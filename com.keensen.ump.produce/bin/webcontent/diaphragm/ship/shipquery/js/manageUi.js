@@ -180,12 +180,10 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 					}, {
 						dataIndex : 'perfFlagName',
 						header : '等级'
-					}/*, {
-						xtype : 'dictcolumn',
-						dataIndex : 'ifconfirm',
-						header : '是否已发货',
-						dictData : ABF_YESORNO
-					}*/, {
+					}, {
+						dataIndex : 'createName',
+						header : '发货确认人'
+					}, {
 						header : '操作',
 						scope : this,
 						renderer : function(v, m, r, i) {
@@ -244,6 +242,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 							name : 'id'
 						}, {
 							name : 'qualifidLength'
+						}, {
+							name : 'createName'
 						}]
 			})
 		})

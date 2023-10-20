@@ -122,6 +122,9 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 						dataIndex : 'materSpecCode',
 						header : '型号'
 					}, {
+						dataIndex : 'createName',
+						header : '计划制定人'
+					}, {
 						dataIndex : 'remark',
 						header : '备注'
 					}],
@@ -155,6 +158,8 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 							name : 'planStockDate'
 						}, {
 							name : 'stockAmount'
+						}, {
+							name : 'createName'
 						}]
 			})
 		})

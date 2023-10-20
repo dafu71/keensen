@@ -170,7 +170,7 @@
  </select>
  
  <select id="queryFhd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-     select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",
+     select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",t2.create_name "createName",
        t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id",
        nvl(t2.ifconfirm,'n')    "ifconfirm",
        t1.LINE_CODE       as "lineCode",
@@ -257,7 +257,7 @@
  
  	<select id="queryOrder" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
       
-	     SELECT T1.ID                "id",t1.ORDER_DATE "orderDate",
+	     SELECT T1.ID                "id",t1.ORDER_DATE "orderDate",t1.create_name "createName",
 	       T1.ORDER_NO          "orderNo",
 	       T1.AMOUNT            "amount",
            T1.SPEC_ID           "specId",T1.remark "remark",
@@ -296,7 +296,7 @@
      
      <select id="queryPlan" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
       
-	     SELECT T1.ID                "id", 
+	     SELECT T1.ID                "id", t1.create_name "createName",
 	       T1.ORDER_NO          "orderNo",
 	       T1.PLAN_NO          "planNo",
 	       T1.plan_date "planDate",

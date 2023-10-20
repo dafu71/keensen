@@ -102,6 +102,9 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						dataIndex : 'materSpecCode',
 						header : '型号'
 					}, {
+						dataIndex : 'createName',
+						header : '订单制定人'
+					}, {
 						dataIndex : 'remark',
 						header : '备注'
 					}],
@@ -127,6 +130,8 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							name : 'remark'
 						}, {
 							name : 'orderDate'
+						}, {
+							name : 'createName'
 						}]
 			})
 		})
@@ -349,6 +354,8 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							name : 'remark'
 						}, {
 							name : 'planDate'
+						}, {
+							name : 'createName'
 						}]
 			})
 		})

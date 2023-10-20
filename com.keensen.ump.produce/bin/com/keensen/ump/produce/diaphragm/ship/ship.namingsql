@@ -89,7 +89,7 @@
         <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'</isNotNull>
     </select>
     <select id="queryFhd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-     select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",
+     select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",t2.create_name "createName",
        t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id",
        nvl(t2.ifconfirm,'n')    "ifconfirm",
        t1.LINE_CODE       as "lineCode",
@@ -140,7 +140,7 @@
      </select>
     <select id="queryOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
       
-	     SELECT T1.ID                "id",t1.ORDER_DATE "orderDate",
+	     SELECT T1.ID                "id",t1.ORDER_DATE "orderDate",t1.create_name "createName",
 	       T1.ORDER_NO          "orderNo",
 	       T1.AMOUNT            "amount",
            T1.SPEC_ID           "specId",T1.remark "remark",
@@ -164,7 +164,7 @@
     </select>
     <select id="queryPlan" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
       
-	     SELECT T1.ID                "id", 
+	     SELECT T1.ID                "id", t1.create_name "createName",
 	       T1.ORDER_NO          "orderNo",
 	       T1.PLAN_NO          "planNo",
 	       T1.plan_date "planDate",
