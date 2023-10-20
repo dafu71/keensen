@@ -1,0 +1,24 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:sca="http://www.springframework.org/schema/sca" xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/sca http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd">
+	 <!-- 流程管理客户端 -->
+    <bean class="com.zoomlion.hjsrm.srmclient.SrmClientDao" id="srmClientDao"/>
+    <bean class="com.zoomlion.hjsrm.srmclient.SrmClientBean" id="srmClientBean">
+        <property name="srmClientDao" ref="srmClientDao"/>
+    </bean>
+
+	<bean class="com.zoomlion.hjsrm.srmclient.common.CommonUtils" id="commonUtils"/>
+	
+	<bean class="com.zoomlion.hjsrm.srmclient.demo.TestflowDao" id="testflowDao"/>
+    <bean class="com.zoomlion.hjsrm.srmclient.demo.TestflowBean" id="testflowBean">
+        <property name="testflowDao" ref="testflowDao"/>
+    </bean>
+    
+    <bean class="com.zoomlion.hjsrm.srmclient.common.WorkFlowEmployeeDao" id="wfEmployeeDao"/>
+    <bean class="com.zoomlion.hjsrm.srmclient.common.WorkFlowEmployeeBean" id="wfEmployeeBean">
+        <property name="wfEmployeeDao" ref="wfEmployeeDao"/>
+    </bean>
+</beans>

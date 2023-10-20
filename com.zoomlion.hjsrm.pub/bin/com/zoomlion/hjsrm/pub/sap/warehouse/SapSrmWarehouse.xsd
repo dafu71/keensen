@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse">
+    <xs:complexType name="Vwarehourse" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.impl.VwarehourseImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="ebeln" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebelp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="menge" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bwart" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lfbja" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lfbnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lfpos" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="grund" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lgort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sgtxt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="charg" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlAsnMseg" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.impl.GenlAsnMsegImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="mblnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mjahr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zasnh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stats" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlSaveMseg" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.impl.GenlSaveMsegImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="mblnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mjahr" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReceiptsMkpf" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.impl.GenlReceiptsMkpfImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="mblnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mjahr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="vgart" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="blart" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bldat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="budat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="cpudt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="bktxt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReceiptsMkpfCrte" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.impl.GenlReceiptsMkpfCrteImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="mblnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mjahr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReceiptsMseg" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.impl.GenlReceiptsMsegImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="mblnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mjahr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zeile" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bwart" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lgort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="charg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="shkzg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="waers" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="menge" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meins" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebeln" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebelp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lfbja" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lfbnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lfpos" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sjahr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="smbln" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="smblp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dmbtr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="grund" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="erfmg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="erfme" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sgtxt" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlMblnrVnbm" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.impl.GenlMblnrVnbmImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="mblnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mblno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="vnbm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="shkzg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lbbsa" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lager" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

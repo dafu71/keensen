@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.Vformalsupplybase">
+        <config db="default" type="sql"><![CDATA[select a.lifnr,a.name1,a.pstlz,a.stras,b.lprop,b.ltype,b.batch,b.lsyst,b.lsort,b.zzyyw,b.creid,b.cretm from base_supply_lfa1 a left join genl_supply_data b on a.lifnr = b.lifnr]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.VsupplyinfoTel">
+        <config db="default" type="sql"><![CDATA[select b.lifnr,sid as zttel,ztext,c.zname,c.zmtel,c.zptel,c.email from BASE_SUPPLY_DICT t ,
+base_supply_lfa1 b left join genl_supply_ttel c 
+on b.lifnr = c.lifnr
+ where t.lifnr_type = 'ZTTEL' ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.Vqzsupplybase">
+        <config db="default" type="sql"><![CDATA[select a.lifnr ,
+           a.name1 ,
+           a.pstlz ,
+           a.ort01 ,
+           a.telf1 ,
+           a.stras ,
+           a.zkfbm ,
+           a.zkcbm ,
+           a.zkcrq ,
+           a.zstus ,
+           b.lprop ,
+           b.ltype ,
+           b.batch ,
+           b.lsyst ,
+           b.lsort ,
+           b.zzyyw ,
+           b.creid ,
+           b.cretm   
+      from genl_supply_linshi a left join genl_supply_data b on a.lifnr = b.lifnr]]></config>
+    </QueryEntity>
+</QueryEntityList>

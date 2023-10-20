@@ -1,0 +1,53 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sca="http://www.springframework.org/schema/sca" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/sca http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd">
+	
+	<!-- 综合工作单查询 -->
+	<bean id="comprehensiveDao" class="com.zoomlion.hjsrm.workflows.comprehensive.ComprehensiveDao"></bean>
+	<bean id="comprehensiveBean" class="com.zoomlion.hjsrm.workflows.comprehensive.ComprehensiveBean">
+		<property name="comprehensiveDao" ref="comprehensiveDao"></property>
+	</bean>
+	
+	<!-- 待办查询 -->
+	<bean id="remainDao" class="com.zoomlion.hjsrm.workflows.remain.RemainDao"></bean>
+	<bean id="remainBean" class="com.zoomlion.hjsrm.workflows.remain.RemainBean">
+		<property name="remainDao" ref="remainDao"></property>
+	</bean>
+	
+	<bean class="com.zoomlion.hjsrm.workflows.ticket.TicketDao" id="ticketDao"/>
+    <bean class="com.zoomlion.hjsrm.workflows.ticket.TicketBean" id="ticketBean">
+        <property name="ticketDao" ref="ticketDao"/>
+    </bean>
+    
+    <!-- 公共业务 开始 -->
+    <!-- 公共业务_Dao -->
+    <bean class="com.zoomlion.hjsrm.workflows.common.WorkinCommonDao" id="workinCommonDao" />
+    <!-- 公共业务_Bean -->
+    <bean class="com.zoomlion.hjsrm.workflows.common.WorkinCommonBean" id="workinCommonBean">
+        <property name="workinCommonDao" ref="workinCommonDao"/>
+        <property name="busiBpsCommon" ref="busiBpsCommon"/>
+    </bean>
+    <!-- 公共业务 结束 -->
+    
+    <!-- 已派工单 开始 -->
+    <!-- 已派工单_Dao -->
+    <bean class="com.zoomlion.hjsrm.workflows.workinsent.WorkinSentDao" id="workinSentDao" />
+    <!-- 已派工单_Bean -->
+    <bean class="com.zoomlion.hjsrm.workflows.workinsent.WorkinSentBean" id="workinSentBean">
+        <property name="workinSentDao" ref="workinSentDao"/>
+    </bean>
+    <!-- 已派工单 结束 -->
+    
+    <!-- 已办工单 开始 -->
+    <!-- 已办工单_Dao -->
+    <bean class="com.zoomlion.hjsrm.workflows.workinfinished.WorkinFinishedDao" id="workinFinishedDao" />
+    <!-- 已办工单_Bean -->
+    <bean class="com.zoomlion.hjsrm.workflows.workinfinished.WorkinFinishedBean" id="workinFinishedBean">
+        <property name="workinFinishedDao" ref="workinFinishedDao"/>
+    </bean>
+    <!-- 已办工单 结束 -->
+    
+</beans>

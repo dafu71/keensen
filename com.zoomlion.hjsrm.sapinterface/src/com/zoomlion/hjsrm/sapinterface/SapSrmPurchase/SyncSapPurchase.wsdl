@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SyncSapPurchaseServiceService" targetNamespace="http://www.primeton.com/SyncSapPurchaseService" xmlns:nns="http://www.primeton.com/SyncSapPurchaseService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.primeton.com/SyncSapPurchaseService" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="SapSrmPurchase">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="0" name="in0" type="xsd:int"/>
+            <xsd:element maxOccurs="1" minOccurs="0" name="in1" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SapSrmPurchaseResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="0" name="out1" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="SapSrmPurchaseResponse">
+    <wsdl:part name="SapSrmPurchaseResponse" element="nns:SapSrmPurchaseResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SapSrmPurchase">
+    <wsdl:part name="SapSrmPurchase" element="nns:SapSrmPurchase">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SyncSapPurchaseService">
+    <wsdl:operation name="SapSrmPurchase">
+      <wsdl:input name="SapSrmPurchase" message="nns:SapSrmPurchase">
+    </wsdl:input>
+      <wsdl:output name="SapSrmPurchaseResponse" message="nns:SapSrmPurchaseResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

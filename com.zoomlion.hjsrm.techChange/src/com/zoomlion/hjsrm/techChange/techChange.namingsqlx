@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   <!--查询线外技术变更-->
+    <select id="queryFlowTechList"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	  select tech_id  "tech_id",
+		t.processinstid  "processinstid",
+		<!--status  "status",-->
+		createby  "createby",
+		createtime  "createtime",
+		createby_name  "createby_name",
+		orgid  "orgid",
+		orgname  "orgname",
+		modifyby  "modifyby",
+		modifytime  "modifytime",
+		modifyby_name  "modifyby_name",
+		modify_orgid  "modify_orgid",
+		modify_oorgname  "modify_oorgname",
+		phone  "phone",
+		problem_type  "problem_type",
+		problem  "problem",
+		productno  "productno",
+		matnr  "matnr",
+		importance  "importance",
+		effection  "effection",
+		duty  "duty",
+		remark  "remark",
+		stand "stand",
+		decode(act.activityinstname,null,'已完成',act.activityinstname) "status"
+		from flow_tech_list t
+		left join (select ac.processinstid,ac.activityinstname from WFActivityInst ac where ac.currentstate='2') act
+		on t.processinstid= act.processinstid
+		where 1=1
+		<isNotNull  property = "status"> 
+		and decode(act.activityinstname,null,'已完成',act.activityinstname) = #status#
+		</isNotNull>
+		<isNotNull  property = "tech_id"> 
+		and tech_id = #tech_id#
+		</isNotNull>
+		<isNotNull  property = "createbyName"> 
+		and createby_name like '%' || #createbyName# || '%'
+		</isNotNull>
+		<isNotNull  property = "productno"> 
+		and productno like '%' || #productno# || '%'
+		</isNotNull>
+		<isNotNull  property = "matnr"> 
+		and matnr like '%' || #matnr# || '%'
+		</isNotNull>
+		<isNotNull  property = "startdate"> 
+        and to_char(createtime, 'yyyy-MM-dd')  &gt;=  substr(#startdate#,1,10)
+     </isNotNull>
+     <isNotNull  property = "endate"> 
+        and  to_char(createtime, 'yyyy-MM-dd')  &lt;=  substr(#endate#,1,10)
+     </isNotNull>
+     order by t.tech_id desc
+    </select>
+    
+    <!--查询总装技术人员或供应商技术人员-->
+    <select id="queryJs"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    select t.tech_id "techId",t.rolecode "rolecode",t.rolename "rolename",
+	t.userid "userid", t.username "username"
+ 	from flow_tech_operators t 
+ 	where t.rolecode in ('zzjs','gysjs')
+	<isNotNull  property = "techId"> 
+		and tech_id = #techId#
+		</isNotNull>
+	 </select>
+	 
+	   <!--查询供应商(或内部)确认-->
+    <select id="queryConfirms"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    select t.flag "flag", t.advise "advise",t.confirm_id "confirmId",
+	t.createby "createby", t.createby_name "createbyName",
+	t.createtime "createtime",nvl(t2.mycount,0) "mycount"
+	 from flow_tech_confirm t left join 
+	 ( select count(1) mycount,relation_id from t_at_fileupload 
+	where group_id='techchangeConfirm' group by relation_id)t2 
+	on t.confirm_id = t2.relation_id
+	<isNotNull  property = "techId"> 
+		where t.tech_id = #techId#
+		</isNotNull>
+	 </select>
+</sqlMap>

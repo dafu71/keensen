@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.srmclient.common.testflow">
+    <select id="queryTestflow" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	select pkid "pkid", 
+		createby "createby", 
+		createtime "createtime", 
+		content "content", 
+		checkby "checkby", 
+		checktime "checktime", 
+		advise "advise", 
+		processinstid "processinstid" ,
+		workitemid "workitemid"
+		from testflow
+		where 1=1
+		<isNotNull prepend="and" property="pkid">pkid = #pkid#</isNotNull>
+        <isNotNull prepend="and" property="processinstid">processinstid = #processinstid#</isNotNull>
+        <isNotNull prepend="and" property="workitemid">workitemid = #workitemid#</isNotNull>
+    </select>
+</sqlMap>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.sap.SapSrmSupply" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.sap.SapSrmSupply">
+    <xs:complexType name="BaseSupplyLfb1" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmSupply.impl.BaseSupplyLfb1Impl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="erdat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="ernam" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sperr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="loevm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="akont" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BaseSupplyLfm1" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmSupply.impl.BaseSupplyLfm1Impl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="erdat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="ernam" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="verkf" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="telf1" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BaseSupplyLfa1" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmSupply.impl.BaseSupplyLfa1Impl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ort01" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pstlz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="telf1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stras" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bankl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bankn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="koinh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ernam" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="erdat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="sortl" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

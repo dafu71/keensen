@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.purchase.query.queryPurchase">
+    <!-- 采购订单查询-->
+    <select id="queryPurchaseManager" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+         select a.werks as "werks",
+                b.lifnr as "lifnr",
+                f.name1 as "name1",
+                a.ebeln as "ebeln",
+                a.ebelp as "ebelp",
+                to_char(b.aedat,'yyyy-MM-dd')   as "aedat",
+                a.matnr as "matnr",
+                a.txz01 as "maktx",
+                a.menge as "menge",
+                to_char(c.eindt,'yyyy-MM-dd')    as "eindt",
+                ddd.ZTEXT as "ztext",to_char(ddd.answer,'yyyy-MM-dd')    as "answer",
+                ddd.zquer as "zquer",
+                a.meins as "meins",
+                a.lgort as "lgort",
+                a.pstyp as "pstyp",
+                a.knttp as "knttp",
+                h.eknam as "ekgrp",
+                i.ekotx as "ekorg",
+                a.bednr as "bednr",
+                g.aufnr as "aufnr",
+                g.kostl as "kostl",
+                a.loekz as "loekz"
+           from genl_purchase_ekpo a
+           left join genl_purchase_ekkn g 
+                on a.ebeln = g.ebeln 
+               and a.ebelp = g.ebelp 
+           left join (select tt.ebeln,tt.ebelp, tt.ztext,ttt.zquer,tt.answer from genl_purchase_eklg tt,
+                         (select t.ebeln,t.ebelp, max(id) as zid,sum(zquer) as zquer 
+                            from genl_purchase_eklg t
+                            group by t.ebeln,t.ebelp) ttt
+                            where ttt.zid = tt.id) ddd 
+                 on ddd.ebeln = a.ebeln 
+                and ddd.ebelp = a.ebelp,
+               genl_purchase_ekko b,
+               genl_purchase_eket c,
+               base_supply_lfa1   f,
+               base_purchase_t024 h,
+               base_purchase_t024e i
+         where a.ebeln = b.ebeln
+           and a.ebeln = c.ebeln
+           and c.ebelp = a.ebelp
+           and b.lifnr = f.lifnr
+           and b.ekgrp = h.ekgrp
+           and b.ekorg = i.ekorg
+        <isNotNull prepend="and" property="lifnr">b.lifnr like '%'||#lifnr#||'%'</isNotNull>
+        <isNotNull prepend="and" property="lifnrsup">b.lifnr =#lifnrsup#</isNotNull>
+        <isNotNull prepend="and" property="werks">a.werks=#werks#</isNotNull>
+        <isNotNull prepend="and" property="ebeln">a.ebeln=#ebeln#</isNotNull>
+        <isNotNull prepend="and" property="ebelp">a.ebelp=#ebelp#</isNotNull>
+        <isNotNull prepend="and" property="matnr">a.matnr=#matnr#</isNotNull>
+        <isNotNull prepend="and" property="bednr">a.bednr=#bednr#</isNotNull>
+        <isNotNull prepend="and" property="ekgrp">b.ekgrp=#ekgrp#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">b.ekorg=#ekorg#</isNotNull>
+        <isNotNull prepend="and" property="maktx">a.txz01 like '%'||#maktx#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">f.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="startDate">trunc(b.aedat) &gt;=to_date(#startDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDate">trunc(b.aedat) &lt;=to_date(#endDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="ifconfirm">decode(ddd.zquer,'','N','Y') = #ifconfirm#</isNotNull>
+		
+		
+	       and (a.loekz is null  or ddd.zquer is not null)
+	     order by a.ebeln desc,a.ebelp
+    </select>
+    <!-- 采购订单确认-->
+    <select id="affirmPurchaseManager" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+        select (a.menge - nvl(ddd.zquer,0)) as "zquera",
+               (a.menge - nvl(ddd.zquer,0)) as "zquerb",
+               a.werks as "werks",
+               b.lifnr as "lifnr",
+               f.name1 as "name1",
+               a.ebeln as "ebeln",
+               a.ebelp as "ebelp",
+               to_char(b.aedat,'yyyy-MM-dd')   as "aedat",
+               a.matnr as "matnr",
+               a.txz01 as "maktx",
+               a.menge as "menge",
+               to_char(c.eindt,'yyyy-MM-dd')    as "eindt",c.eindt-b.aedat as "days", 
+                case when c.eindt-b.aedat&gt;=0 then to_char(2*(c.eindt-b.aedat) + c.eindt,'yyyy-MM-dd') else '2099-01-01' end "maxanswer",
+               ddd.zquer as "zquer",to_char(ddd.answer,'yyyy-MM-dd') "answer",
+               a.meins as "meins",
+               a.lgort as "lgort",
+               a.pstyp as "pstyp",
+               a.knttp as "knttp",
+               h.eknam as "ekgrp",
+               i.ekotx as "ekorg",
+               a.bednr as "bednr",
+               g.aufnr as "aufnr",
+               g.kostl as "kostl",
+               a.loekz as "loekz"
+          from genl_purchase_ekpo a
+          left join genl_purchase_ekkn g on a.ebeln = g.ebeln and a.ebelp = g.ebelp
+          left join (select tt.ebeln,tt.ebelp, tt.ztext,ttt.zquer,tt.answer from genl_purchase_eklg tt,
+                       (select t.ebeln,t.ebelp, max(id) as zid,sum(zquer) as zquer from genl_purchase_eklg t
+                           group by t.ebeln,t.ebelp) ttt
+                           where ttt.zid = tt.id) ddd 
+                on ddd.ebeln = a.ebeln 
+               and ddd.ebelp = a.ebelp,
+               genl_purchase_ekko b,
+               genl_purchase_eket c,
+               base_supply_lfa1   f,
+               base_purchase_t024 h,
+               base_purchase_t024e i
+         where a.ebeln = b.ebeln
+           and a.ebeln = c.ebeln
+           and c.ebelp = a.ebelp
+           and b.lifnr = f.lifnr
+           and b.ekgrp = h.ekgrp
+           and b.ekorg = i.ekorg
+           and (a.menge - nvl(ddd.zquer,0)) &gt; 0
+           and a.loekz is null 
+        <isNotNull prepend="and" property="lifnr">b.lifnr = #lifnr#</isNotNull>
+        <isNotNull prepend="and" property="werks">a.werks=#werks#</isNotNull>
+        <isNotNull prepend="and" property="ebeln">a.ebeln=#ebeln#</isNotNull>
+        <isNotNull prepend="and" property="matnr">a.matnr in  ($matnr$)</isNotNull>
+        <isNotNull prepend="and" property="bednr">a.bednr=#bednr#</isNotNull>
+        <isNotNull prepend="and" property="ekgrp">b.ekgrp=#ekgrp#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">b.ekorg=#ekorg#</isNotNull>
+        <isNotNull prepend="and" property="maktx">a.txz01 like '%'||#maktx#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">f.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="startDate">trunc(b.aedat) &gt;=to_date(#startDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDate">trunc(b.aedat) &lt;=to_date(#endDate#,'yyyy-mm-dd')</isNotNull>
+		    order by a.ebeln desc,a.ebelp
+    </select>
+    <!-- 送货指令维护-->
+    <select id="shzlcxManager" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+        select a.zshso as "zshso",
+               a.zshso_n as "zshso_n",
+               a.lifnr as "lifnr",
+               a.matnr as "matnr",
+               a.ekorg as "ekorg",
+               a.ekgrp as "ekgrp",
+               a.menge as "menge",
+               to_char(a.zdate,'yyyy-MM-dd') as "zdate",
+               a.ztext as "ztext",
+               a.ztext_01 as "ztext_01",
+               a.statu as "statu",
+               a.tranu as "tranu",
+               to_char(a.trant,'yyyy-MM-dd')  as "trant",
+               b.name1 as "name1",
+               a.werks as "werks",
+               a.bukrs as "bukrs",
+               c.maktx as "maktx",
+               (nvl(gz1.pnum,0) - nvl(gz2.nnum,0)) as "gznum",
+               nvl(kd.amount,0) as "amount"
+          from genl_deliver_list a left join base_material_mara c  on  a.matnr = c.matnr
+          left join (select m1.matnr,nvl(sum(m1.menge),0) as pnum from genl_receipts_mseg m1,genl_receipts_mkpf g1 where m1.mblnr = g1.mblnr and m1.mjahr = g1.mjahr
+and m1.bwart = '101' and trunc(g1.budat) &gt;=to_date(#startDatea#,'yyyy-mm-dd') and trunc(g1.budat) &lt;=to_date(#endDatea#,'yyyy-mm-dd')
+group by m1.matnr) gz1 on  a.matnr = gz1.matnr
+          left join (select m2.matnr,nvl(sum(m2.menge),0) as nnum from genl_receipts_mseg m2,genl_receipts_mkpf g2 where m2.mblnr = g2.mblnr and m2.mjahr = g2.mjahr
+and m2.bwart = '102' and trunc(g2.budat) &gt;=to_date(#startDatea#,'yyyy-mm-dd') and trunc(g2.budat) &lt;=to_date(#endDatea#,'yyyy-mm-dd')
+group by m2.matnr) gz2 on  a.matnr = gz2.matnr
+          left join (select t3.matnr,sum(t1.amount) as amount from genl_purchase_note_detail t1,genl_purchase_note t2,GENL_PURCHASE_EKPO t3 where t1.zasnh = t2.zasnh
+               and t1.ebeln = t3.ebeln and t1.ebelp = t3.ebelp and t1.delflag = '0' and t2.delflag = '0'
+               and t2.arrivedate = to_date(to_char((select sysdate from dual),'yyyy-mm-dd'),'yyyy-mm-dd')
+               group by t3.matnr) kd on a.matnr = kd.matnr,
+               base_supply_lfa1 b
+          where a.lifnr = b.lifnr 
+          <isNotNull prepend="and" property="lifnr">a.lifnr like '%'||#lifnr#||'%'</isNotNull>
+        <isNotNull prepend="and" property="werks">a.werks=#werks#</isNotNull>
+        <isNotNull prepend="and" property="bukrs">a.bukrs=#bukrs#</isNotNull>
+        <isNotNull prepend="and" property="zshso">a.zshso=#zshso#</isNotNull>
+        <isNotNull prepend="and" property="matnr">a.matnr in  ($matnr$)</isNotNull>
+        <isNotNull prepend="and" property="ekgrp">a.ekgrp=#ekgrp#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">a.ekorg=#ekorg#</isNotNull>
+        <isNotNull prepend="and" property="maktx">c.maktx like '%'||#maktx#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">b.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="startDatea">trunc(a.zdate) &gt;=to_date(#startDatea#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDatea">trunc(a.zdate) &lt;=to_date(#endDatea#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="startDateb">trunc( a.trant) &gt;=to_date(#startDateb#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDateb">trunc( a.trant) &lt;=to_date(#endDateb#,'yyyy-mm-dd')</isNotNull>
+         order by a.zshso desc,to_number(a.zshso_n)
+    </select>
+    <!-- 送货指令供应商查询-->
+    <select id="shzlcxsupplyManager" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+        select a.zshso as "zshso",
+               a.zshso_n as "zshso_n",
+               a.lifnr as "lifnr",
+               a.matnr as "matnr",
+               a.ekorg as "ekorg",
+               a.ekgrp as "ekgrp",
+               a.menge as "menge",
+               to_date((to_char(a.zdate,'yyyy-MM-dd')),'yyyy-MM-dd') as "zdate",
+               a.ztext as "ztext",
+               a.ztext_01 as "ztext_01",
+               a.statu as "statu",
+               a.tranu as "tranu",
+               to_char(a.trant,'yyyy-MM-dd') as "trant",
+               b.name1 as "name1",
+               a.werks as "werks",
+               a.bukrs as "bukrs",
+               c.maktx as "maktx"
+          from genl_deliver_list a left join base_material_mara c  on  a.matnr = c.matnr ,
+               base_supply_lfa1 b
+          where a.lifnr = b.lifnr 
+            and a.statu is null 
+          <isNotNull prepend="and" property="lifnr">a.lifnr =#lifnr#</isNotNull>
+        <isNotNull prepend="and" property="werks">a.werks=#werks#</isNotNull>
+        <isNotNull prepend="and" property="bukrs">a.bukrs=#bukrs#</isNotNull>
+        <isNotNull prepend="and" property="zshso">a.zshso=#zshso#</isNotNull>
+        <isNotNull prepend="and" property="matnr">a.matnr=#matnr#</isNotNull>
+        <isNotNull prepend="and" property="ekgrp">a.ekgrp=#ekgrp#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">a.ekorg=#ekorg#</isNotNull>
+        <isNotNull prepend="and" property="maktx">c.maktx like '%'||#maktx#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">b.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="startDatea">trunc(a.zdate) &gt;=to_date(#startDatea#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDatea">trunc(a.zdate) &lt;=to_date(#endDatea#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="startDateb">trunc( a.trant) &gt;=to_date(#startDateb#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDateb">trunc( a.trant) &lt;=to_date(#endDateb#,'yyyy-mm-dd')</isNotNull>
+         order by a.zshso desc,a.zshso_n
+    </select>
+    <!-- 送货指令送货指令号查询-->
+    <select id="shzlcxzshsodrManager" parameterClass="com.zoomlion.hjsrm.pub.sap.SapSrmPurchase.GenlDeliverList" resultClass="com.zoomlion.hjsrm.pub.sap.SapSrmPurchase.GenlDeliverList">select * from genl_deliver_list
+          order by zshso desc</select>
+    <!-- 采购合同查询-->
+    <select id="queryCghtManager" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+         select a.werks as "werks",
+                f.maktx as "maktx",
+                a.matnr as "matnr",
+                c.ebeln as "ebeln",
+                c.verkf as "verkf",
+                decode(substr(d.kbetr,1,1),'.','0'||d.kbetr,d.kbetr) as "kbetr",
+                d.kpein as "kpein",
+                d.konwa as "konwa",
+                d.kmein as "kmein",
+                a.ebelp as "ebelp",
+                c.lifnr as "lifnr",
+                e.name1 as "name1",
+                to_char(c.kdatb,'yyyy-MM-dd') as "kdatb",
+                to_char(c.kdate,'yyyy-MM-dd') as "kdate",
+                c.ekorg as "ekorg",
+                a.pstyp as "pstyp", 
+                decode(c.frgrl, NULL, '是', '', '是','X','否') as "frgrl"
+           from genl_contract_ekpo a,
+                genl_contract_ao16 b,
+                genl_contract_ekko c,
+                genl_contract_konp d,
+                base_supply_lfa1   e,
+                base_material_mara f
+           where d.knumh = b.knumh
+             and a.matnr = f.matnr
+             and a.ebeln = b.evrtn
+             and a.ebelp = b.evrtp
+             and c.lifnr = e.lifnr
+             and a.ebeln = c.ebeln
+             and c.bstyp = 'K'
+             and d.kschl = 'ZP01'
+             and d.kappl = 'M'
+             and d.loevm_ko is null
+             and a.loekz is null
+           <isNotNull prepend="and" property="lifnr">c.lifnr like '%'||#lifnr#||'%'</isNotNull>
+        <isNotNull prepend="and" property="ebeln">c.ebeln = #ebeln#</isNotNull>
+        <isNotNull prepend="and" property="verkf">c.verkf = #verkf#</isNotNull>
+        <isNotNull prepend="and" property="werks">a.werks=#werks#</isNotNull>
+        <isNotNull prepend="and" property="matnr">a.matnr=#matnr#</isNotNull>
+        <isNotNull prepend="and" property="frgrl">decode(c.frgrl, NULL, '是', '', '是','X','否') = #frgrl#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">c.ekorg=#ekorg#</isNotNull>
+        <isNotNull prepend="and" property="maktx">f.maktx like '%'||#maktx#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">e.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="startDate">trunc(c.aedat) &gt;=to_date(#startDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDate">trunc(c.aedat) &lt;=to_date(#endDate#,'yyyy-mm-dd')</isNotNull>
+		 order by a.matnr ,c.lifnr,c.kdatb desc
+    </select>
+    <!-- 采购订单确认数量验证-->
+    <select id="queryPurchaseaffirmyz" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.ebeln,t.ebelp,sum(zquer) as "zquer" 
+          from genl_purchase_eklg t
+         where t.ebeln=#ebeln# 
+	       and t.ebelp=#ebelp# 
+        group by t.ebeln,t.ebelp</select>
+    <!-- 查询送货单确认数据-->
+    <select id="queryshdconfirm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+select t.zasnh      as "zasnh",
+                t.lifnr      as "lifnr",
+                t.name1      as "name1",
+                to_char(t.arrivedate,'yyyy-MM-dd') as "arrivedate",
+                t.createtime as "createtime",
+                t.lgort      as "lgort",
+                t.delflag    as "delflag",
+                t.werks      as "werks",
+                t.print      as "print",
+                t.status     as "status",
+               (case when t.sfdpvn = 'Y' and k.vnx &lt;&gt; 0 then 'Z' else t.sfdpvn end) as "sfdpvn"
+           from genl_purchase_note t
+           left join ( select t.zasnh,(count(*) - count(t1.vnbm)) as vnx 
+    from (select * from genl_purchase_note_detail where delflag = '0' ) t 
+        left join genl_note_vndetail t1 
+        on t.zasnh = t1.zasnh
+        and t.zasnp = t1.zasnp
+       where t.zasnh in (select t.zasnh from genl_purchase_note t where t.sfdpvn = 'Y')
+        group by t.zasnh) k on t.zasnh = k.zasnh, genl_purchase_note_lifnr d
+          where t.lifnr = d.lifnr
+            and d.zmode = 'A'
+            and t.zasnh in (select distinct b.zasnh
+                     from genl_purchase_note a, genl_purchase_note_detail b
+                    where a.zasnh = b.zasnh
+                      and a.lifnr in (select distinct lifnr
+                                        from genl_purchase_note_lifnr c
+                                       where c.zmode = 'A')
+                      and b.delflag = '0')
+          <isNotNull prepend="and" property="werks">t.werks =  #werks#</isNotNull>
+        <isNotNull prepend="and" property="zasnh">t.zasnh =  #zasnh#</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t.lifnr like '%' || #lifnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="arrivestartdate">to_char(t.createtime, 'yyyy-MM-dd')  &gt;=  #arrivestartdate#</isNotNull>
+        <isNotNull prepend="and" property="arriveendate">to_char(t.createtime, 'yyyy-MM-dd')  &lt;=  #arriveendate#</isNotNull>
+        <isNotNull prepend="and" property="name1">t.name1 like '%' || #name1# || '%'</isNotNull>
+        <isNotNull prepend="and" property="statu">t.status = #statu#</isNotNull>
+    </select>
+    <!-- 送货单删除验证-->
+    <select id="queryshddelflag" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select * from genl_purchase_note_detail t
+          where t.zasnh = #zasnh#
+            and t.delflag = '0'</select>
+    <!-- 送货单撤销验证-->
+    <select id="shdcexiaoyz" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select * from genl_asn_mseg t
+          where t.zasnh = #zasnh#</select>
+    <!-- 验证vn号是否录满-->
+    <select id="vnwzyz" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.zasnh,(count(*) - count(t1.vnbm)) as "vnx" 
+    from (select * from genl_purchase_note_detail where delflag = '0' ) t 
+        left join genl_note_vndetail t1 
+        on t.zasnh = t1.zasnh
+        and t.zasnp = t1.zasnp
+       where t.zasnh in (select t.zasnh from genl_purchase_note t where t.sfdpvn = 'Y')
+        and t.zasnh = #zasnh#
+        group by t.zasnh</select>
+    <!-- 查询送货单详情-->
+    <select id="queryshd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t1.pkid "pkid",
+           t1.zasnh "zasnh",
+           t1.zasnp "zasnp",
+           t1.delflag "delflag",
+           t2.werks "werks",
+           tt.print "print",
+           t1.ebeln "ebeln",
+           t1.remark2 "remark2",
+           t1.ebelp "ebelp",
+           to_char(t0.aedat,'yyyy-MM-dd') "aedat",
+           t1.amount "amount",
+           t1.return_amount "return_amount",
+           t2.matnr "matnr",
+           t2.txz01 "txz01",
+           k1.zhwbm "zhwbm",
+           NVL(t2.menge, 0) "menge",
+           to_char(t3.eindt,'yyyy-MM-dd') "eindt",
+           t2.meins "meins",
+           tt.lgort "lgort",
+           tt.lifnr "lifnr",
+           tt.name1 "name1",
+           t2.pstyp "pstyp",
+           t2.knttp "knttp",
+           t0.ekgrp "ekgrp",
+           t0.ekorg "ekorg",
+           t5.aufnr "aufnr",
+           t5.kostl "kostl",
+           nvl(t6.cangtui, 0) "cangtui",
+           nvl(t6.ruku, 0) "ruku",
+           t1.createtime "createtime",
+           t7.vnbm as "vnbm"
+      from genl_purchase_note_detail t1
+      LEFT JOIN GENL_PURCHASE_EKKO t0 on t0.ebeln = t1.ebeln
+      left join genl_purchase_note tt on t1.zasnh = tt.zasnh
+      left join GENL_PURCHASE_EKPO t2 on t1.ebeln = t2.ebeln
+                                     and t1.ebelp = t2.ebelp
+      left join base_material_zt76 k1 on t2.matnr = k1.matnr
+                                     and t2.werks = k1.werks
+      left join genl_purchase_eket t3 on t3.ebeln = t2.ebeln
+                                     and t3.ebelp = t2.ebelp
+      left join genl_purchase_ekkn t5 on t5.ebeln = t2.ebeln
+                                     and t5.ebelp = t2.ebelp
+      left join v_genl_asn_ctrk t6 on t1.zasnh = t6.zasnh
+                                  and t1.zasnp = t6.zasnp
+      left join genl_note_vndetail t7 
+                                    on t1.zasnh = t7.zasnh
+                                   and t1.zasnp = t7.zasnp
+     where t1.delflag = '0'
+       and t1.zasnh = #zasnh#</select>
+    <!-- 查询采购申请汇总-->
+    <select id="queryApplyData" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.matnr "matnr",max(t.maktx) "maktx",t.lifnr "lifnr",sum(t.menge) "menge" ,
+          max(t.erdat) "erdat"
+			from GENL_PURCHASE_APPLY_LIST t
+			where t.lifnr is not null
+			group by t.matnr,t.lifnr</select>
+    <!-- 新增采购申请汇总-->
+    <insert id="addApplyData" parameterClass="java.util.HashMap">insert into genl_purchase_apply_data
+	  (pkid,
+	   createby,
+	   createbyname,
+	   createtime,
+	   lifnr,
+	   matnr,
+	   maktx,
+	   menge,
+	   erdat)
+	    select seq_genl_purchase_apply_data.nextval pkid,#createby#,
+	   	#createbyname#,
+	    #createtime#,lifnr,matnr,maktx,menge,erdat
+ 		from
+  	(select t.matnr matnr,max(t.maktx) maktx,t.lifnr lifnr,sum(t.menge) menge ,
+          max(t.erdat) erdat
+      from GENL_PURCHASE_APPLY_LIST t
+      where t.lifnr is not null
+      group by t.matnr,t.lifnr)</insert>
+    <!-- 查询采购申请-->
+    <select id="queryApplylist" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+          select
+			t.lifnr "lifnr", t2.name1 "name1", t.banfn "banfn",t3.name1 "werksname", 
+			t.bnfpo "bnfpo", t.erdat "erdat", t.matnr "matnr", t.maktx "maktx", 
+			t.menge "menge", t.lfdat "lfdat", t.meins "meins", t.lgort "lgort", 
+			t.bstyp "bstyp", t.knttp "knttp", t.ekgrp "ekgrp", t.ekorg "ekorg", 
+			t.bednr "bednr", t.aufnr "aufnr", t.kostl "kostl", t.loekz "loekz",t.pkid "pkid"
+			from
+			genl_purchase_apply_list t
+			left join
+			BASE_SUPPLY_LFA1 t2
+			on t.lifnr = t2.lifnr
+			left join
+    		base_factory_t001w t3
+    		on t3.werks = t.werks
+			where 1=1
+			<isNotNull prepend="and" property="werks">t.werks like '%' || #werks# || '%'</isNotNull>
+        <isNotNull prepend="and" property="banfn">t.banfn = #banfn#</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t.lifnr like '%' || #lifnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="matnr">t.matnr = #matnr#</isNotNull>
+        <isNotNull prepend="and" property="maktx">t.maktx like '%' || #maktx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="bednr">t.bednr = #bednr#</isNotNull>
+        <isNotNull prepend="and" property="name1">t2.name1 like '%' || #name1# || '%'</isNotNull>
+        <isNotNull prepend="and" property="ekgrp">t.ekgrp = #ekgrp#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">t.ekorg = #ekorg#</isNotNull>
+        <isNotNull prepend="and" property="nulllifnr">t.lifnr is null</isNotNull>
+    </select>
+    <!-- 查询供应商库存-->
+    <select id="queryApplyStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+          select
+          	t.pkid  as "pkid",
+			t.lifnr  as "lifnr",
+			t.matnr  as "matnr",
+			t.maktx  as "maktx",
+			t.erdat  as "erdat",
+			t.data2  as "data2",
+			t.data3  as "data3",
+			t.data4  as "data4",
+			t.data5  as "data5",
+			t.data1  as "data1",
+			t.menge as "menge",
+			t.remark as "remark",
+            t2.name1 "name1",
+       		 decode((100*nvl(t.data5,0)/t.menge),'0','0',to_char((100*nvl(t.data5,0)/t.menge),'999999.0') || '%') "bhl",
+       		t2.name1 || '(' || t.lifnr || ')' as "fullname" 
+            
+          from
+          	genl_purchase_apply_data t
+			left join
+			base_supply_lfa1 t2
+			on t.lifnr = t2.lifnr
+		  where 1=1
+		  	<isNotNull prepend="and" property="lifnr">t.lifnr = #lifnr#</isNotNull>
+        <isNotNull prepend="and" property="matnr">t.matnr = #matnr#</isNotNull>
+        <isNotNull prepend="and" property="maktx">t.maktx like '%' || #maktx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="name1">t2.name1 like '%' || #name1# || '%'</isNotNull>
+        <isNotNull prepend="and" property="erdat">t.erdat = #erdat#</isNotNull>
+        <isNotNull prepend="and" property="startdate">t.erdat &gt;=  #startdate#</isNotNull>
+        <isNotNull prepend="and" property="endate">t.erdat &lt;=  #endate#</isNotNull>
+			order by t.erdat desc,t.lifnr
+     </select>
+</sqlMap>

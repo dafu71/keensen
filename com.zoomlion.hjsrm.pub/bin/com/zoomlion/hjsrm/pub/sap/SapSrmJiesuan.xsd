@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan">
+    <xs:complexType name="GenlInvoiceList" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan.impl.GenlInvoiceListImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="jspz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jspzh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mjahr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mblnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zeile" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="budat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="shkzg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bwart" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="djssl" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="djsslCk" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="meins" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="hjsje" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="jsdj" nillable="true" type="xs:decimal"/>
+            <xs:element default="1&#10;" minOccurs="0" name="jsdw" nillable="true" type="xs:int"/>
+            <xs:element default="0&#10;" minOccurs="0" name="kbetr" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="kpein" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="kmein" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="flagHtj" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kalsm" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="hqtkkje" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="hflje" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="hyfje" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="hkkje" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="zcdf" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="lfbnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lfpos" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lfgja" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="shqtk" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hshqtk" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="shqtkbh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="waers" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="belnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="buzei" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gjahr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekgrp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebeln" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebelp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matkl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="aufnr" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="menge" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zwrildt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zwriusr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ztext" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInvoiceHead" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan.impl.GenlInvoiceHeadImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="jspz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mjahr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="jsje" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="mwskz" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="taxrt" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="flje" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="yfje" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="qtkkje" nillable="true" type="xs:decimal"/>
+            <xs:element default="0&#10;" minOccurs="0" name="tax" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="usnam" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="datum" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element default="1&#10;" minOccurs="0" name="print" nillable="true" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

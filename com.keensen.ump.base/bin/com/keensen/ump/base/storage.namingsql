@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.base.storage">
+    <select id="queryStorage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t1.id "id",
+		t1.name "name",
+		t1.code "code",
+		t1.manager "manager",
+		t1.address "address",
+		t1.phone "phone",
+		t1.type "type",
+		t1.remark "remark"
+    from KS_BASE_STORAGE t1
+    where t1.status='1'
+    <isNotNull prepend="and" property="name">t1.name like '%'||#name#||'%'</isNotNull>
+        <isNotNull prepend="and" property="code">t1.code like '%'||#code#||'%'</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+    </select>
+    <select id="queryStoragePos" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.id "id",t.code "code",t.name "name" from KS_BASE_STORAGE_POS t</select>
+</sqlMap>

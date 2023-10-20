@@ -1,0 +1,1069 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:liuxin -->
+<sqlMap>
+    <select id="queryinspectwtwh" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select t.zjwtid as "zjwtid",
+               t.zjwtms as "zjwtms",
+               t.werks as "werks",
+               t.bukrs as "bukrs",
+               t.statu as "statu",
+               t.tranu as "tranu",
+               to_char(t.trant,'yyyy-MM-dd HH24:MI:SS') as "trant"
+          from genl_inspect_wtqd t
+         where t.statu is null 
+          <isNotNull prepend = "and"  property = "zjwtid"> 
+                t.zjwtid =  #zjwtid#
+              </isNotNull>
+              <isNotNull prepend = "and"  property = "zjwtms"> 
+                t.zjwtms like '%'|| #zjwtms#||'%' 
+              </isNotNull>
+               <isNotNull prepend = "and"  property = "werks"> 
+                t.werks =#werks#
+              </isNotNull>
+              order by t.zjwtid
+    </select>
+     <select id="queryinspectwtwh2" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select * from genl_inspect_wtqd t
+         where t.statu is null 
+               and t.zjwtms = #zjwtms#
+    </select>
+      <select id="queryinspectlbwhyz" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select * from genl_inspect_lbwh t
+         where t.matnr = #matnr#
+         and   t.lifnr = #lifnr#
+    </select>
+      <select id="queryinspectwltmyz" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select * from genl_inspect_qjnote t
+         where 1= 1
+         <isNotNull prepend = "and"  property = "wltm"> 
+          t.wltm = #wltm#
+     </isNotNull>
+    </select>
+<select id="queryinspectlbwh" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select a.werks as "werks",
+       a.matnr as "matnr",
+       b.maktx as "maktx",
+       a.lifnr as "lifnr",
+       c.name1 as "name1",
+       b.zeinr as "zeinr",
+       a.zjlb as "zjlb",
+       a.tranu as "tranu",
+       to_char(a.trant,'yyyy-MM-dd HH24:MI:SS') as "trant"
+ from genl_inspect_lbwh a,base_material_mara b,base_supply_lfa1 c
+    where a.matnr = b.matnr 
+      and a.lifnr = c.lifnr
+       <isNotNull prepend = "and"  property = "werks"> 
+          a.werks =  #werks#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "lifnr"> 
+          a.lifnr like '%' ||  #lifnr# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+          a.matnr in ($matnr$)
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "maktx"> 
+          b.maktx like '%' ||  #maktx# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+          c.name1 like '%' ||  #name1# || '%'
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "zjlb"> 
+          a.zjlb =  #zjlb# 
+     </isNotNull>
+    </select>
+    <select id="queryinspectnotzjlb" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    select a.matnr as "matnr",
+       c.maktx as "maktx",
+       a.werks as "werks",
+       a.lifnr as "lifnr",
+       e.name1 as "name1",
+       b.zjlb as "zjlb",
+       c.zeinr as "zeinr",
+       b.tranu as "tranu",
+       to_char(b.trant,'yyyy-MM-dd HH24:MI:SS') as  "trant"
+from (select distinct
+      t.matnr,t.werks,d.lifnr from genl_purchase_ekpo t 
+      left join genl_purchase_ekko d on t.ebeln = d.ebeln) a 
+      left join genl_inspect_lbwh b on a.matnr = b.matnr and a.werks = b.werks 
+      and a.lifnr = b.lifnr,
+      base_material_mara c,base_supply_lfa1 e
+   where a.matnr = c.matnr
+     and a.lifnr = e.lifnr
+     and b.zjlb is null
+      <isNotNull prepend = "and"  property = "werks"> 
+          a.werks =  #werks#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "lifnr"> 
+          a.lifnr like '%' ||  #lifnr# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+          a.matnr in ($matnr$)
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "maktx"> 
+          c.maktx like '%' ||  #maktx# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+          e.name1 like '%' ||  #name1# || '%'
+     </isNotNull>
+     order by a.matnr
+    </select>
+ <select id="queryinspectqjbz" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    select werks as "werks",
+       matnr as "matnr",
+       maktx as "maktx",
+       meins as "meins",
+       zeinr as "zeinr",
+       statu as "statu",
+       zjlb as "zjlb"
+ from (select distinct
+       a.werks  as werks,
+       a.matnr as matnr,
+       b.maktx as maktx,
+       b.meins as meins,
+       b.zeinr as zeinr,
+       (case when a.matnr in (select matnr from genl_inspect_qjbz)
+           then  '2' else '1' end) as statu,
+       a.zjlb as zjlb
+ from genl_inspect_lbwh a,base_material_mara b,base_supply_lfa1 c
+    where a.matnr = b.matnr 
+      and a.lifnr = c.lifnr
+      and a.zjlb = '全检')
+      where 1 = 1
+       <isNotNull prepend = "and"  property = "werks"> 
+          werks =  #werks#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+          matnr in ($matnr$)
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "maktx"> 
+          maktx like '%' ||  #maktx# || '%'
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "statu"> 
+          statu =  #statu# 
+     </isNotNull>
+    </select>
+<select id="queryinspectqjbzmx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select t.matnr as "matnr",
+       t.jyxm as "jyxm",
+       t.jybz as "jybz",
+       t.werks as "werks",
+       t.text as "text"
+       from genl_inspect_qjbz t
+       where t.matnr = #matnr#
+       and   t.werks = #werks#
+      <isNotNull prepend = "and"  property = "jyxm"> 
+          t.jyxm like '%' ||  #jyxm# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jybz"> 
+          t.jybz like '%' ||  #jybz# || '%'
+     </isNotNull>
+    </select>
+    <select id="queryinspectrc" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+                   select        pkid as "pkid",
+                              zasnh as "zasnh",
+                              zasnp as "zasnp",
+                              sgtxt as "sgtxt",
+                              ebeln as "ebeln",
+                              ebelp as "ebelp",
+                              matnr as "matnr",
+                              txz01 as "txz01",
+                              menge as "menge_m",
+                              return_amount as "return_amount",
+                              lgort as "lgort",
+                              amount as "amount",
+                              menge as "menge",
+                              loekz as "loekz",
+                              ruku,
+                              zjlb as "zjlb",
+                              lifnr as "lifnr",
+                              name1 as "name1",
+                              werks as "werks",
+                              num as "num"  from 
+                              (select  a.pkid as pkid,a.zasnh as zasnh,a.zasnp as zasnp,
+                              substr(a.remark2,1,25) as sgtxt, b.ebeln as ebeln,b.ebelp as ebelp,b.matnr as matnr,
+                              b.txz01 as txz01,
+                              b.menge as menge_m,
+                              a.return_amount as return_amount,
+                              b.lgort as lgort,
+                              a.amount as amount,
+                              a.amount as menge,
+                              b.loekz as loekz,
+                              c.ruku,
+                              a.zjlb as zjlb,
+                              d.lifnr as lifnr,
+                              d.name1 as name1,
+                              d.werks as werks,
+                              nvl(g.num,0) as num 
+                      from genl_purchase_ekpo b ,genl_purchase_note_detail a 
+                      left join V_GENL_ASN_CTRK c 
+                           on  a.zasnh = c.zasnh and a.zasnp = c.zasnp
+                      left join genl_purchase_note d on a.zasnh = d.zasnh 
+                       left join genl_inspect_cjnote f on a.zasnp = f.zasnp and a.zasnh = f.zasnh
+                       left join (select t.zasnh ,t.zasnp,count(*) as num from genl_inspect_qjnote t 
+                                  group by t.zasnh ,t.zasnp) g on a.zasnp = g.zasnp and a.zasnh = g.zasnh
+                      where a.ebeln = b.ebeln 
+                        and a.ebelp = b.ebelp
+                        and a.zjlb is not null 
+                        and a.delflag = '0'
+                        and a.zasnh = #zasnh#
+                         <isNotNull prepend = "and"  property = "zasnp"> 
+                             a.zasnp =  #zasnp#
+                         </isNotNull>
+                        and f.jgpd is null
+                        and (b.loekz is null or b.loekz = '')
+                     order by  a.zasnh,to_number(a.zasnp)) love
+                where (ruku is null or ruku ='0') and  love.amount &lt;&gt; love.num
+                and  return_amount &lt; &gt; amount
+
+    </select>
+     <select id="queryinspectzjqjrecord" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select recordid as "recordid",
+       createtime as "createtime",
+       lifnr as "lifnr",
+       name1 as "name1",
+       zasnh as "zasnh",
+       zasnp as "zasnp",
+       ebeln as "ebeln",
+       ebelp as "ebelp",
+       matnr as "matnr",
+       txz01 as "txz01",
+       wltm as "wltm",
+       shsl as "shsl",
+       cjsl as "cjsl",
+       bhgsl as "bhgsl",
+       krksl as "krksl",
+       jgpd as "jgpd",
+       werks as "werks",
+       tranu as "tranu",
+       trant as "trant",
+       zcbz as "zcbz",
+       zjlb as "zjlb"  
+       from (select t.qjrecordid as recordid,
+       t.createtime as createtime,
+       t.lifnr as lifnr,
+       t.name1 as name1,
+       t.zasnh as zasnh,
+       t.zasnp as zasnp,
+       t.ebeln as ebeln,
+       t.ebelp as ebelp,
+       t.matnr as matnr,
+       t.txz01 as txz01,
+       t.wltm as wltm,
+       '/' as shsl,
+       '/' as cjsl,
+       '/' as bhgsl,
+       '/' as krksl,
+       t.jgpd as jgpd,
+       t.werks as werks,
+       t.tranu as tranu,
+       t.trant as trant,
+       t.zcbz as zcbz,
+       t.zjlb as zjlb
+ from genl_inspect_qjnote t
+union all
+select d.cjrecordid as recordid,
+       d.createtime as createtime,
+       d.lifnr as lifnr,
+       d.name1 as name1,
+       d.zasnh as zasnh,
+       d.zasnp as zasnp,
+       d.ebeln as ebeln,
+       d.ebelp as ebelp,
+       d.matnr as matnr,
+       d.txz01 as txz01,
+       d.wltm as wltm,
+       d.shsl as shsl,
+       d.cjsl as cjsl,
+       d.bhgsl as bhgsl,
+       d.krksl as krksl,
+       d.jgpd as jgpd,
+       d.werks as werks,
+       d.tranu as tranu,
+       d.trant as trant,
+       d.zcbz as zcbz,
+       d.zjlb as zjlb
+   from genl_inspect_cjnote d)
+   where 1= 1 
+     <isNotNull prepend = "and"  property = "werks"> 
+          werks =  #werks#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "lifnr"> 
+          lifnr like '%' ||  #lifnr# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnrsup"> 
+          lifnr = #lifnrsup# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+          matnr = #matnr#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "txz01"> 
+         txz01 like '%' ||  #txz01# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+          name1 like '%' ||  #name1# || '%'
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "wltm"> 
+          wltm =  #wltm# 
+     </isNotNull>
+        <isNotNull prepend = "and"  property = "zcbz"> 
+          zcbz =  #zcbz# 
+     </isNotNull>   
+     <isNotNull prepend = "and"  property = "zasnh"> 
+          zasnh =  #zasnh# 
+     </isNotNull>   
+     <isNotNull prepend = "and"  property = "jgpd"> 
+         jgpd =  #jgpd# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "recordid"> 
+         recordid =  #recordid# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "ebeln"> 
+         ebeln =  #ebeln# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "tranu"> 
+         tranu =  #tranu# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "zjlb"> 
+         zjlb =  #zjlb# 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "createstartdate"> 
+          to_char(createtime,'yyyy-MM-dd HH24:MI:SS')  &gt;=  #createstartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createendate"> 
+          to_char(createtime,'yyyy-MM-dd HH24:MI:SS')  &lt;=  #createendate#
+     </isNotNull>
+    </select>
+    <!-- 删除质检类别维护数据-->
+    <delete  id="deleteInspectlbwh" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_lbwh t where  t.matnr=#matnr# and t.lifnr = #lifnr#
+	</delete>
+	 <!-- 删除全检标准明细-->
+    <delete  id="deleteInspectqjbzmx" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_qjbz t where  t.matnr=#matnr# and t.werks = #werks# and t.jyxm = #jyxm#
+	</delete>
+	 <delete  id="delInspectcjdetail" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_cjdetail t where  t.pkid=#pkid# 
+	</delete>
+	<delete  id="delInspectqjdetail" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_qjdetail t where  t.pkid=#pkid# 
+	</delete>
+	 <delete  id="delInspectcjdetail1" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_cjdetail t where  t.cjrecordid=#cjrecordid# 
+	</delete>
+	 <delete  id="delInspectwllldetail1" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_wxlljy_detail t where t.wxllno = #wxllno# 
+	</delete>
+	<delete  id="delInspectwglldetail1" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_wglljy_detail t where t.wgllno = #wgllno# 
+	</delete>
+	<delete  id="delInspectqjdetail1" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_qjdetail t where  t.qjrecordid=#qjrecordid# 
+	</delete>
+	<delete  id="delInspectcjnote" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_cjnote t where  t.cjrecordid=#cjrecordid# 
+	</delete>
+	<delete  id="delInspectqjnote" parameterClass="java.util.HashMap" >
+		delete from genl_inspect_qjnote t where  t.qjrecordid=#qjrecordid# 
+	</delete>			
+<select id="getinspectzjcjrecordmx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	select t.pkid as "pkid",
+       t.cjrecordid as "cjrecordid",
+       t.zjwtid as "zjwtid",
+       t.zjwtms as "zjwtms",
+       t.zjwtdj as "zjwtdj",
+       t.zjwtjs as "zjwtjs",
+       t.text as "text",
+       t.tranu as "tranu",
+       t.trant as "trant"
+ from genl_inspect_cjdetail t
+ where t.cjrecordid = #cjrecordid# 
+  </select>
+  <select id="getinspectzjqjrecordmx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select t.pkid as "pkid",
+       t.qjrecordid as "qjrecordid",
+       t.jyxm as "jyxm",
+       t.jybz as "jybz",
+       t.qjsjz as "qjsjz",
+       t.zjwtjs as "zjwtjs",
+       t.text as "text",
+       t.text2 as "text2",
+       t.tranu as "tranu",
+       t.trant as "trant"
+ from genl_inspect_qjdetail t
+ where t.qjrecordid = #qjrecordid#
+  </select>
+  <select id="querypurchaenotedetail" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select *
+ from genl_purchase_note_detail t
+ where t.zasnh = #zasnh#
+ and t.zasnp = #zasnp#
+  </select>
+  
+  <select id="queryinspectwltmsb" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select nvl(recordid,'/') as "recordid",    
+       lifnr as "lifnr",
+       name1 as "name1",
+       zasnh as "zasnh",
+       zasnp as "zasnp",
+       ebeln as "ebeln",
+       ebelp as "ebelp",
+       matnr as "matnr",
+       txz01 as "txz01",
+       wltm as "wltm",
+       shsl as "shsl",
+       nvl(jgpd,'/') as "jgpd",
+       nvl(zcbz,'/') as "zcbz",
+       nvl(tranu,'/') as "zjtranu",
+       nvl(to_char(trant,'yyyy-MM-dd HH24:MI:SS'),'/') as "zjtrant",
+       aedat as "aedat",
+       nvl(zjlb,'/') as "zjlb",
+       createtime as "createtime", 
+       ekgrp as "ekgrp",
+       zeinr as "zeinr"
+       from (select t.qjrecordid as recordid,
+       t.lifnr as lifnr,
+       t.name1 as name1,
+       t.zasnh as zasnh,
+       t.zasnp as zasnp,
+       t.ebeln as ebeln,
+       t.ebelp as ebelp,
+       t.matnr as matnr,
+       t.txz01 as txz01,
+       t.jgpd as jgpd,
+       t.zcbz as zcbz,
+       t4.operatorname as tranu,
+       t.trant as trant,
+       t.wltm as wltm,
+       t.zjlb as zjlb,
+       to_char(t2.aedat,'yyyy-MM-dd') as aedat,
+       to_char(t3.createtime,'yyyy-MM-dd HH24:MI:SS') as createtime,
+       t5.eknam as ekgrp,
+       t3.amount as shsl,
+       t1.zeinr as zeinr
+ from genl_inspect_qjnote t,base_material_mara t1,genl_purchase_ekko t2,
+      genl_purchase_note_detail t3,v_ac_operator_trs t4,base_purchase_t024 t5
+ where t.matnr = t1.matnr
+   and t.ebeln = t2.ebeln
+   and t.zasnh = t3.zasnh
+   and t.zasnp = t3.zasnp
+   and t.tranu = t4.userid
+   and t2.ekgrp = t5.ekgrp
+union all
+select d.cjrecordid as recordid,
+       d.lifnr as lifnr,
+       d.name1 as name1,
+       d.zasnh as zasnh,
+       d.zasnp as zasnp,
+       d.ebeln as ebeln,
+       d.ebelp as ebelp,
+       d.matnr as matnr,
+       d.txz01 as txz01,
+       d.jgpd as jgpd,
+       d.zcbz as zcbz,
+       d4.operatorname as tranu,
+       d.trant as trant,
+       d.wltm as wltm,
+       d.zjlb as zjlb,
+       to_char(d2.aedat,'yyyy-MM-dd') as aedat,
+        to_char(d3.createtime,'yyyy-MM-dd HH24:MI:SS') as createtime,
+       d5.eknam as ekgrp,
+       d3.amount as shsl,
+       d1.zeinr as zeinr
+   from genl_inspect_cjnote d,base_material_mara d1,genl_purchase_ekko d2,genl_purchase_note_detail d3,
+        v_ac_operator_trs d4,base_purchase_t024 d5
+   where d.matnr = d1.matnr
+   and d.ebeln = d2.ebeln
+   and d.zasnh = d3.zasnh
+   and d.zasnp = d3.zasnp
+   and d.tranu = d4.userid
+   and d2.ekgrp = d5.ekgrp)
+   where  wltm = #wltm#    
+  </select>
+  <select id="queryinspectwltmsb2" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select t.amount as "shsl",
+       t.createtime as "createtime",
+       t.zasnh as "zasnh",
+       t.zasnp as "zasnp",
+       nvl(t.zjlb,'/') as "zjlb",
+       t1.lifnr as "lifnr",
+       t1.name1 as "name1",
+       t2.matnr as "matnr",
+       t2.txz01 as "txz01", 
+       t2.ebeln as "ebeln",
+       t2.ebelp as "ebelp",
+       t3.aedat as "aedat",
+       t4.eknam as "ekgrp",
+       t5.zeinr as "zeinr",
+       nvl(t6.tranu,'/') as "zjtranu",
+       nvl(to_char(t6.trant,'yyyy-MM-dd HH24:MI:SS'),'/') as "zjtrant",
+       nvl(t6.cjrecordid,'/') as "recordid",
+       nvl(t6.jgpd,'/') as "jgpd",
+       nvl(t6.zcbz,'/') as "zcbz"
+ from genl_purchase_note_detail t left join genl_purchase_note t1 on t.zasnh = t1.zasnh
+ left join genl_inspect_cjnote t6 on t.zasnh = t6.zasnh and t.zasnp = t6.zasnp,
+ genl_purchase_ekpo t2 left join base_material_mara t5 on t2.matnr = t5.matnr,
+ genl_purchase_ekko t3,
+ base_purchase_t024 t4
+ where t.ebeln = t2.ebeln
+ and t.ebelp = t2.ebelp
+ and t3.ebeln = t.ebeln
+ and t3.ekgrp = t4.ekgrp
+ and t2.matnr = #matnr#
+ and t1.lifnr = #lifnr#
+ and  to_char(t.createtime, 'yyyymmdd') =  #createtime#
+  </select>
+ <select id="queryinspectwxlljynote" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    select t.werks as "werks",
+       t.wxllno as "wxllno",
+       t.djlx as "djlx",
+       t.djbh as "djbh",
+       t.lifnr as "lifnr",
+       t1.name1 as "name1",
+       t.zjlb as "zjlb",
+       t.dxjlb as "dxjlb",
+       t.jyy as "jyy",
+       t3.EMPNAME as "empname",
+       t.jyjl as "jyjl",
+        to_char(t.jyrq,'yyyy-MM-dd') as "jyrq",
+       t.jyfs as "jyfs",
+       t.matnr as "matnr",
+       t2.maktx as "maktx",
+       t.gyswlbh as "gyswlbh",
+       t.jjs as "jjs",
+       t.bhgs as "bhgs",
+       nvl(t4.bhgx,0) as "bhgx",
+       t.text as "text",
+       t.clyj as "clyj",
+       t.statu as "statu",
+       t.createtime as "createtime",
+       t.createuserid as "createuserid",
+       t.modifytime as "modifytime",
+       t.modifyuserid as "modifyuserid" 
+   from genl_inspect_wxlljy_note t left join base_supply_lfa1 t1 on t.lifnr = t1.lifnr
+                                   left join base_material_mara t2 on t.matnr = t2.matnr
+                                   left join v_hjmes_genl_tgemployee t3 on t.jyy = t3.EMPCODE
+                                   left join (select t.wxllno,count(*) as bhgx from genl_inspect_wxlljy_detail t group by t.wxllno) t4
+                                   on t.wxllno = t4.wxllno
+     where t.statu is null
+      <isNotNull prepend = "and"  property = "werks"> 
+         t.werks =  #werks# 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "djlx"> 
+         t.djlx =  #djlx# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "djbh"> 
+         t.djbh =  #djbh# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr"> 
+         t.lifnr like '%' ||  #lifnr# || '%' 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+         t1.name1 like '%' ||  #name1# || '%' 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "zjlb"> 
+         t.zjlb =  #zjlb# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "dxjlb"> 
+         t.dxjlb =  #dxjlb# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyy"> 
+         t.jyy =  #jyy# 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "jyjl"> 
+         t.jyjl =  #jyjl# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+         t.matnr in ($matnr$) 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "maktx"> 
+         t2.maktx like '%' ||  #maktx# || '%' 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "jystartdate"> 
+          to_char(t.jyrq,'yyyy-MM-dd')  &gt;=  #jystartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyendate"> 
+          to_char(t.jyrq,'yyyy-MM-dd')  &lt;=  #jyendate#
+     </isNotNull>
+     order by t.wxllno desc
+    </select>
+    <select id="queryinspectwxlljynotedaochu" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select p1.werks as "werks",
+       p1.wxllno as "wxllno",
+       p1.djlx as "djlx",
+       p1.djbh as "djbh",
+       p1.lifnr as "lifnr",
+       p1.name1 as "name1",
+       p1.zjlb as "zjlb",
+       p1.dxjlb as "dxjlb",
+       p1.jyy as "jyy",
+       p1.EMPNAME as "empname",
+       p1.jyjl as "jyjl",
+        to_char(p1.jyrq,'yyyy-MM-dd') as "jyrq",
+       p1.jyfs as "jyfs",
+       p1.matnr as "matnr",
+       p1.maktx as "maktx",
+       p1.gyswlbh as "gyswlbh",
+       p1.wtms as "wtms",
+       p1.wtbw as "wtbw",
+       p1.qxlx as "qxlx",
+       p1.wtsx as "wtsx",
+       p1.gzdj as "gzdj",
+       p1.text as "text",
+       p1.clyj as "clyj",
+       p1.statu as "statu",
+       p1.createtime as "createtime",
+       p1.createuserid as "createuserid",
+       p1.modifytime as "modifytime",
+       p1.modifyuserid as "modifyuserid",p2.jjs as "jjs",p2.bhgs as "bhgs" from (select rownum as a, 
+       t.werks as werks,
+       t.wxllno as wxllno,
+       t.djlx as djlx,
+       t.djbh as djbh,
+       t.lifnr as lifnr,
+       t1.name1 as name1,
+       t.zjlb as zjlb,
+       t.dxjlb as dxjlb,
+       t.jyy as jyy,
+       t3.EMPNAME as empname,
+       t.jyjl as jyjl,
+       t.jyrq as jyrq,
+       t.jyfs as jyfs,
+       t.matnr as matnr,
+       t2.maktx as maktx,
+       t.gyswlbh as gyswlbh,
+       t4.wtms as wtms,
+       t4.wtbw as wtbw,
+       t4.qxlx as qxlx,
+       t4.wtsx as wtsx,
+       t4.gzdj as gzdj,
+       t.text as text,
+       t.clyj as clyj,
+       t.statu as statu,
+       t.createtime as createtime,
+       t.createuserid as createuserid,
+       t.modifytime as modifytime,
+       t.modifyuserid as modifyuserid 
+   from genl_inspect_wxlljy_note t left join base_supply_lfa1 t1 on t.lifnr = t1.lifnr
+                                   left join base_material_mara t2 on t.matnr = t2.matnr
+                                   left join v_hjmes_genl_tgemployee t3 on t.jyy = t3.EMPCODE
+                                   left join (select t.wxllno,t.wtms,t.wtbw,t.gzdj,t1.FNAME as wtsx,t2.SNAME as qxlx from genl_inspect_wxlljy_detail t 
+                                              left join v_ser_fault_phenomenon t1 on t.wtsx = t1.FID
+                                              left join v_ser_fault_structure t2 on t.qxlx = t2.SID) t4
+                                   on t.wxllno = t4.wxllno
+     where t.statu is null
+     order by t.wxllno desc) p1 left join (select k.wxllno,min(a) as b,k.jjs,k.bhgs from (select rownum as a, 
+        t.werks as werks,
+       t.wxllno as wxllno,
+       t.djlx as djlx,
+       t.djbh as djbh,
+       t.lifnr as lifnr,
+       t1.name1 as name1,
+       t.zjlb as zjlb,
+       t.dxjlb as dxjlb,
+       t.jyy as jyy,
+       t3.EMPNAME as empname,
+       t.jyjl as jyjl,
+       t.jyrq as jyrq,
+       t.jyfs as jyfs,
+       t.matnr as matnr,
+       t2.maktx as maktx,
+       t.gyswlbh as gyswlbh,
+       t4.wtms as wtms,
+       t4.wtbw as wtbw,
+       t4.qxlx as qxlx,
+       t4.wtsx as wtsx,
+       t4.gzdj as gzdj,
+       t.text as text,
+       t.clyj as clyj,
+       t.statu as statu,
+       t.createtime as createtime,
+       t.createuserid as createuserid,
+       t.modifytime as modifytime,
+       t.modifyuserid as modifyuserid, 
+       t.jjs as jjs,
+       t.bhgs as bhgs
+   from genl_inspect_wxlljy_note t left join base_supply_lfa1 t1 on t.lifnr = t1.lifnr
+                                   left join base_material_mara t2 on t.matnr = t2.matnr
+                                   left join v_hjmes_genl_tgemployee t3 on t.jyy = t3.EMPCODE
+                                   left join (select t.wxllno,t.wtms,t.wtbw,t.gzdj,t1.FNAME as wtsx,t2.SNAME as qxlx from genl_inspect_wxlljy_detail t 
+                                              left join v_ser_fault_phenomenon t1 on t.wtsx = t1.FID
+                                              left join v_ser_fault_structure t2 on t.qxlx = t2.SID) t4
+                                   on t.wxllno = t4.wxllno
+     where t.statu is null
+     order by t.wxllno desc) k
+     group by k.wxllno,k.jjs,k.bhgs) p2 on p1.wxllno = p2.wxllno and p1.a =p2.b
+     where 1 = 1   
+      <isNotNull prepend = "and"  property = "werks"> 
+         p1.werks =  #werks# 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "djlx"> 
+         p1.djlx =  #djlx# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "djbh"> 
+         p1.djbh =  #djbh# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr"> 
+         p1.lifnr like '%' ||  #lifnr# || '%' 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+         p1.name1 like '%' ||  #name1# || '%' 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "zjlb"> 
+         p1.zjlb =  #zjlb# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "dxjlb"> 
+         p1.dxjlb =  #dxjlb# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyy"> 
+         p1.jyy =  #jyy# 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "jyjl"> 
+         p1.jyjl =  #jyjl# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+         p1.matnr in ($matnr$) 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "maktx"> 
+         p1.maktx like '%' ||  #maktx# || '%' 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "jystartdate"> 
+          to_char(p1.jyrq,'yyyy-MM-dd')  &gt;=  #jystartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyendate"> 
+          to_char(p1.jyrq,'yyyy-MM-dd')  &lt;=  #jyendate#
+     </isNotNull>
+     order by p1.wxllno desc,p1.a
+    </select>
+    <select id="queryinspectwglljynote" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select t.wgllno as "wgllno",
+       t.lifnr as "lifnr",
+       t1.name1 as "name1",
+       t.matnr as "matnr",
+       t2.maktx as "maktx",
+       t.jyff as "jyff",
+       t.pls as "pls",
+       t.cjs as "cjs",
+       t.bhgs as "bhgs",
+       t.clyj as "clyj",
+       t.jyy as "jyy",
+       t3.EMPNAME as "jyyname",
+       to_char(t.jyrq,'yyyy-MM-dd') as "jyrq",
+       t.xxms as "xxms",
+       t.gzxt as "gzxt",
+       t4.SNAME as "gzxtname",
+       t.gzjg as "gzjg",
+       t5.SNAME as "gzjgname",
+       t.gzxs as "gzxs",
+       t6.FNAME as "gzxsname",
+       t.werks as "werks",
+       t.createtime as "createtime",
+       t.createuserid as "createuserid",
+       t.modifytime as "modifytime",
+       t.modifyuserid as "modifyuserid",
+       nvl(t7.bhgx,0) as "bhgx"
+       from genl_inspect_wglljy_note t
+       left join base_supply_lfa1 t1 on t.lifnr = t1.lifnr
+       left join base_material_mara t2 on t.matnr = t2.matnr
+       left join v_hjmes_genl_tgemployee t3 on t.jyy = t3.EMPCODE
+       left join v_ser_fault_structure t4 on t.gzxt = t4.SID
+       left join v_ser_fault_structure t5 on t.gzjg = t5.SID
+       left join v_ser_fault_phenomenon t6 on t.gzxs = t6.FID
+       left join (select t.wgllno,count(*) as bhgx from genl_inspect_wglljy_detail t group by t.wgllno) t7 on t.wgllno = t7.wgllno
+     where t.statu is null
+     <isNotNull prepend = "and"  property = "wgllno"> 
+          t.wgllno like '%' ||  #wgllno# || '%' 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "werks"> 
+         t.werks =  #werks# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr"> 
+         t.lifnr like '%' ||  #lifnr# || '%' 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+         t1.name1 like '%' ||  #name1# || '%' 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyy"> 
+         t.jyy =  #jyy# 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "clyj"> 
+         t.clyj =  #clyj# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+         t.matnr in ($matnr$) 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "maktx"> 
+         t2.maktx like '%' ||  #maktx# || '%' 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "jystartdate"> 
+          to_char(t.jyrq,'yyyy-MM-dd')  &gt;=  #jystartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyendate"> 
+          to_char(t.jyrq,'yyyy-MM-dd')  &lt;=  #jyendate#
+     </isNotNull>
+     order by t.wgllno desc
+    </select>
+    <select id="queryinspectwglljynotedaochu" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select p1.wgllno as "wgllno",
+       p1.lifnr as "lifnr",
+       p1.name1 as "name1",
+       p1.matnr as "matnr",
+       p1.maktx as "maktx",
+       p1.jyff as "jyff",
+       p2.pls as "pls",
+       p2.cjs as "cjs",
+       p2.bhgs as "bhgs",
+       p1.clyj as "clyj",
+       p1.jyy as "jyy",
+       p1.jyyname as "jyyname",
+       to_char(p1.jyrq,'yyyy-MM-dd') as "jyrq",
+       p1.gzxt as "gzxt",
+       p1.gzxtname as "gzxtname",
+       p1.gzjg as "gzjg",
+       p1.gzjgname as "gzjgname",
+       p1.werks as "werks",
+       p1.createtime as "createtime",
+       p1.createuserid as "createuserid",
+       p1.modifytime as "modifytime",
+       p1.modifyuserid as "modifyuserid",
+       p1.gzxs as "gzxs",
+       p1.xxms as "xxms"
+        from (select rownum as a,t.wgllno as wgllno,
+       t.lifnr as lifnr,
+       t1.name1 as name1,
+       t.matnr as matnr,
+       t2.maktx as maktx,
+       t.jyff as jyff,
+       t.pls as pls,
+       t.cjs as cjs,
+       t.bhgs as bhgs,
+       t.clyj as clyj,
+       t.jyy as jyy,
+       t3.EMPNAME as jyyname,
+       t.jyrq as jyrq,
+       t.gzxt as gzxt,
+       t4.SNAME as gzxtname,
+       t.gzjg as gzjg,
+       t5.SNAME as gzjgname,
+       t.werks as werks,
+       t.createtime as createtime,
+       t.createuserid as createuserid,
+       t.modifytime as modifytime,
+       t.modifyuserid as modifyuserid,
+       t7.gzxs as gzxs,
+       t7.xxms as xxms
+       from genl_inspect_wglljy_note t
+       left join base_supply_lfa1 t1 on t.lifnr = t1.lifnr
+       left join base_material_mara t2 on t.matnr = t2.matnr
+       left join v_hjmes_genl_tgemployee t3 on t.jyy = t3.EMPCODE
+       left join v_ser_fault_structure t4 on t.gzxt = t4.SID
+       left join v_ser_fault_structure t5 on t.gzjg = t5.SID
+       left join (select k.wgllno,k1.FNAME as gzxs,k.xxms from genl_inspect_wglljy_detail k left join v_ser_fault_phenomenon k1
+                 on k.gzxs = k1.FID) t7 on t.wgllno = t7.wgllno
+     where t.statu is null
+         order by t.wgllno desc) p1 left join (select min(a) as b,d.wgllno,d.pls,d.cjs,d.bhgs from (select rownum as a,t.wgllno as wgllno,
+       t.lifnr as "lifnr",
+       t1.name1 as "name1",
+       t.matnr as "matnr",
+       t2.maktx as "maktx",
+       t.jyff as "jyff",
+       t.pls as pls,
+       t.cjs as cjs,
+       t.bhgs as bhgs,
+       t.clyj as "clyj",
+       t.jyy as "jyy",
+       t3.EMPNAME as "jyyname",
+       to_char(t.jyrq,'yyyy-MM-dd') as "jyrq",
+       t.gzxt as "gzxt",
+       t4.SNAME as "gzxtname",
+       t.gzjg as "gzjg",
+       t5.SNAME as "gzjgname",
+       t.werks as "werks",
+       t.createtime as "createtime",
+       t.createuserid as "createuserid",
+       t.modifytime as "modifytime",
+       t.modifyuserid as "modifyuserid",
+       t7.gzxs as "gzxs",
+       t7.xxms as "xxms"
+       from genl_inspect_wglljy_note t
+       left join base_supply_lfa1 t1 on t.lifnr = t1.lifnr
+       left join base_material_mara t2 on t.matnr = t2.matnr
+       left join v_hjmes_genl_tgemployee t3 on t.jyy = t3.EMPCODE
+       left join v_ser_fault_structure t4 on t.gzxt = t4.SID
+       left join v_ser_fault_structure t5 on t.gzjg = t5.SID
+       left join (select k.wgllno,k1.FNAME as gzxs,k.xxms from genl_inspect_wglljy_detail k left join v_ser_fault_phenomenon k1
+                 on k.gzxs = k1.FID) t7 on t.wgllno = t7.wgllno
+     where t.statu is null
+         order by t.wgllno desc) d
+         group by d.wgllno,d.pls,d.cjs,d.bhgs) p2 on p1.wgllno = p2.wgllno and p1.a =p2.b
+        where 1 =1 
+      <isNotNull prepend = "and"  property = "werks"> 
+         p1.werks =  #werks# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr"> 
+         p1.lifnr like '%' ||  #lifnr# || '%' 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+         p1.name1 like '%' ||  #name1# || '%' 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyy"> 
+         p1.jyy =  #jyy# 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "clyj"> 
+         p1.clyj =  #clyj# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+         p1.matnr in ($matnr$) 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "maktx"> 
+         p1.maktx like '%' ||  #maktx# || '%' 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "jystartdate"> 
+          to_char(p1.jyrq,'yyyy-MM-dd')  &gt;=  #jystartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyendate"> 
+          to_char(p1.jyrq,'yyyy-MM-dd')  &lt;=  #jyendate#
+     </isNotNull>
+      order by p1.wgllno desc,p1.a
+    </select>
+    <select id="querystorematnr" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select t.matnr as "matnr",t.maktx as "maktx",t1.dxjlb as "dxjlb" from base_material_mara t
+left join 
+(select k1.matnr,k2.dxjlb from (select matnr,max(modifytime) as modifytime from genl_inspect_wxlljy_note 
+group by matnr) k1,genl_inspect_wxlljy_note k2 where k1.modifytime=k2.modifytime and k1.matnr =k2.matnr  ) t1 
+on t.matnr = t1.matnr where t.matnr = #matnr#
+    </select>
+    <select id="querystorematnrgzxt" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+             select t.matnr as "matnr",t.maktx as "maktx",t1.gzxt as "gzxt",t1.gzjg as "gzjg" from base_material_mara t
+left join 
+(select t1.matnr,t2.gzxt,t2.gzjg from (select t.matnr,max(t.createtime) as createtime from v_wgsbjl t 
+group by matnr) t1,v_wgsbjl t2 where t1.matnr = t2.matnr and t1.createtime = t2.createtime) t1 on t.matnr =t1.matnr
+where  t.matnr = #matnr#
+    </select>
+    <select id="querystorelifnr" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select distinct t.matnr,t2.lifnr as "lifnr",t2.name1 as "name1" from genl_purchase_ekpo t left join (select a.ebeln,a.lifnr,b.name1 from 
+             genl_purchase_ekko a,base_supply_lfa1 b where a.lifnr = b.lifnr )t2 on t.ebeln = t2.ebeln 
+             where t.matnr = #matnr#
+               and t.loekz is null
+    </select>
+    <select id="querystorezjlb" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    select t.zjlb as "zjlb" from genl_inspect_lbwh t where t.matnr = #matnr# and t.lifnr = #lifnr#
+    </select>
+    <select id="querywggzxtstore" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   select t.SID as "sid",t.SNAME as "sname" from v_ser_fault_structure t where t.SLEVEL = '1' and sid &lt; &gt; 10
+    </select>
+      <select id="querywggzjgstore" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    select t.SID as "sid",t.SNAME as "sname" from v_ser_fault_structure t where 1 = 1 
+      <isNotNull prepend = "and"  property = "psid"> 
+        t.PSID = #psid# 
+     </isNotNull>
+    </select>
+     <select id="querystoreqjlx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   select t.SID as "sid",t.SNAME as "sname" from v_ser_fault_structure t where t.PSID = '10'
+    </select>
+     <select id="querystorewtsx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   select t.FID as "fid", t.FNAME as "fname",t.SID as "sid" from v_ser_fault_phenomenon t
+   where 1 =1 
+      <isNotNull prepend = "and"  property = "sid"> 
+         t.sid =  #sid# 
+     </isNotNull>
+     </select>
+      <select id="querystoregzxspx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select t1.fid as "fid",t1.fname as "fname",t2.sl as "sl",t1.sid as "sid" from (select t.FID,t.FNAME,t.SID  from v_ser_fault_phenomenon t where t.SID = #sid#) t1 
+left join (select t.gzxs,count(*) as sl  from v_wgsbjl t where t.gzjg = #sid# and t.matnr = #matnr#
+group by t.gzxs) t2 on t1.FID = t2.gzxs
+order by nvl(t2.sl,0) desc
+    </select>
+     <select id="loadinspectwxlljydetail" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select t.pkid as "pkid",
+       t.wxllno as "wxllno",
+       t.wtms as "wtms",
+       t.wtbw as "wtbw",
+       t.qxlx as "qxlx",
+       t.wtsx as "wtsx",
+       t.qxlxname as "qxlxname",
+       t.wtsxname as "wtsxname",
+       t.gzdj as "gzdj",t1.FNAME as "fname",t2.SNAME as "sname" from genl_inspect_wxlljy_detail t 
+left join v_ser_fault_phenomenon t1 on t.wtsx = t1.FID
+left join v_ser_fault_structure t2 on t.qxlx = t2.SID
+       where t.wxllno = #wxllno#
+    </select>
+         <select id="loadinspectwglljydetail" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select t.pkid as "pkid",
+       t.wgllno as "wxllno",
+       t.gzxs as "gzxs",
+       t.xxms as "xxms",     
+       t.gzxsname as "gzxsname",
+       t1.FNAME as "fname" from genl_inspect_wglljy_detail t 
+left join v_ser_fault_phenomenon t1 on t.gzxs = t1.FID
+       where t.wgllno = #wgllno#
+    </select>
+        <select id="queryinspectsbtknote" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select t.sbtkno as "sbtkno",
+       t.tkdh as "tkdh",
+       t.lifnr as "lifnr",
+       t1.name1 as "name1",
+       t.matnr as "matnr",
+       t2.maktx as "maktx",
+       t.jyy as "jyy",
+       t3.EMPNAME as "jyyname",
+       to_char(t.jyrq,'yyyy-MM-dd') as "jyrq",
+       t.tksl as "tksl",
+       t.gzxt as "gzxt",
+       t4.SNAME as "gzxtname",
+       t.gzjg as "gzjg",
+       t5.SNAME as "gzjgname",
+       t.gzxs as "gzxs",
+       t6.FNAME as "gzxsname",
+       t.clyj as "clyj",
+       t.tkyy as "tkyy",
+       t.statu as "statu",
+       t.werks as "werks",
+       t.createtime as "createtime",
+       t.createuserid as "createuserid",
+       t.modifytime as "modifytime",
+       t.modifyuserid as "modifyuserid",
+       t.zatwrt as "zatwrt" 
+  from genl_inspect_sbtk_note t
+       left join base_supply_lfa1 t1 on t.lifnr = t1.lifnr
+       left join base_material_mara t2 on t.matnr = t2.matnr
+       left join v_hjmes_genl_tgemployee t3 on t.jyy = t3.EMPCODE
+       left join v_ser_fault_structure t4 on t.gzxt = t4.SID
+       left join v_ser_fault_structure t5 on t.gzjg = t5.SID
+       left join v_ser_fault_phenomenon t6 on t.gzxs = t6.FID
+  where t.statu is null
+      <isNotNull prepend = "and"  property = "werks"> 
+         t.werks =  #werks# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "tkdh"> 
+         t.tkdh =  #tkdh# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr"> 
+         t.lifnr like '%' ||  #lifnr# || '%' 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+         t1.name1 like '%' ||  #name1# || '%' 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyy"> 
+         t.jyy =  #jyy# 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "clyj"> 
+         t.clyj =  #clyj# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+         t.matnr in ($matnr$) 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "maktx"> 
+         t2.maktx like '%' ||  #maktx# || '%' 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "jystartdate"> 
+          to_char(t.jyrq,'yyyy-MM-dd')  &gt;=  #jystartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "jyendate"> 
+          to_char(t.jyrq,'yyyy-MM-dd')  &lt;=  #jyendate#
+     </isNotNull>
+     order by t.sbtkno desc
+    </select>
+    <select id="querysbtkjyzatwrt" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select * from v_ordermanage_batchbaseinfo t where t.ZATWRT = #zatwrt#
+    </select>
+</sqlMap>

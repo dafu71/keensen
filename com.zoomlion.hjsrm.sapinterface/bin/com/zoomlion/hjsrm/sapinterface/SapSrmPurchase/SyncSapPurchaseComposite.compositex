@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eos:compositeDiagram xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:eos="http://www.primeton.com/component/core/6.0" name="SyncSapPurchaseComposite" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" author="HP" createdDate="2014-12-04 11:49:50" displayName="SyncSapPurchaseComposite">
+  <nodes xsi:type="eos:PromotedService" id="node0" name="SyncSapPurchaseService" displayName="SyncSapPurchaseService">
+    <location x="50" y="50"/>
+    <size height="31" width="80"/>
+    <eos:binding xsi:type="eos:WebServiceBinding"/>
+  </nodes>
+  <nodes xsi:type="eos:BizComponent" id="Component0" name="SyncSapPurchaseComponent" nodeType="table" author="HP" createdDate="2014-12-04 11:49:50" displayName="SyncSapPurchaseComponent">
+    <location x="200" y="100"/>
+    <size height="80" width="140"/>
+    <eos:implementation.eos.biz name="com.zoomlion.hjsrm.sapinterface.SapSrmPurchase.SyncSapPurchase"/>
+    <eos:service displayName="SyncSapPurchaseService" name="SyncSapPurchaseService">
+      <eos:interface.wsdl path="com/zoomlion/hjsrm/sapinterface/SapSrmPurchase/SyncSapPurchase.wsdl#SyncSapPurchaseService"/>
+    </eos:service>
+  </nodes>
+  <eos:promote source="#//@compositeDiagram/@nodes.1/@service.0" target="#node0"/>
+</eos:compositeDiagram>

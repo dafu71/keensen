@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.kcgl.BaseMaterialComponent" table="BASE_MATERIAL_COMPONENT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="matnr" type="string">
+                <column length="18" name="MATNR"/>
+            </key-property>
+            <key-property name="pmatnr" type="string">
+                <column length="18" name="PMATNR"/>
+            </key-property>
+        </composite-id>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifybyname" type="string">
+            <column length="20" name="MODIFYBYNAME"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="100" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.kcgl.BaseMaterialSupplier" table="BASE_MATERIAL_SUPPLIER">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="matnr" type="string">
+                <column length="18" name="MATNR"/>
+            </key-property>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+        </composite-id>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifybyname" type="string">
+            <column length="20" name="MODIFYBYNAME"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="100" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.kcgl.BaseMaterialWhole" table="BASE_MATERIAL_WHOLE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="matnr" type="string">
+            <column length="18" name="MATNR"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="zcpcx" type="string">
+            <column length="40" name="ZCPCX"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifybyname" type="string">
+            <column length="20" name="MODIFYBYNAME"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="100" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.kcgl.GenlPurchasePlanHead" table="GENL_PURCHASE_PLAN_HEAD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="20" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="title" type="string">
+            <column length="50" name="TITLE" not-null="true"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="20" name="CREATEBY"/>
+        </property>
+        <property name="createbyname" type="string">
+            <column length="50" name="CREATEBYNAME"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifybyname" type="string">
+            <column length="50" name="MODIFYBYNAME"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="confirm" type="string">
+            <column default="'N'" length="10" name="CONFIRM"/>
+        </property>
+        <property name="archive" type="string">
+            <column default="'N'" length="20" name="ARCHIVE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="10" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.kcgl.GenlPurchasePlanOpt" table="GENL_PURCHASE_PLAN_OPT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="20" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createby" type="string">
+            <column length="20" name="CREATEBY"/>
+        </property>
+        <property name="createbyname" type="string">
+            <column length="50" name="CREATEBYNAME"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifybyname" type="string">
+            <column length="50" name="MODIFYBYNAME"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+        <property name="content" type="string">
+            <column length="500" name="CONTENT"/>
+        </property>
+        <property name="relationid" type="string">
+            <column length="20" name="RELATIONID"/>
+        </property>
+        <property name="opt" type="string">
+            <column length="10" name="OPT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.kcgl.GenlPurchasePlanList" table="GENL_PURCHASE_PLAN_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="20" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createby" type="string">
+            <column length="20" name="CREATEBY"/>
+        </property>
+        <property name="createbyname" type="string">
+            <column length="50" name="CREATEBYNAME"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifybyname" type="string">
+            <column length="50" name="MODIFYBYNAME"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+        <property name="pmatnr" type="string">
+            <column length="18" name="PMATNR"/>
+        </property>
+        <property name="zcpcx" type="string">
+            <column length="40" name="ZCPCX"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="18" name="MATNR"/>
+        </property>
+        <property name="maktx" type="string">
+            <column length="100" name="MAKTX"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="name1" type="string">
+            <column length="100" name="NAME1"/>
+        </property>
+        <property name="stock" type="long">
+            <column default="0&#10;" length="22" name="STOCK"/>
+        </property>
+        <property name="carno" type="string">
+            <column length="100" name="CARNO"/>
+        </property>
+        <property name="underamount" type="long">
+            <column default="0&#10;" length="22" name="UNDERAMOUNT"/>
+        </property>
+        <property name="date1" type="string">
+            <column length="20" name="DATE1"/>
+        </property>
+        <property name="plan1" type="long">
+            <column default="0&#10;" length="22" name="PLAN1"/>
+        </property>
+        <property name="answer1" type="long">
+            <column default="0&#10;" length="22" name="ANSWER1"/>
+        </property>
+        <property name="date2" type="string">
+            <column length="20" name="DATE2"/>
+        </property>
+        <property name="plan2" type="long">
+            <column default="0&#10;" length="22" name="PLAN2"/>
+        </property>
+        <property name="answer2" type="long">
+            <column default="0&#10;" length="22" name="ANSWER2"/>
+        </property>
+        <property name="date3" type="string">
+            <column length="20" name="DATE3"/>
+        </property>
+        <property name="plan3" type="long">
+            <column default="0&#10;" length="22" name="PLAN3"/>
+        </property>
+        <property name="answer3" type="long">
+            <column default="0&#10;" length="22" name="ANSWER3"/>
+        </property>
+        <property name="date4" type="string">
+            <column length="20" name="DATE4"/>
+        </property>
+        <property name="plan4" type="long">
+            <column default="0&#10;" length="22" name="PLAN4"/>
+        </property>
+        <property name="answer4" type="long">
+            <column default="0&#10;" length="22" name="ANSWER4"/>
+        </property>
+        <property name="date5" type="string">
+            <column length="20" name="DATE5"/>
+        </property>
+        <property name="plan5" type="long">
+            <column default="0&#10;" length="22" name="PLAN5"/>
+        </property>
+        <property name="answer5" type="long">
+            <column default="0&#10;" length="22" name="ANSWER5"/>
+        </property>
+        <property name="date6" type="string">
+            <column length="20" name="DATE6"/>
+        </property>
+        <property name="plan6" type="long">
+            <column default="0&#10;" length="22" name="PLAN6"/>
+        </property>
+        <property name="answer6" type="long">
+            <column default="0&#10;" length="22" name="ANSWER6"/>
+        </property>
+        <property name="date7" type="string">
+            <column length="20" name="DATE7"/>
+        </property>
+        <property name="plan7" type="long">
+            <column default="0&#10;" length="22" name="PLAN7"/>
+        </property>
+        <property name="answer7" type="long">
+            <column default="0&#10;" length="22" name="ANSWER7"/>
+        </property>
+        <property name="date8" type="string">
+            <column length="20" name="DATE8"/>
+        </property>
+        <property name="plan8" type="long">
+            <column default="0&#10;" length="22" name="PLAN8"/>
+        </property>
+        <property name="answer8" type="long">
+            <column default="0&#10;" length="22" name="ANSWER8"/>
+        </property>
+        <property name="date9" type="string">
+            <column length="20" name="DATE9"/>
+        </property>
+        <property name="plan9" type="long">
+            <column default="0&#10;" length="22" name="PLAN9"/>
+        </property>
+        <property name="answer9" type="long">
+            <column default="0&#10;" length="22" name="ANSWER9"/>
+        </property>
+        <property name="date10" type="string">
+            <column length="20" name="DATE10"/>
+        </property>
+        <property name="plan10" type="long">
+            <column default="0&#10;" length="22" name="PLAN10"/>
+        </property>
+        <property name="answer10" type="long">
+            <column default="0&#10;" length="22" name="ANSWER10"/>
+        </property>
+        <property name="relationid" type="string">
+            <column length="20" name="RELATIONID" not-null="true"/>
+        </property>
+        <property name="plansum" type="long">
+            <column default="0&#10;" length="22" name="PLANSUM"/>
+        </property>
+        <property name="line" type="string">
+            <column length="50" name="LINE"/>
+        </property>
+    </class>
+</hibernate-mapping>

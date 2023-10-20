@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <!-- 查询工厂--> 
+    <select id="queryBaseFactory"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select t.werks "werks", t.name1 "name1"  from 
+    	base_company_factory tt 
+    	left join
+    	base_factory_t001w t
+    	on tt.werks = t.werks
+    	where 1=1
+    	<isNotNull prepend="and"  property="bukrs">
+				tt.bukrs = #bukrs#
+		</isNotNull>
+    </select>
+    <select id="queryBaseEkorg"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select ekorg as "ekorg" ,ekotx as "ekotx" from base_purchase_t024e 
+    </select>
+    <select id="queryLbjjjy"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    select  ee.empid as "empid",    
+      ee.empcode as "empcode",     
+      ee.empname||'('||ee.empcode||')' as "empname"
+    from v_hjmes_genl_tgemployee ee 
+      left join v_hjmes_genl_tgemporg eo on ee.empid=eo.empid 
+      where ee.EMPSTATUS='on'
+     and eo.orgid in (
+     select orgid from v_hjmes_genl_tgorganization start with orgid = '70000182'
+    connect by prior orgid = parentorgid) 
+    </select>
+     <select id="queryBaseEkgrp"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select ekgrp as "ekgrp" , eknam as "eknam" from base_purchase_t024 
+    </select>
+     <select id="querycplxcombo"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select t.flmc "flmc",t.hbdm "hbdm" from genl_cpflpz_list t where 1 = 1
+    	<isNotNull prepend="and"  property="hbdm">
+				t.sjid = (select t.id from genl_cpflpz_list t where t.hbdm = #hbdm#)
+			</isNotNull>
+    	<isNotNull prepend="and"  property="ssdj">
+				t.ssdj = #ssdj#
+			</isNotNull>
+    </select>
+    <!--根据角色和机构查询参与者 -->   
+<select id="queryParticipantsByRoleAndOrg3" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select distinct o.operatorid as "operatorid", o.userid as "userid", o.operatorname as "operatorname", nvl(org.orgname,'系统级')  as "orgname" ,
+         a.orgnames as "orgnames",
+         (case when userid in ($alluserid$)
+           then  1 else 0 end) as "flag"
+          from v_ac_operator_trs o  
+          left join v_om_organization_trs org on org.orgid=o.dataorgid
+          left join v_om_emporgname_trs a
+                on a.empid = o.empid,
+          (select * from t_ac_operatorrole t
+           where exists(
+           select roleid from t_ac_roleres where resid='702060000' and t.roleid=roleid)) b 
+           where o.operatorid = b.operatorid
+           and o.status = '0' 
+			 <isNotNull prepend="and"  property="userid">
+				o.userid = #userid#
+			</isNotNull>
+			 <isNotNull prepend="and"  property="operatorname">
+				o.operatorname like '%'||#operatorname#||'%'
+			</isNotNull>
+			 <isNotNull prepend="and"  property="orgnames">
+				a.orgnames like '%'||#orgnames#||'%'
+			</isNotNull>
+			 <isNotNull prepend="and"  property="orgid">
+				a.orgids = #orgid#
+			</isNotNull>
+			<isNotNull prepend="and"  property="orgname">
+				org.orgname = #orgname#
+			</isNotNull>	
+</select>
+
+  <!--根据角色查询参与者2 -->   
+   <select id="queryParticipantsByRoleAndOrg2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	  select k.operatorid as "operatorid",
+        k.userid as "userid",
+        k.operatorname as "operatorname",
+        nvl(k.orgname,'系统级') as "orgname",
+        k.orgnames as "orgnames",
+        k.status sd ,
+         (case when k.userid in ($alluserid$)
+           then  1 else 0 end) as "flag"
+ from v_ac_operatorrole_trs t left join (select  o.status,o.empid ,o.operatorid , o.userid , o.operatorname , org.orgname ,
+         a.orgnames 
+          from v_ac_operator_trs o  
+          left join v_om_organization_trs org on org.orgid=o.dataorgid
+          left join v_om_emporgname_trs a
+                on a.empid = o.empid 
+           where 1=1
+           <isNotNull prepend="and"  property="userid">
+				o.userid = #userid#
+			</isNotNull>
+			 <isNotNull prepend="and"  property="operatorname">
+				o.operatorname like '%'||#operatorname#||'%'
+			</isNotNull>
+			 <isNotNull prepend="and"  property="orgnames">
+				a.orgnames like '%'||#orgnames#||'%'
+			</isNotNull>
+			 <isNotNull prepend="and"  property="orgid">
+				a.orgids = #orgid#
+			</isNotNull>
+			<isNotNull prepend="and"  property="orgname">
+				org.orgname = #orgname#
+			</isNotNull>	) k on t.empid =  k.empid
+      where k.status = '0'
+       <isNotNull prepend="and"  property="rolecode">
+				t.rolecode = #rolecode#
+			</isNotNull>
+</select>
+
+<!--根据机构查询参与者 -->   
+<select id="queryParticipantsByOrg" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmEmpoperroleorg">
+    select distinct t.operatorid as "operatorid",t.userid as "userid",t.operatorname as "operatorname",
+           t.orgid as "orgid",t.orgcode as "orgcode",t.orgname as "orgname" ,t.mobileno as "mobileno"
+           from v_om_empoperroleorg_trs t where t.empstatus='on' and t.operatorid is not null
+			<isNotNull prepend="and"  property="orgcode">
+				t.orgcode = #orgcode#
+			</isNotNull>
+			 <isNotNull prepend="and"  property="userid">
+				t.userid = #userid#
+			</isNotNull>
+			 <isNotNull prepend="and"  property="operatorname">
+				t.operatorname like '%'||#operatorname#||'%'
+			</isNotNull>
+</select>
+
+<!-- 查询公司--> 
+    <select id="queryBaseCompany"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select t.bukrs "bukrs", t.butxt "butxt" from 
+    	(select distinct bukrs from base_company_factory) tt 
+    	left join
+    	base_company_t001 t
+    	on tt.bukrs = t.bukrs    	
+    </select>
+    
+    <!-- 查询版本号--> 
+    <select id="queryZvern"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select distinct substr(zvern,1,10) "zvern" from genl_reserve_data_version t
+      order by substr(zvern,1,10) desc
+    </select>
+     <!--根据角色和机构查询参与者 -->   
+<select id="queryParticipantsByRoleAndOrg" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmEmpoperroleorg">
+    select t.operatorid as "operatorid",t.userid as "userid",t.operatorname as "operatorname",
+           t.roleid as "roleid",t.rolecode as "rolecode",t.rolename as "rolename",
+           t.orgid as "orgid",t.orgcode as "orgcode",t.orgname as "orgname" ,t.mobileno as "mobileno"
+           from v_om_empoperroleorg_trs t where t.empstatus='on' and t.operatorid is not null
+           <isNotNull prepend="and"  property="rolecode">
+				t.rolecode = #rolecode#
+			</isNotNull>
+			 <isNotNull prepend="and"  property="userid">
+				t.userid = #userid#
+			</isNotNull>
+			 <isNotNull prepend="and"  property="operatorname">
+				t.operatorname like '%'||#operatorname#||'%'
+			</isNotNull>
+			<isNotNull prepend="and"  property="orgcode">
+				t.orgcode = #orgcode#
+			</isNotNull>
+</select>
+
+<!--根据角色查询参与者 -->   
+<select id="queryParticipantsByRole" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmEmpoperroleorg">
+   select t.operatorid as "operatorid",t.userid as "userid",t.operatorname as "operatorname",
+           t.roleid as "roleid",t.rolecode as "rolecode",t.rolename as "rolename" ,
+           t2.orgid as "orgid",t2.orgcode as "orgcode",t2.orgname as "orgname",
+           e.mobileno as "mobileno"
+           from v_ac_operatorrole_trs t left join v_om_employee_trs e on e.empid = t.empid
+           left join v_om_organization_trs t2 on t2.orgid = e.mainorgid where 1=1
+           <isNotNull prepend="and"  property="rolecode">
+				t.rolecode = #rolecode#
+			</isNotNull>
+			<isNotNull prepend="and"  property="userid">
+				t.userid = #userid#
+			</isNotNull>
+			 <isNotNull prepend="and"  property="operatorname">
+				t.operatorname like '%'||#operatorname#||'%'
+			</isNotNull>
+	
+</select>
+<!-- 查询车型名称--> 
+    <select id="querycxmcCombo"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select distinct a.zcpcx as "zcpcx" from eos62.biz_product_material a 
+          where  a.zcpcx not in (select b.cxmc from GENL_VEGICLE_LIST b where b.statu is null)
+             <isNotNull prepend="and"  property="zcpcx">
+				a.zcpcx like '%'|| #zcpcx# ||'%'
+			</isNotNull>
+    </select>
+<!-- 查询车型名称和车型代码--> 
+    <select id="querydjqdCombo"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select t.cxdm as "cxdm",t.cxmc as "cxmc" from genl_vegicle_list t
+    	where t.statu is null
+             <isNotNull prepend="and"  property="cxmc">
+				t.cxmc like '%'|| #cxmc# ||'%'
+			</isNotNull>
+    </select>
+<!-- 查询物料编码（查一个少一个）--> 
+    <select id="querymatnrCombo"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select t.matnr as "matnr",t.maktx as "maktx" from base_material_mara t
+        where  t.matnr not in (select b.matnr from GENL_RESERVE_LIST b)
+             <isNotNull prepend="and"  property="matnr">
+				t.matnr = #matnr#
+			</isNotNull>
+			 <isNotNull prepend="and"  property="maktx">
+				t.maktx like '%'|| #maktx# || '%'
+			</isNotNull>
+    </select> 
+<!-- 查询物料编码（全部）--> 
+    <select id="querymatnrallCombo"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select t.matnr as "matnr",t.maktx as "maktx" from base_material_mara t
+        where  1 =1
+             <isNotNull prepend="and"  property="matnr">
+				t.matnr = #matnr#
+			</isNotNull>
+			 <isNotNull prepend="and"  property="maktx">
+				t.maktx like '%'|| #maktx# || '%'
+			</isNotNull>
+    </select> 
+<!-- 查询供应商编码（全部）--> 
+    <select id="querylifnrallCombo"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select t.lifnr as "lifnr",t.name1 as "name1" from base_supply_lfa1 t
+        where  1 =1
+             <isNotNull prepend="and"  property="lifnr">
+				t.lifnr like '%'|| #lifnr# || '%'
+			</isNotNull>
+			 <isNotNull prepend="and"  property="name1">
+				t.name1 like '%'|| #name1# || '%'
+			</isNotNull>
+    </select> 
+<!--查询机构名称和ID -->   
+<select id="queryEmpnewCombo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select a.orgid as "orgid", a.orgname as "orgname", (case when a.orgid in ($alluserid$)
+           then  1 else 0 end) as "flag"  from 
+      (select * from v_om_organization_trs  org
+        start with org.orgid=#orgid#
+        connect by  org.parentorgid=prior org.orgid ) a 
+        left join t_om_organization b on a.parentorgid = b.orgid
+        left join t_om_organization c on a.dataorgid = c.orgid
+         where  a.delflag = 'n' 
+			 and a.orgtype = '2' 
+			 and a.status ='running'
+			 <isNotNull prepend="and"  property="orgname">
+				a.orgname like '%'||#orgname#||'%'
+			</isNotNull>
+</select>			
+<!-- 查询产品树 -->			
+<select id="queryProductTree" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	
+	select listid "listid", 
+	parentid "parentid", 
+	text "text", 
+	typename "typename", 
+	self_id "self_id" from v_product_tree t
+	where 1=1
+	<isNotNull property="parentid">
+		and parentid = #parentid#
+	</isNotNull>
+	<isNotNull property="typename">
+		and typename = #typename#
+	</isNotNull>
+	order by myorder
+
+</select>
+
+<!-- 查询产品树 -->		
+<!-- 通过产品编号查询 -->		
+<select id="queryProductTree2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	<!--
+	select matnr "listid", #parentid# "parentid",maktx "text", 'matnr' "typename", matnr "self_id" from
+(select m.* from eos62.v_producttree_1 m
+where m.zeinr='整机'
+and m.matnr like 
+(select matnr from eos62.v_producttree_2 t where t.product_no=#text#)
+or
+m.matnr like 'P' || (select matnr from eos62.v_producttree_2 t where t.product_no=#text#))
+-->
+select materialno "listid",productno "parentid",materialno || '|' || text "text",'matnr' "typename",materialno "self_id" from
+eos62.v_bom_ump_material
+where productno = #text#
+</select>
+
+<!-- 查询产品树 -->		
+<!-- 通过父物料编号查询 -->		
+<select id="queryProductTree3" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+
+select child_code "listid",parent_code "parentid",child_code || '|' || text "text",'matnr' "typename",child_code "self_id" from
+eos62.v_tc_tsi_bom
+where parent_code = #parentid#
+</select>
+
+<!--查询车型代号-->
+    <select id="queryProductNo"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	  select productno  "productno",
+		materialno  "materialno",
+		text  "text"
+		from eos62.v_bom_ump_material t
+		where 1=1
+		<isNotNull  property = "productno"> 
+		and productno like '%' || #productno# || '%'
+		</isNotNull>
+    </select>
+
+<!--根节点-->    
+ <select id="queryProductTree4" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+select materialno "listid",productno "parentid",materialno || '|' || text "text",'matnr' "typename",materialno "self_id" from
+eos62.v_bom_ump_material
+where materialno = #text#
+</select>   
+</sqlMap>

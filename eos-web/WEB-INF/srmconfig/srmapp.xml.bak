@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+/*******************************************************************************
+ * 
+ * 版权所有： 港华科技（武汉）有限公司
+ * 
+ * 描 述：TCIS配置文件
+ * 
+ * 创建日期： 2014-8-8
+ * 
+ * 补丁编号：G3_P_20140915_01_334
+ * 
+ * 作 者： 甘丽
+ * 
+ ******************************************************************************/
+
+// ==============================修改历史===========================
+// 补丁编号 修改人 日期 归属 备注
+// G3_P_20140915_01_334 甘丽     2014-09-23  集团  增加接口webservice的配置
+// =================================================================
+ --> 
+<application xmlns="http://www.primeton.com/xmlns/eos/1.0">
+	<module name="tcis3log">
+		<group name="custom">
+			<configValue key="gloabflag">true</configValue>
+			<!--gloabflag=true表示使用全局日志配置(log4j-custom.xml)，否则使用各自构件包日志配置(log4j-contribution.xml)-->
+		</group>
+	</module>
+	
+	<module name="tics3fileman">
+		<group name="uploadpath_config">
+			<configValue key="upload_path">C:/upload2</configValue>
+		</group>
+		<group name="opertype_config">
+			<!--opertype:simple or ftp-->
+			<configValue key="opertype">ftp</configValue>
+		</group>
+		<group name="ftp">
+			<configValue key="server">10.100.40.17</configValue>
+			<configValue key="port">21</configValue>
+			<configValue key="username">eos6</configValue>
+			<configValue key="password">eos6</configValue>
+			<configValue key="homepath">CBJCATCH</configValue>
+			<configValue key="workdir">dbffilles</configValue>
+		</group>
+	</module>
+	<!-- 模拟abframe项目配置 -->
+	<module name="tcisframe-config">
+        <!-- 
+            文件上传路径 
+		-->
+        <group name="uploadfile-config">
+            <configValue key="defaultDirPath">D:\files</configValue>
+        </group>
+
+    </module>
+    <!-- 邮件发送配置 -->
+    <module name="mail-config">
+    	<!-- SRM系统邮箱 -->
+        <!-- 
+             from:发件人地址
+             smtpHost:smtp地址
+             smtpPort:smtp端口
+             userName:邮箱用户名
+             password:邮箱密码
+		-->
+        <group name="mail">
+            <configValue key="from">admin@zoomlion.com</configValue>
+            <configValue key="smtpHost">mail.zoomlion.com</configValue>
+            <configValue key="smtpPort">25</configValue>
+            <configValue key="userName">linfeng</configValue>
+            <configValue key="password">linfeng</configValue>
+        </group>
+    </module>
+    
+    <!-- 工程系统接口配置 -->
+    <module name="projectwebservice-config">
+        <!-- 
+			isprojectinterface:			是否调用工程接口	0否 1是
+			webservice_url:				webservice地址
+			webservice_operationname:	webservice接口名称
+            projectuser_dataorgid:		工程用户数据归属
+            projectuser_id:				工程用户id
+		-->
+        <group name="projectwebservice">
+            <configValue key="isprojectinterface">0</configValue>
+            <configValue key="webservice_url">http://10.10.8.176:8080/nfsgas/services/TciWebService</configValue>
+            <configValue key="webservice_operationname">saveIndBooking</configValue>
+            <configValue key="projectuser_dataorgid">42</configValue>
+            <configValue key="projectuser_id">FRGAS</configValue>
+        </group>
+    </module>
+    
+    <!-- 远程抄表系统接口配置 webservice_type只能是java或者net-->
+    <module name="remoteMeterwebservice-config">
+    	<!-- remoteMeterwebservice1 
+	    <group name="remoteMeterwebservice1">
+	        <configValue key="webservice_url">http://222.210.108.226:8091/QJBSTCISWebServer/services/QJTCISServer</configValue>
+	        <configValue key="remoteMeter_dataorgid">42</configValue>
+	        <configValue key="serviceuser_id">FRGAS</configValue>
+	    </group>
+	    千嘉远程抄表系统 -->
+	    <!-- remoteMeterwebservice2
+	    <group name="remoteMeterwebservice2">
+	        <configValue key="webservice_url">http://210.16.186.231:8090/fRwebInf</configValue>
+	        <configValue key="remoteMeter_dataorgid">42</configValue>
+	        <configValue key="serviceuser_id">FRGAS</configValue>
+	    </group>
+	     威星远程抄表系统 -->
+	    <!--remoteMeterwebservice3 
+	    <group name="remoteMeterwebservice3">
+	        <configValue key="webservice_url">http://10.10.8.77/ay/SrmWSToAY.asmx</configValue>
+	        <configValue key="remoteMeter_dataorgid">42</configValue>
+	        <configValue key="serviceuser_id">FRGAS</configValue>
+	    </group>
+	    安业远程抄表系统-->
+    </module>
+</application>

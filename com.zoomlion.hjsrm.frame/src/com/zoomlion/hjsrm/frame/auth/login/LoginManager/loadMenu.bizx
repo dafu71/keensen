@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="loadMenu.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="根据操作员ID加载统一客户视图菜单" title="陈今伟&#x9;13-2-5 上午11:46">
+    <location x="87" y="180"/>
+    <size height="106" width="184"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>invokeSpring2</targetNode>
+    </sourceConnections>
+    <location x="60" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
+    <targetConnections>link1</targetConnections>
+    <location x="356" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="commonj.sdo.DataObject[]" name="menus" type="query" valueType="Java">menus</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="62" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="358" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeSpring2" name="加载统一客户视图菜单" displayName="loadMenu" nodeType="common" type="invoke" index="0" invokeType="invoke_spring" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeSpring2</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="208" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>invokeSpring2label</nodeLabel>
+    <process:spring methodType="beanID" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zoomlion.hjsrm.frame.auth.login.LoginBean.loadMenu</process:partner>
+      <process:instance instanceName="loginBean"/>
+    </process:spring>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="parentresid" type="query" value="int" valueType="Java" pattern="reference">parentresid</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out" type="query" value="commonj.sdo.DataObject[]" valueType="Java">menus</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeSpring2label" name="label" nodeType="label">
+    <location x="162" y="96"/>
+    <figSize height="17" width="121"/>
+    <node>invokeSpring2</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="Administrator" createTime="2011-11-22 10:25:29" date="2011-11-22Z" description="加载操作员对应的菜单&#xD;&#xA;" name="loadMenu" version="6.3"/>
+  <process:variables/>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="false" name="parentresid" primitiveType="Int"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output anyType="commonj.sdo.DataObject" description="" isArray="true" name="menus"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

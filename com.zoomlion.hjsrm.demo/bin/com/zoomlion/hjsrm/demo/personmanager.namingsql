@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.demo.personmanager">
+    <!-- 依据人员状态Id查询人员信息(和对应操作员) -->
+    <select id="queryPersonList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	 		select ee.status_id as "statusId",    
+			ee.user_id as "userId",     
+			ee.user_name as "userName",      
+			ee.operator_status as "operatorStatus",		    
+			to_char(ee.begintime,'yyyy/mm/dd') as "begintime",		  
+			to_char(ee.endtime,'yyyy/mm/dd') as "endtime",		
+			ee.worktype as "worktype"
+			from ser_person_status ee
+		<dynamic prepend="and">
+            <isNotNull prepend="and" property="statusId">ee.status_id =#statusId#</isNotNull>
+        </dynamic>
+    </select>
+    <!-- 查询机构下的人员,用于机构管理下查询人员信息 -->
+    <select id="queryPersonByAll" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select ee.status_id as "statusId",    
+			ee.user_id as "userId",     
+			ee.user_name as "userName",      
+			ee.operator_status as "operatorStatus",		    
+			to_char(ee.begintime,'yyyy/mm/dd') as "begintime",		  
+			to_char(ee.endtime,'yyyy/mm/dd') as "endtime",		
+			ee.worktype as "worktype"
+			from ser_person_status ee
+	   where 1=1
+		<isNotNull prepend="and" property="operatorStatus">ee.operator_status=#operatorStatus#</isNotNull>
+        <isNotNull prepend="and" property="userName">ee.user_name like '%'||#userName#||'%'</isNotNull>
+    </select>
+</sqlMap>

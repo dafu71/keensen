@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.Vwarehourse">
+        <config db="default" type="sql"><![CDATA[select t.ebeln,t.ebelp,t.menge,t.bwart,t.lgort,t.lfbja,t.lfbnr,t.lfpos,t.grund,t.sgtxt,d.charg from GENL_RECEIPTS_MSEG t,genl_purchase_eket d
+where t.ebeln = d.ebeln and t.ebelp = d.ebelp]]></config>
+    </QueryEntity>
+</QueryEntityList>

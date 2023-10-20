@@ -1,0 +1,1441 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.busi.Business" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.busi.Business">
+    <xs:complexType name="TBsAppealsendhotlist" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsAppealsendhotlistImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="applyinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="disposetype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="disposedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="disposeuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="disposeorgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="receivedept" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="disposereason" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsBusicheck" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsBusicheckImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="inbatchid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="conclusiontype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="conclusiondetail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="checkdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="checkoptr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsBusidistrinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsBusidistrinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="destorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sourceorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busiattr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sourceoptr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="destoptr" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="newflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="dataflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsBusifee" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsBusifeeImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="acctshtpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="invccode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="feetype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paytype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="balancemodel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="count" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="price" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="chrgsum" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="paidsum" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="plandate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="backflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stages" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="scale" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="stagebatchid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recordedcompany" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="voucher" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsBusirule" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsBusiruleImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busistepdefinepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dealtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="rulename" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="optfunction" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="progtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="optseq" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="optlogic" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="rulelvl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="returnvalue" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processdefinepkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsBusistepdefine" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsBusistepdefineImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processdefinepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="activitydefid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="activitydefname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="candistr" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="urglvl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="finaldays" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="cycletype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="earlydays" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="earlytype" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsBusisteptabs" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsBusisteptabsImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busistepdefinepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tabreslabel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tabresid" nillable="true" type="xs:int"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="seq" nillable="true" type="xs:int"/>
+            <xs:element default="fasle" minOccurs="0" name="ischeck" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="checkurl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsCommonphraseconfig" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsCommonphraseconfigImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitypetosendconfigpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sort" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="phrasedetails" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsConstrinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsConstrinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materialcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="projectid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="construnit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="constrman" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="contactphone" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="monitor" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="monitorphone" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="startdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="enddate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="constrsummary" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsFirefailurereasoncofig" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsFirefailurereasoncofigImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="istop" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="parentpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reasonsdetail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsFireinfoexpand" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsFireinfoexpandImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fireinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remainheadinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remainheadfirecount" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsMeterdealrec" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsMeterdealrecImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reasontype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dealmode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="turninfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isnotmet" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dealer" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dealdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dealorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dealtype" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="meterdealstate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="verifytype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsMeterfixremove" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsMeterfixremoveImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oldmeterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reading" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="qdreading" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="qareading" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="dataflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterpress" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifiertemp" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifierpress" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifierfactor" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="manometer" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="rate" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="rectype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="regdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="regoptrcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="regorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reason" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="leaveamount" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsMeterfixremoveext" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsMeterfixremoveextImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterfixremovepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="projectid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fixdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="fixflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="inbatchid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="meterposi" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterseq" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="isbill" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterfixdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="meterremovedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="fixdirect" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterdirect" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="carddirect" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="safetynumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isbuy" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="supplypointpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="basefactor" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="fixmode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isseal" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isblind" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isbranch" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="adjustfactor" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifiercode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sealcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="imgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="metertstate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="nosucereason" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="nofixreason" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsMeterfixremoverefer" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsMeterfixremovereferImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oldmeterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsMetermaint" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsMetermaintImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reading" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="qdreading" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="qareading" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="meterpress" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifiertmpr" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifierpress" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifierfactor" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="manometer" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="optfee" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="power" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="maintnext" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="maintperiod" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsMeteroil" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsMeteroilImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oilamount" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="oilamountunit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="optfee" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="oilfee" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="oilnext" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="oilperiod" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsOutingresourceinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsOutingresourceinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="repairinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="outingresourcetype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="outingresourceamount" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="outingresourcedetails" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsParticipantrule" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsParticipantruleImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busistepdefinepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="participanttype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="participantid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="participantname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsPlaninfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsPlaninfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="plantype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="effdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="expdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="deptcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="iscrtwksheet" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsPlantask" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsPlantaskImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsReadingtemp" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsReadingtempImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reading" nillable="true" type="xs:decimal"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dataflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsRemainheadinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsRemainheadinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="supplymeterpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remainheadtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remainheadcount" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsRemakeinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsRemakeinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="iscorrect" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="correctdesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="conclusiontype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="conclusionother" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="correctdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="correctoptr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="correctoptrname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="archfileid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsRepairfaultfaultconfig" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsRepairfaultfaultconfigImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="parentpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="istop" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="faultinfo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsRepairtrackhandle" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsRepairtrackhandleImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="repairinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trackhandletype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trackhandleorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="trackhandleresult" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trackhandledate" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsReservamountmodel" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsReservamountmodelImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modelname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modelbusitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="starttime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="endtime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsReservamountmodelext" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsReservamountmodelextImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservamountmodelpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="starttime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="endtime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="resered" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="added" nillable="true" type="xs:long"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsReservationkhour" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsReservationkhourImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservationtypepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workclasscode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workclassname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workhour" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsReservationplan" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsReservationplanImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="makedate" nillable="true" type="xs:dateTime"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planname" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsReservationteam" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsReservationteamImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workgroupcode" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="workgroupname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="totalworkhour" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsReservationtype" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsReservationtypeImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jobclasscode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jobclassname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsSecondfireinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsSecondfireinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="secondfiredate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="secondfireoptr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="secondfiredepartment" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="secondfiredesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsSurveyconclusion" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsSurveyconclusionImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="constrtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="turnbusitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="surveyoptr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="surveydate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="haspromises" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="promisescontent" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="conclusiontype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="conclusiondetail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busidesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="amount" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="iscivicismtube" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="isbuildingtube" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="isrisertube" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="isformalproject" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsTimeoutinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsTimeoutinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="timeoutdesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="optrcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="optdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsTransferrecord" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsTransferrecordImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oldcustid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="newcustid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="transferdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsTurninfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsTurninfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="batchid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="turndate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="turnorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="toorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reasontype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reasondetail" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsUserbusistatetrack" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsUserbusistatetrackImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="usersourtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="appstartdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="buildsupplydate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="upmeterdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="downmeterdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="aeratedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="archivesdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="stopuserdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="reinstatedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="deluserdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="logoutdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="sendcarddate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="userstate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsVerifymeter" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsVerifymeterImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="verifyrslt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="verifyunit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="metertstate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="qmin" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="qmin3" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="qmax01" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="qmax02" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="qmax03" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="qmax07" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="qmax" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="reading" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="verifycode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifierverifyrslt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifiercode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="qacurrent" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifiertmpr" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifierpress" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="modifierfactor" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="verifydate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="verifyoptr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsWorktypeandteam" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsWorktypeandteamImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservationteampkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservationtypepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsBusibusirec" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsBusibusirecImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="applyinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="activitydefid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processinstid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="batchid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="projectid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="startdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="enddate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="urglvl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dealorgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dealopt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="nextactivate" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsWorklistinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsWorklistinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklisttype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="applyinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processinstid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="wkshtid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="batchid" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="dataflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cancelcause" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cancelremark" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsBusitypetosendconfig" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsBusitypetosendconfigImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="isdirectlysend" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="printtemplate" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsProjectmaterial" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsProjectmaterialImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busifeepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="inbatchid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materialmodelpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="count" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="price" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="chargeflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="chrgsum" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="paidsum" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="unuseflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="billingby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="billingtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="constructionorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="buyway" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recordedcompany" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="feebelong" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="isdesign" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="constructionname" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsFirefailurereasons" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsFirefailurereasonsImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fireinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reasonstype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reasonssort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reasonsdetail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isdeal" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsReservationplanext" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsReservationplanextImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservationplanpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="starttime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="endtime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="resered" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="added" nillable="true" type="xs:long"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="timetype" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsReservationiteminfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsReservationiteminfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservationplanpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservationteampkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservationtypepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservationhourpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reservationplanextpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="applyinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workhour" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="makedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="address" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logincode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operator" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="contact" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsProcessdefine" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsProcessdefineImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processdefname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processdefdesc" nillable="true" type="xs:string"/>
+            <xs:element default="1&#10;" minOccurs="0" name="finaldays" nillable="true" type="xs:decimal"/>
+            <xs:element default="1" minOccurs="0" name="cycletype" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="earlydays" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="earlytype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="extend4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="isapply" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsRepairinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsRepairinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="turninfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="conclusiontype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="conclusionother" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="repairdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="repairoptr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="repairoptrname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="faultfeatures" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="faultcategory" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="detailscategory" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="casualtylevel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reportedsource" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reportedmonitor" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reportedperson" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reportedtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="departtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="arrivetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="completetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="repairdetails" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testbegintime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testovertime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testbegindata" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="testoverdata" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsPrintinforec" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsPrintinforecImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="isprint" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="currprintdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="curroptcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="printcount" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="lastprintdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="lastoptcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="applyinfopkid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsFireinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsFireinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="firedesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="firedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="fireconclusion" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cockcount" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fireoptr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="firename" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="firedepartment" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="securityid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ballvalvecount" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="ydcf" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="gydcf" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="ttbj" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="ttbjsl" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="glqxh" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="gyglq" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tyqxh" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="gytyq" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="rhfs" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsModifier" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsModifierImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifiercode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifiertype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifierreading" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsDepartmentliaison" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsDepartmentliaisonImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worktype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="sendby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendday" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="handleorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="handleby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="providecompleteday" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0" minOccurs="0" name="isurgent" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="contentabstract" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="handleresult" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="contactphone" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mobile" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="addrdetail" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsApplyinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsApplyinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="activeapplypkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sourcetype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="chnltype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="chnlid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="custname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="isvirtual" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="applytype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busisort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="firstbusitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reportedsource" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="departmentliaisonpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="count" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="actualcount" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="finishtype" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="addrinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="addrdetail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mngorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bookdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="claimbookdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="claimdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="earlydate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="allocate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="receivedept" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="enddate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="endemp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="enddep" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="enddesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reportedtime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="2" minOccurs="0" name="urglvl" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsUsertypechangerec" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsUsertypechangerecImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="worklistinfopkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="olduserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="usertype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oldusertype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="changedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TBsTransferrecordext" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.Business.impl.TBsTransferrecordextImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="transferrecordpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="newflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mngorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="certtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="certnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="addrdetail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="usersnum" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="contactman" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mobile" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="contactphone" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="signid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paytype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="custname" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

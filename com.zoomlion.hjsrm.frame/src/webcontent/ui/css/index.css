@@ -1,0 +1,351 @@
+/******************************************************************
+*版权所有： 中联重科环境产业公司
+*描    述：  
+*创建日期： 2014-9-17
+*补丁编号： G3_P_20140915_01_246
+*作    者： 吕俊涛
+//==============================修改历史===========================
+// 补丁编号                    修改人     日期           区域       备注
+// G3_P_20140915_01_246    吕俊涛     2014-9-17    集团      
+//
+//=================================================================
+*******************************************************************/
+/******************************************************************
+//==============================修改历史===========================
+//     修改人     日期                备注
+//     刘鑫     2014-11-24          修改图片
+//
+//=================================================================
+*******************************************************************/
+
+.top{
+	background: #ffffff url(../img/headbg_ks.png) no-repeat left top;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	height:65px;	
+}
+.moven{
+	float:left;
+	display:inline;
+	height:25px;
+	margin:0 0 0 0;
+	padding:0 0 0 0;
+	font-weight:bold;
+}
+.left{
+	width:15%;
+	float:left;
+}
+.right{
+	width:80%;
+	float:right;
+	margin-top:10px;
+	text-align: right;
+}
+.menu{
+	width:780px;
+	margin:0 0 0 0;
+	padding:0 10px 0 0;
+	height:25px;
+	float:right;
+	text-align: right;
+	overflow:hidden;
+}
+.menu ul{
+	margin-bottom:0px;
+	height:25px;
+	margin:0;
+	padding:0;
+	width:auto;
+	list-style:none;
+}
+
+.menu ul li{
+	display:block;
+	padding:0;
+	float: left;
+	color: rgb(45, 90, 173) !important;
+	line-height: 25px;
+	height:25px;
+	filter: Alpha(Opacity=75);
+	background: #ffffff url(../img/menu_bg.png) repeat-x;
+		
+}
+
+.menu ul li a{
+	height: 25px;
+	line-height: 25px;
+	color: rgb(0, 0, 0) !important;
+	display: block;
+	margin-left:5px;
+	text-align: center;
+	font-size: 12px;
+	text-decoration: none;
+	width:75px;
+	overflow: hide;		
+	font-weight: 400;
+}
+
+
+.menu ul li a:hover,.menu ul li a.current {
+	background-color: #335379;
+	color: rgb(255, 255, 255) !important;
+	background: #ffffff url(../img/menu_ab_bg.png) repeat-x;
+}
+
+
+#hiddenMenu{
+	position: absolute;
+	z-index: 20000;
+	visibility: hidden;
+	right:70px;;
+  	top:35px;
+  	width:100px;
+  	font-size: 12px;
+	filter: Alpha(Opacity=75);
+	background: #ffffff url(../img/menu_bg.png) repeat-x;
+}
+
+.hiddenMenu_layout{
+	position: absolute;
+	z-index: 10000;
+	visibility: hidden;
+	right:70px;;
+  	top:35px;
+  	width:100px;
+  	font-size: 12px;
+	filter: Alpha(Opacity=75);
+}
+#hiddenMenu a{
+	color: rgb(0, 0, 0) !important;
+	line-height: 25px;
+	height:25px;
+	display:block;
+	margin:0 5px 0 5px;
+	padding:2px 5px 2px 5px;
+	text-decoration: none;
+}
+#hiddenMenu a:hover,#hiddenMenu a.current {
+	background-color: #335379;
+	color: rgb(255, 255, 255) !important;
+	background: #ffffff url(../img/menu_ab_bg.png) repeat-x;
+}
+.hdmn 
+{
+		width:10px;
+}
+.hdmn a{
+		width:10px;
+}
+		
+.js {
+	margin:0 0 0 0;
+	padding:0 0 0 0;
+	color: rgb(45, 90, 173) !important;
+	line-height: 25px;
+	height:25px;
+	width:10px;
+	text-align: center;
+}
+
+.menutsl {
+	width: 100%;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	line-height: 25px;
+	color: #fff;
+	text-align: left;
+	font-size: 11px;
+	text-decoration: none;
+	background: #ffffff url(../img/headbg.png) no-repeat right top;
+}
+.menutsl tr{
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+
+.menutsl tr td{
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+.menutsl a,menutsl a:hover {
+	line-height: 25px;
+	color: #fff;
+	text-align: center;
+	font-size: 11px;
+	text-decoration: none;
+}
+
+.menufsl span {
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 3px;
+}
+
+.menufsl a,menufsl a:hover {
+	line-height: 25px;
+	color: #000000;
+	text-align: center;
+	font-size: 11px;
+	text-decoration: none;
+}
+
+.menufsl {
+	width: 100%;
+	padding: 0 10px 5px 10px;
+	line-height: 15px;
+	color: #000000;
+	text-align: left;
+	font-size: 12px;
+	text-decoration: none;
+	background-color: #DAE5F4;
+}
+
+.icon_read_mail {
+	position: relative;
+	left: 0;
+	top: 0;
+	text-align: left;
+	zoom: 1;
+	white-space: nowrap;
+	display: inline;
+	cursor: pointer;
+}
+
+.on_mail_read {
+	cursor: pointer;
+}
+
+.res-block {
+	float:left;
+}
+
+.welcome_body{
+	width:100%;
+	height:100%;
+	background: url(../img/bannerBgg.png) no-repeat right bottom;
+}
+.res-block-inner {
+	padding: 6px 11px;
+	margin: 15px 15px 15px 15px;
+	border: 2px solid #E0E0E0;
+	/*border: 2px solid #9FC1F7;*/
+}
+
+.res-block h3 {
+	font: bold 12px tahoma, arial, sans-serif;
+	color: #000000;
+	height:30px;
+	line-height:25px;
+	background: url(../img/title_bgx.png) repeat-x top left;
+	margin: 0px 0px 0px 0px;
+	padding-left: 5px;
+}
+
+.res-block ul {
+	list-style-type: disc;
+	margin-left: 5px;
+	font: normal 11px tahoma, arial, sans-serif;
+}
+
+.res-block ul li {
+	margin: 0 0 5px 3px;
+	line-height: 20px;
+	list-style: none;
+}
+
+.res-block ul li b{
+	color: rgb(59, 59, 59) !important;
+	font-weight: 500;
+}
+.res-block ul li a {
+	line-height: 25px;
+	color: #38B1F0;
+	font-size: 13px;
+	margin-left:10px;
+	text-decoration: none;
+}
+
+.res-block ul li a:hover,.res-block ul li a.current {
+	color: #000;
+}
+#indexnews{
+	width:100%;
+}
+#indexnews li {
+	text-align: left;
+	width:100%;
+	line-height:20px;
+	margin-top:5px;
+	
+}
+#indexnews li a{
+	line-height: 20px;
+	color: #38B1F0;
+	font-size: 12px;
+	margin-left:0px;
+	text-decoration: none;
+}
+#indexmaps{
+	width:100%;
+}
+#indexmaps li {
+	text-align: left;
+	width:100%;
+	padding-top:10px;
+	line-height: 25px;	
+}
+#indexmaps li b{
+	font-size: 12px;
+	width:12%;
+	float:left;
+}
+#indexmaps li div {
+	float:right;
+	margin-top:0px;
+	width:88%;
+	text-align: left;
+}
+#indexmaps li a {
+	height:30px;
+	line-height: 20px;
+	width:110px;
+	color: #000000;
+	font-size: 12px;
+	display:inline-block;
+	overflow:hidden;
+	text-align: center;
+	background: url(../img/map_mn_bg.png) no-repeat left top;
+}
+#loading-mask {
+	height: auto;
+	position: absolute;
+	left: 45%;
+	top: 40%;
+	padding: 2px;
+	z-index: 90001;
+}
+
+#loading-mask a {
+	color: #225588;
+}
+
+#loading-mask .loading-indicator {
+	background: white;
+	color: #444;
+	font: bold 13px Helvetica, Arial, sans-serif;
+	height: auto;
+	margin: 0;
+	padding: 10px;
+}
+
+#loading-msg {
+	font-size: 10px;
+	font-weight: normal;
+}
+
+.x-form-invalid, textarea.x-form-invalid {
+    background-color:red;
+	background-image:url(../images/default/grid/invalid_line.gif);
+	border-color:#c30;
+}

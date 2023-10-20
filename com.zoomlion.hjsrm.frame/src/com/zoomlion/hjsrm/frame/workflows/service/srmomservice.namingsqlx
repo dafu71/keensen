@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:陈今伟 -->
+<!-- modifyby:dafu -->
+<sqlMap>
+    <!-- 单个参与者查询 begin -->
+	    <!-- 机构参与者查询  -->
+		    <select id="findParticipantByOrg" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select orgid as "id",
+				       orgname as "name",
+				       email as "email",
+				       'organization' as "typecode"
+				  	   from v_om_organization_trs
+				 	   where orgid = #participantID#
+		    </select>
+	    <!-- 角色参与者查询  -->
+		    <select id="findParticipantByRole" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select roleid as "id", rolename as "name", '' as "email", 'role' as "typecode"
+	  				   from t_ac_role
+	 				   where roleid = #participantID#
+		    </select>
+	    <!-- 个人参与者查询  -->
+		    <select id="findParticipantByPerson" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select userid as "id", operatorname as "name", email as "email", 'person' as "typecode"
+	  				   from v_ac_operator_trs
+	 				   where userid = #participantID#
+		    </select>
+	  <!-- 单个参与者查询 end -->
+	  <!-- 根参与者查询 begin -->
+	  	<!-- 机构根参与者查询  -->
+		    <select id="findOrgRootParticipants" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select orgid as "id", orgname as "name", email as "email",  'organization' as "typecode"
+					   from v_om_organization_trs
+					   where parentorgid is null
+		    </select>
+	    <!-- 角色根参与者查询  -->
+		    <select id="findRoleRootParticipants" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select roleid as "id", rolename as "name", '' as "email", 'role' as "typecode"
+	  				   from t_ac_role
+		    </select>
+	  <!-- 根参与者查询 end -->
+	  <!-- 下级参与者查询 begin -->
+	  	<!-- 机构所有下级参与者查询  -->
+	  		<select id="getAllChildParticipantsByOrg" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				    select cast(orgid as varchar(128)) as "id", orgname as "name", email as "email", 'organization' as "typecode"
+				  	from v_om_organization_trs
+				 	where parentorgid = #participantID#
+				    union
+				    select o.userid as "id",
+			       o.operatorname as "name",
+			       o.email as "email",
+			       'person' as "typecode"
+				   from v_om_employee_trs e, v_om_emporg_trs eo, v_ac_operator_trs o
+				   where e.empid = o.empid
+				   and e.empid = eo.empid
+				   and eo.orgid = #participantID#
+		    </select>
+	  	<!-- 角色所有下级参与者查询  -->
+	  		<select id="getAllChildParticipantsByRole" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				     select o.userid as "id",  o.operatorname as "name", o.email as "email",  'person' as "typecode"
+  					 from t_ac_operatorrole opr, v_ac_operator_trs o
+ 					 where opr.operatorid = o.operatorid
+				    and opr.roleid = #participantID#
+		    </select>
+	  <!-- 下级参与者查询 end -->
+	  <!-- 上级参与者查询 begin -->
+	  	<!-- 机构所有上级参与者查询  -->
+	  		<select id="getAllParentParticipantsByOrg" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select p.orgid as "id", p.orgname as "name", p.email as "email",  'organization' as "typecode"
+				  	   from v_om_organization_trs p, v_om_organization_trs c
+				       where c.parentorgid = p.orgid
+				       and c.orgid = #participantID#
+		    </select>
+		 <!-- 人员所有上级参与者查询  -->
+	  		<select id="getAllParentParticipantsByPerson" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select p.orgid as "id",  p.orgname as "name", p.email as "email", 'organization' as "typecode"
+  					   from v_om_emporg_trs c, v_om_organization_trs p, v_om_employee_trs e, v_ac_operator_trs o
+ 					   where c.orgid = p.orgid
+					   and c.empid = e.empid
+					   and e.empid = o.empid
+					   and o.userid = #participantID#
+					   union
+					   select p.roleid as "id", p.rolename as "name", '' as "email", 'role' as "typecode"
+					   from t_ac_operatorrole c, t_ac_role p, v_ac_operator_trs o
+					   where o.operatorid = c.operatorid
+					   and c.roleid = p.roleid
+					   and o.userid = #participantID#
+		    </select>
+	  <!-- 上级参与者查询 end -->
+	  <!-- 参与者的某个指定类型的子参与者查询 begin -->
+	  	<!-- 机构下所有子机构参与者查询  -->
+	  		<select id="getOrgChildParticipantsByOrg" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select orgid as "id", orgname as "name", email as "email", 'organization' as "typecode"
+  					   from v_om_organization_trs
+ 					   where parentorgid = #participantID#
+		    </select>
+		<!-- 机构下所有人员参与者查询  -->
+	  		<select id="getPersonChildParticipantsByOrg" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				      select o.userid as "id",  o.operatorname as "name", o.email as "email",  'person' as "typecode"
+  					  from v_om_employee_trs e, v_om_emporg_trs eo, v_ac_operator_trs o
+ 					  where e.empid = o.empid
+   					  and e.empid = eo.empid
+   					  and eo.orgid = #participantID#
+		    </select>
+		 <!-- 角色下所有人员参与者查询  -->
+	  		<select id="getPersonChildParticipantsByRole" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				     select o.userid as "id", o.operatorname as "name", o.email as "email", 'person' as "typecode"
+					 from t_ac_operatorrole opr, v_ac_operator_trs o
+					 where opr.operatorid = o.operatorid
+					 and opr.roleid = #participantID#
+		    </select>
+	 <!-- 参与者的某个指定类型的子参与者查询查询 end -->
+	 <!-- 参与者的某个指定类型的父参与者查询 begin -->
+	  	<!-- 机构父机构参与者查询  -->
+	  		<select id="getOrgParentParticipantsByOrg" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select p.orgid as "id",  p.orgname as "name", p.email as "email", 'organization' as "typecode"
+  					   from v_om_organization_trs p, v_om_organization_trs c
+ 					   where c.parentorgid = p.orgid
+   					   and c.orgid = #participantID#
+		    </select>
+		<!-- 人员父机构参与者查询  -->
+	  		<select id="getOrgParentParticipantsByPerson" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				     select p.orgid as "id", p.orgname as "name", p.email as "email", 'organization' as "typecode"
+  					 from v_om_emporg_trs c, v_om_organization_trs p, v_om_employee_trs e, v_ac_operator_trs o
+ 					 where o.empid = e.empid
+   					 and c.orgid = p.orgid
+   					 and c.empid = e.empid
+   					 and o.userid = #participantID#
+		    </select>
+		 <!-- 人员父角色参与者查询  -->
+	  		<select id="getRoleParentParticipantsByPerson" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				     select p.roleid as "id", p.rolename as "name",  p.rolename as "email", 'role' as "typecode"
+  					 from t_ac_operatorrole c, t_ac_role p, v_ac_operator_trs o
+ 					 where o.operatorid = c.operatorid
+   					 and c.roleid = p.roleid
+   					 and o.userid = #participantID#
+		    </select>
+	 <!-- 参与者的某个指定类型的父参与者查询查询 end -->
+	 <!-- 角色机构交集参与者查询 begin 获取某个参与者的参与范围-->
+	 		<select id="getJointChildParticipant" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				     select o.userid as "id", o.operatorname as "name",  o.email as "email",  'person' as "typecode"
+  					 from v_ac_operator_trs     o,  v_om_employee_trs     e,  t_ac_operatorrole ol,  v_om_emporg_trs   eo
+ 					 where o.empid = e.empid
+   					 and o.operatorid = ol.operatorid
+   					 and e.empid = eo.empid
+   					 and eo.orgid = #participantID1#
+   					 and ol.roleid = #participantID2#
+		    </select>
+	 <!-- 角色机构交集参与者查询 end -->
+	 <!-- 获取某个参与者的参与范围 begin -->
+	 	<!-- 人员的机构参与者范围查询  -->
+	  		<select id="getOrgParticipantScopeByPerson" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				      select p.orgid as "id", p.orgname as "name", p.email as "email", 'organization' as "typecode"
+   					  from v_om_emporg_trs   c,  v_om_organization_trs p, v_om_employee_trs  e,  v_ac_operator_trs  o
+  					  where o.empid = e.empid
+    				  and c.orgid = p.orgid
+    				  and c.empid = e.empid
+    				  and o.userid = #participantID#
+		    </select>
+		   <!-- 人员的角色参与者范围查询  -->
+	  		<select id="getRoleParticipantScopeByPerson" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				     select p.roleid as "id", p.rolename as "name", p.rolename as "email", 'role' as "typecode"
+  					 from t_ac_operatorrole c, t_ac_role p, v_ac_operator_trs o
+ 					 where o.operatorid = c.operatorid
+   					 and c.roleid = p.roleid
+   					 and o.userid = #participantID#
+		    </select>
+	 <!-- 获取某个参与者的参与范围 end -->
+	 <!-- 获取某个类型的所有参与者 begin -->
+	 	<!-- 获取机构类型的所有参与者  -->
+	  		<select id="getAllParticipantsByOrg" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				       select orgid as "id", orgname as "name", email as "email",  'organization' as "typecode"
+ 					   from v_om_organization_trs
+		    </select>
+		   <!-- 获取角色类型的所有参与者  -->
+	  		<select id="getAllParticipantsByRole" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				     select roleid as "id", rolename as "name", '' as "email", 'role' as "typecode"
+  					 from t_ac_role
+		    </select>
+		    <!-- 获取人员类型的所有参与者  -->
+	  		<select id="getAllParticipantsByPerson" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+				     select userid as "id", operatorname as "name", email as "email", 'person' as "typecode"
+  					 from v_ac_operator_trs
+		    </select>
+	 <!-- 获取某个类型的所有参与者 end -->
+</sqlMap>

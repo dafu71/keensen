@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.srmclient.workflow" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.srmclient.workflow">
+    <xs:complexType name="EsAuditopinion" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.srmclient.workflow.impl.EsAuditopinionImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="auditopinionid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="orgname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="time" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="opinion" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="flag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processinstid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="executorid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="executorname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="rootprocinstid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EsBasicinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.srmclient.workflow.impl.EsBasicinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="sheetid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="processinstname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="orgname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="deptid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="deptname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="phone" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="applydate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="emergency" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="esheetno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="expectdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="sheetstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processinstid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="description" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="title" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processdefname" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EsWorkformRead" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.srmclient.workflow.impl.EsWorkformReadImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="reader" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="readername" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="esheetno" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="senduser" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendusername" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendtime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0" minOccurs="0" name="status" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="readtime" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EsWorkformReadDeal" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.srmclient.workflow.impl.EsWorkformReadDealImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="readPkid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ContractMessageinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.srmclient.workflow.impl.ContractMessageinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="miid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="messagetype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendbyName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendbyUserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="senddate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="msgcontent" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="contractid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processinstid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="receiveName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="receiveUserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="receivePhone" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EsHasten" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.srmclient.workflow.impl.EsHastenImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="eshastenid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hastenerid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hastenername" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hastentime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="hastenstate" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SmsSend" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.srmclient.workflow.impl.SmsSendImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="messageid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="message" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mobileno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="sendstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendstatustext" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recvstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recvstatustext" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendmobileno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="smsgmessageid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="inserttime" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

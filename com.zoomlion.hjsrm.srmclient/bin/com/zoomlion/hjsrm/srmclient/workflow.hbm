@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.srmclient.workflow.Testflow" table="TESTFLOW">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="long">
+            <column length="22" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createby" type="string">
+            <column length="20" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="content" type="string">
+            <column length="200" name="CONTENT"/>
+        </property>
+        <property name="checkby" type="string">
+            <column length="20" name="CHECKBY"/>
+        </property>
+        <property name="checktime" type="date">
+            <column name="CHECKTIME"/>
+        </property>
+        <property name="advise" type="string">
+            <column length="200" name="ADVISE"/>
+        </property>
+        <property name="processinstid" type="string">
+            <column length="20" name="PROCESSINSTID"/>
+        </property>
+        <property name="workitemid" type="string">
+            <column length="20" name="WORKITEMID"/>
+        </property>
+    </class>
+</hibernate-mapping>

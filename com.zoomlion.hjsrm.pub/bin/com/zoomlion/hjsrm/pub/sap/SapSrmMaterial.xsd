@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.sap.SapSrmMaterial" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.sap.SapSrmMaterial">
+    <xs:complexType name="BaseMaterialMara" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmMaterial.impl.BaseMaterialMaraImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="maktx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ersda" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="laeda" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="lvorm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mtart" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meins" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zeinr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mstae" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BaseMaterialMarc" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmMaterial.impl.BaseMaterialMarcImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lvorm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mmsta" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekgrp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lgfsb" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="maabc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dismm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="minbe" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bstmi" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bstma" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mabst" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lgpro" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="plifz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="eisbe" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="eislo" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BaseMaterialZt76" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmMaterial.impl.BaseMaterialZt76Impl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zhwbm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zwrildt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zwriusr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zsfclq" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

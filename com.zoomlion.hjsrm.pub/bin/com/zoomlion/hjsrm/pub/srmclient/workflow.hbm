@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.srmclient.workflow.EsAuditopinion" table="ES_AUDITOPINION">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="auditopinionid" type="long">
+            <column length="22" name="AUDITOPINIONID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="userid" type="string">
+            <column length="30" name="USERID"/>
+        </property>
+        <property name="username" type="string">
+            <column length="50" name="USERNAME"/>
+        </property>
+        <property name="orgid" type="long">
+            <column length="22" name="ORGID"/>
+        </property>
+        <property name="orgname" type="string">
+            <column length="128" name="ORGNAME"/>
+        </property>
+        <property name="time" type="timestamp">
+            <column name="TIME"/>
+        </property>
+        <property name="opinion" type="string">
+            <column length="1000" name="OPINION"/>
+        </property>
+        <property name="flag" type="string">
+            <column length="1" name="FLAG"/>
+        </property>
+        <property name="status" type="string">
+            <column length="1" name="STATUS"/>
+        </property>
+        <property name="processinstid" type="string">
+            <column length="256" name="PROCESSINSTID"/>
+        </property>
+        <property name="workitemid" type="string">
+            <column length="256" name="WORKITEMID"/>
+        </property>
+        <property name="executorid" type="string">
+            <column length="30" name="EXECUTORID"/>
+        </property>
+        <property name="executorname" type="string">
+            <column length="50" name="EXECUTORNAME"/>
+        </property>
+        <property name="workitemname" type="string">
+            <column length="256" name="WORKITEMNAME"/>
+        </property>
+        <property name="rootprocinstid" type="string">
+            <column length="256" name="ROOTPROCINSTID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.srmclient.workflow.EsBasicinfo" table="ES_BASICINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="sheetid" type="long">
+            <column length="22" name="SHEETID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="processinstname" type="string">
+            <column length="256" name="PROCESSINSTNAME"/>
+        </property>
+        <property name="processtype" type="string">
+            <column length="10" name="PROCESSTYPE"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="30" name="USERID"/>
+        </property>
+        <property name="username" type="string">
+            <column length="50" name="USERNAME"/>
+        </property>
+        <property name="orgid" type="long">
+            <column length="22" name="ORGID"/>
+        </property>
+        <property name="orgname" type="string">
+            <column length="128" name="ORGNAME"/>
+        </property>
+        <property name="deptid" type="long">
+            <column length="22" name="DEPTID"/>
+        </property>
+        <property name="deptname" type="string">
+            <column length="128" name="DEPTNAME"/>
+        </property>
+        <property name="phone" type="string">
+            <column length="20" name="PHONE"/>
+        </property>
+        <property name="applydate" type="timestamp">
+            <column name="APPLYDATE"/>
+        </property>
+        <property name="emergency" type="string">
+            <column length="10" name="EMERGENCY"/>
+        </property>
+        <property name="esheetno" type="string">
+            <column length="20" name="ESHEETNO"/>
+        </property>
+        <property name="expectdate" type="timestamp">
+            <column name="EXPECTDATE"/>
+        </property>
+        <property name="sheetstatus" type="string">
+            <column length="1" name="SHEETSTATUS"/>
+        </property>
+        <property name="processinstid" type="string">
+            <column length="256" name="PROCESSINSTID"/>
+        </property>
+        <property name="description" type="string">
+            <column length="1000" name="DESCRIPTION"/>
+        </property>
+        <property name="title" type="string">
+            <column length="256" name="TITLE"/>
+        </property>
+        <property name="processdefname" type="string">
+            <column length="256" name="PROCESSDEFNAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.srmclient.workflow.EsWorkformRead" table="ES_WORKFORM_READ">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="reader" type="string">
+            <column length="64" name="READER"/>
+        </property>
+        <property name="readername" type="string">
+            <column length="255" name="READERNAME"/>
+        </property>
+        <property name="esheetno" type="long">
+            <column length="22" name="ESHEETNO"/>
+        </property>
+        <property name="senduser" type="string">
+            <column length="64" name="SENDUSER"/>
+        </property>
+        <property name="sendusername" type="string">
+            <column length="255" name="SENDUSERNAME"/>
+        </property>
+        <property name="sendtime" type="timestamp">
+            <column name="SENDTIME"/>
+        </property>
+        <property name="status" type="long">
+            <column default="0" length="22" name="STATUS"/>
+        </property>
+        <property name="readtime" type="timestamp">
+            <column name="READTIME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.srmclient.workflow.EsWorkformReadDeal" table="ES_WORKFORM_READ_DEAL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="long">
+            <column length="22" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="readPkid" type="long">
+            <column length="22" name="READ_PKID"/>
+        </property>
+        <property name="content" type="string">
+            <column length="4000" name="CONTENT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.srmclient.workflow.ContractMessageinfo" table="CONTRACT_MESSAGEINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="miid" type="long">
+            <column length="18" name="MIID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="messagetype" type="string">
+            <column length="64" name="MESSAGETYPE"/>
+        </property>
+        <property name="sendbyName" type="string">
+            <column length="1024" name="SENDBY_NAME"/>
+        </property>
+        <property name="sendbyUserid" type="string">
+            <column length="255" name="SENDBY_USERID"/>
+        </property>
+        <property name="senddate" type="timestamp">
+            <column name="SENDDATE"/>
+        </property>
+        <property name="msgcontent" type="string">
+            <column length="4000" name="MSGCONTENT"/>
+        </property>
+        <property name="contractid" type="string">
+            <column length="255" name="CONTRACTID"/>
+        </property>
+        <property name="processinstid" type="string">
+            <column length="64" name="PROCESSINSTID"/>
+        </property>
+        <property name="receiveName" type="string">
+            <column length="1024" name="RECEIVE_NAME"/>
+        </property>
+        <property name="receiveUserid" type="string">
+            <column length="255" name="RECEIVE_USERID"/>
+        </property>
+        <property name="receivePhone" type="string">
+            <column length="255" name="RECEIVE_PHONE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.srmclient.workflow.EsHasten" table="ES_HASTEN">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="eshastenid" type="string">
+            <column length="50" name="ESHASTENID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="string">
+            <column length="256" name="WORKITEMID"/>
+        </property>
+        <property name="hastenerid" type="string">
+            <column length="256" name="HASTENERID"/>
+        </property>
+        <property name="hastenername" type="string">
+            <column length="256" name="HASTENERNAME"/>
+        </property>
+        <property name="hastentime" type="timestamp">
+            <column name="HASTENTIME"/>
+        </property>
+        <property name="hastenstate" type="string">
+            <column length="2" name="HASTENSTATE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.srmclient.workflow.SmsSend" table="SMS_SEND">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="messageid" type="long">
+            <column length="12" name="MESSAGEID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="message" type="string">
+            <column length="150" name="MESSAGE"/>
+        </property>
+        <property name="mobileno" type="string">
+            <column length="15" name="MOBILENO"/>
+        </property>
+        <property name="sendtime" type="timestamp">
+            <column name="SENDTIME"/>
+        </property>
+        <property name="sendstatus" type="string">
+            <column length="10" name="SENDSTATUS"/>
+        </property>
+        <property name="sendstatustext" type="string">
+            <column length="50" name="SENDSTATUSTEXT"/>
+        </property>
+        <property name="recvstatus" type="string">
+            <column length="10" name="RECVSTATUS"/>
+        </property>
+        <property name="recvstatustext" type="string">
+            <column length="50" name="RECVSTATUSTEXT"/>
+        </property>
+        <property name="sendmobileno" type="string">
+            <column length="15" name="SENDMOBILENO"/>
+        </property>
+        <property name="smsgmessageid" type="string">
+            <column length="25" name="SMSGMESSAGEID"/>
+        </property>
+        <property name="inserttime" type="timestamp">
+            <column name="INSERTTIME" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>

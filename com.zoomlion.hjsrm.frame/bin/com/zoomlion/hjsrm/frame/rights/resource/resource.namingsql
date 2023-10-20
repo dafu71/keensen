@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.rights.resource.resource">
+    <!-- 查询权限内的业务导航 -->
+    <select id="queryResourcesIsBizMap" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select * from (
+				select distinct r.displayorder as "displayorder",
+                r.resid        as "resid",
+                r.reslabel     as "reslabel",
+                r.resseq       as "resseq",
+                r.respath      as "respath",
+                r.resname      as "resname",
+                r.isleaf       as "isleaf",
+                r.isbizmap     as "isbizmap",
+                r.parentresid  as "parentresid"
+                 from  t_ac_resource r   
+				) a where 
+		a."resid" in ( 
+		 select ops.resid from t_ac_operres ops where ops.authtype = 'y' and ops.resid = a."resid" and ops.operatorid = #operatorid# 
+		 and (ops.enddate &gt; sysdate or ops.enddate is null) 
+		  <isNotNull prepend="" property="roleids">union all
+		 	select rl.resid from t_ac_roleres rl where rl.resid = a."resid" and rl.roleid in ($roleids$)</isNotNull>
+		 ) 
+ 		and 
+		a."resid" not in(
+  			select resid from t_ac_operres  where authtype = 'n' and resid = a."resid" and operatorid = #operatorid# and (enddate &gt; sysdate or enddate is null) 
+ 		)
+ 		<isNotNull prepend="and" property="dataorgid">a."resid" in(
+		 	select resid from t_ac_appresauth where orgid = #dataorgid#
+		 )</isNotNull>
+		and a."isbizmap" = 'y'
+		order by a."displayorder"
+    </select>
+    <!-- 查询权限内的应用 -->
+    <select id="queryResourceIsAppByRole" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select distinct r.displayorder as "displayorder",
+                r.resid        as "resid",
+                r.reslabel     as "reslabel",
+                r.resseq       as "resseq",
+                r.respath      as "respath",
+                r.isleaf       as "isleaf",
+                r.parentresid  as "parentresid"
+        from t_ac_resource r where 
+		r.resid in ( 
+		 select ops.resid from t_ac_operres ops where ops.authtype = 'y' and ops.resid = r.resid and ops.operatorid = #operatorid# 
+		 and (ops.enddate &gt; sysdate or ops.enddate is null) 
+		  <isNotNull prepend="" property="roleids">
+		  union all
+		 	select rl.resid from t_ac_roleres rl where rl.resid = r.resid and rl.roleid in (
+			 	  select ro.roleid
+				  from t_ac_role ro
+				  join t_ac_operatorrole opro
+				    on opro.roleid = ro.roleid
+				  where opro.operatorid = #operatorid#
+				  <isNotNull prepend="and" property="orgid">(ro.orgid in
+					       ( select org.orgid from t_om_organization org
+							 start with org.orgid = #orgid#
+							 connect by prior org.parentorgid= org.orgid)
+							 	or ro.dataorgid = 0
+							 )</isNotNull>	
+		 	) 
+		  </isNotNull>
+		 ) 
+ 		and 
+		r.resid not in(
+  			select resid from t_ac_operres  where authtype = 'n' and resid = r.resid and operatorid = #operatorid# and (enddate &gt; sysdate or enddate is null) 
+ 		)
+ 		<isNotNull prepend="and" property="dataorgid">r.resid in(
+		 	select resid from t_ac_appresauth where orgid = #dataorgid#
+		 )</isNotNull>
+		and  r.restype = 'app' 
+		order by r.displayorder
+    </select>
+    <!-- 查询权限内的应用 -->
+    <select id="queryResourceIsAppByRole2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select distinct r.displayorder as "displayorder",
+                r.resid        as "resid",
+                r.reslabel     as "reslabel",
+                r.resseq       as "resseq",
+                r.respath      as "respath",
+                r.isleaf       as "isleaf",
+                r.parentresid  as "parentresid"
+        from t_ac_resource r where 
+		r.resid in ( 
+		 select ops.resid from t_ac_operres ops where ops.authtype = 'y' and ops.resid = r.resid and ops.operatorid = #operatorid# 
+		 and (ops.enddate &gt; sysdate or ops.enddate is null) 
+		  <isNotNull prepend="" property="roleids">
+		  union all
+		 	select rl.resid from t_ac_roleres rl where rl.resid = r.resid and rl.roleid in (
+			 	  select ro.roleid
+				  from t_ac_role ro
+				  join t_ac_operatorrole opro
+				    on opro.roleid = ro.roleid
+				  where opro.operatorid = #operatorid#
+				  <isNotNull prepend="and" property="orgid">(ro.orgid in
+					       ( select org.orgid from v_om_organization_trs org
+							 start with org.orgid = #orgid#
+							 connect by prior org.parentorgid= org.orgid)
+							 	or ro.dataorgid = 0
+							 )</isNotNull>	
+		 	) 
+		  </isNotNull>
+		 ) 
+ 		and 
+		r.resid not in(
+  			select resid from t_ac_operres  where authtype = 'n' and resid = r.resid and operatorid = #operatorid# and (enddate &gt; sysdate or enddate is null) 
+ 		)
+ 		<isNotNull prepend="and" property="dataorgid">r.resid in(
+		 	select resid from t_ac_appresauth where orgid = #dataorgid#
+		 )</isNotNull>
+		and  r.restype = 'app' 
+		order by r.displayorder
+    </select>
+    <!-- 查询权限内的快捷菜单 -->
+    <select id="queryResourcesMenus" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select * from (
+				select distinct r.displayorder as "displayorder",
+                r.resid        as "resid",
+                r.reslabel     as "reslabel",
+                r.resseq       as "resseq",
+                r.respath      as "respath",
+                r.resname      as "resname",
+                r.isleaf       as "isleaf",
+                r.parentresid  as "parentresid"
+                 from  t_ac_resource r   
+				) a where 
+		a."resid" in ( 
+		 select ops.resid from t_ac_operres ops where ops.authtype = 'y' and ops.resid = a."resid" and ops.operatorid = #operatorid# 
+		 and (ops.enddate &gt; sysdate or ops.enddate is null) 
+		  <isNotNull prepend="" property="roleids">union all
+		 	select rl.resid from t_ac_roleres rl where rl.resid = a."resid" and rl.roleid in ($roleids$)</isNotNull>
+		 ) 
+ 		and 
+		a."resid" not in(
+  			select resid from t_ac_operres  where authtype = 'n' and resid = a."resid" and operatorid = #operatorid# and (enddate &gt; sysdate or enddate is null) 
+ 		)
+ 		<isNotNull prepend="and" property="dataorgid">a."resid" in(
+		 	select resid from t_ac_appresauth where orgid = #dataorgid#
+		 )</isNotNull>
+		order by a."displayorder"
+    </select>
+    <!-- 查询权限内的为菜单的资源 -->
+    <select id="queryResourceIsMenuByRole" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select * from (
+				select distinct r.displayorder as "displayorder",
+                r.resid        as "resid",
+                r.reslabel     as "reslabel",
+                r.resseq       as "resseq",
+                r.respath      as "respath",
+                r.isleaf       as "isleaf",
+                r.restype      as "restype",
+                (case  when r.resid = #parentresid# then 0 else r.parentresid end) as "parentresid"
+                 from  t_ac_resource r   start with r.resid=#parentresid#  
+                connect by  r.parentresid=prior r.resid 
+				) a where 
+		a."resid" in ( 
+		 select ops.resid from t_ac_operres ops where ops.authtype = 'y' and ops.resid = a."resid" and ops.operatorid = #operatorid# 
+		 and (ops.enddate &gt; sysdate or ops.enddate is null) 
+		  <isNotNull prepend="" property="roleids">union all
+		 	select rl.resid from t_ac_roleres rl where rl.resid = a."resid" and rl.roleid in ($roleids$)</isNotNull>
+		 ) 
+ 		and 
+		a."resid" not in(
+  			select resid from t_ac_operres  where authtype = 'n' and resid = a."resid" and operatorid = #operatorid# and (enddate &gt; sysdate or enddate is null) 
+ 		)
+ 		<isNotNull prepend="and" property="dataorgid">a."resid" in(
+		 	select resid from t_ac_appresauth where orgid = #dataorgid#
+		 )</isNotNull>
+		and ( a."restype"='menu' or a."restype"='app')
+		order by a."displayorder"
+    </select>
+    <!-- 用于查询(系统管理员)所有菜单资源 -->
+    <select id="queryResourceIsMenu" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject"><![CDATA[
+			select distinct
+            (case  when a.parentresid is null then 0 else a.parentresid end) as "parentresid",
+             (case  when c.resid is null then 0 else 1 end) as "indeterminate",
+            a.resid as "resid",
+            a.rescode as "rescode",
+            a.restype as "restype",
+            a.resname as "resname",
+            a.reslabel as "reslabel",           
+            a.resseq as "resseq",
+            a.isleaf as "isleaf"
+            from t_ac_resource a left join 
+			(select resid from t_ac_roleres rs where rs.roleid in (select opr.roleid from t_ac_operatorrole opr where opr.operatorid=#operatorid#)
+			) c on c.resid = a.resid
+			]]></select>
+    <!-- 用于查询管理员权限下的所有菜单资源 -->
+    <select id="queryResourceIsMenuByOrg" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select distinct
+            (case  when a.parentresid is null then 0 else a.parentresid end) as "parentresid",
+            (case  when c.resid is null then 0 else 1 end) as "indeterminate",
+            a.resid as "resid",
+            a.rescode as "rescode",
+            a.restype as "restype",
+            a.resname as "resname",
+            a.reslabel as "reslabel",
+            a.resseq as "resseq",
+            a.isleaf as "isleaf"
+            from t_ac_appresauth au 
+            left join  t_ac_resource a on au.resid = a.resid
+            left join 
+			(select resid from t_ac_roleres rs where rs.roleid in (select opr.roleid from t_ac_operatorrole opr where opr.operatorid=#operatorid#)
+			) c on c.resid = a.resid
+            where au.orgid = #dataorgid#</select>
+    <!-- 查询所有系统资源 -->
+    <select id="queryAllResources" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select
+           (case  when a.parentresid is null then 0 else a.parentresid end) as "parentresid",
+            a.resid as "resid",
+          	a.respath as "respath",
+          	a.reslevel as "reslevel",
+          	a.resseq as "resseq",
+            a.rescode as "rescode",
+            a.restype as "restype",
+            a.resname as "resname",
+            a.reslabel as "reslabel",
+            a.resseq as "resseq",
+            a.isleaf as "isleaf",
+             a.isbizmap as "isbizmap",
+             a.resdesc as "resdesc",
+            a.displayorder as "displayorder"
+            from t_ac_resource a order by a.displayorder</select>
+    <!-- 查询资源的所有角色授权 -->
+    <select id="queryResourceRoles" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select a.resid as "resid",a.roleid as "roleid",a.dataorgid as "dataorgid" 
+			from t_ac_roleres a where resid = #resid# and roleid!=1</select>
+</sqlMap>

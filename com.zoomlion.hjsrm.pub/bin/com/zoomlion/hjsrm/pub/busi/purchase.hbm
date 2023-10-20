@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.purchase.GenlPurchaseApplyData" table="GENL_PURCHASE_APPLY_DATA">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="20" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createby" type="string">
+            <column length="20" name="CREATEBY"/>
+        </property>
+        <property name="createbyname" type="string">
+            <column length="50" name="CREATEBYNAME"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifybyname" type="string">
+            <column length="50" name="MODIFYBYNAME"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="20" name="LIFNR"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="20" name="MATNR"/>
+        </property>
+        <property name="maktx" type="string">
+            <column length="50" name="MAKTX"/>
+        </property>
+        <property name="erdat" type="string">
+            <column length="20" name="ERDAT"/>
+        </property>
+        <property name="data2" type="string">
+            <column length="20" name="DATA2"/>
+        </property>
+        <property name="data3" type="string">
+            <column length="20" name="DATA3"/>
+        </property>
+        <property name="data4" type="string">
+            <column length="20" name="DATA4"/>
+        </property>
+        <property name="data5" type="string">
+            <column length="20" name="DATA5"/>
+        </property>
+        <property name="data1" type="string">
+            <column length="20" name="DATA1"/>
+        </property>
+        <property name="menge" type="string">
+            <column length="20" name="MENGE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.purchase.GenlPurchaseApplyList" table="GENL_PURCHASE_APPLY_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="20" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createby" type="string">
+            <column length="20" name="CREATEBY"/>
+        </property>
+        <property name="createbyname" type="string">
+            <column length="50" name="CREATEBYNAME"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifybyname" type="string">
+            <column length="50" name="MODIFYBYNAME"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+        <property name="banfn" type="string">
+            <column length="20" name="BANFN"/>
+        </property>
+        <property name="bnfpo" type="string">
+            <column length="20" name="BNFPO"/>
+        </property>
+        <property name="erdat" type="string">
+            <column length="20" name="ERDAT"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="20" name="LIFNR"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="20" name="MATNR"/>
+        </property>
+        <property name="maktx" type="string">
+            <column length="50" name="MAKTX"/>
+        </property>
+        <property name="menge" type="string">
+            <column length="20" name="MENGE"/>
+        </property>
+        <property name="lfdat" type="string">
+            <column length="20" name="LFDAT"/>
+        </property>
+        <property name="meins" type="string">
+            <column length="20" name="MEINS"/>
+        </property>
+        <property name="lgort" type="string">
+            <column length="20" name="LGORT"/>
+        </property>
+        <property name="bstyp" type="string">
+            <column length="20" name="BSTYP"/>
+        </property>
+        <property name="knttp" type="string">
+            <column length="20" name="KNTTP"/>
+        </property>
+        <property name="ekgrp" type="string">
+            <column length="20" name="EKGRP"/>
+        </property>
+        <property name="ekorg" type="string">
+            <column length="20" name="EKORG"/>
+        </property>
+        <property name="bednr" type="string">
+            <column length="20" name="BEDNR"/>
+        </property>
+        <property name="aufnr" type="string">
+            <column length="20" name="AUFNR"/>
+        </property>
+        <property name="kostl" type="string">
+            <column length="20" name="KOSTL"/>
+        </property>
+        <property name="loekz" type="string">
+            <column length="20" name="LOEKZ"/>
+        </property>
+        <property name="flag" type="string">
+            <column length="20" name="FLAG"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="20" name="WERKS"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.purchase.GenlPurchaseDrawingProvide" table="GENL_PURCHASE_DRAWING_PROVIDE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="20" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="20" name="CREATEBY"/>
+        </property>
+        <property name="createbyname" type="string">
+            <column length="50" name="CREATEBYNAME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifybyname" type="string">
+            <column length="50" name="MODIFYBYNAME"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+        <property name="advise" type="string">
+            <column length="500" name="ADVISE"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="20" name="MATNR"/>
+        </property>
+        <property name="maktx" type="string">
+            <column length="100" name="MAKTX"/>
+        </property>
+        <property name="zcpcx" type="string">
+            <column length="100" name="ZCPCX"/>
+        </property>
+        <property name="drawingtype" type="string">
+            <column length="100" name="DRAWINGTYPE"/>
+        </property>
+        <property name="drawingcode" type="string">
+            <column length="100" name="DRAWINGCODE"/>
+        </property>
+        <property name="attribute" type="string">
+            <column length="100" name="ATTRIBUTE"/>
+        </property>
+        <property name="warehousing" type="string">
+            <column length="100" name="WAREHOUSING"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="20" name="LIFNR"/>
+        </property>
+        <property name="name1" type="string">
+            <column length="100" name="NAME1"/>
+        </property>
+        <property name="downtime" type="string">
+            <column length="20" name="DOWNTIME"/>
+        </property>
+        <property name="singman" type="string">
+            <column length="20" name="SINGMAN"/>
+        </property>
+        <property name="signtime" type="string">
+            <column length="20" name="SIGNTIME"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'N'" length="2" name="DELFLAG"/>
+        </property>
+    </class>
+</hibernate-mapping>

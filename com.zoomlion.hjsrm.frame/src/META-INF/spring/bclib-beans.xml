@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+xmlns:sca="http://www.springframework.org/schema/sca" 
+xmlns:tx="http://www.springframework.org/schema/tx" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd   http://www.springframework.org/schema/sca http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd">
+
+	<bean class="com.zoomlion.hjsrm.frame.bclib.EmployeeBclibDao" id="employeeBclibDao"/>
+	<bean class="com.zoomlion.hjsrm.frame.bclib.OperatorBclibDao" id="operatorBclibDao"/>
+	<bean class="com.zoomlion.hjsrm.frame.bclib.OrganizationBclibDao" id="organizationBclibDao"/>
+	<!--  人员组件 -->
+	<bean id="employeeBclibBean" class="com.zoomlion.hjsrm.frame.bclib.EmployeeBclibBean">
+		<property name="employeeBclibDao" ref="employeeBclibDao"></property>	
+	</bean>	 
+	<!--  操作员组件 -->
+	<bean id="operatorBclibBean" class="com.zoomlion.hjsrm.frame.bclib.OperatorBclibBean">
+		<property name="operatorBclibDao" ref="operatorBclibDao"></property>	
+	</bean>	 
+	<!--  机构组件 -->
+	<bean id="organizationBclibBean" class="com.zoomlion.hjsrm.frame.bclib.OrganizationBclibBean">
+		<property name="organizationBclibDao" ref="organizationBclibDao"></property>
+		<property name="roleDao" ref="roleDao"></property>
+	</bean>
+	<!-- 文件工具组件 -->
+	<bean id="fileBean" class="com.zoomlion.hjsrm.frame.bclib.file.FileBean">
+		<property name="fileDao" ref="fileDao"/>
+	</bean>
+	<bean id="fileDao" class="com.zoomlion.hjsrm.frame.bclib.file.FileDao"/>
+</beans>

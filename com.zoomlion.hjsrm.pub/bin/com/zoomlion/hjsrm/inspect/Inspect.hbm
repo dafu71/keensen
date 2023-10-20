@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectWtqd" table="GENL_INSPECT_WTQD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="zjwtid" type="string">
+            <column length="8" name="ZJWTID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="zjwtms" type="string">
+            <column length="100" name="ZJWTMS"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="1" name="STATU"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectLbwh" table="GENL_INSPECT_LBWH">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="matnr" type="string">
+                <column length="18" name="MATNR"/>
+            </key-property>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+        </composite-id>
+        <property name="zjlb" type="string">
+            <column length="1" name="ZJLB"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="1" name="STATU"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectQjbz" table="GENL_INSPECT_QJBZ">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="matnr" type="string">
+                <column length="18" name="MATNR"/>
+            </key-property>
+            <key-property name="jyxm" type="string">
+                <column length="100" name="JYXM"/>
+            </key-property>
+            <key-property name="werks" type="string">
+                <column length="4" name="WERKS"/>
+            </key-property>
+        </composite-id>
+        <property name="jybz" type="string">
+            <column length="100" name="JYBZ"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="1" name="STATU"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+        <property name="text" type="string">
+            <column length="1000" name="TEXT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectCjnote" table="GENL_INSPECT_CJNOTE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="cjrecordid" type="string">
+            <column length="12" name="CJRECORDID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="name1" type="string">
+            <column length="100" name="NAME1"/>
+        </property>
+        <property name="zasnh" type="string">
+            <column length="20" name="ZASNH"/>
+        </property>
+        <property name="zasnp" type="string">
+            <column length="20" name="ZASNP"/>
+        </property>
+        <property name="ebeln" type="string">
+            <column length="10" name="EBELN"/>
+        </property>
+        <property name="ebelp" type="string">
+            <column length="5" name="EBELP"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="18" name="MATNR"/>
+        </property>
+        <property name="txz01" type="string">
+            <column length="200" name="TXZ01"/>
+        </property>
+        <property name="wltm" type="string">
+            <column length="200" name="WLTM"/>
+        </property>
+        <property name="shsl" type="string">
+            <column length="10" name="SHSL"/>
+        </property>
+        <property name="cjsl" type="string">
+            <column length="10" name="CJSL"/>
+        </property>
+        <property name="bhgsl" type="string">
+            <column length="10" name="BHGSL"/>
+        </property>
+        <property name="krksl" type="string">
+            <column length="10" name="KRKSL"/>
+        </property>
+        <property name="jgpd" type="string">
+            <column length="4" name="JGPD"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+        <property name="zcbz" type="string">
+            <column length="4" name="ZCBZ"/>
+        </property>
+        <property name="zjlb" type="string">
+            <column length="4" name="ZJLB"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectQjnote" table="GENL_INSPECT_QJNOTE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="qjrecordid" type="string">
+            <column length="12" name="QJRECORDID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="name1" type="string">
+            <column length="100" name="NAME1"/>
+        </property>
+        <property name="zasnh" type="string">
+            <column length="20" name="ZASNH"/>
+        </property>
+        <property name="zasnp" type="string">
+            <column length="20" name="ZASNP"/>
+        </property>
+        <property name="ebeln" type="string">
+            <column length="10" name="EBELN"/>
+        </property>
+        <property name="ebelp" type="string">
+            <column length="5" name="EBELP"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="18" name="MATNR"/>
+        </property>
+        <property name="txz01" type="string">
+            <column length="200" name="TXZ01"/>
+        </property>
+        <property name="wltm" type="string">
+            <column length="200" name="WLTM"/>
+        </property>
+        <property name="jgpd" type="string">
+            <column length="4" name="JGPD"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+        <property name="zcbz" type="string">
+            <column length="4" name="ZCBZ"/>
+        </property>
+        <property name="zjlb" type="string">
+            <column length="4" name="ZJLB"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectCjdetail" table="GENL_INSPECT_CJDETAIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="20" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="cjrecordid" type="string">
+            <column length="12" name="CJRECORDID"/>
+        </property>
+        <property name="zjwtid" type="string">
+            <column length="8" name="ZJWTID"/>
+        </property>
+        <property name="zjwtms" type="string">
+            <column length="100" name="ZJWTMS"/>
+        </property>
+        <property name="zjwtdj" type="string">
+            <column length="4" name="ZJWTDJ"/>
+        </property>
+        <property name="zjwtjs" type="string">
+            <column length="20" name="ZJWTJS"/>
+        </property>
+        <property name="text" type="string">
+            <column length="1000" name="TEXT"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectQjdetail" table="GENL_INSPECT_QJDETAIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="20" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="qjrecordid" type="string">
+            <column length="12" name="QJRECORDID"/>
+        </property>
+        <property name="jyxm" type="string">
+            <column length="200" name="JYXM"/>
+        </property>
+        <property name="jybz" type="string">
+            <column length="200" name="JYBZ"/>
+        </property>
+        <property name="qjsjz" type="string">
+            <column length="200" name="QJSJZ"/>
+        </property>
+        <property name="zjwtjs" type="string">
+            <column length="20" name="ZJWTJS"/>
+        </property>
+        <property name="text" type="string">
+            <column length="1000" name="TEXT"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+        <property name="text2" type="string">
+            <column length="1000" name="TEXT2"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectWxlljyNote" table="GENL_INSPECT_WXLLJY_NOTE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="wxllno" type="string">
+            <column length="20" name="WXLLNO"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="djlx" type="string">
+            <column length="40" name="DJLX"/>
+        </property>
+        <property name="djbh" type="string">
+            <column length="100" name="DJBH"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="20" name="LIFNR"/>
+        </property>
+        <property name="zjlb" type="string">
+            <column length="20" name="ZJLB"/>
+        </property>
+        <property name="dxjlb" type="string">
+            <column length="40" name="DXJLB"/>
+        </property>
+        <property name="jyy" type="string">
+            <column length="20" name="JYY"/>
+        </property>
+        <property name="jyjl" type="string">
+            <column length="2000" name="JYJL"/>
+        </property>
+        <property name="jyrq" type="timestamp">
+            <column name="JYRQ"/>
+        </property>
+        <property name="jyfs" type="string">
+            <column length="100" name="JYFS"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="100" name="MATNR"/>
+        </property>
+        <property name="gyswlbh" type="string">
+            <column length="100" name="GYSWLBH"/>
+        </property>
+        <property name="jjs" type="string">
+            <column length="20" name="JJS"/>
+        </property>
+        <property name="bhgs" type="string">
+            <column length="20" name="BHGS"/>
+        </property>
+        <property name="text" type="string">
+            <column length="2000" name="TEXT"/>
+        </property>
+        <property name="clyj" type="string">
+            <column length="2000" name="CLYJ"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="4" name="STATU"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createuserid" type="string">
+            <column length="20" name="CREATEUSERID"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="modifyuserid" type="string">
+            <column length="20" name="MODIFYUSERID"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectWglljyNote" table="GENL_INSPECT_WGLLJY_NOTE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="wgllno" type="string">
+            <column length="20" name="WGLLNO"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="lifnr" type="string">
+            <column length="20" name="LIFNR"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="200" name="MATNR"/>
+        </property>
+        <property name="jyff" type="string">
+            <column length="2000" name="JYFF"/>
+        </property>
+        <property name="pls" type="string">
+            <column length="10" name="PLS"/>
+        </property>
+        <property name="cjs" type="string">
+            <column length="10" name="CJS"/>
+        </property>
+        <property name="bhgs" type="string">
+            <column length="10" name="BHGS"/>
+        </property>
+        <property name="clyj" type="string">
+            <column length="100" name="CLYJ"/>
+        </property>
+        <property name="jyy" type="string">
+            <column length="20" name="JYY"/>
+        </property>
+        <property name="jyrq" type="timestamp">
+            <column name="JYRQ"/>
+        </property>
+        <property name="xxms" type="string">
+            <column length="2000" name="XXMS"/>
+        </property>
+        <property name="gzxt" type="string">
+            <column length="20" name="GZXT"/>
+        </property>
+        <property name="gzjg" type="string">
+            <column length="20" name="GZJG"/>
+        </property>
+        <property name="gzxs" type="string">
+            <column length="20" name="GZXS"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createuserid" type="string">
+            <column length="20" name="CREATEUSERID"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="modifyuserid" type="string">
+            <column length="20" name="MODIFYUSERID"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="4" name="STATU"/>
+        </property>
+        <property name="gzxtname" type="string">
+            <column length="100" name="GZXTNAME"/>
+        </property>
+        <property name="gzjgname" type="string">
+            <column length="100" name="GZJGNAME"/>
+        </property>
+        <property name="gzxsname" type="string">
+            <column length="100" name="GZXSNAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectWxlljyDetail" table="GENL_INSPECT_WXLLJY_DETAIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="long">
+            <column length="12" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="wxllno" type="string">
+            <column length="20" name="WXLLNO"/>
+        </property>
+        <property name="wtms" type="string">
+            <column length="2000" name="WTMS"/>
+        </property>
+        <property name="wtbw" type="string">
+            <column length="200" name="WTBW"/>
+        </property>
+        <property name="qxlx" type="string">
+            <column length="200" name="QXLX"/>
+        </property>
+        <property name="wtsx" type="string">
+            <column length="200" name="WTSX"/>
+        </property>
+        <property name="gzdj" type="string">
+            <column length="4" name="GZDJ"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="updateuserid" type="string">
+            <column length="20" name="UPDATEUSERID"/>
+        </property>
+        <property name="qxlxname" type="string">
+            <column length="100" name="QXLXNAME"/>
+        </property>
+        <property name="wtsxname" type="string">
+            <column length="100" name="WTSXNAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectWglljyDetail" table="GENL_INSPECT_WGLLJY_DETAIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="long">
+            <column length="12" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="wgllno" type="string">
+            <column length="20" name="WGLLNO"/>
+        </property>
+        <property name="xxms" type="string">
+            <column length="2000" name="XXMS"/>
+        </property>
+        <property name="gzxs" type="string">
+            <column length="200" name="GZXS"/>
+        </property>
+        <property name="updatetime" type="date">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="updateuserid" type="string">
+            <column length="20" name="UPDATEUSERID"/>
+        </property>
+        <property name="gzxsname" type="string">
+            <column length="100" name="GZXSNAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.inspect.Inspect.GenlInspectSbtkNote" table="GENL_INSPECT_SBTK_NOTE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="sbtkno" type="string">
+            <column length="20" name="SBTKNO"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="tkdh" type="string">
+            <column length="20" name="TKDH"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="20" name="LIFNR"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="200" name="MATNR"/>
+        </property>
+        <property name="jyy" type="string">
+            <column length="20" name="JYY"/>
+        </property>
+        <property name="jyrq" type="timestamp">
+            <column name="JYRQ"/>
+        </property>
+        <property name="tksl" type="string">
+            <column length="20" name="TKSL"/>
+        </property>
+        <property name="gzxt" type="string">
+            <column length="20" name="GZXT"/>
+        </property>
+        <property name="gzjg" type="string">
+            <column length="20" name="GZJG"/>
+        </property>
+        <property name="gzxs" type="string">
+            <column length="20" name="GZXS"/>
+        </property>
+        <property name="clyj" type="string">
+            <column length="100" name="CLYJ"/>
+        </property>
+        <property name="tkyy" type="string">
+            <column length="2000" name="TKYY"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="4" name="STATU"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createuserid" type="string">
+            <column length="20" name="CREATEUSERID"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="modifyuserid" type="string">
+            <column length="20" name="MODIFYUSERID"/>
+        </property>
+        <property name="gzxtname" type="string">
+            <column length="100" name="GZXTNAME"/>
+        </property>
+        <property name="gzjgname" type="string">
+            <column length="100" name="GZJGNAME"/>
+        </property>
+        <property name="gzxsname" type="string">
+            <column length="100" name="GZXSNAME"/>
+        </property>
+        <property name="zatwrt" type="string">
+            <column length="100" name="ZATWRT"/>
+        </property>
+    </class>
+</hibernate-mapping>

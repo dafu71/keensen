@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.sap.SapSrmContract" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.sap.SapSrmContract">
+    <xs:complexType name="GenlContractEkpo" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmContract.impl.GenlContractEkpoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="ebeln" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebelp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="loekz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="aedat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="txz01" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ematn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lgort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bednr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="maktl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="menge" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meins" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="elikz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="erekz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pstyp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="knttp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lmein" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mwskz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stats" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlContractKonp" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmContract.impl.GenlContractKonpImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="knumh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kopos" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kappl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kschl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kbetr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="konwa" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kpein" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kmein" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="loevmKo" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlContractAo16" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmContract.impl.GenlContractAo16Impl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="kappl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kschl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="evrtn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="evrtp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="datbi" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="datab" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="knumh" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlContractEkko" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SapSrmContract.impl.GenlContractEkkoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="ebeln" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bstyp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bsart" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="loekz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="aedat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="ernam" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="spras" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekgrp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="waers" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bedat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="kdatb" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="kdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="ihrez" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="verkf" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stats" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="knumv" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="frgrl" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="UploadFileBackId.flowx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3" state="stateless">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" id="link3" name="link3" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter anyType="com.primeton.ext.access.http.IUploadFile" description="上传文件（固定名称）" historyStateLocation="client" isArray="false" name="uploadFile"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="groupId" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="relationId" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="dataorgid" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="operatorname" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="operatorid" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess0" name="uploadFileSingle" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.zoomlion.hjsrm.frame.bclib.file.FileBclib.uploadFileSingle</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="groupId" type="query" value="String" valueType="Primitive" pattern="reference">groupId</process:inputVariable>
+        <process:inputVariable id="1" name="relationId" type="query" value="String" valueType="Primitive" pattern="reference">relationId</process:inputVariable>
+        <process:inputVariable id="2" name="uploadFile" type="query" value="com.primeton.ext.access.http.IUploadFile" valueType="Java" pattern="reference">uploadFile</process:inputVariable>
+        <process:inputVariable id="3" name="operatorname" type="query" value="String" valueType="Primitive" pattern="reference">operatorname</process:inputVariable>
+        <process:inputVariable id="4" name="dataorgid" type="query" value="String" valueType="Primitive" pattern="reference">dataorgid</process:inputVariable>
+        <process:inputVariable id="5" name="operatorid" type="query" value="String" valueType="Primitive" pattern="reference">operatorid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="fileId" type="query" value="String" valueType="Primitive">fileId</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <figSize height="20" width="122"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end" contextPath="" method="forward" uri="/frame/tools/file/returnSucess.jsp">
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns>
+      <process:return id="0" name="fileId" type="query">f:fileId</process:return>
+      <process:return id="1" name="filePath" type="query">f:filePath</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadFile/filePath</process:from>
+      <process:to type="query">f:filePath</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign1" name="赋值1" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadFile/clientFileName</process:from>
+      <process:to type="query">f:fileName</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="6.3"/>
+  <process:variables>
+    <process:variable historyStateLocation="client" isArray="false" name="fileId" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="filePath" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="fileName" primitiveType="String"/>
+  </process:variables>
+  <process:inputParameters/>
+</process:tPageFlow>

@@ -1,0 +1,3708 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsAppealsendhotlist" table="T_BS_APPEALSENDHOTLIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="applyinfopkid" type="string">
+            <column length="25" name="APPLYINFOPKID"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="disposetype" type="string">
+            <column length="1" name="DISPOSETYPE" not-null="true"/>
+        </property>
+        <property name="disposedate" type="timestamp">
+            <column name="DISPOSEDATE"/>
+        </property>
+        <property name="disposeuserid" type="string">
+            <column length="20" name="DISPOSEUSERID"/>
+        </property>
+        <property name="disposeorgcode" type="string">
+            <column length="20" name="DISPOSEORGCODE"/>
+        </property>
+        <property name="receivedept" type="int">
+            <column length="10" name="RECEIVEDEPT"/>
+        </property>
+        <property name="disposereason" type="string">
+            <column length="4" name="DISPOSEREASON"/>
+        </property>
+        <property name="content" type="string">
+            <column length="300" name="CONTENT"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsBusicheck" table="T_BS_BUSICHECK">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE"/>
+        </property>
+        <property name="inbatchid" type="int">
+            <column length="10" name="INBATCHID"/>
+        </property>
+        <property name="conclusiontype" type="string">
+            <column length="1" name="CONCLUSIONTYPE"/>
+        </property>
+        <property name="conclusiondetail" type="string">
+            <column length="200" name="CONCLUSIONDETAIL"/>
+        </property>
+        <property name="checkdate" type="date">
+            <column name="CHECKDATE" not-null="true"/>
+        </property>
+        <property name="checkoptr" type="string">
+            <column length="20" name="CHECKOPTR" not-null="true"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsBusidistrinfo" table="T_BS_BUSIDISTRINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="destorg" type="string">
+            <column length="20" name="DESTORG"/>
+        </property>
+        <property name="sourceorg" type="string">
+            <column length="20" name="SOURCEORG"/>
+        </property>
+        <property name="busiattr" type="string">
+            <column length="1" name="BUSIATTR"/>
+        </property>
+        <property name="sourceoptr" type="string">
+            <column length="20" name="SOURCEOPTR"/>
+        </property>
+        <property name="destoptr" type="string">
+            <column length="20" name="DESTOPTR"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'0'" length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="newflag" type="string">
+            <column default="'1'" length="1" name="NEWFLAG" not-null="true"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="dataflag" type="string">
+            <column default="'1'" length="1" name="DATAFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsBusifee" table="T_BS_BUSIFEE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="acctshtpkid" type="string">
+            <column length="25" name="ACCTSHTPKID"/>
+        </property>
+        <property name="invccode" type="string">
+            <column length="25" name="INVCCODE"/>
+        </property>
+        <property name="feetype" type="string">
+            <column length="5" name="FEETYPE" not-null="true"/>
+        </property>
+        <property name="paytype" type="string">
+            <column length="1" name="PAYTYPE"/>
+        </property>
+        <property name="balancemodel" type="string">
+            <column length="1" name="BALANCEMODEL"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID" not-null="true"/>
+        </property>
+        <property name="count" type="int">
+            <column length="10" name="COUNT"/>
+        </property>
+        <property name="price" type="big_decimal">
+            <column length="15" name="PRICE" not-null="true" precision="15" scale="2"/>
+        </property>
+        <property name="chrgsum" type="big_decimal">
+            <column length="18" name="CHRGSUM" not-null="true" precision="18" scale="2"/>
+        </property>
+        <property name="paidsum" type="big_decimal">
+            <column length="18" name="PAIDSUM" precision="18" scale="2"/>
+        </property>
+        <property name="plandate" type="date">
+            <column name="PLANDATE"/>
+        </property>
+        <property name="state" type="string">
+            <column length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="backflag" type="string">
+            <column length="1" name="BACKFLAG"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="date">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="stages" type="int">
+            <column length="4" name="STAGES"/>
+        </property>
+        <property name="scale" type="big_decimal">
+            <column length="5" name="SCALE" precision="5" scale="2"/>
+        </property>
+        <property name="stagebatchid" type="string">
+            <column length="25" name="STAGEBATCHID"/>
+        </property>
+        <property name="recordedcompany" type="string">
+            <column length="1" name="RECORDEDCOMPANY"/>
+        </property>
+        <property name="voucher" type="string">
+            <column default="'0'" length="1" name="VOUCHER"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsBusirule" table="T_BS_BUSIRULE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="pkid" type="string">
+                <column length="25" name="PKID"/>
+            </key-property>
+            <key-property name="dataorgid" type="int">
+                <column length="10" name="DATAORGID"/>
+            </key-property>
+        </composite-id>
+        <property name="busistepdefinepkid" type="string">
+            <column length="25" name="BUSISTEPDEFINEPKID"/>
+        </property>
+        <property name="dealtype" type="string">
+            <column length="5" name="DEALTYPE" not-null="true"/>
+        </property>
+        <property name="rulename" type="string">
+            <column length="60" name="RULENAME" not-null="true"/>
+        </property>
+        <property name="optfunction" type="string">
+            <column length="256" name="OPTFUNCTION" not-null="true"/>
+        </property>
+        <property name="progtype" type="string">
+            <column length="1" name="PROGTYPE" not-null="true"/>
+        </property>
+        <property name="optseq" type="int">
+            <column length="10" name="OPTSEQ" not-null="true"/>
+        </property>
+        <property name="optlogic" type="string">
+            <column length="5" name="OPTLOGIC" not-null="true"/>
+        </property>
+        <property name="rulelvl" type="string">
+            <column length="1" name="RULELVL" not-null="true"/>
+        </property>
+        <property name="returnvalue" type="string">
+            <column length="10" name="RETURNVALUE" not-null="true"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG" not-null="true"/>
+        </property>
+        <property name="processdefinepkid" type="string">
+            <column length="25" name="PROCESSDEFINEPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsBusistepdefine" table="T_BS_BUSISTEPDEFINE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="pkid" type="string">
+                <column length="25" name="PKID"/>
+            </key-property>
+            <key-property name="dataorgid" type="int">
+                <column length="10" name="DATAORGID"/>
+            </key-property>
+        </composite-id>
+        <property name="processdefinepkid" type="string">
+            <column length="25" name="PROCESSDEFINEPKID" not-null="true"/>
+        </property>
+        <property name="orgcode" type="string">
+            <column length="10" name="ORGCODE"/>
+        </property>
+        <property name="activitydefid" type="string">
+            <column length="10" name="ACTIVITYDEFID" not-null="true"/>
+        </property>
+        <property name="activitydefname" type="string">
+            <column length="30" name="ACTIVITYDEFNAME" not-null="true"/>
+        </property>
+        <property name="candistr" type="string">
+            <column length="1" name="CANDISTR" not-null="true"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="urglvl" type="string">
+            <column length="1" name="URGLVL" not-null="true"/>
+        </property>
+        <property name="finaldays" type="big_decimal">
+            <column length="6" name="FINALDAYS" not-null="true" precision="6" scale="1"/>
+        </property>
+        <property name="cycletype" type="string">
+            <column length="1" name="CYCLETYPE" not-null="true"/>
+        </property>
+        <property name="extend1" type="string">
+            <column length="64" name="EXTEND1"/>
+        </property>
+        <property name="extend2" type="string">
+            <column length="64" name="EXTEND2"/>
+        </property>
+        <property name="extend3" type="string">
+            <column length="64" name="EXTEND3"/>
+        </property>
+        <property name="extend4" type="string">
+            <column length="64" name="EXTEND4"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="earlydays" type="big_decimal">
+            <column length="5" name="EARLYDAYS" precision="5" scale="1"/>
+        </property>
+        <property name="earlytype" type="string">
+            <column length="1" name="EARLYTYPE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsBusisteptabs" table="T_BS_BUSISTEPTABS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="pkid" type="string">
+                <column length="25" name="PKID"/>
+            </key-property>
+            <key-property name="dataorgid" type="int">
+                <column length="10" name="DATAORGID"/>
+            </key-property>
+        </composite-id>
+        <property name="busistepdefinepkid" type="string">
+            <column length="25" name="BUSISTEPDEFINEPKID" not-null="true"/>
+        </property>
+        <property name="tabreslabel" type="string">
+            <column length="40" name="TABRESLABEL"/>
+        </property>
+        <property name="tabresid" type="int">
+            <column length="10" name="TABRESID" not-null="true"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="seq" type="int">
+            <column length="10" name="SEQ" not-null="true"/>
+        </property>
+        <property name="ischeck" type="string">
+            <column default="'fasle'" length="5" name="ISCHECK" not-null="true"/>
+        </property>
+        <property name="checkurl" type="string">
+            <column length="200" name="CHECKURL"/>
+        </property>
+        <property name="extend1" type="string">
+            <column length="64" name="EXTEND1"/>
+        </property>
+        <property name="extend2" type="string">
+            <column length="64" name="EXTEND2"/>
+        </property>
+        <property name="extend3" type="string">
+            <column length="64" name="EXTEND3"/>
+        </property>
+        <property name="extend4" type="string">
+            <column length="64" name="EXTEND4"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsCommonphraseconfig" table="T_BS_COMMONPHRASECONFIG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="busitypetosendconfigpkid" type="string">
+            <column length="25" name="BUSITYPETOSENDCONFIGPKID" not-null="true"/>
+        </property>
+        <property name="sort" type="int">
+            <column length="10" name="SORT"/>
+        </property>
+        <property name="phrasedetails" type="string">
+            <column length="500" name="PHRASEDETAILS"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsConstrinfo" table="T_BS_CONSTRINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="materialcode" type="string">
+            <column length="20" name="MATERIALCODE"/>
+        </property>
+        <property name="projectid" type="string">
+            <column length="20" name="PROJECTID" not-null="true"/>
+        </property>
+        <property name="construnit" type="string">
+            <column length="200" name="CONSTRUNIT" not-null="true"/>
+        </property>
+        <property name="constrman" type="string">
+            <column length="60" name="CONSTRMAN"/>
+        </property>
+        <property name="contactphone" type="string">
+            <column length="20" name="CONTACTPHONE"/>
+        </property>
+        <property name="monitor" type="string">
+            <column length="60" name="MONITOR"/>
+        </property>
+        <property name="monitorphone" type="string">
+            <column length="20" name="MONITORPHONE"/>
+        </property>
+        <property name="startdate" type="date">
+            <column name="STARTDATE"/>
+        </property>
+        <property name="enddate" type="date">
+            <column name="ENDDATE"/>
+        </property>
+        <property name="constrsummary" type="string">
+            <column length="200" name="CONSTRSUMMARY"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsFirefailurereasoncofig" table="T_BS_FIREFAILUREREASONCOFIG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="istop" type="string">
+            <column length="1" name="ISTOP"/>
+        </property>
+        <property name="parentpkid" type="string">
+            <column length="25" name="PARENTPKID"/>
+        </property>
+        <property name="reasonsdetail" type="string">
+            <column length="30" name="REASONSDETAIL"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsFireinfoexpand" table="T_BS_FIREINFOEXPAND">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="fireinfopkid" type="string">
+            <column length="25" name="FIREINFOPKID"/>
+        </property>
+        <property name="remainheadinfopkid" type="string">
+            <column length="25" name="REMAINHEADINFOPKID"/>
+        </property>
+        <property name="remainheadfirecount" type="int">
+            <column length="10" name="REMAINHEADFIRECOUNT"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsMeterdealrec" table="T_BS_METERDEALREC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID" not-null="true"/>
+        </property>
+        <property name="meterinfopkid" type="string">
+            <column length="500" name="METERINFOPKID"/>
+        </property>
+        <property name="reasontype" type="string">
+            <column length="5" name="REASONTYPE"/>
+        </property>
+        <property name="dealmode" type="string">
+            <column length="1" name="DEALMODE"/>
+        </property>
+        <property name="turninfopkid" type="string">
+            <column length="25" name="TURNINFOPKID"/>
+        </property>
+        <property name="isnotmet" type="string">
+            <column length="1" name="ISNOTMET"/>
+        </property>
+        <property name="dealer" type="string">
+            <column length="20" name="DEALER"/>
+        </property>
+        <property name="dealdate" type="timestamp">
+            <column name="DEALDATE"/>
+        </property>
+        <property name="dealorg" type="string">
+            <column length="20" name="DEALORG"/>
+        </property>
+        <property name="dealtype" type="string">
+            <column length="5" name="DEALTYPE"/>
+        </property>
+        <property name="meterdealstate" type="string">
+            <column default="'1'" length="1" name="METERDEALSTATE"/>
+        </property>
+        <property name="verifytype" type="string">
+            <column length="1" name="VERIFYTYPE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsMeterfixremove" table="T_BS_METERFIXREMOVE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="meterinfopkid" type="string">
+            <column length="25" name="METERINFOPKID" not-null="true"/>
+        </property>
+        <property name="oldmeterinfopkid" type="string">
+            <column length="25" name="OLDMETERINFOPKID"/>
+        </property>
+        <property name="reading" type="big_decimal">
+            <column length="15" name="READING" precision="15" scale="5"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID" not-null="true"/>
+        </property>
+        <property name="qdreading" type="big_decimal">
+            <column length="15" name="QDREADING" precision="15" scale="5"/>
+        </property>
+        <property name="qareading" type="big_decimal">
+            <column length="15" name="QAREADING" precision="15" scale="5"/>
+        </property>
+        <property name="dataflag" type="string">
+            <column length="1" name="DATAFLAG"/>
+        </property>
+        <property name="meterpress" type="big_decimal">
+            <column length="10" name="METERPRESS" precision="10" scale="4"/>
+        </property>
+        <property name="modifiertemp" type="big_decimal">
+            <column length="10" name="MODIFIERTEMP" precision="10" scale="2"/>
+        </property>
+        <property name="modifierpress" type="big_decimal">
+            <column length="10" name="MODIFIERPRESS" precision="10" scale="4"/>
+        </property>
+        <property name="modifierfactor" type="big_decimal">
+            <column length="10" name="MODIFIERFACTOR" precision="10" scale="4"/>
+        </property>
+        <property name="manometer" type="string">
+            <column length="20" name="MANOMETER"/>
+        </property>
+        <property name="rate" type="int">
+            <column length="10" name="RATE"/>
+        </property>
+        <property name="rectype" type="string">
+            <column length="1" name="RECTYPE" not-null="true"/>
+        </property>
+        <property name="regdate" type="date">
+            <column name="REGDATE"/>
+        </property>
+        <property name="regoptrcode" type="string">
+            <column length="20" name="REGOPTRCODE"/>
+        </property>
+        <property name="regorg" type="string">
+            <column length="20" name="REGORG"/>
+        </property>
+        <property name="reason" type="string">
+            <column length="200" name="REASON"/>
+        </property>
+        <property name="leaveamount" type="big_decimal">
+            <column length="18" name="LEAVEAMOUNT" precision="18" scale="5"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsMeterfixremoveext" table="T_BS_METERFIXREMOVEEXT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="meterfixremovepkid" type="string">
+            <column length="25" name="METERFIXREMOVEPKID" not-null="true"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="projectid" type="string">
+            <column length="20" name="PROJECTID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="fixdate" type="date">
+            <column name="FIXDATE"/>
+        </property>
+        <property name="fixflag" type="string">
+            <column length="2" name="FIXFLAG"/>
+        </property>
+        <property name="inbatchid" type="int">
+            <column length="10" name="INBATCHID"/>
+        </property>
+        <property name="meterposi" type="string">
+            <column length="20" name="METERPOSI"/>
+        </property>
+        <property name="meterseq" type="long">
+            <column length="22" name="METERSEQ"/>
+        </property>
+        <property name="isbill" type="string">
+            <column length="1" name="ISBILL"/>
+        </property>
+        <property name="meterfixdate" type="date">
+            <column name="METERFIXDATE"/>
+        </property>
+        <property name="meterremovedate" type="date">
+            <column name="METERREMOVEDATE"/>
+        </property>
+        <property name="fixdirect" type="string">
+            <column length="1" name="FIXDIRECT"/>
+        </property>
+        <property name="meterdirect" type="string">
+            <column length="1" name="METERDIRECT"/>
+        </property>
+        <property name="carddirect" type="string">
+            <column length="1" name="CARDDIRECT"/>
+        </property>
+        <property name="safetynumber" type="string">
+            <column length="30" name="SAFETYNUMBER"/>
+        </property>
+        <property name="isbuy" type="string">
+            <column length="1" name="ISBUY"/>
+        </property>
+        <property name="supplypointpkid" type="string">
+            <column length="25" name="SUPPLYPOINTPKID"/>
+        </property>
+        <property name="basefactor" type="big_decimal">
+            <column length="10" name="BASEFACTOR" precision="10" scale="5"/>
+        </property>
+        <property name="fixmode" type="string">
+            <column length="1" name="FIXMODE"/>
+        </property>
+        <property name="isseal" type="string">
+            <column length="1" name="ISSEAL"/>
+        </property>
+        <property name="isblind" type="string">
+            <column length="1" name="ISBLIND"/>
+        </property>
+        <property name="isbranch" type="string">
+            <column length="1" name="ISBRANCH"/>
+        </property>
+        <property name="adjustfactor" type="big_decimal">
+            <column length="10" name="ADJUSTFACTOR" precision="10" scale="4"/>
+        </property>
+        <property name="modifiercode" type="string">
+            <column length="20" name="MODIFIERCODE"/>
+        </property>
+        <property name="sealcode" type="string">
+            <column length="200" name="SEALCODE"/>
+        </property>
+        <property name="imgcode" type="string">
+            <column length="200" name="IMGCODE"/>
+        </property>
+        <property name="metertstate" type="string">
+            <column length="1" name="METERTSTATE"/>
+        </property>
+        <property name="nosucereason" type="string">
+            <column length="2" name="NOSUCEREASON"/>
+        </property>
+        <property name="nofixreason" type="string">
+            <column length="2" name="NOFIXREASON"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsMeterfixremoverefer" table="T_BS_METERFIXREMOVEREFER">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="meterinfopkid" type="string">
+            <column length="25" name="METERINFOPKID" not-null="true"/>
+        </property>
+        <property name="oldmeterinfopkid" type="string">
+            <column length="25" name="OLDMETERINFOPKID"/>
+        </property>
+        <property name="state" type="string">
+            <column length="1" name="STATE"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsMetermaint" table="T_BS_METERMAINT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="meterinfopkid" type="string">
+            <column length="25" name="METERINFOPKID" not-null="true"/>
+        </property>
+        <property name="reading" type="big_decimal">
+            <column length="15" name="READING" not-null="true" precision="15" scale="5"/>
+        </property>
+        <property name="qdreading" type="big_decimal">
+            <column length="15" name="QDREADING" precision="15" scale="5"/>
+        </property>
+        <property name="qareading" type="big_decimal">
+            <column length="15" name="QAREADING" precision="15" scale="5"/>
+        </property>
+        <property name="meterpress" type="big_decimal">
+            <column length="10" name="METERPRESS" precision="10" scale="4"/>
+        </property>
+        <property name="modifiertmpr" type="big_decimal">
+            <column length="10" name="MODIFIERTMPR" precision="10" scale="2"/>
+        </property>
+        <property name="modifierpress" type="big_decimal">
+            <column length="10" name="MODIFIERPRESS" precision="10" scale="4"/>
+        </property>
+        <property name="modifierfactor" type="big_decimal">
+            <column length="10" name="MODIFIERFACTOR" precision="10" scale="4"/>
+        </property>
+        <property name="manometer" type="string">
+            <column length="20" name="MANOMETER"/>
+        </property>
+        <property name="optfee" type="big_decimal">
+            <column length="10" name="OPTFEE" precision="10" scale="2"/>
+        </property>
+        <property name="power" type="big_decimal">
+            <column length="10" name="POWER" precision="10" scale="2"/>
+        </property>
+        <property name="maintnext" type="date">
+            <column name="MAINTNEXT"/>
+        </property>
+        <property name="maintperiod" type="long">
+            <column length="22" name="MAINTPERIOD"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsMeteroil" table="T_BS_METEROIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="meterinfopkid" type="string">
+            <column length="25" name="METERINFOPKID" not-null="true"/>
+        </property>
+        <property name="oilamount" type="big_decimal">
+            <column length="18" name="OILAMOUNT" precision="18" scale="5"/>
+        </property>
+        <property name="oilamountunit" type="string">
+            <column length="1" name="OILAMOUNTUNIT"/>
+        </property>
+        <property name="optfee" type="big_decimal">
+            <column length="10" name="OPTFEE" precision="10" scale="2"/>
+        </property>
+        <property name="oilfee" type="big_decimal">
+            <column length="10" name="OILFEE" precision="10" scale="2"/>
+        </property>
+        <property name="oilnext" type="date">
+            <column name="OILNEXT"/>
+        </property>
+        <property name="oilperiod" type="long">
+            <column length="22" name="OILPERIOD"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsOutingresourceinfo" table="T_BS_OUTINGRESOURCEINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="repairinfopkid" type="string">
+            <column length="25" name="REPAIRINFOPKID"/>
+        </property>
+        <property name="outingresourcetype" type="string">
+            <column length="1" name="OUTINGRESOURCETYPE"/>
+        </property>
+        <property name="outingresourceamount" type="int">
+            <column length="10" name="OUTINGRESOURCEAMOUNT"/>
+        </property>
+        <property name="outingresourcedetails" type="string">
+            <column length="500" name="OUTINGRESOURCEDETAILS"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsParticipantrule" table="T_BS_PARTICIPANTRULE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="pkid" type="string">
+                <column length="25" name="PKID"/>
+            </key-property>
+            <key-property name="dataorgid" type="int">
+                <column length="10" name="DATAORGID"/>
+            </key-property>
+        </composite-id>
+        <property name="busistepdefinepkid" type="string">
+            <column length="25" name="BUSISTEPDEFINEPKID" not-null="true"/>
+        </property>
+        <property name="participanttype" type="string">
+            <column length="20" name="PARTICIPANTTYPE" not-null="true"/>
+        </property>
+        <property name="participantid" type="string">
+            <column length="20" name="PARTICIPANTID" not-null="true"/>
+        </property>
+        <property name="participantname" type="string">
+            <column length="60" name="PARTICIPANTNAME" not-null="true"/>
+        </property>
+        <property name="extend1" type="string">
+            <column length="64" name="EXTEND1"/>
+        </property>
+        <property name="extend2" type="string">
+            <column length="64" name="EXTEND2"/>
+        </property>
+        <property name="extend3" type="string">
+            <column length="64" name="EXTEND3"/>
+        </property>
+        <property name="extend4" type="string">
+            <column length="64" name="EXTEND4"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="20" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsPlaninfo" table="T_BS_PLANINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="planname" type="string">
+            <column length="60" name="PLANNAME"/>
+        </property>
+        <property name="plantype" type="string">
+            <column length="20" name="PLANTYPE"/>
+        </property>
+        <property name="effdate" type="date">
+            <column name="EFFDATE"/>
+        </property>
+        <property name="expdate" type="date">
+            <column name="EXPDATE"/>
+        </property>
+        <property name="orgcode" type="string">
+            <column length="10" name="ORGCODE" not-null="true"/>
+        </property>
+        <property name="deptcode" type="string">
+            <column length="20" name="DEPTCODE"/>
+        </property>
+        <property name="iscrtwksheet" type="string">
+            <column length="1" name="ISCRTWKSHEET"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsPlantask" table="T_BS_PLANTASK">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID" not-null="true"/>
+        </property>
+        <property name="meterinfopkid" type="string">
+            <column length="25" name="METERINFOPKID"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsReadingtemp" table="T_BS_READINGTEMP">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="meterinfopkid" type="string">
+            <column length="25" name="METERINFOPKID" not-null="true"/>
+        </property>
+        <property name="reading" type="big_decimal">
+            <column length="15" name="READING" not-null="true" precision="15" scale="5"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="dataflag" type="string">
+            <column length="1" name="DATAFLAG" not-null="true"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsRemainheadinfo" table="T_BS_REMAINHEADINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="supplymeterpkid" type="string">
+            <column length="25" name="SUPPLYMETERPKID"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID" not-null="true"/>
+        </property>
+        <property name="remainheadtype" type="string">
+            <column length="1" name="REMAINHEADTYPE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="remainheadcount" type="int">
+            <column length="10" name="REMAINHEADCOUNT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsRemakeinfo" table="T_BS_REMAKEINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="iscorrect" type="string">
+            <column length="1" name="ISCORRECT"/>
+        </property>
+        <property name="correctdesc" type="string">
+            <column length="200" name="CORRECTDESC"/>
+        </property>
+        <property name="conclusiontype" type="string">
+            <column length="1" name="CONCLUSIONTYPE"/>
+        </property>
+        <property name="conclusionother" type="string">
+            <column length="200" name="CONCLUSIONOTHER"/>
+        </property>
+        <property name="correctdate" type="date">
+            <column name="CORRECTDATE" not-null="true"/>
+        </property>
+        <property name="correctoptr" type="string">
+            <column length="20" name="CORRECTOPTR" not-null="true"/>
+        </property>
+        <property name="correctoptrname" type="string">
+            <column length="60" name="CORRECTOPTRNAME"/>
+        </property>
+        <property name="archfileid" type="string">
+            <column length="20" name="ARCHFILEID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsRepairfaultfaultconfig" table="T_BS_REPAIRFAULTFAULTCONFIG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="parentpkid" type="string">
+            <column length="25" name="PARENTPKID"/>
+        </property>
+        <property name="istop" type="string">
+            <column length="1" name="ISTOP"/>
+        </property>
+        <property name="faultinfo" type="string">
+            <column length="50" name="FAULTINFO"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsRepairtrackhandle" table="T_BS_REPAIRTRACKHANDLE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="repairinfopkid" type="string">
+            <column length="25" name="REPAIRINFOPKID"/>
+        </property>
+        <property name="trackhandletype" type="string">
+            <column length="1" name="TRACKHANDLETYPE"/>
+        </property>
+        <property name="trackhandleorgid" type="int">
+            <column length="10" name="TRACKHANDLEORGID"/>
+        </property>
+        <property name="trackhandleresult" type="string">
+            <column length="1" name="TRACKHANDLERESULT"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="trackhandledate" type="timestamp">
+            <column name="TRACKHANDLEDATE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsReservamountmodel" table="T_BS_RESERVAMOUNTMODEL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="modelname" type="string">
+            <column length="60" name="MODELNAME" not-null="true"/>
+        </property>
+        <property name="modelbusitype" type="string">
+            <column length="5" name="MODELBUSITYPE" not-null="true"/>
+        </property>
+        <property name="starttime" type="date">
+            <column name="STARTTIME" not-null="true"/>
+        </property>
+        <property name="endtime" type="date">
+            <column name="ENDTIME" not-null="true"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsReservamountmodelext" table="T_BS_RESERVAMOUNTMODELEXT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="reservamountmodelpkid" type="string">
+            <column length="25" name="RESERVAMOUNTMODELPKID" not-null="true"/>
+        </property>
+        <property name="starttime" type="string">
+            <column length="4" name="STARTTIME"/>
+        </property>
+        <property name="endtime" type="string">
+            <column length="4" name="ENDTIME"/>
+        </property>
+        <property name="resered" type="long">
+            <column length="22" name="RESERED"/>
+        </property>
+        <property name="added" type="long">
+            <column length="22" name="ADDED"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="date">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsReservationkhour" table="T_BS_RESERVATIONKHOUR">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="reservationtypepkid" type="string">
+            <column length="25" name="RESERVATIONTYPEPKID" not-null="true"/>
+        </property>
+        <property name="workclasscode" type="string">
+            <column length="10" name="WORKCLASSCODE" not-null="true"/>
+        </property>
+        <property name="workclassname" type="string">
+            <column length="30" name="WORKCLASSNAME" not-null="true"/>
+        </property>
+        <property name="workhour" type="big_decimal">
+            <column length="11" name="WORKHOUR" not-null="true" precision="11" scale="1"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="date">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsReservationplan" table="T_BS_RESERVATIONPLAN">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE"/>
+        </property>
+        <property name="makedate" type="date">
+            <column name="MAKEDATE" not-null="true"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planname" type="string">
+            <column length="30" name="PLANNAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsReservationteam" table="T_BS_RESERVATIONTEAM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workgroupcode" type="int">
+            <column length="10" name="WORKGROUPCODE" not-null="true"/>
+        </property>
+        <property name="workgroupname" type="string">
+            <column length="30" name="WORKGROUPNAME" not-null="true"/>
+        </property>
+        <property name="totalworkhour" type="big_decimal">
+            <column length="11" name="TOTALWORKHOUR" precision="11" scale="1"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="date">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsReservationtype" table="T_BS_RESERVATIONTYPE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="jobclasscode" type="string">
+            <column length="10" name="JOBCLASSCODE" not-null="true"/>
+        </property>
+        <property name="jobclassname" type="string">
+            <column length="30" name="JOBCLASSNAME" not-null="true"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="date">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsSecondfireinfo" table="T_BS_SECONDFIREINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID" not-null="true"/>
+        </property>
+        <property name="secondfiredate" type="date">
+            <column name="SECONDFIREDATE"/>
+        </property>
+        <property name="secondfireoptr" type="string">
+            <column length="20" name="SECONDFIREOPTR"/>
+        </property>
+        <property name="secondfiredepartment" type="string">
+            <column length="20" name="SECONDFIREDEPARTMENT"/>
+        </property>
+        <property name="secondfiredesc" type="string">
+            <column length="200" name="SECONDFIREDESC"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsSurveyconclusion" table="T_BS_SURVEYCONCLUSION">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="constrtype" type="string">
+            <column length="1" name="CONSTRTYPE"/>
+        </property>
+        <property name="turnbusitype" type="string">
+            <column length="5" name="TURNBUSITYPE"/>
+        </property>
+        <property name="surveyoptr" type="string">
+            <column length="20" name="SURVEYOPTR" not-null="true"/>
+        </property>
+        <property name="surveydate" type="date">
+            <column name="SURVEYDATE" not-null="true"/>
+        </property>
+        <property name="haspromises" type="string">
+            <column length="1" name="HASPROMISES"/>
+        </property>
+        <property name="promisescontent" type="string">
+            <column length="200" name="PROMISESCONTENT"/>
+        </property>
+        <property name="conclusiontype" type="string">
+            <column length="1" name="CONCLUSIONTYPE"/>
+        </property>
+        <property name="conclusiondetail" type="string">
+            <column length="200" name="CONCLUSIONDETAIL"/>
+        </property>
+        <property name="busidesc" type="string">
+            <column length="200" name="BUSIDESC"/>
+        </property>
+        <property name="amount" type="big_decimal">
+            <column length="18" name="AMOUNT" precision="18" scale="5"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="iscivicismtube" type="string">
+            <column default="'0'" length="1" name="ISCIVICISMTUBE"/>
+        </property>
+        <property name="isbuildingtube" type="string">
+            <column default="'0'" length="1" name="ISBUILDINGTUBE"/>
+        </property>
+        <property name="isrisertube" type="string">
+            <column default="'0'" length="1" name="ISRISERTUBE"/>
+        </property>
+        <property name="isformalproject" type="string">
+            <column default="'0'" length="1" name="ISFORMALPROJECT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsTimeoutinfo" table="T_BS_TIMEOUTINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID" not-null="true"/>
+        </property>
+        <property name="timeoutdesc" type="string">
+            <column length="200" name="TIMEOUTDESC"/>
+        </property>
+        <property name="optrcode" type="string">
+            <column length="20" name="OPTRCODE"/>
+        </property>
+        <property name="optdate" type="date">
+            <column name="OPTDATE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="20" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsTransferrecord" table="T_BS_TRANSFERRECORD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID"/>
+        </property>
+        <property name="oldcustid" type="string">
+            <column length="20" name="OLDCUSTID"/>
+        </property>
+        <property name="newcustid" type="string">
+            <column length="20" name="NEWCUSTID"/>
+        </property>
+        <property name="transferdate" type="date">
+            <column name="TRANSFERDATE"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsTurninfo" table="T_BS_TURNINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="batchid" type="string">
+            <column length="20" name="BATCHID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE"/>
+        </property>
+        <property name="turndate" type="date">
+            <column name="TURNDATE"/>
+        </property>
+        <property name="turnorg" type="string">
+            <column length="20" name="TURNORG"/>
+        </property>
+        <property name="toorg" type="string">
+            <column length="20" name="TOORG"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID"/>
+        </property>
+        <property name="reasontype" type="string">
+            <column length="5" name="REASONTYPE" not-null="true"/>
+        </property>
+        <property name="reasondetail" type="string">
+            <column length="200" name="REASONDETAIL"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG" not-null="true"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsUserbusistatetrack" table="T_BS_USERBUSISTATETRACK">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="userid" type="string">
+            <column length="20" name="USERID" not-null="true"/>
+        </property>
+        <property name="usersourtype" type="string">
+            <column length="20" name="USERSOURTYPE"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="appstartdate" type="timestamp">
+            <column name="APPSTARTDATE"/>
+        </property>
+        <property name="buildsupplydate" type="timestamp">
+            <column name="BUILDSUPPLYDATE"/>
+        </property>
+        <property name="upmeterdate" type="timestamp">
+            <column name="UPMETERDATE"/>
+        </property>
+        <property name="downmeterdate" type="timestamp">
+            <column name="DOWNMETERDATE"/>
+        </property>
+        <property name="aeratedate" type="timestamp">
+            <column name="AERATEDATE"/>
+        </property>
+        <property name="archivesdate" type="timestamp">
+            <column name="ARCHIVESDATE"/>
+        </property>
+        <property name="stopuserdate" type="timestamp">
+            <column name="STOPUSERDATE"/>
+        </property>
+        <property name="reinstatedate" type="timestamp">
+            <column name="REINSTATEDATE"/>
+        </property>
+        <property name="deluserdate" type="timestamp">
+            <column name="DELUSERDATE"/>
+        </property>
+        <property name="logoutdate" type="timestamp">
+            <column name="LOGOUTDATE"/>
+        </property>
+        <property name="sendcarddate" type="timestamp">
+            <column name="SENDCARDDATE"/>
+        </property>
+        <property name="userstate" type="string">
+            <column length="2" name="USERSTATE" not-null="true"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsVerifymeter" table="T_BS_VERIFYMETER">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="meterinfopkid" type="string">
+            <column length="25" name="METERINFOPKID" not-null="true"/>
+        </property>
+        <property name="verifyrslt" type="string">
+            <column length="1" name="VERIFYRSLT"/>
+        </property>
+        <property name="verifyunit" type="string">
+            <column length="20" name="VERIFYUNIT"/>
+        </property>
+        <property name="metertstate" type="string">
+            <column length="10" name="METERTSTATE"/>
+        </property>
+        <property name="qmin" type="big_decimal">
+            <column length="10" name="QMIN" precision="10" scale="2"/>
+        </property>
+        <property name="qmin3" type="big_decimal">
+            <column length="10" name="QMIN3" precision="10" scale="2"/>
+        </property>
+        <property name="qmax01" type="big_decimal">
+            <column length="10" name="QMAX01" precision="10" scale="2"/>
+        </property>
+        <property name="qmax02" type="big_decimal">
+            <column length="10" name="QMAX02" precision="10" scale="2"/>
+        </property>
+        <property name="qmax03" type="big_decimal">
+            <column length="10" name="QMAX03" precision="10" scale="2"/>
+        </property>
+        <property name="qmax07" type="big_decimal">
+            <column length="10" name="QMAX07" precision="10" scale="2"/>
+        </property>
+        <property name="qmax" type="big_decimal">
+            <column length="10" name="QMAX" precision="10" scale="2"/>
+        </property>
+        <property name="reading" type="big_decimal">
+            <column length="15" name="READING" not-null="true" precision="15" scale="5"/>
+        </property>
+        <property name="verifycode" type="string">
+            <column length="20" name="VERIFYCODE"/>
+        </property>
+        <property name="modifierverifyrslt" type="string">
+            <column length="1" name="MODIFIERVERIFYRSLT"/>
+        </property>
+        <property name="modifiercode" type="string">
+            <column length="20" name="MODIFIERCODE"/>
+        </property>
+        <property name="qacurrent" type="big_decimal">
+            <column length="10" name="QACURRENT" precision="10" scale="2"/>
+        </property>
+        <property name="modifiertmpr" type="big_decimal">
+            <column length="10" name="MODIFIERTMPR" precision="10" scale="2"/>
+        </property>
+        <property name="modifierpress" type="big_decimal">
+            <column length="10" name="MODIFIERPRESS" precision="10" scale="4"/>
+        </property>
+        <property name="modifierfactor" type="big_decimal">
+            <column length="10" name="MODIFIERFACTOR" precision="10" scale="4"/>
+        </property>
+        <property name="verifydate" type="date">
+            <column name="VERIFYDATE"/>
+        </property>
+        <property name="verifyoptr" type="string">
+            <column length="20" name="VERIFYOPTR"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsWorktypeandteam" table="T_BS_WORKTYPEANDTEAM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="reservationteampkid" type="string">
+            <column length="25" name="RESERVATIONTEAMPKID" not-null="true"/>
+        </property>
+        <property name="reservationtypepkid" type="string">
+            <column length="25" name="RESERVATIONTYPEPKID" not-null="true"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="date">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsBusibusirec" table="T_BS_BUSIBUSIREC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="applyinfopkid" type="string">
+            <column length="25" name="APPLYINFOPKID" not-null="true"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="activitydefid" type="string">
+            <column length="10" name="ACTIVITYDEFID" not-null="true"/>
+        </property>
+        <property name="processinstid" type="long">
+            <column length="22" name="PROCESSINSTID" not-null="true"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID"/>
+        </property>
+        <property name="username" type="string">
+            <column length="60" name="USERNAME"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="batchid" type="string">
+            <column length="20" name="BATCHID"/>
+        </property>
+        <property name="projectid" type="string">
+            <column length="20" name="PROJECTID"/>
+        </property>
+        <property name="startdate" type="timestamp">
+            <column name="STARTDATE"/>
+        </property>
+        <property name="enddate" type="timestamp">
+            <column name="ENDDATE"/>
+        </property>
+        <property name="urglvl" type="string">
+            <column length="1" name="URGLVL" not-null="true"/>
+        </property>
+        <property name="state" type="string">
+            <column length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="dealorgcode" type="string">
+            <column length="32" name="DEALORGCODE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="dealopt" type="string">
+            <column length="30" name="DEALOPT"/>
+        </property>
+        <property name="nextactivate" type="string">
+            <column length="20" name="NEXTACTIVATE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsWorklistinfo" table="T_BS_WORKLISTINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="worklisttype" type="string">
+            <column length="1" name="WORKLISTTYPE" not-null="true"/>
+        </property>
+        <property name="applyinfopkid" type="string">
+            <column length="25" name="APPLYINFOPKID" not-null="true"/>
+        </property>
+        <property name="processinstid" type="long">
+            <column length="22" name="PROCESSINSTID"/>
+        </property>
+        <property name="wkshtid" type="string">
+            <column length="20" name="WKSHTID"/>
+        </property>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="batchid" type="string">
+            <column length="25" name="BATCHID"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID"/>
+        </property>
+        <property name="dataflag" type="string">
+            <column default="'1'" length="1" name="DATAFLAG"/>
+        </property>
+        <property name="cancelcause" type="string">
+            <column length="1" name="CANCELCAUSE"/>
+        </property>
+        <property name="cancelremark" type="string">
+            <column length="200" name="CANCELREMARK"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsBusitypetosendconfig" table="T_BS_BUSITYPETOSENDCONFIG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="orgid" type="int">
+            <column length="10" name="ORGID" not-null="true"/>
+        </property>
+        <property name="isdirectlysend" type="string">
+            <column length="1" name="ISDIRECTLYSEND"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="printtemplate" type="string">
+            <column length="1000" name="PRINTTEMPLATE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsProjectmaterial" table="T_BS_PROJECTMATERIAL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="busifeepkid" type="string">
+            <column length="25" name="BUSIFEEPKID"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="inbatchid" type="int">
+            <column length="10" name="INBATCHID"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID"/>
+        </property>
+        <property name="materialmodelpkid" type="string">
+            <column length="25" name="MATERIALMODELPKID" not-null="true"/>
+        </property>
+        <property name="count" type="big_decimal">
+            <column length="10" name="COUNT" not-null="true" precision="10" scale="3"/>
+        </property>
+        <property name="price" type="big_decimal">
+            <column length="13" name="PRICE" not-null="true" precision="13" scale="6"/>
+        </property>
+        <property name="chargeflag" type="string">
+            <column length="1" name="CHARGEFLAG"/>
+        </property>
+        <property name="chrgsum" type="big_decimal">
+            <column length="18" name="CHRGSUM" precision="18" scale="2"/>
+        </property>
+        <property name="paidsum" type="big_decimal">
+            <column length="18" name="PAIDSUM" precision="18" scale="2"/>
+        </property>
+        <property name="unuseflag" type="string">
+            <column length="1" name="UNUSEFLAG"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="billingby" type="string">
+            <column length="30" name="BILLINGBY"/>
+        </property>
+        <property name="billingtime" type="timestamp">
+            <column name="BILLINGTIME"/>
+        </property>
+        <property name="constructionorgid" type="int">
+            <column length="10" name="CONSTRUCTIONORGID"/>
+        </property>
+        <property name="buyway" type="string">
+            <column length="1" name="BUYWAY"/>
+        </property>
+        <property name="recordedcompany" type="string">
+            <column length="1" name="RECORDEDCOMPANY"/>
+        </property>
+        <property name="feebelong" type="string">
+            <column length="1" name="FEEBELONG"/>
+        </property>
+        <property name="isdesign" type="string">
+            <column default="'0'" length="1" name="ISDESIGN"/>
+        </property>
+        <property name="constructionname" type="string">
+            <column length="50" name="CONSTRUCTIONNAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsFirefailurereasons" table="T_BS_FIREFAILUREREASONS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="fireinfopkid" type="string">
+            <column length="25" name="FIREINFOPKID"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID" not-null="true"/>
+        </property>
+        <property name="reasonstype" type="string">
+            <column length="25" name="REASONSTYPE"/>
+        </property>
+        <property name="reasonssort" type="string">
+            <column length="25" name="REASONSSORT"/>
+        </property>
+        <property name="reasonsdetail" type="string">
+            <column length="25" name="REASONSDETAIL"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="isdeal" type="string">
+            <column length="1" name="ISDEAL"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsReservationplanext" table="T_BS_RESERVATIONPLANEXT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="reservationplanpkid" type="string">
+            <column length="25" name="RESERVATIONPLANPKID" not-null="true"/>
+        </property>
+        <property name="starttime" type="string">
+            <column length="4" name="STARTTIME"/>
+        </property>
+        <property name="endtime" type="string">
+            <column length="4" name="ENDTIME"/>
+        </property>
+        <property name="resered" type="long">
+            <column length="22" name="RESERED"/>
+        </property>
+        <property name="added" type="long">
+            <column length="22" name="ADDED"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="timetype" type="string">
+            <column length="1" name="TIMETYPE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsReservationiteminfo" table="T_BS_RESERVATIONITEMINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="reservationplanpkid" type="string">
+            <column length="25" name="RESERVATIONPLANPKID"/>
+        </property>
+        <property name="reservationteampkid" type="string">
+            <column length="25" name="RESERVATIONTEAMPKID"/>
+        </property>
+        <property name="reservationtypepkid" type="string">
+            <column length="25" name="RESERVATIONTYPEPKID"/>
+        </property>
+        <property name="reservationhourpkid" type="string">
+            <column length="25" name="RESERVATIONHOURPKID"/>
+        </property>
+        <property name="reservationplanextpkid" type="string">
+            <column length="25" name="RESERVATIONPLANEXTPKID"/>
+        </property>
+        <property name="applyinfopkid" type="string">
+            <column length="25" name="APPLYINFOPKID"/>
+        </property>
+        <property name="workhour" type="big_decimal">
+            <column length="10" name="WORKHOUR" precision="10" scale="1"/>
+        </property>
+        <property name="makedate" type="date">
+            <column name="MAKEDATE"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID"/>
+        </property>
+        <property name="username" type="string">
+            <column length="60" name="USERNAME"/>
+        </property>
+        <property name="address" type="string">
+            <column default="'1'" length="200" name="ADDRESS"/>
+        </property>
+        <property name="state" type="string">
+            <column length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="logincode" type="string">
+            <column length="20" name="LOGINCODE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="operator" type="string">
+            <column length="20" name="OPERATOR"/>
+        </property>
+        <property name="contact" type="string">
+            <column length="20" name="CONTACT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsProcessdefine" table="T_BS_PROCESSDEFINE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="pkid" type="string">
+                <column length="25" name="PKID"/>
+            </key-property>
+            <key-property name="dataorgid" type="int">
+                <column length="10" name="DATAORGID"/>
+            </key-property>
+        </composite-id>
+        <property name="orgcode" type="string">
+            <column length="10" name="ORGCODE"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="processdefname" type="string">
+            <column length="64" name="PROCESSDEFNAME" not-null="true"/>
+        </property>
+        <property name="processdefdesc" type="string">
+            <column length="200" name="PROCESSDEFDESC"/>
+        </property>
+        <property name="finaldays" type="big_decimal">
+            <column length="5" name="FINALDAYS" not-null="true" precision="5" scale="1"/>
+        </property>
+        <property name="cycletype" type="string">
+            <column length="1" name="CYCLETYPE" not-null="true"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="1" name="STATE" not-null="true"/>
+        </property>
+        <property name="earlydays" type="big_decimal">
+            <column length="5" name="EARLYDAYS" precision="5" scale="1"/>
+        </property>
+        <property name="earlytype" type="string">
+            <column length="1" name="EARLYTYPE"/>
+        </property>
+        <property name="extend1" type="string">
+            <column length="64" name="EXTEND1"/>
+        </property>
+        <property name="extend2" type="string">
+            <column length="64" name="EXTEND2"/>
+        </property>
+        <property name="extend3" type="string">
+            <column length="64" name="EXTEND3"/>
+        </property>
+        <property name="extend4" type="string">
+            <column length="64" name="EXTEND4"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="isapply" type="string">
+            <column default="'1'" length="1" name="ISAPPLY"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsRepairinfo" table="T_BS_REPAIRINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="turninfopkid" type="string">
+            <column length="25" name="TURNINFOPKID"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="conclusiontype" type="string">
+            <column length="1" name="CONCLUSIONTYPE"/>
+        </property>
+        <property name="conclusionother" type="string">
+            <column length="200" name="CONCLUSIONOTHER"/>
+        </property>
+        <property name="repairdate" type="timestamp">
+            <column name="REPAIRDATE" not-null="true"/>
+        </property>
+        <property name="repairoptr" type="string">
+            <column length="20" name="REPAIROPTR"/>
+        </property>
+        <property name="repairoptrname" type="string">
+            <column length="60" name="REPAIROPTRNAME"/>
+        </property>
+        <property name="faultfeatures" type="string">
+            <column length="25" name="FAULTFEATURES"/>
+        </property>
+        <property name="faultcategory" type="string">
+            <column length="25" name="FAULTCATEGORY"/>
+        </property>
+        <property name="detailscategory" type="string">
+            <column length="25" name="DETAILSCATEGORY"/>
+        </property>
+        <property name="casualtylevel" type="string">
+            <column length="1" name="CASUALTYLEVEL"/>
+        </property>
+        <property name="reportedsource" type="string">
+            <column length="2" name="REPORTEDSOURCE"/>
+        </property>
+        <property name="reportedmonitor" type="string">
+            <column length="30" name="REPORTEDMONITOR"/>
+        </property>
+        <property name="reportedperson" type="string">
+            <column length="30" name="REPORTEDPERSON"/>
+        </property>
+        <property name="reportedtime" type="timestamp">
+            <column name="REPORTEDTIME"/>
+        </property>
+        <property name="departtime" type="timestamp">
+            <column name="DEPARTTIME"/>
+        </property>
+        <property name="arrivetime" type="timestamp">
+            <column name="ARRIVETIME"/>
+        </property>
+        <property name="completetime" type="timestamp">
+            <column name="COMPLETETIME"/>
+        </property>
+        <property name="repairdetails" type="string">
+            <column length="4000" name="REPAIRDETAILS"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="testbegintime" type="string">
+            <column length="20" name="TESTBEGINTIME"/>
+        </property>
+        <property name="testovertime" type="string">
+            <column length="20" name="TESTOVERTIME"/>
+        </property>
+        <property name="testbegindata" type="int">
+            <column length="10" name="TESTBEGINDATA"/>
+        </property>
+        <property name="testoverdata" type="int">
+            <column length="10" name="TESTOVERDATA"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsPrintinforec" table="T_BS_PRINTINFOREC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="isprint" type="string">
+            <column length="1" name="ISPRINT" not-null="true"/>
+        </property>
+        <property name="currprintdate" type="date">
+            <column name="CURRPRINTDATE"/>
+        </property>
+        <property name="curroptcode" type="string">
+            <column length="20" name="CURROPTCODE" not-null="true"/>
+        </property>
+        <property name="printcount" type="int">
+            <column length="10" name="PRINTCOUNT"/>
+        </property>
+        <property name="lastprintdate" type="date">
+            <column name="LASTPRINTDATE"/>
+        </property>
+        <property name="lastoptcode" type="string">
+            <column length="20" name="LASTOPTCODE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="applyinfopkid" type="string">
+            <column length="25" name="APPLYINFOPKID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsFireinfo" table="T_BS_FIREINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="planinfopkid" type="string">
+            <column length="25" name="PLANINFOPKID"/>
+        </property>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE" not-null="true"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID" not-null="true"/>
+        </property>
+        <property name="firedesc" type="string">
+            <column length="200" name="FIREDESC"/>
+        </property>
+        <property name="firedate" type="date">
+            <column name="FIREDATE"/>
+        </property>
+        <property name="fireconclusion" type="string">
+            <column length="1" name="FIRECONCLUSION"/>
+        </property>
+        <property name="cockcount" type="int">
+            <column length="10" name="COCKCOUNT"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="fireoptr" type="string">
+            <column length="20" name="FIREOPTR"/>
+        </property>
+        <property name="firename" type="string">
+            <column length="60" name="FIRENAME"/>
+        </property>
+        <property name="firedepartment" type="string">
+            <column length="20" name="FIREDEPARTMENT"/>
+        </property>
+        <property name="meterdate" type="date">
+            <column name="METERDATE"/>
+        </property>
+        <property name="securityid" type="string">
+            <column length="20" name="SECURITYID"/>
+        </property>
+        <property name="meterinfopkid" type="string">
+            <column length="25" name="METERINFOPKID"/>
+        </property>
+        <property name="ballvalvecount" type="int">
+            <column length="10" name="BALLVALVECOUNT"/>
+        </property>
+        <property name="ydcf" type="string">
+            <column default="'0'" length="1" name="YDCF"/>
+        </property>
+        <property name="gydcf" type="string">
+            <column default="'0'" length="1" name="GYDCF"/>
+        </property>
+        <property name="ttbj" type="string">
+            <column default="'0'" length="1" name="TTBJ"/>
+        </property>
+        <property name="ttbjsl" type="int">
+            <column default="0&#10;" length="10" name="TTBJSL"/>
+        </property>
+        <property name="glqxh" type="string">
+            <column length="50" name="GLQXH"/>
+        </property>
+        <property name="gyglq" type="string">
+            <column default="'0'" length="1" name="GYGLQ"/>
+        </property>
+        <property name="tyqxh" type="string">
+            <column length="50" name="TYQXH"/>
+        </property>
+        <property name="gytyq" type="string">
+            <column default="'0'" length="1" name="GYTYQ"/>
+        </property>
+        <property name="rhfs" type="string">
+            <column default="'0'" length="1" name="RHFS"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsModifier" table="T_BS_MODIFIER">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="meterinfopkid" type="string">
+            <column length="25" name="METERINFOPKID" not-null="true"/>
+        </property>
+        <property name="modifiercode" type="string">
+            <column length="50" name="MODIFIERCODE"/>
+        </property>
+        <property name="modifiertype" type="string">
+            <column length="50" name="MODIFIERTYPE"/>
+        </property>
+        <property name="modifierreading" type="string">
+            <column length="50" name="MODIFIERREADING"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsDepartmentliaison" table="T_BS_DEPARTMENTLIAISON">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="25" name="USERID"/>
+        </property>
+        <property name="worktype" type="string">
+            <column length="20" name="WORKTYPE"/>
+        </property>
+        <property name="sendorgid" type="int">
+            <column length="10" name="SENDORGID"/>
+        </property>
+        <property name="sendby" type="string">
+            <column length="30" name="SENDBY"/>
+        </property>
+        <property name="sendday" type="date">
+            <column name="SENDDAY"/>
+        </property>
+        <property name="handleorgid" type="int">
+            <column length="10" name="HANDLEORGID"/>
+        </property>
+        <property name="handleby" type="string">
+            <column length="30" name="HANDLEBY"/>
+        </property>
+        <property name="providecompleteday" type="date">
+            <column name="PROVIDECOMPLETEDAY"/>
+        </property>
+        <property name="isurgent" type="string">
+            <column default="'0'" length="1" name="ISURGENT"/>
+        </property>
+        <property name="contentabstract" type="string">
+            <column length="4000" name="CONTENTABSTRACT"/>
+        </property>
+        <property name="handleresult" type="string">
+            <column length="4000" name="HANDLERESULT"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+        <property name="delflag" type="string">
+            <column length="1" name="DELFLAG"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="username" type="string">
+            <column length="200" name="USERNAME"/>
+        </property>
+        <property name="contactphone" type="string">
+            <column length="50" name="CONTACTPHONE"/>
+        </property>
+        <property name="mobile" type="string">
+            <column length="50" name="MOBILE"/>
+        </property>
+        <property name="addrdetail" type="string">
+            <column length="200" name="ADDRDETAIL"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsApplyinfo" table="T_BS_APPLYINFO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="activeapplypkid" type="string">
+            <column length="25" name="ACTIVEAPPLYPKID"/>
+        </property>
+        <property name="sourcetype" type="string">
+            <column length="1" name="SOURCETYPE"/>
+        </property>
+        <property name="chnltype" type="string">
+            <column length="1" name="CHNLTYPE" not-null="true"/>
+        </property>
+        <property name="chnlid" type="string">
+            <column length="20" name="CHNLID" not-null="true"/>
+        </property>
+        <property name="custname" type="string">
+            <column length="60" name="CUSTNAME"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID"/>
+        </property>
+        <property name="isvirtual" type="string">
+            <column default="'0'" length="1" name="ISVIRTUAL"/>
+        </property>
+        <property name="applytype" type="string">
+            <column length="4" name="APPLYTYPE"/>
+        </property>
+        <property name="busisort" type="string">
+            <column length="10" name="BUSISORT"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="10" name="BUSITYPE"/>
+        </property>
+        <property name="firstbusitype" type="string">
+            <column length="10" name="FIRSTBUSITYPE"/>
+        </property>
+        <property name="reportedsource" type="string">
+            <column length="2" name="REPORTEDSOURCE"/>
+        </property>
+        <property name="departmentliaisonpkid" type="string">
+            <column length="25" name="DEPARTMENTLIAISONPKID"/>
+        </property>
+        <property name="count" type="int">
+            <column length="10" name="COUNT"/>
+        </property>
+        <property name="actualcount" type="int">
+            <column length="10" name="ACTUALCOUNT"/>
+        </property>
+        <property name="finishtype" type="string">
+            <column length="4" name="FINISHTYPE"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'1'" length="4" name="STATE"/>
+        </property>
+        <property name="addrinfopkid" type="string">
+            <column length="25" name="ADDRINFOPKID"/>
+        </property>
+        <property name="addrdetail" type="string">
+            <column length="200" name="ADDRDETAIL"/>
+        </property>
+        <property name="mngorg" type="string">
+            <column length="20" name="MNGORG"/>
+        </property>
+        <property name="bookdate" type="timestamp">
+            <column name="BOOKDATE"/>
+        </property>
+        <property name="claimbookdate" type="timestamp">
+            <column name="CLAIMBOOKDATE"/>
+        </property>
+        <property name="claimdate" type="timestamp">
+            <column name="CLAIMDATE"/>
+        </property>
+        <property name="earlydate" type="timestamp">
+            <column name="EARLYDATE"/>
+        </property>
+        <property name="allocate" type="string">
+            <column length="1" name="ALLOCATE"/>
+        </property>
+        <property name="receivedept" type="int">
+            <column length="10" name="RECEIVEDEPT"/>
+        </property>
+        <property name="enddate" type="timestamp">
+            <column name="ENDDATE"/>
+        </property>
+        <property name="endemp" type="string">
+            <column length="30" name="ENDEMP"/>
+        </property>
+        <property name="enddep" type="string">
+            <column length="30" name="ENDDEP"/>
+        </property>
+        <property name="enddesc" type="string">
+            <column length="300" name="ENDDESC"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="4000" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="reportedtime" type="timestamp">
+            <column name="REPORTEDTIME"/>
+        </property>
+        <property name="urglvl" type="string">
+            <column default="'2'" length="1" name="URGLVL"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsUsertypechangerec" table="T_BS_USERTYPECHANGEREC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="worklistinfopkid" type="string">
+            <column length="25" name="WORKLISTINFOPKID"/>
+        </property>
+        <property name="workitemid" type="long">
+            <column length="22" name="WORKITEMID"/>
+        </property>
+        <property name="busitype" type="string">
+            <column length="5" name="BUSITYPE"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="20" name="USERID"/>
+        </property>
+        <property name="olduserid" type="string">
+            <column length="20" name="OLDUSERID"/>
+        </property>
+        <property name="usertype" type="string">
+            <column length="1" name="USERTYPE"/>
+        </property>
+        <property name="oldusertype" type="string">
+            <column length="1" name="OLDUSERTYPE"/>
+        </property>
+        <property name="changedate" type="timestamp">
+            <column name="CHANGEDATE"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.Business.TBsTransferrecordext" table="T_BS_TRANSFERRECORDEXT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="transferrecordpkid" type="string">
+            <column length="25" name="TRANSFERRECORDPKID"/>
+        </property>
+        <property name="newflag" type="string">
+            <column length="1" name="NEWFLAG"/>
+        </property>
+        <property name="mngorg" type="string">
+            <column length="20" name="MNGORG"/>
+        </property>
+        <property name="certtype" type="string">
+            <column length="1" name="CERTTYPE"/>
+        </property>
+        <property name="certnum" type="string">
+            <column length="30" name="CERTNUM"/>
+        </property>
+        <property name="addrdetail" type="string">
+            <column length="200" name="ADDRDETAIL"/>
+        </property>
+        <property name="username" type="string">
+            <column length="200" name="USERNAME"/>
+        </property>
+        <property name="usersnum" type="int">
+            <column length="5" name="USERSNUM"/>
+        </property>
+        <property name="contactman" type="string">
+            <column length="30" name="CONTACTMAN"/>
+        </property>
+        <property name="mobile" type="string">
+            <column length="50" name="MOBILE"/>
+        </property>
+        <property name="contactphone" type="string">
+            <column length="50" name="CONTACTPHONE"/>
+        </property>
+        <property name="signid" type="string">
+            <column length="20" name="SIGNID"/>
+        </property>
+        <property name="paytype" type="string">
+            <column length="1" name="PAYTYPE"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="200" name="STAND"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="1000" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="createorgid" type="int">
+            <column length="10" name="CREATEORGID"/>
+        </property>
+        <property name="custname" type="string">
+            <column length="200" name="CUSTNAME"/>
+        </property>
+    </class>
+</hibernate-mapping>

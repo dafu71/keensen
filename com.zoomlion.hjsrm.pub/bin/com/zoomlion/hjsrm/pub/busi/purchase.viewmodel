@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="dafu" displayName="采购管理" id="com.zoomlion.hjsrm.pub.busi.purchase">
+    <viewModel author="dafu" displayName="GenlPurchaseApplyData" entityName="com.zoomlion.hjsrm.pub.busi.purchase.GenlPurchaseApplyData" id="GenlPurchaseApplyData">
+        <field dataType="String" dict="false" id="pkid" label="主键">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="创建人userid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createbyname" label="创建人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createtime" label="创建时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="修改人userid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifybyname" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="modifytime" label="修改时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lifnr" label="供应商或债权人的帐号&#10;">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="matnr" label="物料号 ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="maktx" label="物料描述（短文本） ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="erdat" label="记录的创建日期 ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="data2" label="机加">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="data3" label="铆焊">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="data4" label="半成品">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="data5" label="库存成品数量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="data1" label="投料">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="menge" label="采购申请汇总数">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="GenlPurchaseApplyList" entityName="com.zoomlion.hjsrm.pub.busi.purchase.GenlPurchaseApplyList" id="GenlPurchaseApplyList">
+        <field dataType="String" dict="false" id="pkid" label="主键">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="创建人userid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createbyname" label="创建人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createtime" label="创建时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="修改人userid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifybyname" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="modifytime" label="修改时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="banfn" label="采购申请编号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="bnfpo" label="采购申请的项目编号 ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="erdat" label="记录的创建日期 ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lifnr" label="供应商或债权人的帐号&#10;">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="matnr" label="物料号 ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="maktx" label="物料描述（短文本） ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="menge" label="采购申请数量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lfdat" label="交货日期">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="meins" label="基本计量单位">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lgort" label="库存地点">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="bstyp" label="采购凭证类别">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="knttp" label="科目分配类别">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ekgrp" label="采购组 ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ekorg" label="采购组织">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="bednr" label="需求跟踪号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="aufnr" label="订单号 ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="kostl" label="成本中心">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="loekz" label="资产类别作删除标记 ">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="flag" label="自动or手动更新">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="werks" label="工厂">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="GenlPurchaseDrawingProvide" entityName="com.zoomlion.hjsrm.pub.busi.purchase.GenlPurchaseDrawingProvide" id="GenlPurchaseDrawingProvide">
+        <field dataType="String" dict="false" id="pkid" label="主键">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createtime" label="创建时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createbyname" label="创建人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifybyname" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="modifytime" label="修改时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="advise" label="意见">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="matnr" label="物料编码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="maktx" label="物料描述">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zcpcx" label="适用车型">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="drawingtype" label="图纸类别">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="drawingcode" label="图样更改单号或技术通知单">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="attribute" label="工艺属性">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="warehousing" label="入库件">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lifnr" label="供应商代码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="name1" label="供应商名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="downtime" label="工艺下发时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="singman" label="签收人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="signtime" label="签收时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="delflag" label="删除标志">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

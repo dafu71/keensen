@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:HP -->
+<sqlMap>
+   <!--查询需要结算凭证抬头-->
+    <select id="queryJiesuanHead" resultClass="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan.GenlInvoiceHead" parameterClass="java.util.HashMap" >
+		 select 
+		 JSPZ as "jspz",
+		 MJAHR as "mjahr",
+		 BUKRS as "bukrs",
+		 WERKS as "werks",
+		 LIFNR as "lifnr",
+		 JSJE as "jsje",
+		 MWSKZ as "mwskz",
+		 TAXRT as "taxrt",
+		 FLJE as "flje",
+		 YFJE as "yfje",
+		 QTKKJE as "qtkkje",
+		 TAX as "tax",
+		 USNAM as "usnam",
+		 DATUM as "datum"
+		 from 
+		 genl_invoice_head
+		 where jspz = #jspz#
+		   and mjahr = #mjahr#
+    </select>
+    
+    <!--查询需要结算凭证行项目-->
+    <select id="queryJiesuanList" resultClass="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan.GenlInvoiceList" parameterClass="java.util.HashMap" >
+		 select 
+		 MJAHR as "mjahr",
+		 JSPZ as "jspz",
+		 JSPZH as "jspzh",
+		 MBLNR as "mblnr",
+		 ZEILE as "zeile",
+		 BUDAT as "budat",
+		 SHKZG as "shkzg",
+		 BWART as "bwart",
+		 DJSSL as "djssl",
+		 DJSSL_CK as "djsslCk",
+		 MEINS as "meins",
+		 HJSJE as "hjsje",
+		 JSDJ as "jsdj",
+		 JSDW as "jsdw",
+		 KBETR as "kbetr",
+		 KPEIN as "kpein",
+		 KMEIN as "kmein",
+		 FLAG_HTJ as "flagHtj",
+		 KALSM as "kalsm",
+		 HQTKKJE as "hqtkkje",
+		 HFLJE as "hflje",
+		 HYFJE as "hyfje",
+		 ZCDF as "zcdf",
+		 LFBNR as "lfbnr",
+		 LFPOS as "lfpos",
+		 LFGJA as "lfgja",
+		 WAERS as "waers",
+		 EKORG as "ekorg",
+		 EKGRP as "ekgrp",
+		 EBELN as "ebeln",
+		 EBELP as "ebelp",
+		 MATNR as "matnr",
+		 AUFNR as "aufnr",
+		 MENGE as "menge",
+		 ZWRILDT as "zwrildt",
+		 ZWRIUSR as "zwriusr"
+         from 
+		 genl_invoice_list
+		 where jspz = #jspz#
+		   and mjahr = #mjahr#
+    </select>
+</sqlMap>

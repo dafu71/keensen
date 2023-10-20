@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:nns="http://www.primeton.com/testwsdlService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="testwsdlServiceService" targetNamespace="http://www.primeton.com/testwsdlService">
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.primeton.com/testwsdlService">
+      <xsd:element name="hello">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="0" name="in0" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="helloResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="0" name="out1" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="helloResponse">
+    <wsdl:part element="nns:helloResponse" name="helloResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="hello">
+    <wsdl:part element="nns:hello" name="hello">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="testwsdlService">
+    <wsdl:operation name="hello">
+      <wsdl:input message="nns:hello" name="hello">
+    </wsdl:input>
+      <wsdl:output message="nns:helloResponse" name="helloResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,28 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:sca="http://www.springframework.org/schema/sca" xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/sca http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd">
+	<!--采供订单查询-->
+    <bean class="com.zoomlion.hjsrm.purchase.query.PurchasequeryDao" id="purchasequeryDao"/>
+    <bean class="com.zoomlion.hjsrm.purchase.query.PurchasequeryBean" id="purchasequeryBean">
+        <property name="purchasequeryDao" ref="purchasequeryDao"/>
+    </bean>
+     <bean class="com.zoomlion.hjsrm.purchase.affirm.PurchaseaffirmDao" id="purchaseaffirmDao"/>
+    <bean class="com.zoomlion.hjsrm.purchase.affirm.PurchaseaffirmBean" id="purchaseaffirmBean">
+        <property name="purchaseaffirmDao" ref="purchaseaffirmDao"/>
+    </bean>
+     <bean class="com.zoomlion.hjsrm.purchase.shzl.ShzlDao" id="shzlDao"/>
+    <bean class="com.zoomlion.hjsrm.purchase.shzl.ShzlBean" id="shzlBean">
+        <property name="shzlDao" ref="shzlDao"/>
+    </bean>
+    <bean class="com.zoomlion.hjsrm.purchase.cght.CghtqueryDao" id="cghtqueryDao"/>
+    <bean class="com.zoomlion.hjsrm.purchase.cght.CghtqueryBean" id="cghtqueryBean">
+        <property name="cghtqueryDao" ref="cghtqueryDao"/>
+    </bean>
+     <bean class="com.zoomlion.hjsrm.purchase.shdaffirm.ShdaffirmDao" id="shdaffirmDao"/>
+    <bean class="com.zoomlion.hjsrm.purchase.shdaffirm.ShdaffirmBean" id="shdaffirmBean">
+        <property name="shdaffirmDao" ref="shdaffirmDao"/>
+    </bean>
+</beans>

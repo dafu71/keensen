@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.demo.demodataset.TestUsers" table="TEST_USERS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="userid" type="string">
+                <column length="20" name="USERID"/>
+            </key-property>
+            <key-property name="username" type="string">
+                <column length="50" name="USERNAME"/>
+            </key-property>
+            <key-property name="sex" type="long">
+                <column length="22" name="SEX"/>
+            </key-property>
+            <key-property name="deptname" type="string">
+                <column length="50" name="DEPTNAME"/>
+            </key-property>
+            <key-property name="deptid" type="long">
+                <column length="22" name="DEPTID"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.demo.demodataset.SerPersonStatus" table="SER_PERSON_STATUS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="statusId" type="long">
+            <column length="22" name="STATUS_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="userId" type="string">
+            <column length="20" name="USER_ID"/>
+        </property>
+        <property name="userName" type="string">
+            <column length="30" name="USER_NAME"/>
+        </property>
+        <property name="operatorStatus" type="string">
+            <column length="30" name="OPERATOR_STATUS"/>
+        </property>
+        <property name="processinstid" type="long">
+            <column length="22" name="PROCESSINSTID"/>
+        </property>
+        <property name="begintime" type="date">
+            <column name="BEGINTIME"/>
+        </property>
+        <property name="endtime" type="date">
+            <column name="ENDTIME"/>
+        </property>
+        <property name="worktype" type="string">
+            <column length="50" name="WORKTYPE"/>
+        </property>
+    </class>
+</hibernate-mapping>

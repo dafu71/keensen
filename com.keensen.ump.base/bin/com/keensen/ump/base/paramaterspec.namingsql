@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.base.paramaterspec">
+    <select id="queryParaMaterSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t.mater_spec_id   "materSpecId",
+       t.mater_spec_code "materSpecCode",
+       t.mater_spec_name "materSpecName",
+       t.mater_class_id  "materClassId",
+       t.state           "state",
+       decode(t.state,'Y','再用','停用') "statename",
+       t.safety_Stock  "safetyStock"
+    from qinsen.PARA_MATER_SPEC t
+    where 1=1
+    <isNotNull prepend="and" property="materSpecName">t.mater_spec_name like '%'||#materSpecName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="materSpecCode">t.mater_spec_code = #materSpecCode#</isNotNull>
+        <isNotNull prepend="and" property="state">t.state = #state#</isNotNull>
+    </select>
+</sqlMap>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 系统参数配置相关SQL-->
+<!-- author:陈今伟 -->
+<sqlMap>
+	<!-- 查询系统参数配置 -->
+    <select id="selectSysconfigs" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	select s.paramid as "paramid",
+    			s.paramname as "paramname" ,
+    			s.paramdesc as "paramdesc" ,
+			 sv.paramvalue as "paramvalue",
+			  s.paramtype as "paramtype",
+			 s.configtype as "configtype",
+			 sv.dataorgid as "dataorgid",
+			 org.orgname as "dataorgname"
+    			 from t_om_sysconfig s left join t_om_sysconfigvalue sv on s.paramid=sv.paramid 
+    			 and sv.dataorgid =#dataorgid#
+    			 
+    			 left join t_om_organization org on org.orgid = sv.dataorgid 
+    	where 1=1
+    	<isNotNull prepend="and" property="configtype">
+    		s.configtype = #configtype#
+    	</isNotNull>
+		<isNotNull prepend="and" property="paramname">
+    		s.paramname like '%'||#paramname#||'%'
+    	</isNotNull>
+    	<isNotNull prepend="and" property="paramid">
+    		s.paramid like '%'||#paramid#||'%'
+    	</isNotNull>
+    	<isNotNull prepend="and" property="paramvalue">
+    				sv.paramvalue =#paramvalue#
+    	</isNotNull>
+    </select>
+</sqlMap>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techNotice.techNotice.FlowTechniqueNotice" table="FLOW_TECHNIQUE_NOTICE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="noticeId" type="string">
+            <column length="30" name="NOTICE_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="weavePersonId" type="string">
+            <column length="30" name="WEAVE_PERSON_ID"/>
+        </property>
+        <property name="weavePersonName" type="string">
+            <column length="30" name="WEAVE_PERSON_NAME"/>
+        </property>
+        <property name="deptName" type="string">
+            <column length="50" name="DEPT_NAME"/>
+        </property>
+        <property name="deptId" type="string">
+            <column length="30" name="DEPT_ID"/>
+        </property>
+        <property name="applicationTime" type="timestamp">
+            <column name="APPLICATION_TIME"/>
+        </property>
+        <property name="productType" type="string">
+            <column length="10" name="PRODUCT_TYPE"/>
+        </property>
+        <property name="productModel" type="string">
+            <column length="30" name="PRODUCT_MODEL"/>
+        </property>
+        <property name="noticeType" type="string">
+            <column length="20" name="NOTICE_TYPE"/>
+        </property>
+        <property name="levels" type="string">
+            <column length="20" name="LEVELS"/>
+        </property>
+        <property name="noticeTitle" type="string">
+            <column length="100" name="NOTICE_TITLE"/>
+        </property>
+        <property name="noticeText" type="string">
+            <column length="2000" name="NOTICE_TEXT"/>
+        </property>
+        <property name="sendDept" type="string">
+            <column length="200" name="SEND_DEPT"/>
+        </property>
+        <property name="executePersonId" type="string">
+            <column length="30" name="EXECUTE_PERSON_ID"/>
+        </property>
+        <property name="executePersonName" type="string">
+            <column length="30" name="EXECUTE_PERSON_NAME"/>
+        </property>
+        <property name="executeText" type="string">
+            <column length="200" name="EXECUTE_TEXT"/>
+        </property>
+        <property name="executeTime" type="timestamp">
+            <column name="EXECUTE_TIME"/>
+        </property>
+        <property name="archivePersonId" type="string">
+            <column length="30" name="ARCHIVE_PERSON_ID"/>
+        </property>
+        <property name="archivePersonName" type="string">
+            <column length="30" name="ARCHIVE_PERSON_NAME"/>
+        </property>
+        <property name="archiveText" type="string">
+            <column length="200" name="ARCHIVE_TEXT"/>
+        </property>
+        <property name="archiveTime" type="timestamp">
+            <column name="ARCHIVE_TIME"/>
+        </property>
+        <property name="processinstid" type="string">
+            <column length="30" name="PROCESSINSTID"/>
+        </property>
+        <property name="processStatus" type="string">
+            <column length="30" name="PROCESS_STATUS"/>
+        </property>
+        <bag cascade="none" inverse="true" lazy="true" name="flowTechniqueNoticeItemss">
+            <key column="OPERATION_ID"/>
+            <one-to-many entity-name="com.zoomlion.hjsrm.pub.techNotice.techNotice.FlowTechniqueNoticeItems"/>
+        </bag>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techNotice.techNotice.FlowTechniqueNoticeItems" table="FLOW_TECHNIQUE_NOTICE_ITEMS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="flowId" type="long">
+            <column length="22" name="FLOW_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="itemsId" type="string">
+            <column length="50" name="ITEMS_ID" not-null="true"/>
+        </property>
+        <property name="itemsName" type="string">
+            <column length="50" name="ITEMS_NAME"/>
+        </property>
+        <property name="itmesCode" type="string">
+            <column length="50" name="ITMES_CODE" not-null="true"/>
+        </property>
+        <property name="actionsPersonName" type="string">
+            <column length="30" name="ACTIONS_PERSON_NAME"/>
+        </property>
+        <property name="actionsPersonId" type="string">
+            <column length="30" name="ACTIONS_PERSON_ID"/>
+        </property>
+        <property name="actionsText" type="string">
+            <column length="200" name="ACTIONS_TEXT"/>
+        </property>
+        <property name="actonsTime" type="timestamp">
+            <column name="ACTONS_TIME"/>
+        </property>
+        <property name="processinstid" type="string">
+            <column length="30" name="PROCESSINSTID" not-null="true"/>
+        </property>
+        <property name="operationId" type="string">
+            <column length="30" name="OPERATION_ID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techNotice.techNotice.FlowTempNoticeItems" table="FLOW_TEMP_NOTICE_ITEMS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="flowId" type="long">
+            <column length="22" name="FLOW_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="itemsId" type="string">
+            <column length="50" name="ITEMS_ID" not-null="true"/>
+        </property>
+        <property name="itemsName" type="string">
+            <column length="50" name="ITEMS_NAME"/>
+        </property>
+        <property name="itmesCode" type="string">
+            <column length="50" name="ITMES_CODE" not-null="true"/>
+        </property>
+        <property name="actionsPersonName" type="string">
+            <column length="30" name="ACTIONS_PERSON_NAME"/>
+        </property>
+        <property name="actionsPersonId" type="string">
+            <column length="30" name="ACTIONS_PERSON_ID"/>
+        </property>
+        <property name="processinstid" type="string">
+            <column length="30" name="PROCESSINSTID" not-null="true"/>
+        </property>
+        <property name="operationId" type="string">
+            <column length="30" name="OPERATION_ID"/>
+        </property>
+    </class>
+</hibernate-mapping>

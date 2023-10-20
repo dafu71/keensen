@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.rights.orgauth.orgAuth">
+    <!-- 查询公司列表用于应用授权 -->
+    <select id="getAllCompanys" parameterClass="commonj.sdo.DataObject" resultClass="commonj.sdo.DataObject">select org.orgname "orgname",org.orgcode "orgcode",org.orgid "orgid" from v_om_organization_trs org where org.orgtype in(0,1) and org.status='running'</select>
+    <!-- 获得所有的资源授权情况 -->
+    <select id="getOrgResAuth" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select a.resid as "resid",
+		       a.resid as "id",
+		       c.orgid as "orgid",
+		       a.resname as "text",
+		       a.rescode as "rescode",
+		       a.restype as "restype",
+		       a.resname as "resname",
+		       a.reslabel as "reslabel",
+		       a.resseq as "resseq",
+		       (case
+		         when (select count(1)
+		                 from t_ac_resource s
+		                where s.parentresid = a.resid) = 0 then
+		          1
+		         else
+		          0
+		       end) as "leaf",
+		       (case
+		         when a.parentresid is null then
+		          0
+		         else
+		          a.parentresid
+		       end) as "parentresid",
+		       (case
+		         when c.orgid is null then
+		          0
+		         else
+		          1
+		       end) as "checked"
+		  from t_ac_resource a
+		  left join t_ac_appresauth c
+		    on c.resid = a.resid
+          and c.orgid = #orgid#
+		 where a.parentresid = #parentid#</select>
+    <delete id="delOrgResAuth" parameterClass="java.util.HashMap">
+        <!--移除某机构的资源授权 -->
+    	delete from t_ac_appresauth a where a.orgid= #orgid#
+    </delete>
+</sqlMap>

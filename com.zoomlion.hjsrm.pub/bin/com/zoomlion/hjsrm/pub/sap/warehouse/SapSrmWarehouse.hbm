@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class entity-name="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.Vwarehourse" table="$QueryEntity[com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.Vwarehourse]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="EBELN" insert="false" name="ebeln" type="string" update="false"/>
+        <property column="EBELP" insert="false" name="ebelp" type="string" update="false"/>
+        <property column="MENGE" insert="false" name="menge" type="string" update="false"/>
+        <property column="BWART" insert="false" name="bwart" type="string" update="false"/>
+        <property column="LFBJA" insert="false" name="lfbja" type="string" update="false"/>
+        <property column="LFBNR" insert="false" name="lfbnr" type="string" update="false"/>
+        <property column="LFPOS" insert="false" name="lfpos" type="string" update="false"/>
+        <property column="GRUND" insert="false" name="grund" type="string" update="false"/>
+        <property column="LGORT" insert="false" name="lgort" type="string" update="false"/>
+        <property column="SGTXT" insert="false" name="sgtxt" type="string" update="false"/>
+        <property column="CHARG" insert="false" name="charg" type="string" update="false"/>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlAsnMseg" table="GENL_ASN_MSEG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="mblnr" type="string">
+                <column length="10" name="MBLNR"/>
+            </key-property>
+            <key-property name="mjahr" type="string">
+                <column length="4" name="MJAHR"/>
+            </key-property>
+        </composite-id>
+        <property name="zasnh" type="string">
+            <column length="13" name="ZASNH"/>
+        </property>
+        <property name="stats" type="string">
+            <column length="1" name="STATS"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="date">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlSaveMseg" table="GENL_SAVE_MSEG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="mblnr" type="string">
+                <column length="10" name="MBLNR"/>
+            </key-property>
+            <key-property name="mjahr" type="string">
+                <column length="4" name="MJAHR"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlReceiptsMkpf" table="GENL_RECEIPTS_MKPF">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="mblnr" type="string">
+                <column length="10" name="MBLNR"/>
+            </key-property>
+            <key-property name="mjahr" type="string">
+                <column length="4" name="MJAHR"/>
+            </key-property>
+        </composite-id>
+        <property name="vgart" type="string">
+            <column length="2" name="VGART"/>
+        </property>
+        <property name="blart" type="string">
+            <column length="2" name="BLART"/>
+        </property>
+        <property name="bldat" type="date">
+            <column name="BLDAT"/>
+        </property>
+        <property name="budat" type="date">
+            <column name="BUDAT"/>
+        </property>
+        <property name="cpudt" type="date">
+            <column name="CPUDT"/>
+        </property>
+        <property name="bktxt" type="string">
+            <column length="25" name="BKTXT"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="date">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlReceiptsMkpfCrte" table="GENL_RECEIPTS_MKPF_CRTE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="mblnr" type="string">
+                <column length="10" name="MBLNR"/>
+            </key-property>
+            <key-property name="mjahr" type="string">
+                <column length="4" name="MJAHR"/>
+            </key-property>
+        </composite-id>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="date">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlReceiptsMseg" table="GENL_RECEIPTS_MSEG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="mblnr" type="string">
+                <column length="10" name="MBLNR"/>
+            </key-property>
+            <key-property name="mjahr" type="string">
+                <column length="4" name="MJAHR"/>
+            </key-property>
+            <key-property name="zeile" type="string">
+                <column length="4" name="ZEILE"/>
+            </key-property>
+        </composite-id>
+        <property name="bwart" type="string">
+            <column length="3" name="BWART"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="18" name="MATNR"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="lgort" type="string">
+            <column length="4" name="LGORT"/>
+        </property>
+        <property name="charg" type="string">
+            <column length="10" name="CHARG"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="shkzg" type="string">
+            <column length="1" name="SHKZG"/>
+        </property>
+        <property name="waers" type="string">
+            <column length="5" name="WAERS"/>
+        </property>
+        <property name="menge" type="string">
+            <column length="20" name="MENGE"/>
+        </property>
+        <property name="meins" type="string">
+            <column length="3" name="MEINS"/>
+        </property>
+        <property name="ebeln" type="string">
+            <column length="10" name="EBELN"/>
+        </property>
+        <property name="ebelp" type="string">
+            <column length="5" name="EBELP"/>
+        </property>
+        <property name="lfbja" type="string">
+            <column length="4" name="LFBJA"/>
+        </property>
+        <property name="lfbnr" type="string">
+            <column length="10" name="LFBNR"/>
+        </property>
+        <property name="lfpos" type="string">
+            <column length="4" name="LFPOS"/>
+        </property>
+        <property name="sjahr" type="string">
+            <column length="4" name="SJAHR"/>
+        </property>
+        <property name="smbln" type="string">
+            <column length="10" name="SMBLN"/>
+        </property>
+        <property name="smblp" type="string">
+            <column length="4" name="SMBLP"/>
+        </property>
+        <property name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+        </property>
+        <property name="dmbtr" type="string">
+            <column length="20" name="DMBTR"/>
+        </property>
+        <property name="grund" type="string">
+            <column length="4" name="GRUND"/>
+        </property>
+        <property name="erfmg" type="string">
+            <column length="20" name="ERFMG"/>
+        </property>
+        <property name="erfme" type="string">
+            <column length="3" name="ERFME"/>
+        </property>
+        <property name="sgtxt" type="string">
+            <column length="100" name="SGTXT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlMblnrVnbm" table="GENL_MBLNR_VNBM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="mblnr" type="string">
+                <column length="10" name="MBLNR"/>
+            </key-property>
+            <key-property name="mblno" type="string">
+                <column length="4" name="MBLNO"/>
+            </key-property>
+        </composite-id>
+        <property name="vnbm" type="string">
+            <column length="18" name="VNBM"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+        <property name="shkzg" type="string">
+            <column length="4" name="SHKZG"/>
+        </property>
+        <property name="lbbsa" type="string">
+            <column length="100" name="LBBSA"/>
+        </property>
+        <property name="lager" type="string">
+            <column length="20" name="LAGER"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+    </class>
+</hibernate-mapping>

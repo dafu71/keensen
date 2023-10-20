@@ -1,0 +1,160 @@
+/** fullscreen_trajectory */
+
+.wl-fullscreen-trajectory-toolbar-btn {
+    height: 28px;
+    width: 28px;
+    background-color: #FFFFFF;
+    border-radius: 100%;
+    margin-left: 10px;
+    margin-top: 0px;
+    cursor: pointer;
+    display: inline-block;
+    box-shadow:  2px 2px 3px rgba(0,0,0,0.3);
+    position: relative;
+    top: -6px;
+    opacity: 0.9;
+    transition: all 0.4s;
+}
+
+.wl-fullscreen-trajectory-toolbar-btn:hover{
+    opacity: 1;
+    box-shadow:  2px 2px 3px rgba(0,0,0,0.4);
+}
+
+.wl-fullscreen-trajectory-toolbar-start {
+    height: 18px;
+    margin-top: 5px;
+    margin-left: 5px;
+    position: relative;
+}
+
+.wl-fullscreen-trajectory-toolbar-start .glyphicon-play{
+    color: #7E900F;
+    position: absolute;
+    left: 2px;
+    top: 6px;
+    font-size: 16px;
+}
+
+.wl-fullscreen-trajectory-toolbar-start .glyphicon-play:before,
+.wl-fullscreen-trajectory-toolbar-stop .glyphicon-stop:before{
+    text-shadow: 1px 1px 1px #fff;
+}
+.wl-fullscreen_trajectory-toolbar-pause .glyphicon-play{
+    font-size: 18px;
+    left: 1px;
+    top: 4px;
+}
+.wl-fullscreen_trajectory-toolbar-pause .glyphicon-play:before{
+    content: "\e073";
+}
+
+.wl-fullscreen-trajectory-toolbar-stop {
+    height: 18px;
+    margin-top: 5px;
+    margin-left: 5px;
+    position: relative;
+}
+
+.wl-fullscreen-trajectory-toolbar-stop .glyphicon-stop{
+    color: #FF162D;
+    font-size: 16px;
+    position: absolute;
+    top: 6px;
+}
+
+.scheduleBox {
+    margin-left: 10px;
+    padding: 10px 0;
+    position: relative;
+    top: -2px;
+    flex: 1;
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+}
+
+.scheduleBg {
+    width: 100%;
+    height: 10px;
+    background: #88A832;
+    position: relative;
+    border-radius: 5px;
+}
+
+.slider {
+    width: 20px;
+    height: 20px;
+    background-color: #EAEAEA;
+    position: absolute;
+    left: 0px;
+    top: -5px;
+    border-radius: 100%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    z-index: 3;
+    transition: all 0.3s;
+}
+
+.slider:hover{
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.scheduleActive {
+    width: 0px;
+    height: 10px;
+    background: #D1F279;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 5px 0 0 5px;
+    min-width: 5px;
+    z-index: 2;
+}
+
+.scheduleBox span {
+    color: #fff;
+}
+
+.scheduleBox span:after {
+    content: "‰"
+}
+
+.speedChartBox{
+    display: inline-block;
+    padding-left: 8px;
+}
+
+.speedChartBox p{
+    display: inline-block;
+    background-color: rgba(0,0,0,0.6);
+    padding: 0 8px;
+    height: 23px;
+    line-height: 23px;
+    border-radius: 12px;
+    color: #fff;
+    box-shadow: inset -2px -2px 3px rgba(0,0,0,0.9);
+    transition: all 0.3s;
+    opacity: 0.8;
+}
+
+.speedChartBox p span{
+    padding-right: 3px;
+}
+
+.speedChartBox p:hover,
+.speedChartBox p.active{
+    cursor: pointer;
+    opacity: 1;
+}
+
+.speedChartBox p.active{
+    color: #B7E374;
+}
+
+.navbarFlexbox{
+    display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+}

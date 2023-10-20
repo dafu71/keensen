@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechList" table="FLOW_TECH_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="techId" type="string">
+            <column length="50" name="TECH_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="processinstid" type="string">
+            <column length="20" name="PROCESSINSTID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="50" name="STATUS"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="50" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createbyName" type="string">
+            <column length="50" name="CREATEBY_NAME"/>
+        </property>
+        <property name="orgid" type="string">
+            <column length="50" name="ORGID"/>
+        </property>
+        <property name="orgname" type="string">
+            <column length="50" name="ORGNAME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifytime" type="date">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="modifybyName" type="string">
+            <column length="20" name="MODIFYBY_NAME"/>
+        </property>
+        <property name="modifyOrgid" type="string">
+            <column length="50" name="MODIFY_ORGID"/>
+        </property>
+        <property name="modifyOorgname" type="string">
+            <column length="50" name="MODIFY_OORGNAME"/>
+        </property>
+        <property name="phone" type="string">
+            <column length="20" name="PHONE"/>
+        </property>
+        <property name="problemType" type="string">
+            <column length="20" name="PROBLEM_TYPE"/>
+        </property>
+        <property name="problem" type="string">
+            <column length="500" name="PROBLEM"/>
+        </property>
+        <property name="productno" type="string">
+            <column length="50" name="PRODUCTNO"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="50" name="MATNR"/>
+        </property>
+        <property name="importance" type="string">
+            <column length="20" name="IMPORTANCE"/>
+        </property>
+        <property name="effection" type="string">
+            <column length="20" name="EFFECTION"/>
+        </property>
+        <property name="duty" type="string">
+            <column length="500" name="DUTY"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechMaterial" table="FLOW_TECH_MATERIAL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="materialId" type="string">
+            <column length="20" name="MATERIAL_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="techId" type="string">
+            <column length="50" name="TECH_ID" not-null="true"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="50" name="MATNR"/>
+        </property>
+        <property name="maktx" type="string">
+            <column length="100" name="MAKTX"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechOperators" table="FLOW_TECH_OPERATORS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="optId" type="string">
+            <column length="20" name="OPT_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="techId" type="string">
+            <column length="50" name="TECH_ID" not-null="true"/>
+        </property>
+        <property name="rolecode" type="string">
+            <column length="50" name="ROLECODE"/>
+        </property>
+        <property name="rolename" type="string">
+            <column length="100" name="ROLENAME"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="50" name="USERID"/>
+        </property>
+        <property name="username" type="string">
+            <column length="50" name="USERNAME"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="10" name="DELFLAG"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechCheck" table="FLOW_TECH_CHECK">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="checkId" type="string">
+            <column length="20" name="CHECK_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="techId" type="string">
+            <column length="50" name="TECH_ID" not-null="true"/>
+        </property>
+        <property name="flag" type="string">
+            <column length="2" name="FLAG"/>
+        </property>
+        <property name="advise" type="string">
+            <column length="50" name="ADVISE"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="50" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createbyName" type="string">
+            <column length="50" name="CREATEBY_NAME"/>
+        </property>
+        <property name="orgid" type="string">
+            <column length="50" name="ORGID"/>
+        </property>
+        <property name="orgname" type="string">
+            <column length="50" name="ORGNAME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifytime" type="date">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="modifybyName" type="string">
+            <column length="20" name="MODIFYBY_NAME"/>
+        </property>
+        <property name="modifyOrgid" type="string">
+            <column length="50" name="MODIFY_ORGID"/>
+        </property>
+        <property name="modifyOorgname" type="string">
+            <column length="50" name="MODIFY_OORGNAME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechConfirm" table="FLOW_TECH_CONFIRM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="confirmId" type="string">
+            <column length="20" name="CONFIRM_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="techId" type="string">
+            <column length="50" name="TECH_ID" not-null="true"/>
+        </property>
+        <property name="flag" type="string">
+            <column length="2" name="FLAG"/>
+        </property>
+        <property name="advise" type="string">
+            <column length="50" name="ADVISE"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="50" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createbyName" type="string">
+            <column length="50" name="CREATEBY_NAME"/>
+        </property>
+        <property name="orgid" type="string">
+            <column length="50" name="ORGID"/>
+        </property>
+        <property name="orgname" type="string">
+            <column length="50" name="ORGNAME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifytime" type="date">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="modifybyName" type="string">
+            <column length="20" name="MODIFYBY_NAME"/>
+        </property>
+        <property name="modifyOrgid" type="string">
+            <column length="50" name="MODIFY_ORGID"/>
+        </property>
+        <property name="modifyOorgname" type="string">
+            <column length="50" name="MODIFY_OORGNAME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechModify" table="FLOW_TECH_MODIFY">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="modifyId" type="string">
+            <column length="20" name="MODIFY_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="techId" type="string">
+            <column length="50" name="TECH_ID" not-null="true"/>
+        </property>
+        <property name="flag" type="string">
+            <column length="2" name="FLAG"/>
+        </property>
+        <property name="advise" type="string">
+            <column length="50" name="ADVISE"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="50" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createbyName" type="string">
+            <column length="50" name="CREATEBY_NAME"/>
+        </property>
+        <property name="orgid" type="string">
+            <column length="50" name="ORGID"/>
+        </property>
+        <property name="orgname" type="string">
+            <column length="50" name="ORGNAME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifytime" type="date">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="modifybyName" type="string">
+            <column length="20" name="MODIFYBY_NAME"/>
+        </property>
+        <property name="modifyOrgid" type="string">
+            <column length="50" name="MODIFY_ORGID"/>
+        </property>
+        <property name="modifyOorgname" type="string">
+            <column length="50" name="MODIFY_OORGNAME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechInspect" table="FLOW_TECH_INSPECT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="inspectId" type="string">
+            <column length="20" name="INSPECT_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="techId" type="string">
+            <column length="50" name="TECH_ID" not-null="true"/>
+        </property>
+        <property name="flag" type="string">
+            <column length="2" name="FLAG"/>
+        </property>
+        <property name="advise" type="string">
+            <column length="50" name="ADVISE"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="50" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="date">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createbyName" type="string">
+            <column length="50" name="CREATEBY_NAME"/>
+        </property>
+        <property name="orgid" type="string">
+            <column length="50" name="ORGID"/>
+        </property>
+        <property name="orgname" type="string">
+            <column length="50" name="ORGNAME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifytime" type="date">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="modifybyName" type="string">
+            <column length="20" name="MODIFYBY_NAME"/>
+        </property>
+        <property name="modifyOrgid" type="string">
+            <column length="50" name="MODIFY_ORGID"/>
+        </property>
+        <property name="modifyOorgname" type="string">
+            <column length="50" name="MODIFY_OORGNAME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+    </class>
+</hibernate-mapping>

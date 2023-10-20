@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 安全日志相关SQL-->
+<!-- author:陈今伟 -->
+<sqlMap>
+	<!-- 分页查询安全日志,用于安全审计管理 -->
+	<!-- 中联 -->
+    <select id="selectsecurtyLogs" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select a.* from (
+   	select ll.userid as "userid",ll.operatorname as "operatorname", en.dictname as "opttype",
+  		to_char(ll.opertime,'yyyy-MM-dd HH24:mi:ss') as "opertime",ll.opertime as "otime",ll.clientip as "clientip",ll.operdesc as "operdesc",
+   		ll.exceptionmsg as "exceptionmsg",op.dataorgid as "dataorgid",org.orgname as "orgname",ll.logintype as "optcode"
+   	from t_at_loginoutlog ll left join  eos_dict_entry en on en.dictid = ll.logintype and dicttypeid='TCIS_AC_ACOPTTYPE'
+   	left join v_ac_operator_trs op on op.userid = ll.userid
+   	left join v_om_organization_trs org on op.dataorgid=org.orgid
+   union all (
+   select ll.userid as "userid",ll.operatorname as "operatorname", en.dictname as "opttype",
+  		to_char(ll.opertime,'yyyy-MM-dd HH24:mi:ss') as "opertime",ll.opertime as "otime",ll.clientip as "clientip",ll.operdesc as "operdesc",
+   		ll.exceptionmsg as "exceptionmsg",ll.dataorgid as "dataorgid",org.orgname as "orgname",ll.opertype as "optcode"
+   	from t_ac_rightlogs ll left join  eos_dict_entry en on en.dictid = ll.opertype and dicttypeid='TCIS_AC_ACOPTTYPE'
+   	left join v_om_organization_trs org on ll.dataorgid=org.orgid
+   )
+   ) a where 1=1 
+   	<isNotNull prepend="and"  property="operator">
+		(a."userid" like '%'||#operator#||'%' or a."operatorname" like '%'||#operator#||'%')
+	</isNotNull>
+   	<isNotNull prepend="and"  property="startDate">
+			<![CDATA[to_char(a."otime",'yyyy-mm-dd') >=  #startDate#  ]]>
+	</isNotNull>		
+	<isNotNull prepend="and"  property="endDate">
+			<![CDATA[to_char(a."otime",'yyyy-mm-dd') <= #endDate# ]]>
+	</isNotNull>
+	<isNotNull prepend="and"  property="dataorgid">
+			a."dataorgid" = #dataorgid#
+	</isNotNull>
+	<isNotNull prepend="and" property="opttype">
+  			a."optcode" in 
+			<iterate property="opttype" open="(" close=")" conjunction="," >  
+	           #opttype[]#
+	        </iterate> 
+  	</isNotNull>
+	order by a."otime" desc
+    </select>
+</sqlMap>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.busi.kcgl" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.busi.kcgl">
+    <xs:complexType name="BaseMaterialComponent" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.kcgl.impl.BaseMaterialComponentImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pmatnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifybyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BaseMaterialSupplier" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.kcgl.impl.BaseMaterialSupplierImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifybyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BaseMaterialWhole" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.kcgl.impl.BaseMaterialWholeImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zcpcx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifybyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlPurchasePlanHead" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.kcgl.impl.GenlPurchasePlanHeadImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="title" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createbyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifybyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="N" minOccurs="0" name="confirm" nillable="true" type="xs:string"/>
+            <xs:element default="N" minOccurs="0" name="archive" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlPurchasePlanOpt" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.kcgl.impl.GenlPurchasePlanOptImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createbyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifybyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="relationid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="opt" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlPurchasePlanList" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.kcgl.impl.GenlPurchasePlanListImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createbyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifybyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pmatnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zcpcx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="maktx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="stock" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="carno" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="underamount" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date1" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan1" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer1" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date2" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan2" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer2" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date3" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan3" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer3" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date4" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan4" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer4" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date5" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan5" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer5" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date6" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan6" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer6" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date7" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan7" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer7" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date8" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan8" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer8" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date9" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan9" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer9" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="date10" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plan10" nillable="true" type="xs:long"/>
+            <xs:element default="0&#10;" minOccurs="0" name="answer10" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="relationid" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="plansum" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="line" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

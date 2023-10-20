@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 角色相关SQL-->
+<!-- author:陈今伟 -->
+<sqlMap>
+   
+    <!-- 系统级 查询系统级角色的资源授权-->
+    <select id="loadAuthorizedMnSys" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select a.resid as "resid",
+	       a.resid as "id",
+	       a.resname as "text",
+	       a.rescode as "rescode",
+	       a.restype as "restype",
+	       a.resname as "resname",
+	       a.reslabel as "reslabel",
+	       a.resseq as "resseq",
+	       (case
+	         when (select count(1)
+	                 from t_ac_resource s
+	                where s.parentresid = a.resid) = 0 then
+	          1
+	         else
+	          0
+	       end) as "leaf",
+	       (case
+	         when a.parentresid is null then
+	          0
+	         else
+	          a.parentresid
+	       end) as "parentresid",
+	       (case
+	         when rr.roleid is null then
+	          0
+	         else
+	          1
+	       end) as "checked"
+	  from (select re.*
+	          from t_ac_resource re
+	         where re.parentresid=#parentid# and re.resid in
+	               (select resid from t_ac_roleres where roleid in ($roles$))) a
+	  left join t_ac_roleres rr
+	    on rr.resid = a.resid
+	   and rr.roleid = #roleid#
+	   and a.parentresid=#parentid#
+    </select>
+  
+     <!-- 公司级 查询公司级角色的资源授权-->
+    <select id="loadAuthorizedMnCom" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select a.resid as "resid",
+		       a.resid as "id",
+		       a.resname as "text",
+		       a.rescode as "rescode",
+		       a.restype as "restype",
+		       a.resname as "resname",
+		       a.reslabel as "reslabel",
+		       a.resseq as "resseq",
+		       (case
+		         when (select count(1)
+		                 from t_ac_resource s
+		                where s.parentresid = a.resid) = 0 then
+		          1
+		         else
+		          0
+		       end) as "leaf",
+		       (case
+		         when a.parentresid is null then
+		          0
+		         else
+		          a.parentresid
+		       end) as "parentresid",
+		       (case
+		         when rr.roleid is null then
+		          0
+		         else
+		          1
+		       end) as "checked"
+		  from (select re.*
+		          from t_ac_resource re
+		         where re.parentresid=#parentid# and (re.resid in
+		               (select resid from t_ac_appresauth where orgid = #orgid#) and
+		               re.resid in
+		               (select resid from t_ac_roleres where roleid in ($roles$)))) a
+		  left join t_ac_roleres rr
+		    on rr.resid = a.resid
+		   and rr.roleid = #roleid#
+    </select>
+  	 <!-- 系统级 查询系统级角色的资源授权-->
+    <select id="loadAuthorizedMnSyss" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select
+	     distinct(a.resid) "resid",
+	     (case  when a.parentresid is null then 0 else a.parentresid end) as "parentresid",
+	     a.rescode "rescode",
+	     a.restype "restype",
+	     a.resname "resname",
+	     a.reslabel "reslabel",
+	    (case when rr.roleid is null then 0 else 1 end) as "checked" 
+	     from (
+	    		select re.*from t_ac_resource re where re.resid in(select resid from t_ac_roleres where roleid in ($roles$)
+	     	 )
+	    ) a
+	    left join 
+	    t_ac_roleres rr on rr.resid =a.resid and rr.roleid in
+	    <iterate property="roleids" open="(" close=")" conjunction="," >  
+		     #roleids[]#
+		</iterate> 
+    </select>
+  
+     <!-- 公司级 查询公司级角色的资源授权-->
+    <select id="loadAuthorizedMnComs" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	select
+     distinct(a.resid) "resid",
+     (case  when a.parentresid is null then 0 else a.parentresid end) as "parentresid",
+     a.rescode "rescode",
+     a.restype "restype",
+     a.resname "resname",
+     a.reslabel "reslabel",
+    (case when rr.roleid is null then 0 else 1 end) as "checked" 
+     from (
+    select re.*
+    from t_ac_resource re where (
+         re.resid in( select resid from t_ac_appresauth where orgid =#orgid#)
+     and 
+         re.resid in(select resid from t_ac_roleres where roleid in ($roles$) )
+     )
+    ) a
+    left join 
+    t_ac_roleres rr on rr.resid =a.resid and rr.roleid in
+ 	<iterate property="roleids" open="(" close=")" conjunction="," >  
+		     #roleids[]#
+	</iterate> 
+    </select>
+  	<!-- 依据操作员ID查询对应的角色 -->
+    <select id="queryRoleByOperator" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcRole">
+    	 select r.* from t_ac_role r 
+   			join t_ac_operatorrole ro on ro.roleid= r.roleid 
+		 where ro.operatorid =#operatorid#
+    </select>
+    
+	
+   <delete id="delRoleRes" parameterClass="java.util.HashMap">
+    	 delete from t_ac_roleres where roleid=#roleid#
+   </delete>
+   
+   <!-- 依据当前操作员的权限查询角色 (通过orgid过滤角色)-->
+   <!-- 中联-->
+   <select id="queryRoleByOpeartorPermission" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	   select ro.roleid as "roleid",
+	       ro.rolecode as "rolecode",
+	       ro.rolename as "rolename",
+	       ro.orgid as "orgid",
+	       ro.roletype as "roletype",
+	       ro.roledesc as "roledesc",
+	       ro.dataorgid as "dataorgid",
+	       (case  when org.orgname is null then '0' else org.orgname end) as "orgname"
+		   from t_ac_role ro
+		   left join v_om_organization_trs org
+		   		on ro.orgid = org.orgid
+		   where 1=1
+		   and ro.rolecode != 'sysadmin'
+		   <isNotNull prepend="and" property="rolename">
+		   		ro.rolename like CONCAT('%',CONCAT(#rolename#,'%'))
+		   </isNotNull>
+		   <isNotNull prepend="and" property="rolecode">   
+		   		ro.rolecode like  CONCAT('%',CONCAT(#rolecode#,'%'))  
+		   </isNotNull>
+		   <isNotNull prepend="and" property="dataorgid">
+		   		(ro.dataorgid = #dataorgid#  or ro.dataorgid = '0')
+		   </isNotNull>
+		   <isNotNull prepend="and" property="orgid">   
+			   	ro.orgid in
+		       	(select orgs.orgid
+		          from v_om_organization_trs orgs
+		         start with orgs.orgid = #orgid#
+		        connect by orgs.parentorgid = prior orgs.orgid)
+	       </isNotNull>
+	       <isNotNull prepend="and" property="sysrole">   
+			   	ro.dataorgid = 0  and ro.orgid = 0
+	       </isNotNull>
+    </select>
+    <!-- 依据角色和机构查询待添加操作员-->
+   <!-- 中联-->
+    <select id="queryOperatorByOrgRole" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select e.empid,e.orgids orgid,op.operatorid "operatorid",op.operatorname ,op.status
+	from v_om_emporgname_trs e,(select * from v_ac_operator_trs where status='0') op
+	where exists(
+	select 1 from (
+	select orgid from v_om_organization_trs t
+	start with t.orgid = #orgid#
+	connect by prior t.orgid = t.parentorgid) o
+	where e.orgids = o.orgid
+	) and op.empid = e.empid
+	and not exists(
+	   select 1 from t_ac_operatorrole r where r.roleid=#roleid# and op.operatorid = r.operatorid
+	) 
+     </select>
+</sqlMap>

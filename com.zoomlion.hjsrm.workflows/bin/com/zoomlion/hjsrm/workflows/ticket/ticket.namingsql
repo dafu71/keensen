@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.workflows.ticket.ticket">
+    <!-- 查询某一个工单流程的工作项  -->
+    <!-- 修改执行人字段为partiname  -->
+    <select id="queryWorkitemsById" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+          select        
+               s.processinstname as "processinstname",
+               decode(s.currentstate , '4','',s.partiname) as "assistant",
+               to_char(s.createtime,'yyyy-MM-dd hh24:mi:ss') as "createtime",
+               to_char(s.endtime,'yyyy-MM-dd hh24:mi:ss') as "endtime",
+               s.processinstid as "processinstid",
+               s.workitemid as "workitemid",
+               s.actionurl as "actionurl",
+               s.processdefid as "processdefid",
+               s.activityinstname as "activityinstname",
+               s.activityinstid as "activityinstid",
+               s.activitydefid as "activitydefid",
+               t.planinfopkid as "planinfopkid",
+               t.userid as "userid",
+               t.planinfopkid as "planinfopkid",
+               t.busitype as "busitype",
+               t.pkid  as "busipkid",
+               t.applyinfopkid as "applyinfopkid",
+               wo.pkid as "worklistinfopkid",
+               s.activityinstname as "activityinstname",
+               to_char(s.createtime,'yyyy-MM-dd HH:mi:ss') as "createtime",
+               to_char(s.endtime,'yyyy-MM-dd HH:mi:ss') as "endtime"
+               <!--
+               s.assistant as "assistant"-->
+               
+           from wfworkitem s 
+           join t_bs_busibusirec t on (t.processinstid = s.processinstid and  t.workitemid = s.workitemid)
+           join t_bs_worklistinfo wo on (t.processinstid=wo.processinstid and t.applyinfopkid = wo.applyinfopkid)
+           
+           where 1=1
+        <isNotNull prepend="and" property="processinstid">s.processinstid = #processinstid#</isNotNull>
+        <isNotNull prepend="and" property="activityinstid">s.activityinstid = #activityinstid#</isNotNull>
+        <isNotNull prepend="and" property="activitydefid">s.activitydefid = #activitydefid#</isNotNull>
+        order by  s.createtime desc
+    </select>
+    <!-- 查询某一个工单流程的工作项  -->
+    <!-- dafu  -->
+    <select id="queryWorkitemsById2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+          select        
+               s.processinstname as "processinstname",
+               decode(s.currentstate , '4','',s.partiname) as "assistant",
+               to_char(s.createtime,'yyyy-MM-dd hh24:mi:ss') as "createtime",
+               to_char(s.endtime,'yyyy-MM-dd hh24:mi:ss') as "endtime",
+               s.processinstid as "processinstid",
+               s.workitemid as "workitemid",
+               s.actionurl as "actionurl",
+               s.processdefid as "processdefid",
+               s.activityinstname as "activityinstname",
+               s.activityinstid as "activityinstid",
+               s.activitydefid as "activitydefid",
+               '' as "planinfopkid",
+               '' as "userid",
+               '' as "planinfopkid",
+               '' as "busitype",
+               ''  as "busipkid",
+               '' as "applyinfopkid",
+               '' as "worklistinfopkid",
+               s.activityinstname as "activityinstname",
+               to_char(s.createtime,'yyyy-MM-dd HH:mi:ss') as "createtime",
+               to_char(s.endtime,'yyyy-MM-dd HH:mi:ss') as "endtime"
+               <!--
+               s.assistant as "assistant"-->
+               
+           from wfworkitem s 
+          
+           
+           where 1=1
+        <isNotNull prepend="and" property="processinstid">s.processinstid = #processinstid#</isNotNull>
+        <isNotNull prepend="and" property="activityinstid">s.activityinstid = #activityinstid#</isNotNull>
+        <isNotNull prepend="and" property="activitydefid">s.activitydefid = #activitydefid#</isNotNull>
+        order by  s.createtime desc
+    </select>
+</sqlMap>

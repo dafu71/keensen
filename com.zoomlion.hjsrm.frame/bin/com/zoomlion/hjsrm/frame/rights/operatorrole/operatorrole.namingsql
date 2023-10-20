@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.rights.operatorrole.operatorrole">
+    <!-- 查询角色对应的操作员 -->
+    <select id="queryOperByRole" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	 select r.rolename as "rolename",
+    	 	opr.roleid as "roleid",
+    	 	op.operatorid as "operatorid", 
+			op.empid as "empid" , 
+			op.userid as "userid", 
+			op.password as "password", 
+			op.invaldate as "invaldate", 
+			op.operatorname as "operatorname", 
+			op.authmode as "authmode", 
+			op.status as "status", 
+			op.unlocktime as "unlocktime", 
+			op.menutype as "menutype", 
+			op.lastlogin as "lastlogin", 
+			op.errcount as "errcount", 
+			op.startdate as "startdate", 
+			op.enddate as "enddate", 
+			op.validtime as "validtime", 
+			op.maccode as "maccode", 
+			op.ipaddress as "ipaddress", 
+			op.email as "email", 
+			op.createby as "createby", 
+			op.modifyby as "modifyby", 
+			op.updatetime as "updatetime", 
+			op.dataorgid as "dataorgid",
+			r.rolecode as "rolecode",
+	        r.roletype as "roletype",
+	        r.roledesc as "roledesc",
+    	 nvl(org.orgname,'系统级')as "orgname"  
+    	 from t_ac_operatorrole opr 
+    	 join t_ac_operator op on opr.operatorid=op.operatorid 
+    	 left join t_om_organization org on org.orgid=op.dataorgid 
+    	 join t_ac_role r on r.roleid=opr.roleid 
+    	 where 1=1
+    	 	<isNotNull prepend="and" property="roleid">opr.roleid =#roleid#</isNotNull>
+        <isNotNull prepend="and" property="operatorid">op.operatorid =#operatorid#</isNotNull>
+        <isNotNull prepend="and" property="dataorgid">op.dataorgid =#dataorgid#</isNotNull>
+    </select>
+    <!-- 查询角色对应的操作员 -->
+    <select id="queryOperByRole2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	 select r.rolename as "rolename",
+    	 	opr.roleid as "roleid",
+    	 	op.operatorid as "operatorid", 
+			op.empid as "empid" , 
+			op.userid as "userid", 
+			op.password as "password", 
+			op.invaldate as "invaldate", 
+			op.operatorname as "operatorname", 
+			op.authmode as "authmode", 
+			op.status as "status", 
+			op.unlocktime as "unlocktime", 
+			op.menutype as "menutype", 
+			ll.logtime as "lastlogin", 
+			op.errcount as "errcount", 
+			op.startdate as "startdate", 
+			op.enddate as "enddate", 
+			op.validtime as "validtime", 
+			op.maccode as "maccode", 
+			op.ipaddress as "ipaddress", 
+			op.email as "email", 
+			op.createby as "createby", 
+			op.modifyby as "modifyby", 
+			op.updatetime as "updatetime", 
+			op.dataorgid as "dataorgid",
+			r.rolecode as "rolecode",
+	        r.roletype as "roletype",
+	        r.roledesc as "roledesc",
+    	 nvl(org.orgname,'系统级')as "orgname"  
+    	 from t_ac_operatorrole opr 
+    	 join v_ac_operator_trs op on opr.operatorid=op.operatorid 
+    	 left join v_om_organization_trs org on org.orgid=op.dataorgid 
+    	 join t_ac_role r on r.roleid=opr.roleid 
+    	 left join v_at_loginlog ll
+    	 on op.userid = ll.userid
+    	 where 1=1
+    	 	<isNotNull prepend="and" property="roleid">opr.roleid =#roleid#</isNotNull>
+        <isNotNull prepend="and" property="operatorid">op.operatorid =#operatorid#</isNotNull>
+        <isNotNull prepend="and" property="dataorgid">op.dataorgid =#dataorgid#</isNotNull>
+    </select>
+    <!-- 查询不在某个操作员下并且在某个机构下的角色 -->
+    <select id="queryRoleByDataOrg" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	   select r.roleid as "roleid", 
+				r.rolecode as "rolecode", 
+				r.rolename as "rolename", 
+				r.roletype as "roletype", 
+				r.roledesc as "roledesc", 
+				r.createby as "createby", 
+				r.modifyby as "modifyby", 
+				r.updatetime as "updatetime", 
+				r.dataorgid as "dataorgid",
+               nvl(dataorg.orgname,'系统级') as "orgname"
+    	       from t_ac_role r   
+    	         left join t_om_organization dataorg 
+    	               on dataorg.orgid = r.orgid    
+    	             where not exists (select 1   
+    	                                 from t_ac_operatorrole opr    
+    	                                       where opr.roleid = r.roleid    
+    	                                        and opr.operatorid =#operatorid#)
+    	            <isNotNull prepend="and" property="orgid">r.orgid = #orgid#</isNotNull>
+        <isNotNull prepend="and" property="empid">r.orgid in
+					       ( select org.orgid from t_om_organization org
+							 start with org.orgid in (select em.orgid  from t_om_emporg em where em.empid = #empid#)
+							 connect by prior org.parentorgid = org.orgid
+							)</isNotNull>
+        <isNotNull prepend="and" property="rolename">r.rolename like CONCAT('%', CONCAT(#rolename#,'%'))</isNotNull>
+        <isNotNull prepend="and" property="rolecode">r.rolecode like CONCAT('%', CONCAT(#rolecode#,'%'))</isNotNull>
+        <isNotNull prepend="" property="dataorgid"> 
+    	             		union
+	    	                select r.roleid as "roleid", 
+							r.rolecode as "rolecode", 
+							r.rolename as "rolename", 
+							r.roletype as "roletype", 
+							r.roledesc as "roledesc", 
+							r.createby as "createby", 
+							r.modifyby as "modifyby", 
+							r.updatetime as "updatetime", 
+							r.dataorgid as "dataorgid",
+			               nvl(dataorg.orgname,'系统级') as "orgname"
+			    	       from t_ac_role r   
+			    	         left join t_om_organization dataorg 
+			    	               on dataorg.orgid = r.orgid
+			    	         where r.dataorgid = '0'
+			    	         and r.rolecode != 'sysadmin'
+			    	         and not exists (select 1   
+    	                                 from t_ac_operatorrole opr    
+    	                                       where opr.roleid = r.roleid    
+    	                                        and opr.operatorid =#operatorid#)
+    	                     <isNotNull prepend="and" property="orgid">r.orgid = #orgid#</isNotNull>
+            <isNotNull prepend="and" property="empid">r.orgid in
+							       ( select org.orgid from t_om_organization org
+									 start with org.orgid in (select em.orgid  from t_om_emporg em where em.empid = #empid#)
+									 connect by prior org.parentorgid = org.orgid
+									)</isNotNull>
+        </isNotNull>
+    </select>
+    <!-- 查询操作员对应的角色 -->
+    <select id="queryRoleInOperator" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select opr.roleid as "roleid",
+		opr.operatorid as "operatorid",
+		r.rolename as "rolename",
+		r.rolecode as "rolecode",
+		r.roletype as "roletype",
+		nvl(o.orgname, '系统级') as  "orgname"
+       from t_ac_operatorrole opr
+       join t_ac_role r  on opr.roleid = r.roleid
+       left join t_om_organization o on r.orgid = o.orgid
+      where opr.operatorid = #operatorid#</select>
+</sqlMap>

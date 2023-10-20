@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 人员机构管理相关SQL-->
+<!-- author:陈今伟 -->
+<sqlMap>
+     <!-- 查询机构下的人员,用于机构管理下查询人员信息 -->   
+ <select id="queryEmployeesByOrg" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select  distinct ee.empid as "empid",    
+		ee.empcode as "empcode",     
+		ee.empname as "empname",      
+		ee.realname as "realname",      
+		ee.gender as "gender",      
+		to_char(ee.birthdate,'yyyy/mm/dd') as "birthdate",      
+		ee.position as "position",     
+		ee.empstatus as "empstatus",      
+		ee.cardtype as "cardtype",      
+		ee.cardno as "cardno",      
+		to_char(ee.indate,'yyyy/mm/dd') as "indate",     
+		to_char(ee.outdate,'yyyy/mm/dd') as"outdate",      
+		ee.otel as "otel",      
+		ee.oaddress as "oaddress",      
+		ee.ozipcode as "ozipcode",      
+		ee.oemail as "oemail",      
+		ee.faxno as "faxno",      
+		ee.mobileno as "mobileno",      
+		ee.msn as "msn",      
+		ee.htel as "htel",      
+		ee.haddress as "haddress",     
+		ee.hzipcode as "hzipcode",     
+		ee.pemail as "pemail",     
+		ee.party as "party",      
+		ee.degree as "degree",     
+		ee.major as "major",      
+		ee.specialty as "specialty",      
+		ee.workexp as "workexp",      
+		to_char(ee.regdate,'yyyy/mm/dd') as "regdate" ,      
+		ee.orgidlist as "orgidlist",      
+		ee.mainorgid as "mainorgid",      
+		ee.remark as "remark",      
+		ee.createby as "createby",      
+		ee.modifyby as "modifyby",     
+		ee.updatetime as "updatetime",     
+		ee.delflag as "delflag",      
+		ee.dataorgid as "dataorgid",    
+		mo.orgname as "mainorgname",
+		a.orgnames as "orgname"
+		from t_om_employee ee 
+		left join t_om_emporg eo on ee.empid=eo.empid 
+		left join t_om_organization oo on eo.orgid =oo.orgid
+		left join t_om_organization mo on ee.mainorgid=mo.orgid
+		left join v_om_emporgname a on a.empid=ee.empid
+	 where ee.delflag='n'
+	    <isNotNull prepend="and" property="dataorgid"> 
+		ee.dataorgid=#dataorgid# 
+		</isNotNull> 
+		<isNotNull prepend="and" property="empstatus"> 
+			ee.empstatus=#empstatus# 
+		</isNotNull> 
+		<isNotNull prepend="and" property="empname">
+			ee.empname like '%'||#empname#||'%'	
+		</isNotNull>
+		<isNotNull prepend="and" property="empcode">
+			ee.empcode like '%'||#empcode#||'%'
+		</isNotNull> 
+		<isNotNull prepend="and" property="empstatus">
+			ee.empstatus =#empstatus#
+		</isNotNull>
+		<isNotNull prepend="and" property="orgid">
+			(eo.orgid =#orgid# or ee.dataorgid=#orgid#)
+		</isNotNull>
+ </select>
+ 
+ <!-- 查询机构下的人员,用于机构管理下查询人员信息 -->   
+ <select id="queryEmployeesByOrg2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select  distinct ee.empid as "empid",    
+		ee.empcode as "empcode",     
+		ee.empname as "empname",      
+		ee.realname as "realname",      
+		ee.gender as "gender",      
+		to_char(ee.birthdate,'yyyy/mm/dd') as "birthdate",      
+		ee.position as "position",     
+		ee.empstatus as "empstatus",      
+		ee.cardtype as "cardtype",      
+		ee.cardno as "cardno",      
+		to_char(ee.indate,'yyyy/mm/dd') as "indate",     
+		to_char(ee.outdate,'yyyy/mm/dd') as"outdate",      
+		ee.otel as "otel",      
+		ee.oaddress as "oaddress",      
+		ee.ozipcode as "ozipcode",      
+		ee.oemail as "oemail",      
+		ee.faxno as "faxno",      
+		ee.mobileno as "mobileno",      
+		ee.msn as "msn",      
+		ee.htel as "htel",      
+		ee.haddress as "haddress",     
+		ee.hzipcode as "hzipcode",     
+		ee.pemail as "pemail",     
+		ee.party as "party",      
+		ee.degree as "degree",     
+		ee.major as "major",      
+		ee.specialty as "specialty",      
+		ee.workexp as "workexp",      
+		to_char(ee.regdate,'yyyy/mm/dd') as "regdate" ,      
+		ee.orgidlist as "orgidlist",      
+		ee.mainorgid as "mainorgid",      
+		ee.remark as "remark",      
+		ee.createby as "createby",      
+		ee.modifyby as "modifyby",     
+		ee.updatetime as "updatetime",     
+		ee.delflag as "delflag",      
+		ee.dataorgid as "dataorgid",    
+		mo.orgname as "mainorgname",
+		a.orgnames as "orgname"
+		from v_om_employee_trs ee 
+		left join V_OM_EMPORG_TRS eo on ee.empid=eo.empid 
+		left join v_om_organization_trs oo on eo.orgid =oo.orgid
+		left join v_om_organization_trs mo on ee.mainorgid=mo.orgid
+		left join V_OM_EMPORGNAME_TRS a on a.empid=ee.empid
+	 where ee.delflag='n'
+	    <isNotNull prepend="and" property="dataorgid"> 
+		ee.dataorgid=#dataorgid# 
+		</isNotNull> 
+		<isNotNull prepend="and" property="empstatus"> 
+			ee.empstatus=#empstatus# 
+		</isNotNull> 
+		<isNotNull prepend="and" property="empname">
+			ee.empname like '%'||#empname#||'%'	
+		</isNotNull>
+		<isNotNull prepend="and" property="empcode">
+			ee.empcode like '%'||#empcode#||'%'
+		</isNotNull> 
+		<isNotNull prepend="and" property="empstatus">
+			ee.empstatus =#empstatus#
+		</isNotNull>
+		<isNotNull prepend="and" property="orgid">
+			(eo.orgid =#orgid# or ee.dataorgid=#orgid#)
+		</isNotNull>
+ </select>
+ <!-- 查询机构下的人员,用于机构管理下查询人员信息 -->   
+ <select id="loadEmpnewCombo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select t.empid ,wmsys.wm_concat(t1.orgname||'['||t.orgid||']')||',' as "cool" from t_om_emporg t, v_om_organization_trs t1 
+               where  t.orgid =t1.orgid 
+                 and  t.empid=#empid# 
+                 group by t.empid
+ </select>
+</sqlMap>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.srmclient.workflow" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.srmclient.workflow">
+    <xs:complexType name="Testflow" sdoJava:instanceClass="com.zoomlion.hjsrm.srmclient.workflow.impl.TestflowImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="checkby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="checktime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="advise" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processinstid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workitemid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

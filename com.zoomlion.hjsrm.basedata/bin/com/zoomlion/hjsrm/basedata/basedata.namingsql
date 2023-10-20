@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.basedata.basedata">
+    <!-- 物料基础数据查询-->
+    <select id="queryMarabase" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+      select t.matnr as "matnr",
+       t.maktx as "maktx",
+       d.werks as "werks",
+       t.meins as "meins",
+       t.zeinr as "zeinr",
+       d.ekgrp as "ekgrp",
+       d.lgpro as "lgpro",
+       d.minbe as "minbe",
+       d.bstmi as "bstmi",
+       d.plifz as "plifz",
+       k.zhwbm as "zhwbm" 
+  from base_material_mara t
+left join base_material_marc d on t.matnr = d.matnr
+left join base_material_zt76 k on t.matnr = k.matnr 
+        where 1 = 1
+		<isNotNull prepend="and" property="werks">d.werks=#werks#</isNotNull>
+        <isNotNull prepend="and" property="matnr">t.matnr=#matnr#</isNotNull>
+        <isNotNull prepend="and" property="maktx">t.maktx like '%'||#maktx#||'%'</isNotNull>
+    </select>
+</sqlMap>

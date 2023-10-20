@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="printMeterDeal.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="/******************************************************************&#xD;&#xA;*版权所有： 港华科技（武汉）有限公司&#xD;&#xA;*描    述： 表处理工单打印&#xD;&#xA;*创建日期： 2014-8-8&#xD;&#xA;*补丁编号： G3_P_20140709_01_101&#xD;&#xA;*作    者： 肖斌&#xD;&#xA;*输入  （可空）&#xD;&#xA;*输出   （可空）&#xD;&#xA;*关键点  （可空）&#xD;&#xA;*******************************************************************/&#xD;&#xA;&#xD;&#xA;//==============================修改历史===========================&#xD;&#xA;//补丁编号                修改人     日期       区域       备注&#xD;&#xA;// G3_P_XXXXXXXX_XX_XX      XX     XXXXXXX     集团      &#xD;&#xA;//&#xD;&#xA;//=================================================================" title="肖斌&#x9;14-8-8 下午5:17">
+    <location x="60" y="135"/>
+    <size height="316" width="661"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>invokeSpring0</targetNode>
+    </sourceConnections>
+    <location x="60" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
+    <targetConnections>link1</targetConnections>
+    <location x="356" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="java.util.List" name="data" type="query" valueType="Java">data</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="62" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="358" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeSpring0" name="表处理工单打印" displayName="printMeterDealBatch" nodeType="common" type="invoke" index="0" invokeType="invoke_spring" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokeSpring0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="208" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>invokeSpring0label</nodeLabel>
+    <process:spring methodType="beanID" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zoomlion.hjsrm.workflows.remain.RemainBean.printMeterDealBatch</process:partner>
+      <process:instance instanceName="remainBean"/>
+    </process:spring>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="applyinfopkid" type="query" value="java.lang.String[]" valueType="Java" pattern="reference">applyinfopkid</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.util.List&lt;java.util.Map&lt;java.lang.String,java.lang.String>>" valueType="Java">data</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeSpring0label" name="label" nodeType="label">
+    <location x="180" y="96"/>
+    <figSize height="17" width="85"/>
+    <node>invokeSpring0</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="何源" createTime="2014-05-18 17:04:02" date="2014-05-18Z" description="" name="printMeterDeal" version="6.3"/>
+  <process:variables/>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="true" name="applyinfopkid" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output anyType="java.util.List" description="" isArray="false" name="data"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

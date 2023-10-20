@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+	<tlibversion>1.2</tlibversion>
+	<jspversion>1.1</jspversion>
+	<shortname>js</shortname>
+	<uri>http://eos.primeton.com/tags/hjsrm/js</uri>
+	  <tag>
+		<name>load</name>
+		<tagclass>com.zoomlion.hjsrm.frame.tools.tag.LoadJs4JSp</tagclass>
+		<bodycontent>empty</bodycontent>
+		<attribute>
+			<name>scriptPath</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>DBData</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>replaceName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>getSysConfig</name>
+		<tagclass>com.zoomlion.hjsrm.pub.common.SystemConfigReader</tagclass>
+		<bodycontent>empty</bodycontent>
+		<attribute>
+			<name>property</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>configName</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>

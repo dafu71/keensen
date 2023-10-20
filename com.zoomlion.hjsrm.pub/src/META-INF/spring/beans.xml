@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+/*******************************************************************************
+ * 
+ * 版权所有： 港华科技（武汉）有限公司
+ * 
+ * 描 述：pub公共组件spring bean xml
+ * 
+ * 创建日期： 2014-8-8
+ * 
+ * 补丁编号： G3_P_20140709_01_101
+ * 
+ * 作 者： 肖斌
+ * 
+ ******************************************************************************/
+
+// ==============================修改历史===========================
+// 补丁编号 修改人 日期 归属 备注
+// G3_P_20140915_01_334 甘丽     2014-09-23  集团  增加接口用的spring bean
+// =================================================================
+ --> 
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:sca="http://www.springframework.org/schema/sca" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd   http://www.springframework.org/schema/sca http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd">    
+	
+    
+		<!-- Excel工具组件(含上传) -->
+	<bean class="com.zoomlion.hjsrm.pub.file.excelutil.ExcelDao" id="excelDao" />
+	<bean class="com.zoomlion.hjsrm.pub.file.excelutil.ExcelBean" id="excelBean" />
+	<bean class="com.zoomlion.hjsrm.pub.file.excelutil.ExcelUtilWrapper" id="excelUtilWrapper" />
+	
+	<!-- 业务处理模块 **********************************BEGIN************************** -->
+    <!-- 业务处理-业务流程相关配置 begin -->
+    <bean class="com.zoomlion.hjsrm.pub.busi.common.SrmCommonDao" id="srmCommonDao"/>
+    <bean class="com.zoomlion.hjsrm.pub.busi.common.SrmCommonBean" id="srmCommonBean">
+        <property name="srmCommonDao" ref="srmCommonDao"/>
+    </bean>
+
+	<!-- 业务处理模块 **********************************END**************************** -->
+	
+	
+	 
+</beans>

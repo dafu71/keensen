@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.interfaces.Interfaces" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.interfaces.Interfaces">
+    <xs:complexType name="IMessageAlert" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.IMessageAlertImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recipient" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="alertdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="alerttype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="nature" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="subject" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="body" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="timestamp" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IMeterInformation" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.IMeterInformationImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="resid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="infodate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="currentrate" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="residualamount" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="remainvolume" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="remainenergy" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="alarm" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IMeterParam" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.IMeterParamImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="resid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="aivalue" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="sivalue" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="fsivalue" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="auditid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="supplypointid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mcumapid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="timestamp" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="reccreatedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IMeterReadings" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.IMeterReadingsImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="resid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meterindex" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="readingtypeid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="readingdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isrecycle" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IMeterStatus" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.IMeterStatusImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="resid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="valve" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="islowbattery" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="istamper" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="ishitalertindex" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="ishitcreditindex" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="ishitshutoffindex" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="ishitforceshutoffindex" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="internalerror" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="timestamp" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="reccreatedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IReadRecord" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.IReadRecordImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="resid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="readrecordid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="seqno" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="sentdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="meterindex" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="logtype" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="timestamp" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TJkPrinttemplate" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.TJkPrinttemplateImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="templateid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="templatename" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="templatefolder" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="printparam" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="picturename" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="picturewidth" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="pictureheight" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="template" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TJkInterfacelog" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.TJkInterfacelogImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="targetsystem" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="source" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="classname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="methodname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="param" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="msg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="starttime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="endtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="runtime" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="webaddress" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="port" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="ip" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="backtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="inittype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busifunc" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TJkTelfac" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.TJkTelfacImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="providerid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="link" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="height" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="width" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Changeprice" sdoJava:instanceClass="com.zoomlion.hjsrm.interfaces.Interfaces.impl.ChangepriceImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="supplypointpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reading" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="recordtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.zoomlion.hjsrm.data.tools.Tools.VAtAnnounceReader">
+        <config db="default" type="view"><![CDATA[V_AT_ANNOUNCE_READER]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zoomlion.hjsrm.data.tools.Tools.VAtNoticeHis">
+        <config db="default" type="sql"><![CDATA[ select
+    info.noticeid as "noticeid",
+    info.title as "title",
+    info.sendusername as "sendusername",
+    to_char(info.noticetime,'yyyy-MM-dd HH24:mi:ss') as "sendtime",
+    res.recvusername as "recvusername",
+    info.content as "content",
+    res.readstatus as "readstatus",
+    res.readtime as "readtime"
+    from t_at_noticerecvuser res 
+    left join  t_at_noticeinfo info
+     on info.noticeid=res.noticeid ]]></config>
+    </QueryEntity>
+    <QueryEntity name="com.zoomlion.hjsrm.data.tools.Tools.VAtNoticereader">
+        <config db="default" type="sql"><![CDATA[select noticeid, wmsys.wm_concat((recvusername||to_char(readtime,'yy-mm-dd hh24:mi:ss')))as nr 
+  from (select * from t_at_noticerecvuser where (readtime is not null) or readtime<>''
+   order by readtime desc   )   group by noticeid]]></config>
+    </QueryEntity>
+</QueryEntityList>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.workflows.common.workincommon">
+    <!--查询所有流程定义 -->
+    <select id="queryAllBizProcess" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select processdefid as "processDefID",
+    	processchname as "processDefCHName"
+    	from wfprocessdefine</select>
+    <!--根据dataorgid查询操作员 -->
+    <select id="queryOperatorByDataOrgId" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select op.operatorid   as "operatorid",
+		       op.userid       as "userid",
+		       op.operatorname as "operatorname"
+		  from t_ac_operator op
+		  join t_om_emporg eo
+		    on eo.empid = op.empid
+		 where op.dataorgid = #dataorgid#
+		   and eo.orgid = #orgid#</select>
+    <!--查询诉求补话信息 -->
+    <select id="queryComplementByApply" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select s.contactname  as "contact",
+		       s.contactphone as "contacttel",
+		       t.content      as "content",
+		       t.state        as "state"
+		  from t_sq_complement t, t_kh_contactinfo s
+		 where t.applyinfopkid = s.ownid
+		   and t.applyinfopkid = #applyinfopkid#
+		   and t.delflag = '0'
+		   and t.dataorgid = #dataorgid#</select>
+</sqlMap>

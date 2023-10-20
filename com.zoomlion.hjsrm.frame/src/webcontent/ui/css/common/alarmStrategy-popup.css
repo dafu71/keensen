@@ -1,0 +1,100 @@
+/*!
+ * =====================================================
+ *AlarmStrategyPopup CSS Style File
+ * =====================================================
+ */
+
+.wl-vehicle-menu li.strategy-config-tab-active {
+    background-color: #667D26;
+    color: #fff;
+}
+
+.wl-vehicle-menu li.strategy-route-config-tab-active {
+    background-color: #667D26;
+    color: #fff;
+}
+
+.wl-vehicle-menu li.strategy-area-config-tab-active {
+    background-color: #667D26;
+    color: #fff;
+}
+
+
+/*业务配置，异常策略样式调整*/ 
+.popupTableLeft {
+    width: 250px;
+    margin-right: 20px;
+    height: calc(100% - 60px);
+    height: -webkit-calc(100% - 60px);
+}
+
+.popupTableRight {
+    width: 505px;
+    margin-top: 26px;
+    height: calc(100% - 60px);
+    height: -webkit-calc(100% - 60px);
+    overflow: auto;
+    border: 1px solid #ccc;
+}
+
+.popupTableRelative {
+    position: relative;
+}
+
+.wl-vehicle-basic-left-box {
+    border: 1px solid #ccc;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.popupTableLeft .list-group {
+    margin-top: 28px;
+    overflow: auto;
+    height: 100%;
+}
+
+.popupTableLeft .list-group-item {
+    border: 0;
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+}
+
+.popupTableLeft .list-group-item:last-of-type {
+    border: 0;
+}
+
+.popupTableLeft .list-group-item:first-of-type {
+    position: absolute;
+    z-index: 1;
+    left: 0px;
+    top: 0px;
+    background: #fff;
+    border-radius: 0;
+    width: 250px;
+}
+
+.popupTableRelative .table>thead {
+    position: absolute;
+    z-index: 1;
+    top: 0px;
+    right: 1px;
+    width: 505px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-bottom: 0
+}
+
+.popupTableRelative .table>thead>tr {
+    width: 100%;
+}
+
+.popupTableRelative .table>thead>tr>th,
+.popupTableRelative .table>tbody>tr>td {
+    padding: 5px 10px !important;
+    border-bottom: 1px solid #ddd;
+}
+
+.popupTableRelative .table>tbody>tr:last-of-type>td {
+    border: 0;
+}

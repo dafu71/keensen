@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:maoxiaodong -->
+<sqlMap>
+   
+ <!-- 查询某一个热线工作单详细信息 -->
+    <select id="queryDemandOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select distinct
+     wp.workitemid as "workitemid",
+     wp.pkid as "pkid", 
+     wp.applyinfopkid as "applyinfopkid",
+     wp.processinstid as "processinstid",
+     wp.busitype as "busitype",
+     wp.userid as "userid",
+     wp.username as "username",
+     wp.urglvl as "urglvl",
+     wp.gasaddress as "gasaddress",
+     wp.bookdate as "bookdate",
+     wp.starttime as "starttime",
+     wp.endtime as "endtime",
+     wp.activityinstname as "activityinstname",
+     wp.processinstname as "processinstname",
+     wp.processdefid as "processdefid",
+     wp.processdefname as "processdefname",
+     wp.currentstate as "currentstate",
+     decode(wp.currentstate, 4, '可签收', 10, '待处理', 8, '已挂起') as "currentstatename",
+     wp.sourcetype as "sourcetype",
+     ext.commtimes as "commtimes",
+     ext.commviewdtimes as "commviewdtimes",
+     ext.urgeretimes as "urgeretimes",
+     ext.content as "content",
+     wp.urglvl as "urglvl",
+     WMSYS.WM_CONCAT(wp.participantname || '|') as "participantname"
+     from v_bs_remain wp ,t_sq_applyinfoext ext  where 
+      wp.applyinfopkid  = ext.applyinfopkid
+	  <isNotNull prepend="and" property="dataorgid">
+			 ext.dataorgid = #dataorgid#
+      </isNotNull>
+	  <isNotNull prepend="and" property="busirecpkid"> 
+			 wp.pkid = #busirecpkid#
+	  </isNotNull>
+	  <isNotNull prepend="and" property="applyinfopkid">
+			 wp.applyinfopkid = #applyinfopkid#
+	  </isNotNull> 	
+	        group by 
+     wp.workitemid ,
+     wp.pkid, 
+     wp.applyinfopkid ,
+     wp.processinstid ,
+     wp.busitype ,
+     wp.userid ,
+     wp.username ,
+     wp.urglvl ,
+     wp.gasaddress ,
+     wp.bookdate ,
+     wp.starttime ,
+     wp.endtime ,
+     wp.activityinstname ,
+     wp.processinstname ,
+     wp.processdefid ,
+     wp.processdefname ,
+     wp.currentstate ,
+     wp.sourcetype ,
+     ext.commtimes ,
+     ext.commviewdtimes ,
+     ext.urgeretimes ,
+     ext.content ,
+     wp.urglvl 		
+    </select>
+    
+    
+</sqlMap>

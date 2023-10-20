@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.msg.msg.TJkMsghis" table="T_JK_MSGHIS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="content" type="string">
+            <column length="1000" name="CONTENT"/>
+        </property>
+        <property name="appointmenttime" type="timestamp">
+            <column name="APPOINTMENTTIME"/>
+        </property>
+        <property name="procurationtime" type="timestamp">
+            <column name="PROCURATIONTIME"/>
+        </property>
+        <property name="receiverid" type="string">
+            <column length="30" name="RECEIVERID"/>
+        </property>
+        <property name="receiver" type="string">
+            <column length="50" name="RECEIVER"/>
+        </property>
+        <property name="receiverno" type="string">
+            <column length="30" name="RECEIVERNO"/>
+        </property>
+        <property name="dealtime" type="timestamp">
+            <column name="DEALTIME"/>
+        </property>
+        <property name="reno" type="string">
+            <column length="30" name="RENO"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.msg.msg.TJkMsgqueue" table="T_JK_MSGQUEUE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="msgtemplatepkid" type="string">
+            <column length="25" name="MSGTEMPLATEPKID"/>
+        </property>
+        <property name="content" type="string">
+            <column length="1000" name="CONTENT"/>
+        </property>
+        <property name="appointmenttime" type="timestamp">
+            <column name="APPOINTMENTTIME"/>
+        </property>
+        <property name="procurationtime" type="timestamp">
+            <column name="PROCURATIONTIME"/>
+        </property>
+        <property name="receiverid" type="string">
+            <column length="30" name="RECEIVERID"/>
+        </property>
+        <property name="receiver" type="string">
+            <column length="50" name="RECEIVER"/>
+        </property>
+        <property name="receiverno" type="string">
+            <column length="30" name="RECEIVERNO"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.msg.msg.TJkMsgtemplate" table="T_JK_MSGTEMPLATE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="tpltype" type="string">
+            <column length="5" name="TPLTYPE"/>
+        </property>
+        <property name="subtype" type="string">
+            <column length="5" name="SUBTYPE"/>
+        </property>
+        <property name="templatename" type="string">
+            <column length="50" name="TEMPLATENAME"/>
+        </property>
+        <property name="content" type="string">
+            <column length="1000" name="CONTENT"/>
+        </property>
+        <property name="paramno" type="long">
+            <column length="22" name="PARAMNO"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.msg.msg.TJkBusitplcfg" table="T_JK_BUSITPLCFG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="busicode" type="string">
+            <column length="5" name="BUSICODE" not-null="true"/>
+        </property>
+        <property name="tplpkid" type="string">
+            <column length="25" name="TPLPKID" not-null="true"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+    </class>
+</hibernate-mapping>

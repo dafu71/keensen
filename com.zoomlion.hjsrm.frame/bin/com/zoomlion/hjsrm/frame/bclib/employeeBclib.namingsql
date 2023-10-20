@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.bclib.employeeBclib">
+    <!-- 根据条件查询员工操作员视图信息 -->
+    <select id="queryEmpopers" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmEmpoper">
+   		select * from v_om_empoper
+   		<dynamic prepend="where">
+            <isNotNull prepend="and" property="empid">empid =#empid#</isNotNull>
+            <isNotNull prepend="and" property="empcode">empcode =#empcode#</isNotNull>
+            <isNotNull prepend="and" property="empname">empname =#empname#</isNotNull>
+            <isNotNull prepend="and" property="gender">gender =#gender#</isNotNull>
+            <isNotNull prepend="and" property="mobileno">mobileno =#mobileno#</isNotNull>
+            <isNotNull prepend="and" property="empstatus">empstatus =#empstatus#</isNotNull>
+            <isNotNull prepend="and" property="delflag">delflag =#delflag#</isNotNull>
+            <isNotNull prepend="and" property="operatorid">operatorid =#operatorid#</isNotNull>
+            <isNotNull prepend="and" property="userid">userid =#userid#</isNotNull>
+        </dynamic>
+    </select>
+    <!-- 根据角色ID查询人员视图信息 -->
+    <select id="queryEmpopersByRoleId" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmEmpoper">select empo.* from v_om_empoper empo,t_ac_operatorrole orl where empo.operatorid = orl.operatorid and orl.roleid = #roleid#</select>
+    <!-- 根据机构ID查询人员视图信息 -->
+    <select id="queryvomEmpopersBydataorgId" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmEmpoper">
+   	select DISTINCT  empo.* from v_om_empoper empo,t_om_emporg orl where empo.empid = orl.empid 
+   		<isNotNull prepend="and" property="dataorgid">empo.dataorgid =  #dataorgid#</isNotNull>
+    </select>
+    <!-- 根据机构ID查询人员视图信息 -->
+    <select id="queryEmpopersByOrgId" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmEmpoper">
+   	select DISTINCT  empo.* from v_om_empoper empo,t_om_emporg orl where empo.empid = orl.empid 
+   		<isNotNull prepend="and" property="orgid">orl.orgid =  #orgid#</isNotNull>
+    </select>
+    <!-- 根据当前操作员查询下属员工 -->
+    <select id="queryEmpopersByDataorgid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		   	select 
+		   	   op.userid       as "userid",
+		       op.operatorid   as "operatorid",
+		       op.operatorname as "operatorname",
+		       em.empid        as "empid",
+		       em.empname      as "empname",
+		       org.orgname     as "orgname"
+		  	from t_ac_operator op
+		  	join t_om_employee em
+		    	on op.empid = em.empid
+		  	join t_om_emporg eo
+		    	on eo.empid = op.empid
+		    join t_om_organization org
+      			on eo.orgid = org.orgid
+		 	where 1=1
+		 	<isNotNull prepend="and" property="orgseq">instr(org.orgseq,#orgseq#)=1</isNotNull>
+        <isNotNull prepend="and" property="empname">em.empname like CONCAT('%', CONCAT(#empname#,'%'))</isNotNull>
+        <isNotNull prepend="and" property="empid">eo.orgid in
+			       (select org.orgid
+			          from t_om_organization org
+			         start with org.orgid in (select em.orgid
+			                                    from t_om_emporg em
+			                                   where em.empid = #empid#)
+			        connect by prior org.parentorgid = org.orgid)</isNotNull>
+    </select>
+    <!-- 根据USERID查询用户机构信息 -->
+    <select id="queryOrgsByUserId" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization">select * from t_om_organization s where s.orgid in (
+			select e.orgid from t_om_emporg e ,t_ac_operator o where e.empid = o.empid and o.userid= #userid#
+			)</select>
+    <!-- 根据USERID数组查询角色列表 -->
+    <select id="queryRolesByUserIds" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcRole">
+   		   select * from t_ac_role where 
+  			roleid in (
+        		select opr.roleid from  t_ac_operatorrole opr join t_ac_operator ops on ops.operatorid = opr.operatorid where ops.userid in
+        		<isNotNull prepend="" property="userids">
+            <iterate close=")" conjunction="," open="(" property="userids">#userids[]#</iterate>
+        </isNotNull> 
+  			)
+    </select>
+</sqlMap>

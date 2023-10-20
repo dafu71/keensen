@@ -1,0 +1,1079 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    	<!-- 查询已确认订货单--> 
+    <select id="queryOrders"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select (NVL(t2.menge,0)-nvl(t7.amount,0)+ nvl(t7.ramount,0) + nvl(t8.amount,0)) "amount",
+           t1.ebeln "ebeln",t2.werks "werks",
+           t2.ebelp "ebelp",
+           to_char(t1.aedat,'yyyy-mm-dd') "aedat",
+           t2.matnr "matnr",
+           t2.txz01 "txz01",
+           NVL(t2.menge,0) "menge",
+           to_char(t3.eindt,'yyyy-mm-dd') "eindt",
+           t2.meins "meins",
+           nvl(t2.lgort,0) "lgort",
+           t1.lifnr "lifnr",
+           t4.name1 "name1",
+           t2.pstyp "pstyp",
+           t2.knttp "knttp",
+           t1.ekgrp "ekgrp",
+           t1.ekorg "ekorg",
+           t5.aufnr "aufnr",
+           t5.kostl "kostl",
+           t3.charg "charg",
+           t2.uebto "uebto",
+           nvl(t7.amount,0) "amount1", nvl(t7.ramount,0) "ramount",
+           nvl(t8.amount,0) "amount3"           
+      from GENL_PURCHASE_EKKO t1,
+           GENL_PURCHASE_EKPO t2,
+           genl_purchase_eket t3,
+           base_supply_lfa1 t4,
+           genl_purchase_ekkn t5,
+           (select distinct t.ebeln, t.ebelp from genl_purchase_eklg t) t6,
+           (select sum(amount) amount, sum(return_amount) ramount,ebeln,ebelp
+             from genl_purchase_note_detail t
+             where t.delflag = '0'
+             group by ebeln,ebelp) t7,
+             (select ebeln, ebelp,
+             (sum(case when t.bwart = '122' then to_number(t.erfmg) else 0 end) -
+             sum(case when t.bwart = '123' then to_number(t.erfmg) else 0 end)) as amount
+              from genl_receipts_mseg t
+              group by ebeln, ebelp) t8
+     where t1.ebeln = t2.ebeln and (t2.loekz is null or t2.loekz != 'L')
+       and t3.ebeln = t2.ebeln
+       and t3.ebelp = t2.ebelp
+       and t1.lifnr = t4.lifnr
+       and t5.ebeln(+) = t2.ebeln
+       and t5.ebelp(+) = t2.ebelp
+       and t6.ebeln = t2.ebeln
+       and t6.ebelp = t2.ebelp
+       and t7.ebeln(+) = t2.ebeln
+       and t7.ebelp(+) = t2.ebelp
+       and t8.ebeln(+) = t2.ebeln
+       and t8.ebelp(+) = t2.ebelp
+       and (NVL(t2.menge,0)-nvl(t7.amount,0)+ nvl(t7.ramount,0) + nvl(t8.amount,0))>0
+       <!-- 只判断3000的工厂--> 
+       <!-- 2018-08-27-->
+       <!-- 去掉过滤掉3450工厂--> 
+       <!-- 2018-11-26-->
+       <!--<isEqual property="werks" compareValue="3000">-->
+       and (t2.matnr not in (select matnr from genl_vn_rule) or t2.matnr is null)
+       <!--</isEqual>-->
+       
+        
+       <isNotNull prepend = "and"  property = "lifnr"> 
+          t1.lifnr =  #lifnr#
+     </isNotNull>
+		   <isNotNull prepend = "and"  property = "werks"> 
+          t2.werks = #werks#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "ebeln"> 
+          t2.ebeln = #ebeln#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+          t2.matnr in ($matnr$)
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "txz01"> 
+          t2.txz01 like '%' ||  #txz01# || '%'
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "lgort"> 
+          t2.lgort like '%' ||  #lgort# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "aedatstartdate"> 
+          to_char(t1.aedat, 'yyyy-mm-dd')  &gt;=  #aedatstartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "aedatendate"> 
+          to_char(t1.aedat, 'yyyy-mm-dd')  &lt;=  #aedatendate#
+     </isNotNull>
+     order by t2.matnr,t2.txz01, t2.ebeln, t2.ebelp,t1.aedat desc
+    </select>
+    
+    
+     	<!-- 查询已确认带VN号管理的送货单--> 
+    <select id="queryVnOrders"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select (NVL(t2.menge,0)-nvl(t7.amount,0)+ nvl(t7.ramount,0) + nvl(t8.amount,0)) "amount",
+           t1.ebeln "ebeln",t2.werks "werks",
+           t2.ebelp "ebelp",
+           to_char(t1.aedat,'yyyy-mm-dd') "aedat",
+           t2.matnr "matnr",
+           t2.txz01 "txz01",
+           NVL(t2.menge,0) "menge",
+           to_char(t3.eindt,'yyyy-mm-dd') "eindt",
+           t2.meins "meins",
+           nvl(t2.lgort,0) "lgort",
+           t1.lifnr "lifnr",
+           t4.name1 "name1",
+           t2.pstyp "pstyp",
+           t2.knttp "knttp",
+           t1.ekgrp "ekgrp",
+           t1.ekorg "ekorg",
+           t5.aufnr "aufnr",
+           t5.kostl "kostl",
+           t3.charg "charg",
+           t2.uebto "uebto",
+           nvl(t7.amount,0) "amount1", nvl(t7.ramount,0) "ramount",
+           nvl(t8.amount,0) "amount3"           
+      from GENL_PURCHASE_EKKO t1,
+           GENL_PURCHASE_EKPO t2,
+           genl_purchase_eket t3,
+           base_supply_lfa1 t4,
+           genl_purchase_ekkn t5,
+           (select distinct t.ebeln, t.ebelp from genl_purchase_eklg t) t6,
+           (select sum(amount) amount, sum(return_amount) ramount,ebeln,ebelp
+             from genl_purchase_note_detail t
+             where t.delflag = '0'
+             group by ebeln,ebelp) t7,
+             (select ebeln, ebelp,
+             (sum(case when t.bwart = '122' then to_number(t.erfmg) else 0 end) -
+             sum(case when t.bwart = '123' then to_number(t.erfmg) else 0 end)) as amount
+              from genl_receipts_mseg t
+              group by ebeln, ebelp) t8
+     where t1.ebeln = t2.ebeln and (t2.loekz is null or t2.loekz != 'L')
+       and t3.ebeln = t2.ebeln
+       and t3.ebelp = t2.ebelp
+       and t1.lifnr = t4.lifnr
+       and t5.ebeln(+) = t2.ebeln
+       and t5.ebelp(+) = t2.ebelp
+       and t6.ebeln = t2.ebeln
+       and t6.ebelp = t2.ebelp
+       and t7.ebeln(+) = t2.ebeln
+       and t7.ebelp(+) = t2.ebelp
+       and t8.ebeln(+) = t2.ebeln
+       and t8.ebelp(+) = t2.ebelp
+       and (NVL(t2.menge,0)-nvl(t7.amount,0)+ nvl(t7.ramount,0) + nvl(t8.amount,0))>0
+       <!-- 过滤掉3450工厂--> 
+       <!-- 2018-08-27-->
+       <!-- 去掉过滤掉3450工厂--> 
+       <!-- 2018-11-26-->
+       <!--and t2.matnr in (select matnr from genl_vn_rule) and t2.werks &lt;&gt; '3450'-->
+       <!-- 2018-12-21-->
+       and t2.matnr in (select matnr from genl_vn_rule)
+       <isNotNull prepend = "and"  property = "lifnr"> 
+          t1.lifnr =  #lifnr#
+     </isNotNull>
+		   <isNotNull prepend = "and"  property = "werks"> 
+          t2.werks = #werks#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "ebeln"> 
+          t2.ebeln = #ebeln#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+          t2.matnr in ($matnr$)
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "txz01"> 
+          t2.txz01 like '%' ||  #txz01# || '%'
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "lgort"> 
+          t2.lgort like '%' ||  #lgort# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "aedatstartdate"> 
+          to_char(t1.aedat, 'yyyy-mm-dd')  &gt;=  #aedatstartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "aedatendate"> 
+          to_char(t1.aedat, 'yyyy-mm-dd')  &lt;=  #aedatendate#
+     </isNotNull>
+     order by t2.matnr,t2.txz01, t2.ebeln, t2.ebelp,t1.aedat desc
+    </select>
+    
+    <!-- 查询待生成送货单数据--> 
+    <select id="queryOrder4Create"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    select tt1.amount  "amount",
+       tt1.sendamount "sendamount",
+        tt1.maxamount "maxamount",
+       tt1.ebeln "ebeln",
+       tt1.ebelp "ebelp",
+       tt1.matnr "matnr",
+       tt1.txz01 "txz01",
+       tt1.knttp "knttp",
+       tt1.meins "meins",
+       tt1.lgort "lgort",
+       tt1.remark "remark",
+       tt5.aufnr "aufnr",
+       tt5.kostl "kostl",
+       tt1.uebto "uebto",
+       tt6.charg "charg",
+       tt1.werks "werks",
+       '' as  "zjlb"
+ from (select (NVL(t2.menge, 0) - nvl(t7.amount, 0) + nvl(t7.ramount, 0) +
+           nvl(t8.amount, 0)) amount,
+           round((NVL(t2.menge, 0)*(1+NVL(t2.uebto, 0)/100) - nvl(t7.amount, 0) + nvl(t7.ramount, 0) +
+           nvl(t8.amount, 0)),2) maxamount,
+           (NVL(t2.menge, 0) - nvl(t7.amount, 0) + nvl(t7.ramount, 0) +
+           nvl(t8.amount, 0)) sendamount,
+           t2.ebeln ebeln,
+           t2.ebelp ebelp,
+           tt.lifnr lifnr,
+           t2.matnr matnr,
+           t2.txz01 txz01,
+           t2.knttp knttp,
+           t2.meins meins,
+           t2.uebto uebto,
+           t2.werks werks,
+           nvl(t2.lgort, 0) lgort,
+           '' remark
+      from GENL_PURCHASE_EKPO t2,
+           GENL_PURCHASE_EKKO tt,
+           (select sum(amount) amount, sum(return_amount) ramount, ebeln, ebelp
+              from genl_purchase_note_detail t
+             where t.delflag = '0'
+             group by ebeln, ebelp) t7,
+           (select ebeln,
+                   ebelp,
+                   (sum(case
+                          when t.bwart = '122' then
+                           to_number(t.erfmg)
+                          else
+                           0
+                        end) - sum(case
+                                      when t.bwart = '123' then
+                                       to_number(t.erfmg)
+                                      else
+                                       0
+                                    end)) as amount
+              from genl_receipts_mseg t
+             group by ebeln, ebelp) t8
+     where 1 = 1
+       and t2.ebeln = tt.ebeln
+       and t7.ebeln(+) = t2.ebeln
+       and t7.ebelp(+) = t2.ebelp
+       and t8.ebeln(+) = t2.ebeln
+       and t8.ebelp(+) = t2.ebelp
+       and (NVL(t2.menge, 0) - nvl(t7.amount, 0) + nvl(t7.ramount, 0) +
+           nvl(t8.amount, 0)) > 0
+            <isNotNull prepend = "and"  property = "ebeln"> 
+          t2.ebeln =  #ebeln#
+     </isNotNull>	
+    <isNotNull prepend = "and"  property = "ebelp"> 
+          t2.ebelp =  #ebelp#
+     </isNotNull>	
+    <isNotNull prepend = "and"  property = "conds"> 
+          $conds$
+     </isNotNull>
+     order by t2.matnr,t2.txz01) tt1 
+           left join  GENL_INSPECT_LBWH tt2 on tt1.lifnr = tt2.lifnr and tt1.matnr = tt2.matnr
+           left join  genl_purchase_ekkn tt5 on tt5.ebeln = tt1.ebeln and tt5.ebelp = tt1.ebelp
+           left join  genl_purchase_eket tt6 on tt6.ebeln = tt1.ebeln and tt6.ebelp = tt1.ebelp
+      </select>
+      
+      
+    <!-- 查询待删除送货单数据--> 
+    <select id="queryNote4Delete"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+     
+		select t1.pkid "pkid",
+		       t1.zasnh "zasnh",
+		       t1.zasnp "zasnp",
+		       t1.delflag "delflag",
+		       t2.werks "werks",
+		       tt.print "print",
+		       (tt.print - 1)  "print1",
+		       tt.status "status",
+		       t1.ebeln "ebeln",
+		       t1.remark2 "remark2",
+		       t1.zjlb "zjlb",
+		       t1.ebelp "ebelp",
+		      to_char(t0.aedat,'yyyy-mm-dd') "aedat",
+		       t1.amount "amount",
+		       t1.return_amount "return_amount",
+		       t2.matnr "matnr",
+		       t2.txz01 "txz01",
+		       k1.zhwbm "zhwbm",
+		       NVL(t2.menge, 0) "menge",
+		       to_char(t3.eindt,'yyyy-mm-dd') "eindt",
+		       t2.meins "meins",
+		       tt.lgort "lgort", to_char(tt.arrivedate,'yyyy-mm-dd') "arrivedate",
+		       tt.lifnr "lifnr",
+		       tt.name1 "name1",
+		       t2.pstyp "pstyp",
+		       t2.knttp "knttp",
+		       t0.ekgrp "ekgrp",
+		       t0.ekorg "ekorg",
+		       t3.charg "charg",
+               t2.uebto "uebto",
+		       t5.aufnr "aufnr",
+		       t5.kostl "kostl",
+		       t7.vnbm "vnbm",
+		       nvl(t6.cangtui, 0) "cangtui",
+		       nvl(t6.ruku, 0) "ruku",
+		       (case when  t2.matnr in (select t.MATNR from v_hjmes_genl_matnr t)
+                then  1 else 0 end) as "flag",
+		       to_char(t1.createtime,'yyyy-mm-dd') "createtime"
+		  from genl_purchase_note_detail t1
+		  LEFT JOIN GENL_PURCHASE_EKKO t0 on t0.ebeln = t1.ebeln
+		  left join genl_purchase_note tt on t1.zasnh = tt.zasnh
+		  left join GENL_PURCHASE_EKPO t2 on t1.ebeln = t2.ebeln
+		                                 and t1.ebelp = t2.ebelp
+		  left join base_material_zt76 k1 on t2.matnr = k1.matnr
+		                                 and t2.werks = k1.werks
+		  left join genl_purchase_eket t3 on t3.ebeln = t2.ebeln
+		                                 and t3.ebelp = t2.ebelp
+		  left join genl_purchase_ekkn t5 on t5.ebeln = t2.ebeln
+		                                 and t5.ebelp = t2.ebelp
+		  left join v_genl_asn_ctrk t6 on t1.zasnh = t6.zasnh
+		                              and t1.zasnp = t6.zasnp
+		  left join genl_note_vndetail t7 on t1.zasnh = t7.zasnh
+		                                  and t1.zasnp = t7.zasnp 
+		 where 1 = 1
+
+   <isNotNull prepend = "and"  property = "werks"> 
+          t2.werks =  #werks#
+     </isNotNull>	   
+       <isNotNull prepend = "and"  property = "createstartdate"> 
+          to_char(t1.createtime, 'yyyy-mm-dd')  &gt;=  #createstartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createenddate"> 
+          to_char(t1.createtime, 'yyyy-mm-dd')  &lt;=  #createenddate#
+     </isNotNull>
+     
+      <isNotNull prepend = "and"  property = "arrivestartdate"> 
+          to_char(tt.arrivedate, 'yyyy-mm-dd')  &gt;=  #arrivestartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "arriveendate"> 
+          to_char(tt.arrivedate, 'yyyy-mm-dd')  &lt;=  #arriveendate#
+     </isNotNull>
+     
+      <isNotNull prepend = "and"  property = "lifnr"> 
+          tt.lifnr =  #lifnr#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "zjlb"> 
+          t1.zjlb =  #zjlb#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr2"> 
+          tt.lifnr like '%' || #lifnr2# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+          tt.name1 like  '%' ||  #name1# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "ebeln"> 
+          t1.ebeln =  #ebeln#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "delflag"> 
+          t1.delflag =  #delflag#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+          t2.matnr in  ($matnr$)
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "zasnh"> 
+          t1.zasnh = #zasnh#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "vnbm"> 
+          t7.vnbm  like '%' ||  #vnbm# || '%' 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "txz01"> 
+          t2.txz01 like '%' ||  #txz01# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnrnotnull"> 
+           ((t2.matnr is not null) or (t2.matnr &lt;&gt; ''))
+     </isNotNull>
+     
+      <isNotNull prepend = "and"  property = "ifprint"> 
+          tt.status=#ifprint#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "sfbl"> 
+          t1.return_amount+nvl(t6.ruku, 0) $sfbl$ t1.amount
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "flag"> 
+          (case when  t2.matnr in (select t.MATNR from v_hjmes_genl_matnr t)
+                then  1 else 0 end) = #flag#
+     </isNotNull>
+     order by t1.zasnh desc,to_number(t1.zasnp)
+      </select>
+     <!-- 查询待删除送货单数据--> 
+    <select id="queryVnNote4Delete"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+     
+		select t1.pkid "pkid",
+		       t1.zasnh "zasnh",
+		       t1.zasnp "zasnp",
+		       t1.delflag "delflag",
+		       t2.werks "werks",
+		       tt.print "print",
+		       (tt.print - 1)  "print1",
+		       tt.status "status",
+		       t1.ebeln "ebeln",
+		       t1.remark2 "remark2",
+		       t1.zjlb "zjlb",
+		       t1.ebelp "ebelp",
+		      to_char(t0.aedat,'yyyy-mm-dd') "aedat",
+		       t1.amount "amount",
+		       t1.return_amount "return_amount",
+		       t2.matnr "matnr",
+		       t2.txz01 "txz01",
+		       k1.zhwbm "zhwbm",
+		       NVL(t2.menge, 0) "menge",
+		       to_char(t3.eindt,'yyyy-mm-dd') "eindt",
+		       t2.meins "meins",
+		       tt.lgort "lgort", to_char(tt.arrivedate,'yyyy-mm-dd') "arrivedate",
+		       tt.lifnr "lifnr",
+		       tt.name1 "name1",
+		       t2.pstyp "pstyp",
+		       t2.knttp "knttp",
+		       t0.ekgrp "ekgrp",
+		       t0.ekorg "ekorg",
+		       t3.charg "charg",
+               t2.uebto "uebto",
+		       t5.aufnr "aufnr",
+		       t5.kostl "kostl",
+		       nvl(t6.cangtui, 0) "cangtui",
+		       nvl(t6.ruku, 0) "ruku",
+		        t7.vnbm "vnbm",
+		       t7.vnid "vnid",
+		       (case when  t2.matnr in (select t.MATNR from v_hjmes_genl_matnr t)
+                then  1 else 0 end) as "flag",
+		       to_char(t1.createtime,'yyyy-mm-dd') "createtime"
+		  from genl_purchase_note_detail t1
+		  LEFT JOIN GENL_PURCHASE_EKKO t0 on t0.ebeln = t1.ebeln
+		  left join genl_purchase_note tt on t1.zasnh = tt.zasnh
+		  left join GENL_PURCHASE_EKPO t2 on t1.ebeln = t2.ebeln
+		                                 and t1.ebelp = t2.ebelp
+		  left join base_material_zt76 k1 on t2.matnr = k1.matnr
+		                                 and t2.werks = k1.werks
+		  left join genl_purchase_eket t3 on t3.ebeln = t2.ebeln
+		                                 and t3.ebelp = t2.ebelp
+		  left join genl_purchase_ekkn t5 on t5.ebeln = t2.ebeln
+		                                 and t5.ebelp = t2.ebelp
+		  left join v_genl_asn_ctrk t6 on t1.zasnh = t6.zasnh
+		                              and t1.zasnp = t6.zasnp
+		   left join genl_note_vndetail t7 on t1.zasnh = t7.zasnh
+		                                 and t1.zasnp = t7.zasnp
+		 where tt.sfdpvn = 'Y'
+
+   <isNotNull prepend = "and"  property = "werks"> 
+          t2.werks =  #werks#
+     </isNotNull>	   
+       <isNotNull prepend = "and"  property = "createstartdate"> 
+          to_char(t1.createtime, 'yyyy-mm-dd')  &gt;=  #createstartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createenddate"> 
+          to_char(t1.createtime, 'yyyy-mm-dd')  &lt;=  #createenddate#
+     </isNotNull>
+     
+      <isNotNull prepend = "and"  property = "arrivestartdate"> 
+          to_char(tt.arrivedate, 'yyyy-mm-dd')  &gt;=  #arrivestartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "arriveendate"> 
+          to_char(tt.arrivedate, 'yyyy-mm-dd')  &lt;=  #arriveendate#
+     </isNotNull>
+     
+      <isNotNull prepend = "and"  property = "lifnr"> 
+          tt.lifnr =  #lifnr#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "zjlb"> 
+          t1.zjlb =  #zjlb#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr2"> 
+          tt.lifnr like '%' || #lifnr2# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+          tt.name1 like  '%' ||  #name1# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "ebeln"> 
+          t1.ebeln =  #ebeln#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "delflag"> 
+          t1.delflag =  #delflag#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+          t2.matnr in  ($matnr$)
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "zasnh"> 
+          t1.zasnh in  ($zasnh$)
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "txz01"> 
+          t2.txz01 like '%' ||  #txz01# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnrnotnull"> 
+           ((t2.matnr is not null) or (t2.matnr &lt;&gt; ''))
+     </isNotNull>
+     
+      <isNotNull prepend = "and"  property = "ifprint"> 
+          tt.status=#ifprint#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "sfbl"> 
+          t1.return_amount+nvl(t6.ruku, 0) $sfbl$ t1.amount
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "flag"> 
+          (case when  t2.matnr in (select t.MATNR from v_hjmes_genl_matnr t)
+                then  1 else 0 end) = #flag#
+     </isNotNull>
+     order by t1.zasnh desc,to_number(t1.zasnp)
+      </select>  
+      
+    <!-- 查询待删除送货单数据--> 
+    <select id="queryNote5Delete"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+     
+		select t1.pkid "pkid",
+		       t1.zasnh "zasnh",
+		       t1.zasnp "zasnp",
+		       t1.delflag "delflag",
+		       t2.werks "werks",
+		       tt.print "print",tt.status "status",
+		       t1.ebeln "ebeln",
+		       decode(k1.zsfclq,'x',t1.remark2 || '(超六期)','X',t1.remark2 || '(超六期)',t1.remark2) "remark2",
+		       t1.ebelp "ebelp",
+		       to_char(t0.aedat,'yyyy-mm-dd') "aedat",
+		       t1.amount "amount",
+		       t1.return_amount "return_amount",
+		       t2.matnr "matnr",
+		       t2.txz01 "txz01",
+		       k1.zhwbm "zhwbm",
+		       NVL(t2.menge, 0) "menge",
+		       to_char(t3.eindt,'yyyy-mm-dd') "eindt",
+		       t2.meins "meins",
+		       tt.lgort "lgort", to_char(tt.arrivedate,'yyyy-mm-dd') "arrivedate",
+		       tt.lifnr "lifnr",
+		       tt.name1 "name1",
+		       t2.pstyp "pstyp",
+		       t2.knttp "knttp",
+		       t0.ekgrp "ekgrp",
+		       t0.ekorg "ekorg",
+		       t5.aufnr "aufnr",
+		       t5.kostl "kostl",
+		       nvl(t6.cangtui, 0) "cangtui",
+		       nvl(t6.ruku, 0) "ruku",
+		         t7.vnbm "vnbm",
+		       t7.vnid "vnid",
+		       to_char(t1.createtime,'yyyy-mm-dd') "createtime",
+		       (case when  t2.matnr in (select t.MATNR from v_hjmes_genl_matnr t)
+                then  1 else 0 end) as "flag"
+		  from genl_purchase_note_detail t1
+		  LEFT JOIN GENL_PURCHASE_EKKO t0 on t0.ebeln = t1.ebeln
+		  left join genl_purchase_note tt on t1.zasnh = tt.zasnh
+		  left join GENL_PURCHASE_EKPO t2 on t1.ebeln = t2.ebeln
+		                                 and t1.ebelp = t2.ebelp
+		  left join base_material_zt76 k1 on t2.matnr = k1.matnr
+		                                 and t2.werks = k1.werks
+		  left join genl_purchase_eket t3 on t3.ebeln = t2.ebeln
+		                                 and t3.ebelp = t2.ebelp
+		  left join genl_purchase_ekkn t5 on t5.ebeln = t2.ebeln
+		                                 and t5.ebelp = t2.ebelp
+		  left join v_genl_asn_ctrk t6 on t1.zasnh = t6.zasnh
+		                              and t1.zasnp = t6.zasnp
+		   left join genl_note_vndetail t7 on t1.zasnh = t7.zasnh
+		                                 and t1.zasnp = t7.zasnp
+		 where 1 = 1
+		   and t1.delflag = '0'
+
+   <isNotNull prepend = "and"  property = "werks"> 
+          t2.werks =  #werks#
+     </isNotNull>	
+    <isNotNull prepend = "and"  property = "zasnh"> 
+          t1.zasnh =  #zasnh#
+     </isNotNull>	   
+       <isNotNull prepend = "and"  property = "createstartdate"> 
+          to_char(t1.createtime, 'yyyy-mm-dd')  &gt;=  #createstartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createendate"> 
+          to_char(t1.createtime, 'yyyy-mm-dd')  &lt;=  #createendate#
+     </isNotNull>
+     
+      <isNotNull prepend = "and"  property = "arrivestartdate"> 
+          to_char(tt.arrivedate, 'yyyy-mm-dd')  &gt;=  #arrivestartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "arriveendate"> 
+          to_char(tt.arrivedate, 'yyyy-mm-dd')  &lt;=  #arriveendate#
+     </isNotNull>
+     
+      <isNotNull prepend = "and"  property = "lifnr"> 
+          tt.lifnr =  #lifnr#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr2"> 
+          tt.lifnr like '%' || #lifnr2# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+          tt.name1 like  '%' ||  #name1# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "ebeln"> 
+          t1.ebeln =  #ebeln#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "delflag"> 
+          t1.delflag =  #delflag#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnr"> 
+          t2.matnr in  ($matnr$)
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "txz01"> 
+          t2.txz01 like '%' ||  #txz01# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "matnrnotnull"> 
+           ((t2.matnr is not null) or (t2.matnr &lt;&gt; ''))
+     </isNotNull>
+     
+      <isNotNull prepend = "and"  property = "ifprint"> 
+          tt.status=#ifprint#
+     </isNotNull>
+     order by t1.zasnh desc,to_number(t1.zasnp)
+      </select>
+      
+      <!-- 查询入库数量--> 
+    <select id="queryStorage"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+      select t.zasnh "zasnh", t.zasnp "zasnp", t.cangtui "cangtui", t.ruku "ruku"
+	  from v_genl_asn_ctrk t
+	 where 1 = 1
+    <isNotNull prepend = "and"  property = "zasnh"> 
+          t.zasnh =  #zasnh#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "zasnp"> 
+          t.zasnp =  #zasnp#
+     </isNotNull>
+   
+     </select> 
+     
+     
+     <!-- 查询送货单--> 
+    <select id="queryNotes"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+     select zasnh "zasnh",
+	       lifnr "lifnr",
+	       name1 "name1",
+	       werks "werks",
+	       print "print",
+	       to_char(arrivedate,'yyyy-mm-dd') "arrivedate",
+	       nvl(lgort, '') "lgort",
+	       createby "createby",
+	       '' as "lgort2",
+	       to_char(createtime, 'yyyy-mm-dd') "createtime",
+	       modifyby "modifyby",
+	       modifytime "modifytime",
+	       zjlb "zjlb",
+	       knttp "knttp",
+	       aufnr "aufnr",
+	       kostl "kostl"
+	  from genl_purchase_note t
+	  where 1 = 1
+	    and t.zasnh in ( select distinct zasnh from genl_purchase_note_detail a where delflag = '0')
+	<isNotNull prepend = "and"  property = "lifnr"> 
+          t.lifnr =  #lifnr#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "vnbm"> 
+          t.zasnh in  (select t.zasnh from genl_note_vndetail t where t.vnbm = #vnbm#)
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "werks"> 
+          t.werks =  #werks#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "createstartdate"> 
+          to_char(t.createtime, 'yyyy-mm-dd')  &gt;=  #createstartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createenddate"> 
+          to_char(t.createtime, 'yyyy-mm-dd')  &lt;=  #createenddate#
+     </isNotNull> 
+     
+     <isNotNull prepend = "and"  property = "ifprint"> 
+          t.status=#ifprint#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "zasnh"> 
+           t.zasnh in  ($zasnh$)
+     </isNotNull>    
+     order by zasnh  desc
+     </select> 
+      <!-- Vn送货单明细--> 
+    <select id="queryVndetail"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">   
+		select t1.pkid "pkid",
+		       t1.zasnh "zasnh",
+		       t1.zasnp "zasnp",
+		       t1.delflag "delflag",
+		       t2.werks "werks",
+		       tt.print "print",
+		       (tt.print - 1)  "print1",
+		       tt.status "status",
+		       t1.ebeln "ebeln",
+		       t1.remark2 "remark2",
+		       t1.zjlb "zjlb",
+		       t1.ebelp "ebelp",
+		      to_char(t0.aedat,'yyyy-mm-dd') "aedat",
+		       t1.amount "amount",
+		       t1.return_amount "return_amount",
+		       t2.matnr "matnr",
+		       t2.txz01 "txz01",
+		       k1.zhwbm "zhwbm",
+		       NVL(t2.menge, 0) "menge",
+		       to_char(t3.eindt,'yyyy-mm-dd') "eindt",
+		       t2.meins "meins",
+		       tt.lgort "lgort", to_char(tt.arrivedate,'yyyy-mm-dd') "arrivedate",
+		       tt.lifnr "lifnr",
+		       tt.name1 "name1",
+		       t2.pstyp "pstyp",
+		       t2.knttp "knttp",
+		       t0.ekgrp "ekgrp",
+		       t0.ekorg "ekorg",
+		       t3.charg "charg",
+               t2.uebto "uebto",
+		       t5.aufnr "aufnr",
+		       t5.kostl "kostl",
+		       t7.vnbm "vnbm",
+		       t7.vnid "vnid",
+		       nvl(t6.cangtui, 0) "cangtui",
+		       nvl(t6.ruku, 0) "ruku",
+		       (case when  t2.matnr in (select t.MATNR from v_hjmes_genl_matnr t)
+                then  1 else 0 end) as "flag",
+		       to_char(t1.createtime,'yyyy-mm-dd') "createtime"
+		  from genl_purchase_note_detail t1
+		  LEFT JOIN GENL_PURCHASE_EKKO t0 on t0.ebeln = t1.ebeln
+		  left join genl_purchase_note tt on t1.zasnh = tt.zasnh
+		  left join GENL_PURCHASE_EKPO t2 on t1.ebeln = t2.ebeln
+		                                 and t1.ebelp = t2.ebelp
+		  left join base_material_zt76 k1 on t2.matnr = k1.matnr
+		                                 and t2.werks = k1.werks
+		  left join genl_purchase_eket t3 on t3.ebeln = t2.ebeln
+		                                 and t3.ebelp = t2.ebelp
+		  left join genl_purchase_ekkn t5 on t5.ebeln = t2.ebeln
+		                                 and t5.ebelp = t2.ebelp
+		  left join v_genl_asn_ctrk t6 on t1.zasnh = t6.zasnh
+		                              and t1.zasnp = t6.zasnp
+		  left join genl_note_vndetail t7 on t1.zasnh = t7.zasnh
+		                                 and t1.zasnp = t7.zasnp
+		 where 1 = 1
+     <isNotNull prepend = "and"  property = "delflag"> 
+          t1.delflag =  #delflag#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "zasnh"> 
+          t1.zasnh = #zasnh#
+     </isNotNull>
+     
+     order by t1.zasnh desc,to_number(t1.zasnp)
+      </select>
+      <!-- Vn送货单明细导出--> 
+    <select id="queryVndetaildaochu"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">   
+		select t.zasnh  "zasnh",
+		       t.zasnp "zasnp",
+		       t.vnbm "vnbm",
+		       t1.arrivedate "arrivedate",
+		       t1.createtime "createtime",
+		       t3.matnr "matnr",
+		       t3.txz01 "txz01"
+	    from genl_note_vndetail t
+left join  genl_purchase_note t1 on t1.zasnh = t.zasnh
+,genl_purchase_note_detail t2,genl_purchase_ekpo t3
+ where t.vnbm is null and t.zasnh = t2.zasnh and t.zasnp = t2.zasnp and t2.ebeln = t3.ebeln and t2.ebelp = t3.ebelp
+     <isNotNull prepend = "and"  property = "zasnh"> 
+          t1.zasnh in (#zasnh#)
+     </isNotNull>
+     
+     order by t1.zasnh desc,to_number(t1.zasnp)
+      </select>
+       <!-- 查询带vn号的送货单--> 
+    <select id="queryvnNotes"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+       select t.zasnh "zasnh",
+         t.lifnr "lifnr",
+         t.name1 "name1",
+         t.werks "werks",
+         t.print "print",
+         to_char(t.arrivedate,'yyyy-mm-dd') "arrivedate",
+         nvl(t.lgort, '') "lgort",
+         t.createby "createby",
+         '' as "lgort2",
+         to_char(t.createtime, 'yyyy-mm-dd') "createtime",
+         t.modifyby "modifyby",
+         t.modifytime "modifytime",
+         t.zjlb "zjlb",
+         t.knttp "knttp",
+         t.aufnr "aufnr",
+         t.kostl "kostl",
+         t.status "status",
+         t2.sumvn "sumvn",
+         t2.vns "vns"
+    from genl_purchase_note t
+    left join (select t.zasnh,count(*) as sumvn,count(t1.vnbm) as vns 
+    from (select * from genl_purchase_note_detail where delflag = '0' ) t 
+left join genl_note_vndetail t1 
+on t.zasnh = t1.zasnh
+and t.zasnp = t1.zasnp
+group by t.zasnh) t2 on t.zasnh = t2.zasnh
+    where  t.zasnh in ( select distinct zasnh from genl_purchase_note_detail a where delflag = '0')
+      and t.sfdpvn = 'Y'   
+        and  t.lifnr =  #lifnr#
+     <isNotNull prepend = "and"  property = "werks"> 
+          t.werks =  #werks#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "createstartdate"> 
+          to_char(t.createtime, 'yyyy-mm-dd')  &gt;=  #createstartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createenddate"> 
+          to_char(t.createtime, 'yyyy-mm-dd')  &lt;=  #createenddate#
+     </isNotNull> 
+      <isNotNull prepend = "and"  property = "zasnh"> 
+           t.zasnh in  ($zasnh$)
+     </isNotNull> 
+     <isNotNull prepend = "and"  property = "vnm"> 
+           t.zasnh in  (select t.zasnh from (select * from genl_purchase_note_detail where delflag = '0' ) t 
+left join genl_note_vndetail t1 
+on t.zasnh = t1.zasnh
+and t.zasnp = t1.zasnp
+where vnbm = #vnm#)
+     </isNotNull>     
+     order by t.zasnh  desc
+     </select> 
+     <!-- 查询送货单--> 
+    <select id="queryNotes2"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+     select t.zasnh "zasnh",
+	       t.lifnr "lifnr",
+	       t.name1 "name1",
+	       t.werks "werks",
+	       t2.name1 "werksname",t2.butxt "butxt",
+	       t.print "print",
+	       to_char(t.arrivedate,'yyyy-mm-dd') "arrivedate",
+	       nvl(t.lgort, '') "lgort",
+	       t.createby "createby",
+	       '' as "lgort2",
+	       to_char(t.createtime, 'yyyy-mm-dd') "createtime",
+	       t.modifyby "modifyby",
+	       t.modifytime "modifytime",
+	       t.zjlb "zjlb",
+	       t.knttp "knttp",
+	       t.aufnr "aufnr",
+	       t.kostl "kostl",
+	       t.sfdpvn "sfdpvn"
+	  from genl_purchase_note t,(select bft.werks,bft.name1,bcf.bukrs,bct.butxt from 
+		base_company_factory bcf
+		left join
+		base_factory_t001w bft
+		on bcf.werks = bft.werks
+		left join
+		base_company_t001 bct
+		on bct.bukrs = bcf.bukrs) t2
+	  where t.werks = t2.werks
+	    and t.zasnh in ( select distinct zasnh from genl_purchase_note_detail a where delflag = '0')
+	<isNotNull prepend = "and"  property = "lifnr"> 
+          t.lifnr =  #lifnr#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "werks"> 
+          t.werks =  #werks#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "createstartdate"> 
+          to_char(t.createtime, 'yyyy-mm-dd')  &gt;=  #createstartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createenddate"> 
+          to_char(t.createtime, 'yyyy-mm-dd')  &lt;=  #createenddate#
+     </isNotNull> 
+     
+     <isNotNull prepend = "and"  property = "ifprint"> 
+          t.status=#ifprint#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "zasnh"> 
+           t.zasnh = #zasnh#
+     </isNotNull>    
+     order by zasnh  desc
+     </select> 
+      <!-- 查询生成条码送货单--> 
+    <select id="queryNotes4Barcode"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    select ttt.lifnr "lifnr",
+	       tt4.name1 "name1",
+	       ttt.createtime "createtime",
+	       ttt.matnr "matnr",
+	       ttt.amount "amount",
+	       ttt.meins "meins",
+	       ttt.txz01 "maktx",
+	       ttt.zjlb "zjlb",
+	       (case when  ttt.matnr in (select t.MATNR from v_hjmes_genl_matnr t)
+           then  1 else 0 end) as "flag",
+	       ttt.amount "codeamount",nvl(tt6.print_num,0) "printNum"
+	  from (select tttt.lifnr lifnr,
+	               to_char(tttt.createtime, 'yyyy-mm-dd') createtime,
+	               tttt.matnr matnr,
+	               sum(tttt.amount) amount,
+	               tttt.zjlb zjlb,
+	               tttt.txz01 txz01,
+	               tttt.meins meins	             
+	          from (select t1.pkid pkid,
+	                       t1.zasnh zasnh,
+	                       t1.zasnp zasnp,
+	                       t1.delflag delflag,
+	                       t2.werks werks,
+	                       t1.ebeln ebeln,
+	                       t1.remark2 remark2,
+	                       t1.ebelp ebelp,
+	                       t1.zjlb zjlb,
+	                       t0.aedat aedat,
+	                       t1.amount amount,
+	                       t1.return_amount return_amount,
+	                       t2.matnr matnr,
+	                       t2.txz01 txz01,
+	                       NVL(t2.menge, 0) menge,
+	                       t3.eindt eindt,
+	                       t2.meins meins,
+	                       tt.lgort lgort,
+	                       tt.lifnr lifnr,
+	                       tt.name1 name1,
+	                       t2.pstyp pstyp,
+	                       t2.knttp knttp,
+	                       t0.ekgrp ekgrp,
+	                       t0.ekorg ekorg,
+	                       t5.aufnr aufnr,
+	                       t5.kostl kostl,
+	                       t1.createtime createtime
+	                  from genl_purchase_note_detail t1
+	                  left join GENL_PURCHASE_EKKO t0 on t0.ebeln = t1.ebeln
+	                  left join genl_purchase_note tt on t1.zasnh = tt.zasnh
+	                  left join GENL_PURCHASE_EKPO t2 on t1.ebeln = t2.ebeln
+	                                                 and t1.ebelp = t2.ebelp
+	                  left join genl_purchase_eket t3 on t3.ebeln = t2.ebeln
+	                                                 and t3.ebelp = t2.ebelp
+	                  left join genl_purchase_ekkn t5 on t5.ebeln = t2.ebeln
+	                                                 and t5.ebelp = t2.ebelp) tttt
+	         where ((matnr is not null) or (matnr != ''))
+	           and ($conds$)
+	         group by lifnr,
+	                  to_char(tttt.createtime, 'yyyy-mm-dd'),
+	                  matnr,
+	                  meins,
+	                  zjlb,
+	                  txz01
+	                  ) ttt
+	  left join base_supply_lfa1 tt4 on tt4.lifnr = ttt.lifnr
+	  left join GENL_LABEL_PRINT tt6 on (tt6.matnr = ttt.matnr and tt6.lifnr = ttt.lifnr and tt6.sh_date = ttt.createtime)
+	 order by ttt.matnr, ttt.createtime
+
+		
+     </select> 
+     
+          <!--查询送货单明细数量-->
+     <select id="vndetailrows"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+     select t.zasnh,count(*) as "sumvn" 
+            from  genl_purchase_note_detail t 
+       where delflag = '0'
+           and t.zasnh = #zasnh#
+          group by t.zasnh
+     </select>
+     <!--送货数量校验-->
+     <select id="checkAmount"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    select round((tt.menge*(1+tt.uebto/100) - tt.amount1 + tt.ramount + tt.amount2),2) "maxamount"
+	  from (select
+	        (select NVL(sum(t2.menge), 0) menge
+	            from GENL_PURCHASE_EKPO t2
+	           where ebeln = #ebeln#
+	             and ebelp = #ebelp#) as menge,
+	          (select NVL(t3.uebto,0) uebto
+	            from GENL_PURCHASE_EKPO t3
+	           where ebeln = #ebeln#
+	             and ebelp = #ebelp#) as uebto,
+	         (select nvl(sum(amount), 0) amount
+	            from genl_purchase_note_detail t
+	           where t.delflag = '0'
+	             and ebeln = #ebeln#
+	             and ebelp = #ebelp#) as amount1,
+	         (select nvl(sum(return_amount), 0) ramount
+	            from genl_purchase_note_detail t
+	           where t.delflag = '0'
+	             and ebeln = #ebeln#
+	             and ebelp = #ebelp#) as ramount,
+	         (select nvl((sum(case
+	                            when t.bwart = '122' then
+	                             to_number(t.erfmg)
+	                            else
+	                             0
+	                          end) - sum(case
+	                                        when t.bwart = '123' then
+	                                         to_number(t.erfmg)
+	                                        else
+	                                         0
+	                                      end)),
+	                     0) as amount
+	            from genl_receipts_mseg t
+	           where ebeln = #ebeln#
+	             and ebelp = #ebelp#) as amount2
+	          from dual) tt
+
+     
+     </select>
+     <select id="shddeleteinspectjy" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     
+	select recordid as "recordid",
+       createtime as "createtime",
+       lifnr as "lifnr",
+       name1 as "name1",
+       zasnh as "zasnh",
+       zasnp as "zasnp",
+       ebeln as "ebeln",
+       ebelp as "ebelp",
+       matnr as "matnr",
+       txz01 as "txz01",
+       wltm as "wltm",
+       shsl as "shsl",
+       cjsl as "cjsl",
+       bhgsl as "bhgsl",
+       krksl as "krksl",
+       jgpd as "jgpd",
+       werks as "werks",
+       tranu as "tranu",
+       trant as "trant",
+       zcbz as "zcbz",
+       zjlb as "zjlb"  
+       from (select t.qjrecordid as recordid,
+       t.createtime as createtime,
+       t.lifnr as lifnr,
+       t.name1 as name1,
+       t.zasnh as zasnh,
+       t.zasnp as zasnp,
+       t.ebeln as ebeln,
+       t.ebelp as ebelp,
+       t.matnr as matnr,
+       t.txz01 as txz01,
+       t.wltm as wltm,
+       '/' as shsl,
+       '/' as cjsl,
+       '/' as bhgsl,
+       '/' as krksl,
+       t.jgpd as jgpd,
+       t.werks as werks,
+       t.tranu as tranu,
+       t.trant as trant,
+       t.zcbz as zcbz,
+       t.zjlb as zjlb
+ from genl_inspect_qjnote t
+union all
+select d.cjrecordid as recordid,
+       d.createtime as createtime,
+       d.lifnr as lifnr,
+       d.name1 as name1,
+       d.zasnh as zasnh,
+       d.zasnp as zasnp,
+       d.ebeln as ebeln,
+       d.ebelp as ebelp,
+       d.matnr as matnr,
+       d.txz01 as txz01,
+       d.wltm as wltm,
+       d.shsl as shsl,
+       d.cjsl as cjsl,
+       d.bhgsl as bhgsl,
+       d.krksl as krksl,
+       d.jgpd as jgpd,
+       d.werks as werks,
+       d.tranu as tranu,
+       d.trant as trant,
+       d.zcbz as zcbz,
+       d.zjlb as zjlb
+   from genl_inspect_cjnote d)
+   where zasnh = #zasnh#
+   and zasnp = #zasnp#
+  </select>
+  
+    <!-- 查询按物料打印条码--> 
+    <select id="queryMatnrbarcode"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    select t.matnr as "matnr" ,t3.maktx as "maktx",(case when  t2.matnr in (select t.MATNR from v_hjmes_genl_matnr t)
+                then  '是' else '否' end) as "flag",(case when t2.lifnr is null then '否' else '是' end ) as "sfcgdd" from base_material_marc t left join base_material_mara t3 on t.matnr =t3.matnr  left join (select distinct t.matnr,t1.lifnr from genl_purchase_ekpo t 
+           left join genl_purchase_ekko t1 on t.ebeln = t1.ebeln where t1.lifnr = #lifnr#) t2  on t.matnr = t2.matnr
+	 where 1 = 1
+    <isNotNull prepend = "and"  property = "matnr"> 
+          t.matnr  like '%' ||   #matnr# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "maktx"> 
+          t3.maktx like '%' ||   #maktx# || '%'
+     </isNotNull>
+   
+     </select>
+     
+    <!-- 查询打印次数-->     
+<select id="queryPrintNum"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    select t.print_num as "print_num" from genl_label_print t where t.lifnr = #lifnr# and t.matnr = #matnr# and t.sh_date = #createtime#
+     </select>   
+     <!-- 查询供应商打印机是为300--> 
+     <select id="query300lifnr"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+   select * from genl_barcode_300 t where t.lifnr = #lifnr# 
+     </select>  
+      <!-- 查询供应商导入的vnbm--> 
+     <select id="querystorevnbm"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+   select t.vnbm as "vnbm" from genl_supply_vnbm t where t.vnbm not in (select vnbm from genl_vn_coincident where 1=1
+   <isNotNull prepend = "and"  property = "werks"> 
+        werks = #werks#
+   </isNotNull>
+   ) and t.lifnr = #lifnr# 
+     </select>  
+    </sqlMap>

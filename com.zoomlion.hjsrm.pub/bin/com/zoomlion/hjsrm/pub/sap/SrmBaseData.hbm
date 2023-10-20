@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BaseCompanyT001" table="BASE_COMPANY_T001">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="butxt" type="string">
+            <column length="100" name="BUTXT"/>
+        </property>
+        <property name="adrnr" type="string">
+            <column length="100" name="ADRNR"/>
+        </property>
+        <property name="stceg" type="string">
+            <column length="100" name="STCEG"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BaseFactoryT001w" table="BASE_FACTORY_T001W">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="werks" type="string">
+            <column length="4" name="WERKS"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="name1" type="string">
+            <column length="100" name="NAME1"/>
+        </property>
+        <property name="bwkey" type="string">
+            <column length="4" name="BWKEY"/>
+        </property>
+        <property name="stras" type="string">
+            <column length="100" name="STRAS"/>
+        </property>
+        <property name="pfach" type="string">
+            <column length="50" name="PFACH"/>
+        </property>
+        <property name="pstlz" type="string">
+            <column length="50" name="PSTLZ"/>
+        </property>
+        <property name="ort01" type="string">
+            <column length="100" name="ORT01"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BasePurchaseT024e" table="BASE_PURCHASE_T024E">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="ekorg" type="string">
+            <column length="4" name="EKORG"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="ekotx" type="string">
+            <column length="100" name="EKOTX"/>
+        </property>
+        <property name="trant" type="date">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BasePurchaseT024" table="BASE_PURCHASE_T024">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="ekgrp" type="string">
+            <column length="3" name="EKGRP"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="eknam" type="string">
+            <column length="100" name="EKNAM"/>
+        </property>
+        <property name="ektel" type="string">
+            <column length="50" name="EKTEL"/>
+        </property>
+        <property name="telfx" type="string">
+            <column length="50" name="TELFX"/>
+        </property>
+        <property name="telNumber" type="string">
+            <column length="50" name="TEL_NUMBER"/>
+        </property>
+        <property name="telExtens" type="string">
+            <column length="50" name="TEL_EXTENS"/>
+        </property>
+        <property name="smtpAddr" type="string">
+            <column length="100" name="SMTP_ADDR"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BaseMaterialMbew" table="BASE_MATERIAL_MBEW">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="matnr" type="string">
+                <column length="18" name="MATNR"/>
+            </key-property>
+            <key-property name="bwkey" type="string">
+                <column length="4" name="BWKEY"/>
+            </key-property>
+        </composite-id>
+        <property name="bwtar" type="string">
+            <column length="10" name="BWTAR"/>
+        </property>
+        <property name="vprsv" type="string">
+            <column length="1" name="VPRSV"/>
+        </property>
+        <property name="stprs" type="big_decimal">
+            <column length="11" name="STPRS" precision="11" scale="2"/>
+        </property>
+        <property name="peinh" type="string">
+            <column length="5" name="PEINH"/>
+        </property>
+        <property name="bklas" type="string">
+            <column length="4" name="BKLAS"/>
+        </property>
+        <property name="laepr" type="date">
+            <column name="LAEPR"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BasePurchaseEina" table="BASE_PURCHASE_EINA">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="infnr" type="string">
+            <column length="10" name="INFNR"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="matnr" type="string">
+            <column length="18" name="MATNR"/>
+        </property>
+        <property name="matkl" type="string">
+            <column length="9" name="MATKL"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="loekz" type="string">
+            <column length="1" name="LOEKZ"/>
+        </property>
+        <property name="erdat" type="date">
+            <column name="ERDAT"/>
+        </property>
+        <property name="ernam" type="string">
+            <column length="12" name="ERNAM"/>
+        </property>
+        <property name="meins" type="string">
+            <column length="3" name="MEINS"/>
+        </property>
+    </class>
+</hibernate-mapping>

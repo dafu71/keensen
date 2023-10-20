@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    
+    <!--查询绩效-->
+    <select id="queryPerformances"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+		    select t.zdata "zdata",
+		       t.lifnr "lifnr",
+		       t.zqual "zqual",
+		       t.zsupp "zsupp",
+		       t.zcost "zcost",
+		       t.zqtxi "zqtxi",
+		       t.zjshz "zjshz",
+		       t.zzhjx "zzhjx",
+		       t.ztlpm "ztlpm",
+		       t.zjxpm "zjxpm",
+		       t.zjxdj "zjxdj",
+		       t.zbeiz "zbeiz",
+		       t2.name1 "name1",
+		       t3.lsort "lsort",
+		       t3.ltype "ltype",
+		       t3.lsyst "lsyst",
+		       t.werks "werks",
+       			t.bukrs "bukrs"
+		  from genl_supply_efficacy t,
+		  genl_supply_data t3,base_supply_lfa1 t2
+		  where t.lifnr = t3.lifnr(+)
+		  and t.lifnr = t2.lifnr
+		   <isNotNull prepend = "and"  property = "lifnr"> 
+          t.lifnr like '%'||#lifnr#||'%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "bukrs"> 
+          t.bukrs =  #bukrs#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "werks"> 
+          t.werks =  #werks#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+          t2.name1 like '%' || #name1# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "zdata"> 
+          t.zdata = #zdata# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "ytype"> 
+          t.ytype = #ytype# 
+     </isNotNull>
+     order by t.lifnr,t.zdata
+  </select>
+</sqlMap>

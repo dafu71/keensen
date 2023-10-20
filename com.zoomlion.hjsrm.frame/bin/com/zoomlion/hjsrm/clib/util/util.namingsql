@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.clib.util.util">
+    <!-- 通过表名+字段名来校验某个列值在表里的数据是否唯一 -->
+    <select id="countCnt" parameterClass="java.util.HashMap" resultClass="Integer"><![CDATA[
+	   	SELECT * FROM $table$ WHERE $column$ = #value# 
+	    ]]></select>
+</sqlMap>

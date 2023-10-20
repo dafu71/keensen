@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.tools.notice.noticequery">
+    <!-- 获得当前操作员的提醒列表 -->
+    <select id="getNoticesByUserID" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+        <!--依据操作员ID 查询操作员未阅读已发布的消息, -->
+    	select a.noticeid as "noticeid",
+    	       a.title as "title",
+    	       a.content as "content",
+    	       a.senduserid as "senduserid",
+    	       a.sendusername as "sendusername",
+    	       a.noticetime as "noticetime",
+    	       a.status as "status",
+    	       a.createby as "createby",
+    	       a.modifyby as "modifyby",
+    	       a.updatetime as "updatetime"
+    	from t_at_noticeinfo a,t_at_noticerecvuser b 
+    	where b.noticeid=a.noticeid and a.status=2 
+    	and b.readstatus=1 
+    	<isNotNull prepend="and" property="uid">b.RECVUSERID= #uid#</isNotNull>
+    </select>
+    <!-- 加载邮件-->
+    <select id="getNoticeHis" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject"> 
+        select  info.noticeid as "noticeid",
+                info.title as "title",
+                info.sendusername as "sendusername",
+                to_char(info.noticetime,'yyyy-MM-dd HH24:mi:ss') as "sendtime",
+                res.recvusername as "recvusername",
+                info.content as "content",
+                res.readstatus as "readstatus",
+                res.readtime as "readtime"
+           from t_at_noticerecvuser res 
+           left join  t_at_noticeinfo info on info.noticeid=res.noticeid 
+           where res.recvuserid=#uid#
+             and info.status = 2
+             and (res.readstatus = 1 or res.readstatus = 2)
+           <isNotNull prepend="and" property="title">info.title like '%'||#title#||'%'</isNotNull>
+        <isNotNull prepend="and" property="readstatus">res.readstatus=#readstatus#</isNotNull>
+        <isNotNull prepend="and" property="startDate">trunc(info.noticetime) &gt;=to_date(#startDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDate">trunc(info.noticetime) &lt;=to_date(#endDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="sendusername">info.sendusername like '%'||#sendusername#||'%'</isNotNull>
+           order by res.readstatus,info.noticetime desc   
+	</select>
+    <!-- 读取邮件 -->
+    <select id="getNoticeHisSend" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject"> 
+       select noticeid as "noticeid",title as "title",kk as "sendtime",
+       DBMS_LOB.SUBSTR(tt,2000,1) as "recvusername"
+       <!--tt as "recvusername" -->
+       from (select 
+              info.noticeid, 
+              info.title,
+              to_char(info.noticetime,'yyyy-MM-dd HH24:mi:ss')as kk,
+              <!--wmsys.wm_concat(res.recvusername) as tt -->
+              XMLAGG(XMLELEMENT(E, res.recvusername || ',')).EXTRACT('//text()').getclobval() as tt
+         from t_at_noticerecvuser res 
+         left join  t_at_noticeinfo info
+              on info.noticeid=res.noticeid where info.senduserid=#uid# and info.status = 2
+              and (info.delstatus is null or info.delstatus = 3 )
+         group by info.noticeid,to_char(info.noticetime,'yyyy-MM-dd HH24:mi:ss'), info.title 
+         <!--order by info.noticetime desc -->
+         order by to_char(info.noticetime,'yyyy-MM-dd HH24:mi:ss')
+         )
+         where 1=1  
+         <isNotNull prepend="and" property="title">title like '%'||#title#||'%'</isNotNull>
+        <isNotNull prepend="and" property="startDate">trunc(kk) &gt;=to_date(#startDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDate">trunc(kk) &lt;=to_date(#endDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="recvusername">tt like '%'||#recvusername#||'%'</isNotNull> 
+         order by kk desc 
+	</select>
+    <!-- 读取邮件查询记录 -->
+    <select id="queryNoticeread" parameterClass="com.zoomlion.hjsrm.data.tools.Tools.VAtNoticereader" resultClass="com.zoomlion.hjsrm.data.tools.Tools.VAtNoticereader">select * from v_at_notice_reader  where noticeid = #noticeid#</select>
+    <!-- 读取邮件查询记录2 -->
+    <select id="queryNoticeread2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">       
+      select noticeid as "noticeid" ,orgnames as "orgnames",wmsys.wm_concat((recvusername||'('||to_char(readtime,'yy-mm-dd hh24:mi:ss')||')')) as "nr"  from (select * from (select a.*,c.orgnames from t_at_noticerecvuser a  
+           left join 
+           (select * from v_ac_operator_trs b 
+             left join v_om_emporgname_trs t on b.empid =t.empid) c on  a.recvuserid = c.userid)   order by readtime desc   )
+             where readstatus = '2'
+              <isNotNull prepend="and" property="noticeid">noticeid =  #noticeid#</isNotNull>
+        <isNotNull prepend="and" property="orgnames">orgnames like '%'|| #orgnames#||'%'</isNotNull>
+             group by noticeid,orgnames
+    </select>
+    <!-- 未读取邮件查询记录 -->
+    <select id="queryNoticenotread" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">       
+      select noticeid as "noticeid" ,orgnames as "orgnames",wmsys.wm_concat(recvusername) as "nr"  from (select * from (select a.*,c.orgnames from t_at_noticerecvuser a  
+           left join 
+           (select * from v_ac_operator_trs b 
+             left join v_om_emporgname_trs t on b.empid =t.empid) c on  a.recvuserid = c.userid)   order by readtime desc   )
+             where readstatus = '1'
+              <isNotNull prepend="and" property="noticeid">noticeid =  #noticeid#</isNotNull>
+        <isNotNull prepend="and" property="orgnames">orgnames like '%'|| #orgnames#||'%'</isNotNull>
+             group by noticeid,orgnames
+    </select>
+    <!-- 查询被删除的邮件清单 -->
+    <select id="querylajinotice" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+       select tt.noticeid as "noticeid",
+        tt.title as "title",
+        tt.sendusername as "sendusername",
+        tt.sendtime as "sendtime",
+        tt.flag as "flag"
+ from (select   info.noticeid as noticeid,
+                info.title as title,
+                info.sendusername as sendusername,
+                to_char(info.noticetime,'yyyy-MM-dd HH24:mi:ss') as sendtime,
+                1 as flag
+           from t_at_noticerecvuser res 
+           left join  t_at_noticeinfo info on info.noticeid=res.noticeid 
+           where res.recvuserid=#uid#
+             and info.status = 2
+             and res.readstatus = 3 
+  union all
+  select noticeid as noticeid,title as title,sendusername as sendusername,kk as sendtime, 0 as flag from (select 
+              info.noticeid, 
+              info.title,
+              to_char(info.noticetime,'yyyy-MM-dd HH24:mi:ss')as kk,
+              info.sendusername 
+         from 
+               t_at_noticeinfo info
+               where info.senduserid=#uid# and info.status = 2
+              and info.delstatus = 1
+         order by info.noticetime desc ))tt  
+where 1 = 1
+              <isNotNull prepend="and" property="sendusername">tt.sendusername like '%'|| #sendusername#||'%'</isNotNull>
+        <isNotNull prepend="and" property="title">tt.title like '%'|| #title#||'%'</isNotNull>
+        <isNotNull prepend="and" property="startdate">tt.sendtime  &gt;=  #startdate#</isNotNull>
+        <isNotNull prepend="and" property="enddate">tt.sendtime  &lt;=  #enddate#</isNotNull> 
+               order by tt.sendtime desc       
+    </select>
+</sqlMap>

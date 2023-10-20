@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <select id="queryStorage" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select t1.id "id",
+		t1.name "name",
+		t1.code "code",
+		t1.manager "manager",
+		t1.address "address",
+		t1.phone "phone",
+		t1.type "type",
+		t1.remark "remark"
+    from KS_BASE_STORAGE t1
+    where t1.status='1'
+    <isNotNull prepend="and" property="name"> 
+		       t1.name like '%'||#name#||'%'
+	</isNotNull>
+	<isNotNull prepend="and" property="code"> 
+		       t1.code like '%'||#code#||'%'
+	</isNotNull>
+	<isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="type"> 
+		       t1.type = #type#
+	</isNotNull>
+     </select>
+     
+     <select id="queryStoragePos" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select t.id "id",t.code "code",t.name "name" from KS_BASE_STORAGE_POS t
+      </select>
+</sqlMap>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*******************************************************************************
+ * 
+ * 版权所有： 中联重科环境产业公司
+ * 
+ * 描 述：业务字典相关SQL
+ * 
+ * 创建日期： 2014-8-8
+ * 
+ * 补丁编号： G3_P_20140709_01_101
+ * 
+ * 作 者： 肖斌
+ * 
+ ******************************************************************************/
+
+// ==============================修改历史===========================
+// 补丁编号 修改人 日期 归属 备注
+// G3_P_XXXXXXXX_XX_XX XX XXXXXXXX 集团
+// =================================================================
+ --> 
+<sqlMap>
+  	<!-- 查询字典类型 -->
+   <select id="queryDictTypes" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.tools.Tools.EosDictType">
+			select d.* from eos_dict_type d
+			where 1=1
+        <isNotNull prepend="and" property="orglist">
+  			d.dataorgid in 
+			<iterate  open="(" close=")" conjunction="," >  
+	           #[orglist]#
+	        </iterate> 
+  		</isNotNull>
+		<isNotNull prepend="and" property="dicttypeid">
+  			d.dicttypeid like '%'||#dicttypeid#||'%'
+  		</isNotNull>
+  		<isNotNull prepend="and" property="dicttypename">
+  			d.dicttypename like '%'||#dicttypename#||'%'
+  		</isNotNull>
+  		<isNotNull prepend="and" property="dictid">
+  			d.dicttypeid in (select dicttypeid from eos_dict_entry where dictid like '%'||#dictid#||'%')
+  		</isNotNull>
+  		<isNotNull prepend="and" property="dictname">
+  			d.dicttypeid in (select dicttypeid from eos_dict_entry where dictname like '%'||#dictname#||'%')
+  		</isNotNull>
+    </select>
+    
+    <!-- 查询字典项 -->
+    <select id="queryEosDictEntry" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	 select en.dicttypeid as "dicttypeid",
+		 en.dictid as "dictid", 
+		 en.dictname as "dictname", 
+		 en.status as "status",
+		 en.sortno as "sortno",
+		 en.rank as "rank",
+		 en.parentid as "parentid",
+		 en.seqno as "seqno",
+		 en.filter1 as "filter1",
+		 en.filter2 as "filter2",
+		 en.dataorgid  as "dataorgid",
+		 (case  when org.orgname is null then '0'  else org.orgname end) as "orgname"
+		  from eos_dict_entry en
+		  left join t_om_organization org
+		    on en.dataorgid = org.orgid
+    	 where 1=1
+    	 <isNotNull prepend="and" property="dicttypeid">
+  			en.dicttypeid= #dicttypeid#
+  		 </isNotNull>
+  		 <isNotNull prepend="and" property="dataorgid">
+  			(en.dataorgid= #dataorgid# or en.dataorgid = 0)
+  		 </isNotNull>
+    </select>   
+</sqlMap>

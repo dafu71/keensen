@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="dafu" displayName="送货单数据实体" id="com.zoomlion.hjsrm.pub.busi.delivery.delivery">
+    <viewModel author="liuxin" displayName="GenlReserveData" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveData" id="GenlReserveData">
+        <field dataType="String" dict="false" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="lifnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zleib" label="zleib">
+            <view type="write"/>
+            <edit name="zleib" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zdaji" label="zdaji">
+            <view type="write"/>
+            <edit name="zdaji" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zstat" label="zstat">
+            <view type="write"/>
+            <edit name="zstat" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="menge" label="menge">
+            <view type="write"/>
+            <edit name="menge" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="zcret" label="zcret">
+            <view type="write"/>
+            <edit name="zcret" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="zcreu" label="zcreu">
+            <view type="write"/>
+            <edit name="zcreu" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlReserveDataVersion" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveDataVersion" id="GenlReserveDataVersion">
+        <field dataType="Long" dict="false" id="id" label="id">
+            <view type="write"/>
+            <edit name="id" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zvern" label="zvern">
+            <view type="write"/>
+            <edit name="zvern" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="lifnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zleib" label="zleib">
+            <view type="write"/>
+            <edit name="zleib" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zdaji" label="zdaji">
+            <view type="write"/>
+            <edit name="zdaji" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zstat" label="zstat">
+            <view type="write"/>
+            <edit name="zstat" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="menge" label="menge">
+            <view type="write"/>
+            <edit name="menge" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="zcret" label="zcret">
+            <view type="write"/>
+            <edit name="zcret" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="zcreu" label="zcreu">
+            <view type="write"/>
+            <edit name="zcreu" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlReserveVerd" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveVerd" id="GenlReserveVerd">
+        <field dataType="Long" dict="false" id="id" label="id">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zvern" label="zvern">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zdaji" label="zdaji">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zleib" label="zleib">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlReserveVerl" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveVerl" id="GenlReserveVerl">
+        <field dataType="Long" dict="false" id="id" label="id">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zvern" label="zvern">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zleib" label="zleib">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlReserveZcpcxZleib" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZcpcxZleib" id="GenlReserveZcpcxZleib">
+        <field dataType="String" dict="false" id="zcpcx" label="zcpcx">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zleib" label="zleib">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlReserveZdajiZleib" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZdajiZleib" id="GenlReserveZdajiZleib">
+        <field dataType="String" dict="false" id="zdaji" label="zdaji">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zleib" label="zleib">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlReserveZleibLifnr" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZleibLifnr" id="GenlReserveZleibLifnr">
+        <field dataType="String" dict="false" id="zleib" label="zleib">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlReserveVerz" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveVerz" id="GenlReserveVerz">
+        <field dataType="Long" dict="false" id="id" label="id">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zvern" label="zvern">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zcpcx" label="zcpcx">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zleib" label="zleib">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="Entity" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.V_Zxlbqd" id="V_Zxlbqd">
+        <field dataType="String" dict="false" entityField="zleibname" id="zleibname" label="zleibname">
+            <view type="write"/>
+            <edit name="zleibname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="nr" id="nr" label="nr">
+            <view type="write"/>
+            <edit name="nr" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="GenlPurchaseNoteLifnr" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlPurchaseNoteLifnr" id="GenlPurchaseNoteLifnr">
+        <field dataType="String" dict="false" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zmode" label="zmode">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlPurchaseNoteAffirm" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlPurchaseNoteAffirm" id="GenlPurchaseNoteAffirm">
+        <field dataType="String" dict="false" id="id" label="id">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zasnh" label="zasnh">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="status" label="status">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="useid" label="useid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="usename" label="usename">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="time" label="time">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="GenlLabelPrint" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlLabelPrint" id="GenlLabelPrint">
+        <field dataType="String" dict="false" entityField="matnr" id="matnr" label="matnr">
+            <view type="write"/>
+            <edit name="matnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lifnr" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="lifnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="shDate" id="shDate" label="shDate">
+            <view type="write"/>
+            <edit name="shDate" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="printNum" id="printNum" label="printNum">
+            <view type="write"/>
+            <edit name="printNum" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlVegicleList" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlVegicleList" id="GenlVegicleList">
+        <field dataType="String" dict="false" entityField="cxdm" id="cxdm" label="cxdm">
+            <view type="write"/>
+            <edit name="cxdm" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="cxmc" id="cxmc" label="cxmc">
+            <view type="write"/>
+            <edit name="cxmc" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="werks" id="werks" label="werks">
+            <view type="write"/>
+            <edit name="werks" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="bukrs" id="bukrs" label="bukrs">
+            <view type="write"/>
+            <edit name="bukrs" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="statu" id="statu" label="statu">
+            <view type="write"/>
+            <edit name="statu" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="tranu" id="tranu" label="tranu">
+            <view type="write"/>
+            <edit name="tranu" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="trant" id="trant" label="trant">
+            <view type="write"/>
+            <edit name="trant" type="date"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlReserveList" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveList" id="GenlReserveList">
+        <field dataType="String" dict="false" entityField="matnr" id="matnr" label="matnr">
+            <view type="write"/>
+            <edit name="matnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="cxdm" id="cxdm" label="cxdm">
+            <view type="write"/>
+            <edit name="cxdm" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="werks" id="werks" label="werks">
+            <view type="write"/>
+            <edit name="werks" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="bukrs" id="bukrs" label="bukrs">
+            <view type="write"/>
+            <edit name="bukrs" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="statu" id="statu" label="statu">
+            <view type="write"/>
+            <edit name="statu" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="tranu" id="tranu" label="tranu">
+            <view type="write"/>
+            <edit name="tranu" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="trant" id="trant" label="trant">
+            <view type="write"/>
+            <edit name="trant" type="date"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlReserveDatab" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveDatab" id="GenlReserveDatab">
+        <field dataType="String" dict="false" entityField="lifnr" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="lifnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="cxdm" id="cxdm" label="cxdm">
+            <view type="write"/>
+            <edit name="cxdm" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="matnr" id="matnr" label="matnr">
+            <view type="write"/>
+            <edit name="matnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="zstat" id="zstat" label="zstat">
+            <view type="write"/>
+            <edit name="zstat" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="menge" id="menge" label="menge">
+            <view type="write"/>
+            <edit name="menge" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="zcret" id="zcret" label="zcret">
+            <view type="write"/>
+            <edit name="zcret" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="zcreu" id="zcreu" label="zcreu">
+            <view type="write"/>
+            <edit name="zcreu" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="GenlPurchaseNoteDetail" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlPurchaseNoteDetail" id="GenlPurchaseNoteDetail">
+        <field dataType="String" dict="false" entityField="pkid" id="pkid" label="pkid">
+            <view type="write"/>
+            <edit name="pkid" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="amount" id="amount" label="amount">
+            <view type="write"/>
+            <edit name="amount" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="returnAmount" id="returnAmount" label="returnAmount">
+            <view type="write"/>
+            <edit name="returnAmount" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="createby" id="createby" label="createby">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="createtime" id="createtime" label="createtime">
+            <view type="write"/>
+            <edit name="createtime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifyby" id="modifyby" label="modifyby">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="modifytime" id="modifytime" label="modifytime">
+            <view type="write"/>
+            <edit name="modifytime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="remark2" id="remark2" label="remark2">
+            <view type="write"/>
+            <edit name="remark2" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="stand" id="stand" label="stand">
+            <view type="write"/>
+            <edit name="stand" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="zasnh" id="zasnh" label="zasnh">
+            <view type="write"/>
+            <edit name="zasnh" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ebeln" id="ebeln" label="ebeln">
+            <view type="write"/>
+            <edit name="ebeln" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ebelp" id="ebelp" label="ebelp">
+            <view type="write"/>
+            <edit name="ebelp" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="delflag" id="delflag" label="delflag">
+            <view type="write"/>
+            <edit name="delflag" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zasnp" label="zasnp">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zjlb" label="zjlb">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="mjzt" label="mjzt">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="GenlPurchaseNote" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlPurchaseNote" id="GenlPurchaseNote">
+        <field dataType="String" dict="false" entityField="zasnh" id="zasnh" label="zasnh">
+            <view type="write"/>
+            <edit name="zasnh" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lifnr" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="lifnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="name1" id="name1" label="name1">
+            <view type="write"/>
+            <edit name="name1" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="arrivedate" id="arrivedate" label="arrivedate">
+            <view type="write"/>
+            <edit name="arrivedate" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lgort" id="lgort" label="lgort">
+            <view type="write"/>
+            <edit name="lgort" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="createby" id="createby" label="createby">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="createtime" id="createtime" label="createtime">
+            <view type="write"/>
+            <edit name="createtime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifyby" id="modifyby" label="modifyby">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="modifytime" id="modifytime" label="modifytime">
+            <view type="write"/>
+            <edit name="modifytime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="remark">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="stand" id="stand" label="stand">
+            <view type="write"/>
+            <edit name="stand" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="delflag" id="delflag" label="delflag">
+            <view type="write"/>
+            <edit name="delflag" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="werks" label="werks">
+            <view type="write"/>
+            <edit name="werks" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="print" label="print">
+            <view type="write"/>
+            <edit name="print" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="status" label="status">
+            <view type="write"/>
+            <edit name="status" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zjlb" label="zjlb">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="aufnr" label="aufnr">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="kostl" label="kostl">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="knttp" label="knttp">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="sfdpvn" label="sfdpvn">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlNoteVndetail" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlNoteVndetail" id="GenlNoteVndetail">
+        <field dataType="String" dict="false" entityField="zasnh" id="zasnh" label="zasnh">
+            <view type="write"/>
+            <edit name="zasnh" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="zasnp" id="zasnp" label="zasnp">
+            <view type="write"/>
+            <edit name="zasnp" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="vnbm" id="vnbm" label="vnbm">
+            <view type="write"/>
+            <edit name="vnbm" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifyby" id="modifyby" label="modifyby">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="modifytime" id="modifytime" label="modifytime">
+            <view type="write"/>
+            <edit name="modifytime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="delflay" id="delflay" label="delflay">
+            <view type="write"/>
+            <edit name="delflay" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="vnid" label="vnid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlVnRule" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlVnRule" id="GenlVnRule">
+        <field dataType="String" dict="false" id="matnr" label="matnr">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="vnrule" label="vnrule">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlSupplyVnbm" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlSupplyVnbm" id="GenlSupplyVnbm">
+        <field dataType="String" dict="false" entityField="lifnr" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="lifnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="vnbm" id="vnbm" label="vnbm">
+            <view type="write"/>
+            <edit name="vnbm" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="tranu" id="tranu" label="tranu">
+            <view type="write"/>
+            <edit name="tranu" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="trant" id="trant" label="trant">
+            <view type="write"/>
+            <edit name="trant" type="date"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlVnCoincident" entityName="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlVnCoincident" id="GenlVnCoincident">
+        <field dataType="Long" dict="false" id="id" label="id">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="vnbm" label="vnbm">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

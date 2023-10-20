@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="HP" displayName="SapSrmWarehouse" id="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse">
+    <viewModel author="HP" displayName="Entity" entityName="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.Vwarehourse" id="Vwarehourse">
+        <field dataType="String" dict="false" entityField="ebeln" id="ebeln" label="ebeln">
+            <view type="write"/>
+            <edit name="ebeln" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ebelp" id="ebelp" label="ebelp">
+            <view type="write"/>
+            <edit name="ebelp" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="menge" id="menge" label="menge">
+            <view type="write"/>
+            <edit name="menge" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="bwart" id="bwart" label="bwart">
+            <view type="write"/>
+            <edit name="bwart" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lfbja" id="lfbja" label="lfbja">
+            <view type="write"/>
+            <edit name="lfbja" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lfbnr" id="lfbnr" label="lfbnr">
+            <view type="write"/>
+            <edit name="lfbnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lfpos" id="lfpos" label="lfpos">
+            <view type="write"/>
+            <edit name="lfpos" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="grund" id="grund" label="grund">
+            <view type="write"/>
+            <edit name="grund" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lgort" id="lgort" label="lgort">
+            <view type="write"/>
+            <edit name="lgort" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="sgtxt" id="sgtxt" label="sgtxt">
+            <view type="write"/>
+            <edit name="sgtxt" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="charg" id="charg" label="charg">
+            <view type="write"/>
+            <edit name="charg" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="HP" displayName="GenlAsnMseg" entityName="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlAsnMseg" id="GenlAsnMseg">
+        <field dataType="String" dict="false" id="mblnr" label="mblnr">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="mjahr" label="mjahr">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zasnh" label="zasnh">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stats" label="状态(备用字段)">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="tranu" label="传输者">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="trant" label="传输日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+    </viewModel>
+    <viewModel author="HP" displayName="GenlSaveMseg" entityName="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlSaveMseg" id="GenlSaveMseg">
+        <field dataType="String" dict="false" id="mblnr" label="物料凭证号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="mjahr" label="行号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="HP" displayName="GenlReceiptsMkpf" entityName="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlReceiptsMkpf" id="GenlReceiptsMkpf">
+        <field dataType="String" dict="false" id="mblnr" label="物料凭证编号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="mjahr" label="物料凭证年度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="vgart" label="交易/事件类型">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="blart" label="凭证类型">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="bldat" label="凭证中的凭证日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="budat" label="凭证中的过帐日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="cpudt" label="为SAP会计凭证输入日期+输入时间(CPUTM)">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="bktxt" label="凭证抬头文本">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="tranu" label="传输者">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="trant" label="传输时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+    </viewModel>
+    <viewModel author="HP" displayName="GenlReceiptsMkpfCrte" entityName="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlReceiptsMkpfCrte" id="GenlReceiptsMkpfCrte">
+        <field dataType="String" dict="false" id="mblnr" label="mblnr">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="mjahr" label="mjahr">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="tranu" label="传输者">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="trant" label="传输日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+    </viewModel>
+    <viewModel author="HP" displayName="GenlReceiptsMseg" entityName="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlReceiptsMseg" id="GenlReceiptsMseg">
+        <field dataType="String" dict="false" id="mblnr" label="物料凭证编号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="mjahr" label="物料凭证年度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="zeile" label="物料凭证中的项目">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="bwart" label="移动类型(库存管理)">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="matnr" label="物料号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="werks" label="工厂">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lgort" label="库存地点">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="charg" label="批号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lifnr" label="供应商帐户号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="shkzg" label="借方/贷方标识">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="waers" label="货币码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="menge" label="数量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="meins" label="基本计量单位">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ebeln" label="采购订单编号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ebelp" label="采购订单的项目编号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lfbja" label="参考凭证的会计年度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lfbnr" label="参考凭证编号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lfpos" label="参考凭证项目">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="sjahr" label="物料凭证年度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="smbln" label="物料凭证编号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="smblp" label="物料凭证中的项目">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="bukrs" label="公司代码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="dmbtr" label="本位币金额">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="grund" label="移动原因">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="erfmg" label="以输入单位计的数量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="erfme" label="条目单位">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="sgtxt" label="sgtxt">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="GenlMblnrVnbm" entityName="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlMblnrVnbm" id="GenlMblnrVnbm">
+        <field dataType="String" dict="false" entityField="mblnr" id="mblnr" label="mblnr">
+            <view type="write"/>
+            <edit name="mblnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="mblno" id="mblno" label="mblno">
+            <view type="write"/>
+            <edit name="mblno" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="vnbm" id="vnbm" label="vnbm">
+            <view type="write"/>
+            <edit name="vnbm" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="tranu" id="tranu" label="tranu">
+            <view type="write"/>
+            <edit name="tranu" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="trant" id="trant" label="trant">
+            <view type="write"/>
+            <edit name="trant" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="shkzg" label="shkzg">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lbbsa" label="lbbsa">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lager" label="lager">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="werks" label="werks">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="dafu" displayName="techChange" id="com.zoomlion.hjsrm.pub.techChange.techChange">
+    <viewModel author="dafu" displayName="FlowTechList" entityName="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechList" id="FlowTechList">
+        <field dataType="String" dict="false" entityField="techId" id="techId" label="业务流水号">
+            <view type="write"/>
+            <edit name="techId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="processinstid" id="processinstid" label="流程实例ID">
+            <view type="write"/>
+            <edit name="processinstid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="status" id="status" label="流程状态">
+            <view type="write"/>
+            <edit name="status" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="createby" id="createby" label="发起人">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="createtime" id="createtime" label="发起时间">
+            <view type="write"/>
+            <edit name="createtime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="createbyName" id="createbyName" label="发起人姓名">
+            <view type="write"/>
+            <edit name="createbyName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="orgid" id="orgid" label="机构ID">
+            <view type="write"/>
+            <edit name="orgid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="orgname" id="orgname" label="机构名称">
+            <view type="write"/>
+            <edit name="orgname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifyby" id="modifyby" label="修改人">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="modifytime" id="modifytime" label="修改操作时间">
+            <view type="write"/>
+            <edit name="modifytime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifybyName" id="modifybyName" label="修改人姓名">
+            <view type="write"/>
+            <edit name="modifybyName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifyOrgid" id="modifyOrgid" label="修改人机构ID">
+            <view type="write"/>
+            <edit name="modifyOrgid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifyOorgname" id="modifyOorgname" label="修改人机构名称">
+            <view type="write"/>
+            <edit name="modifyOorgname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="phone" id="phone" label="联系电话">
+            <view type="write"/>
+            <edit name="phone" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="problemType" id="problemType" label="问题类别">
+            <view type="write"/>
+            <edit name="problemType" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="problem" id="problem" label="问题描述">
+            <view type="write"/>
+            <edit name="problem" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="productno" id="productno" label="车型代号">
+            <view type="write"/>
+            <edit name="productno" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="matnr" id="matnr" label="整机编码">
+            <view type="write"/>
+            <edit name="matnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="importance" id="importance" label="重要性">
+            <view type="write"/>
+            <edit name="importance" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="effection" id="effection" label="影响点">
+            <view type="write"/>
+            <edit name="effection" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="duty" id="duty" label="责任人/部门">
+            <view type="write"/>
+            <edit name="duty" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="remark" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="stand" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="stand" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="FlowTechMaterial" entityName="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechMaterial" id="FlowTechMaterial">
+        <field dataType="String" dict="false" id="materialId" label="流水号">
+            <view type="write"/>
+            <edit name="materialId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="techId" label="关联业务流水号">
+            <view type="write"/>
+            <edit name="techId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="matnr" label="物料编码">
+            <view type="write"/>
+            <edit name="matnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="maktx" label="物料名称">
+            <view type="write"/>
+            <edit name="maktx" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="stand" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="FlowTechOperators" entityName="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechOperators" id="FlowTechOperators">
+        <field dataType="String" dict="false" id="optId" label="流水号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="techId" label="关联业务流水号">
+            <view type="write"/>
+            <edit name="techId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="rolecode" label="角色编码">
+            <view type="write"/>
+            <edit name="rolecode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="rolename" label="角色名称">
+            <view type="write"/>
+            <edit name="rolename" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="userid" label="人员id">
+            <view type="write"/>
+            <edit name="userid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="username" label="人员姓名">
+            <view type="write"/>
+            <edit name="username" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="delflag" label="删除状态">
+            <view type="write"/>
+            <edit name="delflag" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="stand" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="FlowTechCheck" entityName="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechCheck" id="FlowTechCheck">
+        <field dataType="String" dict="false" id="checkId" label="流水号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="techId" label="关联业务流水号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="flag" label="意见标识，同意，驳回">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="advise" label="修改期限">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="发起人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createtime" label="发起时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createbyName" label="发起人姓名">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="机构ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgname" label="机构名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="modifytime" label="修改操作时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="modifybyName" label="修改人姓名">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyOrgid" label="修改人机构ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyOorgname" label="修改人机构名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="FlowTechConfirm" entityName="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechConfirm" id="FlowTechConfirm">
+        <field dataType="String" dict="false" id="confirmId" label="流水号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="techId" label="关联业务流水号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="flag" label="意见标识，已修改，未修改">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="advise" label="意见">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="发起人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createtime" label="发起时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createbyName" label="发起人姓名">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="机构ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgname" label="机构名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="modifytime" label="修改操作时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="modifybyName" label="修改人姓名">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyOrgid" label="修改人机构ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyOorgname" label="修改人机构名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="FlowTechModify" entityName="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechModify" id="FlowTechModify">
+        <field dataType="String" dict="false" id="modifyId" label="流水号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="techId" label="关联业务流水号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="flag" label="意见标识，已修改，未修改">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="advise" label="图样更改通知单编码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="发起人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createtime" label="发起时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createbyName" label="发起人姓名">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="机构ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgname" label="机构名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="modifytime" label="修改操作时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="modifybyName" label="修改人姓名">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyOrgid" label="修改人机构ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyOorgname" label="修改人机构名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="FlowTechInspect" entityName="com.zoomlion.hjsrm.pub.techChange.techChange.FlowTechInspect" id="FlowTechInspect">
+        <field dataType="String" dict="false" id="inspectId" label="流水号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="techId" label="关联业务流水号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="flag" label="意见标识，划改一致，划改不一致">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="advise" label="意见">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="发起人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createtime" label="发起时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createbyName" label="发起人姓名">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="机构ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgname" label="机构名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="modifytime" label="修改操作时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="modifybyName" label="修改人姓名">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyOrgid" label="修改人机构ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyOorgname" label="修改人机构名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stand" label="备用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

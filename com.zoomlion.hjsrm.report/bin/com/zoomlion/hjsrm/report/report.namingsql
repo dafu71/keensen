@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.report.report">
+    <!-- 物料凭证报表-->
+    <select id="queryMblnrreport" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+         select c.zasnh as "zasnh",
+               k.operatorname as "username",
+               d.tranu as "tranu",
+               d.trant as "trant",
+                to_char(b.budat,'yyyy-MM-dd') as "budat", 
+               b.cpudt as "cpudt",
+               a.mblnr as "mblnr",
+               a.mjahr as "mjahr",
+               a.zeile as "zeile",
+               a.bwart as "bwart",
+               a.matnr as "matnr",
+               a.werks as "werks",
+               a.lgort as "lgort",
+               a.lifnr as "lifnr",
+               f.name1 as "name1",
+               a.erfmg as "menge",
+               a.meins as "meins",
+               a.ebeln as "ebeln",
+               a.ebelp as "ebelp",
+               a.lfbnr as "lfbnr",
+               a.lfbja as "lfbja",
+               a.lfpos as "lfpos",
+               a.grund as "grund",
+               t.menge as "menge1",
+               t.meins as "meins1",
+               t.txz01 as "txz01",
+               j.vnbm as "vnbm"
+         from genl_receipts_mseg a
+         left join genl_asn_mseg c 
+                on a.lfbnr = c.mblnr
+                left join genl_mblnr_vnbm j 
+                on a.mblnr = j.mblnr
+                and a.zeile= j.mblno,               
+         genl_receipts_mkpf_crte d left join  v_ac_operator_trs k on d.tranu = k.userid,
+              genl_receipts_mkpf b,
+              base_supply_lfa1   f,
+              genl_purchase_ekpo t     
+        where a.mblnr = b.mblnr
+          and a.lifnr = f.lifnr
+          and t.ebeln = a.ebeln
+          and t.ebelp = a.ebelp 
+          and a.mblnr = d.mblnr
+        <isNotNull prepend="and" property="lifnr">a.lifnr like '%'||#lifnr#||'%'</isNotNull>
+        <isNotNull prepend="and" property="lifnrsup">a.lifnr =#lifnrsup#</isNotNull>
+        <isNotNull prepend="and" property="werks">a.werks=#werks#</isNotNull>
+        <isNotNull prepend="and" property="zasnh">c.zasnh=#zasnh#</isNotNull>
+        <isNotNull prepend="and" property="mblnr">a.mblnr=#mblnr#</isNotNull>
+        <isNotNull prepend="and" property="ebeln">a.ebeln=#ebeln#</isNotNull>
+        <isNotNull prepend="and" property="matnr">a.matnr=#matnr#</isNotNull>
+        <isNotNull prepend="and" property="lgort">a.lgort=#lgort#</isNotNull>
+        <isNotNull prepend="and" property="mjahr">a.mjahr=#mjahr#</isNotNull>
+        <isNotNull prepend="and" property="username">k.operatorname like '%'||#username#||'%'</isNotNull>
+        <isNotNull prepend="and" property="maktx">t.txz01 like '%'||#maktx#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">f.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="vnbm">j.vnbm like '%'||#vnbm#||'%'</isNotNull>
+        <isNotNull prepend="and" property="startDate">trunc(b.budat) &gt;=to_date(#startDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDate">trunc(b.budat) &lt;=to_date(#endDate#,'yyyy-mm-dd')</isNotNull>
+    </select>
+    <!-- 采购执行情况查询-->
+    <select id="queryEbelnreport" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+       select a.werks            as "werks",
+       b.lifnr            as "lifnr",
+       f.name1            as "name1",
+       a.ebeln            as "ebeln",
+       a.ebelp            as "ebelp",
+       to_char(b.aedat,'yyyy-MM-dd')   as "aedat",
+       a.matnr            as "matnr",
+       a.txz01            as "maktx",
+       a.menge            as "menge",
+       nvl(dddd.amount, 0) as "amount",
+       nvl(dddd.return_amount, 0) as "return_amount",
+       nvl(dddd.cangtui, 0)       as "cangtui",
+       nvl(dddd.ruku, 0)        as "ruku",
+       to_char(dddd.createtime,'yyyy-MM-dd HH24:MI:SS')     as "createtime",
+       to_char(ddddd.trant,'yyyy-MM-dd HH24:MI:SS')        as "trant",
+       to_char(c.eindt,'yyyy-MM-dd')    as "eindt",
+       to_char( ddd.zcdat ,'yyyy-MM-dd HH24:MI:SS')         as "zcdat",
+       ddd.ZTEXT          as "ztext",
+       nvl(ddd.zquer, 0)  as "zquer",
+       a.meins            as "meins",
+       a.lgort            as "lgort",
+       a.pstyp            as "pstyp",
+       a.knttp            as "knttp",
+       h.eknam            as "ekgrp",
+       i.ekotx            as "ekorg",
+       a.bednr            as "bednr",
+       g.aufnr            as "aufnr",
+       g.kostl            as "kostl",
+       a.loekz            as "loekz"
+  from genl_purchase_ekpo a
+  left join genl_purchase_ekkn g on a.ebeln = g.ebeln
+                                and a.ebelp = g.ebelp
+  left join (select tt.ebeln, tt.ebelp, tt.ztext, ttt.zquer, ttt.zcdat
+               from genl_purchase_eklg tt,
+                    (select t.ebeln,
+                            t.ebelp,
+                            max(id) as zid,
+                            min(zcdat) as zcdat,
+                            sum(zquer) as zquer
+                       from genl_purchase_eklg t
+                      group by t.ebeln, t.ebelp) ttt
+              where ttt.zid = tt.id) ddd on ddd.ebeln = a.ebeln
+                                        and ddd.ebelp = a.ebelp
+  left join (select t2.ebeln, t2.ebelp, min(t3.trant) as trant
+               from genl_receipts_mseg t2, genl_receipts_mkpf t3
+              where t2.mblnr = t3.mblnr
+              group by t2.ebeln, t2.ebelp) ddddd on ddddd.ebeln = a.ebeln
+                                                and ddddd.ebelp = a.ebelp
+  left join (select t1.ebeln as ebeln,
+                    t1.ebelp as ebelp,
+                    sum(t1.amount) as amount,
+                    sum(t1.return_amount) as return_amount,
+                    sum(nvl(t6.cangtui, 0)) as cangtui,
+                    sum(nvl(t6.ruku, 0)) as ruku,
+                    min(t1.createtime) as createtime
+               from genl_purchase_note_detail t1
+               left join v_genl_asn_ctrk t6 on t1.zasnh = t6.zasnh
+                                           and t1.zasnp = t6.zasnp
+              where t1.delflag = '0'
+              group by t1.ebeln, t1.ebelp) dddd on dddd.ebeln = a.ebeln
+                                               and dddd.ebelp = a.ebelp,
+ genl_purchase_ekko b,
+ genl_purchase_eket c,
+ base_supply_lfa1 f,
+ base_purchase_t024 h,
+ base_purchase_t024e i
+ where a.ebeln = b.ebeln
+   and a.ebeln = c.ebeln
+   and c.ebelp = a.ebelp
+   and b.lifnr = f.lifnr
+   and b.ekgrp = h.ekgrp
+   and b.ekorg = i.ekorg
+          <isNotNull prepend="and" property="lifnr">b.lifnr like '%'||#lifnr#||'%'</isNotNull>
+        <isNotNull prepend="and" property="lifnrsup">b.lifnr =#lifnrsup#</isNotNull>
+        <isNotNull prepend="and" property="werks">a.werks=#werks#</isNotNull>
+        <isNotNull prepend="and" property="ebeln">a.ebeln=#ebeln#</isNotNull>
+        <isNotNull prepend="and" property="ebelp">a.ebelp=#ebelp#</isNotNull>
+        <isNotNull prepend="and" property="matnr">a.matnr=#matnr#</isNotNull>
+        <isNotNull prepend="and" property="bednr">a.bednr=#bednr#</isNotNull>
+        <isNotNull prepend="and" property="ekgrp">b.ekgrp=#ekgrp#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">b.ekorg=#ekorg#</isNotNull>
+        <isNotNull prepend="and" property="maktx">a.txz01 like '%'||#maktx#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">f.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="startDate">trunc(c.eindt) &gt;=to_date(#startDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="endDate">trunc(c.eindt) &lt;=to_date(#endDate#,'yyyy-mm-dd')</isNotNull>
+        <isNotNull prepend="and" property="a">(a.menge-(nvl(dddd.ruku,0) -  nvl(dddd.cangtui,0))) &gt;'0'</isNotNull>
+        <isNotNull prepend="and" property="b">(a.menge-(nvl(dddd.ruku,0) -  nvl(dddd.cangtui,0))) &lt;= '0'</isNotNull>
+        <isNotNull prepend="and" property="c">(a.menge - nvl(ddd.zquer,0))&gt;'0'</isNotNull>
+        <isNotNull prepend="and" property="d">(a.menge - nvl(ddd.zquer,0))&lt;='0'</isNotNull>
+		 and (a.loekz is null or ddd.zquer is not null)
+ order by a.ebeln desc, a.ebelp 
+    </select>
+    <!-- 采购周期报表-->
+    <select id="queryCgzqreport" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+select cool.matnr as "matnr",
+       cool.lifnr as "lifnr",
+       cool.name1 as "name1",
+       cool.txz01 as "txz01",
+       round(cool.querenzhouqi,2) as "querenzhouqi",
+       round(cool1.beihuozhouqi,2) as "beihuozhouqi",
+       round(cool2.zaituzhouqi,2) as "zaituzhouqi",
+       round(cool3.caigouzhouqi,2) as "caigouzhouqi" 
+       from
+        (select a.matnr,
+           aaaaa.lifnr,
+               f.name1,
+               a.txz01,
+            decode(sum(a.menge),0,0,sum(a.menge*(to_date(to_char( aaaa.zcdat ,'yyyy-MM-dd'),'yyyy-MM-dd')
+          - to_date(to_char(aaaaa.aedat,'yyyy-MM-dd'),'yyyy-MM-dd')))/ sum(a.menge))  as querenzhouqi
+      from genl_purchase_ekpo a
+      left join (select aa.ebeln, aa.ebelp, aa.ztext, aaa.zcdat
+               from genl_purchase_eklg aa,
+                    (select ebeln,
+                            ebelp,
+                            max(id) as zid,
+                            min(zcdat) as zcdat
+                       from genl_purchase_eklg
+                        group by ebeln,ebelp ) aaa
+              where aaa.zid = aa.id) aaaa on aaaa.ebeln = a.ebeln
+                                        and aaaa.ebelp = a.ebelp,
+
+            genl_purchase_ekko aaaaa,
+            base_supply_lfa1 f
+          where a.ebeln = aaaaa.ebeln
+              and aaaaa.lifnr = f.lifnr
+              and a.matnr is not null
+              and aaaa.zcdat is not null
+              and a.loekz is null
+     <isNotNull prepend="and" property="querystartdate">to_char(aaaa.zcdat, 'yyyy-mm-dd')  &gt;=  #querystartdate#</isNotNull>
+        <isNotNull prepend="and" property="queryendate">to_char(aaaa.zcdat, 'yyyy-mm-dd')  &lt;=  #queryendate#</isNotNull>
+            group by aaaaa.lifnr,a.matnr,a.txz01, f.name1) cool
+      left join (select
+               bb.lifnr,
+               b.matnr,
+               decode(sum(bbbbbb.amount),0,0,sum(bbbbbb.amount *( to_date(to_char(bbbbbb.createtime,'yyyy-MM-dd'),'yyyy-MM-dd')  - to_date(to_char( bbbbb.zcdat ,'yyyy-MM-dd'),'yyyy-MM-dd')))/sum(bbbbbb.amount)) as beihuozhouqi
+               from genl_purchase_ekpo b
+            left join (select bbb.ebeln, bbb.ebelp, bbb.ztext,  bbbb.zcdat
+               from genl_purchase_eklg bbb,
+                    (select  ebeln,
+                            ebelp,
+                            max(id) as zid,
+                            min(zcdat) as zcdat
+                       from genl_purchase_eklg 
+                       group by ebeln,ebelp) bbbb
+              where bbbb.zid = bbb.id) bbbbb on bbbbb.ebeln = b.ebeln
+                                          and bbbbb.ebelp = b.ebelp
+              left join (select t1.ebeln as ebeln,
+                    t1.ebelp as ebelp,
+                    t1.amount,
+                    t1.return_amount,
+                    t6.ruku ,
+                    t1.createtime
+               from genl_purchase_note_detail t1
+               left join v_genl_asn_ctrk t6 on t1.zasnh = t6.zasnh
+                                           and t1.zasnp = t6.zasnp
+              where t1.delflag = '0'
+             ) bbbbbb on   bbbbbb.ebeln = b.ebeln
+                       and bbbbbb.ebelp = b.ebelp,
+        genl_purchase_ekko bb
+    where b.ebeln = bb.ebeln
+      and bbbbbb.createtime is not null
+      <isNotNull prepend="and" property="querystartdate">to_char(bbbbbb.createtime, 'yyyy-mm-dd')  &gt;=  #querystartdate#</isNotNull>
+        <isNotNull prepend="and" property="queryendate">to_char(bbbbbb.createtime, 'yyyy-mm-dd')  &lt;=  #queryendate#</isNotNull>
+          group by bb.lifnr,b.matnr) cool1 on cool.matnr = cool1.matnr
+                                          and cool.lifnr = cool1.lifnr
+         left join (select
+                     c1.lifnr ,
+                     c.matnr ,
+             decode(sum(c2.ruku),0,0,sum(c2.ruku*( to_date(to_char(c3.trant,'yyyy-MM-dd'),'yyyy-MM-dd')-to_date(to_char(c2.createtime,'yyyy-MM-dd'),'yyyy-MM-dd')))/sum(c2.ruku))    as zaituzhouqi
+             from genl_purchase_ekpo c
+             left join (select t3.ebeln, t3.ebelp, t4.trant ,t5.zasnh
+                      from genl_receipts_mseg t3, genl_receipts_mkpf t4,genl_asn_mseg t5
+                      where t3.mblnr = t4.mblnr
+                        and t3.mjahr = t4.mjahr
+                        and t3.mblnr = t5.mblnr
+                        and t3.mjahr = t5.mjahr) c3 on c3.ebeln = c.ebeln
+                                                and c3.ebelp = c.ebelp
+             left join (select t2.ebeln as ebeln,
+                               t2.ebelp as ebelp,
+                               t7.ruku as ruku,
+                               t2.createtime,
+                               t2.zasnh
+                        from genl_purchase_note_detail t2
+                        left join v_genl_asn_ctrk t7 on t2.zasnh = t7.zasnh
+                                           and t2.zasnp = t7.zasnp
+                        where t2.delflag = '0') c2 on c2.ebeln = c.ebeln
+                                                  and c2.ebelp = c.ebelp
+                                                  and c2.zasnh = c3.zasnh,
+             genl_purchase_ekko c1
+           where c.ebeln = c1.ebeln
+             and c2.ruku is not null
+             <isNotNull prepend="and" property="querystartdate">to_char(c3.trant, 'yyyy-mm-dd')  &gt;=  #querystartdate#</isNotNull>
+        <isNotNull prepend="and" property="queryendate">to_char(c3.trant, 'yyyy-mm-dd')  &lt;=  #queryendate#</isNotNull>
+             group by c1.lifnr,c.matnr)cool2 on cool.lifnr = cool2.lifnr
+                                      and cool.matnr = cool2.matnr
+           left join (select
+                        d1.lifnr,
+                        d.matnr,
+                       decode(sum(d2.ruku),0,0,sum(d2.ruku*(to_date(to_char(d3.trant,'yyyy-MM-dd'),'yyyy-MM-dd')-to_date(to_char(d1.aedat,'yyyy-MM-dd'),'yyyy-MM-dd')))/ sum(d2.ruku)) as caigouzhouqi
+                      from genl_purchase_ekpo d
+                 left join (select k2.ebeln, k2.ebelp, k3.trant,k4.zasnh
+                      from genl_receipts_mseg k2, genl_receipts_mkpf k3,genl_asn_mseg k4
+                    where k2.mblnr = k3.mblnr
+                      and k2.mjahr = k3.mjahr
+                      and k2.mblnr = k4.mblnr
+                      and k2.mjahr = k4.mjahr
+                     ) d3 on d3.ebeln = d.ebeln
+                         and d3.ebelp = d.ebelp
+                 left join (select k1.ebeln as ebeln,
+                             k1.ebelp as ebelp,
+                             k6.ruku as ruku,
+                             k1.zasnh,
+                             k1.createtime as createtime
+                from genl_purchase_note_detail k1
+                left join v_genl_asn_ctrk k6 on k1.zasnh = k6.zasnh
+                                            and k1.zasnp = k6.zasnp
+                           where k1.delflag = '0'
+                   ) d2 on d2.ebeln = d.ebeln
+                                           and d2.ebelp = d.ebelp
+                                           and d2.zasnh = d3.zasnh,
+                genl_purchase_ekko d1
+              where d.ebeln = d1.ebeln
+                and d2.ruku is not null
+             <isNotNull prepend="and" property="querystartdate">to_char(d3.trant, 'yyyy-mm-dd')  &gt;=  #querystartdate#</isNotNull>
+        <isNotNull prepend="and" property="queryendate">to_char(d3.trant, 'yyyy-mm-dd')  &lt;=  #queryendate#</isNotNull>
+               group by d1.lifnr,d.matnr) cool3 on cool.matnr = cool3.matnr
+                                     and cool.lifnr = cool3.lifnr
+       where 1= 1
+      <isNotNull prepend="and" property="lifnrsup">cool.lifnr =  #lifnrsup#</isNotNull>
+        <isNotNull prepend="and" property="lifnr">cool.lifnr like '%' ||  #lifnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="matnr">cool.matnr in ($matnr$)</isNotNull>
+        <isNotNull prepend="and" property="txz01">cool.txz01 like '%' ||  #txz01# || '%'</isNotNull>
+        <isNotNull prepend="and" property="name1">cool.name1 like '%' ||  #name1# || '%'</isNotNull>
+    </select>
+    <select id="querydprkreport" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+           select t1.lifnr as "lifnr",
+                  t3.name1 as "name1",
+                  (nvl(t1.a,0) - nvl(t2.b,0)) as "dmbtr",
+                  (nvl(t1.c,0) - nvl(t2.d,0)) as "erfmg" 
+             from (select t.lifnr,sum(t.dmbtr) as a,sum(t.erfmg) as c from genl_receipts_mseg t  
+                   left join genl_receipts_mkpf k on t.mblnr = k.mblnr and t.mjahr = k.mjahr 
+                         where substr(t.matnr,1,4) = '1120' and t.shkzg = 'S' 
+                         <isNotNull prepend="and" property="querystartdate">to_char(k.budat, 'yyyy-mm-dd')  &gt;=  #querystartdate#</isNotNull>
+        <isNotNull prepend="and" property="queryendate">to_char(k.budat, 'yyyy-mm-dd')  &lt;=  #queryendate#</isNotNull>
+        <isNotNull prepend="and" property="werks">t.werks =  #werks#</isNotNull>
+             group by t.lifnr) t1
+                   left join (select t.lifnr,sum(t.dmbtr) as b,sum(t.erfmg) as d from genl_receipts_mseg t
+                   left join genl_receipts_mkpf k on t.mblnr = k.mblnr and t.mjahr = k.mjahr 
+                         where substr(t.matnr,1,4) = '1120' and t.shkzg = 'H'
+                         <isNotNull prepend="and" property="querystartdate">to_char(k.budat, 'yyyy-mm-dd')  &gt;=  #querystartdate#</isNotNull>
+        <isNotNull prepend="and" property="queryendate">to_char(k.budat, 'yyyy-mm-dd')  &lt;=  #queryendate#</isNotNull>
+        <isNotNull prepend="and" property="werks">t.werks =  #werks#</isNotNull> group by t.lifnr) t2
+                   on t1.lifnr = t2.lifnr
+                   left join base_supply_lfa1 t3 on t1.lifnr = t3.lifnr 
+                   order by    (nvl(t1.a,0) - nvl(t2.b,0))  desc                               
+      </select>
+    <select id="querycgrkreport" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select sum(qn1y) as "qn1y",sum(qn2y) as "qn2y",sum(qn3y) as "qn3y",
+sum(qn4y) as "qn4y",sum(qn5y) as "qn5y",sum(qn6y) as "qn6y",
+sum(qn7y) as "qn7y",sum(qn8y) as "qn8y",
+sum(qn9y) as "qn9y",sum(qn10y) as "qn10y",
+sum(qn11y) as "qn11y",sum(qn12y) as "qn12y",sum(jn1y) as "jn1y",sum(jn2y) as "jn2y",
+sum(jn3y) as "jn3y",sum(jn4y) as "jn4y",sum(jn5y) as "jn5y",sum(jn6y) as "jn6y",
+sum(jn7y) as "jn7y",sum(jn8y) as "jn8y",sum(jn9y) as "jn9y",sum(jn10y) as "jn10y",
+sum(jn11y) as "jn11y",sum(jn12y) as "jn12y"
+from (select 
+(case when k.budat = #queryyear#-1||'-01' then k.dmbtr else 0 end) as qn1y,
+(case when k.budat = #queryyear#-1||'-02' then k.dmbtr else 0 end) as qn2y,
+(case when k.budat = #queryyear#-1||'-03' then k.dmbtr else 0 end) as qn3y,
+(case when k.budat = #queryyear#-1||'-04' then k.dmbtr else 0 end) as qn4y,
+(case when k.budat = #queryyear#-1||'-05' then k.dmbtr else 0 end) as qn5y,
+(case when k.budat = #queryyear#-1||'-06' then k.dmbtr else 0 end) as qn6y,
+(case when k.budat = #queryyear#-1||'-07' then k.dmbtr else 0 end) as qn7y,
+(case when k.budat = #queryyear#-1||'-08' then k.dmbtr else 0 end) as qn8y,
+(case when k.budat = #queryyear#-1||'-09' then k.dmbtr else 0 end) as qn9y,
+(case when k.budat = #queryyear#-1||'-10' then k.dmbtr else 0 end) as qn10y,
+(case when k.budat = #queryyear#-1||'-11' then k.dmbtr else 0 end) as qn11y,
+(case when k.budat = #queryyear#-1||'-12' then k.dmbtr else 0 end) as qn12y,
+(case when k.budat = #queryyear#||'-01' then k.dmbtr else 0 end) as jn1y,
+(case when k.budat = #queryyear#||'-02' then k.dmbtr else 0 end) as jn2y,
+(case when k.budat = #queryyear#||'-03' then k.dmbtr else 0 end) as jn3y,
+(case when k.budat = #queryyear#||'-04' then k.dmbtr else 0 end) as jn4y,
+(case when k.budat = #queryyear#||'-05' then k.dmbtr else 0 end) as jn5y,
+(case when k.budat = #queryyear#||'-06' then k.dmbtr else 0 end) as jn6y,
+(case when k.budat = #queryyear#||'-07' then k.dmbtr else 0 end) as jn7y,
+(case when k.budat = #queryyear#||'-08' then k.dmbtr else 0 end) as jn8y,
+(case when k.budat = #queryyear#||'-09' then k.dmbtr else 0 end) as jn9y,
+(case when k.budat = #queryyear#||'-10' then k.dmbtr else 0 end) as jn10y,
+(case when k.budat = #queryyear#||'-11' then k.dmbtr else 0 end) as jn11y,
+(case when k.budat = #queryyear#||'-12' then k.dmbtr else 0 end) as jn12y  from (select sum(t.dmbtr) as dmbtr,to_char(t2.budat, 'yyyy-MM') as budat
+          from genl_receipts_mseg t
+          left join genl_purchase_ekko t1 on t.ebeln = t1.ebeln
+          left join genl_receipts_mkpf t2 on t.mblnr = t2.mblnr
+                                         and t.mjahr = t2.mjahr
+         where   t1.ekorg = '3002'
+         group by to_char(t2.budat, 'yyyy-MM'))k)</select>
+</sqlMap>

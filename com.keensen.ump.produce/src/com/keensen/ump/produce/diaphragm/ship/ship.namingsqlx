@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <select id="queryTumo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select t1.RECORD_ID       as "recordId",t1.is_wx "isWx",t1.worker_id "workerId"
+       ,t1.spec_id "spectId",t1.line_id "lineId",
+       t1.LINE_NAME       as "lineName",
+       t1.LINE_CODE       as "lineCode",
+       t1.PRODUCE_DT      as "produceDt",
+       t1.BATCH_NO        as "batchNo",
+       t1.IS_QUALIFIED    as "isQualified",
+       t1.OUT_LENGTH      as "outLength",
+       t1.LOSS            as "loss",
+       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+       t1.PLAN_NO         as "planNo",
+       t1.ORDER_NO        as "orderNo",
+       t1.SUP_ID          as "supId",
+       t1.SUP_NAME        as "supName",
+       t1.SUP_CODE        as "supCode",
+       t1.DIMO_BATCH_NO   as "dimoBatchNo",
+       t1.OUT_BATCH_NO    as "outBatchNo",
+       t1.DEPT_NAME       as "deptName",
+       t1.STAFF_NAME      as "staffName",
+       t1.STAFF_CODE      as "staffCode",
+       t1.PERF_FLAG_ID    as "perfFlagId",
+       t1.PERF_FLAG_NAME  as "perfFlagName",
+       t1.PERF_FLAG_CODE  as "perfFlagCode",
+       decode(t2.RECORD_ID,null,'n','y') "shipflag",
+       nvl(t2.ifconfirm,'n')    "ifconfirm",
+       t1.mater_class_code as "materClassCode",
+       t1.mater_spec_code as "materSpecCode",
+       t1.mater_class_Name as "materClassName",
+       t1.mater_spec_Name as "materSpecName",
+       ddflag "ddflag"
+  from v_ks_tumo2 t1
+  left join KS_PROD_DIAPHRAGM_SHIP t2 
+    on t1.RECORD_ID = t2.RECORD_ID
+ 
+ where 1=1
+    <isNotNull prepend="and" property="ifconfirm"> 
+		       nvl(t2.ifconfirm,'n') = #ifconfirm#
+	</isNotNull>
+    <isNotNull prepend="and" property="ddflag"> 
+		       t1.ddflag = #ddflag#
+	</isNotNull>
+    <isNotNull prepend="and" property="perfFlagId"> 
+		       t1.PERF_FLAG_ID = #perfFlagId#
+	</isNotNull>
+ 	<isNotNull prepend="and" property="shipflag"> 
+		       decode(t2.RECORD_ID,null,'n','y') = #shipflag#
+	</isNotNull>
+    <isNotNull prepend="and" property="yrkflag"> 
+		       decode(w.batch_no,null,'否','是') = #yrkflag#
+	</isNotNull>
+ 	<isNotNull prepend="and" property="lineId"> 
+		       t1.line_id = #lineId#
+	</isNotNull> 
+	<isNotNull prepend="and" property="specId"> 
+		       t1.spec_id = #specId#
+	</isNotNull>
+	<isNotNull prepend="and" property="workerId"> 
+		       t1.worker_Id = #workerId#
+	</isNotNull>
+	<isNotNull prepend="and" property="supId"> 
+		       t1.SUP_ID = #supId#
+	</isNotNull>
+	<isNotNull prepend="and" property="isWx"> 
+		       t1.is_wx = #isWx#
+	</isNotNull>		
+    <isNotNull prepend="and" property="recordId"> 
+		       t1.RECORD_ID = #recordId#
+	</isNotNull>
+ 
+	<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_No = #batchNo#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="batchNo2"> 
+		       t1.batch_No like '%' || upper(#batchNo2#) || '%'
+	</isNotNull>
+	
+	<isNotNull prepend = "and"  property = "produceDtStart"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #produceDtStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "produceDtEnd"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #produceDtEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="orderNo"> 
+		       upper(t1.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo"> 
+		       upper(t1.plan_No) like '%' || upper(#planNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="dimoBatchNo"> 
+		       t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'
+	</isNotNull>
+ order by t1.produce_dt desc
+ </select>
+ 
+ <select id="queryTumoSum" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  SELECT SUM(T1.OUT_LENGTH) AS "outLength",
+       SUM(T1.LOSS) AS "loss",
+       SUM(T1.USEFUL_LENGTH) AS "usefulLength",
+       SUM(T1.QUALIFID_LENGTH) AS "qualifidLength",
+       SUM(DECODE(T1.PERF_FLAG_CODE, 'A', T1.QUALIFID_LENGTH, 0)) AS "aqualifidLength",
+       SUM(DECODE(T1.PERF_FLAG_CODE, 'B', T1.QUALIFID_LENGTH, 0)) AS "bqualifidLength",
+       SUM(DECODE(T1.PERF_FLAG_CODE, 'C', T1.QUALIFID_LENGTH, 0)) AS "cqualifidLength"
+  FROM V_KS_TUMO2 T1
+  LEFT JOIN KS_PROD_DIAPHRAGM_SHIP T2
+    ON T1.RECORD_ID = T2.RECORD_ID
+ WHERE 1 = 1
+    <isNotNull prepend="and" property="ifconfirm"> 
+		       nvl(t2.ifconfirm,'n') = #ifconfirm#
+	</isNotNull>
+    <isNotNull prepend="and" property="ddflag"> 
+		       t1.ddflag = #ddflag#
+	</isNotNull>
+    <isNotNull prepend="and" property="perfFlagId"> 
+		       t1.PERF_FLAG_ID = #perfFlagId#
+	</isNotNull>
+ 	<isNotNull prepend="and" property="shipflag"> 
+		       decode(t2.RECORD_ID,null,'n','y') = #shipflag#
+	</isNotNull>
+    <isNotNull prepend="and" property="yrkflag"> 
+		       decode(w.batch_no,null,'否','是') = #yrkflag#
+	</isNotNull>
+ 	<isNotNull prepend="and" property="lineId"> 
+		       t1.line_id = #lineId#
+	</isNotNull> 
+	<isNotNull prepend="and" property="specId"> 
+		       t1.spec_id = #specId#
+	</isNotNull>
+	<isNotNull prepend="and" property="workerId"> 
+		       t1.worker_Id = #workerId#
+	</isNotNull>
+	<isNotNull prepend="and" property="supId"> 
+		       t1.SUP_ID = #supId#
+	</isNotNull>
+	<isNotNull prepend="and" property="isWx"> 
+		       t1.is_wx = #isWx#
+	</isNotNull>		
+    <isNotNull prepend="and" property="recordId"> 
+		       t1.RECORD_ID = #recordId#
+	</isNotNull>
+ 
+	<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_No = #batchNo#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="batchNo2"> 
+		       t1.batch_No like '%' || upper(#batchNo2#) || '%'
+	</isNotNull>
+	
+	<isNotNull prepend = "and"  property = "produceDtStart"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #produceDtStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "produceDtEnd"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #produceDtEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="orderNo"> 
+		       upper(t1.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo"> 
+		       upper(t1.plan_No) like '%' || upper(#planNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="dimoBatchNo"> 
+		       t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'
+	</isNotNull>
+
+ </select>
+ 
+ <select id="queryFhd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",
+       t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id",
+       nvl(t2.ifconfirm,'n')    "ifconfirm",
+       t1.LINE_CODE       as "lineCode",
+       t1.PRODUCE_DT      as "produceDt",
+       t1.BATCH_NO        as "batchNo",
+       t1.IS_QUALIFIED    as "isQualified",
+       t1.OUT_LENGTH      as "outLength",
+       t1.LOSS            as "loss",
+       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+       t1.PLAN_NO         as "planNo",
+       t1.ORDER_NO        as "orderNo",
+       t1.SUP_ID          as "supId",
+       t1.SUP_NAME        as "supName",
+       t1.SUP_CODE        as "supCode",
+       t1.DIMO_BATCH_NO   as "dimoBatchNo",
+       t1.OUT_BATCH_NO    as "outBatchNo",
+       t1.DEPT_NAME       as "deptName",
+       t1.STAFF_NAME      as "staffName",
+       t1.STAFF_CODE      as "staffCode",
+       t1.PERF_FLAG_ID    as "perfFlagId",
+       t1.PERF_FLAG_NAME  as "perfFlagName",
+       t1.PERF_FLAG_CODE  as "perfFlagCode",
+       decode(t2.RECORD_ID,null,0,1) "rkflag",
+       t1.mater_class_code as "materClassCode",
+       t1.mater_spec_code as "materSpecCode",
+       t1.mater_class_Name as "materClassName",
+       t1.mater_spec_Name as "materSpecName"
+  from KS_PROD_DIAPHRAGM_ship t2
+  left join V_KS_TUMO t1 
+    on t1.RECORD_ID = t2.RECORD_ID
+ where 1=1
+    <isNotNull prepend="and" property="ifconfirm"> 
+		       nvl(t2.ifconfirm,'n') = #ifconfirm#
+	</isNotNull>
+   <isNotNull prepend="and" property="perfFlagId"> 
+		       t1.PERF_FLAG_ID = #perfFlagId#
+	</isNotNull>
+ 
+   <isNotNull prepend="and" property="lineId"> 
+		       t1.line_id = #lineId#
+	</isNotNull> 
+	<isNotNull prepend="and" property="specId"> 
+		       t1.spec_id = #specId#
+	</isNotNull>
+	<isNotNull prepend="and" property="workerId"> 
+		       t1.worker_Id = #workerId#
+	</isNotNull>
+	<isNotNull prepend="and" property="supId"> 
+		       t1.SUP_ID = #supId#
+	</isNotNull>
+	<isNotNull prepend="and" property="isWx"> 
+		       t1.is_wx = #isWx#
+	</isNotNull>		
+    <isNotNull prepend="and" property="recordId"> 
+		       t1.RECORD_ID = #recordId#
+	</isNotNull>
+
+	<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_No = #batchNo#
+	</isNotNull>
+	
+	
+	<isNotNull prepend="and" property="batchNo2"> 
+		       t1.batch_No like '%' || upper(#batchNo2#) || '%'
+	</isNotNull>
+	
+	<isNotNull prepend = "and"  property = "produceDtStart"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "produceDtEnd"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="orderNo"> 
+		       upper(t1.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo"> 
+		       upper(t1.plan_No)  like '%' || upper(#planNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="dimoBatchNo"> 
+		       t1.DIMO_BATCH_NO  like '%' || #dimoBatchNo# || '%'
+	</isNotNull>
+ order by t1.produce_dt desc
+     </select>
+ 
+ 	<select id="queryOrder" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      
+	     SELECT T1.ID                "id",t1.ORDER_DATE "orderDate",
+	       T1.ORDER_NO          "orderNo",
+	       T1.AMOUNT            "amount",
+           T1.SPEC_ID           "specId",T1.remark "remark",
+	       T99.MATER_CLASS_CODE AS "materClassCode",
+	       T22.MATER_SPEC_CODE  AS "materSpecCode",
+	       T99.MATER_CLASS_NAME AS "materClassName",
+	       T22.MATER_SPEC_NAME  AS "materSpecName"
+	  FROM KS_PROD_DIAPHRAGM_ORDER T1
+	  LEFT JOIN QINSEN.PARA_MATER_SPEC T22
+	    ON T1.SPEC_ID = T22.MATER_SPEC_ID
+	  LEFT JOIN QINSEN.PARA_MATER_CLASS T99
+	    ON T99.MATER_CLASS_ID = T22.MATER_CLASS_ID
+     where 1=1
+     <isNotNull prepend = "and"  property = "orderDateStart"> 
+          to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &gt;=  #orderDateStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "orderDateEnd"> 
+          to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &lt;=  #orderDateEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="specId"> 
+		       t1.spec_id = #specId#
+	</isNotNull>
+	<isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderNo"> 
+		       upper(t1.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="orderNo2"> 
+		       t1.order_No = #orderNo2# 
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo"> 
+		       t1.order_No in( select order_No from KS_PROD_DIAPHRAGM_PLAN where plan_no like '%' || #planNo# || '%')
+	</isNotNull>
+     </select>
+     
+     <select id="queryPlan" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      
+	     SELECT T1.ID                "id", T1.plan_date "planDate",
+	       T1.ORDER_NO          "orderNo",
+	       T1.PLAN_NO          "planNo",
+	       T1.AMOUNT            "amount",
+	       T2.amount            "orderAmount",t2.ORDER_DATE "orderDate",
+           T1.SPEC_ID           "specId",T1.remark "remark",
+	       T99.MATER_CLASS_CODE AS "materClassCode",
+	       T22.MATER_SPEC_CODE  AS "materSpecCode",
+	       T99.MATER_CLASS_NAME AS "materClassName",
+	       T22.MATER_SPEC_NAME  AS "materSpecName"
+	  FROM KS_PROD_DIAPHRAGM_PLAN T1
+	  LEFT JOIN KS_PROD_DIAPHRAGM_ORDER T2
+	    ON T1.ORDER_NO = T2.ORDER_NO
+	  LEFT JOIN QINSEN.PARA_MATER_SPEC T22
+	    ON T1.SPEC_ID = T22.MATER_SPEC_ID
+	  LEFT JOIN QINSEN.PARA_MATER_CLASS T99
+	    ON T99.MATER_CLASS_ID = T22.MATER_CLASS_ID
+     where 1=1
+     <isNotNull prepend="and" property="specId"> 
+		       t1.spec_id = #specId#
+	</isNotNull>
+	<isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderNo"> 
+		       upper(t1.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo"> 
+		       upper(t1.PLAN_NO) like '%' || upper(#planNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo2"> 
+		       t1.PLAN_NO = #planNo2# 
+	</isNotNull>
+	
+	<isNotNull prepend = "and"  property = "planDateStart"> 
+          to_char(t1.plan_date,'yyyy-MM-dd')  &gt;=  #planDateStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "planDateEnd"> 
+          to_char(t1.plan_date,'yyyy-MM-dd')  &lt;=  #planDateEnd#
+     </isNotNull>
+	order by T2.ORDER_NO,t1.PLAN_NO
+     </select>
+     
+     <select id="queryOrderTrace" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	     SELECT T.ORDER_NO           "orderNo",
+	       T.SPEC_ID            "specId",
+	       T99.MATER_CLASS_CODE AS "materClassCode",
+	       T22.MATER_SPEC_CODE  AS "materSpecCode",
+	       T99.MATER_CLASS_NAME AS "materClassName",
+	       T22.MATER_SPEC_NAME  AS "materSpecName",
+	       T.ORDER_DATE         "orderDate",
+	       T.AMOUNT             "orderAmount",
+	       T2.PLAN_NO           "planNo",
+	       T2.PLAN_DATE         "planDate",
+	       T2.AMOUNT            "planAmount",T2.remark "planRemark",
+	       TAMOUNT              "tamount",
+	       camount   "camount",
+	       aamount   "aamount",
+	       to_char(aamount/tamount * 100, 'FM990.00') || '%'    "passrate",
+	       sendamount "sendamount"
+	  FROM KS_PROD_DIAPHRAGM_ORDER T
+	  LEFT JOIN QINSEN.PARA_MATER_SPEC T22
+	    ON T.SPEC_ID = T22.MATER_SPEC_ID
+	  LEFT JOIN QINSEN.PARA_MATER_CLASS T99
+	    ON T99.MATER_CLASS_ID = T22.MATER_CLASS_ID
+	  LEFT JOIN KS_PROD_DIAPHRAGM_PLAN T2
+	    ON T.ORDER_NO = T2.ORDER_NO
+	  LEFT JOIN (SELECT V.ORDER_NO, V.PLAN_NO, SUM(V.OUT_LENGTH) TAMOUNT
+	               FROM V_KS_TUMO_ALL V
+	              WHERE V.ORDER_NO IS NOT NULL
+	                AND V.PLAN_NO IS NOT NULL
+	              GROUP BY V.ORDER_NO, V.PLAN_NO) T3
+	    ON T.ORDER_NO = T3.ORDER_NO
+	   AND T2.PLAN_NO = T3.PLAN_NO
+	   LEFT JOIN (SELECT V.ORDER_NO, V.PLAN_NO, SUM(V.QUALIFID_LENGTH) CAMOUNT
+                 FROM V_KS_TUMO_ALL V
+                WHERE V.ORDER_NO IS NOT NULL
+                  AND V.PLAN_NO IS NOT NULL
+                GROUP BY V.ORDER_NO, V.PLAN_NO) T4
+	    ON T.ORDER_NO = T4.ORDER_NO
+	   AND T2.PLAN_NO = T4.PLAN_NO
+	   LEFT JOIN (SELECT V.ORDER_NO, V.PLAN_NO, SUM(V.QUALIFID_LENGTH) AAMOUNT
+                 FROM V_KS_TUMO_ALL V
+                WHERE V.ORDER_NO IS NOT NULL
+                  AND V.PLAN_NO IS NOT NULL
+                  AND v.perf_flag_code = 'A'
+                GROUP BY V.ORDER_NO, V.PLAN_NO) T5
+	    ON T.ORDER_NO = T5.ORDER_NO
+	   AND T2.PLAN_NO = T5.PLAN_NO
+	   left join (SELECT SUM(QUALIFID_LENGTH) sendamount,plan_no,order_no
+		FROM
+		(select t.batch_no,v.plan_no,v.order_no,V.QUALIFID_LENGTH from KS_PROD_DIAPHRAGM_SHIP t
+		LEFT JOIN v_ks_tumo_all v ON v.batch_no=t.batch_no)
+		GROUP BY plan_no,order_no) t6
+		 ON T.ORDER_NO = T6.ORDER_NO
+	   AND T2.PLAN_NO = T6.PLAN_NO
+     where 1=1
+     <isNotNull prepend="and" property="orderNo"> 
+		       upper(t.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo"> 
+		       upper(t2.PLAN_NO) like '%' || upper(#planNo#) || '%'
+	</isNotNull>
+     <isNotNull prepend = "and"  property = "planDateStart"> 
+          to_char(t2.plan_date,'yyyy-MM-dd')  &gt;=  #planDateStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "planDateEnd"> 
+          to_char(t2.plan_date,'yyyy-MM-dd')  &lt;=  #planDateEnd#
+     </isNotNull>
+	order by T.ORDER_NO,t2.PLAN_NO
+     </select>
+     
+     <select id="queryTumoAll" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select t1.RECORD_ID       as "recordId",t1.is_wx "isWx",t1.worker_id "workerId"
+       ,t1.spec_id "spectId",t1.line_id "lineId",
+       t1.judge_dt "judgeDt",
+       t1.tumo_remark "tumoRemark",
+       t1.LINE_NAME       as "lineName",
+       t1.LINE_CODE       as "lineCode",
+       t1.PRODUCE_DT      as "produceDt",
+       t1.BATCH_NO        as "batchNo",
+       t1.IS_QUALIFIED    as "isQualified",
+       t1.OUT_LENGTH      as "outLength",
+       t1.LOSS            as "loss",
+       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+       t1.PLAN_NO         as "planNo",
+       t1.ORDER_NO        as "orderNo",
+       t1.SUP_ID          as "supId",
+       t1.SUP_NAME        as "supName",
+       t1.SUP_CODE        as "supCode",
+       t1.DIMO_BATCH_NO   as "dimoBatchNo",
+       t1.OUT_BATCH_NO    as "outBatchNo",
+       t1.DEPT_NAME       as "deptName",
+       t1.STAFF_NAME      as "staffName",
+       t1.STAFF_CODE      as "staffCode",
+       t1.PERF_FLAG_ID    as "perfFlagId",
+       t1.PERF_FLAG_NAME  as "perfFlagName",
+       t1.PERF_FLAG_CODE  as "perfFlagCode",
+       decode(t2.RECORD_ID,null,'n','y') "shipflag",
+       nvl(t2.ifconfirm,'n')    "ifconfirm",
+       t1.mater_class_code as "materClassCode",
+       t1.mater_spec_code as "materSpecCode",
+       t1.mater_class_Name as "materClassName",
+       t1.mater_spec_Name as "materSpecName"
+       
+  from v_ks_tumo_all t1
+  left join KS_PROD_DIAPHRAGM_SHIP t2 
+    on t1.RECORD_ID = t2.RECORD_ID
+ 
+ where 1=1
+    <isNotNull prepend="and" property="ifconfirm"> 
+		       nvl(t2.ifconfirm,'n') = #ifconfirm#
+	</isNotNull>
+  
+    <isNotNull prepend="and" property="perfFlagId"> 
+		       t1.PERF_FLAG_ID = #perfFlagId#
+	</isNotNull>
+ 	<isNotNull prepend="and" property="shipflag"> 
+		       decode(t2.RECORD_ID,null,'n','y') = #shipflag#
+	</isNotNull>
+    <isNotNull prepend="and" property="yrkflag"> 
+		       decode(w.batch_no,null,'否','是') = #yrkflag#
+	</isNotNull>
+ 	<isNotNull prepend="and" property="lineId"> 
+		       t1.line_id = #lineId#
+	</isNotNull> 
+	<isNotNull prepend="and" property="specId"> 
+		       t1.spec_id = #specId#
+	</isNotNull>
+	<isNotNull prepend="and" property="workerId"> 
+		       t1.worker_Id = #workerId#
+	</isNotNull>
+	<isNotNull prepend="and" property="supId"> 
+		       t1.SUP_ID = #supId#
+	</isNotNull>
+	<isNotNull prepend="and" property="isWx"> 
+		       t1.is_wx = #isWx#
+	</isNotNull>		
+    <isNotNull prepend="and" property="recordId"> 
+		       t1.RECORD_ID = #recordId#
+	</isNotNull>
+ 
+	<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_No = #batchNo#
+	</isNotNull>
+	<isNotNull prepend = "and"  property = "produceDtStart"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #produceDtStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "produceDtEnd"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #produceDtEnd#
+     </isNotNull>
+      <isNotNull prepend="and" property="orderNo"> 
+		       upper(t1.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo"> 
+		       upper(t1.plan_No) like '%' || upper(#planNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="dimoBatchNo"> 
+		       t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'
+	</isNotNull>
+	
+	
+	<isNotNull prepend="and" property="orderNo2"> 
+		       t1.order_No = #orderNo2# 
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo2"> 
+		       t1.plan_No = #planNo2# 
+	</isNotNull>
+	
+ order by t1.produce_dt desc
+ </select>
+ </sqlMap>

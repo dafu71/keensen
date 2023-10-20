@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan.GenlInvoiceList" table="GENL_INVOICE_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="jspz" type="string">
+                <column length="15" name="JSPZ"/>
+            </key-property>
+            <key-property name="jspzh" type="string">
+                <column length="4" name="JSPZH"/>
+            </key-property>
+            <key-property name="mjahr" type="string">
+                <column length="4" name="MJAHR"/>
+            </key-property>
+        </composite-id>
+        <property name="mblnr" type="string">
+            <column length="10" name="MBLNR"/>
+        </property>
+        <property name="zeile" type="string">
+            <column length="4" name="ZEILE"/>
+        </property>
+        <property name="budat" type="date">
+            <column name="BUDAT"/>
+        </property>
+        <property name="shkzg" type="string">
+            <column length="1" name="SHKZG"/>
+        </property>
+        <property name="bwart" type="string">
+            <column length="3" name="BWART"/>
+        </property>
+        <property name="djssl" type="big_decimal">
+            <column default="0&#10;" length="13" name="DJSSL" precision="13" scale="3"/>
+        </property>
+        <property name="djsslCk" type="big_decimal">
+            <column default="0&#10;" length="13" name="DJSSL_CK" precision="13" scale="3"/>
+        </property>
+        <property name="meins" type="string">
+            <column length="3" name="MEINS"/>
+        </property>
+        <property name="hjsje" type="big_decimal">
+            <column default="0&#10;" length="13" name="HJSJE" precision="13" scale="2"/>
+        </property>
+        <property name="jsdj" type="big_decimal">
+            <column default="0&#10;" length="13" name="JSDJ" precision="13" scale="2"/>
+        </property>
+        <property name="jsdw" type="int">
+            <column default="1&#10;" length="5" name="JSDW"/>
+        </property>
+        <property name="kbetr" type="big_decimal">
+            <column default="0&#10;" length="11" name="KBETR" precision="11" scale="2"/>
+        </property>
+        <property name="kpein" type="int">
+            <column default="0&#10;" length="5" name="KPEIN"/>
+        </property>
+        <property name="kmein" type="string">
+            <column length="5" name="KMEIN"/>
+        </property>
+        <property name="flagHtj" type="string">
+            <column length="1" name="FLAG_HTJ"/>
+        </property>
+        <property name="kalsm" type="string">
+            <column length="6" name="KALSM"/>
+        </property>
+        <property name="hqtkkje" type="big_decimal">
+            <column default="0&#10;" length="13" name="HQTKKJE" precision="13" scale="2"/>
+        </property>
+        <property name="hflje" type="big_decimal">
+            <column default="0&#10;" length="13" name="HFLJE" precision="13" scale="2"/>
+        </property>
+        <property name="hyfje" type="big_decimal">
+            <column default="0&#10;" length="13" name="HYFJE" precision="13" scale="2"/>
+        </property>
+        <property name="hkkje" type="big_decimal">
+            <column default="0&#10;" length="13" name="HKKJE" precision="13" scale="2"/>
+        </property>
+        <property name="zcdf" type="big_decimal">
+            <column default="0&#10;" length="13" name="ZCDF" precision="13" scale="2"/>
+        </property>
+        <property name="lfbnr" type="string">
+            <column length="10" name="LFBNR"/>
+        </property>
+        <property name="lfpos" type="string">
+            <column length="4" name="LFPOS"/>
+        </property>
+        <property name="lfgja" type="string">
+            <column length="4" name="LFGJA"/>
+        </property>
+        <property name="shqtk" type="string">
+            <column length="20" name="SHQTK"/>
+        </property>
+        <property name="hshqtk" type="string">
+            <column length="20" name="HSHQTK"/>
+        </property>
+        <property name="shqtkbh" type="string">
+            <column length="300" name="SHQTKBH"/>
+        </property>
+        <property name="waers" type="string">
+            <column length="5" name="WAERS"/>
+        </property>
+        <property name="belnr" type="string">
+            <column length="10" name="BELNR"/>
+        </property>
+        <property name="buzei" type="string">
+            <column length="3" name="BUZEI"/>
+        </property>
+        <property name="gjahr" type="string">
+            <column length="4" name="GJAHR"/>
+        </property>
+        <property name="ekorg" type="string">
+            <column length="4" name="EKORG"/>
+        </property>
+        <property name="ekgrp" type="string">
+            <column length="3" name="EKGRP"/>
+        </property>
+        <property name="ebeln" type="string">
+            <column length="10" name="EBELN"/>
+        </property>
+        <property name="ebelp" type="string">
+            <column length="5" name="EBELP"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="20" name="MATNR"/>
+        </property>
+        <property name="matkl" type="string">
+            <column length="15" name="MATKL"/>
+        </property>
+        <property name="aufnr" type="string">
+            <column length="12" name="AUFNR"/>
+        </property>
+        <property name="menge" type="string">
+            <column default="'0'" length="20" name="MENGE"/>
+        </property>
+        <property name="zwrildt" type="timestamp">
+            <column name="ZWRILDT"/>
+        </property>
+        <property name="zwriusr" type="string">
+            <column length="12" name="ZWRIUSR"/>
+        </property>
+        <property name="ztext" type="string">
+            <column length="2000" name="ZTEXT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan.GenlInvoiceHead" table="GENL_INVOICE_HEAD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="jspz" type="string">
+                <column length="15" name="JSPZ"/>
+            </key-property>
+            <key-property name="mjahr" type="string">
+                <column length="4" name="MJAHR"/>
+            </key-property>
+        </composite-id>
+        <property name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="jsje" type="big_decimal">
+            <column default="0&#10;" length="13" name="JSJE" precision="13" scale="2"/>
+        </property>
+        <property name="mwskz" type="string">
+            <column length="2" name="MWSKZ"/>
+        </property>
+        <property name="taxrt" type="big_decimal">
+            <column default="0&#10;" length="8" name="TAXRT" precision="8" scale="5"/>
+        </property>
+        <property name="flje" type="big_decimal">
+            <column default="0&#10;" length="13" name="FLJE" precision="13" scale="2"/>
+        </property>
+        <property name="yfje" type="big_decimal">
+            <column default="0&#10;" length="13" name="YFJE" precision="13" scale="2"/>
+        </property>
+        <property name="qtkkje" type="big_decimal">
+            <column default="0&#10;" length="13" name="QTKKJE" precision="13" scale="2"/>
+        </property>
+        <property name="tax" type="big_decimal">
+            <column default="0&#10;" length="13" name="TAX" precision="13" scale="2"/>
+        </property>
+        <property name="usnam" type="string">
+            <column length="12" name="USNAM"/>
+        </property>
+        <property name="datum" type="date">
+            <column name="DATUM"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="1" name="STATU"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+        <property name="print" type="long">
+            <column default="1&#10;" length="22" name="PRINT"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false" threshold="null">
+    <appender class="org.apache.log4j.ConsoleAppender" name="CONSOLE">
+        <param name="Target" value="System.out"/>
+        <param name="Threshold" value="DEBUG"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss,SSS}][%-5p][%c{1}:%L]  %m%n"/>
+        </layout>
+    </appender>
+    <appender class="com.primeton.ext.common.logging.AppRollingFileAppender" name="ROLLING_FILE">
+        <param name="Encoding" value="UTF-8"/>
+        <param name="File" value="logs/custom.log"/>
+        <param name="Threshold" value="DEBUG"/>
+        <param name="Append" value="true"/>
+        <param name="MaxFileSize" value="10MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss,SSS}][%5p][%C:%L] %m%n"/>
+        </layout>
+    </appender>
+    
+    <!-- frame FileAppender config -->
+    <appender class="com.zoomlion.hjsrm.clib.log.custom.AppRollingFileAppender" name="FRAME_FILE">
+        <param name="Encoding" value="UTF-8"/>
+        <param name="File" value="logs/frame.log"/>
+        <param name="Threshold" value="DEBUG"/>
+        <param name="Append" value="true"/>
+        <param name="MaxFileSize" value="10MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss,SSS}][%5p][%C:%L] %m%n"/>
+        </layout>
+    </appender>
+
+    
+    <logger additivity="false" name="custom">
+        <level value="DEBUG"/>
+        <appender-ref ref="ROLLING_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    
+    <!-- frame logs config begain-->
+    <logger additivity="true" name="com.zoomlion.hjsrm.clib">
+        <level value="DEBUG"/>
+        <appender-ref ref="FRAME_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger additivity="true" name="com.zoomlion.hjsrm.core">
+        <level value="DEBUG"/>
+        <appender-ref ref="FRAME_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger additivity="true" name="com.zoomlion.hjsrm.frame.auth">
+        <level value="DEBUG"/>
+        <appender-ref ref="FRAME_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger additivity="true" name="com.zoomlion.hjsrm.frame.bclib">
+        <level value="DEBUG"/>
+        <appender-ref ref="FRAME_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger additivity="true" name="com.zoomlion.hjsrm.frame.org">
+        <level value="DEBUG"/>
+        <appender-ref ref="FRAME_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger additivity="true" name="com.zoomlion.hjsrm.frame.pub">
+        <level value="DEBUG"/>
+        <appender-ref ref="FRAME_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger additivity="true" name="com.zoomlion.hjsrm.frame.rights">
+        <level value="DEBUG"/>
+        <appender-ref ref="FRAME_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger additivity="true" name="com.zoomlion.hjsrm.frame.tools">
+        <level value="DEBUG"/>
+        <appender-ref ref="FRAME_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger additivity="true" name="com.zoomlion.hjsrm.frame.ui">
+        <level value="DEBUG"/>
+        <appender-ref ref="FRAME_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+     <!-- frame logs config end-->
+</log4j:configuration>

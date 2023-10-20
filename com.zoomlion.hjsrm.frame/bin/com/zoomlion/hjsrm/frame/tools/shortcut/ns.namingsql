@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.tools.shortcut.ns">
+    <!-- 查询当前登录操作员对应的快捷方式菜单 -->
+    <select id="queryShortCutByOperator" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcResource">select r.* from t_ac_opershortcut o
+		join t_ac_resource r on o.resid = r.resid
+		where o.operatorid = #operatorid#
+		order by o.orderno</select>
+</sqlMap>

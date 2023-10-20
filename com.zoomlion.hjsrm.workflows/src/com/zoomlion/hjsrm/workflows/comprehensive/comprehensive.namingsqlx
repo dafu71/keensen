@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:雷德猛 -->
+<sqlMap>
+   <!--查询综合工作单信息 --> 
+   <!--2013-11-15 增加综合工单查询视图 v_bs_worklistview ；增加工单状态查询条件 @曹桢 -->
+   <!--2014-2-13  部门联络单地址查询及显示 @傅力 -->
+    <select id="querySrmOrder" parameterClass="java.util.HashMap"  resultClass="commonj.sdo.DataObject">
+	    select wp.pkid as "pkid",
+           wp.worklistinfopkid as "worklistinfopkid",
+           wp.workitemid as "workitemid",
+           wp.processinstid as "processinstid",
+           wp.applyinfopkid as "applyinfopkid",
+           wp.busitype as "busitype",
+           wp.busitypename as "busitypename",
+           wp.sqbusitype as "sqbusitype",
+           wp.sqbusitypename as "sqbusitypename",
+           wp.userid as "userid",
+           wp.username as "username",
+           wp.batchid as "batchid",
+           wp.planinfopkid as "planinfopkid",
+           to_char(wp.startdate, 'yyyy-MM-dd HH24:mi:ss') as "startdate",
+           wp.enddate as "enddate",
+           wp.urglvl as "urglvl",
+           wp.isprint as "isprint",
+           wp.chnltype as "chnltype",
+           wp.appealchannel as "appealchannel",
+           og.orgname as "appealchannelname",
+           wp.receivedeptname as "receivedeptname",
+           wp.receivedept "receivedept",
+           wp.gasaddress || decode(wp.addressbyname, null, '', 
+		       	'（' || wp.addressbyname || '）') as "gasaddress",
+           to_char(wp.bookdate, 'yyyy-mm-dd') as "bookdate",
+           wp.activityinstname as "activityinstname",
+           wp.processinstname as "processinstname",
+           wp.processdefid as "processdefid",
+           wp.processdefname as "processdefname",
+           wp.currentstate as "currentstate",
+           to_char(wp.claimbookdate, 'yyyy-MM-dd') as "claimbookdate",
+           to_char(wp.createtime, 'yyyy-MM-dd HH24:mi:ss') as "createtime",
+             <!--2013-12-29 修改为查询流程状态  @何群吉 -->
+           decode(wp.currentstate, 1,'未启动',2,'运行',3,'已挂起',7,'已完成',8,'已终止') as "currentstatename",
+           wp.worklisttype as "worklisttype",
+           <!--2013-12-30 增加查询领取人字段  @吕俊涛 -->
+           wp.createby as "createby",
+           decode(wp.currentstate, 2, wp.partiname, 3, wp.partiname, '-') as "participant"
+      from v_bs_worklistview wp,
+           t_kh_userinfo usr,
+       	   t_om_organization og
+		  where wp.userid = usr.userid(+) 
+		    and wp.appealchannel = og.orgid(+)
+   			and og.delflag(+) = 'n'
+		    and wp.busitype != 'BS205'
+		    and wp.dataorgid = #dataorgid# 
+		    and usr.dataorgid(+) = #dataorgid# 
+		  <!--2014-1-15 增加地址模糊查询  @傅力 -->
+		  <isNotNull  prepend = "and" property = "gasaddress"> 
+		          wp.gasaddress like CONCAT('%',CONCAT(#gasaddress#,'%'))
+		   </isNotNull>
+		  <isNotNull  prepend = "and" property = "addressbyname"> 
+		          wp.addressbyname like CONCAT('%',CONCAT(#addressbyname#,'%'))
+		   </isNotNull>
+		   <isNotNull  prepend = "and" property = "worklisttype"> 
+		          wp.worklisttype = #worklisttype#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "planinfopkid"> 
+		          wp.planinfopkid = #planinfopkid#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "batchid"> 
+		          wp.batchid = #batchid#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "isprint"> 
+		          wp.isprint = #isprint#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "userid"> 
+		          wp.userid = #userid#
+		   </isNotNull>
+		   <isNotNull prepend="and" property="username">
+				wp.username like CONCAT('%',CONCAT(#username#,'%'))
+			</isNotNull> 
+		   <isNotNull prepend = "and"  property = "urglvl"> 
+		          wp.urglvl= #urglvl#
+		   </isNotNull>
+		   <isNotNull prepend="and" property="busisort">
+			   	wp.sqbusisort =#busisort#	
+			</isNotNull>
+		   <isNotNull prepend="and" property="busitype">
+			   	wp.sqbusitype =#busitype#	
+			</isNotNull>
+		   <isNotNull prepend = "and"  property = "activitydefid"> 
+		          wp.activitydefid= #activitydefid#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "chnltype"> 
+		          wp.chnltype = #chnltype#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "appealchannel"> 
+		          wp.appealchannel = #appealchannel#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "receivedept"> 
+		          wp.receivedept = #receivedept#
+		   </isNotNull>
+ 	   		<isNotNull  prepend="and" property="createtimestartdate">
+	 	   		to_char(wp.createtime,'yyyy-MM-dd') &gt;= #createtimestartdate#
+ 	   		</isNotNull>
+ 	   		<isNotNull  prepend="and" property="createtimeendate">
+ 	   				to_char(wp.createtime,'yyyy-MM-dd') &lt;= #createtimeendate#
+ 	   		</isNotNull>
+ 	   		 <isNotNull property = "claimbookdatestartdate"> 
+			 and to_char(wp.claimbookdate,'yyyy-mm-dd') &gt;= #claimbookdatestartdate#
+		   </isNotNull>
+		    <isNotNull property = "claimbookdateenddate"> 
+				 and to_char(wp.claimbookdate,'yyyy-mm-dd') &lt;=  #claimbookdateenddate#
+		   </isNotNull>
+ 			<isNotNull  prepend="and" property="currentstate">
+ 	   				wp.currentstate= #currentstate#
+ 	   		</isNotNull>
+ 	   		<isNotNull  property = "createby"> 
+		       and  instr(wp.createby,#createby#,1,1)!=0
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "stenocode"> 
+		      usr.stenocode = #stenocode#
+		   </isNotNull>
+		   <isNotNull prepend="and" property="contactphone">
+				
+				   exists(
+				     select con.ownid as userid  
+				     from t_kh_contactinfo con
+				     where con.delflag = '0'
+				     and con.ownid = wp.applyinfopkid
+				     and (con.contactphone  like CONCAT('%',CONCAT(#contactphone#,'%')) 
+				          or con.mobile like CONCAT('%',CONCAT(#contactphone#,'%')) )
+				    )
+				   
+				
+				</isNotNull>
+	 union
+	select wp.pkid as "pkid",
+           wp.worklistinfopkid as "worklistinfopkid",
+           wp.workitemid as "workitemid",
+           wp.processinstid as "processinstid",
+           wp.applyinfopkid as "applyinfopkid",
+           wp.busitype as "busitype",
+           wp.busitypename as "busitypename",
+           wp.sqbusitype as "sqbusitype",
+           wp.sqbusitypename as "sqbusitypename",
+           wp.userid as "userid",
+           wp.username as "username",
+           wp.batchid as "batchid",
+           wp.planinfopkid as "planinfopkid",
+           to_char(wp.startdate, 'yyyy-MM-dd HH24:mi:ss') as "startdate",
+           wp.enddate as "enddate",
+           wp.urglvl as "urglvl",
+           wp.isprint as "isprint",
+           wp.chnltype as "chnltype",
+           wp.appealchannel as "appealchannel",
+           og.orgname as "appealchannelname",
+           wp.receivedeptname as "receivedeptname",
+           wp.receivedept "receivedept",
+           dl.addrdetail as "gasaddress",
+           to_char(wp.bookdate, 'yyyy-mm-dd') as "bookdate",
+           wp.activityinstname as "activityinstname",
+           wp.processinstname as "processinstname",
+           wp.processdefid as "processdefid",
+           wp.processdefname as "processdefname",
+           wp.currentstate as "currentstate",
+           to_char(wp.claimbookdate, 'yyyy-MM-dd') as "claimbookdate",
+           to_char(wp.createtime, 'yyyy-MM-dd HH24:mi:ss') as "createtime",
+             <!--2013-12-29 修改为查询流程状态  @何群吉 -->
+           decode(wp.currentstate, 1,'未启动',2,'运行',3,'已挂起',7,'已完成',8,'已终止') as "currentstatename",
+           wp.worklisttype as "worklisttype",
+           <!--2013-12-30 增加查询领取人字段  @吕俊涛 -->
+           wp.createby as "createby",
+           decode(wp.currentstate, 2, wp.partiname, 3, wp.partiname, '-') as "participant"
+      from v_bs_worklistview wp,
+           t_kh_userinfo usr,
+           t_bs_departmentliaison dl,
+       	   t_om_organization og
+		  where wp.userid = usr.userid(+)
+		    and wp.appealchannel = og.orgid(+)
+   			and og.delflag(+) = 'n'
+		    and wp.busitype = 'BS205' 
+		    and dl.worklistinfopkid(+) = wp.worklistinfopkid
+		    and wp.dataorgid = #dataorgid# 
+		    and usr.dataorgid(+) = #dataorgid# 
+		  <!--2014-1-15 增加地址模糊查询  @傅力 -->
+		  <isNotNull  prepend = "and" property = "gasaddress"> 
+		          dl.addrdetail like CONCAT('%',CONCAT(#gasaddress#,'%'))
+		   </isNotNull>
+		  <isNotNull  prepend = "and" property = "addressbyname"> 
+		          1=2
+		   </isNotNull>
+		   <isNotNull  prepend = "and" property = "worklisttype"> 
+		          wp.worklisttype = #worklisttype#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "planinfopkid"> 
+		          wp.planinfopkid = #planinfopkid#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "batchid"> 
+		          wp.batchid = #batchid#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "isprint"> 
+		          wp.isprint = #isprint#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "userid"> 
+		          wp.userid = #userid#
+		   </isNotNull>
+		   <isNotNull prepend="and" property="username">
+				wp.username like CONCAT('%',CONCAT(#username#,'%'))
+			</isNotNull> 
+		   <isNotNull prepend = "and"  property = "urglvl"> 
+		          wp.urglvl= #urglvl#
+		   </isNotNull>
+		   <isNotNull prepend="and" property="busisort">
+			   	wp.sqbusisort =#busisort#	
+			</isNotNull>
+		   <isNotNull prepend="and" property="busitype">
+			   	wp.sqbusitype =#busitype#	
+			</isNotNull>
+		   <isNotNull prepend = "and"  property = "activitydefid"> 
+		          wp.activitydefid= #activitydefid#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "chnltype"> 
+		          wp.chnltype = #chnltype#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "appealchannel"> 
+		          wp.appealchannel = #appealchannel#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "receivedept"> 
+		          wp.receivedept = #receivedept#
+		   </isNotNull>
+ 	   		<isNotNull  prepend="and" property="createtimestartdate">
+	 	   		to_char(wp.createtime,'yyyy-MM-dd') &gt;= #createtimestartdate#
+ 	   		</isNotNull>
+ 	   		<isNotNull  prepend="and" property="createtimeendate">
+ 	   				to_char(wp.createtime,'yyyy-MM-dd') &lt;= #createtimeendate#
+ 	   		</isNotNull>
+ 	   		 <isNotNull property = "claimbookdatestartdate"> 
+			 and to_char(wp.claimbookdate,'yyyy-mm-dd') &gt;= #claimbookdatestartdate#
+		   </isNotNull>
+		    <isNotNull property = "claimbookdateenddate"> 
+				 and to_char(wp.claimbookdate,'yyyy-mm-dd') &lt;=  #claimbookdateenddate#
+		   </isNotNull>
+ 			<isNotNull  prepend="and" property="currentstate">
+ 	   				wp.currentstate= #currentstate#
+ 	   		</isNotNull>
+ 	   		<isNotNull  property = "createby"> 
+		       and  instr(wp.createby,#createby#,1,1)!=0
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "stenocode"> 
+		      usr.stenocode = #stenocode#
+		   </isNotNull>
+		   <isNotNull prepend="and" property="contactphone">
+				exists(
+				     select con.ownid as userid  
+				     from t_kh_contactinfo con
+				     where con.delflag = '0'
+				     and con.ownid = wp.applyinfopkid
+				     and (con.contactphone  like CONCAT('%',CONCAT(#contactphone#,'%')) 
+				          or con.mobile like CONCAT('%',CONCAT(#contactphone#,'%')) )
+				          
+				      union
+				      select 'userid'
+				      from t_bs_departmentliaison dm
+				      where dm.delflag !='1'
+				      and dm.worklistinfopkid = wp.worklistinfopkid
+				      and (dm.contactphone  like CONCAT('%',CONCAT(#contactphone#,'%')) 
+				          or dm.mobile like CONCAT('%',CONCAT(#contactphone#,'%')) )
+				    )
+				</isNotNull>
+ 	   		order by "createtime" desc
+    </select>
+    
+     <!--综合工单导出EXCEL --> 
+    <select id="queryAllWorklist" parameterClass="java.util.HashMap"  resultClass="commonj.sdo.DataObject">
+		select wp.busitype as "busitype",
+		       wp.busitypename as "busitypename",
+		       wp.sqbusitype as "sqbusitype",
+		       wp.sqbusitypename as "sqbusitypename",
+		       wp.userid as "userid",
+		       wp.username as "username",
+		       nvl(kc.contactname, bd.username) "contactname",
+		       nvl(kc.mobile, bd.mobile) "mobile",
+		       nvl(kc.contactphone, bd.contactphone) "contactphone",
+		       za.fulname || ai.addrdetail as "gasaddress",
+		       to_char(wp.bookdate, 'yyyy-mm-dd') as "bookdate",
+		       wp.activityinstname as "activityinstname",
+		       wp.processinstname as "processinstname",
+		       to_char(ai.bookdate, 'yyyy-MM-dd') as "bookdate",
+		       to_char(wp.createtime, 'yyyy-MM-dd HH24:mi:ss') as "createtime",
+		       decode(wp.currentstate, 1, '未启动', 2, '运行', 3, '已挂起', 7, '已完成', 8, '已终止') as "currentstatename",
+		       wp.worklisttype as "worklisttype",
+		       decode(wp.worklisttype, '1', '诉求工单', '2', '业务工单', '') as "worklisttypename",
+		       wp.createby as "createby",
+		       decode(wp.busitype, 'BS205', bd.contentabstract, nvl(ai.remark, '')) "remark",
+		       decode(wp.activitydefid, 'BS20503', bd.handleresult, '') "handleresult",
+		       decode(wp.activitydefid, 'BS20503', to_char(bd.updatetime, 'yyyy-MM-dd'), '') "handledate"
+		  from v_bs_worklistview wp,
+		       t_bs_applyinfo ai,
+		       t_kh_userinfo usr,
+		       t_bs_departmentliaison bd,
+       		   t_kh_contactinfo kc,
+		       (select b.pkid as pkid,
+		               b.dataorgid as dataorgid,
+		               replace(b.fulname, g.fulname, '') as fulname
+		          from t_zy_addrinfo b,
+		               t_zy_addrinfo c,
+		               t_zy_addrinfo d,
+		               t_zy_addrinfo e,
+		               t_zy_addrinfo f,
+		               t_zy_addrinfo g
+		         where b.parentpkid = c.pkid
+		           and c.parentpkid = d.pkid
+		           and d.parentpkid = e.pkid
+		           and e.parentpkid = f.pkid
+		           and f.parentpkid = g.pkid
+		           and b.dataorgid = #dataorgid# ) za
+		 where wp.userid = usr.userid(+)
+		   and wp.applyinfopkid = ai.pkid
+		   and ai.addrinfopkid = za.pkid(+)
+		   and wp.worklistinfopkid = bd.worklistinfopkid(+)
+		   and ai.pkid = kc.ownid(+)
+		   and kc.owntype(+) = '3'
+		   and kc.delflag(+) = '0'
+		   and bd.delflag(+) = '0'
+		   and bd.dataorgid(+) = #dataorgid# 
+		   and wp.dataorgid = #dataorgid# 
+		   and usr.dataorgid(+) = #dataorgid# 
+		  <isNotNull  prepend = "and" property = "gasaddress"> 
+		          wp.gasaddress like CONCAT('%',CONCAT(#gasaddress#,'%'))
+		   </isNotNull>
+		   <isNotNull  prepend = "and" property = "worklisttype"> 
+		          wp.worklisttype = #worklisttype#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "planinfopkid"> 
+		          wp.planinfopkid = #planinfopkid#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "batchid"> 
+		          wp.batchid = #batchid#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "isprint"> 
+		          wp.isprint = #isprint#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "userid"> 
+		          wp.userid = #userid#
+		   </isNotNull>
+		   <isNotNull prepend="and" property="username">
+				wp.username like CONCAT('%',CONCAT(#username#,'%'))
+			</isNotNull> 
+		   <isNotNull prepend = "and"  property = "urglvl"> 
+		          wp.urglvl= #urglvl#
+		   </isNotNull>
+		   <isNotNull prepend="and" property="busisort">
+			   	wp.sqbusisort =#busisort#	
+			</isNotNull>
+		   <isNotNull prepend="and" property="busitype">
+			   	wp.sqbusitype =#busitype#	
+			</isNotNull>
+		   <isNotNull prepend = "and"  property = "activitydefid"> 
+		          wp.activitydefid= #activitydefid#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "chnltype"> 
+		          wp.chnltype = #chnltype#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "appealchannel"> 
+		          wp.appealchannel = #appealchannel#
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "receivedept"> 
+		          wp.receivedept = #receivedept#
+		   </isNotNull>
+ 	   		<isNotNull  prepend="and" property="createtimestartdate">
+	 	   		to_char(wp.createtime,'yyyy-MM-dd') &gt;= #createtimestartdate#
+ 	   		</isNotNull>
+ 	   		<isNotNull  prepend="and" property="createtimeendate">
+ 	   				to_char(wp.createtime,'yyyy-MM-dd') &lt;= #createtimeendate#
+ 	   		</isNotNull>
+ 	   		 <isNotNull property = "claimbookdatestartdate"> 
+			 and to_char(wp.claimbookdate,'yyyy-mm-dd') &gt;= #claimbookdatestartdate#
+		   </isNotNull>
+		    <isNotNull property = "claimbookdateenddate"> 
+				 and to_char(wp.claimbookdate,'yyyy-mm-dd') &lt;=  #claimbookdateenddate#
+		   </isNotNull>
+ 			<isNotNull  prepend="and" property="currentstate">
+ 	   				wp.currentstate= #currentstate#
+ 	   		</isNotNull>
+ 	   		<isNotNull  property = "createby"> 
+		       and  instr(wp.createby,#createby#,1,1)!=0
+		   </isNotNull>
+		   <isNotNull prepend = "and"  property = "stenocode"> 
+		      usr.stenocode = #stenocode#
+		   </isNotNull>
+		   <isNotNull prepend="and" property="applyinfopkids">
+	   		   ai.pkid in
+				<iterate property="applyinfopkids" open="(" close=")" conjunction="," >
+					#applyinfopkids[]#
+				</iterate>
+		   </isNotNull> 
+ 	   		order by to_char(wp.createtime, 'yyyy-MM-dd HH24:mi:ss') desc
+    </select>
+</sqlMap>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:liuxin -->
+<sqlMap>
+   <select id="querycpflpzcxdl" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+       select t.id as "id",
+       t.fldm as "fldm",
+       t.flmc as "flmc",
+       t.sjid as "sjid",
+       t.ssdj as "ssdj",
+       d.hbdm as "sjdm" 
+       from (select * from genl_cpflpz_list where sjid = #sjid#) t
+        left join genl_cpflpz_list d on t.sjid = d.id
+       where 1= 1
+         <isNotNull prepend = "and"  property = "flmc"> 
+           t.fldm  in ( select substr(k.hbdm,0,2)  from genl_cpflpz_list k where k.flmc = #flmc# )
+         </isNotNull>
+        order by to_number(t.fldm)
+    </select>
+    <select id="querycpqdwhcx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ select t.id as "id",
+       t.lifnr as "lifnr",
+       d.name1 as "name1",
+       t.cpmc as "cpmc",
+       t.cpxh as "cpxh",
+       t.cpgg as "cpgg",
+       t.ssdl as "ssdl",
+       d1.flmc as "ssdlmc",
+       t.sszl as "sszl",
+       d2.flmc as "sszlmc",
+       t.ssxl as "ssxl",
+       d3.flmc as "ssxlmc",
+       t.ntgl as "ntgl",
+       t.gjzld as "gjzld",
+       t.zyjscs as "zyjscs",
+       t.text as "text",
+       t.statu as "statu",
+       t.userid as "userid",
+       d4.operatorname as "operatorname",
+       t.modifytime as "modifytime" 
+  from genl_cpqdwh_list t left join base_supply_lfa1 d on t.lifnr = d.lifnr
+  left join genl_cpflpz_list d1 on t.ssdl = d1.hbdm
+  left join genl_cpflpz_list d2 on t.sszl = d2.hbdm
+  left join genl_cpflpz_list d3 on t.ssxl = d3.hbdm
+  left join v_ac_operator_trs d4 on t.userid = d4.userid 
+       where  t.statu is null
+     <isNotNull prepend = "and"  property = "lifnr"> 
+          t.lifnr like '%'||#lifnr#||'%'
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "lifnrsup"> 
+          t.lifnr = #lifnrsup#
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "name1"> 
+          d.name1 like '%' || #name1# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "cpmc"> 
+          t.cpmc  like '%' || #cpmc# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "cpxh"> 
+          t.cpxh   like '%' || #cpxh# || '%'
+     </isNotNull>   
+     <isNotNull prepend = "and"  property = "cpgg"> 
+          t.cpgg like '%' || #cpgg# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "zyjscs"> 
+          t.zyjscs like '%' || #zyjscs# || '%'
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "operatorname"> 
+          d4.operatorname like '%' || #operatorname# || '%'
+     </isNotNull>
+       <isNotNull prepend = "and"  property = "ssdl"> 
+          t.ssdl = #ssdl# 
+     </isNotNull>
+       <isNotNull prepend = "and"  property = "sszl"> 
+          t.sszl = #sszl# 
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "ssxl"> 
+          t.ssxl = #ssxl# 
+     </isNotNull>
+      <isNotNull prepend = "and"  property = "modifytimesdate"> 
+                to_char(t.modifytime,'yyyy-MM-dd')  &gt;=  #modifytimesdate#
+            </isNotNull>
+            <isNotNull prepend = "and"  property = "modifytimeedate"> 
+                to_char(t.modifytime,'yyyy-MM-dd')  &lt;=  #modifytimeedate#
+            </isNotNull>
+    </select> 
+     <select id="querycpqdwhcxxzMb" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+         select '' as "a",'' as "b",'' as "c",'' as "d",'' as "e",'' as "f",'' as "g",'' as "h",'' as "i",'' as "j",a.hbdm as "dldm",a.flmc as "dlmc",b.hbdm as "zldm",b.flmc as "zlmc",c.hbdm as "xldm",c.flmc as "xlmc" from (select id,flmc,sjid,hbdm from genl_cpflpz_list  where ssdj = '2') b left join 
+(select hbdm,flmc,sjid from genl_cpflpz_list  where ssdj = '3') c on b.id = c.sjid
+left join (select flmc,id,hbdm from genl_cpflpz_list  where ssdj = '1') a on a.id = b.sjid
+order by to_number(a.hbdm),to_number(b.hbdm),to_number(c.hbdm)
+    </select> 
+      <!-- 删除小类信息-->
+    <delete  id="deletecpflxl" parameterClass="java.util.HashMap" >
+		delete from genl_cpflpz_list t where  t.sjid = #sjid#
+	</delete>
+	
+	    <!-- 删除大类以及所有中类小类-->
+    <delete  id="deletecpfldl" parameterClass="java.util.HashMap" >
+		delete from genl_cpflpz_list t where substr(t.hbdm,0,2) = #id#
+	</delete>
+	 <select id="queryname1" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.lifnr as "lifnr",t.name1 as "name1" from base_supply_lfa1 t
+    </select>
+</sqlMap>

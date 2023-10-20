@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <select id="queryTestflow"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select pkid "pkid", 
+		createby "createby", 
+		createtime "createtime", 
+		content "content", 
+		checkby "checkby", 
+		checktime "checktime", 
+		advise "advise", 
+		processinstid "processinstid" ,
+		workitemid "workitemid"
+		from testflow
+		where 1=1
+		<isNotNull prepend = "and"  property = "pkid"> 
+          pkid = #pkid#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "processinstid"> 
+          processinstid = #processinstid#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "workitemid"> 
+          workitemid = #workitemid#
+     </isNotNull>
+    </select>
+</sqlMap>

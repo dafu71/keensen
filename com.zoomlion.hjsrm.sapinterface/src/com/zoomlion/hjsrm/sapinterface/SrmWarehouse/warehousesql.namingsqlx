@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:HP -->
+<sqlMap>
+    <!--查询需要获取物料凭证号码-->
+    <select id="queryMblnrList" resultClass="com.zoomlion.hjsrm.pub.sap.warehouse.SapSrmWarehouse.GenlSaveMseg" parameterClass="java.util.HashMap" >
+		 select mblnr as "mblnr",
+		        mjahr as "mjahr"
+		 from genl_save_mseg
+    </select>
+    
+    <delete  id="delMblnrList" parameterClass="java.util.HashMap" >
+		delete from genl_save_mseg where mblnr = #mblnr# and mjahr = #mjahr#
+	</delete>
+	<delete  id="delVnbm" parameterClass="java.util.HashMap" >
+		delete from genl_vn_coincident where vnbm = #vnbm# 
+	</delete>
+</sqlMap>

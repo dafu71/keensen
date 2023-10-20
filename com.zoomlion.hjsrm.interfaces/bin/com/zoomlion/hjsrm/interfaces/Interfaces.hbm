@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.IMessageAlert" table="I_MESSAGE_ALERT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="recid" type="int">
+                <column length="10" name="RECID" not-null="true"/>
+            </key-property>
+            <key-property name="userid" type="string">
+                <column length="20" name="USERID"/>
+            </key-property>
+            <key-property name="recipient" type="string">
+                <column length="500" name="RECIPIENT"/>
+            </key-property>
+            <key-property name="alertdate" type="date">
+                <column name="ALERTDATE"/>
+            </key-property>
+            <key-property name="alerttype" type="string">
+                <column length="20" name="ALERTTYPE"/>
+            </key-property>
+            <key-property name="nature" type="string">
+                <column length="20" name="NATURE"/>
+            </key-property>
+            <key-property name="subject" type="string">
+                <column length="500" name="SUBJECT"/>
+            </key-property>
+            <key-property name="body" type="string">
+                <column length="2000" name="BODY"/>
+            </key-property>
+            <key-property name="timestamp" type="date">
+                <column name="TIMESTAMP"/>
+            </key-property>
+            <key-property name="orgid" type="string">
+                <column length="20" name="ORGID" not-null="true"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.IMeterInformation" table="I_METER_INFORMATION">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="recid" type="int">
+                <column length="10" name="RECID" not-null="true"/>
+            </key-property>
+            <key-property name="userid" type="string">
+                <column length="20" name="USERID"/>
+            </key-property>
+            <key-property name="resid" type="string">
+                <column length="20" name="RESID"/>
+            </key-property>
+            <key-property name="infodate" type="date">
+                <column name="INFODATE"/>
+            </key-property>
+            <key-property name="currentrate" type="big_decimal">
+                <column length="5" name="CURRENTRATE" precision="5" scale="2"/>
+            </key-property>
+            <key-property name="residualamount" type="big_decimal">
+                <column length="9" name="RESIDUALAMOUNT" precision="9" scale="2"/>
+            </key-property>
+            <key-property name="remainvolume" type="big_decimal">
+                <column length="9" name="REMAINVOLUME" precision="9" scale="2"/>
+            </key-property>
+            <key-property name="remainenergy" type="big_decimal">
+                <column length="9" name="REMAINENERGY" precision="9" scale="2"/>
+            </key-property>
+            <key-property name="alarm" type="long">
+                <column length="22" name="ALARM"/>
+            </key-property>
+            <key-property name="orgid" type="string">
+                <column length="20" name="ORGID" not-null="true"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.IMeterParam" table="I_METER_PARAM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="recid" type="int">
+                <column length="10" name="RECID" not-null="true"/>
+            </key-property>
+            <key-property name="userid" type="string">
+                <column length="20" name="USERID"/>
+            </key-property>
+            <key-property name="resid" type="string">
+                <column length="64" name="RESID"/>
+            </key-property>
+            <key-property name="aivalue" type="big_decimal">
+                <column length="9" name="AIVALUE" precision="9" scale="2"/>
+            </key-property>
+            <key-property name="sivalue" type="big_decimal">
+                <column length="9" name="SIVALUE" precision="9" scale="2"/>
+            </key-property>
+            <key-property name="fsivalue" type="big_decimal">
+                <column length="9" name="FSIVALUE" precision="9" scale="2"/>
+            </key-property>
+            <key-property name="auditid" type="string">
+                <column length="20" name="AUDITID"/>
+            </key-property>
+            <key-property name="supplypointid" type="string">
+                <column length="20" name="SUPPLYPOINTID"/>
+            </key-property>
+            <key-property name="mcumapid" type="int">
+                <column length="10" name="MCUMAPID"/>
+            </key-property>
+            <key-property name="timestamp" type="date">
+                <column name="TIMESTAMP"/>
+            </key-property>
+            <key-property name="reccreatedate" type="date">
+                <column name="RECCREATEDATE"/>
+            </key-property>
+            <key-property name="orgid" type="string">
+                <column length="20" name="ORGID" not-null="true"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.IMeterReadings" table="I_METER_READINGS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="recid" type="int">
+                <column length="10" name="RECID" not-null="true"/>
+            </key-property>
+            <key-property name="userid" type="string">
+                <column length="20" name="USERID"/>
+            </key-property>
+            <key-property name="resid" type="string">
+                <column length="64" name="RESID"/>
+            </key-property>
+            <key-property name="meterindex" type="big_decimal">
+                <column length="9" name="METERINDEX" precision="9" scale="2"/>
+            </key-property>
+            <key-property name="readingtypeid" type="string">
+                <column length="20" name="READINGTYPEID"/>
+            </key-property>
+            <key-property name="readingdate" type="date">
+                <column name="READINGDATE"/>
+            </key-property>
+            <key-property name="remark" type="string">
+                <column length="200" name="REMARK"/>
+            </key-property>
+            <key-property name="orgid" type="string">
+                <column length="20" name="ORGID" not-null="true"/>
+            </key-property>
+            <key-property name="isrecycle" type="string">
+                <column length="1" name="ISRECYCLE"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.IMeterStatus" table="I_METER_STATUS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="recid" type="int">
+                <column length="10" name="RECID" not-null="true"/>
+            </key-property>
+            <key-property name="userid" type="string">
+                <column length="20" name="USERID"/>
+            </key-property>
+            <key-property name="resid" type="string">
+                <column length="64" name="RESID"/>
+            </key-property>
+            <key-property name="valve" type="int">
+                <column length="5" name="VALVE"/>
+            </key-property>
+            <key-property name="islowbattery" type="int">
+                <column length="5" name="ISLOWBATTERY"/>
+            </key-property>
+            <key-property name="istamper" type="int">
+                <column length="5" name="ISTAMPER"/>
+            </key-property>
+            <key-property name="ishitalertindex" type="int">
+                <column length="5" name="ISHITALERTINDEX"/>
+            </key-property>
+            <key-property name="ishitcreditindex" type="int">
+                <column length="5" name="ISHITCREDITINDEX"/>
+            </key-property>
+            <key-property name="ishitshutoffindex" type="int">
+                <column length="5" name="ISHITSHUTOFFINDEX"/>
+            </key-property>
+            <key-property name="ishitforceshutoffindex" type="int">
+                <column length="5" name="ISHITFORCESHUTOFFINDEX"/>
+            </key-property>
+            <key-property name="internalerror" type="int">
+                <column length="5" name="INTERNALERROR"/>
+            </key-property>
+            <key-property name="timestamp" type="date">
+                <column name="TIMESTAMP"/>
+            </key-property>
+            <key-property name="reccreatedate" type="date">
+                <column name="RECCREATEDATE"/>
+            </key-property>
+            <key-property name="orgid" type="string">
+                <column length="20" name="ORGID" not-null="true"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.IReadRecord" table="I_READ_RECORD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="recid" type="int">
+                <column length="10" name="RECID" not-null="true"/>
+            </key-property>
+            <key-property name="userid" type="string">
+                <column length="20" name="USERID"/>
+            </key-property>
+            <key-property name="resid" type="string">
+                <column length="64" name="RESID"/>
+            </key-property>
+            <key-property name="readrecordid" type="string">
+                <column length="20" name="READRECORDID"/>
+            </key-property>
+            <key-property name="seqno" type="int">
+                <column length="5" name="SEQNO"/>
+            </key-property>
+            <key-property name="sentdate" type="date">
+                <column name="SENTDATE"/>
+            </key-property>
+            <key-property name="meterindex" type="big_decimal">
+                <column length="15" name="METERINDEX" precision="15" scale="5"/>
+            </key-property>
+            <key-property name="logtype" type="int">
+                <column length="5" name="LOGTYPE"/>
+            </key-property>
+            <key-property name="timestamp" type="date">
+                <column name="TIMESTAMP"/>
+            </key-property>
+            <key-property name="orgid" type="string">
+                <column length="20" name="ORGID" not-null="true"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.TJkPrinttemplate" table="T_JK_PRINTTEMPLATE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="templateid" type="string">
+            <column length="25" name="TEMPLATEID" not-null="true"/>
+        </property>
+        <property name="templatename" type="string">
+            <column length="100" name="TEMPLATENAME"/>
+        </property>
+        <property name="templatefolder" type="string">
+            <column length="100" name="TEMPLATEFOLDER"/>
+        </property>
+        <property lazy="true" name="printparam" type="com.primeton.das.entity.impl.lob.type.ClobStringType">
+            <column length="4000" name="PRINTPARAM"/>
+        </property>
+        <property name="picturename" type="string">
+            <column length="100" name="PICTURENAME"/>
+        </property>
+        <property name="picturewidth" type="long">
+            <column length="22" name="PICTUREWIDTH"/>
+        </property>
+        <property name="pictureheight" type="long">
+            <column length="22" name="PICTUREHEIGHT"/>
+        </property>
+        <property lazy="true" name="template" type="com.primeton.das.entity.impl.lob.type.ClobStringType">
+            <column length="4000" name="TEMPLATE"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property lazy="true" name="remark" type="com.primeton.das.entity.impl.lob.type.ClobStringType">
+            <column length="4000" name="REMARK"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.TJkInterfacelog" table="T_JK_INTERFACELOG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="targetsystem" type="string">
+            <column length="255" name="TARGETSYSTEM"/>
+        </property>
+        <property name="source" type="string">
+            <column length="255" name="SOURCE"/>
+        </property>
+        <property name="classname" type="string">
+            <column length="255" name="CLASSNAME"/>
+        </property>
+        <property name="methodname" type="string">
+            <column length="255" name="METHODNAME"/>
+        </property>
+        <property lazy="true" name="param" type="com.primeton.das.entity.impl.lob.type.ClobStringType">
+            <column length="4000" name="PARAM"/>
+        </property>
+        <property lazy="true" name="msg" type="com.primeton.das.entity.impl.lob.type.ClobStringType">
+            <column length="4000" name="MSG"/>
+        </property>
+        <property name="starttime" type="timestamp">
+            <column name="STARTTIME"/>
+        </property>
+        <property name="endtime" type="timestamp">
+            <column name="ENDTIME"/>
+        </property>
+        <property name="runtime" type="long">
+            <column length="22" name="RUNTIME"/>
+        </property>
+        <property name="webaddress" type="string">
+            <column length="1024" name="WEBADDRESS"/>
+        </property>
+        <property name="port" type="long">
+            <column length="22" name="PORT"/>
+        </property>
+        <property name="ip" type="string">
+            <column length="25" name="IP"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="backtime" type="date">
+            <column name="BACKTIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="1" name="DELFLAG"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="inittype" type="string">
+            <column length="10" name="INITTYPE"/>
+        </property>
+        <property name="busifunc" type="string">
+            <column length="100" name="BUSIFUNC"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.TJkTelfac" table="T_JK_TELFAC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="25" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="providerid" type="string">
+            <column length="20" name="PROVIDERID"/>
+        </property>
+        <property name="link" type="string">
+            <column length="200" name="LINK"/>
+        </property>
+        <property name="height" type="int">
+            <column length="10" name="HEIGHT"/>
+        </property>
+        <property name="width" type="int">
+            <column length="10" name="WIDTH"/>
+        </property>
+        <property name="state" type="string">
+            <column length="1" name="STATE"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.interfaces.Interfaces.Changeprice" table="T_IMS_CHANGEPRICE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="userid" type="string">
+                <column length="20" name="USERID"/>
+            </key-property>
+            <key-property name="supplypointpkid" type="string">
+                <column length="25" name="SUPPLYPOINTPKID"/>
+            </key-property>
+            <key-property name="reading" type="big_decimal">
+                <column length="18" name="READING" precision="18" scale="5"/>
+            </key-property>
+            <key-property name="recordtime" type="timestamp">
+                <column name="RECORDTIME"/>
+            </key-property>
+            <key-property name="dataorgid" type="big_decimal">
+                <column length="10" name="DATAORGID" precision="10" scale="0"/>
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,270 @@
+/*!
+ * =====================================================
+ * MainPage CSS Style File
+ * =====================================================
+ */
+
+iframe {
+	border: 0px solid #1F232B;
+	height: 100%;
+	width: 100%;
+	background-color: #e0e0e0 !important;
+}
+
+.title {
+	color: #FFFFFF;
+	font-size: 30px;
+	padding-left: 10px;
+	border-left: 2px solid #FFF;
+	margin-top: 5px;
+}
+
+.logo{
+	font-family: "方正超粗黑";
+	background-image: url(../images/logo.png);
+	background-size: 100% 40px;
+	height:40px;
+	margin-left: 10px;
+	font-size: 25px;
+	padding-top: 2px;
+	text-align:center;
+	padding-right: 40px ;
+	cursor: pointer;
+}
+
+.logo1{
+	height:40px;
+	font-size: 20px;
+	margin-left: 10px;
+	padding-top: 5px;
+	text-align:center;
+	font-family:"幼圆";
+	color: #AACE39;
+	font-weight: bold;
+}
+.wl-breadcrumb {
+	line-height: 40px;
+	vertical-align: middle;
+	background-color: #F4F4F4;
+	border-bottom: 1px solid #E1E1E1;
+}
+
+.wl-breadcrumb p {
+	color: #666;
+	margin-bottom: 0px;
+	margin-left: 10px;
+}
+
+.wl-content {
+	margin-top: 0px;
+	min-height: 40px;
+	padding: 0;
+	overflow-x: hidden;
+}
+
+.wl-top-nav-container {
+	background-image: url(../images/navBar.png);
+	background-size: 101% 40px;
+	height:40px;
+}
+
+ul {
+	list-style-type: none;
+	margin-top: 8px;
+	padding: 0;
+}
+
+.wl-top-nav li {
+	float: left;
+	list-style: none;
+	margin-right: 25px;
+}
+
+.wl-top-nav a {
+	color: #EEEEEE;
+	display: block;
+	padding: 0;
+    font: 14px/150% Arial,"Microsoft Yahei";
+}
+
+.glyphicon {
+	margin-right: 5px;
+}
+
+.wl-top-nav a:hover,
+.wl-top-nav a.active {
+	color: #E1E1E1;
+}
+
+.wl-badge {
+	position: fixed;
+	margin-left: -5px;
+	margin-top: -5px;
+	padding: 3px;
+	background-color: #FF5757;
+}
+
+
+/** rewrite css style */
+.col-lg-10,
+.col-md-10,
+.col-sm-10,
+.col-xs-10,
+.col-lg-12,
+.col-md-12,
+.col-sm-12,
+.col-xs-12 {
+	padding-right: 0px;
+	padding-left: 0px;
+}
+
+
+/* menu css style */
+
+#menu {
+	margin: 0 auto;
+	padding: 0;
+}
+
+.wl-menu-diabled {
+	line-height: 40px;
+	background-color: #F4F4F4;
+	border: 1px solid #E1E1E1;
+}
+
+.wl-menu-diabled span {
+	font-size: 16px;
+	color: #8e8e8e;
+	margin: 10px;
+}
+
+.wl-menu-head {
+	height: 30px;
+	line-height: 30px;
+	color: #525252;
+	text-align: left;
+	cursor: pointer;
+	border-left: 1px solid #E1E1E1;
+	border-right: 1px solid #E1E1E1;
+	border-bottom: 1px solid #E1E1E1;
+	border-top: 1px solid #F1F1F1;
+	position: relative;
+	margin: 0px;
+	font-weight: 1000;
+	/*background: #F1F1F1;*/
+	padding: 0 10px;
+}
+
+.wl-menu-head h3 {
+	margin-top: 5px;
+	font-size: 14px;
+}
+
+.glyphicon-chevron-up,
+.glyphicon-chevron-down {
+	font-size: 12px;
+	color: #4D4D4D;
+}
+
+.wl-menu-body {
+/* 	text-align: center; */
+	line-height: 25px;
+	border-left: 1px solid #E1E1E1;
+	border-right: 1px solid #E1E1E1;
+	background: #fff;
+}
+
+.wl-menu-link {
+	display: block;
+	padding-left: 70px;
+	line-height: 25px;
+	font-size: 12px;
+	color: #4D4D4D;
+	background: #FFFFFF;
+	text-decoration: none;
+	border-bottom: 1px solid #E1E1E1;
+}
+
+.wl-menu-body a:hover,
+.wl-menu-active {
+	color: #4D4D4D;
+	background-color: #CCCCCC;
+	text-decoration: none;
+}
+
+
+/*�û���Ϣ css style*/
+.wl-userinfo-tab {
+	width: 80px;
+	padding: 5px 10px;
+	border-radius: 2px;
+	margin-left: 10px;
+}
+
+.wl-userinfo-tab-unactive,
+.wl-userinfo-basic-tab-unactive {
+	background-color: #CCCCCC;
+	color: #404040;
+}
+
+.wl-userinfo-basic-tab-div {
+	margin-top: 5px;
+	margin-bottom: 1px;
+}
+
+.wl-userinfo-basic-tab {
+	padding: 3px 5px;
+	border-radius: 2px;
+}
+
+.wl-userinfo-table {
+	display: table;
+	border-bottom: 1px solid #c1c1c1;
+}
+
+.wl-userinfo-table-row {
+	display: table-row;
+}
+
+.wl-userinfo-table-cell-label-top {
+	display: table-cell;
+	text-align: left;
+	width: 120px;
+	border-top: 1px solid #c1c1c1;
+	border-left: 1px solid #c1c1c1;
+	padding: 5px 10px;
+}
+
+.wl-userinfo-table-cell-text-top {
+	display: table-cell;
+	border-top: 1px solid #c1c1c1;
+	border-right: 1px solid #c1c1c1;
+	width: 300px;
+	padding: 5px 5px;
+}
+
+.wl-userinfo-table-cell-label {
+	display: table-cell;
+	text-align: left;
+	width: 120px;
+	border-left: 1px solid #c1c1c1;
+	padding: 5px 10px;
+}
+
+.wl-userinfo-table-cell-text {
+	display: table-cell;
+	border-right: 1px solid #c1c1c1;
+	width: 300px;
+	padding: 5px 5px;
+}
+/*#menuContent{
+	box-shadow: ;
+}*/
+
+@media (max-width:1025px) {
+
+    .logo{
+        font-size: 22px;
+        padding-top: 5px;
+    }
+}

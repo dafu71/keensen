@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.Vformalsupplybase" table="$QueryEntity[com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.Vformalsupplybase]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="LIFNR" insert="false" name="lifnr" type="string" update="false"/>
+        <property column="NAME1" insert="false" name="name1" type="string" update="false"/>
+        <property column="PSTLZ" insert="false" name="pstlz" type="string" update="false"/>
+        <property column="STRAS" insert="false" name="stras" type="string" update="false"/>
+        <property column="LPROP" insert="false" name="lprop" type="string" update="false"/>
+        <property column="LTYPE" insert="false" name="ltype" type="string" update="false"/>
+        <property column="CRETM" insert="false" name="cretm" type="date" update="false"/>
+        <property column="BATCH" insert="false" name="batch" type="string" update="false"/>
+        <property column="LSYST" insert="false" name="lsyst" type="string" update="false"/>
+        <property column="LSORT" insert="false" name="lsort" type="string" update="false"/>
+        <property column="ZZYYW" insert="false" name="zzyyw" type="string" update="false"/>
+        <property column="CREID" insert="false" name="creid" type="string" update="false"/>
+    </class>
+    <class entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.VsupplyinfoTel" table="$QueryEntity[com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.VsupplyinfoTel]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="LIFNR" insert="false" name="lifnr" type="string" update="false"/>
+        <property column="ZTTEL" insert="false" name="zttel" type="big_decimal" update="false"/>
+        <property column="ZTEXT" insert="false" name="ztext" type="string" update="false"/>
+        <property column="ZNAME" insert="false" name="zname" type="string" update="false"/>
+        <property column="ZMTEL" insert="false" name="zmtel" type="string" update="false"/>
+        <property column="ZPTEL" insert="false" name="zptel" type="string" update="false"/>
+        <property column="EMAIL" insert="false" name="email" type="string" update="false"/>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.GenlSupplyTtel" table="GENL_SUPPLY_TTEL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+            <key-property name="zttel" type="long">
+                <column length="22" name="ZTTEL"/>
+            </key-property>
+        </composite-id>
+        <property name="zname" type="string">
+            <column length="20" name="ZNAME"/>
+        </property>
+        <property name="zmtel" type="string">
+            <column length="20" name="ZMTEL"/>
+        </property>
+        <property name="zptel" type="string">
+            <column length="20" name="ZPTEL"/>
+        </property>
+        <property name="email" type="string">
+            <column length="50" name="EMAIL"/>
+        </property>
+        <property name="creid" type="string">
+            <column length="20" name="CREID"/>
+        </property>
+        <property name="cretm" type="date">
+            <column name="CRETM"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.GenlSupplyData" table="GENL_SUPPLY_DATA">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="lprop" type="string">
+            <column length="10" name="LPROP"/>
+        </property>
+        <property name="ltype" type="string">
+            <column length="10" name="LTYPE"/>
+        </property>
+        <property name="batch" type="string">
+            <column length="10" name="BATCH"/>
+        </property>
+        <property name="lsyst" type="string">
+            <column length="10" name="LSYST"/>
+        </property>
+        <property name="lsort" type="string">
+            <column length="50" name="LSORT"/>
+        </property>
+        <property name="zzyyw" type="string">
+            <column length="2000" name="ZZYYW"/>
+        </property>
+        <property name="creid" type="string">
+            <column length="20" name="CREID"/>
+        </property>
+        <property name="cretm" type="date">
+            <column name="CRETM"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.GenlSupplyLinshi" table="GENL_SUPPLY_LINSHI">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="name1" type="string">
+            <column length="50" name="NAME1"/>
+        </property>
+        <property name="ort01" type="string">
+            <column length="50" name="ORT01"/>
+        </property>
+        <property name="pstlz" type="string">
+            <column length="15" name="PSTLZ"/>
+        </property>
+        <property name="telf1" type="string">
+            <column length="16" name="TELF1"/>
+        </property>
+        <property name="stras" type="string">
+            <column length="50" name="STRAS"/>
+        </property>
+        <property name="zkfbm" type="string">
+            <column length="2000" name="ZKFBM"/>
+        </property>
+        <property name="zkcbm" type="string">
+            <column length="2000" name="ZKCBM"/>
+        </property>
+        <property name="zkcrq" type="date">
+            <column name="ZKCRQ"/>
+        </property>
+        <property name="creid" type="string">
+            <column length="20" name="CREID"/>
+        </property>
+        <property name="cretm" type="date">
+            <column name="CRETM"/>
+        </property>
+        <property name="zstus" type="string">
+            <column length="20" name="ZSTUS"/>
+        </property>
+    </class>
+    <class entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.Vqzsupplybase" table="$QueryEntity[com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.Vqzsupplybase]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="LIFNR" insert="false" name="lifnr" type="string" update="false"/>
+        <property column="NAME1" insert="false" name="name1" type="string" update="false"/>
+        <property column="PSTLZ" insert="false" name="pstlz" type="string" update="false"/>
+        <property column="ORT01" insert="false" name="ort01" type="string" update="false"/>
+        <property column="TELF1" insert="false" name="telf1" type="string" update="false"/>
+        <property column="STRAS" insert="false" name="stras" type="string" update="false"/>
+        <property column="ZKFBM" insert="false" name="zkfbm" type="string" update="false"/>
+        <property column="ZKCBM" insert="false" name="zkcbm" type="string" update="false"/>
+        <property column="ZKCRQ" insert="false" name="zkcrq" type="date" update="false"/>
+        <property column="ZSTUS" insert="false" name="zstus" type="string" update="false"/>
+        <property column="LPROP" insert="false" name="lprop" type="string" update="false"/>
+        <property column="LTYPE" insert="false" name="ltype" type="string" update="false"/>
+        <property column="BATCH" insert="false" name="batch" type="string" update="false"/>
+        <property column="LSYST" insert="false" name="lsyst" type="string" update="false"/>
+        <property column="LSORT" insert="false" name="lsort" type="string" update="false"/>
+        <property column="ZZYYW" insert="false" name="zzyyw" type="string" update="false"/>
+        <property column="CREID" insert="false" name="creid" type="string" update="false"/>
+        <property column="CRETM" insert="false" name="cretm" type="date" update="false"/>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.GenlSupplyEfficacy" table="GENL_SUPPLY_EFFICACY">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="zdata" type="string">
+                <column length="8" name="ZDATA"/>
+            </key-property>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+        </composite-id>
+        <property name="ytype" type="long">
+            <column length="22" name="YTYPE" not-null="true"/>
+        </property>
+        <property name="zqual" type="big_decimal">
+            <column length="12" name="ZQUAL" not-null="true" precision="12" scale="3"/>
+        </property>
+        <property name="zsupp" type="big_decimal">
+            <column length="12" name="ZSUPP" not-null="true" precision="12" scale="3"/>
+        </property>
+        <property name="zcost" type="big_decimal">
+            <column length="12" name="ZCOST" not-null="true" precision="12" scale="3"/>
+        </property>
+        <property name="zqtxi" type="big_decimal">
+            <column length="12" name="ZQTXI" not-null="true" precision="12" scale="3"/>
+        </property>
+        <property name="zjshz" type="big_decimal">
+            <column length="12" name="ZJSHZ" not-null="true" precision="12" scale="3"/>
+        </property>
+        <property name="zzhjx" type="big_decimal">
+            <column length="12" name="ZZHJX" not-null="true" precision="12" scale="3"/>
+        </property>
+        <property name="ztlpm" type="big_decimal">
+            <column length="12" name="ZTLPM" not-null="true" precision="12" scale="3"/>
+        </property>
+        <property name="zjxpm" type="big_decimal">
+            <column length="12" name="ZJXPM" not-null="true" precision="12" scale="3"/>
+        </property>
+        <property name="zjxdj" type="string">
+            <column length="20" name="ZJXDJ" not-null="true"/>
+        </property>
+        <property name="zbeiz" type="string">
+            <column length="2000" name="ZBEIZ"/>
+        </property>
+        <property name="zstat" type="string">
+            <column length="10" name="ZSTAT"/>
+        </property>
+        <property name="creid" type="string">
+            <column length="20" name="CREID"/>
+        </property>
+        <property name="cretm" type="date">
+            <column name="CRETM"/>
+        </property>
+        <property name="bukrs" type="string">
+            <column length="10" name="BUKRS"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="10" name="WERKS"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.GenlSupplywtfkList" table="GENL_SUPPLYWTFK_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="wtfkid" type="string">
+            <column length="20" name="WTFKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createname" type="string">
+            <column length="20" name="CREATENAME"/>
+        </property>
+        <property name="createtel" type="string">
+            <column length="20" name="CREATETEL"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="wtlx" type="string">
+            <column length="1" name="WTLX"/>
+        </property>
+        <property name="wtms" type="string">
+            <column length="2000" name="WTMS"/>
+        </property>
+        <property name="recvuserid" type="string">
+            <column length="15" name="RECVUSERID"/>
+        </property>
+        <property name="zrrname" type="string">
+            <column length="20" name="ZRRNAME"/>
+        </property>
+        <property name="jjfa" type="string">
+            <column length="2000" name="JJFA"/>
+        </property>
+        <property name="jhjjtime" type="timestamp">
+            <column name="JHJJTIME"/>
+        </property>
+        <property name="clzt" type="string">
+            <column length="1" name="CLZT"/>
+        </property>
+        <property name="sjjjtime" type="timestamp">
+            <column name="SJJJTIME"/>
+        </property>
+        <property name="supqr" type="string">
+            <column length="1" name="SUPQR"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+        <property name="tctime" type="timestamp">
+            <column name="TCTIME"/>
+        </property>
+        <property name="recvusername" type="string">
+            <column length="20" name="RECVUSERNAME"/>
+        </property>
+        <property name="name1" type="string">
+            <column length="80" name="NAME1"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.GenlCpflpzList" table="GENL_CPFLPZ_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="12" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="fldm" type="string">
+            <column length="12" name="FLDM"/>
+        </property>
+        <property name="flmc" type="string">
+            <column length="100" name="FLMC"/>
+        </property>
+        <property name="sjid" type="long">
+            <column length="12" name="SJID"/>
+        </property>
+        <property name="ssdj" type="string">
+            <column length="12" name="SSDJ"/>
+        </property>
+        <property name="hbdm" type="string">
+            <column length="12" name="HBDM"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.GenlCpqdwhList" table="GENL_CPQDWH_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="int">
+            <column length="10" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="cpmc" type="string">
+            <column length="100" name="CPMC"/>
+        </property>
+        <property name="cpxh" type="string">
+            <column length="100" name="CPXH"/>
+        </property>
+        <property name="cpgg" type="string">
+            <column length="100" name="CPGG"/>
+        </property>
+        <property name="ssdl" type="string">
+            <column length="100" name="SSDL"/>
+        </property>
+        <property name="sszl" type="string">
+            <column length="100" name="SSZL"/>
+        </property>
+        <property name="ssxl" type="string">
+            <column length="100" name="SSXL"/>
+        </property>
+        <property name="ntgl" type="string">
+            <column length="100" name="NTGL"/>
+        </property>
+        <property name="gjzld" type="string">
+            <column length="2000" name="GJZLD"/>
+        </property>
+        <property name="zyjscs" type="string">
+            <column length="100" name="ZYJSCS"/>
+        </property>
+        <property name="text" type="string">
+            <column length="2000" name="TEXT"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="4" name="STATU"/>
+        </property>
+        <property name="userid" type="string">
+            <column length="12" name="USERID"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.GenlSupplyHgsupply" table="GENL_SUPPLY_HGSUPPLY">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+            <key-property name="yearr" type="string">
+                <column length="10" name="YEARR"/>
+            </key-property>
+            <key-property name="ekorg" type="string">
+                <column length="4" name="EKORG"/>
+            </key-property>
+        </composite-id>
+        <property name="jydy" type="string">
+            <column length="100" name="JYDY"/>
+        </property>
+        <property name="gyslx" type="string">
+            <column length="100" name="GYSLX"/>
+        </property>
+        <property name="zgcp" type="string">
+            <column length="1000" name="ZGCP"/>
+        </property>
+        <property name="wzlx" type="string">
+            <column length="100" name="WZLX"/>
+        </property>
+        <property name="wzlb" type="string">
+            <column length="100" name="WZLB"/>
+        </property>
+        <property name="gysdz" type="string">
+            <column length="1000" name="GYSDZ"/>
+        </property>
+        <property name="gyslxr" type="string">
+            <column length="1000" name="GYSLXR"/>
+        </property>
+        <property name="gyslxdh" type="string">
+            <column length="1000" name="GYSLXDH"/>
+        </property>
+        <property name="text1" type="string">
+            <column length="2000" name="TEXT1"/>
+        </property>
+        <property name="text2" type="string">
+            <column length="2000" name="TEXT2"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="createuserid" type="string">
+            <column length="100" name="CREATEUSERID"/>
+        </property>
+        <property name="updatetime" type="timestamp">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="updateuseid" type="string">
+            <column length="100" name="UPDATEUSEID"/>
+        </property>
+        <property name="delflag" type="string">
+            <column length="4" name="DELFLAG"/>
+        </property>
+        <property name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+        </property>
+    </class>
+</hibernate-mapping>

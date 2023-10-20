@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 人员管理相关SQL-->
+<!-- author:陈今伟 -->
+<sqlMap>
+	  <!-- 依据人员Id查询人员(和对应操作员) -->   
+	 <select id="queryEmpbyEmpid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	 		select ee.empid as "empid",    
+			ee.empcode as "empcode",     
+			ee.empname as "empname",      
+			ee.realname as "realname",      
+			ee.gender as "gender",      
+			to_char(ee.birthdate,'yyyy/mm/dd') as "birthdate",      
+			ee.position as "position",     
+			ee.empstatus as "empstatus",      
+			ee.cardtype as "cardtype",      
+			ee.cardno as "cardno",      
+			to_char(ee.indate,'yyyy/mm/dd') as "indate",     
+			to_char(ee.outdate,'yyyy/mm/dd') as"outdate",      
+			ee.otel as "otel",      
+			ee.oaddress as "oaddress",      
+			ee.ozipcode as "ozipcode",      
+			ee.oemail as "oemail",      
+			ee.faxno as "faxno",      
+			ee.mobileno as "mobileno",      
+			ee.msn as "msn",      
+			ee.htel as "htel",      
+			ee.haddress as "haddress",     
+			ee.hzipcode as "hzipcode",     
+			ee.pemail as "pemail",     
+			ee.party as "party",      
+			ee.degree as "degree",     
+			ee.major as "major",      
+			ee.specialty as "specialty",      
+			ee.workexp as "workexp",      
+			to_char(ee.regdate,'yyyy/mm/dd') as "regdate" ,      
+			ee.orgidlist as "orgidlist",      
+			ee.mainorgid as "mainorgid",      
+			ee.remark as "remark",      
+			ee.createby as "createby",      
+			ee.modifyby as "modifyby",     
+			ee.updatetime as "updatetime",     
+			ee.delflag as "delflag",      
+			ee.dataorgid as "dataorgid",    
+			op.password as "password",
+			to_char(op.invaldate,'yyyy/mm/dd') as "invaldate" ,      
+			op.operatorid as "operatorid",
+			op.userid as "userid",
+			op.operatorname as "operatorname",
+			op.authmode as "authmode",
+			op.status as "status",
+			op.menutype as "menutype",
+			to_char(op.startdate,'yyyy/mm/dd') as "startdate" ,      
+			to_char(op.enddate,'yyyy/mm/dd') as "enddate" ,      
+			op.email as "email",
+			eo.orgid as "orgid",
+			eo.ismain as "ismain",
+			oo.orgname as "orgname"
+			from t_om_employee ee 
+			left join t_om_emporg eo on ee.empid = eo.empid 
+			left join t_om_organization oo on eo.orgid = oo.orgid 
+			left join t_ac_operator op on op.empid = ee.empid
+			where ee.delflag='n'
+		<dynamic prepend="and"> 
+		  <isNotNull prepend="and" property="empid"> 
+			ee.empid =#empid#
+		  </isNotNull>
+		</dynamic> 
+	 </select>
+ 
+	  <!-- 查找没有操作员的员工信息 -->
+	 <select id="queryEmpNotOper" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject" >
+				select e.empid as "empid",
+				e.empcode as "empcode",
+				e.empname as "empname",
+				om.orgid as "orgid",
+				om.orgname as "orgname"
+	  			from t_om_employee e
+	  			left join t_om_emporg o
+	    		on e.empid = o.empid
+	  			left join t_om_organization om
+	    		on o.orgid = om.orgid
+	 			where e.empstatus = 'on'
+        		and not exists (select 1 from t_ac_operator tt where tt.empid = e.empid)
+	 			<isNotNull prepend="and" property="empname"> 
+	 			e.empname like CONCAT('%',CONCAT(#empname#,'%'))
+	 			</isNotNull>
+	 			<isNotNull prepend="and" property="dataorgid"> 
+	 			e.dataorgid = #dataorgid#
+	 			</isNotNull>
+	 </select>
+ 
+</sqlMap>
+
+
+
+
+
+
+
+

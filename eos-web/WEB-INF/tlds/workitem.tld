@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+	<tlibversion>1.2</tlibversion>
+	<jspversion>1.1</jspversion>
+	<shortname>workitem</shortname>
+	<uri>http://eos.primeton.com/tags/hjsrm/workitem</uri>
+	<function>
+		<description>调用java方法获取数据库记录</description>
+		<name>getActivityTabsBusiType</name>
+		<function-class>
+			com.zoomlion.hjsrm.pub.businessclib.busi.common.BusiBpsCommon
+		</function-class>
+		<function-signature>
+			java.lang.String getActivityTabsBusiType(java.lang.String,java.lang.String,java.lang.String)
+		</function-signature>
+		<examples>${js:getData(str,str2,str3)}</examples>
+	</function>
+</taglib>

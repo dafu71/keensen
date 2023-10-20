@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.tuyangbg.tuyangbg">
+    <!--图样变更查询-->
+    <select id="querytybgnotice" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+         select t.tybg_id as "tybgId",
+                t.tybg_person_id as "tybgPersonId",
+                t.tybg_person_name as "tybgPersonName",
+                t.dept_id as "deptID",
+                t.dept_name as "deptName",
+                t.tybg_contact as "tybgContact",
+                t.tybg_title as "tybgTitle",
+                t.tybg_text as "tybgText",
+                t.tybg_time as "tybgTime",
+                t.processinstid as "processinstid",
+                t.process_status as "processStatus",
+                t.processinstid as "rootprocinstid"
+           from flow_tybg_notice t
+          where 1=1
+          <isNotNull prepend="and" property="tybgTitle">t.tybg_title like '%'||#tybgTitle#||'%'</isNotNull>
+        <isNotNull prepend="and" property="tybgId">t.tybg_id  = #tybgId#</isNotNull>
+        <isNotNull prepend="and" property="processinstid">t.processinstid = #processinstid#</isNotNull>
+        <isNotNull prepend="and" property="tybgPersonName">t.tybg_person_name =#tybgPersonName#</isNotNull>
+        <isNotNull prepend="and" property="appstarttime">to_char(t.tybg_time,'yyyy-MM-dd') &gt;= #appstarttime#</isNotNull>
+        <isNotNull prepend="and" property="appendtime">to_char(t.tybg_time,'yyyy-MM-dd') &lt;= #appendtime#</isNotNull>
+        <isNotNull prepend="and" property="orgname">t.dept_name = #orgname#</isNotNull>
+        <isNotNull prepend="and" property="deptid">t.dept_id = #deptid#</isNotNull>
+        <isNotNull prepend="and" property="processStatus">t.process_status = #processStatus#</isNotNull> 
+		 order by t.tybg_id desc
+    </select>
+    <!--通过图样变更ID来查找图样变更信息-->
+    <select id="querytybgdatabyproid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+        select t.tybg_id as "tybgId",
+               t.tybg_person_id as "tybgPersonId",
+               t.tybg_person_name as "tybgPersonName",
+               t.dept_id as "deptID",
+               t.dept_name as "deptName",
+               t.tybg_contact as "tybgContact",
+               t.tybg_title as "tybgTitle",
+               t.tybg_text as "tybgText",
+               t.tybg_time as "tybgTime",
+               t.processinstid as "processinstid",
+               t.process_status as "processStatus"
+          from flow_tybg_notice t
+          where 1=1
+		  <isNotNull prepend="and" property="tybgId">t.tybg_id = #tybgId#</isNotNull>
+        <isNotNull prepend="and" property="processinstid">t.processinstid = #processinstid#</isNotNull>
+    </select>
+    <!--获得图样变更通知业务数据-->
+    <select id="getTybgNotice" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select t.tybg_id as "tybgId",
+               t.tybg_person_id as "tybgPersonId",
+               t.tybg_person_name as "tybgPersonName",
+               t.dept_id as "deptID",
+               t.dept_name as "deptName",
+               t.tybg_contact as "tybgContact",
+               t.tybg_title as "tybgTitle",
+               t.tybg_text as "tybgText",
+               t.tybg_time as "tybgTime",
+               t.processinstid as "processinstid",
+               t.process_status as "processStatus"
+          from flow_tybg_notice t
+          where 1=1
+		  <isNotNull prepend="and" property="tybgId">t.tybg_id = #tybgId#</isNotNull>
+        <isNotNull prepend="and" property="processinstid">t.processinstid = #processinstid#</isNotNull>
+    </select>
+    <!--获得图样变更通知处理数据-->
+    <select id="getTybgNoticeItem" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select a.items_Id "itemsId",
+    		   a.items_Name "itemsName",
+    		   a.itmes_Code "itmesCode",
+    		   a.actions_Person_Name "actionsPersonName",
+    		   a.actions_Person_Id "actionsPersonId",
+    		   a.actions_Text "actionsText",
+    		   a.actons_Time "actonsTime",
+    		   a.processinstid "processinstid",
+    		   a.operation_Id "operationId"
+		  from flow_tybg_notice_items a
+		  where 1=1
+		  <isNotNull prepend="and" property="itemsId">a.items_Id = #itemsId#</isNotNull>
+        <isNotNull prepend="and" property="itmesCode">a.itmes_Code = #itmesCode#</isNotNull>
+        <isNotNull prepend="and" property="buessId">a.OPERATION_ID = #buessId#</isNotNull>
+        <isNotNull prepend="and" property="processinstid">a.processinstid = #processinstid#</isNotNull>
+    </select>
+    <!--获得图样变更通知业务编号-->
+    <update id="updateFileRetionId" parameterClass="java.util.HashMap">update T_AT_FILEUPLOAD a set a.relation_id=#processinstid#  where a.relation_id =#tybgId#</update>
+    <!--删除临时参与人员数据-->
+    <delete id="deleteTempTechData" parameterClass="java.util.HashMap">delete from FLOW_TEMP_NOTICE_ITEMS a where a.processinstid=#processinstid#</delete>
+</sqlMap>

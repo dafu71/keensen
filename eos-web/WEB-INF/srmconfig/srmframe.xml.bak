@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<application xmlns="http://www.primeton.com/xmlns/eos/1.0">
+	
+	<module name="frame-config">
+
+		<!-- 登陆配置
+           use_verify_code: 是否使用验证码
+           use_default_language：默认浏览语言
+	    -->
+		<group name="login-config">
+			<!-- 是否启用登录验证码 true启用 false不启用-->
+	       <configValue key="use_verify_code">false</configValue>
+	        <!-- 是否允许同一IP重复登录 true表示可重复登录，false会将之前登录会话踢下线-->
+	       <configValue key="use_online_distribute">true</configValue>
+	       <!-- 系统语言 预留配置-->
+	       <configValue key="use_default_language">zh_CN</configValue>
+	   </group>
+	   
+		<!--权限校验配置
+		   permission_check_use  : 是否启用权限的资源验证
+		   is_user_position   :  是否启用岗位数据权限开关。 true：启用岗位数据权限、 false：启用角色数据权限
+		   data_permission_default_righttype : up:向上型 (本机构以及所有上级机构有权限，'.1.2.3.'  可翻译为  in (1,2,3)  即上级即本机机构) 
+															  down:向下型 (本机构以及所有下级机构有权限) 
+		   													  self:本机构型(本机构有权限)
+           permission_check_handler:权限校验handler 
+           checked_contributions:   定义进行权限校验的构件包,以逗号分割，可以使用 * 表示任意字符 如org.gocom.abframe.*表示以org.gocom.abframe.*开始的所有构件包
+                                    * 只能出现在最前面或者最后面
+           unchecked_contributions: 定义不需要（NOT）进行权限校验的构件包,以逗号分割，可以使用 * 表示任意字符
+                                    此优先级高于checked_contributions也就是说如果一个构件包只要满足unchecked就忽略checked
+           default_uncheck_resource:默认不需要权限校验url,以逗号分割
+		 -->
+        <group name="permission-config">
+            <configValue key="permission_check_use">true</configValue>
+            <configValue key="is_user_position">false</configValue>
+            <configValue key="data_permission_default_righttype">self</configValue>
+            <configValue key="permission_check_handler">com.zoomlion.hjsrm.frame.auth.handler.PermissionCheckedHandler</configValue>
+            <!-- 逗号分隔userid -->
+            <configValue key="admin_users">sysadmin</configValue>
+            <configValue key="checked_contributions">                
+              *
+            </configValue>
+            <configValue key="unchecked_contributions">
+             com.gocom.abframe.unittest.*,
+             com.eos.workflow.*,
+             com.primeton.workflow.*                                  
+            </configValue>
+            <!-- 不满足上述两个构件包规则的构件包默认是否使用校验，true表示校验，false表示不校验，大小写不敏感，默认值为true，为空表示true -->
+            <configValue key="unmatch_contributions_checked">true</configValue>
+            <!-- 不在数据库功能表中的访问资源默认是否有权限使用，true表示有权限，false表示无，大小写不敏感，默认值为true，为空表示true -->
+            <configValue key="unregistered_function_access">true</configValue>
+            <configValue key="default_uncheck_resource">						
+				com.eos.workflow.executetask.executeTask.flow,
+				/frame/auth/login/login.jsp,
+				/frame/auth/login/relogin.jsp,
+				*Flow.jsp,
+				com.zoomlion.hjsrm.frame.auth.login.LoginManager.authentication.biz
+            </configValue>
+        </group>
+    </module>
+    
+</application>

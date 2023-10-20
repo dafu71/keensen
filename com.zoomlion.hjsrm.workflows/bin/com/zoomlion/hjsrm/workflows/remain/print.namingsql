@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.workflows.remain.print">
+    <select id="queryAppliance" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select io.applyinfopkid "applyinfopkid",
+         dic.dictname "productname",
+         sc.seller "seller",
+         sc.orderid "orderid",
+         nvl(sc.userid,uo.userid) "userid",
+         nvl(sc.username,uo.username) "username",
+         nvl(sc.contactname,uo.username) "contactname",
+         nvl(sc.contactphone,uo.contactphone) "contactphone",
+         nvl(sc.addressdetail,ad.fulname||uo.addrdetail) "addressdetail",
+         to_char(ao.claimbookdate, 'yyyy~mm!dd@hh24^mi*') "claimbookdate",
+         to_char(sc.buydate, 'yyyy~mm!dd@') "buydate",
+         tm.sorttype "sorttype",
+         tm.modelid "modelid",
+         ao.remark "remark",
+         ao.userid "userid"
+        from t_gs_installinfo io
+        join t_bs_applyinfo ao
+          on io.applyinfopkid = ao.pkid
+        left join t_gs_selldetail sd
+          on sd.pkid = io.selldetailpkid
+        left join t_gs_sellrec sc
+          on sd.sellrecpkid = sc.pkid
+        join t_gs_balancebasic bc
+          on bc.selldetailpkid = sd.pkid
+        join t_gs_tparam tm
+          on sd.tparampkid = tm.pkid
+          left join t_kh_userinfo uo on  ao.userid  = uo.userid
+          left join t_zy_addrinfo ad on ad.pkid = uo.addrinfopkid
+        left join (select dict.dictid, dict.dictname
+                     from eos_dict_entry dict
+                    where dict.dicttypeid = 'GS_SORTTYPE') dic
+          on dic.dictid = tm.sorttype
+			            where io.applyinfopkid = #applyinfopkid#</select>
+    <select id="queryRepairAppliance" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+			SELECT ao.userid "userid"
+			    , nvl(sc.username,ui.username) "username"
+			    , nvl(sc.contactname,ui.username) "contactname"
+			    , sc.contactphone "contactphone"
+			    , ope.operatorname "createby"
+			    , sc.addressdetail "addressdetail"
+			    , ao.remark "remark"
+			    <![CDATA[ , to_char (ao.claimbookdate, 'mm!dd@hh24^mi&') "claimbookdate" ]]>
+			    , dict_brand.dictname "brand"
+			    , tm.modelid "modelid"
+			    <![CDATA[ , to_char (sc.buydate, 'yyyy~mm!dd@') "buydate" ]]>
+			    , emp.empname "installman"
+			    , ro.selldetailpkid "selldetailpkid"
+			FROM t_bs_applyinfo ao
+			    JOIN t_gs_repairinfo ro ON ao.pkid = ro.applyinfopkid
+			    JOIN t_gs_selldetail sl ON ro.selldetailpkid = sl.pkid
+			    left JOIN t_gs_sellrec sc ON sc.pkid = sl.sellrecpkid
+			    JOIN t_gs_tparam tm ON tm.pkid = sl.tparampkid
+			    JOIN t_kh_userinfo ui ON ao.userid = ui.userid AND ui.delflag = '0'
+			    JOIN t_ac_operator ope ON ao.createby = ope.userid
+			    JOIN eos_dict_entry dict_brand ON tm.brand = dict_brand.dictid AND dict_brand.dicttypeid = 'GS_PRODUCT_BRAND'
+			    LEFT JOIN t_gs_installinfo io ON ro.selldetailpkid = io.selldetailpkid
+			    LEFT JOIN t_om_employee emp ON io.installman = emp.empcode
+			    WHERE ro.applyinfopkid = #applyinfopkid#
+    </select>
+    <!-- 获取部门联络单要打印的数据 -->
+    <select id="getDepartmentliaisonData" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select a.userid "userid",a.username "username",a.contactphone "contactphone",
+			a.mobile "mobile",a.addrdetail "address",
+			a.worklistinfopkid "sheetno",d.orgname "sendorg",e.orgname "handleorg",
+			a.sendby "sendby",to_char(a.sendday,'yyyy-mm-dd') "sendday",f.dictname "isurgent",
+			g.dictname "worktype",to_char(a.providecompleteday,'yyyy-mm-dd') "providecompleteday",a.contentabstract "contentabstract"
+			from t_bs_departmentliaison a 
+			left join t_om_organization d on a.sendorgid = d.orgid
+			left join t_om_organization e on a.handleorgid = e.orgid
+			left join eos_dict_entry f on a.isurgent = f.dictid and f.dicttypeid = 'PB_ISORNOT'
+			left join eos_dict_entry g on a.worktype = g.dictid and g.dicttypeid = 'T_BS_DEPARTMENTLIAISON'
+			where a.worklistinfopkid = (select t.pkid from t_bs_worklistinfo t where t.applyinfopkid = #applyinfopkid#)</select>
+    <!-- 查询诉求待办工单信息（打印） -->
+    <select id="queryApplyRemainInfo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     	select ai.pkid "applyinfopkid",
+		       ai.userid "userid",
+		       ai.custname "username",
+		       za.fulname || ai.addrdetail || decode(za.byname, null, '', 
+		       				'（' || za.byname || '）')  "address",
+		       to_char(ai.createtime, 'yyyy-MM-dd HH24:mi:ss') "createtime",
+		       ci.contactname "contactname",
+		       ci.mobile "mobile",
+		       ci.contactphone "contactphone",
+		       ai.chnltype "chnltype",
+		       d1.dictname "chnltypename",
+		       ai.chnlid "chnlid",
+		       oo.orgname "chnlname",
+		       ai.receivedept "receivedept",
+		       oo2.orgname "receivedeptname",
+		       ai.busitype "busitype",
+		       sa.typename "busitypename",
+		       d2.dictname "urglvl",
+		       to_char(ai.claimbookdate, 'yyyy-MM-dd') "claimbookdate",
+		       ai.remark "remark"
+		  from t_bs_applyinfo    ai,
+		       t_kh_userinfo     ui,
+		       t_kh_contactinfo  ci,
+		       t_zy_addrinfo     za,
+		       eos_dict_entry    d1,
+		       eos_dict_entry    d2,
+		       t_om_organization oo,
+		       t_om_organization oo2,
+		       t_sq_applytype    sa
+		 where ai.userid = ui.userid
+		   and ai.pkid = ci.ownid(+)
+		   and ci.owntype(+) = '3'
+		   and ai.addrinfopkid = za.pkid(+)
+		   and ai.chnltype = d1.dictid(+)
+		   and d1.dicttypeid(+) = 'BS_APPLYINFO_CHNLTYPE'
+		   and ai.urglvl = d2.dictid(+)
+		   and d2.dicttypeid(+) = 'BS_WORKPRIORITY'
+		   and ai.chnlid = oo.orgid(+)
+		   and ai.receivedept = oo2.orgid(+)
+		   and ai.busitype = sa.apptypeid
+		   and ai.dataorgid = #dataorgid#
+		   and ui.dataorgid = #dataorgid#
+		   and sa.dataorgid = #dataorgid#
+   		   <isNotNull prepend="and" property="applyinfopkids">
+	   		   ai.pkid in
+				<iterate close=")" conjunction="," open="(" property="applyinfopkids">#applyinfopkids[]#</iterate>
+        </isNotNull> 
+		    order by ai.claimdate, ai.earlydate, ai.urglvl
+     </select>
+    <select id="queryMeterDealPrint" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select ku.userid "userid",
+			       ku.username "username",
+			       kc.contactphone "contactphone",
+			       kc.mobile "mobile",
+			       ao.operatorname "createby",
+			       za.fulname || ku.addrdetail "address",
+			       to_char(ba.createtime, 'yyyy-MM-dd HH24:mi:ss') "createtime",
+			       zmp.tparamname "brand",
+			       zm.resid "resid",
+			       zmr.reading "reading",
+			       ba.remark "remark",
+			       to_char(gb.selldate, 'yyyy-MM-dd') "selldate",
+			       tm.modelid "modelid",
+			       de.dictname "rqjbrand",
+			       sp.mcumapid "mcumapid"
+			  from t_bs_applyinfo ba
+			  join t_kh_userinfo ku on ba.userid = ku.userid
+			                       and ku.delflag = '0'
+			  left join t_kh_contactinfo kc on ba.pkid = kc.ownid
+			                               and kc.owntype = '3'
+			  left join t_kh_usersupplypoint kus on ku.userid = kus.userid
+			  									and kus.dataorgid = #dataorgid#
+			  left join t_zy_supplypoint sp on kus.supplypointpkid = sp.pkid
+			  left join t_kh_supplymeter kum on kus.supplypointpkid =
+			                                    kum.supplypointpkid
+			                                and kum.state = '1'
+			  left join t_zy_addrinfo za on ku.addrinfopkid = za.pkid
+			  left join t_zy_meterinfo zm on kum.meterinfopkid = zm.pkid
+			                             and zm.delflag = '0'
+			  left join t_zy_meterreading zmr on zm.pkid = zmr.meterinfopkid
+			                                 and zmr.delflag = '0'
+			  left join t_zy_metertparam zmp on zm.metertparampkid = zmp.pkid
+			  								 and zmp.dataorgid = #dataorgid#
+			  left join t_ac_operator ao on ba.createby = ao.userid
+			  left join (select *
+			               from (select *
+			                       from t_gs_balancebasic
+			                      where productstate not in
+			                            ('D', 'PS006', 'PS007', 'PS008', 'PS012', 'Z')
+			                        and userid = #userid#
+			                      order by selldate)
+			              where rownum = 1) gb on ku.userid = gb.userid
+			  left join t_gs_tparam tm on tm.pkid = gb.tparampkid
+			  left join eos_dict_entry de on tm.brand = de.dictid
+			                             and de.dicttypeid = 'GS_PRODUCT_BRAND'
+			 where ba.pkid = #applyinfopkid#</select>
+    <!-- 查询业务工单通用打印内容 -->
+    <select id="queryCommonPrintBusiRemain" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select oo.orgname "applychnl",
+		       ao.operatorname "operatorname",
+		       to_char(ai.createtime, 'yyyy-MM-dd') "createtime",
+		       sa.typename "busitypename",
+		       to_char(ai.bookdate, 'yyyy-MM-dd') "bookdate",
+		       ai.userid "userid",
+		       ai.custname "username",
+		       nvl(kc.mobile, kc.contactphone) "contact",
+		       za.fulname || ai.addrdetail ||
+		       decode(za.byname, null, '', '（' || za.byname || '）') "useraddress",
+		       ai.remark "remark",
+		       '' "usertype",
+		       '' "consumpattr",
+		       '' "resid",
+		       '' "metertype",
+		       '' "modelid",
+		       '' "meterdirect",
+		       '' "factoryname",
+		       null "reading"
+		  from t_bs_applyinfo    ai,
+		       t_kh_contactinfo  kc,
+		       t_om_organization oo,
+		       t_ac_operator     ao,
+		       t_sq_applytype    sa,
+		       t_zy_addrinfo     za
+		 where ai.pkid = kc.ownid(+)
+		   and ai.busitype in ('BS201', 'BS202', 'BS203', 'BS204')
+		   and kc.owntype(+) = '3'
+		   and kc.delflag(+) = '0'
+		   and ai.chnlid = oo.orgid(+)
+		   and ai.createby = ao.userid(+)
+		   and ao.dataorgid(+) = #dataorgid#
+		   and ai.busitype = sa.apptypeid(+)
+		   and sa.delflag = '0'
+		   and sa.dataorgid = #dataorgid#
+		   and ai.addrinfopkid = za.pkid(+)
+		   and ai.pkid = #applyinfopkid#
+		union all
+		select oo.orgname "applychnl",
+		       ao.operatorname "operatorname",
+		       to_char(ai.createtime, 'yyyy-MM-dd') "createtime",
+		       sa.typename "busitypename",
+		       to_char(ai.bookdate, 'yyyy-MM-dd') "bookdate",
+		       ai.userid "userid",
+		       ai.custname "username",
+		       nvl(kc.mobile, kc.contactphone) "contact",
+		       za.fulname || ai.addrdetail ||
+		       decode(za.byname, null, '', '（' || za.byname || '）') "useraddress",
+		       ai.remark "remark",
+		       de1.dictname "usertype",
+		       de2.dictname "consumpattr",
+		       um.resid "resid",
+		       um.metertype "metertype",
+		       um.modelid "modelid",
+		       um.meterdirect "meterdirect",
+		       um.factoryname "factoryname",
+		       um.reading "reading"
+		  from t_bs_applyinfo ai,
+		       t_kh_contactinfo kc,
+		       t_om_organization oo,
+		       t_ac_operator ao,
+		       t_sq_applytype sa,
+		       t_zy_addrinfo za,
+		       t_kh_userinfo ku,
+		       eos_dict_entry de1,
+		       eos_dict_entry de2,
+		       (select vku.userid,
+		               vku.resid,
+		               de3.dictname metertype,
+		               vku.modelid,
+		               de4.dictname meterdirect,
+		               zf.factoryname,
+		               zmr.reading
+		          from v_kh_usermeter    vku,
+		               t_zy_factory      zf,
+		               t_zy_meterreading zmr,
+		               eos_dict_entry    de3,
+		               eos_dict_entry    de4
+		         where vku.factorypkid = zf.pkid(+)
+		           and vku.meterinfopkid = zmr.meterinfopkid
+		           and vku.metertype = de3.dictid
+		           and de3.dicttypeid = 'ZY_METERTPARAM_METERTYPE'
+		           and vku.meterdirect = de4.dictid(+)
+		           and de4.dicttypeid(+) = 'ZY_METERTPARAM_METERDIRECT'
+		           and zmr.delflag = '0'
+		           and vku.userid = #userid#
+		           and rownum = 1) um
+		 where ai.pkid = kc.ownid(+)
+		   and ai.busitype not in ('BS201', 'BS202', 'BS203', 'BS204')
+		   and kc.owntype(+) = '3'
+		   and kc.delflag(+) = '0'
+		   and ai.chnlid = oo.orgid(+)
+		   and ai.createby = ao.userid(+)
+		   and ao.dataorgid(+) = #dataorgid#
+		   and ai.busitype = sa.apptypeid(+)
+		   and sa.delflag = '0'
+		   and sa.dataorgid = #dataorgid#
+		   and ai.addrinfopkid = za.pkid(+)
+		   and ai.userid = ku.userid(+)
+		   and de1.dicttypeid(+) = 'KH_USERTYPE'
+		   and ku.usertype = de1.dictid(+)
+		   and de2.dicttypeid(+) = 'KH_USERINFO_CONSUMPATTR'
+		   and ku.consumpattr = de2.dictid(+)
+		   and ku.userid = um.userid(+)
+		   and ai.pkid = #applyinfopkid#</select>
+</sqlMap>

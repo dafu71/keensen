@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmMaterial.BaseMaterialMara" table="BASE_MATERIAL_MARA">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="matnr" type="string">
+            <column length="18" name="MATNR"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="maktx" type="string">
+            <column length="100" name="MAKTX"/>
+        </property>
+        <property name="ersda" type="date">
+            <column name="ERSDA"/>
+        </property>
+        <property name="laeda" type="date">
+            <column name="LAEDA"/>
+        </property>
+        <property name="lvorm" type="string">
+            <column length="1" name="LVORM"/>
+        </property>
+        <property name="mtart" type="string">
+            <column length="4" name="MTART"/>
+        </property>
+        <property name="meins" type="string">
+            <column length="5" name="MEINS"/>
+        </property>
+        <property name="zeinr" type="string">
+            <column length="25" name="ZEINR"/>
+        </property>
+        <property name="mstae" type="string">
+            <column length="2" name="MSTAE"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="date">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmMaterial.BaseMaterialMarc" table="BASE_MATERIAL_MARC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="matnr" type="string">
+                <column length="18" name="MATNR"/>
+            </key-property>
+            <key-property name="werks" type="string">
+                <column length="4" name="WERKS"/>
+            </key-property>
+        </composite-id>
+        <property name="lvorm" type="string">
+            <column length="1" name="LVORM"/>
+        </property>
+        <property name="mmsta" type="string">
+            <column length="2" name="MMSTA"/>
+        </property>
+        <property name="ekgrp" type="string">
+            <column length="3" name="EKGRP"/>
+        </property>
+        <property name="lgfsb" type="string">
+            <column length="4" name="LGFSB"/>
+        </property>
+        <property name="maabc" type="string">
+            <column length="2" name="MAABC"/>
+        </property>
+        <property name="dismm" type="string">
+            <column length="4" name="DISMM"/>
+        </property>
+        <property name="minbe" type="string">
+            <column length="20" name="MINBE"/>
+        </property>
+        <property name="bstmi" type="string">
+            <column length="20" name="BSTMI"/>
+        </property>
+        <property name="bstma" type="string">
+            <column length="20" name="BSTMA"/>
+        </property>
+        <property name="mabst" type="string">
+            <column length="20" name="MABST"/>
+        </property>
+        <property name="lgpro" type="string">
+            <column length="8" name="LGPRO"/>
+        </property>
+        <property name="plifz" type="string">
+            <column length="6" name="PLIFZ"/>
+        </property>
+        <property name="eisbe" type="string">
+            <column length="20" name="EISBE"/>
+        </property>
+        <property name="eislo" type="string">
+            <column length="20" name="EISLO"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmMaterial.BaseMaterialZt76" table="BASE_MATERIAL_ZT76">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="matnr" type="string">
+                <column length="18" name="MATNR"/>
+            </key-property>
+            <key-property name="werks" type="string">
+                <column length="4" name="WERKS"/>
+            </key-property>
+        </composite-id>
+        <property name="zhwbm" type="string">
+            <column length="24" name="ZHWBM"/>
+        </property>
+        <property name="zwrildt" type="date">
+            <column name="ZWRILDT"/>
+        </property>
+        <property name="zwriusr" type="string">
+            <column length="12" name="ZWRIUSR"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="date">
+            <column name="TRANT"/>
+        </property>
+        <property name="zsfclq" type="string">
+            <column length="10" name="ZSFCLQ"/>
+        </property>
+    </class>
+</hibernate-mapping>

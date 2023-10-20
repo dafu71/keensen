@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="HP" displayName="SrmBaseData" id="com.zoomlion.hjsrm.pub.sap.SrmBaseData">
+    <viewModel author="HP" displayName="BaseCompanyT001" entityName="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BaseCompanyT001" id="BaseCompanyT001">
+        <field dataType="String" dict="false" id="bukrs" label="公司代码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="butxt" label="公司代码或公司的名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="adrnr" label="地址">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stceg" label="组织机构代码/身份证号码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="HP" displayName="BaseFactoryT001w" entityName="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BaseFactoryT001w" id="BaseFactoryT001w">
+        <field dataType="String" dict="false" id="werks" label="工厂代码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="name1" label="工厂名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="bwkey" label="评估范围">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stras" label="住宅号及街道">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="pfach" label="邮政信箱">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="pstlz" label="邮政编码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ort01" label="城市">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="HP" displayName="BasePurchaseT024e" entityName="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BasePurchaseT024e" id="BasePurchaseT024e">
+        <field dataType="String" dict="false" id="ekorg" label="采购组织">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ekotx" label="采购组织描述">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="trant" label="传输时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+    </viewModel>
+    <viewModel author="HP" displayName="BasePurchaseT024" entityName="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BasePurchaseT024" id="BasePurchaseT024">
+        <field dataType="String" dict="false" id="ekgrp" label="采购组">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="eknam" label="采购组描述">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ektel" label="采购组电话号码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="telfx" label="采购组传真号码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="telNumber" label="采购组座机号码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="telExtens" label="采购组分机号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="smtpAddr" label="采购组电子邮箱">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="BaseMaterialMbew" entityName="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BaseMaterialMbew" id="BaseMaterialMbew">
+        <field dataType="String" dict="false" entityField="matnr" id="matnr" label="matnr">
+            <view type="write"/>
+            <edit name="matnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="bwkey" id="bwkey" label="bwkey">
+            <view type="write"/>
+            <edit name="bwkey" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="bwtar" id="bwtar" label="bwtar">
+            <view type="write"/>
+            <edit name="bwtar" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="vprsv" id="vprsv" label="vprsv">
+            <view type="write"/>
+            <edit name="vprsv" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="stprs" id="stprs" label="stprs">
+            <view type="write"/>
+            <edit name="stprs" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="peinh" id="peinh" label="peinh">
+            <view type="write"/>
+            <edit name="peinh" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="bklas" id="bklas" label="bklas">
+            <view type="write"/>
+            <edit name="bklas" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="laepr" id="laepr" label="laepr">
+            <view type="write"/>
+            <edit name="laepr" type="date"/>
+        </field>
+    </viewModel>
+    <viewModel author="liuxin" displayName="BasePurchaseEina" entityName="com.zoomlion.hjsrm.pub.sap.SrmBaseData.BasePurchaseEina" id="BasePurchaseEina">
+        <field dataType="String" dict="false" id="infnr" label="infnr">
+            <view type="write"/>
+            <edit name="infnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="matnr" label="matnr">
+            <view type="write"/>
+            <edit name="matnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="matkl" label="matkl">
+            <view type="write"/>
+            <edit name="matkl" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lifnr" label="lifnr">
+            <view type="write"/>
+            <edit name="lifnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="loekz" label="loekz">
+            <view type="write"/>
+            <edit name="loekz" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="erdat" label="erdat">
+            <view type="write"/>
+            <edit name="erdat" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="ernam" label="ernam">
+            <view type="write"/>
+            <edit name="ernam" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="meins" label="meins">
+            <view type="write"/>
+            <edit name="meins" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

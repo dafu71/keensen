@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:liuxin -->
+<sqlMap>
+    <!-- 查询收货入库 -->
+   <select id="querykcglshrk" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+                         select  a.pkid as "pkid",
+                              a.zasnh as "zasnh",
+                              a.zasnp as "zasnp",
+                              substr(a.remark2,1,25) as "sgtxt",
+                              b.ebeln as "ebeln",
+                              b.ebelp as "ebelp",
+                              b.matnr as "matnr",
+                              b.txz01 as "txz01",
+                              b.menge as "menge_m",
+                              b.lgort as "lgort",
+                              a.amount as "amount",
+                               (case when a.zjlb = '抽检'  then  d.krksl 
+                                   when a.zjlb = '全检'  then  to_char(nvl(h.num2,0)) 
+                                   when a.zjlb = '免检'  then  nvl(d.krksl,to_char(a.amount))
+                                   else to_char(a.amount) end) as "menge",
+                              b.loekz as "loekz",
+                              a.zjlb as "zjlb",
+                              a.mjzt as "mjzt",
+                              d.zcbz as "cjzcbz",
+                              d.jgpd as "cjjgpd",
+                              d.krksl as "krksl",
+                              nvl(f.num1,0) as num1,
+                              nvl(h.num2,0) as num2,
+                             (case when a.zjlb = '抽检'  then  d.krksl 
+                                   when a.zjlb = '全检'  then  to_char(nvl(h.num2,0)) 
+                                   when a.zjlb = '免检'  then  nvl(d.krksl,to_char(a.amount))
+                                   else to_char(a.amount) end) as "mengezj" ,
+                              i.aufnr as "aufnr",
+                              i.kostl as "kostl",
+                              i.knttp as "knttp",
+                              i.werks as "werks",
+                              a1.charg as "charg",
+                              t7.vnbm as "vnbm",
+                              c.ruku 
+                      from genl_purchase_ekpo b ,genl_purchase_eket a1,genl_purchase_note_detail a 
+                      left join genl_note_vndetail t7 on a.zasnh = t7.zasnh
+		                                 and a.zasnp = t7.zasnp
+                      left join V_GENL_ASN_CTRK c 
+                           on  a.zasnh = c.zasnh and a.zasnp = c.zasnp
+                      left join genl_inspect_cjnote d on a.zasnp = d.zasnp and a.zasnh = d.zasnh
+                      left join (select e.zasnh ,e.zasnp,count(*) as num1 from genl_inspect_qjnote e 
+                                       where e.zcbz = '2'
+                                  group by e.zasnh ,e.zasnp) f on a.zasnp = f.zasnp and a.zasnh = f.zasnh
+                       left join (select g.zasnh ,g.zasnp,count(*) as num2 from genl_inspect_qjnote g 
+                                        where g.zcbz = '2' and (g.jgpd = '1' or g.jgpd = '3')
+                                  group by g.zasnh ,g.zasnp) h on a.zasnp = h.zasnp and a.zasnh = h.zasnh
+                       left join genl_purchase_note i on a.zasnh = i.zasnh
+                      where a.ebeln = b.ebeln 
+                         and a.ebelp = b.ebelp
+                         and a.delflag = '0'
+                         and a.ebeln = a1.ebeln
+                         and a.ebelp = a1.ebelp
+                         and a.zasnh = #zasnh#
+                         <isNotNull prepend = "and"  property = "zasnp"> 
+                             a.zasnp =  #zasnp#
+                         </isNotNull>
+                       and ((a.zjlb is null or a.zjlb = '')
+                            or(a.zjlb = '免检' and (a.mjzt is null or (a.mjzt = '2' and (d.zcbz ='2'or d.zcbz is null)) or a.mjzt = '3'))
+                            or(a.zjlb = '抽检' and d.zcbz = '2')
+                            or(a.zjlb = '全检' and  nvl(f.num1,0) = a.amount))
+                        and (b.loekz is null or b.loekz = '')
+                        and (c.ruku is null or c.ruku = '0')
+                        and a.return_amount &lt; &gt;  a.amount
+                     order by  a.zasnh,to_number(a.zasnp)
+               
+    </select>
+       <!-- 查询物料凭证冲销 -->
+   <select id="querykcglwlpzcx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+       select p.mblnr   as "mblnr",
+              p.mjahr   as "mjahr",
+              p.zeile   as "zeile",
+              p.bwart   as "bwart",
+              p.ebeln   as "ebeln",
+              p.ebelp   as "ebelp",
+              p.grund   as "grund",
+              p.matnr   as "matnr",
+              b.txz01   as "txz01",
+              p.erfmg   as "menge",
+              p.lgort   as "lgort",
+              p.lfbnr   as "lfbnr",
+              p.lfbja   as "lfbja",
+              p.lfpos   as "lfpos",
+              p.delflag as "delflag",
+              p.aufnr as "aufnr",
+              p.kostl as "kostl",
+              p.knttp as "knttp",
+              p.werks1 as "werks",
+               p.mblno as "mblno",
+                p.vnbm as "vnbm",
+                (case when p.vnbm is null  then  'N'
+                                   else 'Y' end) as "sfvn",
+              decode(d.mblnr,null,0,'',0,'1') as "flag"
+        from (select i.* ,k.delflag,k.remark2,j.aufnr,j.kostl,j.knttp,j.werks as werks1 
+                   from (select a.*,b.zasnh,c.mblno,c.vnbm 
+                          from  genl_receipts_mseg a
+                          left join genl_asn_mseg b 
+                            on a.lfbja = b.mjahr and a.lfbnr = b.mblnr
+                          left join genl_mblnr_vnbm c
+                            on a.mblnr =c.mblnr  and a.zeile = c.mblno) i ,
+                         genl_purchase_note_detail k 
+                   left join genl_purchase_note j on k.zasnh = j.zasnh
+                   left join genl_note_vndetail l on k.zasnh = l.zasnh and k.zasnp = l.zasnp
+                   where k.zasnh = i.zasnh 
+                     and k.ebeln = i.ebeln 
+                     and k.ebelp = i.ebelp
+                     and (l.vnbm is null or i.vnbm = l.vnbm)) p 
+               left join (select distinct mblnr,mjahr,zeile from genl_invoice_list) d 
+                    on p.mblnr = d.mblnr 
+                   and p.mjahr = d.mjahr 
+                   and p.zeile = d.zeile,
+       genl_purchase_ekpo b
+       where p.ebeln = b.ebeln
+         and p.ebelp = b.ebelp 
+	     and p.mblnr=#mblnr# 
+	     and p.mjahr=#mjahr#
+	    order by p.mblnr,p.zeile 
+    </select>
+          <!-- 查询物料凭证冲销删除验证 -->
+   <select id="wlpzcxdelyz" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+       select p.delflag as "delflag",
+              decode(d.mblnr,null,0,'',0,'1') as "flag"
+        from (select i.*, k.delflag
+                from (select a.*, b.zasnh
+                        from genl_receipts_mseg  a
+                        left join genl_asn_mseg b
+                             on a.lfbja = b.mjahr
+                            and a.lfbnr = b.mblnr) i,
+              genl_purchase_note_detail k
+               where k.zasnh = i.zasnh
+                 and k.ebeln = i.ebeln
+                 and k.ebelp = i.ebelp) p 
+               left join (select distinct mblnr,mjahr,zeile from genl_invoice_list) d 
+                    on p.mblnr = d.mblnr 
+                   and p.mjahr = d.mjahr 
+                   and p.zeile = d.zeile,
+       genl_purchase_ekpo b
+       where p.ebeln = b.ebeln
+         and p.ebelp = b.ebelp 
+	     and p.mblnr=#mblnr# 
+	     and p.mjahr=#mjahr#
+	     and p.zeile=#zeile#
+         and p.delflag = '0'
+         and decode(d.mblnr,null,0,'',0,'1') = '0'
+    </select>
+    <!-- 查询仓库退货 -->
+     <select id="querykcglckth" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+         select p.mblnr as "mblnr",
+                p.mjahr as "mjahr",
+                p.zeile as "zeile",
+                p.bwart as "bwart",
+                p.ebeln as "ebeln",
+                p.ebelp as "ebelp",
+                '000' as "grund",
+                p.matnr as "matnr",
+                b.txz01 as "txz01",
+                p.erfmg as "mengea",
+                p.lgort as "lgort",
+                p.lfbnr as "lfbnr",
+                p.lfbja as "lfbja",
+                p.lfpos as "lfpos",
+                p.delflag as "delflag",
+                p.aufnr as "aufnr",
+                p.kostl as "kostl",
+                p.knttp as "knttp",
+                a.charg as "charg",
+                p.werks1 as "werks",
+                p.mblno as "mblno",
+                p.vnbm as "vnbm",
+                (case when p.vnbm is null  then  'N'
+                                   else 'Y' end) as "sfvn",
+                substr(p.remark2,1,25) as "sgtxt"
+           from (select i.* ,k.delflag,k.remark2,j.aufnr,j.kostl,j.knttp,j.werks as werks1 
+                   from (select a.*,b.zasnh,c.mblno,c.vnbm 
+                          from  genl_receipts_mseg a
+                          left join genl_asn_mseg b 
+                            on a.lfbja = b.mjahr and a.lfbnr = b.mblnr
+                          left join genl_mblnr_vnbm c
+                            on a.mblnr =c.mblnr  and a.zeile = c.mblno) i ,
+                         genl_purchase_note_detail k 
+                   left join genl_purchase_note j on k.zasnh = j.zasnh
+                   left join genl_note_vndetail l on k.zasnh = l.zasnh and k.zasnp = l.zasnp
+                   where k.zasnh = i.zasnh 
+                     and k.ebeln = i.ebeln 
+                     and k.ebelp = i.ebelp
+                     and (l.vnbm is null or i.vnbm = l.vnbm)) p ,
+                genl_purchase_ekpo b ,
+                genl_purchase_eket a
+           where p.ebeln = b.ebeln 
+             and p.ebelp = b.ebelp
+             and p.ebeln = a.ebeln 
+             and p.ebelp = a.ebelp
+             and p.bwart = '101'
+	         and p.mblnr=#mblnr# 
+	         and p.mjahr=#mjahr#
+	        order by p.mblnr,to_number(p.zeile) 
+    </select>
+    <!-- 车型清单查询（不使用） -->
+    <select id="querycxlbqd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select a.zleib_name as "zleibname",
+               wmsys.wm_concat(c.zname)as "nr" 
+          from genl_reserve_zleib a,
+               genl_reserve_zcpcx_zleib b,
+               genl_reserve_zcpcx c 
+         where a.zleib = b.zleib 
+           and b.zcpcx = c.zcpcx 
+           and a.zleib_name =#zleibname#
+         group by a.zleib_name
+    </select>
+     <!-- 车型清单查询 -->
+    <select id="querywxdjcxqd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select t.cxdm as "cxdm",
+               t.cxmc as "cxmc",
+               t.werks as "werks",
+               t.bukrs as "bukrs",
+               t.statu as "statu",
+               t.tranu as "tranu",
+               to_char(t.trant,'yyyy-MM-dd HH24:MI:SS') as "trant"
+          from genl_vegicle_list t
+         where t.statu is null 
+          <isNotNull prepend = "and"  property = "cxdm"> 
+                t.cxdm =  #cxdm#
+              </isNotNull>
+              <isNotNull prepend = "and"  property = "cxmc"> 
+                t.cxmc like '%'|| #cxmc#||'%' 
+              </isNotNull>
+               <isNotNull prepend = "and"  property = "werks"> 
+                t.werks =#werks#
+              </isNotNull>
+    </select>
+     <!-- 大件清单查询 -->
+    <select id="querywxdjqd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select a.matnr as "matnr",
+       a.cxdm as "cxdm",
+       a.werks as "werks",
+       a.bukrs as "bukrs",
+       a.statu as "statu",
+       a.tranu as "tranu",
+        to_char(a.trant,'yyyy-MM-dd HH24:MI:SS') as "trant",
+       b.cxmc as "cxmc",
+       c.stprs as "stprs",
+       c.peinh as "peinh",
+       d.maktx as "maktx"
+from genl_reserve_list a
+     left join (select * from genl_vegicle_list where statu is null)b on a.cxdm = b.cxdm
+     left join base_material_mbew c on a.matnr = c.matnr ,base_material_mara d
+where   a.matnr =d.matnr
+      and a.statu is null
+          <isNotNull prepend = "and"  property = "matnr"> 
+                a.matnr =  #matnr#
+              </isNotNull>
+               <isNotNull prepend = "and"  property = "maktx"> 
+                d.maktx like '%'||#maktx#||'%'
+              </isNotNull>
+              <isNotNull prepend = "and"  property = "cxmc"> 
+                b.cxmc like '%'|| #cxmc#||'%' 
+              </isNotNull>
+               <isNotNull prepend = "and"  property = "werks"> 
+                a.werks =#werks#
+              </isNotNull>
+              order by  a.trant desc
+    </select>
+  <!-- 外协大件库存状态维护 -->   
+ <select id="querykcglwxdjkcztwh" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ SELECT A.ZLEIB      as "zleib",
+        C.ZLEIB_NAME as "zleibname",
+        P.NR as "nr",
+        A.ZDAJI      as "zdaji",
+        B.ZDAJI_NAME as "zdaji_name",
+        MENGE_A_Z    as "menge_a_z",
+        MENGE_B_Z    as "menge_b_z",
+        MENGE_C_Z    as "menge_c_z",
+        MENGE_D_Z    as "menge_d_z",
+        MENGE_E_Z    as "menge_e_z",
+        MENGE_A      as "menge_a",
+        MENGE_B      as "menge_b",
+        MENGE_C      as "menge_c",
+        MENGE_D      as "menge_d",
+        MENGE_E      as "menge_e"
+   FROM GENL_RESERVE_ZDAJI_ZLEIB A
+   LEFT JOIN (SELECT LIFNR,
+                     ZLEIB,
+                     ZDAJI,
+                     SUM(DECODE(ZSTAT, 'A', MENGE, 0)) MENGE_A,
+                     SUM(DECODE(ZSTAT, 'B', MENGE, 0)) MENGE_B,
+                     SUM(DECODE(ZSTAT, 'C', MENGE, 0)) MENGE_C,
+                     SUM(DECODE(ZSTAT, 'D', MENGE, 0)) MENGE_D,
+                     SUM(DECODE(ZSTAT, 'E', MENGE, 0)) MENGE_E
+                FROM GENL_RESERVE_DATA
+               GROUP BY LIFNR, ZLEIB, ZDAJI) D ON A.ZDAJI = D.ZDAJI
+                                              AND A.ZLEIB = D.ZLEIB
+                                              AND D.LIFNR = #lifnr#
+   LEFT JOIN (SELECT ZLEIB,
+                     ZDAJI,
+                     SUM(DECODE(ZSTAT, 'A', MENGE, 0)) MENGE_A_Z,
+                     SUM(DECODE(ZSTAT, 'B', MENGE, 0)) MENGE_B_Z,
+                     SUM(DECODE(ZSTAT, 'C', MENGE, 0)) MENGE_C_Z,
+                     SUM(DECODE(ZSTAT, 'D', MENGE, 0)) MENGE_D_Z,
+                     SUM(DECODE(ZSTAT, 'E', MENGE, 0)) MENGE_E_Z
+                FROM GENL_RESERVE_DATA
+               GROUP BY ZLEIB, ZDAJI) F ON A.ZDAJI = F.ZDAJI
+                                       AND A.ZLEIB = F.ZLEIB,
+  GENL_RESERVE_ZDAJI B,
+  GENL_RESERVE_ZLEIB C
+   LEFT JOIN (select h.zleib_name as zleibname,wmsys.wm_concat(k.zname)as nr from genl_reserve_zleib h,genl_reserve_zcpcx_zleib j,genl_reserve_zcpcx k 
+               where h.zleib = j.zleib and j.zcpcx = k.zcpcx 
+               group by h.zleib_name) P  
+        ON C.ZLEIB_NAME = P.ZLEIBNAME,
+  GENL_RESERVE_ZLEIB_LIFNR E
+  WHERE A.ZDAJI = B.ZDAJI
+    AND A.ZLEIB = C.ZLEIB
+    AND E.ZLEIB = A.ZLEIB
+    AND E.LIFNR = #lifnr#
+  ORDER BY A.ZLEIB, A.ZDAJI																																													
+     </select>
+<!-- 外协大件库存状态维护new -->   
+ <select id="querykcglwxdjkcztwhnew" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ SELECT A.LIFNR      as "lifnr",
+        A.MATNR      as "matnr",
+        C.MAKTX      as "maktx",
+        B.CXDM       as "cxdm",
+        E.CXMC       as "cxmc",
+        MENGE_A_Z    as "menge_a_z",
+        MENGE_B_Z    as "menge_b_z",
+        MENGE_C_Z    as "menge_c_z",
+        MENGE_D_Z    as "menge_d_z",
+        MENGE_E_Z    as "menge_e_z",
+        MENGE_A      as "menge_a",
+        MENGE_B      as "menge_b",
+        MENGE_C      as "menge_c",
+        MENGE_D      as "menge_d",
+        MENGE_E      as "menge_e"
+   FROM base_purchase_eina A
+   LEFT JOIN (SELECT LIFNR,
+                     MATNR,
+                     CXDM,
+                     SUM(DECODE(ZSTAT, 'A', MENGE, 0)) MENGE_A,
+                     SUM(DECODE(ZSTAT, 'B', MENGE, 0)) MENGE_B,
+                     SUM(DECODE(ZSTAT, 'C', MENGE, 0)) MENGE_C,
+                     SUM(DECODE(ZSTAT, 'D', MENGE, 0)) MENGE_D,
+                     SUM(DECODE(ZSTAT, 'E', MENGE, 0)) MENGE_E
+                FROM GENL_RESERVE_DATAB
+               GROUP BY LIFNR, MATNR, CXDM) D ON A.MATNR = D.MATNR
+                                        AND D.LIFNR = #lifnr#                                                                                     
+   LEFT JOIN (SELECT MATNR,
+                     CXDM,
+                     SUM(DECODE(ZSTAT, 'A', MENGE, 0)) MENGE_A_Z,
+                     SUM(DECODE(ZSTAT, 'B', MENGE, 0)) MENGE_B_Z,
+                     SUM(DECODE(ZSTAT, 'C', MENGE, 0)) MENGE_C_Z,
+                     SUM(DECODE(ZSTAT, 'D', MENGE, 0)) MENGE_D_Z,
+                     SUM(DECODE(ZSTAT, 'E', MENGE, 0)) MENGE_E_Z
+                FROM GENL_RESERVE_DATAB
+               GROUP BY MATNR,CXDM) F ON A.MATNR = F.MATNR,
+  GENL_RESERVE_LIST B,
+  BASE_MATERIAL_MARA C,
+  GENL_VEGICLE_LIST E
+  WHERE A.MATNR = B.MATNR
+    and A.LOEKZ is null
+    and A.MATNR = C.MATNR
+    and B.CXDM = E.CXDM
+    and E.STATU is null
+    AND A.LIFNR = #lifnr#
+  ORDER BY E.CXMC,A.MATNR																																								
+     </select>   
+ <!-- 外协大件库存状态查询 -->   
+ <select id="querykcglwxdjkcztwhcx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  select * from  (SELECT A.LIFNR      as "lifnr",
+        B.WERKS       as "werks",
+        G.NAME1      as "name1",
+        A.MATNR      as "matnr",
+        C.MAKTX      as "maktx",
+        B.CXDM       as "cxdm",
+        E.CXMC       as "cxmc",
+        H.STPRS      as "stprs",
+        H.PEINH      as "peinh",
+        MENGE_A_Z    as "menge_a_z",
+        MENGE_B_Z    as "menge_b_z",
+        MENGE_C_Z    as "menge_c_z",
+        MENGE_D_Z    as "menge_d_z",
+        MENGE_E_Z    as "menge_e_z",
+        MENGE_A      as "menge_a",
+        MENGE_B      as "menge_b",
+        MENGE_C      as "menge_c",
+        MENGE_D      as "menge_d",
+        MENGE_E      as "menge_e",
+        to_char(ZCRET,'yyyy-MM-dd HH24:MI:SS')        as "zcret",
+        MENGE_E*H.STPRS/H.PEINH as "menge_f"
+   FROM base_purchase_eina A
+   LEFT JOIN (SELECT LIFNR,
+                     MATNR,
+                     CXDM,
+                     SUM(DECODE(ZSTAT, 'A', MENGE, 0)) MENGE_A,
+                     SUM(DECODE(ZSTAT, 'B', MENGE, 0)) MENGE_B,
+                     SUM(DECODE(ZSTAT, 'C', MENGE, 0)) MENGE_C,
+                     SUM(DECODE(ZSTAT, 'D', MENGE, 0)) MENGE_D,
+                     SUM(DECODE(ZSTAT, 'E', MENGE, 0)) MENGE_E,
+                     MAX(ZCRET) ZCRET
+                FROM GENL_RESERVE_DATAB
+               GROUP BY LIFNR, MATNR, CXDM) D ON A.MATNR = D.MATNR
+                                             and A.LIFNR = D.LIFNR 
+                                        <isNotNull prepend = "and"  property = "lifnr"> 
+                                               D.LIFNR like '%'|| #lifnr# || '%'
+                                         </isNotNull>                                                                                  
+   LEFT JOIN (SELECT MATNR,
+                     CXDM,
+                     SUM(DECODE(ZSTAT, 'A', MENGE, 0)) MENGE_A_Z,
+                     SUM(DECODE(ZSTAT, 'B', MENGE, 0)) MENGE_B_Z,
+                     SUM(DECODE(ZSTAT, 'C', MENGE, 0)) MENGE_C_Z,
+                     SUM(DECODE(ZSTAT, 'D', MENGE, 0)) MENGE_D_Z,
+                     SUM(DECODE(ZSTAT, 'E', MENGE, 0)) MENGE_E_Z
+                FROM GENL_RESERVE_DATAB
+               GROUP BY MATNR,CXDM) F ON A.MATNR = F.MATNR
+  LEFT JOIN base_supply_lfa1 G ON  A.LIFNR = G.LIFNR
+  LEFT JOIN BASE_MATERIAL_MBEW H  ON  A.MATNR = H.MATNR,
+  GENL_RESERVE_LIST B,
+  BASE_MATERIAL_MARA C,
+  GENL_VEGICLE_LIST E
+  WHERE A.MATNR = B.MATNR
+    and A.LOEKZ is null
+    and A.MATNR = C.MATNR
+    and B.CXDM = E.CXDM
+    and E.STATU is null
+     <isNotNull prepend = "and"  property = "matnr"> 
+          A.MATNR  in ($matnr$)
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr"> 
+          A.LIFNR like '%'|| #lifnr# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+          G.NAME1 like '%' ||  #name1# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "maktx"> 
+          C.MAKTX  like '%' ||  #maktx# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "cxmc"> 
+          E.CXMC  like '%' ||  #cxmc# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "werks"> 
+          B.WERKS   =  #werks# 
+     </isNotNull>
+  ORDER BY E.CXMC,A.MATNR,A.LIFNR),(SELECT 
+       NVL(SUM(MENGE_E*H.STPRS/H.PEINH),0) as "sum_menge"
+   FROM base_purchase_eina A
+   LEFT JOIN (SELECT LIFNR,
+                     MATNR,
+                     CXDM,
+                     SUM(DECODE(ZSTAT, 'A', MENGE, 0)) MENGE_A,
+                     SUM(DECODE(ZSTAT, 'B', MENGE, 0)) MENGE_B,
+                     SUM(DECODE(ZSTAT, 'C', MENGE, 0)) MENGE_C,
+                     SUM(DECODE(ZSTAT, 'D', MENGE, 0)) MENGE_D,
+                     SUM(DECODE(ZSTAT, 'E', MENGE, 0)) MENGE_E
+                FROM GENL_RESERVE_DATAB
+               GROUP BY LIFNR, MATNR, CXDM) D ON A.MATNR = D.MATNR
+                                             and A.LIFNR = D.LIFNR 
+                                        <isNotNull prepend = "and"  property = "lifnr"> 
+                                                D.LIFNR like '%'|| #lifnr# || '%'
+                                         </isNotNull>                                                                                  
+   LEFT JOIN (SELECT MATNR,
+                     CXDM,
+                     SUM(DECODE(ZSTAT, 'A', MENGE, 0)) MENGE_A_Z,
+                     SUM(DECODE(ZSTAT, 'B', MENGE, 0)) MENGE_B_Z,
+                     SUM(DECODE(ZSTAT, 'C', MENGE, 0)) MENGE_C_Z,
+                     SUM(DECODE(ZSTAT, 'D', MENGE, 0)) MENGE_D_Z,
+                     SUM(DECODE(ZSTAT, 'E', MENGE, 0)) MENGE_E_Z
+                FROM GENL_RESERVE_DATAB
+               GROUP BY MATNR,CXDM) F ON A.MATNR = F.MATNR
+  LEFT JOIN base_supply_lfa1 G ON  A.LIFNR = G.LIFNR
+  LEFT JOIN BASE_MATERIAL_MBEW H  ON  A.MATNR = H.MATNR,
+  GENL_RESERVE_LIST B,
+  BASE_MATERIAL_MARA C,
+  GENL_VEGICLE_LIST E
+  WHERE A.MATNR = B.MATNR
+    and A.LOEKZ is null
+    and A.MATNR = C.MATNR
+    and B.CXDM = E.CXDM
+    and E.STATU is null
+     <isNotNull prepend = "and"  property = "matnr"> 
+          A.MATNR  in ($matnr$)
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "lifnr"> 
+          A.LIFNR like '%'|| #lifnr# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "name1"> 
+          G.NAME1 like '%' ||  #name1# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "maktx"> 
+          C.MAKTX  like '%' ||  #maktx# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "cxmc"> 
+          E.CXMC  like '%' ||  #cxmc# || '%'
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "werks"> 
+          B.WERKS   =  #werks# 
+     </isNotNull>
+  ORDER BY E.CXMC,A.MATNR,A.LIFNR)   																																					
+</select>                 
+<select id="queryReserveData" resultClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveData" parameterClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveData" >
+    select * from genl_reserve_data
+</select>
+<select id="queryReserveZdajiZleib" resultClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZdajiZleib" parameterClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZdajiZleib" >
+    select * from genl_reserve_zdaji_zleib
+</select>
+<select id="queryReserveZleibLifnr" resultClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZleibLifnr" parameterClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZleibLifnr" >
+    select * from genl_reserve_zleib_lifnr
+</select>
+<select id="queryReserveZcpcxZleib" resultClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZcpcxZleib" parameterClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZcpcxZleib" >
+    select * from genl_reserve_zcpcx_zleib
+</select>
+ <!-- 送货单收货入库验证-->
+      <select id="shdshrkyz" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+          select * from genl_purchase_note t
+            where  t.status = 'Y'
+               and t.zasnh = #zasnh#
+    </select>
+     <select id="querymatnr" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select * from base_material_mara t
+            where t.matnr = #matnr#
+    </select>
+    <select id="checkStoreMagAuth" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select * from genl_purchase_storemag t
+            where t.name1 = #userid#
+            and t.werks = #werks#
+    </select>
+<!-- 删除大件清单-->
+    <delete  id="deleteWxdjqd" parameterClass="java.util.HashMap" >
+		delete from genl_reserve_list t where  t.matnr=#matnr#
+	</delete>
+<!-- 删除vn号码-->
+    <delete  id="deletevncode" parameterClass="java.util.HashMap" >
+		delete from genl_vn_coincident t where  t.vnbm=#vnbm#
+	</delete>
+<!-- 外协大件维护导入验证-->
+	<select id="wxdjwhdryz" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+           SELECT A.LIFNR      as "lifnr",
+        A.MATNR      as "matnr",
+        C.MAKTX      as "maktx",
+        B.CXDM       as "cxdm",
+        E.CXMC       as "cxmc"
+   FROM base_purchase_eina A,
+  GENL_RESERVE_LIST B,
+  BASE_MATERIAL_MARA C,
+  GENL_VEGICLE_LIST E
+  WHERE A.MATNR = B.MATNR
+    and A.MATNR = C.MATNR
+    and B.CXDM = E.CXDM
+    and A.MATNR =  #matnr#
+    and B.CXDM  = #cxdm#
+    and A.LIFNR = #lifnr#
+    </select>
+    <!-- 质检维护取消确认验证-->
+     <select id="querykcglshrkshujuyz" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+        select  a.pkid as "pkid",
+                              a.zasnh as "zasnh",
+                              a.zasnp as "zasnp",
+                              substr(a.remark2,1,25) as "sgtxt",
+                              b.ebeln as "ebeln",
+                              b.ebelp as "ebelp",
+                              b.matnr as "matnr",
+                              b.txz01 as "txz01",
+                              b.menge as "menge_m",
+                              b.lgort as "lgort",
+                              a.amount as "amount",                         
+                              b.loekz as "loekz",
+                              a.zjlb as "zjlb",
+                              a.mjzt as "mjzt",
+                              d.zcbz as "cjzcbz",
+                              d.jgpd as "cjjgpd",
+                              d.krksl as "krksl",
+                              c.ruku 
+                      from genl_purchase_ekpo b ,genl_purchase_note_detail a 
+                      left join V_GENL_ASN_CTRK c 
+                           on  a.zasnh = c.zasnh and a.zasnp = c.zasnp
+                      left join genl_inspect_cjnote d on a.zasnp = d.zasnp and a.zasnh = d.zasnh
+                      where a.ebeln = b.ebeln 
+                         and a.ebelp = b.ebelp
+                         and a.delflag = '0'   
+                          and a.zasnh = #zasnh#
+                         <isNotNull prepend = "and"  property = "zasnp"> 
+                             a.zasnp =  #zasnp#
+                         </isNotNull> 
+                        and (b.loekz is null or b.loekz = '')
+                        and (c.ruku is null or c.ruku = '0')
+                        and a.return_amount &lt; &gt;  a.amount
+                     order by  a.zasnh,to_number(a.zasnp)
+    </select>
+    
+</sqlMap>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="HP" displayName="SapSrmJiesuan" id="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan">
+    <viewModel author="HP" displayName="GenlInvoiceList" entityName="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan.GenlInvoiceList" id="GenlInvoiceList">
+        <field dataType="String" dict="false" entityField="jspz" id="jspz" label="结算凭证号">
+            <view type="write"/>
+            <edit name="jspz" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="jspzh" id="jspzh" label="结算凭证行号">
+            <view type="write"/>
+            <edit name="jspzh" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="mjahr" id="mjahr" label="结算凭证年度">
+            <view type="write"/>
+            <edit name="mjahr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="mblnr" id="mblnr" label="物料凭证编号">
+            <view type="write"/>
+            <edit name="mblnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="zeile" id="zeile" label="物料凭证中的项目">
+            <view type="write"/>
+            <edit name="zeile" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="budat" id="budat" label="凭证中的过账日期">
+            <view type="write"/>
+            <edit name="budat" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="shkzg" id="shkzg" label="借方/贷方标识">
+            <view type="write"/>
+            <edit name="shkzg" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="bwart" id="bwart" label="移动类型">
+            <view type="write"/>
+            <edit name="bwart" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="djssl" id="djssl" label="待结算数量">
+            <view type="write"/>
+            <edit name="djssl" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="djsslCk" id="djsslCk" label="待结算数量（参考）">
+            <view type="write"/>
+            <edit name="djsslCk" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="meins" id="meins" label="基本计量单位">
+            <view type="write"/>
+            <edit name="meins" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="hjsje" id="hjsje" label="结算金额（整行）">
+            <view type="write"/>
+            <edit name="hjsje" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="jsdj" id="jsdj" label="结算单价（含税）">
+            <view type="write"/>
+            <edit name="jsdj" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="jsdw" id="jsdw" label="结算价格单位">
+            <view type="write"/>
+            <edit name="jsdw" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="kbetr" id="kbetr" label="合同价">
+            <view type="write"/>
+            <edit name="kbetr" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="kpein" id="kpein" label="条件定价单位">
+            <view type="write"/>
+            <edit name="kpein" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="kmein" id="kmein" label="条件单位">
+            <view type="write"/>
+            <edit name="kmein" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="flagHtj" id="flagHtj" label="与合同价一致">
+            <view type="write"/>
+            <edit name="flagHtj" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="kalsm" id="kalsm" label="过程">
+            <view type="write"/>
+            <edit name="kalsm" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="hqtkkje" id="hqtkkje" label="分摊其他扣款（单行）">
+            <view type="write"/>
+            <edit name="hqtkkje" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="hflje" id="hflje" label="分摊返利金额（单行）">
+            <view type="write"/>
+            <edit name="hflje" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="hyfje" id="hyfje" label="分摊运费额（单行）">
+            <view type="write"/>
+            <edit name="hyfje" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="hkkje" id="hkkje" label="扣款金额（单行）">
+            <view type="write"/>
+            <edit name="hkkje" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="zcdf" id="zcdf" label="其他扣款（单项）">
+            <view type="write"/>
+            <edit name="zcdf" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lfbnr" id="lfbnr" label="参考凭证的凭证号">
+            <view type="write"/>
+            <edit name="lfbnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lfpos" id="lfpos" label="参考凭证项目">
+            <view type="write"/>
+            <edit name="lfpos" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lfgja" id="lfgja" label="当前期间的会计年度">
+            <view type="write"/>
+            <edit name="lfgja" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="shqtk" id="shqtk" label="送货全退扣款金额">
+            <view type="write"/>
+            <edit name="shqtk" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="hshqtk" id="hshqtk" label="送货全退扣款金额（单行）">
+            <view type="write"/>
+            <edit name="hshqtk" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="shqtkbh" id="shqtkbh" label="送货全退扣款记录">
+            <view type="write"/>
+            <edit name="shqtkbh" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="waers" id="waers" label="货币码">
+            <view type="write"/>
+            <edit name="waers" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="belnr" id="belnr" label="预制发票号">
+            <view type="write"/>
+            <edit name="belnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="buzei" id="buzei" label="预制发票行号">
+            <view type="write"/>
+            <edit name="buzei" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="gjahr" id="gjahr" label="预制发票年度">
+            <view type="write"/>
+            <edit name="gjahr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ekorg" id="ekorg" label="采购组织">
+            <view type="write"/>
+            <edit name="ekorg" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ekgrp" id="ekgrp" label="采购组">
+            <view type="write"/>
+            <edit name="ekgrp" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ebeln" id="ebeln" label="采购凭证号">
+            <view type="write"/>
+            <edit name="ebeln" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ebelp" id="ebelp" label="采购凭证的项目编号">
+            <view type="write"/>
+            <edit name="ebelp" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="matnr" id="matnr" label="物料号">
+            <view type="write"/>
+            <edit name="matnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="matkl" id="matkl" label="物料组">
+            <view type="write"/>
+            <edit name="matkl" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="aufnr" id="aufnr" label="订单号">
+            <view type="write"/>
+            <edit name="aufnr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="menge" id="menge" label="数量">
+            <view type="write"/>
+            <edit name="menge" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="zwrildt" id="zwrildt" label="最近写入日期">
+            <view type="write"/>
+            <edit name="zwrildt" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="zwriusr" id="zwriusr" label="最近写入者">
+            <view type="write"/>
+            <edit name="zwriusr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ztext" id="ztext" label="文本备注">
+            <view type="write"/>
+            <edit name="ztext" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="HP" displayName="GenlInvoiceHead" entityName="com.zoomlion.hjsrm.pub.sap.SapSrmJiesuan.GenlInvoiceHead" id="GenlInvoiceHead">
+        <field dataType="String" dict="false" entityField="jspz" id="jspz" label="结算凭证号">
+            <view type="write"/>
+            <edit name="jspz" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="mjahr" id="mjahr" label="结算凭证年度">
+            <view type="write"/>
+            <edit name="mjahr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="bukrs" id="bukrs" label="公司代码">
+            <view type="write"/>
+            <edit name="bukrs" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="werks" id="werks" label="工厂">
+            <view type="write"/>
+            <edit name="werks" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="lifnr" id="lifnr" label="供应商帐号">
+            <view type="write"/>
+            <edit name="lifnr" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="jsje" id="jsje" label="结算金额（整单）">
+            <view type="write"/>
+            <edit name="jsje" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="mwskz" id="mwskz" label="销售税代码">
+            <view type="write"/>
+            <edit name="mwskz" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="taxrt" id="taxrt" label="税率">
+            <view type="write"/>
+            <edit name="taxrt" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="flje" id="flje" label="返利总金额">
+            <view type="write"/>
+            <edit name="flje" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="yfje" id="yfje" label="运费总金额">
+            <view type="write"/>
+            <edit name="yfje" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="qtkkje" id="qtkkje" label="其他扣款总金额">
+            <view type="write"/>
+            <edit name="qtkkje" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="tax" id="tax" label="税额">
+            <view type="write"/>
+            <edit name="tax" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="usnam" id="usnam" label="用户名">
+            <view type="write"/>
+            <edit name="usnam" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="datum" id="datum" label="日期">
+            <view type="write"/>
+            <edit name="datum" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="statu" id="statu" label="状态位">
+            <view type="write"/>
+            <edit name="statu" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="tranu" id="tranu" label="tranu">
+            <view type="write"/>
+            <edit name="tranu" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="trant" id="trant" label="trant">
+            <view type="write"/>
+            <edit name="trant" type="date"/>
+        </field>
+        <field dataType="Long" dict="false" entityField="print" id="print" label="print">
+            <view type="write"/>
+            <edit name="print" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

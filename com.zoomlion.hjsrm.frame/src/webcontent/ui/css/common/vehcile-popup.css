@@ -1,0 +1,447 @@
+/*!
+ * =====================================================
+ * VehcilePopup CSS Style File
+ * =====================================================
+ */
+
+.wl-vehicle-menu {
+    height: 34px;
+    background: #f6f6f6;
+    margin-top: 0px;
+}
+
+.wl-vehicle-menu li {
+    float: left;
+    text-align: center;
+    width: 100px;
+    height: 32px;
+    background: #f6f6f6;
+    line-height: 32px;
+    list-style: none;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.wl-vehicle-menu li.wl-vehicle-tab-active {
+    background-color: #667D26;
+    color: #fff;
+}
+
+.wl-vehicle-basic-tab-active {
+    background-color: #667D26;
+    color: #fff;
+}
+
+.wl-vehicle-content {
+    width: 820px;
+}
+
+.wl-vehicle-body-content {
+    height: 508px;
+    padding: 10px;
+    border: 1px solid #C1C1C1;
+    border-top: 2px solid #667D26;
+    margin-top: -2px;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.wl-vehicle-body-content .wl-grid {
+    font-size: 12px;
+}
+
+.wl-vehicle-basic-tab-div {
+    height: 22px;
+    background: #f6f6f6;
+    width: 240px;
+    margin-top: 5px;
+    border-bottom: 2px solid #667D26;
+    margin-bottom: 0;
+}
+
+.wl-vehicle-basic-tab-div li {
+    float: left;
+    text-align: center;
+    width: 40px;
+    height: 20px;
+    background: #f6f6f6;
+    line-height: 20px;
+    list-style: none;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.wl-vehicle-basic-tab-div li.wl-vehicle-basic-tab-active {
+    background-color: #667D26;
+    color: #fff;
+}
+
+.wl-vehicle-basic-lincese {
+    width: 240px;
+    height: 135px;
+    margin-bottom: 5px;
+}
+
+.wl-vehicle-basic-map-title {
+    line-height: 20px;
+    border-top: 1px solid #C1C1C1;
+    border-left: 1px solid #C1C1C1;
+    border-right: 1px solid #C1C1C1;
+}
+
+.wl-vehicle-basic-map {
+    height: 465px;
+    border: 1px solid #C1C1C1;
+}
+
+.wl-vehicle-basic-left {
+    float: left;
+    width: 250px;
+}
+
+.wl-vehicle-basic-right {
+    float: left;
+    width: 525px;
+}
+
+.wl-vehicle-table {
+    display: table;
+    border-bottom: 1px solid #C1C1C1;
+}
+
+.wl-vehicle-table-row {
+    display: table-row;
+}
+
+.wl-vehicle-table-cell {
+    display: table-cell;
+    border-top: 1px solid #C1C1C1;
+    border-left: 1px solid #C1C1C1;
+    padding: 3px 5px;
+}
+
+.wl-vehicle-table-cell-label {
+    text-align: right;
+    width: 80px;
+    background: #ddd;
+}
+
+.wl-vehicle-table-cell-text {
+    text-align: left;
+    width: 160px;
+    border-right: 1px solid #C1C1C1;
+}
+
+
+/** trajectory */
+
+.wl-trajectory-map {
+    float: left;
+    height: 440px;
+    width: 777px;
+    border: 1px solid #C1C1C1;
+}
+
+.wl-trajectory {
+    float: left;
+    height: 440px;
+    width: 210px;
+    margin-left: 10px;
+}
+
+.wl-trajectory-title {
+    background-color: #CCC;
+    line-height: 25px;
+    vertical-align: middle;
+}
+
+.wl-trajectory-title span {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.wl-trajectory-sub-title {
+    margin-left: 10px;
+    margin-top: 5px;
+    font-weight: 600;
+}
+
+.wl-trajectory-info {
+    margin-left: 10px;
+}
+
+.wl-trajectory-toolbar-btn {
+    height: 26px;
+    border-radius: 4px;
+    margin-left: 10px;
+    margin-top: 0px;
+    cursor: pointer;
+    background: -webkit-linear-gradient(#fff, #eee);
+    background: -o-linear-gradient(#fff, #eee);
+    background: linear-gradient(#fff, #eee);
+    display: inline-block;
+    box-shadow: -1px -1px 3px #667D26;
+    color: #667D26;
+    padding: 0 8px 0 5px;
+    line-height: 25px;
+    position: relative;
+    top: 1px;
+}
+
+.wl-trajectory-toolbar-btn.trajectoryBtnStyle{
+    margin-left: 8px;
+}
+
+
+.wl-trajectory-toolbar-btn >span{
+    display: block;
+    transition: all 0.3s;
+}
+.wl-trajectory-toolbar-btn:hover >span {
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+}
+
+
+#trajectory-stop.wl-trajectory-toolbar-btn{
+    margin-left: 5px;
+}
+
+.wl-trajectory-toolbar-start:after{
+    content: "播放";
+}
+.wl-trajectory-toolbar-start .glyphicon-play{
+    font-size: 13px;
+    margin: 2px;
+}
+
+.wl-trajectory-toolbar-pause .wl-trajectory-toolbar-start:after {
+    content: "暂停";
+}
+
+.wl-trajectory-toolbar-pause .wl-trajectory-toolbar-start .glyphicon-play:before{
+    content: "\e073";
+}
+.wl-trajectory-toolbar-stop{
+    color: #DC4B3F;
+}
+.wl-trajectory-toolbar-stop:after {
+    content: "停止";
+}
+
+.wl-trajectory-toolbar-stop .glyphicon-stop{
+    font-size: 13px;
+    margin: 2px;
+}
+
+.wl-trajectory-slider-span {
+    font-size: 12px;
+    float: left;
+}
+
+.selectSpeedBox{
+    display: inline-block;
+    position: relative;
+    top: 2px;
+}
+
+.selectSpeedBox p {
+    display: inline-block;
+    height: 20px;
+    line-height: 18px;
+    color: #555;
+    padding: 0 6px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-left: 4px;
+    text-align: center;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.selectSpeedBox p.active{
+    color: #667D26;
+    border-color: #667D26;
+    background-color: #fff;
+}
+
+.selectSpeedBox p:hover{
+    background-color: #fff;
+}
+
+.selectSpeedBox p .glyphicon-forward{
+    margin-right: 0;
+}
+
+.wl-trajectory-status {
+    margin-top: 90px;
+}
+
+.slider.slider-horizontal {
+    width: 165px;
+    height: 20px;
+    float: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: -2px;
+}
+
+.slider-selection {
+    opacity: 0;
+}
+
+.slider-track {
+    background: -ms-linear-gradient(left, #fff, #ff0000);
+    background: -moz-linear-gradient(left, #fff, #ff0000);
+    background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#fff), to(#ff0000));
+    background: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#fff), to(#ff0000));
+    background: -webkit-linear-gradient(left, #fff, #ff0000);
+    background: -o-linear-gradient(left, #fff, #ff0000);
+}
+
+
+/** hotspot */
+
+.wl-hotspot-title {
+    line-height: 25px;
+    padding-left: 10px;
+    border-top: 1px solid #C1C1C1;
+    border-left: 1px solid #C1C1C1;
+    border-right: 1px solid #C1C1C1;
+}
+
+.wl-hotspot-map {
+    height: 465px;
+    width: 776px;
+    border: 1px solid #C1C1C1;
+}
+
+.wl-car-basic-tipDiv {
+    position: absolute;
+    right: 23px;
+    bottom: 16px;
+}
+
+.wl-car-basic-tipInfo {
+    padding: 2px 5px 2px 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 19px 0 0 0;
+}
+
+.wl-car-basic-tipInfo .wl-mt-5{
+    padding-right: 8px;
+}
+
+.wl-car-basic-tipInfo .wl-mt-5 img{
+    width: 14px;
+}
+
+.wl-car-basic-tipOverlay {
+    background-color: #F2F2F2;
+    opacity: 0.7;
+    width: 69px;
+}
+
+.wl-vehicle-oil-cell-label {
+    text-align: right;
+    width: 90px;
+    background: #ddd;
+}
+
+.wl-vehicle-oil-cell-text {
+    text-align: left;
+    width: 160px;
+    border-right: 1px solid #C1C1C1;
+}
+
+#vehcile_oil .wl-vehicle-oil-cell-label{
+    width: 85px;
+}
+
+#vehcile_oil .wl-userinfo-table{
+    margin: 0 10px;
+    width: calc(100% - 20px);
+    width: -webkit-calc(100% -20px);
+}
+
+#vehcile_oil .wl-vehicle-oil-cell-text{
+    width: 120px;
+}
+
+
+/*单车信息视频播放按钮样式*/
+
+.popupVideoBox {
+    position: relative;
+}
+
+.popupVideoBar {
+    width: 100%;
+    background-color: rgba(255,255,255,0.1);
+    height: 32px;
+    padding: 0 20px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transition: bottom 0.5s;
+    transition-delay: 3s;
+}
+
+.popupVideoBar span {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    position: relative;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    margin-top: 2px;
+    opacity: 0.8;
+    transition: all 0.5s;
+}
+
+.popupVideoBar span:hover{
+    cursor: pointer;
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.popupVideoBar span:before {
+    content: "";
+    border: 7px solid transparent;
+    border-left-color: #fff;
+    position: absolute;
+    left: 11px;
+    top: 6px;
+}
+
+.popupVideoBar.active{
+    bottom: -60px;
+}
+
+.popupVideoBox:hover .popupVideoBar{
+    transition-delay: 0s;
+    bottom: 0;
+}
+
+.popupVideoBar.active span:before {
+    content: "";
+    border: 0;
+    width: 4px;
+    height: 12px;
+    background-color: #fff;
+    left: 8px;
+    top: 7px;
+}
+
+.popupVideoBar.active span:after {
+    content: "";
+    width: 4px;
+    height: 12px;
+    background-color: #fff;
+    position: absolute;
+    left: 15px;
+    top: 7px;
+}

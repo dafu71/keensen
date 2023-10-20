@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.data.org.Organization" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.data.org.Organization">
+    <xs:complexType name="TOmOrganization" sdoJava:instanceClass="com.zoomlion.hjsrm.data.org.Organization.impl.TOmOrganizationImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="parentorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgname" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="orglevel" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgdegree" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgseq" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="channeltype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgaddr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zipcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="manaposition" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="managerid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgmanager" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="linkman" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="linktel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="email" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="weburl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="startdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="enddate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="area" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sortno" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="isleaf" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="subcount" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TOmEmporg" sdoJava:instanceClass="com.zoomlion.hjsrm.data.org.Organization.impl.TOmEmporgImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:int"/>
+            <xs:element default="0&#10;" minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="empid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="ismain" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VOmEmporg" sdoJava:instanceClass="com.zoomlion.hjsrm.data.org.Organization.impl.VOmEmporgImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="empid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="empcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="empname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="realname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="empstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mobileno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgidlist" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dataorgname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="parentorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orglevel" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgdegree" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgseq" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operatorname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VOmEmpoperroleorg" sdoJava:instanceClass="com.zoomlion.hjsrm.data.org.Organization.impl.VOmEmpoperroleorgImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="operatorid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operatorname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="authmode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="menutype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="empid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="empname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="realname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gender" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="birthdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="empstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cardtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cardno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mobileno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="empdelflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="roleid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="rolecode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="rolename" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="roletype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="parentorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orglevel" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgseq" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgdelflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VOmEmpoper" sdoJava:instanceClass="com.zoomlion.hjsrm.data.org.Organization.impl.VOmEmpoperImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="empid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="empcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="empname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="realname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gender" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="birthdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="position" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="empstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cardtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cardno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="indate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="outdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="otel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oaddress" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ozipcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oemail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="faxno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mobileno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="msn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="htel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="haddress" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hzipcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pemail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="party" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="degree" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="major" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="specialty" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workexp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="regdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orgidlist" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mainorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="operatorid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="invaldate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="operatorname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="authmode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="unlocktime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="menutype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lastlogin" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="errcount" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="startdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="enddate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="validtime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="maccode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ipaddress" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="email" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TOmEmployee" sdoJava:instanceClass="com.zoomlion.hjsrm.data.org.Organization.impl.TOmEmployeeImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="empid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="empcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="empname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="realname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gender" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="birthdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="position" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="empstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cardtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cardno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="indate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="outdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="otel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oaddress" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ozipcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oemail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="faxno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mobileno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="msn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="htel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="haddress" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hzipcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pemail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="party" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="degree" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="major" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="specialty" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workexp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="regdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orgidlist" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mainorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VOmEmployeeTrs" sdoJava:instanceClass="com.zoomlion.hjsrm.data.org.Organization.impl.VOmEmployeeTrsImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="empid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="empcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="empname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="realname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gender" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="birthdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="position" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="empstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cardtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cardno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="indate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="outdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="otel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oaddress" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ozipcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oemail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="faxno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mobileno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="msn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="htel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="haddress" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hzipcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pemail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="party" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="degree" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="major" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="specialty" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workexp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="regdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orgidlist" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mainorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VOmOrganizationTrs" sdoJava:instanceClass="com.zoomlion.hjsrm.data.org.Organization.impl.VOmOrganizationTrsImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orglevel" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgdegree" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="parentorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgseq" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgaddr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zipcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="manaposition" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="managerid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orgmanager" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="linkman" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="linktel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="email" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="weburl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="startdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="enddate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="area" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sortno" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="isleaf" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="subcount" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="channeltype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

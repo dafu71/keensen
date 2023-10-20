@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+     <select id="queryCustomer" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select t1.CUSTOMER_ID       as "customerId",
+       t1.CUSTOMER_CODE     as "customerCode",
+       t1.CUSTOMER_NAME     as "customerName",
+       t1.STATE             as "state",
+       t1.AREA_ID           as "areaId",
+       t1.REGION_ID         as "regionId",
+       t1.SHORT_NAME        as "shortName",
+       t1.CUST_LEVEL_ID     as "custLevelId",
+       t1.ORG_TEL           as "orgTel",
+       t1.ORG_FAX           as "orgFax",
+       t1.ORG_EMAIL         as "orgEmail",
+       t1.CONTACT_MAN       as "contactMan",
+       t1.CONTACT_MAN_TEL   as "contactManTel",
+       t1.CONTACT_MAN_FAX   as "contactManFax",
+       t1.CONTACT_MAN_EMAIL as "contactManEmail",
+       t1.RECEIVER          as "receiver",
+       t1.RECEIVER_TEL      as "receiverTel",
+       t1.RECEIVER_FAX      as "receiverFax",
+       t1.RECEIVER_EMAIL    as "receiverEmail",
+       t1.GOODS_ADDRESS     as "goodsAddress",
+       t1.CREATE_DT         as "createDt",
+       t1.CHANGE_DT         as "changeDt",
+       t1.CREATOR_ID        as "creatorId",
+       t1.CHANGER_ID        as "changerId",
+       t1.REMARK            as "remark"
+  from qinsen.inst_customer t1
+  where 1=1
+    <isNotNull prepend="and" property="customerName"> 
+		       t1.CUSTOMER_NAME like '%'||#customerName#||'%'
+	</isNotNull>
+	<isNotNull prepend="and" property="customerCode"> 
+		       t1.CUSTOMER_CODE like '%'||#customerCode#||'%'
+	</isNotNull>
+	<isNotNull prepend="and" property="customerId"> 
+		       t1.CUSTOMER_ID = #customerId#
+	</isNotNull>
+	<isNotNull prepend="and" property="state"> 
+		       t1.STATE = #state#
+	</isNotNull>
+     </select>
+     
+     <!-- 供应商查询 -->
+     <select id="querySup" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.prop_value_id   "supId",t.prop_value_id   "id",
+       t.prop_value_code "supCode",
+       t.prop_value_name "supName",
+       t.prop_value_name || '(' || t.prop_value_code || ')' "name"
+  	from qinsen.CONF_PROP_VALUE_OPTION t
+ 	where t.prop_id = 30021
+     </select>
+     
+       <!-- 膜片操作工查询 -->
+     <select id="queryMpworker" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.staff_id ,t.staff_name,t.staff_code,
+		t.staff_id "id", t.staff_name || '(' || t.staff_code || ')' "name"
+		 from qinsen.base_staff t
+		where t.dept_id in(select distinct team_id from qinsen.INST_TUMO)
+		and t.state = 'A'
+		order by t.staff_name
+     </select>
+     
+      <!-- 膜片型号查询 -->
+     <select id="queryMpSpec" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
+	t.mater_spec_id "id",t.mater_spec_code "name"
+	 from qinsen.PARA_MATER_SPEC t
+	WHERE T.Mater_Class_Id IN(100030024,100030025,100030023,100030022)
+     </select>
+     
+      <!-- 膜片生产线查询 -->
+     <select id="queryMpLine" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.line_id,t.line_code,t.line_name ,
+	t.line_id "id",t.line_name || '(' || t.line_code || ')' "name"
+	from qinsen.BASE_PROD_LINE t
+	where t.line_id in(select distinct line_id from qinsen.INST_TUMO)
+     </select>
+     
+      <!-- 膜片等级查询 -->
+     <select id="queryMpPerf" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.prop_value_id perf_flag_id,t.prop_value_code perf_flag_code,
+		t.prop_value_name perf_flag_name,
+		t.prop_value_id "id",t.prop_value_name "name"
+		 from qinsen.CONF_PROP_VALUE_OPTION t
+		    where t.prop_id = 30023
+     </select>
+     
+      <!-- 元件型号查询 -->
+     <select id="queryProdSpec" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
+	t.mater_spec_id "id",t.mater_spec_code "name"
+	 from qinsen.PARA_MATER_SPEC t
+	WHERE T.Mater_Class_Id IN(100030027)
+     </select>
+     
+     <!-- 工序查询 -->
+     <select id="queryTache" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T.*, P.PRODCUT_CODE, P.PRODUCT_NAME,
+	t.tache_id "id",t.tache_name || '(' || p.product_name || ')' "name"
+	  FROM qinsen.BASE_PRODUCE_TACHE T
+	  LEFT JOIN qinsen.BASE_PRODUCT P
+	    ON T.PRODUCT_ID = T.PRODUCT_ID
+	 ORDER BY TO_NUMBER(T.TACHE_ID)
+	 </select>
+	 
+	 <!-- 班组查询 -->
+     <select id="queryTeam" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select t.*,t.dept_id "id",t.dept_name "name" from qinsen.BASE_DEPARTMENT t
+		WHERE t.dept_type_id='110'
+		ORDER BY t.up_dept_id,t.dept_id
+	 </select>
+	 
+	 <!-- 工序班组查询 -->
+     <select id="queryTacheTeam" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.TACHE_ID     AS "tacheId",
+       T1.TACHE_CODE   AS "tacheCode",
+       T1.TACHE_NAME   AS "tacheName",
+       T1.PRODUCT_ID   AS "productId",
+       T1.PRODCUT_CODE AS "prodcutCode",
+       T1.PRODUCT_NAME AS "productName",
+       T1.DEPT_ID      AS "deptId",
+       T1.DEPT_CODE    AS "deptCode",
+       T1.DEPT_NAME    AS "deptName"
+  FROM (SELECT BPT.TACHE_ID,
+               BPT.TACHE_CODE,
+               BPT.TACHE_NAME,
+               BPT.PRODUCT_ID,
+               BP.PRODCUT_CODE,
+               BP.PRODUCT_NAME,
+               BD.DEPT_ID,
+               BD.DEPT_CODE,
+               BD.DEPT_NAME
+          FROM qinsen.RELA_TACHE_2_TEAM T
+          LEFT JOIN qinsen.BASE_PRODUCE_TACHE BPT
+            ON BPT.TACHE_ID = T.TACHE_ID
+          LEFT JOIN qinsen.BASE_PRODUCT BP
+            ON BP.PRODUCT_ID = BPT.PRODUCT_ID
+          LEFT JOIN qinsen.BASE_DEPARTMENT BD
+            ON BD.DEPT_ID = T.TEAM_ID) T1
+ ORDER BY T1.TACHE_ID, T1.DEPT_ID
+	 </select>
+	 
+	 
+     </sqlMap>

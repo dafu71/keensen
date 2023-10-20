@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QueryEntityList>
+    <QueryEntity name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.V_Zxlbqd">
+        <config db="default" type="sql"><![CDATA[select a.zleib_name as "zleibname",wmsys.wm_concat(c.zname)as "nr" from genl_reserve_zleib a,genl_reserve_zcpcx_zleib b,genl_reserve_zcpcx c 
+where a.zleib = b.zleib and b.zcpcx = c.zcpcx 
+group by a.zleib_name]]></config>
+    </QueryEntity>
+</QueryEntityList>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="GB2312"?>
+<workbook>
+
+	<!--
+		@name: column name
+		@desc: column title
+		@type: column type(1:string 2:numeric 3:datatime)
+		@align: column align(1:left 2:center 3:right)
+		@width: column width
+		@format: column format(numeric format:0.00|#.##..., datatime format:yyyy-MM-dd...)
+		@scale: scale(scale=100)
+		@nullable: option[yes|no]
+		@equsize: column equals szie
+		@minsize: column min size
+		@maxsize: column mas size
+		@datasrc: data source(for example:SCHEDULE_SCHETYPE|#td_s_brand|TD_M_STAFF.STAFF_ID.STAFF_NAME)
+	-->
+	<sheet name="CUST" desc="客户机构信息">
+		<header isshow="true" height="300">
+			<cell
+				name="ORGNAME"
+				desc="机构名称"
+				type="1"
+				align="1"
+				width="1000"
+				nullable="no"
+			/>
+			<cell
+				name="PARENTORGNAME"
+				desc="上级机构名称"
+				type="1"
+				align="1"
+				width="500"
+			/>
+			<cell
+				name="AREA"
+				desc="地区"
+				type="1"
+				align="1"
+				width="500"
+			/>
+			<cell
+				name="INDESTRY"
+				desc="行业"
+				type="1"
+				align="1"
+				width="500"
+				nullable="no"
+				maxsize="500"
+			/>
+			<cell
+				name="ZIPCODE"
+				desc="邮编"
+				type="1"
+				align="1"
+				width="500"
+			/>
+			<cell
+				name="ADDRESS"
+				desc="地址"
+				type="1"
+				align="1"
+				width="100"
+			/>
+			<cell
+				name="ORGALLNAME"
+				desc="简称"
+				type="1"
+				align="1"
+				width="1000"
+			/>
+		</header>
+	</sheet>
+	
+</workbook>

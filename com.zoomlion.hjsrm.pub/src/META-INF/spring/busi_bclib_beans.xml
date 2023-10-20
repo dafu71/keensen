@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:sca="http://www.springframework.org/schema/sca"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd   http://www.springframework.org/schema/sca http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd">
+	<!--转单处理组件 -->
+	
+	<!--业务类型处理组件 -->
+
+	<!-- 业务处理-业务流程相关配置 begin  -->
+	<bean class="com.zoomlion.hjsrm.pub.businessclib.busi.common.BusiBpsCommon" id="busiBpsCommon"/>
+	<bean class="com.zoomlion.hjsrm.pub.businessclib.busi.common.BusiBpsDefineDao" id="busiBpsDefineDao"/>
+	<bean class="com.zoomlion.hjsrm.pub.businessclib.busi.common.BusiBpsDefineBean" id="busiBpsDefineBean">
+		<property name="busiBpsDefineDao" ref="busiBpsDefineDao"/>
+	</bean>
+	
+	<bean class="com.zoomlion.hjsrm.pub.srmclient.CommonUtils" id="bpsCommonUtils"/>
+	
+	<bean class="com.zoomlion.hjsrm.pub.srmclient.SrmClientDao" id="bpsSrmClientDao"/>
+	<bean class="com.zoomlion.hjsrm.pub.srmclient.SrmClientBean" id="bpsSrmClientBean">
+		<property name="srmClientDao" ref="bpsSrmClientDao"/>
+	</bean>
+	
+	<!-- 业务处理-业务流程相关配置 end  -->
+		
+	<!-- 业务处理-TAB页面资源选择组件 begin  -->
+
+	<!-- 业务处理-TAB页面资源选择组件 end  -->
+    
+	<!--通用的工单信息表操作类	begin -->
+
+	<!--通用的工单信息表操作类	end -->
+	
+	<!--发起业务流程校验 -->
+
+	<!--发起业务流程校验 -->
+
+	
+	<!--员工选择组件 -->
+
+</beans>

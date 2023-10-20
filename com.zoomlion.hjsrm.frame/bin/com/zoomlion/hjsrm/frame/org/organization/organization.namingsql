@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.org.organization.organization">
+    <!--查询人员对应机构的机构-->
+    <!--中联-->
+    <select id="queryOrganizationByEmp" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	select distinct eo.orgid as "orgid",
+    	oo.orgname as "orgname",
+    	oo.orgcode as "orgcode",
+    	oo.dataorgid as "dataorgid",
+    	oo.orgseq as "orgseq",
+    	oos.orgname as "orgnames" 
+		 from v_om_organization_trs oo
+		 join v_om_organization_trs oos on oos.orgid = oo.dataorgid
+		 join v_om_emporg_trs eo on oo.orgid = eo.orgid 
+		 where 1=1
+		  <dynamic prepend="">
+            <isNotNull prepend="and" property="empid">eo.empid =#empid#</isNotNull>
+            <isNotNull prepend="and" property="status">oo.status =#status#</isNotNull>
+            <isNotNull prepend="and" property="delflag">oo.delflag =#delflag#</isNotNull>
+        </dynamic>
+    </select>
+    <!-- 查询本级以下机构 -->
+    <select id="queryDownOrgs" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization">
+    	select a.* , b.orgname as "parentorgname" , c.orgname as "busiorgname" from 
+  		(select * from t_om_organization org
+  		<isEqual compareValue="0" property="orgid">start with org.parentorgid is null</isEqual>
+        <isNotEqual compareValue="0" property="orgid">start with org.parentorgid = #orgid#</isNotEqual>
+		connect by  org.parentorgid=prior org.orgid ) a 
+		left join t_om_organization b on a.parentorgid = b.orgid
+		left join t_om_organization c on a.dataorgid = c.orgid
+		where 1=1 
+		<isNotNull prepend="and" property="orgcode">a.orgcode like '%'||#orgcode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="orgname">a.orgname like '%'||#orgname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="delflag">a.delflag =#delflag#</isNotNull>
+        <isNotNull prepend="and" property="orgtype">a.orgtype =#orgtype#</isNotNull>
+        <isNotNull prepend="and" property="status">a.status =#status#</isNotNull>
+    </select>
+    <!-- 查询本级以下机构 -->
+    <select id="queryDownOrgs2" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs">
+    	select a.* , b.orgname as "parentorgname" , c.orgname as "busiorgname" from 
+  		(select * from v_om_organization_trs org
+  		<isEqual compareValue="0" property="orgid">start with org.parentorgid is null</isEqual>
+        <isNotEqual compareValue="0" property="orgid">start with org.parentorgid = #orgid#</isNotEqual>
+		connect by  org.parentorgid=prior org.orgid ) a 
+		left join v_om_organization_trs b on a.parentorgid = b.orgid
+		left join v_om_organization_trs c on a.dataorgid = c.orgid
+		where 1=1 
+		<isNotNull prepend="and" property="orgcode">a.orgcode like '%'||#orgcode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="orgname">a.orgname like '%'||#orgname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="delflag">a.delflag =#delflag#</isNotNull>
+        <isNotNull prepend="and" property="orgtype">a.orgtype =#orgtype#</isNotNull>
+        <isNotNull prepend="and" property="status">a.status =#status#</isNotNull>
+    </select>
+    <!-- 查询某个机构及下级的机构 (点击查询按钮方法) -->
+    <select id="queryEquDownOrgs" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization">
+    	select a.* , b.orgname as "parentorgname" , c.orgname as "busiorgname" from 
+  		(select * from t_om_organization org
+		start with org.orgid=#orgid#
+		connect by  org.parentorgid=prior org.orgid ) a 
+		left join t_om_organization b on a.parentorgid = b.orgid
+		left join t_om_organization c on a.dataorgid = c.orgid
+		where 1=1 
+		<isNotNull prepend="and" property="orgcode">a.orgcode like '%'||#orgcode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="orgname">a.orgname like '%'||#orgname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="delflag">a.delflag = #delflag#</isNotNull>
+        <isNotNull prepend="and" property="orgtype">a.orgtype =#orgtype#</isNotNull>
+        <isNotNull prepend="and" property="status">a.status =#status#</isNotNull>
+    </select>
+    <!-- 查询某个机构及下级的机构 (点击查询按钮方法) -->
+    <select id="queryEquDownOrgs2" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs">
+    	select a.* , b.orgname as "parentorgname" , c.orgname as "busiorgname" from 
+  		(select * from v_om_organization_trs org
+		start with org.orgid=#orgid#
+		connect by  org.parentorgid=prior org.orgid ) a 
+		left join v_om_organization_trs b on a.parentorgid = b.orgid
+		left join v_om_organization_trs c on a.dataorgid = c.orgid
+		where 1=1 
+		<isNotNull prepend="and" property="orgcode">a.orgcode like '%'||#orgcode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="orgname">a.orgname like '%'||#orgname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="delflag">a.delflag = #delflag#</isNotNull>
+        <isNotNull prepend="and" property="orgtype">a.orgtype =#orgtype#</isNotNull>
+        <isNotNull prepend="and" property="status">a.status =#status#</isNotNull>
+    </select>
+</sqlMap>

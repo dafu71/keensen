@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="queryinspectqjbzmx.bizx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node0" name="注释" collapsed="false" nodeType="note" type="note" title="刘鑫&#x9;15-6-18 上午10:49"/>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" collapsed="false" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>invokeSpring1</targetNode>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="12" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" collapsed="false" nodeType="common" type="end">
+    <targetConnections>link1</targetConnections>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="commonj.sdo.DataObject[]" name="datas" type="query" valueType="Java">datas</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <figSize height="12" width="25"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokeSpring1" name="queryinspectqjbzmx1" nodeType="common" type="invoke" index="0" invokeType="invoke_spring" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
+      <sourceNode>invokeSpring1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>invokeSpring1label</nodeLabel>
+    <process:spring methodType="beanID" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zoomlion.hjsrm.inspect.InspectBean.queryinspectqjbzmx</process:partner>
+      <process:instance instanceName="inspectBean"/>
+    </process:spring>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="matnr" type="query" value="java.lang.String" valueType="Java" pattern="reference">matnr</process:inputVariable>
+      <process:inputVariable id="1" name="werks" type="query" value="java.lang.String" valueType="Java" pattern="reference">werks</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out" type="query" value="commonj.sdo.DataObject[]" valueType="Java">datas</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeSpring1label" name="label" nodeType="label">
+    <figSize height="12" width="115"/>
+    <node>invokeSpring1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="6.3"/>
+  <process:variables/>
+  <process:inputs varArgs="false">
+    <process:input isArray="false" name="matnr" primitiveType="String"/>
+    <process:input isArray="false" name="werks" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output anyType="commonj.sdo.DataObject" description="" isArray="true" name="datas"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

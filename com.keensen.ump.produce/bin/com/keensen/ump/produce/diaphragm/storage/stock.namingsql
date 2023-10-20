@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.diaphragm.storage.stock">
+    <select id="queryStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t1.STORAGE_ID as "storageId", t1.id "id", t1.position "position",
+       t1.batch_no   as "batchNo",
+       t1.AMOUNT     as "amount",
+       t1.REMARK     as "remark",
+       t2.name as "storageName"，
+       to_char(nvl(t1.UPDATE_TIME,t1.CREATE_TIME),'yyyy-MM-dd') as "updateTime",
+       vkt.RECORD_ID       as "recordId",vkt.is_wx "isWx",
+       
+       vkt.worker_id "workerId"
+       ,vkt.spec_id "spectId",vkt.line_id "lineId",
+       
+       vkt.LINE_NAME       as "lineName",
+       vkt.LINE_CODE       as "lineCode",
+       vkt.PRODUCE_DT      as "produceDt",
+       vkt.IS_QUALIFIED    as "isQualified",
+       vkt.OUT_LENGTH      as "outLength",
+       vkt.LOSS            as "loss",
+       vkt.USEFUL_LENGTH as "usefulLength",
+       vkt.PLAN_NO         as "planNo",
+       vkt.ORDER_NO        as "orderNo",
+       vkt.SUP_ID          as "supId",
+       vkt.SUP_NAME        as "supName",
+       vkt.SUP_CODE        as "supCode",
+       vkt.DIMO_BATCH_NO   as "dimoBatchNo",
+       vkt.OUT_BATCH_NO    as "outBatchNo",
+       vkt.DEPT_NAME       as "deptName",
+       vkt.STAFF_NAME      as "staffName",
+       vkt.STAFF_CODE      as "staffCode",
+       vkt.PERF_FLAG_ID    as "perfFlagId",
+       vkt.PERF_FLAG_NAME  as "perfFlagName",
+       vkt.PERF_FLAG_CODE  as "perfFlagCode",
+       vkt.mater_class_code as "materClassCode",
+       vkt.mater_spec_code as "materSpecCode",
+       vkt.mater_class_Name as "materClassName",
+       vkt.mater_spec_Name as "materSpecName"
+  from KS_PROD_DIAPHRAGM_STOCK t1
+  left join ks_base_storage t2 on t1.storage_id=t2.id
+  left join V_KS_TUMO vkt on t1.batch_no = vkt.batch_no
+   
+  where 1=1
+  	<isNotNull prepend="and" property="position">t1.position = #position#</isNotNull>
+        <isNotNull prepend="and" property="perfFlagId">vkt.PERF_FLAG_ID = #perfFlagId#</isNotNull>
+        <isNotNull prepend="and" property="lineId">vkt.line_id = #lineId#</isNotNull>
+        <isNotNull prepend="and" property="specId">vkt.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="supId">vkt.SUP_ID = #supId#</isNotNull>
+        <isNotNull prepend="and" property="isWx">vkt.is_wx = #isWx#</isNotNull>
+        <isNotNull prepend="and" property="storageName">t2.name like '%'||#storageName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="storageId">t1.storage_id = #storageId#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">upper(vkt.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="planNo">upper(vkt.plan_No) '%' || upper(#planNo#) || '%'</isNotNull>
+	order by t1.STORAGE_ID
+     </select>
+    <select id="queryWarehousing" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t1.ID             as "id",
+        to_char(t1.CREATE_TIME,'yyyy-MM-dd')    as "createTime",t1.position "position",
+       t1.CREATE_USER_ID as "createUserId",
+       t1.CREATE_NAME    as "createName",
+       t1.UPDATE_TIME    as "updateTime",
+       t1.UPDATE_USER_ID as "updateUserId",
+       t1.UPDATE_NAME    as "updateName",
+       t1.RESERVE1       as "reserve1",
+       t1.RESERVE2       as "reserve2",
+       t1.RESERVE3       as "reserve3",
+       t1.RESERVE4       as "reserve4",
+       t1.RESERVE5       as "reserve5",
+       t1.ORG_ID         as "orgId",
+       t1.STATUS         as "status",
+       t1.STORAGE_ID     as "storageId",
+       t1.batch_no       as "batchNo",
+       t1.AMOUNT         as "amount",
+       t1.TYPE           as "type",
+       t1.REMARK         as "remark"，
+       t1.model "model",
+       t1.customer_code "customerCode",
+       t1.class "class",
+       t1.ifdelivery "ifdelivery",
+       t1.ifrecieve "ifrecieve",
+       t2.name as "storageName"
+  from KS_PROD_DIAPHRAGM_WAREHOUSING t1
+  left join ks_base_storage t2 on t1.storage_id=t2.id
+  where 1=1
+  	
+  	<isNotNull prepend="and" property="position">t1.position = #position#</isNotNull>
+        <isNotNull prepend="and" property="model">t1.model = #model#</isNotNull>
+        <isNotNull prepend="and" property="class">t1.class = #class#</isNotNull>
+        <isNotNull prepend="and" property="storageName">t2.name like '%'||#storageName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="storageId">t1.storage_id = #storageId#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="ifdelivery">t1.ifdelivery = #ifdelivery#</isNotNull>
+        <isNotNull prepend="and" property="ifrecieve">t1.ifrecieve = #ifrecieve#</isNotNull>
+	order by t1.id desc
+     </select>
+    <select id="queryOutofstock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t1.ID             as "id",
+       to_char(t1.CREATE_TIME,'yyyy-MM-dd')    as "createTime",
+       t1.CREATE_USER_ID as "createUserId",
+       t1.CREATE_NAME    as "createName",
+       t1.UPDATE_TIME    as "updateTime",
+       t1.UPDATE_USER_ID as "updateUserId",
+       t1.UPDATE_NAME    as "updateName",
+       t1.RESERVE1       as "reserve1",
+       t1.RESERVE2       as "reserve2",
+       t1.RESERVE3       as "reserve3",
+       t1.RESERVE4       as "reserve4",
+       t1.RESERVE5       as "reserve5",
+       t1.ORG_ID         as "orgId",
+       t1.STATUS         as "status",
+       t1.STORAGE_ID     as "storageId",
+       t1.batch_no       as "batchNo",
+       t1.AMOUNT         as "amount",
+       t1.TYPE           as "type",
+       t1.REMARK         as "remark"，
+       t2.name as "storageName"
+  from KS_PROD_DIAPHRAGM_OUTOFSTOCK t1
+  left join ks_base_storage t2 on t1.storage_id=t2.id
+  where 1=1
+    <isNotNull prepend="and" property="storageName">t2.name like '%'||#storageName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="storageId">t1.storage_id = #storageId#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+	order by t1.id desc
+     </select>
+    <select id="queryAllocate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select t1.ID as "id",
+       to_char(t1.CREATE_TIME, 'yyyy-MM-dd') as "createTime",
+       t1.CREATE_USER_ID as "createUserId",
+       t1.CREATE_NAME as "create_name",
+       t1.UPDATE_TIME as "updateTime",
+       t1.UPDATE_USER_ID as "updateUserId",
+       t1.UPDATE_NAME as "update_name",
+       t1.RESERVE1 as "reserve1",
+       t1.RESERVE2 as "reserve2",
+       t1.RESERVE3 as "reserve3",
+       t1.RESERVE4 as "reserve4",
+       t1.RESERVE5 as "reserve5",
+       t1.ORG_ID as "orgId",
+       t1.STATUS as "status",
+       t1.FROM_STORAGE_ID as "fromStorageId",
+       t1.batch_no as "batchNo",
+       t1.AMOUNT as "amount",
+       t1.REMARK as "remark",
+       t1.TO_STORAGE_ID as "toStorageId",
+       t2.name as "fromStorageName"，
+       t3.name as "toStorageName"
+  from KS_PROD_DIAPHRAGM_ALLOCATE t1
+  left join ks_base_storage t2 on t1.FROM_STORAGE_ID=t2.id
+  left join ks_base_storage t3 on t1.TO_STORAGE_ID=t3.id
+  where 1=1
+    <isNotNull prepend="and" property="fromStorageName">t2.name like '%'||#fromStorageName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="toStorageName">t3.name like '%'||#toStorageName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="fromStorageId">t1.FROM_STORAGE_ID = #fromStorageId#</isNotNull>
+        <isNotNull prepend="and" property="toStorageId">t1.TO_STORAGE_ID = #toStorageId#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+	order by t1.id desc
+     </select>
+    <select id="queryTumo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t1.RECORD_ID       as "recordId",t1.is_wx "isWx",t1.worker_id "workerId"
+       ,t1.spec_id "spectId",t1.line_id "lineId",
+       t1.LINE_NAME       as "lineName",
+       t1.LINE_CODE       as "lineCode",
+       t1.PRODUCE_DT      as "produceDt",
+       t1.BATCH_NO        as "batchNo",
+       t1.IS_QUALIFIED    as "isQualified",
+       t1.OUT_LENGTH      as "outLength",
+       t1.LOSS            as "loss",
+       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+       t1.PLAN_NO         as "planNo",
+       t1.ORDER_NO        as "orderNo",
+       t1.SUP_ID          as "supId",
+       t1.SUP_NAME        as "supName",
+       t1.SUP_CODE        as "supCode",
+       t1.DIMO_BATCH_NO   as "dimoBatchNo",
+       t1.OUT_BATCH_NO    as "outBatchNo",
+       t1.DEPT_NAME       as "deptName",
+       t1.STAFF_NAME      as "staffName",
+       t1.STAFF_CODE      as "staffCode",
+       t1.PERF_FLAG_ID    as "perfFlagId",
+       t1.PERF_FLAG_NAME  as "perfFlagName",
+       t1.PERF_FLAG_CODE  as "perfFlagCode",
+       t1.STORAGE_ID      as "storageId",
+       t1.STORAGE_NAME    as "storageName",
+       decode(t2.RECORD_ID,null,'n','y') "rkflag",
+       t1.mater_class_code as "materClassCode",
+       t1.mater_spec_code as "materSpecCode",
+       t1.mater_class_Name as "materClassName",
+       t1.mater_spec_Name as "materSpecName",
+       decode(w.batch_no,null,'否','是') "yrkflag"
+  from V_KS_TUMO2 t1
+  left join KS_PROD_DIAPHRAGM_RUKUDAN t2 
+    on t1.RECORD_ID = t2.RECORD_ID
+  left join (select distinct batch_no from KS_PROD_DIAPHRAGM_WAREHOUSING) w
+  on w.batch_no = t2.batch_no
+ where 1=1
+    
+    <isNotNull prepend="and" property="perfFlagId">t1.PERF_FLAG_ID = #perfFlagId#</isNotNull>
+        <isNotNull prepend="and" property="rkflag">decode(t2.RECORD_ID,null,'n','y') = #rkflag#</isNotNull>
+        <isNotNull prepend="and" property="yrkflag">decode(w.batch_no,null,'否','是') = #yrkflag#</isNotNull>
+        <isNotNull prepend="and" property="lineId">t1.line_id = #lineId#</isNotNull>
+        <isNotNull prepend="and" property="specId">t1.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="workerId">t1.worker_Id = #workerId#</isNotNull>
+        <isNotNull prepend="and" property="supId">t1.SUP_ID = #supId#</isNotNull>
+        <isNotNull prepend="and" property="isWx">t1.is_wx = #isWx#</isNotNull>
+        <isNotNull prepend="and" property="recordId">t1.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="and" property="storageId">t1.storage_id = #storageId#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="produceDtStart">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="produceDtEnd">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #produceDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="planNo">upper(t1.plan_No) '%' || upper(#planNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO '%' || #dimoBatchNo# || '%'</isNotNull>
+ order by t1.produce_dt desc
+     </select>
+    <select id="queryRkd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",
+       t1.LINE_NAME       as "lineName",t1.line_id "lineId",
+       t1.LINE_CODE       as "lineCode",
+       t1.PRODUCE_DT      as "produceDt",
+       t1.BATCH_NO        as "batchNo",
+       t1.IS_QUALIFIED    as "isQualified",
+       t1.OUT_LENGTH      as "outLength",
+       t1.LOSS            as "loss",
+       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+       t1.PLAN_NO         as "planNo",
+       t1.ORDER_NO        as "orderNo",
+       t1.SUP_ID          as "supId",
+       t1.SUP_NAME        as "supName",
+       t1.SUP_CODE        as "supCode",
+       t1.DIMO_BATCH_NO   as "dimoBatchNo",
+       t1.OUT_BATCH_NO    as "outBatchNo",
+       t1.DEPT_NAME       as "deptName",
+       t1.STAFF_NAME      as "staffName",
+       t1.STAFF_CODE      as "staffCode",
+       t1.PERF_FLAG_ID    as "perfFlagId",
+       t1.PERF_FLAG_NAME  as "perfFlagName",
+       t1.PERF_FLAG_CODE  as "perfFlagCode",
+       t1.STORAGE_ID      as "storageId",
+       t1.STORAGE_NAME    as "storageName",
+       decode(t2.RECORD_ID,null,0,1) "rkflag",
+       decode(t3.RECORD_ID,null,'n','y') "shipflag",
+       t1.mater_class_code as "materClassCode",
+       t1.mater_spec_code as "materSpecCode",
+       t1.mater_class_Name as "materClassName",
+       t1.mater_spec_Name as "materSpecName"
+  from KS_PROD_DIAPHRAGM_RUKUDAN t2
+  left join V_KS_TUMO2 t1 
+    on t1.RECORD_ID = t2.RECORD_ID
+  left join KS_PROD_DIAPHRAGM_SHIP t3
+    on t1.RECORD_ID = t3.RECORD_ID
+ where 1=1
+ and not exists(select 1 from KS_PROD_DIAPHRAGM_WAREHOUSING w where w.batch_No=t2.batch_No)
+ 
+   <isNotNull prepend="and" property="perfFlagId">t1.PERF_FLAG_ID = #perfFlagId#</isNotNull>
+        <isNotNull prepend="and" property="lineId">t1.line_id = #lineId#</isNotNull>
+        <isNotNull prepend="and" property="specId">t1.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="workerId">t1.worker_Id = #workerId#</isNotNull>
+        <isNotNull prepend="and" property="supId">t1.SUP_ID = #supId#</isNotNull>
+        <isNotNull prepend="and" property="isWx">t1.is_wx = #isWx#</isNotNull>
+        <isNotNull prepend="and" property="recordId">t1.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="and" property="storageId">t1.storage_id = #storageId#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="produceDtStart">to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="produceDtEnd">to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="planNo">upper(t1.plan_No) '%' || upper(#planNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO '%' || #dimoBatchNo# || '%'</isNotNull>
+ order by t1.produce_dt desc
+     </select>
+    <select id="queryVTumo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select * from V_KS_TUMO t1
+     where 1=1
+     <isNotNull prepend="and" property="orderNo">t1.order_No = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="planNo">t1.plan_No = #planNo#</isNotNull>
+    </select>
+</sqlMap>

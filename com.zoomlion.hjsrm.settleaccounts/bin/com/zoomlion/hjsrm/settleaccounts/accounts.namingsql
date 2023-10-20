@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.settleaccounts.accounts">
+    <!--查询待生成结算凭证-->
+    <select id="queryCreateAccounts" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	select '' "m_ztext",
+	       t11.djssl "m_djssl",
+	       nvl(t11.jsdj, 0) "m_jsdj",
+	       t11.jsdw "m_jsdw",
+	       t11.flag_htj "m_flag_htj",
+	       0 "m_zcdf",
+	       'F8' "m_mwskz",
+	       'F8' "m_taxrt",
+	       t11.lfpos || t11.lfbnr || t11.lfbja "myid",
+	       t11.tishi "tishi",
+	       t11.mblnr as "mblnr",
+	       t11.zeile as "zeile",
+	       t11.mjahr as "mjahr",
+	       to_char(t11.budat,'yyyy-mm-dd') as "budat",
+	       t11.matnr as "matnr",
+	       t11.txz01 as "txz01",
+	       t11.erfmg as "erfmg",
+	       t11.erfme as "erfme",
+	       t11.djssl as "djssl",
+	       t11.djssl_ck as "djssl_ck",
+	       t11.kbetr as "kbetr",
+	       t11.kpein as "kpein",
+	       t11.kmein as "kmein",
+	       nvl(t11.jsdj, 0) as "jsdj",
+	       t11.jsdw as "jsdw",
+	       t11.flag_htj as "flag_htj",
+	       t11.bwart as "bwart",
+	       t11.shkzg as "shkzg",
+	       t11.waers as "waers",
+	       t11.ebeln as "ebeln",
+	       t11.ebelp as "ebelp",
+	       t11.aufnr as "aufnr",
+	       t11.kostl as "kostl",
+	       t11.lfpos as "lfpos",
+	       t11.lfbnr as "lfbnr",
+	       t11.lfbja as "lfbja",
+	       t11.lifnr as "lifnr",
+	       t11.bukrs as "bukrs",
+	       t11.werks as "werks",
+	       t11.ekorg as "ekorg",
+	       t11.ekgrp as "ekgrp",
+	       t11.amount as "amount",
+	       t11.name1 as "name1",
+	       t11.flag as "flag",
+	       t2.ekotx "ekotx",
+	       t3.eknam "eknam",
+	       t4.name1 as "werksname",
+	       t5.butxt "butxt",
+	       t11.chayi "chayi",
+	       t11.mein "mein",
+	       t11.menge "menge"
+	  from (select ttt.mblnr as mblnr,
+       ttt.zeile as zeile,
+       ttt.mjahr as mjahr,
+       tt.budat,
+       ttt.matnr,
+       z3.txz01,
+       ttt.erfmg,
+       ttt.erfme as erfme,
+       nvl(to_number(ttt.erfmg),0) -nvl(z.djssl,0) as djssl,
+       nvl(to_number(ttt.erfmg),0) -nvl(z.djssl,0) as djssl_ck,
+       decode(ttt.matnr,null,0,'',0,z2.kbetr) as kbetr,
+       decode(ttt.matnr,null,0,'','',z2.kpein) as kpein,
+       decode(ttt.matnr,null,'','','',z2.kmein) as kmein,
+
+       decode(ttt.matnr,null,z1.kbetr,'',z1.kbetr,z2.kbetr) as jsdj,
+       decode(ttt.matnr,null,z1.kpein,'',z1.kpein,z2.kpein) as jsdw,
+       decode(ttt.matnr,null,z1.kmein,'',z1.kmein,z2.kmein) as mein,
+       decode(ttt.matnr,null,'N','','N','Y') as flag_htj,
+       ttt.bwart,
+       ttt.shkzg,
+       ttt.waers,
+       ttt.ebeln,
+       ttt.ebelp,
+       z4.aufnr,
+       z4.kostl,
+       ttt.lfpos,
+       ttt.lfbnr,
+       ttt.lfbja,
+       ttt.lifnr,
+       ttt.bukrs,
+       ttt.werks,
+       z5.ekorg,
+       z5.ekgrp,
+       ttt.erfmg as menge,
+       ttt.amount as amount,
+       sup.name1,
+      
+       (case when fg.flag = '0'
+      then 0
+      else(
+
+        case when (((ttt.matnr is not null) and (nvl(decode(ttt.matnr,null,0,'',0,z2.kbetr),0)&lt;=0))
+            or ((ttt.matnr is null) and (nvl(z1.kbetr,0)&lt;=0)))
+             then 0
+             else(
+
+                  case when (nvl(to_number(ttt.erfmg),0) -nvl(z.djssl,0))&lt;=0
+                  then 0
+                   else 1
+                   end)
+              end )
+       end)  flag,
+       (case when fg.flag = '0' then '物料凭证对应参考凭证'||ttt.lfbnr||'行项目'||ttt.lfpos||'对应的结算数量之和不能为零'
+        else
+        ( case when (((ttt.matnr is not null) and (nvl(decode(ttt.matnr,null,0,'',0,z2.kbetr),0)&lt;=0))
+            or ((ttt.matnr is null) and (nvl(z1.kbetr,0)&lt;=0)))
+             then '无有效合同价不允许结算'
+             else(
+                  case when (nvl(to_number(ttt.erfmg),0) -nvl(z.djssl,0))&lt;=0
+                  then ttt.bwart||'收货凭证'||ttt.mblnr||'行项目'||ttt.zeile||'的待结算数量不能小于收退货数'
+                   else '数据检查通过'
+                   end)
+              end )
+       end)  tishi,
+       z6.mount chayi,
+       tz1.budat ruksj
+  from (select t1.*,
+               (select (nvl(sum(case
+                                  when (t.bwart = '101' or t.bwart = '122' or
+                                       t.bwart = '161') then
+                                   to_number(t.erfmg)
+                                  else
+                                   0
+                                end),
+                            0) - nvl(sum(case
+                                            when (t.bwart = '102' or t.bwart = '123' or
+                                                 t.bwart = '162') then
+                                             to_number(t.erfmg)
+                                            else
+                                             0
+                                          end),
+                                      0))
+                  from (select * from genl_receipts_mseg where 1=1 <isNotNull prepend="and" property="lifnr">lifnr =  #lifnr#</isNotNull>) t
+                 start with (t.mblnr || t.zeile || t.mjahr) =
+                            (t1.mblnr || t1.zeile || t1.mjahr)
+                connect by prior (t.mblnr || t.zeile || t.mjahr) =
+                            (t.smbln || t.smblp || t.sjahr)) amount
+          from (select * from genl_receipts_mseg where 1=1 <isNotNull prepend="and" property="lifnr">lifnr =  #lifnr#</isNotNull>) t1
+         where t1.smbln is null
+            or t1.smbln = '') ttt left join  v_genl_poyuzhi z  on z.mblnr = ttt.mblnr and z.mjahr = ttt.mjahr and z.zeile = ttt.zeile
+            left join v_genl_pojiesjiag z1 on z1.mblnr = ttt.mblnr and z1.mjahr = ttt.mjahr and z1.zeile = ttt.zeile
+            left join v_genl_jieshtjia z2  on  z2.mblnr = ttt.mblnr and z2.mjahr = ttt.mjahr and z2.zeile = ttt.zeile
+            left join genl_purchase_ekpo z3 on z3.ebeln = ttt.ebeln and z3.ebelp = ttt.ebelp
+            left join genl_purchase_ekkn z4 on ttt.ebeln = z4.ebeln and ttt.ebelp = z4.ebelp
+            left join genl_purchase_ekko z5 on z5.ebeln = ttt.ebeln
+            left join v_genl_jiesuan_one z6 on z6.lfbja = ttt.lfbja and z6.lfbnr = ttt.lfbnr and  z6.lfpos = ttt.lfpos
+            left join genl_receipts_mkpf tz1 on ttt.lfbnr = tz1.mblnr and ttt.lfbja = tz1.mjahr
+            left join v_genl_pockpinz fg on fg.lfbnr = ttt.lfbnr and fg.lfbja = ttt.lfbja and fg.lfpos = ttt.lfpos,
+         genl_receipts_mkpf tt,base_supply_lfa1 sup
+ where ttt.amount &lt;&gt; 0
+   and tt.mblnr = ttt.mblnr
+   and tt.mjahr = ttt.mjahr
+   and ttt.lifnr = sup.lifnr  
+   ) t11,
+	       base_purchase_t024e t2,
+	       base_purchase_t024  t3,
+	       base_factory_t001w  t4,
+	       base_company_t001   t5
+	 where t11.ekorg = t2.ekorg
+	   and t11.ekgrp = t3.ekgrp
+	   and t11.djssl != 0
+	   and t4.werks = t11.werks
+	   and t11.bukrs = t5.bukrs
+
+     <isNotNull prepend="and" property="bukrs">t11.bukrs =  #bukrs#</isNotNull>
+        <isNotNull prepend="and" property="werks">t11.werks =  #werks#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">t11.ekorg =  #ekorg#</isNotNull>
+        <isNotNull prepend="and" property="ekgrp">t11.ekgrp = #ekgrp#</isNotNull>
+        <isNotNull prepend="and" property="ekotx">t2.ekotx like '%' || #ekotx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="eknam">t3.eknam like '%' || #eknam# || '%'</isNotNull>
+        <isNotNull prepend="and" property="mblnr">t11.mblnr = #mblnr#</isNotNull>
+        <isNotNull prepend="and" property="matnr">t11.matnr = #matnr#</isNotNull>
+        <isNotNull prepend="and" property="matnrs">t11.matnr in ($matnrs$)</isNotNull>
+        <isNotNull prepend="and" property="mblnrs">t11.mblnr in ($mblnrs$)</isNotNull>
+        <isNotNull prepend="and" property="budatstartdate">to_char(t11.budat, 'yyyy-MM-dd')  &gt;=  substr(#budatstartdate#,1,10)</isNotNull>
+        <isNotNull prepend="and" property="budatendate">to_char(t11.budat, 'yyyy-MM-dd')  &lt;=  substr(#budatendate#,1,10)</isNotNull>
+        <isNotNull prepend="and" property="ruksjstartdate">to_char(t11.ruksj, 'yyyy-MM-dd')  &gt;=  substr(#ruksjstartdate#,1,10)</isNotNull>
+        <isNotNull prepend="and" property="ruksjendate">to_char(t11.ruksj, 'yyyy-MM-dd')  &lt;=  substr(#ruksjendate#,1,10)</isNotNull>
+        <isNotNull prepend="and" property="flag">t11.flag =  #flag#</isNotNull>
+        <isNotNull prepend="and" property="jspz">t11.lfpos || t11.lfbnr || t11.lfbja
+			not in
+			(
+			    select lfpos || lfbnr || lfbja from genl_invoice_list 
+			    where jspz =#jspz# and mjahr=#mjahr#
+			    
+			)</isNotNull>
+        <!--按myid查询-->
+        <isNotNull prepend="and" property="myids">t11.lfpos || t11.lfbnr || t11.lfbja in ($myids$)</isNotNull>
+        <!--按参考凭证的年度（倒序）、参考凭证号（倒序）、参考凭证行（正序）排列-->
+     order by  t11.lfbja desc,to_number(t11.lfbnr) desc,to_number(t11.lfpos)
+  </select>
+    <!--查询待生成结算凭证-->
+    <!--导出生成序号-->
+    <select id="queryJiesuan" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	select rownum as "serial_number",
+	tt."m_ztext",
+	       tt."m_djssl",
+	       tt."m_jsdj",
+	       tt."m_jsdw",
+	       tt."m_flag_htj",
+	       tt."m_zcdf",
+	       tt."m_mwskz",
+	       tt."m_taxrt",
+	       tt."myid",
+	       tt."tishi",
+	       tt."mblnr",
+	       tt."zeile",
+	       tt."mjahr",
+	       tt."budat",
+	       tt."matnr",
+	       tt."txz01",
+	       tt."erfmg",
+	       tt."erfme",
+	       tt."djssl",
+	       tt."djssl_ck",
+	       tt."kbetr",
+	       tt."kpein",
+	       tt."kmein",
+	       tt."jsdj",
+	       tt."jsdw",
+	       tt."flag_htj",
+	       tt."bwart",
+	       tt."shkzg",
+	       tt."waers",
+	       tt."ebeln",
+	       tt."ebelp",
+	       tt."aufnr",
+	       tt."kostl",
+	       tt."lfpos",
+	       tt."lfbnr",
+	       tt."lfbja",
+	       tt."lifnr",
+	       tt."bukrs",
+	       tt."werks",
+	       tt."ekorg",
+	       tt."ekgrp",
+	       tt."name1",
+	       tt."flag",
+	       tt."ekotx",
+	       tt."eknam",
+	       tt."werksname",
+	       tt."butxt",
+	       tt."chayi",
+	       tt."mein",
+	       tt."menge",
+	       tt."vnbm"
+	from	
+	
+	(select t11.m_ztext "m_ztext",
+	       t11.djssl "m_djssl",
+	       nvl(t11.jsdj, 0) "m_jsdj",
+	       t11.jsdw "m_jsdw",
+	       t11.flag_htj "m_flag_htj",
+	       t11.m_zcdf "m_zcdf",
+	       'F4' "m_mwskz",<!--t11.m_mwskz "m_mwskz",-->
+	       'F4' "m_taxrt",<!--t11.m_taxrt "m_taxrt",-->
+	       t11.myid "myid",
+	       t11.tishi "tishi",
+	       t11.mblnr as "mblnr",
+	       t11.zeile as "zeile",
+	       t11.mjahr as "mjahr",
+	       t11.budat as "budat",
+	       t11.matnr as "matnr",
+	       t11.txz01 as "txz01",
+	       t11.erfmg as "erfmg",
+	       t11.erfme as "erfme",
+	       t11.djssl as "djssl",
+	       t11.djssl_ck as "djssl_ck",
+	       t11.kbetr as "kbetr",
+	       t11.kpein as "kpein",
+	       t11.kmein as "kmein",
+	       nvl(t11.jsdj, 0) as "jsdj",
+	       t11.jsdw as "jsdw",
+	       t11.flag_htj as "flag_htj",
+	       t11.bwart as "bwart",
+	       t11.shkzg as "shkzg",
+	       t11.waers as "waers",
+	       t11.ebeln as "ebeln",
+	       t11.ebelp as "ebelp",
+	       t11.aufnr as "aufnr",
+	       t11.kostl as "kostl",
+	       t11.lfpos as "lfpos",
+	       t11.lfbnr as "lfbnr",
+	       t11.lfbja as "lfbja",
+	       t11.lifnr as "lifnr",
+	       t11.bukrs as "bukrs",
+	       t11.werks as "werks",
+	       t11.ekorg as "ekorg",
+	       t11.ekgrp as "ekgrp",
+	       t11.name1 as "name1",
+	       t11.flag as "flag",
+	       t11.ekotx "ekotx",
+	       t11.eknam "eknam",
+	       t11.name1 as "werksname",
+	       t11.butxt "butxt",
+	       t11.chayi "chayi",
+	       t11.mein "mein",
+	       t11.menge "menge",
+	       gmv.VNBM "vnbm"
+	  from (select distinct * from Jiesuan) t11	  
+	  left join GENL_MBLNR_VNBM gmv
+	  on t11.MBLNR = gmv.MBLNR and t11.ZEILE = gmv.MBLNO
+	  where 1=1
+	  
+	  <isNotNull prepend="and" property="vnbms">gmv.VNBM in ($vnbms$)</isNotNull>
+        <isNotNull prepend="and" property="vnbm">gmv.VNBM like '%' || #vnbm# || '%'</isNotNull>
+        <isNotNull prepend="and" property="bukrs">t11.bukrs =  #bukrs#</isNotNull>
+        <isNotNull prepend="and" property="werks">t11.werks =  #werks#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">t11.ekorg =  #ekorg#</isNotNull>
+        <isNotNull prepend="and" property="ekgrp">t11.ekgrp = #ekgrp#</isNotNull>
+        <isNotNull prepend="and" property="ekotx">t11.ekotx like '%' || #ekotx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="eknam">t11.eknam like '%' || #eknam# || '%'</isNotNull>
+        <isNotNull prepend="and" property="mblnr">t11.mblnr = #mblnr#</isNotNull>
+        <isNotNull prepend="and" property="matnr">t11.matnr = #matnr#</isNotNull>
+        <isNotNull prepend="and" property="matnrs">t11.matnr in ($matnrs$)</isNotNull>
+        <isNotNull prepend="and" property="mblnrs">t11.mblnr in ($mblnrs$)</isNotNull>
+        <isNotNull prepend="and" property="budatstartdate">t11.budat  &gt;=  substr(#budatstartdate#,1,10)</isNotNull>
+        <isNotNull prepend="and" property="budatendate">t11.budat &lt;=  substr(#budatendate#,1,10)</isNotNull>
+        <!--
+     <isNotNull prepend = "and"  property = "ruksjstartdate"> 
+          to_char(t11.ruksj,'yyyy-mm-dd')  &gt;=  substr(#ruksjstartdate#,1,10)
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "ruksjendate"> 
+          to_char(t11.ruksj,'yyyy-mm-dd') &lt;=  substr(#ruksjendate#,1,10)
+     </isNotNull>
+     -->
+        <isNotNull prepend="and" property="flag">t11.flag =  #flag#</isNotNull>
+        <isNotNull prepend="and" property="jspz">t11.lfpos || t11.lfbnr || t11.lfbja
+			not in
+			(
+			    select lfpos || lfbnr || lfbja from genl_invoice_list 
+			    where jspz =#jspz# and mjahr=#mjahr#
+			    
+			)</isNotNull>
+        <!--按myid查询-->
+        <isNotNull prepend="and" property="myids">t11.lfpos || t11.lfbnr || t11.lfbja in ($myids$)</isNotNull>
+        <!--按参考凭证的年度（倒序）、参考凭证号（倒序）、参考凭证行（正序）排列-->
+     order by  t11.lfbja desc,to_number(t11.lfbnr) desc,to_number(t11.lfpos)
+     ) tt
+  </select>
+    <!--查询编码-->
+    <select id="queryCode" resultClass="commonj.sdo.DataObject">select t.jspz "jspz" , t.mjahr "mjahr" 
+	from genl_invoice_code t
+	where t.jspz &lt; '3000000000'</select>
+    <!--更新编码-->
+    <update id="updateCode">update genl_invoice_code t set t.jspz = t.jspz +1</update>
+    <!--更新编码-->
+    <update id="updateCode2">update genl_invoice_code t set t.jspz = '2000000001',t.mjahr = to_char(sysdate,'yyyy')</update>
+    <!--查询待确认结算凭证-->
+    <select id="queryUnConfirm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	select t.lifnr  "lifnr",
+	       t2.name1 "name1",
+	       t.jspz   "jspz",
+	       t.mjahr  "mjahr",
+	       t.mwskz  "mwskz",
+	       to_char(t.datum,'yyyy-mm-dd')  "datum",
+	       t.jsje   "jsje",
+	       t.tax    "tax",
+	       t.flje   "flje",
+	       t.yfje   "yfje",
+	       t.qtkkje "qtkkje",
+	       t.statu  "statu",
+	       t3.ekorg "ekorg",
+	       o.operatorname "tranu",
+	       to_char(t.trant,'yyyy-MM-dd HH24:mi:ss') "trant"
+	  from genl_invoice_head t
+	  left join v_ac_operator_trs o on o.userid = t.tranu
+	  left join base_supply_lfa1 t2 on t.lifnr = t2.lifnr
+	  left join (select max(ekorg) ekorg, jspz
+	               from genl_invoice_list t
+	              group by jspz) t3 on t3.jspz = t.jspz
+	 where 1 = 1
+ 	<isNotNull prepend="and" property="bukrs">t.bukrs =  #bukrs#</isNotNull>
+        <isNotNull prepend="and" property="werks">t.werks =  #werks#</isNotNull>
+        <isNotNull prepend="and" property="jspz">t.jspz =  #jspz#</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t.lifnr =  #lifnr#</isNotNull>
+        <isNotNull prepend="and" property="lifnr2">t.lifnr like '%' || #lifnr2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="datumstartdate">to_char(t.datum, 'yyyy-MM-dd')  &gt;=  #datumstartdate#</isNotNull>
+        <isNotNull prepend="and" property="datumendate">to_char(t.datum, 'yyyy-MM-dd')  &lt;=  #datumendate#</isNotNull>
+        <isNotNull prepend="and" property="name1">t2.name1 like '%' || #name1# || '%'</isNotNull>
+        <isNotNull prepend="and" property="statu">t.statu = #statu#</isNotNull>
+     order by to_number(t.jspz) desc
+ </select>
+    <!--查询结算凭证-->
+    <select id="queryAccount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select t.jspz     "jspz",
+           t.jspzh    "jspzh",
+           t.mjahr    "mjahr",
+          t.mblnr    "mblnr",
+           t.zeile    "zeile",
+           to_char(t.budat,'yyyy-mm-dd')    "budat",
+           t.shkzg    "shkzg",
+           t.bwart    "bwart",
+           t.djssl    "djssl",
+           t.djssl_ck "djssl_ck",
+           t.meins    "meins",
+           t.hjsje    "hjsje",
+           t.jsdj     "jsdj",
+           t.jsdw     "jsdw",
+           t.kbetr    "kbetr",
+           t.kpein    "kpein",
+           t.kmein    "kmein",
+           t.flag_htj "flag_htj",
+           t.hqtkkje  "hqtkkje",
+           t.hflje    "hflje",
+           t.hyfje    "hyfje",
+           t.hkkje    "hkkje",
+           t.zcdf     "zcdf",
+           t.lfbnr    "lfbnr",
+           t.lfpos    "lfpos",
+           t.ekorg    "ekorg",
+           t.ekgrp    "ekgrp",
+           t.matnr    "matnr",
+           k.txz01 "maktx",
+           to_char(t.zwrildt,'yyyy-mm-dd')  "zwrildt",
+           t.zwriusr  "zwriusr",
+           t.ztext    "ztext"
+      from genl_invoice_list t
+      left join genl_purchase_ekpo k on k.ebeln = t.ebeln and k.ebelp = t.ebelp
+     where 1=1  
+     <isNotNull prepend="and" property="jspz">t.jspz = #jspz#</isNotNull>
+        <isNotNull prepend="and" property="mjahr">t.mjahr = #mjahr#</isNotNull>
+       order by to_number(t.jspz) desc, to_number(t.jspzh)
+	 </select>
+    <!--查询已生成结算凭证-->
+    <select id="queryCreated" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select 0 as "amount",
+		       t1.aufnr as "aufnr",
+		       to_char(t1.budat,'yyyy-mm-dd') as "budat",
+		       t.bukrs as "bukrs",
+		       t7.butxt as "butxt",
+		       t1.bwart as "bwart",
+		       nvl(t8.chayi, 0) as "chayi",
+		       t1.djssl as "djssl",
+		       t1.djssl_ck as "djssl_ck",
+		       t1.ebeln as "ebeln",
+		       t1.ebelp as "ebelp",
+		       t1.ekgrp as "ekgrp",
+		       t6.eknam as "eknam",
+		       t1.ekorg as "ekorg",
+		       t5.ekotx as "ekotx",
+		       t1.MEINS as "erfme",
+		       t1.MENGE as "erfmg",
+		       1 as "flag",
+		       t1.flag_htj as "flag_htj",
+		       t1.jsdj as "jsdj",
+		       t1.jsdw as "jsdw",
+		       t1.kbetr as "kbetr",
+		       t1.kmein as "kmein",
+		       z4.kostl as "kostl",
+		       t1.kpein as "kpein",
+		       t1.lfgja as "lfbja",
+		       t1.lfbnr as "lfbnr",
+		       t1.lfpos as "lfpos",
+		       t.lifnr as "lifnr",
+		       t1.djssl as "m_djssl",
+		       t1.flag_htj as "m_flag_htj",
+		       nvl(t1.hkkje, 0) as "m_hkkje",
+		       t1.jsdj as "m_jsdj",
+		       t1.jsdw as "m_jsdw",
+		       t.mwskz as "m_mwskz",
+		       t.mwskz as "m_taxrt",
+		       t1.ztext as "m_ztext",
+		       t1.matnr as "matnr",
+		       t1.mblnr as "mblnr",
+		       t1.meins as "mein",
+		       t1.menge as "menge",
+		       t1.mjahr as "mjahr",
+		       t1.lfpos || t1.lfbnr || t1.lfgja as "myid",
+		       t2.name1 as "name1",
+		       t1.shkzg as "shkzg",
+		       '' as "tishi",
+		       z3.txz01 as "txz01",
+		       t1.waers as "waers",
+		       t.werks as "werks",
+		       t4.name1 as "werksname",
+		       t1.zeile as "zeile",
+		       t1.zcdf "m_zcdf",
+		       t1.zcdf "zcdf"
+		  from genl_invoice_list t1
+		  left join genl_invoice_head t on t.jspz || t.mjahr = t1.jspz || t1.mjahr
+		  left join genl_purchase_ekpo z3 on z3.ebeln = t1.ebeln
+		                                 and z3.ebelp = t1.ebelp
+		  left join base_factory_t001w t4 on t4.werks = t.werks
+		  left join base_supply_lfa1 t2 on t.lifnr = t2.lifnr
+		  left join genl_purchase_ekkn z4 on t1.ebeln = z4.ebeln
+		                                 and t1.ebelp = z4.ebelp
+		  left join base_purchase_t024e t5 on t1.ekorg = t5.ekorg
+		  left join base_purchase_t024 t6 on t1.ekgrp = t6.ekgrp
+		  left join base_company_t001 t7 on t.bukrs = t7.bukrs
+		  left join (select sum(djssl) chayi, jspz, mjahr
+		               from genl_invoice_list t
+		              where t.shkzg = 'H'
+		              group by jspz, mjahr) t8 on t.jspz = t8.jspz
+		                                      and t.mjahr = t8.mjahr
+		 where 1 = 1
+	
+	     <isNotNull prepend="and" property="jspz">t.jspz = #jspz#</isNotNull>
+        <isNotNull prepend="and" property="mjahr">t.mjahr = #mjahr#</isNotNull>
+	     
+	     order by to_number(t.jspz) desc, to_number(t1.jspzh),t1.MJAHR
+	
+	 </select>
+    <!--结算凭证查询-->
+    <select id="queryLists" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	 	select t.jspz     as "jspz", 	   
+	       t.jspzh    as "jspzh",
+	       t.mjahr    as "mjahr",
+	       t.mblnr    as "mblnr",
+	       t.zeile    as "zeile",
+	       to_char(t.budat,'yyyy-mm-dd')    as "budat",
+	       t.shkzg    as "shkzg",
+	       t.bwart    as "bwart",
+	       t.djssl    as "djssl",
+	       t.djssl_ck as "djssl_ck",
+	       t.meins    as "meins",
+	       decode(t.shkzg, 'S', t.hjsje, '-'||t.hjsje) "hjsje",
+	       t.jsdj     as "jsdj",
+	       t.jsdw     as "jsdw",
+	       t.kbetr    as "kbetr",
+	       t.kpein    as "kpein",
+	       t.kmein    as "kmein",
+	       t.flag_htj as "flag_htj",
+	       t.kalsm    as "kalsm",
+	       t.hqtkkje  as "hqtkkje",
+	       t.hflje    as "hflje",
+	       t.hyfje    as "hyfje",
+	       t.hkkje    as "hkkje",
+	       t.zcdf     as "zcdf",
+	       t.lfbnr    as "lfbnr",
+	       t.lfpos    as "lfpos",
+	       t.lfgja    as "lfgja",
+	       t.shqtk    as "shqtk",
+	       t.hshqtk   as "hshqtk",
+	       t.shqtkbh  as "shqtkbh",
+	       t.waers    as "waers",
+	       t.belnr    as "belnr",
+	       t.buzei    as "buzei",
+	       t.gjahr    as "gjahr",
+	       t.ekorg    as "ekorg",
+	       t.ekgrp    as "ekgrp",
+	       t.ebeln    as "ebeln",
+	       t.ebelp    as "ebelp",
+	       t.matnr    as "matnr",
+	       t.matkl    as "matkl",
+	       t.aufnr    as "aufnr",
+	       t.menge    as "menge",
+	       to_char(t.zwrildt,'yyyy-mm-dd')  as "zwrildt",
+	       t.zwriusr  as "zwriusr",
+	       t.ztext    as "ztext",
+	       t2.ekotx   "ekotx",
+	       t3.eknam   "eknam",
+	       t4.name1   as "werksname",
+	       t5.butxt   "butxt",z3.txz01 "txz01",t6.name1 "lifnrname",t1.lifnr "lifnr",
+	       t1.statu   as "statu",
+	       c.vnbm as "vnbm"
+	  from genl_invoice_list t
+	  left join genl_invoice_head t1 on t.jspz = t1.jspz
+	                                and t.mjahr = t1.mjahr
+	  left join base_purchase_t024e t2 on t.ekorg = t2.ekorg
+	  left join base_purchase_t024 t3 on t3.ekgrp = t.ekgrp
+	  left join base_factory_t001w t4 on t4.werks = t1.werks
+	  left join base_company_t001 t5 on t5.bukrs = t1.bukrs
+	  left join genl_purchase_ekpo z3 on z3.ebeln = t.ebeln and z3.ebelp = t.ebelp
+	  left join base_supply_lfa1 t6 on t6.lifnr = t1.lifnr
+	  left join genl_mblnr_vnbm c on t.mblnr =c.mblnr and t.zeile = c.mblno
+	  where 1=1 
+	  <isNotNull prepend="and" property="bukrs">t1.bukrs =  #bukrs#</isNotNull>
+        <isNotNull prepend="and" property="werks">t1.werks =  #werks#</isNotNull>
+        <isNotNull prepend="and" property="jspz">t.jspz = #jspz#</isNotNull>
+        <isNotNull prepend="and" property="mblnr">t.mblnr = #mblnr#</isNotNull>
+        <isNotNull prepend="and" property="mjahr">t.mjahr = #mjahr#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">t.ekorg = #ekorg#</isNotNull>
+        <isNotNull prepend="and" property="ekgrp">t.ekgrp = #ekgrp#</isNotNull>
+        <isNotNull prepend="and" property="matnr">t.matnr = #matnr#</isNotNull>
+        <isNotNull prepend="and" property="txz01">z3.txz01 like '%' || #txz01# || '%'</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t1.lifnr =  #lifnr#</isNotNull>
+        <isNotNull prepend="and" property="lifnr2">t1.lifnr like '%' ||  #lifnr2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="statu">t1.statu =  #statu#</isNotNull>
+        <isNotNull prepend="and" property="belnr">t.belnr =  #belnr#</isNotNull>
+        <isNotNull prepend="and" property="lifnrname">t6.name1 like '%' || #lifnrname# || '%'</isNotNull>
+        <isNotNull prepend="and" property="datumstartdate">to_char(t1.datum,'yyyy-mm-dd')&gt;=#datumstartdate#</isNotNull>
+        <isNotNull prepend="and" property="datumendate">to_char(t1.datum,'yyyy-mm-dd')&lt;=#datumendate#</isNotNull>
+	     
+	     order by t1.lifnr,to_number(t.jspz) desc,t.mjahr,to_number(t.jspzh)
+	  </select>
+    <!--结算凭证查询-->
+    <select id="queryPrints" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+			 select t.jspz as "jspz",
+			       t.jspzh as "jspzh",
+			       t.mblnr "mblnr",
+			       to_char(t.budat,'yyyy-mm-dd') "budat",
+			       t.zeile "zeile",
+			       nvl(t.matnr,'-') "matnr",
+			       nvl(t2.txz01,'-') "txz01",
+			       nvl(t.ebeln,'-') "ebeln",
+			       nvl(t.ebelp,'-') "ebelp",
+			       t.jsdj "jsdj",
+			       t.jsdw "jsdw",
+			       t.flag_htj "flag_htj",
+			       t.djssl "djssl",
+			       nvl(t.meins,'-') "meins",
+			       t.hflje "hflje",
+			       t.hyfje "hyfje",
+			       t.hqtkkje "hqtkkje",
+			       t.zcdf "zcdf",
+			       decode(t.shkzg, 'S', t.hjsje, '-'||t.hjsje) "hjsje",
+			       decode(t.shkzg, 'S',to_number(nvl(t.hjsje, 0)) * to_number(nvl(t3.taxrt, 0)),'-' || to_number(nvl(t.hjsje, 0)) * to_number(nvl(t3.taxrt, 0))) "hse",
+			       decode(t.shkzg, 'S', '入', '退') "shkzg",
+			       nvl(t.ztext,'-') "ztext",
+			       bm.vnbm "vnbm"
+			  from genl_invoice_list t
+			  left join genl_purchase_ekpo t2 on t2.ebeln = t.ebeln and t2.ebelp = t.ebelp
+			  left join genl_invoice_head t3 on t3.jspz = t.jspz
+			  left join genl_mblnr_vnbm bm on t.mblnr = bm.mblnr and t.zeile = bm.mblno
+			 where 1 = 1
+	  <isNotNull prepend="and" property="jspz">t.jspz = #jspz#</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t3.lifnr= #lifnr#</isNotNull>
+	     order by to_number(t.jspz) desc,to_number(t.jspzh)
+	   </select>
+    <!--结算凭证打印抬头 -->
+    <select id="queryPrintHead" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select t.lifnr "lifnr",
+		       t2.name1 "name1",
+		       t.jspz "jspz",
+		       nvl(t3.zname, '-') "zname",
+		       nvl(t3.zptel, '-') "zptel",
+		       t.print "print",
+		       t4.ekorg "ekorg",
+		       t5.ekotx "ekotx",
+		       t.tranu "tranu",
+		       t6.operatorname "tranuname",
+		       t.flje "flje",
+		       t.yfje "yfje",
+		       t.qtkkje "qtkkje",
+		       t4.zcdf "zcdf",
+		       t.mwskz "mwskz",
+		       t.taxrt "taxrt",
+		       t.tax "tax",
+		       t7.name1 "werksname1",t7.butxt "butxt",
+		       t4.waers "waers",
+		       t.jsje "jsje"
+		  from genl_invoice_head t
+		  left join base_supply_lfa1 t2 on t.lifnr = t2.lifnr
+		  left join (select lifnr, zname, ZTTEL, ZPTEL
+		               from genl_supply_ttel
+		              where ZTTEL = 2) t3 on t3.lifnr = t.lifnr
+		  left join (select max(ekorg) ekorg, sum(ZCDF) zcdf, jspz, max(WAERS) waers
+		               from genl_invoice_list t
+		              group by jspz) t4 on t4.jspz = t.jspz
+		  left join base_purchase_t024e t5 on t4.ekorg = t5.ekorg
+		  left join v_ac_operator_trs t6 on t6.userid = t.tranu
+		  left join (select bft.werks,bft.name1,bcf.bukrs,bct.butxt from 
+						base_company_factory bcf
+						left join
+						base_factory_t001w bft
+						on bcf.werks = bft.werks
+						left join
+						base_company_t001 bct
+						on bct.bukrs = bcf.bukrs) t7 on t7.werks = t.werks
+		 where 1 = 1
+	        <isNotNull prepend="and" property="jspz">t.jspz = #jspz#</isNotNull>
+    </select>
+    <!--结算数量校验-->
+    <select id="checkAmount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+			 
+     select nvl(sum(t.djssl),0) "mysum" from genl_invoice_list t
+	 where t.mjahr = #mjahr# and  t.mblnr = #mblnr# and t.zeile = #zeile#
+	 <isNotNull prepend="and" property="jspz">t.jspz  &lt;&gt; #jspz#</isNotNull>
+    </select>
+    <!-- 删除当前操作员的所有特权信息 -->
+    <delete id="deleteJiesuan" parameterClass="java.util.HashMap">delete from jiesuan where lifnr = #lifnr# and userid = #userid#</delete>
+</sqlMap>

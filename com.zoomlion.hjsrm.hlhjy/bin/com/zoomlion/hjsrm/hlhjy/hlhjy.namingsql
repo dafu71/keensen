@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.hlhjy.hlhjy">
+    <!-- 查询供应商问题反馈-->
+    <select id="queryhlhjy" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t.wtfkid as "wtfkid",
+       t.createname as "createname",
+       t.createtel as "createtel",
+       t.lifnr as "lifnr",
+       t.wtlx as "wtlx",
+       t.wtms as "wtms",
+       t.recvuserid as "recvuserid",
+       t.zrrname as "zrrname",
+       t.jjfa as "jjfa",
+       to_char(t.jhjjtime,'yyyy-MM-dd HH24:MI:SS')  as "jhjjtime",
+       t.clzt as "clzt",
+       to_char(t.sjjjtime,'yyyy-MM-dd HH24:MI:SS') as "sjjjtime",
+       t.supqr as "supqr",
+       t.tranu as "tranu",
+       to_char(t.trant,'yyyy-MM-dd HH24:MI:SS') as "trant",
+       to_char(t.tctime,'yyyy-MM-dd HH24:MI:SS') as "tctime",
+       t.recvusername as "recvusername",
+       t.name1 as "name1",
+       d.operatorname as "operatorname" 
+   from genl_supplywtfk_list t left join V_AC_OPERATOR_TRS d on t.tranu = d.userid
+   where t.supqr &lt; &gt; 4
+            <isNotNull prepend="and" property="createname">t.createname like '%'|| #createname# ||'%'</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t.lifnr like '%'|| #lifnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="lifnrsup">t.lifnr = #lifnrsup#</isNotNull>
+        <isNotNull prepend="and" property="name1">t.name1 like '%'|| #name1# || '%'</isNotNull>
+        <isNotNull prepend="and" property="wtlx">t.wtlx = #wtlx#</isNotNull>
+        <isNotNull prepend="and" property="wtms">t.wtms like '%'|| #wtms# || '%'</isNotNull>
+        <isNotNull prepend="and" property="recvusername">t.recvusername like '%'|| #recvusername# || '%'</isNotNull>
+        <isNotNull prepend="and" property="zrrname">t.zrrname like '%'|| #zrrname# || '%'</isNotNull>
+        <isNotNull prepend="and" property="clzt">t.clzt =  #clzt#</isNotNull>
+        <isNotNull prepend="and" property="supqr">t.supqr = #supqr#</isNotNull>
+        <isNotNull prepend="and" property="wtfkid">t.wtfkid = #wtfkid#</isNotNull>
+        <isNotNull prepend="and" property="jhstartdate">to_char(t.jhjjtime,'yyyy-MM-dd HH24:MI:SS')  &gt;=  #jhstartdate#</isNotNull>
+        <isNotNull prepend="and" property="jhendate">to_char(t.jhjjtime,'yyyy-MM-dd HH24:MI:SS')  &lt;=  #jhendate#</isNotNull>
+        <isNotNull prepend="and" property="sjstartdate">to_char(t.sjjjtime,'yyyy-MM-dd HH24:MI:SS')  &gt;=  #sjstartdate#</isNotNull>
+        <isNotNull prepend="and" property="sjendate">to_char(t.sjjjtime,'yyyy-MM-dd HH24:MI:SS')  &lt;=  #sjendate#</isNotNull>
+            order by t.wtfkid desc
+    </select>
+    <!-- 查询供应商问题反馈导出-->
+    <select id="queryhlhjydaochu" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t.wtfkid as "wtfkid",
+       t.createname as "createname",
+       t.createtel as "createtel",
+       t.lifnr as "lifnr",
+       ttt.dictname as "wtlx",
+       t.wtms as "wtms",
+       t.recvuserid as "recvuserid",
+       t.zrrname as "zrrname",
+       t.jjfa as "jjfa",
+       to_char(t.jhjjtime,'yyyy-MM-dd HH24:MI:SS')  as "jhjjtime",
+       tt.dictname as "clzt",
+       to_char(t.sjjjtime,'yyyy-MM-dd HH24:MI:SS') as "sjjjtime",
+       tttt.dictname as "supqr",
+       t.tranu as "tranu",
+       to_char(t.trant,'yyyy-MM-dd HH24:MI:SS') as "trant",
+       to_char(t.tctime,'yyyy-MM-dd HH24:MI:SS') as "tctime",
+       t.recvusername as "recvusername",
+       t.name1 as "name1" ,
+       ttttt.operatorname as "operatorname" 
+   from genl_supplywtfk_list t left join (select * from eos_dict_entry d where d.dicttypeid = 'GE_SUPPLYWTFK_CLZT' ) tt 
+   on t.clzt = tt.dictid
+   left join (select * from eos_dict_entry d where d.dicttypeid = 'GE_SUPPLYWTFK_WTLB' ) ttt on  t.wtlx = ttt.dictid
+   left join (select * from eos_dict_entry d where d.dicttypeid = 'GE_SUPPLYWTFK_SUPQR' ) tttt on t.supqr = tttt.dictid
+   left join V_AC_OPERATOR_TRS ttttt on t.tranu = ttttt.userid
+   where t.supqr &lt; &gt; 4
+            <isNotNull prepend="and" property="createname">t.createname like '%'|| #createname# ||'%'</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t.lifnr like '%'|| #lifnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="lifnrsup">t.lifnr = #lifnrsup#</isNotNull>
+        <isNotNull prepend="and" property="name1">t.name1 like '%'|| #name1# || '%'</isNotNull>
+        <isNotNull prepend="and" property="wtlx">t.wtlx = #wtlx#</isNotNull>
+        <isNotNull prepend="and" property="wtms">t.wtms like '%'|| #wtms# || '%'</isNotNull>
+        <isNotNull prepend="and" property="recvusername">t.recvusername like '%'|| #recvusername# || '%'</isNotNull>
+        <isNotNull prepend="and" property="zrrname">t.zrrname like '%'|| #zrrname# || '%'</isNotNull>
+        <isNotNull prepend="and" property="clzt">t.clzt =  #clzt#</isNotNull>
+        <isNotNull prepend="and" property="supqr">t.supqr = #supqr#</isNotNull>
+        <isNotNull prepend="and" property="wtfkid">t.wtfkid = #wtfkid#</isNotNull>
+        <isNotNull prepend="and" property="jhstartdate">to_char(t.jhjjtime,'yyyy-MM-dd HH24:MI:SS')  &gt;=  #jhstartdate#</isNotNull>
+        <isNotNull prepend="and" property="jhendate">to_char(t.jhjjtime,'yyyy-MM-dd HH24:MI:SS')  &lt;=  #jhendate#</isNotNull>
+        <isNotNull prepend="and" property="sjstartdate">to_char(t.sjjjtime,'yyyy-MM-dd HH24:MI:SS')  &gt;=  #sjstartdate#</isNotNull>
+        <isNotNull prepend="and" property="sjendate">to_char(t.sjjjtime,'yyyy-MM-dd HH24:MI:SS')  &lt;=  #sjendate#</isNotNull>
+         order by t.wtfkid desc
+    </select>
+</sqlMap>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr">
+    <xs:complexType name="Vformalsupplybase" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.VformalsupplybaseImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pstlz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stras" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lprop" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ltype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cretm" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="batch" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lsyst" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lsort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zzyyw" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="creid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VsupplyinfoTel" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.VsupplyinfoTelImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zttel" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="ztext" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zmtel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zptel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="email" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlSupplyTtel" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.GenlSupplyTtelImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zttel" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="zname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zmtel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zptel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="email" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="creid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cretm" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlSupplyData" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.GenlSupplyDataImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lprop" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ltype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="batch" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lsyst" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lsort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zzyyw" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="creid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cretm" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlSupplyLinshi" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.GenlSupplyLinshiImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ort01" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pstlz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="telf1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stras" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zkfbm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zkcbm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zkcrq" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cretm" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zstus" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Vqzsupplybase" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.VqzsupplybaseImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pstlz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ort01" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="telf1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stras" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zkfbm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zkcbm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zkcrq" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zstus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lprop" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ltype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="batch" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lsyst" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lsort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zzyyw" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="creid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cretm" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlSupplyEfficacy" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.GenlSupplyEfficacyImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="ytype" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="zdata" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zqual" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zsupp" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zcost" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zqtxi" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zjshz" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zzhjx" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="ztlpm" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zjxpm" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zjxdj" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zbeiz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zstat" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="creid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cretm" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlSupplywtfkList" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.GenlSupplywtfkListImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="wtfkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wtlx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wtms" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recvuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zrrname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jjfa" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jhjjtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="clzt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sjjjtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="supqr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="tctime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="recvusername" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlCpflpzList" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.GenlCpflpzListImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="fldm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="flmc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sjid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="ssdj" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hbdm" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlCpqdwhList" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.GenlCpqdwhListImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cpmc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cpxh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cpgg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ssdl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sszl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ssxl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ntgl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gjzld" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zyjscs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="text" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlSupplyHgsupply" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.sypply.formalsupplyMgr.impl.GenlSupplyHgsupplyImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="yearr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jydy" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gyslx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zgcp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wzlx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wzlb" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gysdz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gyslxr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gyslxdh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="text1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="text2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateuseid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

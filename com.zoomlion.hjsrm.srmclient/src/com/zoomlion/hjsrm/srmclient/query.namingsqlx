@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+     <!--查询待办工单 -->
+    <select id="queryWorking"  parameterClass="java.util.HashMap"  resultClass="commonj.sdo.DataObject">
+    select t.esheetno "esheetno",
+	       t.processinstname "processinstname",
+	       ww.workitemid "id",
+	       ww.rootprocinstid "rootprocinstid",
+	       t.processtype "processtype",
+	       dic.dictname "processtypename",
+	       t.username "username",
+	       t.deptname "deptname",
+	       to_char(t.applydate, 'yyyy-MM-dd HH24:mi:ss') "applydate",
+	       ww.Workitemname "workitemname",
+	       ww.processinstid "processinstid",
+	       ww.Activityinstid "activityinstid",
+	       ww.workitemid "workitemid",
+	       ww.Rootprocinstid "rootprocinstid",
+	       ww.currentstate "currentstate",
+	       decode(ww.currentstate, 4, '待领取', 10, '运行', 8, '挂起') as "currentstatename",
+	       nvl(eh.hastenstate, 0) "hastenstate",
+	       round(to_number(sysdate - t.applydate)) "datediff",
+	       wp.participantID "participantid",
+	       ww.actionurl "actionurl"
+	  from es_basicinfo t,
+	       WFWorkItem ww,
+	       es_hasten eh,
+	       WFWIParticipant wp,
+	       (select dict.dictid, dict.dictname
+	          from eos_dict_entry dict
+	         where dict.dicttypeid = 'PROCESSTYPE') dic
+	 where
+	
+	 t.processinstid = ww.processinstid
+	 and ww.workitemid = eh.workitemid(+)
+	 and ww.currentState in (4, 8, 10)
+	 and wp.workitemid = ww.workitemid
+	 and ((wp.currentstate = 8 and wp.participantid = $userid$ and
+	 wp.partiintype = 'EXE') or
+	 (wp.currentstate = 10 and wp.participantid = $userid$ and
+	 wp.partiintype = 'EXE') or
+	 (wp.currentstate = 4 and wp.partiintype = 'GET' and
+	 ((wp.participanttype = 'person' and wp.participantid = $userid$) or
+	 (wp.participanttype = 'organization' and wp.participantid in ($orgid$)) or
+	 (wp.participanttype = 'role' and wp.participantid in ($roleid$))
+	 
+	 )))
+	 and t.processtype = dic.dictid
+
+    <isNotNull prepend = "and"  property = "workitemid"> 
+          t.workitemid = #workitemid#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "esheetno"> 
+          t.esheetno = #esheetno#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "processinstname"> 
+          t.processinstname like concat(concat('%', #processinstname#),'%')
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "processtype"> 
+          t.processtype = #processtype#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "username"> 
+          t.username = #username#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "deptname"> 
+          t.deptname like concat(concat('%', #deptname#),'%')
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "workitemname"> 
+          ww.Workitemname = #workitemname#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "applydatestartdate"> 
+          to_char(t.applydate, 'yyyy-MM-dd')  &gt;=  #applydatestartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "applydateendate"> 
+          to_char(t.applydate, 'yyyy-MM-dd')  &lt;=  #applydateendate#
+     </isNotNull>
+    order by t.applydate desc
+	</select>
+	
+	<!-- 查询所有子机构--> 
+    <select id="queryAllOrgs"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    	select org.orgid as "orgid" from v_om_organization_trs org
+    	start with org.orgid= #orgid#
+    	connect by  prior org.parentorgid =  org.orgid  
+    </select>
+    
+    <!--查询已办工单-->
+    <select id="queryWorked" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    select * from (
+    	select distinct
+    		a.esheetno "id", 
+    		a.esheetno "esheetno",
+			a.busiprocessinstid "busiprocessinstid",
+			a.busiprocessname "busiprocessname",
+			a.processinstname "processinstname",
+			a.processtype "processtype",
+			a.username "username",
+			a.deptname "deptname",
+			<!--
+		      a.userid,
+		      to_char(a.expectdate, 'yyyy-MM-dd hh24:mi:ss') as expectdate,
+		      a.title,
+		      a.activityinstname,
+		      a.emergency,
+		      a.activitydefid,
+		    -->
+			to_char(a.applydate, 'yyyy-MM-dd hh24:mi:ss') as "applydate",
+			round(to_number(sysdate - a.applydate)) "datediff",
+			a.processdefid "processdefid",
+			a.curactivityinstname "curactivityinstname",
+			a.processinstid "processinstid",
+			a.rootprocinstid "rootprocinstid",
+			b.description "description",
+			dic.dictname "processtypename"
+		from V_HASEXECUTETASK a,wfprocessdefine b,
+    (select dict.dictid ,dict.dictname from eos_dict_entry dict where dict.dicttypeid='PROCESSTYPE') dic
+			WHERE a.processdefid = b.processdefid
+				<!--and a.assistant = #USERID#-->
+				and a.assistant = #userid#
+				and  a.processtype = dic.dictid 
+				and (1=0 
+				<isEqual property="task_origin" compareValue="ALL">
+					or a.bizState = 1 OR a.bizState = 2 OR a.bizState = 0 OR a.bizState = 4
+				</isEqual>
+				<isEqual property="task_origin" compareValue="SELF">
+					or a.bizState = 0
+				</isEqual>
+				<isEqual property="task_origin" compareValue="DELEG">
+					or a.bizState = 1 OR a.bizState = 2 OR a.bizState = 4
+				</isEqual>
+				)
+		<isNotNull property="esheetno">
+			and a.esheetno like '%$esheetno$%'
+		</isNotNull>
+		<isNotNull property="busiprocessname">
+			and a.processinstname like '%$busiprocessname$%'
+		</isNotNull>
+		<isNotNull property="emergency">
+			and a.emergency = #emergency#
+		</isNotNull>
+		<isNotNull property="processtype">
+			and a.processtype = #processtype#
+		</isNotNull>
+		<isNotNull property="orgname">
+			and a.orgname like '%$orgname$%'
+		</isNotNull>
+		<isNotNull property="username">
+			and a.username like '%$username$%'
+		</isNotNull>
+		<isNotNull property="curactivityinstname">
+			and a.curactivityinstname like '%$curactivityinstname$%'
+		</isNotNull>
+		<isNotNull property="applydate_min">
+			and a.applydate &gt;= to_date('$applydate_min$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>
+		<isNotNull property="applydate_max">
+			and a.applydate &lt;= to_date('$applydate_max$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>
+
+		) order by $_order$ desc
+	</select>
+	
+	<!--查询办结工单-->
+	 <select id="queryFinished" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    select * from (
+    	select distinct
+    		a.esheetno "esheetno",
+			a.busiprocessinstid "busiprocessinstid" ,
+			a.rootprocinstid "rootprocinstid",
+			a.busiprocessname "busiprocessname",
+			a.processinstname "processinstname",
+			a.processtype "processtype",
+			a.username "username",
+			a.deptname "deptname",
+			<!--
+		      a.userid,
+		      to_char(a.expectdate, 'yyyy-MM-dd hh24:mi:ss') as expectdate,
+		      a.title,
+		      a.activityinstname,
+		      a.emergency,
+		      a.activitydefid,
+		    -->
+			to_char(a.applydate, 'yyyy-MM-dd hh24:mi:ss') as "applydate",
+			to_char(a.endtime, 'yyyy-MM-dd hh24:mi:ss') as "endtime",
+			a.processdefid "processdefid",
+			a.processinstid "processinstid",
+			b.description "description"
+		from V_FINISHEXECUTETASK a, wfprocessdefine b
+			WHERE a.processdefid = b.processdefid
+				<!--and a.assistant = #USERID#-->
+				and a.assistant = #userid#
+				and (1=0 
+				<isEqual property="task_origin" compareValue="ALL">
+					or a.bizState = 1 OR a.bizState = 2 OR a.bizState = 0 OR a.bizState = 4
+				</isEqual>
+				<isEqual property="task_origin" compareValue="SELF">
+					or a.bizState = 0
+				</isEqual>
+				<isEqual property="task_origin" compareValue="DELEG">
+					or a.bizState = 1 OR a.bizState = 2 OR a.bizState = 4
+				</isEqual>
+				)
+		<isNotNull property="esheetno">
+			and a.esheetno like '%$esheetno$%'
+		</isNotNull>
+		<isNotNull property="busiprocessname">
+			and a.processinstname like '%$busiprocessname$%'
+		</isNotNull>
+		<isNotNull property="emergency">
+			and a.emergency = #emergency#
+		</isNotNull>
+		<isNotNull property="processtype">
+			and a.processtype = #processtype#
+		</isNotNull>
+		<isNotNull property="orgname">
+			and a.orgname like '%$orgname$%'
+		</isNotNull>
+		<isNotNull property="username">
+			and a.username like '%$username$%'
+		</isNotNull>
+		<isNotNull property="applydate_min">
+			and a.applydate &gt;= to_date('$applydate_min$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>
+		<isNotNull property="applydate_max">
+			and a.applydate &lt;= to_date('$applydate_max$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>
+		<isNotNull property="endtime_min">
+			and a.endtime &gt;= to_date('$endtime_min$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>
+		<isNotNull property="endtime_max">
+			and a.endtime &lt;= to_date('$endtime_max$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>
+		) order by $_order$ desc
+	</select>
+	
+	<!--查询阅读工单-->
+	<select id="queryRead" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    	select a.esheetno "esheetno",
+			a.processinstid "processinstid",
+			a.processinstname "processinstname",
+			a.userid "userid",
+			a.username "username",
+			a.orgname "orgname",
+			to_char(a.applydate, 'yyyy-MM-dd hh24:mi:ss') as "applydate",
+			a.emergency "emergency",
+			a.processtype "processtype",
+			d.description "description",
+			e.id "eid",
+			to_char(e.sendtime, 'yyyy-MM-dd hh24:mi:ss') as "sendtime"
+		from es_basicinfo a,
+			wfprocessinst c, wfprocessdefine d,es_workform_read e
+		where e.reader= '$reader$' 
+			and e.status= $status$
+			and a.esheetno=e.esheetno
+			and a.processinstid = c.processinstid
+			and c.processdefid = d.processdefid
+		
+		<isNotNull property="esheetno">
+			and a.esheetno like '%$esheetno$%'
+		</isNotNull>
+		<isNotNull property="processinstname">
+			and a.processinstname like '%$processinstname$%'
+		</isNotNull>
+		<isNotNull property="emergency">
+			and a.emergency = #emergency#
+		</isNotNull>
+		<isNotNull property="processtype">
+			and a.processtype = #processtype#
+		</isNotNull>
+		<isNotNull property="orgname">
+			and a.orgname like '%$orgname$%'
+		</isNotNull>
+		<isNotNull property="username">
+			and a.username like '%$username$%'
+		</isNotNull>
+		<isNotNull property="applydate_min">
+			and a.applydate &gt;= to_date('$applydate_min$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>
+		<isNotNull property="applydate_max">
+			and a.applydate &lt;= to_date('$applydate_max$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>
+
+		order by e.$_order$ desc
+	</select>
+	
+	<!--OA首页待办查询阅读工单-->
+	<select id="queryOARead" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    	select count(a.esheetno) as count
+		from es_basicinfo a,
+			wfprocessinst c, wfprocessdefine d,es_workform_read e
+		where e.reader= '$reader$' 
+			and e.status= $status$
+			and a.esheetno=e.esheetno
+			and a.processinstid = c.processinstid
+			and c.processdefid = d.processdefid		
+		<isNotNull property="esheetno">
+			and a.esheetno like '%$esheetno$%'
+		</isNotNull>
+		<isNotNull property="processinstname">
+			and a.processinstname like '%$processinstname$%'
+		</isNotNull>
+		<isNotNull property="emergency">
+			and a.emergency = #emergency#
+		</isNotNull>
+		<isNotNull property="processtype">
+			and a.processtype = #processtype#
+		</isNotNull>
+		<isNotNull property="orgname">
+			and a.orgname like '%$orgname$%'
+		</isNotNull>
+		<isNotNull property="username">
+			and a.username like '%$username$%'
+		</isNotNull>
+		<isNotNull property="applydate_min">
+			and a.applydate &gt;= to_date('$applydate_min$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>
+		<isNotNull property="applydate_max">
+			and a.applydate &lt;= to_date('$applydate_max$','yyyy-MM-dd hh24:mi:ss')
+		</isNotNull>		
+	</select>
+	
+	 <!--OA首页查询待办工单 -->
+    <select id="queryOAWorking"  parameterClass="java.util.HashMap"  resultClass="commonj.sdo.DataObject">
+	   select count(t.esheetno) as count
+	  from es_basicinfo t,
+	       WFWorkItem ww,
+	       es_hasten eh,
+	       WFWIParticipant wp,
+	       (select dict.dictid, dict.dictname
+	          from eos_dict_entry dict
+	         where dict.dicttypeid = 'PROCESSTYPE') dic
+	 where t.processinstid = ww.processinstid
+	   and ww.workitemid = eh.workitemid(+)
+	   and ww.currentState in (4, 8, 10)
+	   and wp.workitemid = ww.workitemid
+	   and ((wp.currentstate = 8 and wp.participantid = $userid$ and
+	       wp.partiintype = 'EXE') or
+	       (wp.currentstate = 10 and wp.participantid = $userid$ and
+	       wp.partiintype = 'EXE') or
+	       (wp.currentstate = 4 and wp.partiintype = 'GET' and
+	       ((wp.participanttype = 'person' and wp.participantid = $userid$) or
+	       (wp.participanttype = 'organization' and
+	       wp.participantid in ($orgid$)) or
+	       (wp.participanttype = 'role' and wp.participantid in ($roleid$))
+	       
+	       )))
+	   and t.processtype = dic.dictid
+    <isNotNull prepend = "and"  property = "workitemid"> 
+          t.workitemid = #workitemid#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "esheetno"> 
+          t.esheetno = #esheetno#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "processinstname"> 
+          t.processinstname like concat(concat('%', #processinstname#),'%')
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "processtype"> 
+          t.processtype = #processtype#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "username"> 
+          t.username = #username#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "deptname"> 
+          t.deptname like concat(concat('%', #deptname#),'%')
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "workitemname"> 
+          ww.Workitemname = #workitemname#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "applydatestartdate"> 
+          to_char(t.applydate, 'yyyy-MM-dd')  &gt;=  #applydatestartdate#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "applydateendate"> 
+          to_char(t.applydate, 'yyyy-MM-dd')  &lt;=  #applydateendate#
+     </isNotNull>   
+	</select>   
+	
+	
+	<!--查询转阅记录-->
+   <select id="queryReadRecords" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+      select t.id "id",
+	       t.reader "reader",
+	       t.readername "readername",
+	       t.esheetno "esheetno",
+	       t.senduser "senduser",
+	       t.sendusername "sendusername",
+	       t.sendtime "sendtime",
+	       t.status "status",
+	       to_char(t.readtime, 'yyyy-mm-dd HH24:mi:ss') "readtime",
+	       t2.content "content",
+	       t2.pkid "pkid"
+	  from es_workform_read t, es_workform_read_deal t2
+	 where t.id = t2.read_pkid(+)
+	   and t.esheetno = #esheetno#
+      <isNotNull property="status">
+      and t.status = #status#
+    </isNotNull>
+  </select>
+  
+  
+  <!--查询活动参与者-->
+	 <select id="queryActivityUsers" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    	select t.participant "userid",
+		       t.partiname,
+		       t.activityinstid,
+		       e.empname "empname",
+		       e.mobileno "mobileno"
+		  from wfwiparticipant t, v_om_employee_trs e, v_ac_operator_trs u
+		 where t.participant = u.userid
+		   and e.empid = u.empid
+		   and t.activityinstid = #activityinstid#
+	</select>
+	
+	
+	<!--查询短信催办人员-->
+	<select id="queryPart1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	select t.participant "participant",
+	       t.partiname   "partiname",
+	       e.mobileno    "mobileno"
+	  from wfworkitem t
+	  left join v_ac_operator_trs u on t.participant = u.userid
+	  left join v_om_employee_trs e on u.empid = e.empid
+	 where (t.currentstate = 4 or t.currentstate = 10)
+	   and t.rootprocinstid = #rootprocinstid#
+	 order by t.starttime
+	</select>
+	
+	<select id="queryPart2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	select e.* from v_om_employee_trs e left join 
+	v_ac_operator_trs u on u.empid = e.empid where u.userid=#participant#
+	</select>
+	
+	<select id="queryPart3" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select r.roleid "roleid",u.userid "userid",t.empname "empname",t.mobileno "mobileno" from v_om_employee_trs t
+		left join 
+		v_ac_operator_trs u on u.empid = t.empid 
+		left join t_ac_operatorrole r
+		on r.operatorid=u.operatorid and r.roleid=#participant#
+	</select>
+	
+	
+	<!--根据流程实例id查询待执行工作项-->
+	<select id="queryWorkitems" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	select workitemid "workitemid"
+	  from WFWorkItem
+	 where processinstid = #processinstid#
+	   and currentstate in (4, 10)
+    </select>
+    
+    <!--根据empcode查询userid-->
+    <select id="queryUserid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	select userid "userid" from v_ac_operator_trs where empcode=#empcode#
+    </select>
+</sqlMap>

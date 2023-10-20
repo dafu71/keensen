@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:wangfuqiang -->
+<sqlMap>
+    <!--查询技术通知工单-->
+    <select id="queryTechNoticeList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+          select 
+    		a.notice_id "noticeid", 
+    		a.weave_person_name "weavepersonname",
+			a.weave_person_id "weavepersonid",
+			a.dept_name "deptname",
+			a.dept_id "deptid",
+			decode(a.product_Type,'1','扫路设备','2','清洗设备','3','垃圾设备','4','其他') "producttype",
+			a.notice_title "noticetitle",
+			a.processinstid "processinstid",
+			a.process_status "processstatus",
+			to_char(a.application_time, 'yyyy-MM-dd HH24:mi:ss') "applicationtime",
+			a.processinstid "rootprocinstid"
+			 from FLOW_TECHNIQUE_NOTICE a
+			where 1=1
+	 <isNotNull prepend = "and"  property = "noticeid"> 
+          a.notice_id = #noticeid#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "processinstid"> 
+          a.processinstid = #processinstid#
+     </isNotNull>  
+      <isNotNull prepend = "and"  property = "weavepersonname"> 
+          a.weave_person_name = #weavepersonname#
+     </isNotNull> 
+     <isNotNull prepend = "and"  property = "appstarttime"> 
+          to_char(a.application_time,'yyyy-MM-dd') &gt;= #appstarttime#
+     </isNotNull> 
+      <isNotNull prepend = "and"  property = "appendtime"> 
+          to_char(a.application_time,'yyyy-MM-dd') &lt;= #appendtime#
+     </isNotNull> 
+      <isNotNull prepend = "and"  property = "productType"> 
+          a.product_Type = #productType#
+     </isNotNull> 
+      <isNotNull prepend = "and"  property = "orgname"> 
+          a.dept_name = #orgname#
+     </isNotNull> 
+       <isNotNull prepend = "and"  property = "deptid"> 
+          a.dept_id = #deptid#
+     </isNotNull>        
+      <isNotNull prepend = "and"  property = "processstatus"> 
+          a.process_status = #processstatus#
+     </isNotNull> 
+     order by a.application_time desc
+	</select>
+	
+	 <!--查询人员信息-->
+    <select id="queryEmployee" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+          select t.empname as EMPNAME from om_employee t where 1=1
+      <isNotNull prepend = "and"  property = "personId"> 
+          t.userid = #personId#
+     </isNotNull>    
+	</select>
+	
+	 <!--查询数据字典业务数据-->
+    <select id="queryTechData" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		 select dictid as "dictid",dictname as "dictname"  from EOS_DICT_ENTRY t where 1=1
+		  <isNotNull prepend = "and"  property = "dataId"> 
+		     t.dicttypeid =#dataId#          
+           </isNotNull>          	 
+	   order by dictid	   
+    </select>
+    
+     <!--获得技术通知业务数据-->
+    <select id="getTechNotice" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		 select 
+    		a.notice_id "noticeid", 
+    		a.weave_person_name "weavepersonname",
+			a.weave_person_id "weavepersonid",
+			a.dept_name "deptname",
+			a.notice_title "noticetitle",
+			a.product_Type "productType",
+			a.product_Model "productModel",
+			a.notice_Text "noticeText",
+			a.notice_Type "noticeType",
+			a.process_status "processstatus",
+			a.levels "levels",
+			a.send_Dept "sendDept",
+			a.processinstid "processinstid",
+			to_char(a.application_time, 'yyyy-MM-dd HH24:mi:ss') "applicationtime",
+			a.processinstid "rootprocinstid",
+			to_char(a.archive_Time, 'yyyy-MM-dd HH24:mi:ss') "archiveTime",
+			a.archive_Text "archiveText",
+			a.archive_Person_Name "archivePersonName",
+			a.archive_Person_Id "archivePersonId",
+			to_char(a.execute_Time, 'yyyy-MM-dd HH24:mi:ss') "executeTime",
+			a.execute_Text "executeText",
+			a.execute_Person_Name "executePersonName",
+			a.dept_Id "deptId"
+			 from FLOW_TECHNIQUE_NOTICE a
+			where 1=1
+		  <isNotNull prepend = "and"  property = "noticeid"> 
+          a.notice_id = #noticeid#
+          </isNotNull>       	 
+	       <isNotNull prepend = "and"  property = "processinstid"> 
+          a.processinstid = #processinstid#
+          </isNotNull>   
+    </select>
+    
+    <!--获得技术通知业务数据-->
+    <select id="getPrintTechNotice" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		 select 
+    		a.notice_id "noticeid", 
+    		a.weave_person_name "weavepersonname",
+			a.weave_person_id "weavepersonid",
+			a.dept_name "deptname",
+			a.notice_title "noticetitle",
+			decode(a.product_Type,'1','扫路设备','2','清洗设备','3','垃圾设备','4','其他') "producttype",
+			a.product_Model "productModel",
+			a.notice_Text "noticeText",
+			decode(a.notice_Type,'1','整改','2','试验','3','其他') "noticeType",			
+			a.process_status "processstatus",
+			decode(a.levels,'1','一般级','2','重要级','3','关键级') "levels",			
+			a.send_Dept "sendDept",
+			a.processinstid "processinstid",
+			to_char(a.application_time, 'yyyy-MM-dd HH24:mi:ss') "applicationtime",
+			a.processinstid "rootprocinstid",
+			to_char(a.archive_Time, 'yyyy-MM-dd HH24:mi:ss') "archiveTime",
+			a.archive_Text "archiveText",
+			a.archive_Person_Name "archivePersonName",
+			a.archive_Person_Id "archivePersonId",
+			to_char(a.execute_Time, 'yyyy-MM-dd HH24:mi:ss') "executeTime",
+			a.execute_Text "executeText",
+			a.execute_Person_Name "executePersonName",
+			a.dept_Id "deptId"
+			 from FLOW_TECHNIQUE_NOTICE a
+			where 1=1
+		  <isNotNull prepend = "and"  property = "noticeid"> 
+          a.notice_id = #noticeid#
+          </isNotNull>       	 
+	       <isNotNull prepend = "and"  property = "processinstid"> 
+          a.processinstid = #processinstid#
+          </isNotNull>   
+    </select>
+    
+     <!--获得技术通知处理数据-->
+    <select id="getTechNoticeItem" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		 select 
+    		a.items_Id "itemsId",
+    		a.items_Name "itemsName",
+    		a.itmes_Code "itmesCode",
+    		a.actions_Person_Name "actionsPersonName",
+    		a.actions_Person_Id "actionsPersonId",
+    		a.actions_Text "actionsText",
+    		to_char(a.actons_Time, 'yyyy-MM-dd HH24:mi:ss') "actonsTime",
+    		a.processinstid "processinstid",
+    		a.operation_Id "operationId"
+			 from FLOW_TECHNIQUE_NOTICE_ITEMS a
+			where 1=1
+		  <isNotNull prepend = "and"  property = "itemsId"> 
+          a.items_Id = #itemsId#
+          </isNotNull>  
+           <isNotNull prepend = "and"  property = "itmesCode"> 
+          a.itmes_Code = #itmesCode#
+          </isNotNull>  
+           <isNotNull prepend = "and"  property = "buessId"> 
+          a.OPERATION_ID = #buessId#
+          </isNotNull>       	 
+	       <isNotNull prepend = "and"  property = "processinstid"> 
+          a.processinstid = #processinstid#
+          </isNotNull>  
+           order by a.flow_id asc 
+    </select>
+    
+     <!--获得技术通知处理数据-->
+    <select id="getTempNoticeItem" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		 select 
+    		a.items_Id "itemsId",
+    		a.items_Name "itemsName",
+    		a.itmes_Code "itmesCode",
+    		a.actions_Person_Name "actionsPersonName",
+    		a.actions_Person_Id "actionsPersonId",    		
+    		a.processinstid "processinstid",
+    		a.operation_Id "operationId"
+			 from FLOW_TEMP_NOTICE_ITEMS a
+			where 1=1
+		  <isNotNull prepend = "and"  property = "itemsId"> 
+          a.items_Id = #itemsId#
+          </isNotNull>  
+           <isNotNull prepend = "and"  property = "itmesCode"> 
+          a.itmes_Code = #itmesCode#
+          </isNotNull>  
+           <isNotNull prepend = "and"  property = "buessId"> 
+          a.OPERATION_ID = #buessId#
+          </isNotNull>       	 
+	       <isNotNull prepend = "and"  property = "processinstid"> 
+          a.processinstid = #processinstid#
+          </isNotNull>   
+    </select>
+    
+    <!--获得技术通知业务编号-->
+     <select id="getTechNoticeId" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		select nvl(to_number(substr(max(a.notice_id),9,5)),0) as noticeNum  from FLOW_TECHNIQUE_NOTICE a where 1=1 
+		 <isNotNull prepend = "and"  property = "dataYear"> 
+           substr(a.notice_id,5,4)=#dataYear#  
+     </isNotNull> 
+    </select>
+    
+    <!--获得技术通知业务编号-->   
+    <update id ="updateFileRetionId" parameterClass="java.util.HashMap" >
+         update T_AT_FILEUPLOAD a set a.relation_id=#processinstid#  where a.relation_id =#noticeId#  
+    </update>
+    
+     <!--删除临时参与人员数据--> 
+    <delete id ="deleteTempTechData" parameterClass="java.util.HashMap">
+     delete from FLOW_TEMP_NOTICE_ITEMS a where a.processinstid=#processinstid# 
+    </delete>    
+</sqlMap>

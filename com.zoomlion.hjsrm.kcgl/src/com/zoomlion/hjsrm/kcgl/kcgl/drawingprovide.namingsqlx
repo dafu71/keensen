@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+     <!-- 查询图纸发放 -->
+   <select id="queryProvide" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+                         select  t1.PKID as "pkid",
+							t1.CREATETIME as "createtime",
+							t1.CREATEBY as "createby",
+							t1.CREATEBYNAME as "createbyname",
+							t1.MODIFYBY as "modifyby",
+							t1.MODIFYBYNAME as "modifybyname",
+							t1.MODIFYTIME as "modifytime",
+							t1.REMARK as "remark",
+							t1.STAND as "stand",
+							t1.ADVISE as "advise",
+							t1.MATNR as "matnr",
+							t1.MAKTX as "maktx",
+							t1.ZCPCX as "zcpcx",
+							t1.DRAWINGTYPE as "drawingtype",
+							t1.DRAWINGCODE as "drawingcode",
+							t1.ATTRIBUTE as "attribute",
+							t1.WAREHOUSING as "warehousing",
+							t1.LIFNR as "lifnr",
+							t1.NAME1 as "name1",
+							t1.DOWNTIME as "downtime",
+							t1.SINGMAN as "singman",
+							t1.SIGNTIME as "signtime",
+							t1.delflag as "delflag",
+							to_char(nvl(t1.MODIFYTIME,t1.CREATETIME),'yyyy-mm-dd HH24:mi:ss') "opttime",
+							nvl(t1.MODIFYBYNAME,t1.CREATEBYNAME) "operator"
+						from GENL_PURCHASE_DRAWING_PROVIDE t1
+							where 1=1
+                         	<isNotNull property = "matnr"> and t1.matnr like '%' ||  #matnr# || '%' </isNotNull>
+                         	
+                         	<isNotNull property = "matnr2"> and t1.matnr in($matnr2$)</isNotNull>
+                         	
+							<isNotNull property = "maktx"> and t1.maktx like '%' ||  #maktx# || '%' </isNotNull>
+							<isNotNull property = "zcpcx"> and t1.zcpcx like '%' ||  #zcpcx# || '%' </isNotNull>
+							<isNotNull property = "drawingtype"> and t1.drawingtype like '%' ||  #drawingtype# || '%' </isNotNull>
+
+							<isNotNull property = "lifnr"> and t1.lifnr like '%' ||  #lifnr# || '%' </isNotNull>
+							<isNotNull property = "name1"> and t1.name1 like '%' ||  #name1# || '%' </isNotNull>
+														
+							<isNotNull prepend="and"  property="startDown">
+								   t1.downtime &gt;=#startDown#
+							</isNotNull>		
+							<isNotNull prepend="and"  property="endDown">
+								   t1.downtime &lt;=#endDown#
+							</isNotNull>		
+							<isNotNull property = "singman"> and t1.singman like '%' ||  #singman# || '%' </isNotNull>
+							<isNotNull prepend="and"  property="startSign">
+								   t1.signtime &gt;=#startSign#
+							</isNotNull>		
+							<isNotNull prepend="and"  property="endSign">
+								   t1.signtime &lt;=#endSign#
+							</isNotNull>     
+							
+							<isNotNull property = "lifnr2"> 
+							and trim(to_char(replace(t1.lifnr,'S',''),'0000000000')) = lpad(#lifnr2#,10,'0')
+							</isNotNull>
+							
+							<isNotNull prepend="and"  property="delflag">
+								   t1.delflag=#delflag#
+							</isNotNull>                 
+                     order by  to_number(t1.PKID) desc
+               
+    </select></sqlMap>

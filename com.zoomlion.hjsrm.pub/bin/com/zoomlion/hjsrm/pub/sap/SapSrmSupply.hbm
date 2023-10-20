@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmSupply.BaseSupplyLfb1" table="BASE_SUPPLY_LFB1">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+            <key-property name="bukrs" type="string">
+                <column length="4" name="BUKRS"/>
+            </key-property>
+        </composite-id>
+        <property name="erdat" type="date">
+            <column name="ERDAT"/>
+        </property>
+        <property name="ernam" type="string">
+            <column length="12" name="ERNAM"/>
+        </property>
+        <property name="sperr" type="string">
+            <column length="1" name="SPERR"/>
+        </property>
+        <property name="loevm" type="string">
+            <column length="1" name="LOEVM"/>
+        </property>
+        <property name="akont" type="string">
+            <column length="10" name="AKONT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmSupply.BaseSupplyLfm1" table="BASE_SUPPLY_LFM1">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+            <key-property name="ekorg" type="string">
+                <column length="4" name="EKORG"/>
+            </key-property>
+        </composite-id>
+        <property name="erdat" type="date">
+            <column name="ERDAT"/>
+        </property>
+        <property name="ernam" type="string">
+            <column length="12" name="ERNAM"/>
+        </property>
+        <property name="verkf" type="string">
+            <column length="30" name="VERKF"/>
+        </property>
+        <property name="telf1" type="string">
+            <column length="16" name="TELF1"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmSupply.BaseSupplyLfa1" table="BASE_SUPPLY_LFA1">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="name1" type="string">
+            <column length="100" name="NAME1"/>
+        </property>
+        <property name="ort01" type="string">
+            <column length="100" name="ORT01"/>
+        </property>
+        <property name="pstlz" type="string">
+            <column length="50" name="PSTLZ"/>
+        </property>
+        <property name="telf1" type="string">
+            <column length="50" name="TELF1"/>
+        </property>
+        <property name="stras" type="string">
+            <column length="100" name="STRAS"/>
+        </property>
+        <property name="bankl" type="string">
+            <column length="50" name="BANKL"/>
+        </property>
+        <property name="bankn" type="string">
+            <column length="50" name="BANKN"/>
+        </property>
+        <property name="koinh" type="string">
+            <column length="60" name="KOINH"/>
+        </property>
+        <property name="ernam" type="string">
+            <column length="12" name="ERNAM"/>
+        </property>
+        <property name="erdat" type="date">
+            <column name="ERDAT"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="date">
+            <column name="TRANT"/>
+        </property>
+        <property name="sortl" type="string">
+            <column length="50" name="SORTL"/>
+        </property>
+    </class>
+</hibernate-mapping>

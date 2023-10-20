@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmContract.GenlContractEkpo" table="GENL_CONTRACT_EKPO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="ebeln" type="string">
+                <column length="10" name="EBELN"/>
+            </key-property>
+            <key-property name="ebelp" type="string">
+                <column length="5" name="EBELP"/>
+            </key-property>
+        </composite-id>
+        <property name="loekz" type="string">
+            <column length="1" name="LOEKZ"/>
+        </property>
+        <property name="aedat" type="date">
+            <column name="AEDAT"/>
+        </property>
+        <property name="txz01" type="string">
+            <column length="100" name="TXZ01"/>
+        </property>
+        <property name="matnr" type="string">
+            <column length="18" name="MATNR"/>
+        </property>
+        <property name="ematn" type="string">
+            <column length="18" name="EMATN"/>
+        </property>
+        <property name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="lgort" type="string">
+            <column length="4" name="LGORT"/>
+        </property>
+        <property name="bednr" type="string">
+            <column length="10" name="BEDNR"/>
+        </property>
+        <property name="maktl" type="string">
+            <column length="9" name="MAKTL"/>
+        </property>
+        <property name="menge" type="string">
+            <column length="20" name="MENGE"/>
+        </property>
+        <property name="meins" type="string">
+            <column length="3" name="MEINS"/>
+        </property>
+        <property name="elikz" type="string">
+            <column length="1" name="ELIKZ"/>
+        </property>
+        <property name="erekz" type="string">
+            <column length="1" name="EREKZ"/>
+        </property>
+        <property name="pstyp" type="string">
+            <column length="1" name="PSTYP"/>
+        </property>
+        <property name="knttp" type="string">
+            <column length="1" name="KNTTP"/>
+        </property>
+        <property name="lmein" type="string">
+            <column length="3" name="LMEIN"/>
+        </property>
+        <property name="mwskz" type="string">
+            <column length="2" name="MWSKZ"/>
+        </property>
+        <property name="stats" type="string">
+            <column length="1" name="STATS"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="1" name="STATU"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmContract.GenlContractKonp" table="GENL_CONTRACT_KONP">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="knumh" type="string">
+                <column length="10" name="KNUMH"/>
+            </key-property>
+            <key-property name="kopos" type="string">
+                <column length="2" name="KOPOS"/>
+            </key-property>
+        </composite-id>
+        <property name="kappl" type="string">
+            <column length="2" name="KAPPL"/>
+        </property>
+        <property name="kschl" type="string">
+            <column length="4" name="KSCHL"/>
+        </property>
+        <property name="kbetr" type="string">
+            <column length="20" name="KBETR"/>
+        </property>
+        <property name="konwa" type="string">
+            <column length="5" name="KONWA"/>
+        </property>
+        <property name="kpein" type="string">
+            <column length="5" name="KPEIN"/>
+        </property>
+        <property name="kmein" type="string">
+            <column length="3" name="KMEIN"/>
+        </property>
+        <property name="loevmKo" type="string">
+            <column length="1" name="LOEVM_KO"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmContract.GenlContractAo16" table="GENL_CONTRACT_AO16">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="kappl" type="string">
+                <column length="2" name="KAPPL"/>
+            </key-property>
+            <key-property name="kschl" type="string">
+                <column length="4" name="KSCHL"/>
+            </key-property>
+            <key-property name="evrtn" type="string">
+                <column length="10" name="EVRTN"/>
+            </key-property>
+            <key-property name="evrtp" type="string">
+                <column length="5" name="EVRTP"/>
+            </key-property>
+        </composite-id>
+        <property name="datbi" type="date">
+            <column name="DATBI"/>
+        </property>
+        <property name="datab" type="date">
+            <column name="DATAB"/>
+        </property>
+        <property name="knumh" type="string">
+            <column length="10" name="KNUMH"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.sap.SapSrmContract.GenlContractEkko" table="GENL_CONTRACT_EKKO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="ebeln" type="string">
+            <column length="10" name="EBELN"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+        </property>
+        <property name="bstyp" type="string">
+            <column length="1" name="BSTYP"/>
+        </property>
+        <property name="bsart" type="string">
+            <column length="4" name="BSART"/>
+        </property>
+        <property name="loekz" type="string">
+            <column length="1" name="LOEKZ"/>
+        </property>
+        <property name="aedat" type="date">
+            <column name="AEDAT"/>
+        </property>
+        <property name="ernam" type="string">
+            <column length="12" name="ERNAM"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="spras" type="string">
+            <column length="1" name="SPRAS"/>
+        </property>
+        <property name="ekorg" type="string">
+            <column length="4" name="EKORG"/>
+        </property>
+        <property name="ekgrp" type="string">
+            <column length="3" name="EKGRP"/>
+        </property>
+        <property name="waers" type="string">
+            <column length="5" name="WAERS"/>
+        </property>
+        <property name="bedat" type="date">
+            <column name="BEDAT"/>
+        </property>
+        <property name="kdatb" type="date">
+            <column name="KDATB"/>
+        </property>
+        <property name="kdate" type="date">
+            <column name="KDATE"/>
+        </property>
+        <property name="ihrez" type="string">
+            <column length="12" name="IHREZ"/>
+        </property>
+        <property name="verkf" type="string">
+            <column length="30" name="VERKF"/>
+        </property>
+        <property name="stats" type="string">
+            <column length="1" name="STATS"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="date">
+            <column name="TRANT"/>
+        </property>
+        <property name="knumv" type="string">
+            <column length="10" name="KNUMV"/>
+        </property>
+        <property name="frgrl" type="string">
+            <column length="10" name="FRGRL"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 加载权限菜单相关SQL-->
+<!-- author:陈今伟 -->
+<sqlMap>
+	<!-- 查询系统配置信息-->
+    <select id="allSysconfigs" resultClass="commonj.sdo.DataObject">
+   	select paramid as "paramid",
+   			paramvalue as "paramvalue",
+   			dataorgid as "dataorgid"
+     from t_om_sysconfigvalue
+    </select>
+    
+    <!-- 查询系统配置信息-->
+    <select id="allDicts" resultClass="com.zoomlion.hjsrm.data.tools.Tools.EosDictEntry">
+   	select dicttypeid as "dicttypeid",
+   			dictid as "dictid",
+   			dataorgid as "dataorgid",
+   			dictname as "dictname",
+   			status as "status",
+   			sortno as "sortno",
+   			rank as "rank",
+   			parentid as "parentid",
+   			seqno as "seqno",
+   			filter1 as "filter1",
+   			filter2 as "filter2"   			
+     from EOS_DICT_ENTRY where status = 1 order by sortno
+    </select>
+    
+    <!-- 查询菜单信息-->
+    <select id="allResources" resultClass="commonj.sdo.DataObject">
+    <![CDATA[select  r.respath "action" ,r.restype "type" ,r.rescode "code" from t_ac_resource r where respath is not null]]>
+    </select>
+    
+    <!-- 查询角色资源信息-->
+    <select id="roleResources" resultClass="commonj.sdo.DataObject">
+    select r.roleid as "roleid",
+    	 res.resid as "resid",
+    	 res.rescode as "rescode",
+    	 res.respath as "respath",
+    	 res.restype as "restype"
+    	  from t_ac_role r , t_ac_resource res,t_ac_roleres rr
+   	where r.roleid=rr.roleid and rr.resid=res.resid
+    </select>
+    
+    <!-- 查询操作员角色资源信息-->
+    <select id="operResources" parameterClass="java.lang.Long" resultClass="commonj.sdo.DataObject">
+    select r.roleid as "roleid",
+     res.resid as "resid",
+     res.rescode as "rescode",
+     res.respath as "respath",
+     res.restype as "restype" 
+     from t_ac_role r , t_ac_resource res,t_ac_roleres rr
+    where r.roleid=rr.roleid and rr.resid=res.resid and rr.roleid in (select roleid from t_ac_operatorrole 
+	where operatorid = #value#)
+    </select>
+     <!-- 查询操作员资源信息-->
+   <select id="operPrivileges" resultClass="commonj.sdo.DataObject">
+    <![CDATA[
+    select ores.operatorid as "operatorid",
+    ores.authtype as "authtype",
+    nvl(to_char(ores.startdate,'yyyy-mm-dd hh24:mi:ss'),'1900-01-01 00:00:01') as "startdate",	
+    nvl(to_char(ores.enddate,'yyyy-mm-dd hh24:mi:ss'),'2999-01-01 00:00:01') as "enddate" ,   
+    res.resid as "resid",
+    res.rescode as "rescode",
+    res.respath as "respath",
+    res.restype as "restype"  
+      from t_ac_operres ores, t_ac_resource res
+      where ores.resid=res.resid   order by ores.operatorid
+    ]]>
+    </select>
+
+</sqlMap>

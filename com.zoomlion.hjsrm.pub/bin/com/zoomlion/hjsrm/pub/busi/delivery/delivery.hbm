@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveData" table="GENL_RESERVE_DATA">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+            <key-property name="zleib" type="string">
+                <column length="25" name="ZLEIB"/>
+            </key-property>
+            <key-property name="zdaji" type="string">
+                <column length="25" name="ZDAJI"/>
+            </key-property>
+            <key-property name="zstat" type="string">
+                <column length="2" name="ZSTAT"/>
+            </key-property>
+        </composite-id>
+        <property name="menge" type="big_decimal">
+            <column length="13" name="MENGE" precision="13" scale="3"/>
+        </property>
+        <property name="zcret" type="date">
+            <column name="ZCRET"/>
+        </property>
+        <property name="zcreu" type="string">
+            <column length="15" name="ZCREU"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveDataVersion" table="GENL_RESERVE_DATA_VERSION">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="zvern" type="string">
+            <column length="25" name="ZVERN" not-null="true"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR" not-null="true"/>
+        </property>
+        <property name="zleib" type="string">
+            <column length="25" name="ZLEIB" not-null="true"/>
+        </property>
+        <property name="zdaji" type="string">
+            <column length="25" name="ZDAJI" not-null="true"/>
+        </property>
+        <property name="zstat" type="string">
+            <column length="2" name="ZSTAT" not-null="true"/>
+        </property>
+        <property name="menge" type="big_decimal">
+            <column length="13" name="MENGE" precision="13" scale="3"/>
+        </property>
+        <property name="zcret" type="date">
+            <column name="ZCRET"/>
+        </property>
+        <property name="zcreu" type="string">
+            <column length="15" name="ZCREU"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveVerd" table="GENL_RESERVE_VERD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="zvern" type="string">
+            <column length="25" name="ZVERN" not-null="true"/>
+        </property>
+        <property name="zdaji" type="string">
+            <column length="25" name="ZDAJI" not-null="true"/>
+        </property>
+        <property name="zleib" type="string">
+            <column length="25" name="ZLEIB" not-null="true"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveVerl" table="GENL_RESERVE_VERL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="zvern" type="string">
+            <column length="25" name="ZVERN" not-null="true"/>
+        </property>
+        <property name="zleib" type="string">
+            <column length="25" name="ZLEIB" not-null="true"/>
+        </property>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR" not-null="true"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZcpcxZleib" table="GENL_RESERVE_ZCPCX_ZLEIB">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="zcpcx" type="string">
+            <column length="25" name="ZCPCX"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="zleib" type="string">
+            <column length="25" name="ZLEIB" not-null="true"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZdajiZleib" table="GENL_RESERVE_ZDAJI_ZLEIB">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="zdaji" type="string">
+                <column length="25" name="ZDAJI"/>
+            </key-property>
+            <key-property name="zleib" type="string">
+                <column length="25" name="ZLEIB"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveZleibLifnr" table="GENL_RESERVE_ZLEIB_LIFNR">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="zleib" type="string">
+                <column length="25" name="ZLEIB"/>
+            </key-property>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+        </composite-id>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveVerz" table="GENL_RESERVE_VERZ">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="zvern" type="string">
+            <column length="25" name="ZVERN" not-null="true"/>
+        </property>
+        <property name="zcpcx" type="string">
+            <column length="25" name="ZCPCX" not-null="true"/>
+        </property>
+        <property name="zleib" type="string">
+            <column length="25" name="ZLEIB" not-null="true"/>
+        </property>
+    </class>
+    <class entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.V_Zxlbqd" table="$QueryEntity[com.zoomlion.hjsrm.pub.busi.delivery.delivery.V_Zxlbqd]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="zleibname" name="zleibname" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="nr" insert="false" name="nr" type="string" update="false"/>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlPurchaseNoteLifnr" table="GENL_PURCHASE_NOTE_LIFNR">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="zmode" type="string">
+            <column length="8" name="ZMODE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlPurchaseNoteAffirm" table="GENL_PURCHASE_NOTE_AFFIRM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="string">
+            <column length="20" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="zasnh" type="string">
+            <column length="20" name="ZASNH"/>
+        </property>
+        <property name="status" type="string">
+            <column length="4" name="STATUS"/>
+        </property>
+        <property name="useid" type="string">
+            <column length="20" name="USEID"/>
+        </property>
+        <property name="usename" type="string">
+            <column length="100" name="USENAME"/>
+        </property>
+        <property name="time" type="timestamp">
+            <column name="TIME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlLabelPrint" table="GENL_LABEL_PRINT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="matnr" type="string">
+                <column length="18" name="MATNR"/>
+            </key-property>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+            <key-property name="shDate" type="string">
+                <column length="20" name="SH_DATE"/>
+            </key-property>
+        </composite-id>
+        <property name="printNum" type="int">
+            <column length="22" name="PRINT_NUM"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlVegicleList" table="GENL_VEGICLE_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="cxdm" type="string">
+            <column length="6" name="CXDM"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="cxmc" type="string">
+            <column length="50" name="CXMC"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="1" name="STATU"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveList" table="GENL_RESERVE_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="matnr" type="string">
+            <column length="18" name="MATNR"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="cxdm" type="string">
+            <column length="6" name="CXDM"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="4" name="WERKS"/>
+        </property>
+        <property name="bukrs" type="string">
+            <column length="4" name="BUKRS"/>
+        </property>
+        <property name="statu" type="string">
+            <column length="1" name="STATU"/>
+        </property>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlReserveDatab" table="GENL_RESERVE_DATAB">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+            <key-property name="cxdm" type="string">
+                <column length="6" name="CXDM"/>
+            </key-property>
+            <key-property name="matnr" type="string">
+                <column length="18" name="MATNR"/>
+            </key-property>
+            <key-property name="zstat" type="string">
+                <column length="2" name="ZSTAT"/>
+            </key-property>
+        </composite-id>
+        <property name="menge" type="big_decimal">
+            <column default="0" length="13" name="MENGE" precision="13" scale="3"/>
+        </property>
+        <property name="zcret" type="timestamp">
+            <column name="ZCRET"/>
+        </property>
+        <property name="zcreu" type="string">
+            <column length="15" name="ZCREU"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlPurchaseNoteDetail" table="GENL_PURCHASE_NOTE_DETAIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="pkid" type="string">
+            <column length="20" name="PKID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="amount" type="big_decimal">
+            <column length="10" name="AMOUNT" precision="10" scale="4"/>
+        </property>
+        <property name="returnAmount" type="big_decimal">
+            <column length="10" name="RETURN_AMOUNT" precision="10" scale="4"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="20" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="remark2" type="string">
+            <column length="500" name="REMARK2"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+        <property name="zasnh" type="string">
+            <column length="20" name="ZASNH"/>
+        </property>
+        <property name="ebeln" type="string">
+            <column length="10" name="EBELN"/>
+        </property>
+        <property name="ebelp" type="string">
+            <column length="5" name="EBELP"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="2" name="DELFLAG"/>
+        </property>
+        <property name="zasnp" type="string">
+            <column length="20" name="ZASNP"/>
+        </property>
+        <property name="zjlb" type="string">
+            <column length="4" name="ZJLB"/>
+        </property>
+        <property name="mjzt" type="string">
+            <column length="4" name="MJZT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlPurchaseNote" table="GENL_PURCHASE_NOTE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="zasnh" type="string">
+            <column length="20" name="ZASNH"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="lifnr" type="string">
+            <column length="10" name="LIFNR"/>
+        </property>
+        <property name="name1" type="string">
+            <column length="100" name="NAME1"/>
+        </property>
+        <property name="arrivedate" type="timestamp">
+            <column name="ARRIVEDATE"/>
+        </property>
+        <property name="lgort" type="string">
+            <column length="20" name="LGORT"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="20" name="CREATEBY"/>
+        </property>
+        <property name="createtime" type="timestamp">
+            <column name="CREATETIME"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifytime" type="date">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="stand" type="string">
+            <column length="500" name="STAND"/>
+        </property>
+        <property name="delflag" type="string">
+            <column default="'0'" length="2" name="DELFLAG"/>
+        </property>
+        <property name="werks" type="string">
+            <column length="20" name="WERKS"/>
+        </property>
+        <property name="print" type="long">
+            <column default="1" length="22" name="PRINT"/>
+        </property>
+        <property name="status" type="string">
+            <column length="4" name="STATUS"/>
+        </property>
+        <property name="zjlb" type="string">
+            <column length="4" name="ZJLB"/>
+        </property>
+        <property name="aufnr" type="string">
+            <column length="20" name="AUFNR"/>
+        </property>
+        <property name="kostl" type="string">
+            <column length="20" name="KOSTL"/>
+        </property>
+        <property name="knttp" type="string">
+            <column length="20" name="KNTTP"/>
+        </property>
+        <property name="sfdpvn" type="string">
+            <column length="4" name="SFDPVN"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlNoteVndetail" table="GENL_NOTE_VNDETAIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="zasnh" type="string">
+                <column length="20" name="ZASNH"/>
+            </key-property>
+            <key-property name="zasnp" type="string">
+                <column length="20" name="ZASNP"/>
+            </key-property>
+        </composite-id>
+        <property name="vnbm" type="string">
+            <column length="200" name="VNBM"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="20" name="MODIFYBY"/>
+        </property>
+        <property name="modifytime" type="timestamp">
+            <column name="MODIFYTIME"/>
+        </property>
+        <property name="delflay" type="string">
+            <column default="'0'" length="2" name="DELFLAY"/>
+        </property>
+        <property name="vnid" type="long">
+            <column length="12" name="VNID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlVnRule" table="GENL_VN_RULE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="matnr" type="string">
+            <column length="20" name="MATNR"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="vnrule" type="string">
+            <column length="50" name="VNRULE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlSupplyVnbm" table="GENL_SUPPLY_VNBM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="lifnr" type="string">
+                <column length="10" name="LIFNR"/>
+            </key-property>
+            <key-property name="vnbm" type="string">
+                <column length="200" name="VNBM"/>
+            </key-property>
+        </composite-id>
+        <property name="tranu" type="string">
+            <column length="10" name="TRANU"/>
+        </property>
+        <property name="trant" type="timestamp">
+            <column name="TRANT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.busi.delivery.delivery.GenlVnCoincident" table="GENL_VN_COINCIDENT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="12" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="vnbm" type="string">
+            <column length="200" name="VNBM"/>
+        </property>
+    </class>
+</hibernate-mapping>

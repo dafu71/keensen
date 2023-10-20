@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 公告管理相关SQL-->
+<!-- author:陈今伟 -->
+<sqlMap>
+	<!-- 查询公告列表 -->
+	<!-- 中联 -->
+  <select id="queryAnnounces" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.tools.Tools.TAtAnnounce">
+		select  distinct(an.announceid),
+		       an.title,
+		       an.content,
+		       an.userid,
+		       an.username,
+		       an.announcetime,
+		       an.status,
+		       an.createby,
+		       an.announcetype,
+		       an.modifyby,
+		       an.updatetime,
+		       an.dataorgid,
+		       (to_char(an.announcetime,'yyyy/mm/dd')) as pkdate,
+		       lx.flag as "flag"
+		  from t_at_announce_organization ao
+          left join t_at_announce an on ao.announceid = an.announceid
+          left join v_om_organization_trs oo on ao.orgid = oo.orgid
+          left join (select t.*, 1 as flag from t_at_announce t where 
+                     exists (select * from t_at_announce_read e  where e.userid = #userid# and e.announceid = t.announceid )
+                     union select t.*, 0 as flag from t_at_announce t where 
+                     not exists (select * from t_at_announce_read e  where e.userid = #userid# and e.announceid = t.announceid )
+                     )lx on ao.announceid = lx.announceid
+		  where an.status = 2
+		    <!-- <isNotNull prepend="and"  property="dataorgid">
+				ao.dataorgid = #dataorgid#
+			</isNotNull>
+			 -->
+			<isNotNull  prepend="and" property="title">  
+				an.title like '%'||#title#||'%'  
+			</isNotNull>
+			<isNotNull prepend="and"  property="announcetype">
+				an.announcetype in ($announcetype$)
+			</isNotNull>
+			<isNotNull prepend="and"  property="startDate">
+				trunc(an.announcetime) &gt;=to_date(#startDate#,'yyyy-mm-dd') 
+			</isNotNull>		
+			<isNotNull prepend="and"  property="endDate">
+				trunc(an.announcetime) &lt;=to_date(#endDate#,'yyyy-mm-dd')
+			</isNotNull>
+			<isNotNull prepend="and"  property="now">
+				trunc(nvl(an.endtime,sysdate))  &gt;= to_date(#now#,'yyyy-mm-dd')
+			</isNotNull>
+			<isNotNull prepend="and"  property="orgid">
+				#orgid# in (select org.orgid from v_om_organization_trs org start with org.orgid in (ao.orgid)
+                 connect by org.parentorgid = prior org.orgid)
+			</isNotNull>
+			<isNotNull prepend="and"  property="empid">
+				exists (select eoo.orgseq
+                        from v_om_employee_trs e, v_om_emporg_trs eo ,v_om_organization_trs eoo
+                        where e.empid = #empid#
+                          and e.empid = eo.empid
+                          and eo.orgid=eoo.orgid
+                          and instr(eoo.orgseq ,oo.orgid) >0  )
+			</isNotNull>
+		  order by an.announcetime desc
+    </select>
+
+	 <!-- 	  <select id="queryAnnounces" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.tools.Tools.TAtAnnounce">
+			select announceid,
+  					   title,
+					   content,
+					   userid,
+					   username,
+					   announcetime,
+					   status,
+					   createby,
+					   announcetype,
+					   modifyby,
+					   updatetime,
+					   dataorgid from t_at_announce an
+					   where status = 2
+		<isNotNull  prepend="and" property="title">  
+			title like '%'||#title#||'%'  
+		</isNotNull>
+		<isNotNull prepend="and"  property="announcetype">
+			announcetype = #announcetype#
+		</isNotNull>
+		<isNotNull prepend="and"  property="startDate">
+			trunc(announcetime) &gt;=to_date(#startDate#,'yyyy-mm-dd') 
+		</isNotNull>		
+		<isNotNull prepend="and"  property="endDate">
+			trunc(announcetime) &lt;=to_date(#endDate#,'yyyy-mm-dd')
+		</isNotNull>
+		<isNotNull prepend="and"  property="dataorgid">
+			dataorgid = #dataorgid#
+		</isNotNull>
+		<isNotNull prepend="and"  property="orgid">
+			(an.orgid is null or
+		       an.announceid in
+		       (select distinct (ao.announceid)
+		           from t_at_announce_organization ao
+		          where ao.delflag='0'
+		             and ao.orgid in
+		                (select to_char(org.orgid)
+		                   from t_om_organization org
+		                  start with org.orgid = #orgid#
+                 connect by org.parentorgid = prior org.orgid)))
+		</isNotNull>
+		<isNotNull prepend="and"  property="empid">
+			(an.orgid is null or
+		       an.announceid in
+		       (select distinct (ao.announceid)
+		           from t_at_announce_organization ao
+		          where ao.delflag='0'
+		             and ao.orgid in
+		                (select to_char(org.orgid)
+		                   from t_om_organization org
+		                  start with org.orgid in (select org.orgid
+					          from t_om_employee e, t_om_organization org, t_om_emporg eo
+					         where e.empid = #empid#
+					           and e.empid = eo.empid
+					           and org.orgid = eo.orgid)
+                 connect by org.parentorgid = prior org.orgid)))
+		</isNotNull>
+		order by announcetime desc 
+		 </select>
+		 -->
+ <!-- 
+		***********************************************************************************
+		(orgid is null or orgid in (
+			select orgid from t_om_organization org
+		    start with org.orgid=#orgid#
+		    connect by  org.parentorgid=prior org.orgid
+		))
+-->
+	<delete  id="deleteAnnounceOrganization" parameterClass="java.util.HashMap" >
+		delete from t_at_announce_organization ao where  ao.announceid=#announceid# and ao.dataorgid = #dataorgid#
+	</delete>
+	<select id="checkTitle" parameterClass="java.lang.String" resultClass="commonj.sdo.DataObject">
+		select 1
+		  from t_at_announce an
+		 where an.title = #title#
+		   and an.status = '2'
+	</select>
+	<!-- 查询公告查阅记录 -->
+	<!-- 刘鑫 -->
+	 <select id="queryAnnouncesread" parameterClass="com.zoomlion.hjsrm.data.tools.Tools.VAtAnnounceReader" resultClass="com.zoomlion.hjsrm.data.tools.Tools.VAtAnnounceReader">
+         select * from v_at_announce_reader  where announceid = #announceid#
+    </select>
+    <select id="queryAnnouncesread2" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">       
+       select announceid as "announceid" ,orgnames as "orgnames",wmsys.wm_concat((username||'('||to_char(readtime,'yy-mm-dd hh24:mi:ss')||')')) as "nr"  from (select * from (select a.*,c.orgnames from t_at_announce_read a  
+           left join 
+           (select * from v_ac_operator_trs b 
+             left join v_om_emporgname_trs t on b.empid =t.empid) c on  a.userid = c.userid)   order by readtime desc   )
+             where 1= 1
+              <isNotNull prepend = "and"  property = "announceid"> 
+                announceid =  #announceid#
+              </isNotNull>
+              <isNotNull prepend = "and"  property = "orgnames"> 
+                orgnames like '%'|| #orgnames#||'%' 
+              </isNotNull>
+             group by announceid,orgnames
+    </select>
+      <select id="queryAnnouncesreadorg" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">       
+       select orgid as "orgid" from t_at_announce_organization where  announceid = #announceid#
+    </select>
+    <select id="queryAnnouncesnotread" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">       
+      select e.announceid as "announceid",
+       e.orgnames as "orgnames",
+       wmsys.wm_concat(e.operatorname) as "nr",
+        e.orgid as "orgid" from (select * from t_at_announce_organization a , (select * from v_ac_operator_trs b 
+             left join v_om_emporgname_trs t on b.empid =t.empid) c 
+             where a.announceid = #announceid# 
+             and  ($sql$) )e where e.userid not in 
+             (select userid from t_at_announce_read where announceid = #announceid# )
+            <isNotNull prepend = "and"  property = "orgnames"> 
+                orgnames like '%'|| #orgnames#||'%' 
+              </isNotNull>
+           group by e.announceid,e.orgnames,e.orgid
+           order by orgid
+    </select>
+</sqlMap>

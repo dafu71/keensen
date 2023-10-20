@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.auth.login.login">
+    <!-- 修改密码 -->
+    <update id="updatePass" parameterClass="java.util.HashMap">update t_ac_operator set password = #pwd2# where userid = #uid#</update>
+    <!-- 判断操作员密码是否在30分钟内错误5次 -->
+    <select id="loginTryCount" resultClass="java.lang.Integer"><![CDATA[
+    select  *  from t_at_loginoutlog where  opertime < systimestamp and opertime>(sysdate-numtodsinterval(30,'minute'))
+    and userid = #userid# and failtype = '2'
+    ]]></select>
+    <select id="loginywditu" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select *
+  from V_AC_OPERATORMENU a, V_AC_OPERATOR_TRS b
+   where a.operatorid = b.operatorid
+   and a.resid   = #resid#
+   and b.userid = #userid#</select>
+    <!-- 修改状态 -->
+    <update id="updateStatus" parameterClass="java.util.HashMap">update t_ac_operator set status = #status# where operatorid = #operatorid#</update>
+</sqlMap>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.supply.manager.supply.srmsupplymgr">
+    <!--查询正式供应商信息-->
+    <select id="querySupplyManager" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select a.lifnr as "lifnr",
+		       a.name1 as "name1",
+		       a.pstlz as "pstlz",
+		       a.stras as "stras",
+		       b.lprop as "lprop",
+		       b.ltype as "ltype",
+		       b.batch as "batch",
+		       b.lsyst as "lsyst",
+		       b.lsort as "lsort",
+		       b.zzyyw as "zzyyw",
+		       b.creid as "creid",
+		       b.cretm as "cretm"  
+		  from base_supply_lfa1 a left join genl_supply_data b on a.lifnr = b.lifnr
+		 where 1 = 1
+		  <isNotNull prepend="and" property="lifnr">a.lifnr like '%'||#lifnr#||'%'</isNotNull>
+        <isNotNull prepend="and" property="lifnrsup">a.lifnr like '%'||#lifnrsup#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">a.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="lprop">b.lprop like '%'||#lprop#||'%'</isNotNull>
+        <isNotNull prepend="and" property="lsort">b.lsort like '%'||#lsort#||'%'</isNotNull>
+        <isNotNull prepend="and" property="batch">b.batch = #batch#</isNotNull>
+        <isNotNull prepend="and" property="ltype">b.ltype = #ltype#</isNotNull>
+        <isNotNull prepend="and" property="lsyst">b.lsyst = #lsyst#</isNotNull>
+        <isNotNull prepend="and" property="zzyyw">b.zzyyw like '%'||#zzyyw#||'%'</isNotNull>
+        <isNotNull prepend="and" property="whzt1">b.creid is null</isNotNull>
+        <isNotNull prepend="and" property="whzt2">b.creid is not null</isNotNull>
+		  order by a.lifnr
+    </select>
+    <!--查询潜在供应商信息-->
+    <select id="queryQzSupplyManager" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		select a.lifnr as "lifnr",
+           a.name1 as "name1",
+           a.pstlz as "pstlz",
+           a.ort01 as "ort01",
+           a.telf1 as "telf1",
+           a.stras as "stras",
+           a.zkfbm as "zkfbm",
+           a.zkcbm as "zkcbm",
+           a.zkcrq as "zkcrq",
+           a.zstus as "zstus",
+           b.lprop as "lprop",
+           b.ltype as "ltype",
+           b.batch as "batch",
+           b.lsyst as "lsyst",
+           b.lsort as "lsort",
+           b.zzyyw as "zzyyw",
+           b.creid as "creid",
+           b.cretm as "cretm"  
+      from genl_supply_linshi a left join genl_supply_data b on a.lifnr = b.lifnr
+		 where a.zstus is null
+		  <isNotNull prepend="and" property="lifnr">a.lifnr like '%'||#lifnr#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">a.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="lprop">b.lprop like '%'||#lprop#||'%'</isNotNull>
+        <isNotNull prepend="and" property="lsort">b.lsort like '%'||#lsort#||'%'</isNotNull>
+        <isNotNull prepend="and" property="ltype">b.ltype = #ltype#</isNotNull>
+        <isNotNull prepend="and" property="zzyyw">b.zzyyw like '%'||#zzyyw#||'%'</isNotNull>
+		  order by a.lifnr
+    </select>
+    <!--查询供应商联系人信息-->
+    <select id="querySupplyTel" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select b1.lifnr as "lifnr",
+		        a1.sid as "zttel",
+		        a1.ztext as "ztext",
+		        b1.zname as "zname",
+		        b1.zmtel as "zmtel",
+		        b1.zptel as "zptel",
+		        b1.email as "email"  
+		   from base_supply_dict a1 left join  (
+                     select b.lifnr,
+                            c.zttel, 
+                            c.zname,
+                            c.zmtel,
+                            c.zptel,
+                            c.email 
+                       from base_supply_lfa1 b left join genl_supply_ttel c 
+                                                 on b.lifnr = c.lifnr
+                      where b.lifnr = #lifnr#) b1 on a1.sid = b1.zttel  
+          where lifnr_type = 'ZTTEL' 
+       order by sid</select>
+    <!--新增潜在供应商联系人录入信息-->
+    <select id="queryQzsupplyTel" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select b1.lifnr as "lifnr",
+		        a1.sid as "zttel",
+		        a1.ztext as "ztext",
+		        b1.zname as "zname",
+		        b1.zmtel as "zmtel",
+		        b1.zptel as "zptel",
+		        b1.email as "email"  
+		   from base_supply_dict a1 left join  (
+                     select b.lifnr,
+                            c.zttel, 
+                            c.zname,
+                            c.zmtel,
+                            c.zptel,
+                            c.email 
+                       from base_supply_lfa1 b left join genl_supply_ttel c 
+                                                 on b.lifnr = c.lifnr
+                      where b.lifnr = '') b1 on a1.sid = b1.zttel  
+          where lifnr_type = 'ZTTEL' 
+       order by sid</select>
+    <!--查询供应商联系人信息-->
+    <select id="loadSupplyTel" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select b1.lifnr as "lifnr",
+		        a1.sid as "zttel",
+		        a1.ztext as "ztext",
+		        b1.zname as "zname",
+		        b1.zmtel as "zmtel",
+		        b1.zptel as "zptel",
+		        b1.email as "email"  
+		   from base_supply_dict a1 left join  (
+                     select b.lifnr,
+                            c.zttel, 
+                            c.zname,
+                            c.zmtel,
+                            c.zptel,
+                            c.email 
+                       from genl_supply_linshi b left join genl_supply_ttel c 
+                                                 on b.lifnr = c.lifnr
+                      where b.lifnr = #lifnr#) b1 on a1.sid = b1.zttel  
+          where lifnr_type = 'ZTTEL' 
+       order by sid</select>
+    <!--查询供应商主供物资类别-->
+    <select id="querySupplyMaterial" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select dictid as "dictid",
+		        dictname as "dictname"
+		   from EOS_DICT_ENTRY t 
+		  where t.dicttypeid = 'GE_SUPPLY_MATERIALTYPE' 
+	      order by dictid</select>
+    <!--查询合格供应商名录-->
+    <select id="queryHgsupply" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	   select t.lifnr as "lifnr",
+              t1.name1 as "name1",
+              t.yearr as "yearr",
+              t.ekorg as "ekorg",
+              t2.dictname as "ekorgx",
+              t.jydy as "jydy",
+              t.gyslx as "gyslx",
+              t.zgcp as "zgcp",
+              t.wzlx as "wzlx",
+              t.wzlb as "wzlb",
+              t.gysdz as "gysdz",
+              t.gyslxr as "gyslxr",
+              t.gyslxdh as "gyslxdh",
+              t.text1 as "text1",
+              t.text2 as "text2",
+              t.createtime as "createtime",
+              t.createuserid as "createuserid",
+              t.updatetime as "updatetime",
+              t.updateuseid as "updateuserid",
+              t.delflag as "delflag",
+              t.bukrs as "bukrs" from genl_supply_hgsupply t
+       left join base_supply_lfa1 t1 on t.lifnr = t1.lifnr 
+       left join (select t.dictid,t.dictname  from eos_dict_entry t where t.dicttypeid = 'GE_SUPPLY_WGWX') t2 on t.ekorg = t2.dictid
+             where t.delflag is null
+          <isNotNull prepend="and" property="lifnr">t.lifnr like '%'||#lifnr#||'%'</isNotNull>
+        <isNotNull prepend="and" property="name1">t1.name1 like '%'||#name1#||'%'</isNotNull>
+        <isNotNull prepend="and" property="zgcp">t.zgcp like '%'||#zgcp#||'%'</isNotNull>
+        <isNotNull prepend="and" property="yearr">t.yearr = #yearr#</isNotNull>
+        <isNotNull prepend="and" property="gyslx">t.gyslx = #gyslx#</isNotNull>
+        <isNotNull prepend="and" property="wzlx">t.wzlx   like '%'||#wzlx#||'%'</isNotNull>
+        <isNotNull prepend="and" property="wzlb">t.wzlb = #wzlb#</isNotNull>
+        <isNotNull prepend="and" property="ekorg">t.ekorg = #ekorg#</isNotNull>
+    </select>
+    <select id="dictjy" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select * from eos_dict_entry t where t.dicttypeid = #dicttypeid# and t.dictname = #dictname#</select>
+</sqlMap>

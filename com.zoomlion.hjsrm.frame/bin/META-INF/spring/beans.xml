@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:sca="http://www.springframework.org/schema/sca" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd   http://www.springframework.org/schema/sca http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd">
+	
+	<bean class="com.zoomlion.hjsrm.frame.auth.login.LoginBean" id="loginBean">
+        <property name="opDao" ref="opDao"/>
+        <property name="resourceBean" ref="resourceBean"/>
+        <property name="roleDao" ref="roleDao"/>
+        <property name="loginoutDao" ref="loginoutDao"/>
+    </bean>
+    
+    <bean class="com.zoomlion.hjsrm.frame.auth.login.LoginoutDao" id="loginoutDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.auth.util.AuthClibUtilBean" id="authClibUtilBean"/>
+    <bean class="com.zoomlion.hjsrm.frame.auth.util.CacheClibUtilBean" id="cacheClibUtilBean"/>
+    <!-- 修改密码 -->
+    <bean class="com.zoomlion.hjsrm.frame.auth.login.ModifyDao" id="modifyDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.auth.login.ModifyBean" id="modifyBean">
+        <property name="modifyDao" ref="modifyDao"/>
+    </bean>
+    <bean class="com.zoomlion.hjsrm.frame.org.organization.OrganizationDao" id="orgDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.org.employee.EmployeeDao" id="empDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.org.emporg.EmpOrgDao" id="emporgDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.org.employee.OperresDao" id="operresdao"/>
+    <!-- 机构 -->
+    <bean class="com.zoomlion.hjsrm.frame.org.organization.OrganizationBean" id="orgBean">
+        <property name="orgDao" ref="orgDao"/>
+        <property name="emporgDao" ref="emporgDao"/>
+    </bean>
+    <!-- 人员 -->
+    <bean class="com.zoomlion.hjsrm.frame.org.employee.EmployeeBean" id="empBean">
+        <property name="empDao" ref="empDao"/>
+        <property name="operresdao" ref="operresdao"/>
+        <property name="emporgDao" ref="emporgDao"/>
+        <property name="operatorBean" ref="operatorBean"/>
+    </bean>
+    <!--岗位 -->
+    <!--机构岗位 -->
+    <!--人员机构 -->
+    <bean class="com.zoomlion.hjsrm.frame.org.emporg.EmpOrgBean" id="emporgBean">
+        <property name="emporgDao" ref="emporgDao"/>
+    </bean>
+    <bean class="com.zoomlion.hjsrm.frame.rights.operator.OperatorDao" id="opDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.rights.role.RoleDao" id="roleDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.rights.operatorrole.OperatorRoleDao" id="operroleDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.rights.resource.ResourceDao" id="resourceDao"/>
+    <!-- 资源 -->
+    <bean class="com.zoomlion.hjsrm.frame.rights.resource.ResourceBean" id="resourceBean">
+        <property name="resourceDao" ref="resourceDao"/>
+    </bean>
+    <bean class="com.zoomlion.hjsrm.frame.rights.role.QueryRoleResDao" id="queryRoleResDao"/>
+    <!-- 操作员与角色 -->
+    <bean class="com.zoomlion.hjsrm.frame.rights.operatorrole.OperatorRoleBean" id="operatorroleBean">
+        <property name="operatorRoleDao" ref="operroleDao"/>
+    </bean>
+    <!-- 操作员 -->
+    <bean class="com.zoomlion.hjsrm.frame.rights.operator.OperOrgConfigDao" id="operOrgConfigDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.rights.operator.OperatorBean" id="operatorBean">
+        <property name="opDao" ref="opDao"/>
+        <property name="operroleDao" ref="operroleDao"/>
+        <property name="operOrgConfigDao" ref="operOrgConfigDao"/>
+    </bean>
+    <!--角色 -->
+    <bean class="com.zoomlion.hjsrm.frame.rights.role.RoleBean" id="roleBean">
+        <property name="roleDao" ref="roleDao"/>
+        <property name="operatorRoleDao" ref="operroleDao"/>
+        <property name="queryRoleResDao" ref="queryRoleResDao"/>
+    </bean>
+    <!-- 公司的应用资源授权关系 -->
+    <bean class="com.zoomlion.hjsrm.frame.rights.orgauth.OrgAuthDao" id="orgAuthDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.rights.orgauth.OrgAuthBean" id="orgAuthBean">
+        <property name="orgAuthDao" ref="orgAuthDao"/>
+    </bean>
+    <bean class="com.zoomlion.hjsrm.frame.tools.dict.EosDictTypeDao" id="eosDictTypeDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.dict.EosDictEntryDao" id="eosDictEntryDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.shortcut.OperShortCutDao" id="operShortCutDao"/>
+    <!-- 数据字典 -->
+    <bean class="com.zoomlion.hjsrm.frame.tools.dict.DictBean" id="dictBean">
+        <property name="eosDictTypeDao" ref="eosDictTypeDao"/>
+        <property name="eosDictEntryDao" ref="eosDictEntryDao"/>
+    </bean>
+    <!-- 操作员快捷方式 -->
+    <bean class="com.zoomlion.hjsrm.frame.tools.shortcut.OperShortCutBean" id="operShortCutBean">
+        <property name="shortDao" ref="operShortCutDao"/>
+    </bean>
+
+    <bean class="com.zoomlion.hjsrm.clib.util.SrmClibUtilBean" id="srmClibUtilBean">
+    </bean>
+    <!-- 消息提醒 -->
+    <bean class="com.zoomlion.hjsrm.frame.tools.notice.NoticeReadrecordDao" id="noticeReadrecordDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.notice.NoticeInfoDao" id="noticeInfoDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.notice.NoticeRecvuserDao" id="noticeRecvuserDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.notice.NoticeReadDao" id="noticeReadDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.notice.NoticeBean" id="noticeBean">
+        <property name="noticeRecvuserDao" ref="noticeRecvuserDao"/>
+        <property name="noticeInfoDao" ref="noticeInfoDao"/>
+        <property name="noticeReadDao" ref="noticeReadDao"/>
+         <property name="noticeReadrecordDao" ref="noticeReadrecordDao"/>
+    </bean>
+    <bean class="com.zoomlion.hjsrm.frame.tools.announce.AnnounceReadrecordDao" id="announceReadrecordDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.announce.AnnounceDao" id="announceDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.announce.AnnounceReadDao" id="announceReadDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.announce.AnnounceBean" id="announceBean">
+    	<property name="announceReadrecordDao" ref="announceReadrecordDao"/>
+        <property name="announceDao" ref="announceDao"/>
+        <property name="announceReadDao" ref="announceReadDao"/>
+    </bean>
+    <bean class="com.zoomlion.hjsrm.frame.tools.sysconfig.SysconfigDao" id="sysconfigDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.sysconfig.SysconfigBean" id="sysconfigBean">
+        <property name="sysconfigDao" ref="sysconfigDao"/>
+    </bean>
+    <bean class="com.zoomlion.hjsrm.frame.tools.securitylog.SecurityLogDao" id="securityLogDao"/>
+    <bean class="com.zoomlion.hjsrm.frame.tools.securitylog.SecurityLogBean" id="securityLogBean">
+        <property name="securityLogDao" ref="securityLogDao"/>
+    </bean>
+</beans>

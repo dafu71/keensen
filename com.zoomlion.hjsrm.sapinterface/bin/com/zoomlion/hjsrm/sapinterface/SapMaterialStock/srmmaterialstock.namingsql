@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.sapinterface.SapMaterialStock.srmmaterialstock">
+    <select id="querymaterial" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+select t.matnr from base_material_marc t,base_material_mara a 
+where t.matnr =a.matnr
+<isNotNull prepend="and" property="matnr">t.matnr in ($matnr$)</isNotNull>
+        <isNotNull prepend="and" property="werks">t.werks=#werks#</isNotNull>
+        <isNotNull prepend="and" property="maktx">a.maktx like '%'||#maktx#||'%'</isNotNull>
+    </select>
+</sqlMap>

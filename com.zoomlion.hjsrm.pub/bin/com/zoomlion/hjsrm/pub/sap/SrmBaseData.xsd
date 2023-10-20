@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.sap.SrmBaseData" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.sap.SrmBaseData">
+    <xs:complexType name="BaseCompanyT001" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SrmBaseData.impl.BaseCompanyT001Impl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="butxt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="adrnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stceg" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BaseFactoryT001w" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SrmBaseData.impl.BaseFactoryT001wImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bwkey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stras" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pfach" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pstlz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ort01" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BasePurchaseT024e" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SrmBaseData.impl.BasePurchaseT024eImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="ekorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekotx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BasePurchaseT024" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SrmBaseData.impl.BasePurchaseT024Impl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="ekgrp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="eknam" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ektel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="telfx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="telNumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="telExtens" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="smtpAddr" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BaseMaterialMbew" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SrmBaseData.impl.BaseMaterialMbewImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bwkey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bwtar" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="vprsv" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stprs" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="peinh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bklas" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="laepr" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BasePurchaseEina" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.sap.SrmBaseData.impl.BasePurchaseEinaImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="infnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matkl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="loekz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="erdat" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="ernam" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meins" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

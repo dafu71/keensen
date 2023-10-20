@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/******************************************************************
+*版权所有： 港华科技（武汉）有限公司
+*描    述： 待办工单查询
+*创建日期： 2014-09-17
+*补丁编号： G3_P_20140915_01_107
+*作    者： 何源
+*******************************************************************/
+//==============================修改历史===========================
+//    补丁编号                修改人     日期       区域       备注
+// G3_P_20140915_01_107     何源    2014-09-17  集团      
+//=================================================================
+ --> 
+<sqlMap>
+   <!--查询业务待办工作单信息 --> 
+    <!--2013-09-27增加了claimdate(业务整体要求完成时间)、earlydate(业务整体预警时间)字段，原finaltime仍然保留 @陈今伟 -->
+    <!--2013-11-15 createtime(诉求开始时间) @曹桢 -->
+     <!--2014-2-13  部门联络单地址查询及显示 @傅力 -->
+    <select id="queryWorkflowsRemain" parameterClass="java.util.HashMap"  resultClass="commonj.sdo.DataObject">
+     select distinct wp.pkid as "pkid",
+     	   wp.worklisttype as "worklisttype",
+	       wp.worklistinfopkid as "worklistinfopkid",
+	       wp.actionurl as "actionurl",
+	       wp.workitemid as "workitemid",
+	       wp.processinstid as "processinstid",
+	       wp.applyinfopkid as "applyinfopkid",
+	       wp.busitype as "busitype",
+	       wp.busitypename as "busitypename",
+	       usr.usertype as "usertype",
+	       usr.stenocode as "stenocode",
+	       wp.userid as "userid",
+	       wp.squserid as "projectid",
+	       wp.username as "username",
+	       wp.batchid as "batchid",
+	       wp.planinfopkid as "planinfopkid",
+	       to_char(wp.startdate, 'yyyy-MM-dd HH24:mi:ss') as "startdate",
+	       to_char(wp.createtime, 'yyyy-MM-dd HH24:mi:ss') as "createtime",
+	       to_char(wp.enddate, 'yyyy-MM-dd HH24:mi:ss') as "enddate",
+	       wp.sqcontent as "sqcontent",
+	       wp.urglvl as "urglvl",
+	       nvl(wp.isprint,0) as "isprint",
+	       nvl(ext.commtimes, 0) as "commtimes",
+	       wp.chnltype as "chnltype",
+	       wp.appealchannel as "appealchannel",
+	       wp.gasaddress || decode(wp.addressbyname, null, '', 
+		       	'（' || wp.addressbyname || '）') as "gasaddress",
+	       to_char(wp.bookdate, 'yyyy-mm-dd') as "bookdate",
+	       wp.activitydefid as "activitydefid",
+	       wp.activityinstid as "activityinstid",
+	       wp.activityinstname as "activityinstname",
+	       wp.processinstname as "processinstname",
+	       wp.processdefid as "processdefid",
+	       wp.processdefname as "processdefname",
+	       wp.istimeout as "istimeout",
+	       to_char(wp.claimbookdate, 'yyyy-MM-dd') as "claimbookdate",
+           wp.createby as "createby",
+           wp.usermobile as "usermobile",
+	       to_char(wp.finaltime, 'yyyy-MM-dd HH24:mi:ss') as "finaltime",
+	       to_char(wp.claimdate, 'yyyy-MM-dd HH24:mi:ss') as "claimdate",
+	       to_char(wp.earlydate, 'yyyy-MM-dd HH24:mi:ss') as "earlydate",
+	       (case  when  wp.claimdate &lt;= sysdate then 'Y' else 'N' end) as "isclaim",
+           (case  when  wp.earlydate &lt;= sysdate then 'Y' else 'N' end) as "isearly",
+	       wp.currentstate as "currentstate",
+	       decode(wp.currentstate, 4, '可签收', 10, '待处理', 8, '已挂起') as "currentstatename",
+	       (select t1.dictname
+                   from eos_dict_entry t1
+                  where t1.dicttypeid = 'BS_APPLYINFO_CHNLTYPE'
+                    and t1.dictid = wp.chnltype) as "applytypename",
+                (select t1.dictname
+                   from eos_dict_entry t1
+                  where t1.dicttypeid = 'BS_WORKPRIORITY'
+                    and t1.dictid = wp.urglvl) as "priority",
+           to_char(wp.lastprintdate, 'yyyy-mm-dd') as "lastprintdate"
+	  from v_bs_remain wp, t_kh_userinfo usr,t_sq_applyinfoext ext
+	 where wp.dataorgid = #dataorgid# and wp.busitype != 'BS205'
+	 and usr.dataorgid(+) = #dataorgid#
+	 and wp.applyinfopkid = ext.applyinfopkid(+)
+	 and wp.worklisttype = '2' 
+	 and wp.userid = usr.userid(+)
+ 	 <isNotNull prepend = "and"  property = "workitemid"> 
+          wp.workitemid = #workitemid#
+     </isNotNull>
+	 <isNotNull prepend = "and"  property = "usertype"> 
+	          usr.usertype = #usertype#
+	   </isNotNull>
+	 <isNotNull prepend = "and"  property = "stenocode"> 
+	          usr.stenocode = #stenocode#
+	   </isNotNull>
+      <isNotNull prepend = "and"  property = "busitype"> 
+	          wp.busitype = #busitype#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "activitydefid"> 
+	          wp.activitydefid= #activitydefid#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "planinfopkid"> 
+	          wp.planinfopkid = #planinfopkid#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "batchid"> 
+	          (wp.batchid = #batchid#  or wp.planinfopkid = #batchid#) and wp.currentstate in ('4','8','10')
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "khuserid"> 
+	          instr(wp.userid,#khuserid#,1,1)!=0
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "gasaddress"> 
+	          instr(wp.gasaddress,#gasaddress#,1,1)!=0
+	   </isNotNull>
+	    <isNotNull prepend = "and"  property = "projectid"> 
+	          wp.squserid = #projectid#
+	   </isNotNull>
+	    <isNotNull prepend = "and"  property = "username"> 
+	          instr(wp.username,#username#,1,1)!=0
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "isprint"> 
+	          nvl(wp.isprint,0) = #isprint#
+	   </isNotNull>	   
+	   <isNotNull prepend = "and"  property = "urglvl"> 
+	          wp.urglvl= #urglvl#
+	   </isNotNull>
+	   	   <isNotNull  property = "chnltype"> 
+	       and   wp.chnltype= #chnltype#
+	   </isNotNull>	   
+	   <isNotNull  property = "chnlid"> 
+	       and   wp.appealchannel= #chnlid#
+	   </isNotNull>
+	   <isNotNull  property = "bookdate"> 
+	       and   to_char(wp.bookdate,'yyyy-mm-dd') = #bookdate#
+	   </isNotNull>
+	  <isNotNull   property = "createtimestartdate"> 
+             and to_char(wp.startdate,'yyyy-mm-dd')  &gt;=  #createtimestartdate#
+	   </isNotNull>
+	    <isNotNull  property = "createtimeendate"> 
+			 and to_char(wp.startdate,'yyyy-mm-dd')  &lt;=  #createtimeendate#
+	   </isNotNull>
+	    <isNotNull property = "claimdatestartdate"> 
+			 and to_char(wp.claimdate,'yyyy-mm-dd') &gt;= #claimdatestartdate#
+	   </isNotNull>
+	   <isNotNull property = "claimdateenddate"> 
+			 and to_char(wp.claimdate,'yyyy-mm-dd') &lt;=  #claimdateenddate#
+	   </isNotNull>
+	   <isNotNull property = "claimbookdatestartdate"> 
+			 and to_char(wp.claimbookdate,'yyyy-mm-dd') &gt;= #claimbookdatestartdate#
+	   </isNotNull>
+	   <isNotNull property = "claimbookdateenddate"> 
+			 and to_char(wp.claimbookdate,'yyyy-mm-dd') &lt;=  #claimbookdateenddate#
+	   </isNotNull>
+	   <isNotNull  property = "createby"> 
+	       and  instr(wp.createby,#createby#,1,1)!=0
+	   </isNotNull>
+   	   <isNotNull property = "addressbyname"> 
+		  and  instr(wp.addressbyname,#addressbyname#,1,1)!=0
+	   </isNotNull>
+	   and 
+	   (
+	    (wp.currentstate = 8 and wp.participantid = $userid$ and  wp.partiintype = 'EXE')
+         or
+        (wp.currentstate = 10 and wp.participantid = $userid$ and  wp.partiintype = 'EXE')
+         or
+        (wp.currentstate = 4 and wp.partiintype = 'GET' 
+           and (
+               (wp.participanttype = 'person' and wp.participantid = $userid$)
+              or
+               (wp.participanttype = 'organization' and wp.participantid in ($orgid$))
+              or
+              (wp.participanttype = 'role' and wp.participantid in ($roleid$))
+        
+           )
+         )
+       )  
+       union
+        select distinct wp.pkid as "pkid",
+           wp.worklisttype as "worklisttype",
+	       wp.worklistinfopkid as "worklistinfopkid",
+	       wp.actionurl as "actionurl",
+	       wp.workitemid as "workitemid",
+	       wp.processinstid as "processinstid",
+	       wp.applyinfopkid as "applyinfopkid",
+	       wp.busitype as "busitype",
+	       wp.busitypename as "busitypename",
+	       usr.usertype as "usertype",
+	       usr.stenocode as "stenocode",
+	       wp.userid as "userid",
+	       wp.squserid as "projectid",
+	       wp.username as "username",
+	       wp.batchid as "batchid",
+	       wp.planinfopkid as "planinfopkid",
+	       to_char(wp.startdate, 'yyyy-MM-dd HH24:mi:ss') as "startdate",
+	       to_char(wp.createtime, 'yyyy-MM-dd HH24:mi:ss') as "createtime",
+	       to_char(wp.enddate, 'yyyy-MM-dd HH24:mi:ss') as "enddate",
+	       wp.sqcontent as "sqcontent",
+	       wp.urglvl as "urglvl",
+	       nvl(wp.isprint,0) as "isprint",
+	       nvl(ext.commtimes, 0) as "commtimes",
+	       wp.chnltype as "chnltype",
+	       wp.appealchannel as "appealchannel",
+	       dl.addrdetail as "gasaddress",
+	       to_char(wp.bookdate, 'yyyy-mm-dd') as "bookdate",
+	       wp.activitydefid as "activitydefid",
+	       wp.activityinstid as "activityinstid",
+	       wp.activityinstname as "activityinstname",
+	       wp.processinstname as "processinstname",
+	       wp.processdefid as "processdefid",
+	       wp.processdefname as "processdefname",
+	       wp.istimeout as "istimeout",
+	       to_char(wp.claimbookdate, 'yyyy-MM-dd') as "claimbookdate",
+           wp.createby as "createby",
+           wp.usermobile as "usermobile",
+	       to_char(wp.finaltime, 'yyyy-MM-dd HH24:mi:ss') as "finaltime",
+	       to_char(wp.claimdate, 'yyyy-MM-dd HH24:mi:ss') as "claimdate",
+	       to_char(wp.earlydate, 'yyyy-MM-dd HH24:mi:ss') as "earlydate",
+	       (case  when  wp.claimdate &lt;= sysdate then 'Y' else 'N' end) as "isclaim",
+           (case  when  wp.earlydate &lt;= sysdate then 'Y' else 'N' end) as "isearly",
+	       wp.currentstate as "currentstate",
+	       decode(wp.currentstate, 4, '可签收', 10, '待处理', 8, '已挂起') as "currentstatename",
+	       (select t1.dictname
+                   from eos_dict_entry t1
+                  where t1.dicttypeid = 'BS_APPLYINFO_CHNLTYPE'
+                    and t1.dictid = wp.chnltype) as "applytypename",
+                (select t1.dictname
+                   from eos_dict_entry t1
+                  where t1.dicttypeid = 'BS_WORKPRIORITY'
+                    and t1.dictid = wp.urglvl) as "priority",
+           to_char(wp.lastprintdate, 'yyyy-mm-dd') as "lastprintdate"
+	  from v_bs_remain wp, t_kh_userinfo usr,t_sq_applyinfoext ext,t_bs_departmentliaison dl
+	 where wp.dataorgid = #dataorgid# and wp.busitype = 'BS205'
+	 and dl.worklistinfopkid = wp.worklistinfopkid
+	 and usr.dataorgid(+) = #dataorgid#
+	 and wp.applyinfopkid = ext.applyinfopkid(+)
+	 and wp.worklisttype = '2' 
+	 and wp.userid = usr.userid(+)
+  	 <isNotNull prepend = "and"  property = "workitemid"> 
+      	wp.workitemid = #workitemid#
+     </isNotNull>
+	 <isNotNull prepend = "and"  property = "usertype"> 
+	          usr.usertype = #usertype#
+	   </isNotNull>
+	 <isNotNull prepend = "and"  property = "stenocode"> 
+	          usr.stenocode = #stenocode#
+	   </isNotNull>
+      <isNotNull prepend = "and"  property = "busitype"> 
+	          wp.busitype = #busitype#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "activitydefid"> 
+	          wp.activitydefid= #activitydefid#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "planinfopkid"> 
+	          wp.planinfopkid = #planinfopkid#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "batchid"> 
+	          (wp.batchid = #batchid#  or wp.planinfopkid = #batchid#) and wp.currentstate in ('4','8','10')
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "khuserid"> 
+	          instr(wp.userid,#khuserid#,1,1)!=0
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "gasaddress"> 
+	          instr(dl.addrdetail,#gasaddress#,1,1)!=0
+	   </isNotNull>
+	    <isNotNull prepend = "and"  property = "projectid"> 
+	          wp.squserid = #projectid#
+	   </isNotNull>
+	    <isNotNull prepend = "and"  property = "username"> 
+	          instr(wp.username,#username#,1,1)!=0
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "isprint"> 
+	          nvl(wp.isprint,0) = #isprint#
+	   </isNotNull>	   
+	   <isNotNull prepend = "and"  property = "urglvl"> 
+	          wp.urglvl= #urglvl#
+	   </isNotNull>
+	   	   <isNotNull  property = "chnltype"> 
+	       and   wp.chnltype= #chnltype#
+	   </isNotNull>	   
+	   <isNotNull  property = "chnlid"> 
+	       and   wp.appealchannel= #chnlid#
+	   </isNotNull>
+	   <isNotNull  property = "bookdate"> 
+	       and   to_char(wp.bookdate,'yyyy-mm-dd') = #bookdate#
+	   </isNotNull>
+	  <isNotNull   property = "createtimestartdate"> 
+             and to_char(wp.startdate,'yyyy-mm-dd')  &gt;=  #createtimestartdate#
+	   </isNotNull>
+	    <isNotNull  property = "createtimeendate"> 
+			 and to_char(wp.startdate,'yyyy-mm-dd')  &lt;=  #createtimeendate#
+	   </isNotNull>
+	    <isNotNull property = "claimdatestartdate"> 
+			 and to_char(wp.claimdate,'yyyy-mm-dd') &gt;= #claimdatestartdate#
+	   </isNotNull>
+	   <isNotNull property = "claimdateenddate"> 
+			 and to_char(wp.claimdate,'yyyy-mm-dd') &lt;=  #claimdateenddate#
+	   </isNotNull>
+	   <isNotNull property = "claimbookdatestartdate"> 
+			 and to_char(wp.claimbookdate,'yyyy-mm-dd') &gt;= #claimbookdatestartdate#
+	   </isNotNull>
+	   <isNotNull property = "claimbookdateenddate"> 
+			 and to_char(wp.claimbookdate,'yyyy-mm-dd') &lt;=  #claimbookdateenddate#
+	   </isNotNull>
+	   <isNotNull  property = "createby"> 
+	       and  instr(wp.createby,#createby#,1,1)!=0
+	   </isNotNull>
+	   <isNotNull property = "addressbyname"> 
+			 and 1=2
+	   </isNotNull>
+	   and 
+	   (
+	    (wp.currentstate = 8 and wp.participantid = $userid$ and  wp.partiintype = 'EXE')
+         or
+        (wp.currentstate = 10 and wp.participantid = $userid$ and  wp.partiintype = 'EXE')
+         or
+        (wp.currentstate = 4 and wp.partiintype = 'GET' 
+           and (
+               (wp.participanttype = 'person' and wp.participantid = $userid$)
+              or
+               (wp.participanttype = 'organization' and wp.participantid in ($orgid$))
+              or
+              (wp.participanttype = 'role' and wp.participantid in ($roleid$))
+        
+           )
+         )
+       )   
+       
+       order by "claimdate" asc,  "earlydate" asc,"urglvl"
+    </select>
+    
+    
+     <!--查询诉求待办工作单信息 -->
+     <!--2013-09-27增加了starttime字段，原startdate有误仍然保留 -->
+     <!--2013-09-27增加了claimdate(业务整体要求完成时间)、earlydate(业务整体预警时间)字段，原finaltime仍然保留 @陈今伟 -->
+     <!--2013-11-15 createtime(诉求开始时间) @曹桢 -->
+    <select id="queryDemandRemain" parameterClass="java.util.HashMap"  resultClass="commonj.sdo.DataObject">
+	select distinct wp.pkid as "pkid",
+	       wp.worklisttype as "worklisttype",
+	       wp.actionurl as "actionurl",
+	       wp.worklistinfopkid as "worklistinfopkid",
+	       wp.applyinfopkid as "applyinfopkid",
+	       wp.workitemid as "workitemid",
+	       wp.processinstid as "processinstid",
+	       wp.busitype as "busitype",
+	       ap.typename as "sqbusitypename",
+	       wp.busitypename as "applytypename",
+	       wp.userid as "userid",
+	       usr.usertype as "usertype",
+	       usr.stenocode as "stenocode",
+	       wp.username as "username",
+	       to_char(wp.startdate, 'yyyy-MM-dd HH24:mi:ss') "starttime",
+	       to_char(wp.createtime, 'yyyy-MM-dd HH24:mi:ss') "createtime",
+	       wp.enddate as "enddate",
+	       wp.gasaddress || decode(wp.addressbyname, null, '', 
+		       	'（' || wp.addressbyname || '）') as "gasaddress",
+	       to_char(wp.bookdate, 'yyyy-mm-dd') as "bookdate",
+	       wp.activitydefid as "activitydefid",
+	       wp.activityinstid as "activityinstid",
+	       wp.activityinstname as "activityinstname",
+	       wp.processinstname as "processinstname",
+	       wp.processdefid as "processdefid",
+	       wp.processdefname as "processdefname",
+	       wp.istimeout as "istimeout",
+	       to_char(wp.finaltime, 'yyyy-MM-dd HH24:mi:ss') as "finaltime",
+	       to_char(wp.claimdate, 'yyyy-MM-dd HH24:mi:ss') as "claimdate",
+	       to_char(wp.earlydate, 'yyyy-MM-dd HH24:mi:ss') as "earlydate",
+	       (case  when  wp.claimdate &lt;= sysdate then 'Y' else 'N' end) as "isclaim",
+           (case  when  wp.earlydate &lt;= sysdate then 'Y' else 'N' end) as "isearly",
+	       wp.currentstate as "currentstate",
+	       decode(wp.currentstate, 4, '可签收', 10, '待处理', 8, '已挂起') as "currentstatename",
+	       wp.sourcetype as "sourcetype",
+	       nvl(ext.commtimes, 0) as "commtimes",
+	       nvl(ext.commviewdtimes, 0) as "commviewdtimes",
+	       nvl(ext.urgeretimes, 0) as "urgeretimes",
+	       wp.sqcontent as "sqcontent",
+	       wp.urglvl as "urglvl"
+	  from v_bs_remain wp, t_sq_applyinfoext ext, t_sq_applytype ap, t_kh_userinfo usr
+	 where wp.applyinfopkid = ext.applyinfopkid(+)
+	   and wp.sqbusitype = ap.apptypeid(+)
+	   and wp.worklisttype = '1'
+	   and wp.dataorgid = #dataorgid#
+	   and ap.dataorgid = #dataorgid#
+	   and usr.dataorgid(+) = #dataorgid#  
+	   and wp.userid = usr.userid(+)
+	 <isNotNull prepend = "and"  property = "usertype"> 
+	          usr.usertype = #usertype#
+	   </isNotNull>
+	   	 <isNotNull prepend = "and"  property = "stenocode"> 
+	          usr.stenocode = #stenocode#
+	   </isNotNull>
+	   <isNotNull property = "sqbusisort"> 
+	         and wp.sqbusisort = #sqbusisort#
+	   </isNotNull>
+	   <isNotNull property = "sqbusitype"> 
+			and wp.sqbusitype = #sqbusitype# 
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "planid"> 
+	          wp.planid = #planid#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "batchid"> 
+	          wp.batchid = #batchid#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "isprint"> 
+	          wp.isprint = #isprint#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "usercode"> 
+	          wp.userid = #usercode#
+	   </isNotNull>
+	    <isNotNull prepend = "and"  property = "username"> 
+	          wp.username like '%' || #username# || '%'
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "urglvl"> 
+	          wp.urglvl= #urglvl#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "activitydefid"> 
+	          wp.activitydefid= #activitydefid#
+	   </isNotNull>
+	    <isNotNull prepend = "and"  property = "sourcetype"> 
+	          wp.sourcetype= #sourcetype#
+	   </isNotNull>
+	   <isNotNull prepend = "and"  property = "worklisttype"> 
+	          wp.worklisttype= #worklisttype#
+	   </isNotNull>
+	   <isNotNull prepend = "and"   property = "gasaddress"> 
+		 	  instr(wp.gasaddress,#gasaddress#,1,1)!=0
+	   </isNotNull>
+	   <isNotNull prepend = "and"   property = "addressbyname"> 
+		 	  instr(wp.addressbyname,#addressbyname#,1,1)!=0
+	   </isNotNull>
+	   and 
+	   (
+	    (wp.currentstate = 8 and wp.participantid = $userid$ and  wp.partiintype = 'EXE')
+         or
+        (wp.currentstate = 10 and wp.participantid = $userid$ and  wp.partiintype = 'EXE')
+         or
+        (wp.currentstate = 4 and wp.partiintype = 'GET' 
+           and (
+               (wp.participanttype = 'person' and wp.participantid = $userid$)
+              or
+               (wp.participanttype = 'organization' and wp.participantid in ($orgid$))
+              or
+              (wp.participanttype = 'role' and wp.participantid in ($roleid$))
+        
+           )
+         )
+       )  
+     order by "claimdate" asc,  "earlydate" asc,wp.urglvl
+    </select>
+    
+    <!-- 查询所有子机构 @陈今伟 20130905--> 
+    <select id="queryAllOrgs"  resultClass="commonj.sdo.DataObject" parameterClass="map">
+    	select org.orgid as "orgid" from t_om_organization org
+    	start with org.orgid= #orgid#
+    	connect by  prior org.parentorgid =  org.orgid  
+    </select>
+    
+      <!-- 查询工单的优先级 -->
+    <select id="loadUrglvlByPkid"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	   select urglvl as "urglvl",pkid as "pkid" from t_bs_busibusirec where pkid = #pkid#
+    </select>
+    
+    <!--设置优先级 -->
+    <update id ="updateUrglvl" parameterClass="java.util.HashMap" >
+         update  t_bs_busibusirec set urglvl = #urglvl#  where pkid = #pkid#
+    </update>
+    
+    <!--查询工单号超期说明-->
+    <select id="queryTimeOutExplain"  resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	   select distinct t.pkid as "pkid",
+         t.workitemid as "workitemid",
+         t.timeoutdesc as "timeoutdesc",
+         t.remark as "remark",
+         to_char(r.startdate,'yyyy-mm-dd hh24:mi:ss') as "acceptime"  
+       from t_bs_timeoutinfo t ,v_bs_remain r
+       where t.workitemid = r.workitemid
+       and t.workitemid = #workitemid#
+    </select>
+     <!--插入工单号超期说明-->
+    <insert id="insertTimeOutExplain" parameterClass="java.util.HashMap">
+	     insert into t_bs_timeoutinfo (pkid,workitemid,timeoutdesc,createby,createtime,dataorgid)
+         values(#pkid#,#workitemid#,#timeoutdesc#,#createby#,#createtime#,#dataorgid#)
+   </insert>
+    
+    <!-- 分页查询可进行分配的工作项 -->
+    <select id="queryDispatchingWithPage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		     select distinct v.processdefid as "processdefid",
+		                v.processinstid as "processinstid",
+		                v.processinstname as "processinstname",
+		                v.workitemid as "workitemid",
+		                v.busitype as "busitype",
+		                v.busitypename as "busitypename",
+		                v.activityinstid as "activityinstid",
+		                v.activityinstname as "activityinstname",
+		                v.worklistinfopkid as "worklistinfopkid",
+		                v.userid as "userid",
+		                v.username as "username",
+		                decode(v.currentstate,
+		                       4,
+		                       '可签收',
+		                       10,
+		                       '待处理',
+		                       8,
+		                       '已挂起') as "workstate"
+		  from v_bs_remain v
+		  join t_bs_busistepdefine p
+		    on v.activitydefid = p.activitydefid
+		   and p.delflag = '0'
+		 where  v.dataorgid = #dataorgid#
+		   and not exists (select 1
+		          from t_bs_busidistrinfo d
+		         where d.workitemid = v.workitemid
+		           and d.worklistinfopkid = v.worklistinfopkid
+		           and d.delflag = '0')
+		   and p.candistr = '1'
+        <isNotNull  property="workitemids">
+		        and v.workitemid  in ($workitemids$)
+        </isNotNull>
+    </select>
+    
+    <!-- 分页查询已分派的情况 -->
+    <select id="queryDispatchedWithPage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	     select w.processdefid as "processdefid",
+			       w.processinstid as "processinstid",
+			       w.workitemid as "workitemid",
+			       w.processchname as "processchname",
+			       w.workitemname as "workitemname",
+			       d.pkid as "pkid",
+			       to_char(d.createtime, 'yyyy-MM-dd HH24:mi:ss') as "dispatchtime",
+			       d.destoptr as "destoptr",
+			       (select orgname from t_om_organization where orgid = d.destorg) as "destorgname",
+			       (select operatorname from t_ac_operator where userid = d.destoptr) as "destoptrname"
+			  from t_bs_busibusirec t, t_bs_busidistrinfo d, wfworkitem w
+			 where t.processinstid = w.processinstid
+			   and t.workitemid = w.workitemid
+			   and t.workitemid = d.workitemid
+			   and d.delflag = '0'
+	    <isNotNull prepend="and" property="activitydefid">
+             w.activitydefid = #activitydefid#
+        </isNotNull>
+        <isNotNull prepend="and" property="processdefid">
+             w.processdefid = #processdefid# 
+        </isNotNull>
+	    <isNotNull prepend="and" property="activityinstid">
+            (w.activityinstid in 
+               <iterate close=")" conjunction="," open="(" prepend="" property="activityinstid">#activityinstid[]#</iterate>
+            )
+         </isNotNull>
+    </select>
+    
+    <!-- 取消派工 -->
+    <delete id="doCancelDispatchedWorkItem" parameterClass="java.lang.String">
+    	update t_bs_busidistrinfo set delflag = '1'  where pkid in($pkids$)
+    </delete>
+    
+     <!-- 查询某条工单的信息 -->
+      <select id="queryReaminSheeet" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+           select bus.pkid as "pkid",
+			        bus.applyinfopkid as "applyinfopkid",
+			        bus.workitemid as "workitemid",
+			        bus.activitydefid as "activitydefid",
+			        bus.processinstid as "processinstid",
+			        bus.busitype as "busitype",
+			        bus.userid as "userid",
+			        bus.username as "username",
+			        bus.planinfopkid as "planid",
+			        bus.batchid as "batchid",
+			        bus.projectid as "projectid",
+			        bus.startdate as "startdate",
+			        bus.enddate as "enddate",
+			        bus.urglvl as "urglvl",
+			        bus.state as "state",
+			        ap.chnlid as "chnlid",
+			        nvl(ap.actualcount, 0) as "actualcount",
+			        (select orgname from t_om_organization where orgcode = ap.mngorg) as "orgname",
+			        to_char(ap.bookdate, 'yyyy-mm-dd') as "bookdate",
+			        bus.remark as "remark",
+			        (addr.fulname || ap.addrdetail) as "gasaddress",
+			        to_char(nvl(ap.reportedtime, bus.createtime), 'yyyy-mm-dd')  as "createtime",
+			        kc.contactname "contactname",
+		            kc.contactphone "contactphone",
+		            kc.mobile "mobile",
+		            br.operator "operator",
+		            br.contact "optrcontact",
+		            ap.addrdetail "addrdetail"
+			   from t_bs_busibusirec bus, t_bs_applyinfo ap, t_zy_addrinfo addr, 
+			   		t_kh_contactinfo kc,t_bs_reservationiteminfo br
+			  where bus.applyinfopkid = ap.pkid
+			    and ap.addrinfopkid = addr.pkid(+)
+			    and ap.pkid = kc.ownid(+)
+          		and kc.owntype(+)='3'
+          		and ap.pkid = br.applyinfopkid(+)
+          		and br.delflag(+) = 0
+          		and kc.delflag(+) = 0
+			      <isNotNull prepend = "and"  property = "userid"> 
+				          bus.userid= #userid#
+				  </isNotNull>
+			      <isNotNull prepend = "and"  property = "workitemid"> 
+				          bus.workitemid= #workitemid#
+				  </isNotNull>
+				  <isNotNull   property = "workitemids"> 
+				       and bus.workitemid in ($workitemids$)
+				  </isNotNull>
+				  	  <isNotNull   property = "activitydefid"> 
+						  and bus.activitydefid = #activitydefid#
+				  </isNotNull>
+    </select>
+</sqlMap>

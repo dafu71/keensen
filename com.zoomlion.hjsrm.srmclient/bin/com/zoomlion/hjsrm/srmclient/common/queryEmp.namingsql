@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.srmclient.common.queryEmp">
+    <!--查询技术通知工单-->
+    <select id="queryEmployee" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+          select t.empname as EMPNAME from om_employee t where 
+      <isNotNull prepend="and" property="personId">t.userid = #personId#</isNotNull>
+    </select>
+</sqlMap>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.techNotice.techNotice" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.techNotice.techNotice">
+    <xs:complexType name="FlowTechniqueNotice" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.techNotice.techNotice.impl.FlowTechniqueNoticeImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="noticeId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="weavePersonId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="weavePersonName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="deptName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="deptId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="applicationTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="productType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="productModel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="noticeType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="levels" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="noticeTitle" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="noticeText" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendDept" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="executePersonId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="executePersonName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="executeText" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="executeTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="archivePersonId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="archivePersonName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="archiveText" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="archiveTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="processinstid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processStatus" nillable="true" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="flowTechniqueNoticeItemss" nillable="true" type="FlowTechniqueNoticeItems"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FlowTechniqueNoticeItems" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.techNotice.techNotice.impl.FlowTechniqueNoticeItemsImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="itemsId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="itemsName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="itmesCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="actionsPersonName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="actionsPersonId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="actionsText" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="actonsTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="processinstid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="flowId" nillable="true" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FlowTempNoticeItems" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.techNotice.techNotice.impl.FlowTempNoticeItemsImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="itemsId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="itemsName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="itmesCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="actionsPersonName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="actionsPersonId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="processinstid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="flowId" nillable="true" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

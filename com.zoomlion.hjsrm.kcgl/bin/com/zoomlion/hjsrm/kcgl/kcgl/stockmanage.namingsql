@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.kcgl.kcgl.stockmanage">
+    <!-- 查询车型物料 -->
+    <select id="queryWhole" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    
+    select t.matnr "matnr",
+	t.zcpcx "zcpcx",
+	t.maktx "maktx",
+	t.modifyby "modifyby",t.modifybyname "modifybyname",
+	t.modifybyname || '(' || t.modifyby || ')' "fullname",
+	to_char(t.modifytime,'yyyy-mm-dd') "modifytime",
+	t.componentcount "componentcount"
+	from v_base_material_whole t
+    where 1=1
+    <isNotNull prepend="and" property="matnr">t.matnr like '%' ||  #matnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="zcpcx">t.zcpcx like '%' ||  #zcpcx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="maktx">t.maktx like '%' ||  #maktx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="componentzero">t.componentcount = 0</isNotNull>
+    </select>
+    <!-- 查询大件物料 -->
+    <select id="queryComponent" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    
+    select t.matnr "matnr",t.pmatnr "pmatnr",
+	t.maktx "maktx", t.zcpcx "zcpcx",
+	t.modifyby "modifyby",t.modifybyname "modifybyname",
+	t.modifybyname || '(' || t.modifyby || ')' "fullname",
+	to_char(t.modifytime,'yyyy-mm-dd') "modifytime"
+	 from v_base_material_component t
+    where 1=1
+    <isNotNull prepend="and" property="matnr">t.matnr like '%' ||  #matnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="zcpcx">t.zcpcx like '%' ||  #zcpcx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="maktx">t.maktx like '%' ||  #maktx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="pmatnr">t.pmatnr like '%' ||  #pmatnr# || '%'</isNotNull>
+    order by t.pmatnr,t.matnr
+    </select>
+    <!-- 查询大件物料供应商 -->
+    <select id="queryComponetSuppier" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.matnr "matnr",t.lifnr "lifnr",
+     t.modifyby "modifyby",t.modifybyname "modifybyname",
+	t.modifybyname || '(' || t.modifyby || ')' "fullname",
+	to_char(t.modifytime,'yyyy-mm-dd') "modifytime"
+	 from base_material_supplier t
+    where 1=1
+    and t.matnr = #matnr# 
+    and trim(to_char(t.lifnr,'0000000000')) = #lifnr#</select>
+    <!-- 查询大件物料供应商 -->
+    <select id="queryComponetSuppiers" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select t.matnr "matnr",t.lifnr "lifnr",
+	t2.name1 "name1",t3.maktx "maktx",
+	t.modifyby "modifyby",t.modifybyname "modifybyname",
+	t.modifybyname || '(' || t.modifyby || ')' "fullname",
+	to_char(t.modifytime,'yyyy-mm-dd') "modifytime"
+	   from base_material_supplier t
+	   left join base_supply_lfa1 t2
+	   on trim(to_char(t.lifnr,'0000000000')) = t2.lifnr
+	   left join base_material_mara t3
+	   on t.matnr = t3.matnr
+	    where 1=1
+     <isNotNull prepend="and" property="matnr">t.matnr like '%' ||  #matnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t.lifnr like '%' ||  #lifnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="name1">t2.name1 like '%' ||  #name1# || '%'</isNotNull>
+        <isNotNull prepend="and" property="maktx">t3.maktx like '%' ||  #maktx# || '%'</isNotNull>
+    order by t.matnr
+    </select>
+    <!--删除物料供应商-->
+    <delete id="deleteSupplier" parameterClass="java.util.HashMap">
+        <!--delete from base_material_supplier where matnr = #matnr# and trim(to_char(lifnr,'0000000000')) = #lifnr#-->
+    	delete from base_material_supplier where matnr = #matnr# and trim(lifnr) = #lifnr#
+    </delete>
+    <!-- 综合查询 -->
+    <select id="queryMaterials" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select t.matnr "matnr",t.maktx "maktx",
+	t.lifnr "lifnr", t.name1 "name1",
+	 t.pmatnr "pmatnr",t.pmaktx "pmaktx",t.zcpcx "zcpcx"
+	 from v_base_material t
+    where 1=1
+    <isNotNull prepend="and" property="matnr">t.matnr like '%' ||  #matnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="zcpcx">t.zcpcx like '%' ||  #zcpcx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="maktx">t.maktx like '%' ||  #maktx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="pmatnr">t.pmatnr like '%' ||  #pmatnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="pmaktx">t.pmaktx like '%' ||  #pmaktx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t.lifnr like '%' ||  #lifnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="name1">t.name1 like '%' ||  #name1# || '%'</isNotNull>
+    order by t.pmatnr,t.matnr
+    </select>
+    <!-- 查询采购计划 -->
+    <select id="queryHead" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t.pkid "pkid",t.title "title",
+	t.createby "createby", t.createbyname "createbyname",
+	t.createbyname || '(' || t.createby || ')' "fullname",
+	to_char(t.createtime,'yyyy-mm-dd hh24:mi:ss') "createtime",
+	t.modifyby "modifyby",t.modifybyname "modifybyname",
+	t.modifybyname || '(' || t.modifyby || ')' "fullname2",
+	to_char(t.modifytime,'yyyy-mm-dd hh24:mi:ss') "modifytime",
+	t.confirm "confirm",
+	decode(t.confirm,'N','未确认','已确认') "confirmname",
+	t.archive "archive",
+	decode(t.archive,'N','未归档','已归档') "archivename"
+	 from genl_purchase_plan_head t
+	    where 1=1 and t.delflag='0'
+    <isNotNull prepend="and" property="title">t.title like '%' ||  #title# || '%'</isNotNull>
+        <isNotNull prepend="and" property="createstartdate">to_char(t.createtime, 'yyyy-mm-dd')  &gt;=  #createstartdate#</isNotNull>
+        <isNotNull prepend="and" property="createendate">to_char(t.createtime, 'yyyy-mm-dd')  &lt;=  #createendate#</isNotNull>
+        <isNotNull prepend="and" property="confirm">t.confirm = #confirm#</isNotNull>
+        <isNotNull prepend="and" property="archive">t.archive = #archive#</isNotNull>
+    order by t.pkid desc
+    
+    </select>
+    <!-- 新增采购计划 -->
+    <insert id="addPlanlist" parameterClass="java.util.HashMap">insert into genl_purchase_plan_list
+	  (pkid,
+	   relationid,
+	   createby,
+	   createbyname,
+	   createtime,
+	   pmatnr,
+	   zcpcx,
+	   matnr,
+	   maktx,
+	   lifnr,
+	   name1,
+	   carno,line,
+	   underamount,
+	   plansum,
+	   date1,
+	   date2,
+	   date3,
+	   date4,
+	   date5,
+	   date6,
+	   date7,
+	   date8,
+	   date9,
+	   date10,
+	   plan1,
+	   plan2,
+	   plan3,
+	   plan4,
+	   plan5,
+	   plan6,
+	   plan7,
+	   plan8,
+	   plan9,
+	   plan10)
+	  select seq_genl_purchase_plan_list.nextval pkid,
+	         #relationid#,
+	         #createby#,
+	         #createbyname#,
+	         #createtime#,
+	         t.pmatnr,
+	         t.zcpcx,
+	         t.matnr,
+	         t.maktx,
+	         t.lifnr,
+	         t.name1,
+	         #carno#,#line#,
+	         #underamount#,
+	         #plansum#,
+	         #date1#,
+	         #date2#,
+	         #date3#,
+	         #date4#,
+	         #date5#,
+	         #date6#,
+	         #date7#,
+	         #date8#,
+	         #date9#,
+	         #date10#,
+	         #plan1#,
+	         #plan2#,
+	         #plan3#,
+	         #plan4#,
+	         #plan5#,
+	         #plan6#,
+	         #plan7#,
+	         #plan8#,
+	         #plan9#,
+	         #plan10#
+	    from v_base_material t
+	   where t.pmatnr = #pmatnr#</insert>
+    <!-- 查询计划列表 -->
+    <select id="queryPlanlist" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    
+	    select l.pkid         as "pkid",
+	       l.createby     as "createby",
+	       l.createbyname as "createbyname",
+	       to_char(l.createtime,'yyyy-mm-dd hh24:mi:ss')   as "createtime",
+	       l.modifyby     as "modifyby",
+	       l.modifybyname as "modifybyname",
+	       to_char(l.modifytime,'yyyy-mm-dd hh24:mi:ss')   as "modifytime",
+	       l.remark       as "remark",
+	       l.stand        as "stand",
+	       l.pmatnr       as "pmatnr",
+	       l.zcpcx        as "zcpcx",
+	       l.matnr        as "matnr",
+	       l.maktx        as "maktx",
+	       l.lifnr        as "lifnr",
+	       l.name1        as "name1",
+	       l.stock        as "stock",
+	       l.carno        as "carno",nvl(l.line,'-')        as "line",
+	       l.underamount  as "underamount",
+	       l.date1        as "date1",
+	       nvl(l.plan1,0)        as "plan1",
+	       l.answer1      as "answer1",
+	       l.date2        as "date2",
+	       nvl(l.plan2,0)        as "plan2",
+	       l.answer2      as "answer2",
+	       l.date3        as "date3",
+	       nvl(l.plan3,0)        as "plan3",
+	       l.answer3      as "answer3",
+	       l.date4        as "date4",
+	       nvl(l.plan4,0)        as "plan4",
+	       l.answer4      as "answer4",
+	       l.date5        as "date5",
+	       nvl(l.plan5,0)        as "plan5",
+	       l.answer5      as "answer5",
+	       l.date6        as "date6",
+	       nvl(l.plan6,0)        as "plan6",
+	       l.answer6      as "answer6",
+	       l.date7        as "date7",
+	       nvl(l.plan7,0)        as "plan7",
+	       l.answer7      as "answer7",
+	       l.date8        as "date8",
+	       nvl(l.plan8,0)        as "plan8",
+	       l.answer8      as "answer8",
+	       l.date9        as "date9",
+	       nvl(l.plan9,0)        as "plan9",
+	       l.answer9      as "answer9",
+	       l.date10       as "date10",
+	       nvl(l.plan10,0)       as "plan10",
+	       l.answer10     as "answer10",
+	       l.relationid   as "relationid",
+	       l.plansum      as "plansum",
+	       h.title        "title",
+	       h.confirm      "confirm",
+	       h.archive      "archive",
+	       decode(h.confirm,'N','未确认','已确认') "confirmname",
+	       decode(h.archive,'N','未归档','已归档') "archivename",l.remark "remark",
+	       l.stock + l.answer1 + l.answer2 + l.answer3 + l.answer4 + l.answer5 + l.answer6 + l.answer7 + l.answer8 + l.answer9 + l.answer10 as "answers",
+	       case when ((l.stock + l.answer1 + l.answer2 + l.answer3 + l.answer4 + l.answer5 + l.answer6 + l.answer7 + l.answer8 + l.answer9 + l.answer10)-l.plansum)&gt;=0 then ''
+	       else to_char((l.stock + l.answer1 + l.answer2 + l.answer3 + l.answer4 + l.answer5 + l.answer6 + l.answer7 + l.answer8 + l.answer9 + l.answer10)-l.plansum) end as "underamount2"
+	  from genl_purchase_plan_list l
+	  left join genl_purchase_plan_head h on l.relationid = h.pkid
+	 where h.delflag = '0'
+	 <isNotNull prepend="and" property="pkid">l.pkid = #pkid#</isNotNull>
+        <isNotNull prepend="and" property="relationid">l.relationid = #relationid#</isNotNull>
+        <isNotNull prepend="and" property="pmatnr">l.pmatnr like '%' ||  #pmatnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="zcpcx">l.zcpcx like '%' ||  #zcpcx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="matnr">l.matnr like '%' ||  #matnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="maktx">l.maktx like '%' ||  #maktx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="lifnr">trim(to_char(replace(l.lifnr,'S',''),'0000000000')) = trim(to_char(replace(#lifnr#,'S',''),'0000000000'))</isNotNull>
+        <isNotNull prepend="and" property="line">l.line = #line#</isNotNull>
+        <!--采购组答交-->
+        <isNotNull property="answerflag">and trim(to_char(l.lifnr,'0000000000')) in(
+    select trim(to_char(replace(t.lifnr,'S',''),'0000000000')) 
+	from genl_purchase_plan_buyer t
+	where t.userid = #uid#)</isNotNull>
+        <isNotNull prepend="and" property="lifnr2">trim(to_char(replace(l.lifnr,'S',''),'0000000000')) in  ($lifnr2$)</isNotNull>
+        <isNotNull prepend="and" property="name1">l.name1 like '%' ||  #name1# || '%'</isNotNull>
+        <isNotNull prepend="and" property="title">h.title like '%' ||  #title# || '%'</isNotNull>
+        <isNotNull prepend="and" property="confirm">h.confirm = #confirm#</isNotNull>
+        <isNotNull prepend="and" property="archive">h.archive = #archive#</isNotNull>
+        <isNotNull prepend="and" property="answerzero">l.stock + l.answer1 + l.answer2 + l.answer3 + l.answer4 + l.answer5 + l.answer6 + l.answer7 + l.answer8 + l.answer9 + l.answer10 = 0</isNotNull>
+        <isNotNull prepend="and" property="isunderamount">(l.stock + l.answer1 + l.answer2 + l.answer3 + l.answer4 + l.answer5 + l.answer6 + l.answer7 + l.answer8 + l.answer9 + l.answer10)-l.plansum &lt; 0</isNotNull>
+    
+    order by  trim(to_char(replace(l.lifnr,'S',''),'0000000000')),l.pmatnr,l.matnr
+    </select>
+    <!-- 获取计划列表主键 -->
+    <select id="queryPlanlistPkid" resultClass="commonj.sdo.DataObject">select seq_genl_purchase_plan_list.nextval "pkid" from dual</select>
+    <!-- 查询计算结果 -->
+    <!-- 计划总数取最大  2018-07-23 -->
+    <!-- 物料自由组合计算  2018-07-24 -->
+    <!-- 增加按产品线分组  2018-08-06 -->
+    <select id="queryResult" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	select ttt.relationid "relationid", ttt.pmatnr "pmatnr",bmw.zcpcx "zcpcx",gpph.title "title",gppt.plansum "plansum",ttt.line "line",
+	ttt.answer1 "answer1",ttt.date1  "date1",ttt.answer10 "answers",ttt.carno "carno",
+	case when (ttt.answer10-gppt.plansum&gt;=0 ) then ''
+	else to_char(ttt.answer10-gppt.plansum) end as "underamount2",
+	(ttt.answer2-ttt.answer1) "answer2",ttt.date2  "date2",(ttt.answer3-ttt.answer2) "answer3",ttt.date3  "date3",
+	(ttt.answer4-ttt.answer3) "answer4",ttt.date4  "date4",(ttt.answer5-ttt.answer4) "answer5",ttt.date5  "date5",
+	(ttt.answer6-ttt.answer5) "answer6",ttt.date6  "date6",
+	(ttt.answer7-ttt.answer6) "answer7",ttt.date7  "date7",(ttt.answer8-ttt.answer7) "answer8",ttt.date8  "date8",
+	(ttt.answer9-ttt.answer8) "answer9",ttt.date9  "date9",(ttt.answer10-ttt.answer9) "answer10",ttt.date10  "date10"
+	from(
+	select tt.relationid relationid, tt.pmatnr pmatnr,tt.line line,max(tt.carno) carno,
+	min(tt.answer1) answer1,max(tt.date1) date1,
+	min(tt.answer2) answer2,max(tt.date2) date2,min(tt.answer3) answer3,max(tt.date3) date3,
+	min(tt.answer4) answer4,max(tt.date4) date4,min(tt.answer5) answer5,max(tt.date5) date5,
+	min(tt.answer6) answer6,max(tt.date6) date6,
+	min(tt.answer7) answer7,max(tt.date7) date7,min(tt.answer8) answer8,max(tt.date8) date8,
+	min(tt.answer9) answer9,max(tt.date9) date9,min(tt.answer10) answer10,max(tt.date10) date10
+	from
+	(select (stock+answer1) answer1, (stock+answer1 +answer2) answer2,carno,
+	(stock+answer1 +answer2 +answer3) answer3,(stock+answer1 +answer2 +answer3 +answer4) answer4,
+	(stock+answer1 +answer2 +answer3 +answer4 +answer5) answer5,
+	(stock+answer1 +answer2 +answer3 +answer4 +answer5 +answer6) answer6,
+	(stock+answer1 +answer2 +answer3 +answer4 +answer5 +answer6 +answer7) answer7,
+	(stock+answer1 +answer2 +answer3 +answer4 +answer5 +answer6 +answer7 +answer8) answer8,
+	(stock+answer1 +answer2 +answer3 +answer4 +answer5 +answer6 +answer7 +answer8 +answer9) answer9,
+	(stock+answer1 +answer2 +answer3 +answer4 +answer5 +answer6 +answer7 +answer8 +answer9 +answer10) answer10,
+	date1,date2,	date3,	date4,	date5,	date6,	date7,	date8,	date9,	date10,pmatnr,matnr,relationid,line
+	from
+	(select sum(t.stock) stock,sum(t.answer1) answer1,max(t.carno) carno,
+	sum(t.answer2) answer2,sum(t.answer3) answer3,sum(t.answer4) answer4,sum(t.answer5) answer5,
+	sum(t.answer6) answer6,sum(t.answer7) answer7,sum(t.answer8) answer8,
+	sum(t.answer9) answer9,sum(t.answer10) answer10,t.pmatnr,t.matnr,t.relationid,t.line,
+	max(t.date1) date1,max(t.date2) date2,max(t.date3) date3,max(t.date4) date4,max(t.date5) date5,
+	max(t.date6) date6,max(t.date7) date7,max(t.date8) date8,max(t.date9) date9,max(t.date10) date10
+	 from 
+	 (select pkid,remark,decode(nvl(stand,''),'',matnr,stand) matnr,pmatnr,zcpcx,maktx,lifnr,name1,
+		stock,nvl(carno,'-') carno,underamount,date1,plan1,answer1,date2,plan2,nvl(line,'-') line,
+		answer2,date3,plan3,answer3,date4,plan4,answer4,date5,plan5,
+		answer5,date6,plan6,answer6,date7,plan7,answer7,date8,plan8,
+		answer8,date9,plan9,answer9,date10,plan10,answer10,relationid,plansum
+		from  genl_purchase_plan_list 
+	  where relationid=#relationid#) t
+	  where 1=1 
+	   <isNotNull prepend="and" property="pmatnr">t.pmatnr like '%' ||  #pmatnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="zcpcx">t.zcpcx like '%' ||  #zcpcx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="line">t.line like '%' ||  #line# || '%'</isNotNull>
+	  	  
+	 group by t.relationid,t.line,t.pmatnr,t.matnr)) tt
+	 group by tt.relationid,tt.line,tt.pmatnr) ttt
+	 left join base_material_whole bmw on bmw.matnr = ttt.pmatnr
+     left join genl_purchase_plan_head gpph on gpph.pkid = ttt.relationid
+     left join 
+	 (select relationid, nvl(line,'-') line,pmatnr, max(plansum) plansum  
+	 from genl_purchase_plan_list 
+	 where relationid=#relationid#
+	 <isNotNull prepend="and" property="pmatnr">pmatnr like '%' ||  #pmatnr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="zcpcx">zcpcx like '%' ||  #zcpcx# || '%'</isNotNull>
+        <isNotNull prepend="and" property="line">line like '%' ||  #line# || '%'</isNotNull>
+	 
+	 group by relationid, nvl(line,'-'), pmatnr)gppt on gppt.relationid = ttt.relationid 
+	 and gppt.pmatnr = ttt.pmatnr and gppt.line = ttt.line
+    </select>
+    <!-- 查询操作列表 -->
+    <select id="queryOptlist" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	select t.opt "opt",t.createby "createby", t.createbyname "createbyname",
+		t.createbyname || '(' || t.createby || ')' "fullname",
+		to_char(t.createtime,'yyyy-mm-dd hh24:mi:ss') "createtime",
+		t.content "content",
+		t2.dictname "optname"
+		 from genl_purchase_plan_opt t
+		 left join 
+		 (select dictid, dictname from eos_dict_entry where dicttypeid = 'GENL_PURCHASE_PLAN_OPT') t2
+		 on t.opt=t2.dictid
+		 where 1=1
+		 <isNotNull prepend="and" property="lifnr">trim(to_char(replace(t.createby,'S',''),'0000000000')) = trim(to_char(replace(#lifnr#,'S',''),'0000000000'))</isNotNull>
+        <isNotNull prepend="and" property="relationid">t.relationid = #relationid#</isNotNull>
+        <isNotNull prepend="and" property="opt">t.opt = #opt#</isNotNull>
+    	order by to_number(t.pkid)
+    </select>
+    <!-- 查询未答交供应商列表 -->
+    <select id="queryNoAnswer" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select distinct t.lifnr "lifnr",t.name1 "name1" from genl_purchase_plan_list t
+		where t.relationid=#relationid#
+		and 
+		trim(to_char(replace(t.lifnr,'S',''),'0000000000'))
+		not in
+		(select trim(to_char(replace(tt.createby,'S',''),'0000000000')) 
+		from genl_purchase_plan_opt tt where tt.relationid=#relationid# and tt.opt='11')</select>
+    <!-- 查询采购组列表 -->
+    <select id="queryBuyer" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	select t.pkid "pkid",t.lifnr "lifnr",t.name1 "name1",
+    	t.userid "userid",t.username "username" from genl_purchase_plan_buyer t
+		where 1=1
+    	<isNotNull prepend="and" property="name1">t.name1 like '%' ||  #name1# || '%'</isNotNull>
+        <isNotNull prepend="and" property="username">t.username like '%' ||  #username# || '%'</isNotNull>
+        <isNotNull prepend="and" property="lifnr">t.lifnr = #lifnr#</isNotNull>
+        <isNotNull prepend="and" property="userid">t.userid = #userid#</isNotNull>
+        <isNotNull prepend="and" property="pkid">t.pkid = #pkid#</isNotNull>
+    </select>
+    <!-- 新增采购组列表 -->
+    <insert id="insertBuyer" parameterClass="java.util.HashMap">insert into genl_purchase_plan_buyer (pkid, createby, createbyname, createtime, userid, username, lifnr, name1)
+	select max(to_number(pkid))+1 , #createby#, #createbyname#, #createtime#, #userid#, #username#, #lifnr#, #name1# 
+	from genl_purchase_plan_buyer</insert>
+    <!-- 删除采购组列表 -->
+    <delete id="deleteBuyer" parameterClass="java.util.HashMap">delete from genl_purchase_plan_buyer where pkid=#pkid#</delete>
+    <!-- 修改采购组列表 -->
+    <update id="updateBuyer" parameterClass="java.util.HashMap">update genl_purchase_plan_buyer 
+    set modifyby=#modifyby#, modifybyname=#modifybyname#, modifytime=#modifytime#,
+    userid=#userid#, username=#username#, lifnr=#lifnr#, name1=#name1#
+    where pkid=#pkid#</update>
+    <!-- 合并 -->
+    <update id="updateMerge" parameterClass="java.util.HashMap">update genl_purchase_plan_list 
+    set stand = #stand#
+    where pkid in ($pkids$)</update>
+</sqlMap>

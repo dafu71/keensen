@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.bclib.operatorBclib">
+    <!-- 根据条件查询操作员信息 -->
+    <select id="queryOperators" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcOperator">
+   		select o.userid as "userid",
+   			   o.operatorname as "operatorname",
+   			   o.empid as "empid",
+   			   o.operatorid as "operatorid",
+   			   e.empname as "empname",
+   			   e.empcode as "empcode",
+   			   a.orgnames as "orgnames"
+   		 from T_ac_operator o join t_om_employee e on e.empid = o.empid left join v_om_emporgname a on a.empid = e.empid
+   		where o.status in('0','1','3')
+		<isNotNull prepend="and" property="operatorname">o.operatorname like '%'||#operatorname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="userid">o.userid like '%'||#userid#||'%'</isNotNull>
+        <isNotEqual compareValue="0" prepend="and" property="dataorgid">o.dataorgid = #dataorgid#</isNotEqual>
+        <isNotNull prepend="and" property="empname">e.empname like '%'||#empname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="empcode">e.empcode like '%'||#empcode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="status">e.empcode like '%'||#empcode#||'%'</isNotNull>
+    </select>
+    <!-- 根据条件查询操作员信息 -->
+    <select id="queryOperators2" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.rights.RightsCtrl.VAcOperatorTrs">
+   		select o.userid as "userid",
+   			   o.operatorname as "operatorname",
+   			   o.empid as "empid",
+   			   o.operatorid as "operatorid",
+   			   e.empname as "empname",
+   			   e.empcode as "empcode",
+   			   a.orgnames as "orgnames"
+   		 from v_ac_operator_trs o join v_om_employee_trs e on e.empid = o.empid left join v_om_emporgname_trs a on a.empid = e.empid
+   		where o.status in('0','1','3')
+		<isNotNull prepend="and" property="operatorname">o.operatorname like '%'||#operatorname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="userid">o.userid like '%'||#userid#||'%'</isNotNull>
+        <isNotEqual compareValue="0" prepend="and" property="dataorgid">o.dataorgid = #dataorgid#</isNotEqual>
+        <isNotNull prepend="and" property="empname">e.empname like '%'||#empname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="empcode">e.empcode like '%'||#empcode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="status">e.empcode like '%'||#empcode#||'%'</isNotNull>
+    </select>
+</sqlMap>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.msg.msg" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.msg.msg">
+    <xs:complexType name="TJkMsghis" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.msg.msg.impl.TJkMsghisImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="appointmenttime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="procurationtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="receiverid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="receiver" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="receiverno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dealtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="reno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TJkMsgqueue" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.msg.msg.impl.TJkMsgqueueImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="msgtemplatepkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="appointmenttime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="procurationtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="receiverid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="receiver" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="receiverno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TJkMsgtemplate" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.msg.msg.impl.TJkMsgtemplateImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tpltype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="subtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="templatename" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paramno" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TJkBusitplcfg" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.msg.msg.impl.TJkBusitplcfgImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busicode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tplpkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.workflows.workinfinished.workinfinished">
+    <!--查询已办工单 ，当前工作项状态为完成，12-->
+    <select id="queryFinishedWithPage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	   select v.workitemid    as "workitemid",
+		        v.processinstid as "processinstid",
+		        v.processdefid  as "processdefid",
+		        v.businame      as "processchname",
+		        v.planinfopkid  as "planinfopkid",
+		        v.applyinfopkid as "applyinfopkid",
+		        v.userid        as "userid",
+		        v.worklisttype  as "worklisttype",
+		        v.username      as "username",
+		        v.businame      as "businame",
+		        v.accepttime    as "accepttime",
+		        v.finishtime    as "finishtime",
+		        v.workitemname  as "workitemname"
+		   from v_bs_workitemfinished v,
+		        t_kh_userinfo i
+		where v.userid = i.userid(+)
+		  and v.dataorgid = #dataorgid#
+		  and i.dataorgid(+) = #dataorgid#
+		<isNotNull prepend="and" property="worklisttype">v.worklisttype = #worklisttype#</isNotNull>
+        <isNotNull prepend="and" property="busisort">v.busisort = #busisort#</isNotNull>
+        <isNotNull prepend="and" property="busitype">v.busibusitype = #busitype#</isNotNull>
+        <isNotNull prepend="and" property="assistant">v.assistant = #assistant#</isNotNull>
+        <isNotNull prepend="and" property="processdefid">v.processdefid = #processdefid#</isNotNull>
+        <isNotNull prepend="and" property="activitydefid">v.activitydefid = #activitydefid#</isNotNull>
+        <isNotNull prepend="and" property="planinfopkid">v.planinfopkid like concat(#planinfopkid#,'%')</isNotNull>
+        <isNotNull prepend="and" property="userid">v.userid like concat(#userid#,'%')</isNotNull>
+        <isNotNull prepend="and" property="username">v.username like concat(#username#,'%')</isNotNull>
+        <isNotNull prepend="and" property="ticketcode">v.applyinfopkid like concat(#ticketcode#,'%')</isNotNull>
+        <isNotNull prepend="and" property="fstarttime"><![CDATA[
+				v.finishtime >= #fstarttime#
+			]]></isNotNull>
+        <isNotNull prepend="and" property="fendtime"><![CDATA[
+				v.finishtime <= #fendtime#
+			]]></isNotNull>
+        <isNotNull prepend="and" property="stenocode">i.stenocode = #stenocode#</isNotNull>
+		order by v.accepttime desc
+    </select>
+</sqlMap>

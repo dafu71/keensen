@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.inspect.Inspect" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.inspect.Inspect">
+    <xs:complexType name="GenlInspectWtqd" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectWtqdImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="zjwtid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjwtms" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectLbwh" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectLbwhImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjlb" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectQjbz" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectQjbzImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyxm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jybz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="text" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectCjnote" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectCjnoteImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="cjrecordid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zasnh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zasnp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebeln" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebelp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="txz01" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wltm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="shsl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cjsl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bhgsl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="krksl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jgpd" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zcbz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjlb" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectQjnote" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectQjnoteImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="qjrecordid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zasnh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zasnp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebeln" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebelp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="txz01" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wltm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jgpd" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zcbz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjlb" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectCjdetail" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectCjdetailImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cjrecordid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjwtid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjwtms" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjwtdj" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjwtjs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="text" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectQjdetail" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectQjdetailImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="qjrecordid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyxm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jybz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="qjsjz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjwtjs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="text" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="text2" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectWxlljyNote" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectWxlljyNoteImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="wxllno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="djlx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="djbh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjlb" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dxjlb" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyy" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyjl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyrq" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="jyfs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gyswlbh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jjs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bhgs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="text" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="clyj" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectWglljyNote" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectWglljyNoteImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="wgllno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyff" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pls" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cjs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bhgs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="clyj" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyy" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyrq" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="xxms" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzjg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxtname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzjgname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxsname" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectWxlljyDetail" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectWxlljyDetailImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="wxllno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wtms" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wtbw" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="qxlx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wtsx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzdj" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="qxlxname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wtsxname" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectWglljyDetail" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectWglljyDetailImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="wgllno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="xxms" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxsname" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlInspectSbtkNote" sdoJava:instanceClass="com.zoomlion.hjsrm.inspect.Inspect.impl.GenlInspectSbtkNoteImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="sbtkno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tkdh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyy" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jyrq" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="tksl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzjg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="clyj" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tkyy" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxtname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzjgname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gzxsname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zatwrt" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

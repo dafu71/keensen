@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 工具类相关SQL-->
+<!-- author:陈今伟 -->
+<sqlMap>
+	<!-- 通过表名+字段名来校验某个列值在表里的数据是否唯一 -->
+    <select id="countCnt" parameterClass="java.util.HashMap" resultClass="Integer">
+	    <![CDATA[
+	   	SELECT * FROM $table$ WHERE $column$ = #value# 
+	    ]]>
+    </select>
+</sqlMap>

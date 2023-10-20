@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.tybgNotice.tybgNotice.FlowTybgNoticeItems" table="FLOW_TYBG_NOTICE_ITEMS">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="itemsId" type="string">
+            <column length="50" name="ITEMS_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="itemsName" type="string">
+            <column length="50" name="ITEMS_NAME"/>
+        </property>
+        <property name="itmesCode" type="string">
+            <column length="50" name="ITMES_CODE"/>
+        </property>
+        <property name="actionsPersonName" type="string">
+            <column length="30" name="ACTIONS_PERSON_NAME"/>
+        </property>
+        <property name="actionsPersonId" type="string">
+            <column length="30" name="ACTIONS_PERSON_ID"/>
+        </property>
+        <property name="actionsText" type="string">
+            <column length="200" name="ACTIONS_TEXT"/>
+        </property>
+        <property name="actonsTime" type="date">
+            <column name="ACTONS_TIME"/>
+        </property>
+        <property name="processinstid" type="string">
+            <column length="30" name="PROCESSINSTID"/>
+        </property>
+        <property name="operationId" type="string">
+            <column length="30" name="OPERATION_ID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.pub.tybgNotice.tybgNotice.FlowTybgNotice" table="FLOW_TYBG_NOTICE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="tybgId" type="string">
+            <column length="30" name="TYBG_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="tybgPersonId" type="string">
+            <column length="30" name="TYBG_PERSON_ID"/>
+        </property>
+        <property name="tybgPersonName" type="string">
+            <column length="30" name="TYBG_PERSON_NAME"/>
+        </property>
+        <property name="tybgContact" type="string">
+            <column length="30" name="TYBG_CONTACT"/>
+        </property>
+        <property name="tybgTitle" type="string">
+            <column length="100" name="TYBG_TITLE"/>
+        </property>
+        <property name="tybgText" type="string">
+            <column length="2000" name="TYBG_TEXT"/>
+        </property>
+        <property name="tybgTime" type="timestamp">
+            <column name="TYBG_TIME"/>
+        </property>
+        <property name="executePersonId" type="string">
+            <column length="30" name="EXECUTE_PERSON_ID"/>
+        </property>
+        <property name="executePersonName" type="string">
+            <column length="30" name="EXECUTE_PERSON_NAME"/>
+        </property>
+        <property name="executeText" type="string">
+            <column length="200" name="EXECUTE_TEXT"/>
+        </property>
+        <property name="executeTime" type="date">
+            <column name="EXECUTE_TIME"/>
+        </property>
+        <property name="archivePersonId" type="string">
+            <column length="30" name="ARCHIVE_PERSON_ID"/>
+        </property>
+        <property name="archivePersonName" type="string">
+            <column length="30" name="ARCHIVE_PERSON_NAME"/>
+        </property>
+        <property name="archiveText" type="string">
+            <column length="200" name="ARCHIVE_TEXT"/>
+        </property>
+        <property name="archiveTime" type="date">
+            <column name="ARCHIVE_TIME"/>
+        </property>
+        <property name="processinstid" type="string">
+            <column length="30" name="PROCESSINSTID"/>
+        </property>
+        <property name="processStatus" type="string">
+            <column length="30" name="PROCESS_STATUS"/>
+        </property>
+        <property name="deptId" type="string">
+            <column length="30" name="DEPT_ID"/>
+        </property>
+        <property name="deptName" type="string">
+            <column length="30" name="DEPT_NAME"/>
+        </property>
+    </class>
+</hibernate-mapping>

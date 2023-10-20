@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.base.customer">
+    <select id="queryReturn" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t1.ID             as "id",
+       t1.CREATE_TIME    as "createTime",
+       t1.CREATE_USER_ID as "createUserId",
+       t1.CREATE_NAME    as "create_name",
+       t1.UPDATE_TIME    as "updateTime",
+       t1.UPDATE_USER_ID as "updateUserId",
+       t1.UPDATE_NAME    as "update_name",
+       t1.RESERVE1       as "reserve1",
+       t1.RESERVE2       as "reserve2",
+       t1.RESERVE3       as "reserve3",
+       t1.RESERVE4       as "reserve4",
+       t1.RESERVE5       as "reserve5",
+       t1.ORG_ID         as "orgId",
+       t1.STATUS         as "status",
+       t1.CUSTOMER_CODE  as "customerCode",
+       t1.CUSTOMER_NAME  as "customerName",
+       t1.RELATION_TABLE as "relationTable",
+       t1.RELATION_ID    as "relationId",
+       t1.REMARK         as "remark",
+       t1.AMOUNT         as "amount",
+       t1.BATCH_STR      as "batchStr"
+  from KS_PROD_CUSTOMER_RETURN t1
+  where 1=1
+    <isNotNull prepend="and" property="customerName">t1.CUSTOMER_NAME like '%'||#customerName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="customerCode">t1.CUSTOMER_CODE = #customerCode#</isNotNull>
+        <isNotNull prepend="and" property="batchStr">t1.batch_str = #batchStr#</isNotNull>
+        <isNotNull prepend="and" property="relationTable">t1.RELATION_TABLE = #relationTable#</isNotNull>
+        <isNotNull prepend="and" property="relationId">t1.RELATION_ID = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+	order by t1.ID
+     </select>
+</sqlMap>

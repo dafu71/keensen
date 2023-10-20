@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="xiaobin" displayName="Interfaces" id="com.zoomlion.hjsrm.interfaces.Interfaces">
+    <viewModel author="xiaobin" displayName="IMessageAlert" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.IMessageAlert" id="IMessageAlert">
+        <field dataType="Int" dict="false" id="recid" label="recid">
+            <view type="write"/>
+            <edit name="recid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="userid" label="userid">
+            <view type="write"/>
+            <edit name="userid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="recipient" label="recipient">
+            <view type="write"/>
+            <edit name="recipient" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="alertdate" label="alertdate">
+            <view type="write"/>
+            <edit name="alertdate" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="alerttype" label="alerttype">
+            <view type="write"/>
+            <edit name="alerttype" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="nature" label="nature">
+            <view type="write"/>
+            <edit name="nature" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="subject" label="subject">
+            <view type="write"/>
+            <edit name="subject" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="body" label="body">
+            <view type="write"/>
+            <edit name="body" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="timestamp" label="timestamp">
+            <view type="write"/>
+            <edit name="timestamp" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="orgid">
+            <view type="write"/>
+            <edit name="orgid" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="xiaobin" displayName="IMeterInformation" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.IMeterInformation" id="IMeterInformation">
+        <field dataType="Int" dict="false" id="recid" label="recid">
+            <view type="write"/>
+            <edit name="recid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="userid" label="userid">
+            <view type="write"/>
+            <edit name="userid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="resid" label="resid">
+            <view type="write"/>
+            <edit name="resid" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="infodate" label="infodate">
+            <view type="write"/>
+            <edit name="infodate" type="date"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="currentrate" label="currentrate">
+            <view type="write"/>
+            <edit name="currentrate" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="residualamount" label="residualamount">
+            <view type="write"/>
+            <edit name="residualamount" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="remainvolume" label="remainvolume">
+            <view type="write"/>
+            <edit name="remainvolume" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="remainenergy" label="remainenergy">
+            <view type="write"/>
+            <edit name="remainenergy" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="alarm" label="alarm">
+            <view type="write"/>
+            <edit name="alarm" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="orgid">
+            <view type="write"/>
+            <edit name="orgid" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="xiaobin" displayName="IMeterParam" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.IMeterParam" id="IMeterParam">
+        <field dataType="Int" dict="false" id="recid" label="recid">
+            <view type="write"/>
+            <edit name="recid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="userid" label="userid">
+            <view type="write"/>
+            <edit name="userid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="resid" label="resid">
+            <view type="write"/>
+            <edit name="resid" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="aivalue" label="aivalue">
+            <view type="write"/>
+            <edit name="aivalue" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="sivalue" label="sivalue">
+            <view type="write"/>
+            <edit name="sivalue" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="fsivalue" label="fsivalue">
+            <view type="write"/>
+            <edit name="fsivalue" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="auditid" label="auditid">
+            <view type="write"/>
+            <edit name="auditid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="supplypointid" label="supplypointid">
+            <view type="write"/>
+            <edit name="supplypointid" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="mcumapid" label="mcumapid">
+            <view type="write"/>
+            <edit name="mcumapid" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="timestamp" label="timestamp">
+            <view type="write"/>
+            <edit name="timestamp" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="reccreatedate" label="reccreatedate">
+            <view type="write"/>
+            <edit name="reccreatedate" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="orgid">
+            <view type="write"/>
+            <edit name="orgid" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="xiaobin" displayName="IMeterReadings" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.IMeterReadings" id="IMeterReadings">
+        <field dataType="Int" dict="false" id="recid" label="recid">
+            <view type="write"/>
+            <edit name="recid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="userid" label="userid">
+            <view type="write"/>
+            <edit name="userid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="resid" label="resid">
+            <view type="write"/>
+            <edit name="resid" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="meterindex" label="meterindex">
+            <view type="write"/>
+            <edit name="meterindex" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="readingtypeid" label="readingtypeid">
+            <view type="write"/>
+            <edit name="readingtypeid" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="readingdate" label="readingdate">
+            <view type="write"/>
+            <edit name="readingdate" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="remark">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="orgid">
+            <view type="write"/>
+            <edit name="orgid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isrecycle" label="isrecycle">
+            <view type="write"/>
+            <edit name="isrecycle" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="xiaobin" displayName="IMeterStatus" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.IMeterStatus" id="IMeterStatus">
+        <field dataType="Int" dict="false" id="recid" label="recid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="userid" label="userid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="resid" label="resid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="valve" label="valve">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="islowbattery" label="islowbattery">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="istamper" label="istamper">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="ishitalertindex" label="ishitalertindex">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="ishitcreditindex" label="ishitcreditindex">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="ishitshutoffindex" label="ishitshutoffindex">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="ishitforceshutoffindex" label="ishitforceshutoffindex">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="internalerror" label="internalerror">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="timestamp" label="timestamp">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="reccreatedate" label="reccreatedate">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="orgid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="xiaobin" displayName="IReadRecord" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.IReadRecord" id="IReadRecord">
+        <field dataType="Int" dict="false" id="recid" label="recid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="userid" label="userid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="resid" label="resid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="readrecordid" label="readrecordid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="seqno" label="seqno">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="sentdate" label="sentdate">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="meterindex" label="meterindex">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="logtype" label="logtype">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="timestamp" label="timestamp">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="orgid" label="orgid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="xiaobin" displayName="TJkPrinttemplate" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.TJkPrinttemplate" id="TJkPrinttemplate">
+        <field dataType="String" dict="false" id="pkid" label="pkid">
+            <view type="write"/>
+            <edit name="pkid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="templateid" label="templateid">
+            <view type="write"/>
+            <edit name="templateid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="templatename" label="templatename">
+            <view type="write"/>
+            <edit name="templatename" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="templatefolder" label="templatefolder">
+            <view type="write"/>
+            <edit name="templatefolder" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="printparam" label="printparam">
+            <view type="write"/>
+            <edit name="printparam" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="picturename" label="picturename">
+            <view type="write"/>
+            <edit name="picturename" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="picturewidth" label="picturewidth">
+            <view type="write"/>
+            <edit name="picturewidth" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="pictureheight" label="pictureheight">
+            <view type="write"/>
+            <edit name="pictureheight" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="template" label="template">
+            <view type="write"/>
+            <edit name="template" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="createby">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createtime" label="createtime">
+            <view type="write"/>
+            <edit name="createtime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="modifyby">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="updatetime" label="updatetime">
+            <view type="write"/>
+            <edit name="updatetime" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="dataorgid">
+            <view type="write"/>
+            <edit name="dataorgid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="delflag" label="delflag">
+            <view type="write"/>
+            <edit name="delflag" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="remark">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="xiaobin" displayName="TJkInterfacelog" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.TJkInterfacelog" id="TJkInterfacelog">
+        <field dataType="String" dict="false" entityField="pkid" id="pkid" label="pkid">
+            <view type="write"/>
+            <edit name="pkid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="targetsystem" id="targetsystem" label="targetsystem">
+            <view type="write"/>
+            <edit name="targetsystem" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="source" id="source" label="source">
+            <view type="write"/>
+            <edit name="source" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="classname" id="classname" label="classname">
+            <view type="write"/>
+            <edit name="classname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="methodname" id="methodname" label="methodname">
+            <view type="write"/>
+            <edit name="methodname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="param" id="param" label="param">
+            <view type="write"/>
+            <edit name="param" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="msg" id="msg" label="msg">
+            <view type="write"/>
+            <edit name="msg" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="starttime" id="starttime" label="starttime">
+            <view type="write"/>
+            <edit name="starttime" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="endtime" id="endtime" label="endtime">
+            <view type="write"/>
+            <edit name="endtime" type="date"/>
+        </field>
+        <field dataType="Long" dict="false" entityField="runtime" id="runtime" label="runtime">
+            <view type="write"/>
+            <edit name="runtime" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="webaddress" id="webaddress" label="webaddress">
+            <view type="write"/>
+            <edit name="webaddress" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" entityField="port" id="port" label="port">
+            <view type="write"/>
+            <edit name="port" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ip" id="ip" label="ip">
+            <view type="write"/>
+            <edit name="ip" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="createby" id="createby" label="createby">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="createtime" id="createtime" label="createtime">
+            <view type="write"/>
+            <edit name="createtime" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="backtime" id="backtime" label="backtime">
+            <view type="write"/>
+            <edit name="backtime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifyby" id="modifyby" label="modifyby">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="updatetime" id="updatetime" label="updatetime">
+            <view type="write"/>
+            <edit name="updatetime" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="dataorgid" id="dataorgid" label="dataorgid">
+            <view type="write"/>
+            <edit name="dataorgid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="delflag" id="delflag" label="delflag">
+            <view type="write"/>
+            <edit name="delflag" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="remark" id="remark" label="remark">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="inittype" id="inittype" label="inittype">
+            <view type="write"/>
+            <edit name="inittype" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="busifunc" id="busifunc" label="busifunc">
+            <view type="write"/>
+            <edit name="busifunc" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="肖斌" displayName="TJkTelfac" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.TJkTelfac" id="TJkTelfac">
+        <field dataType="String" dict="false" id="pkid" label="pkid">
+            <view type="write"/>
+            <edit name="pkid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="providerid" label="providerid">
+            <view type="write"/>
+            <edit name="providerid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="link" label="link">
+            <view type="write"/>
+            <edit name="link" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="height" label="height">
+            <view type="write"/>
+            <edit name="height" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="width" label="width">
+            <view type="write"/>
+            <edit name="width" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="state" label="state">
+            <view type="write"/>
+            <edit name="state" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="createby">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createtime" label="createtime">
+            <view type="write"/>
+            <edit name="createtime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="modifyby">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="updatetime" label="updatetime">
+            <view type="write"/>
+            <edit name="updatetime" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="dataorgid">
+            <view type="write"/>
+            <edit name="dataorgid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="remark">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="肖斌" displayName="Changeprice" entityName="com.zoomlion.hjsrm.interfaces.Interfaces.Changeprice" id="Changeprice">
+        <field dataType="String" dict="false" entityField="userid" id="userid" label="userid">
+            <view type="write"/>
+            <edit name="property0" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="supplypointpkid" id="supplypointpkid" label="supplypointpkid">
+            <view type="write"/>
+            <edit name="property1" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="reading" id="reading" label="reading">
+            <view type="write"/>
+            <edit name="property2" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="recordtime" id="recordtime" label="recordtime">
+            <view type="write"/>
+            <edit name="property3" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="dataorgid" id="dataorgid" label="dataorgid">
+            <view type="write"/>
+            <edit name="property4" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

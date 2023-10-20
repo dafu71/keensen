@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.workflows.workinsent.workinsent">
+    <!--查询已派工单 -->
+    <select id="querySentWithPage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	select v.processdefid  as "processdefid",
+		       v.processinstid as "processinstid",
+		       v.workitemid    as "workitemid",
+		       apt.typename as "processchname",
+		       v.workitemname  as "workitemname",
+		       v.userid        as "userid",
+		       V.username      as "username",
+		       v.gasaddress || decode(v.addressbyname, null, '', 
+		       	'（' || v.addressbyname || '）')   as "gasaddress",
+		       v.workstate     as "workstate",
+		       v.dispatchtime  as "dispatchtime",
+		       v.destorgname   as "destorgname",
+		       v.destoptr      as "destoptr",
+		       v.destoptrname  as "destoptrname"
+		  from v_bs_workdistrinfo v
+		  left join t_sq_applytype    apt 
+      		on v.busitype = apt.apptypeid
+      	  left join t_kh_userinfo usr
+      	    on v.userid = usr.userid
+      	   and usr.dataorgid = #dataorgid#
+		  where 1=1 and apt.dataorgid=#dataorgid#
+		  <isNotNull prepend="and" property="busitype">v.busitype = #busitype#</isNotNull>
+        <isNotNull prepend="and" property="processdefid">v.processdefid = #processdefid#</isNotNull>
+        <isNotNull prepend="and" property="activitydefid">v.activitydefid = #activitydefid#</isNotNull>
+        <isNotNull prepend="and" property="userid">v.userid like '%'|| #userid# ||'%'</isNotNull>
+        <isNotNull prepend="and" property="username">v.username like concat(#username#,'%')</isNotNull>
+        <isNotNull prepend="and" property="destorg">v.destorg = #destorg#</isNotNull>
+        <isNotNull prepend="and" property="sourceoptr">v.sourceoptr = #sourceoptr#</isNotNull>
+        <isNotNull prepend="and" property="destoptrname">v.destoptrname like concat('%',concat(#destoptrname#,'%'))</isNotNull>
+        <isNotNull prepend="and" property="stenocode">usr.stenocode = #stenocode#</isNotNull>
+    </select>
+</sqlMap>

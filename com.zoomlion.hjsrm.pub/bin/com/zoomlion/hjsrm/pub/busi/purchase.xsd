@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.busi.purchase" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.busi.purchase">
+    <xs:complexType name="GenlPurchaseApplyData" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.purchase.impl.GenlPurchaseApplyDataImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createbyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifybyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="maktx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="erdat" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="data2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="data3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="data4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="data5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="data1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="menge" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlPurchaseApplyList" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.purchase.impl.GenlPurchaseApplyListImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createbyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifybyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="banfn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bnfpo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="erdat" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="maktx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="menge" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lfdat" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="meins" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lgort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bstyp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="knttp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekgrp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ekorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bednr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="aufnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kostl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="loekz" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="flag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlPurchaseDrawingProvide">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createbyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifybyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="advise" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="maktx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zcpcx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="drawingtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="drawingcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="attribute" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="warehousing" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="downtime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="singman" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="signtime" nillable="true" type="xs:string"/>
+            <xs:element default="N" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

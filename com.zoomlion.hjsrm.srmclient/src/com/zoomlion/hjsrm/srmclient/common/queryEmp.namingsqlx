@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:wangfuqiang -->
+<sqlMap>
+   <!--查询技术通知工单-->
+    <select id="queryEmployee" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+          select t.empname as EMPNAME from om_employee t where 
+      <isNotNull prepend = "and"  property = "personId"> 
+          t.userid = #personId#
+     </isNotNull>    
+	</select>
+</sqlMap>

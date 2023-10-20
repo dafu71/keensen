@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*******************************************************************************
+ * 版权所有： 中联重科环境产业公司 
+ * 描 述： 修改组织机构模型
+ * 创建日期： 2014-9-24
+ * 补丁编号： G3_P_20140915_01_238 
+ * 作 者： 吕俊涛
+ ******************************************************************************/
+// ==============================修改历史===========================
+// 补丁编号                 修改人  日期          区域   备注
+// G3_P_20140915_01_238 吕俊涛   2014-9-24  集团
+//
+// =================================================================
+ -->
+<!-- 公共机构组件相关SQL-->
+<!-- author:陈今伟 -->
+<sqlMap>
+ <!-- 查询本级及以下机构 只查orgtype=1,2,3的数据-->
+    <select id="queryDataClient" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization">
+    	select a.* , b.orgname as "parentorgname" , c.orgname as "busiorgname" from 
+  		(select * from t_om_organization org
+		start with org.orgid=#areaid#
+		connect by  org.parentorgid=prior org.orgid ) a 
+		left join t_om_organization b on a.parentorgid = b.orgid
+		left join t_om_organization c on a.dataorgid = c.orgid
+		where 1=1 
+		<isNotNull prepend="and" property="orgcode">
+			    a.orgcode like '%'||#orgcode#||'%' 
+		</isNotNull>
+		<isNotNull prepend="and" property="orgname">
+			    a.orgname like '%'||#orgname#||'%' 
+		</isNotNull>
+		<isNotNull prepend="and" property="delflag">
+			    a.delflag =#delflag#
+		</isNotNull>
+		<isNotNull prepend="and" property="orgtypes">
+			    a.orgtype = 4 
+		</isNotNull>
+		<isNotNull prepend="and" property="status">
+			    a.status =#status# 
+		</isNotNull>
+    </select>
+    
+     <!-- 查询本级及以下机构 只查orgtype=1,2,3的数据-->
+    <select id="queryDataAreas" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization">
+    	select a.* , b.orgname as "parentorgname" , c.orgname as "busiorgname" from 
+  		(select * from t_om_organization org
+		start with org.orgid=#orgid#
+		connect by  org.parentorgid=prior org.orgid ) a 
+		left join t_om_organization b on a.parentorgid = b.orgid
+		left join t_om_organization c on a.dataorgid = c.orgid
+		where 1=1 
+		<isNotNull prepend="and" property="orgcode">
+			    a.orgcode like '%'||#orgcode#||'%' 
+		</isNotNull>
+		<isNotNull prepend="and" property="orgname">
+			    a.orgname like '%'||#orgname#||'%' 
+		</isNotNull>
+		<isNotNull prepend="and" property="delflag">
+			    a.delflag =#delflag# 
+		</isNotNull>
+		<isNotNull prepend="and" property="orgtypes">
+			    a.orgtype in ($orgtypes$) 
+		</isNotNull>
+		<isNotNull prepend="and" property="status">
+			    a.status =#status# 
+		</isNotNull>
+    </select>
+    
+     <!-- 查询本级及以下机构 只查orgtype=1,2,3的数据-->
+    <select id="queryDataAreas2" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs">
+    	select a.* , b.orgname as "parentorgname" , c.orgname as "busiorgname" from 
+  		(select * from v_om_organization_trs org
+		start with org.orgid=#orgid#
+		connect by  org.parentorgid=prior org.orgid ) a 
+		left join v_om_organization_trs b on a.parentorgid = b.orgid
+		left join v_om_organization_trs c on a.dataorgid = c.orgid
+		where 1=1 
+		<isNotNull prepend="and" property="orgcode">
+			    a.orgcode like '%'||#orgcode#||'%' 
+		</isNotNull>
+		<isNotNull prepend="and" property="orgname">
+			    a.orgname like '%'||#orgname#||'%' 
+		</isNotNull>
+		<isNotNull prepend="and" property="delflag">
+			    a.delflag =#delflag# 
+		</isNotNull>
+		<isNotNull prepend="and" property="orgtypes">
+			    a.orgtype in ($orgtypes$) 
+		</isNotNull>
+		<isNotNull prepend="and" property="status">
+			    a.status =#status# 
+		</isNotNull>
+    </select>
+
+<!-- 按条件查询机构 -->
+ <select id="queryOrganizations" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization">
+    select o.orgid,  
+		o.parentorgid, 
+		o.dataorgid, 
+		o.orgcode, 
+		o.orgname, 
+		o.orglevel, 
+		o.orgdegree, 
+		o.orgseq, 
+		o.orgtype, 
+		o.channeltype,
+		o.orgaddr, 
+		o.zipcode, 
+		o.manaposition,
+		o.managerid, 
+		o.orgmanager, 
+		o.linkman, 
+		o.linktel, 
+		o.email, 
+		o.weburl, 
+		to_char(o.startdate,'yyyy-mm-dd hh:mm:ss') startdate,
+		to_char(o.enddate,'yyyy-mm-dd hh:mm:ss') enddate,
+		o.status, 
+		o.area, 
+		o.sortno, 
+		o.isleaf, 
+		o.subcount, 
+		o.remark, 
+		o.createby, 
+		o.modifyby, 
+		o.updatetime, 
+		o.delflag 
+		  from t_om_organization o 
+		 where o.delflag = 'n' 
+		 <dynamic prepend="">
+			 <isNotNull prepend="and" property="dataorgid">
+			    o.dataorgid =#dataorgid# 
+			 </isNotNull>
+			 <isNotNull prepend="and" property="status">
+			  o.status =#status# 
+			 </isNotNull>
+			 <isNotNull prepend="and" property="orgtype">
+			 o.orgtype =#orgtype# 
+			 </isNotNull >
+			  <isNotNull prepend="and" property="parentorgid">
+			  o.parentorgid =#parentorgid#
+			 </isNotNull>
+			  <isNotNull prepend="and" property="orgname">
+			   o.orgname like CONCAT('%',CONCAT(#orgname#,'%')) 
+			 </isNotNull>
+			  <isNotNull prepend="and" property="orgseq">
+			  o.orgseq  like CONCAT(#orgseq#,'%') 
+			 </isNotNull>
+			  <isNotNull prepend="and" property="orgcode">
+			  o.orgcode like CONCAT('%',CONCAT(#orgcode#,'%'))
+			 </isNotNull>
+		 </dynamic>
+</select>
+
+<!-- 按条件查询机构 -->
+ <select id="queryOrganizations2" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs">
+    select o.orgid,  
+		o.parentorgid, 
+		o.dataorgid, 
+		o.orgcode, 
+		o.orgname, 
+		o.orglevel, 
+		o.orgdegree, 
+		o.orgseq, 
+		o.orgtype, 
+		o.channeltype,
+		o.orgaddr, 
+		o.zipcode, 
+		o.manaposition,
+		o.managerid, 
+		o.orgmanager, 
+		o.linkman, 
+		o.linktel, 
+		o.email, 
+		o.weburl, 
+		to_char(o.startdate,'yyyy-mm-dd hh:mm:ss') startdate,
+		to_char(o.enddate,'yyyy-mm-dd hh:mm:ss') enddate,
+		o.status, 
+		o.area, 
+		o.sortno, 
+		o.isleaf, 
+		o.subcount, 
+		o.remark, 
+		o.createby, 
+		o.modifyby, 
+		o.updatetime, 
+		o.delflag 
+		  from v_om_organization_trs o 
+		 where o.delflag = 'n' 
+		 <dynamic prepend="">
+			 <isNotNull prepend="and" property="dataorgid">
+			    o.dataorgid =#dataorgid# 
+			 </isNotNull>
+			 <isNotNull prepend="and" property="status">
+			  o.status =#status# 
+			 </isNotNull>
+			 <isNotNull prepend="and" property="orgtype">
+			 o.orgtype =#orgtype# 
+			 </isNotNull >
+			  <isNotNull prepend="and" property="parentorgid">
+			  o.parentorgid =#parentorgid#
+			 </isNotNull>
+			  <isNotNull prepend="and" property="orgname">
+			   o.orgname like CONCAT('%',CONCAT(#orgname#,'%')) 
+			 </isNotNull>
+			  <isNotNull prepend="and" property="orgseq">
+			  o.orgseq  like CONCAT(#orgseq#,'%') 
+			 </isNotNull>
+			  <isNotNull prepend="and" property="orgcode">
+			  o.orgcode like CONCAT('%',CONCAT(#orgcode#,'%'))
+			 </isNotNull>
+		 </dynamic>
+</select>
+
+<!-- 依据查询对象查询机构(按TOmOrganization实体查询) -->
+<select id="queryDataCompanys" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization">
+    	select * from 
+  		(select * from t_om_organization org
+		start with org.orgid=#orgid#
+		connect by  org.parentorgid=prior org.orgid ) a
+		where a.orgtype in (0,1) and a.delflag = 'n' and a.status = 'running'
+</select>
+
+<!-- 依据查询对象查询机构(按VOmOrganizationTrs实体查询) -->
+<select id="queryDataCompanys2" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs">
+    	select * from 
+  		(select * from v_om_organization_trs org
+		start with org.orgid=#orgid#
+		connect by  org.parentorgid=prior org.orgid ) a
+		where a.orgtype in (0,1) and a.delflag = 'n' and a.status = 'running'
+</select>
+
+<!-- 依据查询对象查询机构(按VOmOrganizationTrs实体查询) -->
+<select id="queryDataCompanysAdd" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs">
+    	select * from 
+  		(select * from v_om_organization_trs org
+		start with org.orgid=#orgid#
+		connect by  org.parentorgid=prior org.orgid ) a
+		where a.orgtype in (0,1) and a.delflag = 'n' and a.status = 'running'
+		and a.dataorgid &lt;&gt; 81
+</select>
+
+<!-- 依据查询对象查询机构(按TOmOrganization实体查询) -->
+<select id="queryAllCompanys" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization">
+    	select org.* from t_om_organization org where org.orgtype in (0,1) and org.delflag = 'n' and org.status = 'running'
+</select>
+
+
+<!-- 依据查询对象查询机构(按VOmOrganizationTrs实体查询) -->
+<select id="queryAllCompanys2" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs">
+    	select org.* from v_om_organization_trs org where org.orgtype in (0,1) and org.delflag = 'n' and org.status = 'running'
+</select>
+
+<!-- 依据查询对象查询机构(按VOmOrganizationTrs实体查询) -->
+<select id="queryAllCompanysAdd" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs">
+    	select org.* from v_om_organization_trs org where org.orgtype in (0,1) and org.delflag = 'n' and org.status = 'running'
+    	and org.dataorgid &lt;&gt; 81
+</select>
+
+<!-- 依据查询对象查询机构(按TOmOrganization实体查询) -->
+<select id="querySubCompanys" parameterClass="java.util.HashMap" resultClass="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization">    	
+        select org.* from t_om_organization org where org.orgtype='1' and org.delflag = 'n' and org.status = 'running'
+</select>
+
+</sqlMap>

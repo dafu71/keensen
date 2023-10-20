@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sca="http://www.springframework.org/schema/sca" xmlns:tx="http://www.springframework.org/schema/tx" xsi:schemaLocation="  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/sca http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd">
+    <!--同步SAP 公司、工厂、采购组织、采购组数据-->
+    <bean class="com.zoomlion.hjsrm.sapinterface.SrmBaseData.SapSrmBaseDataDao" id="sapSrmBaseDataDao"/>
+    <bean class="com.zoomlion.hjsrm.sapinterface.SrmBaseData.SapSrmBaseDataBean" id="sapSrmBaseDataBean">
+        <property name="sapSrmBaseDataDao" ref="sapSrmBaseDataDao"/>
+    </bean>
+    
+    <!--同步SAP物料主数据、工厂物料主数据-->
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapSrmMaterial.SapSrmMaterialDao" id="sapSrmMaterialDao"/>
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapSrmMaterial.SapSrmMaterialBean" id="sapSrmMaterialBean">
+        <property name="sapSrmMaterialDao" ref="sapSrmMaterialDao"/>
+    </bean>
+    
+    <!--同步供应商主数据（一般、购买组织、公司代码）-->
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapSrmSupply.SapSrmSupplyDao" id="sapSrmSupplyDao"/>
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapSrmSupply.SapSrmSupplyBean" id="sapSrmSupplyBean">
+        <property name="sapSrmSupplyDao" ref="sapSrmSupplyDao"/>
+    </bean>
+    
+    <!--即时同步SAP采购订单资料（采购订单抬头、行项目、账户设置信息）-->
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapSrmPurchase.SapSrmPurchaseDao" id="sapSrmPurchaseDao"/>
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapSrmPurchase.SapSrmPurchaseBean" id="sapSrmPurchaseBean">
+        <property name="sapSrmPurchaseDao" ref="sapSrmPurchaseDao"/>
+    </bean>
+    
+    <!--仓库管理作业-->
+    <bean class="com.zoomlion.hjsrm.sapinterface.SrmWarehouse.SapSrmWarehouseDao" id="sapSrmWarehouseDao"/>
+    <bean class="com.zoomlion.hjsrm.sapinterface.SrmWarehouse.SapSrmWarehouseBean" id="sapSrmWarehouseBean">
+        <property name="sapSrmWarehouseDao" ref="sapSrmWarehouseDao"/>
+    </bean>
+    
+    <!--同步SAP合同资料（合同抬头、行项目、价格等信息）-->
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapSrmContract.SapSrmContractDao" id="sapSrmContractDao"/>
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapSrmContract.SapSrmContractBean" id="sapSrmContractBean">
+        <property name="sapSrmContractDao" ref="sapSrmContractDao"/>
+    </bean>
+    
+    <!--同步SAP结算数据（确认结算：结算抬头，结算行项目；撤销确认结算）-->
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapJiesuan.SapJiesuanDao" id="sapJiesuanDao"/>
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapJiesuan.SapJiesuanBean" id="sapJiesuanBean">
+        <property name="sapJiesuanDao" ref="sapJiesuanDao"/>
+    </bean>
+    
+     <!--即时查询物料库存-->
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapMaterialStock.SapMaterialStockDao" id="sapMaterialStockDao"/>
+    <bean class="com.zoomlion.hjsrm.sapinterface.SapMaterialStock.SapMaterialStockBean" id="sapMaterialStockBean">
+    	<property name="sapMaterialStockDao" ref="sapMaterialStockDao"/>
+    </bean>
+    
+</beans>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eos:compositeDiagram xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:eos="http://www.primeton.com/component/core/6.0" name="testwsdlComposite" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" author="dafu" createdDate="2018-08-08 14:01:40" displayName="testwsdlComposite">
+  <nodes xsi:type="eos:PromotedService" id="node0" name="testwsdlService" displayName="testwsdlService">
+    <location x="50" y="50"/>
+    <size height="31" width="80"/>
+    <eos:binding xsi:type="eos:WebServiceBinding"/>
+  </nodes>
+  <nodes xsi:type="eos:BizComponent" id="Component0" name="testwsdlComponent" nodeType="table" author="dafu" createdDate="2018-08-08 14:01:40" displayName="testwsdlComponent">
+    <location x="200" y="100"/>
+    <size height="80" width="140"/>
+    <eos:implementation.eos.biz name="com.zoomlion.hjsrm.demo.testwsdl"/>
+    <eos:service displayName="testwsdlService" name="testwsdlService">
+      <eos:interface.wsdl path="com/zoomlion/hjsrm/demo/testwsdl.wsdl#testwsdlService"/>
+    </eos:service>
+  </nodes>
+  <eos:promote source="#//@compositeDiagram/@nodes.1/@service.0" target="#node0"/>
+</eos:compositeDiagram>

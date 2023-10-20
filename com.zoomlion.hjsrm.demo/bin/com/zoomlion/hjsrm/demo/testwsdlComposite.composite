@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="com.zoomlion.hjsrm.demo.testwsdlComposite" targetNamespace="http://www.osoa.org/xmlns/sca/1.0">
+    <service name="testwsdlService" promote="com.zoomlion.hjsrm.demo.testwsdlComposite.testwsdlComponent/testwsdlService">
+        <interface.wsdl interface="http://www.primeton.com/testwsdlService#wsdl.interface(testwsdlService)"/>
+        <binding.ws/>
+    </service>
+    <component name="com.zoomlion.hjsrm.demo.testwsdlComposite.testwsdlComponent">
+        <implementation.eos.biz name="com.zoomlion.hjsrm.demo.testwsdl"/>
+        <service name="testwsdlService">
+            <interface.wsdl interface="http://www.primeton.com/testwsdlService#wsdl.interface(testwsdlService)"/>
+        </service>
+    </component>
+</composite>

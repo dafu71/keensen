@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="bingyu" displayName="Rights" id="com.zoomlion.hjsrm.data.rights.RightsCtrl">
+    <viewModel author="Administrator" displayName="TAcOperconfig" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcOperconfig" id="TAcOperconfig">
+        <field dataType="Long" dict="false" id="operatorid" label="operatorid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="configname" label="configname">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="configvalue" label="configvalue">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="configtype" label="数据字典中  ABF_CONFIGTYPE类型">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isvalid" label="isvalid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="分公司或者总公司">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="Administrator" displayName="TAcOperfunc" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcOperfunc" id="TAcOperfunc">
+        <field dataType="Long" dict="false" id="operatorid" label="operatorid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="resid" label="无业务意义主键。">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="authtype" label="1：特别开通，2：特别禁止">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="startdate" label="startdate">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="enddate" label="enddate">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="分公司或者总公司">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="Administrator" displayName="TAcPartyrole" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcPartyrole" id="TAcPartyrole">
+        <field dataType="Int" dict="false" entityField="roleid" id="roleid" label="roleid">
+            <view type="write"/>
+            <edit name="roleid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="partytype" id="partytype" label="取值范围业务字典 ABF_PARTYTYPE&#10;机构、工作组、岗位、职务">
+            <view type="write"/>
+            <edit name="partytype" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="partyid" id="partyid" label="partyid">
+            <view type="write"/>
+            <edit name="partyid" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="分公司或者总公司">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="Administrator" displayName="TAcOpershortcut" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcOpershortcut" id="TAcOpershortcut">
+        <field dataType="Long" dict="false" id="operatorid" label="operatorid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="resid" label="resid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="aliasname" label="操作员自定义的别名">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="orderno" label="orderno">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="imagepath" label="imagepath">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="openmentype" label="数据字典：AC_MENUTYPE&#10;1	每次打开新tab且不重复打开相同的tab&#10;2	只打开同一个tab&#10;3	新窗口打开&#10;4	每次打开新tab">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="分公司或者总公司">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="Administrator" displayName="TAcOperatorrole" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcOperatorrole" id="TAcOperatorrole">
+        <field dataType="Long" dict="false" id="operatorid" label="operatorid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="roleid" label="roleid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="分公司或者总公司">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="heqj" displayName="TAcOperres" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcOperres" id="TAcOperres">
+        <field dataType="Long" dict="false" id="operatorid" label="operatorid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="resid" label="无业务意义主键。">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="authtype" label="1：特别开通，2：特别禁止">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="startdate" label="startdate">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="enddate" label="enddate">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="分公司或者总公司">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="heqj" displayName="TAcRoleres" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcRoleres" id="TAcRoleres">
+        <field dataType="Int" dict="false" id="roleid" label="roleid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="resid" label="resid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="分公司或者总公司">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="heqj" displayName="TAcAppresauth" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcAppresauth" id="TAcAppresauth">
+        <field dataType="Int" dict="false" entityField="orgid" id="orgid" label="orgid">
+            <view type="write"/>
+            <edit name="orgid" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="resid" id="resid" label="resid">
+            <view type="write"/>
+            <edit name="resid" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="dataorgid" id="dataorgid" label="dataorgid">
+            <view type="write"/>
+            <edit name="dataorgid" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="rye" displayName="TAcOptorgcfg" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcOptorgcfg" id="TAcOptorgcfg">
+        <field dataType="Long" dict="false" id="orgid" label="orgid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="operatorid" label="operatorid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="querytype" label="querytype">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgname" label="orgname">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="Administrator" displayName="TAcRole" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcRole" id="TAcRole">
+        <field dataType="Int" dict="false" id="roleid" label="roleid">
+            <view type="write"/>
+            <edit name="roleid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="rolecode" label="eosadmin&#10;appadmin： 应用管理员">
+            <view type="write"/>
+            <edit name="rolecode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="rolename" label="rolename">
+            <view type="write"/>
+            <edit name="rolename" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="roletype" label="全局型角色、应用级角色&#10;&#10;1：系统级&#10;0：应用级">
+            <view type="write"/>
+            <edit name="roletype" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="roledesc" label="roledesc">
+            <view type="write"/>
+            <edit name="roledesc" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="创建时的userid">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="最后一次修改者的userid">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="updatetime" label="最后一次修改该记录的时间">
+            <view type="write"/>
+            <edit name="updatetime" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="分公司或者总公司">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="orgid" label="orgid">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="rye" displayName="TAcResource" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcResource" id="TAcResource">
+        <field dataType="Int" dict="false" entityField="resid" id="resid" label="resid">
+            <view type="write"/>
+            <edit name="resid" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="parentresid" id="parentresid" label="parentresid">
+            <view type="write"/>
+            <edit name="parentresid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="rescode" id="rescode" label="rescode">
+            <view type="write"/>
+            <edit name="rescode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="restype" id="restype" label="restype">
+            <view type="write"/>
+            <edit name="restype" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="respath" id="respath" label="respath">
+            <view type="write"/>
+            <edit name="respath" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraminfo" id="paraminfo" label="paraminfo">
+            <view type="write"/>
+            <edit name="paraminfo" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="resname" id="resname" label="resname">
+            <view type="write"/>
+            <edit name="resname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="reslabel" id="reslabel" label="reslabel">
+            <view type="write"/>
+            <edit name="reslabel" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="compackname" id="compackname" label="compackname">
+            <view type="write"/>
+            <edit name="compackname" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" entityField="reslevel" id="reslevel" label="reslevel">
+            <view type="write"/>
+            <edit name="reslevel" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="resseq" id="resseq" label="resseq">
+            <view type="write"/>
+            <edit name="resseq" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="isleaf" id="isleaf" label="isleaf">
+            <view type="write"/>
+            <edit name="isleaf" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="subcount" id="subcount" label="subcount">
+            <view type="write"/>
+            <edit name="subcount" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="createby" id="createby" label="createby">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifyby" id="modifyby" label="modifyby">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="updatetime" id="updatetime" label="updatetime">
+            <view type="write"/>
+            <edit name="updatetime" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="dataorgid" id="dataorgid" label="dataorgid">
+            <view type="write"/>
+            <edit name="dataorgid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ischeck" id="ischeck" label="ischeck">
+            <view type="write"/>
+            <edit name="ischeck" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="resdesc" id="resdesc" label="resdesc">
+            <view type="write"/>
+            <edit name="resdesc" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="uientry" id="uientry" label="uientry">
+            <view type="write"/>
+            <edit name="uientry" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="rootid" id="rootid" label="rootid">
+            <view type="write"/>
+            <edit name="rootid" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="displayorder" id="displayorder" label="displayorder">
+            <view type="write"/>
+            <edit name="displayorder" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="imagepath" id="imagepath" label="imagepath">
+            <view type="write"/>
+            <edit name="imagepath" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="expandpath" id="expandpath" label="expandpath">
+            <view type="write"/>
+            <edit name="expandpath" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="openmode" id="openmode" label="openmode">
+            <view type="write"/>
+            <edit name="openmode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="isbizmap" id="isbizmap" label="isbizmap">
+            <view type="write"/>
+            <edit name="isbizmap" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="Administrator" displayName="TAcOperator" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.TAcOperator" id="TAcOperator">
+        <field dataType="Long" dict="false" id="operatorid" label="operatorid">
+            <view type="write"/>
+            <edit name="operatorid" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="empid" label="empid">
+            <view type="write"/>
+            <edit name="empid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="userid" label="userid">
+            <view type="write"/>
+            <edit name="userid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="password" label="password">
+            <view type="write"/>
+            <edit name="password" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="invaldate" label="invaldate">
+            <view type="write"/>
+            <edit name="invaldate" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="operatorname" label="operatorname">
+            <view type="write"/>
+            <edit name="operatorname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="authmode" label="本地密码认证、LDAP认证、等">
+            <view type="write"/>
+            <edit name="authmode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="status" label=" 操作员状态STATUS 0:正常，1:挂起，2:注销，3:锁定">
+            <view type="write"/>
+            <edit name="status" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="unlocktime" label="当状态为锁定时，解锁的时间">
+            <view type="write"/>
+            <edit name="unlocktime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="menutype" label="用户登录后菜单的风格">
+            <view type="write"/>
+            <edit name="menutype" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="lastlogin" label="lastlogin">
+            <view type="write"/>
+            <edit name="lastlogin" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="errcount" label="errcount">
+            <view type="write"/>
+            <edit name="errcount" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="clientnum" label="clientnum">
+            <view type="write"/>
+            <edit name="clientnum" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="startdate" label="startdate">
+            <view type="write"/>
+            <edit name="startdate" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="enddate" label="enddate">
+            <view type="write"/>
+            <edit name="enddate" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="validtime" label="定义一个规则表达式，表示允许操作的有效时间范围">
+            <view type="write"/>
+            <edit name="validtime" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="maccode" label="允许设置多个MAC">
+            <view type="write"/>
+            <edit name="maccode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ipaddress" label="允许设置多个IP地址">
+            <view type="write"/>
+            <edit name="ipaddress" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="email" label="邮箱地址">
+            <view type="write"/>
+            <edit name="email" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createby" label="创建时的userid">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="modifyby" label="最后一次修改者的userid">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="updatetime" label="最后一次修改该记录的时间">
+            <view type="write"/>
+            <edit name="updatetime" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="dataorgid" label="分公司或者总公司">
+            <view type="write"/>
+            <edit name="dataorgid" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="VAcOperatorTrs" entityName="com.zoomlion.hjsrm.data.rights.RightsCtrl.VAcOperatorTrs" id="VAcOperatorTrs">
+        <field dataType="Long" dict="false" entityField="operatorid" id="operatorid" label="operatorid">
+            <view type="write"/>
+            <edit name="operatorid" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="empid" id="empid" label="empid">
+            <view type="write"/>
+            <edit name="empid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="userid" id="userid" label="userid">
+            <view type="write"/>
+            <edit name="userid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="password" id="password" label="password">
+            <view type="write"/>
+            <edit name="password" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="invaldate" id="invaldate" label="invaldate">
+            <view type="write"/>
+            <edit name="invaldate" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="operatorname" id="operatorname" label="operatorname">
+            <view type="write"/>
+            <edit name="operatorname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="authmode" id="authmode" label="authmode">
+            <view type="write"/>
+            <edit name="authmode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="status" id="status" label="status">
+            <view type="write"/>
+            <edit name="status" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="unlocktime" id="unlocktime" label="unlocktime">
+            <view type="write"/>
+            <edit name="unlocktime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="menutype" id="menutype" label="menutype">
+            <view type="write"/>
+            <edit name="menutype" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="errcount" id="errcount" label="errcount">
+            <view type="write"/>
+            <edit name="errcount" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="clientnum" id="clientnum" label="clientnum">
+            <view type="write"/>
+            <edit name="clientnum" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="startdate" id="startdate" label="startdate">
+            <view type="write"/>
+            <edit name="startdate" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="enddate" id="enddate" label="enddate">
+            <view type="write"/>
+            <edit name="enddate" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="validtime" id="validtime" label="validtime">
+            <view type="write"/>
+            <edit name="validtime" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="maccode" id="maccode" label="maccode">
+            <view type="write"/>
+            <edit name="maccode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="ipaddress" id="ipaddress" label="ipaddress">
+            <view type="write"/>
+            <edit name="ipaddress" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="email" id="email" label="email">
+            <view type="write"/>
+            <edit name="email" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="createby" id="createby" label="createby">
+            <view type="write"/>
+            <edit name="createby" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="modifyby" id="modifyby" label="modifyby">
+            <view type="write"/>
+            <edit name="modifyby" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="updatetime" id="updatetime" label="updatetime">
+            <view type="write"/>
+            <edit name="updatetime" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="dataorgid" id="dataorgid" label="dataorgid">
+            <view type="write"/>
+            <edit name="dataorgid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="empcode" id="empcode" label="empcode">
+            <view type="write"/>
+            <edit name="empcode" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

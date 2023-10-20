@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="loadRoleAuthorizedRss.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" collapsed="false" nodeType="note" type="note" content="加载已授权的资源&#xD;&#xA;1、roleids为当前操作员所拥有的角色ID字符串&#xD;&#xA;2、roleid为需要加载资源的角色ID&#xD;&#xA;3、appid为角色所属应用ID&#xD;&#xA;4、加载资源类型限制加载的资源类型、为空则为全部" title="方曦&#x9;13-12-16 下午4:12">
+    <location x="57" y="150"/>
+    <size height="121" width="331"/>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokeSpring2" name="加载已授权的资源" displayName="loadRoleAuthorizedRs" collapsed="false" nodeType="common" type="invoke" index="0" invokeType="invoke_spring" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="link3" isDefault="true" type="transition">
+      <sourceNode>invokeSpring2</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="208" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>invokeSpring2label</nodeLabel>
+    <process:spring methodType="beanID" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.zoomlion.hjsrm.frame.rights.role.RoleBean.loadRoleAuthorizedRs</process:partner>
+      <process:instance instanceName="roleBean"/>
+    </process:spring>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="roleids" type="query" value="int[]" valueType="Java" pattern="reference">roleids</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="commonj.sdo.DataObject[]" valueType="Java">data</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokeSpring2label" name="label" nodeType="label">
+    <location x="174" y="96"/>
+    <figSize height="17" width="97"/>
+    <node>invokeSpring2</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end1" name="结束" displayName="结束" collapsed="false" nodeType="common" type="end">
+    <targetConnections>link1</targetConnections>
+    <location x="356" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="commonj.sdo.DataObject[]" name="data" type="query" valueType="Java">data</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="358" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" collapsed="false" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="link2" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>invokeSpring2</targetNode>
+    </sourceConnections>
+    <location x="60" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <location x="62" y="96"/>
+    <figSize height="17" width="25"/>
+    <node>start0</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="方曦" createTime="2013-12-16 14:27:09" date="2013-12-16Z" description="" name="loadRoleAuthorizedRss" version="6.3"/>
+  <process:variables/>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="true" name="roleids" primitiveType="Int"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output anyType="commonj.sdo.DataObject" description="" isArray="true" name="data"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

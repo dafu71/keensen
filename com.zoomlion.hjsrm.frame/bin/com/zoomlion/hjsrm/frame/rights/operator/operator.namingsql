@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.hjsrm.frame.rights.operator.operator">
+    <!-- 删除当前操作员的所有特权信息 -->
+    <delete id="deleteEmpOperres" parameterClass="java.util.HashMap">delete from t_ac_operres t where t.operatorid = #operatorid#</delete>
+    <!-- 依据操作员ID查询人员特殊权限 -->
+    <select id="queryEmpOperresByOPerid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select * from (
+	            select
+	            (case  when a.parentresid is null then 0 else a.parentresid end) as "parentresid",
+	            a.resid as "resid",
+	            a.rescode as "rescode",
+	            a.restype as "restype",
+	            a.resname as "resname",
+	            a.reslabel as "reslabel",
+	            a.resseq as "resseq",
+	            a.isleaf as "isleaf",
+	            b.authtype as "authtype",
+	            to_char(b.startdate,'yyyy/mm/dd') as "startdate",
+	            to_char(b.enddate,'yyyy/mm/dd') as "enddate"
+	            from t_ac_resource a 
+	            join t_ac_operres b on b.resid = a.resid and b.operatorid = #operatorid#)
+				where  "restype" = 'menu' or  "restype" = 'app'</select>
+    <!-- 查询不在某个角色下，在某个机构下的操作员 -->
+    <select id="queryOperatorNotInRole" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    		select o.operatorid as "operatorid", o.userid as "userid", o.operatorname as "operatorname", nvl(org.orgname,'系统级')  as "orgname" 
+    	  	from t_ac_operator o  
+    	    left join t_om_organization org on org.orgid=o.dataorgid
+    	    where o.status = '0' 
+    	    <isNotNull prepend="and" property="userid">o.userid = #userid#</isNotNull>
+        <isNotNull prepend="and" property="dataorgid">o.dataorgid in (select org.orgid from t_om_organization org
+					start with org.orgid=#dataorgid#
+					connect by  org.parentorgid=prior org.orgid )</isNotNull>
+        <isNotNull prepend="and" property="operatorname">o.operatorname like CONCAT('%',CONCAT(#operatorname#,'%'))</isNotNull>
+        <isNotNull prepend="and" property="roleid">not exists (select 1  from t_ac_operatorrole opr  
+			    	     where opr.roleid =#roleid#  
+			    	     and opr.operatorid = o.operatorid)</isNotNull>
+    </select>
+    <!-- 查询不在某个角色下，在某个机构下的操作员 -->
+    <select id="queryOperatorNotInRole2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    		select o.operatorid as "operatorid", o.userid as "userid", o.operatorname as "operatorname", nvl(org.orgname,'系统级')  as "orgname" ,
+    		 a.orgnames as "orgnames"
+    	  	from v_ac_operator_trs o  
+    	    left join v_om_organization_trs org on org.orgid=o.dataorgid
+    	    left join v_om_emporgname_trs a
+		            on a.empid = o.empid
+    	    where o.status = '0' 
+    	    <isNotNull prepend="and" property="userid">o.userid = #userid#</isNotNull>
+        <isNotNull prepend="and" property="dataorgid">o.dataorgid in (select org.orgid from v_om_organization_trs org
+					start with org.orgid=#dataorgid#
+					connect by  org.parentorgid=prior org.orgid )</isNotNull>
+        <isNotNull prepend="and" property="operatorname">o.operatorname like CONCAT('%',CONCAT(#operatorname#,'%'))</isNotNull>
+        <isNotNull prepend="and" property="roleid">not exists (select 1  from t_ac_operatorrole opr  
+			    	     where opr.roleid =#roleid#  
+			    	     and opr.operatorid = o.operatorid)</isNotNull>
+        <isNotNull prepend="and" property="orgnames">a.orgnames like CONCAT('%',CONCAT(#orgnames#,'%'))</isNotNull>
+    </select>
+    <!-- 查询人员及操作员信息 -->
+    <select id="queryOperators" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	select *
+		  from (select a.orgnames as "orgnames",
+		               orgname as "dataorgname",
+		               a.orgids as "orgids",
+		               a.orgseqs as "orgseqs",
+		               op.empid as "empid",
+		               to_char(op.invaldate, 'yyyy-mm-dd hh:mm:ss') as "invaldate",
+		               op.operatorid as "operatorid",
+		               op.userid as "userid",
+		               op.clientnum as "clientnum",
+		               op.operatorname as "operatorname",
+		               op.authmode as "authmode",
+		               op.status as "status",
+		               op.menutype as "menutype",
+		               ee.empcode as "empcode",
+		               ee.empname as "empname",
+		               ee.empstatus as "empstatus",
+		               to_char(op.startdate, 'yyyy-mm-dd hh:mm:ss') as "startdate",
+		               to_char(op.enddate, 'yyyy-mm-dd hh:mm:ss') as "enddate",
+		               to_char(op.lastlogin, 'yyyy-mm-dd hh:mm:ss') as "lastlogin",
+		               op.email as "operemail",
+		               op.dataorgid as "dataorgid"
+		          from t_ac_operator op
+		          left join t_om_employee ee
+		            on op.empid = ee.empid
+		          left join t_om_organization org
+		            on op.dataorgid = org.orgid
+		          left join v_om_emporgname a
+		            on a.empid = op.empid) a
+		 where a."userid" != 'sysadmin'
+    	<isNotNull prepend="and" property="operatorname">a."operatorname" like '%'||#operatorname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="userid">a."userid" like '%'||#userid#||'%'</isNotNull>
+        <isNotNull prepend="and" property="status">a."status" =#status#</isNotNull>
+        <isNotNull prepend="and" property="dataorgid">a."dataorgid" = #dataorgid#</isNotNull>
+        <isNotNull prepend="and" property="empcode">a."empcode" like '%'||#empcode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="empname">a."empname" like '%'||#empname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="status">a."status" = #status#</isNotNull>
+        <isNotNull prepend="and" property="orgid">instr(a."orgseqs", #orgid#, 1, 1) &gt; 0</isNotNull>
+    </select>
+    <!-- 查询人员及操作员信息 -->
+    <select id="queryOperators2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	select a.*,to_char(ll.logtime, 'yyyy-mm-dd hh:mm:ss') as "lastlogin"
+		  from (select a.orgnames as "orgnames",
+		               orgname as "dataorgname",
+		               a.orgids as "orgids",
+		               a.orgseqs as "orgseqs",
+		               op.empid as "empid",
+		               to_char(op.invaldate, 'yyyy-mm-dd hh:mm:ss') as "invaldate",
+		               op.operatorid as "operatorid",
+		               op.userid as "userid",
+		               op.clientnum as "clientnum",
+		               op.operatorname as "operatorname",
+		               op.authmode as "authmode",
+		               op.status as "status",
+		               op.menutype as "menutype",
+		               ee.empcode as "empcode",
+		               ee.empname as "empname",
+		               ee.empstatus as "empstatus",
+		               to_char(op.startdate, 'yyyy-mm-dd hh:mm:ss') as "startdate",
+		               to_char(op.enddate, 'yyyy-mm-dd hh:mm:ss') as "enddate",
+		               op.email as "operemail",
+		               op.dataorgid as "dataorgid"
+		          from v_ac_operator_trs op
+		          left join v_om_employee_trs ee
+		            on op.empid = ee.empid
+		          left join v_om_organization_trs org
+		            on op.dataorgid = org.orgid
+		          left join v_om_emporgname_trs a
+		            on a.empid = op.empid) a,v_at_loginlog ll
+		 where a."userid" != 'sysadmin' and a."userid"=ll.userid(+)
+    	<isNotNull prepend="and" property="operatorname">a."operatorname" like '%'||#operatorname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="userid">a."userid" like '%'||#userid#||'%'</isNotNull>
+        <isNotNull prepend="and" property="status">a."status" =#status#</isNotNull>
+        <isNotNull prepend="and" property="dataorgid">a."dataorgid" = #dataorgid#</isNotNull>
+        <isNotNull prepend="and" property="empcode">a."empcode" like '%'||#empcode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="empname">a."empname" like '%'||#empname#||'%'</isNotNull>
+        <isNotNull prepend="and" property="status">a."status" = #status#</isNotNull>
+        <isNotNull prepend="and" property="orgid">instr(a."orgseqs", '.' ||#orgid# ||'.', 1, 1) &gt; 0</isNotNull>
+    </select>
+    <!-- 查询操作员的所有权限信息 -->
+    <select id="loadOperatorAuth" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select
+            (case  when a.parentresid is null then 0 else a.parentresid end) as "parentresid",
+            a.resid as "resid",
+            a.rescode as "rescode",
+            a.restype as "restype",
+            a.resname as "resname",
+            a.reslabel as "reslabel",
+            a.resseq as "resseq",
+            a.isleaf as "isleaf"
+            from t_ac_resource a  left join t_ac_operres opes on opes.resid = a.resid  and opes.operatorid = #operatorid# where 
+            a.resid in (
+            select rl.resid from t_ac_roleres rl where rl.resid = a.resid and rl.roleid in (select opr.roleid from t_ac_operatorrole opr where opr.operatorid=#operatorid#)
+            union all
+            select ops.resid from t_ac_operres ops where  ops.resid = a.resid and ops.operatorid = #operatorid#
+             )</select>
+    <!-- 查询操作员的人员/机构信息 -->
+    <select id="queryOperatorByUserID" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select to_char(ll.logtime, 'yyyy-mm-dd hh:mm:ss') as "lastlogin",
+    	a.clientnum "clientnum",
+		a.operatorid "operatorid",
+		a.empid "empid",
+		a.userid "userid" ,
+		a.password "password",
+		to_char(a.invaldate, 'yyyy-mm-dd hh24:mm:ss') "invaldate",
+		a.operatorname "operatorname",
+		a.authmode "authmode",
+		a.status "status",
+		to_char(a.unlocktime, 'yyyy-mm-dd hh24:mm:ss') "unlocktime",
+		a.menutype "menutype",
+		a.errcount "errcount",
+		to_char(a.startdate, 'yyyy-mm-dd hh24:mm:ss') "startdate",
+		to_char(a.enddate, 'yyyy-mm-dd hh24:mm:ss') "enddate",
+		a.validtime "validtime",
+		a.maccode "maccode",
+		a.ipaddress "ipaddress",
+		a.email "email",
+		a.createby "createby",
+		a.modifyby "modifyby",
+		a.updatetime "updatetime",
+		a.dataorgid "dataorgid" 
+		 from v_ac_operator_trs a,v_at_loginlog ll
+		 where a.userid=ll.userid(+) and a.userid =#userid#</select>
+    <!-- 查询操作员的人员/机构信息 -->
+    <select id="queryOperatorByUserID2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select 
+    	t.clientnum "clientnum",
+		t.operatorid "operatorid",
+		t.empid "empid",
+		t.userid "userid" ,
+		t.password "password",
+		to_char(t.invaldate, 'yyyy-mm-dd hh24:mm:ss') "invaldate",
+		t.operatorname "operatorname",
+		t.authmode "authmode",
+		t.status "status",
+		to_char(t.unlocktime, 'yyyy-mm-dd hh24:mm:ss') "unlocktime",
+		t.menutype "menutype",
+		t.errcount "errcount",
+		to_char(t.startdate, 'yyyy-mm-dd hh24:mm:ss') "startdate",
+		to_char(t.enddate, 'yyyy-mm-dd hh24:mm:ss') "enddate",
+		t.validtime "validtime",
+		t.maccode "maccode",
+		t.ipaddress "ipaddress",
+		t.email "email",
+		t.createby "createby",
+		t.modifyby "modifyby",
+		t.updatetime "updatetime",
+		t.dataorgid "dataorgid" ,to_char(ll.logtime, 'yyyy-mm-dd hh:mm:ss') as "lastlogin" 
+		 from v_ac_operator_trs  t,v_at_loginlog ll
+		 where t.userid =#userid# and t.userid = ll.userid(+)</select>
+    <!-- 查询操作员是否挂起 -->
+    <select id="queryOperatorguaqi" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select
+       t.operatorid,
+       t2.empid empid,
+       t.userid userid,
+       t.password,
+       t.nextupdatedate as invaldate,
+       t.operatorname,
+       t.authmode,
+       decode(t.status,'running','0','suspending','1','locking','3','2') status,
+       t.unlocktime,
+       t.menutype,
+       errcount,
+       decode(t.userid,'sysadmin',to_number(10),to_number(1)) as clientnum,
+       t.startdate,
+       t.enddate,
+       t.validtime,
+       t.maccode,
+       t.ipaddress,
+       t.email,
+       '' createby,
+       '' modifyby,
+       t.updatedate as updatetime,
+       (case when to_char(t.tixingdate,'yyyy-mm-dd') &lt; to_char(sysdate,'yyyy-mm-dd')
+       then  1 
+       else 0 end) as flag,
+       t.tixingdate as tixingdate,
+       t.nextupdatedate as nextupdatedate,
+       to_date(to_char(t.nextupdatedate,'yyyy-mm-dd'),'yyyy-mm-dd') -to_date(to_char(sysdate,'yyyy-mm-dd'),'yyyy-mm-dd') as lo,
+       decode(t.userid,'sysadmin',to_number(0),to_number(81)) as dataorgid
+      from eos62.ac_operator t, eos62.om_employee t2
+      where t.userid(+) = t2.userid and t.userid != 'sysadmin'
+      and t.userid =#userid#</select>
+    <!-- 查询srm操作员是否挂起 -->
+    <select id="querysrmOperatorguaqi" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.*,
+      to_char(t.updatetime, 'yyyy-mm-dd hh:mm:ss') as "aupdatetime",
+      (to_date(to_char(t.updatetime,'yyyy-mm-dd'),'yyyy-mm-dd')+90) as "nextupdatedate",
+      (to_date(to_char(t.updatetime,'yyyy-mm-dd'),'yyyy-mm-dd')+75) as "tixingdate",
+      (case when to_char((to_date(to_char(t.updatetime,'yyyy-mm-dd'),'yyyy-mm-dd')+75),'yyyy-mm-dd') &lt;  to_char(sysdate,'yyyy-mm-dd')
+       then  1 
+       else 0 end) as flag,
+       to_date(to_char((to_date(to_char(t.updatetime,'yyyy-mm-dd'),'yyyy-mm-dd')+90),'yyyy-mm-dd'),'yyyy-mm-dd') -to_date(to_char(sysdate,'yyyy-mm-dd'),'yyyy-mm-dd') as lo
+       from t_ac_operator t
+      where t.userid != 'sysadmin'
+      and t.userid =#userid#</select>
+</sqlMap>

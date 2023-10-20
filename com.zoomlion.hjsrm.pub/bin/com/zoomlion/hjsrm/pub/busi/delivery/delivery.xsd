@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.pub.busi.delivery.delivery" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.pub.busi.delivery.delivery">
+    <xs:complexType name="GenlReserveData" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveDataImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zleib" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zdaji" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zstat" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="menge" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zcret" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zcreu" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReserveDataVersion" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveDataVersionImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="zvern" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zleib" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zdaji" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zstat" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="menge" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zcret" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zcreu" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReserveVerd" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveVerdImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="zvern" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zdaji" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zleib" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReserveVerl" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveVerlImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="zvern" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zleib" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReserveZcpcxZleib" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveZcpcxZleibImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="zcpcx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zleib" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReserveZdajiZleib" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveZdajiZleibImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="zdaji" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zleib" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReserveZleibLifnr" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveZleibLifnrImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="zleib" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReserveVerz" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveVerzImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="zvern" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zcpcx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zleib" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="V_Zxlbqd" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.V_ZxlbqdImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="zleibname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="nr" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlPurchaseNoteLifnr" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlPurchaseNoteLifnrImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zmode" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlPurchaseNoteAffirm" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlPurchaseNoteAffirmImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zasnh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="useid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="usename" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="time" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlLabelPrint" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlLabelPrintImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="shDate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="printNum" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlVegicleList" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlVegicleListImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="cxdm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cxmc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReserveList" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveListImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cxdm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bukrs" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlReserveDatab" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlReserveDatabImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cxdm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zstat" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="menge" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="zcret" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="zcreu" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlPurchaseNoteDetail" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlPurchaseNoteDetailImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pkid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="amount" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="returnAmount" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zasnh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebeln" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ebelp" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zasnp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjlb" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mjzt" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlPurchaseNote" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlPurchaseNoteImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="zasnh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="name1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="arrivedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="lgort" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="werks" nillable="true" type="xs:string"/>
+            <xs:element default="1&#10;" minOccurs="0" name="print" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zjlb" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="aufnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="kostl" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="knttp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sfdpvn" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlNoteVndetail" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlNoteVndetailImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="zasnh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zasnp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="vnbm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifytime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0" minOccurs="0" name="delflay" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="vnid" nillable="true" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlVnRule" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlVnRuleImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="matnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="vnrule" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlSupplyVnbm" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlSupplyVnbmImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="lifnr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="vnbm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tranu" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="trant" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenlVnCoincident" sdoJava:instanceClass="com.zoomlion.hjsrm.pub.busi.delivery.delivery.impl.GenlVnCoincidentImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="vnbm" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.data.org.Organization.TOmOrganization" table="T_OM_ORGANIZATION">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="orgid" type="int">
+            <column length="10" name="ORGID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="parentorgid" type="int">
+            <column length="10" name="PARENTORGID"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="orgcode" type="string">
+            <column length="32" name="ORGCODE" not-null="true"/>
+        </property>
+        <property name="orgname" type="string">
+            <column length="64" name="ORGNAME"/>
+        </property>
+        <property name="orglevel" type="int">
+            <column default="1" length="2" name="ORGLEVEL"/>
+        </property>
+        <property name="orgdegree" type="string">
+            <column length="255" name="ORGDEGREE"/>
+        </property>
+        <property name="orgseq" type="string">
+            <column length="512" name="ORGSEQ"/>
+        </property>
+        <property name="orgtype" type="string">
+            <column length="12" name="ORGTYPE"/>
+        </property>
+        <property name="channeltype" type="string">
+            <column length="12" name="CHANNELTYPE"/>
+        </property>
+        <property name="orgaddr" type="string">
+            <column length="256" name="ORGADDR"/>
+        </property>
+        <property name="zipcode" type="string">
+            <column length="10" name="ZIPCODE"/>
+        </property>
+        <property name="manaposition" type="int">
+            <column length="10" name="MANAPOSITION"/>
+        </property>
+        <property name="managerid" type="int">
+            <column length="10" name="MANAGERID"/>
+        </property>
+        <property name="orgmanager" type="string">
+            <column length="128" name="ORGMANAGER"/>
+        </property>
+        <property name="linkman" type="string">
+            <column length="30" name="LINKMAN"/>
+        </property>
+        <property name="linktel" type="string">
+            <column length="20" name="LINKTEL"/>
+        </property>
+        <property name="email" type="string">
+            <column length="128" name="EMAIL"/>
+        </property>
+        <property name="weburl" type="string">
+            <column length="512" name="WEBURL"/>
+        </property>
+        <property name="startdate" type="date">
+            <column name="STARTDATE"/>
+        </property>
+        <property name="enddate" type="date">
+            <column name="ENDDATE"/>
+        </property>
+        <property name="status" type="string">
+            <column length="255" name="STATUS"/>
+        </property>
+        <property name="area" type="string">
+            <column length="30" name="AREA"/>
+        </property>
+        <property name="sortno" type="long">
+            <column length="22" name="SORTNO"/>
+        </property>
+        <property name="isleaf" type="string">
+            <column length="1" name="ISLEAF"/>
+        </property>
+        <property name="subcount" type="int">
+            <column length="10" name="SUBCOUNT"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="512" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="date">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="delflag" type="string">
+            <column length="1" name="DELFLAG" not-null="true"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.data.org.Organization.TOmEmporg" table="T_OM_EMPORG">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="orgid" type="int">
+                <column length="10" name="ORGID"/>
+            </key-property>
+            <key-property name="empid" type="int">
+                <column length="10" name="EMPID"/>
+            </key-property>
+        </composite-id>
+        <property name="dataorgid" type="int">
+            <column default="0&#10;" length="10" name="DATAORGID" not-null="true"/>
+        </property>
+        <property name="ismain" type="string">
+            <column length="1" name="ISMAIN"/>
+        </property>
+    </class>
+    <class entity-name="com.zoomlion.hjsrm.data.org.Organization.VOmEmporg" table="$QueryEntity[com.zoomlion.hjsrm.data.org.Organization.VOmEmporg]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="EMPID" insert="false" name="empid" type="int" update="false"/>
+        <property column="EMPCODE" insert="false" name="empcode" type="string" update="false"/>
+        <property column="EMPNAME" insert="false" name="empname" type="string" update="false"/>
+        <property column="REALNAME" insert="false" name="realname" type="string" update="false"/>
+        <property column="EMPSTATUS" insert="false" name="empstatus" type="string" update="false"/>
+        <property column="MOBILENO" insert="false" name="mobileno" type="string" update="false"/>
+        <property column="ORGIDLIST" insert="false" name="orgidlist" type="string" update="false"/>
+        <property column="DATAORGNAME" insert="false" name="dataorgname" type="string" update="false"/>
+        <property column="DATAORGID" insert="false" name="dataorgid" type="int" update="false"/>
+        <property column="ORGID" insert="false" name="orgid" type="int" update="false"/>
+        <property column="PARENTORGID" insert="false" name="parentorgid" type="int" update="false"/>
+        <property column="ORGCODE" insert="false" name="orgcode" type="string" update="false"/>
+        <property column="ORGNAME" insert="false" name="orgname" type="string" update="false"/>
+        <property column="ORGLEVEL" insert="false" name="orglevel" type="int" update="false"/>
+        <property column="ORGDEGREE" insert="false" name="orgdegree" type="string" update="false"/>
+        <property column="ORGSEQ" insert="false" name="orgseq" type="string" update="false"/>
+        <property column="ORGTYPE" insert="false" name="orgtype" type="string" update="false"/>
+        <property column="USERID" insert="false" name="userid" type="string" update="false"/>
+        <property column="PASSWORD" insert="false" name="password" type="string" update="false"/>
+        <property column="OPERATORNAME" insert="false" name="operatorname" type="string" update="false"/>
+        <property column="STATUS" insert="false" name="status" type="string" update="false"/>
+    </class>
+    <class entity-name="com.zoomlion.hjsrm.data.org.Organization.VOmEmpoperroleorg" table="$QueryEntity[com.zoomlion.hjsrm.data.org.Organization.VOmEmpoperroleorg]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="OPERATORID" insert="false" name="operatorid" type="long" update="false"/>
+        <property column="USERID" insert="false" name="userid" type="string" update="false"/>
+        <property column="PASSWORD" insert="false" name="password" type="string" update="false"/>
+        <property column="OPERATORNAME" insert="false" name="operatorname" type="string" update="false"/>
+        <property column="AUTHMODE" insert="false" name="authmode" type="string" update="false"/>
+        <property column="MENUTYPE" insert="false" name="menutype" type="string" update="false"/>
+        <property column="EMPID" insert="false" name="empid" type="int" update="false"/>
+        <property column="EMPNAME" insert="false" name="empname" type="string" update="false"/>
+        <property column="REALNAME" insert="false" name="realname" type="string" update="false"/>
+        <property column="GENDER" insert="false" name="gender" type="string" update="false"/>
+        <property column="BIRTHDATE" insert="false" name="birthdate" type="date" update="false"/>
+        <property column="EMPSTATUS" insert="false" name="empstatus" type="string" update="false"/>
+        <property column="CARDTYPE" insert="false" name="cardtype" type="string" update="false"/>
+        <property column="CARDNO" insert="false" name="cardno" type="string" update="false"/>
+        <property column="MOBILENO" insert="false" name="mobileno" type="string" update="false"/>
+        <property column="EMPDELFLAG" insert="false" name="empdelflag" type="string" update="false"/>
+        <property column="ROLEID" insert="false" name="roleid" type="int" update="false"/>
+        <property column="ROLECODE" insert="false" name="rolecode" type="string" update="false"/>
+        <property column="ROLENAME" insert="false" name="rolename" type="string" update="false"/>
+        <property column="ROLETYPE" insert="false" name="roletype" type="string" update="false"/>
+        <property column="ORGID" insert="false" name="orgid" type="int" update="false"/>
+        <property column="PARENTORGID" insert="false" name="parentorgid" type="int" update="false"/>
+        <property column="ORGCODE" insert="false" name="orgcode" type="string" update="false"/>
+        <property column="ORGNAME" insert="false" name="orgname" type="string" update="false"/>
+        <property column="ORGLEVEL" insert="false" name="orglevel" type="int" update="false"/>
+        <property column="ORGSEQ" insert="false" name="orgseq" type="string" update="false"/>
+        <property column="ORGDELFLAG" insert="false" name="orgdelflag" type="string" update="false"/>
+    </class>
+    <class entity-name="com.zoomlion.hjsrm.data.org.Organization.VOmEmpoper" table="$QueryEntity[com.zoomlion.hjsrm.data.org.Organization.VOmEmpoper]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="EMPID" insert="false" name="empid" type="int" update="false"/>
+        <property column="EMPCODE" insert="false" name="empcode" type="string" update="false"/>
+        <property column="EMPNAME" insert="false" name="empname" type="string" update="false"/>
+        <property column="REALNAME" insert="false" name="realname" type="string" update="false"/>
+        <property column="GENDER" insert="false" name="gender" type="string" update="false"/>
+        <property column="BIRTHDATE" insert="false" name="birthdate" type="date" update="false"/>
+        <property column="POSITION" insert="false" name="position" type="int" update="false"/>
+        <property column="EMPSTATUS" insert="false" name="empstatus" type="string" update="false"/>
+        <property column="CARDTYPE" insert="false" name="cardtype" type="string" update="false"/>
+        <property column="CARDNO" insert="false" name="cardno" type="string" update="false"/>
+        <property column="INDATE" insert="false" name="indate" type="date" update="false"/>
+        <property column="OUTDATE" insert="false" name="outdate" type="date" update="false"/>
+        <property column="OTEL" insert="false" name="otel" type="string" update="false"/>
+        <property column="OADDRESS" insert="false" name="oaddress" type="string" update="false"/>
+        <property column="OZIPCODE" insert="false" name="ozipcode" type="string" update="false"/>
+        <property column="OEMAIL" insert="false" name="oemail" type="string" update="false"/>
+        <property column="FAXNO" insert="false" name="faxno" type="string" update="false"/>
+        <property column="MOBILENO" insert="false" name="mobileno" type="string" update="false"/>
+        <property column="MSN" insert="false" name="msn" type="string" update="false"/>
+        <property column="HTEL" insert="false" name="htel" type="string" update="false"/>
+        <property column="HADDRESS" insert="false" name="haddress" type="string" update="false"/>
+        <property column="HZIPCODE" insert="false" name="hzipcode" type="string" update="false"/>
+        <property column="PEMAIL" insert="false" name="pemail" type="string" update="false"/>
+        <property column="PARTY" insert="false" name="party" type="string" update="false"/>
+        <property column="DEGREE" insert="false" name="degree" type="string" update="false"/>
+        <property column="MAJOR" insert="false" name="major" type="int" update="false"/>
+        <property column="SPECIALTY" insert="false" name="specialty" type="string" update="false"/>
+        <property column="WORKEXP" insert="false" name="workexp" type="string" update="false"/>
+        <property column="REGDATE" insert="false" name="regdate" type="date" update="false"/>
+        <property column="ORGIDLIST" insert="false" name="orgidlist" type="string" update="false"/>
+        <property column="MAINORGID" insert="false" name="mainorgid" type="int" update="false"/>
+        <property column="REMARK" insert="false" name="remark" type="string" update="false"/>
+        <property column="CREATEBY" insert="false" name="createby" type="string" update="false"/>
+        <property column="MODIFYBY" insert="false" name="modifyby" type="string" update="false"/>
+        <property column="UPDATETIME" insert="false" name="updatetime" type="date" update="false"/>
+        <property column="DELFLAG" insert="false" name="delflag" type="string" update="false"/>
+        <property column="DATAORGID" insert="false" name="dataorgid" type="int" update="false"/>
+        <property column="OPERATORID" insert="false" name="operatorid" type="long" update="false"/>
+        <property column="USERID" insert="false" name="userid" type="string" update="false"/>
+        <property column="PASSWORD" insert="false" name="password" type="string" update="false"/>
+        <property column="INVALDATE" insert="false" name="invaldate" type="date" update="false"/>
+        <property column="OPERATORNAME" insert="false" name="operatorname" type="string" update="false"/>
+        <property column="AUTHMODE" insert="false" name="authmode" type="string" update="false"/>
+        <property column="STATUS" insert="false" name="status" type="string" update="false"/>
+        <property column="UNLOCKTIME" insert="false" name="unlocktime" type="date" update="false"/>
+        <property column="MENUTYPE" insert="false" name="menutype" type="string" update="false"/>
+        <property column="LASTLOGIN" insert="false" name="lastlogin" type="timestamp" update="false"/>
+        <property column="ERRCOUNT" insert="false" name="errcount" type="int" update="false"/>
+        <property column="STARTDATE" insert="false" name="startdate" type="date" update="false"/>
+        <property column="ENDDATE" insert="false" name="enddate" type="date" update="false"/>
+        <property column="VALIDTIME" insert="false" name="validtime" type="string" update="false"/>
+        <property column="MACCODE" insert="false" name="maccode" type="string" update="false"/>
+        <property column="IPADDRESS" insert="false" name="ipaddress" type="string" update="false"/>
+        <property column="EMAIL" insert="false" name="email" type="string" update="false"/>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.zoomlion.hjsrm.data.org.Organization.TOmEmployee" table="T_OM_EMPLOYEE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="empid" type="int">
+            <column length="10" name="EMPID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="empcode" type="string">
+            <column length="30" name="EMPCODE"/>
+        </property>
+        <property name="empname" type="string">
+            <column length="50" name="EMPNAME"/>
+        </property>
+        <property name="realname" type="string">
+            <column length="50" name="REALNAME"/>
+        </property>
+        <property name="gender" type="string">
+            <column length="255" name="GENDER"/>
+        </property>
+        <property name="birthdate" type="date">
+            <column name="BIRTHDATE"/>
+        </property>
+        <property name="position" type="int">
+            <column length="10" name="POSITION"/>
+        </property>
+        <property name="empstatus" type="string">
+            <column length="255" name="EMPSTATUS"/>
+        </property>
+        <property name="cardtype" type="string">
+            <column length="255" name="CARDTYPE"/>
+        </property>
+        <property name="cardno" type="string">
+            <column length="20" name="CARDNO"/>
+        </property>
+        <property name="indate" type="date">
+            <column name="INDATE"/>
+        </property>
+        <property name="outdate" type="date">
+            <column name="OUTDATE"/>
+        </property>
+        <property name="otel" type="string">
+            <column length="25" name="OTEL"/>
+        </property>
+        <property name="oaddress" type="string">
+            <column length="255" name="OADDRESS"/>
+        </property>
+        <property name="ozipcode" type="string">
+            <column length="10" name="OZIPCODE"/>
+        </property>
+        <property name="oemail" type="string">
+            <column length="128" name="OEMAIL"/>
+        </property>
+        <property name="faxno" type="string">
+            <column length="14" name="FAXNO"/>
+        </property>
+        <property name="mobileno" type="string">
+            <column length="14" name="MOBILENO"/>
+        </property>
+        <property name="msn" type="string">
+            <column length="16" name="MSN"/>
+        </property>
+        <property name="htel" type="string">
+            <column length="12" name="HTEL"/>
+        </property>
+        <property name="haddress" type="string">
+            <column length="128" name="HADDRESS"/>
+        </property>
+        <property name="hzipcode" type="string">
+            <column length="10" name="HZIPCODE"/>
+        </property>
+        <property name="pemail" type="string">
+            <column length="128" name="PEMAIL"/>
+        </property>
+        <property name="party" type="string">
+            <column length="255" name="PARTY"/>
+        </property>
+        <property name="degree" type="string">
+            <column length="255" name="DEGREE"/>
+        </property>
+        <property name="major" type="int">
+            <column length="10" name="MAJOR"/>
+        </property>
+        <property name="specialty" type="string">
+            <column length="1024" name="SPECIALTY"/>
+        </property>
+        <property name="workexp" type="string">
+            <column length="512" name="WORKEXP"/>
+        </property>
+        <property name="regdate" type="date">
+            <column name="REGDATE"/>
+        </property>
+        <property name="orgidlist" type="string">
+            <column length="128" name="ORGIDLIST"/>
+        </property>
+        <property name="mainorgid" type="int">
+            <column length="10" name="MAINORGID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="512" name="REMARK"/>
+        </property>
+        <property name="createby" type="string">
+            <column length="30" name="CREATEBY"/>
+        </property>
+        <property name="modifyby" type="string">
+            <column length="30" name="MODIFYBY"/>
+        </property>
+        <property name="updatetime" type="date">
+            <column name="UPDATETIME"/>
+        </property>
+        <property name="delflag" type="string">
+            <column length="1" name="DELFLAG" not-null="true"/>
+        </property>
+        <property name="dataorgid" type="int">
+            <column length="10" name="DATAORGID" not-null="true"/>
+        </property>
+    </class>
+    <class entity-name="com.zoomlion.hjsrm.data.org.Organization.VOmEmployeeTrs" table="$QueryEntity[com.zoomlion.hjsrm.data.org.Organization.VOmEmployeeTrs]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="EMPID" insert="false" name="empid" type="int" update="false"/>
+        <property column="EMPCODE" insert="false" name="empcode" type="string" update="false"/>
+        <property column="EMPNAME" insert="false" name="empname" type="string" update="false"/>
+        <property column="REALNAME" insert="false" name="realname" type="string" update="false"/>
+        <property column="GENDER" insert="false" name="gender" type="string" update="false"/>
+        <property column="BIRTHDATE" insert="false" name="birthdate" type="date" update="false"/>
+        <property column="POSITION" insert="false" name="position" type="int" update="false"/>
+        <property column="EMPSTATUS" insert="false" name="empstatus" type="string" update="false"/>
+        <property column="CARDTYPE" insert="false" name="cardtype" type="string" update="false"/>
+        <property column="CARDNO" insert="false" name="cardno" type="string" update="false"/>
+        <property column="INDATE" insert="false" name="indate" type="date" update="false"/>
+        <property column="OUTDATE" insert="false" name="outdate" type="date" update="false"/>
+        <property column="OTEL" insert="false" name="otel" type="string" update="false"/>
+        <property column="OADDRESS" insert="false" name="oaddress" type="string" update="false"/>
+        <property column="OZIPCODE" insert="false" name="ozipcode" type="string" update="false"/>
+        <property column="OEMAIL" insert="false" name="oemail" type="string" update="false"/>
+        <property column="FAXNO" insert="false" name="faxno" type="string" update="false"/>
+        <property column="MOBILENO" insert="false" name="mobileno" type="string" update="false"/>
+        <property column="MSN" insert="false" name="msn" type="string" update="false"/>
+        <property column="HTEL" insert="false" name="htel" type="string" update="false"/>
+        <property column="HADDRESS" insert="false" name="haddress" type="string" update="false"/>
+        <property column="HZIPCODE" insert="false" name="hzipcode" type="string" update="false"/>
+        <property column="PEMAIL" insert="false" name="pemail" type="string" update="false"/>
+        <property column="PARTY" insert="false" name="party" type="string" update="false"/>
+        <property column="DEGREE" insert="false" name="degree" type="string" update="false"/>
+        <property column="MAJOR" insert="false" name="major" type="int" update="false"/>
+        <property column="SPECIALTY" insert="false" name="specialty" type="string" update="false"/>
+        <property column="WORKEXP" insert="false" name="workexp" type="string" update="false"/>
+        <property column="REGDATE" insert="false" name="regdate" type="date" update="false"/>
+        <property column="ORGIDLIST" insert="false" name="orgidlist" type="string" update="false"/>
+        <property column="MAINORGID" insert="false" name="mainorgid" type="int" update="false"/>
+        <property column="REMARK" insert="false" name="remark" type="string" update="false"/>
+        <property column="CREATEBY" insert="false" name="createby" type="string" update="false"/>
+        <property column="MODIFYBY" insert="false" name="modifyby" type="string" update="false"/>
+        <property column="UPDATETIME" insert="false" name="updatetime" type="timestamp" update="false"/>
+        <property column="DELFLAG" insert="false" name="delflag" type="string" update="false"/>
+        <property column="DATAORGID" insert="false" name="dataorgid" type="int" update="false"/>
+    </class>
+    <class entity-name="com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs" table="$QueryEntity[com.zoomlion.hjsrm.data.org.Organization.VOmOrganizationTrs]$">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id column="$queryEntityId$" name="queryEntityId" type="string">
+            <generator class="assigned"/>
+        </id>
+        <property column="ORGID" insert="false" name="orgid" type="int" update="false"/>
+        <property column="ORGCODE" insert="false" name="orgcode" type="string" update="false"/>
+        <property column="ORGNAME" insert="false" name="orgname" type="string" update="false"/>
+        <property column="ORGLEVEL" insert="false" name="orglevel" type="int" update="false"/>
+        <property column="ORGDEGREE" insert="false" name="orgdegree" type="string" update="false"/>
+        <property column="PARENTORGID" insert="false" name="parentorgid" type="int" update="false"/>
+        <property column="ORGSEQ" insert="false" name="orgseq" type="string" update="false"/>
+        <property column="ORGTYPE" insert="false" name="orgtype" type="string" update="false"/>
+        <property column="ORGADDR" insert="false" name="orgaddr" type="string" update="false"/>
+        <property column="ZIPCODE" insert="false" name="zipcode" type="string" update="false"/>
+        <property column="MANAPOSITION" insert="false" name="manaposition" type="int" update="false"/>
+        <property column="MANAGERID" insert="false" name="managerid" type="int" update="false"/>
+        <property column="ORGMANAGER" insert="false" name="orgmanager" type="string" update="false"/>
+        <property column="LINKMAN" insert="false" name="linkman" type="string" update="false"/>
+        <property column="LINKTEL" insert="false" name="linktel" type="string" update="false"/>
+        <property column="EMAIL" insert="false" name="email" type="string" update="false"/>
+        <property column="WEBURL" insert="false" name="weburl" type="string" update="false"/>
+        <property column="STARTDATE" insert="false" name="startdate" type="date" update="false"/>
+        <property column="ENDDATE" insert="false" name="enddate" type="date" update="false"/>
+        <property column="STATUS" insert="false" name="status" type="string" update="false"/>
+        <property column="AREA" insert="false" name="area" type="string" update="false"/>
+        <property column="CREATETIME" insert="false" name="createtime" type="timestamp" update="false"/>
+        <property column="UPDATETIME" insert="false" name="updatetime" type="timestamp" update="false"/>
+        <property column="CREATEBY" insert="false" name="createby" type="string" update="false"/>
+        <property column="MODIFYBY" insert="false" name="modifyby" type="string" update="false"/>
+        <property column="SORTNO" insert="false" name="sortno" type="long" update="false"/>
+        <property column="ISLEAF" insert="false" name="isleaf" type="string" update="false"/>
+        <property column="SUBCOUNT" insert="false" name="subcount" type="int" update="false"/>
+        <property column="REMARK" insert="false" name="remark" type="string" update="false"/>
+        <property column="DATAORGID" insert="false" name="dataorgid" type="int" update="false"/>
+        <property column="CHANNELTYPE" insert="false" name="channeltype" type="string" update="false"/>
+        <property column="DELFLAG" insert="false" name="delflag" type="string" update="false"/>
+    </class>
+</hibernate-mapping>

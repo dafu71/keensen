@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="com.zoomlion.hjsrm.sapinterface.SapSrmPurchase.SyncSapPurchaseComposite" targetNamespace="http://www.osoa.org/xmlns/sca/1.0">
+    <service name="SyncSapPurchaseService" promote="com.zoomlion.hjsrm.sapinterface.SapSrmPurchase.SyncSapPurchaseComposite.SyncSapPurchaseComponent/SyncSapPurchaseService">
+        <interface.wsdl interface="http://www.primeton.com/SyncSapPurchaseService#wsdl.interface(SyncSapPurchaseService)"/>
+        <binding.ws/>
+    </service>
+    <component name="com.zoomlion.hjsrm.sapinterface.SapSrmPurchase.SyncSapPurchaseComposite.SyncSapPurchaseComponent">
+        <implementation.eos.biz name="com.zoomlion.hjsrm.sapinterface.SapSrmPurchase.SyncSapPurchase"/>
+        <service name="SyncSapPurchaseService">
+            <interface.wsdl interface="http://www.primeton.com/SyncSapPurchaseService#wsdl.interface(SyncSapPurchaseService)"/>
+        </service>
+    </component>
+</composite>

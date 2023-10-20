@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:liuxin -->
+<sqlMap>
+ <select id="querymaterial" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+select t.matnr from base_material_marc t,base_material_mara a 
+where t.matnr =a.matnr
+<isNotNull prepend="and" property="matnr"> 
+		t.matnr in ($matnr$) 
+		</isNotNull> 
+<isNotNull prepend="and" property="werks"> 
+		t.werks=#werks# 
+		</isNotNull> 
+<isNotNull prepend="and" property="maktx"> 
+		a.maktx like '%'||#maktx#||'%' 
+		</isNotNull>  
+  </select>
+</sqlMap>

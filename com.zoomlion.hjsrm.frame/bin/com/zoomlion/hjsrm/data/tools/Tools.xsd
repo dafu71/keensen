@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.zoomlion.hjsrm.data.tools.Tools" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.zoomlion.hjsrm.data.tools.Tools">
+    <xs:complexType name="TBsUserinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TBsUserinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="busisn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="busitype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="nodesn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="nodetype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="custid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="svctype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="usertype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="consumptype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="consumpattr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userstate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="addrcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="addrdetail" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="statechngdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="industrytype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="consumpdesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="aeratedate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="housearea" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="usersnum" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="latefeeflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mngorg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stenocode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stenoprompt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stenopassword" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="credit" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="archcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="chnltype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="chnlid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ver" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="newflag" nillable="true" type="xs:string"/>
+            <xs:element default="WF" minOccurs="0" name="areapart" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="optrcode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="optdate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtSystemparam" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtSystemparamImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="paramid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="paramname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paramvalue" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paramdesc" nillable="true" type="xs:string"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtAutobusilog" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtAutobusilogImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="operid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="opertime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="clientip" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="appname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="funcname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="uniqueid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operdesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="exceptionmsg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logstatus" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtAutobusiloghis" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtAutobusiloghisImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="operid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="operatorid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="operatorname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="opertime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="clientip" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="appname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="uniqueid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="funcname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operdesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="exceptionmsg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pigeonholetime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtSmssend" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtSmssendImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="messageid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="message" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mobileno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="sendtimes" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="sendtype" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="ordertimestr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendstatustext" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recvstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recvstatustext" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendmobileno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="smsgmessageid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="inserttime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtSmstemplate" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtSmstemplateImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="templateid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="templatetype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="title" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtSncfg" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtSncfgImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busisnno" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="busisnname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="prefix" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="seqname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="serialmod" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="isdate" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="istime" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="isorg" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="isfill" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="filllen" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="begintime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="endtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="grpid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="grpname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="subgrpid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="subgrpname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recordorg" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="belongorg" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtNoticerecvuser" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtNoticerecvuserImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="noticeid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="readstatus" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="readtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="recvuserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recvusername" nillable="true" type="xs:string"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtFileupload" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtFileuploadImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="fileId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fileCatalog" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fileNewName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="filePath" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="absolutepath" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fileSize" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="fileType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fileTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="fileSave" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operatorid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="operatorname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="relationId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="groupId" nillable="true" type="xs:string"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtAnnounceRead" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtAnnounceReadImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="announceid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="readtime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtLoginpolicy" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtLoginpolicyImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="policyid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="policyname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lognamelimit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lognamelmttype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logiplimit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logiplmttype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="starttimelimit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="endtimelimit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logtimelmttype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="policytype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isenabled" nillable="true" type="xs:string"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EosDictEntry" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.EosDictEntryImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="dicttypeid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dictid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dictname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="sortno" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="rank" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="parentid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="seqno" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="filter1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="filter2" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EosDictType" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.EosDictTypeImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="dicttypeid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dicttypename" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="rank" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="parentid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="seqno" nillable="true" type="xs:string"/>
+            <xs:element default="0&#10;" minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAcRightLogs" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAcRightLogsImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="operid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operatorname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="opertime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="clientip" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operdesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="exceptionmsg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logstatus" nillable="true" type="xs:string"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="opertype" nillable="true" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtLoginoutlog" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtLoginoutlogImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="operid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="operatorid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operatorname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logintype" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="failtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="opertime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="clientip" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operdesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="exceptionmsg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logstatus" nillable="true" type="xs:string"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TOmSysconfig" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TOmSysconfigImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="paramid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paramname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paramtype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paramconfig" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paramdesc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="configtype" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TOmSysconfigvalue" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TOmSysconfigvalueImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="paramid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="paramvalue" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtOperlog" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtOperlogImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="operatid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="operaterid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="operattime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="operattype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operatresult" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stand" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="optdesc" nillable="true" type="xs:string"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtAnnunceFile" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtAnnunceFileImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="fileid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="announceid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtAnnounce" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtAnnounceImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="announceid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="title" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="announcetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="announcetype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="endtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtAnnounceOrganization" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtAnnounceOrganizationImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="announceid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="orgid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createtime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0" minOccurs="0" name="delflag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VAtAnnounceReader" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.VAtAnnounceReaderImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="announceid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="nr" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VAtNoticeHis" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.VAtNoticeHisImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="noticeid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="title" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendusername" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendtime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recvusername" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="readstatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="readtime" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VAtNoticereader" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.VAtNoticereaderImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="noticeid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="nr" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtNoticeiplimit" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtNoticeiplimitImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="ip" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAtNoticeinfo" sdoJava:instanceClass="com.zoomlion.hjsrm.data.tools.Tools.impl.TAtNoticeinfoImpl">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="noticeid" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="title" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="senduserid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sendusername" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="noticetime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyby" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updatetime" nillable="true" type="xs:dateTime"/>
+            <xs:element default="0 " minOccurs="0" name="dataorgid" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="delstatus" nillable="true" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
