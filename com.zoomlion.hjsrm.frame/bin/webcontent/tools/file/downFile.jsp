@@ -4,6 +4,7 @@
 	response.reset();
 	SrmFileUtil.downFile(response, filePath, fileName);
 	response.flushBuffer();  
-    //out.clear();  
-    //out = pageContext.pushBody(); 
+	
+    out.clear();  
+    out = pageContext.pushBody(); 
 %>

@@ -354,7 +354,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 		})
 
 		this.inputPanel2 = this.inputPanel2 || new Ext.fn.InputPanel({
-			height : 150,
+			height : 180,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -373,7 +373,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						xtype : 'numberfield',
 						name : 'entity/amount',
 						allowBlank : false,
-						fieldLabel : '计划数量',
+						fieldLabel : '计划发货数量',
 						anchor : '95%',
 						colspan : 1
 					}, {
@@ -382,6 +382,29 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						dataIndex : 'planDate',
 						allowBlank : false,
 						fieldLabel : '计划发货日期',
+						anchor : '95%',
+						format : "Y-m-d",
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						name : 'entity/stockAmount',
+						allowBlank : false,
+						fieldLabel : '计划入库数量',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'datefield',
+						name : 'entity/planStockDate',
+						dataIndex : 'planStockDate',
+						allowBlank : false,
+						fieldLabel : '计划入库日期',
 						anchor : '95%',
 						format : "Y-m-d",
 						colspan : 1

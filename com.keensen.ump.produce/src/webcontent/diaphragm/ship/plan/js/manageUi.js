@@ -92,14 +92,20 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
+						dataIndex : 'orderAmount',
+						header : '订单数量'
+					}, {
 						dataIndex : 'planDate',
 						header : '计划发货日期'
 					}, {
 						dataIndex : 'amount',
-						header : '计划数量'
+						header : '计划发货数量'
 					}, {
-						dataIndex : 'orderAmount',
-						header : '订单数量'
+						dataIndex : 'planStockDate',
+						header : '计划入库日期'
+					}, {
+						dataIndex : 'stockAmount',
+						header : '计划入库数量'
 					}, {
 						dataIndex : 'materSpecCode',
 						header : '型号'
@@ -133,6 +139,10 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 							name : 'planNo'
 						}, {
 							name : 'planDate'
+						}, {
+							name : 'planStockDate'
+						}, {
+							name : 'stockAmount'
 						}]
 			})
 		})
@@ -142,7 +152,7 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 		var me = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增计划单',
-			height : 360,
+			height : 420,
 			width : 480,
 			// itemCls:'required',
 			// style:'margin-top:10px',
@@ -179,6 +189,41 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
+							xtype : 'numberfield',
+							name : 'entity/amount',
+							allowBlank : false,
+							fieldLabel : '计划发货数量',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							name : 'entity/planStockDate',
+							dataIndex : 'planStockDate',
+							allowBlank : false,
+							fieldLabel : '计划入库日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/stockAmount',
+							allowBlank : false,
+							fieldLabel : '计划入库数量',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 							xtype : 'trigger',
 							name : 'entity/orderNo',
 							//id:'planordernotrigger',
@@ -199,17 +244,6 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 							fieldLabel : ' ',
 							value : '<p style="color:red;">输入订单号，点击旁边按钮校验订单号</p>',
 							labelSeparator : '',// 去掉冒号
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/amount',
-							allowBlank : false,
-							fieldLabel : '数量',
-							anchor : '95%',
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
@@ -243,7 +277,7 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 		var me = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '修改计划单',
-			height : 360,
+			height : 420,
 			width : 480,
 			resizable : false,
 			minimizable : false,
@@ -281,6 +315,43 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
+							xtype : 'numberfield',
+							name : 'entity/amount',
+							dataIndex : 'amount',
+							allowBlank : false,
+							fieldLabel : '计划发货数量',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							name : 'entity/planStockDate',
+							dataIndex : 'planStockDate',
+							allowBlank : false,
+							fieldLabel : '计划入库日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/stockAmount',
+							dataIndex : 'stockAmount',
+							allowBlank : false,
+							fieldLabel : '计划入库数量',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 							xtype : 'trigger',
 							name : 'entity/orderNo',
 							//id:'planordernotrigger',
@@ -302,18 +373,6 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 							fieldLabel : ' ',
 							value : '<p style="color:red;">输入订单号，点击旁边按钮校验订单号</p>',
 							labelSeparator : '',// 去掉冒号
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/amount',
-							dataIndex : 'amount',
-							allowBlank : false,
-							fieldLabel : '数量',
-							anchor : '95%',
 							colspan : 2
 						}, {
 							xtype : 'displayfield',

@@ -11,6 +11,9 @@ com.zoomlion.hjsrm.notice.SendMgr = function() {
 		this.initViewSendWindow();
 		this.initsendReadWindow();
 		this.initsendnotReadWindow();
+		
+		this.initUploadWindow();
+		
 		return new Ext.fn.fnLayOut({
 					title : '发件箱',
 					layout : 'ns',
@@ -99,6 +102,7 @@ com.zoomlion.hjsrm.notice.SendMgr = function() {
 								isUploaded : false,
 								xtype : 'attachmentlist',
 								name : 'attachlist',
+								ref : '../attachlist',
 								id : this.attachId,
 								postParams : {
 									relationId : 0,
@@ -442,6 +446,86 @@ com.zoomlion.hjsrm.notice.SendMgr = function() {
 						})
 					}]
 
+				})
+	}
+	
+	this.initUploadWindow = function() {
+		var _this = this;
+		this.uploadForm = this.uploadForm || new Ext.form.FormPanel({
+					labelAlign : 'right',
+					buttonAlign : "center",
+					title : '文件上传',
+					labelWidth : 60,
+					frame : true,
+					url : "com.zoomlion.hjsrm.frame.bclib.file.UploadFileBackId.flow",
+					width : 360,
+					height : 100,
+					fileUpload : true,
+					items : [{
+								xtype : 'textfield',
+								fieldLabel : '文件名',
+								name : 'uploadFile',
+								inputType : 'file'// 文件类型
+							}, {
+								xtype : 'hidden',
+								ref : '../relationId',
+								name : 'relationId'
+							}, {
+								xtype : 'hidden',
+								name : 'groupId',
+								value : 'noticefile'
+							}, {
+								xtype : 'hidden',
+								name : 'dataorgid',
+								value : dataorgid
+							}, {
+								xtype : 'hidden',
+								name : 'operatorid',
+								value : operatorid
+							}, {
+								xtype : 'hidden',
+								name : 'operatorname',
+								value : operatorname
+							}]
+				});
+
+		this.uploadWindow = this.uploadWindow || new Ext.Window({
+					width : 360,
+					modal : true,
+					height : 150,
+					buttonAlign : "center",
+					closeAction : "hide",
+					layout : "fit",
+					items : [this.uploadForm],
+					buttons : [{
+						text : '上传',
+						handler : function() {
+							_this.uploadForm.getForm().submit({
+								clientValidation : true,
+								success : function(form, response) {
+									Ext.Msg.alert('操作提示', '上传成功!');
+									var fileId = response.result.fileId;
+									var fileName = response.result.fileName;
+									var store = _this.sendsendPanel.attachlist
+											.getStore();
+									var F = new Ext.data.Record({
+												id : fileId,
+												filename : fileName
+											});
+									store.add(F)
+
+								},
+								failure : function(form, response) {
+									Ext.Msg.alert('操作提示', '上传失败!');
+								}
+							});
+						}
+					}, {
+						text : "关闭",
+						handler : function() {
+							_this.uploadWindow.hide()
+						}
+					}]
 				})
 	}
 }

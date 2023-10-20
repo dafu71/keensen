@@ -296,10 +296,13 @@
      
      <select id="queryPlan" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
       
-	     SELECT T1.ID                "id", T1.plan_date "planDate",
+	     SELECT T1.ID                "id", 
 	       T1.ORDER_NO          "orderNo",
 	       T1.PLAN_NO          "planNo",
+	       T1.plan_date "planDate",
 	       T1.AMOUNT            "amount",
+	       T1.plan_stock_date "planStockDate",
+	       T1.stock_AMOUNT            "stockAmount",
 	       T2.amount            "orderAmount",t2.ORDER_DATE "orderDate",
            T1.SPEC_ID           "specId",T1.remark "remark",
 	       T99.MATER_CLASS_CODE AS "materClassCode",

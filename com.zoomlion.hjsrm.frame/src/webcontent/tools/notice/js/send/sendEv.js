@@ -10,6 +10,14 @@ com.zoomlion.hjsrm.notice.SendMgr.prototype.destroy = function() {
 
 }
 com.zoomlion.hjsrm.notice.SendMgr.prototype.initEvent = function() {
+
+	this.sendsendPanel.attachlist.mon(this.sendsendPanel.attachlist, 'upload',
+			function(form, vals) {
+				// this.uploadForm.getForm().reset();
+				this.uploadForm.getForm().findField('uploadFile').setValue('');
+				this.uploadWindow.show();
+			}, this);
+
 	this.sendqueryPanel.mon(this.sendqueryPanel, 'query', function(form, vals) {
 		var store = this.sendlistPanel.store;
 		store.baseParams = vals;
@@ -20,8 +28,9 @@ com.zoomlion.hjsrm.notice.SendMgr.prototype.initEvent = function() {
 					}
 				});
 	}, this);
-	this.sendlistPanel.mon(this.sendlistPanel, 'afterdel', function(gird, cell) {
-			Ext.getCmp(lajilistPanel).store.reload();
+	this.sendlistPanel.mon(this.sendlistPanel, 'afterdel',
+			function(gird, cell) {
+				Ext.getCmp(lajilistPanel).store.reload();
 			}, this);
 
 }
@@ -59,6 +68,21 @@ com.zoomlion.hjsrm.notice.SendMgr.prototype.onSend = function() {
 								Ext.getCmp(_this.attachId).loadParams = attachmentParams;
 								Ext.getCmp(_this.attachId)
 										.loadAttachmentRemote();
+
+								this.uploadForm.getForm()
+										.findField('relationId')
+										.setValue(noticeid);
+								this.uploadForm.getForm().findField('groupId')
+										.setValue('noticefile');
+								this.uploadForm.getForm()
+										.findField('dataorgid')
+										.setValue(dataorgid);
+								this.uploadForm.getForm()
+										.findField('operatorid')
+										.setValue(operatorid);
+								this.uploadForm.getForm()
+										.findField('operatorname')
+										.setValue(operatorname);
 							} else {
 								Ext.Msg.alert('系统提示', '获取公共主键失败');
 							}
@@ -225,28 +249,33 @@ function queryNoticesendread(t, k) {
 			});
 	Ext.getCmp("noticesendreadShow").show();
 };
-function showNoticesendnotread(t){
-var list = Ext.getCmp("noticenotReadShow").items.items[0];
-var store = list.store;
-    store.baseParams = {"condition/noticeid" : t}
+function showNoticesendnotread(t) {
+	var list = Ext.getCmp("noticenotReadShow").items.items[0];
+	var store = list.store;
+	store.baseParams = {
+		"condition/noticeid" : t
+	}
 	store.load({
-					params : {
-						"pageCond/begin" : 0,
-						"pageCond/length" : list.pagingToolbar.pageSize
-					}
-				});
-    Ext.getCmp("noticenotReadShow").items.items[0].orgnames.setValue();
+				params : {
+					"pageCond/begin" : 0,
+					"pageCond/length" : list.pagingToolbar.pageSize
+				}
+			});
+	Ext.getCmp("noticenotReadShow").items.items[0].orgnames.setValue();
 	Ext.getCmp("noticenotReadShow").show();
 };
-function queryNoticenotRead(t,k){
-var list = Ext.getCmp("noticenotReadShow").items.items[0];
-var store = list.store;
-    store.baseParams = {"condition/orgnames" : t,"condition/noticeid" : k}
+function queryNoticenotRead(t, k) {
+	var list = Ext.getCmp("noticenotReadShow").items.items[0];
+	var store = list.store;
+	store.baseParams = {
+		"condition/orgnames" : t,
+		"condition/noticeid" : k
+	}
 	store.load({
-					params : {
-						"pageCond/begin" : 0,
-						"pageCond/length" : list.pagingToolbar.pageSize
-					}
-				});
+				params : {
+					"pageCond/begin" : 0,
+					"pageCond/length" : list.pagingToolbar.pageSize
+				}
+			});
 	Ext.getCmp("noticenotReadShow").show();
 };

@@ -18,6 +18,34 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr.prototype.initEvent = function() 
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
 			}, this);
+			
+	this.inputWindow.activeItem.mon(this.inputWindow.activeItem,
+			'beforeSave', function() {
+				var planDate = this.inputWindow.form
+						.findField("entity/planDate").getValue();
+				var planStockDate = this.inputWindow.form
+						.findField("entity/planStockDate").getValue();
+				//计划入库日期必须小于计划发货日期
+				if(planStockDate>planDate){
+					Ext.Msg.alert("系统提示", "计划入库日期必须小于计划发货日期！");
+					return false;
+				}
+
+			}, this);
+			
+	this.editWindow.activeItem.mon(this.editWindow.activeItem,
+			'beforeSave', function() {
+				var planDate = this.editWindow.form
+						.findField("entity/planDate").getValue();
+				var planStockDate = this.editWindow.form
+						.findField("entity/planStockDate").getValue();
+				//计划入库日期必须小于计划发货日期
+				if(planStockDate>planDate){
+					Ext.Msg.alert("系统提示", "计划入库日期必须小于计划发货日期！");
+					return false;
+				}
+
+			}, this);
 
 }
 

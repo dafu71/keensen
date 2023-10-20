@@ -63,47 +63,60 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onPlan = function() {
 };
 
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onSavePlan = function() {
-	var _thispanel = this.inputPanel2;
-	var _thislist = this.listPanel2;
-	var orderNo = this.inputPanel2.form.findField("entity/orderNo").getValue();
-	if (_thispanel.form.isValid()) {
-		_thispanel.form.submit({
-					method : "POST",
-					url : _thispanel.saveUrl,
-					waitTitle : "操作提示",
-					waitMsg : "保存数据中",
-					success : function(C, B) {
-						var D = B.result;
-						if (D.success) {
-							Ext.MessageBox.alert("操作提示", "保存成功!", function() {
-										_thislist.store.load({
-													params : {
-														"condition/orderNo" : orderNo
-													}
-												});
-									})
-						}
-					},
-					failure : function(C, B) {
-						if (B.result.exception) {
-							var A, E;
-							if (B.result.exception.extype == "biz") {
-								E = "【" + B.result.exception.message + "】";
-								A = Ext.Msg.WARNING;
-							} else {
-								A = Ext.Msg.ERROR;
-								E = "【系统发生异常！请与管理员联系】";
-							}
-							Ext.Msg.show({
-										width : 350,
-										title : "操作提示",
-										msg : E,
-										icon : A,
-										buttons : Ext.Msg.OK
-									})
-						}
+
+	var planDate = this.inputPanel2.form.findField("entity/planDate")
+			.getValue();
+	var planStockDate = this.inputPanel2.form.findField("entity/planStockDate")
+			.getValue();
+	// 计划入库日期必须小于计划发货日期
+	if (planStockDate > planDate) {
+		Ext.Msg.alert("系统提示", "计划入库日期必须小于计划发货日期！");
+		return false;
+	} else {
+
+		var _thispanel = this.inputPanel2;
+		var _thislist = this.listPanel2;
+		var orderNo = this.inputPanel2.form.findField("entity/orderNo")
+				.getValue();
+		if (_thispanel.form.isValid()) {
+			_thispanel.form.submit({
+				method : "POST",
+				url : _thispanel.saveUrl,
+				waitTitle : "操作提示",
+				waitMsg : "保存数据中",
+				success : function(C, B) {
+					var D = B.result;
+					if (D.success) {
+						Ext.MessageBox.alert("操作提示", "保存成功!", function() {
+									_thislist.store.load({
+												params : {
+													"condition/orderNo" : orderNo
+												}
+											});
+								})
 					}
-				})
+				},
+				failure : function(C, B) {
+					if (B.result.exception) {
+						var A, E;
+						if (B.result.exception.extype == "biz") {
+							E = "【" + B.result.exception.message + "】";
+							A = Ext.Msg.WARNING;
+						} else {
+							A = Ext.Msg.ERROR;
+							E = "【系统发生异常！请与管理员联系】";
+						}
+						Ext.Msg.show({
+									width : 350,
+									title : "操作提示",
+									msg : E,
+									icon : A,
+									buttons : Ext.Msg.OK
+								})
+					}
+				}
+			})
+		}
 	}
 };
 
