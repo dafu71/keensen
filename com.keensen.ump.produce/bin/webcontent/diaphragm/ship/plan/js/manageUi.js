@@ -1,5 +1,5 @@
 com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
-	
+
 	this.initPanel = function() {
 		this.initQueryPanel();
 		this.initListPanel();
@@ -17,8 +17,8 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
-					columns : 4,
+					height : 150,
+					columns : 3,
 					border : true,
 					collapsible : true,
 					titleCollapse : false,
@@ -33,19 +33,31 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 								name : 'condition/orderNo',
 								anchor : '75%',
 								fieldLabel : '订单号'
-							},{
-								xtype : "dateregion",
-								colspan : 1,
-								anchor : '100%',
-								nameArray : ['condition/planDateStart',
-										'condition/planDateEnd'],
-								fieldLabel : "计划发货日期",
-								format : "Y-m-d"
 							}, {
 								xtype : 'mpspeccombobox',
 								hiddenName : 'condition/specId',
 								anchor : '75%',
 								fieldLabel : '膜片型号 '
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 3
+							}, {
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '75%',
+								nameArray : ['condition/planDateStart',
+										'condition/planDateEnd'],
+								fieldLabel : "计划发货日期",
+								format : "Y-m-d"
+							}, {
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '75%',
+								nameArray : ['condition/planStockDateStart',
+										'condition/planStockDateEnd'],
+								fieldLabel : "计划入库日期",
+								format : "Y-m-d"
 							}]
 				});
 		/*
@@ -226,7 +238,7 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 						}, {
 							xtype : 'trigger',
 							name : 'entity/orderNo',
-							//id:'planordernotrigger',
+							// id:'planordernotrigger',
 							allowBlank : true,
 							fieldLabel : '订单号',
 							anchor : '95%',
@@ -234,10 +246,12 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 							editable : true,
 							hideTrigger : false,
 							scope : this,
-							onTriggerClick : function(){
-								var orderNo = me.inputWindow.form.findField("entity/orderNo").getValue();
-								var mpspeccombo = me.inputWindow.form.findField("entity/specId");
-								me.onOrderNo(orderNo,mpspeccombo);
+							onTriggerClick : function() {
+								var orderNo = me.inputWindow.form
+										.findField("entity/orderNo").getValue();
+								var mpspeccombo = me.inputWindow.form
+										.findField("entity/specId");
+								me.onOrderNo(orderNo, mpspeccombo);
 							}
 						}, {
 							xtype : 'displayfield',
@@ -354,7 +368,7 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 						}, {
 							xtype : 'trigger',
 							name : 'entity/orderNo',
-							//id:'planordernotrigger',
+							// id:'planordernotrigger',
 							allowBlank : true,
 							fieldLabel : '订单号',
 							dataIndex : 'orderNo',
@@ -363,10 +377,12 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 							editable : true,
 							hideTrigger : false,
 							scope : this,
-							onTriggerClick : function(){
-								var orderNo = me.editWindow.form.findField("entity/orderNo").getValue();
-								var mpspeccombo = me.editWindow.form.findField("entity/specId");
-								me.onOrderNo2(orderNo,mpspeccombo);
+							onTriggerClick : function() {
+								var orderNo = me.editWindow.form
+										.findField("entity/orderNo").getValue();
+								var mpspeccombo = me.editWindow.form
+										.findField("entity/specId");
+								me.onOrderNo2(orderNo, mpspeccombo);
 							}
 						}, {
 							xtype : 'displayfield',

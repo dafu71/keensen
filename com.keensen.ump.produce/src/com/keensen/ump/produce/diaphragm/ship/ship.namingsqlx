@@ -339,6 +339,14 @@
      <isNotNull prepend = "and"  property = "planDateEnd"> 
           to_char(t1.plan_date,'yyyy-MM-dd')  &lt;=  #planDateEnd#
      </isNotNull>
+     
+     <isNotNull prepend = "and"  property = "planStockDateStart"> 
+          to_char(t1.plan_stock_date,'yyyy-MM-dd')  &gt;=  #planStockDateStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "planStockDateEnd"> 
+          to_char(t1.plan_stock_date,'yyyy-MM-dd')  &lt;=  #planStockDateEnd#
+     </isNotNull>
+     
 	order by T2.ORDER_NO,t1.PLAN_NO
      </select>
      
