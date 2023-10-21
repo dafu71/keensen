@@ -143,5 +143,9 @@
  ORDER BY T1.TACHE_ID, T1.DEPT_ID
 	 </select>
 	 
-	 
+	 <select id="queryPwd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	 select t.password "password" from V_AC_OPERATOR_TRS t
+		WHERE t.userid != 'sysadmin'
+		AND t.userid = #staffCode# 
+	 </select>
      </sqlMap>

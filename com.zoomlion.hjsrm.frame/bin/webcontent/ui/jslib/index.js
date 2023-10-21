@@ -734,19 +734,20 @@ function switchorg() {
 }
 
 function login_Phase_I() {
-	/*var xhr = new XMLHttpRequest();
-	xhr.open('GET', 'http://172.16.1.253:18080/qinsen/login/loginValid.do?password=xiaobin520&staffCode=XXB');
-	xhr.withCredentials = true;
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState === 4 && xhr.status === 200) {
-			// use xhr.responseText
-			alert(xhr.responseText);
+	Ext.Ajax.request({
+		url : "com.keensen.ump.base.base.getTocken.biz.ext",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			var tocken = ret.tocken;
+			if (!Ext.isEmpty(tocken)) {
+				window
+						.open('http://172.16.1.253:18080/qinsen/app/sys/main/mainPage.jsp?token='
+								+ tocken);
+			} else {
+				window.open('http://172.16.1.253:18080/qinsen/');
+			}
 		}
-	}
-	xhr.send();*/
-	window.open('http://172.16.1.253:18080/qinsen/');
-
-
+	})
 }
 
 function loginOut() {

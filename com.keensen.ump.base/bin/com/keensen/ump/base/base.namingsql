@@ -107,4 +107,7 @@
           LEFT JOIN qinsen.BASE_DEPARTMENT BD
             ON BD.DEPT_ID = T.TEAM_ID) T1
  ORDER BY T1.TACHE_ID, T1.DEPT_ID</select>
+    <select id="queryPwd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.password "password" from V_AC_OPERATOR_TRS t
+		WHERE t.userid != 'sysadmin'
+		AND t.userid = #staffCode#</select>
 </sqlMap>
