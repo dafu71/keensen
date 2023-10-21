@@ -157,6 +157,9 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 						dataIndex : 'qualifidLength',
 						header : '合格长度(米)'
 					}, {
+						dataIndex : 'loss',
+						header : '不良(米)'
+					}, {
 						dataIndex : 'dimoBatchNo',
 						header : '底膜批次'
 					}, {
@@ -244,6 +247,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 							name : 'qualifidLength'
 						}, {
 							name : 'createName'
+						}, {
+							name : 'loss'
 						}]
 			})
 		})

@@ -219,6 +219,9 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 						dataIndex : 'qualifidLength',
 						header : '合格长度(米)'
 					}, {
+						dataIndex : 'loss',
+						header : '不良(米)'
+					}, {
 						dataIndex : 'dimoBatchNo',
 						header : '底膜批次'
 					}, {
@@ -303,6 +306,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 							name : 'ddflag'
 						}, {
 							name : 'qualifidLength'
+						}, {
+							name : 'loss'
 						}]
 			})
 		})

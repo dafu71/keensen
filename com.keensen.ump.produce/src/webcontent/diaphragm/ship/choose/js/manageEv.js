@@ -36,10 +36,10 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.initEvent = funct
 						Ext.getCmp('shipchooseoutlength').setValue('合计长度(m):' + data.outLength);
 						Ext.getCmp('shipchooseusefullength').setValue('合计可用长度(m):' + data.usefulLength);
 						Ext.getCmp('shipchoosequalifidLength').setValue('合计合格长度(m):' + data.qualifidLength);
-						Ext.getCmp('shipchooseloss').setValue('合计不良长度(m):' + data.loss);
-						Ext.getCmp('shipchooseaqualifidlength').setValue('合计A等长度(m):' + data.aqualifidLength);
-						Ext.getCmp('shipchoosebqualifidlength').setValue('合计B等长度(m):' + data.bqualifidLength);
-						Ext.getCmp('shipchoosecqualifidlength').setValue('合计C等长度(m):' + data.cqualifidLength);
+						Ext.getCmp('shipchooseloss').setValue('合计不良长度(m):' + data.loss  );
+						Ext.getCmp('shipchooseaqualifidlength').setValue('<span style="color:red;font-weight: bold;">合计A等长度(m):' + data.aqualifidLength + '</span>');
+						Ext.getCmp('shipchoosebqualifidlength').setValue('<span style="color:blue;font-weight: bold;">合计B等长度(m):' + data.bqualifidLength + '</span>');
+						Ext.getCmp('shipchoosecqualifidlength').setValue('<span style="color:#000000;font-weight: bold;">合计C等长度(m):' + data.cqualifidLength + '</span>');
 					}else{
 						Ext.getCmp('shipchooseoutlength').setValue('合计长度(m):');
 						Ext.getCmp('shipchooseusefullength').setValue('合计可用长度(m):');
