@@ -3,8 +3,8 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 	this.initPanel = function() {
 		this.initQueryPanel();
 		this.initListPanel();
-		this.initTumoWindow();
-		
+		this.initTumoWindow();		
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -255,4 +255,6 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 
 		});
 	}
+	
+
 }

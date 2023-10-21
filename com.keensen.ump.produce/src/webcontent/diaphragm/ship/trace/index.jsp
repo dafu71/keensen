@@ -41,6 +41,7 @@
 </style>
 </head>
 <body>
-<div id="shiptracemgr"></div>
+<div style='' id="shiptracemgr"></div>
+</div>
 </body>
 </html>

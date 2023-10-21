@@ -1,5 +1,5 @@
 com.keensen.ump.produce.diaphragm.ship.TraceMgr.prototype.initEvent = function() {
-	
+
 	var _this = this;
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -42,3 +42,5 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr.prototype.onTumo = function() {
 		this.tumoWindow.show();
 	}
 }
+
+
