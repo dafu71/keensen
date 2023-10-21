@@ -20,7 +20,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					height : 150,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【膜片入库查询】',
 					fields : [{

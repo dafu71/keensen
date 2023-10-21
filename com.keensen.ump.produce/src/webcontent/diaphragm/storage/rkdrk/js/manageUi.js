@@ -16,7 +16,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageRkdrkMgr = function() {
 					height : 180,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【入库单查询】',
 					fields : [{

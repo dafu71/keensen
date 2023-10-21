@@ -20,7 +20,7 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 					height : 150,
 					columns : 3,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【计划单查询】',
 					fields : [{

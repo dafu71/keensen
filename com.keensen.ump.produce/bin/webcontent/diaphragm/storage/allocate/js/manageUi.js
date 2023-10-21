@@ -16,7 +16,7 @@ com.keensen.ump.produce.diaphragm.storage.AllocateMgr = function() {
 					height : 120,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【调拨单查询】',
 					fields : [{

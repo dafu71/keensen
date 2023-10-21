@@ -16,7 +16,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					height : 220,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【涂膜合格记录查询】',
 					fields : [{

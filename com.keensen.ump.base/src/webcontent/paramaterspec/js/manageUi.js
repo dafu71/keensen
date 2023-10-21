@@ -16,7 +16,7 @@ com.keensen.ump.base.ParamaterspecMgr = function() {
 					height : 120,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【物料规格查询】',
 					fields : [  {

@@ -19,7 +19,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 					height : 120,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【订单查询】',
 					fields : [{

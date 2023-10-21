@@ -35,7 +35,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 					height : 120,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【膜片出库查询】',
 					fields : [{

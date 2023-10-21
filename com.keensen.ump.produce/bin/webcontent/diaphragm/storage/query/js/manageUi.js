@@ -17,7 +17,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					height : 180,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【库存查询】',
 					fields : [{

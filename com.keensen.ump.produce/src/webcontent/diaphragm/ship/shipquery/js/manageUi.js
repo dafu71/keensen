@@ -16,7 +16,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 					height : 180,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【发货单查询】',
 					fields : [{

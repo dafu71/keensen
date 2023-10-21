@@ -19,7 +19,7 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 					height : 120,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【订单跟进查询】',
 					fields : [{

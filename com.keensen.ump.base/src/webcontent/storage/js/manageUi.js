@@ -18,7 +18,7 @@ com.keensen.ump.base.StorageMgr = function() {
 					height : 120,
 					columns : 3,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					title : '【仓库配置查询】',
 					fields : [{
