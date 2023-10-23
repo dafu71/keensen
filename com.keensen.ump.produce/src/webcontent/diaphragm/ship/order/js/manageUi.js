@@ -324,7 +324,13 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						header : '计划发货日期'
 					}, {
 						dataIndex : 'amount',
-						header : '计划数量'
+						header : '计划发货数量'
+					}, {
+						dataIndex : 'planStockDate',
+						header : '计划入库日期'
+					}, {
+						dataIndex : 'stockAmount',
+						header : '计划入库数量'
 					}, {
 						dataIndex : 'materSpecCode',
 						header : '型号'
@@ -356,6 +362,10 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							name : 'planDate'
 						}, {
 							name : 'createName'
+						}, {
+							name : 'planStockDate'
+						}, {
+							name : 'stockAmount'
 						}]
 			})
 		})

@@ -148,4 +148,11 @@
 		WHERE t.userid != 'sysadmin'
 		AND t.userid = #staffCode# 
 	 </select>
+	 
+	 <select id="queryProductCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	 SELECT T.SECURITY_CODE "securityCode", T.PRODUCT_CODE "productCode",
+	 'http://192.168.31.111:8888/?t=code' ||  chr(38) || 'securityCode=' || t.security_code myurl 	 
+  		FROM KS_PROD_SECURITY_CODE T
+  		where T.SECURITY_CODE = #securityCode#
+	 </select>
      </sqlMap>
