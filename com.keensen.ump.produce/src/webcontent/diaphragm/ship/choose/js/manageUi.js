@@ -13,12 +13,12 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 220,
+					height : 180,
 					columns : 4,
 					border : true,
 					//collapsible : true,
 					titleCollapse : false,
-					title : '【涂膜合格记录查询】',
+					title : '【涂膜记录查询】',
 					fields : [{
 								xtype : 'datetimefield',
 								name : 'condition/produceDtStart',
@@ -52,7 +52,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								xtype : 'displayfield',
 								height : '5',
 								colspan : 4
-							}, {
+							}/*, {
 								xtype : 'supcombobox',
 								hiddenName : 'condition/supId',
 								anchor : '75%',
@@ -80,15 +80,11 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								hiddenName : 'condition/workerId',
 								anchor : '75%',
 								fieldLabel : '操作工'
-							}, {
+							}*/, {
 								xtype : 'textfield',
 								name : 'condition/orderNo',
 								anchor : '75%',
 								fieldLabel : '订单号'
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 4
 							}, {
 								xtype : 'textfield',
 								name : 'condition/planNo',
@@ -99,7 +95,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								name : 'condition/dimoBatchNo',
 								anchor : '75%',
 								fieldLabel : '底膜批次'
-							}, {
+							}, /*{
 								xtype : 'mpperfcombobox',
 								hiddenName : 'condition/perfFlagId',
 								anchor : '75%',
@@ -109,6 +105,14 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								hiddenName : 'condition/specId',
 								anchor : '75%',
 								fieldLabel : '膜片型号 '
+							},*/ {
+								xtype : 'dictcombobox',
+								name : 'condition/ddflag',
+								anchor : '75%',
+								dataIndex : 'condition/ddflag',
+								hiddenName : 'condition/ddflag',
+								fieldLabel : '是否让步',
+								dictData : ABF_YESORNO
 							}, {
 								xtype : 'displayfield',
 								height : '5',
@@ -121,15 +125,15 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								hiddenName : 'condition/shipflag',
 								fieldLabel : '是否已生成<br>发货单',
 								dictData : ABF_YESORNO
-							}, {
+							} /*, {
 								xtype : 'dictcombobox',
-								name : 'condition/ddflag',
+								name : 'condition/isQualified',
 								anchor : '75%',
-								dataIndex : 'condition/ddflag',
-								hiddenName : 'condition/ddflag',
-								fieldLabel : '是否有订单号',
+								dataIndex : 'condition/isQualified',
+								hiddenName : 'condition/isQualified',
+								fieldLabel : '是否合格',
 								dictData : ABF_YESORNO
-							}]
+							}*/]
 				});
 		this.queryPanel.addButton({
 					text : "导出",
@@ -146,9 +150,9 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【涂膜合格记录列表】',
+			title : '【涂膜记录列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			tbar:[{
 								xtype : 'displayfield',
@@ -204,6 +208,27 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 			id : 'ship-choose-list',
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
+						header : '操作',
+						width:120,
+						scope : this,
+						renderer : function(v, m, r, i) {
+							var ifconfirm = r.get('ifconfirm');
+							if(ifconfirm == 'y') return;
+							var id = r.get('recordId');
+							var batchNo = r.get('batchNo');
+							var shipflag = r.get('shipflag');
+							var title = shipflag == 'n' ? '生成' : '取消';
+							var style = shipflag == 'n'
+									? "<a style='color:blue;text-decoration:none'"
+									: "<a style='color:red;text-decoration:none'";
+							var str = style + " href='javascript:dealchoose2("
+									+ Ext.encode(shipflag) + ","
+									+ Ext.encode(batchNo) + "," + id + ");'>"
+									+ title + "发货单</a>";
+
+							return str;
+						}
+					},{
 						dataIndex : 'batchNo',
 						header : '膜片批次'
 					}, {
@@ -246,25 +271,16 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 						dataIndex : 'perfFlagName',
 						header : '等级'
 					}, {
-						header : '操作',
-						scope : this,
-						renderer : function(v, m, r, i) {
-							var ifconfirm = r.get('ifconfirm');
-							if(ifconfirm == 'y') return;
-							var id = r.get('recordId');
-							var batchNo = r.get('batchNo');
-							var shipflag = r.get('shipflag');
-							var title = shipflag == 'n' ? '生成' : '取消';
-							var style = shipflag == 'n'
-									? "<a style='color:blue;text-decoration:none'"
-									: "<a style='color:red;text-decoration:none'";
-							var str = style + " href='javascript:dealchoose2("
-									+ Ext.encode(shipflag) + ","
-									+ Ext.encode(batchNo) + "," + id + ");'>"
-									+ title + "发货单</a>";
-
-							return str;
-						}
+						xtype : 'dictcolumn',
+						dataIndex : 'isQualified',
+						header : '合格',
+						dictData : ABF_YESORNO
+					}, {
+						dataIndex : 'createTime',
+						header : '发货单生成日期'
+					}, {
+						dataIndex : 'createName',
+						header : '发货单生成人'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.ship.choose.queryTumoByPage.biz.ext',
@@ -308,6 +324,12 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 							name : 'qualifidLength'
 						}, {
 							name : 'loss'
+						}, {
+							name : 'isQualified'
+						}, {
+							name : 'createName'
+						}, {
+							name : 'createTime'
 						}]
 			})
 		})

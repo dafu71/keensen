@@ -296,7 +296,7 @@
   left join (select distinct batch_no from KS_PROD_DIAPHRAGM_WAREHOUSING) w
   on w.batch_no = t2.batch_no
  where 1=1
-    
+    and t1.IS_QUALIFIED = 'Y'
     <isNotNull prepend="and" property="perfFlagId"> 
 		       t1.PERF_FLAG_ID = #perfFlagId#
 	</isNotNull>
@@ -343,7 +343,7 @@
 		       upper(t1.plan_No) '%' || upper(#planNo#) || '%'
 	</isNotNull>
 	<isNotNull prepend="and" property="dimoBatchNo"> 
-		       t1.DIMO_BATCH_NO '%' || #dimoBatchNo# || '%'
+		       t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'
 	</isNotNull>
  order by t1.produce_dt desc
      </select>

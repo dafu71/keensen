@@ -18,7 +18,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageChooseMgr = function() {
 					border : true,
 					//collapsible : true,
 					titleCollapse : false,
-					title : '【涂膜合格记录查询】',
+					title : '【涂膜记录查询】',
 					fields : [{
 								xtype : 'datetimefield',
 								name : 'condition/produceDtStart',
@@ -158,7 +158,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageChooseMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【涂膜合格记录列表】',
+			title : '【涂膜记录列表】',
 			viewConfig : {
 				forceFit : true
 			},

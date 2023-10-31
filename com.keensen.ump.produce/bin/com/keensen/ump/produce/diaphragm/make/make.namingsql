@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.diaphragm.make.make">
+    <select id="queryFix" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select 
+    t1.ID as "id",	 
+	to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mm')as "createTime",
+	t1.CREATE_USER_ID as "createUserId",
+	t1.CREATE_NAME as "createName",
+	to_char(t1.UPDATE_TIME,'yyyy-MM-dd hh24:mm')as "updateTime",
+	t1.UPDATE_USER_ID as "updateUserId",
+	t1.UPDATE_NAME as "updateName",
+	t1.RESERVE1 as "reserve1",
+	t1.RESERVE2 as "reserve2",
+	t1.RESERVE3 as "reserve3",
+	t1.RESERVE4 as "reserve4",
+	t1.RESERVE5 as "reserve5",
+	t1.ORG_ID as "orgId",
+	t1.STATUS as "status",
+	t1.BATCH_NO as "batchNo",
+	t1.C11 as "c11",
+	t1.C12 as "c12",
+	to_char(t1.FIX_STARTTIME,'yyyy-MM-dd hh24:mm') as "fixStarttime",
+	to_char(t1.HOTTIME,'yyyy-MM-dd hh24:mm') as "hottime",
+	to_char(t1.REACHTIME,'yyyy-MM-dd hh24:mm') as "reachtime",
+	t1.KEEP_DURATION as "keepDuration",
+	t1.FIX_USERID as "fixUserid",
+	to_char(t1.HIT_STARTTIME,'yyyy-MM-dd hh24:mm') as "hitStarttime",
+	to_char(t1.HIT_OVERTIME,'yyyy-MM-dd hh24:mm') as "hitOvertime",
+	to_char(t1.LOOP_STARTTIME,'yyyy-MM-dd hh24:mm') as "loopStarttime",
+	to_char(t1.LOOP_OVERTIME,'yyyy-MM-dd hh24:mm') as "loopOvertime",
+	t1.JAR_NO as "jarNo",
+	t1.JAR_VACUUM as "jarVacuum",
+	t1.VACUUM_DURATION as "vacuumDuration",
+	to_char(t1.USETIME,'yyyy-MM-dd hh24:mm') as "usetime",
+	t1.HIT_USERID as "hitUserid",
+	t1.REMARK as "remark",
+	t1.FIX_USERNAME as "fixUsername",
+	t1.HIT_USERNAME as "hitUsername"，
+	CEIL((TO_DATE(TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24-mi-ss'), 'yyyy-mm-dd hh24-mi-ss') -
+            TO_DATE(TO_CHAR(t1.create_time, 'yyyy-mm-dd hh24-mi-ss'), 'yyyy-mm-dd hh24-mi-ss')) * 24) "diff"
+	from KS_PROD_DIAPHRAGM_MAKE_FIX t1
+	
+
+     where 1=1
+     <isNotNull prepend="" property="batchNo">AND t1.BATCH_NO = #logoCode#</isNotNull>
+        <isNotNull prepend="" property="batchNo2">AND t1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="fixUsername">AND t1.FIX_USERNAME LIKE '%' || #fixUsername# || '%'</isNotNull>
+        <isNotNull prepend="" property="hitUsername">AND t1.HIT_USERNAME LIKE '%' || #hitUsername# || '%'</isNotNull>
+        <isNotNull prepend="" property="id">AND t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+	 ORDER BY t1.id desc
+     </select>
+    <select id="queryZmx" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.ID AS "id",
+       to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mm')as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd hh24:mm')as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.DIMO_TYPE AS "dimoType",
+       T1.LINE AS "line",
+       T1.PRODUCT_DT AS "productDt",
+       T1.DIMO_BATCH_NO AS "dimoBatchNo",
+       t2.prop_value_name AS "supName",
+       T1.SUP_ID AS "supId",
+       T1.WF_BATCH_NO AS "wfBatchNo",
+       T1.ZMY_BATCH_NO AS "zmyBatchNo",
+       T1.THEORY_AMOUNT AS "theoryAmount",
+       T1.LOSE0 AS "lose0",
+       T1.LOSE1 AS "lose1",
+       T1.LOSE2 AS "lose2",
+       T1.LOSE3 AS "lose3",
+       T1.LOSE4 AS "lose4",
+       T1.LOSE5 AS "lose5",
+       T1.LOSE6 AS "lose6",
+       T1.LOSE7 AS "lose7",
+       NVL(T1.THEORY_AMOUNT, 0) -
+       (NVL(T1.LOSE0, 0) + NVL(T1.LOSE1, 1) + NVL(T1.LOSE2, 0) +
+        NVL(T1.LOSE3, 0) + NVL(T1.LOSE4, 0) + NVL(T1.LOSE5, 0) +
+        NVL(T1.LOSE6, 0) + NVL(T1.LOSE7, 0)) "dimoAmount",
+       T1.FLAW0 AS "flaw0",
+       T1.FLAW1 AS "flaw1",
+       T1.FLAW2 AS "flaw2",
+       T1.TEAM_ID AS "teamId",
+       t3.dept_name AS "teamName",
+       T1.BEFORE_AMOUNT AS "beforeAmount",
+       T1.CUR_AMOUNT AS "curAmount",
+       NVL(T1.BEFORE_AMOUNT, 0) + NVL(T1.CUR_AMOUNT, 0) "totalAmount"
+  FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+  left join qinsen.CONF_PROP_VALUE_OPTION t2
+ 	on t2.prop_id = 30021 and t2.prop_value_id = t1.SUP_ID
+  left join qinsen.BASE_DEPARTMENT t3
+	on t3.dept_type_id='110' and t3.dept_id = T1.TEAM_ID
+     where 1=1
+     <isNotNull prepend="" property="dimoType">AND t1.dimo_Type = #dimoType#</isNotNull>
+        <isNotNull prepend="" property="teamId">AND T1.TEAM_ID = #teamId#</isNotNull>
+        <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
+        <isNotNull prepend="and" property="productDtStart">to_char(T1.PRODUCT_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(T1.PRODUCT_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND T1.DIMO_BATCH_NO = #dimoBatchNo#</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo2">AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="supId">t1.SUP_ID = #supId#</isNotNull>
+        <isNotNull prepend="" property="zmyBatchNo2">AND T1.ZMY_BATCH_NO like '%' || #zmyBatchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="wfBatchNo2">AND T1.WF_BATCH_NO like '%' || #wfBatchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="createName">AND t1.CREATE_NAME like '%' || #createName# || '%'</isNotNull>
+    </select>
+    <select id="queryStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	     SELECT T1.DIMO_BATCH_NO AS "dimoBatchNo",
+       T1.PRODUCT_DT AS "productDt",
+       T1.LINE AS "line",
+       T1.DIMO_TYPE AS "dimoType",
+       T1.THEORY_AMOUNT AS "theoryAmount",
+       T1.LOSE AS "lose",
+       T1.THEORY_AMOUNT - T1.LOSE "dimoAmount",
+       T2.PROD_LENGTH "prodLength",
+       T1.THEORY_AMOUNT - T1.LOSE - T2.PROD_LENGTH "residue"
+  FROM (SELECT T.DIMO_BATCH_NO,
+               '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
+               DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
+                      'A',
+                      10,
+                      'B',
+                      11,
+                      'C',
+                      12,
+                      SUBSTR(T.DIMO_BATCH_NO, 7, 1)) M,
+               SUBSTR(T.DIMO_BATCH_NO, 8, 2) D,
+               '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) || '-' ||
+               DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
+                      'A',
+                      10,
+                      'B',
+                      11,
+                      'C',
+                      12,
+                      SUBSTR(T.DIMO_BATCH_NO, 7, 1)) || '-' ||
+               SUBSTR(T.DIMO_BATCH_NO, 8, 2) PRODUCT_DT,
+               MAX(T.LINE) LINE,
+               MAX(T.DIMO_TYPE) DIMO_TYPE,
+               MAX(T.THEORY_AMOUNT) THEORY_AMOUNT,
+               SUM(NVL(T.LOSE0, 0)) + SUM(NVL(T.LOSE1, 0)) +
+               SUM(NVL(T.LOSE2, 0)) + SUM(NVL(T.LOSE3, 0)) +
+               SUM(NVL(T.LOSE4, 0)) + SUM(NVL(T.LOSE5, 0)) +
+               SUM(NVL(T.LOSE6, 0)) + SUM(NVL(T.LOSE7, 0)) LOSE
+          FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T
+         GROUP BY T.DIMO_BATCH_NO) T1
+  LEFT JOIN (SELECT T.DIMO_BATCH_NO, SUM(T.OUT_LENGTH) PROD_LENGTH
+               FROM V_KS_TUMO_ALL T
+              GROUP BY T.DIMO_BATCH_NO) T2
+    ON T1.DIMO_BATCH_NO = T2.DIMO_BATCH_NO
+ WHERE 1 = 1
+     <isNotNull prepend="" property="dimoType">AND t1.dimo_Type = #dimoType#</isNotNull>
+        <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
+        <isNotNull prepend="and" property="productDtStart">T1.PRODUCT_DT  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">T1.PRODUCT_DT  &lt;=  #productDtEnd#</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND T1.DIMO_BATCH_NO = #dimoBatchNo#</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo2">AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'</isNotNull>
+    </select>
+</sqlMap>

@@ -208,7 +208,7 @@
   left join (select distinct batch_no from KS_PROD_DIAPHRAGM_WAREHOUSING) w
   on w.batch_no = t2.batch_no
  where 1=1
-    
+    and t1.IS_QUALIFIED = 'Y'
     <isNotNull prepend="and" property="perfFlagId">t1.PERF_FLAG_ID = #perfFlagId#</isNotNull>
         <isNotNull prepend="and" property="rkflag">decode(t2.RECORD_ID,null,'n','y') = #rkflag#</isNotNull>
         <isNotNull prepend="and" property="yrkflag">decode(w.batch_no,null,'否','是') = #yrkflag#</isNotNull>
@@ -224,7 +224,7 @@
         <isNotNull prepend="and" property="produceDtEnd">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #produceDtEnd#</isNotNull>
         <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="planNo">upper(t1.plan_No) '%' || upper(#planNo#) || '%'</isNotNull>
-        <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO '%' || #dimoBatchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'</isNotNull>
  order by t1.produce_dt desc
      </select>
     <select id="queryRkd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">

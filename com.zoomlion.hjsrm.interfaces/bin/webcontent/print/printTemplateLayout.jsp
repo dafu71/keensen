@@ -7,12 +7,19 @@
 <%@page import="com.zoomlion.hjsrm.interfaces.print.TJkPrinttemplateBean"%>
 <html>
 	<head>
+	<script language="javascript" src="interfaces/print/Lodop/LodopFuncs.js"></script>
 	<title>套打模板管理</title>
+	
+	
+	
 		<script type="text/javascript">
 	  		BIZ.ns("com.zoomlion.hjsrm.interfaces");
 	  	</script>
 	  	<js:load scriptPath="interfaces/print/js/printTemplateUi.js"/>
 	  	<js:load scriptPath="interfaces/print/js/printTemplateEv.js"/>
+	  	
+	  	
+	  	
 	  	<script type="text/javascript">
 	  		FunctionMgr.load({mainfn : com.zoomlion.hjsrm.interfaces.TJkPrinttemplateMgr});
 	  	</script>

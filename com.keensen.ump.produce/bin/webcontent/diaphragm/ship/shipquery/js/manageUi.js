@@ -13,10 +13,10 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 150,
 					columns : 4,
 					border : true,
-					//collapsible : true,
+					// collapsible : true,
 					titleCollapse : false,
 					title : '【发货单查询】',
 					fields : [{
@@ -42,44 +42,24 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 						name : 'condition/batchNo2',
 						anchor : '75%',
 						fieldLabel : '膜片批次'
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, {
-						xtype : 'supcombobox',
-						hiddenName : 'condition/supId',
-						anchor : '75%',
-						fieldLabel : '无纺布供应商'
-					}, {
-						xtype : 'combobox',
-						anchor : '75%',
-						name : 'condition/isWx',
-						hiddenName : 'condition/isWx',
-						fieldLabel : '是否外销',
-						triggerAction : "all",
-						store : new Ext.data.ArrayStore({
-									id : 0,
-									fields : ['mykey', 'myvalue'],
-									data : [['N', '否'], ['Y', '是']]
-								}),
-						mode : "local",
-						editable : false,
-						displayField : "myvalue",
-						valueField : "mykey",
-						forceSelection : true,
-						emptyText : "--请选择--"
-					}, {
-						xtype : 'mpworkercombobox',
-						hiddenName : 'condition/workerId',
-						anchor : '75%',
-						fieldLabel : '操作工'
-					}, {
-						xtype : 'storagecombobox',
-						hiddenName : 'condition/storageId',
-						anchor : '75%',
-						fieldLabel : '仓库'
-					}, {
+					}/*
+						 * , { xtype : 'displayfield', height : '5', colspan : 4 }, {
+						 * xtype : 'supcombobox', hiddenName :
+						 * 'condition/supId', anchor : '75%', fieldLabel :
+						 * '无纺布供应商' }, { xtype : 'combobox', anchor : '75%',
+						 * name : 'condition/isWx', hiddenName :
+						 * 'condition/isWx', fieldLabel : '是否外销', triggerAction :
+						 * "all", store : new Ext.data.ArrayStore({ id : 0,
+						 * fields : ['mykey', 'myvalue'], data : [['N', '否'],
+						 * ['Y', '是']] }), mode : "local", editable : false,
+						 * displayField : "myvalue", valueField : "mykey",
+						 * forceSelection : true, emptyText : "--请选择--" }, {
+						 * xtype : 'mpworkercombobox', hiddenName :
+						 * 'condition/workerId', anchor : '75%', fieldLabel :
+						 * '操作工' }, { xtype : 'storagecombobox', hiddenName :
+						 * 'condition/storageId', anchor : '75%', fieldLabel :
+						 * '仓库' }
+						 */, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 4
@@ -103,19 +83,15 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 						hiddenName : 'condition/perfFlagId',
 						anchor : '75%',
 						fieldLabel : '膜片等级'
-					}/*, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}*//*, {
-								xtype : 'dictcombobox',
-								name : 'condition/ifconfirm',
-								anchor : '75%',
-								dataIndex : 'condition/ifconfirm',
-								hiddenName : 'condition/ifconfirm',
-								fieldLabel : '是否已发货',
-								dictData : ABF_YESORNO
-							}*/]
+					}/*
+						 * , { xtype : 'displayfield', height : '5', colspan : 4 }
+						 *//*
+						 * , { xtype : 'dictcombobox', name :
+						 * 'condition/ifconfirm', anchor : '75%', dataIndex :
+						 * 'condition/ifconfirm', hiddenName :
+						 * 'condition/ifconfirm', fieldLabel : '是否已发货', dictData :
+						 * ABF_YESORNO }
+						 */]
 				});
 
 		this.queryPanel.addButton({
@@ -136,69 +112,71 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 		this.listPanel = new Ext.fn.EditListPanel({
 			title : '【发货单列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			id : 'ship-shipquery-list',
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
-						dataIndex : 'batchNo',
-						header : '膜片批次'
-					}, {
-						dataIndex : 'produceDt',
-						header : '生产日期'
-					}, {
-						dataIndex : 'outLength',
-						header : '长度(米)'
-					}, {
-						dataIndex : 'usefulLength',
-						header : '可用长度(米)'
-					}, {
-						dataIndex : 'qualifidLength',
-						header : '合格长度(米)'
-					}, {
-						dataIndex : 'loss',
-						header : '不良(米)'
-					}, {
-						dataIndex : 'dimoBatchNo',
-						header : '底膜批次'
-					}, {
-						dataIndex : 'lineCode',
-						header : '生产线'
-					}, {
-						dataIndex : 'materClassCode',
-						header : '膜片系列'
-					}, {
-						dataIndex : 'materSpecCode',
-						header : '膜片型号'
-					}, {
-						dataIndex : 'supName',
-						header : '无纺布供应商'
-					}, {
-						dataIndex : 'planNo',
-						header : '计划单号'
-					}, {
-						dataIndex : 'orderNo',
-						header : '订单号'
-					}, {
-						dataIndex : 'perfFlagName',
-						header : '等级'
-					}, {
-						dataIndex : 'createName',
-						header : '发货确认人'
-					}, {
-						header : '操作',
-						scope : this,
-						renderer : function(v, m, r, i) {
-							var id = r.get('id');
-							var style = "<a style='color:red;text-decoration:none'";
-							var str = style + " href='javascript:dealship("
-									+ id + ");'>"
-									+ "取消发货单</a>";
+				header : '操作',
+				scope : this,
+				renderer : function(v, m, r, i) {
+					var id = r.get('id');
+					var style = "<a style='color:red;text-decoration:none'";
+					var str = style + " href='javascript:dealship(" + id
+							+ ");'>" + "取消发货单</a>";
 
-							return str;
-						}
-					}],
+					return str;
+				}
+			}, {
+				dataIndex : 'batchNo',
+				header : '膜片批次'
+			}, {
+				dataIndex : 'produceDt',
+				header : '生产日期'
+			}, {
+				dataIndex : 'outLength',
+				header : '长度(米)'
+			}, {
+				dataIndex : 'usefulLength',
+				header : '可用长度(米)'
+			}, {
+				dataIndex : 'qualifidLength',
+				header : '合格长度(米)'
+			}, {
+				dataIndex : 'loss',
+				header : '不良(米)'
+			}, {
+				dataIndex : 'dimoBatchNo',
+				header : '底膜批次'
+			}, {
+				dataIndex : 'lineCode',
+				header : '生产线'
+			}, {
+				dataIndex : 'materClassCode',
+				header : '膜片系列'
+			}, {
+				dataIndex : 'materSpecCode',
+				header : '膜片型号'
+			}, {
+				dataIndex : 'supName',
+				header : '无纺布供应商'
+			}, {
+				dataIndex : 'planNo',
+				header : '计划单号'
+			}, {
+				dataIndex : 'orderNo',
+				header : '订单号'
+			}, {
+				dataIndex : 'perfFlagName',
+				header : '等级'
+			}, {
+				dataIndex : 'createName',
+				header : '发货单生成人'
+			}, {
+				dataIndex : 'createTime',
+				header : '发货单生成时间'
+			}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.ship.shipquery.queryByPage.biz.ext',
 				root : 'data',
@@ -249,6 +227,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 							name : 'createName'
 						}, {
 							name : 'loss'
+						}, {
+							name : 'createTime'
 						}]
 			})
 		})

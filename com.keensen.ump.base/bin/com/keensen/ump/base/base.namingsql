@@ -42,7 +42,7 @@
   	from qinsen.CONF_PROP_VALUE_OPTION t
  	where t.prop_id = 30021</select>
     <!-- 膜片操作工查询 -->
-    <select id="queryMpworker" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.staff_id ,t.staff_name,t.staff_code,
+    <select id="queryMpworker" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.staff_id ,t.staff_name,t.staff_code,t.staff_code "code",
 		t.staff_id "id", t.staff_name || '(' || t.staff_code || ')' "name"
 		 from qinsen.base_staff t
 		where t.dept_id in(select distinct team_id from qinsen.INST_TUMO)
@@ -114,4 +114,7 @@
 	 'http://192.168.31.111:8888/?t=code' ||  chr(38) || 'securityCode=' || t.security_code myurl 	 
   		FROM KS_PROD_SECURITY_CODE T
   		where T.SECURITY_CODE = #securityCode#</select>
+    <select id="queryMarkspec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.PROD_SPEC_ID "prodSpecId",
+	 t.PROD_SPEC_NAME "prodSpecName",
+	 t.MARK_SPEC_NAME "markSpecName" from qinsen.VIEW_MARK_SPEC t</select>
 </sqlMap>

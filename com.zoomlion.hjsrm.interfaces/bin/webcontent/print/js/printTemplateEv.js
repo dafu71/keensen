@@ -207,6 +207,7 @@ com.zoomlion.hjsrm.interfaces.TJkPrinttemplateMgr.prototype.onDesign = function(
 			mk.show();
 			var row = rows[0];
 			var wp = new webPrint();// 创建打印控件对象
+			alert(wp);
 			this.designWin.show();
 			Ext.getCmp("designPanel").show();
 			this.wp = wp;

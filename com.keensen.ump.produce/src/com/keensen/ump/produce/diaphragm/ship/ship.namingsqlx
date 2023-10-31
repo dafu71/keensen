@@ -8,7 +8,7 @@
        t1.LINE_CODE       as "lineCode",
        t1.PRODUCE_DT      as "produceDt",
        t1.BATCH_NO        as "batchNo",
-       t1.IS_QUALIFIED    as "isQualified",
+       lower(t1.IS_QUALIFIED)    as "isQualified",
        t1.OUT_LENGTH      as "outLength",
        t1.LOSS            as "loss",
        t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
@@ -31,12 +31,18 @@
        t1.mater_spec_code as "materSpecCode",
        t1.mater_class_Name as "materClassName",
        t1.mater_spec_Name as "materSpecName",
-       ddflag "ddflag"
-  from v_ks_tumo2 t1
+       ddflag "ddflag",
+       to_char(t2.create_time,'yyyy-MM-dd') "createTime",
+       t2.create_name "createName"
+  from v_ks_tumo3 t1
   left join KS_PROD_DIAPHRAGM_SHIP t2 
     on t1.RECORD_ID = t2.RECORD_ID
  
  where 1=1
+ 
+ 	<isNotNull prepend="and" property="isQualified"> 
+		       upper(t1.IS_QUALIFIED) = upper(#isQualified#)
+	</isNotNull>
     <isNotNull prepend="and" property="ifconfirm"> 
 		       nvl(t2.ifconfirm,'n') = #ifconfirm#
 	</isNotNull>
@@ -75,6 +81,10 @@
 		       t1.batch_No = #batchNo#
 	</isNotNull>
 	
+	<isNotNull prepend="and" property="batchNoStr"> 
+		       t1.batch_No in ($batchNoStr$)
+	</isNotNull>
+	
 	<isNotNull prepend="and" property="batchNo2"> 
 		       t1.batch_No like '%' || upper(#batchNo2#) || '%'
 	</isNotNull>
@@ -105,7 +115,7 @@
        SUM(DECODE(T1.PERF_FLAG_CODE, 'A', T1.QUALIFID_LENGTH, 0)) AS "aqualifidLength",
        SUM(DECODE(T1.PERF_FLAG_CODE, 'B', T1.QUALIFID_LENGTH, 0)) AS "bqualifidLength",
        SUM(DECODE(T1.PERF_FLAG_CODE, 'C', T1.QUALIFID_LENGTH, 0)) AS "cqualifidLength"
-  FROM V_KS_TUMO2 T1
+  FROM V_KS_TUMO3 T1
   LEFT JOIN KS_PROD_DIAPHRAGM_SHIP T2
     ON T1.RECORD_ID = T2.RECORD_ID
  WHERE 1 = 1
@@ -171,7 +181,8 @@
  
  <select id="queryFhd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
      select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",t2.create_name "createName",
-       t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id",
+       t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id", 
+       to_char(t2.create_time,'yyyy-MM-dd') "createTime",
        nvl(t2.ifconfirm,'n')    "ifconfirm",
        t1.LINE_CODE       as "lineCode",
        t1.PRODUCE_DT      as "produceDt",
@@ -199,7 +210,7 @@
        t1.mater_class_Name as "materClassName",
        t1.mater_spec_Name as "materSpecName"
   from KS_PROD_DIAPHRAGM_ship t2
-  left join V_KS_TUMO t1 
+  left join V_KS_TUMO3 t1 
     on t1.RECORD_ID = t2.RECORD_ID
  where 1=1
     <isNotNull prepend="and" property="ifconfirm"> 
@@ -258,9 +269,32 @@
  	<select id="queryOrder" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
       
 	     SELECT T1.ID                "id",t1.ORDER_DATE "orderDate",t1.create_name "createName",
-	       T1.ORDER_NO          "orderNo",
+	       T1.ORDER_NO          "orderNo", t1.customer_Code "customerCode",
 	       T1.AMOUNT            "amount",
            T1.SPEC_ID           "specId",T1.remark "remark",
+           t1.unit as "unit",
+           t1.demand_date as "demandDate",
+			t1.ext0 as "ext0",
+			t1.ext1 as "ext1",
+			t1.ext2 as "ext2",
+			t1.ext3 as "ext3",
+			t1.ext4 as "ext4",
+			t1.ext5 as "ext5",
+			t1.ext6 as "ext6",
+			t1.ext7 as "ext7",
+			t1.ext8 as "ext8",
+			t1.ext9 as "ext9",
+			t1.ext10 as "ext10",
+			t1.ext11 as "ext11",
+			t1.ext12 as "ext12",
+			t1.ext13 as "ext13",
+			t1.ext14 as "ext14",
+			t1.ext15 as "ext15",
+			t1.ext16 as "ext16",
+			t1.ext17 as "ext17",
+			t1.ext18 as "ext18",
+			t1.ext19 as "ext19",
+           
 	       T99.MATER_CLASS_CODE AS "materClassCode",
 	       T22.MATER_SPEC_CODE  AS "materSpecCode",
 	       T99.MATER_CLASS_NAME AS "materClassName",
