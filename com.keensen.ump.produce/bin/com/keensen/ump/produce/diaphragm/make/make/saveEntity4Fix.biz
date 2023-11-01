@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="saveEntity4Fix" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
   <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
-    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
-      <targetNode>invokePojo0</targetNode>
-    </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link1" name="修改" type="transition">
-      <sourceNode>start0</sourceNode>
-      <targetNode>assign0</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="NOTNULLANDEMPTY">
-          <process:leftOperand type="query">entity/id</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
+      <targetNode>switch0</targetNode>
     </sourceConnections>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
     <targetConnections>link4</targetConnections>
+    <targetConnections>link8</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns/>
   </nodes>
@@ -123,6 +114,57 @@
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
     <figSize height="20" width="74"/>
     <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" collapsed="false" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>switch1</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">m:userObject/userId</process:leftOperand>
+          <process:rightOperand type="literal">guest</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <figSize height="20" width="46"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" collapsed="false" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link1" name="修改" isDefault="false" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">entity/id</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <nodeLabel>switch1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
+    <figSize height="20" width="55"/>
+    <node>switch1</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
