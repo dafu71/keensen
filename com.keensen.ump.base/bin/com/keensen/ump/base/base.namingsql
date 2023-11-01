@@ -117,4 +117,31 @@
     <select id="queryMarkspec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.PROD_SPEC_ID "prodSpecId",
 	 t.PROD_SPEC_NAME "prodSpecName",
 	 t.MARK_SPEC_NAME "markSpecName" from qinsen.VIEW_MARK_SPEC t</select>
+    <!-- 查询待选生产线 -->
+    <select id="qryLineOption" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+      SELECT L.LINE_ID       "lineId",
+       L.LINE_CODE     "lineCode",
+       L.LINE_NAME     "lineName",
+       L.WORKSHOP_ID   "workshopId",
+       L.DISP_ORDER    "dispOrder",
+       L.REMARK        "remark",
+       L.PROD_TACHE_ID "prodTacheId",
+       L.STATE         "state",
+       L.GROUP_ID      "groupId",
+       L.TEAM_ID       "teamId",
+       L.FACTORY_ID    "factoryId",
+       G.GROUP_CODE    "groupCode",
+       W.DEPT_NAME     "workshopName",
+       F.DEPT_NAME     "factoryName",
+       l.line_id "id",l.line_name || '(' || l.line_code || ')' "name"
+	  FROM QINSEN.BASE_PROD_LINE  L,
+	       QINSEN.BASE_LINE_GROUP G,
+	       QINSEN.BASE_DEPARTMENT W,
+	       QINSEN.BASE_DEPARTMENT F
+	 WHERE L.STATE = 'A'
+	   AND L.GROUP_ID = G.GROUP_ID(+)
+	   AND L.WORKSHOP_ID = W.DEPT_ID(+)
+	   AND L.FACTORY_ID = F.DEPT_ID(+)
+	   <isNotNull prepend="" property="prodTacheId">AND L.PROD_TACHE_ID in($prodTacheId$)</isNotNull>
+    </select>
 </sqlMap>

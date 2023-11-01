@@ -95,12 +95,15 @@
        t3.dept_name AS "teamName",
        T1.BEFORE_AMOUNT AS "beforeAmount",
        T1.CUR_AMOUNT AS "curAmount",
-       NVL(T1.BEFORE_AMOUNT, 0) + NVL(T1.CUR_AMOUNT, 0) "totalAmount"
+       NVL(T1.BEFORE_AMOUNT, 0) + NVL(T1.CUR_AMOUNT, 0) "totalAmount",
+       t4.cnt "cnt"
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
   left join qinsen.CONF_PROP_VALUE_OPTION t2
  	on t2.prop_id = 30021 and t2.prop_value_id = t1.SUP_ID
   left join qinsen.BASE_DEPARTMENT t3
 	on t3.dept_type_id='110' and t3.dept_id = T1.TEAM_ID
+  left join (select count(1) cnt ,DIMO_BATCH_NO from KS_PROD_DIAPHRAGM_ZMX_RECORD
+      group by DIMO_BATCH_NO) t4 on t4.DIMO_BATCH_NO=t1.DIMO_BATCH_NO
      where 1=1
      <isNotNull prepend="" property="dimoType">AND t1.dimo_Type = #dimoType#</isNotNull>
         <isNotNull prepend="" property="teamId">AND T1.TEAM_ID = #teamId#</isNotNull>

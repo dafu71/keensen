@@ -12,6 +12,32 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
+	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
+			function() {
+				var dimoBatchNo = this.inputWindow.items.items[0].form
+						.findField('entity/dimoBatchNo').getValue();
+				dimoBatchNo = dimoBatchNo.substring(0, 9);
+				var dimoBatchNo2 = this.createDimoBatchNo();
+				if (dimoBatchNo != dimoBatchNo2) {
+					Ext.Msg.alert("系统提示", "底膜批号不合法！");
+					return false;
+				}
+			}, this);
+			
+	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'beforeSave',
+			function() {
+				var dimoBatchNo = this.editWindow.items.items[0].form
+						.findField('entity/dimoBatchNo').getValue();
+				dimoBatchNo = dimoBatchNo.substring(0, 9);
+				var dimoBatchNo2 = this.editWindow.items.items[0].form
+						.findField('entity/dimoBatchNo2').getValue();
+				dimoBatchNo2 = dimoBatchNo2.substring(0, 9);
+				if (dimoBatchNo != dimoBatchNo2) {
+					Ext.Msg.alert("系统提示", "底膜批号不合法！");
+					return false;
+				}
+			}, this);
+
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 				this.editWindow.show();
@@ -81,3 +107,61 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.destroy = function() {
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onEdit = function() {
 	this.listPanel.onEdit();
 };
+
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = function() {
+
+	var _this = this;
+	var dimoBatchNo = _this.inputWindow.items.items[0].form
+			.findField('entity/dimoBatchNo').getValue();
+	var psf = _this.inputWindow.items.items[0].form.findField('psf').getValue();
+	// ULP底膜-30;BW底膜-20；SW底膜-10；NF底膜-60
+	var dimoType = _this.inputWindow.items.items[0].form
+			.findField('entity/dimoType').getValue();
+	var line = _this.inputWindow.items.items[0].form.findField('entity/line')
+			.getValue();
+	var productDt = _this.inputWindow.items.items[0].form
+			.findField('entity/productDt').getValue();
+	productDt = productDt.toLocaleDateString();
+	productDt = productDt.replaceAll('/', '-');
+
+	if (!Ext.isEmpty(productDt) && !Ext.isEmpty(psf) && !Ext.isEmpty(dimoType)
+			&& !Ext.isEmpty(line)) {
+		dimoBatchNo = 'F';
+		line = line == '铸膜A线' ? 'A' : 'B';
+		dimoBatchNo += line;
+		if (dimoType == 'ULP底膜') {
+			dimoBatchNo += '30';
+		} else if (dimoType == 'BW底膜') {
+			dimoBatchNo += '20';
+		} else if (dimoType == 'SW底膜') {
+			dimoBatchNo += '10';
+		} else if (dimoType == 'NF底膜') {
+			dimoBatchNo += '60';
+		}
+		dimoBatchNo += psf;
+		var arr = productDt.split('-');
+		var y = arr[0] - 2020;
+		dimoBatchNo += y
+		var m = arr[1];
+		m = parseInt(m);
+		if (m == 10) {
+			dimoBatchNo += 'A';
+		} else if (m == 11) {
+			dimoBatchNo += 'B';
+		} else if (m == 12) {
+			dimoBatchNo += 'C';
+		}
+		var d = arr[2];
+		d = parseInt(d);
+		if (d < 10) {
+			dimoBatchNo += '0' + d
+		} else {
+			dimoBatchNo += d
+		}
+		return dimoBatchNo;
+
+	} else {
+		return '';
+	}
+};
+

@@ -37,8 +37,14 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								allowBlank : true,
 								editable : true,
 								format : 'Y-m-d H:i'
-							}, {
+							}/*, {
 								xtype : 'mplinecombobox',
+								hiddenName : 'condition/lineId',
+								anchor : '75%',
+								fieldLabel : '生产线 '
+							}*/, {
+								xtype : 'linecombobox',
+								prodTacheId:'100',
 								hiddenName : 'condition/lineId',
 								anchor : '75%',
 								fieldLabel : '生产线 '

@@ -32,6 +32,8 @@
 <js:load scriptPath="pub/common/mplineCombo.js" />
 <js:load scriptPath="pub/common/mpperfCombo.js" />
 
+<js:load scriptPath="pub/common/lineCombo.js" />
+
 <js:load scriptPath="produce/diaphragm/ship/choose/js/manageUi.js"/>
 <js:load scriptPath="produce/diaphragm/ship/choose/js/manageEv.js"/>
 

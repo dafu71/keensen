@@ -123,7 +123,18 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						header : '生产日期'
 					}, {
 						dataIndex : 'dimoBatchNo',
-						header : '底膜批号'
+						header : '底膜批号',
+						renderer : function(v, m, r, i) {
+							var cnt = r.get('cnt');
+							var dimoBatchNo = r.get('dimoBatchNo');
+							if (cnt > 1) {
+								return "<span style='color:red'>" + dimoBatchNo
+										+ "</span>";
+
+							} else {
+								return dimoBatchNo;
+							}
+						}
 					}, {
 						dataIndex : 'supName',
 						header : '无纺布（供应商）'
@@ -181,10 +192,9 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					}, {
 						dataIndex : 'curAmount',
 						header : '本班数量'
-					}/*, {
-						dataIndex : 'totalAmount',
-						header : '当班总计生产数量'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'totalAmount', header : '当班总计生产数量' }
+						 */, {
 						dataIndex : 'createName',
 						header : '填报人'
 					}],
@@ -276,6 +286,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'totalAmount'
 						}, {
 							name : 'dimoAmount'
+						}, {
+							name : 'cnt'
 						}]
 			})
 		})
@@ -283,6 +295,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 
 	this.initInputWindow = function() {
 		var _this = this;
+
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增铸膜线生产记录',
 			height : 600,
@@ -299,13 +312,48 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 				saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.saveEntity4Zmx.biz.ext',
 				fields : [{
 							xtype : 'dictcombobox',
+							name : 'psf',
+							allowBlank : false,
+							fieldLabel : '聚砜选项',
+							hiddenName : 'psf',
+							dictData : KS_PSF,
+							anchor : '47%',
+							colspan : 2,
+							listeners : {
+								scope : this,
+								select : function(combo, record) {
+									var v = this.createDimoBatchNo();
+									if (!Ext.isEmpty(v)) {
+										_this.inputWindow.items.items[0].form
+												.findField('entity/dimoBatchNo')
+												.setValue(v);
+									}
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'dictcombobox',
 							name : 'entity/dimoType',
 							allowBlank : false,
 							fieldLabel : '底膜类型',
 							hiddenName : 'entity/dimoType',
 							dictData : KS_DIMO_TYPE,
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							listeners : {
+								scope : this,
+								select : function(combo, record) {
+									var v = this.createDimoBatchNo();
+									if (!Ext.isEmpty(v)) {
+										_this.inputWindow.items.items[0].form
+												.findField('entity/dimoBatchNo')
+												.setValue(v);
+									}
+								}
+							}
 						}, {
 							xtype : 'dictcombobox',
 							name : 'entity/line',
@@ -314,7 +362,18 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							hiddenName : 'entity/line',
 							dictData : KS_ZM_LINE,
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							listeners : {
+								scope : this,
+								select : function(combo, record) {
+									var v = this.createDimoBatchNo();
+									if (!Ext.isEmpty(v)) {
+										_this.inputWindow.items.items[0].form
+												.findField('entity/dimoBatchNo')
+												.setValue(v);
+									}
+								}
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -327,7 +386,18 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							fieldLabel : '生产日期',
 							value : new Date(),
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							listeners : {
+								scope : this,
+								select : function(combo, record) {
+									var v = this.createDimoBatchNo();
+									if (!Ext.isEmpty(v)) {
+										_this.inputWindow.items.items[0].form
+												.findField('entity/dimoBatchNo')
+												.setValue(v);
+									}
+								}
+							}
 						}, {
 							xtype : 'textfield',
 							name : 'entity/dimoBatchNo',
@@ -513,18 +583,19 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 			minimizable : false,
 			maximizable : false,
 			items : [{
-						xtype : 'editpanel',
-						baseCls : "x-plain",
-						pgrid : this.listPanel,
-						columns : 2,
-						loadUrl : 'com.keensen.ump.produce.diaphragm.make.make.expandZmxEntity.biz.ext',
-						saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.saveEntity4Zmx.biz.ext',
-						fields : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.diaphragm.make.make.expandZmxEntity.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.saveEntity4Zmx.biz.ext',
+				fields : [{
 							xtype : 'dictcombobox',
 							name : 'entity/dimoType',
 							dataIndex : 'dimoType',
 							allowBlank : false,
 							fieldLabel : '底膜类型',
+							readOnly : true,
 							hiddenName : 'entity/dimoType',
 							dictData : KS_DIMO_TYPE,
 							anchor : '95%',
@@ -534,6 +605,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'entity/line',
 							dataIndex : 'line',
 							allowBlank : false,
+							readOnly : true,
 							fieldLabel : '生产线别',
 							hiddenName : 'entity/line',
 							dictData : KS_ZM_LINE,
@@ -548,9 +620,10 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'entity/productDt',
 							dataIndex : 'productDt',
 							allowBlank : false,
+							readOnly : true,
 							format : "Y-m-d",
 							fieldLabel : '生产日期',
-							//value : new Date(),
+							// value : new Date(),
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -743,11 +816,15 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							anchor : '95%',
 							colspan : 1
 						}, {
-									xtype : 'hidden',
-									name : 'entity/id',
-									dataIndex : 'id'
-								}]
-					}]
+							xtype : 'hidden',
+							name : 'entity/id',
+							dataIndex : 'id'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/dimoBatchNo2',
+							dataIndex : 'dimoBatchNo2'
+						}]
+			}]
 		});
 	}
 }
