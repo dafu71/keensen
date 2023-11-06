@@ -266,7 +266,9 @@
  where 1=1
  and not exists(select 1 from KS_PROD_DIAPHRAGM_WAREHOUSING w where w.batch_No=t2.batch_No)
  
-   <isNotNull prepend="and" property="perfFlagId">t1.PERF_FLAG_ID = #perfFlagId#</isNotNull>
+ <isNotNull prepend="and" property="createTimeStart">to_char(t2.create_time,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t2.create_time,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="perfFlagId">t1.PERF_FLAG_ID = #perfFlagId#</isNotNull>
         <isNotNull prepend="and" property="lineId">t1.line_id = #lineId#</isNotNull>
         <isNotNull prepend="and" property="specId">t1.spec_id = #specId#</isNotNull>
         <isNotNull prepend="and" property="workerId">t1.worker_Id = #workerId#</isNotNull>

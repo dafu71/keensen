@@ -113,6 +113,12 @@
 		ORDER BY t.up_dept_id,t.dept_id
 	 </select>
 	 
+	 <!-- 元件生产车间查询 -->
+     <select id="queryComponentTeam" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.orgid "id",t.orgname "name" from V_DEPT t
+	WHERE t.orgseq LIKE '.10000.100001.100062%'
+	 </select>
+	 
 	 <!-- 工序班组查询 -->
      <select id="queryTacheTeam" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
      SELECT T1.TACHE_ID     AS "tacheId",

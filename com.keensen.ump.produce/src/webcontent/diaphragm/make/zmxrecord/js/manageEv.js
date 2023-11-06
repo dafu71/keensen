@@ -121,8 +121,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 			.getValue();
 	var productDt = _this.inputWindow.items.items[0].form
 			.findField('entity/productDt').getValue();
-	productDt = productDt.toLocaleDateString();
-	productDt = productDt.replaceAll('/', '-');
+
+	productDt = Ext.util.Format.date(productDt, "Y-m-d");		
 
 	if (!Ext.isEmpty(productDt) && !Ext.isEmpty(psf) && !Ext.isEmpty(dimoType)
 			&& !Ext.isEmpty(line)) {
@@ -144,13 +144,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 		dimoBatchNo += y
 		var m = arr[1];
 		m = parseInt(m);
-		if (m == 10) {
-			dimoBatchNo += 'A';
-		} else if (m == 11) {
-			dimoBatchNo += 'B';
-		} else if (m == 12) {
-			dimoBatchNo += 'C';
-		}
+		mArr = ['0','1','2','3','4','5','6','7','8','9','A','B','C'];
+		dimoBatchNo += mArr[m];
 		var d = arr[2];
 		d = parseInt(d);
 		if (d < 10) {

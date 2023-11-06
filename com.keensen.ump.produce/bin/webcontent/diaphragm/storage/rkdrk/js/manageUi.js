@@ -13,7 +13,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageRkdrkMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 210,
 					columns : 4,
 					border : true,
 					//collapsible : true,
@@ -103,6 +103,18 @@ com.keensen.ump.produce.diaphragm.storage.StorageRkdrkMgr = function() {
 						hiddenName : 'condition/perfFlagId',
 						anchor : '75%',
 						fieldLabel : '膜片等级'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					},{
+						xtype : "dateregion",
+						colspan : 1,
+						anchor : '95%',
+						nameArray : ['condition/createTimeStart',
+								'condition/createTimeEnd'],
+						fieldLabel : "入库单生成日期",
+						format : "Y-m-d"
 					}]
 				});
 

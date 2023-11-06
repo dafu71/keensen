@@ -82,6 +82,14 @@
       <process:from type="query" pattern="reference">uploadFile/filePath</process:from>
       <process:to type="query">f:filePath</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadFile/size</process:from>
+      <process:to type="query">f:fileSize</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">uploadFile/contentType</process:from>
+      <process:to type="query">f:fileType</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <location x="268" y="98"/>
@@ -114,6 +122,8 @@
     <process:variable description="" historyStateLocation="client" isArray="false" name="fileId" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="filePath" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="fileName" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="fileSize" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="fileType" primitiveType="String"/>
   </process:variables>
   <process:inputParameters/>
 </process:tPageFlow>

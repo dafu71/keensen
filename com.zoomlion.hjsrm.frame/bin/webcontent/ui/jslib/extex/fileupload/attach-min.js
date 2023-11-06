@@ -481,6 +481,7 @@ Ext.ex.AttachmentList = Ext.extend(Ext.ListView, {
 	loadParams : {},
 	postParams : {},
 	deferEmptyText : false,
+	isDelete:false,
 	uploadUrl : undefined,
 	loadRemoteUrl : undefined,
 	frame : false,
@@ -638,6 +639,16 @@ Ext.ex.AttachmentList = Ext.extend(Ext.ListView, {
 				dataIndex : "fileid",
 				width : 0.13,
 				tpl : '<a href="com.zoomlion.hjsrm.frame.bclib.file.FileDownload.flow?fileid={fileid}" target="_blank" ><img src="frame/ui/css/icons/icons/downfile.png"></a>'
+			})
+		}
+		
+		if (this.isDelete) {
+			B.push({
+				header : "删除",
+				align : "center",
+				dataIndex : "fileid",
+				width : 0.13,
+				tpl : '<button onclick="delfile({fileid});" >删除</button>'
 			})
 		}
 		return B

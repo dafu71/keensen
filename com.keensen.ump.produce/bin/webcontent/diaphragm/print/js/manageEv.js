@@ -40,7 +40,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 	var paperwidth = this.listPanel.paperwidth.getValue();
 	var paperheight = this.listPanel.paperheight.getValue();
 
-	paperwidth = Ext.isEmpty(paperwidth) ? "80mm" : paperwidth + "mm";
+	paperwidth = Ext.isEmpty(paperwidth) ? "82mm" : paperwidth + "mm";
 	paperheight = Ext.isEmpty(paperheight) ? "60mm" : paperheight + "mm";
 
 	if (templateName == 'Reverse Osmosis sheet模板') {
@@ -119,37 +119,39 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 			LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", true);
 			LODOP.SET_SHOW_MODE("BKIMG_PRINT", true);
 			if (templateName == '常用模板') {
-				LODOP.ADD_PRINT_TEXT(77, 9, 96, 36, "型号：");
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 20);
+				LODOP.ADD_PRINT_IMAGE(10,21,265,33,rootUrl +"produce/diaphragm/print/img/log.jpg");
+				LODOP.SET_PRINT_STYLEA(0,"Stretch",1);
+				LODOP.ADD_PRINT_TEXT(77, 20, 96, 36, "型号：");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.ADD_PRINT_TEXT(77, 96, 115, 35, materSpecCode);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 20);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(113, 9, 100, 35, "批号：");
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 20);
+				LODOP.ADD_PRINT_TEXT(113, 20, 100, 35, "批号：");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.ADD_PRINT_TEXT(113, 96, 129, 35, outBatchNo);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 20);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(149, 9, 155, 35, "实发数量：");
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 20);
+				LODOP.ADD_PRINT_TEXT(149, 20, 155, 35, "实发数量：");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(147, 136, 100, 35, usefulLength);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 20);
+				LODOP.ADD_PRINT_TEXT(147, 136, 120, 35, usefulLength);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(184, 9, 156, 35, "可用数量：");
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 20);
+				LODOP.ADD_PRINT_TEXT(184, 20, 156, 35, "可用数量：");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(183, 136, 100, 35, qualifidLength);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 20);
+				LODOP.ADD_PRINT_TEXT(183, 136, 120, 35, qualifidLength);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 
 			} else if (templateName == 'SW模板') {

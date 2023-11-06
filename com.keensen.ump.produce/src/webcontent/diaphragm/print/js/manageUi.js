@@ -185,7 +185,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 						xtype : 'numberfield',
 						width : 50,
 						ref : '../paperwidth',
-						value : '80'
+						value : '82'
 
 					}, {
 						xtype : 'displayfield',
@@ -218,7 +218,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 								emptyText : "请选择模板",
 								listeners : {
 									select : function(combo, record) {
-										_this.listPanel.paperwidth.setValue(80);
+										_this.listPanel.paperwidth.setValue(82);
 										_this.listPanel.paperheight.setValue(60);
 										if (record.get('text') == 'ULP-2 Membrane模板') {
 											_this.bar.getComponent('label1')

@@ -80,6 +80,9 @@
     <select id="queryTeam" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.*,t.dept_id "id",t.dept_name "name" from qinsen.BASE_DEPARTMENT t
 		WHERE t.dept_type_id='110'
 		ORDER BY t.up_dept_id,t.dept_id</select>
+    <!-- 元件生产车间查询 -->
+    <select id="queryComponentTeam" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.orgid "id",t.orgname "name" from V_DEPT t
+	WHERE t.orgseq LIKE '.10000.100001.100062%'</select>
     <!-- 工序班组查询 -->
     <select id="queryTacheTeam" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.TACHE_ID     AS "tacheId",
        T1.TACHE_CODE   AS "tacheCode",

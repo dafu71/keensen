@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.component">
+    <select id="queryOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID                 AS "id",
+
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID     AS "createUserId",
+       T1.CREATE_NAME        AS "createName",
+    
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID     AS "updateUserId",
+       T1.UPDATE_NAME        AS "updateName",
+       T1.RESERVE1           AS "reserve1",
+       T1.RESERVE2           AS "reserve2",
+       T1.RESERVE3           AS "reserve3",
+       T1.RESERVE4           AS "reserve4",
+       T1.RESERVE5           AS "reserve5",
+       T1.ORG_ID             AS "orgId",
+       T1.STATUS             AS "status",
+       T1.ORDER_TYPE         AS "orderType",
+       T1.TYPE               AS "type",
+       T1.ORDER_NO           AS "orderNo",
+       T1.ORDER_DATE         AS "orderDate",
+       T1.MATER_SPEC_NAME    AS "materSpecName",
+       T1.DRY_WET            AS "dryWet",
+       T1.ORDER_AMOUNT       AS "orderAmount",
+       T1.PROD_AMOUNT        AS "prodAmount",
+       T1.LABEL              AS "label",
+       T1.BAG                AS "bag",
+       T1.BOX                AS "box",
+       T1.MARK               AS "mark",
+       T1.PACK               AS "pack",
+       T1.PERFORMANCE        AS "performance",
+       T1.REMARK             AS "remark",
+       T1.DEMAND_STOCK_DATE  AS "demandStockDate",
+       T1.CONFIRM            AS "confirm",
+       T1.CONFIRMEDBY        AS "confirmedby",
+       T1.CONFIRMEDBY_USERID AS "confirmedbyUserid"
+  FROM KS_PROD_COMPONENT_ORDER T1
+    where 1=1
+    <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="orderDateStart">to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
+        <isNotNull prepend="and" property="orderDateEnd">to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">upper(t1.order_No) like '%' || upper(#orderNo2#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">upper(t1.order_No) = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">upper(t1.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
+    </select>
+    <select id="queryPlan" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.PLAN_NO AS "planNo",
+       T1.TEAMID AS "teamid",
+       d.orgname AS "team",
+       T1.PRODUCT_DT AS "productDt",
+       T1.BATCH_NO AS "batchNo",
+       T1.AMOUNT AS "amount",
+       T1.STORAGE_ID AS "storageId",
+       T1.POSITION AS "position",
+       T1.PRODUCT_DEMAND AS "productDemand",
+       T1.PRODUCT_ORDER AS "productOrder",
+       T1.REMARK AS "remark",
+       T2.NAME AS "storageName",
+       t3.ORDER_NO as "orderNo",
+        T3.ORDER_DATE         AS "orderDate",
+       T3.MATER_SPEC_NAME    AS "materSpecName",
+       T3.ORDER_AMOUNT       AS "orderAmount",
+		t1.ORDER_ID as "orderId"
+       
+  FROM KS_PROD_COMPONENT_PLAN T1
+  left join v_dept d on d.orgid = t1.teamid
+  LEFT JOIN KS_BASE_STORAGE T2
+    ON T1.STORAGE_ID = T2.ID
+  left join KS_PROD_COMPONENT_ORDER T3
+  on t3.id = t1.ORDER_ID
+    where 1=1
+    <isNotNull prepend="and" property="batchNo2">upper(T1.BATCH_NO) like '%' || upper(#batchNo2#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="planNo">upper(t1.plan_No) = #planNo#</isNotNull>
+        <isNotNull prepend="and" property="planNo2">upper(t1.plan_No) like '%' || upper(#planNo2#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">upper(t3.order_No) like '%' || upper(#orderNo2#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="teamid">t1.teamid = #teamid#</isNotNull>
+        <isNotNull prepend="and" property="orderId">t1.order_Id = #orderId#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">upper(t3.order_No) = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="productDtStart">to_char(t1.PRODUCT_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(t1.PRODUCT_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull>
+     order by T1.PLAN_NO,T1.PRODUCT_ORDER
+    </select>
+    <select id="queryPlanNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT planno "planNo" from 
+	(SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' planNo FROM dual
+	WHERE NOT EXISTS(
+	select t.plan_no "planNo" from KS_PROD_COMPONENT_PLAN t
+	WHERE SUBSTR(t.plan_no,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+	UNION
+	select to_char(to_number(max(t.plan_no))+1) planNo from KS_PROD_COMPONENT_PLAN t
+	WHERE SUBSTR(t.plan_no,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+	WHERE planno IS NOT NULL</select>
+</sqlMap>
