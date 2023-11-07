@@ -9,7 +9,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 		this.initViewWindow();
 
 		this.initUploadWindow();
-		
+
 		this.initEditWindow2();
 
 		return new Ext.fn.fnLayOut({
@@ -49,10 +49,20 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 								format : "Y-m-d"
 							}]
 				});
-		/*
-		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
-		 * 'icon-application_excel', handler : this.exportExcel });
-		 */
+
+		this.queryPanel.addButton({
+					text : "导入即时库存",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.importExcel2
+				});
+		this.queryPanel.addButton({
+					text : "即时库存模板",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onDown2
+				});
+
 	}
 
 	this.initListPanel = function() {
@@ -84,7 +94,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onView
 					}, '-', {
-						text : '锁定计划单',
+						text : '锁定计划',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onPlan
@@ -243,7 +253,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 	}
 
 	this.initEditWindow = function() {
-		
+
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '修改订单',
 			height : 600,
@@ -510,20 +520,68 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 	}
 
 	this.initInputWindow2 = function() {
-
+	
+		var me = this;
 		var selModel2 = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : true,
 					header : ''
 				});
 
+		this.listPanel3 = this.listPanel3 || new Ext.fn.ListPanel({
+			title : '【批次信息】',
+			height : 140,
+			//region : 'center',
+			viewConfig : {
+				forceFit : true
+			},
+			hsPage : false,
+			autoScroll : true,
+			columns : [new Ext.grid.RowNumberer(), {
+						dataIndex : 'batchNo',
+						header : '膜片批次'
+					}, {
+						dataIndex : 'amount',
+						header : '米数'
+					}, {
+						dataIndex : 'storageName',
+						header : '仓库'
+					}, {
+						dataIndex : 'position',
+						header : '仓位'
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.produce.component.order.queryPlanStock.biz.ext',
+				root : 'data',
+				autoLoad : false,
+				totalProperty : '',
+				baseParams : {
+
+			}	,
+				fields : [{
+							name : 'batchNo'
+						}, {
+							name : 'amount'
+						}, {
+							name : 'storageId'
+						}, {
+							name : 'storageName'
+						}, {
+							name : 'position'
+						}
+
+				]
+			})
+		})
+
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
 			title : '【计划单列表】',
-			region : 'center',
+			height : 190,
+			//region : 'south',
 			viewConfig : {
 				forceFit : false
 			},
 			hsPage : false,
-			autoScroll : false,
+			autoScroll : true,
 			tbar : [{
 						text : '删除',
 						scope : this,
@@ -547,7 +605,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					}, {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
-					}, {
+					}/*, {
 						dataIndex : 'amount',
 						header : '米数'
 					}, {
@@ -556,7 +614,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					}, {
 						dataIndex : 'position',
 						header : '仓位'
-					}, {
+					}*/, {
 						dataIndex : 'productDemand',
 						header : '生产要求'
 					}, {
@@ -637,15 +695,15 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 		})
 
 		this.inputPanel2 = this.inputPanel2 || new Ext.fn.InputPanel({
-			height : 320,
-			region : 'north',
+			height : 270,
+			//region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
 			autoScroll : false,
 			border : true,
 			columns : 4,
 			saveUrl : 'com.keensen.ump.produce.component.order.savePlan.biz.ext',
-			fields : [{
+			fields : [/*{
 						xtype : 'displayfield',
 						fieldLabel : '计划单号',
 						value : '<p style="color:red;">系统自动生成</p>',
@@ -655,7 +713,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 4
-					}, {
+					}, */{
 						xtype : 'componentteamcombo',
 						hiddenName : 'entity/teamid',
 						name : 'entity/teamid',
@@ -677,38 +735,26 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						height : '5',
 						colspan : 4
 					}, {
-						xtype : 'textfield',
+						xtype : 'trigger',
 						name : 'entity/batchNo',
-						allowBlank : false,
+						// id:'planordernotrigger',
+						allowBlank : true,
 						fieldLabel : '膜片批次',
 						anchor : '95%',
-						colspan : 2
-					}, {
-						xtype : 'numberfield',
-						name : 'entity/amount',
-						allowBlank : false,
-						fieldLabel : '米数',
-						anchor : '95%',
-						colspan : 2
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, {
-						xtype : 'storagecombobox',
-						hiddenName : 'entity/storageId',
-						colspan : 2,
-						anchor : '95%',
-						fieldLabel : '仓库'
-					}, {
-						xtype : 'storageposcombobox',
-						hiddenName : 'entity/position',
-						colspan : 2,
-						anchor : '95%',
-						fieldLabel : '库位'
+						colspan : 4,
+						editable : true,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							var batchNo = me.inputPanel2.form
+									.findField("entity/batchNo").getValue();
+							me.onBatchNo(batchNo);
+						}
 					}, {
 						xtype : 'displayfield',
-						height : '5',
+						fieldLabel : ' ',
+						value : '<p style="color:red;">输入批次号， 多个批号以逗号分隔,点击旁边按钮加载批次信息</p>',
+						labelSeparator : '',// 去掉冒号
 						colspan : 4
 					}, {
 						xtype : 'textarea',
@@ -725,6 +771,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					}, {
 						xtype : 'numberfield',
 						name : 'entity/productOrder',
+						minValue : 1,
 						allowBlank : false,
 						fieldLabel : '生产顺序',
 						anchor : '95%',
@@ -772,7 +819,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'textarea',
-						height : '70',
+						height : '50',
 						name : 'entity/remark',
 						allowBlank : true,
 						fieldLabel : '订单备注',
@@ -781,6 +828,9 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					}, {
 						xtype : 'hidden',
 						name : 'entity/orderId'
+					}, {
+						xtype : 'hidden',
+						name : 'entity/batchNoStr'
 					}],
 			buttons : [{
 						text : "确定",
@@ -808,8 +858,8 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					modal : true,
 					width : 820,
 					height : 600,
-					layout : 'border',
-					items : [this.inputPanel2, this.listPanel2]
+					layout : 'form',
+					items : [this.inputPanel2, this.listPanel3, this.listPanel2]
 
 				});
 	}
@@ -853,7 +903,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 	}
 
 	this.initViewWindow = function() {
-		
+
 		this.viewWindow = this.viewWindow || new Ext.fn.FormWindow({
 			title : '查看',
 			height : 600,
@@ -1171,9 +1221,9 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 			}]
 		})
 	}
-	
+
 	this.initEditWindow2 = function() {
-		
+
 		this.editWindow2 = this.editWindow2 || new Ext.fn.FormWindow({
 			title : '营销确认',
 			height : 480,
@@ -1188,21 +1238,21 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 				columns : 4,
 				loadUrl : 'com.keensen.ump.produce.component.order.expandEntity.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.component.order.saveOrderConfirm.biz.ext',
-				fields : [ {
-					xtype : 'textarea',
-					name : 'entity/confirm',
-					style:'{background-color:white;}',
-					allowBlank : false,
-					fieldLabel : '确认意见',
-					height:300,
-					anchor : '95%',
-					colspan : 4,
-					dataIndex : 'confirm'
-				}, {
-					xtype : 'hidden',
-					name : 'entity/id',
-					dataIndex : 'id'
-				}]
+				fields : [{
+							xtype : 'textarea',
+							name : 'entity/confirm',
+							style : '{background-color:white;}',
+							allowBlank : false,
+							fieldLabel : '确认意见',
+							height : 300,
+							anchor : '95%',
+							colspan : 4,
+							dataIndex : 'confirm'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/id',
+							dataIndex : 'id'
+						}]
 			}]
 		});
 	}

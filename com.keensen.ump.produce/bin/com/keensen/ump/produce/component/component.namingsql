@@ -48,7 +48,9 @@
         <isNotNull prepend="and" property="materSpecName">upper(t1.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
     </select>
     <select id="queryPlan" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-    SELECT T1.ID AS "id",
+    SELECT T1.ID AS "id",T1.state "state",
+    TO_CHAR(T1.finish_dt, 'yyyy-MM-dd') "finishDt",
+    t1.finish_name "finishName",t1.finish_user_id "finishUserId",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -87,11 +89,16 @@
   left join KS_PROD_COMPONENT_ORDER T3
   on t3.id = t1.ORDER_ID
     where 1=1
-    <isNotNull prepend="and" property="batchNo2">upper(T1.BATCH_NO) like '%' || upper(#batchNo2#) || '%'</isNotNull>
+    
+    <isNotNull prepend="and" property="trace">((T1.PRODUCT_ORDER = 1 AND NVL(T1.STATE, 'a') != '完成') 
+      OR 
+   (T1.PRODUCT_ORDER != 1 AND NVL(T1.STATE, 'a') = '待完成'))</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">upper(T1.BATCH_NO) like '%' || upper(#batchNo2#) || '%'</isNotNull>
         <isNotNull prepend="and" property="planNo">upper(t1.plan_No) = #planNo#</isNotNull>
         <isNotNull prepend="and" property="planNo2">upper(t1.plan_No) like '%' || upper(#planNo2#) || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo2">upper(t3.order_No) like '%' || upper(#orderNo2#) || '%'</isNotNull>
         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
         <isNotNull prepend="and" property="teamid">t1.teamid = #teamid#</isNotNull>
         <isNotNull prepend="and" property="orderId">t1.order_Id = #orderId#</isNotNull>
         <isNotNull prepend="and" property="orderNo">upper(t3.order_No) = #orderNo#</isNotNull>
@@ -99,7 +106,7 @@
         <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="productDtStart">to_char(t1.PRODUCT_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
         <isNotNull prepend="and" property="productDtEnd">to_char(t1.PRODUCT_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull>
-     order by T1.PLAN_NO,T1.PRODUCT_ORDER
+     order by t1.ORDER_ID,T1.PLAN_NO,T1.PRODUCT_ORDER
     </select>
     <select id="queryPlanNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT planno "planNo" from 
 	(SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' planNo FROM dual
@@ -110,4 +117,42 @@
 	select to_char(to_number(max(t.plan_no))+1) planNo from KS_PROD_COMPONENT_PLAN t
 	WHERE SUBSTR(t.plan_no,1,8) = to_char(SYSDATE,'yyyyMMdd'))
 	WHERE planno IS NOT NULL</select>
+    <update id="updatePlan" parameterClass="java.util.HashMap">update KS_PROD_COMPONENT_PLAN tt
+   	set tt.state = '待完成'
+   	where tt.product_order =
+    (select MIN(t.product_order) "productOrder" from KS_PROD_COMPONENT_PLAN t
+	WHERE t.order_id = (
+	select DISTINCT order_id from KS_PROD_COMPONENT_PLAN WHERE id=#id#
+	)
+	AND NVL(t.state,'待完成')='待完成')
+	and tt.order_id = (
+	select DISTINCT order_id from KS_PROD_COMPONENT_PLAN WHERE id=#id#
+	)</update>
+    <update id="updatePlanStorageId" parameterClass="java.util.HashMap">UPDATE  KS_PROD_COMPONENT_STOCK
+	SET
+	  KS_PROD_COMPONENT_STOCK.storage_id  =  (SELECT  id  FROM  KS_BASE_STORAGE  WHERE   KS_BASE_STORAGE.name = KS_PROD_COMPONENT_STOCK.storage_name)
+	WHERE
+	  EXISTS ( SELECT 1 FROM   KS_BASE_STORAGE  WHERE   KS_BASE_STORAGE.name = KS_PROD_COMPONENT_STOCK.storage_name)</update>
+    <select id="queryPlanStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT t.batch_no "batchNo",t.storage_id "storageId",T2.NAME AS "storageName",
+	t.position "position",t.amount "amount" from KS_PROD_COMPONENT_STOCK t
+	LEFT JOIN KS_BASE_STORAGE T2
+    ON T.STORAGE_ID = T2.ID
+	where 1=1
+	<isNotNull prepend="and" property="batchNoStr">t.batch_no in($batchNoStr$)</isNotNull>
+    </select>
+    <select id="queryPlanDetail" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT t.batch_no "batchNo",t.storage_id "storageId",T2.NAME AS "storageName",
+	t.position "position",t.amount "amount" from KS_PROD_COMPONENT_PLAN_DETAIL t
+	LEFT JOIN KS_BASE_STORAGE T2
+    ON T.STORAGE_ID = T2.ID
+	where 1=1
+	<isNotNull prepend="and" property="batchNoStr">t.batch_no in($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="relationId">t.relation_id = #relationId#</isNotNull>
+    </select>
+    <delete id="deletePlanDetail" parameterClass="java.util.HashMap">delete from  KS_PROD_COMPONENT_PLAN_DETAIL
+	WHERE
+	  relation_id = #relationId#</delete>
 </sqlMap>

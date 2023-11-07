@@ -6,10 +6,35 @@ com.keensen.ump.produce.component.OrderMgr.prototype.destroy = function() {
 
 }
 
+function formatBatchNo(str){
+	str = str.replaceAll('，', ',');
+	str = str.replaceAll(' ', '');
+	var arr = [];
+	arr = str.split(',');
+
+	var arr2 = [];
+	for (var i = 0; i < arr.length; i++) {
+		arr2.push("'" + arr[i] + "'");
+	}	
+	return arr2.join(",") == "''" ? null : arr2.join(",");
+}
+
+com.keensen.ump.produce.component.OrderMgr.prototype.onBatchNo = function(
+		batchNoStr) {
+	if(Ext.isEmpty(batchNoStr)) return;
+	var store = this.listPanel3.store;
+	var str = formatBatchNo(batchNoStr);
+	store.baseParams = {
+		"map/batchNoStr" : str
+	};
+	store.load({});
+}
+
 com.keensen.ump.produce.component.OrderMgr.prototype.initEvent = function() {
 
 	var _this = this;
 	var orderId = '';
+	var importOpt = '';
 
 	Ext.getCmp('componentlabel').mon(Ext.getCmp('componentlabel'), 'upload',
 			function(form, vals) {
@@ -24,7 +49,7 @@ com.keensen.ump.produce.component.OrderMgr.prototype.initEvent = function() {
 
 	Ext.getCmp('componentmark').mon(Ext.getCmp('componentmark'), 'upload',
 			function(form, vals) {
-			
+
 				_this.uploadForm.getForm().findField('uploadFile').setValue('');
 				_this.uploadForm.getForm().findField('relationId')
 						.setValue(orderId);
@@ -196,48 +221,75 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onPlan = function() {
 };
 
 com.keensen.ump.produce.component.OrderMgr.prototype.onSavePlan = function() {
-	
+
 	var _thispanel = this.inputPanel2;
 	var _thislist = this.listPanel2;
+	var _thatlist = this.listPanel3;
+	var _this = this;
 	var orderNo = this.inputPanel2.form.findField("entity/orderNo").getValue();
+	var batchNo = this.inputPanel2.form.findField("entity/batchNo")
+								.getValue();
+	this.inputPanel2.form.findField("entity/batchNoStr")
+								.setValue(formatBatchNo(batchNo));
 	if (_thispanel.form.isValid()) {
 		_thispanel.form.submit({
-					method : "POST",
-					url : _thispanel.saveUrl,
-					waitTitle : "操作提示",
-					waitMsg : "保存数据中",
-					success : function(C, B) {
-						var D = B.result;
-						if (D.success) {
-							Ext.MessageBox.alert("操作提示", "保存成功!", function() {
-										_thislist.store.load({
-													params : {
-														"condition/orderNo" : orderNo
-													}
-												});
-									})
-						}
-					},
-					failure : function(C, B) {
-						if (B.result.exception) {
-							var A, E;
-							if (B.result.exception.extype == "biz") {
-								E = "【" + B.result.exception.message + "】";
-								A = Ext.Msg.WARNING;
-							} else {
-								A = Ext.Msg.ERROR;
-								E = "【系统发生异常！请与管理员联系】";
-							}
-							Ext.Msg.show({
-										width : 350,
-										title : "操作提示",
-										msg : E,
-										icon : A,
-										buttons : Ext.Msg.OK
-									})
-						}
+			method : "POST",
+			url : _thispanel.saveUrl,
+			waitTitle : "操作提示",
+			waitMsg : "保存数据中",
+			success : function(C, B) {
+				var D = B.result;
+				if (D.success) {
+					Ext.MessageBox.alert("操作提示", "保存成功!", function() {
+						_this.inputPanel2.form.findField("entity/teamid")
+								.setValue('');
+						_this.inputPanel2.form.findField("entity/productDt")
+								.setValue('');
+						_this.inputPanel2.form.findField("entity/batchNo")
+								.setValue('');
+						_this.inputPanel2.form.findField("entity/batchNoStr")
+								.setValue('');
+//						_this.inputPanel2.form.findField("entity/amount")
+//								.setValue('');
+//						_this.inputPanel2.form.findField("entity/storageId")
+//								.setValue('');
+//						_this.inputPanel2.form.findField("entity/position")
+//								.setValue('');
+						_this.inputPanel2.form
+								.findField("entity/productDemand").setValue('');
+						_this.inputPanel2.form.findField("entity/remark")
+								.setValue('');
+						_this.inputPanel2.form.findField("entity/productOrder")
+								.setValue('');
+						_thislist.store.load({
+									params : {
+										"map/orderNo" : orderNo
+									}
+								});
+						_thatlist.store.removeAll();
+					})
+				}
+			},
+			failure : function(C, B) {
+				if (B.result.exception) {
+					var A, E;
+					if (B.result.exception.extype == "biz") {
+						E = "【" + B.result.exception.message + "】";
+						A = Ext.Msg.WARNING;
+					} else {
+						A = Ext.Msg.ERROR;
+						E = "【系统发生异常！请与管理员联系】";
 					}
-				})
+					Ext.Msg.show({
+								width : 350,
+								title : "操作提示",
+								msg : E,
+								icon : A,
+								buttons : Ext.Msg.OK
+							})
+				}
+			}
+		})
 	}
 
 };
@@ -250,12 +302,29 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onDown = function() {
 			+ fname;
 };
 
+com.keensen.ump.produce.component.OrderMgr.prototype.onDown2 = function() {
+
+	var fname = "ks_component_stock_import.xls";
+	window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
+			+ fname;
+};
+
 com.keensen.ump.produce.component.OrderMgr.prototype.onDelPlan = function() {
 	this.listPanel2.onDel();
 };
 
 // 弹出文件上传选择窗口
 com.keensen.ump.produce.component.OrderMgr.prototype.importExcel = function() {
+	importOpt = 'order';
+	this.uploadForm = this.excelUploadWin.getComponent('uploadForm').getForm();
+	this.uploadForm.reset();
+	this.excelUploadWin.show();
+
+}
+
+// 弹出文件上传选择窗口
+com.keensen.ump.produce.component.OrderMgr.prototype.importExcel2 = function() {
+	importOpt = 'stock';
 	this.uploadForm = this.excelUploadWin.getComponent('uploadForm').getForm();
 	this.uploadForm.reset();
 	this.excelUploadWin.show();
@@ -284,7 +353,10 @@ com.keensen.ump.produce.component.OrderMgr.prototype.doUpload = function() {
 		return false;
 	}
 	if (this.uploadInputPanel.form.isValid()) {
-		var url = this.uploadInputPanel.saveUrl;
+		// var url = this.uploadInputPanel.saveUrl;
+		var url = importOpt == 'order'
+				? 'com.keensen.ump.produce.component.importOrder.flow'
+				: 'com.keensen.ump.produce.component.importStock.flow';
 		this.uploadInputPanel.form.submit({
 					method : "POST",
 					timeout : 1200,
@@ -343,8 +415,7 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onConfirm = function() {
 		var confirm = r.data.confirm;
 		this.editWindow2.form.findField("entity/id").setValue(orderId);
 		this.editWindow2.form.findField("entity/confirm").setValue(confirm);
-		
-		
+
 		this.editWindow2.show();
 	}
 
