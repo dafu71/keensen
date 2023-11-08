@@ -137,7 +137,7 @@
 		       t1.order_Id = #orderId#
 	</isNotNull>
     <isNotNull prepend="and" property="orderNo"> 
-		       upper(t3.order_No) = #orderNo#
+		       upper(t3.order_No) = upper(#orderNo#)
 	</isNotNull>
      <isNotNull prepend = "and"  property = "createTimeStart"> 
           to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
@@ -190,7 +190,7 @@
 	
 	<select id="queryPlanStock" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	
-	SELECT t.batch_no "batchNo",t.storage_id "storageId",T2.NAME AS "storageName",
+	SELECT t.batch_no "batchNo",t.storage_id "storageId",T2.NAME AS "storageName",0 "id",
 	t.position "position",t.amount "amount" from KS_PROD_COMPONENT_STOCK t
 	LEFT JOIN KS_BASE_STORAGE T2
     ON T.STORAGE_ID = T2.ID
@@ -204,7 +204,7 @@
 	 
 	 <select id="queryPlanDetail" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	
-	SELECT t.batch_no "batchNo",t.storage_id "storageId",T2.NAME AS "storageName",
+	SELECT t.batch_no "batchNo",t.storage_id "storageId",T2.NAME AS "storageName",t.reserve1 "reserve1",t.id "id",
 	t.position "position",t.amount "amount" from KS_PROD_COMPONENT_PLAN_DETAIL t
 	LEFT JOIN KS_BASE_STORAGE T2
     ON T.STORAGE_ID = T2.ID

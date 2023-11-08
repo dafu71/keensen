@@ -21,9 +21,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link12</targetConnections>
-    <targetConnections>link15</targetConnections>
     <targetConnections>link17</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link12</targetConnections>
     <location x="1170" y="173"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -278,6 +278,7 @@
     <location x="675" y="175"/>
     <size height="24" width="24"/>
     <nodeLabel>loopstart5label</nodeLabel>
+    <process:condition/>
     <process:iterate iterable="detail" iterableElement="d"/>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopend5label" name="label" nodeType="label">

@@ -1,12 +1,13 @@
 com.keensen.ump.produce.component.PlanMgr = function() {
 
 	this.initPanel = function() {
+		this.rec = {};
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
 		this.initEditWindow();
 		this.initViewWindow();
-		
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -440,7 +441,11 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 	this.initEditWindow = function() {
 		var me = this;
 
-		this.listPanel4 = this.listPanel4 || new Ext.fn.ListPanel({
+		var selModel4 = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+		this.listPanel4 = this.listPanel4 || new Ext.fn.EditListPanel({
 			title : '【批次信息】',
 			height : 240,
 			// region : 'center',
@@ -449,7 +454,8 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 			},
 			hsPage : false,
 			autoScroll : true,
-			columns : [new Ext.grid.RowNumberer(), {
+			selModel : selModel4,
+			columns : [new Ext.grid.RowNumberer(), selModel4,{
 						dataIndex : 'batchNo',
 						header : '膜片批次'
 					}, {
@@ -461,6 +467,13 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 					}, {
 						dataIndex : 'position',
 						header : '仓位'
+					}, {
+						dataIndex : 'reserve1',
+						header : '备注',
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									allowBlank : true
+								}))
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.order.queryPlanStock.biz.ext',
@@ -480,6 +493,10 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 							name : 'storageName'
 						}, {
 							name : 'position'
+						}, {
+							name : 'reserve1'
+						}, {
+							name : 'id'
 						}
 
 				]
@@ -492,10 +509,10 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 			pgrid : this.listPanel,
 			columns : 4,
 			loadUrl : 'com.keensen.ump.produce.component.order.expandPlanEntity.biz.ext',
-			saveUrl : 'com.keensen.ump.produce.component.order.savePlan.biz.ext',
+			saveUrl : 'com.keensen.ump.produce.component.order.savePlan2.biz.ext',
 			fields : [{
 						xtype : 'textfield',
-						name : 'entity/orderNo',
+						name : 'orderNo',
 						dataIndex : 'orderNo',
 						readOnly : true,
 						fieldLabel : '订单号',
@@ -503,7 +520,7 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 						colspan : 2
 					}, {
 						xtype : 'numberfield',
-						name : 'entity/orderAmount',
+						name : 'orderAmount',
 						dataIndex : 'orderAmount',
 						readOnly : true,
 						fieldLabel : '订单数量',
@@ -515,7 +532,7 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'textfield',
-						name : 'entity/materSpecName',
+						name : 'materSpecName',
 						dataIndex : 'materSpecName',
 						readOnly : true,
 						anchor : '95%',
@@ -523,7 +540,7 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 						colspan : 2
 					}, {
 						xtype : 'textfield',
-						name : 'entity/orderDate',
+						name : 'orderDate',
 						dataIndex : 'orderDate',
 						readOnly : true,
 						anchor : '95%',
@@ -547,15 +564,15 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 					}, {
 						xtype : 'componentteamcombo',
 						dataIndex : 'teamid',
-						hiddenName : 'entity/teamid',
-						name : 'entity/teamid',
+						hiddenName : 'teamid',
+						name : 'teamid',
 						allowBlank : false,
 						colspan : 2,
 						anchor : '95%',
 						fieldLabel : '生产车间'
 					}, {
 						xtype : 'datefield',
-						name : 'entity/productDt',
+						name : 'productDt',
 						dataIndex : 'productDt',
 						allowBlank : false,
 						fieldLabel : '作业日期',
@@ -568,7 +585,7 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'trigger',
-						name : 'entity/batchNo',
+						name : 'batchNo',
 						dataIndex : 'batchNo',
 						// id:'planordernotrigger',
 						allowBlank : true,
@@ -580,7 +597,7 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 						scope : this,
 						onTriggerClick : function() {
 							var batchNo = me.editPanel.form
-									.findField("entity/batchNo").getValue();
+									.findField("batchNo").getValue();
 							me.onBatchNo2(batchNo);
 						}
 					}, {
@@ -596,7 +613,7 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 					}, {
 						xtype : 'textarea',
 						height : '30',
-						name : 'entity/productDemand',
+						name : 'productDemand',
 						dataIndex : 'productDemand',
 						allowBlank : true,
 						fieldLabel : '生产要求',
@@ -608,12 +625,20 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'numberfield',
-						name : 'entity/productOrder',
+						name : 'productOrder',
 						dataIndex : 'productOrder',
 						allowBlank : false,
 						fieldLabel : '生产顺序',
 						anchor : '95%',
-						colspan : 4
+						colspan : 2
+					}, {
+						xtype : 'numberfield',
+						name : 'amount',
+						minValue : 1,
+						allowBlank : false,
+						fieldLabel : '计划数量',
+						anchor : '95%',
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -621,7 +646,7 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 					}, {
 						xtype : 'textarea',
 						height : '70',
-						name : 'entity/remark',
+						name : 'remark',
 						dataIndex : 'remark',
 						allowBlank : true,
 						fieldLabel : '订单备注',
@@ -630,17 +655,14 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 					}, {
 						xtype : 'hidden',
 						dataIndex : 'orderId',
-						name : 'entity/orderId'
+						name : 'orderId'
 					}, {
 						xtype : 'hidden',
-						name : 'entity/id',
+						name : 'id',
 						dataIndex : 'id'
 					}, {
 						xtype : 'hidden',
-						name : 'entity/batchNoStr'
-					}, {
-						xtype : 'hidden',
-						name : 'entity/edited'
+						name : 'batchNoStr'
 					}],
 			buttons : [{
 						text : "确定",
@@ -692,6 +714,9 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 					}, {
 						dataIndex : 'position',
 						header : '仓位'
+					}, {
+						dataIndex : 'reserve1',
+						header : '备注'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.order.queryPlanStock.biz.ext',
@@ -711,6 +736,8 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 							name : 'storageName'
 						}, {
 							name : 'position'
+						}, {
+							name : 'reserve1'
 						}
 
 				]
@@ -806,7 +833,7 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 						fieldLabel : '膜片批次',
 						anchor : '95%',
 						colspan : 4
-						
+
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -831,7 +858,14 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 						readOnly : true,
 						fieldLabel : '生产顺序',
 						anchor : '95%',
-						colspan : 4
+						colspan : 2
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'amount',
+						readOnly : true,
+						fieldLabel : '计划数量',
+						anchor : '95%',
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -857,7 +891,7 @@ com.keensen.ump.produce.component.PlanMgr = function() {
 						xtype : 'hidden',
 						name : 'entity/batchNoStr'
 					}],
-			buttons : [ {
+			buttons : [{
 						text : "关闭",
 						scope : this,
 						handler : function() {

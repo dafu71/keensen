@@ -527,7 +527,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					header : ''
 				});
 
-		this.listPanel3 = this.listPanel3 || new Ext.fn.ListPanel({
+		this.listPanel3 = this.listPanel3 || new Ext.fn.EditListPanel({
 			title : '【批次信息】',
 			height : 140,
 			//region : 'center',
@@ -548,6 +548,12 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					}, {
 						dataIndex : 'position',
 						header : '仓位'
+					}, {
+						dataIndex : 'reserve1',
+						header : '备注',
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField({
+							allowBlank : true
+						}))
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.order.queryPlanStock.biz.ext',
@@ -567,6 +573,8 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 							name : 'storageName'
 						}, {
 							name : 'position'
+						}, {
+							name : 'reserve1'
 						}
 
 				]
@@ -702,7 +710,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 			autoScroll : false,
 			border : true,
 			columns : 4,
-			saveUrl : 'com.keensen.ump.produce.component.order.savePlan.biz.ext',
+			saveUrl : 'com.keensen.ump.produce.component.order.savePlan2.biz.ext',
 			fields : [/*{
 						xtype : 'displayfield',
 						fieldLabel : '计划单号',
@@ -715,15 +723,15 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						colspan : 4
 					}, */{
 						xtype : 'componentteamcombo',
-						hiddenName : 'entity/teamid',
-						name : 'entity/teamid',
+						hiddenName : 'teamid',
+						name : 'teamid',
 						allowBlank : false,
 						colspan : 2,
 						anchor : '95%',
 						fieldLabel : '生产车间'
 					}, {
 						xtype : 'datefield',
-						name : 'entity/productDt',
+						name : 'productDt',
 						dataIndex : 'productDt',
 						allowBlank : false,
 						fieldLabel : '作业日期',
@@ -736,7 +744,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'trigger',
-						name : 'entity/batchNo',
+						name : 'batchNo',
 						// id:'planordernotrigger',
 						allowBlank : true,
 						fieldLabel : '膜片批次',
@@ -747,7 +755,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						scope : this,
 						onTriggerClick : function() {
 							var batchNo = me.inputPanel2.form
-									.findField("entity/batchNo").getValue();
+									.findField("batchNo").getValue();
 							me.onBatchNo(batchNo);
 						}
 					}, {
@@ -759,7 +767,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					}, {
 						xtype : 'textarea',
 						height : '30',
-						name : 'entity/productDemand',
+						name : 'productDemand',
 						allowBlank : true,
 						fieldLabel : '生产要求',
 						anchor : '95%',
@@ -770,19 +778,27 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'numberfield',
-						name : 'entity/productOrder',
+						name : 'productOrder',
 						minValue : 1,
 						allowBlank : false,
 						fieldLabel : '生产顺序',
 						anchor : '95%',
-						colspan : 4
+						colspan : 2
+					}, {
+						xtype : 'numberfield',
+						name : 'amount',
+						minValue : 1,
+						allowBlank : false,
+						fieldLabel : '计划数量',
+						anchor : '95%',
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 4
 					}, {
 						xtype : 'textfield',
-						name : 'entity/orderNo',
+						name : 'orderNo',
 						readOnly : true,
 						allowBlank : false,
 						fieldLabel : '订单号',
@@ -790,7 +806,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						colspan : 2
 					}, {
 						xtype : 'numberfield',
-						name : 'entity/orderAmount',
+						name : 'orderAmount',
 						readOnly : true,
 						fieldLabel : '订单数量',
 						anchor : '95%',
@@ -801,14 +817,14 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'textfield',
-						name : 'entity/materSpecName',
+						name : 'materSpecName',
 						readOnly : true,
 						anchor : '95%',
 						fieldLabel : '规格型号 ',
 						colspan : 2
 					}, {
 						xtype : 'textfield',
-						name : 'entity/orderDate',
+						name : 'orderDate',
 						readOnly : true,
 						anchor : '95%',
 						fieldLabel : '订单交期 ',
@@ -820,17 +836,20 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					}, {
 						xtype : 'textarea',
 						height : '50',
-						name : 'entity/remark',
+						name : 'remark',
 						allowBlank : true,
 						fieldLabel : '订单备注',
 						anchor : '95%',
 						colspan : 4
 					}, {
 						xtype : 'hidden',
-						name : 'entity/orderId'
+						name : 'orderId'
 					}, {
 						xtype : 'hidden',
-						name : 'entity/batchNoStr'
+						name : 'batchNoStr'
+					}, {
+						xtype : 'hidden',
+						name : 'details'
 					}],
 			buttons : [{
 						text : "确定",

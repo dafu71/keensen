@@ -9,6 +9,7 @@
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
     <targetConnections>link1</targetConnections>
+    <targetConnections>link5</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns/>
   </nodes>
@@ -25,7 +26,7 @@
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link2</targetConnections>
+    <targetConnections>link4</targetConnections>
     <nodeLabel>invokePojo0label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.deleteEntity</process:partner>
@@ -44,7 +45,7 @@
   <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
-      <targetNode>invokePojo0</targetNode>
+      <targetNode>assign1</targetNode>
     </sourceConnections>
     <targetConnections>link0</targetConnections>
     <nodeLabel>assign0label</nodeLabel>
@@ -57,11 +58,60 @@
     <figSize height="20" width="31"/>
     <node>assign0</node>
   </nodes>
+  <nodes xsi:type="process:tAssign" id="assign1" name="赋值1" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/orderNo</process:from>
+      <process:to type="query">map/orderNo</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess0" name="queryPlan" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link5" name="已有计划不能删除" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">datas</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.queryPlan</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="map" type="query" value="java.util.HashMap" valueType="Java" pattern="reference">map</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="data" type="query" value="commonj.sdo.DataObject[]" valueType="Java">datas</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <figSize height="20" width="73"/>
+    <node>subprocess0</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info version="6.3"/>
   <process:variables>
     <process:variable historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.component.KsProdComponentOrder" name="entity"/>
+    <process:variable anyType="java.util.HashMap" historyStateLocation="client" isArray="false" name="map"/>
+    <process:variable anyType="commonj.sdo.DataObject" historyStateLocation="client" isArray="true" name="datas"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input isArray="true" modelType="com.keensen.ump.produce.component.KsProdComponentOrder" name="entitys"/>

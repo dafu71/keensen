@@ -12,6 +12,13 @@ com.keensen.ump.produce.component.PlanMgr.prototype.initEvent = function() {
 					}
 				});
 	}, this);
+	
+	this.listPanel4.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					_this.rec = r;
+				}).defer(100);
+			}, this);
 
 	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
 				var C = gird.getSelectionModel().getSelections();
@@ -29,7 +36,7 @@ com.keensen.ump.produce.component.PlanMgr.prototype.initEvent = function() {
 				this.editWindow.show();
 				this.editPanel.loadData(cell);
 				var relationId = cell.get('id');
-				this.editPanel.form.findField("entity/edited").setValue(0);
+				
 				var store = this.listPanel4.store;
 				store.load({
 							params : {
@@ -215,19 +222,36 @@ com.keensen.ump.produce.component.PlanMgr.prototype.onSavePlan2 = function() {
 	var _thispanel = this.editPanel;
 	var _thislist = this.listPanel;
 	var _this = this;
+	var records = this.listPanel4.store.getRange();
+	var details = [];
+
+	Ext.each(records, function(r) {
+
+				var d = {
+					'batchNo' : r.data['batchNo'],
+					'amount' : r.data['amount'],
+					'storageId' : r.data['storageId'],
+					'reserve1' : r.data['reserve1'],
+					'position' : r.data['position']
+				}
+
+				details.push(d);
+
+			});
 	if (_thispanel.form.isValid()) {
-		var batchNo = this.editPanel.form.findField("entity/batchNo")
-				.getValue();
-		this.editPanel.form.findField("entity/batchNoStr")
+		var batchNo = this.editPanel.form.findField("batchNo").getValue();
+		this.editPanel.form.findField("batchNoStr")
 				.setValue(formatBatchNo(batchNo));
-		_thispanel.form.submit({
+		Ext.Ajax.request({
 					method : "POST",
 					url : _thispanel.saveUrl,
-					waitTitle : "操作提示",
-					waitMsg : "保存数据中",
-					success : function(C, B) {
-						var D = B.result;
-						if (D.success) {
+					jsonData : {
+						'entity' : _this.editPanel.form.getValues(),
+						'details' : details
+					},
+					success : function(F) {
+						var B = Ext.decode(F.responseText);
+						if (B.success) {
 							Ext.MessageBox.alert("操作提示", "保存成功!", function() {
 										_thislist.store.load({});
 										_this.editWindow.hide();
@@ -283,7 +307,7 @@ com.keensen.ump.produce.component.PlanMgr.prototype.onBatchNo2 = function(
 		"map/batchNoStr" : str
 	};
 	store.load({});
-	this.editPanel.form.findField("entity/edited").setValue(1);
+	
 };
 
 com.keensen.ump.produce.component.PlanMgr.prototype.onOrderNo = function(

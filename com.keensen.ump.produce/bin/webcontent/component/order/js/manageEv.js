@@ -6,7 +6,7 @@ com.keensen.ump.produce.component.OrderMgr.prototype.destroy = function() {
 
 }
 
-function formatBatchNo(str){
+function formatBatchNo(str) {
 	str = str.replaceAll('，', ',');
 	str = str.replaceAll(' ', '');
 	var arr = [];
@@ -15,13 +15,14 @@ function formatBatchNo(str){
 	var arr2 = [];
 	for (var i = 0; i < arr.length; i++) {
 		arr2.push("'" + arr[i] + "'");
-	}	
+	}
 	return arr2.join(",") == "''" ? null : arr2.join(",");
 }
 
 com.keensen.ump.produce.component.OrderMgr.prototype.onBatchNo = function(
 		batchNoStr) {
-	if(Ext.isEmpty(batchNoStr)) return;
+	if (Ext.isEmpty(batchNoStr))
+		return;
 	var store = this.listPanel3.store;
 	var str = formatBatchNo(batchNoStr);
 	store.baseParams = {
@@ -203,13 +204,12 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onPlan = function() {
 		var materSpecName = r.data.materSpecName;
 		var orderAmount = r.data.orderAmount;
 		var orderDate = r.data.orderDate;
-		this.inputPanel2.form.findField("entity/orderId").setValue(orderId);
-		this.inputPanel2.form.findField("entity/orderNo").setValue(orderNo);
-		this.inputPanel2.form.findField("entity/materSpecName")
+		this.inputPanel2.form.findField("orderId").setValue(orderId);
+		this.inputPanel2.form.findField("orderNo").setValue(orderNo);
+		this.inputPanel2.form.findField("materSpecName")
 				.setValue(materSpecName);
-		this.inputPanel2.form.findField("entity/orderAmount")
-				.setValue(orderAmount);
-		this.inputPanel2.form.findField("entity/orderDate").setValue(orderDate);
+		this.inputPanel2.form.findField("orderAmount").setValue(orderAmount);
+		this.inputPanel2.form.findField("orderDate").setValue(orderDate);
 		this.listPanel2.store.load({
 					params : {
 						"map/orderId" : orderId
@@ -226,40 +226,51 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onSavePlan = function() {
 	var _thislist = this.listPanel2;
 	var _thatlist = this.listPanel3;
 	var _this = this;
-	var orderNo = this.inputPanel2.form.findField("entity/orderNo").getValue();
-	var batchNo = this.inputPanel2.form.findField("entity/batchNo")
-								.getValue();
-	this.inputPanel2.form.findField("entity/batchNoStr")
-								.setValue(formatBatchNo(batchNo));
+	var orderNo = this.inputPanel2.form.findField("orderNo").getValue();
+	var batchNo = this.inputPanel2.form.findField("batchNo").getValue();
+	this.inputPanel2.form.findField("batchNoStr")
+			.setValue(formatBatchNo(batchNo));
+	var records = this.listPanel3.store.getRange();
+	var details = [];
+
+	Ext.each(records, function(r) {
+
+				var d = {
+					'batchNo' : r.data['batchNo'],
+					'amount' : r.data['amount'],
+					'storageId' : r.data['storageId'],
+					'reserve1' : r.data['reserve1'],
+					'position' : r.data['position']
+				}
+
+				details.push(d);
+
+			});
+	
 	if (_thispanel.form.isValid()) {
-		_thispanel.form.submit({
-			method : "POST",
+		Ext.Ajax.request({
+			method : "post",
 			url : _thispanel.saveUrl,
-			waitTitle : "操作提示",
-			waitMsg : "保存数据中",
-			success : function(C, B) {
-				var D = B.result;
-				if (D.success) {
+			jsonData : {
+				'entity' : _this.inputPanel2.form.getValues(),
+				'details' : details
+			},
+			success : function(F) {
+					var B = Ext.decode(F.responseText);
+					if (B.success) {
 					Ext.MessageBox.alert("操作提示", "保存成功!", function() {
-						_this.inputPanel2.form.findField("entity/teamid")
+						_this.inputPanel2.form.findField("teamid").setValue('');
+						_this.inputPanel2.form.findField("productDt")
 								.setValue('');
-						_this.inputPanel2.form.findField("entity/productDt")
+						_this.inputPanel2.form.findField("batchNo")
 								.setValue('');
-						_this.inputPanel2.form.findField("entity/batchNo")
+						_this.inputPanel2.form.findField("batchNoStr")
 								.setValue('');
-						_this.inputPanel2.form.findField("entity/batchNoStr")
+
+						_this.inputPanel2.form.findField("productDemand")
 								.setValue('');
-//						_this.inputPanel2.form.findField("entity/amount")
-//								.setValue('');
-//						_this.inputPanel2.form.findField("entity/storageId")
-//								.setValue('');
-//						_this.inputPanel2.form.findField("entity/position")
-//								.setValue('');
-						_this.inputPanel2.form
-								.findField("entity/productDemand").setValue('');
-						_this.inputPanel2.form.findField("entity/remark")
-								.setValue('');
-						_this.inputPanel2.form.findField("entity/productOrder")
+						_this.inputPanel2.form.findField("remark").setValue('');
+						_this.inputPanel2.form.findField("productOrder")
 								.setValue('');
 						_thislist.store.load({
 									params : {
