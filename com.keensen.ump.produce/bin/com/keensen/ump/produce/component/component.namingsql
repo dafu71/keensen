@@ -98,7 +98,7 @@
         <isNotNull prepend="and" property="planNo2">upper(t1.plan_No) like '%' || upper(#planNo2#) || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo2">upper(t3.order_No) like '%' || upper(#orderNo2#) || '%'</isNotNull>
         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
-        <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
+        <isNotNull prepend="and" property="state">t1.state in ($state$)</isNotNull>
         <isNotNull prepend="and" property="teamid">t1.teamid = #teamid#</isNotNull>
         <isNotNull prepend="and" property="orderId">t1.order_Id = #orderId#</isNotNull>
         <isNotNull prepend="and" property="orderNo">upper(t3.order_No) = upper(#orderNo#)</isNotNull>
@@ -141,6 +141,7 @@
     ON T.STORAGE_ID = T2.ID
 	where 1=1
 	<isNotNull prepend="and" property="batchNoStr">t.batch_no in($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T.BATCH_NO = #batchNo#</isNotNull>
     </select>
     <select id="queryPlanDetail" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
@@ -155,4 +156,51 @@
     <delete id="deletePlanDetail" parameterClass="java.util.HashMap">delete from  KS_PROD_COMPONENT_PLAN_DETAIL
 	WHERE
 	  relation_id = #relationId#</delete>
+    <select id="queryTemporaryArea" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.CREATE_TIME    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       T1.UPDATE_TIME    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.STORAGE_NAME   AS "storageName",
+       T1.POSITION       AS "position",
+       T1.AMOUNT         AS "amount",
+       T1.STORAGE_ID     AS "storageId",
+       T1.BATCH_NO       AS "batchNo"
+  FROM KS_PROD_COMPONENT_TEMPAREA T1
+
+	where 1=1
+	<isNotNull prepend="and" property="batchNoStr">t1.batch_no in($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="storageId">T1.STORAGE_ID = #storageId#</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">upper(T1.BATCH_NO) like '%' || upper(#batchNo2#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="storageName">T1.STORAGE_NAME like '%' || #storageName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="position">T1.POSITION like '%' || #position# || '%'</isNotNull>
+    </select>
+    <select id="queryHuanku" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T.BATCH_NO "batchNo",
+       T.AMOUNT "amount",
+       T2.LOSS "loss",
+       T2.CAIMO_LENGTH "caimoLength",
+       T.AMOUNT - (nvl(T2.LOSS,0) + nvl(T2.CAIMO_LENGTH,0)) "amount2"
+  FROM KS_PROD_COMPONENT_STOCK T
+  LEFT JOIN (SELECT TT.BATCH_NO, TT.LOSS, TT.CAIMO_LENGTH
+               FROM V_KS_TUMO_ALL TT) T2
+    ON T.BATCH_NO = T2.BATCH_NO
+	where 1=1
+	and not exists(
+		select 1 from KS_PROD_COMPONENT_TEMPAREA where BATCH_NO = #batchNo#
+	)
+	<isNotNull prepend="and" property="batchNo">T.BATCH_NO = #batchNo#</isNotNull>
+    </select>
 </sqlMap>

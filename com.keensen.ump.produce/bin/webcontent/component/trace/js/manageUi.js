@@ -214,6 +214,9 @@ com.keensen.ump.produce.component.TraceMgr = function() {
 					}, {
 						dataIndex : 'position',
 						header : '仓位'
+					}, {
+						dataIndex : 'reserve1',
+						header : '备注'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.order.queryPlanStock.biz.ext',
@@ -233,6 +236,8 @@ com.keensen.ump.produce.component.TraceMgr = function() {
 							name : 'storageName'
 						}, {
 							name : 'position'
+						}, {
+							name : 'reserve1'
 						}
 
 				]
@@ -353,7 +358,14 @@ com.keensen.ump.produce.component.TraceMgr = function() {
 						readOnly : true,
 						fieldLabel : '生产顺序',
 						anchor : '95%',
-						colspan : 4
+						colspan : 2
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'amount',
+						readOnly : true,
+						fieldLabel : '计划数量',
+						anchor : '95%',
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '5',

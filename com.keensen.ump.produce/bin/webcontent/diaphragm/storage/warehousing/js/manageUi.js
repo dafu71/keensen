@@ -65,7 +65,6 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 								fieldLabel : '膜片等级',
 								triggerAction : "all",
 								store : new Ext.data.ArrayStore({
-											id : 0,
 											fields : ['mykey', 'myvalue'],
 											data : [['A等品', 'A等品'],
 													['B等品', 'B等品'],

@@ -30,11 +30,11 @@ function dealchoose(rkflag, batchNo, index) {
 					"batchNo" : batchNo
 				},
 				success : function(response, action) {
-					A.store.load({
-								params : {
-									"pageCond/begin" : 0,
-									"pageCond/length" : A.pagingToolbar.pageSize
-								}
+					A.store.reload({
+								//params : {
+								//	"pageCond/begin" : 0,
+								//	"pageCond/length" : A.pagingToolbar.pageSize
+								//}
 							});
 				}
 			});

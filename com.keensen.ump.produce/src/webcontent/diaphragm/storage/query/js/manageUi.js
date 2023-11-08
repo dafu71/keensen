@@ -1,5 +1,6 @@
 com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 	this.initPanel = function() {
+		this.rec = {};
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initEditWindow();
@@ -13,19 +14,60 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 
 	this.initQueryPanel = function() {
 		var _this = this;
+
+		var store = new Ext.data.SimpleStore({
+					fields : ['id', 'name'],
+					data : [['1', '膜片AB仓'], ['2', '膜片C仓'], ['3', '膜片发货仓'],
+							['4', '试卷合格仓'], ['5', '半成品仓']]
+				});
+		this.storagecombo = new Ext.form.ComboBox({
+			store : store,
+			anchor : '100%',
+			fieldLabel : '仓库',
+			displayField : 'name',
+			valueField : 'id',
+			myvalue : '',
+			typeAhead : true,
+			mode : 'local',
+			// name : 'condition/storageIds',
+			// hiddenName: 'condition/storageIds',
+			tpl : '<tpl for="."><div class="x-combo-list-item"><span><input type="checkbox" {[values.check?"checked":""]} value="{[values.id]}" /></span><span >{name}</span></div></tpl>',
+			triggerAction : 'all',
+			emptyText : '--请选择--',
+			selectOnFocus : true,
+
+			onSelect : function(record, index) {
+				if (_this.storagecombo.fireEvent('beforeselect',
+						_this.storagecombo, record, index) !== false) {
+					record.set('check', !record.get('check'));
+					var str = [];// 页面显示的值
+					var strvalue = [];// 传入后台的值
+					_this.storagecombo.store.each(function(rc) {
+								if (rc.get('check')) {
+									str.push(rc.get('name'));
+									strvalue.push(rc.get('id'));
+								}
+							});
+					_this.storagecombo.setValue(str.join());
+					_this.storagecombo.myvalue = strvalue.join();
+					_this.storagecombo.fireEvent('select', _this.storagecombo,
+							record, index);
+				}
+			}
+		});
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 180,
 					columns : 4,
 					border : true,
-					//collapsible : true,
+					// collapsible : true,
 					titleCollapse : false,
 					title : '【库存查询】',
-					fields : [{
-								xtype : 'storagecombobox',
-								hiddenName : 'condition/storageId',
-								anchor : '75%',
-								fieldLabel : '仓库'
-							}, {
+					fields : [this.storagecombo/*
+												 * ,{ xtype : 'storagecombobox',
+												 * hiddenName :
+												 * 'condition/storageId', anchor :
+												 * '75%', fieldLabel : '仓库' }
+												 */,	{
 								xtype : 'textfield',
 								name : 'condition/batchNo',
 								anchor : '75%',
@@ -79,6 +121,9 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								editable : true,
 								anchor : '75%',
 								fieldLabel : '库位'
+							}, {
+								xtype : 'hidden',
+								name : 'condition/storageIds'
 							}]
 				});
 		/*
@@ -93,13 +138,14 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					singleSelect : true,
 					header : ''
 				});
-		this.listPanel = new Ext.fn.ListPanel({
+		this.listPanel = new Ext.fn.EditListPanel({
 			title : '【库存列表】',
 			viewConfig : {
 				forceFit : true
 			},
 			hsPage : true,
 			id : listid,
+			clicksToEdit : 1,
 			tbar : [{
 						text : '调拨',
 						scope : this,
@@ -112,7 +158,35 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						header : '仓库名称'
 					}, {
 						dataIndex : 'position',
-						header : '库位'
+						header : '库位',
+						css : 'background:#c7c7c7;',
+						editor : new Ext.grid.GridEditor(new com.keensen.ump.StoragePosComboBox(
+								{
+									allowBlank : false,
+									id : 'positionComb',
+									scope : this,
+									readOnly: modifyFlag !=1,
+									hiddenName : 'code',
+									typeAhead : true,
+									typeAheadDelay : 100,
+									minChars : 1,
+									queryMode : 'local',
+									lastQuery : '',
+									editable : true,
+									// valueField : 'code',
+									// displayField : 'name',
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if(newValue==oldValue) return false;
+											var id = _this.rec.data['id'] ;
+											_this.savePosition(id,newValue,oldValue);
+										}
+									}
+								}))
 					}, {
 						dataIndex : 'batchNo',
 						header : '批号'

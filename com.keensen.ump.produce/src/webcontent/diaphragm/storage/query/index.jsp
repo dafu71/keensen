@@ -11,6 +11,8 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    //10001101膜片库管员
+    int modifyFlag = roleId.indexOf("10001101")>-1?1:0;
 %>
 <html>
 <!-- 
@@ -36,6 +38,8 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var listid = Ext.id();
+  var modifyFlag = <%=modifyFlag %>;
+
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr
 		});

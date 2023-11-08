@@ -141,6 +141,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageRkdrkMgr = function() {
 			hsPage : true,
 			id : 'rkdrk-list',
 			selModel : selModel,
+			clicksToEdit : 1,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
@@ -200,6 +201,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageRkdrkMgr = function() {
 						// return Ext.getCmp('positionComb').getRawValue();
 						// },
 						// sortable : true,
+						
 						css : 'background:#c7c7c7;',
 						editor : new Ext.grid.GridEditor(new com.keensen.ump.StoragePosComboBox(
 								{

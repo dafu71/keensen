@@ -50,6 +50,7 @@
         <isNotNull prepend="and" property="isWx">vkt.is_wx = #isWx#</isNotNull>
         <isNotNull prepend="and" property="storageName">t2.name like '%'||#storageName#||'%'</isNotNull>
         <isNotNull prepend="and" property="storageId">t1.storage_id = #storageId#</isNotNull>
+        <isNotNull prepend="and" property="storageIds">t1.storage_id in($storageIds$)</isNotNull>
         <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
         <isNotNull prepend="and" property="orderNo">upper(vkt.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>

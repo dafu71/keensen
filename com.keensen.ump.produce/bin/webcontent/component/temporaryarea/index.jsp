@@ -11,8 +11,6 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
-    //10001101膜片库管员
-    int modifyFlag = roleId.indexOf("10001101")>-1?1:0;
 %>
 <html>
 <!-- 
@@ -21,31 +19,28 @@
   - Description:
 -->
 <head>
-<title>库存查询</title>
+<title>膜片待用区管理</title>
 <script type="text/javascript">
-	BIZ.ns('com.keensen.ump.produce.diaphragm.storage');
+	BIZ.ns('com.keensen.ump.produce.component');
 </script>
-<ext:dict property="STORAGE_TYPE"   dictTypeId="STORAGE_TYPE" />
-<js:load scriptPath="pub/common/storageCombo.js" />
-<js:load scriptPath="pub/common/supCombo.js" />
-<js:load scriptPath="pub/common/mpworkerCombo.js" />
-<js:load scriptPath="pub/common/mpspecCombo.js" />
-<js:load scriptPath="pub/common/mplineCombo.js" />
-<js:load scriptPath="pub/common/mpperfCombo.js" />
-<js:load scriptPath="pub/common/storagePosCombo.js" />
-<js:load scriptPath="produce/diaphragm/storage/query/js/manageUi.js"/>
-<js:load scriptPath="produce/diaphragm/storage/query/js/manageEv.js"/>
+
+
+<js:load scriptPath="produce/component/temporaryarea/js/manageUi.js"/>
+<js:load scriptPath="produce/component/temporaryarea/js/manageEv.js"/>
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var listid = Ext.id();
-  var modifyFlag = <%=modifyFlag %>;
-
+  
   FunctionMgr.load({ 
-			mainfn:com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr
+			mainfn:com.keensen.ump.produce.component.TempareaMgr
 		});
  </script>
+ 
+ <style type="text/css">
+.x-grid3-cell-inner {-webkit-user-select:text;}
+</style>
 </head>
 <body>
-<div id="storagequerymgr"></div>
+<div id="temporaryareamgr"></div>
 </body>
 </html>

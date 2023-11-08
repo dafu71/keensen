@@ -68,6 +68,9 @@
 	<isNotNull prepend="and" property="storageId"> 
 		       t1.storage_id = #storageId#
 	</isNotNull>
+	<isNotNull prepend="and" property="storageIds"> 
+		       t1.storage_id in($storageIds$)
+	</isNotNull>
 	<isNotNull prepend="and" property="batchNo"> 
 		       t1.batch_no = #batchNo#
 	</isNotNull>
