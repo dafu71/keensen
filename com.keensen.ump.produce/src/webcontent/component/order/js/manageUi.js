@@ -605,6 +605,9 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
+						dataIndex : 'amount',
+						header : '订单数量'
+					}, {
 						dataIndex : 'team',
 						header : '生产车间'
 					}, {

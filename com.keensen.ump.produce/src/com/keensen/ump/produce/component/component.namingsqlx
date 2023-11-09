@@ -190,7 +190,7 @@
 	
 	<select id="queryPlanStock" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	
-	SELECT t.batch_no "batchNo",t.storage_id "storageId",T2.NAME AS "storageName",0 "id",
+	SELECT t.batch_no "batchNo",t.storage_id "storageId",T2.NAME AS "storageName",
 	t.position "position",t.amount "amount" from KS_PROD_COMPONENT_STOCK t
 	LEFT JOIN KS_BASE_STORAGE T2
     ON T.STORAGE_ID = T2.ID

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.mater">
+    <select id="queryOrderMater" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT t1.ORDER_NO as "orderNo",
+		t1.MATER_SPEC_NAME as "materSpecName",
+		t1.ORDER_AMOUNT as "orderAmount",
+		t2.MATER_CODE as "materCode",
+		t2.MATER_NAME as "materName",
+		t2.AMOUNT as "amount",
+		t2.WORK_ORDER_NAME as "workOrderName",
+		t2.STORAGE_NAME as "storageName",
+		NVL(t1.order_amount,0)*NVL(t2.amount,0) "total"
+  FROM KS_PROD_COMPONENT_ORDER T1
+  LEFT JOIN KS_BASE_MATER_BOM T2
+    ON T1.MATER_SPEC_NAME = T2.MATER_SPEC_NAME
+	where 1=1	
+	<isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
+    </select>
+    <select id="queryPlanMater" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT 
+	    T3.PLAN_NO "planNo",
+	    to_char(t3.product_dt,'yyyy-MM-dd') "productDt",
+	    t1.ORDER_NO as "orderNo",
+		t1.MATER_SPEC_NAME as "materSpecName",
+		t3.AMOUNT as "planAmount",
+		t2.MATER_CODE as "materCode",
+		t2.MATER_NAME as "materName",
+		t2.AMOUNT as "amount",
+		t2.WORK_ORDER_NAME as "workOrderName",
+		t2.STORAGE_NAME as "storageName",
+		NVL(t2.amount,0)*NVL(t3.amount,0) "total"
+   FROM KS_PROD_COMPONENT_PLAN T3
+  LEFT JOIN KS_PROD_COMPONENT_ORDER T1
+    ON T3.ORDER_ID = T1.ID
+  LEFT JOIN KS_BASE_MATER_BOM T2
+    ON T1.MATER_SPEC_NAME = T2.MATER_SPEC_NAME
+	where 1=1	
+	<isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="planNo">T3.PLAN_No = #planNo#</isNotNull>
+        <isNotNull prepend="and" property="productDtStart">to_char(t3.PRODUCT_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(t3.PRODUCT_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="storageName">T2.STORAGE_NAME like '%' || #storageName# || '%'</isNotNull>
+	order by T1.ORDER_NO,T3.PLAN_NO
+	 </select>
+</sqlMap>

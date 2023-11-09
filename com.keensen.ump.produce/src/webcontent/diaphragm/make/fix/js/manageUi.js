@@ -270,14 +270,14 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							name : 'entity/fixStarttime',
 							fieldLabel : '混料开始时间',
 							anchor : '95%',
-							format : "Y-m-d H:i:s",
+							format : "Y-m-d H:i:00",
 							colspan : 1
 						}, {
 							xtype : 'datetimefield',
 							name : 'entity/hottime',
 							fieldLabel : '开始加热时间',
 							anchor : '95%',
-							format : "Y-m-d H:i:s",
+							format : "Y-m-d H:i:00",
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -285,7 +285,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'datetimefield',
-							format : "Y-m-d H:i:s",
+							format : "Y-m-d H:i:00",
 							name : 'entity/reachtime',
 							fieldLabel : '料液达70℃时间',
 							anchor : '95%',
@@ -377,7 +377,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							dataIndex : 'fixStarttime',
 							fieldLabel : '混料开始时间',
 							anchor : '95%',
-							format : "Y-m-d H:i:s",
+							format : "Y-m-d H:i:00",
 							colspan : 1
 						}, {
 							xtype : 'datetimefield',
@@ -385,7 +385,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							dataIndex : 'hottime',
 							fieldLabel : '开始加热时间',
 							anchor : '95%',
-							format : "Y-m-d H:i:s",
+							format : "Y-m-d H:i:00",
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -393,7 +393,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'datetimefield',
-							format : "Y-m-d H:i:s",
+							format : "Y-m-d H:i:00",
 							name : 'entity/reachtime',
 							dataIndex : 'reachtime',
 							fieldLabel : '料液达70℃时间',
@@ -472,7 +472,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'datetimefield',
-							format : 'Y-m-d H:i:s',
+							format : 'Y-m-d H:i:00',
 							name : 'entity/hitStarttime',
 							dataIndex : 'hitStarttime',
 							fieldLabel : '打料开始时间',
@@ -480,7 +480,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'datetimefield',
-							format : 'Y-m-d H:i:s',
+							format : 'Y-m-d H:i:00',
 							name : 'entity/hitOvertime',
 							dataIndex : 'hitOvertime',
 							fieldLabel : '打料结束时间',
@@ -492,7 +492,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'datetimefield',
-							format : 'Y-m-d H:i:s',
+							format : 'Y-m-d H:i:00',
 							name : 'entity/loopStarttime',
 							dataIndex : 'loopStarttime',
 							fieldLabel : '内循环开始时间',
@@ -500,7 +500,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'datetimefield',
-							format : 'Y-m-d H:i:s',
+							format : 'Y-m-d H:i:00',
 							name : 'entity/loopOvertime',
 							dataIndex : 'loopOvertime',
 							fieldLabel : '内循环结束时间',
@@ -537,7 +537,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'datetimefield',
-							format : 'Y-m-d H:i:s',
+							format : 'Y-m-d H:i:00',
 							name : 'entity/usetime',
 							dataIndex : 'usetime',
 							fieldLabel : '料液使用时间',

@@ -16,6 +16,7 @@ function formatBatchNo(str) {
 	for (var i = 0; i < arr.length; i++) {
 		arr2.push("'" + arr[i] + "'");
 	}
+	
 	return arr2.join(",") == "''" ? null : arr2.join(",");
 }
 
@@ -25,10 +26,11 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onBatchNo = function(
 		return;
 	var store = this.listPanel3.store;
 	var str = formatBatchNo(batchNoStr);
-	store.baseParams = {
-		"map/batchNoStr" : str
-	};
-	store.load({});
+	store.load({
+					params : {
+						"map/batchNoStr" : str
+					}
+				});
 }
 
 com.keensen.ump.produce.component.OrderMgr.prototype.initEvent = function() {
