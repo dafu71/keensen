@@ -119,7 +119,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onSavePlan = function(
 // 模板文件下载
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onDown = function() {
 
-	var fname = "ks_order_import.xls";
+	var fname = "ks_order_import2.xls";
 	window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
 			+ fname;
 };

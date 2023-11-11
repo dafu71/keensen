@@ -27,20 +27,23 @@ com.keensen.ump.produce.component.PlanmaterMgr = function() {
 								name : 'condition/orderNo',
 								anchor : '75%',
 								fieldLabel : '订单号'
-							},{
+							}, {
 								xtype : 'textfield',
 								name : 'condition/planNo',
 								anchor : '75%',
 								fieldLabel : '计划号'
-							},{
-								xtype : 'textfield',
+							}, {
+								xtype : 'dictcombobox',
 								name : 'condition/storageName',
-								anchor : '75%',
-								fieldLabel : '发料仓库'
+								allowBlank : false,
+								fieldLabel : '发料仓库',
+								hiddenName : 'condition/storageName',
+								dictData : KS_COMPONENT_STORAGE,
+								anchor : '75%'
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
-								//anchor : '75%',
+								// anchor : '75%',
 								nameArray : ['condition/productDtStart',
 										'condition/productDtEnd'],
 								fieldLabel : "作业日期",
@@ -112,7 +115,7 @@ com.keensen.ump.produce.component.PlanmaterMgr = function() {
 				baseParams : {},
 				fields : [{
 							name : 'orderNo'
-						},{
+						}, {
 							name : 'planNo'
 						}, {
 							name : 'materSpecName'

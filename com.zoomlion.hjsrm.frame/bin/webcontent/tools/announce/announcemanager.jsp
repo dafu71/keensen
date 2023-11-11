@@ -25,6 +25,8 @@ BIZ.ns('com.zoomlion.hjsrm.announce');
 <js:load scriptPath="frame/tools/announce/js/announceUi.js"/>
 <js:load scriptPath="frame/tools/announce/js/announceEv.js"/>
 <script type="text/javascript">
+
+
 var ggannounceid = '0';
   FunctionMgr.load({ 
 			mainfn:com.zoomlion.hjsrm.announce.AnnounceMgr

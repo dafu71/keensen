@@ -173,7 +173,7 @@ function delfile(fileid) {
 									}
 									store.removeAll();
 									store.loadData(I);
-									Ext.getCmp('componentuploadwindow').hide();
+									//Ext.getCmp('componentuploadwindow').hide();
 								}
 							}
 						})

@@ -24,7 +24,7 @@
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
 
-
+<ext:dict property="KS_COMPONENT_STORAGE"   dictTypeId="KS_COMPONENT_STORAGE" />
 <js:load scriptPath="produce/component/planmater/js/manageUi.js"/>
 <js:load scriptPath="produce/component/planmater/js/manageEv.js"/>
 <script type="text/javascript">

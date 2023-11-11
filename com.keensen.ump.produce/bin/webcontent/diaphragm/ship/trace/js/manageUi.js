@@ -106,6 +106,15 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 						dataIndex : 'aamount',
 						header : '可发货(A等品)'
 					}, {
+						dataIndex : 'usefulAmount',
+						header : '可用数量'
+					}, {
+						dataIndex : 'onceAmount',
+						header : '一检数量'
+					}, {
+						dataIndex : 'twiceAmount',
+						header : '二检数量'
+					}, {
 						dataIndex : 'sendamount',
 						header : '已发货数量'
 					}, {
@@ -154,6 +163,12 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 							name : 'passrate'
 						}, {
 							name : 'sendamount'
+						}, {
+							name : 'onceAmount'
+						}, {
+							name : 'twiceAmount'
+						}, {
+							name : 'usefulAmount'
 						}]
 			})
 		})

@@ -10,6 +10,7 @@ com.zoomlion.hjsrm.announce.AnnounceMgr.prototype.destroy = function() {
 
 }
 com.zoomlion.hjsrm.announce.AnnounceMgr.prototype.initEvent = function() {
+	var _this = this;
 
 	// 增加查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -23,14 +24,40 @@ com.zoomlion.hjsrm.announce.AnnounceMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
+	Ext.getCmp('announceinputfile').mon(Ext.getCmp('announceinputfile'),
+			'upload', function(form, vals) {
+				var orderId = _this.inputWindow.items.items[0].form
+						.findField('announce/announceid').getValue();
+				_this.uploadForm.getForm().findField('uploadFile').setValue('');
+				_this.uploadForm.getForm().findField('relationId')
+						.setValue(orderId);
+				_this.uploadForm.getForm().findField('groupId')
+						.setValue('announcefile');
+				_this.uploadWindow.show();
+			}, _this);
+
+	Ext.getCmp('announceeditfile').mon(Ext.getCmp('announceeditfile'),
+			'upload', function(form, vals) {
+				var orderId = _this.editWindow.items.items[0].form
+						.findField('announce/announceid').getValue();
+				_this.uploadForm.getForm().findField('uploadFile').setValue('');
+				_this.uploadForm.getForm().findField('relationId')
+						.setValue(orderId);
+				_this.uploadForm.getForm().findField('groupId')
+						.setValue('announcefile');
+				_this.uploadWindow.show();
+			}, _this);
+
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+				
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
 				var attachmentParams = {
 					relationId : cell.data.announceid,
 					groupId : 'announcefile'
 				};
+
 				Ext.getCmp(this.eattachId).setPostParams(attachmentParams);
 				Ext.getCmp(this.eattachId).loadParams = attachmentParams;
 				Ext.getCmp(this.eattachId).loadAttachmentRemote();
@@ -76,13 +103,13 @@ com.zoomlion.hjsrm.announce.AnnounceMgr.prototype.initEvent = function() {
 	// 增加新增前事件
 	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
 			function(gird, cell) {
-				//alert(this.inputWindow.allflag.checked);
-				//return;
+				// alert(this.inputWindow.allflag.checked);
+				// return;
 				if (this.inputWindow.allflag.checked == false) {
 					this.inputWindow.form.findField("announce/orgid")
 							.setValue(this.inputWindow.orgid.getValue());
 				}
-		
+
 			}, this);
 
 	// 增加新增后事件
@@ -128,6 +155,7 @@ com.zoomlion.hjsrm.announce.AnnounceMgr.prototype.initEvent = function() {
  */
 com.zoomlion.hjsrm.announce.AnnounceMgr.prototype.onAdd = function() {
 	var _this = this;
+	
 	Ext.Ajax.request({
 		method : "post",
 		scope : this,
@@ -157,6 +185,7 @@ com.zoomlion.hjsrm.announce.AnnounceMgr.prototype.onAdd = function() {
  * 绑定修改按钮方法
  */
 com.zoomlion.hjsrm.announce.AnnounceMgr.prototype.onEdit = function() {
+
 	this.listPanel.onEdit();
 };
 
@@ -167,56 +196,66 @@ com.zoomlion.hjsrm.announce.AnnounceMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
 };
 
-function showAnnounceReader(k){
-//var record = new Ext.data.Record({"condition/announceid":k});
- ggannounceid = k;
- var list = Ext.getCmp("announceReaderShow").items.items[0];
- var store = list.store;
-    store.baseParams = {"condition/announceid" : k}
+function showAnnounceReader(k) {
+	// var record = new Ext.data.Record({"condition/announceid":k});
+	ggannounceid = k;
+	var list = Ext.getCmp("announceReaderShow").items.items[0];
+	var store = list.store;
+	store.baseParams = {
+		"condition/announceid" : k
+	}
 	store.load({
-					params : {
-						"pageCond/begin" : 0,
-						"pageCond/length" : list.pagingToolbar.pageSize
-					}
-				});
-    Ext.getCmp("announceReaderShow").items.items[0].orgname.setValue();
+				params : {
+					"pageCond/begin" : 0,
+					"pageCond/length" : list.pagingToolbar.pageSize
+				}
+			});
+	Ext.getCmp("announceReaderShow").items.items[0].orgname.setValue();
 	Ext.getCmp("announceReaderShow").show();
 };
-function queryAnnounceRead(t,k){
- var list = Ext.getCmp("announceReaderShow").items.items[0];
- var store = list.store;
-    store.baseParams = {"condition/orgnames" : t,"condition/announceid" : k}
+function queryAnnounceRead(t, k) {
+	var list = Ext.getCmp("announceReaderShow").items.items[0];
+	var store = list.store;
+	store.baseParams = {
+		"condition/orgnames" : t,
+		"condition/announceid" : k
+	}
 	store.load({
-					params : {
-						"pageCond/begin" : 0,
-						"pageCond/length" : list.pagingToolbar.pageSize
-					}
-				});
+				params : {
+					"pageCond/begin" : 0,
+					"pageCond/length" : list.pagingToolbar.pageSize
+				}
+			});
 	Ext.getCmp("announceReaderShow").show();
 };
-function showAnnouncenotRead(t){
-var list = Ext.getCmp("announcenotReadShow").items.items[0];
-var store = list.store;
-    store.baseParams = {"condition/announceid" : t}
+function showAnnouncenotRead(t) {
+	var list = Ext.getCmp("announcenotReadShow").items.items[0];
+	var store = list.store;
+	store.baseParams = {
+		"condition/announceid" : t
+	}
 	store.load({
-					params : {
-						"pageCond/begin" : 0,
-						"pageCond/length" : list.pagingToolbar.pageSize
-					}
-				});
+				params : {
+					"pageCond/begin" : 0,
+					"pageCond/length" : list.pagingToolbar.pageSize
+				}
+			});
 	Ext.getCmp("announcenotReadShow").items.items[0].orgnames.setValue();
 	Ext.getCmp("announcenotReadShow").show();
 };
-function queryAnnouncenotRead(t,k){
-var list = Ext.getCmp("announcenotReadShow").items.items[0];
-var store = list.store;
-    store.baseParams = {"condition/orgnames" : t,"condition/announceid" : k}
+function queryAnnouncenotRead(t, k) {
+	var list = Ext.getCmp("announcenotReadShow").items.items[0];
+	var store = list.store;
+	store.baseParams = {
+		"condition/orgnames" : t,
+		"condition/announceid" : k
+	}
 	store.load({
-					params : {
-						"pageCond/begin" : 0,
-						"pageCond/length" : list.pagingToolbar.pageSize
-					}
-				});
+				params : {
+					"pageCond/begin" : 0,
+					"pageCond/length" : list.pagingToolbar.pageSize
+				}
+			});
 	Ext.getCmp("announcenotReadShow").show();
 };
 function showAnnounce(v) {
@@ -235,3 +274,58 @@ function showAnnounce(v) {
 	Ext.getCmp(fid).loadParams = attachmentParams;
 	Ext.getCmp(fid).loadAttachmentRemote();
 };
+
+function delfile(fileid) {
+
+	Ext.Msg.confirm("操作确认", "您确实要删除这个文件吗?", function(A) {
+		if (A == "yes") {
+			Ext.Ajax.request({
+				url : "com.zoomlion.hjsrm.frame.bclib.file.FileBclib.deleteFile2.biz.ext",
+				jsonData : {
+					"fileId" : fileid
+				},
+				success : function(F) {
+					var B = Ext.decode(F.responseText);
+					if (B.success) {
+						var groupId = B.groupId;
+						var relationId = B.relationId;
+						if (Ext.getCmp('announceeditwindow').hidden) {
+							var store = Ext.getCmp('announceinputfile')
+									.getStore();
+						} else {
+							var store = Ext.getCmp('announceeditfile')
+									.getStore();
+						}
+						Ext.Ajax.request({
+							url : "com.zoomlion.hjsrm.frame.bclib.file.FileBclib.queryFileList.biz.ext",
+							jsonData : {
+								'groupId' : groupId,
+								'relationId' : relationId
+							},
+							success : function(B) {
+								var A = Ext.decode(B.responseText);
+								var J = A.files;
+								if (J) {
+									var I = [];
+									for (var H = 0; H < J.length; H++) {
+										var fileName = J[H].fileName;
+										var fileType = fileName.substr(fileName
+												.lastIndexOf('.'));
+										I.push([J[H].fileId, J[H].fileId,
+												J[H].fileName, fileType,
+												J[H].fileSize, -4, 100,
+												J[H].filePath])
+									}
+									store.removeAll();
+									store.loadData(I);
+									//Ext.getCmp('componentuploadwindow').hide();
+								}
+							}
+						})
+					}
+				}
+			})
+		}
+	})
+
+}

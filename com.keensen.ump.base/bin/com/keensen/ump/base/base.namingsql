@@ -177,4 +177,22 @@
      
      
      </select>
+    <!-- Bom查询 -->
+    <select id="queryBom" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+      SELECT T1.MATER_SPEC_NAME AS "materSpecName",
+       T1.MATER_CODE      AS "materCode",
+       T1.MATER_NAME      AS "materName",
+       T1.AMOUNT          AS "amount",
+       T1.WORK_ORDER_NAME AS "workOrderName",
+       T1.STORAGE_NAME    AS "storageName",
+       T1.ID              "id"
+	  FROM KS_BASE_MATER_BOM T1
+	  where 1=1
+	  <isNotNull prepend="and" property="materSpecName">T1.MATER_SPEC_NAME like '%'||#materSpecName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="materName">T1.MATER_NAME like '%'||#materName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="workOrderName">T1.WORK_ORDER_NAME like '%'||#workOrderName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="storageName">T1.STORAGE_NAME like '%'||#storageName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="materCode">T1.MATER_CODE like '%'||#materCode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+    </select>
 </sqlMap>

@@ -10,6 +10,9 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 		this.initEditWindow();
 		this.initViewWindow();
 		this.initReadWindow();
+
+		this.initUploadWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -24,7 +27,7 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 					width : 500,
 					columns : 3,
 					border : true,
-					title : '【 公告制度查询 】', 
+					title : '【 公告制度查询 】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'announce/title',
@@ -81,36 +84,36 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 						header : '标题',
 						width : 600,
 						renderer : function(v, p, record, rowIndex, colIndex) {
-							if(v=='0'){
-							return '<a style="text-decoration:none" href="javascript:showAnnounce('
-									+ record.get("announceid")
-									+ ')">'
-									+ record.get("title")
-									+ '</a><a style="text-decoration:none" href="javascript:showAnnounceReader('
-									+ record.get("announceid")
-									+ ')"> '
-									+ '<img  src="frame/ui/img/new.gif"  style="width:28px;height:11px;">'
-									+ '<img  src="frame/ui/img/vote_item.gif" ext:qtip="点击查询查阅信息">'
-									+ '</a>';
-							}else{
+							if (v == '0') {
 								return '<a style="text-decoration:none" href="javascript:showAnnounce('
-									+ record.get("announceid")
-									+ ')">'
-									+ record.get("title")
-									+ '</a><a style="text-decoration:none" href="javascript:showAnnounceReader('
-									+ record.get("announceid")
-									+ ')"> '
-									+ '<img  src="frame/ui/img/vote_item.gif" ext:qtip="点击查询查阅信息">'
-									+ '</a>';
+										+ record.get("announceid")
+										+ ')">'
+										+ record.get("title")
+										+ '</a><a style="text-decoration:none" href="javascript:showAnnounceReader('
+										+ record.get("announceid")
+										+ ')"> '
+										+ '<img  src="frame/ui/img/new.gif"  style="width:28px;height:11px;">'
+										+ '<img  src="frame/ui/img/vote_item.gif" ext:qtip="点击查询查阅信息">'
+										+ '</a>';
+							} else {
+								return '<a style="text-decoration:none" href="javascript:showAnnounce('
+										+ record.get("announceid")
+										+ ')">'
+										+ record.get("title")
+										+ '</a><a style="text-decoration:none" href="javascript:showAnnounceReader('
+										+ record.get("announceid")
+										+ ')"> '
+										+ '<img  src="frame/ui/img/vote_item.gif" ext:qtip="点击查询查阅信息">'
+										+ '</a>';
 							}
 						}
 					}, {
 						dataIndex : 'username',
 						header : '发布人'
-					},{
+					}, {
 						dataIndex : 'title',
 						header : '隐藏标题',
-						hidden : true			
+						hidden : true
 					}, {
 						dataIndex : 'announcetime',
 						header : '发布时间',
@@ -141,20 +144,21 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 							name : 'endtime'
 						}, {
 							name : 'orgid'
-						},{
-						    name : 'flag' 
+						}, {
+							name : 'flag'
 						}]
 			})
 		});
 	}
 	this.initInputWindow = function() {
-		this.attachId = Ext.id();
+		this.attachId = 'announceinputfile';
 		var companyid = Ext.id();
 		var orgid = Ext.id();
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增公告制度',
 			height : 600,
 			width : 800,
+			id : 'announceinputwindow',
 			resizable : true,
 			minimizable : false,
 			maximizable : true,
@@ -261,7 +265,7 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 						}, {
 							colspan : 2,
 							width : 700,
-							isUploaded : true,
+							isUploaded : false,
 							xtype : 'attachmentlist',
 							name : 'attachlist',
 							id : this.attachId,
@@ -282,11 +286,12 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 	}
 
 	this.initEditWindow = function() {
-		this.eattachId = Ext.id();
+		this.eattachId = 'announceeditfile';
 		var companyid = Ext.id();
 		var orgid = Ext.id();
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '编辑公告制度',
+			id : 'announceeditwindow',
 			height : 600,
 			width : 800,
 			resizable : false,
@@ -388,7 +393,8 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 						}, {
 							colspan : 2,
 							width : 700,
-							isUploaded : true,
+							isUploaded : false,
+							isDelete : true,
 							xtype : 'attachmentlist',
 							name : 'attachlist',
 							id : this.eattachId,
@@ -444,7 +450,9 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 			resizable : false,
 			minimizable : false,
 			maximizable : false,
-			defaults:{autoScroll : true},
+			defaults : {
+				autoScroll : true
+			},
 			items : [{
 				xtype : 'viewpanel',
 				columns : 1,
@@ -463,7 +471,7 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 							style : 'padding-top:3px;padding-left:10px;',
 							anchor : '90%',
 							fieldLabel : '内容',
-							style:'padding-top:3px;padding-left:10px;border:2px solid #D2D2D2',
+							style : 'padding-top:3px;padding-left:10px;border:2px solid #D2D2D2',
 							xtype : 'container',
 							autoScroll : true,
 							html : ""
@@ -510,8 +518,9 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 									width : 600,
 									renderer : function(value, meta, record) {
 										meta.attr = 'style="white-space:normal;"';
-										var kvalue = value.replace(/,/g,'&nbsp&nbsp&nbsp');
-				                        return kvalue;
+										var kvalue = value.replace(/,/g,
+												'&nbsp&nbsp&nbsp');
+										return kvalue;
 									}
 								}],
 						tbar : [{
@@ -527,7 +536,8 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 									iconCls : 'icon-application_edit',
 									handler : function() {
 										queryAnnounceRead(
-												Ext.getCmp("announceReaderShow").items.items[0].orgname
+												Ext
+														.getCmp("announceReaderShow").items.items[0].orgname
 														.getValue(),
 												ggannounceid)
 									}
@@ -576,5 +586,125 @@ com.zoomlion.hjsrm.announce.AnnounceMgr = function() {
 					}
 				});
 
+	}
+
+	this.initUploadWindow = function() {
+		var _this = this;
+		this.uploadForm = this.uploadForm || new Ext.form.FormPanel({
+					labelAlign : 'right',
+					buttonAlign : "center",
+					title : '文件上传',
+					labelWidth : 60,
+					frame : true,
+					url : "com.zoomlion.hjsrm.frame.bclib.file.UploadFileBackId.flow",
+					width : 360,
+					height : 100,
+					fileUpload : true,
+					items : [{
+								xtype : 'textfield',
+								fieldLabel : '文件名',
+								name : 'uploadFile',
+								inputType : 'file'// 文件类型
+							}, {
+								xtype : 'hidden',
+								ref : '../relationId',
+								name : 'relationId'
+							}, {
+								xtype : 'hidden',
+								name : 'groupId',
+								value : ''
+							}, {
+								xtype : 'hidden',
+								name : 'dataorgid',
+								value : dataorgid
+							}, {
+								xtype : 'hidden',
+								name : 'operatorid',
+								value : operatorid
+							}, {
+								xtype : 'hidden',
+								name : 'operatorname',
+								value : operatorname
+							}]
+				});
+
+		this.uploadWindow = this.uploadWindow || new Ext.Window({
+			id : 'announceuploadwindow',
+			width : 360,
+			modal : true,
+			height : 150,
+			buttonAlign : "center",
+			closeAction : "hide",
+			layout : "fit",
+			items : [this.uploadForm],
+			buttons : [{
+				text : '上传',
+				handler : function() {
+					var groupId = _this.uploadForm.getForm()
+							.findField('groupId').getValue();
+					_this.uploadForm.getForm().submit({
+						clientValidation : true,
+						success : function(form, response) {
+							Ext.Msg.alert('操作提示', '上传成功!');
+							/*
+							 * var fileId = response.result.fileId; var fileName =
+							 * response.result.fileName; var size =
+							 * response.result.fileSize; var type =
+							 * response.result.fileType; var store =
+							 * Ext.getCmp(_this.veattachId).getStore(); var F =
+							 * new Ext.data.Record({ id : fileId, filename :
+							 * fileName, size : size, type : type });
+							 * store.add(F)
+							 */
+							if (Ext.getCmp('announceeditwindow').hidden) {
+								var store = Ext.getCmp('announceinputfile')
+										.getStore();
+							} else {
+								var store = Ext.getCmp('announceeditfile')
+										.getStore();
+							}
+
+							Ext.Ajax.request({
+								url : "com.zoomlion.hjsrm.frame.bclib.file.FileBclib.queryFileList.biz.ext",
+								jsonData : {
+									'groupId' : 'announcefile',
+									'relationId' : _this.uploadForm.getForm()
+											.findField('relationId').getValue()
+								},
+								success : function(B) {
+									var A = Ext.decode(B.responseText);
+									var J = A.files;
+									if (J) {
+										var I = [];
+										for (var H = 0; H < J.length; H++) {
+											var fileName = J[H].fileName;
+											var fileType = fileName
+													.substr(fileName
+															.lastIndexOf('.'));
+											I.push([J[H].fileId, J[H].fileId,
+													J[H].fileName, fileType,
+													J[H].fileSize, -4, 100,
+													J[H].filePath])
+										}
+										store.removeAll();
+										store.loadData(I);
+										_this.uploadWindow.hide();
+									}
+								}
+							})
+
+						},
+						failure : function(form, response) {
+							Ext.Msg.alert('操作提示', '上传失败!');
+						}
+					});
+				}
+			}, {
+				text : "关闭",
+				handler : function() {
+					_this.uploadWindow.hide()
+				}
+			}]
+		})
 	}
 }

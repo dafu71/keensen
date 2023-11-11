@@ -520,7 +520,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 	}
 
 	this.initInputWindow2 = function() {
-	
+
 		var me = this;
 		var selModel2 = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : true,
@@ -530,7 +530,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 		this.listPanel3 = this.listPanel3 || new Ext.fn.EditListPanel({
 			title : '【批次信息】',
 			height : 140,
-			//region : 'center',
+			// region : 'center',
 			viewConfig : {
 				forceFit : true
 			},
@@ -551,9 +551,10 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					}, {
 						dataIndex : 'reserve1',
 						header : '备注',
-						editor : new Ext.grid.GridEditor(new Ext.form.TextField({
-							allowBlank : true
-						}))
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									allowBlank : true
+								}))
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.order.queryPlanStock.biz.ext',
@@ -584,7 +585,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
 			title : '【计划单列表】',
 			height : 190,
-			//region : 'south',
+			// region : 'south',
 			viewConfig : {
 				forceFit : false
 			},
@@ -616,16 +617,11 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 					}, {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
-					}/*, {
-						dataIndex : 'amount',
-						header : '米数'
-					}, {
-						dataIndex : 'storageName',
-						header : '仓库'
-					}, {
-						dataIndex : 'position',
-						header : '仓位'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'amount', header : '米数' }, {
+						 * dataIndex : 'storageName', header : '仓库' }, {
+						 * dataIndex : 'position', header : '仓位' }
+						 */, {
 						dataIndex : 'productDemand',
 						header : '生产要求'
 					}, {
@@ -707,24 +703,18 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 
 		this.inputPanel2 = this.inputPanel2 || new Ext.fn.InputPanel({
 			height : 270,
-			//region : 'north',
+			// region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
 			autoScroll : false,
 			border : true,
 			columns : 4,
 			saveUrl : 'com.keensen.ump.produce.component.order.savePlan2.biz.ext',
-			fields : [/*{
-						xtype : 'displayfield',
-						fieldLabel : '计划单号',
-						value : '<p style="color:red;">系统自动生成</p>',
-						anchor : '47%',
-						colspan : 4
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, */{
+			fields : [/*
+						 * { xtype : 'displayfield', fieldLabel : '计划单号', value : '<p style="color:red;">系统自动生成</p>',
+						 * anchor : '47%', colspan : 4 }, { xtype :
+						 * 'displayfield', height : '5', colspan : 4 },
+						 */{
 						xtype : 'componentteamcombo',
 						hiddenName : 'teamid',
 						name : 'teamid',
@@ -938,6 +928,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 			},
 			items : [{
 				xtype : 'viewpanel',
+				baseCls : "x-plain",
 				columns : 4,
 				loadUrl : 'com.keensen.ump.produce.component.order.expandEntity.biz.ext',
 				fields : [{
@@ -981,6 +972,7 @@ com.keensen.ump.produce.component.OrderMgr = function() {
 							dataIndex : 'materSpecName'
 						}, {
 							xtype : 'displayfield',
+							fieldLabel : '干膜/湿',
 							anchor : '95%',
 							colspan : 2,
 							dataIndex : 'dryWet'

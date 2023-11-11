@@ -54,4 +54,68 @@
             <column length="500" name="OPT"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.base.common.KsBaseMaterBom" table="KS_BASE_MATER_BOM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="materSpecName" type="string">
+            <column length="100" name="MATER_SPEC_NAME"/>
+        </property>
+        <property name="materCode" type="string">
+            <column length="100" name="MATER_CODE"/>
+        </property>
+        <property name="materName" type="string">
+            <column length="100" name="MATER_NAME"/>
+        </property>
+        <property name="amount" type="big_decimal">
+            <column length="10" name="AMOUNT" precision="10" scale="4"/>
+        </property>
+        <property name="workOrderName" type="string">
+            <column length="100" name="WORK_ORDER_NAME"/>
+        </property>
+        <property name="storageName" type="string">
+            <column length="100" name="STORAGE_NAME"/>
+        </property>
+    </class>
 </hibernate-mapping>
