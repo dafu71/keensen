@@ -58,7 +58,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 								anchor : '100%',
 								nameArray : ['condition/demandDateStart',
 										'condition/demandDateEnd'],
-								fieldLabel : "要求完成日期",
+								fieldLabel : "要求入库日期",
 								format : "Y-m-d"
 							}]
 				});
@@ -132,7 +132,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						header : '下单日期'
 					}, {
 						dataIndex : 'demandDate',
-						header : '要求完成日期'
+						header : '要求入库日期'
 					}, {
 						dataIndex : 'amount',
 						header : '数量'
@@ -239,7 +239,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							name : 'entity/demandDate',
 							dataIndex : 'demandDate',
 							allowBlank : false,
-							fieldLabel : '要求完成日期',
+							fieldLabel : '要求入库日期',
 							anchor : '80%',
 							format : "Y-m-d",
 							colspan : 2
@@ -338,7 +338,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							name : 'entity/demandDate',
 							dataIndex : 'demandDate',
 							allowBlank : false,
-							fieldLabel : '要求完成日期',
+							fieldLabel : '要求入库日期',
 							anchor : '95%',
 							format : "Y-m-d",
 							colspan : 2
@@ -858,7 +858,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							xtype : 'displayfield',
 							dataIndex : 'demandDate',
 							// readOnly : true,
-							fieldLabel : '要求完成日期',
+							fieldLabel : '要求入库日期',
 							anchor : '95%',
 							// format : "Y-m-d",
 							colspan : 2

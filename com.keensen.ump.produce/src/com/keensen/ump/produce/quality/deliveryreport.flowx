@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="deliveryreport" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3" state="stateless">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.quality.KsProdQualityDeliveryrecord" name="entity"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="type" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="unit" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="unit2" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="appearanceResult" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="waterResult" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="waterResult2" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="desalinationResult" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="desalinationResult2" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="result" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="100" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="480" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="99" y="186"/>
+    <figSize height="20" width="31"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="479" y="186"/>
+    <figSize height="20" width="31"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view0" name="deliveryreport.jsp" displayName="deliveryreport.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/quality/deliveryrecord/deliveryreport.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link1" name="link1" lineType="reference" isDefault="true" type="action" actionName="action1">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="375" y="150"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="321" y="186"/>
+    <figSize height="20" width="131"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="expand" displayName="expand" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link3" name="link3" displayName="连接线" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>switch0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">type</process:leftOperand>
+          <process:rightOperand type="literal">e</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="225" y="150"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.quality.deliveryrecord.expand</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="entity" type="query" value="com.keensen.ump.produce.quality.KsProdQualityDeliveryrecord" valueType="DataObject" pattern="reference">entity</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="data" type="query" value="com.keensen.ump.produce.quality.KsProdQualityDeliveryrecord" valueType="DataObject">data</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="211" y="185"/>
+    <figSize height="20" width="55"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view1" name="deliveryreport2.jsp" displayName="deliveryreport2.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/quality/deliveryrecord/deliveryreport2.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link4" name="link4" lineType="reference" isDefault="true" type="action" actionName="action2">
+      <sourceNode>view1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="372" y="257"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view1label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <location x="313" y="293"/>
+    <figSize height="20" width="140"/>
+    <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link6" name="反渗透膜元件" displayName="连接线" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">data/productName</process:leftOperand>
+          <process:rightOperand type="literal">反渗透膜元件</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="120" y="255"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <location x="111" y="291"/>
+    <figSize height="20" width="46"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="205" y="348"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">Industrial RO Membrane</process:from>
+      <process:to type="query">data/productName</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="204" y="384"/>
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="200" y="257"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">Industrial NF Membrane</process:from>
+      <process:to type="query">data/productName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/waterResult2</process:from>
+      <process:to type="query">waterResult2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">waterResult2.replace(&quot;不合格&quot;, &quot;NO Qualified&quot;)</process:from>
+      <process:to type="query">waterResult2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">waterResult2.replace(&quot;合格&quot;, &quot;Qualified&quot;)</process:from>
+      <process:to type="query">waterResult2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">waterResult2</process:from>
+      <process:to type="query">data/waterResult2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/desalinationResult2</process:from>
+      <process:to type="query">desalinationResult2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">desalinationResult2.replace(&quot;不合格&quot;, &quot;NO Qualified&quot;)</process:from>
+      <process:to type="query">desalinationResult2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">desalinationResult2.replace(&quot;合格&quot;, &quot;Qualified&quot;)</process:from>
+      <process:to type="query">desalinationResult2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">desalinationResult2</process:from>
+      <process:to type="query">data/desalinationResult2</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="194" y="293"/>
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>view1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link10" name="link10" displayName="连接线" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">data/result</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="279" y="257"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/orderAmount</process:from>
+      <process:to type="query">unit</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">unit.replace(&quot;支&quot;, &quot; SETS&quot;)</process:from>
+      <process:to type="query">unit</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">unit</process:from>
+      <process:to type="query">data/orderAmount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/checkAmount</process:from>
+      <process:to type="query">unit2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">unit2.replace(&quot;支&quot;, &quot; SETS&quot;)</process:from>
+      <process:to type="query">unit2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">unit2</process:from>
+      <process:to type="query">data/checkAmount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/appearanceResult</process:from>
+      <process:to type="query">appearanceResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">appearanceResult.replace(&quot;不合格&quot;, &quot;NO Qualified&quot;)</process:from>
+      <process:to type="query">appearanceResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">appearanceResult.replace(&quot;合格&quot;, &quot;Qualified&quot;)</process:from>
+      <process:to type="query">appearanceResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">appearanceResult</process:from>
+      <process:to type="query">data/appearanceResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/waterResult</process:from>
+      <process:to type="query">waterResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">waterResult.replace(&quot;不合格&quot;, &quot;NO Qualified&quot;)</process:from>
+      <process:to type="query">waterResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">waterResult.replace(&quot;合格&quot;, &quot;Qualified&quot;)</process:from>
+      <process:to type="query">waterResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">waterResult</process:from>
+      <process:to type="query">data/waterResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/desalinationResult</process:from>
+      <process:to type="query">desalinationResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">desalinationResult.replace(&quot;不合格&quot;, &quot;NO Qualified&quot;)</process:from>
+      <process:to type="query">desalinationResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">desalinationResult.replace(&quot;合格&quot;, &quot;Qualified&quot;)</process:from>
+      <process:to type="query">desalinationResult</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">desalinationResult</process:from>
+      <process:to type="query">data/desalinationResult</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="273" y="293"/>
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值3" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>view1</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="321" y="465"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/result</process:from>
+      <process:to type="query">result</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">result.replace(&quot;不合格&quot;, &quot;NO Qualified&quot;)</process:from>
+      <process:to type="query">result</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">result.replace(&quot;合格&quot;, &quot;Qualified&quot;)</process:from>
+      <process:to type="query">result</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">result</process:from>
+      <process:to type="query">data/result</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="315" y="501"/>
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="dafu" createTime="2023-11-17 17:01:15" date="2023-11-17Z" description="" name="deliveryreport" version="6.3"/>
+  <process:variables/>
+</process:tPageFlow>

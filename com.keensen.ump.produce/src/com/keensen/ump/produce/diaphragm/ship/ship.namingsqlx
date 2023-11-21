@@ -3,7 +3,7 @@
 <sqlMap>
     <select id="queryTumo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
      select t1.RECORD_ID       as "recordId",t1.is_wx "isWx",t1.worker_id "workerId"
-       ,t1.spec_id "spectId",t1.line_id "lineId",
+       ,t1.spec_id "spectId",t1.line_id "lineId",t1.is_cut_over "isCutOver",
        t1.LINE_NAME       as "lineName",
        t1.LINE_CODE       as "lineCode",
        t1.PRODUCE_DT      as "produceDt",
@@ -25,21 +25,29 @@
        t1.PERF_FLAG_ID    as "perfFlagId",
        t1.PERF_FLAG_NAME  as "perfFlagName",
        t1.PERF_FLAG_CODE  as "perfFlagCode",
-       decode(t2.RECORD_ID,null,'n','y') "shipflag",
-       nvl(t2.ifconfirm,'n')    "ifconfirm",
+       <!--decode(t2.RECORD_ID,null,'n','y') "shipflag",
+       nvl(t2.ifconfirm,'n')    "ifconfirm",-->
        t1.mater_class_code as "materClassCode",
        t1.mater_spec_code as "materSpecCode",
        t1.mater_class_Name as "materClassName",
        t1.mater_spec_Name as "materSpecName",
        ddflag "ddflag",
-       to_char(t2.create_time,'yyyy-MM-dd') "createTime",
-       t2.create_name "createName"
+       <!--to_char(t2.create_time,'yyyy-MM-dd') "createTime",
+       t2.create_name "createName", 
+       t2.amount "sendAmount",
+       t2.id "sendId",-->
+       t1.QUALIFID_LENGTH - nvl(t3.amount,0) "delivery"
   from v_ks_tumo3 t1
-  left join KS_PROD_DIAPHRAGM_SHIP t2 
-    on t1.RECORD_ID = t2.RECORD_ID
+  
+  left join (SELECT sum(nvl(t.amount,0)) amount ,record_id 
+			from KS_PROD_DIAPHRAGM_SHIP t
+			GROUP BY record_id) t3
+	on t1.RECORD_ID = t3.RECORD_ID
  
  where 1=1
- 
+ 	<isNotNull prepend="and" property="isCutOver"> 
+		       upper(nvl(t1.is_cut_over,'N')) = 'N'
+	</isNotNull>
  	<isNotNull prepend="and" property="isQualified"> 
 		       upper(t1.IS_QUALIFIED) = upper(#isQualified#)
 	</isNotNull>
@@ -119,6 +127,9 @@
   LEFT JOIN KS_PROD_DIAPHRAGM_SHIP T2
     ON T1.RECORD_ID = T2.RECORD_ID
  WHERE 1 = 1
+    <isNotNull prepend="and" property="isCutOver"> 
+		       upper(nvl(t1.is_cut_over,'N')) = 'N'
+	</isNotNull>
     <isNotNull prepend="and" property="ifconfirm"> 
 		       nvl(t2.ifconfirm,'n') = #ifconfirm#
 	</isNotNull>
@@ -181,7 +192,7 @@
  
  <select id="queryFhd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
      select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",t2.create_name "createName",
-       t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id", 
+       t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id", t2.amount "sendAmount",
        to_char(t2.create_time,'yyyy-MM-dd') "createTime",
        nvl(t2.ifconfirm,'n')    "ifconfirm",
        t1.LINE_CODE       as "lineCode",
@@ -413,6 +424,9 @@
                  FROM v_ks_tumo_all2 V
                 WHERE V.ORDER_NO IS NOT NULL
                   AND V.PLAN_NO IS NOT NULL
+                  <isNotNull prepend="and" property="isCutOver"> 
+		       	upper(nvl(v.is_cut_over,'N')) = 'N'
+				</isNotNull>
                 GROUP BY V.ORDER_NO, V.PLAN_NO) T3
       ON T.ORDER_NO = T3.ORDER_NO
      AND T2.PLAN_NO = T3.PLAN_NO
@@ -420,6 +434,9 @@
                  FROM v_ks_tumo_all2 V
                 WHERE V.ORDER_NO IS NOT NULL
                   AND V.PLAN_NO IS NOT NULL
+                   <isNotNull prepend="and" property="isCutOver"> 
+		       	upper(nvl(v.is_cut_over,'N')) = 'N'
+				</isNotNull>
                 GROUP BY V.ORDER_NO, V.PLAN_NO) T4
       ON T.ORDER_NO = T4.ORDER_NO
      AND T2.PLAN_NO = T4.PLAN_NO
@@ -427,14 +444,24 @@
                  FROM v_ks_tumo_all2 V
                 WHERE V.ORDER_NO IS NOT NULL
                   AND V.PLAN_NO IS NOT NULL
-                  AND v.perf_flag_code = 'A'
+                  AND v.perf_flag_code = 'A' <isNotNull prepend="and" property="isCutOver"> 
+		       	upper(nvl(v.is_cut_over,'N')) = 'N'
+				</isNotNull>
+                  
                 GROUP BY V.ORDER_NO, V.PLAN_NO) T5
       ON T.ORDER_NO = T5.ORDER_NO
      AND T2.PLAN_NO = T5.PLAN_NO
      left join (SELECT SUM(QUALIFID_LENGTH) sendamount,plan_no,order_no
     FROM
     (select t.batch_no,v.plan_no,v.order_no,V.QUALIFID_LENGTH from KS_PROD_DIAPHRAGM_SHIP t
-    LEFT JOIN v_ks_tumo_all v ON v.batch_no=t.batch_no)
+    LEFT JOIN 
+    (select * from  v_ks_tumo_all
+    where 1=1
+     			<isNotNull prepend="and" property="isCutOver"> 
+		       	upper(nvl(is_cut_over,'N')) = 'N'
+				</isNotNull>) v ON v.batch_no=t.batch_no
+    
+    )
     GROUP BY plan_no,order_no) t6
      ON T.ORDER_NO = T6.ORDER_NO
      AND T2.PLAN_NO = T6.PLAN_NO
@@ -446,6 +473,9 @@
                  FROM v_ks_tumo_all2 V
                 WHERE V.ORDER_NO IS NOT NULL
                   AND V.PLAN_NO IS NOT NULL
+                 <isNotNull prepend="and" property="isCutOver"> 
+		       	upper(nvl(v.is_cut_over,'N')) = 'N'
+				</isNotNull>
                 GROUP BY V.ORDER_NO, V.PLAN_NO) T7
       ON T.ORDER_NO = T7.ORDER_NO
      AND T2.PLAN_NO = T7.PLAN_NO

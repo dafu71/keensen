@@ -3,7 +3,7 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 	this.initPanel = function() {
 		this.initQueryPanel();
 		this.initListPanel();
-		this.initTumoWindow();		
+		this.initTumoWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -16,10 +16,10 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
-					columns : 4,
+					height : 150,
+					columns : 3,
 					border : true,
-					//collapsible : true,
+					// collapsible : true,
 					titleCollapse : false,
 					title : '【订单跟进查询】',
 					fields : [{
@@ -41,10 +41,21 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 								fieldLabel : "计划发货日期",
 								format : "Y-m-d"
 							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 3
+							}, {
 								xtype : 'mpspeccombobox',
 								hiddenName : 'condition/specId',
 								anchor : '75%',
 								fieldLabel : '膜片型号 '
+							}, {
+								fieldLabel : '不统计已裁膜',
+								xtype : 'checkbox',
+								checked : true,
+								name : 'condition/isCutOver',
+								value : 'N',
+								anchor : '100%'
 							}]
 				});
 		/*
@@ -121,18 +132,18 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 						dataIndex : 'passrate',
 						header : '发货合格率'
 					}
-					
-					/*
-						 * , { dataIndex : 'planRemark', header : '计划备注' }
-						 */],
+
+			/*
+			 * , { dataIndex : 'planRemark', header : '计划备注' }
+			 */],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.ship.trace.queryByPage.biz.ext',
 				root : 'data',
 				autoLoad : true,
 				totalProperty : 'totalCount',
 				baseParams : {
-
-			}	,
+					'condition/isCutOver' : 'N'
+				},
 				fields : [{
 							name : 'orderNo'
 						}, {
@@ -174,7 +185,7 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 		})
 	}
 
-	this.initTumoWindow = function(){
+	this.initTumoWindow = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : true,
@@ -241,35 +252,34 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 						}]
 			})
 		})
-		
-		this.tumoWindow = this.tumoWindow || new Ext.Window({
-			title : "涂膜工序",
-			resizable : true,
-			minimizable : false,
-			maximizable : true,
-			closeAction : "hide",
-			buttonAlign : "center",
-			autoScroll : true,
-			width : 1024,
-			height : 800,
-			layout : 'fit',
-			draggable : false,
-			constrain : true,
-			hasvcode : true,
-			remoteIP : "",
-			redirect : true,
-			modal : true,
-			items : [this.tumolistPanel],
-			buttons : [ {
-						text : "关闭",
-						scope : this,
-						handler : function() {
-							this.tumoWindow.hide();
-						}
-					}]
 
-		});
+		this.tumoWindow = this.tumoWindow || new Ext.Window({
+					title : "涂膜工序",
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : true,
+					width : 1024,
+					height : 800,
+					layout : 'fit',
+					draggable : false,
+					constrain : true,
+					hasvcode : true,
+					remoteIP : "",
+					redirect : true,
+					modal : true,
+					items : [this.tumolistPanel],
+					buttons : [{
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.tumoWindow.hide();
+								}
+							}]
+
+				});
 	}
-	
 
 }

@@ -76,8 +76,10 @@ com.keensen.ump.base.BomMgr.prototype.onAdd = function() {
 }
 
 com.keensen.ump.base.BomMgr.prototype.destroy = function() {
-	//this.editWindow.destroy();
+	this.editWindow.destroy();
 	this.inputWindow.destroy();
+	this.viewWindow.destroy();
+	this.excelUploadWin.destroy();
 }
 
 com.keensen.ump.base.BomMgr.prototype.onEdit = function() {

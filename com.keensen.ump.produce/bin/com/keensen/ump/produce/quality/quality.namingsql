@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.quality.quality">
+    <select id="queryDiamStand" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID              AS "id",
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       T1.MATER_SPEC_ID   AS "materSpecId",
+       T1.STAND           AS "stand",
+       T1.MATER_SPEC_NAME "materSpecName",
+       T1.lft,
+       T1.RGHT,
+       t1.toplimit "toplimit",
+       t1.bottomlimit "bottomlimit"  
+  FROM V_KS_TUMO_DIAMSTAND T1
+	where 1=1
+	
+	<isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materSpecId">T1.MATER_SPEC_ID = #materSpecId#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">T1.MATER_SPEC_NAME like '%' || #materSpecName# || '%'</isNotNull>
+    </select>
+    <select id="queryDiamRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   		SELECT T.RECORD_ID      AS "recordId",
+       T.BATCH_NO       AS "batchNo",
+       T.PROD_SPEC_ID   AS "prodSpecId",
+       T.PRODUCE_DT     AS "produceDt",
+       T.PROD_SPEC_NAME AS "prodSpecName",
+       T.LINE_CODE      AS "lineCode",
+       T.LINE_ID        "lineId",
+       T.ORDER_NO       AS "orderNo",
+       T.TUMO_BATCH_STR AS "tumoBatchStr",
+       T.TEAM_NAME      AS "teamName",
+       T.WORKER_NAME    AS "workerName",
+       T1.STAND         AS "stand",
+       T1.TOPLIMIT      "toplimit",
+       T1.BOTTOMLIMIT   "bottomlimit",
+       T2.LEFT_DIAM     "leftDiam",
+       T2.RIGHT_DIAM    "rightDiam",T2.id "id",
+       CASE WHEN T2.LEFT_DIAM&gt;=T1.BOTTOMLIMIT AND T2.LEFT_DIAM &lt;=T1.TOPLIMIT and T2.RIGHT_DIAM&gt;=T1.BOTTOMLIMIT AND T2.RIGHT_DIAM &lt;=T1.TOPLIMIT
+       THEN 'y' ELSE 'n' END AS "flag",
+       CASE WHEN T2.LEFT_DIAM&gt;=T1.BOTTOMLIMIT AND T2.LEFT_DIAM &lt;=T1.TOPLIMIT THEN 'y' ELSE 'n' END AS "leftflag",
+       CASE WHEN T2.RIGHT_DIAM&gt;=T1.BOTTOMLIMIT AND T2.RIGHT_DIAM &lt;=T1.TOPLIMIT THEN 'y' ELSE 'n' END AS "rightflag"
+  	FROM V_KS_JUANMO T
+  	LEFT JOIN V_KS_TUMO_DIAMSTAND T1
+    	ON T.PROD_SPEC_ID = T1.MATER_SPEC_ID
+  	LEFT JOIN KS_PROD_QUALITY_DIAMRECORD T2
+    	ON T2.RELATION_ID = T.RECORD_ID
+ 	WHERE 1 = 1
+	<isNotNull prepend="and" property="recordId">T.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="and" property="materSpecId">T1.MATER_SPEC_ID = #materSpecId#</isNotNull>
+        <isNotNull prepend="and" property="lineId">T.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="and" property="produceDtStart">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="produceDtEnd">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #produceDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="tumoBatchStr">T.TUMO_BATCH_STR like '%' || #tumoBatchStr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="workerName">T.WORKER_NAME like '%' || #workerName# || '%'</isNotNull>
+    </select>
+    <select id="queryPoorRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.WORKSHOP AS "workshop",
+       TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  AS "invalidDt",
+       T1.INVALID_CODE AS "invalidCode",
+       T1.MATER_SPEC_ID AS "materSpecId",
+       T1.BATCH_NO AS "batchNo",
+       T1.COMPONENT_NUMBER AS "componentNumber",
+       T1.AMOUNT AS "amount",
+       T1.LENGTH AS "length",
+       T1.MACHINE AS "machine",
+       T1.DESCRIBE AS "describe",
+       T1.INVALID_TYPE AS "invalidType",
+       T1.INVALID_TYPE2 AS "invalidType2",
+       decode(T1.WORKSHOP,'工业组件',T1.INVALID_TYPE,T1.INVALID_TYPE2) "invalidTypeName",
+       T1.RESPONSIBLE AS "responsible",
+       T1.DEAL_METHOD AS "dealMethod",
+       T1.DEPARTMENT AS "department",
+       T1.COMPONENT_TYPE AS "componentType",
+       T2.MATER_SPEC_NAME AS "materSpecName"
+  FROM KS_PROD_QUALITY_POORRECORD T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+    ON T1.MATER_SPEC_ID = T2.MATER_SPEC_ID
+   	WHERE 1 = 1
+	<isNotNull prepend="and" property="id">T.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="workshop">T1.WORKSHOP = #workshop#</isNotNull>
+        <isNotNull prepend="and" property="invalidDtStart">TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &gt;=  #invalidDtStart#</isNotNull>
+        <isNotNull prepend="and" property="invalidDtEnd">TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &lt;=  #invalidDtStart#</isNotNull>
+        <isNotNull prepend="and" property="invalidCode">T1.INVALID_CODE like '%' || #invalidCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="responsible">T1.RESPONSIBLE like '%' || #responsible# || '%'</isNotNull>
+        <isNotNull prepend="and" property="department">T1.DEPARTMENT like '%' || #department# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.BATCH_NO like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="materSpecId">T1.MATER_SPEC_ID = #materSpecId#</isNotNull>
+        <isNotNull prepend="and" property="invalidType">T1.INVALID_TYPE = #invalidType#</isNotNull>
+        <isNotNull prepend="and" property="invalidType2">T1.INVALID_TYPE2 = #invalidType2#</isNotNull>
+        <isNotNull prepend="and" property="dealMethod">T1.DEAL_METHOD = #dealMethod#</isNotNull>
+        <isNotNull prepend="and" property="componentType">T1.COMPONENT_TYPE = #componentType#</isNotNull>
+	order by t1.id desc
+   	</select>
+    <select id="queryPoorSum" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select sum(t.JUANMO_LENGTH) "length" FROM V_KS_QJ t
+	WHERE t.TUMO_BATCH_STR LIKE '%' || #batchNo# || '%' 
+	AND t.PROD_SPEC_ID=#materSpecId#  
+	and t.ng_reason_id in(300060,300061,300062)</select>
+    <select id="queryDeliveryStand" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT t1.ID as "id",
+		t1.LABELING_MODEL as "labelingModel",
+		t1.MATER_SPEC_ID as "materSpecId",
+		t1.SOLUTION as "solution",
+		t1.TEMPERATURE as "temperature",
+		t1.PH as "ph",
+		t1.PRESS as "press",
+		t1.RECOVERY as "recovery",
+		t1.WATER as "water",
+		t1.DESALINATION as "desalination",
+		t1.SOLUTION2 as "solution2",
+		t1.TEMPERATURE2 as "temperature2",
+		t1.PH2 as "ph2",
+		t1.PRESS2 as "press2",
+		t1.RECOVERY2 as "recovery2",
+		t1.WATER2 as "water2",
+		t1.DESALINATION2 as "desalination2",
+		T2.MATER_SPEC_NAME "materSpecName"
+  FROM KS_PROD_QUALITY_DELIVERYSTAND T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+    ON T1.MATER_SPEC_ID = T2.MATER_SPEC_ID
+	where 1=1
+	
+	<isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materSpecId">T1.MATER_SPEC_ID = #materSpecId#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">T2.MATER_SPEC_NAME like '%' || #materSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="labelingModel">t1.LABELING_MODEL like '%' || #labelingModel# || '%'</isNotNull>
+    </select>
+    <select id="queryDeliveryRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT t1.ID as "id",
+		TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+		t1.UPDATE_USER_ID as "updateUserId",
+		t1.UPDATE_NAME as "updateName",
+		t1.RESERVE1 as "reserve1",
+		t1.RESERVE2 as "reserve2",
+		t1.RESERVE3 as "reserve3",
+		t1.RESERVE4 as "reserve4",
+		t1.RESERVE5 as "reserve5",
+		t1.ORG_ID as "orgId",
+		t1.STATUS as "status",
+		t1.CODE as "code",
+		t1.PRODUCT_NAME as "productName",
+		t1.LABELING_MODEL as "labelingModel",
+		t1.BATCH_NO as "batchNo",
+		t1.ORDER_NO as "orderNo",
+		TO_CHAR(t1.CHECK_DT, 'yyyy-MM-dd') as "checkDt",
+		
+		t1.ORDER_AMOUNT as "orderAmount",
+		t1.CHECK_AMOUNT as "checkAmount",
+		t1.WATER_CHECK as "waterCheck",
+		t1.DESALINATION_CHECK as "desalinationCheck",
+		t1.APPEARANCE_CHECK as "appearanceCheck",
+		t1.WATER_RESULT as "waterResult",
+		t1.DESALINATION_RESULT as "desalinationResult",
+		t1.APPEARANCE_RESULT as "appearanceResult",
+		t1.WATER_CHECK2 as "waterCheck2",
+		t1.DESALINATION_CHECK2 as "desalinationCheck2",
+		t1.WATER_RESULT2 as "waterResult2",
+		t1.DESALINATION_RESULT2 as "desalinationResult2",
+		t1.RESULT as "result",
+		t1.INSPECTOR as "inspector",
+		t1.REVIEWER as "reviewer",
+		t1.INSPECTOR_ID as "inspectorId",
+		t1.REVIEWER_ID as "reviewerId",
+		TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd') as "reportDt",
+		TO_CHAR(t1.review_dt, 'yyyy-MM-dd') as "reportDt"
+
+  FROM KS_PROD_QUALITY_DELIVERYRECORD T1
+  
+	where 1=1
+	
+	<isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="code">t1.code like '%' || #code# || '%'</isNotNull>
+        <isNotNull prepend="and" property="labelingModel">t1.LABELING_MODEL like '%' || #labelingModel# || '%'</isNotNull>
+        <isNotNull prepend="and" property="reportDtStart">TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd')  &gt;=  #reportDtStart#</isNotNull>
+        <isNotNull prepend="and" property="reportDtEnd">TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd')  &lt;=  #reportDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="checkDtStart">TO_CHAR(t1.CHECK_DT, 'yyyy-MM-dd')  &gt;=  #checkDtStart#</isNotNull>
+        <isNotNull prepend="and" property="checkDtEnd">TO_CHAR(t1.CHECK_DT, 'yyyy-MM-dd')  &lt;=  #checkDtEnd#</isNotNull>
+    </select>
+    <select id="queryDeliveryReportCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 'QC' || CODE "code" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '01' CODE FROM dual
+  WHERE NOT EXISTS(
+  select t.code from KS_PROD_QUALITY_DELIVERYRECORD t
+  WHERE SUBSTR(replace(t.code,'QC',''),1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  select to_char(to_number(max(replace(t.code,'QC','')))+1) planNo from KS_PROD_QUALITY_DELIVERYRECORD t
+  WHERE SUBSTR(replace(t.code,'QC',''),1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE CODE IS NOT NULL</select>
+</sqlMap>

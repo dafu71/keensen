@@ -394,7 +394,7 @@ com.keensen.ump.base.BomMgr = function() {
 	
 	// 导入excel面板
 	this.buildExcelUploadWin = function() {
-		this.excelUploadWin = new Ext.Window({
+		this.excelUploadWin = this.excelUploadWin || new Ext.Window({
 					title : '导入Excel',
 					collapsible : false,
 					modal : true,

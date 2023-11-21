@@ -135,6 +135,9 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 				dataIndex : 'produceDt',
 				header : '生产日期'
 			}, {
+				dataIndex : 'sendAmount',
+				header : '发货长度(米)'
+			}, {
 				dataIndex : 'outLength',
 				header : '长度(米)'
 			}, {
@@ -229,6 +232,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 							name : 'loss'
 						}, {
 							name : 'createTime'
+						}, {
+							name : 'sendAmount'
 						}]
 			})
 		})
