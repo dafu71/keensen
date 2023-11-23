@@ -146,7 +146,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate = functi
 		}
 
 		// 选择了一条
-		if (records.length == 1) {
+		/*if (records.length == 1) {
 			var delivery = records[0].get('delivery');
 			Ext.MessageBox.prompt("发货数量确认", "请输入发货数量：", function(bu, txt) {
 				var sendAmout = txt;
@@ -180,7 +180,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate = functi
 
 			}, window, false, delivery);
 
-		} else {
+		} else {*/
 
 			var list = [];
 			Ext.each(records, function(r) {
@@ -188,7 +188,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate = functi
 						r.set('shipflag', 'n');
 						list.push(r.data);
 					});
-			Ext.Msg.confirm("系统提示", '是否批量生成发货单?', function(btnText) {
+			Ext.Msg.confirm("系统提示", '是否生成发货单?', function(btnText) {
 				if (btnText == "yes") {
 					Ext.Ajax.request({
 						method : "post",
@@ -203,7 +203,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate = functi
 					});
 				}
 			})
-		}
+		//}
 	}
 
 }

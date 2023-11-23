@@ -88,10 +88,10 @@ ThemePicker = Ext.extend(Ext.ColorPalette, {
 					Ext.getCmp("indexLayout").items.itemAt(0).get("head")
 							.doLayout();
 
-					if (DATAORGID == '81') {
-						Ext.Msg.alert("系统提示", "非UMP系统用户不能保存设置!");
+					//if (DATAORGID == '81') {
+						//Ext.Msg.alert("系统提示", "非UMP系统用户不能保存设置!");
 
-					} else {
+					//} else {
 						Ext.Ajax.request({
 							url : "com.zoomlion.hjsrm.frame.auth.login.LoginManager.setTheme.biz.ext?theme="
 									+ D,
@@ -100,7 +100,7 @@ ThemePicker = Ext.extend(Ext.ColorPalette, {
 							}
 						})
 
-					}
+					//}
 				}
 
 			}

@@ -99,7 +99,7 @@
   </tr>
   
   <tr style="border: 1px solid black;">
-    <td height="33"><div align="center" class="style1">MgSO4</div></td>
+    <td height="33"><div align="center" class="style1">MgSO<sub>4</sub></div></td>
     <td height="33"><div align="center" class="style1"><b:write property="data/solution2" /></div></td>
     <td height="33"><div align="center" class="style1"><b:write property="data/temperature2" /></div></td>
     <td height="33"><div align="center" class="style1"><b:write property="data/ph2" /></div></td>
@@ -151,7 +151,7 @@
     <td height="38"><div align="center" class="style1"><b:write property="data/waterResult" /></div></td>
   </tr>
   <tr  style="border: 1px solid black;">
-    <td height="38"><div align="center" class="style1">MgSO4</div></td>
+    <td height="38"><div align="center" class="style1">MgSO<sub>4</sub></div></td>
     <td height="38"><div align="center" class="style1"> <b:write property="data/water2" /> </div></td>
     <td height="38"><div align="center" class="style1"> <b:write property="data/waterCheck2" /> </div></td>
     <td height="38"><div align="center" class="style1">Product standard test</div></td>
@@ -167,7 +167,7 @@
     <td height="38"><div align="center" class="style1"><b:write property="data/desalinationResult" /></div></td>
   </tr>
   <tr  style="border: 1px solid black;">
-    <td height="38"><div align="center" class="style1">MgSO4</div></td>
+    <td height="38"><div align="center" class="style1">MgSO<sub>4</sub></div></td>
     <td height="38"><div align="center" class="style1"> <b:write property="data/desalination2" /> </div></td>
     <td height="38"><div align="center" class="style1"> <b:write property="data/desalinationCheck2" /> </div></td>
     <td height="38"><div align="center" class="style1">Product standard test</div></td>

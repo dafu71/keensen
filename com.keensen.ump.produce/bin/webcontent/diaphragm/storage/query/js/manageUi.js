@@ -150,6 +150,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						text : '调拨',
 						scope : this,
 						iconCls : 'icon-application_edit',
+						hidden : modifyFlag !=1,
 						handler : this.onEdit
 					}],
 			selModel : selModel,
