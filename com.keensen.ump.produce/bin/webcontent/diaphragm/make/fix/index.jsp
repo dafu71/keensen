@@ -12,6 +12,8 @@
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
     String userName = userObject.getUserName();
+    //10001221膜片生产管理员
+    int modifyFlag = roleId.indexOf("10001221")>-1?1:0;
 %>
 <html>
 <!-- 
@@ -31,6 +33,7 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var uname = "<%=userName %>";
+  var modifyFlag = <%=modifyFlag %>;
   var opt = '';
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.make.FixMgr

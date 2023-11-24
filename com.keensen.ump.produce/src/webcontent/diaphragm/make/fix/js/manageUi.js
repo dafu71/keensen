@@ -5,6 +5,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 		this.initInputWindow();
 		this.initEditWindow();
 		this.initEditWindow2();
+		this.initEditWindow3();
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -81,6 +82,12 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '-', {
+						text : '修改记录',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : modifyFlag !=1,
+						handler : this.onEdit3
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.make.deleteFixEntity.biz.ext',
@@ -574,6 +581,206 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							xtype : 'hidden',
 							dataIndex : 'hitUserid',
 							name : 'entity/hitUserid'
+						}]
+			}]
+		});
+	}
+	
+	this.initEditWindow3 = function() {
+		this.editWindow3 = this.editWindow3 || new Ext.fn.FormWindow({
+			title : '修改记录',
+			height : 480,
+			width : 600,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.diaphragm.make.make.expandFixEntity.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.saveEntity.biz.ext',
+				fields : [{
+							xtype : 'textfield',
+							allowBlank : false,
+							name : 'entity/batchNo',
+							dataIndex : 'batchNo',
+							fieldLabel : '混料批次',
+							anchor : '47%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/c11',
+							dataIndex : 'c11',
+							fieldLabel : 'C11重量',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/c12',
+							dataIndex : 'c12',
+							fieldLabel : 'C12重量',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datetimefield',
+							name : 'entity/fixStarttime',
+							dataIndex : 'fixStarttime',
+							fieldLabel : '混料开始时间',
+							anchor : '95%',
+							format : "Y-m-d H:i:00",
+							colspan : 1
+						}, {
+							xtype : 'datetimefield',
+							name : 'entity/hottime',
+							dataIndex : 'hottime',
+							fieldLabel : '开始加热时间',
+							anchor : '95%',
+							format : "Y-m-d H:i:00",
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datetimefield',
+							format : "Y-m-d H:i:00",
+							name : 'entity/reachtime',
+							dataIndex : 'reachtime',
+							fieldLabel : '料液达70℃时间',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/keepDuration',
+							dataIndex : 'keepDuration',
+							fieldLabel : '保持70-80℃时长',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							fieldLabel : '混料人',
+							dataIndex : 'fixUsername',
+							anchor : '95%',
+							colspan : 1
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datetimefield',
+							format : 'Y-m-d H:i:00',
+							name : 'entity/hitStarttime',
+							dataIndex : 'hitStarttime',
+							fieldLabel : '打料开始时间',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'datetimefield',
+							format : 'Y-m-d H:i:00',
+							name : 'entity/hitOvertime',
+							dataIndex : 'hitOvertime',
+							fieldLabel : '打料结束时间',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datetimefield',
+							format : 'Y-m-d H:i:00',
+							name : 'entity/loopStarttime',
+							dataIndex : 'loopStarttime',
+							fieldLabel : '内循环开始时间',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'datetimefield',
+							format : 'Y-m-d H:i:00',
+							name : 'entity/loopOvertime',
+							dataIndex : 'loopOvertime',
+							fieldLabel : '内循环结束时间',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/jarNo',
+							dataIndex : 'jarNo',
+							fieldLabel : '脱气罐编号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/jarVacuum',
+							dataIndex : 'jarVacuum',
+							fieldLabel : '脱气罐 真空度',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/vacuumDuration',
+							dataIndex : 'vacuumDuration',
+							fieldLabel : '真空保持时长',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'datetimefield',
+							format : 'Y-m-d H:i:00',
+							name : 'entity/usetime',
+							dataIndex : 'usetime',
+							fieldLabel : '料液使用时间',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							dataIndex : 'hitUsername',
+							readOnly : true,
+							fieldLabel : '打料人',
+							anchor : '47%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							name : 'entity/remark',
+							dataIndex : 'remark',
+							fieldLabel : '备注',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'id',
+							name : 'entity/id'
 						}]
 			}]
 		});

@@ -68,7 +68,7 @@
      </select>
      
      <select id="queryZmx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-     SELECT T1.ID AS "id",
+     SELECT T1.ID AS "id", T1.abnormal "abnormal",
        to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mi')as "createTime",
 		t1.CREATE_USER_ID as "createUserId",
 		t1.CREATE_NAME as "createName",

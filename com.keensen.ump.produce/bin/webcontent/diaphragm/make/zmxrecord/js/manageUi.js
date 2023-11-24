@@ -184,6 +184,9 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						dataIndex : 'flaw2',
 						header : '铸膜不良'
 					}, {
+						dataIndex : 'abnormal',
+						header : '铸膜异常记录'
+					}, {
 						dataIndex : 'teamName',
 						header : '生产班组'
 					}, {
@@ -288,6 +291,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'dimoAmount'
 						}, {
 							name : 'cnt'
+						}, {
+							name : 'abnormal'
 						}]
 			})
 		})
@@ -543,6 +548,16 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							name : 'entity/abnormal',
+							fieldLabel : '铸膜异常记录',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
 							value : '<p style="color:red;">生产信息</p>',
 							colspan : 2
 						}, {
@@ -784,6 +799,17 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							dataIndex : 'flaw2',
 							fieldLabel : '铸膜不良',
 							anchor : '47%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							name : 'entity/abnormal',
+							dataIndex : 'abnormal',
+							fieldLabel : '铸膜异常记录',
+							anchor : '95%',
 							colspan : 2
 						}, {
 							xtype : 'displayfield',

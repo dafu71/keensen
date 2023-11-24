@@ -19,7 +19,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				var createName = r.data.createName;
 				var hitUserid = r.data.hitUserid;
 				var diff = r.data.diff;
-				if(diff>48){
+				if (diff > 48) {
 					Ext.Msg.alert('系统提示', '不能删除两天前的记录');
 					return false;
 				}
@@ -30,14 +30,16 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 					Ext.Msg.alert('系统提示', '已有打料记录，不能删除');
 					return false;
 				}
-    		})
+			})
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-				var diff = cell.get('diff');
-				if(diff>48){
-					Ext.Msg.alert('系统提示', '不能修改两天前的记录');
-					return false;
+				if (opt == 'fix' || opt == 'hit') {
+					var diff = cell.get('diff');
+					if (diff > 48) {
+						Ext.Msg.alert('系统提示', '不能修改两天前的记录');
+						return false;
+					}
 				}
 				if (opt == 'fix') {
 					var fixUserid = cell.get('fixUserid');
@@ -58,6 +60,17 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 						this.editWindow2.show();
 						this.editWindow2.loadData(cell);
 
+					}
+				}
+				if (opt == 'modify') {
+					var fixUserid = cell.get('fixUserid');
+					var hitUserid = cell.get('hitUserid');
+					if (Ext.isEmpty(fixUserid) || Ext.isEmpty(hitUserid)) {
+						Ext.Msg.alert('系统提示', '不能修改没有打料或混料的记录');
+						return;
+					} else {
+						this.editWindow3.show();
+						this.editWindow3.loadData(cell);
 					}
 				}
 			}, this);
@@ -90,7 +103,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 							.findField('entity/reachtime')
 							.setValue(new Date(date1));
 				}
-				
+
 			}, this);
 
 	// 打料修改加载数据后事件
@@ -125,7 +138,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 							.findField('entity/loopOvertime')
 							.setValue(new Date(date1));
 				}
-				
+
 				if (data.usetime) {
 					data.usetime = data.usetime.split('.')[0];
 					var date1 = data.usetime.replace(regEx, "/");
@@ -139,6 +152,71 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 					this.editWindow2.form.findField("entity/hitUsername")
 							.setValue(uname);
 				}
+			}, this);
+	
+			// 修改加载数据后事件
+	this.editWindow3.activeItem.mon(this.editWindow3.activeItem, 'afterload',
+			function(win, data) {
+				var regEx = new RegExp("\\-", "gi");
+				if (data.fixStarttime) {
+					data.fixStarttime = data.fixStarttime.split('.')[0];
+					var date1 = data.fixStarttime.replace(regEx, "/");
+					this.editWindow3.items.items[0].form
+							.findField('entity/fixStarttime')
+							.setValue(new Date(date1));
+				}
+				if (data.hottime) {
+					data.hottime = data.hottime.split('.')[0];
+					var date1 = data.hottime.replace(regEx, "/");
+					this.editWindow3.items.items[0].form
+							.findField('entity/hottime')
+							.setValue(new Date(date1));
+				}
+				if (data.reachtime) {
+					data.reachtime = data.reachtime.split('.')[0];
+					var date1 = data.reachtime.replace(regEx, "/");
+					this.editWindow3.items.items[0].form
+							.findField('entity/reachtime')
+							.setValue(new Date(date1));
+				}
+				if (data.hitStarttime) {
+					data.hitStarttime = data.hitStarttime.split('.')[0];
+					var date1 = data.hitStarttime.replace(regEx, "/");
+					this.editWindow3.items.items[0].form
+							.findField('entity/hitStarttime')
+							.setValue(new Date(date1));
+				}
+				if (data.hitOvertime) {
+					data.hitOvertime = data.hitOvertime.split('.')[0];
+					var date1 = data.hitOvertime.replace(regEx, "/");
+					this.editWindow3.items.items[0].form
+							.findField('entity/hitOvertime')
+							.setValue(new Date(date1));
+				}
+				if (data.loopStarttime) {
+					data.loopStarttime = data.loopStarttime.split('.')[0];
+					var date1 = data.loopStarttime.replace(regEx, "/");
+					this.editWindow3.items.items[0].form
+							.findField('entity/loopStarttime')
+							.setValue(new Date(date1));
+				}
+				if (data.loopOvertime) {
+					data.loopOvertime = data.loopOvertime.split('.')[0];
+					var date1 = data.loopOvertime.replace(regEx, "/");
+					this.editWindow3.items.items[0].form
+							.findField('entity/loopOvertime')
+							.setValue(new Date(date1));
+				}
+
+				if (data.usetime) {
+					data.usetime = data.usetime.split('.')[0];
+					var date1 = data.usetime.replace(regEx, "/");
+					this.editWindow3.items.items[0].form
+							.findField('entity/usetime')
+							.setValue(new Date(date1));
+				}
+				
+
 			}, this);
 }
 
@@ -163,8 +241,6 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onEdit2 = function() {
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
 };
-
-
 
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel = function() {
 	var _this = this;
@@ -203,3 +279,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel = function()
 		}
 	})
 }
+
+com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onEdit3 = function() {
+	opt = 'modify';
+	this.listPanel.onEdit();
+};
+

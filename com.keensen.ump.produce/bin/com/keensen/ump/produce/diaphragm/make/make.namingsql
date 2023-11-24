@@ -53,7 +53,7 @@
 	 ORDER BY t1.id desc
      </select>
     <select id="queryZmx" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-     SELECT T1.ID AS "id",
+     SELECT T1.ID AS "id", T1.abnormal "abnormal",
        to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mi')as "createTime",
 		t1.CREATE_USER_ID as "createUserId",
 		t1.CREATE_NAME as "createName",
