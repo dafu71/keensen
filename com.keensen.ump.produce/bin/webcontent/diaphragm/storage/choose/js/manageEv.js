@@ -15,6 +15,30 @@ com.keensen.ump.produce.diaphragm.storage.StorageChooseMgr.prototype.initEvent =
 
 }
 
+// 批量生成入库单
+com.keensen.ump.produce.diaphragm.storage.StorageChooseMgr.prototype.insertRkdBatch = function() {
+	var A = Ext.getCmp('choose-list');
+	var title = '是否批量生成入库单?';
+	Ext.Msg.confirm("系统提示", title, function(btnText) {
+		if (btnText == "yes") {
+			Ext.Ajax.request({
+				method : "post",
+				scope : this,
+				url : 'com.keensen.ump.produce.diaphragm.storage.choose.insertRkdBatch.biz.ext',
+				success : function(response, action) {
+					A.store.reload({
+							// params : {
+							// "pageCond/begin" : 0,
+							// "pageCond/length" : A.pagingToolbar.pageSize
+							// }
+							});
+				}
+			});
+		}
+	})
+
+}
+
 function dealchoose(rkflag, batchNo, index) {
 	var A = Ext.getCmp('choose-list');
 	var title = rkflag == 'n' ? '是否生成入库单?' : '是否取消入库单?';
@@ -31,10 +55,10 @@ function dealchoose(rkflag, batchNo, index) {
 				},
 				success : function(response, action) {
 					A.store.reload({
-								//params : {
-								//	"pageCond/begin" : 0,
-								//	"pageCond/length" : A.pagingToolbar.pageSize
-								//}
+							// params : {
+							// "pageCond/begin" : 0,
+							// "pageCond/length" : A.pagingToolbar.pageSize
+							// }
 							});
 				}
 			});

@@ -16,7 +16,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageChooseMgr = function() {
 					height : 220,
 					columns : 4,
 					border : true,
-					//collapsible : true,
+					// collapsible : true,
 					titleCollapse : false,
 					title : '【涂膜记录查询】',
 					fields : [{
@@ -145,10 +145,14 @@ com.keensen.ump.produce.diaphragm.storage.StorageChooseMgr = function() {
 								fieldLabel : '膜片批次'
 							}]
 				});
-		/*
-		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
-		 * 'icon-application_excel', handler : this.exportExcel });
-		 */
+
+		this.queryPanel.addButton({
+					text : "批量生成入库单",
+					scope : this,
+					iconCls : 'icon-application_add',
+					handler : this.insertRkdBatch
+				});
+
 	}
 
 	this.initListPanel = function() {
@@ -221,27 +225,32 @@ com.keensen.ump.produce.diaphragm.storage.StorageChooseMgr = function() {
 							}
 						}
 					}, {
-						header : '操作',
+						header : '入库单状态',
 						scope : this,
 						renderer : function(v, m, r, i) {
 							var yrkflag = r.get('yrkflag');
 							if (yrkflag == '是')
 								return;
-							var id = r.get('recordId');
-							var batchNo = r.get('batchNo');
 							var rkflag = r.get('rkflag');
-							var title = rkflag == 'n' ? '生成' : '取消';
-							var style = rkflag == 'n'
-									? "<a style='color:blue;text-decoration:none'"
-									: "<a style='color:red;text-decoration:none'";
-							var str = style + " href='javascript:dealchoose("
-									+ Ext.encode(rkflag) + ","
-									+ Ext.encode(batchNo) + "," + id + ");'>"
-									+ title + "入库单</a>";
-
+							var str = rkflag == 'y'
+									? "<span style='color:blue;text-decoration:none'>已生成入库单</span>"
+									: "<span style='color:red;text-decoration:none'>未生成入库单</span>";
 							return str;
 						}
-					}],
+					}
+			/*
+			 * , { header : '操作', scope : this, renderer : function(v, m, r, i) {
+			 * var yrkflag = r.get('yrkflag'); if (yrkflag == '是') return; var
+			 * id = r.get('recordId'); var batchNo = r.get('batchNo'); var
+			 * rkflag = r.get('rkflag'); var title = rkflag == 'n' ? '生成' :
+			 * '取消'; var style = rkflag == 'n' ? "<a
+			 * style='color:blue;text-decoration:none'" : "<a
+			 * style='color:red;text-decoration:none'"; var str = style + "
+			 * href='javascript:dealchoose(" + Ext.encode(rkflag) + "," +
+			 * Ext.encode(batchNo) + "," + id + ");'>" + title + "入库单</a>";
+			 * 
+			 * return str; } }
+			 */],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.storage.choose.queryTumoByPage.biz.ext',
 				root : 'data',

@@ -299,7 +299,7 @@
   left join (select distinct batch_no from KS_PROD_DIAPHRAGM_WAREHOUSING) w
   on w.batch_no = t2.batch_no
  where 1=1
-    and t1.IS_QUALIFIED = 'Y'
+    <!--and t1.IS_QUALIFIED = 'Y'-->
     <isNotNull prepend="and" property="perfFlagId"> 
 		       t1.PERF_FLAG_ID = #perfFlagId#
 	</isNotNull>
@@ -453,4 +453,14 @@
 		       t1.plan_No = #planNo# 
 	</isNotNull>
      </select>
+     
+     <insert id="insertRkdBatch" parameterClass="java.util.HashMap" >
+     INSERT INTO
+		KS_PROD_DIAPHRAGM_RUKUDAN t
+		(id,create_user_id,create_name,create_time,RECORD_ID,BATCH_NO)
+		SELECT SEQ_KS_PROD_DIAPHRAGM_RUKUDAN.Nextval,#createUserId#, #createName#, sysdate,v.RECORD_ID,v.BATCH_NO from V_KS_TUMO2 v
+		WHERE (v.RECORD_ID,v.BATCH_NO)
+		NOT IN(select RECORD_ID,BATCH_NO from KS_PROD_DIAPHRAGM_RUKUDAN t)
+		and not exists(select 1 from KS_PROD_DIAPHRAGM_WAREHOUSING w where w.batch_No=v.batch_No)
+   </insert>
      </sqlMap>
