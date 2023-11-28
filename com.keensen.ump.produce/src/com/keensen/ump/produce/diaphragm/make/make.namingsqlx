@@ -64,7 +64,7 @@
      <isNotNull prepend = "and"  property = "createTimeEnd"> 
           to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
      </isNotNull>
-	 ORDER BY t1.id desc
+	 ORDER BY t1.CREATE_TIME desc
      </select>
      
      <select id="queryZmx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
@@ -152,6 +152,7 @@
 	</isNotNull><isNotNull prepend="" property="createName"> 
 		       AND t1.CREATE_NAME like '%' || #createName# || '%'
 	</isNotNull>
+	ORDER BY t1.CREATE_TIME desc
      </select>
      
      <select id="queryStock" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >

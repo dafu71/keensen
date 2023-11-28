@@ -29,7 +29,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 							}, {
 								xtype : 'displayfield',
 								fieldLabel : ' ',
-								value : '<p style="color:red;">请输入膜片批次,以逗号分隔</p>',
+								value : '<p style="color:red;">多个批次请用逗号分隔，或一行一个批次</p>',
 								labelSeparator : '',// 去掉冒号
 								colspan : 1
 							}]

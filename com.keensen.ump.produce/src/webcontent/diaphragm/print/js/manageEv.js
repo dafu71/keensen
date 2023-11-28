@@ -5,6 +5,8 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.initEvent = funct
 		var store = this.listPanel.store;
 		var batchNoStr = this.queryPanel.form.findField("condition/batchNoStr")
 				.getValue();
+		var regEx = new RegExp("\\n", "gi");
+		batchNoStr = batchNoStr.replace(regEx, ",");
 		batchNoStr = batchNoStr.replaceAll('，', ',');
 		batchNoStr = batchNoStr.replaceAll(' ', '');
 		var arr = [];

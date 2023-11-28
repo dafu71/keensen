@@ -45,7 +45,8 @@
 	on t1.RECORD_ID = t3.RECORD_ID
  
  where 1=1
- 	<isNotNull prepend="and" property="isCutOver">upper(nvl(t1.is_cut_over,'N')) = 'N'</isNotNull>
+    <isEqual compareValue="N" prepend="and" property="isDelivery">t1.QUALIFID_LENGTH - nvl(t3.amount,0) &gt; 0</isEqual>
+        <isNotNull prepend="and" property="isCutOver">upper(nvl(t1.is_cut_over,'N')) = 'N'</isNotNull>
         <isNotNull prepend="and" property="isQualified">upper(t1.IS_QUALIFIED) = upper(#isQualified#)</isNotNull>
         <isNotNull prepend="and" property="ifconfirm">nvl(t2.ifconfirm,'n') = #ifconfirm#</isNotNull>
         <isNotNull prepend="and" property="ddflag">t1.ddflag = #ddflag#</isNotNull>

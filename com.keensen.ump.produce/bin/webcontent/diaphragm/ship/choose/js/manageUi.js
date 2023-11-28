@@ -13,7 +13,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 210,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -90,11 +90,22 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								anchor : '75%',
 								fieldLabel : '底膜批次'
 							}, {
+								fieldLabel : '不展示已发货',
+								xtype : 'checkbox',
+								checked : false,
+								name : 'condition/isDelivery',
+								inputValue : 'N',
+								anchor : '100%'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
 								xtype : 'textarea',
 								name : 'condition/batchNoStr2',
 								emptyText:'多个批次请用逗号分隔，或一行一个批次',
-								colspan : 1,
-								anchor : '95%',
+								colspan : 2,
+								anchor : '85%',
 								fieldLabel : '膜片批次'
 							}, {
 								xtype : 'hidden',

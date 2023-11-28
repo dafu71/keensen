@@ -50,7 +50,7 @@
         <isNotNull prepend="" property="id">AND t1.ID = #id#</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
-	 ORDER BY t1.id desc
+	 ORDER BY t1.CREATE_TIME desc
      </select>
     <select id="queryZmx" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
      SELECT T1.ID AS "id", T1.abnormal "abnormal",
@@ -116,7 +116,8 @@
         <isNotNull prepend="" property="zmyBatchNo2">AND T1.ZMY_BATCH_NO like '%' || #zmyBatchNo2# || '%'</isNotNull>
         <isNotNull prepend="" property="wfBatchNo2">AND T1.WF_BATCH_NO like '%' || #wfBatchNo2# || '%'</isNotNull>
         <isNotNull prepend="" property="createName">AND t1.CREATE_NAME like '%' || #createName# || '%'</isNotNull>
-    </select>
+	ORDER BY t1.CREATE_TIME desc
+     </select>
     <select id="queryStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	     SELECT T1.DIMO_BATCH_NO AS "dimoBatchNo",
        T1.PRODUCT_DT AS "productDt",
