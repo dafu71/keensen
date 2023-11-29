@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <select id="queryStocktakingResult" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT T.BATCH_NO "batchNo", T.JUANMO_BATCH_NO "juanmoBatchNo"
+  	FROM V_KS_BATCHCOMP T
+ 	WHERE 1 = 1
+   	AND NOT EXISTS (SELECT 1
+          FROM KS_PROD_COMPONENT_STOCKTAKING TT
+         WHERE TT.BATCH_NO = T.BATCH_NO
+            OR TT.BATCH_NO = T.JUANMO_BATCH_NO)
+            
+     <isNotNull prepend="and" property="batchNo"> 
+		       upper(T.BATCH_NO) like '%' || upper(#batchNo#) || '%'
+		       or
+		       upper(T.JUANMO_BATCH_NO ) like '%' || upper(#batchNo#) || '%'
+	</isNotNull>
+    </select>
+    
+    </sqlMap>

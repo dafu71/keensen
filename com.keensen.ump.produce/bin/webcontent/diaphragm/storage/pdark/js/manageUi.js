@@ -33,6 +33,7 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 					},{
 						xtype : 'textfield',
 						name : 'warehousing/batchNo',
+						style:'{font-weight:bold;}',
 						allowBlank : false,
 						fieldLabel : '批号',
 						ref : '../batchNo',
@@ -63,6 +64,7 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						name : 'warehousing/position',
 						allowBlank : false,
 						fieldLabel : '库位',
+						style:'{font-weight:bold;}',
 						ref : '../position',
 						anchor : '80%',
 						colspan : 1,

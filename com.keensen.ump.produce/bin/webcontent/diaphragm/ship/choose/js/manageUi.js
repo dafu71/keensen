@@ -103,7 +103,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 							}, {
 								xtype : 'textarea',
 								name : 'condition/batchNoStr2',
-								emptyText:'多个批次请用逗号分隔，或一行一个批次',
+								emptyText : '多个批次请用逗号分隔，或一行一个批次',
 								colspan : 2,
 								anchor : '85%',
 								fieldLabel : '膜片批次'
@@ -132,23 +132,38 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 
 	this.initListPanel = function() {
 		var _this = this;
-		
+
 		this.bar = this.bar || new Ext.Toolbar({
 					items : [{
-						text : '生成发货单',
-						scope : this,
-						iconCls : 'icon-application_add',
-						handler : this.onCreate
-					}/*, '-', {
-						text : '取消发货单',
-						scope : this,
-						iconCls : 'icon-application_delete',
-						handler : this.onCancel
-					}*/]
+								text : '生成发货单',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onCreate
+							}, {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '',
+								id : 'shipchoosecount'
+							}/*
+								 * , '-', { text : '取消发货单', scope : this,
+								 * iconCls : 'icon-application_delete', handler :
+								 * this.onCancel }
+								 */]
 				});
-				
-		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : false
+
+		this.selModel = this.selModel || new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					listeners : {
+						selectionchange : function() {
+							var cnt = _this.listPanel.getSelectionModel()
+									.getCount();
+							Ext.getCmp('shipchoosecount').setValue('已选择 <span style="color:red;font-weight: bold;">' + cnt + '</span> 栏');
+
+						}
+					}
+
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			title : '【涂膜记录列表】',
@@ -213,94 +228,119 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					scope : this, _this.bar.render(_this.listPanel.tbar);
 				}
 			},
-			selModel : selModel,
-			columns : [new Ext.grid.RowNumberer(), selModel, /*{
-				header : '操作',
-				width : 120,
-				scope : this,
-				renderer : function(v, m, r, i) {
-					var ifconfirm = r.get('ifconfirm');
-					if (ifconfirm == 'y')
-						return;
-					var id = r.get('recordId');
-					var batchNo = r.get('batchNo');
-					var shipflag = r.get('shipflag');
-					var title = shipflag == 'n' ? '生成' : '取消';
-					var style = shipflag == 'n'
-							? "<a style='color:blue;text-decoration:none'"
-							: "<a style='color:red;text-decoration:none'";
-					var str = style + " href='javascript:dealchoose2("
-							+ Ext.encode(shipflag) + "," + Ext.encode(batchNo)
-							+ "," + id + ");'>" + title + "发货单</a>";
+			selModel : this.selModel,
+			columns : [new Ext.grid.RowNumberer(), this.selModel, /*
+																	 * { header :
+																	 * '操作',
+																	 * width :
+																	 * 120,
+																	 * scope :
+																	 * this,
+																	 * renderer :
+																	 * function(v,
+																	 * m, r, i) {
+																	 * var
+																	 * ifconfirm =
+																	 * r.get('ifconfirm');
+																	 * if
+																	 * (ifconfirm ==
+																	 * 'y')
+																	 * return;
+																	 * var id =
+																	 * r.get('recordId');
+																	 * var
+																	 * batchNo =
+																	 * r.get('batchNo');
+																	 * var
+																	 * shipflag =
+																	 * r.get('shipflag');
+																	 * var title =
+																	 * shipflag ==
+																	 * 'n' ?
+																	 * '生成' :
+																	 * '取消'; var
+																	 * style =
+																	 * shipflag ==
+																	 * 'n' ? "<a
+																	 * style='color:blue;text-decoration:none'" : "<a
+																	 * style='color:red;text-decoration:none'";
+																	 * var str =
+																	 * style + "
+																	 * href='javascript:dealchoose2(" +
+																	 * Ext.encode(shipflag) +
+																	 * "," +
+																	 * Ext.encode(batchNo) +
+																	 * "," + id +
+																	 * ");'>" +
+																	 * title +
+																	 * "发货单</a>";
+																	 * 
+																	 * return
+																	 * str; } },
+																	 */		{
+						dataIndex : 'batchNo',
+						header : '膜片批次',
+						renderer : function(v, m, r, i) {
+							var sendId = r.get('sendId');
+							if (!Ext.isEmpty(sendId)) {
+								return "<span style='color:blue;'>" + v
+										+ "</span>"
+							} else {
+								return v;
+							}
+						}
 
-					return str;
-				}
-			},*/ {
-				dataIndex : 'batchNo',
-				header : '膜片批次',
-				renderer : function(v, m, r, i) {
-					var sendId = r.get('sendId');
-					if(!Ext.isEmpty(sendId)){
-						return "<span style='color:blue;'>" + v + "</span>"
-					}else{
-						return v;
-					}
-				}
-				
-			}, {
-				dataIndex : 'produceDt',
-				header : '生产日期'
-			}, {
-				dataIndex : 'delivery',
-				header : '可发货长度(米)'
-			}, {
-				dataIndex : 'outLength',
-				header : '长度(米)'
-			}, {
-				dataIndex : 'usefulLength',
-				header : '可用长度(米)'
-			}, {
-				dataIndex : 'qualifidLength',
-				header : '合格长度(米)'
-			}, {
-				dataIndex : 'loss',
-				header : '不良(米)'
-			}, {
-				dataIndex : 'dimoBatchNo',
-				header : '底膜批次'
-			}, {
-				dataIndex : 'lineCode',
-				header : '生产线'
-			}, {
-				dataIndex : 'materClassCode',
-				header : '膜片系列'
-			}, {
-				dataIndex : 'materSpecCode',
-				header : '膜片型号'
-			}, {
-				dataIndex : 'supName',
-				header : '无纺布供应商'
-			}, {
-				dataIndex : 'planNo',
-				header : '计划单号'
-			}, {
-				dataIndex : 'orderNo',
-				header : '订单号'
-			}, {
-				dataIndex : 'perfFlagName',
-				header : '等级'
-			}, {
-				xtype : 'dictcolumn',
-				dataIndex : 'isQualified',
-				header : '合格',
-				dictData : ABF_YESORNO
-			}/*, {
-				dataIndex : 'createTime',
-				header : '发货单生成日期'
-			}, {
-				dataIndex : 'createName',
-				header : '发货单生成人'
-			}*/],
+					}, {
+						dataIndex : 'produceDt',
+						header : '生产日期'
+					}, {
+						dataIndex : 'delivery',
+						header : '可发货长度(米)'
+					}, {
+						dataIndex : 'outLength',
+						header : '长度(米)'
+					}, {
+						dataIndex : 'usefulLength',
+						header : '可用长度(米)'
+					}, {
+						dataIndex : 'qualifidLength',
+						header : '合格长度(米)'
+					}, {
+						dataIndex : 'loss',
+						header : '不良(米)'
+					}, {
+						dataIndex : 'dimoBatchNo',
+						header : '底膜批次'
+					}, {
+						dataIndex : 'lineCode',
+						header : '生产线'
+					}, {
+						dataIndex : 'materClassCode',
+						header : '膜片系列'
+					}, {
+						dataIndex : 'materSpecCode',
+						header : '膜片型号'
+					}, {
+						dataIndex : 'supName',
+						header : '无纺布供应商'
+					}, {
+						dataIndex : 'planNo',
+						header : '计划单号'
+					}, {
+						dataIndex : 'orderNo',
+						header : '订单号'
+					}, {
+						dataIndex : 'perfFlagName',
+						header : '等级'
+					}, {
+						xtype : 'dictcolumn',
+						dataIndex : 'isQualified',
+						header : '合格',
+						dictData : ABF_YESORNO
+					}/*
+						 * , { dataIndex : 'createTime', header : '发货单生成日期' }, {
+						 * dataIndex : 'createName', header : '发货单生成人' }
+						 */],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.ship.choose.queryTumoByPage.biz.ext',
 				root : 'data',

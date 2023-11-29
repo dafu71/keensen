@@ -93,6 +93,9 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.initEvent = funct
 		})
 
 	});
+	
+	
+	
 
 }
 
