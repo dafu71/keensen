@@ -415,7 +415,7 @@
          aamount   "aamount",
          to_char(aamount/tamount * 100, 'FM990.00') || '%'    "passrate",
          sendamount "sendamount",t7.useful_amount "usefulAmount"
-         ,t7.once_amount "onceAmount",t7.twice_amount "twiceAmount",t7.zero_amount "zeroAmount"
+         ,t7.once_amount "onceAmount",t7.twice_amount "twiceAmount",t7.zero_amount "zeroAmount",t8.amount "stockAmount"
     FROM KS_PROD_DIAPHRAGM_ORDER T
     LEFT JOIN QINSEN.PARA_MATER_SPEC T22
       ON T.SPEC_ID = T22.MATER_SPEC_ID
@@ -482,6 +482,9 @@
                 GROUP BY V.ORDER_NO, V.PLAN_NO) T7
       ON T.ORDER_NO = T7.ORDER_NO
      AND T2.PLAN_NO = T7.PLAN_NO
+     left join V_KS_diaphragm_stock_count t8
+      ON T.ORDER_NO = T8.ORDER_NO
+     AND T2.PLAN_NO = T8.PLAN_NO
      where 1=1
      <isNotNull prepend="and" property="orderNo"> 
 		       upper(t.order_No) like '%' || upper(#orderNo#) || '%'
@@ -531,7 +534,7 @@
        t1.mater_class_Name as "materClassName",
        t1.mater_spec_Name as "materSpecName"
        
-  from v_ks_tumo_all t1
+  from v_ks_tumo_all3 t1
   left join KS_PROD_DIAPHRAGM_SHIP t2 
     on t1.RECORD_ID = t2.RECORD_ID
  

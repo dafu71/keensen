@@ -54,7 +54,7 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 								xtype : 'checkbox',
 								checked : true,
 								name : 'condition/isCutOver',
-								value : 'N',
+								inputValue : 'N',
 								anchor : '100%'
 							}]
 				});
@@ -113,6 +113,9 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 					}, {
 						dataIndex : 'camount',
 						header : '涂膜产出'
+					}, {
+						dataIndex : 'stockAmount',
+						header : '入库数量'
 					}, {
 						dataIndex : 'aamount',
 						header : '可发货(A等品)'
@@ -180,6 +183,8 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 							name : 'twiceAmount'
 						}, {
 							name : 'usefulAmount'
+						}, {
+							name : 'stockAmount'
 						}]
 			})
 		})
