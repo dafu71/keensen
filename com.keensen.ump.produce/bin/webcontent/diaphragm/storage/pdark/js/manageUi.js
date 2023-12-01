@@ -99,11 +99,11 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						xtype : 'storagecombobox',
 						emptyText : "",
 						hiddenName : 'warehousing/storageId',
-						// allowBlank : false,
+						allowBlank : false,
 						anchor : '80%',
 						readOnly : true,
 						name : 'warehousing/storageId',
-						fieldLabel : '仓库' + "<span style='color:red'>*</span>",
+						fieldLabel : '仓库',
 						colspan : 1
 					},{
 						xtype : 'displayfield',
@@ -113,9 +113,9 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						xtype : 'numberfield',
 						name : 'warehousing/amount',
 						anchor : '80%',
-						// allowBlank : false,
+						allowBlank : false,
 						readOnly : true,
-						fieldLabel : '数量' + "<span style='color:red'>*</span>",
+						fieldLabel : '数量',
 						colspan : 1
 					},{
 						xtype : 'displayfield',

@@ -2,6 +2,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 	this.initPanel = function() {
 		this.initQueryPanel();
 		this.initListPanel();
+		this.initInputWindow();
+		
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -139,6 +141,11 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								scope : this,
 								iconCls : 'icon-application_add',
 								handler : this.onCreate
+							}, '-', {
+								text : '变更订单后生成发货单',
+								scope : this,
+								iconCls : 'icon-application_edit',
+								handler : this.onCreate2
 							}, {
 								xtype : 'displayfield',
 								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
@@ -154,17 +161,19 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 				});
 
 		this.selModel = this.selModel || new Ext.grid.CheckboxSelectionModel({
-					singleSelect : false,
-					listeners : {
-						selectionchange : function() {
-							var cnt = _this.listPanel.getSelectionModel()
-									.getCount();
-							Ext.getCmp('shipchoosecount').setValue('已选择 <span style="color:red;font-weight: bold;">' + cnt + '</span> 栏');
+			singleSelect : false,
+			listeners : {
+				selectionchange : function() {
+					var cnt = _this.listPanel.getSelectionModel().getCount();
+					Ext
+							.getCmp('shipchoosecount')
+							.setValue('已选择 <span style="color:red;font-weight: bold;">'
+									+ cnt + '</span> 栏');
 
-						}
-					}
+				}
+			}
 
-				});
+		});
 		this.listPanel = new Ext.fn.ListPanel({
 			title : '【涂膜记录列表】',
 			viewConfig : {
@@ -402,4 +411,63 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 		})
 	}
 
+	this.initInputWindow = function() {
+		var _this = this;
+		
+		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
+			height : 300,
+			pgrid : this.listPanel,
+			autoHide : true,
+			autoScroll : false,
+			border : true,
+			columns : 1,
+			saveUrl : 'com.keensen.ump.produce.diaphragm.ship.choose.createShips2.biz.ext',
+			fields : [{
+				xtype : 'textfield',
+				name : 'entity/orderNo',
+				allowBlank : false,
+				fieldLabel : '订单号',
+				anchor : '85%',
+				colspan : 1
+			}, {
+				xtype : 'displayfield',
+				height : '5',
+				colspan : 1
+			}, {
+				xtype : 'textfield',
+				name : 'entity/planNo',
+				allowBlank : false,
+				anchor : '85%',
+				fieldLabel : '计划单号 ',
+				colspan : 1
+			}],
+			buttons : [{
+						text : "确定",
+						scope : this,
+						handler : this.onSaveCreate
+					}, {
+						text : "关闭",
+						scope : this,
+						handler : function() {
+							this.inputPanel.form.reset();
+							this.inputWindow.hide();
+						}
+					}]
+
+		});
+		
+		this.inputWindow = this.inputWindow || new Ext.Window({
+					title : '变更订单后生成发货单',
+					height : 300,
+					width : 400,
+					// itemCls:'required',
+					// style:'margin-top:10px',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					layout : 'fit',
+					items : [this.inputPanel]
+				});
+
+	}
 }

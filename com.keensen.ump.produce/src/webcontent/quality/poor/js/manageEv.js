@@ -40,6 +40,11 @@ com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterSave',
 			function(gird, cell) {
 			}, this);
+			
+	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'afterSave',
+			function(gird, cell) {
+		this.inputWindow.form.findField("entity/batchNo").setValue('');
+			}, this);
 }
 
 com.keensen.ump.produce.quality.poorMgr.prototype.onDel = function() {

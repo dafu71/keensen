@@ -369,6 +369,16 @@
       <sourceNode>assign7</sourceNode>
       <targetNode>subprocess2</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link25" name="数量为空" type="transition">
+      <sourceNode>assign7</sourceNode>
+      <targetNode>throw0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">warehousing/amount</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link21</targetConnections>
     <nodeLabel>assign7label</nodeLabel>
     <process:copy>
@@ -496,6 +506,17 @@
   <nodes xsi:type="model:NodeElementLabel" id="assign6label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
     <node>assign6</node>
+  </nodes>
+  <nodes xsi:type="process:tThrow" id="throw0" name="异常抛出" type="throw">
+    <targetConnections>link25</targetConnections>
+    <nodeLabel>throw0label</nodeLabel>
+    <process:exception code="100001" message="数量为空" type="com.eos.system.exception.EOSException">
+      <process:args/>
+    </process:exception>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="throw0label" name="label" nodeType="label">
+    <figSize height="20" width="61"/>
+    <node>throw0</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

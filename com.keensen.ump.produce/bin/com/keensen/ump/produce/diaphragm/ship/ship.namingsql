@@ -113,8 +113,8 @@
        t1.OUT_LENGTH      as "outLength",
        t1.LOSS            as "loss",
        t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
-       t1.PLAN_NO         as "planNo",
-       t1.ORDER_NO        as "orderNo",
+       t2.PLAN_NO         as "planNo",
+       t2.ORDER_NO        as "orderNo",
        t1.SUP_ID          as "supId",
        t1.SUP_NAME        as "supName",
        t1.SUP_CODE        as "supCode",
@@ -131,7 +131,7 @@
        t1.mater_spec_code as "materSpecCode",
        t1.mater_class_Name as "materClassName",
        t1.mater_spec_Name as "materSpecName"
-  from KS_PROD_DIAPHRAGM_ship t2
+  from V_KS_PROD_DIAPHRAGM_SHIP t2
   left join V_KS_TUMO3 t1 
     on t1.RECORD_ID = t2.RECORD_ID
  where 1=1
@@ -284,15 +284,9 @@
                 GROUP BY V.ORDER_NO, V.PLAN_NO) T5
       ON T.ORDER_NO = T5.ORDER_NO
      AND T2.PLAN_NO = T5.PLAN_NO
-     left join (SELECT SUM(QUALIFID_LENGTH) sendamount,plan_no,order_no
+     left join (SELECT SUM(amount) sendamount,plan_no,order_no
     FROM
-    (select t.batch_no,v.plan_no,v.order_no,V.QUALIFID_LENGTH from KS_PROD_DIAPHRAGM_SHIP t
-    LEFT JOIN 
-    (select * from  v_ks_tumo_all3
-    where 1=1
-     			<isNotNull prepend="and" property="isCutOver">upper(nvl(is_cut_over,'N')) = 'N'</isNotNull>) v ON v.batch_no=t.batch_no
-    
-    )
+    (select t.batch_no,t.plan_no,t.order_no,t.amount from V_KS_PROD_DIAPHRAGM_SHIP t)
     GROUP BY plan_no,order_no) t6
      ON T.ORDER_NO = T6.ORDER_NO
      AND T2.PLAN_NO = T6.PLAN_NO

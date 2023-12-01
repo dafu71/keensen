@@ -5,9 +5,9 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.initEvent = funct
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
 
-		var batchNoStr = this.queryPanel.form.findField("condition/batchNoStr2")
-				.getValue();
-	    var regEx = new RegExp("\\n", "gi");
+		var batchNoStr = this.queryPanel.form
+				.findField("condition/batchNoStr2").getValue();
+		var regEx = new RegExp("\\n", "gi");
 		batchNoStr = batchNoStr.replace(regEx, ",");
 		batchNoStr = batchNoStr.replaceAll('，', ',');
 		batchNoStr = batchNoStr.replaceAll(' ', '');
@@ -17,7 +17,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.initEvent = funct
 		for (var i = 0; i < arr.length; i++) {
 			arr2.push("'" + arr[i] + "'");
 		}
-	
+
 		this.queryPanel.getForm().findField('condition/batchNoStr')
 				.setValue(arr2.join(",") == "''" ? null : arr2.join(","));
 		this.queryPanel.getForm().findField('condition/isCutOver')
@@ -93,9 +93,6 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.initEvent = funct
 		})
 
 	});
-	
-	
-	
 
 }
 
@@ -127,6 +124,76 @@ function isNonNegativeFloat(str) {
 	return regex.test(str);
 }
 
+com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate2 = function() {
+	var A = this.listPanel;
+
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		for (var i = 0; i < records.length; i++) {
+
+			var delivery = records[i].get('delivery');
+			if (delivery <= 0) {
+				Ext.Msg.alert("系统提示", "所选数据中有发货已完成的数据，请重新选择！");
+				return;
+			}
+		}
+		var orderNo = records[0].get('orderNo');
+		var planNo = records[0].get('planNo');
+		this.inputPanel.form.findField("entity/orderNo").setValue(orderNo);
+		this.inputPanel.form.findField("entity/planNo").setValue(planNo);
+		this.inputWindow.show();
+	}
+}
+
+com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onSaveCreate = function() {
+	var A = this.listPanel;
+	var _this = this;
+	var orderNo = this.inputPanel.form.findField("entity/orderNo").getValue();
+	var planNo = this.inputPanel.form.findField("entity/planNo").getValue();
+
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		for (var i = 0; i < records.length; i++) {
+
+			var delivery = records[i].get('delivery');
+			if (delivery <= 0) {
+				Ext.Msg.alert("系统提示", "所选数据中有发货已完成的数据，请重新选择！");
+				return;
+			}
+		}
+
+		var list = [];
+		Ext.each(records, function(r) {
+					r.set('sendAmount', r.get('delivery'));
+					r.set('shipflag', 'n');
+					list.push(r.data);
+				});
+		Ext.Msg.confirm("系统提示", '是否生成发货单?', function(btnText) {
+			if (btnText == "yes") {
+				Ext.Ajax.request({
+					method : "post",
+					scope : this,
+					url : 'com.keensen.ump.produce.diaphragm.ship.choose.createShips2.biz.ext',
+					jsonData : {
+						list : list,
+						orderNo : orderNo,
+						planNo : planNo
+					},
+					success : function(response, action) {
+						A.store.reload({});
+						_this.inputWindow.hide();
+					}
+				});
+			}
+		})
+		// }
+	}
+}
+
 // 批量生成
 com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate = function() {
 	var A = this.listPanel;
@@ -149,64 +216,43 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate = functi
 		}
 
 		// 选择了一条
-		/*if (records.length == 1) {
-			var delivery = records[0].get('delivery');
-			Ext.MessageBox.prompt("发货数量确认", "请输入发货数量：", function(bu, txt) {
-				var sendAmout = txt;
-				if (!isNonNegativeFloat(sendAmout)) {
-					Ext.Msg.alert("系统提示", "请输入数字！");
-					return;
-				}
-				if (sendAmout > delivery) {
-					Ext.Msg.alert("系统提示", "发货数量不能大于" + delivery);
-					return;
-				}
-				if (bu == 'ok') {
-					records[0].set('sendAmount', sendAmout);
-					records[0].set('shipflag', 'n');
-					var list = [];
-					Ext.each(records, function(r) {
-								list.push(r.data);
-							});
-					Ext.Ajax.request({
-						method : "post",
-						scope : this,
-						url : 'com.keensen.ump.produce.diaphragm.ship.choose.createShips.biz.ext',
-						jsonData : {
-							list : list
-						},
-						success : function(response, action) {
-							A.store.reload({});
-						}
-					});
-				}
+		/*
+		 * if (records.length == 1) { var delivery = records[0].get('delivery');
+		 * Ext.MessageBox.prompt("发货数量确认", "请输入发货数量：", function(bu, txt) { var
+		 * sendAmout = txt; if (!isNonNegativeFloat(sendAmout)) {
+		 * Ext.Msg.alert("系统提示", "请输入数字！"); return; } if (sendAmout > delivery) {
+		 * Ext.Msg.alert("系统提示", "发货数量不能大于" + delivery); return; } if (bu ==
+		 * 'ok') { records[0].set('sendAmount', sendAmout);
+		 * records[0].set('shipflag', 'n'); var list = []; Ext.each(records,
+		 * function(r) { list.push(r.data); }); Ext.Ajax.request({ method :
+		 * "post", scope : this, url :
+		 * 'com.keensen.ump.produce.diaphragm.ship.choose.createShips.biz.ext',
+		 * jsonData : { list : list }, success : function(response, action) {
+		 * A.store.reload({}); } }); } }, window, false, delivery); } else {
+		 */
 
-			}, window, false, delivery);
-
-		} else {*/
-
-			var list = [];
-			Ext.each(records, function(r) {
-						r.set('sendAmount', r.get('delivery'));
-						r.set('shipflag', 'n');
-						list.push(r.data);
-					});
-			Ext.Msg.confirm("系统提示", '是否生成发货单?', function(btnText) {
-				if (btnText == "yes") {
-					Ext.Ajax.request({
-						method : "post",
-						scope : this,
-						url : 'com.keensen.ump.produce.diaphragm.ship.choose.createShips.biz.ext',
-						jsonData : {
-							list : list
-						},
-						success : function(response, action) {
-							A.store.reload({});
-						}
-					});
-				}
-			})
-		//}
+		var list = [];
+		Ext.each(records, function(r) {
+					r.set('sendAmount', r.get('delivery'));
+					r.set('shipflag', 'n');
+					list.push(r.data);
+				});
+		Ext.Msg.confirm("系统提示", '是否生成发货单?', function(btnText) {
+			if (btnText == "yes") {
+				Ext.Ajax.request({
+					method : "post",
+					scope : this,
+					url : 'com.keensen.ump.produce.diaphragm.ship.choose.createShips.biz.ext',
+					jsonData : {
+						list : list
+					},
+					success : function(response, action) {
+						A.store.reload({});
+					}
+				});
+			}
+		})
+		// }
 	}
 
 }

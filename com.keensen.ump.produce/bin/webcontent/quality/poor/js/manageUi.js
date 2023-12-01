@@ -331,6 +331,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 			maximizable : true,
 			items : [{
 				xtype : 'inputpanel',
+				autoHide : false,
 				pgrid : this.listPanel,
 				columns : 2,
 				saveUrl : 'com.keensen.ump.produce.quality.poorrecord.savePoor.biz.ext',
@@ -438,7 +439,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					colspan : 1
 				}, {
 					xtype : 'textfield',
-					allowBlank : false,
+					allowBlank : true,
 					name : 'entity/componentNumber',
 					fieldLabel : '元件序列号',
 					anchor : '75%',
@@ -557,6 +558,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 				}]
 			}]
 		});
+
 	}
 
 	this.initEditWindow = function() {
@@ -684,7 +686,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					colspan : 1
 				}, {
 					xtype : 'textfield',
-					allowBlank : false,
+					allowBlank : true,
 					name : 'entity/componentNumber',
 					dataIndex : 'componentNumber',
 					fieldLabel : '元件序列号',

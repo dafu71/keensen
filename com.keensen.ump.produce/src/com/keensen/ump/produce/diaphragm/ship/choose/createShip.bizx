@@ -16,9 +16,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link7</targetConnections>
-    <targetConnections>link2</targetConnections>
     <targetConnections>link15</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <targetConnections>link7</targetConnections>
     <location x="585" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -159,6 +159,14 @@
       <process:from type="query" pattern="reference">sendAmount</process:from>
       <process:to type="query">ship/amount</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orderNo</process:from>
+      <process:to type="query">ship/orderNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">planNo</process:from>
+      <process:to type="query">ship/planNo</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="369" y="131"/>
@@ -202,6 +210,7 @@
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" description="" id="link15" name="发货数量大于可以发货数量" displayName="连接线" type="transition">
+      <bendPoint heightToEnd="-120" heightToStart="0" widthToEnd="-1" widthToStart="276"/>
       <sourceNode>switch1</sourceNode>
       <targetNode>end0</targetNode>
       <process:transitionCondition>
@@ -375,6 +384,8 @@
     <process:input description="" isArray="false" name="batchNo" primitiveType="String"/>
     <process:input description="" isArray="false" name="sendId" primitiveType="String"/>
     <process:input description="" isArray="false" name="sendAmount" primitiveType="String"/>
+    <process:input description="" isArray="false" name="orderNo" primitiveType="String"/>
+    <process:input description="" isArray="false" name="planNo" primitiveType="String"/>
   </process:inputs>
   <process:outputs/>
   <process:extAttribute1>public</process:extAttribute1>
