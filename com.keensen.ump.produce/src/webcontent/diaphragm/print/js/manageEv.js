@@ -213,7 +213,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 			} else if (templateName == 'BW SHEET模板') {
-				LODOP.ADD_PRINT_TEXT(66, 19, 139, 38, materSpecCode);
+				/*LODOP.ADD_PRINT_TEXT(66, 19, 139, 38, materSpecCode);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
@@ -228,6 +228,40 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.ADD_PRINT_TEXT(218, 101, 166, 40, qualifidLength);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);*/
+				LODOP.ADD_PRINT_IMAGE(10,21,265,33,rootUrl +"produce/diaphragm/print/img/log.jpg");
+				LODOP.SET_PRINT_STYLEA(0,"Stretch",1);
+				LODOP.ADD_PRINT_TEXT(77, 20, 96, 36, materSpecCode);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(77, 130, 115, 35, "SHEET");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(113, 20, 100, 35, "Lot：");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(113, 96, 129, 35, outBatchNo);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(149, 20, 155, 35, "Spec：");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(147, 136, 120, 35, usefulLength);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(184, 20, 156, 35, "Qty：");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(183, 136, 120, 35, qualifidLength);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 			} else if (templateName == 'MEMBRANE FLAT SHEET模板') {
 				LODOP.ADD_PRINT_TEXT(154, 84, 292, 41, outBatchNo);
@@ -323,5 +357,6 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onTemplate = func
 	var templateValue = this.listPanel.templateValue.getValue();
 	if (Ext.isEmpty(templateValue))
 		return;
+
 	window.open(templateValue);
 }

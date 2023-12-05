@@ -56,7 +56,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 			}
 		});
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 210,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -67,11 +67,17 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 												 * hiddenName :
 												 * 'condition/storageId', anchor :
 												 * '75%', fieldLabel : '仓库' }
-												 */,	{
-								xtype : 'textfield',
-								name : 'condition/batchNo',
+												 */, {
+								xtype : 'storageposcombobox',
+								hiddenName : 'condition/position',
+								typeAhead : true,
+								typeAheadDelay : 100,
+								minChars : 1,
+								queryMode : 'local',
+								lastQuery : '',
+								editable : true,
 								anchor : '75%',
-								fieldLabel : '批号'
+								fieldLabel : '库位'
 							}, {
 								xtype : 'mplinecombobox',
 								hiddenName : 'condition/lineId',
@@ -110,20 +116,19 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								xtype : 'displayfield',
 								height : '5',
 								colspan : 4
-							}, {
-								xtype : 'storageposcombobox',
-								hiddenName : 'condition/position',
-								typeAhead : true,
-								typeAheadDelay : 100,
-								minChars : 1,
-								queryMode : 'local',
-								lastQuery : '',
-								editable : true,
+							},	{
+								xtype : 'textarea',
+								colspan : 2,
+								name : 'condition/batchNoStr2',
+								emptyText : '多个批次请用逗号分隔，或一行一个批次',
 								anchor : '75%',
-								fieldLabel : '库位'
+								fieldLabel : '批号'
 							}, {
 								xtype : 'hidden',
 								name : 'condition/storageIds'
+							}, {
+								xtype : 'hidden',
+								name : 'condition/batchNoStr'
 							}]
 				});
 		/*
@@ -135,10 +140,10 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false
+					//header : ''
 				});
-		this.listPanel = new Ext.fn.EditListPanel({
+		this.listPanel = this.listPanel || new Ext.fn.EditListPanel({
 			title : '【库存列表】',
 			viewConfig : {
 				forceFit : true
@@ -300,7 +305,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
 				successFn : function(i, r) {
-					if (r.ret != '1') {
+					/*if (r.ret != '1') {
 						Ext.Msg.show({
 									width : 350,
 									title : "操作提示",
@@ -311,25 +316,24 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 										Ext.getCmp(listid).store.load();
 									}
 								})
-					} else {
-						Ext.getCmp(listid).store.load();
-						me.editWindow.hide();
-					}
+					} else {*/
+						//Ext.getCmp(listid).store.load();
+						//me.editWindow.hide();
+					//}
 				},
 				columns : 1,
 				loadUrl : 'com.keensen.ump.produce.diaphragm.storage.query.expandEntity.biz.ext',
-				saveUrl : 'com.keensen.ump.produce.diaphragm.storage.allocate.allocate.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.diaphragm.storage.allocate.allocateBatch.biz.ext',
 				fields : [{
-							xtype : 'textfield',
-							name : 'allocate/batchNo',
+							xtype : 'textarea',
+							name : 'batchNOs',
 							readOnly : true,
 							fieldLabel : '批号',
-							dataIndex : 'batchNo',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5'
-						}, {
+						}/*, {
 							xtype : 'storagecombobox',
 							hiddenName : 'allocate/fromStorageId',
 							readOnly : true,
@@ -339,20 +343,19 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5'
-						}, {
+						}*/, {
 							xtype : 'storagecombobox',
-							hiddenName : 'allocate/toStorageId',
+							hiddenName : 'toStorageId',
 							allowBlank : false,
-							name : 'allocate/toStorageId',
+							name : 'toStorageId',
 							fieldLabel : '目标仓库'
-						}, {
+						}/*, {
 							xtype : 'hidden',
 							name : 'allocate/stockId',
 							dataIndex : 'id'
-						}, {
+						}*/, {
 							xtype : 'hidden',
-							name : 'allocate/amount',
-							dataIndex : 'amount'
+							name : 'ids'
 						}]
 			}]
 		});

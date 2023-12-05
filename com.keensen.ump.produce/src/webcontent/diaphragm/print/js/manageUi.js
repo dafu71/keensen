@@ -154,11 +154,11 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 
 		var templateData = [
 				["produce/diaphragm/print/img/mpmark1.png", "常用模板"],
+				["produce/diaphragm/print/img/mpmark11.png", "BW SHEET模板"],
 				["produce/diaphragm/print/img/mpmark0.png", "Reverse Osmosis sheet模板"],
 				["produce/diaphragm/print/img/mpmark3.png", "SW模板"],
 				["produce/diaphragm/print/img/mpmark4.png", "ULP-2模板"],
-				["produce/diaphragm/print/img/mpmark10.png", "BW-FR SHEET模板"],
-				["produce/diaphragm/print/img/mpmark9.png", "BW SHEET模板"],
+				["produce/diaphragm/print/img/mpmark10.png", "BW-FR SHEET模板"],				
 				["produce/diaphragm/print/img/mpmark6.png",
 						"MEMBRANE FLAT SHEET模板"],
 				["produce/diaphragm/print/img/mpmark5.png", "Mang loc R.O.模板"],

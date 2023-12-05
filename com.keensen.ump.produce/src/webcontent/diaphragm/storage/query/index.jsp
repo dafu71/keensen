@@ -35,6 +35,9 @@
 <js:load scriptPath="pub/common/storagePosCombo.js" />
 <js:load scriptPath="produce/diaphragm/storage/query/js/manageUi.js"/>
 <js:load scriptPath="produce/diaphragm/storage/query/js/manageEv.js"/>
+ <style type="text/css">
+.x-grid3-cell-inner {-webkit-user-select:text;}
+</style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var listid = Ext.id();
@@ -44,6 +47,7 @@
 			mainfn:com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr
 		});
  </script>
+
 </head>
 <body>
 <div id="storagequerymgr"></div>
