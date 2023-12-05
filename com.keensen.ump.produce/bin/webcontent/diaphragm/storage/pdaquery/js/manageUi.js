@@ -14,7 +14,10 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 	this.initInputWindow = function() {
 		var _this = this;
 		this.panel = this.panel || new Ext.Panel({});
-		this.panel2 = this.panel2 || new Ext.Panel({height : '300',baseCls : "x-plain"});
+		this.panel2 = this.panel2 || new Ext.Panel({
+					height : '300',
+					baseCls : "x-plain"
+				});
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
 			// baseCls : "x-plain",
 
@@ -30,10 +33,10 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 						xtype : 'displayfield',
 						height : '50',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'textfield',
 						name : 'batchNo',
-						style:'{font-weight:bold;}',
+						style : '{font-weight:bold;}',
 						allowBlank : false,
 						fieldLabel : '批号',
 						ref : '../batchNo',
@@ -55,7 +58,7 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
@@ -64,7 +67,7 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 						name : 'position',
 						allowBlank : false,
 						fieldLabel : '库位',
-						style:'{font-weight:bold;}',
+						style : '{font-weight:bold;}',
 						ref : '../position',
 						anchor : '80%',
 						colspan : 1,
@@ -74,8 +77,7 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 								if (D.getKey() == Ext.EventObject.ENTER) {
 
 									var amount = this.inputPanel.form
-											.findField("amount")
-											.getValue();
+											.findField("amount").getValue();
 									if (Ext.isEmpty(amount)) {
 
 									} else {
@@ -91,7 +93,7 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
@@ -101,11 +103,11 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 						hiddenName : 'storageId',
 						allowBlank : false,
 						anchor : '80%',
-						readOnly : true,
+						// readOnly : true,
 						name : 'storageId',
 						fieldLabel : '仓库',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
@@ -117,7 +119,7 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 						readOnly : true,
 						fieldLabel : '数量',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
@@ -134,7 +136,7 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 						readOnly : true,
 						fieldLabel : '膜片型号',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
@@ -167,12 +169,53 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 					}],
 			buttons : [{
 						text : "更改库位",
+						height : 30,
 						scope : this,
 						handler : this.savePosition
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						text : "调拨仓库",
+						height : 30,
+						scope : this,
+						handler : this.saveAllocate
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						text : "出库",
+						height : 30,
+						scope : this,
+						handler : this.saveOutofstock
 					}]
 		})
-
-		
 
 	}
 

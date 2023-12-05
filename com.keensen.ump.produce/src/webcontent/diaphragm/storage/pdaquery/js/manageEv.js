@@ -67,3 +67,54 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.savePosition = f
 		}
 	});
 };
+
+com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.saveAllocate = function() {
+	var id = this.inputPanel.form.findField("id").getValue();
+	var toStorageId = this.inputPanel.form.findField("storageId").getValue();
+	Ext.Ajax.request({
+		method : "post",
+		scope : this,
+		url : 'com.keensen.ump.produce.diaphragm.storage.allocate.allocateBatch.biz.ext',
+		jsonData : {
+			"ids" : id,
+			"toStorageId" : toStorageId
+		},
+		success : function(response, action) {
+			Ext.Msg.alert("系统提示", "调拨成功！");
+		}
+	});
+};
+
+com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.saveOutofstock = function() {
+	var _this = this;
+	var stockId = this.inputPanel.form.findField("id").getValue();
+	Ext.Ajax.request({
+		method : "post",
+		scope : this,
+		url : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock.biz.ext',
+		jsonData : {
+			"outofstock/stockId" : stockId
+		},
+		success : function(response, action) {
+			_this.inputPanel.form.reset();
+			Ext.Msg.alert("系统提示", "出库成功！");
+		}
+	});
+};
+
+com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.saveOutofstock2 = function() {
+	var stockId = this.inputPanel.form.findField("id").getValue();
+	var _this = this;
+	Ext.Ajax.request({
+		method : "post",
+		scope : this,
+		url : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock2.biz.ext',
+		jsonData : {
+			"outofstock/stockId" : stockId
+		},
+		success : function(response, action) {
+			_this.inputPanel.form.reset();
+			Ext.Msg.alert("系统提示", "发货出库成功！");
+		}
+	});
+};
