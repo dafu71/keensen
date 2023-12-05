@@ -34,7 +34,7 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.onScan = functio
 			this.inputPanel.form.findField("storageId")
 					.setValue(data.storageId);
 			this.inputPanel.form.findField("amount")
-					.setValue(data.usefulLength);
+					.setValue(data.amount);
 			this.inputPanel.form.findField("model")
 					.setValue(data.materSpecCode);
 			this.inputPanel.form.findField("class").setValue(data.perfFlagName);
@@ -88,6 +88,11 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.saveAllocate = f
 com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.saveOutofstock = function() {
 	var _this = this;
 	var stockId = this.inputPanel.form.findField("id").getValue();
+	var amount = this.inputPanel.form.findField("amount").getValue();
+	if(amount==0 || amount=='0'){
+		Ext.Msg.alert("系统提示", "库存为零，不能出库！");
+		return;
+	}
 	Ext.Ajax.request({
 		method : "post",
 		scope : this,
@@ -102,19 +107,3 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.saveOutofstock =
 	});
 };
 
-com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.saveOutofstock2 = function() {
-	var stockId = this.inputPanel.form.findField("id").getValue();
-	var _this = this;
-	Ext.Ajax.request({
-		method : "post",
-		scope : this,
-		url : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock2.biz.ext',
-		jsonData : {
-			"outofstock/stockId" : stockId
-		},
-		success : function(response, action) {
-			_this.inputPanel.form.reset();
-			Ext.Msg.alert("系统提示", "发货出库成功！");
-		}
-	});
-};

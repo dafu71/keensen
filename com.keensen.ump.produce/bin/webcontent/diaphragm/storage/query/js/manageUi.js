@@ -231,7 +231,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						header : '等级'
 					}, {
 						dataIndex : 'amount',
-						header : '入库数量'
+						header : '库存数量'
 					}, {
 						dataIndex : 'updateTime',
 						header : '更新日期'
