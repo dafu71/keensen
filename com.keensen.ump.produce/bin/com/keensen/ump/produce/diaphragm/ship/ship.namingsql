@@ -371,4 +371,72 @@
 	
  order by t1.produce_dt desc
  </select>
+    <select id="queryTumo4Print" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t1.RECORD_ID       as "recordId",t1.is_wx "isWx",t1.worker_id "workerId"
+       ,t1.spec_id "spectId",t1.line_id "lineId",t1.is_cut_over "isCutOver",
+       t1.LINE_NAME       as "lineName",
+       t1.LINE_CODE       as "lineCode",
+       t1.PRODUCE_DT      as "produceDt",
+       t1.BATCH_NO        as "batchNo",
+       lower(t1.IS_QUALIFIED)    as "isQualified",
+       t1.OUT_LENGTH      as "outLength",
+       t1.LOSS            as "loss",
+       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+       t1.PLAN_NO         as "planNo",
+       t1.ORDER_NO        as "orderNo",
+       t1.SUP_ID          as "supId",
+       t1.SUP_NAME        as "supName",
+       t1.SUP_CODE        as "supCode",
+       t1.DIMO_BATCH_NO   as "dimoBatchNo",
+       t1.OUT_BATCH_NO    as "outBatchNo",
+       t1.DEPT_NAME       as "deptName",
+       t1.STAFF_NAME      as "staffName",
+       t1.STAFF_CODE      as "staffCode",
+       t1.PERF_FLAG_ID    as "perfFlagId",
+       t1.PERF_FLAG_NAME  as "perfFlagName",
+       t1.PERF_FLAG_CODE  as "perfFlagCode",
+       <!--decode(t2.RECORD_ID,null,'n','y') "shipflag",
+       nvl(t2.ifconfirm,'n')    "ifconfirm",-->
+       t1.mater_class_code as "materClassCode",
+       t1.mater_spec_code as "materSpecCode",
+       t1.mater_class_Name as "materClassName",
+       t1.mater_spec_Name as "materSpecName",
+       ddflag "ddflag",
+       <!--to_char(t2.create_time,'yyyy-MM-dd') "createTime",
+       t2.create_name "createName", 
+       t2.amount "sendAmount",
+       t2.id "sendId",-->
+       t1.QUALIFID_LENGTH - nvl(t3.amount,0) "delivery"
+  from v_ks_tumo4 t1
+  
+  left join (SELECT sum(nvl(t.amount,0)) amount ,record_id 
+			from KS_PROD_DIAPHRAGM_SHIP t
+			GROUP BY record_id) t3
+	on t1.RECORD_ID = t3.RECORD_ID
+ 
+ where 1=1
+    <isEqual compareValue="N" prepend="and" property="isDelivery">t1.QUALIFID_LENGTH - nvl(t3.amount,0) &gt; 0</isEqual>
+        <isNotNull prepend="and" property="isCutOver">upper(nvl(t1.is_cut_over,'N')) = 'N'</isNotNull>
+        <isNotNull prepend="and" property="isQualified">upper(t1.IS_QUALIFIED) = upper(#isQualified#)</isNotNull>
+        <isNotNull prepend="and" property="ifconfirm">nvl(t2.ifconfirm,'n') = #ifconfirm#</isNotNull>
+        <isNotNull prepend="and" property="ddflag">t1.ddflag = #ddflag#</isNotNull>
+        <isNotNull prepend="and" property="perfFlagId">t1.PERF_FLAG_ID = #perfFlagId#</isNotNull>
+        <isNotNull prepend="and" property="shipflag">decode(t2.RECORD_ID,null,'n','y') = #shipflag#</isNotNull>
+        <isNotNull prepend="and" property="yrkflag">decode(w.batch_no,null,'否','是') = #yrkflag#</isNotNull>
+        <isNotNull prepend="and" property="lineId">t1.line_id = #lineId#</isNotNull>
+        <isNotNull prepend="and" property="specId">t1.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="workerId">t1.worker_Id = #workerId#</isNotNull>
+        <isNotNull prepend="and" property="supId">t1.SUP_ID = #supId#</isNotNull>
+        <isNotNull prepend="and" property="isWx">t1.is_wx = #isWx#</isNotNull>
+        <isNotNull prepend="and" property="recordId">t1.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">t1.batch_No in ($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">t1.batch_No like '%' || upper(#batchNo2#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="produceDtStart">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="produceDtEnd">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #produceDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="planNo">upper(t1.plan_No) like '%' || upper(#planNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'</isNotNull>
+ order by t1.produce_dt desc
+ </select>
 </sqlMap>

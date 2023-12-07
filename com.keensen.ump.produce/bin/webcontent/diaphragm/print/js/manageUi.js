@@ -350,7 +350,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 						dictData : ABF_YESORNO
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.diaphragm.ship.choose.queryTumoByPage.biz.ext',
+				url : 'com.keensen.ump.produce.diaphragm.ship.choose.queryTumo4PrintByPage.biz.ext',
 				root : 'data',
 				autoLoad : true,
 				totalProperty : 'totalCount',
