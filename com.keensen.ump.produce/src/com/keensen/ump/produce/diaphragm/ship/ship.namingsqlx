@@ -340,6 +340,7 @@
 	<isNotNull prepend="and" property="planNo"> 
 		       t1.order_No in( select order_No from KS_PROD_DIAPHRAGM_PLAN where plan_no like '%' || #planNo# || '%')
 	</isNotNull>
+	order by t1.id desc
      </select>
      
      <select id="queryPlan" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >

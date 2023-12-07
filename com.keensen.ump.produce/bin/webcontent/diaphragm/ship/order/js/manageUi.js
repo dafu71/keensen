@@ -123,18 +123,22 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 			delUrl : 'com.keensen.ump.produce.diaphragm.ship.order.deleteEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'orderNo',
+						sortable  : true,
 						header : '订单号'
 					}, {
 						dataIndex : 'customerCode',
 						header : '客户'
 					}, {
 						dataIndex : 'orderDate',
+						sortable  : true,
 						header : '下单日期'
 					}, {
 						dataIndex : 'demandDate',
+						sortable  : true,
 						header : '要求入库日期'
 					}, {
 						dataIndex : 'amount',
+						sortable  : true,
 						header : '数量'
 					}, {
 						dataIndex : 'unit',
