@@ -18,6 +18,13 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.initEvent = function()
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
 			}, this);
+			
+	this.listPanel.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					_this.rec = r;
+				}).defer(100);
+			}, this);
 
 }
 
@@ -204,3 +211,19 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onView = function() {
 		}
 	}
 }
+
+com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.saveCustormerCode = function(
+		id, newValue, oldValue) {
+	Ext.Ajax.request({
+		method : "post",
+		scope : this,
+		url : 'com.keensen.ump.produce.diaphragm.ship.order.saveEntity.biz.ext',
+		jsonData : {
+			"entity/id" : id,
+			"entity/customerCode" : newValue
+		},
+		success : function(response, action) {
+			Ext.Msg.alert("系统提示", "客户修改成功！");
+		}
+	});
+};

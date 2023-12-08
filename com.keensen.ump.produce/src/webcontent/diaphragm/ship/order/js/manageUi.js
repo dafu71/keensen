@@ -74,13 +74,14 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 					singleSelect : true,
 					header : ''
 				});
-		this.listPanel = new Ext.fn.ListPanel({
+		this.listPanel = this.listPanel || new Ext.fn.EditListPanel({
 			title : '【订单列表】',
 			viewConfig : {
 				forceFit : true
 			},
 			hsPage : true,
 			id : listid,
+			clicksToEdit : 1,
 			tbar : [{
 						text : '新增',
 						scope : this,
@@ -123,22 +124,39 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 			delUrl : 'com.keensen.ump.produce.diaphragm.ship.order.deleteEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'orderNo',
-						sortable  : true,
+						sortable : true,
 						header : '订单号'
 					}, {
 						dataIndex : 'customerCode',
-						header : '客户'
+						header : '客户',
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									allowBlank : true,
+									css : 'background:#c7c7c7;',
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if(newValue==oldValue) return false;
+											var id = _this.rec.data['id'] ;
+											_this.saveCustormerCode(id,newValue,oldValue);
+										}
+									}
+								}))
 					}, {
 						dataIndex : 'orderDate',
-						sortable  : true,
+						sortable : true,
 						header : '下单日期'
 					}, {
 						dataIndex : 'demandDate',
-						sortable  : true,
+						sortable : true,
 						header : '要求入库日期'
 					}, {
 						dataIndex : 'amount',
-						sortable  : true,
+						sortable : true,
 						header : '数量'
 					}, {
 						dataIndex : 'unit',

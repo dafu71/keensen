@@ -99,21 +99,25 @@ com.keensen.ump.produce.diaphragm.ship.PlanMgr = function() {
 			delUrl : 'com.keensen.ump.produce.diaphragm.ship.plan.deleteEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'planNo',
+						sortable : true,
 						header : '计划单号'
 					}, {
 						dataIndex : 'orderNo',
+						sortable : true,
 						header : '订单号'
 					}, {
 						dataIndex : 'orderAmount',
 						header : '订单数量'
 					}, {
 						dataIndex : 'planDate',
+						sortable : true,
 						header : '计划发货日期'
 					}, {
 						dataIndex : 'amount',
 						header : '计划发货数量'
 					}, {
 						dataIndex : 'planStockDate',
+						sortable : true,
 						header : '计划入库日期'
 					}, {
 						dataIndex : 'stockAmount',

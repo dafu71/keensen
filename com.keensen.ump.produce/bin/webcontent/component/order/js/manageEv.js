@@ -16,7 +16,7 @@ function formatBatchNo(str) {
 	for (var i = 0; i < arr.length; i++) {
 		arr2.push("'" + arr[i] + "'");
 	}
-	
+
 	return arr2.join(",") == "''" ? null : arr2.join(",");
 }
 
@@ -27,10 +27,10 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onBatchNo = function(
 	var store = this.listPanel3.store;
 	var str = formatBatchNo(batchNoStr);
 	store.load({
-					params : {
-						"map/batchNoStr" : str
-					}
-				});
+				params : {
+					"map/batchNoStr" : str
+				}
+			});
 }
 
 com.keensen.ump.produce.component.OrderMgr.prototype.initEvent = function() {
@@ -135,6 +135,8 @@ com.keensen.ump.produce.component.OrderMgr.prototype.initEvent = function() {
 				}
 			}, this);
 
+	
+
 }
 
 function delfile(fileid) {
@@ -173,7 +175,7 @@ function delfile(fileid) {
 									}
 									store.removeAll();
 									store.loadData(I);
-									//Ext.getCmp('componentuploadwindow').hide();
+									// Ext.getCmp('componentuploadwindow').hide();
 								}
 							}
 						})
@@ -248,7 +250,7 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onSavePlan = function() {
 				details.push(d);
 
 			});
-	
+
 	if (_thispanel.form.isValid()) {
 		Ext.Ajax.request({
 			method : "post",
@@ -258,8 +260,8 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onSavePlan = function() {
 				'details' : details
 			},
 			success : function(F) {
-					var B = Ext.decode(F.responseText);
-					if (B.success) {
+				var B = Ext.decode(F.responseText);
+				if (B.success) {
 					Ext.MessageBox.alert("操作提示", "保存成功!", function() {
 						_this.inputPanel2.form.findField("teamid").setValue('');
 						_this.inputPanel2.form.findField("productDt")
@@ -433,3 +435,5 @@ com.keensen.ump.produce.component.OrderMgr.prototype.onConfirm = function() {
 	}
 
 };
+
+
