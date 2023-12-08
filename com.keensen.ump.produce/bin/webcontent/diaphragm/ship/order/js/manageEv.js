@@ -214,6 +214,11 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onView = function() {
 
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.saveCustormerCode = function(
 		id, newValue, oldValue) {
+	var _this = this;
+	//this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	//			msg : "正在进行订单客户修改操作,请稍候!"
+	//		});
+	//this.requestMask.show();
 	Ext.Ajax.request({
 		method : "post",
 		scope : this,
@@ -223,7 +228,11 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.saveCustormerCode = fu
 			"entity/customerCode" : newValue
 		},
 		success : function(response, action) {
-			Ext.Msg.alert("系统提示", "客户修改成功！");
+			_this.listPanel.store.reload();
+			//Ext.Msg.alert("系统提示", "客户修改成功！");
+		},
+		callback : function() {
+			//_this.requestMask.hide()
 		}
 	});
 };
