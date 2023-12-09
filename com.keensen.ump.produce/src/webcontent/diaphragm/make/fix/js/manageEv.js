@@ -285,3 +285,5 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onEdit3 = function() {
 	this.listPanel.onEdit();
 };
 
+
+

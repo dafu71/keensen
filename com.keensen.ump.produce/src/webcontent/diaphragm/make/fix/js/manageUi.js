@@ -88,6 +88,11 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						iconCls : 'icon-application_edit',
 						hidden : modifyFlag !=1,
 						handler : this.onEdit3
+					}, '-', {
+						text : '打印标签',
+						scope : this,
+						iconCls : 'icon-printer',
+						handler : this.onPrint
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.make.deleteFixEntity.biz.ext',

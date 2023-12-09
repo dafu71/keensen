@@ -44,7 +44,7 @@
 
      where 1=1
      <isNotNull prepend="" property="batchNo"> 
-		       AND t1.BATCH_NO = #logoCode#
+		       AND t1.BATCH_NO = #batchNo#
 	</isNotNull>
 	<isNotNull prepend="" property="batchNo2"> 
 		       AND t1.BATCH_NO like '%' || #batchNo2# || '%'
@@ -120,6 +120,9 @@
   left join (select count(1) cnt ,DIMO_BATCH_NO from KS_PROD_DIAPHRAGM_ZMX_RECORD
       group by DIMO_BATCH_NO) t4 on t4.DIMO_BATCH_NO=t1.DIMO_BATCH_NO
      where 1=1
+     <isNotNull prepend="" property="id"> 
+		       AND t1.id = #id#
+	</isNotNull>
      <isNotNull prepend="" property="dimoType"> 
 		       AND t1.dimo_Type = #dimoType#
 	</isNotNull>

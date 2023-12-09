@@ -1,5 +1,4 @@
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
-
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -8,6 +7,18 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 					params : {
 						"pageCond/begin" : 0,
 						"pageCond/length" : this.listPanel.pagingToolbar.pageSize
+					}
+				});
+	}, this);
+
+	// 查询事件
+	this.queryPanel2.mon(this.queryPanel2, 'query', function(form, vals) {
+		var store = this.listPanel2.store;
+		store.baseParams = vals;
+		store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel2.pagingToolbar.pageSize
 					}
 				});
 	}, this);
@@ -23,7 +34,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 					return false;
 				}
 			}, this);
-			
+
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'beforeSave',
 			function() {
 				var dimoBatchNo = this.editWindow.items.items[0].form
@@ -122,7 +133,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 	var productDt = _this.inputWindow.items.items[0].form
 			.findField('entity/productDt').getValue();
 
-	productDt = Ext.util.Format.date(productDt, "Y-m-d");		
+	productDt = Ext.util.Format.date(productDt, "Y-m-d");
 
 	if (!Ext.isEmpty(productDt) && !Ext.isEmpty(psf) && !Ext.isEmpty(dimoType)
 			&& !Ext.isEmpty(line)) {
@@ -144,7 +155,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 		dimoBatchNo += y
 		var m = arr[1];
 		m = parseInt(m);
-		mArr = ['0','1','2','3','4','5','6','7','8','9','A','B','C'];
+		mArr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C'];
 		dimoBatchNo += mArr[m];
 		var d = arr[2];
 		d = parseInt(d);
@@ -160,3 +171,55 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 	}
 };
 
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onChooseWindowShow = function(_this) {
+	
+	//_this.listPanel2.selModel.clearSelections();
+	_this.listPanel2.store.removeAll();
+	_this.queryPanel2.form.reset();
+	_this.queryPanel2.fireEvent('query');
+	_this.chooseWindow.show();
+}
+
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onChoose = function() {
+	var A = this.listPanel2;
+
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var arr = [];
+		for (var i = 0; i < records.length; i++) {
+			var zmyBatchNo = records[i].get('batchNo');
+			arr.push(zmyBatchNo);
+		}
+		if (this.inputWindow.hidden) {
+			this.editWindow.items.items[0].form.findField('entity/zmyBatchNo')
+					.setValue(arr.join(','));
+		} else {
+			this.inputWindow.items.items[0].form.findField('entity/zmyBatchNo')
+					.setValue(arr.join(','));
+		}
+		this.chooseWindow.hide();
+	}
+
+};
+
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onPrint = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var id = r.data.id;
+		var dimoType = r.data.dimoType;
+		var dimoAmount = r.data.dimoAmount;
+		var supName = r.data.supName;
+		window
+				.open('com.keensen.ump.produce.diaphragm.make.printZmTag.flow?condition/id='
+						+ id );
+
+	}
+
+};
