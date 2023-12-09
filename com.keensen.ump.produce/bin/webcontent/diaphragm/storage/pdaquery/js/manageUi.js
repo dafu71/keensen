@@ -214,6 +214,29 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 						height : 30,
 						scope : this,
 						handler : this.saveOutofstock
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						labelSeparator : ''
+					}, {
+						text : "重置",
+						height : 30,
+						scope : this,
+						handler : function(){
+							this.inputPanel.form.reset();
+						}
 					}]
 		})
 

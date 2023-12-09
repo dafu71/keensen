@@ -8,7 +8,7 @@
   - Description:
 -->
 <head>
-<title>混料批次标签打印</title>
+<title>底膜批次标签打印</title>
  <script type="text/javascript" src="base/jquery/jquery-1.11.3.min.js"></script>	
 <script type='text/javascript' src="base/jquery/plugins/JsBarcode.all.min.js"></script>
 <script type='text/javascript' src="base/utility/utf.js"></script>
