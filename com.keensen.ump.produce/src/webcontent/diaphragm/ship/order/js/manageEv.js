@@ -19,6 +19,18 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.initEvent = function()
 				this.editWindow.loadData(cell);
 			}, this);
 			
+	
+	this.editWindow.items.items[0].mon(this.editWindow.items.items[0], 'aftersave', function() {
+				this.listPanel.store.reload();
+				this.editWindow.hide();
+				return false;
+			}, this);
+			
+	this.editWindow.mon(this.editWindow, 'hide', function() {
+				//this.listPanel.store.reload();
+			}, this);
+			
+
 	this.listPanel.selModel.on('rowselect', function(o, i, r) {
 				var _this = this;
 	(function	() {
@@ -29,7 +41,37 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.initEvent = function()
 }
 
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onDel = function() {
-	this.listPanel.onDel();
+	// this.listPanel.onDel();
+	var records = this.listPanel.getSelectionModel().getSelections();
+	var _this = this;
+	var store = _this.listPanel.store;
+	var entitys = [];
+	Ext.each(records, function(r) {
+				entitys.push(r.data);
+			});
+	var mk = new Ext.LoadMask(document.body, {
+				msg : '正在删除数据，请稍候！',
+				removeMask : true
+			});
+	mk.show();
+	Ext.Ajax.request({
+		method : "post",
+		scope : this,
+		url : 'com.keensen.ump.produce.diaphragm.ship.order.deleteEntity.biz.ext',
+		jsonData : {
+			entitys : entitys
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				mk.hide();
+				store.reload();
+				// _this.shzlcxlistPanel.getForm().reset();
+			} else {
+				Ext.Msg.alert('系统提示', '删除失败');
+			}
+		}
+	}, this);
 };
 
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onAdd = function() {
@@ -38,7 +80,21 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onAdd = function() {
 }
 
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onEdit = function() {
-	this.listPanel.onEdit();
+	//this.listPanel.onEdit();
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+			var A = B[0];
+			//var materSpecCode = A.get('materSpecCode');
+			this.editWindow.items.items[0].loadData(A);
+			this.editWindow.show();
+			//this.editWindow.items.items[0].specId.setValue(materSpecCode);
+		}
+	}
+	
 };
 
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onPlan = function() {
@@ -215,10 +271,10 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onView = function() {
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.saveCustormerCode = function(
 		id, newValue, oldValue) {
 	var _this = this;
-	//this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-	//			msg : "正在进行订单客户修改操作,请稍候!"
-	//		});
-	//this.requestMask.show();
+	// this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	// msg : "正在进行订单客户修改操作,请稍候!"
+	// });
+	// this.requestMask.show();
 	Ext.Ajax.request({
 		method : "post",
 		scope : this,
@@ -229,10 +285,10 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.saveCustormerCode = fu
 		},
 		success : function(response, action) {
 			_this.listPanel.store.reload();
-			//Ext.Msg.alert("系统提示", "客户修改成功！");
+			// Ext.Msg.alert("系统提示", "客户修改成功！");
 		},
 		callback : function() {
-			//_this.requestMask.hide()
+			// _this.requestMask.hide()
 		}
 	});
 };

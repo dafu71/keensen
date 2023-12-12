@@ -402,7 +402,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					colspan : 2
 				}, {
 					xtype : 'textfield',
-					allowBlank : false,
+					allowBlank : true,
 					name : 'entity/invalidCode',
 					fieldLabel : '报废单编码',
 					anchor : '75%',
@@ -646,7 +646,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					colspan : 2
 				}, {
 					xtype : 'textfield',
-					allowBlank : false,
+					allowBlank : true,
 					name : 'entity/invalidCode',
 					dataIndex : 'invalidCode',
 					fieldLabel : '报废单编码',
