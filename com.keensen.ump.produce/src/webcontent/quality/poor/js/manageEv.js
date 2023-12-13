@@ -52,10 +52,10 @@ com.keensen.ump.produce.quality.poorMgr.prototype.onDel = function() {
 };
 
 com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate = function(
-		batchNo) {
-	var batchNo = this.inputWindow.form.findField("entity/batchNo").getValue();
-	if (Ext.isEmpty(batchNo)) {
-		Ext.Msg.alert("系统提示", "请输入膜片批次号！");
+		) {
+	var amount = this.inputWindow.form.findField("entity/amount").getValue();
+	if (Ext.isEmpty(amount)) {
+		Ext.Msg.alert("系统提示", "请输入不合格数量！");
 		return;
 	}
 
@@ -75,7 +75,7 @@ com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate = function(
 		url : "com.keensen.ump.produce.quality.poorrecord.queryPoorSum.biz.ext",
 		method : "post",
 		jsonData : {
-			'condition/batchNo' : batchNo,
+			'condition/amount' : amount,
 			'condition/materSpecId' : materSpecId
 		},
 		success : function(resp) {
@@ -101,10 +101,10 @@ com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate = function(
 };
 
 com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate2 = function(
-		batchNo) {
-	var batchNo = this.editWindow.form.findField("entity/batchNo").getValue();
-	if (Ext.isEmpty(batchNo)) {
-		Ext.Msg.alert("系统提示", "请输入膜片批次号！");
+		) {
+	var amount = this.editWindow.form.findField("entity/amount").getValue();
+	if (Ext.isEmpty(amount)) {
+		Ext.Msg.alert("系统提示", "请输入不合格数量！");
 		return;
 	}
 
@@ -124,7 +124,7 @@ com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate2 = function(
 		url : "com.keensen.ump.produce.quality.poorrecord.queryPoorSum.biz.ext",
 		method : "post",
 		jsonData : {
-			'condition/batchNo' : batchNo,
+			'condition/amount' : amount,
 			'condition/materSpecId' : materSpecId
 		},
 		success : function(resp) {

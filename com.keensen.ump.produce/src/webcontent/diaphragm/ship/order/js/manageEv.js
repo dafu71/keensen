@@ -66,7 +66,6 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onDel = function() {
 			if (ret.success) {
 				mk.hide();
 				store.reload();
-				// _this.shzlcxlistPanel.getForm().reset();
 			} else {
 				Ext.Msg.alert('系统提示', '删除失败');
 			}

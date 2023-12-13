@@ -319,6 +319,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 	}
 
 	this.initInputWindow = function() {
+	
 		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增元件不良记录',
@@ -505,7 +506,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : ' ',
-					value : '<p style="color:red;">输入膜片批次号，选择元件型号，点击旁边按钮获取不合格膜片长度</p>',
+					value : '<p style="color:red;">选择元件型号,及输入不合格数量，点击旁边按钮获取不合格膜片长度</p>',
 					labelSeparator : '',// 去掉冒号
 					colspan : 2
 				}, {
@@ -757,7 +758,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : ' ',
-					value : '<p style="color:red;">输入膜片批次号，选择元件型号，点击旁边按钮获取不合格膜片长度</p>',
+					value : '<p style="color:red;">选择元件型号,及输入不合格数量，点击旁边按钮获取不合格膜片长度</p>',
 					labelSeparator : '',// 去掉冒号
 					colspan : 2
 				}, {

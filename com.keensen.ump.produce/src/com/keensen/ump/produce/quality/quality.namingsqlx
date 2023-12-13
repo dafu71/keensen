@@ -172,10 +172,16 @@
    	</select>
    	
    	<select id="queryPoorSum" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-   	select sum(t.JUANMO_LENGTH) "length" FROM V_KS_QJ t
+   	<!--select sum(t.JUANMO_LENGTH) "length" FROM V_KS_QJ t
 	WHERE t.TUMO_BATCH_STR LIKE '%' || #batchNo# || '%' 
 	AND t.PROD_SPEC_ID=#materSpecId#  
-	and t.ng_reason_id in(300060,300061,300062)
+	and t.ng_reason_id in(300060,300061,300062)-->
+	
+	select t.MATER_SPEC_ID,t.MATER_SPEC_CODE,t.MATER_SPEC_CODE,
+	t.NUM_PER_WAD,t.BLANKING_SIZE,t.PAGE_WIDTH,
+	nvl(t.NUM_PER_WAD * t.BLANKING_SIZE * t.PAGE_WIDTH,0) * #amount# as "length"
+	 from V_KS_MATERSPECLIST t
+	WHERE t.MATER_SPEC_id=#materSpecId#
    </select>
 	 
 	 
