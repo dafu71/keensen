@@ -73,6 +73,12 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						editable : false,
 						forceSelection : true,
 						mode : 'local',
+
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						},
 						emptyText : '--请选择--'
 					}, {
 						xtype : 'dictcombobox',
