@@ -225,4 +225,56 @@
   select to_char(to_number(max(replace(t.code,'QC','')))+1) planNo from KS_PROD_QUALITY_DELIVERYRECORD t
   WHERE SUBSTR(replace(t.code,'QC',''),1,8) = to_char(SYSDATE,'yyyyMMdd'))
   WHERE CODE IS NOT NULL</select>
+    <select id="queryTumoCheck" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT T1.BATCH_ID AS "batchId",
+       T1.MAC_NAME AS "macName",
+       T1.BATCH_NO AS "batchNo",
+       T2.QUALIFID_LENGTH AS "qualifidLength",
+       T2.USEFUL_LENGTH AS "usefulLength",
+       T1.LINE_CODE AS "lineCode", T1.mater_Spec_Name "materSpecName",
+       T1.IS_WX_NAME AS "isWxName",
+       T1.PRODUCE_DATE AS "produceDate",
+       T1.POSITION_LENGTH AS "positionLength",
+       T1.GFD_AVG AS "gfdAvg",
+       T1.SALT_REJECTION AS "saltRejection",
+       T1.RECHECK_NAME AS "recheckName",
+       T1.PERF_FLAG_NAME AS "perfFlagName",t1.PERF_FLAG_ID AS "perfFlagId",
+       T1.BATCH_PERF_FLAG_NAME AS "batchPerfFlagName",
+       '' AS "appearance",
+       T1.ORDER_NO AS "orderNo",
+       T1.WF_SUPPLIER_NAME AS "wfSupplierName",
+       T1.TAG_NUM AS "tagNum",
+       T1.TAG_LENGTH AS "tagLength",
+       T1.THICK_AVG AS "thickAvg",
+       T1.THICK_MIN AS "thickMin",
+       T1.THICK_MAX AS "thickMax",
+       T1.JUDGER_NAME AS "judgerName",T1.JUDGER_ID AS "judgerId",
+       T1.IS_BATCH_QUALIFIED_NAME AS "isBatchQualifiedName",T1.IS_BATCH_QUALIFIED AS "isBatchQualified",
+       T1.GFD_STR AS "gfdStr",
+       T1.CONDUCTIVITY_IN AS "conductivityIn",
+       T1.CONDUCTIVITY_STR AS "conductivityStr",
+       T1.IS_VALID_NAME AS "isValidName",
+       T1.CHECKER_NAME AS "checkerName",
+       T1.CHECK_TIME AS "checkTime",
+       T1.JUDGE_TIME AS "judgeTime",
+       T1.PRODUCE_REMARK AS "produceRemark",
+       T1.REMARK AS "remark",
+       T1.JUDGE_REMARK AS "judgeRemark"
+  FROM V_KS_TUMO_CHECK_FIRST T1
+  LEFT JOIN V_KS_TUMO T2
+    ON T1.BATCH_ID = T2.RECORD_ID
+    where 1=1
+     <isNotNull prepend="" property="batchId">AND T1.BATCH_ID = #batchId#</isNotNull>
+        <isNotNull prepend="and" property="produceDtStart">to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="produceDtEnd">to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#</isNotNull>
+        <isNotNull prepend="" property="lineId">AND t1.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND t1.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND t1.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND t1.PROD_FLAG_ID = #prodFlagId#</isNotNull>
+        <isNotNull prepend="" property="perfFlagId">AND t1.PERF_FLAG_ID = #perfFlagId#</isNotNull>
+        <isNotNull prepend="" property="isBatchValid">AND lower(t1.IS_VALID) = #isBatchValid#</isNotNull>
+        <isNotNull prepend="" property="isBatchQualified">AND t1.IS_QUALIFIED = #isBatchQualified#</isNotNull>
+        <isNotNull prepend="" property="isWx">AND lower(t1.IS_WX) = #isWx#</isNotNull>
+	ORDER BY t1.PRODUCE_DT DESC, t1.BATCH_NO, t1.CHECK_TM DESC
+   </select>
 </sqlMap>

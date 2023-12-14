@@ -418,4 +418,71 @@
             <column length="50" name="REVIEWER_ID"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.quality.KsProdDiaphragmTumo" table="KS_PROD_DIAPHRAGM_TUMO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="judgerId" type="int">
+            <column length="9" name="JUDGER_ID"/>
+        </property>
+        <property name="judgeDt" type="date">
+            <column name="JUDGE_DT"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="20" name="ORDER_NO"/>
+        </property>
+        <property name="judgeRemark" type="string">
+            <column length="500" name="JUDGE_REMARK"/>
+        </property>
+        <property name="perfFlagId" type="int">
+            <column length="9" name="PERF_FLAG_ID"/>
+        </property>
+        <property name="isQualified" type="string">
+            <column length="10" name="IS_QUALIFIED"/>
+        </property>
+        <property name="batchNo" type="string">
+            <column length="20" name="BATCH_NO"/>
+        </property>
+    </class>
 </hibernate-mapping>

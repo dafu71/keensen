@@ -48,6 +48,11 @@
 		where t.dept_id in(select distinct team_id from qinsen.INST_TUMO)
 		and t.state = 'A'
 		order by t.staff_name</select>
+    <!-- 质检员查询 -->
+    <select id="queryJudger" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.staff_id ,t.staff_name,t.staff_code,t.staff_code "code",
+    t.staff_id "id", t.staff_name || '(' || t.staff_code || ')' "name"
+     from qinsen.base_staff t
+    where t.dept_id = '100080'</select>
     <!-- 膜片型号查询 -->
     <select id="queryMpSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
 	t.mater_spec_id "id",t.mater_spec_code "name"
@@ -195,4 +200,10 @@
         <isNotNull prepend="and" property="materCode">T1.MATER_CODE like '%'||#materCode#||'%'</isNotNull>
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
     </select>
+    <!-- 生产类型查询 -->
+    <select id="queryProdFlagSel" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T.PROP_VALUE_ID "id",
+       T.PROP_VALUE_NAME || '(' || T.PROP_VALUE_CODE || ')' "name",
+       T.PROP_VALUE_CODE "code"
+  FROM QINSEN.CONF_PROP_VALUE_OPTION T
+ WHERE T.PROP_ID = 30022</select>
 </sqlMap>
