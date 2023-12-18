@@ -21,6 +21,11 @@ com.keensen.ump.SupComboBox = Ext.extend(Ext.form.ComboBox, {
 				//this.store.load();
 				
 			},
+			listeners : {
+				"expand" : function(A) {
+					this.reset()
+				}
+			},
 			buildStore : function() {
 				this.store = new Ext.data.JsonStore({
 							url:'com.keensen.ump.base.base.querySup.biz.ext',

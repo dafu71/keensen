@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="queryMpCheckResult.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="com.keensen.ump.produce.quality.quality.queryMpCheckResult" title="dafu&#x9;23-12-15 下午4:05">
+    <location x="345" y="615"/>
+    <size height="100" width="562"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="样块性能人工判定" title="dafu&#x9;23-12-15 下午3:59">
+    <location x="60" y="615"/>
+    <size height="100" width="191"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <location x="100" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
+    <targetConnections>link2</targetConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="540" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="java.util.HashMap" name="ret" type="query" valueType="Java">ret</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="99" y="186"/>
+    <figSize height="20" width="31"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="539" y="186"/>
+    <figSize height="20" width="31"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="178" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">recordId</process:from>
+      <process:to type="query">map/recordId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">null</process:from>
+      <process:to type="query">ret/levelId</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="177" y="186"/>
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo0" name="queryByNamedSql" displayName="queryByNamedSql" nodeType="common" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link3" name="link3" displayName="连接线" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>loopstart0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">datas</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="285" y="150"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo0label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.keensen.ump.produce.quality.quality.queryMpCheckResult</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">map</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.Object[]" valueType="Java">datas</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
+    <location x="228" y="186"/>
+    <figSize height="20" width="136"/>
+    <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopStart" description="" id="loopstart0" name="循环" displayName="循环" grouped="true" type="loopstart" matchedName="loopend0" loopType="iterate">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopstart0</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="283" y="401"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopstart0label</nodeLabel>
+    <process:condition/>
+    <process:iterate iterable="datas" iterableElement="data"/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopstart0label" name="label" nodeType="label">
+    <location x="280" y="433"/>
+    <figSize height="20" width="31"/>
+    <node>loopstart0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopEnd" id="loopend0" name="循环结束" displayName="循环结束" grouped="true" type="loopend" matchedName="loopstart0">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>loopend0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <targetConnections>link13</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="859" y="401"/>
+    <size height="24" width="24"/>
+    <nodeLabel>loopend0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopend0label" name="label" nodeType="label">
+    <location x="841" y="433"/>
+    <figSize height="20" width="61"/>
+    <node>loopend0</node>
+  </nodes>
+  <nodes xsi:type="model:GroupNode" id="group0" name="group" grouped="true" gstart="loopstart0" gend="loopend0">
+    <location x="283" y="257"/>
+    <size height="329" width="601"/>
+    <chidren>loopend0</chidren>
+    <chidren>loopstart0</chidren>
+    <chidren>assign1</chidren>
+    <chidren>subprocess0</chidren>
+    <chidren>subprocess1</chidren>
+    <chidren>subprocess2</chidren>
+    <chidren>subprocess3</chidren>
+    <chidren>assign2</chidren>
+    <chidren>invokePojo1</chidren>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="352" y="298"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/gfdAvg</process:from>
+      <process:to type="query">gfdAvg</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/saltRejection</process:from>
+      <process:to type="query">saltRejection</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/gfdLowLimit</process:from>
+      <process:to type="query">gfdLowLimit</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/gfdLowSymbol</process:from>
+      <process:to type="query">gfdLowSymbol</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/gfdUpLimit</process:from>
+      <process:to type="query">gfdUpLimit</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/gfdUpSymbol</process:from>
+      <process:to type="query">gfdUpSymbol</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/saltLowLimit</process:from>
+      <process:to type="query">saltLowLimit</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/saltLowSymbol</process:from>
+      <process:to type="query">saltLowSymbol</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/saltUpLimit</process:from>
+      <process:to type="query">saltUpLimit</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/saltUpSymbol</process:from>
+      <process:to type="query">saltUpSymbol</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="346" y="334"/>
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="judge" displayName="judge" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link8" name="link8" displayName="连接线" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>rt == true</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="440" y="298"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="3" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.judge</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="num1" type="query" value="String" valueType="Primitive" pattern="reference">gfdAvg</process:inputVariable>
+        <process:inputVariable id="1" name="num2" type="query" value="String" valueType="Primitive" pattern="reference">gfdLowLimit</process:inputVariable>
+        <process:inputVariable id="2" name="opt" type="query" value="String" valueType="Primitive" pattern="reference">gfdLowSymbol</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="ret" type="query" value="Boolean" valueType="Primitive">rt</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="432" y="333"/>
+    <figSize height="20" width="43"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="judge1" displayName="judge" collapsed="false" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link10" name="link10" displayName="连接线" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>subprocess2</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>rt == true</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="440" y="371"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="3" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.judge</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="num1" type="query" value="String" valueType="Primitive" pattern="reference">gfdAvg</process:inputVariable>
+        <process:inputVariable id="1" name="num2" type="query" value="String" valueType="Primitive" pattern="reference">gfdUpLimit</process:inputVariable>
+        <process:inputVariable id="2" name="opt" type="query" value="String" valueType="Primitive" pattern="reference">gfdUpSymbol</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="ret" type="query" value="Boolean" valueType="Primitive">rt</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="427" y="406"/>
+    <figSize height="20" width="52"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="judge2" displayName="judge" collapsed="false" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link12" name="link12" displayName="连接线" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>subprocess3</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>rt == true</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="440" y="445"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="3" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.judge</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="num1" type="query" value="String" valueType="Primitive" pattern="reference">saltRejection</process:inputVariable>
+        <process:inputVariable id="1" name="num2" type="query" value="String" valueType="Primitive" pattern="reference">saltLowLimit</process:inputVariable>
+        <process:inputVariable id="2" name="opt" type="query" value="String" valueType="Primitive" pattern="reference">saltLowSymbol</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="ret" type="query" value="Boolean" valueType="Primitive">rt</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="427" y="480"/>
+    <figSize height="20" width="52"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="judge3" displayName="judge" collapsed="false" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link14" name="link14" displayName="连接线" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>rt == true</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="439" y="519"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="3" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.judge</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="num1" type="query" value="String" valueType="Primitive" pattern="reference">saltRejection</process:inputVariable>
+        <process:inputVariable id="1" name="num2" type="query" value="String" valueType="Primitive" pattern="reference">saltUpLimit</process:inputVariable>
+        <process:inputVariable id="2" name="opt" type="query" value="String" valueType="Primitive" pattern="reference">saltUpSymbol</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="ret" type="query" value="Boolean" valueType="Primitive">rt</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="426" y="554"/>
+    <figSize height="20" width="52"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="633" y="519"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/levelId</process:from>
+      <process:to type="query">ret/levelId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/gfd</process:from>
+      <process:to type="query">ret/gfd</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/salt</process:from>
+      <process:to type="query">ret/salt</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="627" y="555"/>
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="concat" displayName="concat" grouped="true" nodeType="common" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" lineType="inheritance" isDefault="true" type="break">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="750" y="519"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo1label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.common.utils.StringUtil.concat</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="joinString" type="expression" value="java.lang.String" valueType="Java" pattern="reference">null</process:inputVariable>
+      <process:inputVariable id="1" name="strings" type="literal" value="java.lang.String" valueType="Java" pattern="reference">膜通量范围:</process:inputVariable>
+      <process:inputVariable id="2" name="param1" type="query" value="java.lang.String" valueType="Java" pattern="reference">ret/gfd</process:inputVariable>
+      <process:inputVariable id="3" name="param2" type="literal" value="java.lang.String" valueType="Java" pattern="reference">,</process:inputVariable>
+      <process:inputVariable id="4" name="param3" type="literal" value="java.lang.String" valueType="Java" pattern="reference">脱盐率范围:</process:inputVariable>
+      <process:inputVariable id="5" name="param4" type="query" value="java.lang.String" valueType="Java" pattern="reference">ret/salt</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">ret/rule</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
+    <location x="736" y="555"/>
+    <figSize height="20" width="50"/>
+    <node>invokePojo1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="dafu" createTime="2023-12-15 15:59:40" date="2023-12-15Z" description="" name="queryMpCheckResult" version="6.3"/>
+  <process:variables>
+    <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="datas"/>
+    <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="map"/>
+    <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="false" name="data"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="gfdAvg" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="saltRejection" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="gfdLowSymbol" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="gfdLowLimit" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="gfdUpSymbol" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="gfdUpLimit" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="saltLowSymbol" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="saltLowLimit" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="saltUpSymbol" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="saltUpLimit" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="rt" primitiveType="Boolean"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="" isArray="false" name="recordId" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output anyType="java.util.HashMap" description="" isArray="false" name="ret"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

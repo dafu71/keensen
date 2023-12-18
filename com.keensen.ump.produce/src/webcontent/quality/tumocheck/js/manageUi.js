@@ -98,6 +98,13 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						fieldLabel : '是否外销',
 						anchor : '75%',
 						dictData : ABF_YESORNO
+					}, {
+						xtype : 'dictcombobox',
+						name : 'condition/ifPerFlag',
+						hiddenName : 'condition/ifPerFlag',
+						fieldLabel : '是否样块<br>性能判定',
+						anchor : '75%',
+						dictData : ABF_YESORNO
 					}]
 				});
 
@@ -113,8 +120,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false
 				});
 		this.listPanel = new Ext.fn.EditListPanel({
 			title : '【膜片分析列表】',
@@ -122,11 +128,16 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 				forceFit : false
 			},
 			hsPage : true,
-			tbar : [{
+			tbar : [/*{
 						text : '批次判定',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onJudgeBatch
+					}*/{
+						text : '样块性能判定',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onJudgeBlock
 					}],
 			id : 'tumocheck-list',
 			selModel : selModel,
@@ -304,13 +315,15 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 							name : 'materSpecName'
 						}, {
 							name : 'batchId'
+						}, {
+							name : 'recordId'
 						}]
 			})
 		})
 	}
 	this.initEditWindow = function() {
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
-			title : '膜片批次人工判定',
+			title : '样块性能人工判定',
 			height : 600,
 			width : 800,
 			resizable : false,
@@ -321,11 +334,11 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
 				columns : 4,
-				loadUrl : 'com.keensen.ump.produce.quality.quality.expandTumoCheck.biz.ext',
-				saveUrl : 'com.keensen.ump.produce.quality.quality.saveTumoCheck.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.quality.quality.expandTumoCheck2.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.quality.saveTumoCheck2.biz.ext',
 				fields : [{
 							xtype : 'displayfield',
-							fieldLabel : "<span style='color:red;'>批次信息</span>",
+							fieldLabel : "<span style='color:red;'>样块信息</span>",
 							colspan : 4
 						}, {
 							xtype : 'textfield',
@@ -348,6 +361,24 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 							colspan : 4
 						}, {
 							xtype : 'textfield',
+							dataIndex : 'gfdAvg',
+							readOnly : true,
+							fieldLabel : '膜通量均值',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							dataIndex : 'saltRejection',
+							readOnly : true,
+							fieldLabel : '脱盐率%',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 4
+						}, {
+							xtype : 'textfield',
 							dataIndex : 'isWxName',
 							readOnly : true,
 							fieldLabel : '是否外销',
@@ -355,11 +386,22 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'textfield',
+							dataIndex : 'macName',
+							readOnly : true,
+							fieldLabel : '测试台',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 4
+						}, {
+							xtype : 'textfield',
 							dataIndex : 'thickAvg',
 							readOnly : true,
 							fieldLabel : '厚度(平均)',
-							anchor : '95%',
-							colspan : 2
+							anchor : '48%',
+							colspan : 4
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -409,7 +451,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 							colspan : 4
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : "<span style='color:red;'>批次判定</span>",
+							fieldLabel : "<span style='color:red;'>样块性能判定</span>",
 							colspan : 4
 						}, {
 							xtype : 'mpperfcombobox',
@@ -421,68 +463,22 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 							colspan : 2,
 							fieldLabel : '等级'
 						}, {
-							xtype : 'combobox',
-							name : 'entity/isQualified',
-							hiddenName : 'entity/isQualified',
-							allowBlank : false,
-							fieldLabel : '判定结果',
-							typeAhead : true,
-							triggerAction : 'all',
-							lazyRender : true,
-							mode : 'local',
-							editable : false,
-							store : new Ext.data.ArrayStore({
-										id : 0,
-										fields : ['myId', 'displayText'],
-										data : [['Y', '合格'], ['P', '放行'],
-												['N', '不合格']]
-									}),
-							valueField : 'myId',
-							displayField : 'displayText',
-							dataIndex : 'isBatchQualified',
-							anchor : '95%',
-							colspan : 2,
-							emptyText : '--请选择--'
-						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'textfield',
-							dataIndex : 'orderNo',
-							name : 'entity/orderNo',
-							fieldLabel : '订单号',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'judgercombobox',
-							ref : '../judgercombobox',
-							allowBlank : false,
-							hiddenName : 'entity/judgerId',
-							name : 'entity/judgerId',
-							dataIndex : 'judgerId',
-							anchor : '95%',
-							colspan : 2,
-							fieldLabel : '质检员'
-						}, {
 							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
-							xtype : 'textarea',
-							dataIndex : 'judgeRemark',
-							name : 'entity/judgeRemark',
-							fieldLabel : '判定说明',
-							anchor : '95%',
+							fieldLabel : "<span style='color:red;'>判定规则</span>",
+							dataIndex : 'rule',
 							colspan : 4
 						}, {
 							xtype : 'hidden',
 							name : 'entity/recordId',
-							dataIndex : 'batchId'
+							dataIndex : 'recordId'
 						}, {
 							xtype : 'hidden',
-							ref : '../judgerName',
-							dataIndex : 'judgerName'
+							name : 'entity/judgerId',
+							value : operatorid
 						}]
 			}]
 		});

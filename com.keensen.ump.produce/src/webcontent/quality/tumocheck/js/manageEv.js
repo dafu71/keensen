@@ -14,15 +14,17 @@ com.keensen.ump.produce.quality.tumocheckMgr.prototype.initEvent = function() {
 	}, this);
 
 	this.editWindow.items.items[0].mon(this.editWindow.items.items[0],
-			'afterload', function() {
-				var judgerName = this.editWindow.items.items[0].judgerName
-						.getValue();
-				
-				if (Ext.isEmpty(judgerName) || judgerName == '系统自动') {
-					this.editWindow.items.items[0].judgercombobox.setValue(optId);
-				}
-				
-			}, this);
+			'aftersave', function() {
+				this.listPanel.store.reload();
+				/*
+				 * var judgerName = this.editWindow.items.items[0].judgerName
+				 * .getValue();
+				 * 
+				 * if (Ext.isEmpty(judgerName) || judgerName == '系统自动') {
+				 * this.editWindow.items.items[0].judgercombobox.setValue(optId); }
+				 */
+
+		}, this);
 
 }
 
@@ -64,23 +66,59 @@ com.keensen.ump.produce.quality.tumocheckMgr.prototype.exportExcel = function() 
 	})
 }
 
-com.keensen.ump.produce.quality.tumocheckMgr.prototype.onJudgeBatch = function() {
+/*
+ * com.keensen.ump.produce.quality.tumocheckMgr.prototype.onJudgeBatch =
+ * function() { // this.listPanel.onEdit(); var B =
+ * this.listPanel.getSelectionModel().getSelections(); if (B && B.length != 0) {
+ * if (B.length > 1) { Ext.Msg.alert("系统提示", "仅允许选择一条数据行!"); return } else { var
+ * A = B[0]; // var materSpecCode = A.get('materSpecCode');
+ * this.editWindow.items.items[0].loadData(A); this.editWindow.show(); //
+ * this.editWindow.items.items[0].specId.setValue(materSpecCode); } } else {
+ * Ext.Msg.alert("系统提示", "请选择一条数据行!"); return } }
+ */
+
+com.keensen.ump.produce.quality.tumocheckMgr.prototype.onJudgeBlock = function() {
 	// this.listPanel.onEdit();
+	var _this = this;
 	var B = this.listPanel.getSelectionModel().getSelections();
 	if (B && B.length != 0) {
-		if (B.length > 1) {
-			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
-			return
-		} else {
+		if (B.length == 1) {
 			var A = B[0];
-			// var materSpecCode = A.get('materSpecCode');
 			this.editWindow.items.items[0].loadData(A);
 			this.editWindow.show();
-
-			// this.editWindow.items.items[0].specId.setValue(materSpecCode);
+		} else {
+			// 批量保存样块性能人工判定
+			var recordIds = [];
+			Ext.each(B, function(r) {
+						recordIds.push(r.data.recordId);
+					});
+			
+			var url = 'com.keensen.ump.produce.quality.quality.saveTumocheckBatch.biz.ext';
+			this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			this.requestMask.show();
+			Ext.Ajax.request({
+						url : url,
+						method : "post",
+						jsonData : {
+							'recordIds' : recordIds.join(',')
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								Ext.Msg.alert("系统提示", "样块性能判定成功!");								
+							}
+							_this.listPanel.store.reload();
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
 		}
 	} else {
-		Ext.Msg.alert("系统提示", "请选择一条数据行!");
+		Ext.Msg.alert("系统提示", "请选择数据!");
 		return
 	}
 }

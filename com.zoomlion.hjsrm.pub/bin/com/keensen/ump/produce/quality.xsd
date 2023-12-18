@@ -183,4 +183,57 @@
             <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="KsProdDiaphragmStand">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="specId" nillable="true" type="xs:int"/>
+            <xs:element default="Y" minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="levelId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="gfdLowSymbol" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gfdLowLimit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gfdUpSymbol" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gfdUpLimit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="saltLowSymbol" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="saltLowLimit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="saltUpSymbol" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="saltUpLimit" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="specName2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="specName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="levelName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="macName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testSolid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isWx" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="method" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="specId2" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsProdDiaphragmTumoCheck">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="judgerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="judgeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="perfFlagId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="isQualified" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>
