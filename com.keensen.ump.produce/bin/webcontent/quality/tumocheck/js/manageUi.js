@@ -14,7 +14,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -57,7 +57,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						hiddenName : 'condition/perfFlagId',
 						anchor : '75%',
 						fieldLabel : '样块性能'
-					}, {
+					}/*, {
 						xtype : 'combobox',
 						anchor : '75%',
 						fieldLabel : '批次判定',
@@ -91,7 +91,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 4
-					}, {
+					}*/, {
 						xtype : 'dictcombobox',
 						name : 'condition/isWx',
 						hiddenName : 'condition/isWx',
@@ -102,7 +102,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						xtype : 'dictcombobox',
 						name : 'condition/ifPerFlag',
 						hiddenName : 'condition/ifPerFlag',
-						fieldLabel : '是否样块<br>性能判定',
+						fieldLabel : '是否已样块<br>性能判定',
 						anchor : '75%',
 						dictData : ABF_YESORNO
 					}]
@@ -179,10 +179,10 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					}, {
 						dataIndex : 'perfFlagName',
 						header : '样块性能等级'
-					}, {
+					}/*, {
 						dataIndex : 'batchPerfFlagName',
 						header : '批次性能等级'
-					}, {
+					}*/, {
 						dataIndex : 'appearance',
 						header : '外观'
 					}, {
@@ -208,17 +208,17 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					}, {
 						dataIndex : 'judgerName',
 						header : '质检员'
-					}, {
+					}/*, {
 						dataIndex : 'isBatchQualifiedName',
 						header : '批次合格'
-					}/*
+					}*//*
 						 * , { dataIndex : 'gfdStr', header : '膜通量数据' }, {
 						 * dataIndex : 'conductivityIn', header : '进水电导' }, {
 						 * dataIndex : 'conductivityStr', header : '出水电导数据' }
-						 */, {
+						 *//*, {
 						dataIndex : 'isValidName',
 						header : '批次验证'
-					}, {
+					}*/, {
 						dataIndex : 'checkerName',
 						header : '分析员'
 					}, {

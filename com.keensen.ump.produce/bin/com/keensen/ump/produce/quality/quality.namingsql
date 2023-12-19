@@ -376,4 +376,111 @@
    AND V.MAC_NAME = TT.MAC_NAME
  WHERE v.record_ID = #recordId#
  ORDER BY TT.SPEC_ID, TT.LEVEL_NAME</select>
+    <select id="queryTumoJudge" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	 SELECT T1.RECORD_ID AS "recordId",
+       T1.BATCH_NO AS "batchNo",
+       T1.LINE_ID AS "lineId",
+       T1.SPEC_ID AS "specId",
+       T1.IS_WX AS "isWx",
+       T1.LINE_CODE AS "lineCode",
+       T1.LINE_NAME AS "lineName",
+       T1.MATER_SPEC_CODE AS "materSpecCode",
+       T1.MATER_SPEC_NAME AS "materSpecName",
+       T1.IS_WX_NAME AS "isWxName",
+       T1.USEFUL_LENGTH AS "usefulLength",
+       T1.QUALIFID_LENGTH AS "qualifidLength",
+       T1.TAG_NUM AS "tagNum",
+       T1.TAG_LENGTH AS "tagLength",
+       T1.THICK_MAX AS "thickMax",
+       T1.THICK_MIN AS "thickMin",
+       T1.THICK_AVG AS "thickAvg",
+       T1.PRODUCE_REMARK AS "produceRemark",
+       T2.PERF_FLAG_ID AS "batchPerfFlagId",t2.judger_Id "judgerId",
+       T4.PERF_FLAG_NAME AS "batchPerfFlagName",
+       T2.IS_QUALIFIED AS "isBatchQualified",
+       DECODE(T2.IS_QUALIFIED, 'Y', '合格', 'P', '放行', 'N', '不合格', '') "isBatchQualifiedName",
+       t3.mac_name "macName",
+       T2.order_no "orderNo",
+       t2.judge_remark "judgeRemark",
+       t2.appearance_is_qualified "appearanceIsQualified",
+       DECODE(NVL(t2.appearance_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "appearanceIsQualifiedName",
+       t2.thick_is_qualified "thickIsQualified",
+       DECODE(NVL(t2.thick_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "thickIsQualifiedName"
+  FROM (SELECT T.RECORD_ID,T.PRODUCE_DT,T.PROD_FLAG_ID,
+               T.BATCH_NO,
+               T.LINE_ID,
+               T.SPEC_ID,
+               NVL(T.IS_WX, 'N') IS_WX,
+               L.LINE_CODE,
+               L.LINE_NAME,
+               S.MATER_SPEC_CODE,
+               S.MATER_SPEC_NAME,
+               DECODE(NVL(T.IS_WX, 'N'), 'Y', '是', 'N', '否', '') IS_WX_NAME,
+               T.OUT_LENGTH - NVL(T100.LOSS, 0) USEFUL_LENGTH,
+               DECODE(NVL(T.IS_WX, 'N'),
+                      'N',
+                      T.OUT_LENGTH - NVL(T2.LOSS, 0),
+                      T.OUT_LENGTH - NVL(T2.LOSS, 0) - NVL(T.TAG_LENGTH, 0)) QUALIFID_LENGTH,
+               T.TAG_NUM,
+               T.TAG_LENGTH,
+               T.THICK_MAX,
+               T.THICK_MIN,
+               T.THICK_AVG,
+               T.REMARK PRODUCE_REMARK
+               
+          FROM QINSEN.INST_TUMO T
+          LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT D,
+                           QINSEN.PARA_CDM_DEFECT P
+                     WHERE D.DEFECT_ITEM_ID = P.RECORD_ID
+                       AND P.REC_TACHE_ID = 100
+                     GROUP BY D.TUMO_BATCH_ID) T100
+            ON T100.TUMO_BATCH_ID = T.RECORD_ID
+          LEFT JOIN (SELECT SUM(T.LOSS) LOSS, T.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT T
+                     GROUP BY T.TUMO_BATCH_ID) T2
+            ON T.RECORD_ID = T2.TUMO_BATCH_ID
+          LEFT JOIN QINSEN.BASE_PROD_LINE L
+            ON L.LINE_ID = T.LINE_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC S
+            ON T.SPEC_ID = S.MATER_SPEC_ID
+          ) T1
+  LEFT JOIN KS_PROD_DIAPHRAGM_TUMO T2
+    ON T1.RECORD_ID = T2.RECORD_ID
+  LEFT JOIN (SELECT T.PROP_VALUE_ID   PERF_FLAG_ID,
+                    T.PROP_VALUE_CODE PERF_FLAG_CODE,
+                    T.PROP_VALUE_NAME PERF_FLAG_NAME
+               FROM QINSEN.CONF_PROP_VALUE_OPTION T
+              WHERE T.PROP_ID = 30023) T4
+    ON T4.PERF_FLAG_ID = T2.PERF_FLAG_ID
+  LEFT JOIN (SELECT DISTINCT c.batch_id,c.mac_name FROM qinsen.INST_TUMO_CHECK C) t3
+    ON t3.batch_id = t1.record_id
+	LEFT JOIN (SELECT T.PROP_VALUE_ID   PERF_FLAG_ID,
+                    T.PROP_VALUE_CODE PERF_FLAG_CODE,
+                    T.PROP_VALUE_NAME PERF_FLAG_NAME
+               FROM QINSEN.CONF_PROP_VALUE_OPTION T
+              WHERE T.PROP_ID = 30023) a
+            ON T2.appearance_perf_flag_id = a.PERF_FLAG_ID
+   LEFT JOIN (SELECT T.PROP_VALUE_ID   PERF_FLAG_ID,
+                    T.PROP_VALUE_CODE PERF_FLAG_CODE,
+                    T.PROP_VALUE_NAME PERF_FLAG_NAME
+               FROM QINSEN.CONF_PROP_VALUE_OPTION T
+              WHERE T.PROP_ID = 30023) th
+            ON T2.thick_perf_flag_id = th.PERF_FLAG_ID
+ where 1=1
+ <isNotNull prepend="" property="ifPerFlag">AND decode(t2.record_id,null,'n','y') = #ifPerFlag#</isNotNull>
+        <isNotNull prepend="" property="recordIds">AND T1.record_id in ($recordIds$)</isNotNull>
+        <isNotNull prepend="" property="recordId">AND T1.record_id = #recordId#</isNotNull>
+        <isNotNull prepend="and" property="produceDtStart">to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="produceDtEnd">to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#</isNotNull>
+        <isNotNull prepend="" property="lineId">AND t1.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND t1.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND t1.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND t1.PROD_FLAG_ID = #prodFlagId#</isNotNull>
+        <isNotNull prepend="" property="batchPerfFlagId">AND t2.PERF_FLAG_ID = #batchPerfFlagId#</isNotNull>
+        <isNotNull prepend="" property="isBatchQualified">AND t2.IS_QUALIFIED = #isBatchQualified#</isNotNull>
+        <isNotNull prepend="" property="isWx">AND lower(t1.IS_WX) = #isWx#</isNotNull>
+     
+     ORDER BY T1.RECORD_ID DESC
+ </select>
 </sqlMap>
