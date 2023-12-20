@@ -442,7 +442,7 @@
      
      <select id="queryMpCheckResult" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
      SELECT V.BATCH_ID,V.RECORD_ID,
-       V.BATCH_NO,tt.GFD "gfd",tt.SALT "salt",
+       V.BATCH_NO "batchNo",tt.GFD "gfd",tt.SALT "salt",
        TT.IS_WX,
        gfd_Avg "gfdAvg",
        salt_Rejection "saltRejection",
@@ -479,13 +479,13 @@
                DECODE(T.IS_WX, 'Y', '是', '否') IS_WX_NAME,
                
                NVL(T.GFD_LOW_SYMBOL, '&gt;=') GFD_LOW_SYMBOL,
-               NVL(T.GFD_LOW_LIMIT, '0') GFD_LOW_LIMIT,
+               NVL(trim(T.GFD_LOW_LIMIT), '0') GFD_LOW_LIMIT,
                NVL(T.GFD_UP_SYMBOL, '&lt;=') GFD_UP_SYMBOL,
-               NVL(T.GFD_UP_LIMIT, '100') GFD_UP_LIMIT,
+               NVL(trim(T.GFD_UP_LIMIT), '100') GFD_UP_LIMIT,
                NVL(T.SALT_LOW_SYMBOL, '&gt;=') SALT_LOW_SYMBOL,
-               NVL(T.SALT_LOW_LIMIT, '0') SALT_LOW_LIMIT,
+               NVL(trim(T.SALT_LOW_LIMIT), '0') SALT_LOW_LIMIT,
                NVL(T.SALT_UP_SYMBOL, '&lt;=') SALT_UP_SYMBOL,
-               NVL(T.SALT_UP_LIMIT, '100') SALT_UP_LIMIT
+               NVL(trim(T.SALT_UP_LIMIT), '100') SALT_UP_LIMIT
           FROM KS_PROD_DIAPHRAGM_STAND T
           LEFT JOIN (SELECT T.MATER_SPEC_ID ID, T.MATER_SPEC_CODE NAME
                       FROM QINSEN.PARA_MATER_SPEC T
@@ -508,7 +508,7 @@
  
  
  <select id="queryTumoJudge" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-	 SELECT T1.RECORD_ID AS "recordId",
+	 SELECT T1.RECORD_ID AS "recordId",T1.mpd "mpd",
        T1.BATCH_NO AS "batchNo",
        T1.LINE_ID AS "lineId",
        T1.SPEC_ID AS "specId",
@@ -530,7 +530,7 @@
        T4.PERF_FLAG_NAME AS "batchPerfFlagName",
        T2.IS_QUALIFIED AS "isBatchQualified",
        DECODE(T2.IS_QUALIFIED, 'Y', '合格', 'P', '放行', 'N', '不合格', '') "isBatchQualifiedName",
-       t3.mac_name "macName",
+       <!--t3.mac_name "macName",-->
        T2.order_no "orderNo",
        t2.judge_remark "judgeRemark",
        t2.appearance_is_qualified "appearanceIsQualified",
@@ -538,7 +538,7 @@
        t2.thick_is_qualified "thickIsQualified",
        DECODE(NVL(t2.thick_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "thickIsQualifiedName"
   FROM (SELECT T.RECORD_ID,T.PRODUCE_DT,T.PROD_FLAG_ID,
-               T.BATCH_NO,
+               T.BATCH_NO,T.mpd,
                T.LINE_ID,
                T.SPEC_ID,
                NVL(T.IS_WX, 'N') IS_WX,
@@ -559,7 +559,7 @@
                T.THICK_AVG,
                T.REMARK PRODUCE_REMARK
                
-          FROM QINSEN.INST_TUMO T
+          FROM (select * from QINSEN.INST_TUMO tm where exists(select 1 from QINSEN.INST_TUMO_CHECK tmc where tmc.batch_id=tm.record_id) ) T
           LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
                       FROM QINSEN.INST_CDM_DEFECT D,
                            QINSEN.PARA_CDM_DEFECT P
@@ -584,8 +584,8 @@
                FROM QINSEN.CONF_PROP_VALUE_OPTION T
               WHERE T.PROP_ID = 30023) T4
     ON T4.PERF_FLAG_ID = T2.PERF_FLAG_ID
-  LEFT JOIN (SELECT DISTINCT c.batch_id,c.mac_name FROM qinsen.INST_TUMO_CHECK C) t3
-    ON t3.batch_id = t1.record_id
+  <!--LEFT JOIN (SELECT DISTINCT c.batch_id,c.mac_name FROM qinsen.INST_TUMO_CHECK C) t3
+    ON t3.batch_id = t1.record_id-->
 	LEFT JOIN (SELECT T.PROP_VALUE_ID   PERF_FLAG_ID,
                     T.PROP_VALUE_CODE PERF_FLAG_CODE,
                     T.PROP_VALUE_NAME PERF_FLAG_NAME
@@ -600,7 +600,7 @@
             ON T2.thick_perf_flag_id = th.PERF_FLAG_ID
  where 1=1
  <isNotNull prepend = ""  property = "ifPerFlag">
-	   AND decode(t2.record_id,null,'n','y') = #ifPerFlag#
+	   AND decode(t2.perf_flag_id,null,'n','y') = #ifPerFlag#
 	</isNotNull>
     <isNotNull prepend = ""  property = "recordIds">
 	   AND T1.record_id in ($recordIds$)
@@ -648,5 +648,60 @@
      
      ORDER BY T1.RECORD_ID DESC
  </select>
-	 
+ 
+  <select id="queryDiamThickStand" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+   	SELECT T.SPEC_ID   "specId",
+       T.THICK_MIN "thickMin",
+       T.THICK_MAX "thickMax",
+       T.IS_WX     "isWx"
+  FROM KS_PROD_DIAPHRAGM_THICK_STAND T
+  where 1=1
+  <isNotNull prepend = ""  property = "specId">
+	   AND t.SPEC_ID = #specId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "isWx">
+	   AND T.IS_WX  = #isWx#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "thickMin">
+	   AND T.thick_Min  &lt;= #thickMin#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "thickMax">
+	   AND T.thick_Max  &gt;= #thickMax#
+	</isNotNull>
+   	
+   </select>	 
+   
+   <!--模块全A判定-->
+   <select id="queryTumoCheck2A" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   
+   SELECT tt.batch_id
+	FROM(
+	select COUNT(*) cnt ,sum(DECODE(t.perf_flag_id,300029,1,0)) cnt2,t.batch_id
+	 from (SELECT t1.* ,t3.record_id batch_id FROM KS_PROD_DIAPHRAGM_TUMO_CHECK t1
+	 LEFT JOIN qinsen.inst_tumo_check t2 ON t2.record_id=t1.record_id
+	 LEFT JOIN qinsen.inst_tumo t3 ON t3.record_id =t2.batch_id) t
+	 GROUP BY t.batch_id) tt
+	 WHERE tt.cnt=tt.cnt2
+	  <isNotNull prepend = ""  property = "batchId">
+	   AND tt.batch_id = #batchId#
+	</isNotNull>
+ 
+ </select>
+ 
+ <!--BW1-1/BW2-1初复检差值-->
+ <select id="queryDiff" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >   
+   SELECT n.gfd_avg- y.gfd_avg "diff",n.gfd_avg,y.gfd_avg gfd_avg2,n.batch_no,y.batch_no batch_no2,n.batch_str
+	FROM
+	(SELECT t.gfd_avg,t.batch_str, t.batch_No,t.position_length,t.recheck_flag FROM V_KS_TUMO_CHECK_SPECIAL t
+	WHERE t.recheck_flag = 'N') n
+	LEFT JOIN (
+	SELECT t.gfd_avg,t.batch_str, t.batch_No,t.position_length,t.recheck_flag FROM V_KS_TUMO_CHECK_SPECIAL t
+	WHERE t.recheck_flag = 'Y') y
+	ON n.batch_str = y.batch_str AND n.position_length = y.position_length
+	WHERE n.batch_str=SUBSTR(#batchNo#,1,LENGTH(#batchNo#)-2)
+	AND y.gfd_avg IS NOT NULL
+	AND n.batch_no &lt;= #batchNo#
+	ORDER BY n.batch_no DESC 
+ </select>
 </sqlMap>

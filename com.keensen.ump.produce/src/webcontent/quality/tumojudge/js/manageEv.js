@@ -13,6 +13,39 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
+	this.listPanel2.store.on('load', function(o) {
+				
+
+			})
+
+	this.editPanel.mon(this.editPanel, 'afterload', function() {
+				var recordId = _this.editPanel.form
+						.findField('entity/recordId').getValue();
+				_this.listPanel2.store.load({
+							params : {
+								"condition/batchId" : recordId
+							}
+						});
+				/*
+				 * // 外观判定 var appearanceIsQualified = _this.editPanel.form
+				 * .findField('entity/appearanceIsQualified').getValue(); var
+				 * tagNum = _this.editPanel.form.findField('tagNum')
+				 * .getValue(); var tagLength =
+				 * _this.editPanel.form.findField('tagLength') .getValue(); if
+				 * (Ext.isEmpty(appearanceIsQualified)) { if
+				 * (Ext.isEmpty(tagNum) && Ext.isEmpty(tagLength)) {
+				 * _this.editPanel.form
+				 * .findField('entity/appearanceIsQualified') .setValue('Y'); }
+				 * else { if (Ext.isEmpty(tagNum) || Ext.isEmpty(tagLength)) {
+				 * _this.editPanel.form
+				 * .findField('entity/appearanceIsQualified') .setValue('N'); }
+				 * else { if (tagNum <= 6 && tagLength <= 5) {
+				 * _this.editPanel.form
+				 * .findField('entity/appearanceIsQualified') .setValue('Y'); }
+				 * else { _this.editPanel.form
+				 * .findField('entity/appearanceIsQualified') .setValue('N'); } } } } //
+				 */})
+
 	/*
 	 * this.editpanel.form.mon(this.editpanel.form, 'aftersave', function() {
 	 * this.listPanel.store.reload();
@@ -20,9 +53,8 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 	 * var judgerName = this.editWindow.items.items[0].judgerName .getValue();
 	 * 
 	 * if (Ext.isEmpty(judgerName) || judgerName == '系统自动') {
-	 * this.editWindow.items.items[0].judgercombobox.setValue(optId); }
-	 * 
-	 *  }, this);
+	 * this.editWindow.items.items[0].judgercombobox.setValue(optId); } },
+	 * this);
 	 */
 
 }
@@ -115,13 +147,9 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onJudge = function() {
 	if (B && B.length != 0) {
 		if (B.length == 1) {
 			var r = B[0];
-			var recordId = r.data.recordId;
+
 			this.editWindow.items.items[0].loadData(r);
-			this.listPanel2.store.load({
-						params : {
-							"condition/batchId" : recordId
-						}
-					});
+
 			this.editWindow.show();
 		}
 	} else {

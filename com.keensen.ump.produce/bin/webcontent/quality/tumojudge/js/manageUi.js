@@ -170,6 +170,9 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'usefulLength',
 						header : '可用长度'
 					}, {
+						dataIndex : 'mpd',
+						header : 'C21浓度'
+					}, {
 						dataIndex : 'batchPerfFlagName',
 						header : '批次性能等级'
 					}, {
@@ -228,6 +231,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							name : 'isBatchQualified'
 						}, {
 							name : 'isBatchQualifiedName'
+						}, {
+							name : 'mpd'
 						}]
 			})
 		})
@@ -256,13 +261,16 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'saltRejection',
 						header : '脱盐率%'
 					}, {
+						dataIndex : 'recheckName',
+						header : '首/复检'
+					}, {
 						dataIndex : 'perfFlagName',
 						header : '样块性能等级'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality.queryTumocheckByPage.biz.ext',
 				root : 'data',
-				autoLoad : true,
+				autoLoad : false,
 				totalProperty : 'totalCount',
 				baseParams : {
 
@@ -360,6 +368,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'tagNum',
+						name:'tagNum',
 						readOnly : true,
 						fieldLabel : '标签数',
 						anchor : '95%',
@@ -367,6 +376,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'tagLength',
+						name : 'tagLength',
 						readOnly : true,
 						fieldLabel : '标签长度m',
 						anchor : '95%',
@@ -387,6 +397,13 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'mpd',
+						readOnly : true,
+						fieldLabel : 'C21浓度',
+						anchor : '95%',
+						colspan : 2
 					}, {
 						xtype : 'combobox',
 						allowBlank : false,
@@ -437,12 +454,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'thickAvg',
 						readOnly : true,
 						fieldLabel : '厚度(平均)',
-						anchor : '47.5%',
-						colspan : 4
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
+						anchor : '95%',
+						colspan : 2
 					}, {
 						xtype : 'combobox',
 						allowBlank : false,
@@ -563,7 +576,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					width : 800,
 					resizable : false,
 					minimizable : false,
-					maximizable : false,
+					maximizable : true,
 					closeAction : "hide",
 					buttonAlign : "center",
 					autoScroll : false,
