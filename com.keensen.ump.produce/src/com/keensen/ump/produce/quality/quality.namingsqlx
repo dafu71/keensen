@@ -508,7 +508,7 @@
  
  
  <select id="queryTumoJudge" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-	 SELECT T1.RECORD_ID AS "recordId",T1.mpd "mpd",
+	 SELECT T1.RECORD_ID AS "recordId",T1.mpd "mpd",T1.order_no "orderNo",
        T1.BATCH_NO AS "batchNo",
        T1.LINE_ID AS "lineId",
        T1.SPEC_ID AS "specId",
@@ -537,7 +537,7 @@
        DECODE(NVL(t2.appearance_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "appearanceIsQualifiedName",
        t2.thick_is_qualified "thickIsQualified",
        DECODE(NVL(t2.thick_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "thickIsQualifiedName"
-  FROM (SELECT T.RECORD_ID,T.PRODUCE_DT,T.PROD_FLAG_ID,
+  FROM (SELECT T.RECORD_ID,T.PRODUCE_DT,T.PROD_FLAG_ID,T.order_no,
                T.BATCH_NO,T.mpd,
                T.LINE_ID,
                T.SPEC_ID,

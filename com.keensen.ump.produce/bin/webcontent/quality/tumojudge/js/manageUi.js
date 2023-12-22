@@ -173,6 +173,12 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'mpd',
 						header : 'C21浓度'
 					}, {
+						dataIndex : 'orderNo',
+						header : '订单号'
+					}, {
+						dataIndex : 'produceRemark',
+						header : '生产备注'
+					}, {
 						dataIndex : 'batchPerfFlagName',
 						header : '批次性能等级'
 					}, {
@@ -233,6 +239,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							name : 'isBatchQualifiedName'
 						}, {
 							name : 'mpd'
+						}, {
+							name : 'orderNo'
 						}]
 			})
 		})
