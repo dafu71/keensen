@@ -18,8 +18,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link2</targetConnections>
     <targetConnections>link5</targetConnections>
+    <targetConnections>link2</targetConnections>
     <location x="540" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -119,11 +119,11 @@
       <sourceNode>loopend0</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link7</targetConnections>
-    <targetConnections>link9</targetConnections>
-    <targetConnections>link11</targetConnections>
-    <targetConnections>link13</targetConnections>
     <targetConnections>link15</targetConnections>
+    <targetConnections>link13</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link7</targetConnections>
     <location x="859" y="401"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend0label</nodeLabel>
@@ -155,8 +155,8 @@
       <sourceNode>assign1</sourceNode>
       <targetNode>subprocess0</targetNode>
     </sourceConnections>
-    <targetConnections>link18</targetConnections>
     <targetConnections>link21</targetConnections>
+    <targetConnections>link18</targetConnections>
     <location x="377" y="298"/>
     <size height="28" width="28"/>
     <nodeLabel>assign1label</nodeLabel>
@@ -464,7 +464,7 @@
       <targetNode>subprocess4</targetNode>
       <process:transitionCondition>
         <process:complexCondition>
-          <process:code>&quot;100030224&quot;.equals(specId)  || &quot;100030225&quot;.equals(specId) </process:code>
+          <process:code>(&quot;100030224&quot;.equals(specId)  || &quot;100030225&quot;.equals(specId) ) &amp;&amp; &quot;N&quot;.equals(recheckFlag)</process:code>
         </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
@@ -473,7 +473,7 @@
       <targetNode>assign5</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -485,6 +485,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">data/specId</process:from>
       <process:to type="query">specId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/recheckFlag</process:from>
+      <process:to type="query">recheckFlag</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
@@ -537,6 +541,7 @@
     <process:variable description="" historyStateLocation="client" isArray="false" name="gfdAvg2" primitiveType="Float"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="diff2" primitiveType="Float"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="specId" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="recheckFlag" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" name="recordId" primitiveType="String"/>

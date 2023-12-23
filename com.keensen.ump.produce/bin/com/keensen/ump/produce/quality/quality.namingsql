@@ -313,7 +313,7 @@
         <isNotNull prepend="" property="macName">AND t.mac_name = #macName#</isNotNull>
 		    ORDER BY t.spec_id,t.level_id
      </select>
-    <select id="queryMpCheckResult" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT V.BATCH_ID,V.RECORD_ID,
+    <select id="queryMpCheckResult" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT V.BATCH_ID,V.RECORD_ID,v.recheck_flag "recheckFlag",
        V.BATCH_NO "batchNo",tt.GFD "gfd",tt.SALT "salt",
        TT.IS_WX,
        gfd_Avg "gfdAvg",
@@ -369,7 +369,7 @@
                      WHERE T.PROP_ID = 30023) T3
             ON T.LEVEL_ID = T3.ID
          WHERE T.STATE = 'Y') TT
-  LEFT JOIN (SELECT record_id,BATCH_ID, SPEC_ID, IS_WX, MAC_NAME, BATCH_NO,gfd_Avg,salt_Rejection
+  LEFT JOIN (SELECT record_id,BATCH_ID, SPEC_ID, IS_WX, MAC_NAME, BATCH_NO,gfd_Avg,salt_Rejection,recheck_flag
                FROM V_KS_TUMO_CHECK_FIRST) V
     ON V.IS_WX = TT.IS_WX
    AND V.SPEC_ID = TT.SPEC_ID
