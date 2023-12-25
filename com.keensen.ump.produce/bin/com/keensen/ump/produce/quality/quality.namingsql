@@ -107,7 +107,7 @@
 	<isNotNull prepend="and" property="id">T.id = #id#</isNotNull>
         <isNotNull prepend="and" property="workshop">T1.WORKSHOP = #workshop#</isNotNull>
         <isNotNull prepend="and" property="invalidDtStart">TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &gt;=  #invalidDtStart#</isNotNull>
-        <isNotNull prepend="and" property="invalidDtEnd">TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &lt;=  #invalidDtStart#</isNotNull>
+        <isNotNull prepend="and" property="invalidDtEnd">TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &lt;=  #invalidDtEnd#</isNotNull>
         <isNotNull prepend="and" property="invalidCode">T1.INVALID_CODE like '%' || #invalidCode# || '%'</isNotNull>
         <isNotNull prepend="and" property="responsible">T1.RESPONSIBLE like '%' || #responsible# || '%'</isNotNull>
         <isNotNull prepend="and" property="department">T1.DEPARTMENT like '%' || #department# || '%'</isNotNull>

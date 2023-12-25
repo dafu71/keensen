@@ -139,7 +139,7 @@
           TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &gt;=  #invalidDtStart#
      </isNotNull>
      <isNotNull prepend = "and"  property = "invalidDtEnd"> 
-          TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &lt;=  #invalidDtStart#
+          TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  &lt;=  #invalidDtEnd#
      </isNotNull>
      <isNotNull prepend="and" property="invalidCode"> 
 		       T1.INVALID_CODE like '%' || #invalidCode# || '%'
