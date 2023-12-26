@@ -698,7 +698,7 @@
 	LEFT JOIN (
 	SELECT t.gfd_avg,t.batch_str, t.batch_No,t.position_length,t.recheck_flag FROM V_KS_TUMO_CHECK_SPECIAL t
 	WHERE t.recheck_flag = 'Y') y
-	ON n.batch_str = y.batch_str AND n.position_length = y.position_length
+	ON n.batch_no = y.batch_no AND n.position_length = y.position_length
 	WHERE n.batch_str=SUBSTR(#batchNo#,1,LENGTH(#batchNo#)-2)
 	AND y.gfd_avg IS NOT NULL
 	AND n.batch_no &lt;= #batchNo#
