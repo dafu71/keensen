@@ -5,4 +5,9 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/sca http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd">
 
+    <bean class="com.keensen.ump.produce.RcsDao" id="rcsDao"/>
+    <bean class="com.keensen.ump.produce.RcsBean" id="rcsBean">
+        <property name="rcsDao" ref="rcsDao"/>
+    </bean>
+
 </beans>

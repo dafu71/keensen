@@ -8,8 +8,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link4</targetConnections>
     <targetConnections>link8</targetConnections>
+    <targetConnections>link4</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns/>
   </nodes>
@@ -144,7 +144,7 @@
       <targetNode>invokePojo0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>

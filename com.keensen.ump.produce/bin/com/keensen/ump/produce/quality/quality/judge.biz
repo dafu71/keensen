@@ -8,10 +8,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link5</targetConnections>
-    <targetConnections>link7</targetConnections>
-    <targetConnections>link9</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link5</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="Boolean" name="ret" type="query" valueType="Primitive">ret</process:return>
@@ -31,7 +31,7 @@
       <targetNode>assign1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>

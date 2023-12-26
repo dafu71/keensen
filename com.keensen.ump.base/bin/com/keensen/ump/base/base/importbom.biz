@@ -114,10 +114,10 @@
       <sourceNode>invokeSpring2</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link9</targetConnections>
-    <targetConnections>link12</targetConnections>
-    <targetConnections>link19</targetConnections>
     <targetConnections>link26</targetConnections>
+    <targetConnections>link19</targetConnections>
+    <targetConnections>link12</targetConnections>
+    <targetConnections>link9</targetConnections>
     <nodeLabel>invokeSpring2label</nodeLabel>
     <process:spring methodType="beanID" synchronization="true" transactionType="join">
       <process:partner type="literal">com.zoomlion.hjsrm.pub.busi.common.SrmCommonBean.deleteFile</process:partner>
@@ -279,13 +279,13 @@
       <targetNode>assign4</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link15</targetConnections>
     <targetConnections>link17</targetConnections>
+    <targetConnections>link15</targetConnections>
     <nodeLabel>loopend0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" grouped="true" type="switch">
@@ -400,13 +400,13 @@
       <targetNode>invokePojo0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link21</targetConnections>
     <targetConnections>link24</targetConnections>
+    <targetConnections>link21</targetConnections>
     <nodeLabel>loopend1label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign3" name="赋值3" grouped="true" type="assign">

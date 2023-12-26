@@ -9,10 +9,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link1</targetConnections>
-    <targetConnections>link5</targetConnections>
-    <targetConnections>link8</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link1</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="appearanceIsQualified" type="query" valueType="Primitive">appearanceIsQualified</process:return>
@@ -42,7 +42,7 @@
       <targetNode>switch1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -69,7 +69,7 @@
       <targetNode>switch2</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -112,7 +112,7 @@
       <targetNode>switch3</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -129,8 +129,8 @@
       <sourceNode>assign1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link6</targetConnections>
     <targetConnections>link10</targetConnections>
+    <targetConnections>link6</targetConnections>
     <nodeLabel>assign1label</nodeLabel>
     <process:copy>
       <process:from type="literal" pattern="reference">N</process:from>

@@ -8,9 +8,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link4</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link15</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns/>
   </nodes>
@@ -27,8 +27,8 @@
       <sourceNode>assign0</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
-    <targetConnections>link14</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link14</targetConnections>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
       <process:from type="expression" pattern="reference">new Date()</process:from>

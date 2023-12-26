@@ -10,9 +10,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link19</targetConnections>
-    <targetConnections>link23</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link23</targetConnections>
+    <targetConnections>link19</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="ret" type="query" valueType="Primitive">ret</process:return>
@@ -31,8 +31,8 @@
       <sourceNode>transactionbegin0</sourceNode>
       <targetNode>assign0</targetNode>
     </sourceConnections>
-    <targetConnections>link2</targetConnections>
     <targetConnections>link22</targetConnections>
+    <targetConnections>link2</targetConnections>
     <nodeLabel>transactionbegin0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="transactionbegin0label" name="label" nodeType="label">
@@ -137,8 +137,8 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <targetConnections>link12</targetConnections>
     <targetConnections>link13</targetConnections>
+    <targetConnections>link12</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.saveEntity</process:partner>
