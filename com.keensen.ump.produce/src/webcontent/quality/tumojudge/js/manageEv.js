@@ -14,7 +14,14 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 	}, this);
 
 	this.listPanel2.store.on('load', function(o) {
-				
+				var isBatchQualified = _this.editPanel.form
+						.findField('isBatchQualified2').getValue();
+				var isBatchQualified2 = _this.editPanel.form
+						.findField('entity/isQualified').getValue();
+				if (Ext.isEmpty(isBatchQualified)) {
+					_this.editPanel.form.findField('isBatchQualified2')
+							.setValue(isBatchQualified2);
+				}
 
 			})
 

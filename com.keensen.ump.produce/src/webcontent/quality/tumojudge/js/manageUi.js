@@ -246,7 +246,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 		})
 	}
 	this.initEditWindow = function() {
-
+		var _this = this;
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
 			title : '【样块性能列表】',
 			region : 'center',
@@ -376,7 +376,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'tagNum',
-						name:'tagNum',
+						name : 'tagNum',
 						readOnly : true,
 						fieldLabel : '标签数',
 						anchor : '95%',
@@ -431,7 +431,34 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 
 						listeners : {
 							"expand" : function(A) {
-								this.reset()
+								// this.reset()
+							},
+							"select" : function(combo, record) {
+								var isBatchQualified = _this.editPanel.form
+										.findField('isBatchQualified2')
+										.getValue();
+								var appearanceIsQualified = combo.getValue();
+								var thickIsQualified = _this.editPanel.form
+										.findField('entity/thickIsQualified')
+										.getValue();
+								if ("N" == appearanceIsQualified) {
+									_this.editPanel.form
+											.findField('entity/isQualified')
+											.setValue("N");
+									_this.editPanel.form
+											.findField('entity/perfFlagId')
+											.setValue("300032");
+								} else {
+									if ("Y" == isBatchQualified
+											&& "Y" == thickIsQualified) {
+										_this.editPanel.form
+												.findField('entity/isQualified')
+												.setValue("Y");
+										_this.editPanel.form
+												.findField('entity/perfFlagId')
+												.setValue("300029");
+									}
+								}
 							}
 						},
 						emptyText : '--请选择--'
@@ -483,7 +510,34 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 
 						listeners : {
 							"expand" : function(A) {
-								this.reset()
+								//this.reset()
+							},
+							"select" : function(combo, record) {
+								var isBatchQualified = _this.editPanel.form
+										.findField('isBatchQualified2')
+										.getValue();
+								var thickIsQualified = combo.getValue();
+								var appearanceIsQualified = _this.editPanel.form
+										.findField('entity/appearanceIsQualified')
+										.getValue();
+								if ("N" == thickIsQualified) {
+									_this.editPanel.form
+											.findField('entity/isQualified')
+											.setValue("N");
+									_this.editPanel.form
+											.findField('entity/perfFlagId')
+											.setValue("300032");
+								} else {
+									if ("Y" == isBatchQualified
+											&& "Y" == appearanceIsQualified) {
+										_this.editPanel.form
+												.findField('entity/isQualified')
+												.setValue("Y");
+										_this.editPanel.form
+												.findField('entity/perfFlagId')
+												.setValue("300029");
+									}
+								}
 							}
 						},
 						emptyText : '--请选择--'
@@ -538,7 +592,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 
 						listeners : {
 							"expand" : function(A) {
-								this.reset()
+								//this.reset()
 							}
 						},
 						emptyText : '--请选择--'
@@ -562,6 +616,10 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						xtype : 'hidden',
 						name : 'entity/judgerId',
 						value : operatorid
+					}, {
+						xtype : 'hidden',
+						name : 'isBatchQualified2',
+						dataIndex : 'isBatchQualified'
 					}],
 			buttons : [{
 						text : "确定",

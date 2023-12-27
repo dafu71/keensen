@@ -21,9 +21,9 @@ public class RcsBean extends BaseBean {
 	 * @return
 	 * @throws Exception
 	 */
-	public String dispatchOrder(Object td) throws Exception {
+	public String dispatchOrder(Object td,String url) throws Exception {
 		String resultMsg = null;//获取服务端返回的参数
-		String url = "http://localhost:8090/rcs/services/rest/hikRpcService/genAgvSchedulingTask";//调用生成任务单
+		//String url = "http://localhost:8090/rcs/services/rest/hikRpcService/genAgvSchedulingTask";//调用生成任务单
 		String param = JSONObject.toJSONString(td);//将对象转换为JSON格式
 		resultMsg = HttpClientUtil.post(url, param);// 以post形式调用webservice
 		if (null == resultMsg || resultMsg.toString().equals("")) {
