@@ -79,7 +79,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			title : '【膜片出库列表】',
-			id : listid,
+			id : 'outofstock-list',
 			viewConfig : {
 				forceFit : true
 			},
@@ -168,12 +168,13 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 									buttons : Ext.Msg.OK,
 									fn : function() {
 										currentWindow = 'inputWindow';
-										Ext.getCmp(listid).store.load();
+										Ext.getCmp('outofstock-list').store.reload();
 									}
 								})
 					} else {
 						currentWindow = 'inputWindow';
-						Ext.getCmp(listid).store.load();
+						Ext.getCmp('outofstock-list').store.reload();
+				
 					}
 				},
 				columns : 2,
@@ -294,12 +295,12 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 									buttons : Ext.Msg.OK,
 									fn : function() {
 										currentWindow = 'inputWindow2';
-										Ext.getCmp(listid).store.load();
+										Ext.getCmp('outofstock-list').store.reload();
 									}
 								})
 					} else {
 						currentWindow = 'inputWindow2';
-						Ext.getCmp(listid).store.reload();
+						Ext.getCmp('outofstock-list').store.reload();
 					}
 				},
 				columns : 1,

@@ -41,6 +41,13 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 					iconCls : 'icon-printer',
 					handler : this.onPrint
 				});
+				
+		this.queryPanel.addButton({
+					text : "导出发货请检单",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel2
+				});
 
 	}
 

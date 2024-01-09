@@ -26,13 +26,13 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 			})
 
 	this.editPanel.mon(this.editPanel, 'afterload', function() {
-				var recordId = _this.editPanel.form
-						.findField('entity/recordId').getValue();
+				var recordId = _this.editPanel.form.findField('entity/recordId')
+						.getValue();
 				_this.listPanel2.store.load({
 							params : {
 								"condition/batchId" : recordId
 							}
-						});
+						}, this);
 				/*
 				 * // 外观判定 var appearanceIsQualified = _this.editPanel.form
 				 * .findField('entity/appearanceIsQualified').getValue(); var

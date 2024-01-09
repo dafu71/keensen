@@ -31,7 +31,7 @@
 <js:load scriptPath="produce/diaphragm/storage/outofstock/js/manageEv.js"/>
 <script type="text/javascript">
   var uid = "<%=uid %>";
-  var listid = Ext.id();
+  var listid = 'outofstock-list';
   var currentWindow ='';
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.storage.OutofstockMgr

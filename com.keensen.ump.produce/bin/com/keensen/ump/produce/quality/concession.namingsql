@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.quality.concession">
+    <!--让步放行查询-->
+    <select id="queryConcession" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                 AS "id",
+       T1.CREATE_TIME        AS "createTime",
+       T1.CREATE_USER_ID     AS "createUserId",
+       T1.CREATE_NAME        AS "createName",
+       T1.UPDATE_TIME        AS "updateTime",
+       T1.UPDATE_USER_ID     AS "updateUserId",
+       T1.UPDATE_NAME        AS "updateName",
+       T1.RESERVE1           AS "reserve1",
+       T1.RESERVE2           AS "reserve2",
+       T1.RESERVE3           AS "reserve3",
+       T1.RESERVE4           AS "reserve4",
+       T1.RESERVE5           AS "reserve5",
+       T1.ORG_ID             AS "orgId",
+       T1.STATUS             AS "status",
+       T1.ORDER_NO           AS "orderNo",
+       T1.PROD_SPEC_NAME     AS "prodSpecName",
+       T1.PROD_SPEC_ID       AS "prodSpecId",
+       T1.DEPT               AS "dept",
+       T1.NUM                AS "num",
+       T1.ITEM               AS "item",
+       T1.IF_KEY             AS "ifKey",
+       T1.REASON             AS "reason",
+       T1.RESULT             AS "result",
+       T1.RESULT_CREATEBY    AS "resultCreateby",
+       T1.RESULT_CREATEBY_ID AS "resultCreatebyId",
+       T1.RESULT_DT          AS "resultDt",
+       T1.FOLLOW             AS "follow",
+       T1.FOLLOW_CREATEBY    AS "followCreateby",
+       T1.FOLLOW_CREATEBY_ID AS "followCreatebyId",
+       T1.FOLLOW_DT          AS "followDt",
+       T1.ADVISE1            AS "advise1",
+       T1.ADVISE2            AS "advise2",
+       T1.ADVISE3            AS "advise3",
+       T1.ADVISE4            AS "advise4"
+  FROM KS_QUALITY_CONCESSION_HEAD T1
+	 WHERE 1=1
+	  <isNotNull prepend="" property="id">AND t1.id = #id#</isNotNull>
+    </select>
+</sqlMap>

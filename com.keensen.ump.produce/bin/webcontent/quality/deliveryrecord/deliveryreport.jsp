@@ -1,7 +1,18 @@
 <%@page pageEncoding="UTF-8"%>
 <%@include file="/common/common.jsp"%>
 <%@include file="/frame/ui/page/include.jsp"%>
+<%@page import="com.eos.web.taglib.util.XpathUtil"%>
+<%@page import="commonj.sdo.DataObject"%>
 <html>
+<%
+	Object rootObj = XpathUtil.getDataContextRoot("request",
+			pageContext);
+	DataObject[] list2 = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
+			"list");
+
+	//System.out.println(list2);	
+%>
+
 <!-- 
   - Author(s): dafu
   - Date: 2023-11-17 16:59:24
@@ -15,7 +26,7 @@
 .style1 {font-family: "仿宋";font-size:11pt;}
 .style2 {font-family: "仿宋";font-size:12pt;}
 .style3 {font-family: "仿宋";font-size:20pt;}
-.style4 {font-family: "仿宋";font-size:16pt;}
+.style4 {font-family: "仿宋";font-size:24pt;}
  
 -->
     </style>
@@ -210,7 +221,7 @@
 	<td width="50%">&nbsp; </td>
   </tr>
   <tr>
-    <td width="50%" height="192"> <div align="center" class="style16"><strong><b:write property="data/result" /></strong></div> </td>
+    <td width="50%" height="192"> <div align="center" class="style4"><strong><b:write property="data/result" /></strong></div> </td>
 	<td width="50%" height="192"><div align="center"><img src="produce/quality/deliveryrecord/img/image003.png" width="189" height="190"></div> </td>
   </tr>
 </table>
@@ -224,6 +235,51 @@
 
 </l:notEmpty>
 
+<l:notEmpty property="list">
+<p>&nbsp;</p>
+<table width="780" border="0" >
+<tr>
+    <td width="50%"> <div align="left" class="style2"><strong>测试膜元件性能数据</strong></div> </td>
+	<td width="50%">&nbsp; </td>
+  </tr>
+</table>
+
+<table width="780" border="1" bordercolor="#000000" style="border-collapse: collapse; " >
+<tr  style="border: 1px solid black;">
+    <td  width="6%"> <div align="center" class="style1">序号</div> </td>
+	<td  width="20%"> <div align="center" class="style1">元件序列号</div> </td>
+	<td  width="12%"> <div align="center" class="style1">产水量，gpd</div> </td>
+	<td  width="12%"> <div align="center" class="style1">脱盐率，%</div> </td>
+	<td  width="6%"> <div align="center" class="style1">序号</div> </td>
+	<td  width="20%"> <div align="center" class="style1">元件序列号</div> </td>
+	<td  width="12%"> <div align="center" class="style1">产水量，gpd</div> </td>
+	<td  width="12%"> <div align="center" class="style1">脱盐率，%</div> </td>
+  </tr>
+
+<%  for(int i=0;i<list2.length;i++){ %>
+<% if(i%2==0){ %>
+<tr  style="border: 1px solid black;">
+<% } %>
+
+	<td  width="6%"> <div align="center" class="style1"><%=i+1 %></div> </td>
+	<td  width="20%"> <div align="center" class="style1"><%=list2[i].getString("batchNo") %></div> </td>
+	<td  width="12%"> <div align="center" class="style1"><%=list2[i].getString("water") %></div> </td>
+	<td  width="12%"> <div align="center" class="style1"><%=list2[i].getString("desalination") %></div> </td>
+	
+<%if(i==list2.length-1 && i%2==0){ %>
+	<td  width="6%"> &nbsp; </td>
+	<td  width="20%"> &nbsp; </td>
+	<td  width="12%"> &nbsp; </td>
+	<td  width="12%"> &nbsp; </td>
+<% } %>
+	
+<% if(i%2==1 || i==list2.length-1){ %>
+  </tr>
+<% } %>
+<% } %>  
+</table>
+
+</l:notEmpty>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 </div>

@@ -1,6 +1,19 @@
 <%@page pageEncoding="UTF-8"%>
 <%@include file="/common/common.jsp"%>
 <%@include file="/frame/ui/page/include.jsp"%>
+
+<%@page import="com.eos.web.taglib.util.XpathUtil"%>
+<%@page import="commonj.sdo.DataObject"%>
+<html>
+<%
+	Object rootObj = XpathUtil.getDataContextRoot("request",
+			pageContext);
+	DataObject[] list2 = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
+			"list");
+
+	//System.out.println(list2);	
+%>
+
 <html>
 <!-- 
   - Author(s): dafu
@@ -15,7 +28,7 @@
 .style1 {font-family: "仿宋";font-size:11pt;}
 .style2 {font-family: "仿宋";font-size:12pt;}
 .style3 {font-family: "仿宋";font-size:20pt;}
-.style4 {font-family: "仿宋";font-size:16pt;}
+.style4 {font-family: "仿宋";font-size:24pt;}
  
 -->
     </style>
@@ -95,7 +108,7 @@
     <td width="20%" height="27"> <div align="center" class="style1">Test pressure psi(Mpa）</div> </td>
     <td width="15%" height="27"> <div align="center" class="style1">Recovery rate（%）</div> </td>
   </tr>
-  <l:equal targetValue="Industrial NF Membrane" property="data/productName" compareType="string">
+  <l:equal targetValue="NF Membrane" property="data/productName" compareType="string">
   <tr style="border: 1px solid black;">
     <td width="5%" height="33"><div align="center" class="style1">NaCl</div> </td>
     <td width="20%" height="33"><div align="center" class="style1"><b:write property="data/solution" /></div></td>
@@ -114,7 +127,7 @@
     <td height="33"><div align="center" class="style1"><b:write property="data/recovery2" /></div></td>
   </tr>
   </l:equal>
-   <l:notEqual targetValue="Industrial NF Membrane" property="data/productName" compareType="string">
+   <l:notEqual targetValue="NF Membrane" property="data/productName" compareType="string">
   <tr style="border: 1px solid black;">
     <td height="33" colspan="2"><div align="center" class="style1"><b:write property="data/solution" /></div></td>
     <td height="33"><div align="center" class="style1"><b:write property="data/temperature" /></div></td>
@@ -147,7 +160,7 @@
     <td height="78"><div align="center" class="style1">Visual Inspection Qualified</div></td>
     <td height="78"><div align="center" class="style1"><b:write property="data/appearanceResult" /></div></td>
   </tr>
-  <l:equal targetValue="Industrial NF Membrane" property="data/productName" compareType="string">
+  <l:equal targetValue="NF Membrane" property="data/productName" compareType="string">
   <tr  style="border: 1px solid black;">
     <td height="38" rowspan="2"><div align="center" class="style1">2</div></td>
     <td height="38" rowspan="2"><div align="center" class="style1">Average Permeate Flow</div></td>
@@ -181,7 +194,7 @@
     <td height="38"><div align="center" class="style1"><b:write property="data/desalinationResult2" /></div></td>
   </tr>
   </l:equal>
-  <l:notEqual targetValue="Industrial NF Membrane" property="data/productName" compareType="string">
+  <l:notEqual targetValue="NF Membrane" property="data/productName" compareType="string">
    <tr  style="border: 1px solid black;">
     <td height="38"><div align="center" class="style1">2</div></td>
     <td height="38"><div align="center" class="style1">Average Permeate Flow</div></td>
@@ -210,7 +223,7 @@
 	<td width="50%">&nbsp; </td>
   </tr>
   <tr>
-    <td width="50%" height="192"> <div align="center" class="style16"><strong><b:write property="data/result" /></strong></div> </td>
+    <td width="50%" height="192"> <div align="center" class="style4"><strong><b:write property="data/result" /></strong></div> </td>
 	<td width="50%" height="192"><div align="center"><img src="produce/quality/deliveryrecord/img/image003.png" width="189" height="190"></div> </td>
   </tr>
 </table>
@@ -220,6 +233,52 @@
 	<td width="33%"> <div align="left" class="style1"> Auditor：<b:write property="data/reviewer" /></div> </td>
 	<td width="33%"> <div align="left" class="style1">Report Date：<b:write property="data/reportDt" formatPattern="yyyy/MM/dd"/></div> </td>
   </tr>
+</table>
+
+</l:notEmpty>
+
+<l:notEmpty property="list">
+<p>&nbsp;</p>
+<table width="780" border="0" >
+<tr>
+    <td width="50%"> <div align="left" class="style2"><strong>Test Data of Membrane</strong></div> </td>
+	<td width="50%">&nbsp; </td>
+  </tr>
+</table>
+
+<table width="780" border="1" bordercolor="#000000" style="border-collapse: collapse; " >
+<tr  style="border: 1px solid black;">
+    <td  width="6%"> <div align="center" class="style1">No.</div> </td>
+	<td  width="20%"> <div align="center" class="style1">Serial No.</div> </td>
+	<td  width="12%"> <div align="center" class="style1">Permeate Flow，gpd</div> </td>
+	<td  width="12%"> <div align="center" class="style1">Salt Rejection，%</div> </td>
+	<td  width="6%"> <div align="center" class="style1">No.</div> </td>
+	<td  width="20%"> <div align="center" class="style1">Serial No.</div> </td>
+	<td  width="12%"> <div align="center" class="style1">Permeate Flow，gpd</div> </td>
+	<td  width="12%"> <div align="center" class="style1">Salt Rejection，%</div> </td>
+  </tr>
+
+<%  for(int i=0;i<list2.length;i++){ %>
+<% if(i%2==0){ %>
+<tr  style="border: 1px solid black;">
+<% } %>
+
+	<td  width="6%"> <div align="center" class="style1"><%=i+1 %></div> </td>
+	<td  width="20%"> <div align="center" class="style1"><%=list2[i].getString("batchNo") %></div> </td>
+	<td  width="12%"> <div align="center" class="style1"><%=list2[i].getString("water") %></div> </td>
+	<td  width="12%"> <div align="center" class="style1"><%=list2[i].getString("desalination") %></div> </td>
+	
+<%if(i==list2.length-1 && i%2==0){ %>
+	<td  width="6%"> &nbsp; </td>
+	<td  width="20%"> &nbsp; </td>
+	<td  width="12%"> &nbsp; </td>
+	<td  width="12%"> &nbsp; </td>
+<% } %>
+	
+<% if(i%2==1 || i==list2.length-1){ %>
+  </tr>
+<% } %>
+<% } %>  
 </table>
 
 </l:notEmpty>

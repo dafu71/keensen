@@ -13,6 +13,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 		this.initEditWindow();
 		
 		this.initReviewWindow();
+		
+		this.buildExcelUploadWin();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -55,6 +57,12 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							}]
 				});
 
+		this.queryPanel.addButton({
+					text : "元件明细模板",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onDown
+				});
 	}
 
 	this.initListPanel = function() {
@@ -89,6 +97,11 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onReview
+					}, '-', {
+						text : '导入元件',
+						scope : this,
+						iconCls : 'icon-application_excel',
+						handler : this.onRelation
 					}, '-', {
 						text : '查看报告',
 						scope : this,
@@ -1514,6 +1527,44 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							emptyText : "--请选择--"
 						}]
 			}]
+		});
+	}
+	
+	// 导入excel面板
+	this.buildExcelUploadWin = function() {
+		this.excelUploadWin = new Ext.Window({
+			title : '导入Excel',
+			collapsible : false,
+			modal : true,
+			closeAction : 'hide',
+			buttonAlign : 'center',
+			layout : 'fit',
+			width : 480,
+			height : 120,
+			items : [{
+						xtype : 'columnform',
+						itemId : 'uploadForm',
+						saveUrl : 'com.keensen.ump.produce.quality.importDeliveryReportList.flow',
+						columns : 1,
+						fileUpload : true,
+						fields : [{
+									name : 'uploadFile',
+									fieldLabel : '选择文件',
+									allowBlank : false,
+									inputType : 'file'
+								}]
+					}],
+			buttons : [{
+						text : '上传',
+						handler : this.doUpload,
+						scope : this
+					}, {
+						text : '关闭',
+						scope : this,
+						handler : function() {
+							this.excelUploadWin.hide();
+						}
+					}]
 		});
 	}
 }

@@ -130,6 +130,13 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
+				
+		/*this.queryPanel.addButton({
+					text : "导出发货请检单",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel2
+				});*/
 	}
 
 	this.initListPanel = function() {

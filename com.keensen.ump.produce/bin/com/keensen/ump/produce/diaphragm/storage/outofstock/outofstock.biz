@@ -125,10 +125,9 @@
       <sourceNode>assign1</sourceNode>
       <targetNode>assign2</targetNode>
       <process:transitionCondition>
-        <process:simpleCondition operator="LT">
-          <process:leftOperand type="query">amount</process:leftOperand>
-          <process:rightOperand type="query">outofstock/amount</process:rightOperand>
-        </process:simpleCondition>
+        <process:complexCondition>
+          <process:code>Float.parseFloat(amount4)>amount</process:code>
+        </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link7" name="link7" isDefault="true" type="transition">
@@ -147,6 +146,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">data2[1]/amount</process:from>
       <process:to type="query">amount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">outofstock/amount</process:from>
+      <process:to type="query">amount4</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
@@ -431,6 +434,7 @@
     <process:variable historyStateLocation="client" isArray="false" name="amount2" primitiveType="Float"/>
     <process:variable historyStateLocation="client" isArray="false" name="amount3" primitiveType="Float"/>
     <process:variable historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.diaphragm.KsProdDiaphragmStock" name="stock"/>
+    <process:variable historyStateLocation="client" isArray="false" name="amount4" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input isArray="false" modelType="com.keensen.ump.produce.diaphragm.KsProdDiaphragmOutofstock" name="outofstock"/>

@@ -3,7 +3,7 @@
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
       <sourceNode>start0</sourceNode>
-      <targetNode>subprocess0</targetNode>
+      <targetNode>assign4</targetNode>
       <process:validateRules errorPage="" onError="default"/>
       <process:inputParameters>
         <process:parameter description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.quality.KsProdQualityDeliveryrecord" name="entity"/>
@@ -16,6 +16,8 @@
         <process:parameter description="" historyStateLocation="client" isArray="false" name="desalinationResult" primitiveType="String"/>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="desalinationResult2" primitiveType="String"/>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="result" primitiveType="String"/>
+        <process:parameter anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="map"/>
+        <process:parameter anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="list"/>
       </process:inputParameters>
     </sourceConnections>
     <location x="100" y="150"/>
@@ -71,7 +73,7 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link0</targetConnections>
+    <targetConnections>link13</targetConnections>
     <location x="225" y="150"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess0label</nodeLabel>
@@ -143,7 +145,7 @@
     <size height="28" width="28"/>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
-      <process:from type="literal" pattern="reference">Industrial RO Membrane</process:from>
+      <process:from type="literal" pattern="reference">RO Membrane</process:from>
       <process:to type="query">data/productName</process:to>
     </process:copy>
   </nodes>
@@ -162,7 +164,7 @@
     <size height="28" width="28"/>
     <nodeLabel>assign1label</nodeLabel>
     <process:copy>
-      <process:from type="literal" pattern="reference">Industrial NF Membrane</process:from>
+      <process:from type="literal" pattern="reference">NF Membrane</process:from>
       <process:to type="query">data/productName</process:to>
     </process:copy>
     <process:copy>
@@ -331,6 +333,49 @@
     <location x="315" y="501"/>
     <figSize height="20" width="40"/>
     <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值4" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="100" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/id</process:from>
+      <process:to type="query">map/relationId</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="94" y="96"/>
+    <figSize height="20" width="40"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="queryDeliveryReportList" displayName="queryDeliveryReportList" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="226" y="60"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.quality.deliveryrecord.queryDeliveryReportList</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="condition" type="query" value="java.util.Map" valueType="Java" pattern="reference">map</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="data" type="query" value="commonj.sdo.DataObject[]" valueType="Java">list</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="150" y="95"/>
+    <figSize height="20" width="178"/>
+    <node>subprocess1</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

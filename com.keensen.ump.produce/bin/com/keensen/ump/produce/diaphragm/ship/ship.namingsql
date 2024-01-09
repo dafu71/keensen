@@ -440,4 +440,144 @@
         <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'</isNotNull>
  order by t1.produce_dt desc
  </select>
+    <select id="queryTumoOrigin" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT T1.RN                 AS "rn",
+       T1.RECORD_ID          AS "recordId",
+       T1.PLAN_NO            AS "planNo",
+       T1.DIMO_BATCH_NO      AS "dimoBatchNo",
+       T1.BATCH_NO           AS "batchNo",
+       T1.LINE_ID            AS "lineId",
+       T1.SPEC_ID            AS "specId",
+       T1.WF_SUP_ID          AS "wfSupId",
+       T1.PROD_FLAG_ID       AS "prodFlagId",
+       T1.PRODUCE_DT         AS "produceDt",
+       T1.TEAM_ID            AS "teamId",
+       T1.TEAM_SEG           AS "teamSeg",
+       T1.OUT_LENGTH         AS "outLength",
+       T1.WORKER_ID          AS "workerId",
+       T1.PERF_FLAG_ID       AS "perfFlagId",
+       T1.IS_QUALIFIED       AS "isQualified",
+       T1.JUDGER_ID          AS "judgerId",
+       T1.JUDGE_DT           AS "judgeDt",
+       T1.CREATE_DT          AS "createDt",
+       T1.CHANGE_DT          AS "changeDt",
+       T1.CREATOR_ID         AS "creatorId",
+       T1.CHANGER_ID         AS "changerId",
+       T1.REMARK             AS "remark",
+       T1.JUDGE_REMARK       AS "judgeRemark",
+       T1.IS_VALID           AS "isValid",
+       T1.VALID_TM           AS "validTm",
+       T1.VERIFIER_ID        AS "verifierId",
+       T1.WF_BATCH_NO        AS "wfBatchNo",
+       T1.THICK_AVG          AS "thickAvg",
+       T1.THICK_MIN          AS "thickMin",
+       T1.THICK_MAX          AS "thickMax",
+       T1.TAG_NUM            AS "tagNum",
+       T1.TAG_LENGTH         AS "tagLength",
+       T1.INBOUND_REMARK     AS "inboundRemark",
+       T1.ORDER_NO           AS "orderNo",
+       T1.IS_WX              AS "isWx",
+       T1.IS_CUT_OVER        AS "isCutOver",
+       T1.OUT_BATCH_NO       AS "outBatchNo",
+       T1.IS_KEEP            AS "isKeep",
+       T1.MPD                AS "mpd",
+       T1.LINE_CODE          AS "lineCode",
+       T1.LINE_NAME          AS "lineName",
+       T1.MATER_SPEC_CODE    AS "materSpecCode",
+       T1.MATER_SPEC_NAME    AS "materSpecName",
+       T1.MP_BATCH_CODE      AS "mpBatchCode",
+       T1.QT_JUDGE_FLAG      AS "qtJudgeFlag",
+       T1.MATER_CLASS_ID     AS "materClassId",
+       T1.WF_SUPPLIER_CODE   AS "wfSupplierCode",
+       T1.WF_SUPPLIER_NAME   AS "wfSupplierName",
+       T1.PROD_FLAG_CODE     AS "prodFlagCode",
+       T1.PROD_FLAG_NAME     AS "prodFlagName",
+       T1.PERF_FLAG_CODE     AS "perfFlagCode",
+       T1.PERF_FLAG_NAME     AS "perfFlagName",
+       T1.IS_QUALIFIED_NAME  AS "isQualifiedName",
+       T1.IS_VALID_NAME      AS "isValidName",
+       T1.IS_WX_NAME         AS "isWxName",
+       T1.IS_CUT_OVER_NAME   AS "isCutOverName",
+       T1.IS_KEEP_NAME       AS "isKeepName",
+       T1.PRODUCE_DATE       AS "produceDate",
+       T1.JUDGE_TIME         AS "judgeTime",
+       T1.VALID_TIME         AS "validTime",
+       T1.JUDGER_NAME        AS "judgerName",
+       T1.WORKER_NAME        AS "workerName",
+       T1.VERIFIER_NAME      AS "verifierName",
+       T1.TEAM_NAME          AS "teamName",
+       T1.QT_JUDGE_FLAG_NAME AS "qtJudgeFlagName",
+       T1.MATER_CLASS_CODE   AS "materClassCode",
+       T1.CAIMO_LENGTH       AS "caimoLength",
+       T1.CAIMO_LOSS         AS "caimoLoss",
+       T1.LAST_CAIMO_DATE    AS "lastCaimoDate",
+       T1.USEFUL_LENGTH      AS "usefulLength",
+       T1.QUALIFID_LENGTH    AS "qualifidLength",
+       T1.F_GFD_AVG          AS "fGfdAvg",
+       T1.F_SALT_REJECTION   AS "fSaltRejection",
+       T1.R_GFD_AVG          AS "rGfdAvg",
+       T1.R_SALT_REJECTION   AS "rSaltRejection",
+       T1.PERF_FLAG_CODE || '仓' "storageName"
+  FROM V_KS_TUMO_ORIGIN T1
+  left join KS_PROD_DIAPHRAGM_TUMO t3
+  on t1.record_id = t3.record_id
+  WHERE 1=1
+  <isNotNull prepend="" property="ifPerFlag">AND decode(t3.record_id,null,'n','y') = #ifPerFlag#</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">t1.batch_No in ($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="produceDtStart">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="produceDtEnd">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #produceDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="planNo">upper(t1.plan_No) like '%' || upper(#planNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'</isNotNull>
+        <isEqual compareValue="n" prepend="and" property="ddflag">(T1.ORDER_NO is null or (
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) !='1'
+ 			   and 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) !='2'
+ 			   and 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) !='3'
+ 			   and 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) !='4'
+ 			   and 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) !='5'
+ 			   and 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) !='6'
+ 			   and 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) !='7'
+ 			   and 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) !='8'
+ 			   and 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) !='9'
+ 			   and
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 2) !='SG'))</isEqual>
+        <isEqual compareValue="y" prepend="and" property="ddflag">(T1.ORDER_NO is not null and (
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) ='1'
+ 			   or 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) ='2'
+ 			   or 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) ='3'
+ 			   or 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) ='4'
+ 			   or 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) ='5'
+ 			   or 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) ='6'
+ 			   or 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) ='7'
+ 			   or 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) ='8'
+ 			   or 
+ 			   substr(trim(nvl(t1.order_no,'空')), 1, 1) ='9'
+ 			    OR 
+ 			    substr(trim(nvl(t1.order_no,'空')), 1, 2) ='SG'
+ 			    OR 
+ 			    substr(trim(nvl(t1.order_no,'空')), 1, 2) ='CRM'))</isEqual>
+        <isNotNull prepend="and" property="judgeDtStart">to_char(T1.JUDGE_dt,'yyyy-MM-dd')  &gt;=  #judgeDtStart#</isNotNull>
+        <isNotNull prepend="and" property="judgeDtEnd">to_char(T1.JUDGE_dt,'yyyy-MM-dd')  &lt;=  #judgeDtEnd#</isNotNull>
+     
+   ORDER BY t1.JUDGE_DT DESC NULLS LAST, t1.BATCH_NO 
+ 
+ 
+ 
+  </select>
 </sqlMap>

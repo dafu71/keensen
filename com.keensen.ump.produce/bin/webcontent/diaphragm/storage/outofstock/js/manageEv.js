@@ -48,7 +48,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.initEvent = fu
 	this.inputWindow2.activeItem.mon(this.inputWindow2.activeItem, 'afterSave',
 			function() {
 				// currentWindow = 'inputWindow2';
-				// this.listPanel.store.reload();
+				//this.listPanel.store.reload();
 
 			}, this);
 

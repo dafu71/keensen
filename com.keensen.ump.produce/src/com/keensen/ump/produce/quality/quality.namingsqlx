@@ -704,4 +704,22 @@
 	AND n.batch_no &lt;= #batchNo#
 	ORDER BY n.batch_no DESC 
  </select>
+ 
+ <delete id="deleteDeliveryrecordList" parameterClass="java.util.HashMap" >
+   delete from  KS_QUALITY_DELIVERYRECORD_LIST
+	WHERE
+	  relation_id = #relationId#
+	</delete>
+	
+	<select id="queryDeliveryrecordList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+
+	SELECT T1.ID           "id", rownum "rn",
+       T1.RELATION_ID  "relationId",
+       T1.WATER        "water",
+       T1.DESALINATION "desalination",
+       T1.BATCH_NO     "batchNo"
+  FROM KS_QUALITY_DELIVERYRECORD_LIST T1
+  WHERE 1=1
+  and t1.relation_id = #relationId#
+   </select>
 </sqlMap>
