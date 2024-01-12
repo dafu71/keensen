@@ -715,8 +715,8 @@
 
 	SELECT T1.ID           "id", rownum "rn",
        T1.RELATION_ID  "relationId",
-       T1.WATER        "water",
-       T1.DESALINATION "desalination",
+       nvl(T1.WATER,'')        "water",
+       nvl(T1.DESALINATION,'') "desalination",
        T1.BATCH_NO     "batchNo"
   FROM KS_QUALITY_DELIVERYRECORD_LIST T1
   WHERE 1=1

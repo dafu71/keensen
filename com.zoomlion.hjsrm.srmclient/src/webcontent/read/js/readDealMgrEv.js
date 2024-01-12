@@ -1,4 +1,5 @@
 com.zoomlion.hjsrm.srmclient.ReadDealMgr.prototype.initEvent = function() {
+
 	// 获取阅读工单表主键
 	Ext.Ajax.request({
 		method : "post",
@@ -22,7 +23,7 @@ com.zoomlion.hjsrm.srmclient.ReadDealMgr.prototype.initEvent = function() {
 }
 
 com.zoomlion.hjsrm.srmclient.ReadDealMgr.prototype.onSave = function() {
-
+	
 	var readdealPkid = this.inputPanel.form.findField('readdeal/pkid')
 			.getValue();
 	if (Ext.isEmpty(readdealPkid)) {
@@ -45,8 +46,8 @@ com.zoomlion.hjsrm.srmclient.ReadDealMgr.prototype.onSave = function() {
 								Ext.MessageBox.alert("操作提示", "保存成功!",
 										function() {
 											// 刷新已阅读及待阅读列表
-											if (Ext.getCmp(listId)) {
-												Ext.getCmp(listId).store
+											if (Ext.getCmp(listId3)) {
+												Ext.getCmp(listId3).store
 														.reload();
 											}
 											if (Ext.getCmp(listId2)) {

@@ -10,8 +10,16 @@
 			pageContext);
 	DataObject[] list2 = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
 			"list");
+	//判断导入明细格式
+	//分为1、只有元件数据	2、包含测试数据
+	int flag = 1;//只有元件数据
+	for(int i=0;i<list2.length;i++){ 
 
-	//System.out.println(list2);	
+		if(null !=list2[i].getString("water") || null !=list2[i].getString("desalination")){
+			flag = 2;
+			break;
+		}
+	}	
 %>
 
 <html>
@@ -247,6 +255,7 @@
 </table>
 
 <table width="780" border="1" bordercolor="#000000" style="border-collapse: collapse; " >
+<% if(flag==2){ %>
 <tr  style="border: 1px solid black;">
     <td  width="6%"> <div align="center" class="style1">No.</div> </td>
 	<td  width="20%"> <div align="center" class="style1">Serial No.</div> </td>
@@ -278,7 +287,39 @@
 <% if(i%2==1 || i==list2.length-1){ %>
   </tr>
 <% } %>
-<% } %>  
+<% } %> 
+<% } %>
+
+<% if(flag==1){ %>
+<tr  style="border: 1px solid black;">
+    <td  width="5%"> <div align="center" class="style1">No.</div> </td>
+	<td  width="20%"> <div align="center" class="style1">Serial No.</div> </td>
+	<td  width="5%"> <div align="center" class="style1">No.</div> </td>
+	<td  width="20%"> <div align="center" class="style1">Serial No.</div> </td>
+	<td  width="5%"> <div align="center" class="style1">No.</div> </td>
+	<td  width="20%"> <div align="center" class="style1">Serial No.</div> </td>
+	<td  width="5%"> <div align="center" class="style1">No.</div> </td>
+	<td  width="20%"> <div align="center" class="style1">Serial No.</div> </td>
+  </tr>
+
+<%  for(int i=0;i<list2.length;i++){ %>
+<% if(i%4==0){ %>
+<tr  style="border: 1px solid black;">
+<% } %>
+<td  width="5%"> <div align="center" class="style1"><%=i+1 %></div> </td>
+<td  width="20%"> <div align="center" class="style1"><%=list2[i].getString("batchNo") %></div> </td>
+
+<% if(i==list2.length-1){ %>
+<% 	for(int j =0;j<3-(i%4);j++){ %>
+	<td  width="5%"> &nbsp; </td>
+	<td  width="20%"> &nbsp; </td>
+<% } %>
+<% } %>
+<% if(i%4==3 || i==list2.length-1){ %>
+  </tr>
+<% } %>
+<% } %>
+<% } %> 
 </table>
 
 </l:notEmpty>

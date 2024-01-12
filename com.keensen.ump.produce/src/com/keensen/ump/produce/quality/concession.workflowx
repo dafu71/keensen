@@ -7,7 +7,7 @@
       <priority>60</priority>
       <author>dafu</author>
       <department>质量管理部</department>
-      <description></description>
+      <description>produce/quality/concession/view/index.jsp</description>
     </processBasicInfo>
     <dataFields>
       <dataField>
@@ -18,6 +18,26 @@
         </dataType>
         <initialValue>0</initialValue>
         <description>是否需要膜片事业部评审</description>
+        <isArray>false</isArray>
+      </dataField>
+      <dataField>
+        <name>ifok</name>
+        <dataType>
+          <typeClass>primitive</typeClass>
+          <typeValue>String</typeValue>
+        </dataType>
+        <initialValue>y</initialValue>
+        <description>n不合格y合格</description>
+        <isArray>false</isArray>
+      </dataField>
+      <dataField>
+        <name>ifok2</name>
+        <dataType>
+          <typeClass>primitive</typeClass>
+          <typeValue>String</typeValue>
+        </dataType>
+        <initialValue>y</initialValue>
+        <description>n不合格y合格</description>
         <isArray>false</isArray>
       </dataField>
     </dataFields>
@@ -55,7 +75,7 @@
   <transitions>
     <transition>
       <from>startActivity</from>
-      <to>manualActivity</to>
+      <to>first</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -63,8 +83,8 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity</from>
-      <to>manualActivity5</to>
+      <from>first</from>
+      <to>second</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -72,8 +92,8 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity1</from>
-      <to>manualActivity3</to>
+      <from>third</from>
+      <to>fourth</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -81,8 +101,24 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity2</from>
-      <to>manualActivity6</to>
+      <from>fifth</from>
+      <to>sixth</to>
+      <isDefault>false</isDefault>
+      <priority>60</priority>
+      <displayName>不合格</displayName>
+      <type>simpleCondition</type>
+      <simpleCondition>
+        <leftValueType>variable</leftValueType>
+        <leftValue>ifok</leftValue>
+        <compType>EQ</compType>
+        <rightValue>n</rightValue>
+        <rightValueType>constant</rightValueType>
+      </simpleCondition>
+      <bendPoints/>
+    </transition>
+    <transition>
+      <from>fifth</from>
+      <to>seventh</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -90,8 +126,8 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity3</from>
-      <to>manualActivity2</to>
+      <from>fourth</from>
+      <to>fifth</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -99,8 +135,8 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity5</from>
-      <to>manualActivity1</to>
+      <from>second</from>
+      <to>third</to>
       <isDefault>false</isDefault>
       <priority>60</priority>
       <displayName>选择</displayName>
@@ -115,8 +151,8 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity5</from>
-      <to>manualActivity3</to>
+      <from>second</from>
+      <to>fourth</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -124,8 +160,38 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity6</from>
-      <to>manualActivity7</to>
+      <from>sixth</from>
+      <to>first</to>
+      <isDefault>false</isDefault>
+      <priority>60</priority>
+      <displayName>不合格</displayName>
+      <type>simpleCondition</type>
+      <simpleCondition>
+        <leftValueType>variable</leftValueType>
+        <leftValue>ifok2</leftValue>
+        <compType>EQ</compType>
+        <rightValue>n</rightValue>
+        <rightValueType>constant</rightValueType>
+      </simpleCondition>
+      <bendPoints/>
+    </transition>
+    <transition>
+      <from>sixth</from>
+      <to>seventh</to>
+      <isDefault>true</isDefault>
+      <priority>60</priority>
+      <displayName>合格</displayName>
+      <type>simpleCondition</type>
+      <simpleCondition>
+        <leftValueType>variable</leftValueType>
+        <compType>EQ</compType>
+        <rightValueType>constant</rightValueType>
+      </simpleCondition>
+      <bendPoints/>
+    </transition>
+    <transition>
+      <from>seventh</from>
+      <to>eighth</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
       <displayName></displayName>
@@ -133,16 +199,7 @@
       <bendPoints/>
     </transition>
     <transition>
-      <from>manualActivity7</from>
-      <to>manualActivity4</to>
-      <isDefault>true</isDefault>
-      <priority>60</priority>
-      <displayName></displayName>
-      <type>simpleCondition</type>
-      <bendPoints/>
-    </transition>
-    <transition>
-      <from>manualActivity4</from>
+      <from>eighth</from>
       <to>finishActivity</to>
       <isDefault>true</isDefault>
       <priority>60</priority>
@@ -213,7 +270,7 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>manualActivity</activityId>
+      <activityId>first</activityId>
       <activityName>让步放行申请</activityName>
       <description></description>
       <splitType>XOR</splitType>
@@ -223,13 +280,27 @@
       <splitTransaction>false</splitTransaction>
       <activateRule>
         <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
       </activateRule>
       <implementation>
         <manualActivity>
           <allowAgent>true</allowAgent>
           <customURL>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/produce/quality/concession/first/index.jsp</urlInfo>
+            <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
             <isSpecifyURL>false</isSpecifyURL>
@@ -257,19 +328,36 @@
             <isMulWIValid>false</isMulWIValid>
             <workitemNumStrategy>participant-number</workitemNumStrategy>
             <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
           <triggerEvents/>
-          <rollBack/>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
           <freeFlowRule>
             <isFreeActivity>false</isFreeActivity>
-            <freeRangeStrategy>freeWithinActivityList</freeRangeStrategy>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
             <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
           </freeFlowRule>
           <resetParticipant>originalParticipant</resetParticipant>
         </manualActivity>
       </implementation>
+      <extendNodes></extendNodes>
       <isStartActivity>false</isStartActivity>
       <nodeGraphInfo>
         <color>16777215</color>
@@ -288,7 +376,7 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>manualActivity1</activityId>
+      <activityId>third</activityId>
       <activityName>膜片事业部意见</activityName>
       <description></description>
       <splitType>XOR</splitType>
@@ -298,20 +386,42 @@
       <splitTransaction>false</splitTransaction>
       <activateRule>
         <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
       </activateRule>
       <implementation>
         <manualActivity>
           <allowAgent>true</allowAgent>
           <customURL>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/produce/quality/concession/third/index.jsp</urlInfo>
+            <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
             <isSpecifyURL>false</isSpecifyURL>
             <urlType>presentation-logic</urlType>
           </resetUrl>
           <participants>
-            <participantType>process-starter</participantType>
+            <participantType>organization-list</participantType>
+            <organization>
+              <participant>
+                <id>10000842</id>
+                <type>role</type>
+                <name>流程-膜片事业部</name>
+              </participant>
+              <isAllowAppointParticipants>false</isAllowAppointParticipants>
+            </organization>
             <specialActivityID></specialActivityID>
             <specialPath></specialPath>
           </participants>
@@ -332,19 +442,36 @@
             <isMulWIValid>false</isMulWIValid>
             <workitemNumStrategy>participant-number</workitemNumStrategy>
             <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
           <triggerEvents/>
-          <rollBack/>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
           <freeFlowRule>
             <isFreeActivity>false</isFreeActivity>
-            <freeRangeStrategy>freeWithinActivityList</freeRangeStrategy>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
             <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
           </freeFlowRule>
           <resetParticipant>originalParticipant</resetParticipant>
         </manualActivity>
       </implementation>
+      <extendNodes></extendNodes>
       <isStartActivity>false</isStartActivity>
       <nodeGraphInfo>
         <color>16777215</color>
@@ -363,7 +490,7 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>manualActivity2</activityId>
+      <activityId>fifth</activityId>
       <activityName>质量管理部意见</activityName>
       <description></description>
       <splitType>XOR</splitType>
@@ -373,20 +500,42 @@
       <splitTransaction>false</splitTransaction>
       <activateRule>
         <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
       </activateRule>
       <implementation>
         <manualActivity>
           <allowAgent>true</allowAgent>
           <customURL>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/produce/quality/concession/fifth/index.jsp</urlInfo>
+            <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
             <isSpecifyURL>false</isSpecifyURL>
             <urlType>presentation-logic</urlType>
           </resetUrl>
           <participants>
-            <participantType>process-starter</participantType>
+            <participantType>organization-list</participantType>
+            <organization>
+              <participant>
+                <id>10000844</id>
+                <type>role</type>
+                <name>流程-质量管理部</name>
+              </participant>
+              <isAllowAppointParticipants>false</isAllowAppointParticipants>
+            </organization>
             <specialActivityID></specialActivityID>
             <specialPath></specialPath>
           </participants>
@@ -407,19 +556,36 @@
             <isMulWIValid>false</isMulWIValid>
             <workitemNumStrategy>participant-number</workitemNumStrategy>
             <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
           <triggerEvents/>
-          <rollBack/>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
           <freeFlowRule>
             <isFreeActivity>false</isFreeActivity>
-            <freeRangeStrategy>freeWithinActivityList</freeRangeStrategy>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
             <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
           </freeFlowRule>
           <resetParticipant>originalParticipant</resetParticipant>
         </manualActivity>
       </implementation>
+      <extendNodes></extendNodes>
       <isStartActivity>false</isStartActivity>
       <nodeGraphInfo>
         <color>16777215</color>
@@ -438,7 +604,7 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>manualActivity3</activityId>
+      <activityId>fourth</activityId>
       <activityName>生产管理部意见</activityName>
       <description></description>
       <splitType>XOR</splitType>
@@ -448,20 +614,42 @@
       <splitTransaction>false</splitTransaction>
       <activateRule>
         <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
       </activateRule>
       <implementation>
         <manualActivity>
           <allowAgent>true</allowAgent>
           <customURL>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/produce/quality/concession/fourth/index.jsp</urlInfo>
+            <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
             <isSpecifyURL>false</isSpecifyURL>
             <urlType>presentation-logic</urlType>
           </resetUrl>
           <participants>
-            <participantType>process-starter</participantType>
+            <participantType>organization-list</participantType>
+            <organization>
+              <participant>
+                <id>10000843</id>
+                <type>role</type>
+                <name>流程-生产管理部</name>
+              </participant>
+              <isAllowAppointParticipants>false</isAllowAppointParticipants>
+            </organization>
             <specialActivityID></specialActivityID>
             <specialPath></specialPath>
           </participants>
@@ -482,19 +670,36 @@
             <isMulWIValid>false</isMulWIValid>
             <workitemNumStrategy>participant-number</workitemNumStrategy>
             <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
           <triggerEvents/>
-          <rollBack/>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
           <freeFlowRule>
             <isFreeActivity>false</isFreeActivity>
-            <freeRangeStrategy>freeWithinActivityList</freeRangeStrategy>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
             <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
           </freeFlowRule>
           <resetParticipant>originalParticipant</resetParticipant>
         </manualActivity>
       </implementation>
+      <extendNodes></extendNodes>
       <isStartActivity>false</isStartActivity>
       <nodeGraphInfo>
         <color>16777215</color>
@@ -513,7 +718,7 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>manualActivity5</activityId>
+      <activityId>second</activityId>
       <activityName>膜片制造部意见</activityName>
       <description></description>
       <splitType>XOR</splitType>
@@ -523,20 +728,42 @@
       <splitTransaction>false</splitTransaction>
       <activateRule>
         <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
       </activateRule>
       <implementation>
         <manualActivity>
           <allowAgent>true</allowAgent>
           <customURL>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/produce/quality/concession/second/index.jsp</urlInfo>
+            <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
             <isSpecifyURL>false</isSpecifyURL>
             <urlType>presentation-logic</urlType>
           </resetUrl>
           <participants>
-            <participantType>process-starter</participantType>
+            <participantType>organization-list</participantType>
+            <organization>
+              <participant>
+                <id>10000841</id>
+                <type>role</type>
+                <name>流程-膜片制造部</name>
+              </participant>
+              <isAllowAppointParticipants>false</isAllowAppointParticipants>
+            </organization>
             <specialActivityID></specialActivityID>
             <specialPath></specialPath>
           </participants>
@@ -557,19 +784,36 @@
             <isMulWIValid>false</isMulWIValid>
             <workitemNumStrategy>participant-number</workitemNumStrategy>
             <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
           <triggerEvents/>
-          <rollBack/>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
           <freeFlowRule>
             <isFreeActivity>false</isFreeActivity>
-            <freeRangeStrategy>freeWithinActivityList</freeRangeStrategy>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
             <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
           </freeFlowRule>
           <resetParticipant>originalParticipant</resetParticipant>
         </manualActivity>
       </implementation>
+      <extendNodes></extendNodes>
       <isStartActivity>false</isStartActivity>
       <nodeGraphInfo>
         <color>16777215</color>
@@ -588,7 +832,7 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>manualActivity6</activityId>
+      <activityId>sixth</activityId>
       <activityName>最终判定</activityName>
       <description></description>
       <splitType>XOR</splitType>
@@ -598,20 +842,42 @@
       <splitTransaction>false</splitTransaction>
       <activateRule>
         <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
       </activateRule>
       <implementation>
         <manualActivity>
           <allowAgent>true</allowAgent>
           <customURL>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/produce/quality/concession/sixth/index.jsp</urlInfo>
+            <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
             <isSpecifyURL>false</isSpecifyURL>
             <urlType>presentation-logic</urlType>
           </resetUrl>
           <participants>
-            <participantType>process-starter</participantType>
+            <participantType>organization-list</participantType>
+            <organization>
+              <participant>
+                <id>10000861</id>
+                <type>role</type>
+                <name>流程-最终判定</name>
+              </participant>
+              <isAllowAppointParticipants>false</isAllowAppointParticipants>
+            </organization>
             <specialActivityID></specialActivityID>
             <specialPath></specialPath>
           </participants>
@@ -632,26 +898,43 @@
             <isMulWIValid>false</isMulWIValid>
             <workitemNumStrategy>participant-number</workitemNumStrategy>
             <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
           <triggerEvents/>
-          <rollBack/>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
           <freeFlowRule>
             <isFreeActivity>false</isFreeActivity>
-            <freeRangeStrategy>freeWithinActivityList</freeRangeStrategy>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
             <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
           </freeFlowRule>
           <resetParticipant>originalParticipant</resetParticipant>
         </manualActivity>
       </implementation>
+      <extendNodes></extendNodes>
       <isStartActivity>false</isStartActivity>
       <nodeGraphInfo>
         <color>16777215</color>
         <height>28</height>
         <width>28</width>
-        <x>645</x>
-        <y>150</y>
+        <x>542</x>
+        <y>302</y>
         <lookAndFeel>classic</lookAndFeel>
         <fontName>System</fontName>
         <fontSize>12</fontSize>
@@ -663,7 +946,7 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>manualActivity7</activityId>
+      <activityId>seventh</activityId>
       <activityName>品管修改订单号</activityName>
       <description></description>
       <splitType>XOR</splitType>
@@ -673,20 +956,42 @@
       <splitTransaction>false</splitTransaction>
       <activateRule>
         <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
       </activateRule>
       <implementation>
         <manualActivity>
           <allowAgent>true</allowAgent>
           <customURL>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/produce/quality/concession/seventh/index.jsp</urlInfo>
+            <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
             <isSpecifyURL>false</isSpecifyURL>
             <urlType>presentation-logic</urlType>
           </resetUrl>
           <participants>
-            <participantType>process-starter</participantType>
+            <participantType>organization-list</participantType>
+            <organization>
+              <participant>
+                <id>10000845</id>
+                <type>role</type>
+                <name>流程-品管</name>
+              </participant>
+              <isAllowAppointParticipants>false</isAllowAppointParticipants>
+            </organization>
             <specialActivityID></specialActivityID>
             <specialPath></specialPath>
           </participants>
@@ -707,19 +1012,36 @@
             <isMulWIValid>false</isMulWIValid>
             <workitemNumStrategy>participant-number</workitemNumStrategy>
             <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
           <triggerEvents/>
-          <rollBack/>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
           <freeFlowRule>
             <isFreeActivity>false</isFreeActivity>
-            <freeRangeStrategy>freeWithinActivityList</freeRangeStrategy>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
             <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
           </freeFlowRule>
           <resetParticipant>originalParticipant</resetParticipant>
         </manualActivity>
       </implementation>
+      <extendNodes></extendNodes>
       <isStartActivity>false</isStartActivity>
       <nodeGraphInfo>
         <color>16777215</color>
@@ -738,7 +1060,7 @@
       </nodeGraphInfo>
     </activity>
     <activity>
-      <activityId>manualActivity4</activityId>
+      <activityId>eighth</activityId>
       <activityName>发货</activityName>
       <description></description>
       <splitType>XOR</splitType>
@@ -748,20 +1070,42 @@
       <splitTransaction>false</splitTransaction>
       <activateRule>
         <activateRuleType>directRunning</activateRuleType>
+        <applicationInfo>
+          <actionType>service-component</actionType>
+          <suppressJoinFailure>suppress</suppressJoinFailure>
+          <application>
+            <actionType>service-component</actionType>
+            <applicationUri></applicationUri>
+            <transactionType>join</transactionType>
+            <exceptionStrategy>rollback</exceptionStrategy>
+            <invokePattern>synchronous</invokePattern>
+            <parameters/>
+          </application>
+          <assignments/>
+        </applicationInfo>
       </activateRule>
       <implementation>
         <manualActivity>
           <allowAgent>true</allowAgent>
           <customURL>
-            <isSpecifyURL>false</isSpecifyURL>
-            <urlType>presentation-logic</urlType>
+            <isSpecifyURL>true</isSpecifyURL>
+            <urlInfo>/produce/quality/concession/eighth/index.jsp</urlInfo>
+            <urlType>webpage</urlType>
           </customURL>
           <resetUrl>
             <isSpecifyURL>false</isSpecifyURL>
             <urlType>presentation-logic</urlType>
           </resetUrl>
           <participants>
-            <participantType>process-starter</participantType>
+            <participantType>organization-list</participantType>
+            <organization>
+              <participant>
+                <id>10000846</id>
+                <type>role</type>
+                <name>流程-发货</name>
+              </participant>
+              <isAllowAppointParticipants>false</isAllowAppointParticipants>
+            </organization>
             <specialActivityID></specialActivityID>
             <specialPath></specialPath>
           </participants>
@@ -782,19 +1126,36 @@
             <isMulWIValid>false</isMulWIValid>
             <workitemNumStrategy>participant-number</workitemNumStrategy>
             <finishRule>all</finishRule>
+            <finishRequiredPercent>0</finishRequiredPercent>
+            <finishRquiredNum>0</finishRquiredNum>
             <isAutoCancel>false</isAutoCancel>
             <sequentialExecute>false</sequentialExecute>
           </multiWorkItem>
           <triggerEvents/>
-          <rollBack/>
+          <rollBack>
+            <applicationInfo>
+              <actionType>service-component</actionType>
+              <suppressJoinFailure>suppress</suppressJoinFailure>
+              <application>
+                <actionType>service-component</actionType>
+                <applicationUri></applicationUri>
+                <transactionType>join</transactionType>
+                <exceptionStrategy>rollback</exceptionStrategy>
+                <invokePattern>synchronous</invokePattern>
+                <parameters/>
+              </application>
+              <assignments/>
+            </applicationInfo>
+          </rollBack>
           <freeFlowRule>
             <isFreeActivity>false</isFreeActivity>
-            <freeRangeStrategy>freeWithinActivityList</freeRangeStrategy>
+            <freeRangeStrategy>freeWithinProcess</freeRangeStrategy>
             <isOnlyLimitedManualActivity>false</isOnlyLimitedManualActivity>
           </freeFlowRule>
           <resetParticipant>originalParticipant</resetParticipant>
         </manualActivity>
       </implementation>
+      <extendNodes></extendNodes>
       <isStartActivity>false</isStartActivity>
       <nodeGraphInfo>
         <color>16777215</color>

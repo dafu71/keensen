@@ -4,6 +4,9 @@ com.keensen.ump.produce.quality.deliverystandMgr = function() {
 		this.initListPanel();
 		this.initInputWindow();
 		this.initEditWindow();
+		
+		//复制
+		this.initCopyWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -75,6 +78,11 @@ com.keensen.ump.produce.quality.deliverystandMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '-', {
+						text : '复制',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onCopy
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.deliverystand.delete.biz.ext',
@@ -555,6 +563,204 @@ com.keensen.ump.produce.quality.deliverystandMgr = function() {
 							xtype : 'hidden',
 							name : 'entity/id',
 							dataIndex : 'id'
+						}]
+			}]
+		});
+	}
+	
+	this.initCopyWindow = function() {
+		this.copyWindow = this.copyWindow || new Ext.fn.FormWindow({
+			title : '复制新增元件发货质检标准',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.quality.deliverystand.expand.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.deliverystand.save.biz.ext',
+				fields : [{
+							xtype : 'textfield',
+							name : 'entity/labelingModel',
+							allowBlank : false,
+							fieldLabel : '贴标型号',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'labelingModel'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'prodspeccombobox',
+							allowBlank : false,
+							hiddenName : 'entity/materSpecId',
+							name : 'entity/materSpecId',
+							fieldLabel : '元件型号',
+							anchor : '95%',
+							colspan : 2,
+							typeAhead : true,
+							typeAheadDelay : 100,
+							minChars : 1,
+							queryMode : 'local',
+							lastQuery : '',
+							editable : true,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							},
+							dataIndex : 'materSpecId'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>NaCl测试条件</span>",
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/solution',
+							fieldLabel : '测试溶液',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'solution'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/temperature',
+							fieldLabel : '温度(c)',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'temperature'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/ph',
+							fieldLabel : 'pH值',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'ph'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/press',
+							fieldLabel : '测试压力psi(Mpa)',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'press'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/recovery',
+							fieldLabel : '回收率(%)',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'recovery'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>NaCl标准</span>",
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/water',
+							fieldLabel : '产水量(GPD)',
+							anchor : '95%',
+							colspan : 1,
+							dataIndex : 'water'
+						}, {
+							xtype : 'textfield',
+							name : 'entity/desalination',
+							fieldLabel : '最低脱盐率(%)',
+							anchor : '95%',
+							colspan : 1,
+							dataIndex : 'desalination'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>MgSO4测试条件</span>",
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/solution2',
+							fieldLabel : '测试溶液',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'solution2'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/temperature2',
+							fieldLabel : '温度(c)',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'temperature2'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/ph2',
+							fieldLabel : 'pH值',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'ph2'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/press2',
+							fieldLabel : '测试压力psi(Mpa)',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'press2'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/recovery2',
+							fieldLabel : '回收率(%)',
+							anchor : '95%',
+							colspan : 2,
+							dataIndex : 'recovery2'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>MgSO4标准</span>",
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/water2',
+							fieldLabel : '产水量(GPD)',
+							anchor : '95%',
+							colspan : 1,
+							dataIndex : 'water2'
+						}, {
+							xtype : 'textfield',
+							name : 'entity/desalination2',
+							fieldLabel : '最低脱盐率(%)',
+							anchor : '95%',
+							colspan : 1,
+							dataIndex : 'desalination2'
 						}]
 			}]
 		});

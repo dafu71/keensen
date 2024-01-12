@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -577,5 +578,34 @@ public class CommonUtils extends BaseBean {
 			stmt.addBatch(tmp);
 		}
 		return stmt.executeBatch();
+	}
+	
+	/**
+	 * 根据当前活动实例ID和目标活动定义ID，查询他们之间所有已经运行过的活动定义，该方法返回的是一个List列表
+	 * 
+	 * @param currentActInstID
+	 * @param destActDefID
+	 * @return
+	 * @throws BusinessException
+	 */
+	public HashMap[] getBackActivities(long currentActInstID,
+			String destActDefID) throws BusinessException {
+		HashMap[] objs;
+		try {
+			List<WFActivityDefine> define = BPSServiceManagerImpl
+					.getPreviousActivities(currentActInstID, destActDefID);
+			objs = new HashMap[define.size()];
+			for (int i = 0; i < define.size(); i++) {
+				WFActivityDefine temp = define.get(i);
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("id", temp.getId());
+				map.put("name", temp.getName());
+				objs[i] = map;
+			}
+			return objs;
+		} catch (Exception e) {
+			SrmLog.error("getPreviousActivities异常!", e);
+			throw new BusinessException("查询业务数据异常!", e.getMessage());
+		}
 	}
 }

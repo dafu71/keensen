@@ -53,3 +53,6 @@ com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.exportExcel = function
 	})
 }
 
+com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.onShow = function() {
+	window.open('com.keensen.ump.produce.diaphragm.make.queryStock4View.flow');
+}

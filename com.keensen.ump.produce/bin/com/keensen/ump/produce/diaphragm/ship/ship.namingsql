@@ -523,8 +523,11 @@
   left join KS_PROD_DIAPHRAGM_TUMO t3
   on t1.record_id = t3.record_id
   WHERE 1=1
-  <isNotNull prepend="" property="ifPerFlag">AND decode(t3.record_id,null,'n','y') = #ifPerFlag#</isNotNull>
+  	<isEqual compareValue="n" prepend="and" property="ifconcession">t1.order_no not like '%让步%'</isEqual>
+        <isEqual compareValue="y" prepend="and" property="ifconcession">t1.order_no like '%让步%'</isEqual>
+        <isNotNull prepend="" property="ifPerFlag">AND decode(t3.record_id,null,'n','y') = #ifPerFlag#</isNotNull>
         <isNotNull prepend="and" property="batchNoStr">t1.batch_No in ($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="recordIds">t1.record_id in ($recordIds$)</isNotNull>
         <isNotNull prepend="and" property="produceDtStart">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #produceDtStart#</isNotNull>
         <isNotNull prepend="and" property="produceDtEnd">to_char(t1.PRODUCE_DT,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #produceDtEnd#</isNotNull>
         <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>

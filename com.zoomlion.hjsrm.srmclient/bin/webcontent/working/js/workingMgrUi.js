@@ -65,12 +65,12 @@ com.zoomlion.hjsrm.srmclient.WorkingMgr = function() {
 			selModel : selModel,
 			delUrl : '...',
 			autoExpandColumn : '4',
-			tbar : [{
+			/*tbar : [{
 						text : '批量处理',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onBatchDeal
-					}],
+					}],*/
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'esheetno',
 						header : '编号',
@@ -140,7 +140,7 @@ com.zoomlion.hjsrm.srmclient.WorkingMgr = function() {
 									+ i
 									+ ")'; style='cursor:pointer'>";
 						}
-					}, {
+					}/*, {
 						header : '操作',
 						width : 150,
 						scope : this,
@@ -157,7 +157,7 @@ com.zoomlion.hjsrm.srmclient.WorkingMgr = function() {
 									+ Ext.encode("短信提醒") + ");'>" + "短信提醒</a>";
 							return str;
 						}
-					}],
+					}*/],
 			store : new Ext.data.JsonStore({
 				url : 'com.zoomlion.hjsrm.srmclient.WorkflowClient.remainQuery.biz.ext',
 				root : 'data',

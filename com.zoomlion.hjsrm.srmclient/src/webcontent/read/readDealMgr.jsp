@@ -44,8 +44,9 @@ var description = "<%=description %>";
 
 var readPkid = <%=readPkid %>;
 
-var listId = "<%=listId %>";
+var listId3 = "<%=listId %>";
 var listId2 = "<%=listId2 %>";
+
 BIZ.ns('com.zoomlion.hjsrm.srmclient');
 
  </script>

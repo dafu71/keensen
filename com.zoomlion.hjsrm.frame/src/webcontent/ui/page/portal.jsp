@@ -1175,7 +1175,7 @@ Ext.lib.Ajax.getConnectionObject = function() {
 					o.innerHTML=htmls;
 				}
 			});--%>
-setTimeout("loademail()",5000);
+<%--setTimeout("loademail()",5000);--%>
 <%--setInterval("loademail()",5000);--%>
 };
 <%--管理制度加载

@@ -63,12 +63,12 @@ com.zoomlion.hjsrm.srmclient.WorkedMgr = function() {
 			hsPage : true,
 			selModel : selModel,
 			delUrl : '...',
-			tbar : [{
+			/*tbar : [{
 						text : '批量催办',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.insertHastens
-					}],
+					}],*/
 			autoExpandColumn : '4',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'esheetno',
@@ -131,7 +131,7 @@ com.zoomlion.hjsrm.srmclient.WorkedMgr = function() {
 									+ i
 									+ ")'; style='cursor:pointer'>";
 						}
-					}, {
+					}/*, {
 						header : '操作',
 						width : 200,
 						scope : this,
@@ -151,7 +151,7 @@ com.zoomlion.hjsrm.srmclient.WorkedMgr = function() {
 									+ "转阅</a>";
 							return str;
 						}
-					}],
+					}*/],
 			store : new Ext.data.JsonStore({
 				url : 'com.zoomlion.hjsrm.srmclient.WorkflowClient.queryWorked.biz.ext',
 				root : 'data',

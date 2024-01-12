@@ -2,6 +2,7 @@ com.zoomlion.hjsrm.srmclient.ReadDealMgr = function() {
 	this.initPanel = function() {
 		this.initInputPanel();
 		this.initViewPanel();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -34,7 +35,7 @@ com.zoomlion.hjsrm.srmclient.ReadDealMgr = function() {
 								allowBlank : false,
 								fieldLabel : '&nbsp;&nbsp;&nbsp;&nbsp;内容'
 							}, {
-
+								hidden:true,
 								width : 700,
 								isUploaded : true,
 								xtype : 'attachmentlist',

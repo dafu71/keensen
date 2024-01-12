@@ -18,29 +18,58 @@
        T1.ORG_ID             AS "orgId",
        T1.STATUS             AS "status",
        T1.ORDER_NO           AS "orderNo",
-       T1.PROD_SPEC_NAME     AS "prodSpecName",
+       T2.mater_spec_name     AS "prodSpecName",
        T1.PROD_SPEC_ID       AS "prodSpecId",
        T1.DEPT               AS "dept",
        T1.NUM                AS "num",
-       T1.ITEM               AS "item",
+       T1.myITEMs               AS "myitems",
        T1.IF_KEY             AS "ifKey",
        T1.REASON             AS "reason",
        T1.RESULT             AS "result",
        T1.RESULT_CREATEBY    AS "resultCreateby",
        T1.RESULT_CREATEBY_ID AS "resultCreatebyId",
-       T1.RESULT_DT          AS "resultDt",
+       to_char(T1.RESULT_DT,'yyyy-MM-dd')          AS "resultDt",
        T1.FOLLOW             AS "follow",
        T1.FOLLOW_CREATEBY    AS "followCreateby",
        T1.FOLLOW_CREATEBY_ID AS "followCreatebyId",
-       T1.FOLLOW_DT          AS "followDt",
+       to_char(T1.FOLLOW_DT,'yyyy-MM-dd')          AS "followDt",
        T1.ADVISE1            AS "advise1",
        T1.ADVISE2            AS "advise2",
        T1.ADVISE3            AS "advise3",
-       T1.ADVISE4            AS "advise4"
+       T1.ADVISE4            AS "advise4",
+       t1.ADVISE5 as "advise5",
+       t1.PROCESSINSTID as "processinstid",
+       t1.PROCESS_state as "processState",
+       decode(t1.PROCESS_state,0,'审批中',1,'完结',2,'作废') "processStateName"
   FROM KS_QUALITY_CONCESSION_HEAD T1
+  left join qinsen.PARA_MATER_SPEC t2
+    on t1.PROD_SPEC_ID = t2.mater_spec_id
+  
 	 WHERE 1=1
 	  <isNotNull prepend = ""  property = "id">
 	   AND t1.id = #id#
 	</isNotNull>
+	<isNotNull prepend = ""  property = "processinstid">
+	   AND t1.processinstid = #processinstid#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "processState">
+	   AND t1.PROCESS_state = #processState#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "id">
+	   AND t1.id = #id#
+	</isNotNull>
+	
+	<isNotNull prepend = ""  property = "batchNo">
+	   AND T1.RESERVE5 like '%' || #batchNo# || '%'
+	</isNotNull>
  
- </select></sqlMap>
+ </select>
+ 
+ <update id="updateInstTumoOrderNo" parameterClass="java.util.HashMap" >
+   	update qinsen.inst_tumo t2
+   	set t2.order_No = #orderNo#
+   	where t2.record_id IN($recordIds$)
+	</update>
+ 
+ 
+ </sqlMap>

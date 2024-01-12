@@ -85,7 +85,7 @@
        T1.LOSE6 AS "lose6",
        T1.LOSE7 AS "lose7",
        NVL(T1.THEORY_AMOUNT, 0) -
-       (NVL(T1.LOSE0, 0) + NVL(T1.LOSE1, 1) + NVL(T1.LOSE2, 0) +
+       (NVL(T1.LOSE0, 0) + NVL(T1.LOSE1, 0) + NVL(T1.LOSE2, 0) +
         NVL(T1.LOSE3, 0) + NVL(T1.LOSE4, 0) + NVL(T1.LOSE5, 0) +
         NVL(T1.LOSE6, 0) + NVL(T1.LOSE7, 0)) "dimoAmount",
        T1.FLAW0 AS "flaw0",
@@ -171,4 +171,57 @@
         <isNotNull prepend="" property="dimoBatchNo">AND T1.DIMO_BATCH_NO = #dimoBatchNo#</isNotNull>
         <isNotNull prepend="" property="dimoBatchNo2">AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'</isNotNull>
     </select>
+    <select id="queryStock4View" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	     SELECT T1.DIMO_BATCH_NO AS "dimoBatchNo",
+       T1.PRODUCT_DT AS "productDt",
+       T1.LINE AS "line",
+       T1.DIMO_TYPE AS "dimoType",
+       T1.THEORY_AMOUNT AS "theoryAmount",
+       T1.LOSE AS "lose",
+       T1.THEORY_AMOUNT - T1.LOSE "dimoAmount",
+       T2.PROD_LENGTH "prodLength",
+       T1.THEORY_AMOUNT - T1.LOSE - T2.PROD_LENGTH "residue"
+  FROM (SELECT T.DIMO_BATCH_NO,
+               '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
+               DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
+                      'A',
+                      10,
+                      'B',
+                      11,
+                      'C',
+                      12,
+                      SUBSTR(T.DIMO_BATCH_NO, 7, 1)) M,
+               SUBSTR(T.DIMO_BATCH_NO, 8, 2) D,
+               '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) || '-' ||
+               DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
+                      'A',
+                      10,
+                      'B',
+                      11,
+                      'C',
+                      12,
+                      SUBSTR(T.DIMO_BATCH_NO, 7, 1)) || '-' ||
+               SUBSTR(T.DIMO_BATCH_NO, 8, 2) PRODUCT_DT,
+               MAX(T.LINE) LINE,
+               MAX(T.DIMO_TYPE) DIMO_TYPE,
+               MAX(T.THEORY_AMOUNT) THEORY_AMOUNT,
+               SUM(NVL(T.LOSE0, 0)) + SUM(NVL(T.LOSE1, 0)) +
+               SUM(NVL(T.LOSE2, 0)) + SUM(NVL(T.LOSE3, 0)) +
+               SUM(NVL(T.LOSE4, 0)) + SUM(NVL(T.LOSE5, 0)) +
+               SUM(NVL(T.LOSE6, 0)) + SUM(NVL(T.LOSE7, 0)) LOSE
+          FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T
+         GROUP BY T.DIMO_BATCH_NO) T1
+  LEFT JOIN (SELECT T.DIMO_BATCH_NO, SUM(T.OUT_LENGTH) PROD_LENGTH
+               FROM V_KS_TUMO_ALL T
+              GROUP BY T.DIMO_BATCH_NO) T2
+    ON T1.DIMO_BATCH_NO = T2.DIMO_BATCH_NO
+ WHERE 1 = 1
+ AND 
+ T1.THEORY_AMOUNT - T1.LOSE - T2.PROD_LENGTH&gt;100
+ 
+  <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
+	
+ ORDER BY T1.LINE,T1.THEORY_AMOUNT - T1.LOSE - T2.PROD_LENGTH desc
+     
+     </select>
 </sqlMap>

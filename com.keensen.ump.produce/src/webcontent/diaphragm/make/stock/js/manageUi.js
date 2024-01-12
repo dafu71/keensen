@@ -54,6 +54,12 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
+		this.queryPanel.addButton({
+					text : "库存显示",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onShow
+				});
 	}
 
 	this.initListPanel = function() {

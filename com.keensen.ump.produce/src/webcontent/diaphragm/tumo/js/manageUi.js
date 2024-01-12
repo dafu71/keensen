@@ -54,10 +54,9 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 								fieldLabel : '生产线 '
 							}, {
 								xtype : 'dictcombobox',
-								name : 'condition/ddflag',
+								name : 'condition/ifconcession',
 								anchor : '75%',
-								dataIndex : 'condition/ddflag',
-								hiddenName : 'condition/ddflag',
+								hiddenName : 'condition/ifconcession',
 								fieldLabel : '是否让步',
 								dictData : ABF_YESORNO
 							}, {
@@ -98,7 +97,6 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 								xtype : 'dictcombobox',
 								name : 'condition/ddflag',
 								anchor : '75%',
-								dataIndex : 'condition/ddflag',
 								hiddenName : 'condition/ddflag',
 								fieldLabel : '是否有订单号',
 								dictData : ABF_YESORNO
@@ -255,6 +253,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						}, {
 							name : 'materSpecCode'
 						}, {
+							name : 'specId'
+						}, {
 							name : 'supName'
 						}, {
 							name : 'lineCode'
@@ -360,7 +360,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 					autoScroll : false,
 					border : true,
 					columns : 2,
-					saveUrl : 'com.keensen.ump.produce.quality.concession.saveConcession.biz.ext',
+					saveUrl : 'com.keensen.ump.produce.quality.concession.createWorkFlow.biz.ext',
 					fields : [{
 								xtype : 'textfield',
 								name : 'entity/orderNo',
@@ -370,10 +370,10 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 								colspan : 1
 							}, {
 								xtype : 'mpspeccombobox',
-								hiddenName : 'entity/specId',
+								hiddenName : 'entity/prodSpecId',
 								allowBlank : false,
 								anchor : '95%',
-								fieldLabel : '膜片型号 '
+								fieldLabel : '膜片型号'
 							}, {
 								xtype : 'displayfield',
 								height : '5',
@@ -398,7 +398,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 								colspan : 2
 							}, {
 								xtype : 'dictcheckboxgroup',
-								name : 'entity/item',
+								name : 'myCheckboxGroup',
 								allowBlank : false,
 								fieldLabel : '放行类型',
 								anchor : '95%',
@@ -406,6 +406,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 								colspan : 1
 							}, {
 								xtype : 'dictcombobox',
+								hiddenName : 'entity/ifKey',
 								name : 'entity/ifKey',
 								fieldLabel : '是否关键特性',
 								allowBlank : false,
@@ -423,6 +424,15 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 								fieldLabel : '让步接收理由',
 								anchor : '95%',
 								colspan : 2
+							}, {
+								xtype : 'hidden',
+								name : 'entity/myitems'
+							}, {
+								xtype : 'hidden',
+								name : 'entity/reserve1'
+							}, {
+								xtype : 'hidden',
+								name : 'entity/reserve5'
 							}],
 					buttons : [{
 								text : "确定",

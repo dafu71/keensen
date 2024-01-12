@@ -45,19 +45,47 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onConcession = function
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
 		var arr = [];
+		var recordIdArr =[];
 		var C = A.getSelectionModel().getSelections();
+
+		var num = 0;
+		var orderNo = C[0].data.orderNo;
+		var specId = C[0].data.specId;
+		if (Ext.isEmpty(orderNo)) {
+			Ext.Msg.alert("系统提示", "请选择有订单号的数据！");
+			return false;
+		}
+		var ok = true;
 		Ext.each(C, function(r) {
+					var odn = r.data.orderNo;
+					var usefulLength = r.data.usefulLength;
+					if (odn != orderNo) {
+						ok = false;
+					}
 					var bn = r.data.batchNo;
 					arr.push("'" + bn + "'");
+					var recordId = r.data.recordId;
+					recordIdArr.push(recordId);
+					num += usefulLength;
 				})
-		var store = this.listPanel2.store;
 
-		store.load({
-					params : {
-						'condition/batchNoStr' : arr.join(',')
-					}
-				});
-		this.inputWindow.show();
+		if (ok) {
+			var store = this.listPanel2.store;
+			store.load({
+						params : {
+							'condition/recordIds' : recordIdArr.join(',')
+						}
+					});
+			//this.inputPanel.form.findField('entity/orderNo').setValue(orderNo);
+			this.inputPanel.form.findField('entity/prodSpecId').setValue(specId);
+			this.inputPanel.form.findField('entity/num').setValue(num);
+			this.inputPanel.form.findField('entity/reserve1').setValue(recordIdArr.join(','));
+			this.inputPanel.form.findField('entity/reserve5').setValue(arr.join(','));
+			this.inputWindow.show();
+		} else {
+			//Ext.Msg.alert("系统提示", "请选择相同订单号数据！");
+			//return false;
+		}
 	}
 
 }
@@ -73,12 +101,21 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onSaveConcession = func
 					removeMask : true
 				});
 		mk.show();
+
+		var itemArr = [];
+		var myCheckboxGroup = this.inputPanel.form.findField('myCheckboxGroup');
+		for (var i = 0; i < myCheckboxGroup.items.length; i++) {
+			if (myCheckboxGroup.items.itemAt(i).checked) {
+				itemArr.push(i);
+			}
+		}
+		this.inputPanel.form.findField('entity/myitems').setValue(itemArr.join(','));
 		var forms = _thispanel.getForm().getValues();
-		alert(forms);
+
 		Ext.Ajax.request({
 			method : "post",
 			scope : this,
-			url : 'com.keensen.ump.produce.quality.concession.saveConcession.biz.ext',
+			url : 'com.keensen.ump.produce.quality.concession.createWorkFlow.biz.ext',
 			jsonData : forms,
 			success : function(response, action) {
 				mk.hide();

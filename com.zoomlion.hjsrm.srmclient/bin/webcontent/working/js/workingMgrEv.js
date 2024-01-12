@@ -87,8 +87,9 @@ function doExec() {
 	var currentstate = record.get('currentstate');
 	var actionurl = record.get('actionurl');
 	var processinstid = record.get('processinstid');
-
-	if (currentstate == '10') {
+	
+	
+	if (currentstate == '10' || currentstate == '4') {
 
 		// var tabId = "workitem-" + workitemid;
 		var tabId = listId;
