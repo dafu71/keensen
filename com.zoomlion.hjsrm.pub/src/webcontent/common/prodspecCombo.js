@@ -4,6 +4,14 @@ Ext.ns("com.keensen.ump");
  * @class com.keensen.ump.ProdspecComboBox
  * @extends Ext.form.ComboBox
  * <p>元件型号查询下拉框组件
+ * 
+ * this.queryPanel.prodSpecSel.mon(this.queryPanel.prodSpecSel, 'select', function(fcombo, record, eOpts) {
+		alert(record.data.blankingSize);
+		alert(record.data.denseNet);
+		alert(record.data.pageWidth);
+	}, this);
+ * 
+ * 
  */
 com.keensen.ump.ProdspecComboBox = Ext.extend(Ext.form.ComboBox, {
 			editable : false,
@@ -30,6 +38,12 @@ com.keensen.ump.ProdspecComboBox = Ext.extend(Ext.form.ComboBox, {
 										name : "id"
 									}, {
 										name : "name"
+									}, {
+										name : "blankingSize"
+									}, {
+										name : "denseNet"
+									}, {
+										name : "pageWidth"
 									}],
 							listeners : {
 								scope : this,

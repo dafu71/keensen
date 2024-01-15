@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.zoomlion.ump.qinsen.inst">
+    <select id="queryRecordId" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT TO_NUMBER(C.VALUE || LPAD(qinsen.$seqname$.NEXTVAL, 8, 0)) "recordId"
+		  FROM qinsen.BASE_SYS_CONFIG C
+		 WHERE C.ID = 7</select>
+</sqlMap>

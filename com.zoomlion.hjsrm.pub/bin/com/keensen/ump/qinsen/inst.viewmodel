@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="dafu" displayName="inst" id="com.keensen.ump.qinsen.inst">
+    <viewModel author="dafu" displayName="InstTumo" entityName="com.keensen.ump.qinsen.inst.InstTumo" id="InstTumo">
+        <field dataType="Int" dict="false" id="recordId" label="主键ID，取值见SEQ_INST_TUMO">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="batchNo" label="膜片批号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="lineId" label="生产线ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="specId" label="膜片型号ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="wfSupId" label="无纺布供应商ID，值义见字典表">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="prodFlagId" label="生产标识ID，值义见字典表">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="produceDt" label="生产日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="teamId" label="班组ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="teamSeg" label="班段，早中晚">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="outLength" label="产出长度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="workerId" label="生产员工">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="perfFlagId" label="膜片性能等级标识,值义见字典表">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isQualified" label="膜卷判定,Y=合格N=不合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="judgerId" label="判定人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="judgeDt" label="判定时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="judgeRemark" label="判定说明">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="dimoBatchNo" label="底膜批号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="planNo" label="计划单号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isValid" label="是否已人工质检验证,Y=是,N=否">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="validTm" label="人工质检验证时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="verifierId" label="质检验证人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="wfBatchNo" label="无纺布批号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="thickAvg" label="平均厚度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="thickMin" label="最小厚度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="thickMax" label="最大厚度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="tagNum" label="标签数梁">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="tagLength" label="标签长度，单位米">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="inboundRemark" label="入库意见">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orderNo" label="订单号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isWx" label="是否外销,Y=是，N=否">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isCutOver" label="是否已裁完,Y=是，N=否">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="outBatchNo" label="对外批号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isKeep" label="是否保留品,Y=是，N=否">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="mpd" label="MPD(C21)浓度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="baseProdLine.lineCode" id="baseProdLine.lineCode" label="生产线编码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="baseProdLine.changerId" id="baseProdLine.changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="baseProdLine.workshopId" id="baseProdLine.workshopId" label="车间ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="baseProdLine.changeDt" id="baseProdLine.changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="baseProdLine.dispOrder" id="baseProdLine.dispOrder" label="显示排序">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="baseProdLine.lineName" id="baseProdLine.lineName" label="生产线名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="baseProdLine.createDt" id="baseProdLine.createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="baseProdLine.remark" id="baseProdLine.remark" label="说明">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="baseProdLine.lineId" id="baseProdLine.lineId" label="生产线ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="baseProdLine.groupId" id="baseProdLine.groupId" label="机台或线组ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="baseProdLine.creatorId" id="baseProdLine.creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="baseProdLine.factoryId" id="baseProdLine.factoryId" label="分厂ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="baseProdLine.teamId" id="baseProdLine.teamId" label="对应班组">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="baseProdLine.state" id="baseProdLine.state" label="状态,A=在用,X=失效">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="baseProdLine.prodTacheId" id="baseProdLine.prodTacheId" label="生产工序ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.materSpecCode" id="paraMaterSpec.materSpecCode" label="规格编码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.width" id="paraMaterSpec.width" label="宽度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="paraMaterSpec.supplierId" id="paraMaterSpec.supplierId" label="供应商ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="paraMaterSpec.safetyStock" id="paraMaterSpec.safetyStock" label="安全库存量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="paraMaterSpec.pageWidth" id="paraMaterSpec.pageWidth" label="页宽，单位米">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="paraMaterSpec.dispOrder" id="paraMaterSpec.dispOrder" label="排列顺序">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="paraMaterSpec.createDt" id="paraMaterSpec.createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.mpBatchCode" id="paraMaterSpec.mpBatchCode" label="对应的编制膜片批号时的代码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.materSpecName" id="paraMaterSpec.materSpecName" label="规格名称">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="paraMaterSpec.creatorId" id="paraMaterSpec.creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="paraMaterSpec.materSpecId" id="paraMaterSpec.materSpecId" label="规格ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="paraMaterSpec.materClassId" id="paraMaterSpec.materClassId" label="物料分类ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="paraMaterSpec.measurementUnit" id="paraMaterSpec.measurementUnit" label="单位">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.qtJudgeFlag" id="paraMaterSpec.qtJudgeFlag" label="品质判定依据,F=初检，L=复检">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="paraMaterSpec.blankingSize" id="paraMaterSpec.blankingSize" label="下料尺寸，元件型号叠膜时用，单位米">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="paraMaterSpec.numPerWad" id="paraMaterSpec.numPerWad" label="膜页数，元件型号叠膜时用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="paraMaterSpec.plannedUnitPrice" id="paraMaterSpec.plannedUnitPrice" label="计划单价(元)">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.length" id="paraMaterSpec.length" label="长度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="paraMaterSpec.changerId" id="paraMaterSpec.changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="paraMaterSpec.denseNet" id="paraMaterSpec.denseNet" label="浓网，元件型号叠膜时用，单位mil">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="paraMaterSpec.changeDt" id="paraMaterSpec.changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.remark" id="paraMaterSpec.remark" label="说明">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.thickness" id="paraMaterSpec.thickness" label="厚度">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.propString" id="paraMaterSpec.propString" label="特征串">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="paraMaterSpec.state" id="paraMaterSpec.state" label="状态，Y=在用,N=停用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="paraMaterSpec.area" id="paraMaterSpec.area" label="面积">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="BaseProdLine" entityName="com.keensen.ump.qinsen.inst.BaseProdLine" id="BaseProdLine">
+        <field dataType="Int" dict="false" id="lineId" label="生产线ID">
+            <view type="write"/>
+            <edit name="lineId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lineCode" label="生产线编码">
+            <view type="write"/>
+            <edit name="lineCode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lineName" label="生产线名称">
+            <view type="write"/>
+            <edit name="lineName" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="prodTacheId" label="生产工序ID">
+            <view type="write"/>
+            <edit name="prodTacheId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="factoryId" label="分厂ID">
+            <view type="write"/>
+            <edit name="factoryId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="workshopId" label="车间ID">
+            <view type="write"/>
+            <edit name="workshopId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="teamId" label="对应班组">
+            <view type="write"/>
+            <edit name="teamId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="groupId" label="机台或线组ID">
+            <view type="write"/>
+            <edit name="groupId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="state" label="状态,A=在用,X=失效">
+            <view type="write"/>
+            <edit name="state" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="dispOrder" label="显示排序">
+            <view type="write"/>
+            <edit name="dispOrder" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="createDt" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="changeDt" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="creatorId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="changerId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="ParaMaterSpec" entityName="com.keensen.ump.qinsen.inst.ParaMaterSpec" id="ParaMaterSpec">
+        <field dataType="Int" dict="false" id="materSpecId" label="规格ID">
+            <view type="write"/>
+            <edit name="materSpecId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="materSpecCode" label="规格编码">
+            <view type="write"/>
+            <edit name="materSpecCode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="materSpecName" label="规格名称">
+            <view type="write"/>
+            <edit name="materSpecName" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="materClassId" label="物料分类ID">
+            <view type="write"/>
+            <edit name="materClassId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="state" label="状态，Y=在用,N=停用">
+            <view type="write"/>
+            <edit name="state" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="safetyStock" label="安全库存量">
+            <view type="write"/>
+            <edit name="safetyStock" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="supplierId" label="供应商ID">
+            <view type="write"/>
+            <edit name="supplierId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="measurementUnit" label="单位">
+            <view type="write"/>
+            <edit name="measurementUnit" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="plannedUnitPrice" label="计划单价(元)">
+            <view type="write"/>
+            <edit name="plannedUnitPrice" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="thickness" label="厚度">
+            <view type="write"/>
+            <edit name="thickness" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="width" label="宽度">
+            <view type="write"/>
+            <edit name="width" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="length" label="长度">
+            <view type="write"/>
+            <edit name="length" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="propString" label="特征串">
+            <view type="write"/>
+            <edit name="propString" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="dispOrder" label="排列顺序">
+            <view type="write"/>
+            <edit name="dispOrder" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="createDt" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="changeDt" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="creatorId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="changerId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="mpBatchCode" label="对应的编制膜片批号时的代码">
+            <view type="write"/>
+            <edit name="mpBatchCode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="qtJudgeFlag" label="品质判定依据,F=初检，L=复检">
+            <view type="write"/>
+            <edit name="qtJudgeFlag" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="numPerWad" label="膜页数，元件型号叠膜时用">
+            <view type="write"/>
+            <edit name="numPerWad" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="blankingSize" label="下料尺寸，元件型号叠膜时用，单位米">
+            <view type="write"/>
+            <edit name="blankingSize" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="denseNet" label="浓网，元件型号叠膜时用，单位mil">
+            <view type="write"/>
+            <edit name="denseNet" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="area" label="面积">
+            <view type="write"/>
+            <edit name="area" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="pageWidth" label="页宽，单位米">
+            <view type="write"/>
+            <edit name="pageWidth" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

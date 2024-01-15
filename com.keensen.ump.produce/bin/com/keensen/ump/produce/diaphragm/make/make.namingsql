@@ -128,7 +128,7 @@
        T1.LOSE AS "lose",
        T1.THEORY_AMOUNT - T1.LOSE "dimoAmount",
        T2.PROD_LENGTH "prodLength",
-       T1.THEORY_AMOUNT - T1.LOSE - T2.PROD_LENGTH "residue"
+       T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue"
   FROM (SELECT T.DIMO_BATCH_NO,
                '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
                DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
@@ -170,9 +170,10 @@
         <isNotNull prepend="and" property="productDtEnd">T1.PRODUCT_DT  &lt;=  #productDtEnd#</isNotNull>
         <isNotNull prepend="" property="dimoBatchNo">AND T1.DIMO_BATCH_NO = #dimoBatchNo#</isNotNull>
         <isNotNull prepend="" property="dimoBatchNo2">AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'</isNotNull>
-    </select>
+     order by T1.PRODUCT_DT desc
+     </select>
     <select id="queryStock4View" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-	     SELECT T1.DIMO_BATCH_NO AS "dimoBatchNo",
+	     SELECT T1.DIMO_BATCH_NO AS "dimoBatchNo",ceil（sysdate-to_date(T1.PRODUCT_DT,'yyyy-MM-dd')） "diff",
        T1.PRODUCT_DT AS "productDt",
        T1.LINE AS "line",
        T1.DIMO_TYPE AS "dimoType",
@@ -180,7 +181,7 @@
        T1.LOSE AS "lose",
        T1.THEORY_AMOUNT - T1.LOSE "dimoAmount",
        T2.PROD_LENGTH "prodLength",
-       T1.THEORY_AMOUNT - T1.LOSE - T2.PROD_LENGTH "residue"
+       T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue"
   FROM (SELECT T.DIMO_BATCH_NO,
                '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
                DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
@@ -217,11 +218,11 @@
     ON T1.DIMO_BATCH_NO = T2.DIMO_BATCH_NO
  WHERE 1 = 1
  AND 
- T1.THEORY_AMOUNT - T1.LOSE - T2.PROD_LENGTH&gt;100
+ T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)&gt;500
  
   <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
 	
- ORDER BY T1.LINE,T1.THEORY_AMOUNT - T1.LOSE - T2.PROD_LENGTH desc
+ ORDER BY T1.LINE,T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) desc
      
      </select>
 </sqlMap>

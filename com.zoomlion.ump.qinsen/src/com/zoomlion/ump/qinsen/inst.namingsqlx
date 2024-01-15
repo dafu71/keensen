@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+	<select id="queryRecordId" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   		SELECT TO_NUMBER(C.VALUE || LPAD(qinsen.$seqname$.NEXTVAL, 8, 0)) "recordId"
+		  FROM qinsen.BASE_SYS_CONFIG C
+		 WHERE C.ID = 7
+   	</select>
+</sqlMap>

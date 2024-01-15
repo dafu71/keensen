@@ -514,7 +514,18 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							fieldLabel : '产水检验结果',
 							anchor : '100%',
 							colspan : 2,
-							dataIndex : 'waterCheck'
+							dataIndex : 'waterCheck',
+							listeners : {
+								'blur':function(){
+									var searchStr = "GPD";
+									var str = _this.inputWindow.form.findField('entity/waterCheck').getValue();
+									var index = str.indexOf(searchStr);
+									if(index==-1){
+										_this.inputWindow.form.findField('entity/waterCheck').setValue(str + searchStr);
+									}
+								}
+							}
+							
 						}, {
 							xtype : 'combobox',
 							anchor : '75%',
@@ -552,7 +563,17 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							fieldLabel : '产水检验结果',
 							anchor : '100%',
 							colspan : 2,
-							dataIndex : 'waterCheck2'
+							dataIndex : 'waterCheck2',
+							listeners : {
+								'blur':function(){
+									var searchStr = "GPD";
+									var str = _this.inputWindow.form.findField('entity/waterCheck2').getValue();
+									var index = str.indexOf(searchStr);
+									if(index==-1){
+										_this.inputWindow.form.findField('entity/waterCheck2').setValue(str + searchStr);
+									}
+								}
+							}
 						}, {
 							xtype : 'combobox',
 							anchor : '75%',
@@ -590,7 +611,17 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							fieldLabel : '脱盐检验结果',
 							anchor : '100%',
 							colspan : 2,
-							dataIndex : 'desalinationCheck'
+							dataIndex : 'desalinationCheck',
+							listeners : {
+								'blur':function(){
+									var searchStr = "%";
+									var str = _this.inputWindow.form.findField('entity/desalinationCheck').getValue();
+									var index = str.indexOf(searchStr);
+									if(index==-1){
+										_this.inputWindow.form.findField('entity/desalinationCheck').setValue(str + searchStr);
+									}
+								}
+							}
 						}, {
 							xtype : 'combobox',
 							anchor : '75%',
@@ -628,7 +659,17 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							fieldLabel : '脱盐检验结果',
 							anchor : '100%',
 							colspan : 2,
-							dataIndex : 'desalinationCheck2'
+							dataIndex : 'desalinationCheck2',
+							listeners : {
+								'blur':function(){
+									var searchStr = "%";
+									var str = _this.inputWindow.form.findField('entity/desalinationCheck2').getValue();
+									var index = str.indexOf(searchStr);
+									if(index==-1){
+										_this.inputWindow.form.findField('entity/desalinationCheck2').setValue(str + searchStr);
+									}
+								}
+							}
 						}, {
 							xtype : 'combobox',
 							anchor : '75%',
@@ -652,7 +693,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 	}
 
 	this.initEditWindow = function() {
-
+		var _this =this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '修改元件出货质检报告',
 			height : 600,
@@ -950,7 +991,17 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							fieldLabel : '产水检验结果',
 							anchor : '100%',
 							colspan : 2,
-							dataIndex : 'waterCheck'
+							dataIndex : 'waterCheck',
+							listeners : {
+								'blur':function(){
+									var searchStr = "GPD";
+									var str = _this.editWindow.form.findField('entity/waterCheck').getValue();
+									var index = str.indexOf(searchStr);
+									if(index==-1){
+										_this.editWindow.form.findField('entity/waterCheck').setValue(str + searchStr);
+									}
+								}
+							}
 						}, {
 							xtype : 'combobox',
 							anchor : '75%',
@@ -988,7 +1039,17 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							fieldLabel : '产水检验结果',
 							anchor : '100%',
 							colspan : 2,
-							dataIndex : 'waterCheck2'
+							dataIndex : 'waterCheck2',
+							listeners : {
+								'blur':function(){
+									var searchStr = "GPD";
+									var str = _this.editWindow.form.findField('entity/waterCheck2').getValue();
+									var index = str.indexOf(searchStr);
+									if(index==-1){
+										_this.editWindow.form.findField('entity/waterCheck2').setValue(str + searchStr);
+									}
+								}
+							}
 						}, {
 							xtype : 'combobox',
 							anchor : '75%',
@@ -1026,7 +1087,17 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							fieldLabel : '脱盐检验结果',
 							anchor : '100%',
 							colspan : 2,
-							dataIndex : 'desalinationCheck'
+							dataIndex : 'desalinationCheck',
+							listeners : {
+								'blur':function(){
+									var searchStr = "%";
+									var str = _this.editWindow.form.findField('entity/desalinationCheck').getValue();
+									var index = str.indexOf(searchStr);
+									if(index==-1){
+										_this.editWindow.form.findField('entity/desalinationCheck').setValue(str + searchStr);
+									}
+								}
+							}
 						}, {
 							xtype : 'combobox',
 							anchor : '75%',
@@ -1064,7 +1135,17 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							fieldLabel : '脱盐检验结果',
 							anchor : '100%',
 							colspan : 2,
-							dataIndex : 'desalinationCheck2'
+							dataIndex : 'desalinationCheck2',
+							listeners : {
+								'blur':function(){
+									var searchStr = "%";
+									var str = _this.editWindow.form.findField('entity/desalinationCheck2').getValue();
+									var index = str.indexOf(searchStr);
+									if(index==-1){
+										_this.editWindow.form.findField('entity/desalinationCheck2').setValue(str + searchStr);
+									}
+								}
+							}
 						}, {
 							xtype : 'combobox',
 							anchor : '75%',

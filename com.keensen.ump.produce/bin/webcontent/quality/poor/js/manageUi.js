@@ -83,6 +83,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						}
 					}, {
 						xtype : 'prodspeccombobox',
+						ref:'../prodSpecSel',
 						hiddenName : 'condition/materSpecId',
 						anchor : '75%',
 						fieldLabel : '元件型号 ',

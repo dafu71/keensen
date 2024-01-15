@@ -56,7 +56,7 @@
       <targetNode>assign2</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -80,8 +80,8 @@
       <sourceNode>invokeSpring19</sourceNode>
       <targetNode>invokeSpring1</targetNode>
     </sourceConnections>
-    <targetConnections>link5</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link5</targetConnections>
     <nodeLabel>invokeSpring19label</nodeLabel>
     <process:spring methodType="beanID" synchronization="true" transactionType="join">
       <process:partner type="literal">com.zoomlion.hjsrm.srmclient.common.CommonUtils.setRelativeDataBatch</process:partner>

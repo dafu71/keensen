@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="updateInstTumoOrderNo.bizx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node1" name="注释1" nodeType="note" type="note" title="dafu&#x9;24-1-12 上午9:47"/>
+  <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="dafu&#x9;24-1-12 上午9:46"/>
   <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
@@ -92,6 +94,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">recordIds</process:from>
       <process:to type="query">map/recordIds</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/prodSpecId</process:from>
+      <process:to type="query">map/prodSpecId</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">

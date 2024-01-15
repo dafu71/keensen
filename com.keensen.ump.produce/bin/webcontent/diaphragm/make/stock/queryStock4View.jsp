@@ -1,6 +1,6 @@
 <%@page pageEncoding="UTF-8"%>
 <%@include file="/common/common.jsp"%>
-<%@include file="/frame/ui/page/include.jsp"%>
+<%--<%@include file="/frame/ui/page/include.jsp"%>--%>
 <%@page import="com.eos.web.taglib.util.XpathUtil"%>
 <%@page import="commonj.sdo.DataObject"%>
 <html>
@@ -33,6 +33,7 @@
 .style2 {font-family: "仿宋";font-size:12pt;}
 .style3 {font-family: "仿宋";font-size:20pt;}
 .style4 {font-family: "仿宋";font-size:24pt;}
+.style5 {color:red}
  
 -->
     </style>
@@ -41,7 +42,7 @@
 
 <script type="text/javascript">
 	(function(){
-		setInterval(function(){ location.reload(true); }, 360000);
+		setInterval(function(){ location.reload(true); }, 600000);
 	})();
 </script> 
 
@@ -70,6 +71,15 @@
         
 </tr>
 <%  for(int i=0;i<list.length;i++){ %>
+<%
+	String diff = list[i].getString("diff");
+	int diff2 =Integer.valueOf(diff);
+	String style5="";
+	if(diff2>15){
+		style5="style5";
+	}
+ %>
+
   <% if(i%2==0){ %>
   <tr class="EOS_table_row">
   <% }else{ %>
@@ -80,25 +90,33 @@
           	老基地
         </td>
   <% } %>
-    	<td align='center'>
+    	<td align='center' class="<%=style5 %>">
     	<%=list[i].getString("productDt") %>
           
         </td>
-        <td align='center'>
+        <td align='center' class="<%=style5 %>">
         <%=list[i].getString("line") %>
         </td>
-        <td align='center'>
+        <td align='center' class="<%=style5 %>">
         <%=list[i].getString("dimoType") %>
         </td>
-        <td align='center'>
+        <td align='center' class="<%=style5 %>">
         <%=list[i].getString("dimoBatchNo") %>
         </td>
-        <td align='center'>
+        <td align='center' class="<%=style5 %>">
         <%=list[i].getString("residue") %>
         </td>
          </tr>
 <% } %>
 <%  for(int i=0;i<list2.length;i++){ %>
+<%
+	String diff = list[i].getString("diff");
+	int diff2 =Integer.valueOf(diff);
+	String style5="";
+	if(diff2>15){
+		style5="style5";
+	}
+ %>
   <% if(i%2==0){ %>
   <tr class="EOS_table_row">
   <% }else{ %>
@@ -109,20 +127,20 @@
           	新基地
         </td>
    <% } %>
-    	<td align='center'>
+    	<td align='center' class="<%=style5 %>">
           <%=list2[i].getString("productDt") %>
         </td>
-        <td align='center'>
+        <td align='center' class="<%=style5 %>">
          <%=list2[i].getString("line") %>
         </td>
-        <td align='center'>
+        <td align='center' class="<%=style5 %>">
         <%=list2[i].getString("dimoType") %>
         </td>
 
-        <td align='center'>
+        <td align='center' class="<%=style5 %>">
         <%=list2[i].getString("dimoBatchNo") %>
         </td>
-        <td align='center'>
+        <td align='center' class="<%=style5 %>">
         <%=list2[i].getString("residue") %>
         </td>
          </tr>

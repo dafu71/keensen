@@ -60,7 +60,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onConcession = function
 					var odn = r.data.orderNo;
 					var usefulLength = r.data.usefulLength;
 					if (odn != orderNo) {
-						ok = false;
+						//ok = false;
 					}
 					var bn = r.data.batchNo;
 					arr.push("'" + bn + "'");

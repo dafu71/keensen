@@ -99,7 +99,9 @@
       <!-- 元件型号查询 -->
      <select id="queryProdSpec" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
       select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
-	t.mater_spec_id "id",t.mater_spec_name "name"
+	t.mater_spec_id "id",t.mater_spec_name "name",
+	 t.blanking_size "blankingSize", 
+	       t.dense_net "denseNet", t.area "area", t.page_width "pageWidth"
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030027)
      </select>

@@ -1,4 +1,5 @@
 com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
+	
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
