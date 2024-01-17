@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.report.quality">
+    <select id="queryXbar" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT T1.BATCH_NO "batchNo",ROWNUM "rn",
+	       T1.LINE_ID "lineId",
+	       T1.SPEC_ID "specId"， L.LINE_NAME || '(' || L.LINE_CODE || ')' "lineName",
+	       M.MATER_SPEC_NAME "specName",
+	       to_char(T1.CREATE_DT,'yyyy-MM-dd') "createDt",
+	       T1.POSITION_LENGTH "positionLength",
+	       NVL(T1.GFD_FIRST, 0) "gfdFirst",
+	       NVL(T1.GFD_SECOND, 0) "gfdSecond",
+	       NVL(T1.GFD_THIRD, 0) "gfdThird",
+	       NVL(T1.GFD_FIRST, 0) + NVL(T1.GFD_SECOND, 0) + NVL(T1.GFD_THIRD, 0) "gfdSum",
+	       ROUND((NVL(T1.GFD_FIRST, 0) + NVL(T1.GFD_SECOND, 0) +
+	             NVL(T1.GFD_THIRD, 0)) / 3,
+	             2) "gfdAvg",
+	       GREATEST(NVL(T1.GFD_FIRST, 0),
+	                NVL(T1.GFD_SECOND, 0),
+	                NVL(T1.GFD_THIRD, 0)) -
+	       LEAST(NVL(T1.GFD_FIRST, 0),
+	             NVL(T1.GFD_SECOND, 0),
+	             NVL(T1.GFD_THIRD, 0)) "gfdDiff"
+	  FROM (SELECT TT.BATCH_NO,
+	               TT.LINE_ID,
+	               TT.SPEC_ID,
+	               TT.CREATE_DT,
+	               T.POSITION_LENGTH,
+	               SUBSTR(T.GFD_STR, 0, INSTR(T.GFD_STR, ',') - 1) GFD_FIRST,
+	               SUBSTR(T.GFD_STR,
+	                      INSTR(T.GFD_STR, ',') + 1,
+	                      INSTR(T.GFD_STR,
+	                            ',',
+	                            INSTR(T.GFD_STR, ',') + LENGTH(',')) -
+	                      INSTR(T.GFD_STR, ',') - 1) GFD_SECOND,
+	               SUBSTR(T.GFD_STR,
+	                      INSTR(T.GFD_STR,
+	                            ',',
+	                            INSTR(T.GFD_STR, ',') + LENGTH(',')) + 1) GFD_THIRD,
+	               T.GFD_STR
+	          FROM qinsen.INST_TUMO_CHECK T
+	          LEFT JOIN qinsen.INST_TUMO TT
+	            ON TT.RECORD_ID = T.BATCH_ID) T1
+	  LEFT JOIN QINSEN.BASE_PROD_LINE L
+	    ON T1.LINE_ID = L.LINE_ID
+	  LEFT JOIN QINSEN.PARA_MATER_SPEC M
+	    ON M.MATER_SPEC_ID = T1.SPEC_ID
+	    where 1=1
+	      	<isNotNull prepend="" property="lineId">AND T1.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND T1.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="createDtStart">AND to_char(T1.CREATE_DT,'yyyy-MM-dd')  &gt;=  #createDtStart#</isNotNull>
+        <isNotNull prepend="" property="createDtEnd">AND to_char(t1.CREATE_DT,'yyyy-MM-dd')  &lt;=  #createDtEnd#</isNotNull>
+	 ORDER BY T1.BATCH_NO, T1.POSITION_LENGTH
+
+   </select>
+</sqlMap>

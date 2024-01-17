@@ -4,7 +4,7 @@
     <!--让步放行查询-->
     <select id="queryConcession" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT T1.ID                 AS "id",
-       T1.CREATE_TIME        AS "createTime",
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd')        AS "createTime",
        T1.CREATE_USER_ID     AS "createUserId",
        T1.CREATE_NAME        AS "createName",
        T1.UPDATE_TIME        AS "updateTime",
@@ -51,7 +51,8 @@
         <isNotNull prepend="" property="processState">AND t1.PROCESS_state = #processState#</isNotNull>
         <isNotNull prepend="" property="id">AND t1.id = #id#</isNotNull>
         <isNotNull prepend="" property="batchNo">AND T1.RESERVE5 like '%' || #batchNo# || '%'</isNotNull>
-    </select>
+ order by T1.CREATE_TIME desc
+ </select>
     <update id="updateInstTumoOrderNo" parameterClass="java.util.HashMap">update qinsen.inst_tumo t2
    	set t2.order_No = #orderNo#,t2.spec_id = #prodSpecId#
    	where t2.record_id IN($recordIds$)</update>

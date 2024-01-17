@@ -110,7 +110,7 @@
 <% } %>
 <%  for(int i=0;i<list2.length;i++){ %>
 <%
-	String diff = list[i].getString("diff");
+	String diff = list2[i].getString("diff");
 	int diff2 =Integer.valueOf(diff);
 	String style5="";
 	if(diff2>15){

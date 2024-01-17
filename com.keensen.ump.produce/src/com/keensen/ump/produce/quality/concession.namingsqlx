@@ -4,7 +4,7 @@
      <!--让步放行查询-->
    <select id="queryConcession" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    SELECT T1.ID                 AS "id",
-       T1.CREATE_TIME        AS "createTime",
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd')        AS "createTime",
        T1.CREATE_USER_ID     AS "createUserId",
        T1.CREATE_NAME        AS "createName",
        T1.UPDATE_TIME        AS "updateTime",
@@ -62,7 +62,7 @@
 	<isNotNull prepend = ""  property = "batchNo">
 	   AND T1.RESERVE5 like '%' || #batchNo# || '%'
 	</isNotNull>
- 
+ order by T1.CREATE_TIME desc
  </select>
  
  <update id="updateInstTumoOrderNo" parameterClass="java.util.HashMap" >

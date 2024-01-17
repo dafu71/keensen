@@ -97,6 +97,9 @@ com.keensen.ump.produce.quality.concessionListMgr = function() {
 						dataIndex : 'result',
 						header : '最终判定结果'
 					}, {
+						dataIndex : 'createTime',
+						header : '发起日期'
+					}, {
 						dataIndex : 'processStateName',
 						header : '流程状态'
 					}],

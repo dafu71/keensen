@@ -293,7 +293,7 @@
     <targetConnections>link12</targetConnections>
     <nodeLabel>assign4label</nodeLabel>
     <process:copy>
-      <process:from type="expression" pattern="reference">Pattern.compile(&quot;^[-\\+]?[\\d]*$&quot;)</process:from>
+      <process:from type="expression" pattern="reference">Pattern.compile(&quot;^\\d+(\\.\\d+)?$&quot;)</process:from>
       <process:to type="query">pattern</process:to>
     </process:copy>
   </nodes>

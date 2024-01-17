@@ -10,7 +10,7 @@
       <targetNode>assign0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="NOTNULLANDEMPTY">
-          <process:leftOperand type="query">entity/recordId</process:leftOperand>
+          <process:leftOperand type="query">entity/id</process:leftOperand>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -47,11 +47,15 @@
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
       <process:from type="expression" pattern="reference">new Date()</process:from>
-      <process:to type="query">entity/changeDt</process:to>
+      <process:to type="query">entity/updateTime</process:to>
     </process:copy>
     <process:copy>
       <process:from type="query" pattern="reference">m:userObject/userId</process:from>
-      <process:to type="query">entity/changerId</process:to>
+      <process:to type="query">entity/updateUserId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/updateName</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
@@ -93,11 +97,15 @@
     <nodeLabel>assign1label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">m:userObject/userId</process:from>
-      <process:to type="query">entity/creatorId</process:to>
+      <process:to type="query">entity/createUserId</process:to>
     </process:copy>
     <process:copy>
       <process:from type="expression" pattern="reference">new Date()</process:from>
-      <process:to type="query">entity/createDt</process:to>
+      <process:to type="query">entity/createTime</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/createName</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">

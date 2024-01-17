@@ -296,7 +296,9 @@
 		t.salt_low_symbol || t.salt_low_limit || ',' || t.salt_up_symbol || t.salt_up_limit "salt",
 		decode(t.state,'Y','在用','失效') "stateName",
 		t.mac_name "macName",t.test_solid "testSolid",t.method "method",
-		decode(t.is_wx,'Y','是','否') "isWxName"
+		decode(t.is_wx,'Y','是','否') "isWxName",
+    nvl(trim(t.gfd_low_limit),0) "gfdLow",nvl(trim(t.gfd_up_limit),0) "gfdUp"
+     ,(nvl(trim(t.gfd_low_limit),0) + nvl(trim(t.gfd_up_limit),0))/2 "gfdAvg"
 		  FROM KS_PROD_DIAPHRAGM_STAND T
 		  LEFT JOIN (SELECT T.MATER_SPEC_ID ID, T.MATER_SPEC_CODE NAME
 		               FROM QINSEN.PARA_MATER_SPEC T
@@ -311,6 +313,8 @@
 		<isNotNull prepend="" property="specId">AND t.SPEC_ID = #specId#</isNotNull>
         <isNotNull prepend="" property="isWx">AND lower(t.IS_WX) = #isWx#</isNotNull>
         <isNotNull prepend="" property="macName">AND t.mac_name = #macName#</isNotNull>
+        <isNotNull prepend="" property="levelId">AND t.level_id = #levelId#</isNotNull>
+        <isNotNull prepend="" property="lineId">AND t.mac_name = decode(#lineId#,'10020',1,'10003',1,3)</isNotNull>
 		    ORDER BY t.spec_id,t.level_id
      </select>
     <select id="queryMpCheckResult" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT V.BATCH_ID,V.RECORD_ID,v.recheck_flag "recheckFlag",
