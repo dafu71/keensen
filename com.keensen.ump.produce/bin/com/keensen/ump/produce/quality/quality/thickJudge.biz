@@ -90,6 +90,10 @@
       <process:from type="query" pattern="reference">thickMax</process:from>
       <process:to type="query">map/thickMax</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">thickAvg</process:from>
+      <process:to type="query">map/thickAvg</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
@@ -143,6 +147,7 @@
     <sourceConnections xsi:type="process:tLink" id="link10" name="link10" isDefault="true" type="transition">
       <sourceNode>subprocess0</sourceNode>
       <targetNode>assign0</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link11" name="空" type="transition">
       <sourceNode>subprocess0</sourceNode>
@@ -182,6 +187,7 @@
     <process:input isArray="false" name="isWx" primitiveType="String"/>
     <process:input isArray="false" name="thickMin" primitiveType="String"/>
     <process:input isArray="false" name="thickMax" primitiveType="String"/>
+    <process:input isArray="false" name="thickAvg" primitiveType="String"/>
   </process:inputs>
   <process:outputs>
     <process:output description="" isArray="false" name="thickIsQualified" primitiveType="String"/>

@@ -18,10 +18,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link2</targetConnections>
-    <targetConnections>link8</targetConnections>
-    <targetConnections>link14</targetConnections>
     <targetConnections>link15</targetConnections>
+    <targetConnections>link14</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link2</targetConnections>
     <location x="750" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -160,13 +160,14 @@
     <location x="492" y="225"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess1label</nodeLabel>
-    <process:flow index="4" synchronization="true" transactionType="join" varArgs="false">
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
       <process:partner type="literal">this.thickJudge</process:partner>
       <process:inputVariables>
         <process:inputVariable id="0" name="specId" type="query" value="String" valueType="Primitive" pattern="reference">data/specId</process:inputVariable>
         <process:inputVariable id="1" name="isWx" type="query" value="String" valueType="Primitive" pattern="reference">data/isWx</process:inputVariable>
         <process:inputVariable id="2" name="thickMin" type="query" value="String" valueType="Primitive" pattern="reference">data/thickMin</process:inputVariable>
         <process:inputVariable id="3" name="thickMax" type="query" value="String" valueType="Primitive" pattern="reference">data/thickMax</process:inputVariable>
+        <process:inputVariable id="4" name="thickAvg" type="query" value="String" valueType="Primitive" pattern="reference">data/thickAvg</process:inputVariable>
       </process:inputVariables>
       <process:outputVariables>
         <process:outputVariable id="0" name="thickIsQualified" type="query" value="String" valueType="Primitive">data/thickIsQualified</process:outputVariable>

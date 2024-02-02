@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.cdm">
+    <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		SELECT t1.rn "rn", T1.RECORD_ID       AS "recordId",
+       T1.BATCH_NO        AS "batchNo",
+       T1.LINE_ID         AS "lineId",
+       T1.TUMO_BATCH_ID   AS "tumoBatchId",
+       T1.PROD_SPEC_ID    AS "prodSpecId",
+       T1.ORDER_NO        AS "orderNo",
+       T1.QUANTITY        AS "quantity",
+       T1.NUM_PER_WAD     AS "numPerWad",
+       T1.BLANKING_SIZE   AS "blankingSize",
+       T1.DENSE_NET       AS "denseNet",
+       T1.PRODUCE_DT      AS "produceDt",
+       T1.TEAM_ID         AS "teamId",
+       T1.WORKER_ID       AS "workerId",
+       T1.CREATE_DT       AS "createDt",
+       T1.CHANGE_DT       AS "changeDt",
+       T1.CREATOR_ID      AS "creatorId",
+       T1.CHANGER_ID      AS "changerId",
+       T1.REMARK          AS "remark",
+       T1.IS_TO_MIX       AS "isToMix",
+       T1.PAGE_WIDTH      AS "pageWidth",
+       T1.TUMO_BATCH_NO   AS "tumoBatchNo",
+       T1.MP_SPEC_CODE    AS "mpSpecCode",
+       T1.MP_SPEC_NAME    AS "mpSpecName",
+       T1.CDM_SPEC_CODE   AS "cdmSpecCode",
+       T1.CDM_SPEC_NAME   AS "cdmSpecName",
+       T1.OUT_LENGTH      AS "outLength",
+       T1.IS_TO_MIX_STR   AS "isToMixStr",
+       T1.PRODUCE_DATE    AS "produceDate",
+       T1.TEAM_NAME       AS "teamName",
+       T1.WORKER_NAME     AS "workerName",
+       T1.LINE_CODE       AS "lineCode",
+       T1.TOTAL_LOSS      AS "totalLoss",
+       T1.UNUSED_QUANTITY AS "unusedQuantity"
+
+  FROM (SELECT ROWNUM RN,A.RECORD_ID,
+               A.BATCH_NO,
+               A.LINE_ID,
+               A.TUMO_BATCH_ID,
+               A.PROD_SPEC_ID,
+               A.ORDER_NO,
+               A.QUANTITY,
+               A.NUM_PER_WAD,
+               A.BLANKING_SIZE,
+               A.DENSE_NET,
+               A.PRODUCE_DT,
+               A.TEAM_ID,
+               A.WORKER_ID,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               A.IS_TO_MIX,
+               A.PAGE_WIDTH,
+               TM.BATCH_NO TUMO_BATCH_NO,
+               MST.MATER_SPEC_CODE MP_SPEC_CODE,
+               MST.MATER_SPEC_NAME MP_SPEC_NAME,
+               MSC.MATER_SPEC_CODE CDM_SPEC_CODE,
+               MSC.MATER_SPEC_NAME CDM_SPEC_NAME,
+               A.QUANTITY * A.BLANKING_SIZE * A.PAGE_WIDTH OUT_LENGTH,
+               DECODE(A.IS_TO_MIX, 'Y', '混卷', 'N', '单卷', '') IS_TO_MIX_STR,
+               TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
+               QINSEN.PG_GET_INFO.GET_DEPT_NAME_BY_ID(A.TEAM_ID) TEAM_NAME,
+               QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(A.WORKER_ID) WORKER_NAME,
+               (SELECT L.LINE_CODE
+                  FROM QINSEN.BASE_PROD_LINE L
+                 WHERE L.LINE_ID = A.LINE_ID) LINE_CODE,
+               (SELECT NVL(SUM(D.LOSS), 0)
+                  FROM QINSEN.INST_CDM_DEFECT D
+                 WHERE D.TUMO_BATCH_ID = A.TUMO_BATCH_ID) TOTAL_LOSS,
+               (SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
+                  FROM QINSEN.INST_JUANMO_DETAIL JD
+                 WHERE JD.CDM_BATCH_ID = A.RECORD_ID) UNUSED_QUANTITY
+          FROM QINSEN.INST_CAIDIEMO   A,
+               QINSEN.INST_TUMO       TM,
+               QINSEN.PARA_MATER_SPEC MST,
+               QINSEN.PARA_MATER_SPEC MSC
+         WHERE A.TUMO_BATCH_ID = TM.RECORD_ID
+           AND A.PROD_SPEC_ID = MSC.MATER_SPEC_ID
+           AND TM.SPEC_ID = MST.MATER_SPEC_ID
+        	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = UPPER(#batchNo#)</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="lineId">AND A.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="teamId">AND A.TEAM_ID = #teamId#</isNotNull>
+        <isNotNull prepend="" property="workerId">AND A.WORKER_ID = #workerId#</isNotNull>
+        <isNotNull prepend="" property="produceBeginDate">AND A.PRODUCE_DT &gt;= TO_DATE(#produceBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceEndDate">AND A.PRODUCE_DT &lt; TO_DATE(#produceEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="tumoBatchId">AND TM.RECORD_ID = #tumoBatchId#</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND TM.BATCH_NO = #tumoBatchNo#</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNoStr">AND TM.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND TM.SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchId">AND EXISTS (SELECT 1
+	          FROM INST_JUANMO_DETAIL D
+	         WHERE D.CDM_BATCH_ID = A.RECORD_ID
+	           AND D.MAIN_BATCH_ID = #juanMoBatchId#)</isNotNull> 
+	ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO
+        ) T1
+		ORDER BY T1.rn
+	</select>
+    <!-- 查询是否有唯一键冲突记录 -->
+    <select id="queryDuplicateRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT 1
+	  FROM QINSEN.INST_CAIDIEMO A
+	 WHERE A.BATCH_NO = UPPER(#batchNo#)
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID &lt;&gt; #recordId#</isNotNull>
+    </select>
+    <select id="countRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
+    SUM(A.QUANTITY * A.BLANKING_SIZE * A.PAGE_WIDTH) as "totalLength",
+       SUM((SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
+              FROM qinsen.INST_JUANMO_DETAIL JD
+             WHERE JD.CDM_BATCH_ID = A.RECORD_ID)) as "totalUnusedQuantity"
+    FROM qinsen.INST_CAIDIEMO A, qinsen.INST_TUMO TM, qinsen.PARA_MATER_SPEC MST,
+         qinsen.PARA_MATER_SPEC MSC
+   WHERE A.TUMO_BATCH_ID = TM.RECORD_ID
+     AND A.PROD_SPEC_ID = MSC.MATER_SPEC_ID
+     AND TM.SPEC_ID = MST.MATER_SPEC_ID
+     <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = UPPER(#batchNo#)</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="lineId">AND A.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="teamId">AND A.TEAM_ID = #teamId#</isNotNull>
+        <isNotNull prepend="" property="workerId">AND A.WORKER_ID = #workerId#</isNotNull>
+        <isNotNull prepend="" property="produceBeginDate">AND A.PRODUCE_DT &gt;= TO_DATE(#produceBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceEndDate">AND A.PRODUCE_DT &lt; TO_DATE(#produceEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="tumoBatchId">AND TM.RECORD_ID = #tumoBatchId#</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND TM.BATCH_NO = #tumoBatchNo#</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNoStr">AND TM.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND TM.SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchId">AND EXISTS (SELECT 1
+	          FROM INST_JUANMO_DETAIL D
+	         WHERE D.CDM_BATCH_ID = A.RECORD_ID
+	           AND D.MAIN_BATCH_ID = #juanMoBatchId#)</isNotNull>
+    </select>
+    <!-- 查询膜片最后的裁膜记录,按生产时间+栈板号排倒序 -->
+    <select id="queryLastRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT A.RECORD_ID     AS "recordId",
+       A.BATCH_NO      AS "batchNo",
+       A.TUMO_BATCH_ID AS "tumoBatchId",
+       A.PROD_SPEC_ID  AS "prodSpecId",
+       A.IS_TO_MIX     AS "isToMix",
+       A.ORDER_NO      AS "orderNo",
+       A.QUANTITY      AS "quantity",
+       A.NUM_PER_WAD   AS "numPerWad",
+       A.BLANKING_SIZE AS "blankingSize",
+       A.DENSE_NET     AS "denseNet",
+       A.PAGE_WIDTH    AS "pageWidth"
+  FROM QINSEN.INST_CAIDIEMO A
+	 WHERE A.TUMO_BATCH_ID = #tumoBatchId#	
+	 ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO DESC</select>
+</sqlMap>

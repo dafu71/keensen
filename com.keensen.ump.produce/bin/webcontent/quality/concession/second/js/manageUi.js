@@ -40,6 +40,7 @@ com.keensen.ump.produce.quality.concessionSencondMgr = function() {
 								hiddenName : 'ifchoose',
 								fieldLabel : '是否需要膜片<br>事业部审批',
 								anchor : '30%',
+								value :'n',
 								dictData : ABF_YESORNO
 							}, {
 								xtype : "hidden",
@@ -144,7 +145,7 @@ com.keensen.ump.produce.quality.concessionSencondMgr = function() {
 		})
 
 		this.viewPanel = this.viewPanel || new Ext.fn.ViewPanel({
-			height : 200,
+			height : 240,
 			// baseCls : "x-panel",
 			autoHide : false,
 			autoScroll : false,
@@ -215,6 +216,11 @@ com.keensen.ump.produce.quality.concessionSencondMgr = function() {
 						anchor : '95%',
 						colspan : 2
 					}, {
+						xtype : 'displayfield',
+						ref:'../picturePanel',
+						height : '30',
+						colspan : 2
+					}, {
 						xtype : 'hidden',
 						dataIndex : 'myitems'
 					}, {
@@ -225,6 +231,24 @@ com.keensen.ump.produce.quality.concessionSencondMgr = function() {
 						xtype : 'hidden',
 						name : 'id',
 						dataIndex : 'id'
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl',
+						ref:'../pictureUrl',
+						name : 'pictureUrl'
+
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl2',
+						ref:'../pictureUrl2',
+						name : 'pictureUrl2'
+
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl3',
+						ref:'../pictureUrl3',
+						name : 'pictureUrl3'
+
 					}]
 
 		})

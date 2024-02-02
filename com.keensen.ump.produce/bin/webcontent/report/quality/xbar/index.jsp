@@ -10,7 +10,6 @@
   	Long operatorid=(Long)userObject.getAttributes().get("operatorid");
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
-  	boolean workerflag = roleId.indexOf("10001161")>-1;
     String uid = userObject.getUserId();
     String userOrgId = userObject.getUserOrgId();
 %>

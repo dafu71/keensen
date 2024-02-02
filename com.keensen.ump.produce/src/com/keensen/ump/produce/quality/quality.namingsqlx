@@ -516,7 +516,9 @@
  
  
  <select id="queryTumoJudge" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-	 SELECT T1.RECORD_ID AS "recordId",T1.mpd "mpd",T1.order_no "orderNo",
+	 SELECT T1.RECORD_ID AS "recordId",T1.mpd "mpd",T1.order_no "orderNo",T1.is_keep "isKeep",
+	 	T8.GFD_AVG "rGfdAvg",
+       	T8.SALT_REJECTION "rSaltRejection",
        T1.BATCH_NO AS "batchNo",
        T1.LINE_ID AS "lineId",
        T1.SPEC_ID AS "specId",
@@ -540,7 +542,7 @@
        DECODE(T2.IS_QUALIFIED, 'Y', '合格', 'P', '放行', 'N', '不合格', '') "isBatchQualifiedName",
        <!--t3.mac_name "macName",-->
        T2.order_no "orderNo",
-       t2.judge_remark "judgeRemark",
+       t2.judge_remark "judgeRemark",T2.trend "trend",
        t2.appearance_is_qualified "appearanceIsQualified",
        DECODE(NVL(t2.appearance_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "appearanceIsQualifiedName",
        t2.thick_is_qualified "thickIsQualified",
@@ -565,7 +567,7 @@
                T.THICK_MAX,
                T.THICK_MIN,
                T.THICK_AVG,
-               T.REMARK PRODUCE_REMARK
+               T.REMARK PRODUCE_REMARK,T.is_keep
                
           FROM (select * from QINSEN.INST_TUMO tm where exists(select 1 from QINSEN.INST_TUMO_CHECK tmc where tmc.batch_id=tm.record_id) ) T
           LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
@@ -606,6 +608,14 @@
                FROM QINSEN.CONF_PROP_VALUE_OPTION T
               WHERE T.PROP_ID = 30023) th
             ON T2.thick_perf_flag_id = th.PERF_FLAG_ID
+   LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'Y'
+                     GROUP BY C.BATCH_ID) T8
+            ON T8.BATCH_ID = T1.RECORD_ID
  where 1=1
  <isNotNull prepend = ""  property = "ifPerFlag">
 	   AND decode(t2.perf_flag_id,null,'n','y') = #ifPerFlag#
@@ -653,6 +663,10 @@
 	<isNotNull prepend = ""  property = "isWx">
 	   AND lower(t1.IS_WX) = #isWx#
 	</isNotNull>
+	
+	<isNotNull prepend="and" property="applyId"> 
+		  T1.RECORD_ID in(select RECORD_ID from KS_PROD_DIAPHRAGM_APPLY_LIST where relation_id=#applyId#)
+	</isNotNull>
      
      ORDER BY T1.RECORD_ID DESC
  </select>
@@ -671,13 +685,17 @@
 	<isNotNull prepend = ""  property = "isWx">
 	   AND T.IS_WX  = #isWx#
 	</isNotNull>
+	<!--
 	<isNotNull prepend = ""  property = "thickMin">
 	   AND T.thick_Min  &lt;= #thickMin#
 	</isNotNull>
 	<isNotNull prepend = ""  property = "thickMax">
 	   AND T.thick_Max  &gt;= #thickMax#
 	</isNotNull>
-   	
+	-->
+   	<isNotNull prepend = ""  property = "thickAvg">
+	   AND T.thick_Min  &lt;= #thickAvg# AND T.thick_Max  &gt;= #thickAvg#
+	</isNotNull>
    </select>	 
    
    <!--模块全A判定-->
@@ -730,4 +748,28 @@
   WHERE 1=1
   and t1.relation_id = #relationId#
    </select>
+   
+   <update id="updateTumoJudge" parameterClass="java.util.HashMap" >
+   	UPDATE  qinsen.inst_tumo
+SET
+  qinsen.inst_tumo.is_qualified  =  (SELECT  is_qualified  FROM  KS_PROD_DIAPHRAGM_TUMO  
+  WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),
+  qinsen.inst_tumo.perf_flag_id  =  (SELECT  perf_flag_id  FROM  KS_PROD_DIAPHRAGM_TUMO  
+  WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),
+  qinsen.inst_tumo.judger_id  =  (SELECT  judger_id  FROM  KS_PROD_DIAPHRAGM_TUMO  
+  WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),
+  qinsen.inst_tumo.judge_dt  =  (SELECT  judge_dt  FROM  KS_PROD_DIAPHRAGM_TUMO  
+  WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),
+  qinsen.inst_tumo.judge_remark  =  (SELECT  judge_remark  FROM  KS_PROD_DIAPHRAGM_TUMO  
+  WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),
+  qinsen.inst_tumo.order_no  =  (SELECT  order_no  FROM  KS_PROD_DIAPHRAGM_TUMO  
+  WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),
+  qinsen.inst_tumo.is_valid  =  'Y'
+	WHERE
+  EXISTS ( SELECT 1 FROM   KS_PROD_DIAPHRAGM_TUMO  WHERE   
+  KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id)
+  AND qinsen.inst_tumo.record_id=#recordId#
+	</update>
+	
+	
 </sqlMap>

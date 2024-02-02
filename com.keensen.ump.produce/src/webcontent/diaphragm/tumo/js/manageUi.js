@@ -2,10 +2,9 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 	this.initPanel = function() {
 
 		this.initQueryPanel();
-
 		this.initListPanel();
-
 		this.initInputWindow();
+		this.buildUploadWin();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -149,6 +148,16 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onConcession
+					}, '-', {
+						text : '发货请检',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onCheck
+					}, '-', {
+						text : '自用请检',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onCheck2
 					}],
 			hsPage : true,
 			id : 'diaphragm-tumo-list',
@@ -169,6 +178,9 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							}
 						}
 
+					}, {
+						dataIndex : 'isValidName',
+						header : '是否已人工<br>质检验证'
 					}, {
 						dataIndex : 'produceDt',
 						header : '生产日期'
@@ -208,6 +220,24 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						dataIndex : 'planNo',
 						header : '计划单号'
 					}, {
+						dataIndex : 'fMacName',
+						header : '初检测试台'
+					}, {
+						dataIndex : 'fGfdAvg',
+						header : '初检膜通量'
+					}, {
+						dataIndex : 'fSaltRejection',
+						header : '初检脱盐率%'
+					}, {
+						dataIndex : 'rMacName',
+						header : '复检测试台'
+					}, {
+						dataIndex : 'rGfdAvg',
+						header : '复测膜通量'
+					}, {
+						dataIndex : 'rSaltRejection',
+						header : '复测脱盐率%'
+					}, {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
@@ -238,6 +268,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'outLength'
 						}, {
 							name : 'perfFlagName'
+						}, {
+							name : 'perfFlagCode'
 						}, {
 							name : 'planNo'
 						}, {
@@ -282,6 +314,22 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'sendAmount'
 						}, {
 							name : 'judgeDt'
+						}, {
+							name : 'fGfdAvg'
+						}, {
+							name : 'fSaltRejection'
+						}, {
+							name : 'fMacName'
+						}, {
+							name : 'rMacName'
+						}, {
+							name : 'rGfdAvg'
+						}, {
+							name : 'rSaltRejection'
+						}, {
+							name : 'isValid'
+						}, {
+							name : 'isValidName'
 						}]
 			})
 		})
@@ -353,102 +401,158 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 		})
 
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
-					height : 240,
-					region : 'north',
-					// baseCls : "x-panel",
-					autoHide : false,
-					autoScroll : false,
-					border : true,
-					columns : 2,
-					saveUrl : 'com.keensen.ump.produce.quality.concession.createWorkFlow.biz.ext',
-					fields : [{
-								xtype : 'textfield',
-								name : 'entity/orderNo',
-								allowBlank : false,
-								fieldLabel : '客户/订单号',
-								anchor : '95%',
-								colspan : 1
-							}, {
-								xtype : 'mpspeccombobox',
-								hiddenName : 'entity/prodSpecId',
-								allowBlank : false,
-								anchor : '95%',
-								fieldLabel : '膜片型号'
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 2
-							}, {
-								xtype : 'textfield',
-								name : 'entity/dept',
-								fieldLabel : '申请部门',
-								allowBlank : false,
-								anchor : '95%',
-								colspan : 1
-							}, {
-								xtype : 'numberfield',
-								name : 'entity/num',
-								allowBlank : false,
-								fieldLabel : '数量',
-								anchor : '95%',
-								colspan : 1
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 2
-							}, {
-								xtype : 'dictcheckboxgroup',
-								name : 'myCheckboxGroup',
-								allowBlank : false,
-								fieldLabel : '放行类型',
-								anchor : '95%',
-								dictData : KS_QUALITY_JUDGE_ITEM,
-								colspan : 1
-							}, {
-								xtype : 'dictcombobox',
-								hiddenName : 'entity/ifKey',
-								name : 'entity/ifKey',
-								fieldLabel : '是否关键特性',
-								allowBlank : false,
-								dictData : ABF_YESORNO,
-								anchor : '95%',
-								colspan : 1
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 2
-							}, {
-								xtype : 'textarea',
-								name : 'entity/reason',
-								allowBlank : false,
-								fieldLabel : '让步接收理由',
-								anchor : '95%',
-								colspan : 2
-							}, {
-								xtype : 'hidden',
-								name : 'entity/myitems'
-							}, {
-								xtype : 'hidden',
-								name : 'entity/reserve1'
-							}, {
-								xtype : 'hidden',
-								name : 'entity/reserve5'
-							}],
-					buttons : [{
-								text : "确定",
-								scope : this,
-								handler : this.onSaveConcession
-							}, {
-								text : "关闭",
-								scope : this,
-								handler : function() {
-									this.inputPanel.form.reset();
-									this.inputWindow.hide();
-								}
-							}]
+			height : 280,
+			region : 'north',
+			// baseCls : "x-panel",
+			autoHide : false,
+			autoScroll : false,
+			border : true,
+			columns : 2,
+			saveUrl : 'com.keensen.ump.produce.quality.concession.createWorkFlow.biz.ext',
+			fields : [{
+						xtype : 'textfield',
+						name : 'entity/orderNo',
+						allowBlank : false,
+						fieldLabel : '客户/订单号',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'mpspeccombobox',
+						hiddenName : 'entity/prodSpecId',
+						allowBlank : false,
+						anchor : '95%',
+						fieldLabel : '膜片型号'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'textfield',
+						name : 'entity/dept',
+						fieldLabel : '申请部门',
+						allowBlank : false,
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						name : 'entity/num',
+						allowBlank : false,
+						fieldLabel : '数量',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'dictcheckboxgroup',
+						name : 'myCheckboxGroup',
+						allowBlank : false,
+						fieldLabel : '放行类型',
+						anchor : '95%',
+						dictData : KS_QUALITY_JUDGE_ITEM,
+						colspan : 1
+					}, {
+						xtype : 'dictcombobox',
+						hiddenName : 'entity/ifKey',
+						name : 'entity/ifKey',
+						fieldLabel : '是否关键特性',
+						allowBlank : false,
+						dictData : ABF_YESORNO,
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'textarea',
+						name : 'entity/reason',
+						allowBlank : false,
+						fieldLabel : '让步接收理由',
+						anchor : '95%',
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'trigger',
+						name : 'pictureUrl',
+						fieldLabel : '图片1',
+						colspan : 1,
+						anchor : '95%',
+						editable : false,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onUploadWindowShow(1);
+						}
+					}, {
+						xtype : 'trigger',
+						name : 'pictureUrl2',
+						fieldLabel : '图片2',
+						colspan : 1,
+						anchor : '95%',
+						editable : false,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onUploadWindowShow(2);
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'trigger',
+						name : 'pictureUrl3',
+						fieldLabel : '图片3',
+						anchor : '95%',
+						colspan : 1,
+						editable : false,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onUploadWindowShow(3);
+						}
+					}, {
+						xtype : 'hidden',
+						name : 'entity/myitems'
+					}, {
+						xtype : 'hidden',
+						name : 'entity/reserve1'
+					}, {
+						xtype : 'hidden',
+						name : 'entity/reserve5'
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl',
+						name : 'entity/pictureUrl'
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl',
+						name : 'entity/pictureUrl2'
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl',
+						name : 'entity/pictureUrl3'
+					}],
+			buttons : [{
+						text : "确定",
+						scope : this,
+						handler : this.onSaveConcession
+					}, {
+						text : "关闭",
+						scope : this,
+						handler : function() {
+							this.inputPanel.form.reset();
+							this.inputWindow.hide();
+						}
+					}]
 
-				})
-				
+		})
+
 		this.inputWindow = this.inputWindow || new Ext.Window({
 					title : '发起让步放行',
 					resizable : true,
@@ -465,6 +569,44 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 
 				});
 
-		
+	}
+
+	// 上传面板
+	this.buildUploadWin = function() {
+		this.uploadWin = new Ext.Window({
+			title : '上传文件',
+			collapsible : false,
+			modal : true,
+			closeAction : 'hide',
+			buttonAlign : 'center',
+			layout : 'fit',
+			width : 480,
+			height : 120,
+			myflag:0,
+			items : [{
+				xtype : 'columnform',
+				itemId : 'uploadForm',
+				saveUrl : 'com.keensen.ump.produce.quality.uploadConcession.flow',
+				columns : 1,
+				fileUpload : true,
+				fields : [{
+							name : 'uploadFile',
+							fieldLabel : '选择文件',
+							allowBlank : false,
+							inputType : 'file'
+						}]
+			}],
+			buttons : [{
+						text : '上传',
+						handler : this.doUpload,
+						scope : this
+					}, {
+						text : '关闭',
+						scope : this,
+						handler : function() {
+							this.uploadWin.hide();
+						}
+					}]
+		});
 	}
 }

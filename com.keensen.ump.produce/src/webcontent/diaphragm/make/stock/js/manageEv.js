@@ -54,5 +54,13 @@ com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.exportExcel = function
 }
 
 com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.onShow = function() {
-	window.open('com.keensen.ump.produce.diaphragm.make.queryStock4View.flow');
+	window.open('com.keensen.ump.produce.diaphragm.make.queryStock4View.flow?flag=1');
+}
+
+com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.onShow4Old = function() {
+	window.open('com.keensen.ump.produce.diaphragm.make.queryStock4View.flow?flag=2');
+}
+
+com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.onShow4New = function() {
+	window.open('com.keensen.ump.produce.diaphragm.make.queryStock4View.flow?flag=3');
 }

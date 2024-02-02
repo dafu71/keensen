@@ -31,6 +31,16 @@
       <sourceNode>assign0</sourceNode>
       <targetNode>subprocess0</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link3" name="判定合格" displayName="连接线" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">map/ifok</process:leftOperand>
+          <process:rightOperand type="literal">y</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link14</targetConnections>
     <location x="193" y="150"/>
     <size height="28" width="28"/>
@@ -61,6 +71,7 @@
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link1</targetConnections>
+    <targetConnections>link4</targetConnections>
     <location x="307" y="150"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess0label</nodeLabel>
@@ -222,6 +233,37 @@
     <location x="307" y="275"/>
     <figSize height="20" width="100"/>
     <node>invokeSpring19</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="254" y="54"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">可放行</process:from>
+      <process:to type="query">entity/result</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/resultCreateby</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/resultCreatebyId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">entity/resultDt</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="248" y="90"/>
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

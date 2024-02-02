@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.diaphragm.make.report">
+    <select id="queryZmPoor" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.TEAM_ID "teamId",
+       BD.DEPT_NAME "teamName",
+       T1.THEORY_AMOUNT AS "theoryAmount",
+       NVL(T1.LOSE0, 0) AS "lose0",
+       NVL(T1.LOSE1, 0) AS "lose1",
+       NVL(T1.LOSE2, 0) AS "lose2",
+       NVL(T1.LOSE3, 0) AS "lose3",
+       NVL(T1.LOSE4, 0) AS "lose4",
+       NVL(T1.LOSE5, 0) AS "lose5",
+       NVL(T1.LOSE6, 0) AS "lose6",
+       NVL(T1.LOSE7, 0) AS "lose7",
+       NVL(T1.FLAW0, 0) AS "flaw0",
+       NVL(T1.FLAW1, 0) AS "flaw1",
+       NVL(T1.FLAW2, 0) AS "flaw2"， 
+       NVL(T1.LOSE0, 0) 
+       + NVL(T1.LOSE1, 0) + NVL(T1.LOSE2, 0) 
+       + NVL(T1.LOSE3, 0) + NVL(T1.LOSE4, 0)
+       + NVL(T1.LOSE5, 0) + NVL(T1.LOSE6, 0) 
+       + NVL(T1.LOSE7, 0) + NVL(T1.FLAW0, 0) 
+       + NVL(T1.FLAW1, 0) + NVL(T1.FLAW2, 0) "total",
+       to_char(round(100*(NVL(T1.LOSE0, 0) 
+       + NVL(T1.LOSE1, 0) + NVL(T1.LOSE2, 0) 
+       + NVL(T1.LOSE3, 0) + NVL(T1.LOSE4, 0)
+       + NVL(T1.LOSE5, 0) + NVL(T1.LOSE6, 0) 
+       + NVL(T1.LOSE7, 0) + NVL(T1.FLAW0, 0) 
+       + NVL(T1.FLAW1, 0) + NVL(T1.FLAW2, 0))/T1.THEORY_AMOUNT,2),'FM990.00') || '%' "poor"
+  FROM (SELECT T.TEAM_ID,
+               SUM(T.THEORY_AMOUNT) THEORY_AMOUNT,
+               SUM(T.LOSE0) LOSE0,
+               SUM(T.LOSE1) LOSE1,
+               SUM(T.LOSE2) LOSE2,
+               SUM(T.LOSE3) LOSE3,
+               SUM(T.LOSE4) LOSE4,
+               SUM(T.LOSE5) LOSE5,
+               SUM(T.LOSE6) LOSE6,
+               SUM(T.LOSE7) LOSE7,
+               SUM(T.FLAW0) FLAW0,
+               SUM(T.FLAW1) FLAW1,
+               SUM(T.FLAW2) FLAW2
+          FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T
+         WHERE T.TEAM_ID IN (SELECT DEPT_ID FROM QINSEN.BASE_DEPARTMENT)
+           <isNotNull prepend="and" property="productDtStart">to_char(T.PRODUCT_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(T.PRODUCT_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull>           
+         GROUP BY T.TEAM_ID) T1
+  LEFT JOIN QINSEN.BASE_DEPARTMENT BD
+    ON BD.DEPT_ID = T1.TEAM_ID
+     where 1=1
+     
+	
+      ORDER BY BD.DEPT_NAME
+     </select>
+    <select id="queryTmPoor" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+      
+SELECT P.TEAM_ID         AS "teamId",
+       P.TEAM_NAME       AS "teamName",
+       P.D01             AS "d01",
+       P.D03             AS "d03",
+       P.D04             AS "d04",
+       P.D05             AS "d05",
+       P.D07             AS "d07",
+       P.D15             AS "d15",
+       P.D14             AS "d14",
+       P.D10             AS "d10",
+       P.D11             AS "d11",
+       P.D09             AS "d09",
+       P.D13             AS "d13",
+       P.C09             AS "c09",
+       P.C10             AS "c10",
+       P.C11             AS "c11",
+       P.C12             AS "c12",
+       P.C01             AS "c01",
+       P.C03             AS "c03",
+       P.C04             AS "c04",
+       P.C05             AS "c05",
+       P.C06             AS "c06",
+       P.C08             AS "c08",
+       P.C02             AS "c02",
+       P.C07             AS "c07",
+       P.C13             AS "c13",
+       P.D02             AS "d02",
+       P.D06             AS "d06",
+       P.D08             AS "d08",
+       P.D12             AS "d12",
+       P.TOTAL           AS "total",
+       L.OUT_LENGTH      "outLength",
+       L.USEFUL_LENGTH   "usefulLength",
+       L.QUALIFID_LENGTH "qualifidLength",
+       to_char(round(100*p.total/ L.OUT_LENGTH,2),'FM990.00') || '%' "poor"
+  FROM (SELECT TTT.TEAM_ID,
+               (SELECT MAX(DEPT_NAME)
+                  FROM QINSEN.BASE_DEPARTMENT
+                 WHERE DEPT_ID = TTT.TEAM_ID) TEAM_NAME,
+               SUM(D01) D01,
+               SUM(D03) D03,
+               SUM(D04) D04,
+               SUM(D05) D05,
+               SUM(D07) D07,
+               SUM(D15) D15,
+               SUM(D14) D14,
+               SUM(D10) D10,
+               SUM(D11) D11,
+               SUM(D09) D09,
+               SUM(D13) D13,
+               SUM(C09) C09,
+               SUM(C10) C10,
+               SUM(C11) C11,
+               SUM(C12) C12,
+               SUM(C01) C01,
+               SUM(C03) C03,
+               SUM(C04) C04,
+               SUM(C05) C05,
+               SUM(C06) C06,
+               SUM(C08) C08,
+               SUM(C02) C02,
+               SUM(C07) C07,
+               SUM(C13) C13,
+               SUM(D02) D02,
+               SUM(D06) D06,
+               SUM(D08) D08,
+               SUM(D12) D12,
+               (SUM(D01) + SUM(D03) + SUM(D04) + SUM(D05) + SUM(D07) +
+               SUM(D15) + SUM(D14) + SUM(D10) + SUM(D11) + SUM(D09) +
+               SUM(D13) + SUM(C09) + SUM(C10) + SUM(C11) + SUM(C12) +
+               SUM(C01) + SUM(C03) + SUM(C04) + SUM(C05) + SUM(C06) +
+               SUM(C08) + SUM(C02) + SUM(C07) + SUM(C13) + SUM(D02) +
+               SUM(D06) + SUM(D08) + SUM(D12)) TOTAL
+        
+          FROM (SELECT TT.TEAM_ID,
+                       
+                       DECODE(TT.DEFECT_ITEM_ID, 100000006, TT.LOSS, 0) D01,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000007, TT.LOSS, 0) D03,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000008, TT.LOSS, 0) D04,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000009, TT.LOSS, 0) D05,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000010, TT.LOSS, 0) D07,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000011, TT.LOSS, 0) D15,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000012, TT.LOSS, 0) D14,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000013, TT.LOSS, 0) D10,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000014, TT.LOSS, 0) D11,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000015, TT.LOSS, 0) D09,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000016, TT.LOSS, 0) D13,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000022, TT.LOSS, 0) C09,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000023, TT.LOSS, 0) C10,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000024, TT.LOSS, 0) C11,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000025, TT.LOSS, 0) C12,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000026, TT.LOSS, 0) C01,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000027, TT.LOSS, 0) C03,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000028, TT.LOSS, 0) C04,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000029, TT.LOSS, 0) C05,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000030, TT.LOSS, 0) C06,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000031, TT.LOSS, 0) C08,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000039, TT.LOSS, 0) C02,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000040, TT.LOSS, 0) C07,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000041, TT.LOSS, 0) C13,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000042, TT.LOSS, 0) D02,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000043, TT.LOSS, 0) D06,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000044, TT.LOSS, 0) D08,
+                       DECODE(TT.DEFECT_ITEM_ID, 100000045, TT.LOSS, 0) D12
+                  FROM (SELECT T.TUMO_BATCH_ID,
+                               T.DEFECT_ITEM_ID,
+                               T.LOSS,
+                               T2.TEAM_ID,
+                               T2.PRODUCE_DT,
+                               V.DEFECT_NAME
+                          FROM QINSEN.INST_CDM_DEFECT T
+                          LEFT JOIN V_KS_CDMDEFECTITEMLIST V
+                            ON V.RECORD_ID = T.DEFECT_ITEM_ID
+                          LEFT JOIN V_KS_TUMO_ORIGIN T2
+                            ON T.TUMO_BATCH_ID = T2.RECORD_ID
+                         WHERE V.DUTY_TACHE_CODE = 'TM'
+                              
+           <isNotNull prepend="and" property="productDtStart">to_char(T2.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(T2.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull> 
+                          
+                        
+                        ) TT) TTT
+         GROUP BY TTT.TEAM_ID) P
+  LEFT JOIN (SELECT SUM(USEFUL_LENGTH) USEFUL_LENGTH,
+                    SUM(OUT_LENGTH) OUT_LENGTH,
+                    SUM(QUALIFID_LENGTH) QUALIFID_LENGTH,
+                    TEAM_ID
+               FROM V_KS_TUMO_ORIGIN V
+              WHERE 1 = 1
+              <isNotNull prepend="and" property="productDtStart">to_char(v.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(v.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull> 
+                
+              GROUP BY TEAM_ID) L
+    ON P.TEAM_ID = L.TEAM_ID
+ ORDER BY P.TEAM_ID
+
+     </select>
+</sqlMap>

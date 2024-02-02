@@ -25,8 +25,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link1</targetConnections>
     <targetConnections>link4</targetConnections>
+    <targetConnections>link1</targetConnections>
     <location x="480" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -97,8 +97,8 @@
       <sourceNode>view1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link9</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link9</targetConnections>
     <location x="372" y="257"/>
     <size height="28" width="22"/>
     <nodeLabel>view1label</nodeLabel>
@@ -234,6 +234,10 @@
       <process:to type="query">unit</process:to>
     </process:copy>
     <process:copy>
+      <process:from type="expression" pattern="reference">unit.replace(&quot;1 SETS&quot;, &quot;1 SET&quot;)</process:from>
+      <process:to type="query">unit</process:to>
+    </process:copy>
+    <process:copy>
       <process:from type="query" pattern="reference">unit</process:from>
       <process:to type="query">data/orderAmount</process:to>
     </process:copy>
@@ -243,6 +247,10 @@
     </process:copy>
     <process:copy>
       <process:from type="expression" pattern="reference">unit2.replace(&quot;支&quot;, &quot; SETS&quot;)</process:from>
+      <process:to type="query">unit2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">unit2.replace(&quot;1 SETS&quot;, &quot;1 SET&quot;)</process:from>
       <process:to type="query">unit2</process:to>
     </process:copy>
     <process:copy>

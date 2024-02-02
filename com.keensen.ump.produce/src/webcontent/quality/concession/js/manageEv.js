@@ -9,6 +9,7 @@ com.keensen.ump.produce.quality.concessionListMgr.prototype.initEvent = function
 	},this);
 	
 	this.viewPanel.mon(this.viewPanel, 'afterload', function() {
+				this.viewPanel.picturePanel.update('');
 				var recordIds = this.viewPanel.form.findField('reserve1')
 						.getValue();
 				
@@ -18,6 +19,23 @@ com.keensen.ump.produce.quality.concessionListMgr.prototype.initEvent = function
 								'condition/recordIds' : recordIds
 							}
 						});
+				var pictureUrl = this.viewPanel.pictureUrl.getValue();
+				var pictureUrl2 = this.viewPanel.pictureUrl2.getValue();
+				var pictureUrl3 = this.viewPanel.pictureUrl3.getValue();
+				var url = '';
+				if(!Ext.isEmpty(pictureUrl)){
+					url +='<a href="/default/' + pictureUrl + '" target=_blank>查看图片</a>';
+					url +='&nbsp;&nbsp;&nbsp;&nbsp;'
+				}
+				if(!Ext.isEmpty(pictureUrl2)){
+					url +='<a href="/default/' + pictureUrl2 + '" target=_blank>查看图片</a>';
+					url +='&nbsp;&nbsp;&nbsp;&nbsp;'
+				}
+				if(!Ext.isEmpty(pictureUrl3)){
+					url +='<a href="/default/' + pictureUrl3 + '" target=_blank>查看图片</a>';
+					url +='&nbsp;&nbsp;&nbsp;&nbsp;'
+				}
+				this.viewPanel.picturePanel.update(url);
 			}, this);
 	
 }
@@ -71,3 +89,37 @@ com.keensen.ump.produce.quality.concessionListMgr.prototype.exportExcel = functi
 			})
 }
 
+function showProcessGraph(lId, index) {
+
+	var store = Ext.getCmp(lId).store;
+	var rec = store.getAt(index);
+	if (Ext.isEmpty(rec)) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+	} else {
+		var workItemId = rec.get('processinstid');
+		var tabId = "workitem-" + workItemId;
+		var paramObj = {
+			workItemId : workItemId,
+			pId : rec.get('processinstid'),// 流程实例id
+			tabId : tabId
+			// 标签页ID "processinstid-" + workItemId;
+		}
+		var spac = Ext.getCmp('spacepanel');
+		var tabName = '';
+
+		tabName += '流程图';
+
+		var tabNode = {
+			id : tabId,
+			text : tabName,
+			attributes : {
+				respath : '/workflows/ticket/workflowsgraph.jsp',
+				readPanel : true
+			},
+			params : paramObj
+		}
+		// 打开新标签
+		spac.open(tabNode);
+	}
+
+}

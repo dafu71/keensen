@@ -1,5 +1,15 @@
 com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = function() {
 	var _this = this;
+	var chartDom = document.getElementById('main');
+	var myChart = echarts.init(chartDom,'light');
+	var chartDom2 = document.getElementById('main2');
+	var myChart2 = echarts.init(chartDom2,'light');
+
+	window.addEventListener('resize', function() {
+				myChart.resize();
+				myChart2.resize();
+			});
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 				var specId = this.queryPanel.form.findField('condition/specId')
@@ -12,11 +22,11 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = functi
 				} else {
 					var mpStandStore = this.mpStandStore;
 					mpStandStore.baseParams = ({
-								'condition/specId' : specId,
-								'condition/isWx' : 'n',
-								'condition/lineId' : lineId,
-								'condition/levelId' : 300029
-							});
+						'condition/specId' : specId,
+						'condition/isWx' : 'n',
+						'condition/lineId' : lineId,
+						'condition/levelId' : 300029
+					});
 					mpStandStore.load({});
 					var store = this.listPanel.store;
 					store.baseParams = vals;
@@ -34,7 +44,7 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = functi
 					var gfdLow = records2[0].data.gfdLow;
 					var gfdUp = records2[0].data.gfdUp;
 					var gfdAverage = records2[0].data.gfdAvg;
-					
+
 					var records = _this.listPanel.store.getRange();
 					var xArray = [];
 					var yArray = [];
@@ -46,17 +56,15 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = functi
 						var batchNo = records[i].data.batchNo;
 						var gfdAvg = records[i].data.gfdAvg;
 						var createDt = records[i].data.createDt;
-						var gfdDiff = records[i].data.gfdDiff; 
+						var gfdDiff = records[i].data.gfdDiff;
 						xArray.push(batchNo + ' ' + createDt);
 						yArray.push(gfdAvg);
 						yArray2.push(gfdDiff);
-						minValue = minValue>gfdAvg?gfdAvg:minValue;
-						maxValue = maxValue<gfdAvg?gfdAvg:maxValue;
+						minValue = minValue > gfdAvg ? gfdAvg : minValue;
+						maxValue = maxValue < gfdAvg ? gfdAvg : maxValue;
 					}
-					maxValue = Number(maxValue)+1;
+					maxValue = Number(maxValue) + 1;
 
-					var chartDom = document.getElementById('main');
-					var myChart = echarts.init(chartDom);
 					var option;
 
 					option = {
@@ -126,9 +134,7 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = functi
 					};
 
 					option && myChart.setOption(option);
-					
-					var chartDom2 = document.getElementById('main2');
-					var myChart2 = echarts.init(chartDom2);
+
 					var option2;
 
 					option2 = {
@@ -183,8 +189,6 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = functi
 					};
 
 					option2 && myChart2.setOption(option2);
-					
-					
 
 				}
 
@@ -194,7 +198,7 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = functi
 com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.exportExcel = function() {
 	var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
-	
+
 	if (!this.queryPanel.form.isValid()) {
 		return;
 	}
@@ -231,4 +235,9 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.exportExcel = func
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.produce.report.quality.xbar.XbarMgr.destroy = function() {
+	myChart.dispose();
+	myChart2.dispose();
 }

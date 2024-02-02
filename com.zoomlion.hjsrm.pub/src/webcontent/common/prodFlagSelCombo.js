@@ -36,6 +36,10 @@ com.keensen.ump.ProdFlagSelComboBox = Ext.extend(Ext.form.ComboBox, {
 								name : "id"
 							}, {
 								name : "name"
+							}, {
+								name : "code"
+							}, {
+								name : "isDefault"
 							}],
 					listeners : {
 						scope : this,

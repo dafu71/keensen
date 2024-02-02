@@ -28,6 +28,18 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.initEvent = funct
 					}
 				});
 	}, this);
+	
+	// 查询事件
+	this.queryPanel2.mon(this.queryPanel2, 'query', function(form, vals) {
+		var store = this.listPanel2.store;
+		store.baseParams = vals;
+		store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel2.pagingToolbar.pageSize
+					}
+				});
+	}, this);
 
 }
 
@@ -105,6 +117,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 		var C = A.getSelectionModel().getSelections();
 		var LODOP = getLodop();// 创建打印控件对象
 		LODOP.PRINT_INIT("膜片唛头打印模板");
+		LODOP.SET_PRINT_STYLEA(0,"HtmWaitMilSecs",1000);
 		LODOP.ADD_PRINT_SETUP_BKIMG(rootUrl + templateValue);
 
 		Ext.each(C, function(r) {
@@ -386,11 +399,12 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.exportExcel2 = fu
 			});
 	this.requestMask.show();
 	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlAndOpt.biz.ext",
 		method : "post",
 		jsonData : {
 			'map/condition/batchNoStr' : arr2.join(",") == "''" ? null : arr2.join(","),
-		
+			'map/business':'导出发货请检单',
+			'map/opt':arr2.join(",") == "''" ? null : arr2.join(","),
 			namingsql : 'com.keensen.ump.produce.diaphragm.ship.ship.queryTumoOrigin',
 			templateFilename : 'ks_mp_fhqjd'
 		},
@@ -414,4 +428,31 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.exportExcel2 = fu
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onCopyBatchNo = function() {
+	var A = this.listPanel2;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var opt = records[0].get('opt');
+		opt = opt.replace(/'/g, "");;
+		//navigator.clipboard.writeText(opt);
+		copyToClipboard(opt);
+		Ext.Msg.alert("系统提示", "已复制到系统粘贴板！");
+	}
+}
+
+function copyToClipboard(text) {
+   var textarea = document.createElement("textarea");
+   textarea.value = text;
+   textarea.setAttribute("readonly", "");
+   textarea.style.position = "absolute";
+   textarea.style.left = "-9999px";
+   document.body.appendChild(textarea);
+   textarea.select();
+   document.execCommand("copy");
+   document.body.removeChild(textarea);
 }

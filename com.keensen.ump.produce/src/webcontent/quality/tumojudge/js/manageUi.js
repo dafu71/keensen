@@ -5,9 +5,24 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					fields : ['mykey', 'myvalue'],
 					data : [['Y', '合格'], ['N', '不合格']]
 				});
+		this.applyStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.quality.apply.queryDiaphragmApply.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			totalProperty : '',
+			baseParams : {
+				'condition/isJudged' : 'N'
+			},
+			fields : [{
+						name : 'id'
+					}, {
+						name : 'title'
+					}]
+		})
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initEditWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -116,6 +131,26 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						fieldLabel : '是否已批次<br>性能判定',
 						anchor : '75%',
 						dictData : ABF_YESORNO
+					}, {
+						xtype : 'combobox',
+						anchor : '95%',
+						fieldLabel : '选择请检单',
+						triggerAction : "all",
+						store : this.applyStore,
+						valueField : 'id',
+						displayField : 'title',
+						hiddenName : 'condition/applyId',
+						name : 'condition/applyId',
+						editable : false,
+						forceSelection : true,
+						mode : 'local',
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						},
+						emptyText : '--请选择--',
+						colspan : 1
 					}]
 				});
 
@@ -126,6 +161,12 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					handler : this.exportExcel
 				});
 
+		this.queryPanel.addButton({
+					text : "更新请检单状态",
+					scope : this,
+					iconCls : 'icon-application_form_edit',
+					handler : this.onUpdateApplyIsJudged
+				});
 	}
 
 	this.initListPanel = function() {
@@ -153,15 +194,23 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'batchNo',
+						sortable : true,
 						header : '膜片批号'
 					}, {
 						dataIndex : 'materSpecName',
+						sortable : true,
 						header : '膜片型号'
 					}, {
+						dataIndex : 'trend',
+						sortable : true,
+						header : '走向'
+					}, {
 						dataIndex : 'lineName',
+						sortable : true,
 						header : '生产线'
 					}, {
 						dataIndex : 'isWxName',
+						sortable : true,
 						header : '是否外销'
 					}, {
 						dataIndex : 'qualifidLength',
@@ -173,7 +222,14 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'mpd',
 						header : 'C21浓度'
 					}, {
+						dataIndex : 'rGfdAvg',
+						header : '复测膜通量'
+					}, {
+						dataIndex : 'rSaltRejection',
+						header : '复测脱盐率'
+					}, {
 						dataIndex : 'orderNo',
+						sortable : true,
 						header : '订单号'
 					}, {
 						dataIndex : 'produceRemark',
@@ -241,6 +297,12 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							name : 'mpd'
 						}, {
 							name : 'orderNo'
+						}, {
+							name : 'rGfdAvg'
+						}, {
+							name : 'rSaltRejection'
+						}, {
+							name : 'trend'
 						}]
 			})
 		})
@@ -399,7 +461,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						readOnly : true,
 						fieldLabel : '异常备注',
 						anchor : '95%',
-						height : 50,
+						height : 30,
 						colspan : 4
 					}, {
 						xtype : 'displayfield',
@@ -446,8 +508,12 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 											.findField('entity/isQualified')
 											.setValue("N");
 									_this.editPanel.form
+											.findField('entity/isQualified').fireEvent('change');
+									_this.editPanel.form
 											.findField('entity/perfFlagId')
 											.setValue("300032");
+									_this.editPanel.form
+											.findField('entity/perfFlagId').fireEvent('change');
 								} else {
 									if ("Y" == isBatchQualified
 											&& "Y" == thickIsQualified) {
@@ -455,8 +521,12 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 												.findField('entity/isQualified')
 												.setValue("Y");
 										_this.editPanel.form
+											.findField('entity/isQualified').fireEvent('change');
+										_this.editPanel.form
 												.findField('entity/perfFlagId')
 												.setValue("300029");
+										_this.editPanel.form
+											.findField('entity/perfFlagId').fireEvent('change');
 									}
 								}
 							}
@@ -510,7 +580,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 
 						listeners : {
 							"expand" : function(A) {
-								//this.reset()
+								// this.reset()
 							},
 							"select" : function(combo, record) {
 								var isBatchQualified = _this.editPanel.form
@@ -525,8 +595,12 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 											.findField('entity/isQualified')
 											.setValue("N");
 									_this.editPanel.form
+											.findField('entity/isQualified').fireEvent('change');
+									_this.editPanel.form
 											.findField('entity/perfFlagId')
 											.setValue("300032");
+									_this.editPanel.form
+											.findField('entity/perfFlagId').fireEvent('change');
 								} else {
 									if ("Y" == isBatchQualified
 											&& "Y" == appearanceIsQualified) {
@@ -534,8 +608,12 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 												.findField('entity/isQualified')
 												.setValue("Y");
 										_this.editPanel.form
+											.findField('entity/isQualified').fireEvent('change');
+										_this.editPanel.form
 												.findField('entity/perfFlagId')
 												.setValue("300029");
+										_this.editPanel.form
+											.findField('entity/perfFlagId').fireEvent('change');
 									}
 								}
 							}
@@ -568,15 +646,35 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						xtype : 'mpperfcombobox',
 						allowBlank : false,
 						hiddenName : 'entity/perfFlagId',
+						ref : '../perfFlagId',
 						name : 'entity/perfFlagId',
 						dataIndex : 'batchPerfFlagId',
 						anchor : '95%',
 						colspan : 2,
-						fieldLabel : '批次等级'
+						fieldLabel : '批次等级',
+						listeners : {
+							scope : this,
+							"expand" : function(A) {
+								// this.reset()
+							},
+							"change" : function(A) {
+								var perfFlagId = _this.editPanel.perfFlagId
+										.getValue();
+								var isBatchQualified = _this.editPanel.isBatchQualified
+										.getValue();
+								var isKeep = _this.editPanel.isKeep.getValue();
+								var isWx = _this.editPanel.isWx.getValue();
+								_this.editPanel.trend.setValue(trend(
+										perfFlagId, isBatchQualified, isKeep,
+										isWx));
+							}
+						}
+
 					}, {
 						xtype : 'combobox',
 						allowBlank : false,
 						dataIndex : 'isBatchQualified',
+						ref : '../isBatchQualified',
 						anchor : '95%',
 						colspan : 2,
 						fieldLabel : '是否合格',
@@ -591,11 +689,49 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						mode : 'local',
 
 						listeners : {
+							scope : this,
 							"expand" : function(A) {
-								//this.reset()
+								// this.reset()
+							},
+							"change" : function(A) {
+								var perfFlagId = _this.editPanel.perfFlagId
+										.getValue();
+								var isBatchQualified = _this.editPanel.isBatchQualified
+										.getValue();
+								var isKeep = _this.editPanel.isKeep.getValue();
+								var isWx = _this.editPanel.isWx.getValue();
+								_this.editPanel.trend.setValue(trend(
+										perfFlagId, isBatchQualified, isKeep,
+										isWx));
 							}
 						},
 						emptyText : '--请选择--'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}
+
+					, {
+
+						xtype : 'combo',
+						fieldLabel : '保留品',
+						dataIndex : 'isKeep',
+						ref : '../isKeep',
+						hiddenName : 'entity/isKeep',
+						value : 'N',
+						emptyText : '--请选择--',
+						allowBlank : true,
+						readOnly : true,
+						colspan : 2,
+						anchor : '95%',
+						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.editPanel.isKeep.reset();
+							}
+						}
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -606,8 +742,20 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						name : 'entity/judgeRemark',
 						fieldLabel : '判定说明',
 						anchor : '95%',
-						height : 50,
+						height : 30,
 						colspan : 4
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'trend',
+						ref : '../trend',
+						name : 'entity/trend',
+						fieldLabel : '走向',
+						anchor : '95%',
+						colspan : 2
 					}, {
 						xtype : 'hidden',
 						name : 'entity/recordId',
@@ -620,6 +768,10 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						xtype : 'hidden',
 						name : 'isBatchQualified2',
 						dataIndex : 'isBatchQualified'
+					}, {
+						xtype : 'hidden',
+						ref : '../isWx',
+						dataIndex : 'isWx'
 					}],
 			buttons : [{
 						text : "确定",

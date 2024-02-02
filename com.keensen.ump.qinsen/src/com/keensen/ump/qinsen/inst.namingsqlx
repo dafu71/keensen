@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+	<select id="queryRecordId" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   		SELECT TO_NUMBER(C.VALUE+1 || LPAD(qinsen.$seqname$.NEXTVAL, 8, 0)) "recordId"
+		  FROM qinsen.BASE_SYS_CONFIG C
+		 WHERE C.ID = 7
+   	</select>
+   	
+   	<!-- 查询裁叠膜不良项目列表 -->
+<select id="queryCdmDefectItemList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	SELECT CD.RECORD_ID "recordId", CD.DUTY_TACHE_ID "dutyTacheId", CD.REC_TACHE_ID "recTacheId"
+	, CD.DEFECT_CODE,PT1.TACHE_NAME || '-' || CD.DEFECT_NAME "defectFullName",
+	       CD.DEFECT_NAME "defectName", CD.DISP_ORDER, CD.REMARK,
+	       PT1.TACHE_CODE "dutyTacheCode", PT1.TACHE_NAME DUTY_TACHE_NAME,
+	       PT2.TACHE_CODE "recTacheCode", PT2.TACHE_NAME REC_TACHE_NAME
+	  FROM qinsen.PARA_CDM_DEFECT CD, qinsen.BASE_PRODUCE_TACHE PT1, qinsen.BASE_PRODUCE_TACHE PT2
+	 WHERE CD.DUTY_TACHE_ID = PT1.TACHE_ID
+	   AND CD.REC_TACHE_ID = PT2.TACHE_ID
+	<isNotNull prepend = ""  property = "recordId">
+	   AND CD.RECORD_ID = #recordId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "defectId">
+	   AND CD.RECORD_ID = #defectId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "defectName">
+	   AND CD.DEFECT_NAME = #defectName#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "recTacheId">
+	   AND CD.REC_TACHE_ID = #recTacheId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "recTacheCode">
+	   AND PT2.TACHE_CODE = #recTacheCode#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "dutyTacheId">
+	   AND CD.DUTY_TACHE_ID = #dutyTacheId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "dutyTacheCode">
+	   AND PT1.TACHE_CODE = #dutyTacheCode#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "state">
+	   AND CD.STATE = #state#
+	</isNotNull>
+	 ORDER BY PT1.DISP_ORDER, CD.DISP_ORDER
+</select>
+
+	<select id="queryTmRecordIdByBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	select t.record_id "recordId" from QINSEN.INST_tumo t
+		WHERE t.batch_no=#batchNo#
+	</select>
+</sqlMap>

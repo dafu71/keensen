@@ -18,6 +18,24 @@ com.keensen.ump.produce.quality.concessionViewMgr.prototype.initEvent = function
 								'condition/recordIds' : recordIds
 							}
 						});
+				this.editPanel.picturePanel.update('');
+				var pictureUrl = this.editPanel.pictureUrl.getValue();
+				var pictureUrl2 = this.editPanel.pictureUrl2.getValue();
+				var pictureUrl3 = this.editPanel.pictureUrl3.getValue();
+				var url = '';
+				if(!Ext.isEmpty(pictureUrl)){
+					url +='<a href="/default/' + pictureUrl + '" target=_blank>查看图片</a>';
+					url +='&nbsp;&nbsp;&nbsp;&nbsp;'
+				}
+				if(!Ext.isEmpty(pictureUrl2)){
+					url +='<a href="/default/' + pictureUrl2 + '" target=_blank>查看图片</a>';
+					url +='&nbsp;&nbsp;&nbsp;&nbsp;'
+				}
+				if(!Ext.isEmpty(pictureUrl3)){
+					url +='<a href="/default/' + pictureUrl3 + '" target=_blank>查看图片</a>';
+					url +='&nbsp;&nbsp;&nbsp;&nbsp;'
+				}
+				this.editPanel.picturePanel.update(url);
 			}, this);
 	this.listPanel.store.on('load', function() {
 				_this.editPanel.form.findField('prodSpecId')

@@ -3,6 +3,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 	this.initPanel = function() {
 		this.initQueryPanel();
 		this.initListPanel();
+		this.initOptLogWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -41,12 +42,20 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 					iconCls : 'icon-printer',
 					handler : this.onPrint
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "导出发货请检单",
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel2
+				});
+		this.queryPanel.addButton({
+					text : "发货请检单导出记录",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : function(){
+						this.optLogWindow.show();
+					}
 				});
 
 	}
@@ -66,18 +75,13 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 								xtype : 'textfield',
 								itemId : 'param0',
 								ref : '../param0'
-							}/*{
-								xtype : 'mpspeccombobox',
-								itemId : 'param0',
-								ref : '../param0',
-								mode : "local",
-								editable : true
-							}, {
-								text : '重置型号',
-								handler : function(){
-									_this.bar.getComponent('param0').setValue('');
-								}
-							}*/,{
+							}/*
+								 * { xtype : 'mpspeccombobox', itemId :
+								 * 'param0', ref : '../param0', mode : "local",
+								 * editable : true }, { text : '重置型号', handler :
+								 * function(){
+								 * _this.bar.getComponent('param0').setValue(''); } }
+								 */, {
 								xtype : 'displayfield',
 								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 							}, {
@@ -117,7 +121,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 								itemId : 'param3',
 								ref : '../param3',
 								name : 'param3'
-							},{
+							}, {
 								xtype : 'displayfield',
 								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 							}, {
@@ -162,10 +166,11 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 		var templateData = [
 				["produce/diaphragm/print/img/mpmark1.png", "常用模板"],
 				["produce/diaphragm/print/img/mpmark11.png", "BW SHEET模板"],
-				["produce/diaphragm/print/img/mpmark0.png", "Reverse Osmosis sheet模板"],
+				["produce/diaphragm/print/img/mpmark0.png",
+						"Reverse Osmosis sheet模板"],
 				["produce/diaphragm/print/img/mpmark3.png", "SW模板"],
 				["produce/diaphragm/print/img/mpmark4.png", "ULP-2模板"],
-				["produce/diaphragm/print/img/mpmark10.png", "BW-FR SHEET模板"],				
+				["produce/diaphragm/print/img/mpmark10.png", "BW-FR SHEET模板"],
 				["produce/diaphragm/print/img/mpmark6.png",
 						"MEMBRANE FLAT SHEET模板"],
 				["produce/diaphragm/print/img/mpmark5.png", "Mang loc R.O.模板"],
@@ -207,86 +212,86 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, new Ext.form.ComboBox({
-								ref : '../templateValue',
-								triggerAction : "all",
-								lazyRender : true,
-								store : new Ext.data.SimpleStore({
-											fields : ["value", "text"],
-											data : templateData
-										}),
-								name : "templateValue",
-								mode : "local",
-								anchor : '100%',
-								editable : false,
-								displayField : "text",
-								valueField : "value",
-								forceSelection : true,
-								allowBlank : false,
-								emptyText : "请选择模板",
-								listeners : {
-									select : function(combo, record) {
-										_this.listPanel.paperwidth.setValue(82);
-										_this.listPanel.paperheight.setValue(60);
-										if (record.get('text') == 'ULP-2 Membrane模板') {
-											_this.bar.getComponent('label1')
-													.setVisible(true);
-											_this.bar.getComponent('label2')
-													.setVisible(true);
-											_this.bar.getComponent('label3')
-													.setVisible(true);
-											_this.bar.getComponent('param1')
-													.setVisible(true);
-											_this.bar.getComponent('param2')
-													.setVisible(true);
-											_this.bar.getComponent('param3')
-													.setVisible(true);
-										} else {
-											_this.bar.getComponent('label1')
-													.setVisible(false);
-											_this.bar.getComponent('label2')
-													.setVisible(false);
-											_this.bar.getComponent('label3')
-													.setVisible(false);
-											_this.bar.getComponent('param1')
-													.setVisible(false);
-											_this.bar.getComponent('param2')
-													.setVisible(false);
-											_this.bar.getComponent('param3')
-													.setVisible(false);
-										}
-										if (record.get('text') == 'Reverse Osmosis sheet模板') {
-											_this.listPanel.paperwidth.setValue(100);
-											_this.listPanel.paperheight.setValue(80);
-											_this.bar.getComponent('label4')
-													.setVisible(true);
-											_this.bar.getComponent('label5')
-													.setVisible(true);
-											_this.bar.getComponent('label6')
-													.setVisible(true);
-											_this.bar.getComponent('param4')
-													.setVisible(true);
-											_this.bar.getComponent('param5')
-													.setVisible(true);
-											_this.bar.getComponent('param6')
-													.setVisible(true);
-										} else {
-											_this.bar.getComponent('label4')
-													.setVisible(false);
-											_this.bar.getComponent('label5')
-													.setVisible(false);
-											_this.bar.getComponent('label6')
-													.setVisible(false);
-											_this.bar.getComponent('param4')
-													.setVisible(false);
-											_this.bar.getComponent('param5')
-													.setVisible(false);
-											_this.bar.getComponent('param6')
-													.setVisible(false);
-										}
-									}
+						ref : '../templateValue',
+						triggerAction : "all",
+						lazyRender : true,
+						store : new Ext.data.SimpleStore({
+									fields : ["value", "text"],
+									data : templateData
+								}),
+						name : "templateValue",
+						mode : "local",
+						anchor : '100%',
+						editable : false,
+						displayField : "text",
+						valueField : "value",
+						forceSelection : true,
+						allowBlank : false,
+						emptyText : "请选择模板",
+						listeners : {
+							select : function(combo, record) {
+								_this.listPanel.paperwidth.setValue(82);
+								_this.listPanel.paperheight.setValue(60);
+								if (record.get('text') == 'ULP-2 Membrane模板') {
+									_this.bar.getComponent('label1')
+											.setVisible(true);
+									_this.bar.getComponent('label2')
+											.setVisible(true);
+									_this.bar.getComponent('label3')
+											.setVisible(true);
+									_this.bar.getComponent('param1')
+											.setVisible(true);
+									_this.bar.getComponent('param2')
+											.setVisible(true);
+									_this.bar.getComponent('param3')
+											.setVisible(true);
+								} else {
+									_this.bar.getComponent('label1')
+											.setVisible(false);
+									_this.bar.getComponent('label2')
+											.setVisible(false);
+									_this.bar.getComponent('label3')
+											.setVisible(false);
+									_this.bar.getComponent('param1')
+											.setVisible(false);
+									_this.bar.getComponent('param2')
+											.setVisible(false);
+									_this.bar.getComponent('param3')
+											.setVisible(false);
 								}
+								if (record.get('text') == 'Reverse Osmosis sheet模板') {
+									_this.listPanel.paperwidth.setValue(100);
+									_this.listPanel.paperheight.setValue(80);
+									_this.bar.getComponent('label4')
+											.setVisible(true);
+									_this.bar.getComponent('label5')
+											.setVisible(true);
+									_this.bar.getComponent('label6')
+											.setVisible(true);
+									_this.bar.getComponent('param4')
+											.setVisible(true);
+									_this.bar.getComponent('param5')
+											.setVisible(true);
+									_this.bar.getComponent('param6')
+											.setVisible(true);
+								} else {
+									_this.bar.getComponent('label4')
+											.setVisible(false);
+									_this.bar.getComponent('label5')
+											.setVisible(false);
+									_this.bar.getComponent('label6')
+											.setVisible(false);
+									_this.bar.getComponent('param4')
+											.setVisible(false);
+									_this.bar.getComponent('param5')
+											.setVisible(false);
+									_this.bar.getComponent('param6')
+											.setVisible(false);
+								}
+							}
+						}
 
-							}), {
+					}), {
 						text : '查看模板',
 						scope : this,
 						handler : this.onTemplate
@@ -407,4 +412,132 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 		})
 	}
 
+	this.initOptLogWindow = function() {
+
+		var selModel2 = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
+			title : '【操作记录列表】',
+			region : 'center',
+			hsPage : true,			
+			viewConfig : {
+				forceFit : true
+			},
+			selModel : selModel2,			
+			tbar : [{
+						text : '复制膜片批号',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onCopyBatchNo
+					}],
+			delUrl : '1.biz.ext',
+			columns : [new Ext.grid.RowNumberer(), selModel2, {
+						dataIndex : 'createTime',
+						header : '操作日期'
+					}, {
+						dataIndex : 'createName',
+						header : '操作员'
+					}, {
+						dataIndex : 'business',
+						header : '业务项'
+					}, {
+						dataIndex : 'opt',
+						header : '业务操作'
+					}],
+			store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.base.base.queryOptLogByPage.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : 'totalCount',
+						baseParams : {
+							'condition/business':'导出发货请检单'
+						},
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'createUserId'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'updateTime'
+								}, {
+									name : 'updateUserId'
+								}, {
+									name : 'updateName'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'reserve2'
+								}, {
+									name : 'reserve3'
+								}, {
+									name : 'reserve4'
+								}, {
+									name : 'reserve5'
+								}, {
+									name : 'orgId'
+								}, {
+									name : 'status'
+								}, {
+									name : 'business'
+								}, {
+									name : 'opt'
+								}]
+					})
+		})
+
+		this.queryPanel2 = this.queryPanel2 || new Ext.fn.QueryPanel({
+					height : 120,
+					columns : 2,
+					border : true,
+					region : 'north',
+					// collapsible : true,
+					titleCollapse : false,
+					title : '【操作记录查询】',
+					fields : [{
+								xtype : 'textfield',
+								name : 'condition/business',
+								anchor : '85%',
+								fieldLabel : '业务项',
+								value : '导出发货请检单'
+							}, {
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '85%',
+								nameArray : ['condition/createTimeStart',
+										'condition/createTimeEnd'],
+								fieldLabel : "操作日期",
+								format : "Y-m-d"
+							}]
+				});
+		this.queryPanel2.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.optLogWindow.hide();
+					}
+
+				});
+
+		this.optLogWindow = this.optLogWindow || new Ext.Window({
+					title : '操作记录查询',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 820,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel2, this.listPanel2]
+
+				});
+	}
 }

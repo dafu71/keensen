@@ -77,7 +77,7 @@ com.keensen.ump.produce.quality.concessionViewMgr = function() {
 		})
 
 		this.editPanel = this.editPanel || new Ext.fn.ViewPanel({
-			height : 380,
+			height : 420,
 			// baseCls : "x-panel",
 			autoHide : false,
 			autoScroll : false,
@@ -151,7 +151,8 @@ com.keensen.ump.produce.quality.concessionViewMgr = function() {
 						colspan : 2
 					}, {
 						xtype : 'displayfield',
-						height : '5',
+						ref:'../picturePanel',
+						height : '30',
 						colspan : 2
 					}, {
 						xtype : 'textarea',
@@ -213,6 +214,24 @@ com.keensen.ump.produce.quality.concessionViewMgr = function() {
 						dataIndex : 'reserve1',
 						name : 'reserve1'
 						
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl',
+						ref:'../pictureUrl',
+						name : 'pictureUrl'
+
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl2',
+						ref:'../pictureUrl2',
+						name : 'pictureUrl2'
+
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl3',
+						ref:'../pictureUrl3',
+						name : 'pictureUrl3'
+
 					}],
 					buttons : [ {
 								text : "关闭",

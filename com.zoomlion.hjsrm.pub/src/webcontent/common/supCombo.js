@@ -35,6 +35,8 @@ com.keensen.ump.SupComboBox = Ext.extend(Ext.form.ComboBox, {
 										name : "id"
 									}, {
 										name : "name"
+									}, {
+										name : "code"
 									}],
 							listeners : {
 								scope : this,

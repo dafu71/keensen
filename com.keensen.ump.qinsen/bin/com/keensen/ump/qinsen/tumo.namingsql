@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.tumo">
+    <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   		SELECT T1.RECORD_ID         AS "recordId",
+       T1.PLAN_NO           AS "planNo",
+       T1.DIMO_BATCH_NO     AS "dimoBatchNo",
+       T1.BATCH_NO          AS "batchNo",
+       T1.LINE_ID           AS "lineId",
+       T1.SPEC_ID           AS "specId",
+       T1.WF_SUP_ID         AS "wfSupId",
+       T1.PROD_FLAG_ID      AS "prodFlagId",
+       T1.PRODUCE_DT        AS "produceDt",
+       T1.TEAM_ID           AS "teamId",
+       T1.TEAM_SEG          AS "teamSeg",
+       T1.OUT_LENGTH        AS "outLength",
+       T1.WORKER_ID         AS "workerId",
+       T1.PERF_FLAG_ID      AS "perfFlagId",
+       T1.IS_QUALIFIED      AS "isQualified",
+       T1.JUDGER_ID         AS "judgerId",
+       T1.JUDGE_DT          AS "judgeDt",
+       T1.CREATE_DT         AS "createDt",
+       T1.CHANGE_DT         AS "changeDt",
+       T1.CREATOR_ID        AS "creatorId",
+       T1.CHANGER_ID        AS "changerId",
+       T1.REMARK            AS "remark",
+       T1.JUDGE_REMARK      AS "judgeRemark",
+       T1.IS_VALID          AS "isValid",
+       T1.VALID_TM          AS "validTm",
+       T1.VERIFIER_ID       AS "verifierId",
+       T1.WF_BATCH_NO       AS "wfBatchNo",
+       T1.THICK_AVG         AS "thickAvg",
+       T1.THICK_MIN         AS "thickMin",
+       T1.THICK_MAX         AS "thickMax",
+       T1.TAG_NUM           AS "tagNum",
+       T1.TAG_LENGTH        AS "tagLength",
+       T1.INBOUND_REMARK    AS "inboundRemark",
+       T1.ORDER_NO          AS "orderNo",
+       T1.IS_WX             AS "isWx",
+       T1.IS_CUT_OVER       AS "isCutOver",
+       T1.OUT_BATCH_NO      AS "outBatchNo",
+       T1.IS_KEEP           AS "isKeep",
+       T1.MPD               AS "mpd",
+       T1.LINE_CODE         AS "lineCode",
+       T1.LINE_NAME         AS "lineName",
+       T1.MATER_SPEC_CODE   AS "materSpecCode",
+       T1.MATER_SPEC_NAME   AS "materSpecName",
+       T1.MP_BATCH_CODE     AS "mpBatchCode",
+       T1.QT_JUDGE_FLAG     AS "qtJudgeFlag",
+       T1.MATER_CLASS_ID    AS "materClassId",
+       T1.WF_SUPPLIER_CODE  AS "wfSupplierCode",
+       T1.WF_SUPPLIER_NAME  AS "wfSupplierName",
+       T1.PROD_FLAG_CODE    AS "prodFlagCode",
+       T1.PROD_FLAG_NAME    AS "prodFlagName",
+       T1.PERF_FLAG_CODE    AS "perfFlagCode",
+       T1.PERF_FLAG_NAME    AS "perfFlagName",
+       T1.IS_QUALIFIED_NAME AS "isQualifiedName",
+       T1.IS_VALID_NAME     AS "isValidName",
+       T1.IS_WX_NAME        AS "isWxName",
+       T1.IS_CUT_OVER_NAME  AS "isCutOverName",
+       T1.IS_KEEP_NAME      AS "isKeepName",
+       T1.PRODUCE_DATE      AS "produceDate",
+       T1.JUDGE_TIME        AS "judgeTime",
+       T1.VALID_TIME        AS "validTime",
+       T1.JUDGER_NAME       AS "judgerName",
+       T1.WORKER_NAME       AS "workerName",
+       T1.VERIFIER_NAME     AS "verifierName",
+       T1.TEAM_NAME         AS "teamName",
+       T1.MATER_CLASS_CODE  AS "materClassCode",
+       T1.CAIMO_LENGTH      AS "caimoLength",
+       T1.CAIMO_LOSS        AS "caimoLoss",
+       T1.LAST_CAIMO_DATE   AS "lastCaimoDate",
+       T1.USEFUL_LENGTH     AS "usefulLength",
+       T1.QUALIFID_LENGTH   AS "qualifidLength",
+       T1.F_MAC_NAME        AS "fMacName",
+       T1.F_GFD_AVG         AS "fGfdAvg",
+       T1.F_SALT_REJECTION  AS "fSaltRejection",
+       T1.R_MAC_NAME        AS "rMacName",
+       T1.R_GFD_AVG         AS "rGfdAvg",
+       T1.R_SALT_REJECTION  AS "rSaltRejection"
+  FROM (SELECT A.RECORD_ID,
+               A.PLAN_NO,
+               A.DIMO_BATCH_NO,
+               A.BATCH_NO,
+               A.LINE_ID,
+               A.SPEC_ID,
+               A.WF_SUP_ID,
+               A.PROD_FLAG_ID,
+               A.PRODUCE_DT,
+               A.TEAM_ID,
+               A.TEAM_SEG,
+               A.OUT_LENGTH,
+               A.WORKER_ID,
+               A.PERF_FLAG_ID,
+               A.IS_QUALIFIED,
+               A.JUDGER_ID,
+               A.JUDGE_DT,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               A.JUDGE_REMARK,
+               A.IS_VALID,
+               A.VALID_TM,
+               A.VERIFIER_ID,
+               A.WF_BATCH_NO,
+               A.THICK_AVG,
+               A.THICK_MIN,
+               A.THICK_MAX,
+               A.TAG_NUM,
+               A.TAG_LENGTH,
+               A.INBOUND_REMARK,
+               A.ORDER_NO,
+               A.IS_WX,
+               A.IS_CUT_OVER,
+               A.OUT_BATCH_NO,
+               A.IS_KEEP,
+               A.MPD,
+               L.LINE_CODE,
+               L.LINE_NAME,
+               S.MATER_SPEC_CODE,
+               S.MATER_SPEC_NAME,
+               S.MP_BATCH_CODE,
+               S.QT_JUDGE_FLAG,
+               S.MATER_CLASS_ID,
+               O1.PROP_VALUE_CODE WF_SUPPLIER_CODE,
+               O1.PROP_VALUE_NAME WF_SUPPLIER_NAME,
+               O2.PROP_VALUE_CODE PROD_FLAG_CODE,
+               O2.PROP_VALUE_NAME PROD_FLAG_NAME,
+               O3.PROP_VALUE_CODE PERF_FLAG_CODE,
+               O3.PROP_VALUE_NAME PERF_FLAG_NAME,
+               DECODE(A.IS_QUALIFIED,
+                      'Y',
+                      '合格',
+                      'P',
+                      '放行',
+                      'N',
+                      '不合格',
+                      '') IS_QUALIFIED_NAME,
+               DECODE(A.IS_VALID, 'Y', '是', 'N', '否', '') IS_VALID_NAME,
+               DECODE(A.IS_WX, 'Y', '是', 'N', '否', '') IS_WX_NAME,
+               DECODE(A.IS_CUT_OVER, 'Y', '是', 'N', '否', '') IS_CUT_OVER_NAME,
+               DECODE(A.IS_KEEP, 'Y', '是', 'N', '否', '') IS_KEEP_NAME,
+               TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
+               TO_CHAR(A.JUDGE_DT, 'YYYY-MM-DD HH24:MI') JUDGE_TIME,
+               TO_CHAR(A.VALID_TM, 'YYYY-MM-DD HH24:MI') VALID_TIME,
+               BS.STAFF_NAME JUDGER_NAME,
+               BS2.STAFF_NAME WORKER_NAME,
+               BS3.STAFF_NAME VERIFIER_NAME,
+               BD.DEPT_NAME TEAM_NAME,
+               PMC.MATER_CLASS_CODE MATER_CLASS_CODE,
+               T2.CAIMO_LENGTH,
+               T3.CAIMO_LOSS,
+               T4.LAST_CAIMO_DATE,
+               A.OUT_LENGTH - T5.LOSS USEFUL_LENGTH， A.OUT_LENGTH - DECODE(A.IS_WX, 'Y', NVL(A.TAG_LENGTH, 0), 0) - T6.LOSS QUALIFID_LENGTH,
+               T7.MAC_NAME F_MAC_NAME,
+               T7.GFD_AVG F_GFD_AVG,
+               T7.SALT_REJECTION F_SALT_REJECTION,
+               T8.MAC_NAME R_MAC_NAME,
+               T8.GFD_AVG R_GFD_AVG,
+               T8.SALT_REJECTION R_SALT_REJECTION
+          FROM QINSEN.INST_TUMO A
+          LEFT JOIN QINSEN.BASE_PROD_LINE L
+            ON A.LINE_ID = L.LINE_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC S
+            ON A.SPEC_ID = S.MATER_SPEC_ID
+          LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION O1
+            ON A.WF_SUP_ID = O1.PROP_VALUE_ID
+          LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION O2
+            ON A.PROD_FLAG_ID = O2.PROP_VALUE_ID
+          LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION O3
+            ON A.PERF_FLAG_ID = O3.PROP_VALUE_ID
+          LEFT JOIN QINSEN.BASE_STAFF BS
+            ON BS.STAFF_ID = A.JUDGER_ID
+          LEFT JOIN QINSEN.BASE_STAFF BS2
+            ON BS2.STAFF_ID = A.WORKER_ID
+          LEFT JOIN QINSEN.BASE_STAFF BS3
+            ON BS2.STAFF_ID = A.VERIFIER_ID
+          LEFT JOIN QINSEN.BASE_DEPARTMENT BD
+            ON BD.DEPT_ID = A.TEAM_ID
+          LEFT JOIN QINSEN.PARA_MATER_CLASS PMC
+            ON PMC.MATER_CLASS_ID = S.MATER_CLASS_ID
+          LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,
+                           C.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
+                     WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
+                     GROUP BY C.TUMO_BATCH_ID) T2
+            ON T2.TUMO_BATCH_ID = A.RECORD_ID
+          LEFT JOIN (SELECT SUM(D.LOSS) CAIMO_LOSS, D.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT D
+                     GROUP BY D.TUMO_BATCH_ID) T3
+            ON T3.TUMO_BATCH_ID = A.RECORD_ID
+          LEFT JOIN (SELECT TO_CHAR(MAX(C.PRODUCE_DT), 'YYYY-MM-DD HH24:MI') LAST_CAIMO_DATE,
+                           C.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CAIDIEMO C
+                     GROUP BY C.TUMO_BATCH_ID) T4
+            ON T4.TUMO_BATCH_ID = A.RECORD_ID
+          LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT D,
+                           QINSEN.PARA_CDM_DEFECT P
+                     WHERE D.DEFECT_ITEM_ID = P.RECORD_ID
+                       AND P.REC_TACHE_ID = 100
+                     GROUP BY D.TUMO_BATCH_ID) T5
+            ON T5.TUMO_BATCH_ID = A.RECORD_ID
+          LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT D,
+                           QINSEN.PARA_CDM_DEFECT P
+                     WHERE D.DEFECT_ITEM_ID = P.RECORD_ID
+                     GROUP BY D.TUMO_BATCH_ID) T6
+            ON T6.TUMO_BATCH_ID = A.RECORD_ID
+          LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'N'
+                     GROUP BY C.BATCH_ID) T7
+            ON T7.BATCH_ID = A.RECORD_ID
+          LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'Y'
+                     GROUP BY C.BATCH_ID) T8
+            ON T8.BATCH_ID = A.RECORD_ID) T1
+       where 1=1
+       	<isNotNull prepend="" property="produceDtStart">AND T1.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceDtEnd">AND T1.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="lineId">AND T1.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND T1.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="wfSupId">AND T1.WF_SUP_ID = #wfSupId#</isNotNull>
+        <isNotNull prepend="" property="isQualified">AND T1.IS_QUALIFIED = #isQualified#</isNotNull>
+        <isNotNull prepend="" property="isWx">AND T1.IS_WX = #isWx#</isNotNull>
+        <isNotNull prepend="" property="workerId">AND T1.WORKER_ID = #workerId#</isNotNull>
+        <isNotNull prepend="" property="orderNoStr">AND T1.ORDER_NO LIKE '%' || #orderNoStr# || '%'</isNotNull>
+        <isNotNull prepend="" property="planNo">AND T1.PLAN_NO = #planNo#</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND T1.DIMO_BATCH_NO = UPPER(#dimoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND T1.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="outBatchNo">AND T1.OUT_BATCH_NO = #outBatchNo#</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND T1.BATCH_NO = #tumoBatchNo#</isNotNull>
+ ORDER BY T1.PRODUCE_DT DESC, T1.BATCH_NO
+
+   	</select>
+    <select id="countRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT nvl(COUNT(1),0) "cnt", nvl(SUM(T.OUT_LENGTH),0) "totalLength",
+       nvl(SUM(T.USEFUL_LENGTH),0) "totalUsefulLength",
+       nvl(SUM(T.CAIMO_LENGTH),0) "totalCdmLength", nvl(SUM(T.CAIMO_LOSS),0) "totalLoss"
+  FROM (SELECT A.RECORD_ID, A.OUT_LENGTH,
+                (SELECT nvl(A.OUT_LENGTH - NVL(SUM(D.LOSS), 0),0)
+                    FROM qinsen.INST_CDM_DEFECT D, qinsen.PARA_CDM_DEFECT P
+                   WHERE D.TUMO_BATCH_ID = A.RECORD_ID
+                     AND D.DEFECT_ITEM_ID = P.RECORD_ID
+                     AND P.REC_TACHE_ID = 100) USEFUL_LENGTH,
+                (SELECT nvl(SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH),0)
+                    FROM qinsen.INST_CAIDIEMO C, qinsen.PARA_MATER_SPEC CS
+                   WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
+                     AND C.TUMO_BATCH_ID = A.RECORD_ID) CAIMO_LENGTH,
+                (SELECT nvl(SUM(D.LOSS),0)
+                    FROM qinsen.INST_CDM_DEFECT D
+                   WHERE D.TUMO_BATCH_ID = A.RECORD_ID) CAIMO_LOSS
+           FROM qinsen.INST_TUMO A, qinsen.BASE_PROD_LINE L, qinsen.PARA_MATER_SPEC S,
+                qinsen.CONF_PROP_VALUE_OPTION O1, qinsen.CONF_PROP_VALUE_OPTION O2
+   WHERE A.LINE_ID = L.LINE_ID
+     AND A.SPEC_ID = S.MATER_SPEC_ID
+     AND A.WF_SUP_ID = O1.PROP_VALUE_ID
+     AND A.PROD_FLAG_ID = O2.PROP_VALUE_ID
+	
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="" property="orderNoStr">AND A.ORDER_NO LIKE '%' || #orderNoStr# || '%'</isNotNull>
+        <isNotNull prepend="" property="planNo">AND A.PLAN_NO = #planNo#</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND A.DIMO_BATCH_NO = #dimoBatchNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="lineId">AND A.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND A.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="wfSupId">AND A.WF_SUP_ID = #wfSupId#</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND A.PROD_FLAG_ID = #prodFlagId#</isNotNull>
+        <isNotNull prepend="" property="teamId">AND A.TEAM_ID = #teamId#</isNotNull>
+        <isNotNull prepend="" property="workerId">AND A.WORKER_ID = #workerId#</isNotNull>
+        <isNotNull prepend="" property="perfFlagId">AND A.PERF_FLAG_ID = #perfFlagId#</isNotNull>
+        <isNotNull prepend="" property="isQualified">AND A.IS_QUALIFIED = #isQualified#</isNotNull>
+        <isNotNull prepend="" property="isValid">AND A.IS_VALID = #isValid#</isNotNull>
+        <isNotNull prepend="" property="isWx">AND A.IS_WX = #isWx#</isNotNull>
+        <isNotNull prepend="" property="isCutOver">AND A.IS_CUT_OVER = #isCutOver#</isNotNull>
+        <isNotNull prepend="" property="produceDtStart">AND A.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceDtEnd">AND A.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchId">AND EXISTS (SELECT 1
+	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C
+	         WHERE D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = A.RECORD_ID
+	           AND D.MAIN_BATCH_ID = #juanMoBatchId#)</isNotNull>
+        <isNotNull prepend="" property="outBatchNo">AND A.OUT_BATCH_NO = #outBatchNo#</isNotNull>
+	) T
+   	
+   	</select>
+    <select id="queryOutBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT SUBSTR(to_char(SYSDATE,'yyyy'),4,1) || '1' || trim(to_char('1','00000')) "outBatchNo" 
+		FROM dual
+		WHERE NOT EXISTS (SELECT 1 FROM qinsen.inst_tumo t 
+		WHERE to_char(t.create_dt,'yyyy')=to_char(SYSDATE,'yyyy'))
+		UNION 
+		SELECT SUBSTR(to_char(SYSDATE,'yyyy'),4,1) || 
+		DECODE(to_char(SYSDATE,'mm'),10,'0',11,'A',12,'B',to_number(to_char(SYSDATE,'mm')))
+		|| trim(to_char(to_number(substr(nvl(MAX(t.out_batch_no),'00000'),3,5))+1,'00000'))
+		FROM qinsen.inst_tumo t 
+		WHERE EXISTS (SELECT 1 FROM qinsen.inst_tumo t 
+		WHERE to_char(t.create_dt,'yyyy')=to_char(SYSDATE,'yyyy'))</select>
+    <!-- 查询是否有唯一键冲突记录 -->
+    <select id="queryDuplicateRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT 1
+    FROM qinsen.INST_TUMO A
+	 WHERE A.BATCH_NO = UPPER(#batchNo#)
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID &lt;&gt; #recordId#</isNotNull>
+        <isNotNull prepend="" property="tumoRecordId">AND A.RECORD_ID = #tumoRecordId#</isNotNull>
+    </select>
+    <insert id="backupTumo" parameterClass="java.util.HashMap">INSERT INTO KS_INST_TUMO_DEL_BAK
+	(RECORD_ID,BATCH_NO,LINE_ID,SPEC_ID,WF_SUP_ID,PROD_FLAG_ID,
+	PRODUCE_DT,TEAM_ID,TEAM_SEG,OUT_LENGTH,WORKER_ID,PERF_FLAG_ID,
+	IS_QUALIFIED,JUDGER_ID,JUDGE_DT,CREATE_DT,CHANGE_DT,CREATOR_ID,
+	CHANGER_ID,REMARK,JUDGE_REMARK,DIMO_BATCH_NO,PLAN_NO,IS_VALID,
+	VALID_TM,VERIFIER_ID,WF_BATCH_NO,THICK_AVG,THICK_MIN,THICK_MAX,
+	TAG_NUM,TAG_LENGTH,INBOUND_REMARK,ORDER_NO,IS_WX,IS_CUT_OVER,
+	OUT_BATCH_NO,IS_KEEP,MPD)
+	SELECT RECORD_ID,BATCH_NO,LINE_ID,SPEC_ID,WF_SUP_ID,PROD_FLAG_ID,
+	PRODUCE_DT,TEAM_ID,TEAM_SEG,OUT_LENGTH,WORKER_ID,PERF_FLAG_ID,
+	IS_QUALIFIED,JUDGER_ID,JUDGE_DT,CREATE_DT,CHANGE_DT,CREATOR_ID,
+	CHANGER_ID,REMARK,JUDGE_REMARK,DIMO_BATCH_NO,PLAN_NO,IS_VALID,
+	VALID_TM,VERIFIER_ID,WF_BATCH_NO,THICK_AVG,THICK_MIN,THICK_MAX,
+	TAG_NUM,TAG_LENGTH,INBOUND_REMARK,ORDER_NO,IS_WX,IS_CUT_OVER,
+	OUT_BATCH_NO,IS_KEEP,MPD
+	FROM qinsen.inst_tumo 
+	WHERE RECORD_ID=#recordId#</insert>
+</sqlMap>

@@ -60,6 +60,18 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.onShow
 				});
+		this.queryPanel.addButton({
+					text : "老基地库存显示",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onShow4Old
+				});
+		this.queryPanel.addButton({
+					text : "新基地库存显示",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onShow4New
+				});
 	}
 
 	this.initListPanel = function() {
@@ -86,6 +98,9 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					}, {
 						dataIndex : 'dimoType',
 						header : '底膜类型'
+					}, {
+						dataIndex : 'supName',
+						header : '无纺布（供应商）'
 					}, {
 						dataIndex : 'dimoBatchNo',
 						header : '底膜批号'
@@ -116,6 +131,8 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 							name : 'dimoAmount'
 						}, {
 							name : 'residue'
+						}, {
+							name : 'supName'
 						}]
 			})
 		})

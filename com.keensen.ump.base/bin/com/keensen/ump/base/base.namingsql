@@ -36,7 +36,7 @@
     </select>
     <!-- 供应商查询 -->
     <select id="querySup" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.prop_value_id   "supId",t.prop_value_id   "id",
-       t.prop_value_code "supCode",
+       t.prop_value_code "supCode",t.prop_value_code "code",
        t.prop_value_name "supName",
        t.prop_value_name || '(' || t.prop_value_code || ')' "name"
   	from qinsen.CONF_PROP_VALUE_OPTION t
@@ -55,11 +55,12 @@
     where t.dept_id = '100080'</select>
     <!-- 膜片型号查询 -->
     <select id="queryMpSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
-	t.mater_spec_id "id",t.mater_spec_code "name"
+	t.mater_spec_id "id",t.mater_spec_code "name",t.mater_spec_code "code"
+	,t.mp_batch_code "mpBatchCode"
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030024,100030025,100030023,100030022)</select>
     <!-- 膜片生产线查询 -->
-    <select id="queryMpLine" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.line_id,t.line_code,t.line_name ,
+    <select id="queryMpLine" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.line_id,t.line_code "code",t.line_name ,
 	t.line_id "id",t.line_name || '(' || t.line_code || ')' "name"
 	from qinsen.BASE_PROD_LINE t
 	where t.line_id in(select distinct line_id from qinsen.INST_TUMO)</select>
@@ -130,7 +131,7 @@
     <!-- 查询待选生产线 -->
     <select id="qryLineOption" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
       SELECT L.LINE_ID       "lineId",
-       L.LINE_CODE     "lineCode",
+       L.LINE_CODE     "lineCode",L.LINE_CODE     "code",
        L.LINE_NAME     "lineName",
        L.WORKSHOP_ID   "workshopId",
        L.DISP_ORDER    "dispOrder",
@@ -203,9 +204,46 @@
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
     </select>
     <!-- 生产类型查询 -->
-    <select id="queryProdFlagSel" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T.PROP_VALUE_ID "id",
+    <select id="queryProdFlagSel" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T.PROP_VALUE_ID "id",t.is_default "isDefault",
        T.PROP_VALUE_NAME || '(' || T.PROP_VALUE_CODE || ')' "name",
        T.PROP_VALUE_CODE "code"
   FROM QINSEN.CONF_PROP_VALUE_OPTION T
  WHERE T.PROP_ID = 30022</select>
+    <!-- 操作记录查询 -->
+    <select id="queryOptLog" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+      SELECT T1.ID             AS "id",
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       T1.UPDATE_TIME    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.BUSINESS       AS "business",
+       T1.OPT            AS "opt"
+  FROM KS_BASE_OPT_LOG T1
+  where 1=1
+  	<isNotNull prepend="and" property="business">T1.BUSINESS like '%'||#business#||'%'</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+  ORDER BY T1.CREATE_TIME DESC
+     </select>
+    <!-- 元件操作工查询 -->
+    <select id="queryComponentworker" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.dept_id,t.staff_id ,t.staff_name,t.staff_code,t.staff_code "code",
+		t.staff_id "id", t.staff_name || '(' || t.staff_code || ')' "name"
+		 from qinsen.base_staff t
+		where t.dept_id in(100070)
+		--and t.state = 'A'
+		order by t.staff_name</select>
+    <!-- 元件生产线查询 -->
+    <select id="queryComponentLine" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.line_id,t.line_code "code",t.line_name ,
+	t.line_id "id",t.line_name || '(' || t.line_code || ')' "name"
+	from qinsen.BASE_PROD_LINE t
+	where t.prod_tache_id=101</select>
 </sqlMap>

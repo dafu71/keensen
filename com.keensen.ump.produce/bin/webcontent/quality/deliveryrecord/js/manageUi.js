@@ -4,16 +4,16 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 		this.resultStore = new Ext.data.ArrayStore({
 					fields : ['mykey', 'myvalue'],
 					data : [["合格", "合格"], ["不合格", "不合格"]]
-					
+
 				});
 
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
 		this.initEditWindow();
-		
+
 		this.initReviewWindow();
-		
+
 		this.buildExcelUploadWin();
 
 		return new Ext.fn.fnLayOut({
@@ -27,35 +27,42 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
-					columns : 2,
-					border : true,
-					// collapsible : true,
-					titleCollapse : false,
-					title : '【元件出货质检报告查询】',
-					fields : [{
-								xtype : 'textfield',
-								name : 'condition/labelingModel',
-								anchor : '75%',
-								fieldLabel : '贴标型号'
-							}, {
-								xtype : 'prodspeccombobox',
-								hiddenName : 'condition/materSpecId',
-								anchor : '75%',
-								fieldLabel : '元件型号 ',
-								typeAhead : true,
-								typeAheadDelay : 100,
-								minChars : 1,
-								queryMode : 'local',
-								lastQuery : '',
-								editable : true,
-								listeners : {
-									'specialkey' : function() {
-										return false;
-									}
-								}
-							}]
-				});
+			height : 120,
+			columns : 3,
+			border : true,
+			// collapsible : true,
+			titleCollapse : false,
+			title : '【元件出货质检报告查询】',
+			fields : [{
+				xtype : "dateregion",
+				colspan : 1,
+				anchor : '75%',
+				nameArray : ['condition/reportDtStart', 'condition/reportDtEnd'],
+				fieldLabel : "报告日期",
+				format : "Y-m-d"
+			}, {
+				xtype : 'textfield',
+				name : 'condition/labelingModel',
+				anchor : '75%',
+				fieldLabel : '贴标型号'
+			}, {
+				xtype : 'prodspeccombobox',
+				hiddenName : 'condition/materSpecId',
+				anchor : '75%',
+				fieldLabel : '元件型号 ',
+				typeAhead : true,
+				typeAheadDelay : 100,
+				minChars : 1,
+				queryMode : 'local',
+				lastQuery : '',
+				editable : true,
+				listeners : {
+					'specialkey' : function() {
+						return false;
+					}
+				}
+			}]
+		});
 
 		this.queryPanel.addButton({
 					text : "元件明细模板",
@@ -492,7 +499,6 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							valueField : "mykey",
 							forceSelection : true,
 							emptyText : "--请选择--"
-							
 
 						}, {
 							xtype : 'displayfield',
@@ -516,16 +522,20 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 2,
 							dataIndex : 'waterCheck',
 							listeners : {
-								'blur':function(){
+								'blur' : function() {
 									var searchStr = "GPD";
-									var str = _this.inputWindow.form.findField('entity/waterCheck').getValue();
+									var str = _this.inputWindow.form
+											.findField('entity/waterCheck')
+											.getValue();
 									var index = str.indexOf(searchStr);
-									if(index==-1){
-										_this.inputWindow.form.findField('entity/waterCheck').setValue(str + searchStr);
+									if (index == -1) {
+										_this.inputWindow.form
+												.findField('entity/waterCheck')
+												.setValue(str + searchStr);
 									}
 								}
 							}
-							
+
 						}, {
 							xtype : 'combobox',
 							anchor : '75%',
@@ -565,12 +575,16 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 2,
 							dataIndex : 'waterCheck2',
 							listeners : {
-								'blur':function(){
+								'blur' : function() {
 									var searchStr = "GPD";
-									var str = _this.inputWindow.form.findField('entity/waterCheck2').getValue();
+									var str = _this.inputWindow.form
+											.findField('entity/waterCheck2')
+											.getValue();
 									var index = str.indexOf(searchStr);
-									if(index==-1){
-										_this.inputWindow.form.findField('entity/waterCheck2').setValue(str + searchStr);
+									if (index == -1) {
+										_this.inputWindow.form
+												.findField('entity/waterCheck2')
+												.setValue(str + searchStr);
 									}
 								}
 							}
@@ -613,12 +627,16 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 2,
 							dataIndex : 'desalinationCheck',
 							listeners : {
-								'blur':function(){
+								'blur' : function() {
 									var searchStr = "%";
-									var str = _this.inputWindow.form.findField('entity/desalinationCheck').getValue();
+									var str = _this.inputWindow.form
+											.findField('entity/desalinationCheck')
+											.getValue();
 									var index = str.indexOf(searchStr);
-									if(index==-1){
-										_this.inputWindow.form.findField('entity/desalinationCheck').setValue(str + searchStr);
+									if (index == -1) {
+										_this.inputWindow.form
+												.findField('entity/desalinationCheck')
+												.setValue(str + searchStr);
 									}
 								}
 							}
@@ -661,12 +679,16 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 2,
 							dataIndex : 'desalinationCheck2',
 							listeners : {
-								'blur':function(){
+								'blur' : function() {
 									var searchStr = "%";
-									var str = _this.inputWindow.form.findField('entity/desalinationCheck2').getValue();
+									var str = _this.inputWindow.form
+											.findField('entity/desalinationCheck2')
+											.getValue();
 									var index = str.indexOf(searchStr);
-									if(index==-1){
-										_this.inputWindow.form.findField('entity/desalinationCheck2').setValue(str + searchStr);
+									if (index == -1) {
+										_this.inputWindow.form
+												.findField('entity/desalinationCheck2')
+												.setValue(str + searchStr);
 									}
 								}
 							}
@@ -693,7 +715,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 	}
 
 	this.initEditWindow = function() {
-		var _this =this;
+		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '修改元件出货质检报告',
 			height : 600,
@@ -993,12 +1015,16 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 2,
 							dataIndex : 'waterCheck',
 							listeners : {
-								'blur':function(){
+								'blur' : function() {
 									var searchStr = "GPD";
-									var str = _this.editWindow.form.findField('entity/waterCheck').getValue();
+									var str = _this.editWindow.form
+											.findField('entity/waterCheck')
+											.getValue();
 									var index = str.indexOf(searchStr);
-									if(index==-1){
-										_this.editWindow.form.findField('entity/waterCheck').setValue(str + searchStr);
+									if (index == -1) {
+										_this.editWindow.form
+												.findField('entity/waterCheck')
+												.setValue(str + searchStr);
 									}
 								}
 							}
@@ -1041,12 +1067,16 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 2,
 							dataIndex : 'waterCheck2',
 							listeners : {
-								'blur':function(){
+								'blur' : function() {
 									var searchStr = "GPD";
-									var str = _this.editWindow.form.findField('entity/waterCheck2').getValue();
+									var str = _this.editWindow.form
+											.findField('entity/waterCheck2')
+											.getValue();
 									var index = str.indexOf(searchStr);
-									if(index==-1){
-										_this.editWindow.form.findField('entity/waterCheck2').setValue(str + searchStr);
+									if (index == -1) {
+										_this.editWindow.form
+												.findField('entity/waterCheck2')
+												.setValue(str + searchStr);
 									}
 								}
 							}
@@ -1089,12 +1119,16 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 2,
 							dataIndex : 'desalinationCheck',
 							listeners : {
-								'blur':function(){
+								'blur' : function() {
 									var searchStr = "%";
-									var str = _this.editWindow.form.findField('entity/desalinationCheck').getValue();
+									var str = _this.editWindow.form
+											.findField('entity/desalinationCheck')
+											.getValue();
 									var index = str.indexOf(searchStr);
-									if(index==-1){
-										_this.editWindow.form.findField('entity/desalinationCheck').setValue(str + searchStr);
+									if (index == -1) {
+										_this.editWindow.form
+												.findField('entity/desalinationCheck')
+												.setValue(str + searchStr);
 									}
 								}
 							}
@@ -1137,12 +1171,16 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 2,
 							dataIndex : 'desalinationCheck2',
 							listeners : {
-								'blur':function(){
+								'blur' : function() {
 									var searchStr = "%";
-									var str = _this.editWindow.form.findField('entity/desalinationCheck2').getValue();
+									var str = _this.editWindow.form
+											.findField('entity/desalinationCheck2')
+											.getValue();
 									var index = str.indexOf(searchStr);
-									if(index==-1){
-										_this.editWindow.form.findField('entity/desalinationCheck2').setValue(str + searchStr);
+									if (index == -1) {
+										_this.editWindow.form
+												.findField('entity/desalinationCheck2')
+												.setValue(str + searchStr);
 									}
 								}
 							}
@@ -1196,10 +1234,10 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							xtype : 'combobox',
 							anchor : '75%',
 							colspan : 3,
-							//name : 'entity/productName',
+							// name : 'entity/productName',
 							hiddenName : 'entity/productName',
 							dataIndex : 'productName',
-							
+
 							readOnly : true,
 							fieldLabel : '品名',
 							triggerAction : "all",
@@ -1217,8 +1255,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							emptyText : "--请选择--"
 						}, {
 							xtype : 'trigger',
-							//name : 'entity/labelingModel',
-							
+							// name : 'entity/labelingModel',
+
 							readOnly : true,
 							fieldLabel : '规格',
 							emptyText : "输入规格，单击旁边按钮",
@@ -1237,8 +1275,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 6
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/batchNo',
-							
+							// name : 'entity/batchNo',
+
 							readOnly : true,
 							fieldLabel : '批号',
 							anchor : '75%',
@@ -1246,9 +1284,9 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							dataIndex : 'batchNo'
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/orderNo',
+							// name : 'entity/orderNo',
 							readOnly : true,
-							
+
 							fieldLabel : '订单号',
 							anchor : '75%',
 							colspan : 3,
@@ -1259,18 +1297,18 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 6
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/orderAmount',
+							// name : 'entity/orderAmount',
 							readOnly : true,
-							
+
 							fieldLabel : '订单数量',
 							anchor : '75%',
 							colspan : 3,
 							dataIndex : 'orderAmount'
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/checkAmount',
+							// name : 'entity/checkAmount',
 							readOnly : true,
-							
+
 							fieldLabel : '抽检数量',
 							anchor : '75%',
 							colspan : 3,
@@ -1281,8 +1319,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 6
 						}, {
 							xtype : 'datefield',
-							
-							//name : 'entity/checkDt',
+
+							// name : 'entity/checkDt',
 							readOnly : true,
 							dataIndex : 'checkDt',
 							format : "Y-m-d",
@@ -1295,7 +1333,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 6
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/solution',
+							// name : 'entity/solution',
 							readOnly : true,
 							fieldLabel : "<span style='color:red;'>NaCl</span>测试原水",
 							anchor : '95%',
@@ -1303,7 +1341,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							dataIndex : 'solution'
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/temperature',
+							// name : 'entity/temperature',
 							readOnly : true,
 							fieldLabel : '温度（℃）',
 							anchor : '95%',
@@ -1311,7 +1349,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							dataIndex : 'temperature'
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/ph',
+							// name : 'entity/ph',
 							readOnly : true,
 							fieldLabel : 'pH',
 							anchor : '95%',
@@ -1323,7 +1361,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 6
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/recovery',
+							// name : 'entity/recovery',
 							readOnly : true,
 							fieldLabel : '回收率（%）',
 							anchor : '95%',
@@ -1331,7 +1369,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							dataIndex : 'recovery'
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/press',
+							// name : 'entity/press',
 							readOnly : true,
 							fieldLabel : '测试压力',
 							anchor : '95%',
@@ -1391,7 +1429,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 6
 						}, {
 							xtype : 'textarea',
-							//name : 'entity/appearance',
+							// name : 'entity/appearance',
 							value : '表面光洁平整,无毛刺、损伤、污染、划痕、裂痕、破损等明显缺陷',
 							readOnly : true,
 							fieldLabel : '外观标准',
@@ -1400,7 +1438,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							dataIndex : 'appearance'
 						}, {
 							xtype : 'textarea',
-							//name : 'entity/appearanceCheck',
+							// name : 'entity/appearanceCheck',
 							value : '表面光洁平整,无毛刺、损伤、污染、划痕、裂痕、破损等缺陷',
 							readOnly : true,
 							fieldLabel : '外观检验结果',
@@ -1411,10 +1449,10 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							xtype : 'combobox',
 							anchor : '75%',
 							colspan : 2,
-							//name : 'entity/appearanceResult',
-							//hiddenName : 'entity/appearanceResult',
+							// name : 'entity/appearanceResult',
+							// hiddenName : 'entity/appearanceResult',
 							dataIndex : 'appearanceResult',
-							
+
 							readOnly : true,
 							fieldLabel : '外观判定',
 							triggerAction : "all",
@@ -1431,7 +1469,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 6
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/water',
+							// name : 'entity/water',
 							readOnly : true,
 							fieldLabel : "<span style='color:red;'>NaCl</span>产水量标准",
 							anchor : '100%',
@@ -1439,8 +1477,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							dataIndex : 'water'
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/waterCheck',
-							
+							// name : 'entity/waterCheck',
+
 							readOnly : false,
 							fieldLabel : '产水检验结果',
 							anchor : '100%',
@@ -1450,10 +1488,10 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							xtype : 'combobox',
 							anchor : '75%',
 							colspan : 2,
-							//name : 'entity/waterResult',
+							// name : 'entity/waterResult',
 							hiddenName : 'entity/waterResult',
 							dataIndex : 'waterResult',
-							
+
 							readOnly : true,
 							fieldLabel : '产水量判定',
 							triggerAction : "all",
@@ -1479,7 +1517,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						}, {
 							xtype : 'textfield',
 							name : 'waterCheck2',
-							
+
 							readOnly : false,
 							fieldLabel : '产水检验结果',
 							anchor : '100%',
@@ -1490,9 +1528,9 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							anchor : '75%',
 							colspan : 2,
 							name : 'waterResult2',
-							//hiddenName : 'entity/waterResult2',
+							// hiddenName : 'entity/waterResult2',
 							dataIndex : 'waterResult2',
-							
+
 							readOnly : true,
 							fieldLabel : '产水量判定',
 							triggerAction : "all",
@@ -1509,7 +1547,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 6
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/desalination',
+							// name : 'entity/desalination',
 							readOnly : true,
 							fieldLabel : "<span style='color:red;'>NaCl</span>脱盐率标准",
 							anchor : '100%',
@@ -1517,8 +1555,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							dataIndex : 'desalination'
 						}, {
 							xtype : 'textfield',
-							//name : 'entity/desalinationCheck',
-							
+							// name : 'entity/desalinationCheck',
+
 							readOnly : true,
 							fieldLabel : '脱盐检验结果',
 							anchor : '100%',
@@ -1528,10 +1566,10 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							xtype : 'combobox',
 							anchor : '75%',
 							colspan : 2,
-							//name : 'entity/desalinationResult',
-							//hiddenName : 'entity/desalinationResult',
+							// name : 'entity/desalinationResult',
+							// hiddenName : 'entity/desalinationResult',
 							dataIndex : 'desalinationResult',
-							
+
 							readOnly : true,
 							fieldLabel : '脱盐率判定',
 							triggerAction : "all",
@@ -1557,7 +1595,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						}, {
 							xtype : 'textfield',
 							name : 'desalinationCheck2',
-							
+
 							readOnly : true,
 							fieldLabel : '脱盐检验结果',
 							anchor : '100%',
@@ -1568,9 +1606,9 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							anchor : '75%',
 							colspan : 2,
 							name : 'desalinationResult2',
-							//hiddenName : 'entity/desalinationResult2',
+							// hiddenName : 'entity/desalinationResult2',
 							dataIndex : 'desalinationResult2',
-							
+
 							readOnly : true,
 							fieldLabel : '脱盐率判定',
 							triggerAction : "all",
@@ -1610,7 +1648,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 			}]
 		});
 	}
-	
+
 	// 导入excel面板
 	this.buildExcelUploadWin = function() {
 		this.excelUploadWin = new Ext.Window({
@@ -1623,18 +1661,18 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 			width : 480,
 			height : 120,
 			items : [{
-						xtype : 'columnform',
-						itemId : 'uploadForm',
-						saveUrl : 'com.keensen.ump.produce.quality.importDeliveryReportList.flow',
-						columns : 1,
-						fileUpload : true,
-						fields : [{
-									name : 'uploadFile',
-									fieldLabel : '选择文件',
-									allowBlank : false,
-									inputType : 'file'
-								}]
-					}],
+				xtype : 'columnform',
+				itemId : 'uploadForm',
+				saveUrl : 'com.keensen.ump.produce.quality.importDeliveryReportList.flow',
+				columns : 1,
+				fileUpload : true,
+				fields : [{
+							name : 'uploadFile',
+							fieldLabel : '选择文件',
+							allowBlank : false,
+							inputType : 'file'
+						}]
+			}],
 			buttons : [{
 						text : '上传',
 						handler : this.doUpload,

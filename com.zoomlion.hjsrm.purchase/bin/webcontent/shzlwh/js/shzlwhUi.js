@@ -27,12 +27,12 @@ com.zoomlion.hjsrm.purchase.shzlwhMgr = function(){
     };
     
   
-    this.createshzldrPanel = function(){
-      this.shzldr = new com.zoomlion.hjsrm.purchase.shzldrMgr(this.lay);
-      this.shzldrPanel =this.shzldr.initPanel();
-      this.shzldr.initEvent();
-      return this.shzldrPanel;
-    };
+    this.createshzldrPanel = function() {
+		this.shzldr = new com.zoomlion.hjsrm.purchase.shzldrMgr(this.lay);
+		this.shzldrPanel = this.shzldr.initPanel();
+		this.shzldr.initEvent();
+		return this.shzldrPanel;
+	};
      this.createshzlcxPanel = function(){
      this.shzlcx = new com.zoomlion.hjsrm.purchase.shzlcxMgr(this.lay);
       this.shzlcxPanel =  this.shzlcx.initPanel();

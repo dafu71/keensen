@@ -39,28 +39,224 @@ function isNonNegativeFloat(str) {
 	return regex.test(str);
 }
 
+// 发货请检单
+com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck = function() {
+	// 订单号-计划单号
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var arr = [];
+		var recordIdArr = [];
+		var C = A.getSelectionModel().getSelections();
+
+		var num = 0;
+		var orderNo = C[0].data.orderNo;
+		var planNo = C[0].data.planNo;
+		var specId = C[0].data.specId;
+		var list = [];
+		if (Ext.isEmpty(orderNo)) {
+			Ext.Msg.alert("系统提示", "请选择有订单号的数据！");
+			return false;
+		}
+		if (Ext.isEmpty(planNo)) {
+			Ext.Msg.alert("系统提示", "请选择有计划单号的数据！");
+			return false;
+		}
+		var ok = true;
+		var msg = '';
+		Ext.each(C, function(r) {
+					var odn = r.data.orderNo;
+					var pln = r.data.planNo;
+					var usefulLength = r.data.usefulLength;
+					var isValid = r.data.isValid;
+					var fGfdAvg = r.data.fGfdAvg;
+					if(Ext.isEmpty(fGfdAvg)){//初测为空的，作为判断条件
+						msg = "请选择初测不为空的数据！";
+						ok = false;
+					}
+					
+					if(!Ext.isEmpty(isValid) && isValid=='Y'){//是否已人工质检验证,Y=是,N=否，作为判断条件
+						msg = "请选择没有判定过的数据！";
+						ok = false;
+					}
+					if (odn != orderNo) {
+						msg = "请选择相同订单号和计划单号数据！";
+						ok = false;
+					}
+					if (pln != planNo) {
+						msg = "请选择相同订单号和计划单号数据！";
+						ok = false;
+					}
+					var bn = r.data.batchNo;
+					arr.push("'" + bn + "'");
+					var recordId = r.data.recordId;
+					recordIdArr.push(recordId);
+					list.push(r.data);
+					num += usefulLength;
+				})
+		if (ok) {
+			var mk = new Ext.LoadMask(A.id, {
+						msg : '正在保存，请稍候!',
+						removeMask : true
+					});
+			mk.show();
+			Ext.Ajax.request({
+				method : "post",
+				scope : this,
+				url : 'com.keensen.ump.produce.quality.apply.createDiaphragmApply.biz.ext',
+				jsonData : {
+					'entity/types' : '发货',
+					'entity/amount' : num,
+					'entity/orderNo' : orderNo,
+					'entity/planNo' : planNo,
+					'entity/prodSpecId' : specId,
+					list : list
+				},
+				success : function(response, action) {
+					mk.hide();
+					// 返回值处理
+					var result = Ext.decode(response.responseText);
+					if (result.success) {
+						Ext.Msg.alert("系统提示", "已生成发货请检单", function() {
+									_this.inputPanel.form.reset();
+									_this.inputWindow.hide();
+								});
+					}
+				},
+				failure : function(resp, opts) {
+					mk.hide();
+				}
+			});
+
+		} else {
+			Ext.Msg.alert("系统提示", msg);
+			return false;
+		}
+	}
+
+}
+
+// 自用请检单
+com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck2 = function() {
+	// 订单号-计划单号
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var arr = [];
+		var recordIdArr = [];
+		var C = A.getSelectionModel().getSelections();
+
+		var num = 0;
+		var orderNo = C[0].data.orderNo;
+		var planNo = C[0].data.planNo;
+		var specId = C[0].data.specId;
+		var list = [];
+		if (!Ext.isEmpty(orderNo)) {
+			Ext.Msg.alert("系统提示", "请选择没有有订单号的数据！");
+			return false;
+		}
+		if (Ext.isEmpty(planNo)) {
+			Ext.Msg.alert("系统提示", "请选择有计划单号的数据！");
+			return false;
+		}
+		var ok = true;
+		var msg = '';
+		Ext.each(C, function(r) {
+					var odn = r.data.orderNo;
+					var pln = r.data.planNo;
+					var usefulLength = r.data.usefulLength;
+					var isValid = r.data.isValid;
+					var fGfdAvg = r.data.fGfdAvg;
+					if(Ext.isEmpty(fGfdAvg)){//初测为空的，作为判断条件
+						msg = "请选择初测不为空的数据！";
+						ok = false;
+					}
+
+					if(!Ext.isEmpty(isValid) && isValid=='Y'){//是否已人工质检验证,Y=是,N=否，作为判断条件
+						msg = "请选择没有判定过的数据！";
+						ok = false;
+						
+					}
+					//if (!Ext.isEmpty(odn)) {
+						//msg = "请选择相同计划单号数据！"
+						//ok = false;
+					//}
+					if (pln != planNo) {
+						msg = "请选择相同计划单号数据！"
+						ok = false;
+					}
+					var bn = r.data.batchNo;
+					arr.push("'" + bn + "'");
+					var recordId = r.data.recordId;
+					recordIdArr.push(recordId);
+					list.push(r.data);
+					num += usefulLength;
+				})
+		if (ok) {
+			var mk = new Ext.LoadMask(A.id, {
+						msg : '正在保存，请稍候!',
+						removeMask : true
+					});
+			mk.show();
+			Ext.Ajax.request({
+				method : "post",
+				scope : this,
+				url : 'com.keensen.ump.produce.quality.apply.createDiaphragmApply.biz.ext',
+				jsonData : {
+					'entity/types' : '自用',
+					'entity/amount' : num,
+					'entity/planNo' : planNo,
+					'entity/prodSpecId' : specId,
+					list : list
+				},
+				success : function(response, action) {
+					mk.hide();
+					// 返回值处理
+					var result = Ext.decode(response.responseText);
+					if (result.success) {
+						Ext.Msg.alert("系统提示", "已生成自用请检单", function() {
+									_this.inputPanel.form.reset();
+									_this.inputWindow.hide();
+								});
+					}
+				},
+				failure : function(resp, opts) {
+					mk.hide();
+				}
+			});
+
+		} else {
+			Ext.Msg.alert("系统提示", msg);
+			return false;
+		}
+	}
+
+}
+
 com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onConcession = function() {
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
 		var arr = [];
-		var recordIdArr =[];
+		var recordIdArr = [];
 		var C = A.getSelectionModel().getSelections();
 
 		var num = 0;
 		var orderNo = C[0].data.orderNo;
 		var specId = C[0].data.specId;
 		if (Ext.isEmpty(orderNo)) {
-			Ext.Msg.alert("系统提示", "请选择有订单号的数据！");
-			return false;
+			//Ext.Msg.alert("系统提示", "请选择有订单号的数据！");
+			//return false;
 		}
 		var ok = true;
 		Ext.each(C, function(r) {
 					var odn = r.data.orderNo;
 					var usefulLength = r.data.usefulLength;
 					if (odn != orderNo) {
-						//ok = false;
+						// ok = false;
 					}
 					var bn = r.data.batchNo;
 					arr.push("'" + bn + "'");
@@ -76,15 +272,18 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onConcession = function
 							'condition/recordIds' : recordIdArr.join(',')
 						}
 					});
-			//this.inputPanel.form.findField('entity/orderNo').setValue(orderNo);
-			this.inputPanel.form.findField('entity/prodSpecId').setValue(specId);
+			// this.inputPanel.form.findField('entity/orderNo').setValue(orderNo);
+			this.inputPanel.form.findField('entity/prodSpecId')
+					.setValue(specId);
 			this.inputPanel.form.findField('entity/num').setValue(num);
-			this.inputPanel.form.findField('entity/reserve1').setValue(recordIdArr.join(','));
-			this.inputPanel.form.findField('entity/reserve5').setValue(arr.join(','));
+			this.inputPanel.form.findField('entity/reserve1')
+					.setValue(recordIdArr.join(','));
+			this.inputPanel.form.findField('entity/reserve5').setValue(arr
+					.join(','));
 			this.inputWindow.show();
 		} else {
-			//Ext.Msg.alert("系统提示", "请选择相同订单号数据！");
-			//return false;
+			// Ext.Msg.alert("系统提示", "请选择相同订单号数据！");
+			// return false;
 		}
 	}
 
@@ -109,7 +308,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onSaveConcession = func
 				itemArr.push(i);
 			}
 		}
-		this.inputPanel.form.findField('entity/myitems').setValue(itemArr.join(','));
+		this.inputPanel.form.findField('entity/myitems').setValue(itemArr
+				.join(','));
 		var forms = _thispanel.getForm().getValues();
 
 		Ext.Ajax.request({
@@ -210,4 +410,87 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.exportExcel = function(
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onUploadWindowShow = function(
+		o) {
+	this.uploadWin.myflag = o;
+	this.uploadForm = this.uploadWin.getComponent('uploadForm').getForm();
+	this.uploadForm.reset();
+	this.uploadWin.show();
+
+};
+
+// 文件上传
+com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.doUpload = function() {
+	var _this = this;
+	this.uploadInputPanel = this.uploadWin.getComponent('uploadForm');
+	// 校验
+	this.fileUploadObj = this.uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	this.filePath = this.fileUploadObj.getValue();
+	// 文件后缀
+	this.sfileName = this.filePath.split(".");
+
+	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
+			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
+			'raw', 'wmf', 'webp', 'avif', 'apng'];
+	var extname = this.sfileName[1].toLowerCase();
+	if (extname == null || array.indexOf(extname) == -1) {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为图片文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+	if (this.uploadInputPanel.form.isValid()) {
+		var url = 'com.keensen.ump.produce.quality.uploadConcession.flow';
+		this.uploadInputPanel.form.submit({
+					method : "POST",
+					timeout : 1200,
+					url : url,
+					waitTitle : "操作提示",
+					waitMsg : "上传数据中...",
+					success : function(form, action) {
+						var result = action.result;
+						var fname = result.msg;
+						fname = '/myupload/concession/' + fname;
+						if (result.success) {
+							_this.uploadWin.hide();
+							var myflag = _this.uploadWin.myflag;
+							if (myflag == '1') {
+								_this.inputPanel.form.findField('pictureUrl')
+										.setValue(_this.filePath);
+								_this.inputPanel.form
+										.findField('entity/pictureUrl')
+										.setValue(fname);
+							} else if (myflag == '2') {
+								_this.inputPanel.form.findField('pictureUrl2')
+										.setValue(_this.filePath);
+								_this.inputPanel.form
+										.findField('entity/pictureUrl2')
+										.setValue(fname);
+							} else if (myflag == '3') {
+								_this.inputPanel.form.findField('pictureUrl3')
+										.setValue(_this.filePath);
+								_this.inputPanel.form
+										.findField('entity/pictureUrl3')
+										.setValue(fname);
+							}
+
+						}
+					},
+					failure : function(form, action) {
+						Ext.MessageBox.show({
+									title : '操作提示',
+									buttons : Ext.MessageBox.OK,
+									msg : "导入失败，请检查文件格式或网络是否正常",
+									icon : Ext.MessageBox.ERROR
+								});
+					}
+				});
+	}
+
 }

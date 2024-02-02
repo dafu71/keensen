@@ -36,6 +36,8 @@ com.keensen.ump.LineComboBox = Ext.extend(Ext.form.ComboBox, {
 										name : "id"
 									}, {
 										name : "name"
+									}, {
+										name : "code"
 									}],
 							listeners : {
 								scope : this,

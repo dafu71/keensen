@@ -25,9 +25,19 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 
 			})
 
+
+	
 	this.editPanel.mon(this.editPanel, 'afterload', function() {
 				var recordId = _this.editPanel.form.findField('entity/recordId')
 						.getValue();
+				var perfFlagId = _this.editPanel.perfFlagId.getValue();
+				var isBatchQualified = _this.editPanel.isBatchQualified.getValue();
+				var isKeep = _this.editPanel.isKeep.getValue();
+				var isWx = _this.editPanel.isWx.getValue();
+				var trendText = _this.editPanel.trend.getValue();
+				if(Ext.isEmpty(trendText)){
+					_this.editPanel.trend.setValue(trend(perfFlagId,isBatchQualified,isKeep,isWx));
+				}
 				_this.listPanel2.store.load({
 							params : {
 								"condition/batchId" : recordId
@@ -71,7 +81,7 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.exportExcel = function() 
 	var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
+				msg : "后台正在操作,请您稍候!"
 			});
 	this.requestMask.show();
 	Ext.Ajax.request({
@@ -163,4 +173,63 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onJudge = function() {
 		Ext.Msg.alert("系统提示", "请选择数据!");
 		return
 	}
+}
+
+function trend(perfFlagId,isBatchQualified,isKeep,isWx){
+	//alert(perfFlagId + '---' + isBatchQualified + '---' + isKeep + '---' + isWx);
+	//发货膜片
+	//A等品 合格 走向仓库发货仓
+	//alert(perfFlagId);
+	var ret = '';
+	if(isWx == 'Y' && perfFlagId==300029 && isBatchQualified =='Y'){
+		ret = '仓库发货仓';
+	}
+	//C等品 不合格 走向蒋滔 
+	if(isWx == 'Y' && perfFlagId==300032 && isBatchQualified =='N'){
+		ret = '蒋滔';
+	}
+	//保留品 不合格 走向仓库C仓
+	if(isWx == 'Y' && isKeep=='Y' && isBatchQualified =='N'){
+		ret = '仓库C仓';
+	}
+	//自用膜片
+	//A/B等品 合格 走向仓库AB仓
+	if(isWx == 'N' && (perfFlagId==300029 || perfFlagId==300030) && isBatchQualified =='Y'){
+		ret = '仓库AB仓';
+	}	
+	//C等品 不合格 走向仓库AB仓
+	if(isWx == 'N' && perfFlagId==300032  && isBatchQualified =='N'){
+		ret = '仓库AB仓';
+	}
+	//保留品 不合格 走向仓库C仓
+	if(isWx == 'N' && isKeep=='Y' && isBatchQualified =='N'){
+		ret = '仓库C仓';
+	}
+	return ret;
+	
+}
+
+com.keensen.ump.produce.quality.timojudgeMgr.prototype.onUpdateApplyIsJudged = function() {
+	var _this = this;
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "正在更新操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.quality.apply.updateApplyIsJudged.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				Ext.Msg.alert("系统提示", "请检单状态更新成功!",function(){
+					_this.listPanel.store.load();
+					
+				});
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
 }

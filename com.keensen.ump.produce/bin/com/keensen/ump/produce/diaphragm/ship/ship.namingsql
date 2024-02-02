@@ -518,12 +518,32 @@
        T1.F_SALT_REJECTION   AS "fSaltRejection",
        T1.R_GFD_AVG          AS "rGfdAvg",
        T1.R_SALT_REJECTION   AS "rSaltRejection",
-       T1.PERF_FLAG_CODE || '仓' "storageName"
+       T1.PERF_FLAG_CODE || '仓' "storageName",
+       T7.MAC_NAME "fMacName",
+       T8.MAC_NAME "rMacName",t3.trend "trend"
   FROM V_KS_TUMO_ORIGIN T1
   left join KS_PROD_DIAPHRAGM_TUMO t3
   on t1.record_id = t3.record_id
+  LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'N'
+                     GROUP BY C.BATCH_ID) T7
+            ON T7.BATCH_ID = T1.RECORD_ID
+          LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'Y'
+                     GROUP BY C.BATCH_ID) T8
+            ON T8.BATCH_ID = T1.RECORD_ID
   WHERE 1=1
-  	<isEqual compareValue="n" prepend="and" property="ifconcession">t1.order_no not like '%让步%'</isEqual>
+  
+  <isNotNull prepend="and" property="lineId">T1.LINE_ID = #lineId#</isNotNull>
+        <isEqual compareValue="n" prepend="and" property="ifconcession">t1.order_no not like '%让步%'</isEqual>
         <isEqual compareValue="y" prepend="and" property="ifconcession">t1.order_no like '%让步%'</isEqual>
         <isNotNull prepend="" property="ifPerFlag">AND decode(t3.record_id,null,'n','y') = #ifPerFlag#</isNotNull>
         <isNotNull prepend="and" property="batchNoStr">t1.batch_No in ($batchNoStr$)</isNotNull>
@@ -577,6 +597,7 @@
  			    substr(trim(nvl(t1.order_no,'空')), 1, 2) ='CRM'))</isEqual>
         <isNotNull prepend="and" property="judgeDtStart">to_char(T1.JUDGE_dt,'yyyy-MM-dd')  &gt;=  #judgeDtStart#</isNotNull>
         <isNotNull prepend="and" property="judgeDtEnd">to_char(T1.JUDGE_dt,'yyyy-MM-dd')  &lt;=  #judgeDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="applyId">T1.RECORD_ID in(select RECORD_ID from KS_PROD_DIAPHRAGM_APPLY_LIST where relation_id=#applyId#)</isNotNull>
      
    ORDER BY t1.JUDGE_DT DESC NULLS LAST, t1.BATCH_NO 
  

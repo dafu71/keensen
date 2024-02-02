@@ -7,6 +7,8 @@
 <%
 	Object rootObj = XpathUtil.getDataContextRoot("request",
 			pageContext);
+			
+	String flag = (String)XpathUtil.getObjectByXpath(rootObj,"flag");
 	DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
 			"list");
 	int cnt = list.length;
@@ -59,10 +61,13 @@
         <th  width="10%" align="center">
           生产线别
         </th>
-        <th width="20%" align="center">
+        <th width="10%" align="center">
           底膜类型
+        </th>
+         <th width="15%" align="center">
+          无纺布（供应商）
         </th>        
-        <th  width="20%" align="center">
+        <th  width="15%" align="center">
                 底膜批号
         </th>
         <th  width="20%" align="center">
@@ -70,6 +75,7 @@
         </th>
         
 </tr>
+<% if(flag.equals("1") || flag.equals("2")){ %>
 <%  for(int i=0;i<list.length;i++){ %>
 <%
 	String diff = list[i].getString("diff");
@@ -101,6 +107,9 @@
         <%=list[i].getString("dimoType") %>
         </td>
         <td align='center' class="<%=style5 %>">
+        <%=list[i].getString("supName") %>
+        </td>
+        <td align='center' class="<%=style5 %>">
         <%=list[i].getString("dimoBatchNo") %>
         </td>
         <td align='center' class="<%=style5 %>">
@@ -108,6 +117,8 @@
         </td>
          </tr>
 <% } %>
+<% } %>
+<% if(flag.equals("1") || flag.equals("3")){ %>
 <%  for(int i=0;i<list2.length;i++){ %>
 <%
 	String diff = list2[i].getString("diff");
@@ -136,7 +147,9 @@
         <td align='center' class="<%=style5 %>">
         <%=list2[i].getString("dimoType") %>
         </td>
-
+		<td align='center' class="<%=style5 %>">
+        <%=list2[i].getString("supName") %>
+        </td>
         <td align='center' class="<%=style5 %>">
         <%=list2[i].getString("dimoBatchNo") %>
         </td>
@@ -144,6 +157,7 @@
         <%=list2[i].getString("residue") %>
         </td>
          </tr>
+<% } %>
 <% } %>
 </table>
 </div>

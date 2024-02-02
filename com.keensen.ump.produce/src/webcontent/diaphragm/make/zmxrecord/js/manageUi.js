@@ -16,7 +16,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 180,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -73,6 +73,17 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 								anchor : '90%',
 								name : 'condition/createName',
 								fieldLabel : '填报人'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'teamcombobox',
+								name : 'condition/teamId',
+								fieldLabel : '生产班组',
+								hiddenName : 'condition/teamId',
+								anchor : '90%',
+								colspan : 1
 							}]
 				});
 		this.queryPanel.addButton({

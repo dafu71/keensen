@@ -48,10 +48,15 @@
 	<module name="srmframe-config">
         <!-- 
             文件上传路径 
+            服务器配置
+           <group name="uploadfile-config">
+            <configValue key="defaultDirPath">d:\server\apache-tomcat-5.5.20\webapps\default\produce\quality\deliveryrecord\img</configValue>
+        	</group> 
 		-->
         <group name="uploadfile-config">
             <configValue key="defaultDirPath">/db/files/srmfiles</configValue>
         </group>
+        
 
     </module>
     <!-- 邮件发送配置 -->

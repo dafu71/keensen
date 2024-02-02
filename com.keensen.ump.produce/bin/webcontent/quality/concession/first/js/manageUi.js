@@ -1,6 +1,7 @@
 com.keensen.ump.produce.quality.concessionFirstMgr = function() {
 	this.initPanel = function() {
 		this.initEditPanel();
+		this.buildUploadWin();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'form',
@@ -10,7 +11,7 @@ com.keensen.ump.produce.quality.concessionFirstMgr = function() {
 					panels : [this.editPanel, this.listPanel]
 				});
 	}
-	
+
 	this.initEditPanel = function() {
 		var _this = this;
 
@@ -77,8 +78,9 @@ com.keensen.ump.produce.quality.concessionFirstMgr = function() {
 		})
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 250,
+			height : 320,
 			// baseCls : "x-panel",
+			id :'concessionEditPanel',
 			autoHide : false,
 			autoScroll : false,
 			border : true,
@@ -149,11 +151,60 @@ com.keensen.ump.produce.quality.concessionFirstMgr = function() {
 					}, {
 						xtype : 'textarea',
 						dataIndex : 'reason',
-						name:'reason',
+						name : 'reason',
 						allowBlank : false,
 						fieldLabel : '让步接收理由',
 						anchor : '95%',
 						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						ref : '../picturePanel',
+						height : '30',
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'trigger',
+						ref : '../newPictureUrl',
+						fieldLabel : '替换图片1',
+						colspan : 1,
+						anchor : '95%',
+						editable : false,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onUploadWindowShow(1);
+						}
+					}, {
+						xtype : 'trigger',
+						ref : '../newPictureUr2',
+						fieldLabel : '替换图片2',
+						colspan : 1,
+						anchor : '95%',
+						editable : false,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onUploadWindowShow(2);
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'trigger',
+						ref : '../newPictureUrl3',
+						fieldLabel : '替换图片3',
+						anchor : '95%',
+						colspan : 1,
+						editable : false,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onUploadWindowShow(3);
+						}
 					}, {
 						xtype : 'hidden',
 						name : 'myitems'
@@ -165,26 +216,82 @@ com.keensen.ump.produce.quality.concessionFirstMgr = function() {
 						xtype : 'hidden',
 						name : 'id',
 						dataIndex : 'id'
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl',
+						name : 'pictureUrl',
+						ref : '../pictureUrl'
+
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl2',
+						name : 'pictureUrl2',
+						ref : '../pictureUrl2'
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl3',
+						name : 'pictureUrl3',
+						ref : '../pictureUrl3'
+
 					}],
-					buttons : [{
-								text : "重新提交",
-								scope : this,
-								ref : '../saveBtn',
-								handler : this.onSave
-							}, {
-								text : "关闭",
-								scope : this,
-								handler : function() {
-									this.onClose();
-								}
-							}, {
-								text : "作废申请",
-								scope : this,
-								handler : function() {
-									this.onInvalid();
-								}
-							}]
+			buttons : [{
+						text : "重新提交",
+						scope : this,
+						ref : '../saveBtn',
+						handler : this.onSave
+					}, {
+						text : "关闭",
+						scope : this,
+						handler : function() {
+							this.onClose();
+						}
+					}, {
+						text : "作废申请",
+						scope : this,
+						handler : function() {
+							this.onInvalid();
+						}
+					}]
 
 		})
+	}
+
+	// 上传面板
+	this.buildUploadWin = function() {
+		this.uploadWin = new Ext.Window({
+			title : '上传文件',
+			collapsible : false,
+			modal : true,
+			closeAction : 'hide',
+			buttonAlign : 'center',
+			layout : 'fit',
+			width : 480,
+			height : 120,
+			myflag : 0,
+			items : [{
+				xtype : 'columnform',
+				itemId : 'uploadForm',
+				saveUrl : 'com.keensen.ump.produce.quality.uploadConcession.flow',
+				columns : 1,
+				fileUpload : true,
+				fields : [{
+							name : 'uploadFile',
+							fieldLabel : '选择文件',
+							allowBlank : false,
+							inputType : 'file'
+						}]
+			}],
+			buttons : [{
+						text : '上传',
+						handler : this.doUpload,
+						scope : this
+					}, {
+						text : '关闭',
+						scope : this,
+						handler : function() {
+							this.uploadWin.hide();
+						}
+					}]
+		});
 	}
 }

@@ -30,6 +30,8 @@ com.keensen.ump.MpworkerComboBox = Ext.extend(Ext.form.ComboBox, {
 										name : "id"
 									}, {
 										name : "name"
+									}, {
+										name : "code"
 									}],
 							listeners : {
 								scope : this,

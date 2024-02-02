@@ -5,6 +5,8 @@
             <xs:any minOccurs="0"/>
             <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
             <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lineId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="specId" nillable="true" type="xs:int"/>
             <xs:element minOccurs="0" name="wfSupId" nillable="true" type="xs:int"/>
             <xs:element minOccurs="0" name="prodFlagId" nillable="true" type="xs:int"/>
             <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
@@ -40,8 +42,6 @@
             <xs:element minOccurs="0" name="outBatchNo" nillable="true" type="xs:string"/>
             <xs:element default="N" minOccurs="0" name="isKeep" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="mpd" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="baseProdLine" nillable="true" type="BaseProdLine"/>
-            <xs:element minOccurs="0" name="paraMaterSpec" nillable="true" type="ParaMaterSpec"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="BaseProdLine">
@@ -92,6 +92,48 @@
             <xs:element minOccurs="0" name="blankingSize" nillable="true" type="xs:decimal"/>
             <xs:element minOccurs="0" name="denseNet" nillable="true" type="xs:int"/>
             <xs:element minOccurs="0" name="area" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="pageWidth" nillable="true" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstCdmDefect">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="tumoBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="defectItemId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="loss" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstCaidiemo">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lineId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="tumoBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="prodSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="quantity" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="numPerWad" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="teamId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="blankingSize" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="denseNet" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="isToMix" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="pageWidth" nillable="true" type="xs:decimal"/>
         </xs:sequence>
     </xs:complexType>

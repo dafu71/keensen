@@ -135,7 +135,7 @@ com.keensen.ump.produce.quality.concessionFourthMgr = function() {
 		})
 
 		this.viewPanel = this.viewPanel || new Ext.fn.ViewPanel({
-			height : 200,
+			height : 240,
 			// baseCls : "x-panel",
 			autoHide : false,
 			autoScroll : false,
@@ -206,6 +206,11 @@ com.keensen.ump.produce.quality.concessionFourthMgr = function() {
 						anchor : '95%',
 						colspan : 2
 					}, {
+						xtype : 'displayfield',
+						ref:'../picturePanel',
+						height : '30',
+						colspan : 2
+					}, {
 						xtype : 'hidden',
 						dataIndex : 'myitems'
 					}, {
@@ -216,6 +221,24 @@ com.keensen.ump.produce.quality.concessionFourthMgr = function() {
 						xtype : 'hidden',
 						name : 'id',
 						dataIndex : 'id'
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl',
+						ref:'../pictureUrl',
+						name : 'pictureUrl'
+
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl2',
+						ref:'../pictureUrl2',
+						name : 'pictureUrl2'
+
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'pictureUrl3',
+						ref:'../pictureUrl3',
+						name : 'pictureUrl3'
+
 					}]
 
 		})
