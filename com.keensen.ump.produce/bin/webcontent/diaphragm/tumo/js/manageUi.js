@@ -24,106 +24,139 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 					titleCollapse : false,
 					title : '【涂膜记录查询】',
 					fields : [{
-								xtype : 'datetimefield',
-								name : 'condition/produceDtStart',
-								fieldLabel : '生产时间',
-								colspan : 1,
-								anchor : '75%',
-								allowBlank : true,
-								editable : true,
-								format : 'Y-m-d H:i'
-							}, {
-								xtype : 'datetimefield',
-								name : 'condition/produceDtEnd',
-								fieldLabel : '至',
-								colspan : 1,
-								anchor : '75%',
-								allowBlank : true,
-								editable : true,
-								format : 'Y-m-d H:i'
-							}/*
-								 * , { xtype : 'mplinecombobox', hiddenName :
-								 * 'condition/lineId', anchor : '75%',
-								 * fieldLabel : '生产线 ' }
-								 */, {
-								xtype : 'linecombobox',
-								prodTacheId : '100',
-								hiddenName : 'condition/lineId',
-								anchor : '75%',
-								fieldLabel : '生产线 '
-							}, {
-								xtype : 'dictcombobox',
-								name : 'condition/ifconcession',
-								anchor : '75%',
-								hiddenName : 'condition/ifconcession',
-								fieldLabel : '是否让步',
-								dictData : ABF_YESORNO
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 4
-							}/*
-								 * , { xtype : 'supcombobox', hiddenName :
-								 * 'condition/supId', anchor : '75%', fieldLabel :
-								 * '无纺布供应商' }, { xtype : 'combobox', anchor :
-								 * '75%', name : 'condition/isWx', hiddenName :
-								 * 'condition/isWx', fieldLabel : '是否外销',
-								 * triggerAction : "all", store : new
-								 * Ext.data.ArrayStore({ id : 0, fields :
-								 * ['mykey', 'myvalue'], data : [['N', '否'],
-								 * ['Y', '是']] }), mode : "local", editable :
-								 * false, displayField : "myvalue", valueField :
-								 * "mykey", forceSelection : true, emptyText :
-								 * "--请选择--" }, { xtype : 'mpworkercombobox',
-								 * hiddenName : 'condition/workerId', anchor :
-								 * '75%', fieldLabel : '操作工' }
-								 */, {
-								xtype : 'textfield',
-								name : 'condition/orderNo',
-								anchor : '75%',
-								fieldLabel : '订单号'
-							}, {
-								xtype : 'textfield',
-								name : 'condition/planNo',
-								anchor : '75%',
-								fieldLabel : '计划单号'
-							}, {
-								xtype : 'textfield',
-								name : 'condition/dimoBatchNo',
-								anchor : '75%',
-								fieldLabel : '底膜批次'
-							}, {
-								xtype : 'dictcombobox',
-								name : 'condition/ddflag',
-								anchor : '75%',
-								hiddenName : 'condition/ddflag',
-								fieldLabel : '是否有订单号',
-								dictData : ABF_YESORNO
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 4
-							}, {
-								xtype : 'textarea',
-								name : 'condition/batchNoStr2',
-								emptyText : '多个批次请用逗号分隔，或一行一个批次',
-								colspan : 2,
-								anchor : '85%',
-								fieldLabel : '膜片批次'
-							}, {
-								xtype : 'hidden',
-								name : 'condition/isCutOver',
-								value : 'N'
-							}, {
-								xtype : 'hidden',
-								name : 'condition/batchNoStr'
-							} /*
-								 * , { xtype : 'dictcombobox', name :
-								 * 'condition/isQualified', anchor : '75%',
-								 * dataIndex : 'condition/isQualified',
-								 * hiddenName : 'condition/isQualified',
-								 * fieldLabel : '是否合格', dictData : ABF_YESORNO }
-								 */]
+						xtype : 'datetimefield',
+						name : 'condition/produceDtStart',
+						fieldLabel : '生产时间',
+						colspan : 1,
+						anchor : '75%',
+						allowBlank : false,
+						editable : true,
+						format : 'Y-m-d H:i',
+						value : new Date().add(Date.DAY, -1)
+								.format('Y-m-d 00:00')
+					}, {
+						xtype : 'datetimefield',
+						name : 'condition/produceDtEnd',
+						fieldLabel : '至',
+						colspan : 1,
+						anchor : '75%',
+						allowBlank : false,
+						editable : true,
+						format : 'Y-m-d H:i',
+						value : new Date().add(Date.DAY, 1)
+								.format('Y-m-d 00:00')
+					}/*
+						 * , { xtype : 'mplinecombobox', hiddenName :
+						 * 'condition/lineId', anchor : '75%', fieldLabel : '生产线 ' }
+						 */, {
+						xtype : 'linecombobox',
+						prodTacheId : '100',
+						hiddenName : 'condition/lineId',
+						anchor : '75%',
+						fieldLabel : '生产线 '
+					}, {
+						xtype : 'dictcombobox',
+						name : 'condition/ifconcession',
+						anchor : '75%',
+						hiddenName : 'condition/ifconcession',
+						fieldLabel : '是否让步',
+						dictData : ABF_YESORNO
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}/*
+						 * , { xtype : 'supcombobox', hiddenName :
+						 * 'condition/supId', anchor : '75%', fieldLabel :
+						 * '无纺布供应商' }, { xtype : 'combobox', anchor : '75%',
+						 * name : 'condition/isWx', hiddenName :
+						 * 'condition/isWx', fieldLabel : '是否外销', triggerAction :
+						 * "all", store : new Ext.data.ArrayStore({ id : 0,
+						 * fields : ['mykey', 'myvalue'], data : [['N', '否'],
+						 * ['Y', '是']] }), mode : "local", editable : false,
+						 * displayField : "myvalue", valueField : "mykey",
+						 * forceSelection : true, emptyText : "--请选择--" }, {
+						 * xtype : 'mpworkercombobox', hiddenName :
+						 * 'condition/workerId', anchor : '75%', fieldLabel :
+						 * '操作工' }
+						 */, {
+						xtype : 'textfield',
+						name : 'condition/orderNo',
+						anchor : '75%',
+						fieldLabel : '订单号'
+					}, {
+						xtype : 'textfield',
+						name : 'condition/planNo',
+						anchor : '75%',
+						fieldLabel : '计划单号'
+					}, {
+						xtype : 'textfield',
+						name : 'condition/dimoBatchNo',
+						anchor : '75%',
+						fieldLabel : '底膜批次'
+					}, {
+						xtype : 'dictcombobox',
+						name : 'condition/ddflag',
+						anchor : '75%',
+						hiddenName : 'condition/ddflag',
+						fieldLabel : '是否有订单号',
+						dictData : ABF_YESORNO
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'textarea',
+						name : 'condition/batchNoStr2',
+						emptyText : '多个批次请用逗号分隔，或一行一个批次',
+						colspan : 2,
+						anchor : '85%',
+						fieldLabel : '膜片批次'
+					}, {
+						xtype : 'mpperfcombobox',
+						hiddenName : 'condition/perfFlagId',
+						anchor : '75%',
+						fieldLabel : '膜片等级'
+					}, {
+						xtype : 'combobox',
+						anchor : '75%',
+						name : 'condition/trend',
+						hiddenName : 'condition/trend',
+						fieldLabel : '走向',
+						triggerAction : "all",
+						store : new Ext.data.ArrayStore({
+									fields : ['mykey', 'myvalue'],
+									data : [['仓库发货仓', '仓库发货仓'],
+											['仓库C仓', '仓库C仓'],
+											['待二次判定', '待二次判定'],
+											['二次判定-发货', '二次判定-发货'],
+											['二次判定-自用', '二次判定-自用']]
+								}),
+						mode : "local",
+						editable : false,
+						displayField : "myvalue",
+						valueField : "mykey",
+						forceSelection : true,
+						emptyText : "--请选择--",
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
+					}, {
+						xtype : 'hidden',
+						name : 'condition/isCutOver',
+						value : 'N'
+					}, {
+						xtype : 'hidden',
+						name : 'condition/batchNoStr'
+					} /*
+						 * , { xtype : 'dictcombobox', name :
+						 * 'condition/isQualified', anchor : '75%', dataIndex :
+						 * 'condition/isQualified', hiddenName :
+						 * 'condition/isQualified', fieldLabel : '是否合格',
+						 * dictData : ABF_YESORNO }
+						 */]
 				});
 
 	}
@@ -158,6 +191,16 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onCheck2
+					}, '->', {
+						text : '二次判定-自用',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onSecondJudge2
+					}, '-', '->', {
+						text : '二次判定-发货',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onSecondJudge
 					}],
 			hsPage : true,
 			id : 'diaphragm-tumo-list',
@@ -167,6 +210,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 			selModel : this.selModel,
 			columns : [new Ext.grid.RowNumberer(), this.selModel, {
 						dataIndex : 'batchNo',
+						sortable : true,
 						header : '膜片批次',
 						renderer : function(v, m, r, i) {
 							var sendId = r.get('sendId');
@@ -180,12 +224,21 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 
 					}, {
 						dataIndex : 'isValidName',
+						sortable : true,
 						header : '是否已人工<br>质检验证'
 					}, {
+						dataIndex : 'perfFlagName',
+						header : '等级'
+					}, {
+						dataIndex : 'trend',
+						header : '走向'
+					}, {
 						dataIndex : 'produceDt',
+						sortable : true,
 						header : '生产日期'
 					}, {
 						dataIndex : 'judgeDt',
+						sortable : true,
 						header : '判定日期'
 					}/*
 						 * , { dataIndex : 'delivery', header : '可发货长度(米)' }
@@ -199,7 +252,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						dataIndex : 'qualifidLength',
 						header : '合格长度(米)'
 					}, {
-						dataIndex : 'loss',
+						dataIndex : 'caimoLoss',
 						header : '不良(米)'
 					}, {
 						dataIndex : 'dimoBatchNo',
@@ -214,7 +267,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						dataIndex : 'materSpecCode',
 						header : '膜片型号'
 					}, {
-						dataIndex : 'supName',
+						dataIndex : 'wfSupplierName',
 						header : '无纺布供应商'
 					}, {
 						dataIndex : 'planNo',
@@ -240,9 +293,6 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 					}, {
 						dataIndex : 'orderNo',
 						header : '订单号'
-					}, {
-						dataIndex : 'perfFlagName',
-						header : '等级'
 					}, {
 						xtype : 'dictcolumn',
 						dataIndex : 'isQualified',
@@ -287,7 +337,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						}, {
 							name : 'specId'
 						}, {
-							name : 'supName'
+							name : 'wfSupplierName'
 						}, {
 							name : 'lineCode'
 						}, {
@@ -297,7 +347,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						}, {
 							name : 'qualifidLength'
 						}, {
-							name : 'loss'
+							name : 'caimoLoss'
 						}, {
 							name : 'isQualified'
 						}, {
@@ -330,6 +380,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'isValid'
 						}, {
 							name : 'isValidName'
+						}, {
+							name : 'trend'
 						}]
 			})
 		})
@@ -582,7 +634,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 			layout : 'fit',
 			width : 480,
 			height : 120,
-			myflag:0,
+			myflag : 0,
 			items : [{
 				xtype : 'columnform',
 				itemId : 'uploadForm',

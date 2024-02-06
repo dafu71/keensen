@@ -25,6 +25,14 @@
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.qinsen.produce');
 </script>
+<script type="text/javascript">
+	function dayDiff(start,end){
+		var datediff = (new Date(end)) - (new Date(start));
+		datediff = datediff / 24 / 60 / 60 / 1000;
+		return datediff;
+		
+	}
+</script>
 <ext:dict property="STORAGE_TYPE"   dictTypeId="STORAGE_TYPE" />
 <ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
 <ext:dict property="KS_QUALITY_JUDGE_ITEM"   dictTypeId="KS_QUALITY_JUDGE_ITEM" />
@@ -40,6 +48,7 @@
 <js:load scriptPath="pub/common/teamCombo.js" />
 
 <js:load scriptPath="pub/common/defectWin.js" />
+<js:load scriptPath="pub/common/defectViewWin.js" />
 
 <js:load scriptPath="qinsen/produce/tumo/js/manageUi.js"/>
 <js:load scriptPath="qinsen/produce/tumo/js/manageEv.js"/>

@@ -244,7 +244,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality.queryTumoJudgeByPage.biz.ext',
 				root : 'data',
-				autoLoad : true,
+				autoLoad : false,
 				totalProperty : 'totalCount',
 				baseParams : {
 

@@ -588,8 +588,14 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					name : 'entity/teamId',
 					fieldLabel : '生产班组',
 					hiddenName : 'entity/teamId',
-					anchor : '47%',
-					colspan : 2
+					anchor : '95%',
+					colspan : 1
+				}, {
+					xtype : 'numberfield',
+					name : 'entity/pumpSpeed',
+					fieldLabel : '底膜泵速',
+					anchor : '95%',
+					colspan : 1
 				}, {
 					xtype : 'displayfield',
 					height : '5',
@@ -851,8 +857,15 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							dataIndex : 'teamId',
 							fieldLabel : '生产班组',
 							hiddenName : 'entity/teamId',
-							anchor : '47%',
-							colspan : 2
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/pumpSpeed',
+							dataIndex : 'pumpSpeed',
+							fieldLabel : '底膜泵速',
+							anchor : '95%',
+							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',

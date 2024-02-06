@@ -241,6 +241,9 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					}, {
 						dataIndex : 'componentType',
 						header : '元件归属类型'
+					}, {
+						dataIndex : 'createName',
+						header : '录入'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.poorrecord.querypoorByPage.biz.ext',

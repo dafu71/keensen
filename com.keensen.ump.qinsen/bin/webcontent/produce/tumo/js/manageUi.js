@@ -15,6 +15,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					dutyTacheCode : 'ZM',
 					recTacheCode : 'TM'
 				});
+				
+		this.defectViewWindow = new com.keensen.ump.defectViewWindow({
+					id : 'tm-defectviewwindow'
+				});
 		return new Ext.fn.fnLayOut({
 					layout : 'collapse',
 					border : false,
@@ -269,7 +273,19 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}, {
 						header : '不良m',
 						width : 50,
-						dataIndex : 'caimoLoss'
+						dataIndex : 'caimoLoss',
+						renderer : function(v, m, r, i) {
+							if (!Ext.isEmpty(v) && v > 0) {
+								var tumoBatchNo = r.get('batchNo');
+								var style = "<a style='text-decoration:none'";
+								var str = style
+										+ " href='javascript:defectView("
+										+ Ext.encode(tumoBatchNo) + ");'>" + v
+										+ "</a>";
+
+								return str;
+							}
+						}
 					}, {
 						header : '已裁完',
 						width : 50,
@@ -622,7 +638,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						saveUrl : 'com.keensen.ump.qinsen.tumo.saveTumo.biz.ext',
 						fields : [{
 									xtype : 'datetimefield',
-									format : "Y-m-d H:i",
+									format : "Y-m-d H:i:00",
 									name : 'entity/produceDt',
 									ref : '../../produceDt',
 									fieldLabel : '生产时间',
@@ -949,7 +965,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						saveUrl : 'com.keensen.ump.qinsen.tumo.saveTumo.biz.ext',
 						fields : [{
 									xtype : 'datetimefield',
-									format : "Y-m-d H:i",
+									format : "Y-m-d H:i:00",
 									name : 'entity/produceDt',
 									dataIndex : 'produceDt',
 									ref : '../../produceDt',

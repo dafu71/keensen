@@ -23,7 +23,7 @@
         <property name="prodFlagId" type="int">
             <column length="9" name="PROD_FLAG_ID" not-null="true"/>
         </property>
-        <property name="produceDt" type="date">
+        <property name="produceDt" type="timestamp">
             <column name="PRODUCE_DT" not-null="true"/>
         </property>
         <property name="teamId" type="int">
@@ -50,10 +50,10 @@
         <property name="judgeDt" type="date">
             <column name="JUDGE_DT"/>
         </property>
-        <property name="createDt" type="date">
+        <property name="createDt" type="timestamp">
             <column name="CREATE_DT"/>
         </property>
-        <property name="changeDt" type="date">
+        <property name="changeDt" type="timestamp">
             <column name="CHANGE_DT"/>
         </property>
         <property name="creatorId" type="int">
@@ -321,7 +321,7 @@
         <property name="numPerWad" type="big_decimal">
             <column length="5" name="NUM_PER_WAD" precision="5" scale="1"/>
         </property>
-        <property name="produceDt" type="date">
+        <property name="produceDt" type="timestamp">
             <column name="PRODUCE_DT" not-null="true"/>
         </property>
         <property name="teamId" type="int">
@@ -330,10 +330,10 @@
         <property name="workerId" type="int">
             <column length="9" name="WORKER_ID"/>
         </property>
-        <property name="createDt" type="date">
+        <property name="createDt" type="timestamp">
             <column name="CREATE_DT"/>
         </property>
-        <property name="changeDt" type="date">
+        <property name="changeDt" type="timestamp">
             <column name="CHANGE_DT"/>
         </property>
         <property name="creatorId" type="int">

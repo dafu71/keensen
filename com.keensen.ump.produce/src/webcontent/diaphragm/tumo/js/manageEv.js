@@ -1,9 +1,17 @@
 com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.initEvent = function() {
 
 	var _this = this;
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 
+		var start = vals['condition/produceDtStart'];
+		var end = vals['condition/produceDtEnd'];
+		if(dayDiff(start,end)>31){
+			Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
+			return false;
+
+		}
 		var store = this.listPanel.store;
 
 		var batchNoStr = this.queryPanel.form
@@ -491,6 +499,122 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.doUpload = function() {
 								});
 					}
 				});
+	}
+
+}
+
+com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onSecondJudge = function() {
+	var _this = this;
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var ok = true;
+		var msg = '';
+		var recordIdArr = [];
+		Ext.each(C, function(r) {
+					var trend = r.data.trend;
+					var recordId = r.data.recordId;
+					if(Ext.isEmpty(trend) || trend != '待二次判定'){//待二次判定
+						msg = "请选择待二次判定的数据！";
+						ok = false;
+					}
+
+					var recordId = r.data.recordId;
+					recordIdArr.push(recordId);
+				})
+		if (ok) {
+			var mk = new Ext.LoadMask(A.id, {
+						msg : '正在保存，请稍候!',
+						removeMask : true
+					});
+			mk.show();
+			Ext.Ajax.request({
+				method : "post",
+				scope : this,
+				url : 'com.keensen.ump.produce.quality.quality.saveDiaphragmTumoTrend.biz.ext',
+				jsonData : {
+					'recordIds' : recordIdArr.join(','),
+					'trend' : '二次判定-发货'
+				},
+				success : function(response, action) {
+					mk.hide();
+					// 返回值处理
+					var result = Ext.decode(response.responseText);
+					if (result.success) {
+						Ext.Msg.alert("系统提示", "走向已经更新", function() {
+									_this.listPanel.store.load();
+								});
+					}
+				},
+				failure : function(resp, opts) {
+					mk.hide();
+				}
+			});
+
+		} else {
+			Ext.Msg.alert("系统提示", msg);
+			return false;
+		}
+	}
+
+}
+
+com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onSecondJudge2 = function() {
+	var _this = this;
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var ok = true;
+		var msg = '';
+		var recordIdArr = [];
+		Ext.each(C, function(r) {
+					var trend = r.data.trend;
+					var recordId = r.data.recordId;
+					if(Ext.isEmpty(trend) || trend != '待二次判定'){//待二次判定
+						msg = "请选择待二次判定的数据！";
+						ok = false;
+					}
+
+					var recordId = r.data.recordId;
+					recordIdArr.push(recordId);
+				})
+		if (ok) {
+			var mk = new Ext.LoadMask(A.id, {
+						msg : '正在保存，请稍候!',
+						removeMask : true
+					});
+			mk.show();
+			Ext.Ajax.request({
+				method : "post",
+				scope : this,
+				url : 'com.keensen.ump.produce.quality.quality.saveDiaphragmTumoTrend.biz.ext',
+				jsonData : {
+					'recordIds' : recordIdArr.join(','),
+					'trend' : '二次判定-自用'
+				},
+				success : function(response, action) {
+					mk.hide();
+					// 返回值处理
+					var result = Ext.decode(response.responseText);
+					if (result.success) {
+						Ext.Msg.alert("系统提示", "走向已经更新", function() {
+									_this.listPanel.store.load();
+								});
+					}
+				},
+				failure : function(resp, opts) {
+					mk.hide();
+				}
+			});
+
+		} else {
+			Ext.Msg.alert("系统提示", msg);
+			return false;
+		}
 	}
 
 }

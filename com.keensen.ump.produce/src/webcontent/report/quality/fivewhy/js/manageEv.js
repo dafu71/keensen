@@ -167,7 +167,10 @@ com.keensen.ump.produce.report.quality.FivewhyMgr.prototype.doUpload = function(
 	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
 			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
 			'raw', 'wmf', 'webp', 'avif', 'apng'];
-	var extname = this.sfileName[1].toLowerCase();
+	//var extname = this.sfileName[1].toLowerCase();
+	//alert(extname)
+	var extname = this.filePath.substr(this.filePath.lastIndexOf('.') + 1);
+	//alert(extname)
 	if (extname == null
 			|| array.indexOf(extname) == -1) {
 		Ext.MessageBox.show({

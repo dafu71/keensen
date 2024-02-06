@@ -144,7 +144,8 @@ SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
 	           AND D.MAIN_BATCH_ID = #juanMoBatchId#)</isNotNull>
     </select>
     <!-- 查询膜片最后的裁膜记录,按生产时间+栈板号排倒序 -->
-    <select id="queryLastRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT A.RECORD_ID     AS "recordId",
+    <select id="queryLastRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT A.RECORD_ID     AS "recordId",
        A.BATCH_NO      AS "batchNo",
        A.TUMO_BATCH_ID AS "tumoBatchId",
        A.PROD_SPEC_ID  AS "prodSpecId",
@@ -156,6 +157,33 @@ SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
        A.DENSE_NET     AS "denseNet",
        A.PAGE_WIDTH    AS "pageWidth"
   FROM QINSEN.INST_CAIDIEMO A
-	 WHERE A.TUMO_BATCH_ID = #tumoBatchId#	
-	 ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO DESC</select>
+	 WHERE 1=1
+	 <isNotNull prepend="and" property="tumoBatchId">A.TUMO_BATCH_ID = #tumoBatchId#</isNotNull>
+	
+	 ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO DESC
+</select>
+    <select id="queryLastRecords2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT #tumoBatchId#     AS "recordId",
+       #tumoBatchNo#       AS "batchNo",
+       ''  AS "tumoBatchId",
+       ''  AS "prodSpecId",
+       ''     AS "isToMix",
+       ''      AS "orderNo",
+       ''      AS "quantity",
+       ''   AS "numPerWad",
+       '' AS "blankingSize",
+       ''     AS "denseNet",
+       ''    AS "pageWidth"
+  FROM dual A
+	 WHERE 1=1</select>
+    <insert id="backupCaidiemo" parameterClass="java.util.HashMap">INSERT INTO KS_INST_CAIDIEMO_DEL_BAK
+	(RECORD_ID,BATCH_NO,LINE_ID,TUMO_BATCH_ID,PROD_SPEC_ID,ORDER_NO,
+	QUANTITY,NUM_PER_WAD,PRODUCE_DT,TEAM_ID,WORKER_ID,CREATE_DT,
+	CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,BLANKING_SIZE,DENSE_NET,
+	IS_TO_MIX,PAGE_WIDTH)
+	SELECT RECORD_ID,BATCH_NO,LINE_ID,TUMO_BATCH_ID,PROD_SPEC_ID,ORDER_NO,
+	QUANTITY,NUM_PER_WAD,PRODUCE_DT,TEAM_ID,WORKER_ID,CREATE_DT,
+	CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,BLANKING_SIZE,DENSE_NET,
+	IS_TO_MIX,PAGE_WIDTH
+	FROM qinsen.INST_CAIDIEMO 
+	WHERE RECORD_ID=#recordId#</insert>
 </sqlMap>

@@ -68,7 +68,7 @@
      </select>
      
      <select id="queryZmx" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-     SELECT T1.ID AS "id", T1.abnormal "abnormal",
+     SELECT T1.ID AS "id", T1.abnormal "abnormal",T1.pump_Speed "pumpSpeed",
        to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mi')as "createTime",
 		t1.CREATE_USER_ID as "createUserId",
 		t1.CREATE_NAME as "createName",
@@ -167,7 +167,7 @@
        T1.LOSE AS "lose",
        T1.THEORY_AMOUNT - T1.LOSE "dimoAmount",
        T2.PROD_LENGTH "prodLength",
-       T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue",t3.sup_name "supName"
+       T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue",t3.sup_name "supName",nvl(t3.pump_speed,'无') "pumpSpeed"
   FROM (SELECT T.DIMO_BATCH_NO,
                '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
                DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
@@ -202,7 +202,7 @@
                FROM V_KS_TUMO_ALL T
               GROUP BY T.DIMO_BATCH_NO) T2
     ON T1.DIMO_BATCH_NO = T2.DIMO_BATCH_NO
-     LEFT JOIN (select t.dimo_batch_no,t.sup_id,t2.prop_value_name sup_name from KS_PROD_DIAPHRAGM_ZMX_RECORD t
+     LEFT JOIN (select t.dimo_batch_no,t.sup_id,t2.prop_value_name sup_name,t.pump_speed from KS_PROD_DIAPHRAGM_ZMX_RECORD t
 LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
  	on t2.prop_id = 30021 and t2.prop_value_id = t.SUP_ID) t3 ON t3.dimo_batch_no=t1.DIMO_BATCH_NO
  WHERE 1 = 1
@@ -237,7 +237,7 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
        T1.LOSE AS "lose",
        T1.THEORY_AMOUNT - T1.LOSE "dimoAmount",
        T2.PROD_LENGTH "prodLength",
-       T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue",t3.sup_name "supName"
+       T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue",t3.sup_name "supName",nvl(t3.pump_speed,'无') "pumpSpeed"
   FROM (SELECT T.DIMO_BATCH_NO,
                '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
                DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
@@ -272,7 +272,7 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
                FROM V_KS_TUMO_ALL T
               GROUP BY T.DIMO_BATCH_NO) T2
     ON T1.DIMO_BATCH_NO = T2.DIMO_BATCH_NO
-    LEFT JOIN (select t.dimo_batch_no,t.sup_id,t2.prop_value_name sup_name from KS_PROD_DIAPHRAGM_ZMX_RECORD t
+    LEFT JOIN (select t.dimo_batch_no,t.sup_id,t2.prop_value_name sup_name,t.pump_speed from KS_PROD_DIAPHRAGM_ZMX_RECORD t
 LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
  	on t2.prop_id = 30021 and t2.prop_value_id = t.SUP_ID) t3 ON t3.dimo_batch_no=t1.DIMO_BATCH_NO
  WHERE 1 = 1

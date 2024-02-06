@@ -64,13 +64,16 @@
         <th width="10%" align="center">
           底膜类型
         </th>
+        <th  width="10%" align="center">
+           底膜泵速
+        </th>
          <th width="15%" align="center">
           无纺布（供应商）
         </th>        
-        <th  width="15%" align="center">
+        <th  width="10%" align="center">
                 底膜批号
         </th>
-        <th  width="20%" align="center">
+        <th  width="15%" align="center">
          结存
         </th>
         
@@ -105,6 +108,9 @@
         </td>
         <td align='center' class="<%=style5 %>">
         <%=list[i].getString("dimoType") %>
+        </td>
+         <td align='center' class="<%=style5 %>">
+        <%=list[i].getString("pumpSpeed") %>
         </td>
         <td align='center' class="<%=style5 %>">
         <%=list[i].getString("supName") %>
@@ -146,6 +152,9 @@
         </td>
         <td align='center' class="<%=style5 %>">
         <%=list2[i].getString("dimoType") %>
+        </td>
+         <td align='center' class="<%=style5 %>">
+        <%=list2[i].getString("pumpSpeed") %>
         </td>
 		<td align='center' class="<%=style5 %>">
         <%=list2[i].getString("supName") %>

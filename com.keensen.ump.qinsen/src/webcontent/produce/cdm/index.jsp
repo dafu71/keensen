@@ -13,6 +13,7 @@
   	boolean workerflag = roleId.indexOf("10001161")>-1;
     String uid = userObject.getUserId();
     String userOrgId = userObject.getUserOrgId();
+    String uname = userObject.getUserName();
 %>
 <html>
 <!-- 
@@ -24,6 +25,14 @@
 <title>裁叠膜记录</title>
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.qinsen.produce');
+</script>
+<script type="text/javascript">
+	function dayDiff(start,end){
+		var datediff = (new Date(end)) - (new Date(start));
+		datediff = datediff / 24 / 60 / 60 / 1000;
+		return datediff;
+		
+	}
 </script>
 <ext:dict property="STORAGE_TYPE"   dictTypeId="STORAGE_TYPE" />
 <ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
@@ -40,6 +49,7 @@
 <js:load scriptPath="pub/common/teamCombo.js" />
 <js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="pub/common/componentworkerCombo.js" />
+<js:load scriptPath="pub/common/defectViewWin.js" />
 
 <js:load scriptPath="pub/common/defectWin.js" />
 
@@ -51,6 +61,8 @@
 </style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  var nowStaffName = "<%=uname %>";
+  var nowStaffId = <%=operatorid %>;
    <% if(workerflag){ %>
   var teamId = "<%=userOrgId %>";
   <% }else{ %>

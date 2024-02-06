@@ -98,6 +98,7 @@
         <isNotNull prepend="and" property="code">T1.code like '%' || #code# || '%'</isNotNull>
         <isNotNull prepend="and" property="dept">T1.dept like '%' || #dept# || '%'</isNotNull>
         <isNotNull prepend="and" property="prodSpecName">T1.PROD_SPEC_NAME like '%' || #prodSpecName# || '%'</isNotNull>
+		order by t1.id desc
     </select>
     <select id="query5whyMeasure" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
     SELECT T1.ID             AS "id",

@@ -88,6 +88,7 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 			delUrl : 'com.keensen.ump.produce.quality.apply.deleteApply.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'title',
+						sortable : true,
 						header : '标题'
 					}, {
 						dataIndex : 'code',
@@ -115,12 +116,14 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 						header : '膜片型号'
 					}, {
 						dataIndex : 'isJudgedName',
+						sortable : true,
 						header : '请检状态'
 					}, {
 						dataIndex : 'createName',
 						header : '请检人'
 					}, {
 						dataIndex : 'createTime',
+						sortable : true,
 						header : '请检时间'
 					}],
 			store : new Ext.data.JsonStore({
@@ -213,6 +216,7 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 						header : '走向'
 					}, {
 						dataIndex : 'batchNo',
+						sortable : true,
 						header : '膜片批次'
 					}, {
 						dataIndex : 'outLength',

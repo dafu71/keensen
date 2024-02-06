@@ -16,7 +16,13 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
+		var start = vals['condition/produceDtStart'];
+		var end = vals['condition/produceDtEnd'];
+		if(dayDiff(start,end)>31){
+			Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
+			return false;
 
+		}
 		var store = this.listPanel.store;
 
 		store.baseParams = this.queryPanel.getForm().getValues();
@@ -423,6 +429,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.destroy = function() {
 	this.editMpdWindow.destroy();
 	this.defectTmWin.destroy();
 	this.defectZmWin.destroy();
+	Ext.getCmp('tm-defectviewwindow').destroy();
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModiTech = function() {
@@ -447,4 +454,15 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModiTech = function() {
 function isNonNegativeFloat(str) {
 	const regex = /^\d+(\.\d+)?$/;
 	return regex.test(str);
+}
+
+function defectView(tumoBatchNo) {
+	Ext.getCmp('tm-defectviewwindow').tumoBatchNo = tumoBatchNo;
+	var store = Ext.getCmp('tm-defectviewwindow').listPanel.store;
+	store.baseParams = {
+		'condition/tumoBatchNo' : Ext.isEmpty(tumoBatchNo) ? "0" : tumoBatchNo
+	};
+	store.load();
+	Ext.getCmp('tm-defectviewwindow').show();
+
 }

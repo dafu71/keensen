@@ -51,7 +51,8 @@
         <isNotNull prepend="and" property="Id">t1.ID = #Id#</isNotNull>
         <isNotNull prepend="and" property="title">t1.code || t1.types || '请检单' like '%' || #title# || '%'</isNotNull>
         <isNotNull prepend="and" property="isJudged">upper(t1.is_Judged) = upper(#isJudged#)</isNotNull>
-    </select>
+	order by t1.id desc
+	</select>
     <update id="updateApplyIsJudged" parameterClass="java.util.HashMap">UPDATE KS_PROD_DIAPHRAGM_APPLY a
 	SET a.is_judged = (SELECT v.flag FROM
 	(SELECT tt.relation_id,MIN(flag) flag

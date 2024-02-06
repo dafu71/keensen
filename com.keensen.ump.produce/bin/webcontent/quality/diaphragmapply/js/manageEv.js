@@ -85,13 +85,18 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr.prototype.onView = function() 
 com.keensen.ump.produce.quality.diaphragmApplyMgr.prototype.exportExcel = function() {
 	var _this = this;
 	var B = this.listPanel2.getSelectionModel().getSelections();
+	var arr =[];
 	if (B && B.length != 0) {
-		var arr =[];
+		
 		Ext.each(B, function(r) {
 					var recordId = r.data.recordId;
 					arr.push(recordId);
 				})
 
+	}
+	if(arr && arr.length==0) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
+		return false;
 	}
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {

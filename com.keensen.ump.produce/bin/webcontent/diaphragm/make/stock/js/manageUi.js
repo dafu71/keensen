@@ -99,6 +99,9 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 						dataIndex : 'dimoType',
 						header : '底膜类型'
 					}, {
+						dataIndex : 'pumpSpeed',
+						header : '底膜泵速'
+					}, {
 						dataIndex : 'supName',
 						header : '无纺布（供应商）'
 					}, {
@@ -133,6 +136,8 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 							name : 'residue'
 						}, {
 							name : 'supName'
+						}, {
+							name : 'pumpSpeed'
 						}]
 			})
 		})

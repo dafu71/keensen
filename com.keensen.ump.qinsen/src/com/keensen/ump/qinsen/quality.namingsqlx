@@ -62,6 +62,9 @@
           LEFT JOIN QINSEN.BASE_PRODUCE_TACHE B2
             ON P.REC_TACHE_ID = B2.TACHE_ID) T1
 	WHERE 1 = 1
+	<isNotNull prepend = ""  property = "tumoBatchNo">
+	   AND t1.BATCH_NO = UPPER(#tumoBatchNo#) 
+	</isNotNull>
 	<isNotNull prepend = ""  property = "tumoBatchNoStr">
 	   AND t1.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%'
 	</isNotNull>

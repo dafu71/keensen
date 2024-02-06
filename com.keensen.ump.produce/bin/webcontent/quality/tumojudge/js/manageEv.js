@@ -1,6 +1,11 @@
 com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
+	this.queryPanel.form.findField(['condition/produceDtStart']).setValue(new Date().add(Date.DAY, -1)
+								.format('Y-m-d'));
+	this.queryPanel.form.findField(['condition/produceDtEnd']).setValue(new Date().add(Date.DAY, +1)
+								.format('Y-m-d'));
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -184,9 +189,9 @@ function trend(perfFlagId,isBatchQualified,isKeep,isWx){
 	if(isWx == 'Y' && perfFlagId==300029 && isBatchQualified =='Y'){
 		ret = '仓库发货仓';
 	}
-	//C等品 不合格 走向蒋滔 
+	//C等品 不合格 走向待二次判定 
 	if(isWx == 'Y' && perfFlagId==300032 && isBatchQualified =='N'){
-		ret = '蒋滔';
+		ret = '待二次判定';
 	}
 	//保留品 不合格 走向仓库C仓
 	if(isWx == 'Y' && isKeep=='Y' && isBatchQualified =='N'){
