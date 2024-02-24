@@ -137,4 +137,103 @@
             <xs:element minOccurs="0" name="pageWidth" nillable="true" type="xs:decimal"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="InstJuanmoMain">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lineId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="isTrial" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="prodSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="blankingSize" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="denseNet" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="teamId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pageWidth" nillable="true" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstJuanmoDetail">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="mainBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="cdmBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="inQuantity" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="outQuantity" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstQjStd">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="prodSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="lowLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="upLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstQijian">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="juanmoBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lineId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="prodSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="presure" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="checkResult" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isFirst" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stdStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="teamId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ngReasonId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="judgeFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ngItem" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="judgerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="judgeDt" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstQijianChange">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="juanmoBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="oldBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="newBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="oldSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="newSpecId" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

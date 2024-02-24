@@ -44,6 +44,8 @@ com.keensen.ump.ProdspecComboBox = Ext.extend(Ext.form.ComboBox, {
 										name : "denseNet"
 									}, {
 										name : "pageWidth"
+									}, {
+										name : "numPerWad"
 									}],
 							listeners : {
 								scope : this,

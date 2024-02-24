@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.juanmo">
+    <!-- 按生产线和日期获取序号流水 -->
+    <!-- 序号最后4位是流水号 -->
+    <select id="getBatchSeq" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT NVL(TO_NUMBER(MAX(SUBSTR(A.BATCH_NO, LENGTH(A.BATCH_NO) - 2))),
+	            0) + 1 "nextSeq"
+	  FROM qinsen.INST_JUANMO_MAIN A
+	WHERE A.BATCH_NO LIKE #prefix# || '%'</select>
+    <!-- 查询是否有唯一键冲突记录 -->
+    <select id="queryDuplicateRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT 1
+	  FROM QINSEN.INST_JUANMO_MAIN A
+	 WHERE A.BATCH_NO = UPPER(#batchNo#)
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID &lt;&gt; #recordId#</isNotNull>
+    </select>
+    <!-- 打印查询 -->
+    <select id="queryRecords4Print" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT T1.RECORD_ID      AS "recordId",
+	TO_CHAR(T1.PRODUCE_DT, 'YYYY-MM-DD') "produceDay",
+       T1.BATCH_NO       AS "batchNo",
+       T1.LINE_ID        AS "lineId",
+       qinsen.PG_GET_INFO.GET_PROD_LINE_CODE_BY_ID(T1.LINE_ID) "lineCode",
+       T1.IS_TRIAL       AS "isTrial",
+       T1.ORDER_NO       AS "orderNo",
+       T1.PROD_SPEC_ID   AS "prodSpecId",
+       T1.BLANKING_SIZE  AS "blankingSize",
+       T1.DENSE_NET      AS "denseNet",
+       T1.PAGE_WIDTH     AS "pageWidth",
+       T1.PRODUCE_DT     AS "produceDt",
+       T1.TEAM_ID        AS "teamId",
+       T1.WORKER_ID      AS "workerId",
+       T1.CREATE_DT      AS "createDt",
+       T1.CHANGE_DT      AS "changeDt",
+       T1.CREATOR_ID     AS "creatorId",
+       T1.CHANGER_ID     AS "changerId",
+       T1.REMARK         AS "remark",
+       T2.MATER_SPEC_CODE AS "prodSpecCode",
+       T2.MATER_SPEC_NAME AS "prodSpecName",
+       T3.Staff_Name  AS "workerName",
+       t4.TUMO_BATCH_STR AS "tumoBatchStr"      
+  FROM QINSEN.INST_JUANMO_MAIN T1, QINSEN.PARA_MATER_SPEC T2,qinsen.base_staff t3,
+  (SELECT WM_CONCAT(DISTINCT M.BATCH_NO) TUMO_BATCH_STR,D.MAIN_BATCH_ID
+	           FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	          WHERE D.CDM_BATCH_ID = C.RECORD_ID
+	            AND C.TUMO_BATCH_ID = M.RECORD_ID
+	            GROUP BY D.MAIN_BATCH_ID) t4
+ WHERE T1.PROD_SPEC_ID = T2.MATER_SPEC_ID
+ AND t1.worker_id = t3.staff_id
+ AND t4.MAIN_BATCH_ID = t1.record_id
+	<isNotNull prepend="" property="batchIdStr">AND T1.RECORD_ID in ($batchIdStr$)</isNotNull>
+    </select>
+    <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT Z.RECORD_ID AS "recordId",
+       Z.BATCH_NO AS "batchNo",
+       Z.LINE_ID AS "lineId",
+       Z.IS_TRIAL AS "isTrial",
+       Z.ORDER_NO AS "orderNo",
+       Z.PROD_SPEC_ID AS "prodSpecId",
+       Z.BLANKING_SIZE AS "blankingSize",
+       Z.DENSE_NET AS "denseNet",
+       Z.PAGE_WIDTH AS "pageWidth",
+       Z.PRODUCE_DT AS "produceDt",
+       Z.TEAM_ID AS "teamId",
+       Z.WORKER_ID AS "workerId",
+       Z.CREATE_DT AS "createDt",
+       Z.CHANGE_DT AS "changeDt",
+       Z.CREATOR_ID AS "creatorId",
+       Z.CHANGER_ID AS "changerId",
+       Z.REMARK AS "remark",
+       Z.PROD_SPEC_CODE AS "prodSpecCode",
+       Z.PROD_SPEC_NAME AS "prodSpecName",
+       decode(z.is_trial, 'Y', '是', 'N', '否', '') "isTrialName",
+       to_char(z.produce_dt, 'yyyy-mm-dd') "produceDay",
+       to_char(z.produce_dt, 'yyyy-mm-dd hh24:mi') "produceDate",
+       qinsen.pg_get_info.get_dept_name_by_id(z.team_id) "teamName",
+       qinsen.pg_get_info.get_staff_name_by_id(z.worker_id) "workerName",
+       qinsen.pg_get_info.get_prod_line_code_by_id(z.line_id) "lineCode",
+       (select sum(d.in_quantity)
+          from qinsen.inst_juanmo_detail d
+         where d.main_batch_id = z.record_id) "inPageCnt",
+       (select sum(d.in_quantity) * z.blanking_size * z.page_width
+          from qinsen.inst_juanmo_detail d
+         where d.main_batch_id = z.record_id) "inPageLength",
+       (select sum(d.in_quantity) - sum(d.out_quantity)
+          from qinsen.inst_juanmo_detail d
+         where d.main_batch_id = z.record_id) "lossPageCnt",
+       (select (sum(d.in_quantity) - sum(d.out_quantity)) * z.blanking_size *
+               z.page_width
+          from qinsen.inst_juanmo_detail d
+         where d.main_batch_id = z.record_id) "lossPageLength",
+       (select sum(d.out_quantity)
+          from qinsen.inst_juanmo_detail d
+         where d.main_batch_id = z.record_id) "pageCnt",
+       (select sum(d.out_quantity) * z.blanking_size * z.page_width
+          from qinsen.inst_juanmo_detail d
+         where d.main_batch_id = z.record_id) "pageLength",
+       (select wm_concat(distinct c.batch_no)
+          from qinsen.inst_juanmo_detail d, qinsen.inst_caidiemo c
+         where d.cdm_batch_id = c.record_id
+           and d.main_batch_id = z.record_id) "cdmBatchStr",
+       (select wm_concat(distinct m.batch_no)
+          from qinsen.inst_juanmo_detail d,
+               qinsen.inst_caidiemo      c,
+               qinsen.inst_tumo          m
+         where d.cdm_batch_id = c.record_id
+           and c.tumo_batch_id = m.record_id
+           and d.main_batch_id = z.record_id) "tumoBatchStr",
+       (select wm_concat(distinct m.dimo_batch_no)
+          from qinsen.inst_juanmo_detail d,
+               qinsen.inst_caidiemo      c,
+               qinsen.inst_tumo          m
+         where d.cdm_batch_id = c.record_id
+           and c.tumo_batch_id = m.record_id
+           and d.main_batch_id = z.record_id) "dimoBatchStr",
+       (select decode(count(1), 1, '否', '是')
+          from qinsen.inst_juanmo_detail d
+         where d.main_batch_id = z.record_id) "isMixStr",
+       (select wm_concat(d.out_quantity)
+          from qinsen.inst_juanmo_detail d
+         where d.main_batch_id = z.record_id) "pageCntStr",
+       (select decode(q.is_qualified, 'Y', '是', 'N', '否', '')
+          from qinsen.inst_qijian q
+         where q.juanmo_batch_id = z.record_id) "isAirQualifiedName",
+       decode((select count(1)
+                from qinsen.inst_qijian            q,
+                     qinsen.inst_prod_apply_judge  j,
+                     qinsen.inst_prod_apply_detail ad
+               where q.batch_no = ad.batch_no
+                 and ad.apply_id = j.apply_id
+                 and q.juanmo_batch_id = z.record_id
+                 and j.is_qualified = 'y'),
+              0,
+              '',
+              '合格入库') "applyJudgeResult"
+  FROM (SELECT T.*
+          FROM (
+                
+                SELECT A.RECORD_ID,
+                        A.BATCH_NO,
+                        A.LINE_ID,
+                        A.IS_TRIAL,
+                        A.ORDER_NO,
+                        A.PROD_SPEC_ID,
+                        A.BLANKING_SIZE,
+                        A.DENSE_NET,
+                        A.PAGE_WIDTH,
+                        A.PRODUCE_DT,
+                        A.TEAM_ID,
+                        A.WORKER_ID,
+                        A.CREATE_DT,
+                        A.CHANGE_DT,
+                        A.CREATOR_ID,
+                        A.CHANGER_ID,
+                        A.REMARK,
+                        MS.MATER_SPEC_CODE PROD_SPEC_CODE,
+                        MS.MATER_SPEC_NAME PROD_SPEC_NAME
+                  FROM QINSEN.INST_JUANMO_MAIN A, QINSEN.PARA_MATER_SPEC MS
+                 WHERE A.PROD_SPEC_ID = MS.MATER_SPEC_ID
+                 
+                <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = UPPER(#batchNo#)</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="lineId">AND A.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="teamId">AND A.TEAM_ID = #teamId#</isNotNull>
+        <isNotNull prepend="" property="workerId">AND A.WORKER_ID = #workerId#</isNotNull>
+        <isNotNull prepend="" property="produceDtStart">AND A.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceDtEnd">AND A.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE D.MAIN_BATCH_ID = A.RECORD_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.DIMO_BATCH_NO = #dimoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchId">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
+	         WHERE D.MAIN_BATCH_ID = A.RECORD_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = #tumoBatchId#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE D.MAIN_BATCH_ID = A.RECORD_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO = #tumoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNoStr">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE D.MAIN_BATCH_ID = A.RECORD_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%')</isNotNull>
+        <isNotNull prepend="" property="cdmBatchId">AND EXISTS (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D
+	         WHERE D.MAIN_BATCH_ID = A.RECORD_ID
+	           AND D.CDM_BATCH_ID = #cdmBatchId#)</isNotNull>
+        <isNotNull prepend="" property="cdmBatchNo">AND EXISTS (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
+	         WHERE D.MAIN_BATCH_ID = A.RECORD_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.BATCH_NO = #cdmBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE D.MAIN_BATCH_ID = A.RECORD_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.SPEC_ID = #mpSpecId#)</isNotNull>
+        <isNotNull prepend="" property="isAirQualifiedId">AND EXISTS (SELECT 1
+	          FROM qinsen.INST_QIJIAN Q
+	         WHERE Q.JUANMO_BATCH_ID = A.RECORD_ID
+	           AND Q.IS_QUALIFIED = #isAirQualifiedId#)</isNotNull>
+        <isNotNull prepend="" property="batchIdStr">AND A.RECORD_ID IN ($batchIdStr$)</isNotNull>
+	ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO
+                ) T) Z
+
+   
+   
+   </select>
+    <select id="queryDetailRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.RECORD_ID         AS "recordId",
+       T1.MAIN_BATCH_ID     AS "mainBatchId",
+       T1.CDM_BATCH_ID      AS "cdmBatchId",
+       T1.IN_QUANTITY       AS "inQuantity",
+       T1.OUT_QUANTITY      AS "outQuantity",
+       T1.CREATE_DT         AS "createDt",
+       T1.CHANGE_DT         AS "changeDt",
+       T1.CREATOR_ID        AS "creatorId",
+       T1.CHANGER_ID        AS "changerId",
+       T1.REMARK            AS "remark",
+       T1.LOSS_QUANTITY     AS "lossQuantity",
+       T1.JUANMO_BATCH_NO   AS "juanmoBatchNo",
+       T1.CDM_BATCH_NO      AS "cdmBatchNo",
+       T1.CDM_ORDER_NO      AS "cdmOrderNo",
+       T1.TUMO_BATCH_ID     AS "tumoBatchId",
+       T1.CDM_BLANKING_SIZE AS "cdmBlankingSize",
+       T1.CDM_DENSE_NET     AS "cdmDenseNet",
+       T1.CDM_PAGE_WIDTH    AS "cdmPageWidth",
+       T1.TUMO_BATCH_NO     AS "tumoBatchNo",
+       T1.CDM_SPEC_CODE     AS "cdmSpecCode",
+       T1.CDM_SPEC_NAME     AS "cdmSpecName",
+       T1.MP_SPEC_CODE      AS "mpSpecCode"
+  FROM (SELECT A.RECORD_ID,
+               A.MAIN_BATCH_ID,
+               A.CDM_BATCH_ID,
+               A.IN_QUANTITY,
+               A.OUT_QUANTITY,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               A.IN_QUANTITY - A.OUT_QUANTITY LOSS_QUANTITY,
+               JM.BATCH_NO JUANMO_BATCH_NO,
+               JM.PRODUCE_DT JUANMO_PRODUCE_DT,
+               CD.BATCH_NO CDM_BATCH_NO,
+               CD.ORDER_NO CDM_ORDER_NO,
+               CD.TUMO_BATCH_ID,
+               CD.BLANKING_SIZE CDM_BLANKING_SIZE,
+               CD.DENSE_NET CDM_DENSE_NET,
+               CD.PAGE_WIDTH CDM_PAGE_WIDTH,
+               TM.BATCH_NO TUMO_BATCH_NO,
+               CMS.MATER_SPEC_CODE CDM_SPEC_CODE,
+               CMS.MATER_SPEC_NAME CDM_SPEC_NAME,
+               TMS.MATER_SPEC_CODE MP_SPEC_CODE
+          FROM QINSEN.INST_JUANMO_DETAIL A,
+               QINSEN.INST_JUANMO_MAIN   JM,
+               QINSEN.INST_CAIDIEMO      CD,
+               QINSEN.INST_TUMO          TM,
+               QINSEN.PARA_MATER_SPEC    CMS,
+               QINSEN.PARA_MATER_SPEC    TMS
+         WHERE A.MAIN_BATCH_ID = JM.RECORD_ID
+           AND A.CDM_BATCH_ID = CD.RECORD_ID
+           AND CD.TUMO_BATCH_ID = TM.RECORD_ID
+           AND CD.PROD_SPEC_ID = CMS.MATER_SPEC_ID
+           AND TM.SPEC_ID = TMS.MATER_SPEC_ID
+           <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="mainBatchId">AND A.MAIN_BATCH_ID = #mainBatchId#</isNotNull>
+        <isNotNull prepend="" property="mainBatchNo">AND JM.BATCH_NO = UPPER(#mainBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="cdmBatchNo">AND CD.BATCH_NO = UPPER(#cdmBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND TM.BATCH_NO = UPPER(#tumoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="cdmBatchId">AND A.CDM_BATCH_ID = #cdmBatchId#</isNotNull>
+        <isNotNull prepend="" property="tumoBatchId">AND CD.TUMO_BATCH_ID = #tumoBatchId#</isNotNull>
+        <isNotNull prepend="" property="tumoBatchId">AND TM.RECORD_ID = #tumoBatchId#</isNotNull>
+        <isNotNull prepend="" property="juanMoSpecId">AND JM.PROD_SPEC_ID = #cdmSpecId#</isNotNull>
+        <isNotNull prepend="" property="cdmSpecId">AND CD.PROD_SPEC_ID = #cdmSpecId#</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND TM.SPEC_ID = #mpSpecId#</isNotNull>
+           
+           
+           
+           ) T1
+ ORDER BY T1.JUANMO_PRODUCE_DT DESC, T1.JUANMO_BATCH_NO, T1.RECORD_ID
+   
+   
+   </select>
+    <insert id="backupJuanmoMain" parameterClass="java.util.HashMap">INSERT INTO KS_INST_JUANMO_MAIN_DEL_BAK
+	(RECORD_ID,BATCH_NO,LINE_ID,IS_TRIAL,ORDER_NO,PROD_SPEC_ID,
+	BLANKING_SIZE,DENSE_NET,PRODUCE_DT,TEAM_ID,WORKER_ID,CREATE_DT,
+	CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,PAGE_WIDTH)
+	SELECT RECORD_ID,BATCH_NO,LINE_ID,IS_TRIAL,ORDER_NO,PROD_SPEC_ID,
+	BLANKING_SIZE,DENSE_NET,PRODUCE_DT,TEAM_ID,WORKER_ID,CREATE_DT,
+	CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,PAGE_WIDTH
+	FROM qinsen.INST_JUANMO_MAIN 
+	WHERE RECORD_ID=#recordId#</insert>
+    <insert id="backupJuanmoDetail" parameterClass="java.util.HashMap">
+     INSERT INTO KS_INST_JUANMO_DETAIL_DEL_BAK
+	(RECORD_ID,MAIN_BATCH_ID,CDM_BATCH_ID,IN_QUANTITY,OUT_QUANTITY,
+	CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK)
+	SELECT RECORD_ID,MAIN_BATCH_ID,CDM_BATCH_ID,IN_QUANTITY,OUT_QUANTITY,
+	CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK
+	FROM qinsen.INST_JUANMO_DETAIL 
+	WHERE 1=1
+	<isNotNull prepend="and" property="recordId">RECORD_ID=#recordId#</isNotNull>
+        <isNotNull prepend="and" property="mainBatchId">MAIN_BATCH_ID=#mainBatchId#</isNotNull>
+    </insert>
+    <delete id="deleteJuanmoDetail" parameterClass="java.util.HashMap">
+   delete FROM qinsen.INST_JUANMO_DETAIL
+   WHERE 1=1
+	<isNotNull prepend="and" property="recordId">RECORD_ID=#recordId#</isNotNull>
+        <isNotNull prepend="and" property="mainBatchId">MAIN_BATCH_ID=#mainBatchId#</isNotNull>
+    </delete>
+</sqlMap>

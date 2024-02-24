@@ -7,8 +7,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.initEvent = function() 
 
 		var start = vals['condition/produceDtStart'];
 		var end = vals['condition/produceDtEnd'];
-		if(dayDiff(start,end)>31){
-			Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
+		if(dayDiff(start,end)>91){
+			Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
 			return false;
 
 		}
@@ -79,20 +79,22 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck = function() {
 					var usefulLength = r.data.usefulLength;
 					var isValid = r.data.isValid;
 					var fGfdAvg = r.data.fGfdAvg;
-					if(Ext.isEmpty(fGfdAvg)){//初测为空的，作为判断条件
+					var title = r.data.title;
+					if(Ext.isEmpty(fGfdAvg) && ok){//初测为空的，作为判断条件
 						msg = "请选择初测不为空的数据！";
 						ok = false;
 					}
 					
-					if(!Ext.isEmpty(isValid) && isValid=='Y'){//是否已人工质检验证,Y=是,N=否，作为判断条件
+					//if(!Ext.isEmpty(isValid) && isValid=='Y'){//是否已人工质检验证,Y=是,N=否，作为判断条件
+					if(!Ext.isEmpty(title) && ok){//是否有请检单号作为判断条件
 						msg = "请选择没有判定过的数据！";
 						ok = false;
 					}
-					if (odn != orderNo) {
+					if (odn != orderNo && ok) {
 						msg = "请选择相同订单号和计划单号数据！";
 						ok = false;
 					}
-					if (pln != planNo) {
+					if (pln != planNo && ok) {
 						msg = "请选择相同订单号和计划单号数据！";
 						ok = false;
 					}
@@ -177,12 +179,12 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck2 = function() {
 					var usefulLength = r.data.usefulLength;
 					var isValid = r.data.isValid;
 					var fGfdAvg = r.data.fGfdAvg;
-					if(Ext.isEmpty(fGfdAvg)){//初测为空的，作为判断条件
+					if(Ext.isEmpty(fGfdAvg) && ok){//初测为空的，作为判断条件
 						msg = "请选择初测不为空的数据！";
 						ok = false;
 					}
 
-					if(!Ext.isEmpty(isValid) && isValid=='Y'){//是否已人工质检验证,Y=是,N=否，作为判断条件
+					if(!Ext.isEmpty(isValid) && isValid=='Y' && ok){//是否已人工质检验证,Y=是,N=否，作为判断条件
 						msg = "请选择没有判定过的数据！";
 						ok = false;
 						
@@ -191,7 +193,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck2 = function() {
 						//msg = "请选择相同计划单号数据！"
 						//ok = false;
 					//}
-					if (pln != planNo) {
+					if (pln != planNo && ok) {
 						msg = "请选择相同计划单号数据！"
 						ok = false;
 					}

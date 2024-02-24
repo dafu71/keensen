@@ -26,6 +26,7 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 								fieldLabel : '订单号'
 							}, {
 								xtype : 'textfield',
+								ref : '../planNo',
 								name : 'condition/planNo',
 								fieldLabel : '计划单号'
 							}, {
@@ -49,10 +50,15 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 					iconCls : 'icon-application_form_edit',
 					handler : this.onUpdateApplyIsJudged
 				});
-		/*
-		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
-		 * 'icon-application_excel', handler : this.exportExcel });
-		 */
+
+		this.queryPanel.addButton({
+					text : "按计划单号导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					hidden: planerflag == 0,
+					handler : this.exportExcelByPlanNo
+				});
+
 	}
 
 	this.initListPanel = function() {
@@ -208,12 +214,18 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 						iconCls : 'icon-application_excel',
 						handler : this.exportExcel
 					}],
-			hsPage : true,
+			hsPage : false,
 			autoScroll : true,
 			selModel : selModel2,
 			columns : [new Ext.grid.RowNumberer(), selModel2, {
 						dataIndex : 'trend',
 						header : '走向'
+					}, {
+						dataIndex : 'appearanceIsQualifiedName',
+						header : '外观'
+					}, {
+						dataIndex : 'thickIsQualifiedName',
+						header : '厚度'
 					}, {
 						dataIndex : 'batchNo',
 						sortable : true,
@@ -274,6 +286,10 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 							name : 'trend'
 						}, {
 							name : 'recordId'
+						}, {
+							name : 'appearanceIsQualifiedName'
+						}, {
+							name : 'thickIsQualifiedName'
 						}]
 			})
 		})

@@ -146,4 +146,46 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr.prototype.onReport = function(
 
 	}
 
-};
+}
+
+com.keensen.ump.produce.quality.diaphragmApplyMgr.prototype.exportExcelByPlanNo = function() {
+	var planNo = this.queryPanel.planNo.getValue();
+
+	if(Ext.isEmpty(planNo.trim())) {
+		Ext.Msg.alert("系统提示", "请输入计划单号!");
+		return false;
+	}
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+		method : "post",
+		jsonData : {
+			'map/condition/planNo2' : planNo,
+			namingsql : 'com.keensen.ump.produce.diaphragm.ship.ship.queryTumoOrigin',
+			templateFilename : 'ks_mp_qjd'
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+
+				var fname = ret.fname;
+				if (Ext.isIE) {
+					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
+							+ fname);
+				} else {
+					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
+							+ fname;
+				}
+
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}

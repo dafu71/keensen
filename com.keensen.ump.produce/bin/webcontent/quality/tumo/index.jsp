@@ -23,6 +23,14 @@
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.quality');
 </script>
+<script type="text/javascript">
+	function dayDiff(start,end){
+		var datediff = (new Date(end)) - (new Date(start));
+		datediff = datediff / 24 / 60 / 60 / 1000;
+		return datediff;
+		
+	}
+</script>
 <ext:dict property="STORAGE_TYPE"   dictTypeId="STORAGE_TYPE" />
 <ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
 <js:load scriptPath="pub/common/storageCombo.js" />

@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.qinsen.cdm">
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-		SELECT t1.rn "rn", T1.RECORD_ID       AS "recordId",
+		SELECT T1.RECORD_ID       AS "recordId",
        T1.BATCH_NO        AS "batchNo",
        T1.LINE_ID         AS "lineId",
        T1.TUMO_BATCH_ID   AS "tumoBatchId",
@@ -36,7 +36,7 @@
        T1.TOTAL_LOSS      AS "totalLoss",
        T1.UNUSED_QUANTITY AS "unusedQuantity"
 
-  FROM (SELECT ROWNUM RN,A.RECORD_ID,
+  FROM (SELECT A.RECORD_ID,
                A.BATCH_NO,
                A.LINE_ID,
                A.TUMO_BATCH_ID,
@@ -83,6 +83,7 @@
            AND A.PROD_SPEC_ID = MSC.MATER_SPEC_ID
            AND TM.SPEC_ID = MST.MATER_SPEC_ID
         	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="batchIdStr">AND A.RECORD_ID IN ($batchIdStr$)</isNotNull>
         <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
         <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = UPPER(#batchNo#)</isNotNull>
@@ -103,7 +104,7 @@
 	           AND D.MAIN_BATCH_ID = #juanMoBatchId#)</isNotNull> 
 	ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO
         ) T1
-		ORDER BY T1.rn
+		
 	</select>
     <!-- 查询是否有唯一键冲突记录 -->
     <select id="queryDuplicateRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
@@ -162,9 +163,9 @@ SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
 	
 	 ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO DESC
 </select>
-    <select id="queryLastRecords2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT #tumoBatchId#     AS "recordId",
+    <select id="queryLastRecords2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT ''     AS "recordId",
        #tumoBatchNo#       AS "batchNo",
-       ''  AS "tumoBatchId",
+       #tumoBatchId#  AS "tumoBatchId",
        ''  AS "prodSpecId",
        ''     AS "isToMix",
        ''      AS "orderNo",

@@ -17,7 +17,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 210,
+					height : 240,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -144,6 +144,20 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							}
 						}
 					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						name : 'condition/title',
+						anchor : '75%',
+						fieldLabel : '请检单号'
+					}, {
+						xtype : 'mpspeccombobox',
+						hiddenName : 'condition/specId',
+						anchor : '75%',
+						fieldLabel : '膜片型号 '
+					}, {
 						xtype : 'hidden',
 						name : 'condition/isCutOver',
 						value : 'N'
@@ -222,16 +236,28 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							}
 						}
 
-					}, {
+					}/*, {
 						dataIndex : 'isValidName',
 						sortable : true,
 						header : '是否已人工<br>质检验证'
+					}*/, {
+						dataIndex : 'title',
+						header : '请检单号'
 					}, {
 						dataIndex : 'perfFlagName',
 						header : '等级'
 					}, {
 						dataIndex : 'trend',
 						header : '走向'
+					}, {
+						dataIndex : 'appearanceIsQualifiedName',
+						header : '外观'
+					}, {
+						dataIndex : 'thickIsQualifiedName',
+						header : '厚度'
+					}, {
+						dataIndex : 'stockAmount',
+						header : '库存数量'
 					}, {
 						dataIndex : 'produceDt',
 						sortable : true,
@@ -382,6 +408,14 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'isValidName'
 						}, {
 							name : 'trend'
+						}, {
+							name : 'title'
+						}, {
+							name : 'appearanceIsQualifiedName'
+						}, {
+							name : 'thickIsQualifiedName'
+						}, {
+							name : 'stockAmount'
 						}]
 			})
 		})

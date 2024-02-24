@@ -668,6 +668,18 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									anchor : '75%',
 									fieldLabel : '生产线 '
 								}, {
+									xtype : 'textfield',
+									name : 'entity/dimoBatchNo',
+									ref : '../../dimoBatchNo',
+									fieldLabel : '底膜批次',
+									allowBlank : false,
+									anchor : '75%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
 									xtype : 'supcombobox',
 									hiddenName : 'entity/wfSupId',
 									name : 'entity/wfSupId',
@@ -676,16 +688,17 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									anchor : '75%',
 									fieldLabel : '无纺布供应商'
 								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
 									xtype : 'textfield',
 									name : 'entity/wfBatchNo',
+									ref : '../../wfBatchNo',
 									fieldLabel : '无纺布批号',
 									allowBlank : false,
 									anchor : '75%',
 									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
 								}, {
 									xtype : 'mpspeccombobox',
 									hiddenName : 'entity/specId',
@@ -693,17 +706,6 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									allowBlank : false,
 									anchor : '75%',
 									fieldLabel : '膜片型号 '
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'textfield',
-									name : 'entity/dimoBatchNo',
-									fieldLabel : '底膜批次',
-									allowBlank : false,
-									anchor : '75%',
-									colspan : 1
 								}, {
 									xtype : 'textfield',
 									name : 'entity/batchNo',
@@ -997,6 +999,19 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									anchor : '75%',
 									fieldLabel : '生产线 '
 								}, {
+									xtype : 'textfield',
+									name : 'entity/dimoBatchNo',
+									ref : '../../dimoBatchNo',
+									dataIndex : 'dimoBatchNo',
+									fieldLabel : '底膜批次',
+									allowBlank : false,
+									anchor : '75%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
 									xtype : 'supcombobox',
 									hiddenName : 'entity/wfSupId',
 									dataIndex : 'wfSupId',
@@ -1006,17 +1021,18 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									anchor : '75%',
 									fieldLabel : '无纺布供应商'
 								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
 									xtype : 'textfield',
 									name : 'entity/wfBatchNo',
 									dataIndex : 'wfBatchNo',
+									ref : '../../wfBatchNo',
 									fieldLabel : '无纺布批号',
 									allowBlank : false,
 									anchor : '75%',
 									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
 								}, {
 									xtype : 'mpspeccombobox',
 									hiddenName : 'entity/specId',
@@ -1026,18 +1042,6 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									allowBlank : false,
 									anchor : '75%',
 									fieldLabel : '膜片型号 '
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'textfield',
-									name : 'entity/dimoBatchNo',
-									dataIndex : 'dimoBatchNo',
-									fieldLabel : '底膜批次',
-									allowBlank : false,
-									anchor : '75%',
-									colspan : 1
 								}, {
 									xtype : 'textfield',
 									name : 'entity/batchNo',

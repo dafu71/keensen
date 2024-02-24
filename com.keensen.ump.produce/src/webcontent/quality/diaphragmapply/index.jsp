@@ -11,6 +11,7 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    boolean planerflag = roleId.indexOf("10001141")>-1;
 %>
 <html>
 <!-- 
@@ -37,6 +38,12 @@ BIZ.ns('com.keensen.ump.produce.quality');
 
 <script type="text/javascript">
   var uid = "<%=uid %>";
+   <% if(planerflag){ %>
+  var planerflag = 1;
+  <% }else{ %>
+  var planerflag = 0;
+  <% } %>
+
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.quality.diaphragmApplyMgr
 		});

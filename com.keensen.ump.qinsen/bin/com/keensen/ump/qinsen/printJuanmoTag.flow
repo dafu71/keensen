@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="printJuanmoTag" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3" state="stateless">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="batchIdStr" primitiveType="String"/>
+        <process:parameter anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="list"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
+    <targetConnections>link1</targetConnections>
+    <nodeLabel>end0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess0" name="queryRecords4Print" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>view1</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.qinsen.juanmo.queryRecords4Print</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="batchIdStr" type="query" value="String" valueType="Primitive" pattern="reference">batchIdStr</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="list" type="query" value="commonj.sdo.DataObject[]" valueType="Java">list</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <figSize height="20" width="146"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view1" name="printTags.jsp" type="view" contextPath="" contributionName="com.keensen.ump.qinsen" method="forward" uri="/qinsen/produce/juanmo/printTag.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link1" name="link1" lineType="reference" isDefault="true" type="action" actionName="action1">
+      <sourceNode>view1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>view1label</nodeLabel>
+    <process:inputParameters/>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <figSize height="20" width="95"/>
+    <node>view1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="6.3"/>
+</process:tPageFlow>

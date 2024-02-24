@@ -74,7 +74,7 @@
     <select id="queryProdSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
 	t.mater_spec_id "id",t.mater_spec_name "name",
 	 t.blanking_size "blankingSize", 
-	       t.dense_net "denseNet", t.area "area", t.page_width "pageWidth"
+	       t.dense_net "denseNet", t.area "area", t.page_width "pageWidth",t.NUM_PER_WAD "numPerWad"
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030027)</select>
     <!-- 工序查询 -->
@@ -92,15 +92,16 @@
     <select id="queryComponentTeam" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.orgid "id",t.orgname "name" from V_DEPT t
 	WHERE t.orgseq LIKE '.10000.100001.100062%'</select>
     <!-- 工序班组查询 -->
-    <select id="queryTacheTeam" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.TACHE_ID     AS "tacheId",
+    <select id="queryTacheTeam" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.TACHE_ID     AS "tacheId",
        T1.TACHE_CODE   AS "tacheCode",
        T1.TACHE_NAME   AS "tacheName",
        T1.PRODUCT_ID   AS "productId",
        T1.PRODCUT_CODE AS "prodcutCode",
        T1.PRODUCT_NAME AS "productName",
-       T1.DEPT_ID      AS "deptId",
-       T1.DEPT_CODE    AS "deptCode",
-       T1.DEPT_NAME    AS "deptName"
+       T1.DEPT_ID      AS "deptId", T1.DEPT_ID      AS "id",
+       T1.DEPT_CODE    AS "deptCode",T1.DEPT_CODE AS "code",
+       T1.DEPT_NAME    AS "deptName", T1.DEPT_NAME    AS "name"
   FROM (SELECT BPT.TACHE_ID,
                BPT.TACHE_CODE,
                BPT.TACHE_NAME,
@@ -117,7 +118,11 @@
             ON BP.PRODUCT_ID = BPT.PRODUCT_ID
           LEFT JOIN qinsen.BASE_DEPARTMENT BD
             ON BD.DEPT_ID = T.TEAM_ID) T1
- ORDER BY T1.TACHE_ID, T1.DEPT_ID</select>
+            
+            WHERE 1=1 
+            <isNotNull prepend="and" property="tacheCode">t1.tache_code= #tacheCode#</isNotNull>
+ ORDER BY T1.TACHE_ID, T1.DEPT_ID
+	 </select>
     <select id="queryPwd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.password "password" from V_AC_OPERATOR_TRS t
 		WHERE t.userid != 'sysadmin'
 		AND t.userid = #staffCode#</select>

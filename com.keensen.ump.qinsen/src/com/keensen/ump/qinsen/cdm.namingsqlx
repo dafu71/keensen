@@ -3,7 +3,7 @@
 <sqlMap>
     
     <select id="queryRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
-		SELECT t1.rn "rn", T1.RECORD_ID       AS "recordId",
+		SELECT T1.RECORD_ID       AS "recordId",
        T1.BATCH_NO        AS "batchNo",
        T1.LINE_ID         AS "lineId",
        T1.TUMO_BATCH_ID   AS "tumoBatchId",
@@ -37,7 +37,7 @@
        T1.TOTAL_LOSS      AS "totalLoss",
        T1.UNUSED_QUANTITY AS "unusedQuantity"
 
-  FROM (SELECT ROWNUM RN,A.RECORD_ID,
+  FROM (SELECT A.RECORD_ID,
                A.BATCH_NO,
                A.LINE_ID,
                A.TUMO_BATCH_ID,
@@ -86,6 +86,11 @@
         	<isNotNull prepend = ""  property = "recordId">
 	   AND A.RECORD_ID = #recordId#
 	</isNotNull>
+	
+	<isNotNull prepend = ""  property = "batchIdStr">
+	   AND A.RECORD_ID IN ($batchIdStr$)
+	</isNotNull>
+	
 	<isNotNull prepend = ""  property = "batchId">
 	   AND A.RECORD_ID = #batchId#
 	</isNotNull>
@@ -136,7 +141,7 @@
 	</isNotNull> 
 	ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO
         ) T1
-		ORDER BY T1.rn
+		
 	</select>
 	
 	    <!-- 查询是否有唯一键冲突记录 -->
@@ -236,9 +241,9 @@ SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
 </select>
 
 <select id="queryLastRecords2" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
-	SELECT #tumoBatchId#     AS "recordId",
+	SELECT ''     AS "recordId",
        #tumoBatchNo#       AS "batchNo",
-       ''  AS "tumoBatchId",
+       #tumoBatchId#  AS "tumoBatchId",
        ''  AS "prodSpecId",
        ''     AS "isToMix",
        ''      AS "orderNo",
@@ -265,4 +270,6 @@ SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
 	FROM qinsen.INST_CAIDIEMO 
 	WHERE RECORD_ID=#recordId#
    </insert>
+   
+
 </sqlMap>

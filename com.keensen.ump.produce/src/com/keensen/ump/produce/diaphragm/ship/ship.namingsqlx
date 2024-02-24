@@ -713,7 +713,7 @@
  
  <select id="queryTumoOrigin" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
  
- SELECT T1.RN                 AS "rn",
+ SELECT 
        T1.RECORD_ID          AS "recordId",
        T1.PLAN_NO            AS "planNo",
        T1.DIMO_BATCH_NO      AS "dimoBatchNo",
@@ -791,12 +791,30 @@
        T1.R_SALT_REJECTION   AS "rSaltRejection",
        T1.PERF_FLAG_CODE || '仓' "storageName",
        T1.F_MAC_NAME "fMacName",
-       T1.R_MAC_NAME "rMacName",t3.trend "trend"
-  FROM V_KS_TUMO_ORIGIN T1
+       T1.R_MAC_NAME "rMacName",t3.trend "trend",
+       decode(t3.appearance_is_qualified,'Y','合格','不合格') "appearanceIsQualifiedName",
+       decode(t3.thick_is_qualified,'Y','合格','不合格') "thickIsQualifiedName",
+       T4.title "title",s.amount "stockAmount"
+  FROM V_KS_TUMO_ORIGIN2 T1
   left join KS_PROD_DIAPHRAGM_TUMO t3
   on t1.record_id = t3.record_id
+  left join (select t.record_id,t.relation_id,t2.code|| t2.types || '请检单' title from KS_PROD_DIAPHRAGM_APPLY_LIST t
+	LEFT JOIN KS_PROD_DIAPHRAGM_APPLY t2 ON t.relation_id=t2.id) t4
+  on t1.record_id = t4.record_id
+  left join KS_PROD_DIAPHRAGM_STOCK s 
+  on s.batch_no = T1.batch_no
   WHERE 1=1
+  <isNotNull prepend="and" property="specId">
+  T1.SPEC_ID = #specId#
+  </isNotNull>
+  <isNotNull prepend="and" property="planNo2"> 
+		       upper(t1.plan_No) = upper(#planNo2#)
+	</isNotNull>
   
+  <isNotNull prepend="and" property="title" >
+		       T4.title like '%' || #title# || '%'
+	</isNotNull>
+	
   <isNotNull prepend="and" property="perfFlagId"> 
 		       T1.PERF_FLAG_ID = #perfFlagId#
 	</isNotNull>

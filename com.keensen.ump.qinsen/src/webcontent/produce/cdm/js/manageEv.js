@@ -39,7 +39,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 			function() {
 				if (this.editWindow.batchNo.getValue()
 						.indexOf(this.editWindow.tumoBatchNo.getValue()) != 0) {
-					Bluesea.toast('栈板号应以膜片批次开头！');
+					Ext.Msg.alert('系统提示','栈板号应以膜片批次开头！');
 					return false;
 				}
 			}, this);
@@ -283,6 +283,9 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function(
 										.setValue(last.pageWidth);
 								_this.inputWindow.tumoBatchId
 										.setValue(last.tumoBatchId);
+								alert(last.tumoBatchId);
+								alert(_this.inputWindow.tumoBatchId
+										.getValue());
 							} else {
 								Ext.Msg.alert("系统提示", "膜片批次不存在，请检查！",
 										function() {

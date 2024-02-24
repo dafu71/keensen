@@ -83,7 +83,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						}
 					}, {
 						xtype : 'prodspeccombobox',
-						ref:'../prodSpecSel',
+						ref : '../prodSpecSel',
 						hiddenName : 'condition/materSpecId',
 						anchor : '75%',
 						fieldLabel : '元件型号 ',
@@ -193,6 +193,18 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '-',{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '不合格膜片长度:'
+					}, {
+						xtype : 'textfield',
+						width : 100,
+						readOnly : true,
+						ref : '../length'
+
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.poorrecord.deletePoor.biz.ext',
@@ -201,9 +213,11 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						header : '车间'
 					}, {
 						dataIndex : 'invalidDt',
+						sortable : true,
 						header : '报废日期'
 					}, {
 						dataIndex : 'invalidCode',
+						sortable : true,
 						header : '报废单编码'
 					}, {
 						dataIndex : 'materSpecName',
@@ -242,13 +256,17 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						dataIndex : 'componentType',
 						header : '元件归属类型'
 					}, {
+						dataIndex : 'createTime',
+						sortable : true,
+						header : '录入日期'
+					}, {
 						dataIndex : 'createName',
 						header : '录入'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.poorrecord.querypoorByPage.biz.ext',
 				root : 'data',
-				autoLoad : true,
+				autoLoad : false,
 				totalProperty : 'totalCount',
 				baseParams : {
 
@@ -323,7 +341,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 	}
 
 	this.initInputWindow = function() {
-	
+
 		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增元件不良记录',

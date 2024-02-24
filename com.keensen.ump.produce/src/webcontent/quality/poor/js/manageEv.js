@@ -1,5 +1,7 @@
 com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
-	
+
+	var _this = this;
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -40,22 +42,50 @@ com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
 			}, this);
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterSave',
 			function(gird, cell) {
-		this.listPanel.store.reload();
+				this.listPanel.store.reload();
 			}, this);
-			
+
 	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'afterSave',
 			function(gird, cell) {
-		this.listPanel.store.reload();
-		this.inputWindow.form.findField("entity/batchNo").setValue('');
+				this.listPanel.store.reload();
+				this.inputWindow.form.findField("entity/batchNo").setValue('');
 			}, this);
+
+	this.listPanel.store.on('load', function() {
+		var vals = _this.queryPanel.getForm().getValues();
+
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.quality.poorrecord.queryPoorRecordSum.biz.ext",
+			method : "post",
+			jsonData : vals,
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					var data = ret.data;
+					if (Ext.isEmpty(data) || Ext.isEmpty(data[0])
+							|| data[0].length == null) {
+						Ext.Msg.alert("系统提示", "没有查询到气检记录,请直接录入！")
+					} else {
+
+						var length = data[0].length;
+						_this.listPanel.length.setValue(length);
+					}
+
+				}
+
+			},
+			callback : function() {
+				
+			}
+		})
+	})
 }
 
 com.keensen.ump.produce.quality.poorMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
 };
 
-com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate = function(
-		) {
+com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate = function() {
 	var amount = this.inputWindow.form.findField("entity/amount").getValue();
 	if (Ext.isEmpty(amount)) {
 		Ext.Msg.alert("系统提示", "请输入不合格数量！");
@@ -85,7 +115,8 @@ com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate = function(
 			var ret = Ext.decode(resp.responseText);
 			if (ret.success) {
 				var data = ret.data;
-				if (Ext.isEmpty(data) || Ext.isEmpty(data[0]) || data[0].length == null) {
+				if (Ext.isEmpty(data) || Ext.isEmpty(data[0])
+						|| data[0].length == null) {
 					Ext.Msg.alert("系统提示", "没有查询到气检记录,请直接录入！")
 				} else {
 
@@ -103,8 +134,7 @@ com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate = function(
 	})
 };
 
-com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate2 = function(
-		) {
+com.keensen.ump.produce.quality.poorMgr.prototype.onCalculate2 = function() {
 	var amount = this.editWindow.form.findField("entity/amount").getValue();
 	if (Ext.isEmpty(amount)) {
 		Ext.Msg.alert("系统提示", "请输入不合格数量！");
@@ -165,7 +195,6 @@ com.keensen.ump.produce.quality.poorMgr.prototype.destroy = function() {
 com.keensen.ump.produce.quality.poorMgr.prototype.onEdit = function() {
 	this.listPanel.onEdit();
 };
-
 
 com.keensen.ump.produce.quality.poorMgr.prototype.exportExcel = function() {
 	var _this = this;

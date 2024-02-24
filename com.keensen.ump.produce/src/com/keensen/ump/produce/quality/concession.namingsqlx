@@ -70,7 +70,8 @@
  
  <update id="updateInstTumoOrderNo" parameterClass="java.util.HashMap" >
    	update qinsen.inst_tumo t2
-   	set t2.order_No = #orderNo#,t2.spec_id = #prodSpecId#
+   	set t2.order_No = #orderNo#
+   	<!--,t2.spec_id = #prodSpecId#-->
    	where t2.record_id IN($recordIds$)
 	</update>
  

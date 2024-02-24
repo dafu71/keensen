@@ -48,4 +48,23 @@
 	select t.record_id "recordId" from QINSEN.INST_tumo t
 		WHERE t.batch_no=#batchNo#
 	</select>
+	
+	<!-- 通过字典code查询字典项值 -->
+<select id="getPropOptionByPropCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT A.PROP_VALUE_ID   AS "propValueId",
+       A.PROP_VALUE_CODE AS "propValueCode",
+       A.PROP_VALUE_NAME AS "propValueName",
+       A.IS_DEFAULT      AS "isDefault"
+  FROM QINSEN.CONF_PROP_VALUE_OPTION A, QINSEN.CONF_PROP B
+ WHERE A.PROP_ID = B.PROP_ID
+   AND A.STATE = 'Y'
+  AND B.PROP_CODE = #propCode#
+	 <isNotNull prepend = ""  property = "sysId">
+	   AND B.BELONG_SYS_ID = #sysId#
+	 </isNotNull>
+	 <isNotNull prepend = ""  property = "sysCode">
+	   AND B.BELONG_SYS_ID = (SELECT O.PROP_VALUE_ID FROM QINSEN.CONF_PROP_VALUE_OPTION O WHERE O.PROP_ID = 1 AND O.PROP_VALUE_CODE = #sysCode#)
+	 </isNotNull>
+	ORDER BY A.DISP_ORDER
+</select>
 </sqlMap>

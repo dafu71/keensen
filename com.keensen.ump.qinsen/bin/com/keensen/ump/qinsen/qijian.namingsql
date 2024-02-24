@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.qijian">
+    <!-- 查询气检记录列表 -->
+    <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	
+	SELECT Z.RECORD_ID as "recordId",
+		Z.JUANMO_BATCH_ID as "juanmoBatchId",
+		Z.BATCH_NO as "batchNo",
+		Z.LINE_ID as "lineId",
+		Z.PROD_SPEC_ID as "prodSpecId",
+		Z.ORDER_NO as "orderNo",
+		Z.PRODUCE_DT as "produceDt",
+		Z.PRESURE as "presure",
+		Z.CHECK_RESULT as "checkResult",
+		Z.IS_QUALIFIED as "isQualified",
+		Z.IS_FIRST as "isFirst",
+		Z.STD_STR as "stdStr",
+		Z.TEAM_ID as "teamId",
+		Z.WORKER_ID as "workerId",
+		Z.NG_REASON_ID as "ngReasonId",
+		Z.CREATE_DT as "createDt",
+		Z.CHANGE_DT as "changeDt",
+		Z.CREATOR_ID as "creatorId",
+		Z.CHANGER_ID as "changerId",
+		Z.REMARK as "remark",
+		Z.JUDGE_FLAG as "judgeFlag",
+		Z.NG_ITEM as "ngItem",
+		Z.JUDGER_ID as "judgerId",
+		Z.JUDGE_DT as "judgeDt",
+		Z.JM_LINE_ID as "jmLineId",
+		Z.JM_WORKER_ID as "jmWorkerId",
+		Z.BLANKING_SIZE as "blankingSize",
+		Z.PAGE_WIDTH as "pageWidth",
+		Z.JUANMO_BATCH_NO as "juanmoBatchNo",
+		Z.PROD_SPEC_AREA as "prodSpecArea",
+		Z.PROD_SPEC_CODE as "prodSpecCode",
+		Z.PROD_SPEC_NAME as "prodSpecName",
+       DECODE(Z.IS_QUALIFIED, 'Y', '是', 'N', '否', '') "isQualifiedName",
+       DECODE(Z.IS_FIRST, 'Y', '首检', 'N', '复检', '') "isFirstName",
+       DECODE(Z.JUDGE_FLAG, 'Y', '是', 'N', '否', '') "judgeFlagName",
+       TO_CHAR(Z.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') "produceDate",
+       TO_CHAR(Z.JUDGE_DT, 'YYYY-MM-DD HH24:MI') "judgeDate",
+       qinsen.PG_GET_INFO.GET_PROP_VALUE_CODE_BY_ID(Z.NG_REASON_ID) "ngReasonCode",
+       qinsen.PG_GET_INFO.GET_PROP_VALUE_NAME_BY_ID(Z.NG_REASON_ID) "ngReasonName",
+       qinsen.PG_GET_INFO.GET_DEPT_NAME_BY_ID(Z.TEAM_ID) "teamName",
+       qinsen.PG_GET_INFO.GET_STAFF_NAME_BY_ID(Z.WORKER_ID) "workerName",
+       qinsen.PG_GET_INFO.GET_STAFF_NAME_BY_ID(Z.JUDGER_ID) "judgerName",
+       qinsen.PG_GET_INFO.GET_PROD_LINE_CODE_BY_ID(Z.LINE_ID) "lineCode",
+       qinsen.PG_GET_INFO.GET_PROD_LINE_CODE_BY_ID(Z.JM_LINE_ID) "jmLineCode",
+       qinsen.PG_GET_INFO.GET_STAFF_NAME_BY_ID(Z.JM_WORKER_ID) "jmWorkerName",
+       (SELECT WM_CONCAT(DISTINCT C.BATCH_NO)
+           FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
+          WHERE D.CDM_BATCH_ID = C.RECORD_ID
+            AND D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) "cdmBatchStr",
+       (SELECT WM_CONCAT(DISTINCT M.BATCH_NO)
+           FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+          WHERE D.CDM_BATCH_ID = C.RECORD_ID
+            AND C.TUMO_BATCH_ID = M.RECORD_ID
+            AND D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) "tumoBatchStr",
+       (SELECT WM_CONCAT(DISTINCT M.DIMO_BATCH_NO)
+           FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+          WHERE D.CDM_BATCH_ID = C.RECORD_ID
+            AND C.TUMO_BATCH_ID = M.RECORD_ID
+            AND D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) "dimoBatchStr",
+       (SELECT SUM(D.OUT_QUANTITY) * Z.BLANKING_SIZE * Z.PAGE_WIDTH
+           FROM qinsen.INST_JUANMO_DETAIL D
+          WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) "juanmoLength",
+       (SELECT TO_CHAR(MAX(QC.PRODUCE_DT), 'YYYY-MM-DD HH24:MI')
+           FROM qinsen.INST_QIJIAN_CHANGE QC
+          WHERE QC.JUANMO_BATCH_ID = Z.JUANMO_BATCH_ID) "lastTagDate",
+       qinsen.PG_GET_INFO.GET_STAFF_NAME_BY_ID(qinsen.PG_GET_INFO.GET_LAST_TAG_WORKER(Z.JUANMO_BATCH_ID)) "lastTagWorker"
+	  FROM (SELECT  T.* 
+	          FROM (
+
+	SELECT A.RECORD_ID, A.JUANMO_BATCH_ID, A.BATCH_NO, A.LINE_ID,
+	       A.PROD_SPEC_ID, A.ORDER_NO, A.PRODUCE_DT, A.PRESURE, A.CHECK_RESULT,
+	       A.IS_QUALIFIED, A.IS_FIRST, A.STD_STR, A.TEAM_ID, A.WORKER_ID, A.NG_REASON_ID, 
+	       A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID, A.CHANGER_ID, A.REMARK,
+	       A.JUDGE_FLAG, A.NG_ITEM, A.JUDGER_ID, A.JUDGE_DT,
+	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
+	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
+	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
+	  FROM qinsen.INST_QIJIAN A, qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
+	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
+	   AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = UPPER(#batchNo#)</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="lineId">AND A.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="teamId">AND A.TEAM_ID = #teamId#</isNotNull>
+        <isNotNull prepend="" property="workerId">AND A.WORKER_ID = #workerId#</isNotNull>
+        <isNotNull prepend="" property="isQualified">AND A.IS_QUALIFIED = #isQualified#</isNotNull>
+        <isNotNull prepend="" property="judgeFlag">AND A.JUDGE_FLAG = #judgeFlag#</isNotNull>
+        <isNotNull prepend="" property="ngReasonId">AND A.NG_REASON_ID = #ngReasonId#</isNotNull>
+        <isNotNull prepend="" property="produceDtStart">AND A.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceDtEnd">AND A.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchId">AND J.RECORD_ID = #juanMoBatchId#</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchNo">AND J.BATCH_NO = UPPER(#juanMoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND EXISTS
+		 (SELECT 1
+	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C, INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.DIMO_BATCH_NO = #dimoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchId">AND EXISTS
+		 (SELECT 1
+	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = #tumoBatchId#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND EXISTS
+		 (SELECT 1
+	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C, INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO = #tumoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNoStr">AND EXISTS
+		 (SELECT 1
+	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C, INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%')</isNotNull>
+        <isNotNull prepend="" property="cdmBatchId">AND EXISTS (SELECT 1
+	          FROM INST_JUANMO_DETAIL D
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = #cdmBatchId#)</isNotNull>
+        <isNotNull prepend="" property="cdmBatchNo">AND EXISTS (SELECT 1
+	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.BATCH_NO = #cdmBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND EXISTS
+		 (SELECT 1
+	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C, INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.SPEC_ID = #mpSpecId#)</isNotNull>
+        <isNotNull prepend="" property="batchIdList">AND A.RECORD_ID IN ($batchIdList$)</isNotNull>
+        <isNotNull prepend="" property="lastTagWorkerId">AND EXISTS
+            (SELECT 1 FROM INST_QIJIAN_CHANGE X
+              WHERE X.JUANMO_BATCH_ID = A.JUANMO_BATCH_ID)
+	   AND qinsen.PG_GET_INFO.GET_LAST_TAG_WORKER(A.JUANMO_BATCH_ID) =	#lastTagWorkerId#</isNotNull>
+	 ORDER BY A.PRODUCE_DT DESC, A.CREATE_DT DESC, A.BATCH_NO
+		
+		) T) Z	
+			
+</select>
+    <select id="queryChangeRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	
+	SELECT 
+		RECORD_ID as "recordId",
+		JUANMO_BATCH_ID as "juanmoBatchId",
+		OLD_BATCH_NO as "oldBatchNo",
+		NEW_BATCH_NO as "newBatchNo",
+		OLD_SPEC_ID as "oldSpecId",
+		NEW_SPEC_ID as "newSpecId",
+		WORKER_ID as "workerId",
+		PRODUCE_DT as "produceDt",
+		CREATE_DT as "createDt",
+		CHANGE_DT as "changeDt",
+		CREATOR_ID as "creatorId",
+		CHANGER_ID as "changerId",
+		REMARK as "remark",
+		JUANMO_BATCH_NO as "juanmoBatchNo",
+		OLD_SPEC_CODE as "oldSpecCode",
+		OLD_SPEC_NAME as "oldSpecName",
+		NEW_SPEC_CODE as "newSpecCode",
+		NEW_SPEC_NAME as "newSpecName",
+		PRODUCE_DATE as "produceDate",
+		WORKER_NAME as "workerName",
+		FLAG_NAME as "flagName",
+		CREATE_DATE as "createDate",
+		CREATOR_NAME as "creatorName" 
+	  FROM (SELECT  T.* 
+	          FROM (
+	
+	SELECT A.RECORD_ID, A.JUANMO_BATCH_ID, A.OLD_BATCH_NO, A.NEW_BATCH_NO,
+	       A.OLD_SPEC_ID, A.NEW_SPEC_ID, A.WORKER_ID, A.PRODUCE_DT, A.CREATE_DT, 
+	       A.CHANGE_DT, A.CREATOR_ID, A.CHANGER_ID, A.REMARK, M.BATCH_NO JUANMO_BATCH_NO,
+	       (SELECT S.MATER_SPEC_CODE FROM qinsen.PARA_MATER_SPEC S
+	          WHERE S.MATER_SPEC_ID = A.OLD_SPEC_ID) OLD_SPEC_CODE,
+	       (SELECT S.MATER_SPEC_NAME FROM qinsen.PARA_MATER_SPEC S
+	          WHERE S.MATER_SPEC_ID = A.OLD_SPEC_ID) OLD_SPEC_NAME,
+	       (SELECT S.MATER_SPEC_CODE FROM qinsen.PARA_MATER_SPEC S
+	          WHERE S.MATER_SPEC_ID = A.NEW_SPEC_ID) NEW_SPEC_CODE,
+	       (SELECT S.MATER_SPEC_NAME FROM qinsen.PARA_MATER_SPEC S
+	          WHERE S.MATER_SPEC_ID = A.NEW_SPEC_ID) NEW_SPEC_NAME,
+	       TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD') PRODUCE_DATE,
+	       (SELECT S.STAFF_NAME FROM qinsen.BASE_STAFF S WHERE S.STAFF_ID = A.WORKER_ID) WORKER_NAME,
+	       NVL2(A.OLD_BATCH_NO, '换标', '补标') FLAG_NAME,
+	       TO_CHAR(A.CREATE_DT, 'YYYY-MM-DD HH24:MI') CREATE_DATE,
+	       (SELECT S.STAFF_NAME
+	           FROM qinsen.BASE_STAFF S
+	          WHERE S.STAFF_ID = A.CREATOR_ID) CREATOR_NAME
+	  FROM qinsen.INST_QIJIAN_CHANGE A, qinsen.INST_JUANMO_MAIN M
+	 WHERE A.JUANMO_BATCH_ID = M.RECORD_ID
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchId">AND A.JUANMO_BATCH_ID = #juanMoBatchId#</isNotNull>
+        <isNotNull prepend="" property="oldBatchNo">AND A.OLD_BATCH_NO = UPPER(#oldBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="newBatchNo">AND A.NEW_BATCH_NO = UPPER(#newBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="produceBeginDate">AND A.PRODUCE_DT &gt;= TO_DATE(#produceBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceEndDate">AND A.PRODUCE_DT &lt; TO_DATE(#produceEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchNo">AND M.BATCH_NO = UPPER(#juanMoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND EXISTS 
+		 (SELECT 1 FROM INST_QIJIAN Q 
+	         WHERE Q.JUANMO_BATCH_ID = M.RECORD_ID 
+	           AND Q.BATCH_NO = UPPER(#batchNo#))</isNotNull>
+	 ORDER BY A.PRODUCE_DT DESC, A.CREATE_DT DESC
+		
+		) T)		
+			
+</select>
+    <!-- 查询气检标准 -->
+    <select id="queryQjStd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   
+   SELECT T.RECORD_ID      AS "recordId",
+       T.PROD_SPEC_ID   AS "prodSpecId",
+       T.LOW_LIMIT      AS "lowLimit",
+       T.UP_LIMIT       AS "upLimit",
+       T.STATE          AS "state",
+       T.CREATE_DT      AS "createDt",
+       T.CHANGE_DT      AS "changeDt",
+       T.CREATOR_ID     AS "creatorId",
+       T.CHANGER_ID     AS "changerId",
+       T.REMARK         AS "remark",
+       T.STD_STR        AS "stdStr",
+       T.PROD_SPEC_CODE AS "prodSpecCode",
+       T.PROD_SPEC_NAME AS "prodSpecName",
+       T.STATE_NAME     AS "stateName"
+  FROM (
+        
+        SELECT A.RECORD_ID,
+                A.PROD_SPEC_ID,
+                A.LOW_LIMIT,
+                A.UP_LIMIT,
+                A.STATE,
+                A.CREATE_DT,
+                A.CHANGE_DT,
+                A.CREATOR_ID,
+                A.CHANGER_ID,
+                A.REMARK,
+                TO_CHAR(A.LOW_LIMIT, 'fm990.0') || '-' ||
+                TO_CHAR(A.UP_LIMIT, 'fm990.0') STD_STR,
+                S.MATER_SPEC_CODE PROD_SPEC_CODE,
+                S.MATER_SPEC_NAME PROD_SPEC_NAME,
+                DECODE(A.STATE, 'Y', '在用', 'N', '失效', '') STATE_NAME
+          FROM QINSEN.INST_QJ_STD A, QINSEN.PARA_MATER_SPEC S
+         WHERE A.PROD_SPEC_ID = S.MATER_SPEC_ID
+         <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="state">AND A.STATE = #state#</isNotNull>
+        <isNotNull prepend="" property="prodSpecName">AND S.MATER_SPEC_NAME = #prodSpecName#</isNotNull>
+         ORDER BY S.DISP_ORDER
+        
+        ) T
+   </select>
+    <!-- 查询是否有唯一键冲突记录 -->
+    <select id="queryDuplicateRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT 1
+	  FROM QINSEN.INST_QIJIAN A
+	 WHERE A.BATCH_NO = UPPER(#batchNo#)
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID &lt;&gt; #recordId#</isNotNull>
+    </select>
+    <insert id="backupQijian" parameterClass="java.util.HashMap">INSERT INTO KS_INST_QIJIAN_DEL_BAK
+	(RECORD_ID,JUANMO_BATCH_ID,BATCH_NO,LINE_ID,PROD_SPEC_ID,
+	ORDER_NO,PRODUCE_DT,PRESURE,CHECK_RESULT,IS_QUALIFIED,IS_FIRST,
+	STD_STR,TEAM_ID,WORKER_ID,CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,
+	REMARK,NG_REASON_ID,JUDGE_FLAG,NG_ITEM,JUDGER_ID,JUDGE_DT)
+	SELECT RECORD_ID,JUANMO_BATCH_ID,BATCH_NO,LINE_ID,PROD_SPEC_ID,
+	ORDER_NO,PRODUCE_DT,PRESURE,CHECK_RESULT,IS_QUALIFIED,IS_FIRST,
+	STD_STR,TEAM_ID,WORKER_ID,CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,
+	REMARK,NG_REASON_ID,JUDGE_FLAG,NG_ITEM,JUDGER_ID,JUDGE_DT
+	FROM qinsen.INST_QIJIAN 
+	WHERE RECORD_ID=#recordId#</insert>
+</sqlMap>

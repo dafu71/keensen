@@ -46,7 +46,7 @@
 <js:load scriptPath="pub/common/mpperfCombo.js" />
 <js:load scriptPath="pub/common/prodFlagSelCombo.js" />
 <js:load scriptPath="pub/common/componentlineCombo.js" />
-<js:load scriptPath="pub/common/teamCombo.js" />
+<js:load scriptPath="pub/common/tacheteamCombo.js" />
 <js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="pub/common/componentworkerCombo.js" />
 <js:load scriptPath="pub/common/defectViewWin.js" />

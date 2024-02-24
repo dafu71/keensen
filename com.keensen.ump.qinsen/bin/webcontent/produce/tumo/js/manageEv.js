@@ -18,7 +18,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var start = vals['condition/produceDtStart'];
 		var end = vals['condition/produceDtEnd'];
-		if(dayDiff(start,end)>31){
+		if (dayDiff(start, end) > 31) {
 			Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
 			return false;
 
@@ -152,6 +152,82 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				_this.dealBatchNo2();
 			});
 
+	this.inputWindow.dimoBatchNo.mon(this.inputWindow.dimoBatchNo, "change",
+			function(thisFiled, newValue, oldValue) {
+				if (newValue.length == 12) {
+					this.requestMask = this.requestMask
+							|| new Ext.LoadMask(Ext.getBody(), {
+										msg : "后台正在操作,请稍候!"
+									});
+					this.requestMask.show();
+					Ext.Ajax.request({
+						url : "com.keensen.ump.produce.diaphragm.make.make.queryZmx.biz.ext",
+						method : "post",
+						jsonData : {
+							'condition/dimoBatchNo' : newValue
+						},
+						success : function(response, action) {
+							var result = Ext.decode(response.responseText);
+							var datas = result.data;
+							if (Ext.isEmpty(datas)) {
+								Ext.Msg.alert("系统提示", "没有查询到无纺布数据！");
+								return;
+							} else {
+								var data = datas[0];
+								var supId = data.supId;
+								var wfBatchNo = data.wfBatchNo;
+								_this.inputWindow.wfSupId.setValue(supId);
+								_this.inputWindow.wfBatchNo
+										.setValue(wfBatchNo);
+							    _this.inputWindow.wfSupId.fireEvent('change');
+							}
+
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
+				}
+			});
+			
+	this.editWindow.dimoBatchNo.mon(this.editWindow.dimoBatchNo, "change",
+			function(thisFiled, newValue, oldValue) {
+				if (newValue.length == 12) {
+					this.requestMask = this.requestMask
+							|| new Ext.LoadMask(Ext.getBody(), {
+										msg : "后台正在操作,请稍候!"
+									});
+					this.requestMask.show();
+					Ext.Ajax.request({
+						url : "com.keensen.ump.produce.diaphragm.make.make.queryZmx.biz.ext",
+						method : "post",
+						jsonData : {
+							'condition/dimoBatchNo' : newValue
+						},
+						success : function(response, action) {
+							var result = Ext.decode(response.responseText);
+							var datas = result.data;
+							if (Ext.isEmpty(datas)) {
+								Ext.Msg.alert("系统提示", "没有查询到无纺布数据！");
+								return;
+							} else {
+								var data = datas[0];
+								var supId = data.supId;
+								var wfBatchNo = data.wfBatchNo;
+								_this.editWindow.wfSupId.setValue(supId);
+								_this.editWindow.wfBatchNo
+										.setValue(wfBatchNo);
+							    _this.editWindow.wfSupId.fireEvent('change');
+							}
+
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
+				}
+			});
+
 	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
 			function() {
 				var dimoBatchNo = this.inputWindow.items.items[0].form
@@ -202,6 +278,20 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 						return false;
 					}
 				}
+			}, this);
+			
+			
+	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterload',
+			function(win, data) {
+				var regEx = new RegExp("\\-", "gi");
+				if (data.produceDt) {
+					data.produceDt = data.produceDt.split('.')[0];
+					var date1 = data.produceDt.replace(regEx, "/");
+					this.editWindow.items.items[0].form
+							.findField('entity/produceDt')
+							.setValue(new Date(date1));
+				}
+				
 			}, this);
 
 }
