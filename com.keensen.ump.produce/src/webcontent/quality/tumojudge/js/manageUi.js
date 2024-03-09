@@ -22,6 +22,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initEditWindow();
+		this.initInputWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -151,6 +152,11 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						},
 						emptyText : '--请选择--',
 						colspan : 1
+					}, {
+						xtype : 'textfield',
+						name : 'condition/title',
+						anchor : '75%',
+						fieldLabel : '请检单'
 					}]
 				});
 
@@ -172,8 +178,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false
 				});
 		this.listPanel = new Ext.fn.EditListPanel({
 			title : '【膜片质检判定列表】',
@@ -189,6 +194,11 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onJudge
+					}, '->', {
+						text : '膜片降级',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onReduce
 					}],
 			id : 'timojudge-list',
 			selModel : selModel,
@@ -196,6 +206,10 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'batchNo',
 						sortable : true,
 						header : '膜片批号'
+					}, {
+						dataIndex : 'title',
+						sortable : true,
+						header : '请检单'
 					}, {
 						dataIndex : 'materSpecName',
 						sortable : true,
@@ -214,9 +228,11 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						header : '是否外销'
 					}, {
 						dataIndex : 'qualifidLength',
+						sortable : true,
 						header : '合格长度'
 					}, {
 						dataIndex : 'usefulLength',
+						sortable : true,
 						header : '可用长度'
 					}, {
 						dataIndex : 'mpd',
@@ -240,6 +256,9 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						dataIndex : 'isBatchQualifiedName',
 						header : '批次合格'
+					}, {
+						dataIndex : 'reduce',
+						header : '降级原因'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality.queryTumoJudgeByPage.biz.ext',
@@ -303,10 +322,15 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							name : 'rSaltRejection'
 						}, {
 							name : 'trend'
+						}, {
+							name : 'title'
+						}, {
+							name : 'reduce'
 						}]
 			})
 		})
 	}
+
 	this.initEditWindow = function() {
 		var _this = this;
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
@@ -508,12 +532,14 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 											.findField('entity/isQualified')
 											.setValue("N");
 									_this.editPanel.form
-											.findField('entity/isQualified').fireEvent('change');
+											.findField('entity/isQualified')
+											.fireEvent('change');
 									_this.editPanel.form
 											.findField('entity/perfFlagId')
 											.setValue("300032");
 									_this.editPanel.form
-											.findField('entity/perfFlagId').fireEvent('change');
+											.findField('entity/perfFlagId')
+											.fireEvent('change');
 								} else {
 									if ("Y" == isBatchQualified
 											&& "Y" == thickIsQualified) {
@@ -521,12 +547,14 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 												.findField('entity/isQualified')
 												.setValue("Y");
 										_this.editPanel.form
-											.findField('entity/isQualified').fireEvent('change');
+												.findField('entity/isQualified')
+												.fireEvent('change');
 										_this.editPanel.form
 												.findField('entity/perfFlagId')
 												.setValue("300029");
 										_this.editPanel.form
-											.findField('entity/perfFlagId').fireEvent('change');
+												.findField('entity/perfFlagId')
+												.fireEvent('change');
 									}
 								}
 							}
@@ -595,12 +623,14 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 											.findField('entity/isQualified')
 											.setValue("N");
 									_this.editPanel.form
-											.findField('entity/isQualified').fireEvent('change');
+											.findField('entity/isQualified')
+											.fireEvent('change');
 									_this.editPanel.form
 											.findField('entity/perfFlagId')
 											.setValue("300032");
 									_this.editPanel.form
-											.findField('entity/perfFlagId').fireEvent('change');
+											.findField('entity/perfFlagId')
+											.fireEvent('change');
 								} else {
 									if ("Y" == isBatchQualified
 											&& "Y" == appearanceIsQualified) {
@@ -608,12 +638,14 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 												.findField('entity/isQualified')
 												.setValue("Y");
 										_this.editPanel.form
-											.findField('entity/isQualified').fireEvent('change');
+												.findField('entity/isQualified')
+												.fireEvent('change');
 										_this.editPanel.form
 												.findField('entity/perfFlagId')
 												.setValue("300029");
 										_this.editPanel.form
-											.findField('entity/perfFlagId').fireEvent('change');
+												.findField('entity/perfFlagId')
+												.fireEvent('change');
 									}
 								}
 							}
@@ -804,5 +836,59 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 
 				});
 
+	}
+
+	this.initInputWindow = function() {
+		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
+			title : '膜片降级',
+			height : 600,
+			width : 800,
+			// itemCls:'required',
+			// style:'margin-top:10px',
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+				xtype : 'inputpanel',
+				pgrid : this.listPanel,
+				columns : 2,
+				saveUrl : 'com.keensen.ump.produce.quality.quality.updateTumoReduce.biz.ext',
+				fields : [{
+							ref : '../../batchNo',
+							anchor : '85%',
+							colspan : 2,
+							xtype : 'textarea',
+							fieldLabel : '膜片批号',
+							readOnly : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+
+							xtype : 'combobox',
+							fieldLabel : '降级原因',
+							ref : '../../reduce',
+							hiddenName : 'reduce',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							anchor : '85%',
+							colspan : 2,
+							store : [['膜片漏气', '膜片漏气'], ['膜片性能', '膜片性能'],
+									['膜片变色', '膜片变色'], ['膜片外观', '膜片外观']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.reduce.reset();
+								}
+							}
+						}, {
+							xtype : 'hidden',
+							ref : '../../recordIds',
+							name : 'recordIds'
+						}]
+			}]
+		});
 	}
 }

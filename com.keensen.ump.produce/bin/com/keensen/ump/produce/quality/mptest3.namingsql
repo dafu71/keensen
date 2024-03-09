@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.quality.mptest3">
+    <select id="queryC21Records" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.ID             AS "id",
+       to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.LINE           AS "line",
+       T1.BATCH_NO       AS "batchNo",
+       T1.MPTYPE         AS "mptype",
+       T1.CONCENTRATION  AS "concentration"
+  FROM KS_QUALITY_MP_TEST_C21_HEAD T1
+
+		 where 1=1
+		  <isNotNull prepend="and" property="id">t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="line">t1.line = #line#</isNotNull>
+        <isNotNull prepend="and" property="mptype">t1.mptype = #mptype#</isNotNull>
+			
+			order by id desc
+    </select>
+    <select id="queryQualRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.ID             AS "id",
+       to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+        T1.LINE           AS "line",
+       T1.BATCH_NO       AS "batchNo",
+       T1.MPTYPE         AS "mptype",
+       T1.WATER          AS "water",
+       T1.GFD            AS "gfd"
+  FROM KS_QUALITY_MP_TEST_QUAL_HEAD T1
+
+		 where 1=1
+		  <isNotNull prepend="and" property="id">t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="line">t1.line = #line#</isNotNull>
+        <isNotNull prepend="and" property="mptype">t1.mptype = #mptype#</isNotNull>
+			
+			order by id desc
+    </select>
+    <select id="queryThickRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.ID             AS "id",
+       to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.WF_BATCH_NO    AS "wfBatchNo",
+       T1.BATCH_NO       AS "batchNo",
+       T1.MPTYPE         AS "mptype"
+  FROM KS_QUALITY_MP_TEST_THICK_HEAD T1
+
+		 where 1=1
+		  <isNotNull prepend="and" property="id">t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="wfBatchNo">t1.WF_BATCH_NO = #wfBatchNo#</isNotNull>
+        <isNotNull prepend="and" property="mptype">t1.mptype = #mptype#</isNotNull>
+			
+			order by id desc
+    </select>
+    <select id="queryThickList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ITYPE       AS "itype",T1.ID             AS "id",
+    to_char(t2.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+       T1.THICK1      AS "thick1",
+       T1.THICK2      AS "thick2",
+       T1.THICK3      AS "thick3",
+       T1.THICK4      AS "thick4",
+       T1.THICK5      AS "thick5",
+       T1.THICK6      AS "thick6",
+       T1.THICK7      AS "thick7",
+       T1.THICK8      AS "thick8",
+       T1.THICK9      AS "thick9",
+       T1.THICK10     AS "thick10",
+       T1.RELATION_ID AS "relationId",
+       T2.WF_BATCH_NO AS "wfBatchNo",
+       T2.BATCH_NO    AS "batchNo",
+       T2.MPTYPE      AS "mptype",
+       (NVL(T1.THICK1, 0) + NVL(T1.THICK2, 0) + NVL(T1.THICK3, 0) +
+       NVL(T1.THICK4, 0) + NVL(T1.THICK5, 0) + NVL(T1.THICK6, 0) +
+       NVL(T1.THICK7, 0) + NVL(T1.THICK8, 0) + NVL(T1.THICK9, 0) +
+       NVL(T1.THICK10, 0)) / 10  AS "avg"
+  FROM KS_QUALITY_MP_TEST_THICK_LIST T1
+  LEFT JOIN KS_QUALITY_MP_TEST_THICK_HEAD T2
+    ON T1.RELATION_ID = T2.ID
+     where 1=1
+		  <isNotNull prepend="and" property="id">t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="relationId">t2.ID = #relationId#</isNotNull>
+    order by T1.RELATION_ID desc, t1.id
+    </select>
+</sqlMap>

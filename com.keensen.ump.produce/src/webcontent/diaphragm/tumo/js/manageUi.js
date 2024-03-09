@@ -299,6 +299,9 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						dataIndex : 'planNo',
 						header : '计划单号'
 					}, {
+						dataIndex : 'mpd',
+						header : 'C21浓度'
+					}, {
 						dataIndex : 'fMacName',
 						header : '初检测试台'
 					}, {
@@ -416,6 +419,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'thickIsQualifiedName'
 						}, {
 							name : 'stockAmount'
+						}, {
+							name : 'mpd'
 						}]
 			})
 		})

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+  <!-- 查询记录列表 -->
+<select id="queryRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	select t1.RECORD_ID as "recordId",
+		t1.BATCH_NO as "batchNo",
+		t1.LINE_ID as "lineId",
+		t1.PRODUCE_DT as "produceDt",
+		t1.TEAM_ID as "teamId",
+		t1.WORKER_ID as "workerId",
+		t1.CREATE_DT as "createDt",
+		t1.CHANGE_DT as "changeDt",
+		t1.CREATOR_ID as "creatorId",
+		t1.CHANGER_ID as "changerId",
+		t1.REMARK as "remark",
+		t1.PROD_SPEC_ID as "prodSpecId",
+		t1.PRODUCE_FLAG as "produceFlag",
+		t1.ORDER_NO as "orderNo",
+		t1.JUANMO_BATCH_ID as "juanmoBatchId",
+		t1.JUANMO_BATCH_NO as "juanmoBatchNo",
+		t1.PROD_SPEC_AREA as "prodSpecArea",
+		t1.PROD_SPEC_CODE as "prodSpecCode",
+		t1.PROD_SPEC_NAME as "prodSpecName",
+		t1.PRODUCE_FLAG_NAME as "produceFlagName",
+		t1.PRODUCE_DATE as "produceDate",
+		t1.TEAM_NAME as "teamName",
+		t1.WORKER_NAME as "workerName",
+		t1.LINE_CODE as "lineCode",
+		t1.CDM_BATCH_STR as "cdmBatchStr",
+		t1.TUMO_BATCH_STR as "tumoBatchStr"
+	from(
+	
+	SELECT A.RECORD_ID, A.BATCH_NO, A.LINE_ID, A.PRODUCE_DT,
+	       A.TEAM_ID, A.WORKER_ID, A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID,
+	       A.CHANGER_ID, A.REMARK, A.PROD_SPEC_ID, A.PRODUCE_FLAG,
+	       Q.ORDER_NO, Q.JUANMO_BATCH_ID, J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
+	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME,
+	       DECODE(A.PRODUCE_FLAG, 'W', '白膜', 'R', '返修', '') PRODUCE_FLAG_NAME,
+	       TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
+	       qinsen.PG_GET_INFO.GET_DEPT_NAME_BY_ID(A.TEAM_ID) TEAM_NAME,
+	       qinsen.PG_GET_INFO.GET_STAFF_NAME_BY_ID(A.WORKER_ID) WORKER_NAME,
+	       (SELECT L.LINE_CODE FROM qinsen.BASE_PROD_LINE L WHERE L.LINE_ID = A.LINE_ID) LINE_CODE,
+	       (SELECT WM_CONCAT(DISTINCT C.BATCH_NO)
+	           FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
+	          WHERE D.CDM_BATCH_ID = C.RECORD_ID
+	            AND D.MAIN_BATCH_ID = J.RECORD_ID) CDM_BATCH_STR,
+	       (SELECT WM_CONCAT(DISTINCT M.BATCH_NO)
+	           FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	          WHERE D.CDM_BATCH_ID = C.RECORD_ID
+	            AND C.TUMO_BATCH_ID = M.RECORD_ID
+	            AND D.MAIN_BATCH_ID = J.RECORD_ID) TUMO_BATCH_STR
+	  FROM qinsen.INST_RAOSI A, qinsen.INST_QIJIAN Q, qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
+	 WHERE A.BATCH_NO = Q.BATCH_NO(+)
+	   AND Q.JUANMO_BATCH_ID = J.RECORD_ID(+)
+	   AND Q.PROD_SPEC_ID = MS.MATER_SPEC_ID(+)
+	<isNotNull prepend = ""  property = "recordId">
+	   AND A.RECORD_ID = #recordId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "lineId">
+	   AND A.LINE_ID = #lineId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "teamId">
+	   AND A.TEAM_ID = #teamId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "workerId">
+	   AND A.WORKER_ID = #workerId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "produceBeginDate">
+	   AND A.PRODUCE_DT &gt;= TO_DATE(#produceBeginDate#, 'YYYY-MM-DD HH24:MI')
+	</isNotNull>
+	<isNotNull prepend = ""  property = "produceEndDate">
+	   AND A.PRODUCE_DT &lt; TO_DATE(#produceEndDate#, 'YYYY-MM-DD HH24:MI')
+	</isNotNull>
+	<isNotNull prepend = ""  property = "batchNo">
+	   AND A.BATCH_NO = UPPER(#batchNo#)
+	</isNotNull>
+	<isNotNull prepend = ""  property = "batchNoStr">
+	   AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'
+	</isNotNull>
+	<isNotNull prepend = ""  property = "produceFlag">
+	   AND A.PRODUCE_FLAG = #produceFlag#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "orderNo">
+	   AND Q.ORDER_NO = #orderNo#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "prodSpecId">
+	   AND Q.PROD_SPEC_ID = #prodSpecId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "juanMoBatchId">
+	   AND J.RECORD_ID = #juanMoBatchId#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "juanMoBatchNo">
+	   AND J.BATCH_NO = UPPER(#juanMoBatchNo#)
+	</isNotNull>
+	<isNotNull prepend = ""  property = "tumoBatchId">
+	   AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = #tumoBatchId#)
+	</isNotNull>
+	<isNotNull prepend = ""  property = "tumoBatchNo">
+	   AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO = #tumoBatchNo#)
+	</isNotNull>
+	<isNotNull prepend = ""  property = "tumoBatchNoStr">
+	   AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%')
+	</isNotNull>
+	<isNotNull prepend = ""  property = "cdmBatchId">
+	   AND EXISTS (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = #cdmBatchId#)
+	</isNotNull>
+	<isNotNull prepend = ""  property = "cdmBatchNo">
+	   AND EXISTS (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.BATCH_NO = #cdmBatchNo#)
+	</isNotNull>
+	<isNotNull prepend = ""  property = "mpSpecId">
+	   AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.SPEC_ID = #mpSpecId#)
+	</isNotNull>
+	<isNotNull prepend = ""  property = "batchIdList">
+	   AND Q.RECORD_ID IN ($batchIdList$)
+	</isNotNull>   
+	 ORDER BY A.PRODUCE_DT DESC, A.CREATE_DT DESC, A.BATCH_NO
+	 ) t1
+			
+</select>
+
+ <insert id="backupRaosi" parameterClass="java.util.HashMap" >
+     INSERT INTO KS_INST_RAOSI_DEL_BAK
+	(RECORD_ID,BATCH_NO,ORDER_NO,LINE_ID,PRODUCE_DT,TEAM_ID,WORKER_ID,
+	CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,PROD_SPEC_ID,PRODUCE_FLAG)
+	SELECT RECORD_ID,BATCH_NO,ORDER_NO,LINE_ID,PRODUCE_DT,TEAM_ID,WORKER_ID,
+	CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,PROD_SPEC_ID,PRODUCE_FLAG
+	FROM QINSEN.INST_RAOSI 
+	WHERE RECORD_ID=#recordId#
+   </insert>
+
+</sqlMap>

@@ -76,7 +76,7 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 				forceFit : true
 			},
 			hsPage : true,
-			id : listid,
+			id : 'list-trace-tumo',
 			tbar : [{
 						text : '涂膜记录',
 						scope : this,
@@ -142,7 +142,7 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.ship.trace.queryByPage.biz.ext',
 				root : 'data',
-				autoLoad : true,
+				autoLoad : false,
 				totalProperty : 'totalCount',
 				baseParams : {
 					'condition/isCutOver' : 'N'
@@ -202,7 +202,7 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 				forceFit : true
 			},
 			hsPage : true,
-			id : listid,
+			id : 'list-trace-tumorecord',
 			tbar : [],
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
@@ -266,8 +266,8 @@ com.keensen.ump.produce.diaphragm.ship.TraceMgr = function() {
 					closeAction : "hide",
 					buttonAlign : "center",
 					autoScroll : true,
-					width : 1024,
-					height : 800,
+					width : 800,
+					height : 600,
 					layout : 'fit',
 					draggable : false,
 					constrain : true,

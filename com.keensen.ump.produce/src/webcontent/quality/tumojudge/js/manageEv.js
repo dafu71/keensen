@@ -173,6 +173,8 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onJudge = function() {
 			this.editWindow.items.items[0].loadData(r);
 
 			this.editWindow.show();
+		}else{
+			Ext.Msg.alert("系统提示", "请选择一条数据!");
 		}
 	} else {
 		Ext.Msg.alert("系统提示", "请选择数据!");
@@ -237,4 +239,31 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onUpdateApplyIsJudged = f
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.produce.quality.timojudgeMgr.prototype.onReduce = function() {
+	// this.listPanel.onEdit();
+	var _this = this;
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		var arr = [];
+		var arr2 = [];
+		for (var i = 0; i < B.length; i++) {
+			var recordId = B[i].get('recordId');
+			arr.push(recordId);
+			var batchNo = B[i].get('batchNo');
+			arr2.push(batchNo);
+		}
+		this.inputWindow.batchNo.setValue(arr2.join(','));
+		this.inputWindow.recordIds.setValue(arr.join(','));
+		this.inputWindow.show();
+	} else {
+		Ext.Msg.alert("系统提示", "请选择数据!");
+		return
+	}
+}
+
+com.keensen.ump.produce.quality.timojudgeMgr.prototype.destroy = function() {
+	this.editWindow.destroy();
+	this.inputWindow.destroy();
 }

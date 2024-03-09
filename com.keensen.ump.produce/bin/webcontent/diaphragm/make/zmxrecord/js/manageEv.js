@@ -138,7 +138,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 	if (!Ext.isEmpty(productDt) && !Ext.isEmpty(psf) && !Ext.isEmpty(dimoType)
 			&& !Ext.isEmpty(line)) {
 		dimoBatchNo = 'F';
-		line = line == '铸膜A线' ? 'A' : 'B';
+		line = line == '铸膜A线' ? 'A' : line == '铸膜B线' ? 'B' : 'C';
 		dimoBatchNo += line;
 		if (dimoType == 'ULP底膜') {
 			dimoBatchNo += '30';
@@ -171,9 +171,10 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 	}
 };
 
-com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onChooseWindowShow = function(_this) {
-	
-	//_this.listPanel2.selModel.clearSelections();
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onChooseWindowShow = function(
+		_this) {
+
+	// _this.listPanel2.selModel.clearSelections();
 	_this.listPanel2.store.removeAll();
 	_this.queryPanel2.form.reset();
 	_this.queryPanel2.fireEvent('query');
@@ -218,7 +219,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onPrint = function() {
 		var supName = r.data.supName;
 		window
 				.open('com.keensen.ump.produce.diaphragm.make.printZmTag.flow?condition/id='
-						+ id );
+						+ id);
 
 	}
 

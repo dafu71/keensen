@@ -50,6 +50,7 @@ function isNonNegativeFloat(str) {
 // 发货请检单
 com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck = function() {
 	// 订单号-计划单号
+	var _this = this;
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
@@ -86,7 +87,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck = function() {
 					}
 					
 					//if(!Ext.isEmpty(isValid) && isValid=='Y'){//是否已人工质检验证,Y=是,N=否，作为判断条件
-					if(!Ext.isEmpty(title) && ok){//是否有请检单号作为判断条件
+					if(Ext.isEmpty(title) && ok){//是否有请检单号作为判断条件
 						msg = "请选择没有判定过的数据！";
 						ok = false;
 					}
@@ -150,6 +151,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck = function() {
 // 自用请检单
 com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck2 = function() {
 	// 订单号-计划单号
+	var _this = this;
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
@@ -179,12 +181,13 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck2 = function() {
 					var usefulLength = r.data.usefulLength;
 					var isValid = r.data.isValid;
 					var fGfdAvg = r.data.fGfdAvg;
+					var title = r.data.title;
 					if(Ext.isEmpty(fGfdAvg) && ok){//初测为空的，作为判断条件
 						msg = "请选择初测不为空的数据！";
 						ok = false;
 					}
 
-					if(!Ext.isEmpty(isValid) && isValid=='Y' && ok){//是否已人工质检验证,Y=是,N=否，作为判断条件
+					if(Ext.isEmpty(title) && ok){////是否有请检单号作为判断条件
 						msg = "请选择没有判定过的数据！";
 						ok = false;
 						

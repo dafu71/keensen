@@ -110,7 +110,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						colspan : 2
 					}, {
 
-						xtype : 'combo',
+						xtype : 'combobox',
 						fieldLabel : '试卷',
 						ref : '../isTrial',
 						hiddenName : 'entity/isTrial',
@@ -147,7 +147,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						name : 'entity/outQuantity',
 						fieldLabel : '膜页数',
 						xtype : 'textfield',
-						readOnly:true,
+						readOnly : true,
 						anchor : '85%'
 					}, {
 						ref : '../inQuantity',
@@ -162,14 +162,14 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						name : 'entity/blankingSize',
 						fieldLabel : '下料尺寸',
 						xtype : 'textfield',
-						readOnly:true,
+						readOnly : true,
 						anchor : '85%'
 					}, {
 						ref : '../denseNet',
 						name : 'entity/denseNet',
 						fieldLabel : '浓网',
 						xtype : 'textfield',
-						readOnly:true,
+						readOnly : true,
 						anchor : '85%'
 					}, {
 						xtype : 'displayfield',
@@ -180,7 +180,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						name : 'entity/pageWidth',
 						fieldLabel : '页宽',
 						xtype : 'textfield',
-						readOnly:true,
+						readOnly : true,
 						anchor : '85%'
 					}, {
 						xtype : 'displayfield',

@@ -31,12 +31,12 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 170,
 					columns : 4,
 					border : true,
 					collapsible : true,
 					titleCollapse : false,
-					title : '【裁叠膜记录查询】',
+					//title : '【裁叠膜记录查询】',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceBeginDate',
@@ -172,7 +172,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 				});
 
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【涂膜记录列表】',
+			//title : '【裁叠膜记录列表】',
 			viewConfig : {
 				forceFit : false
 			},

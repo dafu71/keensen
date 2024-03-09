@@ -10,6 +10,7 @@
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
     <targetConnections>link14</targetConnections>
+    <targetConnections>link20</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns/>
   </nodes>
@@ -25,6 +26,10 @@
     <sourceConnections xsi:type="process:tLink" id="link15" name="link15" isDefault="true" type="transition">
       <sourceNode>subprocess0</sourceNode>
       <targetNode>transactioncommit0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" lineType="note" type="exception">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link2</targetConnections>
     <nodeLabel>subprocess0label</nodeLabel>
@@ -84,6 +89,10 @@
     <sourceConnections xsi:type="process:tLink" id="link5" name="link5" isDefault="true" type="transition">
       <sourceNode>invokeSpring1</sourceNode>
       <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" lineType="note" type="exception">
+      <sourceNode>invokeSpring1</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link4</targetConnections>
     <nodeLabel>invokeSpring1label</nodeLabel>
@@ -186,6 +195,10 @@
       <sourceNode>invokeSpring3</sourceNode>
       <targetNode>invokeSpring4</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" lineType="note" type="exception">
+      <sourceNode>invokeSpring3</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
     <targetConnections>link8</targetConnections>
     <nodeLabel>invokeSpring3label</nodeLabel>
     <process:spring methodType="beanID" synchronization="true" transactionType="join">
@@ -205,6 +218,10 @@
     <sourceConnections xsi:type="process:tLink" id="link11" name="link11" isDefault="true" type="transition">
       <sourceNode>invokeSpring4</sourceNode>
       <targetNode>assign4</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" lineType="note" type="exception">
+      <sourceNode>invokeSpring4</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link9</targetConnections>
     <nodeLabel>invokeSpring4label</nodeLabel>
@@ -246,6 +263,10 @@
     <sourceConnections xsi:type="process:tLink" id="link12" name="link12" isDefault="true" type="transition">
       <sourceNode>invokeSpring5</sourceNode>
       <targetNode>assign5</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" lineType="note" type="exception">
+      <sourceNode>invokeSpring5</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
     <targetConnections>link10</targetConnections>
     <nodeLabel>invokeSpring5label</nodeLabel>
@@ -303,6 +324,22 @@
   <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
     <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionRollback" id="transactionrollback0" name="事务回滚" type="transactionrollback">
+    <sourceConnections xsi:type="process:tLink" id="link20" name="link20" isDefault="true" type="transition">
+      <sourceNode>transactionrollback0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <targetConnections>link16</targetConnections>
+    <targetConnections>link17</targetConnections>
+    <targetConnections>link18</targetConnections>
+    <targetConnections>link19</targetConnections>
+    <nodeLabel>transactionrollback0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactionrollback0label" name="label" nodeType="label">
+    <figSize height="20" width="61"/>
+    <node>transactionrollback0</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

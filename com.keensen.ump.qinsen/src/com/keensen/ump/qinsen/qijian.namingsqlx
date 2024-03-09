@@ -259,8 +259,8 @@
 	<isNotNull prepend = ""  property = "recordId">
 	   AND A.RECORD_ID = #recordId#
 	</isNotNull>
-	<isNotNull prepend = ""  property = "juanMoBatchId">
-	   AND A.JUANMO_BATCH_ID = #juanMoBatchId#
+	<isNotNull prepend = ""  property = "juanmoBatchId">
+	   AND A.JUANMO_BATCH_ID = #juanmoBatchId#
 	</isNotNull>
 	<isNotNull prepend = ""  property = "oldBatchNo">
 	   AND A.OLD_BATCH_NO = UPPER(#oldBatchNo#)
@@ -366,4 +366,16 @@
 	WHERE RECORD_ID=#recordId#
    </insert>
    
+   <!-- 查询气检不良项目 -->
+	<select id="qryNgItemOption" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		SELECT distinct A.NG_ITEM "ngItem" FROM qinsen.INST_QIJIAN A 
+		WHERE A.NG_ITEM IS NOT NULL ORDER BY 1
+	</select>
+
+	<!-- 批量改订单 -->
+	<update id="modiOrder" parameterClass="java.util.HashMap" >
+	UPDATE qinsen.INST_QIJIAN t  SET t.order_no = #orderNo#,
+	t.change_dt = SYSDATE,t.changer_id = #changerId#
+	WHERE t.record_id IN($recordIds$)
+	</update>
 </sqlMap>

@@ -585,10 +585,10 @@
 	
 	
 	<isNotNull prepend="and" property="orderNo2"> 
-		       t1.order_No = #orderNo2# 
+		       trim(t1.order_No) = #orderNo2# 
 	</isNotNull>
 	<isNotNull prepend="and" property="planNo2"> 
-		       t1.plan_No = #planNo2# 
+		       trim(t1.plan_No) = #planNo2# 
 	</isNotNull>
 	
  order by t1.produce_dt desc
@@ -794,12 +794,16 @@
        T1.R_MAC_NAME "rMacName",t3.trend "trend",
        decode(t3.appearance_is_qualified,'Y','合格','不合格') "appearanceIsQualifiedName",
        decode(t3.thick_is_qualified,'Y','合格','不合格') "thickIsQualifiedName",
-       T4.title "title",s.amount "stockAmount"
+       nvl(T4.title,' ') "title",s.amount "stockAmount"
   FROM V_KS_TUMO_ORIGIN2 T1
   left join KS_PROD_DIAPHRAGM_TUMO t3
   on t1.record_id = t3.record_id
   left join (select t.record_id,t.relation_id,t2.code|| t2.types || '请检单' title from KS_PROD_DIAPHRAGM_APPLY_LIST t
-	LEFT JOIN KS_PROD_DIAPHRAGM_APPLY t2 ON t.relation_id=t2.id) t4
+	LEFT JOIN KS_PROD_DIAPHRAGM_APPLY t2 ON t.relation_id=t2.id
+	<isNotNull prepend="" property="applyId"> 
+	WHERE t2.id=#applyId#
+	</isNotNull>
+	) t4
   on t1.record_id = t4.record_id
   left join KS_PROD_DIAPHRAGM_STOCK s 
   on s.batch_no = T1.batch_no

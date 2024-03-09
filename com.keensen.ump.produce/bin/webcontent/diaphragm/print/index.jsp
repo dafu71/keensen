@@ -41,6 +41,7 @@
 	var uid = "<%=uid %>";
   	var listid = 'mark-print-list';
   	var rootUrl = "<%=rootUrl %>";
+  	
 
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.print.PrintMarkMgr

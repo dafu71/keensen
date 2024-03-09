@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+  
+   <select id="queryOilRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",
+      to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.LINE           AS "line",
+       T1.TANK           AS "tank",
+       T1.MPTYPE         AS "mptype",
+       T1.BATCH_NO        AS "batchNo",
+       T1.STATE          AS "state",
+       decode(T1.STATE,0,'处理中',1,'完结','作废') "stateName",
+       T1.STEP           AS "step",
+       decode(T1.STEP,'first','分析','second','调整','third','配料','生产使用') "stepName"
+  FROM KS_QUALITY_MP_TEST_OIL_HEAD T1
+		 where 1=1
+		  <isNotNull prepend="and" property="id"> 
+		       t1.ID = #id#
+			</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_no = #batchNo#
+			</isNotNull>
+			<isNotNull prepend="and" property="line"> 
+		       t1.line = #line#
+			</isNotNull>
+			<isNotNull prepend="and" property="mptype"> 
+		       t1.mptype = #mptype#
+			</isNotNull>
+			<isNotNull prepend="and" property="step"> 
+		       t1.STEP = #step#
+			</isNotNull>
+			order by id desc
+    </select>
+    
+     <select id="queryOilListRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",T1.ID             AS "pkid",
+       to_char(t2.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t2.CREATE_USER_ID as "createUserId",
+		t2.CREATE_NAME as "createName",
+		to_char(t2.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.CONCENTRATION  AS "concentration",
+       T1.C41_PLAN       AS "c41Plan",
+       T1.C42_PLAN       AS "c42Plan",
+       T1.C41_REALITY    AS "c41Reality",
+       T1.C42_REALITY    AS "c42Reality",
+       T1.FIRST_NAME     AS "firstName",
+       T1.FIRST_ID       AS "firstId",
+       T1.SECOND_NAME    AS "secondName",
+       T1.SECOND_ID      AS "secondId",
+       T1.THIRD_NAME     AS "thirdName",
+       T1.THIRD_ID       AS "thirdId",
+       to_char(T1.FIRST_DATE,'yyyy-MM-dd HH24:mi:ss')     AS "firstDate",
+       to_char(T1.SECOND_DATE,'yyyy-MM-dd HH24:mi:ss')    AS "secondDate",
+       to_char(T1.THIRD_DATE ,'yyyy-MM-dd HH24:mi:ss')    AS "thirdDate",
+       T1.RELATION_ID    AS "relationId",
+       T2.LINE           AS "line",
+       T2.BATCH_NO        AS "batchNo",
+       T2.STATE          AS "state",
+       T2.mptype          AS "mptype",
+       T2.TANK           AS "tank",
+       T2.STEP           AS "step"
+  FROM KS_QUALITY_MP_TEST_OIL_LIST T1
+  LEFT JOIN KS_QUALITY_MP_TEST_OIL_HEAD T2
+    ON T1.RELATION_ID = T2.ID
+		 where 1=1
+		  <isNotNull prepend="and" property="id"> 
+		       t1.ID = #id#
+			</isNotNull>
+			 <isNotNull prepend="and" property="relationId"> 
+		       t2.ID = #relationId#
+			</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       t2.batch_no = #batchNo#
+			</isNotNull>
+			order by t1.relation_id desc,t1.id desc
+    </select>
+    
+    <select id="queryOilBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      SELECT BATCH_NO "batchNo" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' BATCH_NO FROM dual
+  WHERE NOT EXISTS(
+  select t.BATCH_NO from KS_QUALITY_MP_TEST_OIL_HEAD t
+  WHERE SUBSTR(t.BATCH_NO,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  select to_char(to_number(max(t.BATCH_NO))+1) CODE from KS_QUALITY_MP_TEST_OIL_HEAD t
+  WHERE SUBSTR(t.BATCH_NO,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE BATCH_NO IS NOT NULL
+     
+    </select> 
+    
+    
+    <select id="queryZmyRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",
+      to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.LINE           AS "line",
+       T1.MPTYPE         AS "mptype",
+       T1.BATCH_NO        AS "batchNo",
+       T1.STATE          AS "state",
+       decode(T1.STATE,0,'处理中',1,'完结','作废') "stateName",
+       T1.STEP           AS "step",
+       decode(T1.STEP,'first','分析','second','调整','third','配料','生产使用') "stepName"
+  FROM KS_QUALITY_MP_TEST_ZMY_HEAD T1
+		 where 1=1
+		  <isNotNull prepend="and" property="id"> 
+		       t1.ID = #id#
+			</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_no = #batchNo#
+			</isNotNull>
+			<isNotNull prepend="and" property="line"> 
+		       t1.line = #line#
+			</isNotNull>
+			<isNotNull prepend="and" property="mptype"> 
+		       t1.mptype = #mptype#
+			</isNotNull>
+			<isNotNull prepend="and" property="step"> 
+		       t1.STEP = #step#
+			</isNotNull>
+			order by id desc
+    </select>
+    
+     <select id="queryZmyListRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",T1.ID             AS "pkid",
+       to_char(t2.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t2.CREATE_USER_ID as "createUserId",
+		t2.CREATE_NAME as "createName",
+		to_char(t2.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       t1.CONCENTRATION as "concentration",
+		t1.CPS as "cps",
+		t1.TEMPERATURE as "temperature",
+		t1.DMF_PLAN as "dmfPlan",
+		t1.POLYSULFONE_PLAN as "polysulfonePlan",
+		t1.DMF_REALITY as "dmfReality",
+		t1.POLYSULFONE_REALITY as "polysulfoneReality",
+       T1.FIRST_NAME     AS "firstName",
+       T1.FIRST_ID       AS "firstId",
+       T1.SECOND_NAME    AS "secondName",
+       T1.SECOND_ID      AS "secondId",
+       T1.THIRD_NAME     AS "thirdName",
+       T1.THIRD_ID       AS "thirdId",
+       to_char(T1.FIRST_DATE,'yyyy-MM-dd HH24:mi:ss')     AS "firstDate",
+       to_char(T1.SECOND_DATE,'yyyy-MM-dd HH24:mi:ss')    AS "secondDate",
+       to_char(T1.THIRD_DATE ,'yyyy-MM-dd HH24:mi:ss')    AS "thirdDate",
+       T1.RELATION_ID    AS "relationId",
+       T2.LINE           AS "line",
+       T2.BATCH_NO        AS "batchNo",
+       T2.STATE          AS "state",
+       T2.mptype          AS "mptype",
+       T2.STEP           AS "step"
+  FROM KS_QUALITY_MP_TEST_ZMY_LIST T1
+  LEFT JOIN KS_QUALITY_MP_TEST_ZMY_HEAD T2
+    ON T1.RELATION_ID = T2.ID
+		 where 1=1
+		  <isNotNull prepend="and" property="id"> 
+		       t1.ID = #id#
+			</isNotNull>
+			 <isNotNull prepend="and" property="relationId"> 
+		       t2.ID = #relationId#
+			</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       t2.batch_no = #batchNo#
+			</isNotNull>
+			order by t1.relation_id desc,t1.id desc
+    </select>
+    
+    <select id="queryZmyBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      SELECT BATCH_NO "batchNo" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' BATCH_NO FROM dual
+  WHERE NOT EXISTS(
+  select t.BATCH_NO from KS_QUALITY_MP_TEST_ZMY_HEAD t
+  WHERE SUBSTR(t.BATCH_NO,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  select to_char(to_number(max(t.BATCH_NO))+1) CODE from KS_QUALITY_MP_TEST_ZMY_HEAD t
+  WHERE SUBSTR(t.BATCH_NO,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE BATCH_NO IS NOT NULL
+     
+    </select> 
+    
+    
+     <select id="queryTestItems" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		SELECT item "item",item || '测试(' || wm_concat(step_name || cnt || '条') || ')' "title",
+		DECODE(item,'油相液浓度','oil','水相液浓度','water','铸膜液浓度','zmy','甘油浓度','gy','IPA浓度','ipa','') "itemCode"
+		FROM
+		(SELECT cnt ,step ,step_name ,item 
+		FROM(
+		select '油相液浓度' item, COUNT(*) cnt,t.step,
+		 decode(T.STEP,'first','分析','second','调整','third','配料','生产使用') step_Name 
+		 from KS_QUALITY_MP_TEST_OIL_HEAD t
+		GROUP BY t.step
+		UNION ALL
+		select '水相液浓度' item, COUNT(*) cnt,t.step,
+		 decode(T.STEP,'first','分析','second','调整','third','配料','生产使用') step_Name 
+		 from KS_QUALITY_MP_TEST_water_HEAD t
+		GROUP BY t.step
+		UNION ALL
+		select '铸膜液浓度' item, COUNT(*) cnt,t.step,
+		 decode(T.STEP,'first','分析','second','调整','third','配料','生产使用') step_Name 
+		 from KS_QUALITY_MP_TEST_ZMY_HEAD t
+		GROUP BY t.step
+		UNION ALL
+		select '甘油浓度' item, COUNT(*) cnt,t.step,
+		 decode(T.STEP,'first','分析','second','调整','third','配料','生产使用') step_Name 
+		 from KS_QUALITY_MP_TEST_GY_HEAD t
+		GROUP BY t.step
+		UNION ALL
+		select 'IPA浓度' item, COUNT(*) cnt,t.step,
+		 decode(T.STEP,'first','分析','second','调整','third','配料','生产使用') step_Name 
+		 from KS_QUALITY_MP_TEST_IPA_HEAD t
+		GROUP BY t.step) t
+		WHERE 1=1
+		<isNotNull prepend="and" property="steps"> 
+				       t.step in ($steps$)
+					</isNotNull>
+		) tt
+		GROUP BY tt.item
+		ORDER BY tt.item 
+	
+     
+    </select> 
+  </sqlMap>

@@ -7,7 +7,7 @@
        to_char(T1.CREATE_TIME,'yyyy-MM-dd')        AS "createTime",
        T1.CREATE_USER_ID     AS "createUserId",
        T1.CREATE_NAME        AS "createName",
-       T1.UPDATE_TIME        AS "updateTime",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd')        AS "updateTime",
        T1.UPDATE_USER_ID     AS "updateUserId",
        T1.UPDATE_NAME        AS "updateName",
        T1.RESERVE1           AS "reserve1",
@@ -61,6 +61,12 @@
 	<isNotNull prepend = ""  property = "id">
 	   AND t1.id = #id#
 	</isNotNull>
+	
+	<isNotNull prepend = ""  property = "orderNo">
+	   AND T1.ORDER_NO like '%' || #orderNo# || '%'
+	</isNotNull>
+	
+	
 	
 	<isNotNull prepend = ""  property = "batchNo">
 	   AND T1.RESERVE5 like '%' || #batchNo# || '%'

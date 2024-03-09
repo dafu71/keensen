@@ -192,9 +192,9 @@ com.zoomlion.hjsrm.kcgl.PlanheadMgr = function() {
 						fileUpload : true,
 						fields : [{
 								xtype : 'textfield',
-								name : 'title',
+								name : 'logoCode',
 								allowBlank : false,
-								fieldLabel : '计划标题'
+								fieldLabel : '检索编码'
 							},{
 									name : 'uploadFile',
 									fieldLabel : '选择文件',

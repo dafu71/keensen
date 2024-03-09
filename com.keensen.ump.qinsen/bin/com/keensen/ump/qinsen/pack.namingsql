@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.pack">
+    <!-- 查询唛头LOGO记录列表 -->
+    <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT T1.RECORD_ID   AS "recordId",
+       T1.CUSTOMER_ID AS "customerId",
+       T1.LOGO_CODE   AS "logoCode",
+       T1.LOGO_NAME   AS "logoName",
+       T1.IMG_URI     AS "imgUri",
+       T1.CREATE_DT   AS "createDt",
+       T1.CHANGE_DT   AS "changeDt",
+       T1.CREATOR_ID  AS "creatorId",
+       T1.CHANGER_ID  AS "changerId",
+       T1.REMARK      AS "remark",
+       T1.STATE       AS "state",
+       T1.STATE_NAME  AS "stateName",
+       T1.IMG_URL     AS "imgUrl",
+       T1.FLAG        AS "flag"
+  FROM (SELECT A.RECORD_ID,
+               A.CUSTOMER_ID,
+               A.LOGO_CODE,
+               A.LOGO_NAME,
+               A.IMG_URI,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               A.STATE,
+               DECODE(A.STATE, 'A', '在用', 'X', '停用') STATE_NAME,
+               DECODE(SUBSTR(A.RECORD_ID, 1, 1),
+                      1,
+                      (SELECT C.VALUE
+                         FROM QINSEN.BASE_SYS_CONFIG C
+                        WHERE C.CODE = 'PACK_MARK_LOGO_DOMIAN'),
+                      '') || A.IMG_URI IMG_URL,
+               DECODE(SUBSTR(A.RECORD_ID, 1, 1), 1, 'first', 'second') FLAG
+          FROM QINSEN.INST_PACK_MARK_LOGO A
+          where 1=1
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="batchId">AND A.CUSTOMER_ID = #batchId#</isNotNull>
+        <isNotNull prepend="" property="logoCode">AND A.LOGO_CODE = #logoCode#</isNotNull>
+        <isNotNull prepend="" property="logoCodeStr">AND A.LOGO_CODE LIKE '%' || #logoCodeStr# || '%'</isNotNull>
+        <isNotNull prepend="" property="logoName">AND A.LOGO_NAME = #logoName#</isNotNull>
+        <isNotNull prepend="" property="logoNameStr">AND A.LOGO_NAME LIKE '%' || #logoNameStr# || '%'</isNotNull>
+        <isNotNull prepend="" property="state">AND A.STATE = #state#</isNotNull>
+	
+	 ORDER BY A.LOGO_CODE
+	) T1
+		
+</select>
+    <!-- 获取元件序号打印唛头所需信息 -->
+    <select id="queryBatchMarkInfo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT Q.BATCH_NO "batchNo",
+	        (SELECT COUNT(1)
+	           FROM qinsen.INST_WATER_TEST T
+	          WHERE T.JUANMO_BATCH_ID = Q.JUANMO_BATCH_ID) "hasWaterTest"
+	  FROM qinsen.INST_QIJIAN Q
+	 WHERE 1=1
+	 <isNotNull prepend="" property="batchNo">AND Q.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND Q.BATCH_NO in ($batchNoStr$)</isNotNull>
+    </select>
+    <select id="queryPrintRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	
+	SELECT T1.RECORD_ID         AS "recordId",
+       T1.PRINT_TM          AS "printTm",
+       T1.MARK_SPEC_NAME    AS "markSpecName",
+       T1.LOGO_ID           AS "logoId",
+       T1.WORKER_ID         AS "workerId",
+       T1.BATCH_NO_STR      AS "batchNoStr",
+       T1.QUANTITY          AS "quantity",
+       T1.IS_WITH_STAR      AS "isWithStar",
+       T1.CUSTOMER_ID       AS "customerId",
+       T1.LOGO_CODE         AS "logoCode",
+       T1.LOGO_NAME         AS "logoName",
+       T1.IMG_URI           AS "imgUri",
+       T1.PRINT_TIME        AS "printTime",
+       T1.IS_WITH_STAR_NAME AS "isWithStarName",
+       T1.WORKER_NAME       AS "workerName",
+       T1.IMG_URL           AS "imgUrl"
+  FROM (
+        
+        SELECT A.RECORD_ID,
+                A.PRINT_TM,
+                A.MARK_SPEC_NAME,
+                A.LOGO_ID,
+                A.WORKER_ID,
+                A.BATCH_NO_STR,
+                A.QUANTITY,
+                A.IS_WITH_STAR,
+                L.CUSTOMER_ID,
+                L.LOGO_CODE,
+                L.LOGO_NAME,
+                L.IMG_URI,
+                TO_CHAR(A.PRINT_TM, 'YYYY-MM-DD HH24:MI:SS') PRINT_TIME,
+                DECODE(A.IS_WITH_STAR, 'Y', '是', 'N', '否', '') IS_WITH_STAR_NAME,
+                QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(A.WORKER_ID) WORKER_NAME,
+                (SELECT C.VALUE
+                   FROM QINSEN.BASE_SYS_CONFIG C
+                  WHERE C.CODE = 'PACK_MARK_LOGO_DOMIAN') || L.IMG_URI IMG_URL
+          FROM QINSEN.INST_MARK_PRINT A, QINSEN.INST_PACK_MARK_LOGO L
+	 WHERE A.LOGO_ID = L.RECORD_ID(+)
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="markSpecName">AND A.MARK_SPEC_NAME = UPPER(#markSpecName#)</isNotNull>
+        <isNotNull prepend="" property="printBeginDate">AND A.PRINT_TM &gt;= TO_DATE(#printBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="printEndDate">AND A.PRINT_TM &lt; TO_DATE(#printEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+	 ORDER BY A.PRINT_TM DESC) T1
+		
+		
+</select>
+</sqlMap>

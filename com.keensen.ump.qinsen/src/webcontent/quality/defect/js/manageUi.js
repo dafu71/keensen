@@ -47,12 +47,12 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 120,
 					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【膜片不良记录查询】',
+					//title : '【膜片不良记录查询】',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
@@ -157,7 +157,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【膜片不良记录列表】',
+			//title : '【膜片不良记录列表】',
 			id : 'qinsen_defect_list',
 			viewConfig : {
 				forceFit : true

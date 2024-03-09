@@ -90,7 +90,6 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						typeAhead : true,
 						typeAheadDelay : 100,
 						minChars : 1,
-						queryMode : 'local',
 						lastQuery : '',
 						editable : true,
 						listeners : {

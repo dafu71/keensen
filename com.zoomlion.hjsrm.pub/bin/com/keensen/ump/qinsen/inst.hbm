@@ -553,7 +553,7 @@
         <property name="judgerId" type="int">
             <column length="9" name="JUDGER_ID"/>
         </property>
-        <property name="judgeDt" type="date">
+        <property name="judgeDt" type="timestamp">
             <column name="JUDGE_DT"/>
         </property>
     </class>
@@ -598,6 +598,117 @@
         </property>
         <property name="newSpecId" type="int">
             <column length="9" name="NEW_SPEC_ID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstRaosi" table="INST_RAOSI">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="batchNo" type="string">
+            <column length="20" name="BATCH_NO" not-null="true"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="20" name="ORDER_NO"/>
+        </property>
+        <property name="lineId" type="int">
+            <column length="9" name="LINE_ID" not-null="true"/>
+        </property>
+        <property name="produceDt" type="timestamp">
+            <column name="PRODUCE_DT" not-null="true"/>
+        </property>
+        <property name="teamId" type="int">
+            <column length="9" name="TEAM_ID" not-null="true"/>
+        </property>
+        <property name="workerId" type="int">
+            <column length="9" name="WORKER_ID" not-null="true"/>
+        </property>
+        <property name="createDt" type="timestamp">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="timestamp">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="prodSpecId" type="int">
+            <column length="9" name="PROD_SPEC_ID"/>
+        </property>
+        <property name="produceFlag" type="string">
+            <column length="1" name="PRODUCE_FLAG" not-null="true"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstPackMarkLogo" table="INST_PACK_MARK_LOGO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="customerId" type="int">
+            <column length="9" name="CUSTOMER_ID"/>
+        </property>
+        <property name="logoCode" type="string">
+            <column length="20" name="LOGO_CODE" not-null="true"/>
+        </property>
+        <property name="logoName" type="string">
+            <column length="50" name="LOGO_NAME"/>
+        </property>
+        <property name="imgUri" type="string">
+            <column length="100" name="IMG_URI" not-null="true"/>
+        </property>
+        <property name="createDt" type="timestamp">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="timestamp">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'A'" length="1" name="STATE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstMarkPrint" table="INST_MARK_PRINT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="printTm" type="timestamp">
+            <column name="PRINT_TM" not-null="true"/>
+        </property>
+        <property name="markSpecName" type="string">
+            <column length="20" name="MARK_SPEC_NAME" not-null="true"/>
+        </property>
+        <property name="logoId" type="int">
+            <column length="9" name="LOGO_ID" not-null="true"/>
+        </property>
+        <property name="workerId" type="int">
+            <column length="9" name="WORKER_ID"/>
+        </property>
+        <property name="batchNoStr" type="string">
+            <column length="2000" name="BATCH_NO_STR" not-null="true"/>
+        </property>
+        <property name="quantity" type="int">
+            <column length="3" name="QUANTITY" not-null="true"/>
+        </property>
+        <property name="isWithStar" type="string">
+            <column length="1" name="IS_WITH_STAR"/>
         </property>
     </class>
 </hibernate-mapping>

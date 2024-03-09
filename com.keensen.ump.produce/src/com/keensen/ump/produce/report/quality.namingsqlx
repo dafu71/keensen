@@ -210,6 +210,147 @@
 </isNotNull>
     
     </select>
+    
+     <select id="queryInvalidated" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+
+SELECT 1 MYORDER,
+       MATER_SPEC_CODE "materSpecCode",
+       SUM(CASE
+             WHEN FLAG = 'E' AND DEFECT_CODE != 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) "eloss1",
+       SUM(CASE
+             WHEN FLAG = 'E' AND DEFECT_CODE = 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) "eloss2",
+       SUM(CASE
+             WHEN FLAG = 'P' AND DEFECT_CODE != 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) "ploss1",
+       SUM(CASE
+             WHEN FLAG = 'P' AND DEFECT_CODE = 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) "ploss2",
+       SUM(CASE
+             WHEN FLAG = 'T' AND DEFECT_CODE != 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) "tloss1",
+       SUM(CASE
+             WHEN FLAG = 'T' AND DEFECT_CODE = 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) "tloss2",
+       SUM(CASE
+             WHEN DEFECT_CODE != 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) "loss1",
+       SUM(CASE
+             WHEN DEFECT_CODE = 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) "loss2"
+  FROM (SELECT T1.TUMO_BATCH_ID,
+         T1.DEFECT_ITEM_ID,
+         T1.LOSS,
+         T22.MATER_SPEC_CODE,
+         CD.DEFECT_CODE,
+         T1.PRODUCE_DT， T2.BATCH_NO,
+         SUBSTR(T2.BATCH_NO, 1, 1) FLAG
+    FROM QINSEN.INST_CDM_DEFECT T1
+    LEFT JOIN QINSEN.INST_TUMO T2
+      ON T1.TUMO_BATCH_ID = T2.RECORD_ID
+    LEFT JOIN QINSEN.PARA_MATER_SPEC T22
+      ON T2.SPEC_ID = T22.MATER_SPEC_ID
+    LEFT JOIN QINSEN.PARA_CDM_DEFECT CD
+      ON CD.RECORD_ID = T1.DEFECT_ITEM_ID
+   WHERE TO_CHAR(T1.PRODUCE_DT, 'yyyy-MM-dd') &gt;= #produceDtStart#
+     AND TO_CHAR(T1.PRODUCE_DT, 'yyyy-MM-dd') &lt;= #produceDtEnd#) V
+ GROUP BY MATER_SPEC_CODE
+UNION ALL
+SELECT 2 MYORDER,
+       '合计',
+       SUM(CASE
+             WHEN FLAG = 'E' AND DEFECT_CODE != 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) ELOSS1,
+       SUM(CASE
+             WHEN FLAG = 'E' AND DEFECT_CODE = 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) ELOSS2,
+       SUM(CASE
+             WHEN FLAG = 'P' AND DEFECT_CODE != 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) PLOSS1,
+       SUM(CASE
+             WHEN FLAG = 'P' AND DEFECT_CODE = 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) PLOSS2,
+       SUM(CASE
+             WHEN FLAG = 'T' AND DEFECT_CODE != 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) TLOSS1,
+       SUM(CASE
+             WHEN FLAG = 'T' AND DEFECT_CODE = 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) TLOSS2,
+       SUM(CASE
+             WHEN DEFECT_CODE != 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) LOSS1,
+       SUM(CASE
+             WHEN DEFECT_CODE = 'D14' THEN
+              LOSS
+             ELSE
+              0
+           END) LOSS2
+  FROM (SELECT T1.TUMO_BATCH_ID,
+         T1.DEFECT_ITEM_ID,
+         T1.LOSS,
+         T22.MATER_SPEC_CODE,
+         CD.DEFECT_CODE,
+         T1.PRODUCE_DT， T2.BATCH_NO,
+         SUBSTR(T2.BATCH_NO, 1, 1) FLAG
+    FROM QINSEN.INST_CDM_DEFECT T1
+    LEFT JOIN QINSEN.INST_TUMO T2
+      ON T1.TUMO_BATCH_ID = T2.RECORD_ID
+    LEFT JOIN QINSEN.PARA_MATER_SPEC T22
+      ON T2.SPEC_ID = T22.MATER_SPEC_ID
+    LEFT JOIN QINSEN.PARA_CDM_DEFECT CD
+      ON CD.RECORD_ID = T1.DEFECT_ITEM_ID
+   WHERE TO_CHAR(T1.PRODUCE_DT, 'yyyy-MM-dd') &gt;= #produceDtStart#
+     AND TO_CHAR(T1.PRODUCE_DT, 'yyyy-MM-dd') &lt;= #produceDtEnd#) V
+ ORDER BY MYORDER，"materSpecCode"
+
+    
+    </select>
    
    
    </sqlMap>

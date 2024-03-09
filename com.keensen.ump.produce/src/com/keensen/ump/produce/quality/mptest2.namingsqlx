@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+<select id="queryGyRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",
+      to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.LINE           AS "line",
+       T1.BATCH_NO        AS "batchNo",
+       T1.STATE          AS "state",
+       decode(T1.STATE,0,'处理中',1,'完结','作废') "stateName",
+       T1.STEP           AS "step",
+       decode(T1.STEP,'first','分析','second','调整','third','配料','生产使用') "stepName"
+  FROM KS_QUALITY_MP_TEST_GY_HEAD T1
+		 where 1=1
+		  <isNotNull prepend="and" property="id"> 
+		       t1.ID = #id#
+			</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_no = #batchNo#
+			</isNotNull>
+			<isNotNull prepend="and" property="line"> 
+		       t1.line = #line#
+			</isNotNull>
+			<isNotNull prepend="and" property="mptype"> 
+		       t1.mptype = #mptype#
+			</isNotNull>
+			<isNotNull prepend="and" property="step"> 
+		       t1.STEP = #step#
+			</isNotNull>
+			order by id desc
+    </select>
+    
+<select id="queryGyListRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",T1.ID             AS "pkid",
+       to_char(t2.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+    t2.CREATE_USER_ID as "createUserId",
+    t2.CREATE_NAME as "createName",
+    to_char(t2.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.CONCENTRATION  AS "concentration",
+      t1.OUT_PLAN as "outPlan",
+    t1.GY_PLAN as "gyPlan",
+    t1.RO_PLAN as "roPlan",
+    t1.OUT_REALITY as "outReality",
+    t1.GY_REALITY as "gyReality",
+    t1.RO_REALITY as "roReality",
+    t1.POSITION as "position",
+       T1.FIRST_NAME     AS "firstName",
+       T1.FIRST_ID       AS "firstId",
+       T1.SECOND_NAME    AS "secondName",
+       T1.SECOND_ID      AS "secondId",
+       T1.THIRD_NAME     AS "thirdName",
+       T1.THIRD_ID       AS "thirdId",
+       to_char(T1.FIRST_DATE,'yyyy-MM-dd HH24:mi:ss')     AS "firstDate",
+       to_char(T1.SECOND_DATE,'yyyy-MM-dd HH24:mi:ss')    AS "secondDate",
+       to_char(T1.THIRD_DATE ,'yyyy-MM-dd HH24:mi:ss')    AS "thirdDate",
+       T1.RELATION_ID    AS "relationId",
+       T2.LINE           AS "line",
+       T2.BATCH_NO        AS "batchNo",
+       T2.STATE          AS "state",
+       T2.STEP           AS "step"
+  FROM KS_QUALITY_MP_TEST_GY_LIST T1
+  LEFT JOIN KS_QUALITY_MP_TEST_GY_HEAD T2
+    ON T1.RELATION_ID = T2.ID
+		 where 1=1
+		  <isNotNull prepend="and" property="id"> 
+		       t1.ID = #id#
+			</isNotNull>
+			 <isNotNull prepend="and" property="relationId"> 
+		       t2.ID = #relationId#
+			</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       t2.batch_no = #batchNo#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="flag"> 
+		    <isEqual prepend="and" property="flag" compareValue="first">
+ 			   T1.FIRST_ID is null
+    		</isEqual>
+    		<isEqual prepend="and" property="flag" compareValue="second">
+ 			   T1.second_ID is null
+    		</isEqual>
+    		<isEqual prepend="and" property="flag" compareValue="third">
+ 			   T1.third_ID is null
+    		</isEqual>
+			</isNotNull>
+			
+			order by t1.relation_id desc,t1.id desc
+    </select>
+    
+<select id="queryIpaRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",
+      to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.LINE           AS "line",
+       T1.BATCH_NO        AS "batchNo",
+       T1.STATE          AS "state",
+       decode(T1.STATE,0,'处理中',1,'完结','作废') "stateName",
+       T1.STEP           AS "step",
+       decode(T1.STEP,'first','分析','second','调整','third','配料','生产使用') "stepName"
+  FROM KS_QUALITY_MP_TEST_IPA_HEAD T1
+		 where 1=1
+		  <isNotNull prepend="and" property="id"> 
+		       t1.ID = #id#
+			</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_no = #batchNo#
+			</isNotNull>
+			<isNotNull prepend="and" property="line"> 
+		       t1.line = #line#
+			</isNotNull>
+			<isNotNull prepend="and" property="mptype"> 
+		       t1.mptype = #mptype#
+			</isNotNull>
+			<isNotNull prepend="and" property="step"> 
+		       t1.STEP = #step#
+			</isNotNull>
+			order by id desc
+    </select>
+    
+<select id="queryIpaListRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",T1.ID             AS "pkid",
+       to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+    t1.CREATE_USER_ID as "createUserId",
+    t1.CREATE_NAME as "createName",
+    to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.CONCENTRATION  AS "concentration",
+      t1.OUT_PLAN as "outPlan",
+    t1.IPA_PLAN as "ipaPlan",
+    t1.RO_PLAN as "roPlan",
+    t1.OUT_REALITY as "outReality",
+    t1.IPA_REALITY as "ipaReality",
+    t1.RO_REALITY as "roReality",
+    t1.POSITION as "position",t1.code as "code",
+       T1.FIRST_NAME     AS "firstName",
+       T1.FIRST_ID       AS "firstId",
+       T1.SECOND_NAME    AS "secondName",
+       T1.SECOND_ID      AS "secondId",
+       T1.THIRD_NAME     AS "thirdName",
+       T1.THIRD_ID       AS "thirdId",
+       to_char(T1.FIRST_DATE,'yyyy-MM-dd HH24:mi:ss')     AS "firstDate",
+       to_char(T1.SECOND_DATE,'yyyy-MM-dd HH24:mi:ss')    AS "secondDate",
+       to_char(T1.THIRD_DATE ,'yyyy-MM-dd HH24:mi:ss')    AS "thirdDate",
+       T1.RELATION_ID    AS "relationId",
+       T2.LINE           AS "line",
+       T2.BATCH_NO        AS "batchNo",
+       T2.STATE          AS "state",
+       T2.STEP           AS "step"
+  FROM KS_QUALITY_MP_TEST_IPA_LIST T1
+  LEFT JOIN KS_QUALITY_MP_TEST_IPA_HEAD T2
+    ON T1.RELATION_ID = T2.ID
+		 where 1=1
+		  <isNotNull prepend="and" property="id"> 
+		       t1.ID = #id#
+			</isNotNull>
+			 <isNotNull prepend="and" property="relationId"> 
+		       t2.ID = #relationId#
+			</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       t2.batch_no = #batchNo#
+			</isNotNull>
+			
+			<isNotNull property="flag"> 
+		    <isEqual prepend="and" property="flag" compareValue="first">
+ 			   T1.FIRST_ID is null
+    		</isEqual>
+    		<isEqual prepend="and" property="flag" compareValue="second">
+ 			   T1.second_ID is null
+    		</isEqual>
+    		<isEqual prepend="and" property="flag" compareValue="third">
+ 			   T1.third_ID is null
+    		</isEqual>
+    		order by t1.code
+			</isNotNull>
+			<isNull property="flag"> 
+			order by t1.relation_id desc,t1.id,t1.code
+			</isNull>
+    </select>
+</sqlMap>

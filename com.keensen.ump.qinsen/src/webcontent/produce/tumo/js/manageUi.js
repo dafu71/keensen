@@ -35,7 +35,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					border : true,
 					collapsible : true,
 					titleCollapse : false,
-					title : '【涂膜记录查询】',
+					//title : '【涂膜记录查询】',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
@@ -206,7 +206,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【涂膜记录列表】',
+			//title : '【涂膜记录列表】',
 			id : listid,
 			viewConfig : {
 				forceFit : false

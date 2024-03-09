@@ -85,7 +85,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 		var _me = _this;
 		var vals = _this.queryPanel.getForm().getValues();
 
-		_this.requestMask = this.requestMask
+		_this.requestMask = _this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
 							msg : "后台正在操作,请稍候!"
 						});

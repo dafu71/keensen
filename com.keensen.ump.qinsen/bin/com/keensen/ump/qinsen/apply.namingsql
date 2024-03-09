@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.apply">
+    <!-- 查询记录列表 -->
+    <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	
+	SELECT T1.RECORD_ID          AS "recordId",
+       T1.CHECK_NO           AS "checkNo",
+       T1.ORDER_TYPE_FLAG    AS "orderTypeFlag",
+       T1.ORDER_NO           AS "orderNo",
+       T1.STACK_NO           AS "stackNo",
+       T1.PROD_SPEC_ID       AS "prodSpecId",
+       T1.ORDER_QUANTITY     AS "orderQuantity",
+       T1.PROD_CLASS_FLAG    AS "prodClassFlag",
+       T1.LID                AS "lid",
+       T1.PERFORMANCE        AS "performance",
+       T1.LABEL_TYPE_FLAG    AS "labelTypeFlag",
+       T1.LABEL_SPEC_CODE    AS "labelSpecCode",
+       T1.TAPE               AS "tape",
+       T1.MARK_TYPE_FLAG     AS "markTypeFlag",
+       T1.MARK_SPEC_CODE     AS "markSpecCode",
+       T1.MARK_SPECIAL_FLAG  AS "markSpecialFlag",
+       T1.APPLICANT_ID       AS "applicantId",
+       T1.APPLY_TM           AS "applyTm",
+       T1.WORKSHOP_ID        AS "workshopId",
+       T1.CREATE_DT          AS "createDt",
+       T1.CHANGE_DT          AS "changeDt",
+       T1.CREATOR_ID         AS "creatorId",
+       T1.CHANGER_ID         AS "changerId",
+       T1.REMARK             AS "remark",
+       T1.APPLY_DATE         AS "applyDate",
+       T1.APPLY_TIME         AS "applyTime",
+       T1.ORDER_TYPE_NAME    AS "orderTypeName",
+       T1.PROD_CLASS_NAME    AS "prodClassName",
+       T1.LABEL_TYPE_NAME    AS "labelTypeName",
+       T1.MARK_TYPE_NAME     AS "markTypeName",
+       T1.MARK_SPECIAL_NAME  AS "markSpecialName",
+       T1.WORKSHOP_NAME      AS "workshopName",
+       T1.APPLICANT_NAME     AS "applicantName",
+       T1.PROD_SPEC_CODE     AS "prodSpecCode",
+       T1.PROD_SPEC_NAME     AS "prodSpecName",
+       T1.PROD_QUANTITY      AS "prodQuantity",
+       T1.HAS_JUDGED         AS "hasJudged",
+       T1.APPLY_ID           AS "applyId",
+       T1.MARK_SAMPLE_CNT    AS "markSampleCnt",
+       T1.IS_MARK_PASS       AS "isMarkPass",
+       T1.LABEL_SAMPLE_CNT   AS "labelSampleCnt",
+       T1.IS_LABEL_PASS      AS "isLabelPass",
+       T1.LOOK_SAMPLE_CNT    AS "lookSampleCnt",
+       T1.IS_LOOK_PASS       AS "isLookPass",
+       T1.DIA_SAMPLE_CNT     AS "diaSampleCnt",
+       T1.IS_DIA_PASS        AS "isDiaPass",
+       T1.PERF_SAMPLE_CNT    AS "perfSampleCnt",
+       T1.IS_PERF_PASS       AS "isPerfPass",
+       T1.IS_QUALIFIED       AS "isQualified",
+       T1.DEAL_FLAG          AS "dealFlag",
+       T1.IS_REDO_PASS       AS "isRedoPass",
+       T1.EXCEPTION_NO       AS "exceptionNo",
+       T1.SUGGEST_SPEC_ID    AS "suggestSpecId",
+       T1.STORE_FLAG         AS "storeFlag",
+       T1.JUDGER_ID          AS "judgerId",
+       T1.JUDGE_TM           AS "judgeTm",
+       T1.APPROVER_ID        AS "approverId",
+       T1.APPROVE_TM         AS "approveTm",
+       T1.IS_MARK_PASS_NAME  AS "isMarkPassName",
+       T1.IS_LABEL_PASS_NAME AS "isLabelPassName",
+       T1.IS_LOOK_PASS_NAME  AS "isLookPassName",
+       T1.IS_DIA_PASS_NAME   AS "isDiaPassName",
+       T1.IS_PERF_PASS_NAME  AS "isPerfPassName",
+       T1.IS_QUALIFIED_NAME  AS "isQualifiedName",
+       T1.DEAL_FLAG_NAME     AS "dealFlagName",
+       T1.IS_REDO_PASS_NAME  AS "isRedoPassName",
+       T1.SUGGEST_SPEC_CODE  AS "suggestSpecCode",
+       T1.STORE_FLAG_NAME    AS "storeFlagName",
+       T1.JUDGER_NAME        AS "judgerName",
+       T1.JUDGE_TIME         AS "judgeTime",
+       T1.APPROVER_NAME      AS "approverName",
+       T1.APPROVE_TIME       AS "approveTime"
+  FROM (SELECT A.RECORD_ID,
+               A.CHECK_NO,
+               A.ORDER_TYPE_FLAG,
+               A.ORDER_NO,
+               A.STACK_NO,
+               A.PROD_SPEC_ID,
+               A.ORDER_QUANTITY,
+               A.PROD_CLASS_FLAG,
+               A.LID,
+               A.PERFORMANCE,
+               A.LABEL_TYPE_FLAG,
+               A.LABEL_SPEC_CODE,
+               A.TAPE,
+               A.MARK_TYPE_FLAG,
+               A.MARK_SPEC_CODE,
+               A.MARK_SPECIAL_FLAG,
+               A.APPLICANT_ID,
+               A.APPLY_TM,
+               A.WORKSHOP_ID,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               TO_CHAR(A.APPLY_TM, 'YYYY-MM-DD') APPLY_DATE,
+               TO_CHAR(A.APPLY_TM, 'YYYY-MM-DD HH24:MI') APPLY_TIME,
+               DECODE(A.ORDER_TYPE_FLAG,
+                      '1',
+                      '公司标准',
+                      '2',
+                      '非公司标准',
+                      '') ORDER_TYPE_NAME,
+               DECODE(A.PROD_CLASS_FLAG,
+                      'D',
+                      '干膜',
+                      'W',
+                      '湿膜',
+                      'O',
+                      '干湿均可',
+                      '') PROD_CLASS_NAME,
+               DECODE(A.LABEL_TYPE_FLAG,
+                      '1',
+                      '公司标准',
+                      '2',
+                      '中性',
+                      '3',
+                      '贴牌',
+                      '0',
+                      '不贴标',
+                      '') LABEL_TYPE_NAME,
+               DECODE(A.MARK_TYPE_FLAG,
+                      '1',
+                      '公司标准',
+                      '2',
+                      '中性',
+                      '3',
+                      '贴牌',
+                      '0',
+                      '不贴标',
+                      '') MARK_TYPE_NAME,
+               DECODE(A.MARK_SPECIAL_FLAG, 'Y', '是', 'N', '否', '') MARK_SPECIAL_NAME,
+               QINSEN.PG_GET_INFO.GET_DEPT_NAME_BY_ID(A.WORKSHOP_ID) WORKSHOP_NAME,
+               QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(A.APPLICANT_ID) APPLICANT_NAME,
+               QINSEN.PG_GET_INFO.GET_MATER_SPEC_CODE_BY_ID(A.PROD_SPEC_ID) PROD_SPEC_CODE,
+               QINSEN.PG_GET_INFO.GET_MATER_SPEC_NAME_BY_ID(A.PROD_SPEC_ID) PROD_SPEC_NAME,
+               (SELECT COUNT(1)
+                  FROM QINSEN.INST_PROD_APPLY_DETAIL D
+                 WHERE D.APPLY_ID = A.RECORD_ID) PROD_QUANTITY,
+               (SELECT COUNT(1)
+                  FROM QINSEN.INST_PROD_APPLY_JUDGE J
+                 WHERE J.APPLY_ID = A.RECORD_ID) HAS_JUDGED,
+               
+               J.APPLY_ID,
+               J.MARK_SAMPLE_CNT,
+               J.IS_MARK_PASS,
+               J.LABEL_SAMPLE_CNT,
+               J.IS_LABEL_PASS,
+               J.LOOK_SAMPLE_CNT,
+               J.IS_LOOK_PASS,
+               J.DIA_SAMPLE_CNT,
+               J.IS_DIA_PASS,
+               J.PERF_SAMPLE_CNT,
+               J.IS_PERF_PASS,
+               J.IS_QUALIFIED,
+               J.DEAL_FLAG,
+               J.IS_REDO_PASS,
+               J.EXCEPTION_NO,
+               J.SUGGEST_SPEC_ID,
+               J.STORE_FLAG,
+               J.JUDGER_ID,
+               J.JUDGE_TM,
+               J.APPROVER_ID,
+               J.APPROVE_TM,
+               DECODE(J.IS_MARK_PASS, 'Y', '合格', 'N', '不合格') IS_MARK_PASS_NAME,
+               DECODE(J.IS_LABEL_PASS, 'Y', '合格', 'N', '不合格') IS_LABEL_PASS_NAME,
+               DECODE(J.IS_LOOK_PASS, 'Y', '合格', 'N', '不合格') IS_LOOK_PASS_NAME,
+               DECODE(J.IS_DIA_PASS, 'Y', '合格', 'N', '不合格') IS_DIA_PASS_NAME,
+               DECODE(J.IS_PERF_PASS, 'Y', '合格', 'N', '不合格') IS_PERF_PASS_NAME,
+               DECODE(J.IS_QUALIFIED,
+                      NULL,
+                      '未判',
+                      'Y',
+                      '合格',
+                      'N',
+                      '不合格') IS_QUALIFIED_NAME,
+               DECODE(J.DEAL_FLAG,
+                      '1',
+                      '返工',
+                      '2',
+                      '让步接收',
+                      '3',
+                      '待处理') DEAL_FLAG_NAME,
+               DECODE(J.IS_REDO_PASS, 'Y', '合格', 'N', '不合格') IS_REDO_PASS_NAME,
+               QINSEN.PG_GET_INFO.GET_MATER_SPEC_CODE_BY_ID(J.SUGGEST_SPEC_ID) SUGGEST_SPEC_CODE,
+               DECODE(J.STORE_FLAG,
+                      '1',
+                      '成品仓',
+                      '2',
+                      '订单仓',
+                      '3',
+                      'C等品仓') STORE_FLAG_NAME,
+               QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(J.JUDGER_ID) JUDGER_NAME,
+               TO_CHAR(J.JUDGE_TM, 'YYYY-MM-DD HH24:MI') JUDGE_TIME,
+               QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(J.APPROVER_ID) APPROVER_NAME,
+               TO_CHAR(J.APPROVE_TM, 'YYYY-MM-DD HH24:MI') APPROVE_TIME
+          FROM QINSEN.INST_PROD_APPLY_MAIN A, QINSEN.INST_PROD_APPLY_JUDGE J
+         WHERE A.RECORD_ID = J.APPLY_ID(+)
+
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="checkNo">AND A.CHECK_NO = #checkNo#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="" property="stackNo">AND A.STACK_NO = #stackNo#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="workshopId">AND A.WORKSHOP_ID = #workshopId#</isNotNull>
+        <isNotNull prepend="" property="applyDateBegin">AND A.APPLY_TM &gt;= TO_DATE(#applyDateBegin#, 'YYYY-MM-DD')</isNotNull>
+        <isNotNull prepend="" property="applyDateEnd">AND A.APPLY_TM &lt; TO_DATE(#applyDateEnd#, 'YYYY-MM-DD') + 1</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND EXISTS (SELECT 1
+	          FROM qinsen.INST_PROD_APPLY_DETAIL D
+	         WHERE D.APPLY_ID = A.RECORD_ID
+	           AND D.BATCH_NO = #batchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND EXISTS (SELECT 1
+	          FROM qinsen.INST_PROD_APPLY_DETAIL AD, qinsen.INST_QIJIAN Q,
+	               qinsen.INST_JUANMO_DETAIL JD, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO TM
+	         WHERE AD.APPLY_ID = A.RECORD_ID
+	           AND AD.BATCH_NO = Q.BATCH_NO
+	           AND Q.JUANMO_BATCH_ID = JD.MAIN_BATCH_ID
+	           AND JD.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = TM.RECORD_ID
+	           AND TM.BATCH_NO = #tumoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNoStr">AND EXISTS (SELECT 1
+	          FROM qinsen.INST_PROD_APPLY_DETAIL AD, qinsen.INST_QIJIAN Q,
+	               qinsen.INST_JUANMO_DETAIL JD, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO TM
+	         WHERE AD.APPLY_ID = A.RECORD_ID
+	           AND AD.BATCH_NO = Q.BATCH_NO
+	           AND Q.JUANMO_BATCH_ID = JD.MAIN_BATCH_ID
+	           AND JD.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = TM.RECORD_ID
+	           AND TM.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%')</isNotNull>
+	 ORDER BY A.APPLY_TM DESC
+	 ) T1		
+</select>
+    <!-- 获取最近N天的气检订单号 -->
+    <select id="getRecentOrderNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT Q.ORDER_NO "orderNo"
+	  FROM qinsen.INST_QIJIAN Q
+	 WHERE Q.PRODUCE_DT &gt; TRUNC(SYSDATE - #days#)
+	 GROUP BY Q.ORDER_NO
+	 ORDER BY 1</select>
+    <select id="genCheckNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT CHECK_NO "checkNo" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' CHECK_NO FROM dual
+  WHERE NOT EXISTS(
+  select t.CHECK_NO from qinsen.INST_PROD_APPLY_MAIN t
+  WHERE SUBSTR(t.CHECK_NO,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  select to_char(to_number(max(t.CHECK_NO))+1) CODE from qinsen.INST_PROD_APPLY_MAIN t
+  WHERE SUBSTR(t.CHECK_NO,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE CHECK_NO IS NOT NULL</select>
+</sqlMap>

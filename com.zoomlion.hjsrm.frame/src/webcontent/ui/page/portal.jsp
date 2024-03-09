@@ -16,6 +16,8 @@
 	String lifnr = (String) userObject.getAttributes().get("lifnr");
 	String lifnrname = (String) userObject.getAttributes().get(
 			"lifnrname");
+	String roleCodes = (String) userObject.getAttributes().get(
+			"roles_rolecode_str");
 %>
 <js:load scriptPath="frame/ui/jslib/extex/fileupload/attach-min.js" />
 <js:load scriptPath="pub/common/selectParticipantsWin3.js" />
@@ -28,9 +30,7 @@
 <div><%--设置主页显示框
     author 刘鑫
     修改时间 14-12-9
---%>
-
-<!--  
+--%> <!--  
 <div class="res-block" style="width:60%;">
 <div class="res-block-inner">
 <h3><img style="width:5%;cursor:pointer;"
@@ -69,7 +69,7 @@
 <div class="res-block" style="width:40%;float:right;">
 -->
 <div class="res-block" style="width:40%;">
-<div class="res-block-inner">
+<div class="res-block-inner" style="display:none;">
 <h3><img style="width:8%;cursor:pointer;"
 	src="frame/ui/img/tongzhix.png" /><a
 	style="text-decoration:none;color:#000000" href="javascript:link()">
@@ -84,6 +84,11 @@
 <ul id="indexworks"></ul>
 </div>
 <div class="res-block-inner">
+<h3><img style="width:7%;cursor:pointer;"
+	src="frame/ui/img/yewuditux.png" /> 业务提醒</h3>
+<ul id="div_business"></ul>
+</div>
+<div class="res-block-inner" style="display:none;">
 <h3><img style="width:8%;cursor:pointer;"
 	src="frame/ui/img/emalnoticex.png" /><a
 	style="text-decoration:none;color:#000000" href="javascript:email()">
@@ -960,6 +965,48 @@ var spacepanel = Ext.getCmp('spacepanel');
 
 };
 
+//首页消息提醒
+function businesslink(itemCode){
+var spacepanel = Ext.getCmp('spacepanel');
+	if(itemCode == ''){
+		return;
+	}
+	var myid = Ext.id();
+	var itemId = "menu" + myid;
+	var url='';
+	var title = '';	
+	if(itemCode == 'ipa'){
+		url = '/produce/quality/mptest/ipa/index.jsp';
+		title = 'IPA浓度';
+	}
+	if(itemCode == 'gy'){
+		url = '/produce/quality/mptest/gy/index.jsp';
+		title = '甘油浓度';
+	}
+	if(itemCode == 'water'){
+		url = '/produce/quality/mptest/water/index.jsp';
+		title = '水相液浓度';
+	}
+	if(itemCode == 'oil'){
+		url = '/produce/quality/mptest/oil/index.jsp';
+		title = '油相液浓度';
+	}
+	if(itemCode == 'zmy'){
+		url = '/produce/quality/mptest/zmy/index.jsp';
+		title = '铸膜液浓度';
+	}
+	
+	spacepanel.remove(spacepanel.getItem(itemId));
+	spacepanel.open({
+		id: myid,
+		text:title,
+		attributes:{
+			respath:url
+		}
+	});
+
+};
+
 //首页待办
 function readslink(){
 var spacepanel = Ext.getCmp('spacepanel');
@@ -1224,7 +1271,25 @@ function loadWroking(){
 			});
 };
 
-
+//业务提醒查询
+function loadBusiness(){
+	Ext.Ajax.request({
+				url : 'com.keensen.ump.produce.quality.mptest.queryTestItems.biz.ext.biz.ext',
+				success : function(resp) {
+					var res = Ext.decode(resp.responseText);
+					var works = res.data;
+					if(!!works){
+						var l = works.length<6? works.length: 5;
+						var htmls = "";
+						for (var i=0;i<l;i++){					
+							htmls+="<li><a style='text-decoration:none;color:#000000' href='javascript:businesslink(" + '"' + works[i].itemCode + '"' +")'>"+'<img  src="frame/ui/img/dot6.jpg" ext:qtip="点击查看业务信息">'+"  "+works[i].title+"</a>"+'<img  src="frame/ui/img/new.gif" >'+"</li>"
+						}
+						var o=document.getElementById("div_business");
+						o.innerHTML=htmls;
+					}
+				}
+			});
+};
 
 <%--
 //OA待办数据查询
@@ -1299,6 +1364,20 @@ var mailtask = new Ext.util.DelayedTask(loademail);
 
 var worktask = new Ext.util.DelayedTask(loadWroking);
 					worktask.delay(350);
+
+//膜片测试-分析员,工艺员，配料员
+<% if(roleCodes.indexOf("10001323")>-1 || roleCodes.indexOf("10001322")>-1 || roleCodes.indexOf("10001321")>-1){ %>					
+//业务提醒					
+var businesstask = new Ext.util.DelayedTask(loadBusiness);
+businesstask.delay(450);
+
+//5 分钟刷新一次业务提醒
+Ext.TaskMgr.start({
+    run: loadBusiness,
+    interval: 30000
+});
+
+<% } %>					
 var glzdtask = new Ext.util.DelayedTask(loadglzdAnnounce);
 					glzdtask.delay(400);
 

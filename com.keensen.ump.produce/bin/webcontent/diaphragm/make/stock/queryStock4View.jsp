@@ -34,8 +34,8 @@
 .style1 {font-family: "仿宋";font-size:11pt;}
 .style2 {font-family: "仿宋";font-size:12pt;}
 .style3 {font-family: "仿宋";font-size:20pt;}
-.style4 {font-family: "仿宋";font-size:24pt;}
-.style5 {color:red}
+.style4 {font-family: "仿宋";font-size:18pt;}
+.style5 {color:red;font-family: "仿宋";font-size:18pt;}
  
 -->
     </style>
@@ -44,7 +44,7 @@
 
 <script type="text/javascript">
 	(function(){
-		setInterval(function(){ location.reload(true); }, 600000);
+		setInterval(function(){ location.reload(true); }, 60000);
 	})();
 </script> 
 
@@ -86,6 +86,8 @@
 	String style5="";
 	if(diff2>15){
 		style5="style5";
+	}else{
+		style5="style4";
 	}
  %>
 
@@ -132,6 +134,8 @@
 	String style5="";
 	if(diff2>15){
 		style5="style5";
+	}else{
+		style5="style4";
 	}
  %>
   <% if(i%2==0){ %>

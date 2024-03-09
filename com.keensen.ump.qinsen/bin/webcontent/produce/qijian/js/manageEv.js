@@ -50,9 +50,9 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 					return false;
 				}
 			}, this);
-			
-	this.qijianEditWindow.activeItem.mon(this.qijianEditWindow.activeItem, 'afterload',
-			function(win, data) {
+
+	this.qijianEditWindow.activeItem.mon(this.qijianEditWindow.activeItem,
+			'afterload', function(win, data) {
 				var regEx = new RegExp("\\-", "gi");
 				if (data.produceDt) {
 					data.produceDt = data.produceDt.split('.')[0];
@@ -72,17 +72,25 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 					Ext.Msg.alert('系统提示', '一期数据不能修改');
 					return false;
 				}
-				this.qijianEditWindow.show();
-				this.qijianEditWindow.loadData(cell);
+
+				if (this.opt == 'onEdit') {
+					this.qijianEditWindow.show();
+					this.qijianEditWindow.loadData(cell);
+				}
+				if (this.opt == 'judgeRecord') {
+					this.qiJianJudgeWindow.show();
+					this.qiJianJudgeWindow.loadData(cell);
+				}
+
 			}, this);
-			
+
 	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
 				var C = gird.getSelectionModel().getSelections();
-				if(C.length>1){
+				if (C.length > 1) {
 					Ext.Msg.alert('系统提示', '不能批量删除');
 					return false;
 				}
-				
+
 				var r = C[0];
 				var recordId = r.data.recordId;
 				recordId = recordId + '';
@@ -90,6 +98,45 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 				if (recordId.substr(0, 1) != '2') {
 					Ext.Msg.alert('系统提示', '一期数据不能删除');
 					return false;
+				}
+			})
+
+	// 气检记录-换标
+	this.changeTagWindow.activeItem.mon(this.changeTagWindow.activeItem,
+			'beforeSave', function() {
+				if (this.changeTagWindow.oldBatchNo.getValue() == this.changeTagWindow.newBatchNo
+						.getValue()) {
+					Ext.Msg.alert("系统提示", '新旧元件序号相同，请修改');
+					return false;
+				}
+			}, this);
+
+	this.listPanel.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					var juanmoBatchId = r.data.juanmoBatchId;
+					_this.mainSelected(juanmoBatchId)
+				}).defer(100);
+			}, this);
+
+	// 增加修改事件
+	this.detailGrid.mon(this.detailGrid, 'update', function(gird, cell) {
+				var recordId = cell.data.recordId;
+				recordId = recordId + '';
+				if (recordId.substr(0, 1) != '2') {
+					Ext.Msg.alert('系统提示', '一期数据不能修改');
+					return false;
+				}
+
+			}, this);
+
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.mainSelected = function(
+		juanmoBatchId) {
+	this.detailGrid.store.load({
+				params : {
+					'condition/juanmoBatchId' : juanmoBatchId
 				}
 			})
 }
@@ -100,11 +147,91 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onAdd = function() {
 }
 
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.onEdit = function() {
+	this.opt = 'onEdit';
 	this.listPanel.onEdit();
 }
 
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.judgeRecord = function() {
+	this.opt = 'judgeRecord';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.changeTag = function() {
+	this.changeTagWindow.form.reset();
+	this.changeTagWindow.produceDt.setValue(new Date());
+	this.changeTagWindow.workerId.setValue(nowStaffId);
+	this.changeTagWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.makeupTag = function() {
+	this.makeupTagWindow.form.reset();
+	this.makeupTagWindow.produceDt.setValue(new Date());
+	this.makeupTagWindow.workerId.setValue(nowStaffId);
+	this.makeupTagWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiOrder = function() {
+	var _this = this;
+	var grid = this.listPanel;
+	
+	var records = grid.getSelectionModel().getSelections();
+	if (records.length == 0) {
+		Ext.Msg.alert('系统提示', '请先选择数据');
+		return false;
+	}
+	var arr = new Array();
+	for (var i = 0; i < records.length; i++) {
+
+		var recordId = records[i].get('recordId');
+		recordId = recordId + '';
+		if (recordId.substr(0, 1) != '2') {
+			Ext.Msg.alert('系统提示', '一期数据不能修改');
+			return false;
+		}
+		arr.push(recordId);
+	}
+	Ext.Msg.confirm('提示', '共' + records.length + '个批次，您确定要修改这些产品的订单号？',
+			function(btn) {
+				if (btn === 'yes') {
+					Ext.Msg.prompt('批量改订单', '请输入新订单号', function(btn, text) {
+						if (btn == 'ok') {
+							_this.requestMask = this.requestMask
+									|| new Ext.LoadMask(Ext.getBody(), {
+												msg : "后台正在操作,请稍候!"
+											});
+							_this.requestMask.show();
+							Ext.Ajax.request({
+								url : "com.keensen.ump.qinsen.qijian.modiOrder.biz.ext",
+								method : "post",
+								jsonData : {
+									orderNo : text,
+									recordIds : arr.join(',')
+								},
+								success : function(resp) {
+									var ret = Ext.decode(resp.responseText);
+									if (ret.success) {
+										Ext.Msg.alert("系统提示", "操作成功！",function(){
+											_this.listPanel.store.load();
+											
+										})
+									} else {
+										Ext.Msg.alert("系统提示", "修改订单号失败！")
+
+									}
+
+								},
+								callback : function() {
+									_this.requestMask.hide()
+								}
+							})
+						}
+					});
+				}
+			});
 }
 
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.dealJuanMoBatchNo = function() {
@@ -190,8 +317,64 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.judge = function() {
 	return true;
 }
 
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiDetailRecord = function() {
+	this.detailGrid.onEdit();
+}
+
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.destroy = function() {
 	this.qijianAddWindow.destroy();
 	this.qijianEditWindow.destroy();
+	this.changeTagWindow.destroy();
+	this.makeupTagWindow.destroy();
+	this.qjChangeEditWindow.destroy();
+	this.qiJianJudgeWindow.destroy();
 
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.exportExcel = function() {
+	var _this = this;
+
+	var start = this.queryPanel.getForm()
+			.findField(['condition/produceDtStart']).getValue();
+	var end = this.queryPanel.getForm().findField(['condition/produceDtEnd'])
+			.getValue();
+	if (dayDiff(start, end) > 31) {
+		Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
+		return false;
+
+	}
+	var daochu = _this.queryPanel.getForm().getValues();
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+		method : "post",
+		jsonData : {
+			'map' : daochu,
+			namingsql : 'com.keensen.ump.qinsen.qijian.queryRecords',
+			templateFilename : 'ks_inst_qijian'
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+
+				var fname = ret.fname;
+				if (Ext.isIE) {
+					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
+							+ fname);
+				} else {
+					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
+							+ fname;
+				}
+
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
 }

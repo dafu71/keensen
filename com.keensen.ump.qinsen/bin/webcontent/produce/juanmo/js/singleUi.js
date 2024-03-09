@@ -79,7 +79,7 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 						colspan : 2
 					}, {
 
-						xtype : 'combo',
+						xtype : 'combobox',
 						fieldLabel : '试卷',
 						ref : '../isTrial',
 						hiddenName : 'entity/isTrial',

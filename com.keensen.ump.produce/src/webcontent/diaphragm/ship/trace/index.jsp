@@ -29,7 +29,7 @@
 <js:load scriptPath="produce/diaphragm/ship/trace/js/manageEv.js"/>
 <script type="text/javascript">
   var uid = "<%=uid %>";
-  var listid = Ext.id();
+  var listid = 'list-trace-tumo';
   
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.ship.TraceMgr

@@ -764,4 +764,142 @@
             <edit name="newSpecId" type="text"/>
         </field>
     </viewModel>
+    <viewModel author="dafu" displayName="InstRaosi" entityName="com.keensen.ump.qinsen.inst.InstRaosi" id="InstRaosi">
+        <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="主键ID，取自SEQ_INST_RAOSI">
+            <view type="write"/>
+            <edit name="recordId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="batchNo" id="batchNo" label="元件序号">
+            <view type="write"/>
+            <edit name="batchNo" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="orderNo" id="orderNo" label="订单号">
+            <view type="write"/>
+            <edit name="orderNo" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="lineId" id="lineId" label="生产线ID">
+            <view type="write"/>
+            <edit name="lineId" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="produceDt" id="produceDt" label="生产日期">
+            <view type="write"/>
+            <edit name="produceDt" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="teamId" id="teamId" label="班组ID">
+            <view type="write"/>
+            <edit name="teamId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="workerId" id="workerId" label="生产员工">
+            <view type="write"/>
+            <edit name="workerId" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="createDt" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="createDt" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="changeDt" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="changeDt" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="creatorId" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="creatorId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="changerId" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="changerId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="remark" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="prodSpecId" id="prodSpecId" label="元件型号ID">
+            <view type="write"/>
+            <edit name="prodSpecId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="produceFlag" id="produceFlag" label="生产标志，W=白膜；R=返修">
+            <view type="write"/>
+            <edit name="produceFlag" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="InstPackMarkLogo" entityName="com.keensen.ump.qinsen.inst.InstPackMarkLogo" id="InstPackMarkLogo">
+        <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="recordId">
+            <view type="write"/>
+            <edit name="recordId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="customerId" id="customerId" label="customerId">
+            <view type="write"/>
+            <edit name="customerId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="logoCode" id="logoCode" label="logoCode">
+            <view type="write"/>
+            <edit name="logoCode" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="logoName" id="logoName" label="logoName">
+            <view type="write"/>
+            <edit name="logoName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="imgUri" id="imgUri" label="LOGO图片相对地址">
+            <view type="write"/>
+            <edit name="imgUri" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="createDt" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="createDt" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="changeDt" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="changeDt" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="creatorId" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="creatorId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="changerId" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="changerId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="remark" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="state" id="state" label="状态，A=有效，X=失效">
+            <view type="write"/>
+            <edit name="state" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="InstMarkPrint" entityName="com.keensen.ump.qinsen.inst.InstMarkPrint" id="InstMarkPrint">
+        <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="主键ID，取自SEQ_INST_MARK_PRINT_MAIN">
+            <view type="write"/>
+            <edit name="recordId" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="printTm" id="printTm" label="打印时间">
+            <view type="write"/>
+            <edit name="printTm" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="markSpecName" id="markSpecName" label="唛头标记元件型号">
+            <view type="write"/>
+            <edit name="markSpecName" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="logoId" id="logoId" label="唛头LOGO图片ID">
+            <view type="write"/>
+            <edit name="logoId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="workerId" id="workerId" label="打印人">
+            <view type="write"/>
+            <edit name="workerId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="batchNoStr" id="batchNoStr" label="打印批号，以,分隔">
+            <view type="write"/>
+            <edit name="batchNoStr" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="quantity" id="quantity" label="元件支数">
+            <view type="write"/>
+            <edit name="quantity" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="isWithStar" id="isWithStar" label="是否带星标，Y=是，N=否">
+            <view type="write"/>
+            <edit name="isWithStar" type="text"/>
+        </field>
+    </viewModel>
 </viewModelSet>

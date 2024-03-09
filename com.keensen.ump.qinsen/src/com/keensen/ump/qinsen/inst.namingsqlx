@@ -67,4 +67,62 @@
 	 </isNotNull>
 	ORDER BY A.DISP_ORDER
 </select>
+
+<!-- 查询系统配置 -->
+<select id="qrySysConfigByCond" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">   	
+		 SELECT T1.NAME                   AS "name",
+       T1.VALUE                  AS "value",
+       T1.BELONG_SYS_ID          AS "belongSysId",
+       T1.VALUE_DATA_SOURCE_ID   AS "valueDataSourceId",
+       T1.CREATE_DT              AS "createDt",
+       T1.CHANGE_DT              AS "changeDt",
+       T1.CREATOR_ID             AS "creatorId",
+       T1.CHANGER_ID             AS "changerId",
+       T1.REMARK                 AS "remark",
+       T1.BELONG_SYS_CODE        AS "belongSysCode",
+       T1.BELONG_SYS_NAME        AS "belongSysName",
+       T1.VALUE_DATA_SOURCE_CODE AS "valueDataSourceCode",
+       T1.VALUE_DATA_SOURCE_NAME AS "valueDataSourceName",
+       T1.CREATE_DATE            AS "createDate",
+       T1.CHANGE_DATE            AS "changeDate",
+       T1.CREATOR                AS "creator",
+       T1.CHANGER                AS "changer"
+  FROM (
+        
+        SELECT B.*,
+                (SELECT O.PROP_VALUE_CODE
+                   FROM qinsen.CONF_PROP_VALUE_OPTION O
+                  WHERE O.PROP_VALUE_ID = B.BELONG_SYS_ID) BELONG_SYS_CODE,
+                (SELECT O.PROP_VALUE_NAME
+                   FROM qinsen.CONF_PROP_VALUE_OPTION O
+                  WHERE O.PROP_VALUE_ID = B.BELONG_SYS_ID) BELONG_SYS_NAME,
+                (SELECT O.PROP_VALUE_CODE
+                   FROM qinsen.CONF_PROP_VALUE_OPTION O
+                  WHERE O.PROP_VALUE_ID = B.VALUE_DATA_SOURCE_ID) VALUE_DATA_SOURCE_CODE,
+                (SELECT O.PROP_VALUE_NAME
+                   FROM qinsen.CONF_PROP_VALUE_OPTION O
+                  WHERE O.PROP_VALUE_ID = B.VALUE_DATA_SOURCE_ID) VALUE_DATA_SOURCE_NAME,
+                TO_CHAR(B.CREATE_DT, 'YYYY-MM-DD HH24:MI:SS') CREATE_DATE,
+                TO_CHAR(B.CHANGE_DT, 'YYYY-MM-DD HH24:MI:SS') CHANGE_DATE,
+                (SELECT S.STAFF_NAME
+                   FROM qinsen.BASE_STAFF S
+                  WHERE S.STAFF_ID = B.CREATOR_ID) CREATOR,
+                (SELECT S.STAFF_NAME
+                   FROM qinsen.BASE_STAFF S
+                  WHERE S.STAFF_ID = B.CHANGER_ID) CHANGER
+          FROM qinsen.BASE_SYS_CONFIG B
+         WHERE B.ID &gt;= 10000
+        <isNotNull prepend = ""  property = "configCode">
+	   AND UPPER(B.CODE) LIKE '%'||UPPER(#configCode#)||'%'
+	</isNotNull>
+	<isNotNull prepend = ""  property = "configName">
+	   AND B.NAME LIKE '%'||#configName#||'%'
+	</isNotNull>
+ ORDER BY B.ID
+        ) T1
+
+   	</select>
+   	
+   	
+
 </sqlMap>

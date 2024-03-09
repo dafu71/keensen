@@ -203,7 +203,7 @@
 	  FROM qinsen.INST_QIJIAN_CHANGE A, qinsen.INST_JUANMO_MAIN M
 	 WHERE A.JUANMO_BATCH_ID = M.RECORD_ID
 	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
-        <isNotNull prepend="" property="juanMoBatchId">AND A.JUANMO_BATCH_ID = #juanMoBatchId#</isNotNull>
+        <isNotNull prepend="" property="juanmoBatchId">AND A.JUANMO_BATCH_ID = #juanmoBatchId#</isNotNull>
         <isNotNull prepend="" property="oldBatchNo">AND A.OLD_BATCH_NO = UPPER(#oldBatchNo#)</isNotNull>
         <isNotNull prepend="" property="newBatchNo">AND A.NEW_BATCH_NO = UPPER(#newBatchNo#)</isNotNull>
         <isNotNull prepend="" property="produceBeginDate">AND A.PRODUCE_DT &gt;= TO_DATE(#produceBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
@@ -280,4 +280,11 @@
 	REMARK,NG_REASON_ID,JUDGE_FLAG,NG_ITEM,JUDGER_ID,JUDGE_DT
 	FROM qinsen.INST_QIJIAN 
 	WHERE RECORD_ID=#recordId#</insert>
+    <!-- 查询气检不良项目 -->
+    <select id="qryNgItemOption" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT distinct A.NG_ITEM "ngItem" FROM qinsen.INST_QIJIAN A 
+		WHERE A.NG_ITEM IS NOT NULL ORDER BY 1</select>
+    <!-- 批量改订单 -->
+    <update id="modiOrder" parameterClass="java.util.HashMap">UPDATE qinsen.INST_QIJIAN t  SET t.order_no = #orderNo#,
+	t.change_dt = SYSDATE,t.changer_id = #changerId#
+	WHERE t.record_id IN($recordIds$)</update>
 </sqlMap>

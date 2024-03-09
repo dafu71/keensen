@@ -7,6 +7,14 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 		this.initQiJianAddWindow();
 		this.initQiJianEditWindow();
 
+		this.initChangeTagWindow();
+		this.initMakeupTagWindow();
+
+		this.initQjChangeEditWindow();
+		this.initQiJianJudgeWindow();
+
+		this.opt = '';
+
 		this.gridPanel = this.gridPanel || new Ext.Panel({
 					layout : 'border',
 					collapsible : false,
@@ -45,6 +53,17 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						name : 'isDefault'
 					}]
 		})
+
+		this.ngItemStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.qinsen.qijian.qryNgItemOption.biz.ext',
+					root : 'data',
+					autoLoad : true,
+					totalProperty : '',
+					baseParams : {},
+					fields : [{
+								name : 'ngItem'
+							}]
+				})
 
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 165,
@@ -238,6 +257,11 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.judgeRecord
+					}, '-', {
+						text : '批量改订单',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.modiOrder
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.qijian.deleteQijian.biz.ext',
@@ -507,7 +531,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					}, {
 						header : '新型号',
 						width : 90,
-						dataIndex : 'newspecName'
+						dataIndex : 'newSpecName'
 					}, {
 						header : '生产日期',
 						width : 100,
@@ -717,6 +741,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							anchor : '90%',
 							fieldLabel : '订单号'
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 							xtype : 'prodspeccombobox',
 							hiddenName : 'entity/prodSpecId',
 							dataIndex : 'prodSpecId',
@@ -736,37 +764,13 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 								}
 							}
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							ref : '../../presure',
-							name : 'entity/presure',
-							dataIndex : 'presure',
-							fieldLabel : '检测气压',
+							xtype : 'textfield',
+							name : 'entity/stdStr',
+							readOnly : true,
 							allowBlank : false,
-							xtype : 'numberfield',
-							minValue : 0,
-							anchor : '90%'
-						}, {
-							ref : '../../checkResult',
-							name : 'entity/checkResult',
-							dataIndex : 'checkResult',
-							fieldLabel : '泄压值',
-							allowBlank : false,
-							xtype : 'numberfield',
+							ref : '../../stdStr',
 							anchor : '90%',
-							minValue : 0,
-							listeners : {
-								scope : this,
-								specialkey : function(C, D) {
-									if (D.getKey() == Ext.EventObject.ENTER) {
-										this.judge();
-
-									}
-
-								}
-							}
+							fieldLabel : '气检标准'
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -1002,7 +1006,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									hiddenName : 'entity/isFirst',
 									emptyText : '--请选择--',
 									allowBlank : false,
-									//readOnly : true,
+									// readOnly : true,
 									anchor : '90%',
 									store : [['', ''], ['Y', '首检'], ['N', '复检']],
 									listeners : {
@@ -1021,7 +1025,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									hiddenName : 'entity/isQualified',
 									emptyText : '--请选择--',
 									allowBlank : false,
-									//readOnly : true,
+									// readOnly : true,
 									anchor : '90%',
 									store : [['', '未判'], ['Y', '合格'],
 											['N', '不合格']],
@@ -1065,7 +1069,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									name : 'entity/remark',
 									xtype : 'textarea',
 									dataIndex : 'remark',
-									
+
 									fieldLabel : '备注',
 									colspan : 2,
 									anchor : '95%',
@@ -1079,6 +1083,475 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									name : 'entity/recordId',
 									dataIndex : 'recordId',
 									ref : '../../recordId',
+									xtype : 'hidden'
+								}]
+					}]
+				})
+	}
+
+	this.initChangeTagWindow = function() {
+		var _this = this;
+		this.changeTagWindow = this.changeTagWindow || new Ext.fn.FormWindow({
+			title : '气检记录-换标',
+			height : 480,
+			width : 600,
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+						xtype : 'inputpanel',
+						pgrid : this.listPanel,
+						columns : 1,
+						saveUrl : 'com.keensen.ump.qinsen.qijian.changeTag.biz.ext',
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+												// _this.qijianAddWindow.hide();
+											}
+										})
+							} else {
+								_this.listPanel.store.load();
+								_this.changeTagWindow.hide();
+
+							}
+						},
+
+						fields : [{
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									xtype : 'datetimefield',
+									format : "Y-m-d",
+									anchor : '90%',
+									ref : '../../produceDt',
+									name : 'entity/produceDt',
+									allowBlank : false,
+									fieldLabel : '换标日期',
+									value : new Date()
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									ref : '../../oldBatchNo',
+									fieldLabel : '旧元件序号',
+									name : 'entity/oldBatchNo',
+									allowBlank : false,
+									anchor : '90%'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'prodspeccombobox',
+									hiddenName : 'entity/newSpecId',
+									ref : '../../newSpecId',
+									anchor : '90%',
+									fieldLabel : '新元件型号 ',
+									typeAhead : true,
+									typeAheadDelay : 100,
+									minChars : 1,
+									queryMode : 'local',
+									lastQuery : '',
+									editable : true,
+									allowBlank : true,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									ref : '../../newBatchNo',
+									fieldLabel : '新元件序号',
+									name : 'entity/newBatchNo',
+									allowBlank : false,
+									anchor : '90%'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									name : 'entity/remark',
+									xtype : 'textarea',
+									fieldLabel : '备注',
+									colspan : 2,
+									anchor : '95%',
+									allowBlank : true
+								}, {
+									name : 'entity/workerId',
+									ref : '../../workerId',
+									value : nowStaffId,
+									xtype : 'hidden'
+								}]
+					}]
+		})
+	}
+
+	this.initMakeupTagWindow = function() {
+		var _this = this;
+		this.makeupTagWindow = this.makeupTagWindow || new Ext.fn.FormWindow({
+			title : '气检记录-补标',
+			height : 480,
+			width : 600,
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+						xtype : 'inputpanel',
+						pgrid : this.listPanel,
+						columns : 1,
+						saveUrl : 'com.keensen.ump.qinsen.qijian.makeupTag.biz.ext',
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+												// _this.makeupTagWindow.hide();
+											}
+										})
+							} else {
+								_this.listPanel.store.load();
+								_this.makeupTagWindow.hide();
+
+							}
+						},
+
+						fields : [{
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									xtype : 'datetimefield',
+									format : "Y-m-d",
+									anchor : '90%',
+									ref : '../../produceDt',
+									name : 'entity/produceDt',
+									allowBlank : false,
+									fieldLabel : '换标日期',
+									value : new Date()
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									ref : '../../juanmoBatchNo',
+									fieldLabel : '卷膜序号',
+									name : 'entity/juanmoBatchNo',
+									allowBlank : false,
+									anchor : '90%'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'prodspeccombobox',
+									hiddenName : 'entity/newSpecId',
+									ref : '../../newSpecId',
+									anchor : '90%',
+									fieldLabel : '新元件型号 ',
+									typeAhead : true,
+									typeAheadDelay : 100,
+									minChars : 1,
+									queryMode : 'local',
+									lastQuery : '',
+									editable : true,
+									allowBlank : true,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									ref : '../../newBatchNo',
+									fieldLabel : '新元件序号',
+									name : 'entity/newBatchNo',
+									allowBlank : false,
+									anchor : '90%'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									name : 'entity/remark',
+									xtype : 'textarea',
+									fieldLabel : '备注',
+									colspan : 2,
+									anchor : '95%',
+									allowBlank : true
+								}, {
+									name : 'entity/workerId',
+									ref : '../../workerId',
+									value : nowStaffId,
+									xtype : 'hidden'
+								}]
+					}]
+		})
+	}
+
+	this.initQjChangeEditWindow = function() {
+		var _this = this;
+		this.qjChangeEditWindow = this.qjChangeEditWindow
+				|| new Ext.fn.FormWindow({
+					title : '补换标记录-修改',
+					height : 480,
+					width : 600,
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.detailGrid,
+						columns : 1,
+						saveUrl : 'com.keensen.ump.qinsen.qijian.modiChangeRecordById.biz.ext',
+						loadUrl : 'com.keensen.ump.qinsen.qijian.expandChange.biz.ext',
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+												// _this.qijianAddWindow.hide();
+											}
+										})
+							} else {
+								_this.detailGrid.store.load();
+								_this.qjChangeEditWindow.hide();
+
+							}
+						},
+
+						fields : [{
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									ref : '../../flagName',
+									dataIndex : 'flagName',
+									anchor : '90%',
+									xtype : 'displayfield',
+									fieldLabel : '动作'
+								}, {
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									xtype : 'datetimefield',
+									format : "Y-m-d",
+									anchor : '90%',
+									ref : '../../produceDt',
+									name : 'entity/produceDt',
+									dataIndex : 'produceDt',
+									allowBlank : false,
+									fieldLabel : '换标日期'
+								}, {
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									ref : '../../oldSpecName',
+									dataIndex : 'oldSpecName',
+									xtype : 'displayfield',
+									fieldLabel : '旧元件型号',
+									anchor : '90%'
+								}, {
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									ref : '../../oldBatchNo',
+									dataIndex : 'oldBatchNo',
+									xtype : 'displayfield',
+									fieldLabel : '旧元件序号',
+									anchor : '90%'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'prodspeccombobox',
+									hiddenName : 'entity/newSpecId',
+									ref : '../../newSpecId',
+									dataIndex : 'newSpecId',
+									anchor : '90%',
+									fieldLabel : '新元件型号 ',
+									typeAhead : true,
+									typeAheadDelay : 100,
+									minChars : 1,
+									queryMode : 'local',
+									lastQuery : '',
+									editable : true,
+									allowBlank : true,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									ref : '../../newBatchNo',
+									dataIndex : 'newBatchNo',
+									name : 'entity/newBatchNo',
+									allowBlank : false,
+									fieldLabel : '新元件序号',
+									anchor : '90%'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									name : 'entity/remark',
+									dataIndex : 'remark',
+									xtype : 'textarea',
+									fieldLabel : '备注',
+									colspan : 1,
+									anchor : '90%',
+									allowBlank : true
+								}, {
+									name : 'entity/recordId',
+									dataIndex : 'recordId',
+									ref : '../../recordId',
+									xtype : 'hidden'
+								}]
+					}]
+				})
+	}
+
+	this.initQiJianJudgeWindow = function() {
+		var _this = this;
+		this.qiJianJudgeWindow = this.qiJianJudgeWindow
+				|| new Ext.fn.FormWindow({
+					title : '气检记录-质检',
+					height : 480,
+					width : 600,
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						saveUrl : 'com.keensen.ump.qinsen.qijian.modiQiJianJudge.biz.ext',
+						loadUrl : 'com.keensen.ump.qinsen.qijian.expandQijian.biz.ext',
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+												// _this.qijianAddWindow.hide();
+											}
+										})
+							} else {
+								_this.listPanel.store.load();
+								_this.qiJianJudgeWindow.hide();
+
+							}
+						},
+
+						fields : [{
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									dataIndex : 'batchNo',
+									xtype : 'displayfield',
+									anchor : '90%',
+									fieldLabel : '元件序号'
+								}, {
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									ref : '../../ngReasonId',
+									// hiddenName : 'entity/ngReasonId',
+									dataIndex : 'ngReasonId',
+									anchor : '90%',
+									xtype : 'combobox',
+									fieldLabel : '不良类型',
+									triggerAction : 'all',
+									store : this.ngReasonIdStore,
+									valueField : 'propValueId',
+									displayField : 'propValueName',
+									addAllSelector : true,
+									readOnly : true,
+									editable : false,
+									queryMode : 'local'
+								}, {
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+
+									xtype : 'combo',
+									fieldLabel : '质检判定',
+									ref : '../../judgeFlag',
+									dataIndex : 'judgeFlag',
+									hiddenName : 'entity/judgeFlag',
+									emptyText : '--请选择--',
+									allowBlank : false,
+									anchor : '90%',
+									store : [['Y', '合格'], ['N', '不合格']],
+									listeners : {
+										scope : this,
+										'expand' : function(A) {
+											this.qiJianJudgeWindow.judgeFlag
+													.reset();
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									ref : '../../ngItem',
+									hiddenName : 'entity/ngItem',
+									dataIndex : 'ngItem',
+									anchor : '90%',
+									xtype : 'combobox',
+									fieldLabel : '不良原因',
+									triggerAction : 'all',
+									store : this.ngItemStore,
+									valueField : 'ngItem',
+									displayField : 'ngItem',
+									addAllSelector : true,
+									editable : true,
+									queryMode : 'local',
+									emptyText : '--请选择--',
+									allowBlank : true,
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+								}, {
+									name : 'entity/recordId',
+									dataIndex : 'recordId',
+									ref : '../../recordId',
+									xtype : 'hidden'
+								}, {
+									name : 'entity/judgerId',
+									ref : '../../judgerId',
+									value : nowStaffId,
 									xtype : 'hidden'
 								}]
 					}]
