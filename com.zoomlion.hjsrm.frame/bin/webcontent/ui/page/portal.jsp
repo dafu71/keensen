@@ -1372,10 +1372,10 @@ var businesstask = new Ext.util.DelayedTask(loadBusiness);
 businesstask.delay(450);
 
 //5 分钟刷新一次业务提醒
-Ext.TaskMgr.start({
-    run: loadBusiness,
-    interval: 30000
-});
+//Ext.TaskMgr.start({
+//    run: loadBusiness,
+//    interval: 30000
+//});
 
 <% } %>					
 var glzdtask = new Ext.util.DelayedTask(loadglzdAnnounce);

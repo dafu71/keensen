@@ -284,4 +284,82 @@
             <xs:element minOccurs="0" name="isWithStar" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="InstProdApplyMain">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="checkNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orderTypeFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stackNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="prodSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orderQuantity" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="prodClassFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="performance" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="labelTypeFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="labelSpecCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tape" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="markTypeFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="markSpecCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="markSpecialFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="applicantId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="applyTm" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="workshopId" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstProdApplyDetail">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="applyId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="tumoBatchStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="prodClassFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="airResult" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isAirQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gpdResult" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="isGpdQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="saltResult" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isSaltQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="factorBResult" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isFactorBQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="airStdStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gpdStdStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="saltStd" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="factorBStd" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isWaterQualified" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TempProdApplyDetail">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="applyId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="batchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="juanmoBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="prodSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="tumoBatchStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="prodClassFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="airResult" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isAirQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gpdResult" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="isGpdQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="saltResult" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isSaltQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="factorBResult" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isFactorBQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="airStdStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gpdStdStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="saltStd" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="factorBStd" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isWaterQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="prodSpecArea" nillable="true" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

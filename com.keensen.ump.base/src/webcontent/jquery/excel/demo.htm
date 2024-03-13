@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+  <script src="js/jquery.table2excel.js"></script>
+ </head>
+ <body onload="javascript:exportExcel()">
+ <table id="myTable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Gender</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tom</td>
+      <td>25</td>
+      <td>Male</td>
+    </tr>
+    <tr>
+      <td>Lisa</td>
+      <td>30</td>
+      <td>Female</td>
+    </tr>
+  </tbody>
+</table>
+  
+ </body>
+<script type="text/javascript" >
+function exportExcel(){
+	// 获取表格对象
+	var table = $("#myTable");
+	 
+	// 将表格转换为Excel，并下载到本地
+	table.table2excel({
+	  filename: "文件名",    // 下载的文件名
+	  name: "表名"         // Excel文件中的工作表名
+	});
+}
+</script>
+</html>

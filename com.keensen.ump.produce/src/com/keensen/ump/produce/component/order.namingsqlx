@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   
+<select id="queryYxOrder" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+	SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",	
+		T1.SCFS              AS "scfs",
+       T1.BM                AS "bm",
+       T1.SFFH              AS "sffh",
+       T1.ORDER_TYPE        AS "orderType",
+       T1.TYPE              AS "type",
+       T1.KHXJ              AS "khxj",
+       T1.CPXJ              AS "cpxj",
+       T1.DDXJ              AS "ddxj",
+       T1.ORDER_NO          AS "orderNo",
+       T1.ORDER_DATE        AS "orderDate",
+       T1.HPMC              AS "hpmc",
+       T1.DW                AS "dw",
+       T1.MATER_SPEC_NAME   AS "materSpecName",
+       T1.CPGG              AS "cpgg",
+       T1.DRY_WET           AS "dryWet",
+       T1.ORDER_AMOUNT      AS "orderAmount",
+       T1.DFH               AS "dfh",
+       T1.XSC               AS "xsc",
+       T1.SBKCGM            AS "sbkcgm",
+       T1.SBKCSM            AS "sbkcsm",
+       T1.BQ                AS "bq",
+       T1.BAG               AS "bag",
+       T1.BOX               AS "box",
+       T1.MARK              AS "mark",
+       T1.PACK              AS "pack",
+       T1.PERFORMANCE       AS "performance",
+       T1.REMARK            AS "remark",
+       T1.DEMAND_STOCK_DATE AS "demandStockDate",
+       T1.RKSL              AS "rksl",
+       T1.JHWCSJ            AS "jhwcsj",
+       T1.SCWCRQ            AS "scwcrq"
+  FROM KS_PROD_COMPONENT_YXORDER T1
+	where 1=1
+	<isNotNull prepend="and" property="orderNo"> 
+		       T1.ORDER_NO = #orderNo#
+	</isNotNull>
+	 <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+	<isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="materSpecName"> 
+		       upper(t1.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="materSpecName2"> 
+		       upper(t1.MATER_SPEC_NAME) = upper(#materSpecName2#) 
+	</isNotNull>
+	
+	 <isNotNull prepend = "and"  property = "orderDateStart"> 
+          to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "orderDateEnd"> 
+          to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#
+     </isNotNull>
+	 </select>
+</sqlMap>

@@ -30,12 +30,12 @@ com.keensen.ump.qinsen.quality.applyMgr = function() {
 		this.panel = this.panel || new Ext.Panel({
 					title : '请检元件序号',
 					items : [{
-								ref : '../batchNoStr',
+								id : 'apply-batchNoStr',
 								xtype : 'textarea',
 								width : '200',
 								height : '600',
 								emptyText : '请按顺序将元件序号扫码，或手工输入并回车换行',
-								allowBlank : true
+								allowBlank : false
 							}]
 				});
 		this.panel2 = this.panel2 || new Ext.Panel({
@@ -50,7 +50,40 @@ com.keensen.ump.qinsen.quality.applyMgr = function() {
 			columns : 2,
 			autoHide : false,
 			border : true,
-			saveUrl : '111.biz.ext',
+			saveUrl : 'com.keensen.ump.qinsen.apply.createApply.biz.ext',
+			successFn : function(i, r) {
+				if (r.err != '0') {
+					var errData = r.msg;
+
+					Ext.Msg.confirm('提示', '以下元件在气检记录的型号与当前型号不一致：' + r.msg
+									+ '；是否需要从请检清单中移除？', function(btn) {
+								if (btn === 'yes') {
+									var errorBatchNos = r.msg.split(',');
+									var orgBatchNos = Ext
+											.getCmp('apply-batchNoStr')
+											.getValue().split('\n');
+									var batchNos = new Array();
+									for (var i = 0; i < orgBatchNos.length; i++) {
+										var orgBatchNo = orgBatchNos[i];
+										var flag = true;// 型号是否正确
+										errorBatchNos.forEach(function(val,
+														index) {
+													if (val.trim() == orgBatchNo.trim()) {
+														flag = false;
+														return false;
+													}
+												});
+										if (flag)
+											batchNos.push(orgBatchNo);
+									}
+									Ext.getCmp('apply-batchNoStr')
+											.setValue(batchNos.join('\n'));// 回填一下
+								}
+							})
+				} else {
+
+				}
+			},
 			fields : [{
 
 				xtype : 'combobox',
@@ -322,6 +355,14 @@ com.keensen.ump.qinsen.quality.applyMgr = function() {
 						this.inputPanel.markSpecialFlag.reset();
 					}
 				}
+			}, {
+				xtype : 'hidden',
+				name : 'entity/batchNoStr',
+				ref : '../batchNoStr'
+			}, {
+				xtype : 'hidden',
+				name : 'entity/batchNoStr2',
+				ref : '../batchNoStr2'
 			}],
 			buttons : [{
 						text : "确定",

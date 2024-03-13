@@ -4,15 +4,16 @@
   <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
-      <targetNode>switch0</targetNode>
+      <targetNode>switch4</targetNode>
     </sourceConnections>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link11</targetConnections>
-    <targetConnections>link8</targetConnections>
-    <targetConnections>link5</targetConnections>
     <targetConnections>link1</targetConnections>
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <targetConnections>link14</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="appearanceIsQualified" type="query" valueType="Primitive">appearanceIsQualified</process:return>
@@ -47,7 +48,7 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link0</targetConnections>
+    <targetConnections>link12</targetConnections>
     <nodeLabel>switch0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
@@ -183,6 +184,43 @@
     <figSize height="20" width="40"/>
     <node>assign2</node>
   </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch4" name="空操作4" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" isDefault="true" type="transition">
+      <sourceNode>switch4</sourceNode>
+      <targetNode>switch0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link13" name="异常备注里面出现整卷，两个字，系统自动外观判定不合格+流向AB仓" type="transition">
+      <sourceNode>switch4</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>null != produceRemark &amp;&amp; produceRemark.indexOf(&quot;整卷&quot;)>-1</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>switch4label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch4label" name="label" nodeType="label">
+    <figSize height="20" width="55"/>
+    <node>switch4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign3" name="赋值3" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">N</process:from>
+      <process:to type="query">appearanceIsQualified</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info version="6.3"/>
@@ -195,6 +233,7 @@
     <process:input isArray="false" name="tagNum" primitiveType="String"/>
     <process:input isArray="false" name="tagLength" primitiveType="String"/>
     <process:input isArray="false" name="isWx" primitiveType="String"/>
+    <process:input isArray="false" name="produceRemark" primitiveType="String"/>
   </process:inputs>
   <process:outputs>
     <process:output description="" isArray="false" name="appearanceIsQualified" primitiveType="String"/>

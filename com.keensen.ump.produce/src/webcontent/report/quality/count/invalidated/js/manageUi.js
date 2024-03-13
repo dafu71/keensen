@@ -65,16 +65,13 @@ com.keensen.ump.produce.report.quality.invalidatedMgr = function() {
 						header : '实验工业转家用待处理数量'
 					}, {
 						dataIndex : 'ploss1',
-						header : '试量产报废数量'
-					}, {
-						dataIndex : 'ploss2',
-						header : '试量产工业转家用待处理数量'
+						header : '膜片车间报废数量'
 					}, {
 						dataIndex : 'tloss1',
-						header : '量产报废数量'
+						header : '组件车间裁膜报废数量'
 					}, {
 						dataIndex : 'tloss2',
-						header : '量产工业转家用待处理数量'
+						header : '组件车间工业转家用待处理数量'
 					}, {
 						dataIndex : 'loss1',
 						header : '报废数量合计'
@@ -98,8 +95,6 @@ com.keensen.ump.produce.report.quality.invalidatedMgr = function() {
 							name : 'eloss2'
 						}, {
 							name : 'ploss1'
-						}, {
-							name : 'ploss2'
 						}, {
 							name : 'tloss1'
 						}, {

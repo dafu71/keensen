@@ -228,25 +228,19 @@ SELECT 1 MYORDER,
               0
            END) "eloss2",
        SUM(CASE
-             WHEN FLAG = 'P' AND DEFECT_CODE != 'D14' THEN
+             WHEN FLAG != 'E' AND DEFECT_CODE != 'D14' AND Rec_Tache_Id=100  THEN
               LOSS
              ELSE
               0
            END) "ploss1",
        SUM(CASE
-             WHEN FLAG = 'P' AND DEFECT_CODE = 'D14' THEN
-              LOSS
-             ELSE
-              0
-           END) "ploss2",
-       SUM(CASE
-             WHEN FLAG = 'T' AND DEFECT_CODE != 'D14' THEN
+             WHEN FLAG != 'E' AND DEFECT_CODE != 'D14' AND Rec_Tache_Id=101 THEN
               LOSS
              ELSE
               0
            END) "tloss1",
        SUM(CASE
-             WHEN FLAG = 'T' AND DEFECT_CODE = 'D14' THEN
+             WHEN FLAG != 'E' AND DEFECT_CODE = 'D14' AND Rec_Tache_Id=101 THEN
               LOSS
              ELSE
               0
@@ -267,7 +261,7 @@ SELECT 1 MYORDER,
          T1.DEFECT_ITEM_ID,
          T1.LOSS,
          T22.MATER_SPEC_CODE,
-         CD.DEFECT_CODE,
+         CD.DEFECT_CODE,CD.Rec_Tache_Id,
          T1.PRODUCE_DT， T2.BATCH_NO,
          SUBSTR(T2.BATCH_NO, 1, 1) FLAG
     FROM QINSEN.INST_CDM_DEFECT T1
@@ -296,25 +290,20 @@ SELECT 2 MYORDER,
               0
            END) ELOSS2,
        SUM(CASE
-             WHEN FLAG = 'P' AND DEFECT_CODE != 'D14' THEN
+             WHEN FLAG != 'E' AND DEFECT_CODE != 'D14' AND Rec_Tache_Id=100 THEN
               LOSS
              ELSE
               0
            END) PLOSS1,
+      
        SUM(CASE
-             WHEN FLAG = 'P' AND DEFECT_CODE = 'D14' THEN
-              LOSS
-             ELSE
-              0
-           END) PLOSS2,
-       SUM(CASE
-             WHEN FLAG = 'T' AND DEFECT_CODE != 'D14' THEN
+             WHEN FLAG != 'E' AND DEFECT_CODE != 'D14'AND Rec_Tache_Id=101 THEN
               LOSS
              ELSE
               0
            END) TLOSS1,
        SUM(CASE
-             WHEN FLAG = 'T' AND DEFECT_CODE = 'D14' THEN
+             WHEN FLAG != 'E' AND DEFECT_CODE = 'D14' AND Rec_Tache_Id=101 THEN
               LOSS
              ELSE
               0
@@ -335,7 +324,7 @@ SELECT 2 MYORDER,
          T1.DEFECT_ITEM_ID,
          T1.LOSS,
          T22.MATER_SPEC_CODE,
-         CD.DEFECT_CODE,
+         CD.DEFECT_CODE,CD.Rec_Tache_Id,
          T1.PRODUCE_DT， T2.BATCH_NO,
          SUBSTR(T2.BATCH_NO, 1, 1) FLAG
     FROM QINSEN.INST_CDM_DEFECT T1
@@ -352,5 +341,43 @@ SELECT 2 MYORDER,
     
     </select>
    
-   
+      <select id="queryMpReduce" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.RECORD_ID       AS "recordId",
+       T1.SPEC_CODE2      AS "specCode2",
+       T1.BATCH_NO        AS "batchNo",
+       T1.QUALIFID_LENGTH AS "qualifidLength",
+       T1.REDUCE          AS "reduce",
+       T1.REDUCE_DT       AS "reduceDt",
+       T1.REDUCE_MONTH       AS "reduceMonth",
+       T1.ORDER_NO        AS "orderNo",
+       T1.AMOUNT          AS "amount",
+       T1.EXT18           AS "ext18",
+       T1.SPEC_ID         AS "specId",
+       T1.SPEC_CODE       AS "specCode"
+  FROM (SELECT V.RECORD_ID,
+               V.MATER_SPEC_CODE SPEC_CODE2,
+               V.BATCH_NO,
+               V.QUALIFID_LENGTH,
+               T0.REDUCE,
+               TO_CHAR(T0.REDUCE_DT, 'yyyy-MM-dd') REDUCE_DT,
+               TO_CHAR(T0.REDUCE_DT, 'yyyy-MM') REDUCE_MONTH,
+               T.ORDER_NO,
+               T.AMOUNT,
+               T.EXT18,
+               T.SPEC_ID,
+               T2.MATER_SPEC_CODE SPEC_CODE
+          FROM KS_PROD_DIAPHRAGM_TUMO T0
+          LEFT JOIN V_KS_TUMO_ALL_2_0 V
+            ON V.RECORD_ID = T0.RECORD_ID
+          LEFT JOIN KS_PROD_DIAPHRAGM_ORDER T
+            ON V.ORDER_NO = T.ORDER_NO
+          LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+            ON T.SPEC_ID = T2.MATER_SPEC_ID
+         WHERE T0.REDUCE IS NOT NULL
+          AND TO_CHAR(T0.REDUCE_DT, 'yyyy-MM-dd') &gt;= #reduceDtStart#
+     		AND TO_CHAR(T0.REDUCE_DT, 'yyyy-MM-dd') &lt;= #reduceDtEnd#
+         ) T1
+         
+    
+    </select>
    </sqlMap>

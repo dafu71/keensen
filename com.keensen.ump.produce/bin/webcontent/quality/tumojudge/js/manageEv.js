@@ -1,11 +1,11 @@
 com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 
 	var _this = this;
-	
-	this.queryPanel.form.findField(['condition/produceDtStart']).setValue(new Date().add(Date.DAY, -1)
-								.format('Y-m-d'));
-	this.queryPanel.form.findField(['condition/produceDtEnd']).setValue(new Date().add(Date.DAY, +1)
-								.format('Y-m-d'));
+
+	this.queryPanel.form.findField(['condition/produceDtStart'])
+			.setValue(new Date().add(Date.DAY, -1).format('Y-m-d'));
+	this.queryPanel.form.findField(['condition/produceDtEnd'])
+			.setValue(new Date().add(Date.DAY, +1).format('Y-m-d'));
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -30,18 +30,28 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 
 			})
 
+	this.inputWindow.items.items[0].mon(this.inputWindow.items.items[0],
+			'aftersave', function() {
+				this.listPanel.store.reload();
+				this.inputWindow.hide();
+				return false;
+			}, this);
 
-	
 	this.editPanel.mon(this.editPanel, 'afterload', function() {
-				var recordId = _this.editPanel.form.findField('entity/recordId')
-						.getValue();
+				var recordId = _this.editPanel.form
+						.findField('entity/recordId').getValue();
 				var perfFlagId = _this.editPanel.perfFlagId.getValue();
-				var isBatchQualified = _this.editPanel.isBatchQualified.getValue();
+				var isBatchQualified = _this.editPanel.isBatchQualified
+						.getValue();
 				var isKeep = _this.editPanel.isKeep.getValue();
 				var isWx = _this.editPanel.isWx.getValue();
 				var trendText = _this.editPanel.trend.getValue();
-				if(Ext.isEmpty(trendText)){
-					_this.editPanel.trend.setValue(trend(perfFlagId,isBatchQualified,isKeep,isWx));
+				var qualifidLength = _this.editPanel.qualifidLength.getValue();
+				var produceRemark = _this.editPanel.produceRemark.getValue();
+				if (Ext.isEmpty(trendText)) {
+					_this.editPanel.trend.setValue(trend(perfFlagId,
+							isBatchQualified, isKeep, isWx, qualifidLength,
+							produceRemark));
 				}
 				_this.listPanel2.store.load({
 							params : {
@@ -173,7 +183,7 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onJudge = function() {
 			this.editWindow.items.items[0].loadData(r);
 
 			this.editWindow.show();
-		}else{
+		} else {
 			Ext.Msg.alert("系统提示", "请选择一条数据!");
 		}
 	} else {
@@ -182,38 +192,51 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onJudge = function() {
 	}
 }
 
-function trend(perfFlagId,isBatchQualified,isKeep,isWx){
-	//alert(perfFlagId + '---' + isBatchQualified + '---' + isKeep + '---' + isWx);
-	//发货膜片
-	//A等品 合格 走向仓库发货仓
-	//alert(perfFlagId);
+function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
+		produceRemark) {
+	// alert(perfFlagId + '---' + isBatchQualified + '---' + isKeep + '---' +
+	// isWx);
+	// 发货膜片
+	// A等品 合格 走向仓库发货仓
+	// alert(perfFlagId);
 	var ret = '';
-	if(isWx == 'Y' && perfFlagId==300029 && isBatchQualified =='Y'){
+	if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified == 'Y') {
 		ret = '仓库发货仓';
 	}
-	//C等品 不合格 走向待二次判定 
-	if(isWx == 'Y' && perfFlagId==300032 && isBatchQualified =='N'){
+	// C等品 不合格 走向待二次判定
+	if (isWx == 'Y' && perfFlagId == 300032 && isBatchQualified == 'N') {
 		ret = '待二次判定';
 	}
-	//保留品 不合格 走向仓库C仓
-	if(isWx == 'Y' && isKeep=='Y' && isBatchQualified =='N'){
+	// 保留品 不合格 走向仓库C仓
+	if (isWx == 'Y' && isKeep == 'Y' && isBatchQualified == 'N') {
 		ret = '仓库C仓';
 	}
-	//自用膜片
-	//A/B等品 合格 走向仓库AB仓
-	if(isWx == 'N' && (perfFlagId==300029 || perfFlagId==300030) && isBatchQualified =='Y'){
-		ret = '仓库AB仓';
-	}	
-	//C等品 不合格 走向仓库AB仓
-	if(isWx == 'N' && perfFlagId==300032  && isBatchQualified =='N'){
+	// 自用膜片
+	// A/B等品 合格 走向仓库AB仓
+	if (isWx == 'N' && (perfFlagId == 300029 || perfFlagId == 300030)
+			&& isBatchQualified == 'Y') {
 		ret = '仓库AB仓';
 	}
-	//保留品 不合格 走向仓库C仓
-	if(isWx == 'N' && isKeep=='Y' && isBatchQualified =='N'){
+	// C等品 不合格 走向仓库AB仓
+	if (isWx == 'N' && perfFlagId == 300032 && isBatchQualified == 'N') {
+		ret = '仓库AB仓';
+	}
+	// 保留品 不合格 走向仓库C仓
+	if (isWx == 'N' && isKeep == 'Y' && isBatchQualified == 'N') {
 		ret = '仓库C仓';
+	}
+
+	//外销，合格长度小于300m入AB仓
+	if (isWx == 'Y' && qualifidLength < 300) {
+		ret = '仓库AB仓';
+	}
+	
+	//异常备注里面出现整卷，两个字，系统自动外观判定不合格+流向AB仓
+	if(produceRemark.indexOf('整卷')>-1){
+		ret = '仓库AB仓';
 	}
 	return ret;
-	
+
 }
 
 com.keensen.ump.produce.quality.timojudgeMgr.prototype.onUpdateApplyIsJudged = function() {
@@ -228,10 +251,10 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onUpdateApplyIsJudged = f
 		success : function(resp) {
 			var ret = Ext.decode(resp.responseText);
 			if (ret.success) {
-				Ext.Msg.alert("系统提示", "请检单状态更新成功!",function(){
-					_this.listPanel.store.load();
-					
-				});
+				Ext.Msg.alert("系统提示", "请检单状态更新成功!", function() {
+							_this.listPanel.store.load();
+
+						});
 			}
 
 		},

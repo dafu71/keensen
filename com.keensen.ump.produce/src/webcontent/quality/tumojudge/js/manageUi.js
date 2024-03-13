@@ -197,11 +197,12 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, '->', {
 						text : '膜片降级',
 						scope : this,
+						hidden : true,
 						iconCls : 'icon-application_edit',
 						handler : this.onReduce
 					}],
-			id : 'timojudge-list',
 			selModel : selModel,
+			delUrl : '111.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'batchNo',
 						sortable : true,
@@ -259,6 +260,9 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						dataIndex : 'reduce',
 						header : '降级原因'
+					}, {
+						dataIndex : 'reduceDt',
+						header : '降级时间'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality.queryTumoJudgeByPage.biz.ext',
@@ -326,6 +330,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							name : 'title'
 						}, {
 							name : 'reduce'
+						}, {
+							name : 'reduceDt'
 						}]
 			})
 		})
@@ -446,7 +452,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 		})
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 420,
+			height : 440,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -482,6 +488,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textarea',
 						dataIndex : 'produceRemark',
+						ref: '../produceRemark',
 						readOnly : true,
 						fieldLabel : '异常备注',
 						anchor : '95%',
@@ -651,6 +658,18 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							}
 						},
 						emptyText : '--请选择--'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'qualifidLength',
+						ref :'../qualifidLength',
+						readOnly:true,
+						fieldLabel : '合格长度',
+						anchor : '95%',
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : "<span style='color:red;'>综合批次判定</span>",
@@ -850,7 +869,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 			maximizable : true,
 			items : [{
 				xtype : 'inputpanel',
-				pgrid : this.listPanel,
+				// pgrid : this.listPanel,
 				columns : 2,
 				saveUrl : 'com.keensen.ump.produce.quality.quality.updateTumoReduce.biz.ext',
 				fields : [{

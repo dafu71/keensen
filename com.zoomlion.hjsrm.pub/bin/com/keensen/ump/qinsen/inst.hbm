@@ -711,4 +711,206 @@
             <column length="1" name="IS_WITH_STAR"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstProdApplyMain" table="INST_PROD_APPLY_MAIN">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="checkNo" type="string">
+            <column length="20" name="CHECK_NO" not-null="true"/>
+        </property>
+        <property name="orderTypeFlag" type="string">
+            <column length="1" name="ORDER_TYPE_FLAG" not-null="true"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="20" name="ORDER_NO" not-null="true"/>
+        </property>
+        <property name="stackNo" type="string">
+            <column length="20" name="STACK_NO" not-null="true"/>
+        </property>
+        <property name="prodSpecId" type="int">
+            <column length="9" name="PROD_SPEC_ID" not-null="true"/>
+        </property>
+        <property name="orderQuantity" type="int">
+            <column length="5" name="ORDER_QUANTITY" not-null="true"/>
+        </property>
+        <property name="prodClassFlag" type="string">
+            <column length="1" name="PROD_CLASS_FLAG" not-null="true"/>
+        </property>
+        <property name="lid" type="string">
+            <column length="20" name="LID" not-null="true"/>
+        </property>
+        <property name="performance" type="string">
+            <column length="50" name="PERFORMANCE" not-null="true"/>
+        </property>
+        <property name="labelTypeFlag" type="string">
+            <column length="1" name="LABEL_TYPE_FLAG" not-null="true"/>
+        </property>
+        <property name="labelSpecCode" type="string">
+            <column length="20" name="LABEL_SPEC_CODE"/>
+        </property>
+        <property name="tape" type="string">
+            <column length="20" name="TAPE" not-null="true"/>
+        </property>
+        <property name="markTypeFlag" type="string">
+            <column length="1" name="MARK_TYPE_FLAG" not-null="true"/>
+        </property>
+        <property name="markSpecCode" type="string">
+            <column length="20" name="MARK_SPEC_CODE"/>
+        </property>
+        <property name="markSpecialFlag" type="string">
+            <column length="1" name="MARK_SPECIAL_FLAG" not-null="true"/>
+        </property>
+        <property name="applicantId" type="int">
+            <column length="9" name="APPLICANT_ID" not-null="true"/>
+        </property>
+        <property name="applyTm" type="date">
+            <column name="APPLY_TM" not-null="true"/>
+        </property>
+        <property name="createDt" type="date">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="date">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="workshopId" type="int">
+            <column length="9" name="WORKSHOP_ID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstProdApplyDetail" table="INST_PROD_APPLY_DETAIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="applyId" type="int">
+            <column length="9" name="APPLY_ID" not-null="true"/>
+        </property>
+        <property name="batchNo" type="string">
+            <column length="20" name="BATCH_NO" not-null="true"/>
+        </property>
+        <property name="tumoBatchStr" type="string">
+            <column length="300" name="TUMO_BATCH_STR" not-null="true"/>
+        </property>
+        <property name="prodClassFlag" type="string">
+            <column length="1" name="PROD_CLASS_FLAG" not-null="true"/>
+        </property>
+        <property name="airResult" type="big_decimal">
+            <column length="6" name="AIR_RESULT" precision="6" scale="2"/>
+        </property>
+        <property name="isAirQualified" type="string">
+            <column length="1" name="IS_AIR_QUALIFIED"/>
+        </property>
+        <property name="gpdResult" type="int">
+            <column length="6" name="GPD_RESULT"/>
+        </property>
+        <property name="isGpdQualified" type="string">
+            <column length="1" name="IS_GPD_QUALIFIED"/>
+        </property>
+        <property name="saltResult" type="big_decimal">
+            <column length="6" name="SALT_RESULT" precision="6" scale="2"/>
+        </property>
+        <property name="isSaltQualified" type="string">
+            <column length="1" name="IS_SALT_QUALIFIED"/>
+        </property>
+        <property name="factorBResult" type="big_decimal">
+            <column length="6" name="FACTOR_B_RESULT" precision="6" scale="4"/>
+        </property>
+        <property name="isFactorBQualified" type="string">
+            <column length="1" name="IS_FACTOR_B_QUALIFIED"/>
+        </property>
+        <property name="airStdStr" type="string">
+            <column length="20" name="AIR_STD_STR"/>
+        </property>
+        <property name="gpdStdStr" type="string">
+            <column length="20" name="GPD_STD_STR"/>
+        </property>
+        <property name="saltStd" type="big_decimal">
+            <column length="6" name="SALT_STD" precision="6" scale="2"/>
+        </property>
+        <property name="factorBStd" type="big_decimal">
+            <column length="6" name="FACTOR_B_STD" precision="6" scale="4"/>
+        </property>
+        <property name="isWaterQualified" type="string">
+            <column length="1" name="IS_WATER_QUALIFIED"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.TempProdApplyDetail" table="TEMP_PROD_APPLY_DETAIL">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="applyId" type="int">
+                <column length="9" name="APPLY_ID"/>
+            </key-property>
+            <key-property name="batchNo" type="string">
+                <column length="20" name="BATCH_NO"/>
+            </key-property>
+        </composite-id>
+        <property name="batchId" type="int">
+            <column length="9" name="BATCH_ID"/>
+        </property>
+        <property name="juanmoBatchId" type="int">
+            <column length="9" name="JUANMO_BATCH_ID"/>
+        </property>
+        <property name="prodSpecId" type="int">
+            <column length="9" name="PROD_SPEC_ID"/>
+        </property>
+        <property name="tumoBatchStr" type="string">
+            <column length="300" name="TUMO_BATCH_STR"/>
+        </property>
+        <property name="prodClassFlag" type="string">
+            <column length="1" name="PROD_CLASS_FLAG"/>
+        </property>
+        <property name="airResult" type="big_decimal">
+            <column length="6" name="AIR_RESULT" precision="6" scale="2"/>
+        </property>
+        <property name="isAirQualified" type="string">
+            <column length="1" name="IS_AIR_QUALIFIED"/>
+        </property>
+        <property name="gpdResult" type="int">
+            <column length="6" name="GPD_RESULT"/>
+        </property>
+        <property name="isGpdQualified" type="string">
+            <column length="1" name="IS_GPD_QUALIFIED"/>
+        </property>
+        <property name="saltResult" type="big_decimal">
+            <column length="6" name="SALT_RESULT" precision="6" scale="2"/>
+        </property>
+        <property name="isSaltQualified" type="string">
+            <column length="1" name="IS_SALT_QUALIFIED"/>
+        </property>
+        <property name="factorBResult" type="big_decimal">
+            <column length="6" name="FACTOR_B_RESULT" precision="6" scale="4"/>
+        </property>
+        <property name="isFactorBQualified" type="string">
+            <column length="1" name="IS_FACTOR_B_QUALIFIED"/>
+        </property>
+        <property name="airStdStr" type="string">
+            <column length="20" name="AIR_STD_STR"/>
+        </property>
+        <property name="gpdStdStr" type="string">
+            <column length="20" name="GPD_STD_STR"/>
+        </property>
+        <property name="saltStd" type="big_decimal">
+            <column length="6" name="SALT_STD" precision="6" scale="2"/>
+        </property>
+        <property name="factorBStd" type="big_decimal">
+            <column length="6" name="FACTOR_B_STD" precision="6" scale="4"/>
+        </property>
+        <property name="isWaterQualified" type="string">
+            <column length="1" name="IS_WATER_QUALIFIED"/>
+        </property>
+        <property name="prodSpecArea" type="big_decimal">
+            <column length="8" name="PROD_SPEC_AREA" precision="8" scale="3"/>
+        </property>
+    </class>
 </hibernate-mapping>

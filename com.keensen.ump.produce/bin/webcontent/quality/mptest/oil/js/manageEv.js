@@ -1,5 +1,5 @@
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
-	var _this =this;
+	var _this = this;
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -26,12 +26,12 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 								"pageCond/length" : _this.listPanel.pagingToolbar.pageSize
 							}
 						});
-						
+
 					});
 
 				}
 			}, this);
-			
+
 	this.editWindow2.activeItem.mon(this.editWindow2.activeItem, 'afterload',
 			function(win, data) {
 				var step = data.step;
@@ -46,12 +46,12 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 								"pageCond/length" : _this.listPanel.pagingToolbar.pageSize
 							}
 						});
-						
+
 					});
 
 				}
 			}, this);
-			
+
 	this.editWindow3.activeItem.mon(this.editWindow3.activeItem, 'afterload',
 			function(win, data) {
 				var step = data.step;
@@ -66,7 +66,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 								"pageCond/length" : _this.listPanel.pagingToolbar.pageSize
 							}
 						});
-						
+
 					});
 
 				}
@@ -177,10 +177,11 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.exportExcel = function()
 			});
 	this.requestMask.show();
 	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlLimited.biz.ext",
 		method : "post",
 		jsonData : {
 			'map' : daochu,
+			'map/limited' : '1000',
 			namingsql : 'com.keensen.ump.produce.quality.mptest.queryOilListRecords',
 			templateFilename : 'ks_mp_mptest_oil'
 		},
@@ -189,16 +190,26 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.exportExcel = function()
 			if (ret.success) {
 
 				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
+				if (Ext.isEmpty(fname)) {
+					Ext.Msg.alert("系统提示", ret.msg);
+					return
 				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
+					if (Ext.isIE) {
+						window
+								.open('/default/deliverynote/seek/down4IE.jsp?fname='
+										+ fname);
+					} else {
+						window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
+								+ fname;
+					}
 				}
-
 			}
 
+		},
+		failure : function(resp, options) {
+			var ret = Ext.decode(resp.responseText);
+			alert(ret);
+			// Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
 		},
 		callback : function() {
 			_this.requestMask.hide()

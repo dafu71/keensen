@@ -2043,5 +2043,14 @@
         <property name="reduce" type="string">
             <column length="20" name="REDUCE"/>
         </property>
+        <property name="reduceDt" type="timestamp">
+            <column name="REDUCE_DT"/>
+        </property>
+        <property name="reduceUserId" type="string">
+            <column length="20" name="REDUCE_USER_ID"/>
+        </property>
+        <property name="reduceUserName" type="string">
+            <column length="50" name="REDUCE_USER_NAME"/>
+        </property>
     </class>
 </hibernate-mapping>

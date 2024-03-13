@@ -84,7 +84,9 @@
 	  FROM qinsen.INST_QIJIAN A, qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
 	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
 	   AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
-	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+	   
+   <isNotNull prepend="" property="batchNoList">AND A.BATCH_NO in($batchNoList$)</isNotNull>
+        <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
         <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
         <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = UPPER(#batchNo#)</isNotNull>

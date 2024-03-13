@@ -14,9 +14,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link9</targetConnections>
-    <targetConnections>link24</targetConnections>
     <targetConnections>link10</targetConnections>
+    <targetConnections>link24</targetConnections>
+    <targetConnections>link9</targetConnections>
     <location x="510" y="147"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -188,8 +188,8 @@
       <sourceNode>transactionrollback0</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link7</targetConnections>
     <targetConnections>link20</targetConnections>
+    <targetConnections>link7</targetConnections>
     <location x="394" y="156"/>
     <size height="28" width="28"/>
     <nodeLabel>transactionrollback0label</nodeLabel>
@@ -309,6 +309,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">m:userObject/attributes/operatorid</process:from>
       <process:to type="query">entity/creatorId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">entity/createDt</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
@@ -460,8 +464,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link18</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link18</targetConnections>
     <location x="966" y="412"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend0label</nodeLabel>

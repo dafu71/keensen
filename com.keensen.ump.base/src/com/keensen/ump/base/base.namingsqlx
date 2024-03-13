@@ -105,6 +105,10 @@
 	       t.dense_net "denseNet", t.area "area", t.page_width "pageWidth",t.NUM_PER_WAD "numPerWad"
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030027)
+	<isNotNull prepend="and" property="materSpecName"> 
+		       upper(t.MATER_SPEC_NAME) = upper(#materSpecName#) 
+	</isNotNull>
+	order by t.mater_spec_code
      </select>
      
      <!-- 工序查询 -->

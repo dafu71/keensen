@@ -1,8 +1,17 @@
 com.keensen.ump.produce.report.quality.invalidatedMgr.prototype.initEvent = function() {
+	// 获取当前日期
+	var currentDate = new Date();
+	// 获取当前月份
+	var currentMonth = currentDate.getMonth();
+	var firstDay = new Date(currentDate.getFullYear(), currentMonth, 1);
+
+	this.queryPanel.form.findField(['condition/produceDtStart']).setValue(firstDay);
+	this.queryPanel.form.findField(['condition/produceDtEnd']).setValue(currentDate);
+	
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
-		var start = vals['condition/productDtStart'];
-		var end = vals['condition/productDtEnd'];
+		var start = vals['condition/produceDtStart'];
+		var end = vals['condition/produceDtEnd'];
 		if(dayDiff(start,end)>61){
 			Ext.Msg.alert("系统提示", "查询间隔日期不能大于2个月！");
 			return false;

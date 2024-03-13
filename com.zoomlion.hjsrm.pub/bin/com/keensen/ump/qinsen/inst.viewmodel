@@ -902,4 +902,262 @@
             <edit name="isWithStar" type="text"/>
         </field>
     </viewModel>
+    <viewModel author="dafu" displayName="InstProdApplyMain" entityName="com.keensen.ump.qinsen.inst.InstProdApplyMain" id="InstProdApplyMain">
+        <field dataType="Int" dict="false" id="recordId" label="主键ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="checkNo" label="请检单号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orderTypeFlag" label="订单类型：1=司标；2=非司标">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orderNo" label="订单号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="stackNo" label="栈板号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="prodSpecId" label="元件型号ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="orderQuantity" label="订单数量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="prodClassFlag" label="元件类型：D=干膜；W=湿膜；O=干湿均可">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lid" label="端盖">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="performance" label="性能要求">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="labelTypeFlag" label="覆标签情况：1=公司标准；2=中性；3=贴牌；0=不贴标">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="labelSpecCode" label="标签显示型号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="tape" label="胶带">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="markTypeFlag" label="唛头情况：1=公司标准；2=中性；3=贴牌；0=不贴标">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="markSpecCode" label="唛头显示型号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="markSpecialFlag" label="加贴特殊唛头：Y=是；N=否">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="applicantId" label="请检人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="applyTm" label="请检时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="workshopId" label="车间ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="InstProdApplyDetail" entityName="com.keensen.ump.qinsen.inst.InstProdApplyDetail" id="InstProdApplyDetail">
+        <field dataType="Int" dict="false" id="recordId" label="主键ID，取自SEQ_INST_PROD_CHECK_DETAIL">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="applyId" label="请检单ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="batchNo" label="元件序列号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="tumoBatchStr" label="膜片批号，多个以,分隔">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="prodClassFlag" label="元件类型：D=干膜；W=湿膜">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="airResult" label="气检值">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isAirQualified" label="气检是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="gpdResult" label="产水量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isGpdQualified" label="产水量是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="saltResult" label="脱盐率">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isSaltQualified" label="脱盐率是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="factorBResult" label="透盐系数">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isFactorBQualified" label="透盐系数是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="airStdStr" label="气检标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="gpdStdStr" label="产水量标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="saltStd" label="脱盐率标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="factorBStd" label="系数B标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isWaterQualified" label="水测是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="TempProdApplyDetail" entityName="com.keensen.ump.qinsen.inst.TempProdApplyDetail" id="TempProdApplyDetail">
+        <field dataType="Int" dict="false" id="applyId" label="请检单ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="batchId" label="气检批号ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="batchNo" label="元件序列号，即气检批号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="juanmoBatchId" label="卷膜批号ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="prodSpecId" label="气检元件型号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="tumoBatchStr" label="膜片批号，多个以,分隔">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="prodClassFlag" label="元件类型：D=干膜；W=湿膜">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="airResult" label="气检值">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isAirQualified" label="气检是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="gpdResult" label="产水量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isGpdQualified" label="产水量是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="saltResult" label="脱盐率">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isSaltQualified" label="脱盐率是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="factorBResult" label="透盐系数">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isFactorBQualified" label="透盐系数是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="airStdStr" label="气检标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="gpdStdStr" label="产水量标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="saltStd" label="脱盐率标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="factorBStd" label="系数B标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isWaterQualified" label="水测是否合格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="prodSpecArea" label="元件型号面积">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
 </viewModelSet>
