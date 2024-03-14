@@ -299,7 +299,7 @@
 </select> 
   <!-- 根据临时表数据创建关联质检数据记录 -->
 <insert id="createRelaDataFromTemp" parameterClass="java.util.HashMap">
-	INSERT INTO INST_PROD_APPLY_RELA
+	INSERT INTO qinsen.INST_PROD_APPLY_RELA
 	  (RECORD_ID, APPLY_ID, TEST_TYPE_ID, TUMO_BATCH_NO, 
 	   AIR_RESULT, IS_AIR_QUALIFIED, AIR_STD_STR, 
 	   GPD_RESULT, IS_GPD_QUALIFIED, GPD_STD_STR, 

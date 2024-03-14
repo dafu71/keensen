@@ -285,8 +285,8 @@ com.keensen.ump.qinsen.quality.applyMgr = function() {
 				height : '5',
 				colspan : 2
 			}, {
-				ref : '../performance',
-				name : 'entity/performance',
+				ref : '../markSpecName',
+				name : 'entity/markSpecName',
 				anchor : '85%',
 				xtype : 'textfield',
 				fieldLabel : '标签显示元件型号',

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.quality.quality2">
+    <select id="queryMpWetStand" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID              AS "id",
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       t1.MATER_CLASS_ID as "materSpecId",
+		t2.mater_class_code AS "materClassCode",
+		t1.WATER_CONTENT as "waterContent",
+		t1.WATER_FLUX as "waterFlux"  
+  FROM  KS_QUALITY_MP_WET_STAND t1
+ LEFT JOIN QINSEN.PARA_MATER_CLASS t2
+ ON t1.mater_class_id = t2.mater_class_id
+	where 1=1
+	
+	<isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materClassId">T1.MATER_CLASS_ID = #materClassId#</isNotNull>
+        <isNotNull prepend="and" property="materClassCode">t2.mater_class_code like '%' || #materClassCode# || '%'</isNotNull>
+    </select>
+    <select id="queryMaterClass" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   
+	 select t.mater_class_id "materClassId",
+	 t.mater_class_code "materClassCode",
+	 t.mater_class_name "materClassName"
+ from QINSEN.PARA_MATER_CLASS t
+ WHERE 1=1
+ <isNotNull prepend="and" property="materClassId">t.mater_class_id  in($materClassId$)</isNotNull>
+    </select>
+    <select id="queryMpWetRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID              AS "id",
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       t1.batch_no as "batchNo",
+		t1.WATER_CONTENT as "waterContent",
+		t1.WATER_FLUX as "waterFlux"  
+  FROM  KS_QUALITY_MP_WET_RECORD t1
+	where 1=1
+	
+	<isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no like '%' || #batchNo# || '%'</isNotNull>
+	order by t1.id desc
+	 </select>
+    <select id="queryZmyViscosityStand" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID              AS "id",
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       t1.psf as "psf",
+		t1.stand as "stand"  
+  FROM  KS_QUALITY_ZMY_VISCOSITY_STAND t1
+	where 1=1
+	
+	<isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="psf">t1.psf like '%' || #psf# || '%'</isNotNull>
+	order by t1.id desc
+	 </select>
+    <select id="queryWaterStdcond" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID               AS "id",
+      to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID   AS "updateUserId",
+       T1.UPDATE_NAME      AS "updateName",
+       T1.RESERVE1         AS "reserve1",
+       T1.RESERVE2         AS "reserve2",
+       T1.RESERVE3         AS "reserve3",
+       T1.RESERVE4         AS "reserve4",
+       T1.RESERVE5         AS "reserve5",
+       T1.ORG_ID           AS "orgId",
+       T1.STATUS           AS "status",
+       T1.MATER_CLASS_ID   AS "materClassId",
+       T1.CONDITION        AS "condition",
+       T1.SOLID            AS "solid",
+       T1.PRESS            AS "press",
+       T1.RECOVERY         AS "recovery",
+       T1.TEMPERATURE      AS "temperature",
+       T1.PH               AS "ph",
+       T2.MATER_CLASS_CODE AS "materClassCode"
+  FROM KS_QUALITY_WATER_STD_COND T1
+  LEFT JOIN QINSEN.PARA_MATER_CLASS T2
+    ON T1.MATER_CLASS_ID = T2.MATER_CLASS_ID
+
+	where 1=1
+	
+	<isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materClassId">T1.MATER_CLASS_ID = #materClassId#</isNotNull>
+        <isNotNull prepend="and" property="materClassCode">t2.mater_class_code like '%' || #materClassCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="condition">T1.CONDITION like '%' || #condition# || '%'</isNotNull>
+	
+	order by t1.id desc
+	 </select>
+    <!-- 查询水测标准列表 -->
+    <select id="queryWaterStd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT T1.RECORD_ID            AS "recordId",
+       T1.MP_SPEC_ID           AS "mpSpecId",
+       T1.PROD_SPEC_ID         AS "prodSpecId",
+       T1.A_GPD_LOW_LIMIT      AS "aGpdLowLimit",
+       T1.A_GPD_UP_LIMIT       AS "aGpdUpLimit",
+       T1.A_GPD_CENTER         AS "aGpdCenter",
+       T1.A_SALT_LOW_LIMIT     AS "aSaltLowLimit",
+       T1.A_SALT_UP_LIMIT      AS "aSaltUpLimit",
+       T1.A_FACTOR_B_LOW_LIMIT AS "aFactorBLowLimit",
+       T1.A_FACTOR_B_UP_LIMIT  AS "aFactorBUpLimit",
+       T1.B_SPEC_ID            AS "bSpecId",
+       T1.B_GPD_LOW_LIMIT      AS "bGpdLowLimit",
+       T1.B_GPD_UP_LIMIT       AS "bGpdUpLimit",
+       T1.B_GPD_CENTER         AS "bGpdCenter",
+       T1.B_SALT_LOW_LIMIT     AS "bSaltLowLimit",
+       T1.B_SALT_UP_LIMIT      AS "bSaltUpLimit",
+       T1.B_FACTOR_B_LOW_LIMIT AS "bFactorBLowLimit",
+       T1.B_FACTOR_B_UP_LIMIT  AS "bFactorBUpLimit",
+       T1.CREATE_DT            AS "createDt",
+       T1.CHANGE_DT            AS "changeDt",
+       T1.CREATOR_ID           AS "creatorId",
+       T1.CHANGER_ID           AS "changerId",
+       T1.REMARK               AS "remark",
+       T1.MP_SPEC_CODE         AS "mpSpecCode",
+       T1.PROD_SPEC_CODE       AS "prodSpecCode",
+       T1.PROD_SPEC_NAME       AS "prodSpecName",
+       T1.AREA                 AS "area",
+       T1.DENSE_NET            AS "denseNet",
+       T1.B_SPEC_CODE          AS "bSpecCode",
+       T1.B_SPEC_NAME          AS "bSpecName",
+       T1.MAC_NAME             AS "macName"
+  FROM (SELECT A.RECORD_ID,
+               A.MP_SPEC_ID,
+               A.PROD_SPEC_ID,
+               A.A_GPD_LOW_LIMIT,
+               A.MAC_NAME,
+               A.A_GPD_UP_LIMIT,
+               A.A_GPD_CENTER,
+               A.A_SALT_LOW_LIMIT,
+               A.A_SALT_UP_LIMIT,
+               A.A_FACTOR_B_LOW_LIMIT,
+               A.A_FACTOR_B_UP_LIMIT,
+               A.B_SPEC_ID,
+               A.B_GPD_LOW_LIMIT,
+               A.B_GPD_UP_LIMIT,
+               A.B_GPD_CENTER,
+               A.B_SALT_LOW_LIMIT,
+               A.B_SALT_UP_LIMIT,
+               A.B_FACTOR_B_LOW_LIMIT,
+               A.B_FACTOR_B_UP_LIMIT,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               S1.MATER_SPEC_CODE     MP_SPEC_CODE,
+               S2.MATER_SPEC_CODE     PROD_SPEC_CODE,
+               S2.MATER_SPEC_NAME     PROD_SPEC_NAME,
+               S2.AREA,
+               S2.DENSE_NET,
+               S3.MATER_SPEC_CODE     B_SPEC_CODE,
+               S3.MATER_SPEC_NAME     B_SPEC_NAME
+          FROM QINSEN.INST_PROD_WATER_STD A,
+               QINSEN.PARA_MATER_SPEC     S1,
+               QINSEN.PARA_MATER_SPEC     S2,
+               QINSEN.PARA_MATER_SPEC     S3
+         WHERE A.MP_SPEC_ID = S1.MATER_SPEC_ID
+           AND A.PROD_SPEC_ID = S2.MATER_SPEC_ID
+           AND A.B_SPEC_ID = S3.MATER_SPEC_ID(+)
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND A.MP_SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="bSpecId">AND A.B_SPEC_ID = #bSpecId#</isNotNull>
+        <isNotNull prepend="" property="mpSpecCode">AND S1.MATER_SPEC_CODE = #mpSpecCode#</isNotNull>
+        <isNotNull prepend="" property="prodSpecName">AND S2.MATER_SPEC_NAME = #prodSpecName#</isNotNull>
+        <isNotNull prepend="" property="bSpecName">AND S3.MATER_SPEC_NAME = #bSpecName#</isNotNull>
+	 ORDER BY S2.DISP_ORDER)t1
+		
+</select>
+    <insert id="insertWaterStd" parameterClass="java.util.HashMap">INSERT INTO qinsen.INST_PROD_WATER_STD
+	  (RECORD_ID, MP_SPEC_ID, PROD_SPEC_ID,mac_name, 
+	   A_GPD_LOW_LIMIT, A_GPD_UP_LIMIT, A_GPD_CENTER, 
+	   A_SALT_LOW_LIMIT, A_SALT_UP_LIMIT, A_FACTOR_B_LOW_LIMIT, A_FACTOR_B_UP_LIMIT, 
+	   B_SPEC_ID, B_GPD_LOW_LIMIT, B_GPD_UP_LIMIT, B_GPD_CENTER, 
+	   B_SALT_LOW_LIMIT, B_SALT_UP_LIMIT, B_FACTOR_B_LOW_LIMIT, B_FACTOR_B_UP_LIMIT, 
+	   CREATE_DT, CHANGE_DT, CREATOR_ID, CHANGER_ID, REMARK)
+	VALUES
+	  (#recordId#, #mpSpecId#, #prodSpecId#, #macName#,
+	   #aGpdLowLimit#, #aGpdUpLimit#, #aGpdCenter#, 
+	   #aSaltLowLimit#, #aSaltUpLimit#, #aFactorBLowLimit#, #aFactorBUpLimit#, 
+	   #bSpecId#, #bGpdLowLimit#, #bGpdUpLimit#, #bGpdCenter#, 
+	   #bSaltLowLimit#, #bSaltUpLimit#, #bFactorBLowLimit#, #bFactorBUpLimit#,
+	   SYSDATE, SYSDATE, #operatorId#, #operatorId#, #remark# )</insert>
+    <update id="updateWaterStdById" parameterClass="java.util.HashMap">
+	UPDATE qinsen.INST_PROD_WATER_STD 
+	   SET CHANGE_DT = SYSDATE, 
+	   
+	  <isNotNull prepend="" property="macName">mac_Name = #macName#,</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">MP_SPEC_ID = #mpSpecId#,</isNotNull>
+        <isNotNull prepend="" property="aGpdLowLimit">A_GPD_LOW_LIMIT = #aGpdLowLimit#,</isNotNull>
+        <isNotNull prepend="" property="aGpdUpLimit">A_GPD_UP_LIMIT = #aGpdUpLimit#,</isNotNull>
+        <isNotNull prepend="" property="aGpdCenter">A_GPD_CENTER = #aGpdCenter#,</isNotNull>
+        <isNotNull prepend="" property="aSaltLowLimit">A_SALT_LOW_LIMIT = #aSaltLowLimit#,</isNotNull>
+        <isNotNull prepend="" property="aSaltUpLimit">A_SALT_UP_LIMIT = #aSaltUpLimit#,</isNotNull>
+        <isNotNull prepend="" property="aFactorBLowLimit">A_FACTOR_B_LOW_LIMIT = #aFactorBLowLimit#,</isNotNull>
+        <isNotNull prepend="" property="aFactorBUpLimit">A_FACTOR_B_UP_LIMIT = #aFactorBUpLimit#,</isNotNull>
+        <isNotNull prepend="" property="bSpecId">B_SPEC_ID = #bSpecId#,</isNotNull>
+        <isNotNull prepend="" property="bGpdLowLimit">B_GPD_LOW_LIMIT = #bGpdLowLimit#,</isNotNull>
+        <isNotNull prepend="" property="bGpdUpLimit">B_GPD_UP_LIMIT = #bGpdUpLimit#,</isNotNull>
+        <isNotNull prepend="" property="bGpdCenter">B_GPD_CENTER = #bGpdCenter#,</isNotNull>
+        <isNotNull prepend="" property="bSaltLowLimit">B_SALT_LOW_LIMIT = #bSaltLowLimit#,</isNotNull>
+        <isNotNull prepend="" property="bSaltUpLimit">B_SALT_UP_LIMIT = #bSaltUpLimit#,</isNotNull>
+        <isNotNull prepend="" property="bFactorBLowLimit">B_FACTOR_B_LOW_LIMIT = #bFactorBLowLimit#,</isNotNull>
+        <isNotNull prepend="" property="bFactorBUpLimit">B_FACTOR_B_UP_LIMIT = #bFactorBUpLimit#,</isNotNull>
+        <isNotNull prepend="" property="remark">REMARK = #remark#,</isNotNull>
+	       CHANGER_ID = #operatorId#
+	 WHERE RECORD_ID = #recordId#
+</update>
+    <delete id="deleteWaterStdById" parameterClass="java.util.HashMap">DELETE FROM qinsen.INST_PROD_WATER_STD WHERE RECORD_ID = #recordId#</delete>
+    <!-- 查询是否有唯一键冲突记录 -->
+    <select id="queryDuplicateWaterStd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT *
+	  FROM qinsen.INST_PROD_WATER_STD A
+	 WHERE A.PROD_SPEC_ID = #prodSpecId#
+	 <isNotNull prepend="" property="macName">AND A.mac_name = #macName#</isNotNull>
+        <isNotNull prepend="" property="recordId">AND A.RECORD_ID &lt;&gt; #recordId#</isNotNull>
+    </select>
+</sqlMap>
