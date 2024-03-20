@@ -13,12 +13,12 @@ com.keensen.ump.produce.report.quality.FivewhyMgr.prototype.initEvent = function
 	}, this);
 
 	this.viewPanel.mon(this.viewPanel, 'afterload', function() {
-				var templateValue = Ext.getCmp('fivewhyPoorUrl').getValue();
+				var templateValue = Ext.getCmp(fivewhyPoorUrl).getValue();
 	(function	() {
 					if (Ext.isEmpty(templateValue)) {
-						Ext.getCmp('fivewhyPicture').hide();
+						Ext.getCmp(fivewhyPicture).hide();
 					} else {
-						Ext.getCmp('fivewhyPicture').show();
+						Ext.getCmp(fivewhyPicture).show();
 					}
 				}).defer(200);
 
@@ -30,78 +30,77 @@ com.keensen.ump.produce.report.quality.FivewhyMgr.prototype.initEvent = function
 				this.editWindow.loadData(cell);
 			}, this);
 
-	Ext.getCmp('fivewhyInput').mon(Ext.getCmp('fivewhyInput'), 'beforesave',
+	Ext.getCmp(fivewhyInput).mon(Ext.getCmp(fivewhyInput), 'beforesave',
 			function() {
 				var itemArr = [];
-				var happenPlace = Ext.getCmp('fivewhyInput').form
+				var happenPlace = Ext.getCmp(fivewhyInput).form
 						.findField('happenPlace');
 				for (var i = 0; i < happenPlace.items.length; i++) {
 					if (happenPlace.items.itemAt(i).checked) {
 						itemArr.push(i + 1);
 					}
 				}
-				Ext.getCmp('fivewhyInput').form.findField('entity/happenPlace')
+				Ext.getCmp(fivewhyInput).form.findField('entity/happenPlace')
 						.setValue(itemArr.join(','));
 
 				var itemArr2 = [];
-				var productClassify = Ext.getCmp('fivewhyInput').form
+				var productClassify = Ext.getCmp(fivewhyInput).form
 						.findField('productClassify');
 				for (var i = 0; i < productClassify.items.length; i++) {
 					if (productClassify.items.itemAt(i).checked) {
 						itemArr2.push(i + 1);
 					}
 				}
-				Ext.getCmp('fivewhyInput').form
+				Ext.getCmp(fivewhyInput).form
 						.findField('entity/productClassify').setValue(itemArr2
 								.join(','));
 
 				var itemArr3 = [];
-				var poorClassify = Ext.getCmp('fivewhyInput').form
+				var poorClassify = Ext.getCmp(fivewhyInput).form
 						.findField('poorClassify');
 				for (var i = 0; i < poorClassify.items.length; i++) {
 					if (poorClassify.items.itemAt(i).checked) {
 						itemArr3.push(i + 1);
 					}
 				}
-				Ext.getCmp('fivewhyInput').form
-						.findField('entity/poorClassify').setValue(itemArr3
-								.join(','));
+				Ext.getCmp(fivewhyInput).form.findField('entity/poorClassify')
+						.setValue(itemArr3.join(','));
 			}, this);
 
-	Ext.getCmp('fivewhyEdit').mon(Ext.getCmp('fivewhyEdit'), 'beforesave',
+	Ext.getCmp(fivewhyEdit).mon(Ext.getCmp(fivewhyEdit), 'beforesave',
 			function() {
 				var itemArr = [];
-				var happenPlace = Ext.getCmp('fivewhyEdit').form
+				var happenPlace = Ext.getCmp(fivewhyEdit).form
 						.findField('happenPlace');
 				for (var i = 0; i < happenPlace.items.length; i++) {
 					if (happenPlace.items.itemAt(i).checked) {
 						itemArr.push(i + 1);
 					}
 				}
-				Ext.getCmp('fivewhyEdit').form.findField('entity/happenPlace')
+				Ext.getCmp(fivewhyEdit).form.findField('entity/happenPlace')
 						.setValue(itemArr.join(','));
 
 				var itemArr2 = [];
-				var productClassify = Ext.getCmp('fivewhyEdit').form
+				var productClassify = Ext.getCmp(fivewhyEdit).form
 						.findField('productClassify');
 				for (var i = 0; i < productClassify.items.length; i++) {
 					if (productClassify.items.itemAt(i).checked) {
 						itemArr2.push(i + 1);
 					}
 				}
-				Ext.getCmp('fivewhyEdit').form
+				Ext.getCmp(fivewhyEdit).form
 						.findField('entity/productClassify').setValue(itemArr2
 								.join(','));
 
 				var itemArr3 = [];
-				var poorClassify = Ext.getCmp('fivewhyEdit').form
+				var poorClassify = Ext.getCmp(fivewhyEdit).form
 						.findField('poorClassify');
 				for (var i = 0; i < poorClassify.items.length; i++) {
 					if (poorClassify.items.itemAt(i).checked) {
 						itemArr3.push(i + 1);
 					}
 				}
-				Ext.getCmp('fivewhyEdit').form.findField('entity/poorClassify')
+				Ext.getCmp(fivewhyEdit).form.findField('entity/poorClassify')
 						.setValue(itemArr3.join(','));
 			}, this);
 
@@ -140,9 +139,9 @@ com.keensen.ump.produce.report.quality.FivewhyMgr.prototype.destroy = function()
 	this.inputWindow.destroy();
 	this.editWindow.destroy();
 	this.followWindow.destroy();
-	Ext.getCmp('fivewhyInput').destroy();
-	Ext.getCmp('fivewhyEdit').destroy();
-	Ext.getCmp('fivewhyPicture').destroy();
+	Ext.getCmp(fivewhyInput).destroy();
+	Ext.getCmp(fivewhyEdit).destroy();
+	Ext.getCmp(fivewhyPicture).destroy();
 }
 
 com.keensen.ump.produce.report.quality.FivewhyMgr.prototype.onUploadWindowShow = function(
@@ -167,12 +166,11 @@ com.keensen.ump.produce.report.quality.FivewhyMgr.prototype.doUpload = function(
 	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
 			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
 			'raw', 'wmf', 'webp', 'avif', 'apng'];
-	//var extname = this.sfileName[1].toLowerCase();
-	//alert(extname)
+	// var extname = this.sfileName[1].toLowerCase();
+	// alert(extname)
 	var extname = this.filePath.substr(this.filePath.lastIndexOf('.') + 1);
-	//alert(extname)
-	if (extname == null
-			|| array.indexOf(extname) == -1) {
+	// alert(extname)
+	if (extname == null || array.indexOf(extname) == -1) {
 		Ext.MessageBox.show({
 					title : '操作提示',
 					buttons : Ext.MessageBox.OK,
@@ -322,29 +320,29 @@ com.keensen.ump.produce.report.quality.FivewhyMgr.prototype.onReport = function(
 		var C = A.getSelectionModel().getSelections();
 		var r = C[0];
 		var id = r.data.id;
-		window
-				.open('com.keensen.ump.produce.report.fivewhyreport.flow?entity/id='
-						+ id)
+		window.open(
+				'com.keensen.ump.produce.report.fivewhyreport.flow?entity/id='
+						+ id, "top")
 
 	}
 
 };
 
 function showPicture() {
-	var templateValue = Ext.getCmp('fivewhyPoorUrl').getValue();
+	var templateValue = Ext.getCmp(fivewhyPoorUrl).getValue();
 	if (Ext.isEmpty(templateValue))
 		return;
 	window.open('/default/' + templateValue);
 }
 
 function deletePicture() {
-	Ext.getCmp('fivewhyEdit').form.findField('entity/reserve5').setValue('');
-	Ext.getCmp('fivewhyEdit').form.findField('entity/poorUrl').setValue('');
+	Ext.getCmp(fivewhyEdit).form.findField('entity/reserve5').setValue('');
+	Ext.getCmp(fivewhyEdit).form.findField('entity/poorUrl').setValue('');
 
 }
 
 function deletePicture2() {
-	Ext.getCmp('fivewhyInput').form.findField('entity/reserve5').setValue('');
-	Ext.getCmp('fivewhyInput').form.findField('entity/poorUrl').setValue('');
+	Ext.getCmp(fivewhyInput).form.findField('entity/reserve5').setValue('');
+	Ext.getCmp(fivewhyInput).form.findField('entity/poorUrl').setValue('');
 
 }

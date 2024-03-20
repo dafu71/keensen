@@ -8,6 +8,26 @@ com.keensen.ump.produce.quality.concessionListMgr.prototype.initEvent = function
                     }});
 	},this);
 	
+	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
+				var C = gird.getSelectionModel().getSelections();
+				var r = C[0];
+				var processState = r.data.processState;
+				var createUserId = r.data.createUserId;
+				var cnt = r.data.cnt;
+				if (processState == '1') {
+					Ext.Msg.alert('系统提示', '完成状态的不能删除');
+					return false;
+				}
+				if (uid != createUserId) {
+					Ext.Msg.alert('系统提示', '不是自己发起的工单的不能删除');
+					return false;
+				}
+				if (cnt > 1) {
+					Ext.Msg.alert('系统提示', '工单已经审批，不能删除');
+					return false;
+				}
+			})
+	
 	this.viewPanel.mon(this.viewPanel, 'afterload', function() {
 				this.viewPanel.picturePanel.update('');
 				var recordIds = this.viewPanel.form.findField('reserve1')
@@ -39,6 +59,10 @@ com.keensen.ump.produce.quality.concessionListMgr.prototype.initEvent = function
 			}, this);
 	
 }
+
+com.keensen.ump.produce.quality.concessionListMgr.prototype.onDel = function() {
+	this.listPanel.onDel();
+};
 
 com.keensen.ump.produce.quality.concessionListMgr.prototype.onView = function() {
 

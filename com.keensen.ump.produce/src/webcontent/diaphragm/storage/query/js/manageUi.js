@@ -67,7 +67,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 												 * hiddenName :
 												 * 'condition/storageId', anchor :
 												 * '75%', fieldLabel : '仓库' }
-												 */, {
+												 */,	{
 								xtype : 'storageposcombobox',
 								hiddenName : 'condition/position',
 								typeAhead : true,
@@ -116,13 +116,20 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								xtype : 'displayfield',
 								height : '5',
 								colspan : 4
-							},	{
+							}, {
 								xtype : 'textarea',
 								colspan : 2,
 								name : 'condition/batchNoStr2',
 								emptyText : '多个批次请用逗号分隔，或一行一个批次',
 								anchor : '75%',
 								fieldLabel : '批号'
+							}, {
+								fieldLabel : '不展示库存为零',
+								xtype : 'checkbox',
+								checked : true,
+								name : 'condition/notZero',
+								inputValue : 'Y',
+								anchor : '75%'
 							}, {
 								xtype : 'hidden',
 								name : 'condition/storageIds'
@@ -131,18 +138,22 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								name : 'condition/batchNoStr'
 							}]
 				});
-		/*
-		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
-		 * 'icon-application_excel', handler : this.exportExcel });
-		 */
+
+		this.queryPanel.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel
+				});
+
 	}
 
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : false
-					//header : ''
-				});
+			singleSelect : false
+				// header : ''
+			});
 		this.listPanel = this.listPanel || new Ext.fn.EditListPanel({
 			title : '【库存列表】',
 			viewConfig : {
@@ -155,7 +166,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						text : '调拨',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						hidden : modifyFlag !=1,
+						hidden : modifyFlag != 1,
 						handler : this.onEdit
 					}],
 			selModel : selModel,
@@ -171,7 +182,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 									allowBlank : false,
 									id : 'positionComb',
 									scope : this,
-									readOnly: modifyFlag !=1,
+									readOnly : modifyFlag != 1,
 									hiddenName : 'code',
 									typeAhead : true,
 									typeAheadDelay : 100,
@@ -187,9 +198,11 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 										},
 										'change' : function(o, newValue,
 												oldValue) {
-											if(newValue==oldValue) return false;
-											var id = _this.rec.data['id'] ;
-											_this.savePosition(id,newValue,oldValue);
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.savePosition(id, newValue,
+													oldValue);
 										}
 									}
 								}))
@@ -305,21 +318,15 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
 				successFn : function(i, r) {
-					/*if (r.ret != '1') {
-						Ext.Msg.show({
-									width : 350,
-									title : "操作提示",
-									msg : r.ret,
-									icon : Ext.Msg.WARNING,
-									buttons : Ext.Msg.OK,
-									fn : function() {
-										Ext.getCmp(listid).store.load();
-									}
-								})
-					} else {*/
-						//Ext.getCmp(listid).store.load();
-						//me.editWindow.hide();
-					//}
+					/*
+					 * if (r.ret != '1') { Ext.Msg.show({ width : 350, title :
+					 * "操作提示", msg : r.ret, icon : Ext.Msg.WARNING, buttons :
+					 * Ext.Msg.OK, fn : function() {
+					 * Ext.getCmp(listid).store.load(); } }) } else {
+					 */
+					// Ext.getCmp(listid).store.load();
+					// me.editWindow.hide();
+					// }
 				},
 				columns : 1,
 				loadUrl : 'com.keensen.ump.produce.diaphragm.storage.query.expandEntity.biz.ext',
@@ -333,27 +340,22 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5'
-						}/*, {
-							xtype : 'storagecombobox',
-							hiddenName : 'allocate/fromStorageId',
-							readOnly : true,
-							name : 'allocate/fromStorageId',
-							dataIndex : 'storageId',
-							fieldLabel : '源仓库'
-						}, {
-							xtype : 'displayfield',
-							height : '5'
-						}*/, {
+						}/*
+							 * , { xtype : 'storagecombobox', hiddenName :
+							 * 'allocate/fromStorageId', readOnly : true, name :
+							 * 'allocate/fromStorageId', dataIndex :
+							 * 'storageId', fieldLabel : '源仓库' }, { xtype :
+							 * 'displayfield', height : '5' }
+							 */, {
 							xtype : 'storagecombobox',
 							hiddenName : 'toStorageId',
 							allowBlank : false,
 							name : 'toStorageId',
 							fieldLabel : '目标仓库'
-						}/*, {
-							xtype : 'hidden',
-							name : 'allocate/stockId',
-							dataIndex : 'id'
-						}*/, {
+						}/*
+							 * , { xtype : 'hidden', name : 'allocate/stockId',
+							 * dataIndex : 'id' }
+							 */, {
 							xtype : 'hidden',
 							name : 'ids'
 						}]

@@ -39,6 +39,10 @@
   var uid = "<%=uid %>";
   var applyflag = "<%=applyflag %>";
   var followflag = "<%=followflag %>";
+  var fivewhyEdit = Ext.id();
+  var fivewhyInput = Ext.id();
+  var fivewhyPicture = Ext.id();
+  var fivewhyPoorUrl = Ext.id();
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.report.quality.FivewhyMgr
 		});

@@ -5,6 +5,12 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 		this.buildExcelUploadWin();
 		this.initUploadWindow();
+
+		this.initWeekArr();
+		this.initPlanWeekWindow();
+		this.initViewPlanWeekWindow();
+		this.initEditPlanWeekWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -21,10 +27,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【营销订单查询】',
+					// title : '【营销订单查询】',
 					fields : [{
 								xtype : 'textfield',
-								name : 'condition/orderNo2',
+								name : 'condition/orderNo',
 								anchor : '75%',
 								fieldLabel : '订单号'
 							}, {
@@ -35,7 +41,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
-								anchor : '100%',
+								anchor : '75%',
 								nameArray : ['condition/orderDateStart',
 										'condition/orderDateEnd'],
 								fieldLabel : "订单日期",
@@ -65,13 +71,23 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【营销订单列表】',
+			// title : '【营销订单列表】',
 			viewConfig : {
 				forceFit : false
 			},
 			hsPage : true,
-			id : listid,
-			tbar : ['->', {
+			id : mylistid,
+			tbar : [{
+						text : '新增周生产主计划',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onAddPlanWeek
+					}, '-', {
+						text : '查看周生产主计划',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onViewPlanWeek
+					}, '->', {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
@@ -80,6 +96,15 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.neworder.deleteEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
+						dataIndex : 'orderNo',
+						header : '订单编号'
+					}, {
+						dataIndex : 'orderAmount',
+						header : '订单数量'
+					}, {
+						dataIndex : 'arrangeAmount',
+						header : '已排产数量'
+					}, {
 						dataIndex : 'scfs',
 						header : '生产方式'
 					}, {
@@ -104,9 +129,6 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						dataIndex : 'ddxj',
 						header : '订单星级'
 					}, {
-						dataIndex : 'orderNo',
-						header : '订单编号'
-					}, {
 						dataIndex : 'orderDate',
 						header : '订单日期'
 					}, {
@@ -124,9 +146,6 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, {
 						dataIndex : 'dryWet',
 						header : '干膜/湿'
-					}, {
-						dataIndex : 'orderAmount',
-						header : '订单数量'
 					}, {
 						dataIndex : 'dfh',
 						header : '待发货（发库存）'
@@ -271,6 +290,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							name : 'jhwcsj'
 						}, {
 							name : 'scwcrq'
+						}, {
+							name : 'cnt'
+						}, {
+							name : 'arrangeAmount'
 						}]
 			})
 		})
@@ -288,18 +311,18 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 			width : 480,
 			height : 120,
 			items : [{
-						xtype : 'columnform',
-						itemId : 'uploadForm',
-						saveUrl : 'com.keensen.ump.produce.component.importYxOrder.flow',
-						columns : 1,
-						fileUpload : true,
-						fields : [{
-									name : 'uploadFile',
-									fieldLabel : '选择文件',
-									allowBlank : false,
-									inputType : 'file'
-								}]
-					}],
+				xtype : 'columnform',
+				itemId : 'uploadForm',
+				saveUrl : 'com.keensen.ump.produce.component.importYxOrder.flow',
+				columns : 1,
+				fileUpload : true,
+				fields : [{
+							name : 'uploadFile',
+							fieldLabel : '选择文件',
+							allowBlank : false,
+							inputType : 'file'
+						}]
+			}],
 			buttons : [{
 						text : '上传',
 						handler : this.doUpload,
@@ -434,4 +457,598 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		})
 	}
 
+	this.initWeekArr = function() {
+		this.weekArr = [];
+		for (var i = 1; i < 53; i++) {
+			this.weekArr.push([i, i])
+		}
+	}
+
+	this.initPlanWeekWindow = function() {
+		var _this = this;
+		this.planWeekWindow = this.planWeekWindow || new Ext.fn.FormWindow({
+			title : '新增周生产主计划',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				successFn : function(i, r) {
+					if (r.err != '0') {
+						Ext.Msg.show({
+									width : 400,
+									title : "操作提示",
+									msg : r.msg,
+									icon : Ext.Msg.WARNING,
+									buttons : Ext.Msg.OK,
+									fn : function() {
+
+									}
+								})
+					} else {
+						// _this.listPanel.store.load();
+						if (_this.viewPlanWeekWindow.isVisible()) {
+							var B = _this.listPanel.getSelectionModel()
+									.getSelections();
+							var A = B[0];
+
+							_this.listPanel2.store.load({
+										params : {
+											'condition/relationId' : A.data.id
+										}
+									});
+						}
+						_this.planWeekWindow.items.items[0].form.reset();
+						_this.planWeekWindow.hide();
+					}
+				},
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.component.neworder.expandYxOrder.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanWeek.biz.ext',
+				fields : [{
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;">订单信息</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '编码',
+							ref : '../../bm',
+							dataIndex : 'bm',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '订单号',
+							ref : '../../orderNo',
+							dataIndex : 'orderNo',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '规格型号',
+							ref : '../../materSpecName',
+							dataIndex : 'materSpecName',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '干/湿膜',
+							ref : '../../dryWet',
+							dataIndex : 'dryWet',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '数量',
+							ref : '../../orderAmount',
+							dataIndex : 'orderAmount',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '需生产数量',
+							ref : '../../xsc',
+							dataIndex : 'xsc',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '标签',
+							ref : '../../bq',
+							dataIndex : 'bq',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '产品性能',
+							ref : '../../performance',
+							dataIndex : 'performance',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '订单日期',
+							ref : '../../orderDate',
+							dataIndex : 'orderDate',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;">制定计划</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							fieldLabel : '计划年度',
+							ref : '../../planYear',
+							hiddenName : 'entity/planYear',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							anchor : '85%',
+							store : [[2024, 2024], [2025, 2025], [2026, 2026],
+									[2027, 2027]],
+							value : new Date().getFullYear(),
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.planWeekWindow.planYear.reset();
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							fieldLabel : '计划制定周',
+							ref : '../../planWeek',
+							hiddenName : 'entity/planWeek',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							anchor : '85%',
+							store : this.weekArr,
+							value : getCurrentWeekNumber(),
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.planWeekWindow.planWeek.reset();
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							name : 'entity/startDate',
+							fieldLabel : '计划开始时间',
+							allowBlank : false,
+							anchor : '85%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'datefield',
+							name : 'entity/endDate',
+							fieldLabel : '计划结束时间',
+							allowBlank : false,
+							anchor : '85%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							name : 'entity/enterDate',
+							fieldLabel : '入库日期',
+							allowBlank : false,
+							anchor : '85%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/jmAmount',
+							fieldLabel : '卷膜数量',
+							allowBlank : false,
+							anchor : '85%',
+							minValue : 0,
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/waitAmount',
+							fieldLabel : '待排产数量',
+							allowBlank : false,
+							anchor : '85%',
+							minValue : 0,
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							name : 'entity/remark',
+							xtype : 'textarea',
+							fieldLabel : '备注',
+							colspan : 2,
+							anchor : '87%',
+							allowBlank : true
+						}, {
+							name : 'entity/relationId',
+							xtype : 'hidden',
+							dataIndex : 'id'
+						}]
+			}]
+		});
+	}
+
+	this.initViewPlanWeekWindow = function() {
+		var _this = this;
+
+		var selModel2 = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
+			// title : '【周计划】',
+			region : 'center',
+			viewConfig : {
+				forceFit : false
+			},
+			tbar : [{
+						text : '新增',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onAddPlanWeek2
+					}, '-', {
+						text : '修改',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onEditPlanWeek
+					}, '->', {
+						text : '删除',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDelPlanWeek
+					}],
+			hsPage : false,
+			autoScroll : true,
+			selModel : selModel2,
+			delUrl : 'com.keensen.ump.produce.component.neworder.deletePlanWeek.biz.ext',
+			columns : [new Ext.grid.RowNumberer(), selModel2, {
+						dataIndex : 'orderDate',
+						header : '订单日期'
+					}, {
+						dataIndex : 'planYear',
+						header : '计划制定年度'
+					}, {
+						dataIndex : 'planWeek',
+						header : '计划制定周'
+					}, {
+						dataIndex : 'startDate',
+						header : '开始日期'
+					}, {
+						dataIndex : 'endDate',
+						header : '结束日期'
+					}, {
+						dataIndex : 'bm',
+						header : '编码'
+					}, {
+						dataIndex : 'performance',
+						header : '产品性能'
+					}, {
+						dataIndex : 'orderNo',
+						header : '订单号'
+					}, {
+						dataIndex : 'materSpecName',
+						header : '规格型号'
+					}, {
+						dataIndex : 'dryWet',
+						header : '干/湿膜'
+					}, {
+						dataIndex : 'orderAmount',
+						header : '数量'
+					}, {
+						dataIndex : 'xsc',
+						header : '需生产数量'
+					}, {
+						dataIndex : 'bq',
+						header : '标签'
+					}, {
+						dataIndex : 'enterDate',
+						header : '入库日期'
+					}, {
+						dataIndex : 'jmAmount',
+						header : '卷膜数量'
+					}, {
+						dataIndex : 'waitAmount',
+						header : '待排产数量'
+					}, {
+						dataIndex : 'remark',
+						header : '备注'
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.produce.component.neworder.queryPlanWeek.biz.ext',
+				root : 'data',
+				autoLoad : false,
+				totalProperty : '',
+				baseParams : {
+
+			}	,
+				fields : [{
+							name : 'bm'
+						}, {
+							name : 'orderNo'
+						}, {
+							name : 'materSpecName'
+						}, {
+							name : 'dryWet'
+						}, {
+							name : 'orderAmount'
+						}, {
+							name : 'xsc'
+						}, {
+							name : 'bq'
+						}, {
+							name : 'performance'
+						}, {
+							name : 'orderDate'
+						}, {
+							name : 'relationId'
+						}, {
+							name : 'planYear'
+						}, {
+							name : 'planWeek'
+						}, {
+							name : 'enterDate'
+						}, {
+							name : 'amount'
+						}, {
+							name : 'jmAmount'
+						}, {
+							name : 'enterAmount'
+						}, {
+							name : 'waitAmount'
+						}, {
+							name : 'remark'
+						}, {
+							name : 'startDate'
+						}, {
+							name : 'endDate'
+						}, {
+							name : 'id'
+						}]
+			})
+		})
+
+		this.viewPlanWeekWindow = this.viewPlanWeekWindow || new Ext.Window({
+					title : '周计划明细',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel2],
+					buttons : [{
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.viewPlanWeekWindow.hide();
+								}
+							}]
+
+				});
+
+	}
+
+	this.initEditPlanWeekWindow = function() {
+		var _this = this;
+		this.editPlanWeekWindow = this.editPlanWeekWindow
+				|| new Ext.fn.FormWindow({
+					title : '修改周生产主计划',
+					height : 600,
+					width : 800,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel2,
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+
+											}
+										})
+							} else {
+								// _this.listPanel.store.load();
+								if (_this.editPlanWeekWindow.isVisible()) {
+									var B = _this.listPanel.getSelectionModel()
+											.getSelections();
+									var A = B[0];
+
+									_this.listPanel2.store.load({
+												params : {
+													'condition/relationId' : A.data.id
+												}
+											});
+								}
+								_this.editPlanWeekWindow.items.items[0].form
+										.reset();
+								_this.editPlanWeekWindow.hide();
+							}
+						},
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanWeek.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									fieldLabel : '<p style="color:red;">制定计划</p>',
+									labelSeparator : '',// 去掉冒号
+									colspan : 2
+								}, {
+									xtype : 'combobox',
+									fieldLabel : '计划年度',
+									ref : '../../planYear',
+									hiddenName : 'entity/planYear',
+									dataIndex : 'planYear',
+									emptyText : '--请选择--',
+									allowBlank : false,
+									editable : false,
+									anchor : '85%',
+									store : [[2024, 2024], [2025, 2025],
+											[2026, 2026], [2027, 2027]],
+									listeners : {
+										scope : this,
+										'expand' : function(A) {
+											this.editPlanWeekWindow.planYear
+													.reset();
+										}
+									}
+								}, {
+									xtype : 'combobox',
+									fieldLabel : '计划制定周',
+									hiddenName : 'entity/planWeek',
+									ref : '../../planWeek',
+									emptyText : '--请选择--',
+									allowBlank : false,
+									editable : false,
+									anchor : '85%',
+									store : this.weekArr,
+									dataIndex : 'planWeek',
+									listeners : {
+										scope : this,
+										'expand' : function(A) {
+											this.editPlanWeekWindow.planWeek
+													.reset();
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'datefield',
+									name : 'entity/startDate',
+									fieldLabel : '计划开始时间',
+									dataIndex : 'startDate',
+									allowBlank : false,
+									readOnly : true,
+									anchor : '85%',
+									format : "Y-m-d",
+									colspan : 1
+								}, {
+									xtype : 'datefield',
+									name : 'entity/endDate',
+									dataIndex : 'endDate',
+									fieldLabel : '计划结束时间',
+									readOnly : true,
+									allowBlank : false,
+									anchor : '85%',
+									format : "Y-m-d",
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'datefield',
+									name : 'entity/enterDate',
+									dataIndex : 'enterDate',
+									fieldLabel : '入库日期',
+									allowBlank : false,
+									anchor : '85%',
+									format : "Y-m-d",
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/jmAmount',
+									dataIndex : 'jmAmount',
+									fieldLabel : '卷膜数量',
+									allowBlank : false,
+									anchor : '85%',
+									minValue : 0,
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/waitAmount',
+									dataIndex : 'waitAmount',
+									fieldLabel : '待排产数量',
+									allowBlank : false,
+									anchor : '85%',
+									minValue : 0,
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									name : 'entity/remark',
+									dataIndex : 'remark',
+									xtype : 'textarea',
+									fieldLabel : '备注',
+									colspan : 2,
+									anchor : '87%',
+									allowBlank : true
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
+								}, {
+									name : 'entity/relationId',
+									xtype : 'hidden',
+									dataIndex : 'relationId'
+								}]
+					}]
+				});
+	}
 }

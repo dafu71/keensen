@@ -182,7 +182,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onView = function() 
 		var productName = r.data.productName;
 		window
 				.open('com.keensen.ump.produce.quality.deliveryreport.flow?entity/id='
-						+ id);
+						+ id, "top");
 
 	}
 
@@ -199,7 +199,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onView2 = function()
 		var productName = r.data.productName;
 		window
 				.open('com.keensen.ump.produce.quality.deliveryreport.flow?type=e&entity/id='
-						+ id);
+						+ id, "top");
 
 	}
 

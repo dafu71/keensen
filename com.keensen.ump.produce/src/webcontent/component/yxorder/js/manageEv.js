@@ -13,11 +13,97 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
+	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
+				var C = gird.getSelectionModel().getSelections();
+				var r = C[0];
+				var cnt = r.data.cnt;
+
+				if (cnt > 0) {
+					Ext.Msg.alert('系统提示', ' 已经制定计划，不能删除');
+					return false;
+				}
+			})
+
+	this.listPanel2.mon(this.listPanel2, 'beforedel', function(gird, cell) {
+				var C = gird.getSelectionModel().getSelections();
+				var r = C[0];
+				if (C.length > 1) {
+					Ext.Msg.alert('系统提示', '不能批量删除');
+					return false;
+				}
+			})
+
+	// 增加修改事件
+	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+				if (this.opt == 'addplanweek') {
+					this.planWeekWindow.show();
+					this.planWeekWindow.loadData(cell);
+				}
+			}, this);
+
+	// 增加修改事件
+	this.listPanel2.mon(this.listPanel2, 'update', function(gird, cell) {
+				this.editPlanWeekWindow.show();
+				this.editPlanWeekWindow.loadData(cell);
+
+			}, this);
+
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.destroy = function() {
+	this.excelUploadWin.destroy();
+	this.uploadWindow.destroy();
+	this.planWeekWindow.destroy();
+	this.viewPlanWeekWindow.destroy();
+	this.editPlanWeekWindow.destroy();
 }
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
-};
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onEditPlanWeek = function() {
+	this.listPanel2.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onDelPlanWeek = function() {
+	this.listPanel2.onDel();
+}
+
+// 周生产计划
+com.keensen.ump.produce.component.yxorderMgr.prototype.onAddPlanWeek = function() {
+	this.opt = 'addplanweek';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onViewPlanWeek = function() {
+
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+			var A = B[0];
+			this.viewPlanWeekWindow.show();
+			var store = this.listPanel2.store;
+			if (Ext.isEmpty(A.data.id))
+				return;
+			store.load({
+						params : {
+							'condition/relationId' : A.data.id
+						}
+					});
+		}
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onAddPlanWeek2 = function() {
+	this.opt = 'addplanweek';
+	this.listPanel.onEdit();
+}
 
 // 模板文件下载
 com.keensen.ump.produce.component.yxorderMgr.prototype.onDown = function() {

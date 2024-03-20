@@ -37,7 +37,7 @@
     
 </head>
 <body>
-<div align="center" id="pdfContainer">
+<div align="center">
 
 
   <table width="780" border="0" >
@@ -49,6 +49,10 @@
 <tr>
     <td width="50%"> <div align="left" class="style2">管理编号：<b:write property="data/code" /></div> </td>
 	<td width="50%"> <div align="right" class="style2">主导部门：<b:write property="data/dept" /></div> </td>
+  </tr>
+  <tr>
+    <td width="50%"> <div align="left" class="style2">CRM编号：<b:write property="data/crmCode" /></div> </td>
+	<td width="50%"> <div align="right" class="style2">客户：<b:write property="data/client" /></div> </td>
   </tr>
 </table>
 <table width="780" border="0" >
@@ -65,6 +69,14 @@
     <td width="23%" height="38"> <div align="center" class="style1"><b:write property="data/prodSpecName" /></div></td>
     <td width="10%" height="38"> <div align="center" class="style1"><strong>发生日期</strong></div></td>
     <td width="23%" height="38"> <div align="center" class="style1"><b:write property="data/happenDt" formatPattern="yyyy-MM-dd"/></div></td>
+  </tr>
+  <tr style="border: 1px solid black;">
+    <td width="10%" height="38"> <div align="center" class="style1"><strong>不良数量</strong></div></td>
+    <td width="23%" height="38"> <div align="center" class="style1"><d:write property="data/amount" dictTypeId="KS_HAPPEN_PLACE"/></div></td>
+    <td width="10%" height="38"> <div align="center" class="style1"><strong>等级</strong></div></td>
+    <td width="23%" height="38"> <div align="center" class="style1"><b:write property="data/class" /></div></td>
+    <td width="10%" height="38"> &nbsp;</td>
+    <td width="23%" height="38">&nbsp;</td>
   </tr>
   <tr style="border: 1px solid black;">
     <td height="38"> <div align="center" class="style1"><strong>现品区分</strong></div></td>

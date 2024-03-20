@@ -85,7 +85,8 @@
 </div>
 <div class="res-block-inner">
 <h3><img style="width:7%;cursor:pointer;"
-	src="frame/ui/img/yewuditux.png" /> 业务提醒</h3>
+	src="frame/ui/img/yewuditux.png" /> <a
+	style="text-decoration:none;color:#000000" href="javascript:loadBusiness()" title='刷新提醒'>业务提醒</a></h3>
 <ul id="div_business"></ul>
 </div>
 <div class="res-block-inner" style="display:none;">

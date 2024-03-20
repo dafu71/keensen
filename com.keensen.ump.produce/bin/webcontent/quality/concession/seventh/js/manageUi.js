@@ -67,8 +67,7 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 		var _this = this;
 
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false
 				});
 
 		this.listPanel = this.listPanel || new Ext.fn.ListPanel({
@@ -80,6 +79,12 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 			autoScroll : false,
 			height : '200',
 			selModel : selModel,
+			tbar : [{
+						text : '复制选择涂膜批次',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onCopy
+					}],
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
@@ -101,6 +106,9 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 					}, {
 						dataIndex : 'rSaltRejection',
 						header : '复测脱盐率'
+					}, {
+						dataIndex : 'mpd',
+						header : 'C21浓度'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality.queryTumoOrigin.biz.ext',
@@ -124,6 +132,8 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 							name : 'usefulLength'
 						}, {
 							name : 'outLength'
+						}, {
+							name : 'mpd'
 						}]
 			})
 		})

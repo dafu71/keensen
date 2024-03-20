@@ -208,7 +208,6 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.exportExcel = function()
 		},
 		failure : function(resp, options) {
 			var ret = Ext.decode(resp.responseText);
-			alert(ret);
 			// Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
 		},
 		callback : function() {

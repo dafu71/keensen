@@ -42,7 +42,8 @@
   left join V_KS_TUMO vkt on t1.batch_no = vkt.batch_no
    
   where 1=1
-  	<isNotNull prepend="and" property="ids">t1.id in($ids$)</isNotNull>
+   <isEqual compareValue="Y" prepend="and" property="notZero">t1.AMOUNT &gt; 0</isEqual>
+        <isNotNull prepend="and" property="ids">t1.id in($ids$)</isNotNull>
         <isNotNull prepend="and" property="position">t1.position = #position#</isNotNull>
         <isNotNull prepend="and" property="perfFlagId">vkt.PERF_FLAG_ID = #perfFlagId#</isNotNull>
         <isNotNull prepend="and" property="lineId">vkt.line_id = #lineId#</isNotNull>

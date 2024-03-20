@@ -61,8 +61,13 @@ com.keensen.ump.produce.quality.concessionListMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onView
+					},'->',{
+						text : '删除',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDel
 					}],
-			delUrl : 'com.keensen.ump.base.storage.deleteEntity.biz.ext',
+			delUrl : 'com.keensen.ump.produce.quality.concession.delete.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'orderNo',
 						header : '客户/订单号'
@@ -197,6 +202,8 @@ com.keensen.ump.produce.quality.concessionListMgr = function() {
 							name : 'processinstid'
 						}, {
 							name : 'processState'
+						}, {
+							name : 'cnt'
 						}]
 			})
 		})

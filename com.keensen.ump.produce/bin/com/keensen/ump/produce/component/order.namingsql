@@ -40,8 +40,14 @@
        T1.DEMAND_STOCK_DATE AS "demandStockDate",
        T1.RKSL              AS "rksl",
        T1.JHWCSJ            AS "jhwcsj",
-       T1.SCWCRQ            AS "scwcrq"
+       T1.SCWCRQ            AS "scwcrq",
+       t2.cnt "cnt",
+       t3.arrange_amount   as "arrangeAmount"
   FROM KS_PROD_COMPONENT_YXORDER T1
+  left join (select relation_id ,count(*) cnt from KS_COMPONENT_PLAN_WEEK group by relation_id) t2 
+	on t2.relation_id = t1.id
+  left join (select sum(amount) arrange_amount,order_id from KS_COMPONENT_PLAN_WEEK_DAYS group by order_id) t3
+    on t1.id = t3.order_id
 	where 1=1
 	<isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
@@ -51,5 +57,345 @@
         <isNotNull prepend="and" property="materSpecName2">upper(t1.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
         <isNotNull prepend="and" property="orderDateStart">to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
         <isNotNull prepend="and" property="orderDateEnd">to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+     order by t1.id desc
+	 </select>
+    <select id="queryPlanWeek" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",	
+		T1.RELATION_ID     AS "relationId",
+       T1.PLAN_YEAR       AS "planYear",
+       T1.PLAN_WEEK       AS "planWeek",
+       T1.ENTER_DATE      AS "enterDate",
+       T1.AMOUNT          AS "amount",
+       T1.JM_AMOUNT       AS "jmAmount",
+       T1.ENTER_AMOUNT    AS "enterAmount",
+       T1.WAIT_AMOUNT     AS "waitAmount",
+       T1.REMARK          AS "remark",
+       T1.START_DATE      AS "startDate",
+       T1.END_DATE        AS "endDate",
+       T2.BM              AS "bm",
+       T2.ORDER_NO        AS "orderNo",
+       T2.MATER_SPEC_NAME AS "materSpecName",
+       T2.DRY_WET         AS "dryWet",
+       T2.BQ              AS "bq",
+       T2.PERFORMANCE     AS "performance",
+       T2.ORDER_DATE      AS "orderDate",
+       t2.order_amount    AS "orderAmount",
+       t2.xsc             AS "xsc",
+       t3.cnt             AS "cnt"
+  FROM KS_COMPONENT_PLAN_WEEK T1
+  left join KS_PROD_COMPONENT_YXORDER t2
+  ON T1.relation_id = t2.id
+  left join (select relation_id ,count(*) cnt from KS_COMPONENT_PLAN_DAY group by relation_id) t3 
+	on t3.relation_id = t1.id
+	where 1=1
+	<isNotNull prepend="and" property="planYear">T1.PLAN_YEAR  = #planYear#</isNotNull>
+        <isNotNull prepend="and" property="planWeek">T1.PLAN_WEEK = #planWeek#</isNotNull>
+        <isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T2.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">upper(t2.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="materSpecName2">upper(t2.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
+        <isNotNull prepend="and" property="orderDateStart">to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
+        <isNotNull prepend="and" property="orderDateEnd">to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+     order by t1.relation_Id desc,t1.id desc
+	 </select>
+    <insert id="insertPlanWeekDays" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_PLAN_WEEK_DAYS
+  (ID,
+   PLAN_DATE,
+   CREATE_TIME,
+   CREATE_USER_ID,
+   CREATE_NAME,
+   relation_id,
+   order_id)
+  SELECT SEQ_COMPONENT_PLAN_DAY.NEXTVAL,
+         TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD') + LEVEL - 1),
+         SYSDATE,
+         #createUserId#,
+         #createName#,
+         #relationId#,
+         #orderId#
+    FROM DUAL
+  CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) -
+             TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) + 1</insert>
+    <select id="queryPlanDate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT TRUNC(TO_DATE(#startDate#, 'YYYY-MM-DD') + LEVEL - 1) as "planDate"
+    FROM DUAL
+  CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(#endDate#, 'YYYY-MM-DD')) -
+             TRUNC(TO_DATE(#startDate#, 'YYYY-MM-DD')) + 1</select>
+    <select id="queryPlanDay" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",	
+		 T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       T1.RELATION_ID     AS "relationId",
+       T1.ORDER_ID        AS "orderId",
+       T1.PLAN_DATE       AS "planDate",
+       T1.JM_AMOUNT       AS "jmAmount",
+       T1.BATCH_NO        AS "batchNo",
+       T1.METER_AMOUNT    AS "meterAmount",
+       T1.POSITION        AS "position",
+       T1.MP_REMARK       AS "mpRemark",
+       T1.PROBLEM         AS "problem",
+       T1.PRODUCT_ORDER   AS "productOrder",
+       T3.ORDER_NO        AS "orderNo",
+       T3.MATER_SPEC_NAME AS "materSpecName",
+       T3.ORDER_AMOUNT    AS "orderAmount",
+       T3.XSC             AS "xsc",
+       T3.ORDER_DATE      AS "orderDate",
+       T2.PLAN_YEAR       AS "planYear",
+       T2.PLAN_WEEK       AS "planWeek",
+       T2.ENTER_DATE      AS "enterDate",
+       T2.REMARK          AS "weekRemark"
+  FROM KS_COMPONENT_PLAN_DAY T1
+  LEFT JOIN KS_COMPONENT_PLAN_WEEK T2
+    ON T1.RELATION_ID = T2.ID
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER T3
+    ON T3.ID = T2.RELATION_ID
+	where 1=1
+	<isNotNull prepend="and" property="planYear">T2.PLAN_YEAR  = #planYear#</isNotNull>
+        <isNotNull prepend="and" property="planWeek">T2.PLAN_WEEK = #planWeek#</isNotNull>
+        <isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T3.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">upper(t3.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="materSpecName2">upper(t3.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
+        <isNotNull prepend="and" property="orderDateStart">to_char(t3.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
+        <isNotNull prepend="and" property="orderDateEnd">to_char(t3.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+     order by t2.id desc,t1.id
+	 </select>
+    <select id="queryPlanRoll" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",	
+		 T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       T1.RELATION_ID     AS "relationId",
+       t1.RELATION_ID as "relationId",
+		t1.ORDER_ID as "orderId",
+		t1.JM_AMOUNT as "jmAmount",
+		t1.WORK_DATE as "workDate",
+		t1.RISK as "risk",
+		t1.PROBLEM as "problem",
+       T3.ORDER_NO        AS "orderNo",
+       T3.MATER_SPEC_NAME AS "materSpecName",
+       T3.ORDER_AMOUNT    AS "orderAmount",
+       T3.XSC             AS "xsc",
+       T3.ORDER_DATE      AS "orderDate",
+       T2.PLAN_YEAR       AS "planYear",
+       T2.PLAN_WEEK       AS "planWeek",
+       T2.ENTER_DATE      AS "enterDate",
+       T2.REMARK          AS "weekRemark"
+  FROM KS_COMPONENT_PLAN_ROLL T1
+  LEFT JOIN KS_COMPONENT_PLAN_WEEK T2
+    ON T1.RELATION_ID = T2.ID
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER T3
+    ON T3.ID = T2.RELATION_ID
+	where 1=1
+	<isNotNull prepend="and" property="planYear">T2.PLAN_YEAR  = #planYear#</isNotNull>
+        <isNotNull prepend="and" property="planWeek">T2.PLAN_WEEK = #planWeek#</isNotNull>
+        <isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T3.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">upper(t3.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="materSpecName2">upper(t3.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
+        <isNotNull prepend="and" property="orderDateStart">to_char(t3.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
+        <isNotNull prepend="and" property="orderDateEnd">to_char(t3.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+     order by t2.id desc,t1.id
+	 </select>
+    <select id="queryPlanWeekDays" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",	
+		 T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       T1.RELATION_ID     AS "relationId",
+       T1.ORDER_ID        AS "orderId",
+       T1.PLAN_DATE      AS "planDate",
+       T1.AMOUNT         AS "amount",
+       to_char(T1.PLAN_DATE,'D') AS "weekday",
+       '星期' || DECODE(to_char(T1.PLAN_DATE,'D'),1,'日 ',2 ,'一',3,'二',4,'三',5,'四',6,'五','六') "weekdayname"
+  FROM KS_COMPONENT_PLAN_WEEK_DAYS T1
+	where 1=1
+	
+	<isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
+	
+     order by T1.RELATION_ID,t1.id
+	 </select>
+    <select id="queryYxOrderTrace" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",	
+		T1.SCFS              AS "scfs",
+       T1.BM                AS "bm",
+       T1.SFFH              AS "sffh",
+       T1.ORDER_TYPE        AS "orderType",
+       T1.TYPE              AS "type",
+       T1.KHXJ              AS "khxj",
+       T1.CPXJ              AS "cpxj",
+       T1.DDXJ              AS "ddxj",
+       T1.ORDER_NO          AS "orderNo",
+       T1.ORDER_DATE        AS "orderDate",
+       T1.HPMC              AS "hpmc",
+       T1.DW                AS "dw",
+       T1.MATER_SPEC_NAME   AS "materSpecName",
+       T1.CPGG              AS "cpgg",
+       T1.DRY_WET           AS "dryWet",
+       T1.ORDER_AMOUNT      AS "orderAmount",
+       T1.DFH               AS "dfh",
+       T1.XSC               AS "xsc",
+       T1.SBKCGM            AS "sbkcgm",
+       T1.SBKCSM            AS "sbkcsm",
+       T1.BQ                AS "bq",
+       T1.BAG               AS "bag",
+       T1.BOX               AS "box",
+       T1.MARK              AS "mark",
+       T1.PACK              AS "pack",
+       T1.PERFORMANCE       AS "performance",
+       T1.REMARK            AS "remark",
+       T1.DEMAND_STOCK_DATE AS "demandStockDate",
+       T1.RKSL              AS "rksl",
+       T1.JHWCSJ            AS "jhwcsj",
+       T1.SCWCRQ            AS "scwcrq",
+       t2.amount AS "cdmAmount",
+       t3.amount "jmAmount",
+       t4.amount "qjAmount",
+       t5.amount "rsAmount",
+		100*t2.amount/t1.order_amount || '%' "cdmFinish",
+		100*t3.amount/t1.order_amount || '%' "jmFinish",
+		100*t4.amount/t1.order_amount || '%' "qjFinish",
+		100*t5.amount/t1.order_amount || '%' "rsFinish"
+  FROM KS_PROD_COMPONENT_YXORDER T1
+  LEFT JOIN
+(SELECT t.order_no,t.prod_spec_id mater_spec_id,count(t.quantity/t.num_per_wad) AS amount 
+from qinsen.inst_caidiemo t
+WHERE t.num_per_wad !=0
+GROUP BY t.order_no,t.prod_spec_id) t2 ON t1.order_no=t2.order_no AND t1.mater_spec_id=t2.mater_spec_id
+LEFT JOIN
+(SELECT t.order_no,t.prod_spec_id mater_spec_id, COUNT(1) amount from qinsen.inst_juanmo_main t
+GROUP BY t.order_no,t.prod_spec_id) t3 ON t3.order_no = t1.order_no AND t1.mater_spec_id=t3.mater_spec_id
+LEFT JOIN
+(SELECT t.order_no,t.prod_spec_id mater_spec_id, COUNT(1) amount  from qinsen.inst_qijian t
+GROUP BY t.order_no,t.prod_spec_id) t4 ON t4.order_no = t1.order_no AND t1.mater_spec_id=t4.mater_spec_id
+LEFT JOIN
+(SELECT t2.order_no,t2.prod_spec_id mater_spec_id, COUNT(1) amount  from  QINSEN.INST_RAOSI t
+ LEFT JOIN qinsen.inst_qijian t2 
+ON t.batch_no=t2.batch_no
+GROUP BY t2.order_no,t2.prod_spec_id) t5 ON t5.order_no = t1.order_no AND t1.mater_spec_id=t5.mater_spec_id
+	where 1=1
+	<isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">upper(t1.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="materSpecName2">upper(t1.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
+        <isNotNull prepend="and" property="orderDateStart">to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
+        <isNotNull prepend="and" property="orderDateEnd">to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+     order by t1.id desc
+	 </select>
+    <select id="queryRework" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	 
+	 SELECT T1.ID               AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID   AS "updateUserId",
+       T1.UPDATE_NAME      AS "updateName",
+       T1.RESERVE1         AS "reserve1",
+       T1.RESERVE2         AS "reserve2",
+       T1.RESERVE3         AS "reserve3",
+       T1.RESERVE4         AS "reserve4",
+       T1.RESERVE5         AS "reserve5",
+       T1.ORG_ID           AS "orgId",
+       T1.STATUS           AS "status",
+       T1.CODE             AS "code",
+       T1.HAPPEN_DATE      AS "happenDate",
+       T1.TACHE            AS "tache",
+       T1.DESCRIBE         AS "describe",
+       T1.ORDER_NO         AS "orderNo",
+       T1.PROD_SPEC_ID     AS "prodSpecId",
+       T1.DEFECT_TYPE      AS "defectType",
+       T1.DEFECT_AMOUNT    AS "defectAmount",
+       T1.BATCH_NO_STR     AS "batchNoStr",
+       T1.FIRST_ID         AS "firstId",
+       T1.FIRST_NAME       AS "firstName",
+       T1.REWORK_METHOD    AS "reworkMethod",
+       T1.REWORK_DEAL      AS "reworkDeal",
+       T1.SECOND_ID        AS "secondId",
+       T1.SECOND_NAME      AS "secondName",
+       T1.SECOND_TIME      AS "secondTime",
+       T1.REWORK_RESPONSE  AS "reworkResponse",
+       T1.REWORK_INCENTIVE AS "reworkIncentive",
+       T1.PLAN_FINISH_DATE AS "planFinishDate",
+       T1.REWORK_ORDER_NO  AS "reworkOrderNo",
+       T1.THIRD_ID         AS "thirdId",
+       T1.THIRD_NAME       AS "thirdName",
+       T1.THIRD_TIME       AS "thirdTime",
+       T1.IF_ONTIME        AS "ifOntime",
+       T1.NOT_ONTIME       AS "notOntime",
+       T1.IF_OK            AS "ifOk",
+       T1.FOURTH_ID        AS "fourthId",
+       T1.FOURTH_NAME      AS "fourthName",
+       T1.FOURTH_TIME      AS "fourthTime",
+       T2.MATER_SPEC_NAME  AS "materSpecName",
+       T1.STEP      AS "step"
+  FROM KS_COMPONENT_REWORK T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+    ON T1.PROD_SPEC_ID = T2.MATER_SPEC_ID
+    where 1=1
+	<isNotNull prepend="and" property="orderNo">T1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="code">T1.code like '%' || #code# || '%'</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">upper(t2.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
     </select>
 </sqlMap>

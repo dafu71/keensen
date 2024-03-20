@@ -42,6 +42,9 @@
   left join V_KS_TUMO vkt on t1.batch_no = vkt.batch_no
    
   where 1=1
+   <isEqual prepend="and" property="notZero" compareValue="Y">
+ 			   t1.AMOUNT > 0
+    </isEqual>
   	<isNotNull prepend="and" property="ids"> 
 		       t1.id in($ids$)
 	</isNotNull>

@@ -26,10 +26,11 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
+						ref : '../produceDtStart',
 						fieldLabel : '生产时间',
 						colspan : 1,
 						anchor : '75%',
-						allowBlank : false,
+						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, -1)
@@ -37,10 +38,11 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 					}, {
 						xtype : 'datetimefield',
 						name : 'condition/produceDtEnd',
+						ref : '../produceDtEnd',
 						fieldLabel : '至',
 						colspan : 1,
 						anchor : '75%',
-						allowBlank : false,
+						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, 1)
@@ -236,11 +238,10 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							}
 						}
 
-					}/*, {
-						dataIndex : 'isValidName',
-						sortable : true,
-						header : '是否已人工<br>质检验证'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'isValidName', sortable : true,
+						 * header : '是否已人工<br>质检验证' }
+						 */, {
 						dataIndex : 'title',
 						header : '请检单号'
 					}, {

@@ -59,25 +59,25 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 			tbar : [{
 						text : '新增',
 						scope : this,
-						disabled: applyflag!='true',
+						disabled : applyflag != 'true',
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
 					}, '-', {
 						text : '修改',
-						disabled: applyflag!='true',
+						disabled : applyflag != 'true',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',
-						disabled: applyflag!='true',
+						disabled : applyflag != 'true',
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}, '-', {
 						text : '跟进',
 						scope : this,
-						disabled: followflag!='true',
+						disabled : followflag != 'true',
 						iconCls : 'icon-application_edit',
 						handler : this.onFollow
 					}, '-', {
@@ -198,9 +198,9 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 			maximizable : true,
 			items : [{
 				xtype : 'editpanel',
-				id : 'fivewhyEdit',
+				id : fivewhyEdit,
 				pgrid : this.listPanel,
-				columns : 4,
+				columns : 12,
 				loadUrl : 'com.keensen.ump.produce.report.quality.expand5whyHead.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.report.quality.modify5whyHead.biz.ext',
 				fields : [{
@@ -208,37 +208,63 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 							dataIndex : 'code',
 							readOnly : true,
 							fieldLabel : '管理编号',
-							colspan : 2
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 12
 						}, {
 							xtype : 'textfield',
 							name : 'entity/dept',
 							dataIndex : 'dept',
 							allowBlank : false,
 							fieldLabel : '主导部门',
-							colspan : 2
+							colspan : 4
+						}, {
+							xtype : 'textfield',
+							name : 'entity/crmCode',
+							dataIndex : 'crmCode',
+							allowBlank : true,
+							fieldLabel : 'CRM编号',
+							colspan : 4
+						}, {
+							xtype : 'textfield',
+							name : 'entity/client',
+							dataIndex : 'client',
+							allowBlank : true,
+							fieldLabel : '客户',
+							colspan : 4
 						}, {
 							xtype : 'displayfield',
 							fieldLabel : "<span style='color:red;'>不良信息</span>",
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'dictcheckboxgroup',
 							name : 'happenPlace',
 							dataIndex : 'happenPlace',
 							dictData : KS_HAPPEN_PLACE,
+							columns : 2,
 							allowBlank : false,
 							fieldLabel : '发生地点',
-							colspan : 2
+							colspan : 4
+						}, {
+							xtype : 'textfield',
+							name : 'entity/amount',
+							dataIndex : 'amount',
+							allowBlank : true,
+							fieldLabel : '不良数量',
+							colspan : 4
 						}, {
 							xtype : 'textfield',
 							name : 'entity/prodSpecName',
 							dataIndex : 'prodSpecName',
 							allowBlank : false,
 							fieldLabel : '产品型号',
-							colspan : 2
+							colspan : 4
 						}, {
 							xtype : 'displayfield',
 							height : 5,
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'datefield',
 							format : "Y-m-d",
@@ -246,7 +272,7 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 							dataIndex : 'happenDt',
 							allowBlank : false,
 							fieldLabel : '发生日期',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'dictcheckboxgroup',
 							name : 'productClassify',
@@ -254,11 +280,11 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 							dictData : KS_PRODUCT_CLASSIFY,
 							allowBlank : false,
 							fieldLabel : '现品区分',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							height : 5,
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'dictcheckboxgroup',
 							name : 'poorClassify',
@@ -266,35 +292,56 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 							dictData : KS_POOR_CLASSIFY,
 							allowBlank : false,
 							fieldLabel : '不良分类',
-							colspan : 2
+							colspan : 6
+						}, {
+							xtype : 'combobox',
+							fieldLabel : '等级',
+							ref : '../../iclass',
+							hiddenName : 'entity/class',
+							dataIndex : 'class',
+							emptyText : '--请选择--',
+							allowBlank : true,
+							editable : false,
+							store : [['轻微', '轻微'], ['一般', '一般'], ['较大', '较大']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.iclass.reset();
+								}
+							},
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 12
 						}, {
 							xtype : 'textfield',
 							name : 'entity/poorClassifyOther',
 							dataIndex : 'poorClassifyOther',
 							allowBlank : true,
 							fieldLabel : '不良分类其它',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							height : 5,
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'textarea',
 							name : 'entity/poorDescribe',
 							dataIndex : 'poorDescribe',
 							allowBlank : false,
 							fieldLabel : '不良现象',
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'displayfield',
 							height : 5,
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'trigger',
 							name : 'entity/reserve5',
 							dataIndex : 'reserve5',
 							fieldLabel : '不良现象图片',
-							colspan : 4,
+							colspan : 12,
 							editable : false,
 							hideTrigger : false,
 							scope : this,
@@ -302,11 +349,11 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 								_this.onUploadWindowShow(_this);
 							}
 						}, {
-						xtype : 'displayfield',
-						html : '<a href="javascript:deletePicture();" >'
-								+ '删除不良图片' + "</a>",
-						colspan : 4
-					}, {
+							xtype : 'displayfield',
+							html : '<a href="javascript:deletePicture();" >'
+									+ '删除不良图片' + "</a>",
+							colspan : 12
+						}, {
 							xtype : 'hidden',
 							dataIndex : 'id',
 							name : 'entity/id'
@@ -344,87 +391,126 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 			maximizable : true,
 			items : [{
 				xtype : 'inputpanel',
-				id : 'fivewhyInput',
+				id : fivewhyInput,
 				pgrid : this.listPanel,
-				columns : 4,
+				columns : 12,
 				saveUrl : 'com.keensen.ump.produce.report.quality.insert5whyHead.biz.ext',
 				fields : [{
 							xtype : 'textfield',
 							name : 'entity/dept',
 							allowBlank : false,
 							fieldLabel : '主导部门',
-							colspan : 2
+							colspan : 4
+						}, {
+							xtype : 'textfield',
+							name : 'entity/crmCode',
+							allowBlank : true,
+							fieldLabel : 'CRM编号',
+							colspan : 4
+						}, {
+							xtype : 'textfield',
+							name : 'entity/client',
+							allowBlank : true,
+							fieldLabel : '客户',
+							colspan : 4
 						}, {
 							xtype : 'displayfield',
 							fieldLabel : "<span style='color:red;'>不良信息</span>",
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'dictcheckboxgroup',
 							name : 'happenPlace',
+							columns : 2,
 							dictData : KS_HAPPEN_PLACE,
 							allowBlank : false,
 							fieldLabel : '发生地点',
-							colspan : 2
+							colspan : 4
+						}, {
+							xtype : 'textfield',
+							name : 'entity/amount',
+							allowBlank : true,
+							fieldLabel : '不良数量',
+							colspan : 4
 						}, {
 							xtype : 'textfield',
 							name : 'entity/prodSpecName',
 							allowBlank : false,
 							fieldLabel : '产品型号',
-							colspan : 2
+							colspan : 4
 						}, {
 							xtype : 'displayfield',
 							height : 5,
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'datefield',
 							format : "Y-m-d",
 							name : 'entity/happenDt',
 							allowBlank : false,
 							fieldLabel : '发生日期',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'dictcheckboxgroup',
 							name : 'productClassify',
 							dictData : KS_PRODUCT_CLASSIFY,
 							allowBlank : false,
 							fieldLabel : '现品区分',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							height : 5,
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'dictcheckboxgroup',
 							name : 'poorClassify',
 							dictData : KS_POOR_CLASSIFY,
 							allowBlank : false,
 							fieldLabel : '不良分类',
-							colspan : 2
+							colspan : 6
+						}, {
+							xtype : 'combobox',
+							fieldLabel : '等级',
+							ref : '../../iclass',
+							hiddenName : 'entity/class',
+							emptyText : '--请选择--',
+							allowBlank : true,
+							editable : false,
+							store : [['轻微', '轻微'], ['一般', '一般'], ['较大', '较大']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.iclass.reset();
+								}
+							},
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 12
 						}, {
 							xtype : 'textfield',
 							name : 'entity/poorClassifyOther',
 							allowBlank : true,
 							fieldLabel : '不良分类其它',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							height : 5,
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'textarea',
 							name : 'entity/poorDescribe',
 							allowBlank : false,
 							fieldLabel : '不良现象',
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'displayfield',
 							height : 5,
-							colspan : 4
+							colspan : 12
 						}, {
 							xtype : 'trigger',
 							name : 'entity/reserve5',
 							fieldLabel : '不良现象图片',
-							colspan : 4,
+							colspan : 12,
 							editable : false,
 							hideTrigger : false,
 							scope : this,
@@ -432,11 +518,11 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 								_this.onUploadWindowShow(_this);
 							}
 						}, {
-						xtype : 'displayfield',
-						html : '<a href="javascript:deletePicture2();" >'
-								+ '删除不良图片' + "</a>",
-						colspan : 4
-					}, {
+							xtype : 'displayfield',
+							html : '<a href="javascript:deletePicture2();" >'
+									+ '删除不良图片' + "</a>",
+							colspan : 12
+						}, {
 							xtype : 'hidden',
 							name : 'entity/id'
 						}, {
@@ -501,96 +587,129 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 			autoHide : false,
 			autoScroll : false,
 			border : true,
-			columns : 4,
+			columns : 12,
 			loadUrl : 'com.keensen.ump.produce.report.quality.expand5whyHead.biz.ext',
 			fields : [{
 						xtype : 'textfield',
 						dataIndex : 'code',
 						readOnly : true,
 						fieldLabel : '管理编号',
-						colspan : 2
+						colspan : 6
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						colspan : 12
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'dept',
 						readOnly : true,
 						fieldLabel : '主导部门',
-						colspan : 2
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'crmCode',
+						readOnly : true,
+						fieldLabel : 'CRM编号',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'client',
+						readOnly : true,
+						fieldLabel : '客户',
+						colspan : 4
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : "<span style='color:red;'>不良信息</span>",
-						colspan : 4
+						colspan : 12
 					}, {
 						xtype : 'dictcheckboxgroup',
 						dataIndex : 'happenPlace',
 						dictData : KS_HAPPEN_PLACE,
+						columns: 2, 
 						readOnly : true,
 						fieldLabel : '发生地点',
-						colspan : 2
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'amount',
+						readOnly : true,
+						fieldLabel : '不良数量',
+						colspan : 4
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'prodSpecName',
 						readOnly : true,
 						fieldLabel : '产品型号',
-						colspan : 2
+						colspan : 4
 					}, {
 						xtype : 'displayfield',
 						height : 5,
-						colspan : 4
+						colspan : 12
 					}, {
 						xtype : 'datefield',
 						format : "Y-m-d",
 						dataIndex : 'happenDt',
 						readOnly : true,
 						fieldLabel : '发生日期',
-						colspan : 2
+						colspan : 6
 					}, {
 						xtype : 'dictcheckboxgroup',
 						dataIndex : 'productClassify',
 						dictData : KS_PRODUCT_CLASSIFY,
 						readOnly : true,
 						fieldLabel : '现品区分',
-						colspan : 2
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						height : 5,
-						colspan : 4
+						colspan : 12
 					}, {
 						xtype : 'dictcheckboxgroup',
 						dataIndex : 'poorClassify',
 						dictData : KS_POOR_CLASSIFY,
 						readOnly : true,
 						fieldLabel : '不良分类',
-						colspan : 2
+						colspan : 6
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'class',
+						readOnly : true,
+						fieldLabel : '等级',
+						colspan : 6
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						colspan : 12
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'poorClassifyOther',
 						readOnly : true,
 						fieldLabel : '不良分类其它',
-						colspan : 2
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						height : 5,
-						colspan : 4
+						colspan : 12
 					}, {
 						xtype : 'textarea',
 						dataIndex : 'poorDescribe',
 						readOnly : true,
 						fieldLabel : '不良现象',
-						colspan : 4
+						colspan : 12
 					}, {
 						xtype : 'displayfield',
 						height : 5,
-						colspan : 4
+						colspan : 12
 					}, {
 						xtype : 'displayfield',
-						id : 'fivewhyPicture',
+						id : fivewhyPicture,
 						html : '<a href="javascript:showPicture();" >'
 								+ '查看不良图片' + "</a>",
-						colspan : 4
+						colspan : 12
 					}, {
 						xtype : 'hidden',
 						dataIndex : 'poorUrl',
-						id : 'fivewhyPoorUrl'
+						id : fivewhyPoorUrl
 					}, {
 						xtype : 'hidden',
 						dataIndex : 'id',
@@ -1165,8 +1284,9 @@ com.keensen.ump.produce.report.quality.FivewhyMgr = function() {
 					height : 600,
 					layout : 'form',
 					items : [this.viewPanel, this.measureListPanel,
-							this.productPanel, this.reasonListPanel,this.answerListPanel],
-					buttons : [ {
+							this.productPanel, this.reasonListPanel,
+							this.answerListPanel],
+					buttons : [{
 								text : '关闭',
 								scope : this,
 								handler : function() {

@@ -7,46 +7,35 @@ com.keensen.ump.produce.quality.concessionFirstMgr.prototype.initEvent = functio
 	this.editPanel.loadData(r);
 
 	this.editPanel.mon(this.editPanel, 'afterload', function() {
-				var recordIds = this.editPanel.form.findField('reserve1')
-						.getValue();
+		var recordIds = this.editPanel.form.findField('reserve1').getValue();
 
-				prodSpecId = this.editPanel.form.findField('prodSpecId')
-						.getValue();
-				var store = this.listPanel.store;
-				store.load({
-							params : {
-								'condition/recordIds' : recordIds
-							}
-						});
-				deletePicture(0);
-				/*this.editPanel.picturePanel.update('');
-				var pictureUrl = this.editPanel.pictureUrl.getValue();
-				var pictureUrl2 = this.editPanel.pictureUrl2.getValue();
-				var pictureUrl3 = this.editPanel.pictureUrl3.getValue();
-				var url = '';
-				if (!Ext.isEmpty(pictureUrl)) {
-					url += '<a href="/default/' + pictureUrl
-							+ '" target=_blank>查看图片1</a>';
-					url += '&nbsp;&nbsp;<a href="javascript:deletePicture(1);" >'
-							+ '删除图片1' + "</a>"
-					url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-				}
-				if (!Ext.isEmpty(pictureUrl2)) {
-					url += '<a href="/default/' + pictureUrl2
-							+ '" target=_blank>查看图片2</a>';
-					url += '&nbsp;&nbsp;<a href="javascript:deletePicture(2);" >'
-							+ '删除图片2' + "</a>"
-					url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-				}
-				if (!Ext.isEmpty(pictureUrl3)) {
-					url += '<a href="/default/' + pictureUrl3
-							+ '" target=_blank>查看图片3</a>';
-					url += '&nbsp;&nbsp;<a href="javascript:deletePicture(3);" >'
-							+ '删除图片3' + "</a>"
-					url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-				}
-				this.editPanel.picturePanel.update(url);*/
-			}, this);
+		prodSpecId = this.editPanel.form.findField('prodSpecId').getValue();
+		var store = this.listPanel.store;
+		store.load({
+					params : {
+						'condition/recordIds' : recordIds
+					}
+				});
+		deletePicture(0);
+			/*
+			 * this.editPanel.picturePanel.update(''); var pictureUrl =
+			 * this.editPanel.pictureUrl.getValue(); var pictureUrl2 =
+			 * this.editPanel.pictureUrl2.getValue(); var pictureUrl3 =
+			 * this.editPanel.pictureUrl3.getValue(); var url = ''; if
+			 * (!Ext.isEmpty(pictureUrl)) { url += '<a href="/default/' +
+			 * pictureUrl + '" target=_blank>查看图片1</a>'; url += '&nbsp;&nbsp;<a
+			 * href="javascript:deletePicture(1);" >' + '删除图片1' + "</a>" url +=
+			 * '&nbsp;&nbsp;&nbsp;&nbsp;' } if (!Ext.isEmpty(pictureUrl2)) { url += '<a
+			 * href="/default/' + pictureUrl2 + '" target=_blank>查看图片2</a>';
+			 * url += '&nbsp;&nbsp;<a href="javascript:deletePicture(2);" >' +
+			 * '删除图片2' + "</a>" url += '&nbsp;&nbsp;&nbsp;&nbsp;' } if
+			 * (!Ext.isEmpty(pictureUrl3)) { url += '<a href="/default/' +
+			 * pictureUrl3 + '" target=_blank>查看图片3</a>'; url += '&nbsp;&nbsp;<a
+			 * href="javascript:deletePicture(3);" >' + '删除图片3' + "</a>" url +=
+			 * '&nbsp;&nbsp;&nbsp;&nbsp;' }
+			 * this.editPanel.picturePanel.update(url);
+			 */
+		}, this);
 	this.listPanel.store.on('load', function() {
 				_this.editPanel.form.findField('prodSpecId')
 						.setValue(prodSpecId);
@@ -260,7 +249,7 @@ function closeMyTab() {
 function deletePicture(v) {
 	if (v == '1') {
 		Ext.getCmp('concessionEditPanel').pictureUrl.setValue('');
-		Ext.getCmp('concessionEditPanel').newPictureUrl.setValue('');		
+		Ext.getCmp('concessionEditPanel').newPictureUrl.setValue('');
 	} else if (v == '2') {
 		Ext.getCmp('concessionEditPanel').pictureUrl2.setValue('');
 		Ext.getCmp('concessionEditPanel').newPictureUrl2.setValue('');
@@ -291,5 +280,31 @@ function deletePicture(v) {
 		url += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
 	}
 	Ext.getCmp('concessionEditPanel').picturePanel.update(url);
+
+}
+function copyToClipboard(text) {
+	var textarea = document.createElement('textarea');
+	textarea.style.position = 'fixed';
+	textarea.style.opacity = 0;
+	textarea.value = text;
+	document.body.appendChild(textarea);
+	textarea.select();
+	document.execCommand('copy');
+	document.body.removeChild(textarea);
+}
+
+com.keensen.ump.produce.quality.concessionFirstMgr.prototype.onCopy = function() {
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		var arr = [];
+		for (var i = 0; i < B.length; i++) {
+			var batchNo = B[i].get('batchNo');
+			arr.push(batchNo);
+		}
+		var str = arr.join('\n');
+		copyToClipboard(str);
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
 
 }

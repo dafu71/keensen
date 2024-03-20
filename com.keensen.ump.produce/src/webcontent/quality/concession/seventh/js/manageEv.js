@@ -107,3 +107,30 @@ function closeMyTab() {
 			});
 
 }
+
+function copyToClipboard(text) {
+	var textarea = document.createElement('textarea');
+	textarea.style.position = 'fixed';
+	textarea.style.opacity = 0;
+	textarea.value = text;
+	document.body.appendChild(textarea);
+	textarea.select();
+	document.execCommand('copy');
+	document.body.removeChild(textarea);
+}
+
+com.keensen.ump.produce.quality.concessionSeventhMgr.prototype.onCopy = function() {
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		var arr = [];
+		for (var i = 0; i < B.length; i++) {
+			var batchNo = B[i].get('batchNo');
+			arr.push(batchNo);
+		}
+		var str = arr.join('\n');
+		copyToClipboard(str);
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
+
+}

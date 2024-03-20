@@ -24,13 +24,29 @@
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
 
+<style type="text/css">
+.x-grid3-cell-inner {-webkit-user-select:text;}
+</style>
+
 <js:load scriptPath="produce/component/yxorder/js/manageUi.js"/>
 <js:load scriptPath="produce/component/yxorder/js/manageEv.js"/>
 <script type="text/javascript">
+
+function getCurrentWeekNumber() {
+  var now = new Date();
+  var startOfYear = new Date(now.getFullYear(), 0, 1);
+  var startOfWeek = new Date(startOfYear.setDate(startOfYear.getDate() - startOfYear.getDay() + 1));
+  var daysSinceStartOfWeek = Math.ceil((now - startOfWeek + 1) / (24 * 60 * 60 * 1000));
+  var currentWeekNumber = Math.ceil(daysSinceStartOfWeek / 7);
+  return currentWeekNumber;
+}
+
+  var mylistid = Ext.id();
   var uid = "<%=uid %>";
   var dataorgid = "<%=dataorgid%>";
 var operatorid = "<%=operatorid%>";
 var operatorname = "<%=operatorname%>";
+var opt = '';
   var listid = Ext.id();
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.yxorderMgr

@@ -2,94 +2,6 @@
 <!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.report.KsQuality5whyHead" table="KS_QUALITY_5WHY_HEAD">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="id" type="int">
-            <column length="9" name="ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="createTime" type="timestamp">
-            <column name="CREATE_TIME"/>
-        </property>
-        <property name="createUserId" type="string">
-            <column length="24" name="CREATE_USER_ID"/>
-        </property>
-        <property name="createName" type="string">
-            <column length="24" name="CREATE_NAME"/>
-        </property>
-        <property name="updateTime" type="timestamp">
-            <column name="UPDATE_TIME"/>
-        </property>
-        <property name="updateUserId" type="string">
-            <column length="24" name="UPDATE_USER_ID"/>
-        </property>
-        <property name="updateName" type="string">
-            <column length="24" name="UPDATE_NAME"/>
-        </property>
-        <property name="reserve1" type="string">
-            <column length="1500" name="RESERVE1"/>
-        </property>
-        <property name="reserve2" type="string">
-            <column length="1500" name="RESERVE2"/>
-        </property>
-        <property name="reserve3" type="string">
-            <column length="1500" name="RESERVE3"/>
-        </property>
-        <property name="reserve4" type="string">
-            <column length="1500" name="RESERVE4"/>
-        </property>
-        <property name="reserve5" type="string">
-            <column length="1500" name="RESERVE5"/>
-        </property>
-        <property name="orgId" type="string">
-            <column length="90" name="ORG_ID"/>
-        </property>
-        <property name="status" type="string">
-            <column length="24" name="STATUS"/>
-        </property>
-        <property name="code" type="string">
-            <column length="50" name="CODE"/>
-        </property>
-        <property name="dept" type="string">
-            <column length="500" name="DEPT"/>
-        </property>
-        <property name="happenPlace" type="string">
-            <column length="50" name="HAPPEN_PLACE"/>
-        </property>
-        <property name="prodSpecName" type="string">
-            <column length="50" name="PROD_SPEC_NAME"/>
-        </property>
-        <property name="happenDt" type="date">
-            <column name="HAPPEN_DT"/>
-        </property>
-        <property name="productClassify" type="string">
-            <column length="50" name="PRODUCT_CLASSIFY"/>
-        </property>
-        <property name="poorClassify" type="string">
-            <column length="50" name="POOR_CLASSIFY"/>
-        </property>
-        <property name="poorClassifyOther" type="string">
-            <column length="500" name="POOR_CLASSIFY_OTHER"/>
-        </property>
-        <property name="poorDescribe" type="string">
-            <column length="2000" name="POOR_DESCRIBE"/>
-        </property>
-        <property name="poorUrl" type="string">
-            <column length="200" name="POOR_URL"/>
-        </property>
-        <property name="productInfo" type="string">
-            <column length="2000" name="PRODUCT_INFO"/>
-        </property>
-        <property name="followUserId" type="string">
-            <column length="50" name="FOLLOW_USER_ID"/>
-        </property>
-        <property name="followName" type="string">
-            <column length="50" name="FOLLOW_NAME"/>
-        </property>
-        <property name="followDt" type="date">
-            <column name="FOLLOW_DT"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.report.KsQuality5whyMeasure" table="KS_QUALITY_5WHY_MEASURE">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="int">
@@ -283,6 +195,106 @@
         </property>
         <property name="relationId" type="int">
             <column length="9" name="RELATION_ID"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.report.KsQuality5whyHead" table="KS_QUALITY_5WHY_HEAD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="int">
+            <column length="9" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="code" type="string">
+            <column length="50" name="CODE"/>
+        </property>
+        <property name="dept" type="string">
+            <column length="500" name="DEPT"/>
+        </property>
+        <property name="happenPlace" type="string">
+            <column length="50" name="HAPPEN_PLACE"/>
+        </property>
+        <property name="prodSpecName" type="string">
+            <column length="50" name="PROD_SPEC_NAME"/>
+        </property>
+        <property name="happenDt" type="date">
+            <column name="HAPPEN_DT"/>
+        </property>
+        <property name="productClassify" type="string">
+            <column length="50" name="PRODUCT_CLASSIFY"/>
+        </property>
+        <property name="poorClassify" type="string">
+            <column length="50" name="POOR_CLASSIFY"/>
+        </property>
+        <property name="poorClassifyOther" type="string">
+            <column length="500" name="POOR_CLASSIFY_OTHER"/>
+        </property>
+        <property name="poorDescribe" type="string">
+            <column length="2000" name="POOR_DESCRIBE"/>
+        </property>
+        <property name="poorUrl" type="string">
+            <column length="200" name="POOR_URL"/>
+        </property>
+        <property name="productInfo" type="string">
+            <column length="2000" name="PRODUCT_INFO"/>
+        </property>
+        <property name="followUserId" type="string">
+            <column length="50" name="FOLLOW_USER_ID"/>
+        </property>
+        <property name="followName" type="string">
+            <column length="50" name="FOLLOW_NAME"/>
+        </property>
+        <property name="followDt" type="date">
+            <column name="FOLLOW_DT"/>
+        </property>
+        <property name="crmCode" type="string">
+            <column length="50" name="CRM_CODE"/>
+        </property>
+        <property name="client" type="string">
+            <column length="200" name="CLIENT"/>
+        </property>
+        <property name="amount" type="string">
+            <column length="50" name="AMOUNT"/>
+        </property>
+        <property name="class" type="string">
+            <column length="50" name="CLASS"/>
         </property>
     </class>
 </hibernate-mapping>

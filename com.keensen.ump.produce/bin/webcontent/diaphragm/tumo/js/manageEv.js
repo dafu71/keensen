@@ -5,17 +5,29 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.initEvent = function() 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 
-		var start = vals['condition/produceDtStart'];
-		var end = vals['condition/produceDtEnd'];
-		if(dayDiff(start,end)>91){
-			Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
-			return false;
-
-		}
-		var store = this.listPanel.store;
-
 		var batchNoStr = this.queryPanel.form
 				.findField("condition/batchNoStr2").getValue();
+		var start = vals['condition/produceDtStart'];
+		var end = vals['condition/produceDtEnd'];
+		if (Ext.isEmpty(batchNoStr)) {
+			if (Ext.isEmpty(start)) {
+				Ext.Msg.alert("系统提示", "查询开始日期不能为空！");
+				return false;
+			}
+			if (Ext.isEmpty(end)) {
+				Ext.Msg.alert("系统提示", "查询结束日期不能为空！");
+				return false;
+			}
+
+			if (dayDiff(start, end) > 91) {
+				Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+				return false;
+
+			}
+		}
+
+		var store = this.listPanel.store;
+
 		var regEx = new RegExp("\\n", "gi");
 		batchNoStr = batchNoStr.replace(regEx, ",");
 		batchNoStr = batchNoStr.replaceAll('，', ',');
@@ -81,13 +93,14 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck = function() {
 					var isValid = r.data.isValid;
 					var fGfdAvg = r.data.fGfdAvg;
 					var title = r.data.title;
-					if(Ext.isEmpty(fGfdAvg) && ok){//初测为空的，作为判断条件
+					if (Ext.isEmpty(fGfdAvg) && ok) {// 初测为空的，作为判断条件
 						msg = "请选择初测不为空的数据！";
 						ok = false;
 					}
-					
-					//if(!Ext.isEmpty(isValid) && isValid=='Y'){//是否已人工质检验证,Y=是,N=否，作为判断条件
-					if(Ext.isEmpty(title) && ok){//是否有请检单号作为判断条件
+
+					// if(!Ext.isEmpty(isValid) &&
+					// isValid=='Y'){//是否已人工质检验证,Y=是,N=否，作为判断条件
+					if (Ext.isEmpty(title) && ok) {// 是否有请检单号作为判断条件
 						msg = "请选择没有判定过的数据！";
 						ok = false;
 					}
@@ -182,20 +195,20 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck2 = function() {
 					var isValid = r.data.isValid;
 					var fGfdAvg = r.data.fGfdAvg;
 					var title = r.data.title;
-					if(Ext.isEmpty(fGfdAvg) && ok){//初测为空的，作为判断条件
+					if (Ext.isEmpty(fGfdAvg) && ok) {// 初测为空的，作为判断条件
 						msg = "请选择初测不为空的数据！";
 						ok = false;
 					}
 
-					if(Ext.isEmpty(title) && ok){////是否有请检单号作为判断条件
+					if (Ext.isEmpty(title) && ok) {// //是否有请检单号作为判断条件
 						msg = "请选择没有判定过的数据！";
 						ok = false;
-						
+
 					}
-					//if (!Ext.isEmpty(odn)) {
-						//msg = "请选择相同计划单号数据！"
-						//ok = false;
-					//}
+					// if (!Ext.isEmpty(odn)) {
+					// msg = "请选择相同计划单号数据！"
+					// ok = false;
+					// }
 					if (pln != planNo && ok) {
 						msg = "请选择相同计划单号数据！"
 						ok = false;
@@ -261,8 +274,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onConcession = function
 		var orderNo = C[0].data.orderNo;
 		var specId = C[0].data.specId;
 		if (Ext.isEmpty(orderNo)) {
-			//Ext.Msg.alert("系统提示", "请选择有订单号的数据！");
-			//return false;
+			// Ext.Msg.alert("系统提示", "请选择有订单号的数据！");
+			// return false;
 		}
 		var ok = true;
 		Ext.each(C, function(r) {
@@ -521,7 +534,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onSecondJudge = functio
 		Ext.each(C, function(r) {
 					var trend = r.data.trend;
 					var recordId = r.data.recordId;
-					if(Ext.isEmpty(trend) || trend != '待二次判定'){//待二次判定
+					if (Ext.isEmpty(trend) || trend != '待二次判定') {// 待二次判定
 						msg = "请选择待二次判定的数据！";
 						ok = false;
 					}
@@ -579,7 +592,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onSecondJudge2 = functi
 		Ext.each(C, function(r) {
 					var trend = r.data.trend;
 					var recordId = r.data.recordId;
-					if(Ext.isEmpty(trend) || trend != '待二次判定'){//待二次判定
+					if (Ext.isEmpty(trend) || trend != '待二次判定') {// 待二次判定
 						msg = "请选择待二次判定的数据！";
 						ok = false;
 					}

@@ -10,9 +10,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link16</targetConnections>
-    <targetConnections>link15</targetConnections>
     <targetConnections>link20</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link16</targetConnections>
     <location x="825" y="274"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -157,10 +157,6 @@
       <process:to type="query">entity/updateName</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">list/relationId</process:from>
-      <process:to type="query">entity/id</process:to>
-    </process:copy>
-    <process:copy>
       <process:from type="literal" pattern="reference">1</process:from>
       <process:to type="query">entity/state</process:to>
     </process:copy>
@@ -183,8 +179,8 @@
       <sourceNode>invokePojo3</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link2</targetConnections>
+    <targetConnections>link10</targetConnections>
     <location x="519" y="274"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo3label</nodeLabel>
@@ -212,6 +208,7 @@
     <location x="336" y="408"/>
     <size height="24" width="24"/>
     <nodeLabel>loopstart0label</nodeLabel>
+    <process:condition/>
     <process:iterate iterable="list" iterableElement="lst"/>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopstart0label" name="label" nodeType="label">

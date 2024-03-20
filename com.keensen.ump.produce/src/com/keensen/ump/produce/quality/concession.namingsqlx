@@ -43,11 +43,13 @@
        T1.PICTURE_URL as "pictureUrl",
        T1.PICTURE_URL2 as "pictureUrl2",
        T1.PICTURE_URL3 as "pictureUrl3",
-       decode(t1.PROCESS_state,0,'审批中',1,'完结',2,'作废') "processStateName"
+       decode(t1.PROCESS_state,0,'审批中',1,'完结',2,'作废') "processStateName",
+       t3.cnt "cnt"
   FROM KS_QUALITY_CONCESSION_HEAD T1
   left join qinsen.PARA_MATER_SPEC t2
     on t1.PROD_SPEC_ID = t2.mater_spec_id
-  
+   LEFT JOIN (SELECT count(1) cnt,processinstid FROM ES_AUDITOPINION GROUP BY processinstid) t3
+  ON t3.processinstid = t1.processinstid
 	 WHERE 1=1
 	  <isNotNull prepend = ""  property = "id">
 	   AND t1.id = #id#
