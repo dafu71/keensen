@@ -115,7 +115,7 @@
         <%=list[i].getString("pumpSpeed") %>
         </td>
         <td align='center' class="<%=style5 %>">
-        <%=list[i].getString("supName") %>
+        <%=(((list[i].getString("supName")).replace("三菱","A")).replace("三木","B")).replace("天间","C") %>
         </td>
         <td align='center' class="<%=style5 %>">
         <%=list[i].getString("dimoBatchNo") %>
@@ -161,7 +161,7 @@
         <%=list2[i].getString("pumpSpeed") %>
         </td>
 		<td align='center' class="<%=style5 %>">
-        <%=list2[i].getString("supName") %>
+        <%=(((list2[i].getString("supName")).replace("三菱","A")).replace("三木","B")).replace("天间","C") %>
         </td>
         <td align='center' class="<%=style5 %>">
         <%=list2[i].getString("dimoBatchNo") %>

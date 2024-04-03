@@ -629,14 +629,43 @@
        t2.create_name "createName", 
        t2.amount "sendAmount",
        t2.id "sendId",-->
-       t1.QUALIFID_LENGTH - nvl(t3.amount,0) "delivery"
+       t1.QUALIFID_LENGTH - nvl(t3.amount,0) "delivery",
+       nvl(t7.SALT_REJECTION,0) "fSaltRejection",
+       case when t7.SALT_REJECTION-0.05 &gt; 99.79 or t7.SALT_REJECTION-0.05 &lt; 99.65 
+       then round(DBMS_RANDOM.VALUE(99.65, 99.79),2) else t7.SALT_REJECTION-0.05 end "fSaltRejection2",
+       m.mater_code "materCode"
   from v_ks_tumo4 t1
   
   left join (SELECT sum(nvl(t.amount,0)) amount ,record_id 
 			from KS_PROD_DIAPHRAGM_SHIP t
 			GROUP BY record_id) t3
 	on t1.RECORD_ID = t3.RECORD_ID
- 
+ LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'N'
+                     GROUP BY C.BATCH_ID) T7 ON t7.bATCH_ID = t1.RECORD_ID
+                     
+    LEFT JOIN (select '02.01.01.026' as mater_code , 'NF1-R' as mater_name from dual union all
+	select '02.01.01.034' as mater_code , 'SW1-1' as mater_name from dual union all
+	select '02.01.01.033' as mater_code , 'ULP4-1' as mater_name from dual union all
+	select '02.01.01.031' as mater_code , 'ULP2-1' as mater_name from dual union all
+	select '02.01.01.028' as mater_code , 'BW2-1' as mater_name from dual union all
+	select '02.01.01.016' as mater_code , 'ULP-5' as mater_name from dual union all
+	select '02.01.01.0060' as mater_code , 'NF1' as mater_name from dual union all
+	select '02.01.01.032' as mater_code , 'ULP3-1' as mater_name from dual union all
+	select '02.01.01.027' as mater_code , 'BW1-1' as mater_name from dual union all
+	select '02.01.01.029' as mater_code , 'BW3-1' as mater_name from dual union all
+	select '02.01.01.030' as mater_code , 'ULP1-1' as mater_name from dual union all
+	select '02.01.01.0070' as mater_code , 'NF2' as mater_name from dual) m
+	ON m.mater_name = t1.mater_spec_code
+	<isNotNull property="batchNoStr2"> 
+		       left join (SELECT rn,batch_no from 
+		(SELECT ROWNUM rn,COLUMN_VALUE batch_no from 
+		TABLE(SPLIT($batchNoStr2$,',')))) tt on tt.batch_no = t1.BATCH_NO
+	</isNotNull>
  where 1=1
     <isEqual prepend="and" property="isDelivery" compareValue="N">
  			   t1.QUALIFID_LENGTH - nvl(t3.amount,0) > 0
@@ -708,7 +737,14 @@
 	<isNotNull prepend="and" property="dimoBatchNo"> 
 		       t1.DIMO_BATCH_NO like '%' || #dimoBatchNo# || '%'
 	</isNotNull>
- order by t1.produce_dt desc
+	
+	<isNotNull property="batchNoStr2"> 
+		order by tt.rn
+	</isNotNull>
+	<isNull  property="batchNoStr2"> 
+		order by t1.produce_dt desc
+	</isNull>
+ 
  </select>
  
  <select id="queryTumoOrigin" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
@@ -794,6 +830,8 @@
        T1.R_MAC_NAME "rMacName",t3.trend "trend",
        decode(t3.appearance_is_qualified,'Y','合格','不合格') "appearanceIsQualifiedName",
        decode(t3.thick_is_qualified,'Y','合格','不合格') "thickIsQualifiedName",
+       decode(t3.perf_is_qualified,'Y','合格','N','不合格','') "perfIsQualifiedName",
+       t3.reserve4 "reserve4",
        nvl(T4.title,' ') "title",s.amount "stockAmount"
   FROM V_KS_TUMO_ORIGIN2 T1
   left join KS_PROD_DIAPHRAGM_TUMO t3

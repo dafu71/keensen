@@ -82,7 +82,7 @@
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="queryOilBatchNo" displayName="queryOilBatchNo" collapsed="false" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess0</sourceNode>
-      <targetNode>invokePojo1</targetNode>
+      <targetNode>assign1</targetNode>
     </sourceConnections>
     <targetConnections>link1</targetConnections>
     <location x="315" y="150"/>
@@ -106,7 +106,7 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>invokePojo0</targetNode>
     </sourceConnections>
-    <targetConnections>link4</targetConnections>
+    <targetConnections>link5</targetConnections>
     <location x="318" y="245"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo1label</nodeLabel>
@@ -124,10 +124,35 @@
     <figSize height="20" width="108"/>
     <node>invokePojo1</node>
   </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="204" y="245"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/batchNo</process:from>
+      <process:to type="query">batchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">batchNo + &quot;HLY&quot;</process:from>
+      <process:to type="query">entity/refluxNo</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="198" y="281"/>
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="dafu" createTime="2024-03-04 13:59:37" date="2024-03-04Z" description="" name="saveOilHead" version="6.3"/>
-  <process:variables/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="batchNo" primitiveType="String"/>
+  </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.keensen.ump.produce.quality.KsQualityMpTestOilHead" name="entity"/>
   </process:inputs>

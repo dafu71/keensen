@@ -27,6 +27,14 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 					_this.editPanel.form.findField('isBatchQualified2')
 							.setValue(isBatchQualified2);
 				}
+				/*var store = _this.listPanel2.store;
+				var records = store.getRange();
+				Ext.each(records, function(r) {
+							var perfIsQualified = r.data['perfIsQualified'];
+							if (perfIsQualified == 'N') {
+								_this.editPanel.perfIsQualified.setValue('N');
+							}
+						})*/
 
 			})
 
@@ -38,6 +46,7 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 			}, this);
 
 	this.editPanel.mon(this.editPanel, 'afterload', function() {
+
 				var recordId = _this.editPanel.form
 						.findField('entity/recordId').getValue();
 				var perfFlagId = _this.editPanel.perfFlagId.getValue();
@@ -48,10 +57,12 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 				var trendText = _this.editPanel.trend.getValue();
 				var qualifidLength = _this.editPanel.qualifidLength.getValue();
 				var produceRemark = _this.editPanel.produceRemark.getValue();
+				var tagNum = _this.editPanel.tagNum.getValue();
+				var tagLength = _this.editPanel.tagLength.getValue();
 				if (Ext.isEmpty(trendText)) {
 					_this.editPanel.trend.setValue(trend(perfFlagId,
 							isBatchQualified, isKeep, isWx, qualifidLength,
-							produceRemark));
+							produceRemark, tagNum, tagLength));
 				}
 				_this.listPanel2.store.load({
 							params : {
@@ -193,7 +204,7 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onJudge = function() {
 }
 
 function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
-		produceRemark) {
+		produceRemark, tagNum, tagLength) {
 	// alert(perfFlagId + '---' + isBatchQualified + '---' + isKeep + '---' +
 	// isWx);
 	// 发货膜片
@@ -226,13 +237,17 @@ function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
 		ret = '仓库C仓';
 	}
 
-	//外销，合格长度小于300m入AB仓
+	// 外销，合格长度小于300m入AB仓
 	if (isWx == 'Y' && qualifidLength < 300) {
 		ret = '仓库AB仓';
 	}
-	
-	//异常备注里面出现整卷，两个字，系统自动外观判定不合格+流向AB仓
-	if(produceRemark.indexOf('整卷')>-1){
+
+	// 异常备注里面出现整卷，两个字，系统自动外观判定不合格+流向AB仓
+	if (produceRemark.indexOf('整卷') > -1) {
+		ret = '仓库AB仓';
+	}
+	// 发货请检单内瑕疵标签个数＞10个，瑕疵总长度＞30m，自动流向AB仓
+	if (tagNum > 10 && tagLength > 30) {
 		ret = '仓库AB仓';
 	}
 	return ret;

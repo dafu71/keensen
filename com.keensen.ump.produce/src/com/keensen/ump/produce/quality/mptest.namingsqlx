@@ -20,7 +20,7 @@
        T1.LINE           AS "line",
        T1.TANK           AS "tank",
        T1.MPTYPE         AS "mptype",
-       T1.BATCH_NO        AS "batchNo",
+       T1.BATCH_NO        AS "batchNo",T1.reflux_NO        AS "refluxNo",
        T1.STATE          AS "state",
        decode(T1.STATE,0,'处理中',1,'完结','作废') "stateName",
        T1.STEP           AS "step",
@@ -31,7 +31,7 @@
 		       t1.ID = #id#
 			</isNotNull>
 		<isNotNull prepend="and" property="batchNo"> 
-		       t1.batch_no = #batchNo#
+		       (t1.batch_no like '%' || #batchNo# || '%' or t1.reflux_no like '%' || #batchNo# || '%')
 			</isNotNull>
 			<isNotNull prepend="and" property="line"> 
 		       t1.line = #line#
@@ -53,18 +53,18 @@
 		to_char(t2.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
        T1.UPDATE_USER_ID AS "updateUserId",
        T1.UPDATE_NAME    AS "updateName",
-       T1.RESERVE1       AS "reserve1",
+       <!--T1.RESERVE1       AS "reserve1",
        T1.RESERVE2       AS "reserve2",
        T1.RESERVE3       AS "reserve3",
        T1.RESERVE4       AS "reserve4",
-       T1.RESERVE5       AS "reserve5",
+       T1.RESERVE5       AS "reserve5",-->
        T1.ORG_ID         AS "orgId",
        T1.STATUS         AS "status",
        T1.CONCENTRATION  AS "concentration",
-       T1.C41_PLAN       AS "c41Plan",
+       T1.C41_PLAN       AS "c41Plan",T1.weight       AS "weight",
        T1.C42_PLAN       AS "c42Plan",
-       T1.C41_REALITY    AS "c41Reality",
-       T1.C42_REALITY    AS "c42Reality",
+       nvl(T1.C41_REALITY,0)    AS "c41Reality",
+       nvl(T1.C42_REALITY,0)    AS "c42Reality",
        T1.FIRST_NAME     AS "firstName",
        T1.FIRST_ID       AS "firstId",
        T1.SECOND_NAME    AS "secondName",
@@ -76,11 +76,12 @@
        to_char(T1.THIRD_DATE ,'yyyy-MM-dd HH24:mi:ss')    AS "thirdDate",
        T1.RELATION_ID    AS "relationId",
        T2.LINE           AS "line",
-       T2.BATCH_NO        AS "batchNo",
-       T2.STATE          AS "state",
+       T2.BATCH_NO        AS "batchNo",T2.reflux_NO        AS "refluxNo",
+       T2.STATE          AS "state",T2.reserve1          AS "reserve1",
        T2.mptype          AS "mptype",
        T2.TANK           AS "tank",
-       T2.STEP           AS "step"
+       T2.STEP           AS "step",
+       nvl(T1.reflux,0) "reflux"
   FROM KS_QUALITY_MP_TEST_OIL_LIST T1
   LEFT JOIN KS_QUALITY_MP_TEST_OIL_HEAD T2
     ON T1.RELATION_ID = T2.ID

@@ -314,7 +314,7 @@ com.keensen.ump.base.BomMgr = function() {
 
 	this.initViewWindow = function() {
 
-		this.viewWindow = this.viewWindow || new Ext.fn.FormWindow({
+		this.viewWindow = this.viewWindow || new Ext.fn.ShowWindow({
 			title : '查看',
 			height : 600,
 			width : 800,

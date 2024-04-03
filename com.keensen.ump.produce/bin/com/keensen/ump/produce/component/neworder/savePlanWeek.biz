@@ -8,9 +8,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link7</targetConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link16</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link7</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -235,10 +235,6 @@
       <process:to type="query">template/planYear</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">entity/planWeek</process:from>
-      <process:to type="query">template/planWeek</process:to>
-    </process:copy>
-    <process:copy>
       <process:from type="query" pattern="reference">entity/relationId</process:from>
       <process:to type="query">template/relationId</process:to>
     </process:copy>
@@ -314,7 +310,7 @@
       <process:to type="query">err</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="expression" pattern="reference">&quot;该订单已存在&quot; + y + &quot;年度第&quot; + w +&quot;周计划&quot;</process:from>
+      <process:from type="expression" pattern="reference">&quot;该订单已存在&quot; + y + &quot;年度计划&quot;</process:from>
       <process:to type="query">msg</process:to>
     </process:copy>
   </nodes>

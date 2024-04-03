@@ -452,7 +452,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 		})
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 440,
+			height : 480,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -468,6 +468,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'tagNum',
+						ref : '../tagNum',
 						name : 'tagNum',
 						readOnly : true,
 						fieldLabel : '标签数',
@@ -476,6 +477,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'tagLength',
+						ref : '../tagLength',
 						name : 'tagLength',
 						readOnly : true,
 						fieldLabel : '标签长度m',
@@ -488,7 +490,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textarea',
 						dataIndex : 'produceRemark',
-						ref: '../produceRemark',
+						ref : '../produceRemark',
 						readOnly : true,
 						fieldLabel : '异常备注',
 						anchor : '95%',
@@ -665,9 +667,23 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'qualifidLength',
-						ref :'../qualifidLength',
-						readOnly:true,
+						ref : '../qualifidLength',
+						readOnly : true,
 						fieldLabel : '合格长度',
+						anchor : '95%',
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : "<span style='color:red;'>性能判定</span>",
+						colspan : 4
+					}, {
+						xtype : 'dictcombobox',
+						name : 'entity/perfIsQualified',
+						hiddenName : 'entity/perfIsQualified',
+						dataIndex : 'perfIsQualified',
+						ref : '../perfIsQualified',
+						fieldLabel : '是否合格',
+						dictData : KS_YESORNO,
 						anchor : '95%',
 						colspan : 2
 					}, {
@@ -678,7 +694,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						xtype : 'textfield',
 						dataIndex : 'batchNo',
 						name : 'entity/batchNo',
-						fieldLabel : '膜片批号号',
+						fieldLabel : '膜片批号',
 						readOnly : true,
 						anchor : '95%',
 						colspan : 2
@@ -841,7 +857,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 
 		this.editWindow = this.editWindow || new Ext.Window({
 					title : '膜片质检判定',
-					height : 600,
+					height : 650,
 					width : 800,
 					resizable : false,
 					minimizable : false,

@@ -3,17 +3,7 @@
   <nodes xsi:type="process:tStart" id="start0" name="开始" collapsed="false" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tLink" id="link29" name="link29" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
-      <targetNode>invokePojo0</targetNode>
-    </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link30" name="修改" type="transition">
-      <sourceNode>start0</sourceNode>
-      <targetNode>assign0</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="NOTNULLANDEMPTY">
-          <process:leftOperand type="query">entity/id</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
+      <targetNode>switch0</targetNode>
     </sourceConnections>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
@@ -50,7 +40,7 @@
       <sourceNode>assign1</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
-    <targetConnections>link28</targetConnections>
+    <targetConnections>link0</targetConnections>
     <nodeLabel>assign1label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">m:userObject/userId</process:from>
@@ -85,9 +75,9 @@
   <nodes xsi:type="process:tInvoke" id="invokePojo0" name="getPrimaryKey" collapsed="false" nodeType="common" type="invoke" index="1" invokeType="invoke_pojo" varArgs="false">
     <sourceConnections xsi:type="process:tLink" id="link28" name="link28" isDefault="true" type="transition">
       <sourceNode>invokePojo0</sourceNode>
-      <targetNode>assign1</targetNode>
+      <targetNode>subprocess0</targetNode>
     </sourceConnections>
-    <targetConnections>link29</targetConnections>
+    <targetConnections>link7</targetConnections>
     <nodeLabel>invokePojo0label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseExt.getPrimaryKey</process:partner>
@@ -123,6 +113,196 @@
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo1label" name="label" nodeType="label">
     <figSize height="20" width="74"/>
     <node>invokePojo1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess0" name="queryReworkCode" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link28</targetConnections>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.queryReworkCode</process:partner>
+      <process:inputVariables/>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="code" type="query" value="String" valueType="Primitive">entity/code</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <figSize height="20" width="137"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="返工指令" isDefault="false" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">entity/step</process:leftOperand>
+          <process:rightOperand type="literal">third</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link3" name="发起或者修改" isDefault="false" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">entity/step</process:leftOperand>
+          <process:rightOperand type="literal">second</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link8" name="返工安排" isDefault="false" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign5</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">entity/step</process:leftOperand>
+          <process:rightOperand type="literal">fourth</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link29</targetConnections>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <figSize height="20" width="46"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign3" name="赋值3" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/secondId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/secondName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">entity/secondTime</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign4" name="赋值4" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/firstId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/firstName</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link30" name="修改" isDefault="false" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">entity/id</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" isDefault="true" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <nodeLabel>switch1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
+    <figSize height="20" width="55"/>
+    <node>switch1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign5" name="赋值5" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" isDefault="true" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <nodeLabel>assign5label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/thirdId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/thirdName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">entity/thirdTime</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign2" name="赋值2" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/fourthId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/fourthName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">entity/fourthTime</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

@@ -108,12 +108,15 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						height : '5',
 						colspan : 4
 					}, {
-						xtype : 'textarea',
-						name : 'condition/batchNoStr2',
-						emptyText : '多个批次请用逗号分隔，或一行一个批次',
-						colspan : 2,
-						anchor : '85%',
-						fieldLabel : '膜片批次'
+						xtype : 'textfield',
+						name : 'condition/title',
+						anchor : '75%',
+						fieldLabel : '请检单号'
+					}, {
+						xtype : 'mpspeccombobox',
+						hiddenName : 'condition/specId',
+						anchor : '75%',
+						fieldLabel : '膜片型号 '
 					}, {
 						xtype : 'mpperfcombobox',
 						hiddenName : 'condition/perfFlagId',
@@ -150,15 +153,12 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						height : '5',
 						colspan : 4
 					}, {
-						xtype : 'textfield',
-						name : 'condition/title',
-						anchor : '75%',
-						fieldLabel : '请检单号'
-					}, {
-						xtype : 'mpspeccombobox',
-						hiddenName : 'condition/specId',
-						anchor : '75%',
-						fieldLabel : '膜片型号 '
+						xtype : 'textarea',
+						name : 'condition/batchNoStr2',
+						emptyText : '多个批次请用逗号分隔，或一行一个批次',
+						colspan : 2,
+						anchor : '85%',
+						fieldLabel : '膜片批次'
 					}, {
 						xtype : 'hidden',
 						name : 'condition/isCutOver',
@@ -207,6 +207,12 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onCheck2
+					}, '-', {
+						text : '工艺员备注',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : gyyFlag !=1,
+						handler : this.onRemark
 					}, '->', {
 						text : '二次判定-自用',
 						scope : this,
@@ -256,6 +262,12 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 					}, {
 						dataIndex : 'thickIsQualifiedName',
 						header : '厚度'
+					}, {
+						dataIndex : 'perfIsQualifiedName',
+						header : '性能'
+					}, {
+						dataIndex : 'reserve4',
+						header : '工艺员备注'
 					}, {
 						dataIndex : 'stockAmount',
 						header : '库存数量'
@@ -422,6 +434,10 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'stockAmount'
 						}, {
 							name : 'mpd'
+						}, {
+							name : 'perfIsQualifiedName'
+						}, {
+							name : 'reserve4'
 						}]
 			})
 		})

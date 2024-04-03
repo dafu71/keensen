@@ -59,6 +59,57 @@ function isNonNegativeFloat(str) {
 	return regex.test(str);
 }
 
+com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onRemark = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var trend = C[0].data.trend;
+		var recordId = C[0].data.recordId;
+		if (Ext.isEmpty(trend)) {
+			Ext.Msg.alert("系统提示", "请选择品管已经判定过的数据！");
+			return false;
+		}
+		Ext.Msg.prompt('工艺员备注', '请输入', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.quality.quality.saveDiaphragmTumo.biz.ext",
+					method : "post",
+					jsonData : {
+						'entity/reserve4' : text,
+						'entity/reserve5' : uid + '----' + (new Date()),
+						'entity/recordId' : recordId
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.load();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "备注失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, true);
+	}
+}
+
 // 发货请检单
 com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck = function() {
 	// 订单号-计划单号

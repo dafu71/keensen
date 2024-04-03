@@ -132,6 +132,10 @@
       <process:from type="query" pattern="reference">order/id</process:from>
       <process:to type="query">data/orderId</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">order/materSpecId</process:from>
+      <process:to type="query">data/materSpecId</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="414" y="291"/>

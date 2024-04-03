@@ -11,6 +11,8 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+     //10001322膜片测试-工艺员
+    int gyyFlag = roleId.indexOf("10001322")>-1?1:0;
 %>
 <html>
 <!-- 
@@ -52,6 +54,8 @@
 </style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  var gyyFlag = <%=gyyFlag %>;
+
   var listid = 'tumo-choose-list';
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.tumo.tumoMgr

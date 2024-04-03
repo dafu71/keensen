@@ -36,8 +36,14 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 				if (this.opt == 'addplanweek') {
-					this.planWeekWindow.show();
-					this.planWeekWindow.loadData(cell);
+					var cnt = cell.get('cnt');
+					if (cnt > 0) {
+						Ext.Msg.alert('系统提示', ' 已经制定计划，不能新增');
+						return false;
+					} else {
+						this.planWeekWindow.show();
+						this.planWeekWindow.loadData(cell);
+					}
 				}
 			}, this);
 
@@ -108,9 +114,22 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onAddPlanWeek2 = function
 // 模板文件下载
 com.keensen.ump.produce.component.yxorderMgr.prototype.onDown = function() {
 
-	var fname = "ks_component_yxorder_import.xls";
-	window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
-			+ fname;
+	Ext.Msg.show({
+		width : 350,
+		title : "操作提示",
+		msg : "下载模板后，请按照示例填写真实订单数据，并注意日期和数字格式,示例数据请删除后再提交。",
+		icon : Ext.Msg.WARNING,
+		buttons : Ext.Msg.OK,
+		fn : function(btn) {
+			if (btn == "ok") {
+				var fname = "ks_component_yxorder_import.xls";
+				window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
+						+ fname;
+			}
+		}
+
+	})
+
 }
 
 // 弹出文件上传选择窗口

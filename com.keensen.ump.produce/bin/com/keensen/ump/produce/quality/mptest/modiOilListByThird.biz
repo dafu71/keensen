@@ -24,9 +24,19 @@
   <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
-      <targetNode>invokePojo0</targetNode>
+      <targetNode>assign1</targetNode>
     </sourceConnections>
-    <targetConnections>link6</targetConnections>
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="GT">
+          <process:leftOperand type="query">reflux</process:leftOperand>
+          <process:rightOperand type="literal">0</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
       <process:from type="expression" pattern="reference">new Date()</process:from>
@@ -68,6 +78,18 @@
       <process:from type="query" pattern="reference">list/relationId</process:from>
       <process:to type="query">entity/id</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/weight</process:from>
+      <process:to type="query">weight</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c41Reality</process:from>
+      <process:to type="query">c41Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/reflux</process:from>
+      <process:to type="query">reflux</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>
@@ -78,7 +100,8 @@
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
-    <targetConnections>link1</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link11</targetConnections>
     <nodeLabel>invokePojo0label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.saveEntity</process:partner>
@@ -135,8 +158,14 @@
     <sourceConnections xsi:type="process:tLink" id="link5" name="link5" isDefault="true" type="transition">
       <sourceNode>subprocess0</sourceNode>
       <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" isDefault="false" type="transition">
       <sourceNode>subprocess0</sourceNode>
       <targetNode>assign0</targetNode>
       <process:transitionCondition>
@@ -163,12 +192,47 @@
     <figSize height="20" width="77"/>
     <node>subprocess0</node>
   </nodes>
+  <nodes xsi:type="process:tAssign" id="assign1" name="赋值1" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c41Reality + weight</process:from>
+      <process:to type="query">list/weight</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign3" name="赋值3" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c41Reality + reflux</process:from>
+      <process:to type="query">list/weight</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info version="6.3"/>
   <process:variables>
     <process:variable historyStateLocation="client" isArray="false" name="flag" primitiveType="Boolean"/>
     <process:variable historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.quality.KsQualityMpTestOilHead" name="entity2"/>
+    <process:variable historyStateLocation="client" isArray="false" name="weight" primitiveType="Float"/>
+    <process:variable historyStateLocation="client" isArray="false" name="c41Reality" primitiveType="Float"/>
+    <process:variable historyStateLocation="client" isArray="false" name="reflux" primitiveType="Float"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input isArray="false" modelType="com.keensen.ump.produce.quality.KsQualityMpTestOilHead" name="entity"/>

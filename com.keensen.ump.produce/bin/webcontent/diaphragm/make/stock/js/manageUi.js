@@ -86,12 +86,21 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 				forceFit : true
 			},
 			hsPage : true,
+			tbar : [{
+						text : '新/老基地切换',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onChange
+					}],
 			selModel : selModel,
 			// delUrl :
 			// 'com.keensen.ump.produce.diaphragm.make.make.deleteZmxEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'productDt',
 						header : '生产日期'
+					}, {
+						dataIndex : 'base',
+						header : '基地'
 					}, {
 						dataIndex : 'line',
 						header : '生产线别'
@@ -138,6 +147,10 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 							name : 'supName'
 						}, {
 							name : 'pumpSpeed'
+						}, {
+							name : 'base'
+						}, {
+							name : 'id'
 						}]
 			})
 		})

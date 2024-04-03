@@ -142,10 +142,18 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	var orderId = this.editPlanDayPanel.orderId.getValue();
 	var startDate = this.editPlanDayPanel.startDate.getValue();
 	var endDate = this.editPlanDayPanel.endDate.getValue();
+	var materSpecId = this.editPlanDayPanel.materSpecId.getValue();
+	
 	this.planDayWindow.planDate.store.load({
 				params : {
 					'condition/startDate' : startDate,
 					'condition/endDate' : endDate
+				}
+			});
+			
+	this.planDayWindow.batchNo.store.load({
+				params : {
+					'condition/prodSpecId' : materSpecId
 				}
 			});
 	this.planDayWindow.relationId.setValue(relationId);
@@ -167,6 +175,13 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlanRoll = function
 com.keensen.ump.produce.component.planweekMgr.prototype.onEditPlan = function() {
 	var startDate = this.editPlanDayPanel.startDate.getValue();
 	var endDate = this.editPlanDayPanel.endDate.getValue();
+	var materSpecId = this.editPlanDayPanel.materSpecId.getValue();
+	
+	this.planDayWindow2.batchNo.store.load({
+				params : {
+					'condition/prodSpecId' : materSpecId
+				}
+			});
 	this.planDayWindow2.planDate.store.load({
 				params : {
 					'condition/startDate' : startDate,

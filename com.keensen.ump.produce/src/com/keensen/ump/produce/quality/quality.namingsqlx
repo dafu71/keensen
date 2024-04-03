@@ -65,6 +65,7 @@
     	ON T.PROD_SPEC_ID = T1.MATER_SPEC_ID
   	LEFT JOIN KS_PROD_QUALITY_DIAMRECORD T2
     	ON T2.RELATION_ID = T.RECORD_ID
+    
  	WHERE 1 = 1
 	<isNotNull prepend="and" property="recordId"> 
 		       T.RECORD_ID = #recordId#

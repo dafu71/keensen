@@ -36,6 +36,10 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;neworder.componentType&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;neworder&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder&lt;/html&gt;</string>
   </entry>
   <entry>
+    <string>com.keensen.ump.produce.component.neworder.queryReworkCode()</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryReworkCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;genCheckNo&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.queryReworkCode&lt;dl&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;code(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>com.keensen.ump.produce.component.neworder.queryYxOrderTraceByPage(java.util.Map, com.eos.foundation.PageCond)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryYxOrderTraceByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.queryYxOrderTraceByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
@@ -44,12 +48,12 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandRework&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandYxOrder&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.expandRework&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentRework):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.produce.component.KsComponentRework):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.produce.component.neworder.savePlanDay(com.keensen.ump.produce.component.KsComponentPlanDay)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;savePlanDay&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.savePlanDay&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentPlanDay):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
     <string>com.keensen.ump.produce.component.neworder.savePlanWeek(com.keensen.ump.produce.component.KsComponentPlanWeek)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;savePlanWeek&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.savePlanWeek&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentPlanWeek):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.neworder.savePlanDay(com.keensen.ump.produce.component.KsComponentPlanDay)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;savePlanDay&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.savePlanDay&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentPlanDay):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.component.neworder.queryPlanDay(java.util.HashMap)</string>
@@ -60,8 +64,20 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandPlanRoll&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandYxOrder&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.expandPlanRoll&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentPlanRoll):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.produce.component.KsComponentPlanRoll):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
+    <string>com.keensen.ump.produce.component.neworder.deleteRework(com.keensen.ump.produce.component.KsComponentRework[])</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteRework&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.deleteRework&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.produce.component.KsComponentRework[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.neworder.Copy_of_SavePlanWeek(com.keensen.ump.produce.component.KsComponentPlanWeek)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;Copy_of_SavePlanWeek&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.Copy_of_SavePlanWeek&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentPlanWeek):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>com.keensen.ump.produce.component.neworder.expandPlanDay(com.keensen.ump.produce.component.KsComponentPlanDay)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandPlanDay&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandYxOrder&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.expandPlanDay&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentPlanDay):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.produce.component.KsComponentPlanDay):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.neworder.queryBatchNo(java.util.HashMap)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryBatchNo&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryStock&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.neworder.queryBatchNo&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.component.neworder.queryPlanWeek(java.util.HashMap)</string>

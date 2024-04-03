@@ -227,6 +227,9 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 						dataIndex : 'thickIsQualifiedName',
 						header : '厚度'
 					}, {
+						dataIndex : 'perfIsQualifiedName',
+						header : '性能'
+					}, {
 						dataIndex : 'batchNo',
 						sortable : true,
 						header : '膜片批次'
@@ -290,6 +293,8 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 							name : 'appearanceIsQualifiedName'
 						}, {
 							name : 'thickIsQualifiedName'
+						}, {
+							name : 'perfIsQualifiedName'
 						}]
 			})
 		})

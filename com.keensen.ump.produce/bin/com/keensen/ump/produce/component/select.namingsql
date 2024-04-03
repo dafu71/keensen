@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.select">
+    <select id="query" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+     SELECT T1.MATER_CODE          AS "materCode", t1.record_id "tumoBatchId",
+       T1.MATER_SPEC_CODE     AS "materSpecCode", t1.mp_spec_id "mpSpecId",
+       T1.TUMO_BATCH_NO       AS "tumoBatchNo",
+       T1.STORAGE_NAME        AS "storageName",
+       T1.STORAGE_POSITION    AS "storagePosition",
+       T1.USEFUL_LENGTH       AS "usefulLength",
+       T1.REMAIN              AS "remain",
+       T1.PRODUCE_DT          AS "produceDt",
+       T1.IS_KEEP             AS "isKeep",
+       T1.REMARK              AS "remark",
+       T1.TEST_GPD            AS "testGpd",
+       T1.TEST_AVG_GPD        AS "testAvgGpd",
+       T1.SALT                AS "salt",
+       T1.TEST_SALT_REJECTION AS "testSaltRejection",
+       T1.min_SALT_REJECTION AS "minSaltRejection",
+       T1.max_SALT_REJECTION AS "maxSaltRejection",       
+       T1.TEST_MATER_SPEC     AS "testMaterSpec",
+       T1.CHECK_BATCH_NO      AS "checkBatchNo",
+       T1.GPD                 AS "gpd",
+       T1.SALT2               AS "salt2",
+       T1.CHECK_TM            AS "checkTm",
+       T1.SALT_REJECTION      AS "saltRejection",
+       T1.AREA                AS "area"
+  FROM (SELECT MAX(TT.MATER_CODE) MATER_CODE,
+               MAX(TT.MATER_SPEC_CODE) MATER_SPEC_CODE, MAX(tt.mp_spec_id) mp_spec_id,
+               TUMO_BATCH_NO,max(RECORD_ID) RECORD_ID ,
+               MAX(STORAGE_NAME) STORAGE_NAME,
+               MAX(STORAGE_POSITION) STORAGE_POSITION,
+               MAX(USEFUL_LENGTH) USEFUL_LENGTH,
+               MAX(REMAIN) REMAIN,
+               MAX(PRODUCE_DT) PRODUCE_DT,
+               MAX(IS_KEEP) IS_KEEP,
+               MAX(REMARK) REMARK,
+               LISTAGG(TEST_GPD, ',') WITHIN GROUP(ORDER BY POSITION_LENGTH) TEST_GPD,
+               ROUND(AVG(TEST_GPD),2) TEST_AVG_GPD,
+               MAX(SALT) SALT,
+               LISTAGG(TEST_SALT_REJECTION, ',') WITHIN GROUP(ORDER BY POSITION_LENGTH) TEST_SALT_REJECTION,
+               min(TEST_SALT_REJECTION)  min_SALT_REJECTION,  
+               max(TEST_SALT_REJECTION)  max_SALT_REJECTION,  
+               MAX(TEST_MATER_SPEC) TEST_MATER_SPEC,
+               MAX(CHECK_BATCH_NO) CHECK_BATCH_NO,
+               MAX(GPD) GPD,
+               MAX(SALT) SALT2,
+               MAX(CHECK_TM) CHECK_TM,
+               MAX(SALT_REJECTION) SALT_REJECTION,
+               MAX(AREA) AREA
+          FROM (SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
+       T.BATCH_NO TUMO_BATCH_NO,
+       T.USEFUL_LENGTH,
+       T.CAIMO_LENGTH,
+       T.USEFUL_LENGTH - T.CAIMO_LENGTH REMAIN,
+       T.DIMO_BATCH_NO,
+       SUBSTR(T.PRODUCE_DATE, 1, 10) PRODUCE_DT,
+       T.IS_KEEP,
+       T.REMARK,
+       T.MATER_SPEC_CODE,T.spec_id mp_spec_id,
+       M.MATER_CODE,
+       T3.NAME STORAGE_NAME,
+       T3.POSITION STORAGE_POSITION,
+       NVL(TST.R_GPD, TST.F_GPD) GPD,
+       NVL(TST.R_SALT, TST.F_SALT) SALT,
+       TO_CHAR(NVL(TST.R_CHECK_TM, TST.F_CHECK_TM), 'yyyy-Mm-dd') CHECK_TM,
+       TST.CHECK_BATCH_NO,
+       TST.TEST_MATER_SPEC,
+       TST.TEST_TUMO_BATCH_ID,
+       TST4.SALT_REJECTION,
+       PMS.AREA,
+       TST3.GFD_AVG,
+       TST3.GFD_AVG GFD_AVG2,
+       TST4.POSITION_LENGTH,
+       TST4.SALT_REJECTION TEST_SALT_REJECTION,
+       ROUND((NVL(TST.R_GPD, TST.F_GPD) * TST4.GFD_AVG) / TST3.GFD_AVG, 2) TEST_GPD
+  FROM V_KS_TUMO_ORIGIN T
+  LEFT JOIN (SELECT '02.01.01.026' AS MATER_CODE, 'NF1-R' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.034' AS MATER_CODE, 'SW1-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.033' AS MATER_CODE, 'ULP4-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.031' AS MATER_CODE, 'ULP2-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.028' AS MATER_CODE, 'BW2-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.016' AS MATER_CODE, 'ULP-5' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.0060' AS MATER_CODE, 'NF1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.032' AS MATER_CODE, 'ULP3-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.027' AS MATER_CODE, 'BW1-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.029' AS MATER_CODE, 'BW3-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.030' AS MATER_CODE, 'ULP1-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.0070' AS MATER_CODE, 'NF2' AS MATER_NAME
+               FROM DUAL) M
+    ON M.MATER_NAME = T.MATER_SPEC_CODE
+
+  LEFT JOIN (SELECT T.BATCH_NO, T2.NAME, T.POSITION
+               FROM KS_PROD_DIAPHRAGM_STOCK T
+               LEFT JOIN KS_BASE_STORAGE T2
+                 ON T.STORAGE_ID = T2.ID) T3
+    ON T3.BATCH_NO = T.BATCH_NO
+
+  LEFT JOIN (SELECT WT.*,
+                    TM.RECORD_ID        TEST_TUMO_BATCH_ID,
+                    TM.DIMO_BATCH_NO,
+                    TM.BATCH_NO         CHECK_BATCH_NO,
+                    PMS.MATER_SPEC_NAME TEST_MATER_SPEC
+               FROM (SELECT *
+                       FROM QINSEN.INST_WATER_TEST
+                      WHERE JUANMO_BATCH_ID IN
+                            (SELECT RECORD_ID
+                               FROM QINSEN.INST_JUANMO_MAIN J
+                              WHERE J.TUMO_BATCH_STR IS NULL OR INSTR(J.TUMO_BATCH_STR, ',') = 0)) WT
+               LEFT JOIN QINSEN.INST_JUANMO_DETAIL JD
+                 ON WT.JUANMO_BATCH_ID = JD.MAIN_BATCH_ID
+               LEFT JOIN QINSEN.INST_CAIDIEMO CDM
+                 ON JD.CDM_BATCH_ID = CDM.RECORD_ID
+               LEFT JOIN QINSEN.INST_TUMO TM
+                 ON CDM.TUMO_BATCH_ID = TM.RECORD_ID
+               LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                 ON PMS.MATER_SPEC_ID = WT.TEST_SPEC_ID
+               WHERE WT.RECORD_ID IN
+                    (SELECT MAX(TT.WT_RECORD_ID) WT_RECORD_ID
+                       FROM (SELECT TM.RECORD_ID,
+                                    TM.DIMO_BATCH_NO,wt.record_id WT_RECORD_ID
+                               FROM (SELECT *
+                                       FROM QINSEN.INST_WATER_TEST
+                                      WHERE JUANMO_BATCH_ID IN
+                                            (SELECT RECORD_ID
+                                               FROM QINSEN.INST_JUANMO_MAIN J
+                                              WHERE J.TUMO_BATCH_STR IS NULL OR INSTR(J.TUMO_BATCH_STR, ',') = 0)) WT
+                               LEFT JOIN QINSEN.INST_JUANMO_DETAIL JD
+                                 ON WT.JUANMO_BATCH_ID = JD.MAIN_BATCH_ID
+                               LEFT JOIN QINSEN.INST_CAIDIEMO CDM
+                                 ON JD.CDM_BATCH_ID = CDM.RECORD_ID
+                               LEFT JOIN QINSEN.INST_TUMO TM
+                                 ON CDM.TUMO_BATCH_ID = TM.RECORD_ID
+                              WHERE WT.TEST_TYPE_ID = 300040
+                                AND TM.SPEC_ID IN (100030222,100030224,100030225,100030226,100030234,100030235,100030236)) TT
+                      GROUP BY TT.DIMO_BATCH_NO)) TST
+    ON TST.DIMO_BATCH_NO = T.DIMO_BATCH_NO
+
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_NAME = TST.TEST_MATER_SPEC
+  LEFT JOIN (SELECT T.BATCH_ID  TEST_BATCH_ID,
+                    T.GFD_AVG,
+                    T.RECORD_ID RID,
+                    T2.BATCH_NO TEST_BATCH_NO
+               FROM QINSEN.INST_TUMO_CHECK T
+               LEFT JOIN QINSEN.INST_TUMO T2
+                 ON T.BATCH_ID = T2.RECORD_ID
+                  WHERE 1=1
+              AND t.record_id IN(
+                  SELECT MAX(record_id) FROM QINSEN.INST_TUMO_CHECK
+                  WHERE RECHECK_FLAG = 'N'
+                  GROUP BY BATCH_ID
+              )) TST3
+    ON TST3.TEST_BATCH_ID = TST.TEST_TUMO_BATCH_ID
+  LEFT JOIN (SELECT T.BATCH_ID,
+                    T.GFD_AVG,
+                    T2.BATCH_NO TEST_BATCH_NO,
+                    T.POSITION_LENGTH,
+                    T.SALT_REJECTION
+               FROM QINSEN.INST_TUMO_CHECK T
+               LEFT JOIN QINSEN.INST_TUMO T2
+                 ON T.BATCH_ID = T2.RECORD_ID
+             WHERE RECHECK_FLAG = 'N'
+             
+             ) TST4
+    ON TST4.BATCH_ID = T.RECORD_ID
+ 
+
+ WHERE 1 = 1
+   AND T.MATER_SPEC_CODE IN
+       ('SW1-1', 'NF1', 'NF2', 'BW2-1', 'BW1-1', 'BW3-1', 'NF1-R')
+
+UNION ALL
+
+SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
+       T.BATCH_NO TUMO_BATCH_NO,
+       T.USEFUL_LENGTH,
+       T.CAIMO_LENGTH,
+       T.USEFUL_LENGTH - T.CAIMO_LENGTH REMAIN,
+       T.DIMO_BATCH_NO,
+       SUBSTR(T.PRODUCE_DATE, 1, 10) PRODUCE_DT,
+       T.IS_KEEP,
+       T.REMARK,
+       T.MATER_SPEC_CODE,T.spec_id mp_spec_id,
+       M.MATER_CODE,
+       T3.NAME STORAGE_NAME,
+       T3.POSITION STORAGE_POSITION,
+       NVL(TST.R_GPD, TST.F_GPD) GPD,
+       NVL(TST.R_SALT, TST.F_SALT) SALT,
+       TO_CHAR(NVL(TST.R_CHECK_TM, TST.F_CHECK_TM), 'yyyy-Mm-dd') CHECK_TM,
+       TST.CHECK_BATCH_NO,
+       TST.TEST_MATER_SPEC,
+       TST.TEST_TUMO_BATCH_ID,
+       TST4.SALT_REJECTION,
+       PMS.AREA,
+       TST3.GFD_AVG,
+       TST3.GFD_AVG GFD_AVG2,
+       TST4.POSITION_LENGTH,
+       TST4.SALT_REJECTION TEST_SALT_REJECTION,
+       ROUND((NVL(TST.R_GPD, TST.F_GPD) * TST4.GFD_AVG) / TST3.GFD_AVG, 2) TEST_GPD
+  FROM V_KS_TUMO_ORIGIN T
+  LEFT JOIN (SELECT '02.01.01.026' AS MATER_CODE, 'NF1-R' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.034' AS MATER_CODE, 'SW1-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.033' AS MATER_CODE, 'ULP4-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.031' AS MATER_CODE, 'ULP2-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.028' AS MATER_CODE, 'BW2-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.016' AS MATER_CODE, 'ULP-5' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.0060' AS MATER_CODE, 'NF1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.032' AS MATER_CODE, 'ULP3-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.027' AS MATER_CODE, 'BW1-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.029' AS MATER_CODE, 'BW3-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.030' AS MATER_CODE, 'ULP1-1' AS MATER_NAME
+               FROM DUAL
+             UNION ALL
+             SELECT '02.01.01.0070' AS MATER_CODE, 'NF2' AS MATER_NAME
+               FROM DUAL) M
+    ON M.MATER_NAME = T.MATER_SPEC_CODE
+
+  LEFT JOIN (SELECT T.BATCH_NO, T2.NAME, T.POSITION
+               FROM KS_PROD_DIAPHRAGM_STOCK T
+               LEFT JOIN KS_BASE_STORAGE T2
+                 ON T.STORAGE_ID = T2.ID) T3
+    ON T3.BATCH_NO = T.BATCH_NO
+
+  LEFT JOIN (SELECT TO_CHAR(TM.produce_dt, 'yyyyMMdd') F_CHECK_DT,
+                    SUBSTR(TM.BATCH_NO, 2, 1) AORB,
+                    TM.SPEC_ID,tm.record_id TEST_TUMO_BATCH_ID,PMS.MATER_SPEC_NAME TEST_MATER_SPEC,
+                    WT.*,TM.BATCH_NO  CHECK_BATCH_NO
+               FROM QINSEN.INST_WATER_TEST WT
+               LEFT JOIN QINSEN.INST_JUANMO_DETAIL JD
+                 ON WT.JUANMO_BATCH_ID = JD.MAIN_BATCH_ID
+               LEFT JOIN QINSEN.INST_CAIDIEMO CDM
+                 ON JD.CDM_BATCH_ID = CDM.RECORD_ID
+               LEFT JOIN QINSEN.INST_TUMO TM
+                 ON CDM.TUMO_BATCH_ID = TM.RECORD_ID
+               LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                 ON PMS.MATER_SPEC_ID = WT.TEST_SPEC_ID
+              WHERE WT.RECORD_ID IN
+                    (SELECT MAX(TT.WT_RECORD_ID) WT_RECORD_ID
+                       FROM (SELECT TM.RECORD_ID,
+                                    TM.BATCH_NO,
+                                    TM.SPEC_ID,
+                                    WT.RECORD_ID WT_RECORD_ID,
+                                    TO_CHAR(TM.produce_dt, 'yyyyMMdd') F_CHECK_DT,
+                                    TM.PRODUCE_DT,
+                                    SUBSTR(TM.BATCH_NO, 2, 1) AORB
+                               FROM (SELECT *
+                                       FROM QINSEN.INST_WATER_TEST
+                                      WHERE JUANMO_BATCH_ID IN
+                                            (SELECT RECORD_ID
+                                               FROM QINSEN.INST_JUANMO_MAIN J
+                                              WHERE J.TUMO_BATCH_STR IS NULL OR INSTR(J.TUMO_BATCH_STR, ',') = 0)) WT
+                               LEFT JOIN QINSEN.INST_JUANMO_DETAIL JD
+                                 ON WT.JUANMO_BATCH_ID = JD.MAIN_BATCH_ID
+                               LEFT JOIN QINSEN.INST_CAIDIEMO CDM
+                                 ON JD.CDM_BATCH_ID = CDM.RECORD_ID
+                               LEFT JOIN QINSEN.INST_TUMO TM
+                                 ON CDM.TUMO_BATCH_ID = TM.RECORD_ID
+                              WHERE WT.TEST_TYPE_ID = 300040
+                                AND TM.SPEC_ID IN (100030228,
+                                                   100030229,
+                                                   100030230,
+                                                   100030231)) TT
+                      GROUP BY TT.SPEC_ID, TT.F_CHECK_DT, TT.AORB)) TST
+    ON TST.F_CHECK_DT = to_char(T.produce_dt,'yyyyMMdd') AND TST.aorb = sUBSTR(t.BATCH_NO, 2, 1) AND 
+    tst.spec_id = t.SPEC_ID
+
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_NAME = TST.TEST_MATER_SPEC
+  LEFT JOIN (SELECT T.BATCH_ID  TEST_BATCH_ID,
+                    T.GFD_AVG,
+                    T.RECORD_ID RID,
+                    T2.BATCH_NO TEST_BATCH_NO
+               FROM QINSEN.INST_TUMO_CHECK T
+               LEFT JOIN QINSEN.INST_TUMO T2
+                 ON T.BATCH_ID = T2.RECORD_ID
+                 WHERE 1=1
+              AND t.record_id IN(
+                  SELECT MAX(record_id) FROM QINSEN.INST_TUMO_CHECK
+                  WHERE RECHECK_FLAG = 'N'
+                  GROUP BY BATCH_ID
+              )) TST3
+    ON TST3.TEST_BATCH_ID = TST.TEST_TUMO_BATCH_ID
+  LEFT JOIN (SELECT T.BATCH_ID,
+                    T.GFD_AVG,
+                    T2.BATCH_NO TEST_BATCH_NO,
+                    T.POSITION_LENGTH,
+                    T.SALT_REJECTION
+               FROM QINSEN.INST_TUMO_CHECK T
+               LEFT JOIN QINSEN.INST_TUMO T2
+                 ON T.BATCH_ID = T2.RECORD_ID
+              WHERE RECHECK_FLAG = 'N'             
+             ) TST4
+    ON TST4.BATCH_ID = T.RECORD_ID
+ 
+
+ WHERE 1 = 1
+   AND T.MATER_SPEC_CODE IN ('ULP2-1', 'ULP1-1', 'ULP3-1', 'ULP4-1')
+) TT
+         WHERE 1 = 1
+        <isNotNull prepend="" property="tumoBatchNo">AND TT.TUMO_BATCH_NO in ($tumoBatchNo$)</isNotNull>
+        <isNotNull prepend="" property="produceDtStart">and to_char(TT.mp_produce_dt,'yyyy-MM-dd') &gt;= #produceDtStart#</isNotNull>
+        <isNotNull prepend="" property="produceDtEnd">and to_char(TT.mp_produce_dt,'yyyy-MM-dd') &lt;= #produceDtEnd#</isNotNull>
+               
+         GROUP BY TT.TUMO_BATCH_NO) T1
+         
+
+    </select>
+    <delete id="deleteSelectByTumoBatchNo" parameterClass="java.util.HashMap">delete from  KS_COMPONENT_TUMO_SELECT
+	WHERE
+	TUMO_BATCH_NO = #tumoBatchNo#</delete>
+    <insert id="insertSelett" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_TUMO_SELECT
+  (ID,TUMO_BATCH_ID,
+   CREATE_TIME,
+   CREATE_USER_ID,
+   CREATE_NAME,
+   TUMO_BATCH_NO,
+   MP_SPEC_ID,
+   TEST_AVG_GPD,
+   SALT_REJECTION,
+   TEST_AREA,test_Salt_Rejection,min_Salt_Rejection,max_Salt_Rejection,
+   PROD_SPEC_ID,
+   STD_AREA,A_GPD_LOW_LIMIT,A_GPD_UP_LIMIT,A_SALT_LOW_LIMIT,MP_SALT_LOW_LIMIT,
+   flag
+   )
+  SELECT SEQ_COMPONENT_TUMO_SELECT.NEXTVAL,#tumoBatchId#,
+         SYSDATE,
+         #createUserId#,
+         #createName#,
+         #tumoBatchNo#,
+         #mpSpecId#,         
+         #testAvgGpd#,         
+         #saltRejection#,
+         #testArea#,
+         #testSaltRejection#,#minSaltRejection#,#maxSaltRejection#,
+         PROD_SPEC_ID,
+         AREA,
+         A_GPD_LOW_LIMIT,A_GPD_UP_LIMIT,A_SALT_LOW_LIMIT,
+         mp_salt,
+         
+          CASE WHEN round(#testAvgGpd# * AREA/#testArea#,2)&gt;=A_GPD_LOW_LIMIT
+      AND round(#testAvgGpd# * AREA/#testArea#,2)&lt;= nvl(A_GPD_UP_LIMIT,1000000)
+      AND #saltRejection# &gt;= A_SALT_LOW_LIMIT 
+       AND #minSaltRejection# &gt;= mp_salt 
+      THEN '合格' ELSE '不合格' END flag        
+         
+    FROM (SELECT DISTINCT TT.PROD_SPEC_ID, TT.AREA,A_GPD_LOW_LIMIT,A_GPD_UP_LIMIT,A_SALT_LOW_LIMIT,mp_salt
+            FROM (SELECT A.RECORD_ID,
+                         A.MP_SPEC_ID,
+                         A.PROD_SPEC_ID,
+                         A.A_GPD_LOW_LIMIT,
+                         A.MAC_NAME,
+                         A.A_GPD_UP_LIMIT,
+                         A.A_GPD_CENTER,
+                         A.A_SALT_LOW_LIMIT,
+                         A.A_SALT_UP_LIMIT,
+                         A.A_FACTOR_B_LOW_LIMIT,
+                         A.A_FACTOR_B_UP_LIMIT,
+                         A.B_SPEC_ID,
+                         A.B_GPD_LOW_LIMIT,
+                         A.B_GPD_UP_LIMIT,
+                         A.B_GPD_CENTER,
+                         A.B_SALT_LOW_LIMIT,
+                         A.B_SALT_UP_LIMIT,
+                         A.B_FACTOR_B_LOW_LIMIT,
+                         A.B_FACTOR_B_UP_LIMIT,
+                         A.CREATE_DT,
+                         A.CHANGE_DT,
+                         A.CREATOR_ID,
+                         A.CHANGER_ID,
+                         A.REMARK,
+                         S1.MATER_SPEC_CODE     MP_SPEC_CODE,
+                         S2.MATER_SPEC_CODE     PROD_SPEC_CODE,
+                         S2.MATER_SPEC_NAME     PROD_SPEC_NAME,
+                         S2.AREA,
+                         S2.DENSE_NET,
+                         S3.MATER_SPEC_CODE     B_SPEC_CODE,
+                         S3.MATER_SPEC_NAME     B_SPEC_NAME,
+                         std.mp_salt
+                    FROM QINSEN.INST_PROD_WATER_STD A,
+                         QINSEN.PARA_MATER_SPEC     S1,
+                         QINSEN.PARA_MATER_SPEC     S2,
+                         QINSEN.PARA_MATER_SPEC     S3,
+                         V_KS_MP_SALT_STANDARD std  
+                   WHERE A.MP_SPEC_ID = S1.MATER_SPEC_ID
+                     AND A.PROD_SPEC_ID = S2.MATER_SPEC_ID
+                     AND A.B_SPEC_ID = S3.MATER_SPEC_ID(+)
+                     and std.MP_SPEC_ID = A.MP_SPEC_ID) TT
+           WHERE TT.MP_SPEC_ID = #mpSpecId#)</insert>
+    <select id="querySelect" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.TUMO_BATCH_NO    AS "tumoBatchNo",T1.id "id",
+       T1.MP_SPEC_ID       AS "mpSpecId",T1.TUMO_BATCH_ID    AS "tumoBatchId",
+       PMS.mater_SPEC_CODE    AS "mpSpecCode",
+       T1.TEST_AVG_GPD     AS "testAvgGpd",
+       T1.TEST_AREA        AS "testArea",
+       T1.SALT_REJECTION AS "saltRejection",
+       T1.TEST_SALT_REJECTION AS "testSaltRejection",
+       T1.MIN_SALT_REJECTION AS "minSaltRejection",
+       T1.PROD_SPEC_ID     AS "prodSpecId",
+       PMS2.mater_SPEC_NAME AS "prodSpecName" ,       
+       T1.STD_AREA         AS "stdArea",
+       round(T1.TEST_AVG_GPD * T1.STD_AREA/T1.TEST_AREA,2)  AS "calcAvgGpd",
+       t1.A_GPD_LOW_LIMIT as "aGpdLowLimit",
+		t1.A_GPD_UP_LIMIT as "aGpdUpLimit",
+		t1.A_SALT_LOW_LIMIT as "aSaltLowLimit",
+		t1.mp_salt_low_limit "mpSaltLowLimit",
+		t1.flag "flag"
+       <!-- ,CASE WHEN round(T1.TEST_AVG_GPD * T1.STD_AREA/T1.TEST_AREA,2)>=t1.A_GPD_LOW_LIMIT
+      AND round(T1.TEST_AVG_GPD * T1.STD_AREA/T1.TEST_AREA,2)&lt;=t1.A_GPD_UP_LIMIT
+      AND T1.SALT_REJECTION >= t1.A_SALT_LOW_LIMIT 
+       AND T1.MIN_SALT_REJECTION >= t1.mp_salt_low_limit 
+      THEN '合格' ELSE '不合格' END "flag"-->
+  FROM KS_COMPONENT_TUMO_SELECT T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = T1.MP_SPEC_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS2
+    ON PMS2.MATER_SPEC_ID = T1.PROD_SPEC_ID
+  <!-- left join V_KS_MP_SALT_STANDARD std
+  on std.MP_SPEC_ID = T1.MP_SPEC_ID-->
+
+	where 1=1
+	<isNotNull prepend="and" property="tumoBatchId">T1.TUMO_BATCH_ID = #tumoBatchId#</isNotNull>
+        <isNotNull prepend="and" property="tumoBatchNo">T1.TUMO_BATCH_NO = #tumoBatchNo#</isNotNull>
+    </select>
+    <select id="selectMp" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	    select t1.TUMO_BATCH_ID as "tumoBatchId",
+		t1.TUMO_BATCH_NO as "tumoBatchNo",
+		t1.MP_SPEC_ID as "mpSpecId",
+		t1.PROD_SPEC_ID as "prodSpecId",
+		t1.MP_SPEC_CODE as "mpSpecCode",
+		t1.PROD_SPEC_NAME as "prodSpecName"
+		from   	    
+   	    (select t.tumo_batch_id,t.tumo_batch_no,t.mp_spec_id,t.prod_spec_id,m.mater_spec_code mp_spec_code
+		,p.mater_spec_name prod_spec_name from KS_COMPONENT_TUMO_SELECT t
+		LEFT JOIN QINSEN.PARA_MATER_SPEC m ON m.mater_spec_id = t.mp_spec_id
+		LEFT JOIN QINSEN.PARA_MATER_SPEC p ON p.mater_spec_id = t.prod_spec_id
+		WHERE t.flag='合格') t1
+		where 1=1
+		<isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="mpSpecId">t1.MP_SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="and" property="tumoBatchNo">upper(t1.TUMO_BATCH_NO) like '%' || upper(#tumoBatchNo#) || '%'</isNotNull>
+		order by t1.TUMO_BATCH_ID
+    </select>
+</sqlMap>

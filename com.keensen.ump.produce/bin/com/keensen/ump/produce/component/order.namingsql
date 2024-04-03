@@ -42,6 +42,7 @@
        T1.JHWCSJ            AS "jhwcsj",
        T1.SCWCRQ            AS "scwcrq",
        t2.cnt "cnt",
+       decode(nvl(t2.cnt,0),0,'未制定','已制定') "ifplan",
        t3.arrange_amount   as "arrangeAmount"
   FROM KS_PROD_COMPONENT_YXORDER T1
   left join (select relation_id ,count(*) cnt from KS_COMPONENT_PLAN_WEEK group by relation_id) t2 
@@ -88,12 +89,15 @@
        T2.ORDER_DATE      AS "orderDate",
        t2.order_amount    AS "orderAmount",
        t2.xsc             AS "xsc",
-       t3.cnt             AS "cnt"
+       t3.cnt             AS "cnt",
+       t4.arrange_amount   as "arrangeAmount"
   FROM KS_COMPONENT_PLAN_WEEK T1
   left join KS_PROD_COMPONENT_YXORDER t2
   ON T1.relation_id = t2.id
   left join (select relation_id ,count(*) cnt from KS_COMPONENT_PLAN_DAY group by relation_id) t3 
 	on t3.relation_id = t1.id
+  left join (select sum(amount) arrange_amount,relation_id from KS_COMPONENT_PLAN_WEEK_DAYS group by relation_id) t4
+    on t1.id = t4.relation_id
 	where 1=1
 	<isNotNull prepend="and" property="planYear">T1.PLAN_YEAR  = #planYear#</isNotNull>
         <isNotNull prepend="and" property="planWeek">T1.PLAN_WEEK = #planWeek#</isNotNull>
@@ -126,7 +130,7 @@
     FROM DUAL
   CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) -
              TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) + 1</insert>
-    <select id="queryPlanDate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT TRUNC(TO_DATE(#startDate#, 'YYYY-MM-DD') + LEVEL - 1) as "planDate"
+    <select id="queryPlanDate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT to_date(TRUNC(TO_DATE('2024-03-28', 'YYYY-MM-DD') + LEVEL - 1)) as "planDate"
     FROM DUAL
   CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(#endDate#, 'YYYY-MM-DD')) -
              TRUNC(TO_DATE(#startDate#, 'YYYY-MM-DD')) + 1</select>
@@ -158,6 +162,7 @@
        T1.PRODUCT_ORDER   AS "productOrder",
        T3.ORDER_NO        AS "orderNo",
        T3.MATER_SPEC_NAME AS "materSpecName",
+       T3.MATER_SPEC_ID AS "materSpecId",
        T3.ORDER_AMOUNT    AS "orderAmount",
        T3.XSC             AS "xsc",
        T3.ORDER_DATE      AS "orderDate",
@@ -202,6 +207,9 @@
        T1.STATUS          AS "status",
        T1.RELATION_ID     AS "relationId",
        t1.RELATION_ID as "relationId",
+       T1.BATCH_NO        AS "batchNo",
+       T1.METER_AMOUNT    AS "meterAmount",
+       T1.POSITION        AS "position",
 		t1.ORDER_ID as "orderId",
 		t1.JM_AMOUNT as "jmAmount",
 		t1.WORK_DATE as "workDate",
@@ -371,31 +379,56 @@ GROUP BY t2.order_no,t2.prod_spec_id) t5 ON t5.order_no = t1.order_no AND t1.mat
        T1.REWORK_DEAL      AS "reworkDeal",
        T1.SECOND_ID        AS "secondId",
        T1.SECOND_NAME      AS "secondName",
-       T1.SECOND_TIME      AS "secondTime",
-       T1.REWORK_RESPONSE  AS "reworkResponse",
+       TO_CHAR(T1.SECOND_TIME, 'YYYY-MM-DD HH24:MI:SS')      AS "secondTime",
+           T1.REWORK_RESPONSE  AS "reworkResponse",
        T1.REWORK_INCENTIVE AS "reworkIncentive",
        T1.PLAN_FINISH_DATE AS "planFinishDate",
        T1.REWORK_ORDER_NO  AS "reworkOrderNo",
        T1.THIRD_ID         AS "thirdId",
        T1.THIRD_NAME       AS "thirdName",
-       T1.THIRD_TIME       AS "thirdTime",
+       TO_CHAR(T1.THIRD_TIME, 'YYYY-MM-DD HH24:MI:SS')        AS "thirdTime",
        T1.IF_ONTIME        AS "ifOntime",
        T1.NOT_ONTIME       AS "notOntime",
        T1.IF_OK            AS "ifOk",
        T1.FOURTH_ID        AS "fourthId",
        T1.FOURTH_NAME      AS "fourthName",
-       T1.FOURTH_TIME      AS "fourthTime",
+       TO_CHAR(T1.FOURTH_TIME, 'YYYY-MM-DD HH24:MI:SS')       AS "fourthTime",
        T2.MATER_SPEC_NAME  AS "materSpecName",
-       T1.STEP      AS "step"
+       T1.STEP      AS "step",
+       decode(T1.STEP,'second','返工指令','third','返工安排','fourth','结果确认','完结') "stepName"
   FROM KS_COMPONENT_REWORK T1
   LEFT JOIN QINSEN.PARA_MATER_SPEC T2
     ON T1.PROD_SPEC_ID = T2.MATER_SPEC_ID
     where 1=1
-	<isNotNull prepend="and" property="orderNo">T1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
+    <isNotNull prepend="and" property="step">T1.step = #step#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
         <isNotNull prepend="and" property="code">T1.code like '%' || #code# || '%'</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
         <isNotNull prepend="and" property="materSpecName">upper(t2.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
+	order by t1.id desc
+	 </select>
+    <select id="queryReworkCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT CODE "code" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' CODE FROM dual
+  WHERE NOT EXISTS(
+  select t.code from KS_COMPONENT_REWORK t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  select to_char(to_number(max(t.code))+1) CODE from KS_COMPONENT_REWORK t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE CODE IS NOT NULL</select>
+    <select id="queryBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT t.order_no "orderNo",t.batch_no "batchNo" ,t.produce_dt "produceDt",
+    t2.mater_spec_id "materSpecId",t2.mater_spec_name "materSpecName"
+ 	FROM qinsen.inst_qijian t
+	LEFT JOIN qinsen.para_mater_spec t2 ON t2.mater_spec_id = t.prod_spec_id
+    
+    where 1=1
+    and t.batch_no is not null
+    <isNotNull prepend="and" property="orderNo">T.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">T.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">upper(t2.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
+	order by T.ORDER_NO,t2.mater_spec_id
     </select>
 </sqlMap>

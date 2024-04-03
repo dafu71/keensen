@@ -79,6 +79,7 @@
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030027)
 	<isNotNull prepend="and" property="materSpecName">upper(t.MATER_SPEC_NAME) = upper(#materSpecName#)</isNotNull>
+        <isNotNull prepend="and" property="materSpecId">t.mater_spec_id = #materSpecId#</isNotNull>
 	order by t.mater_spec_code
      </select>
     <!-- 工序查询 -->

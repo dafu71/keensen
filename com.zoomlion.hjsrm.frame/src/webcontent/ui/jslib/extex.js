@@ -686,6 +686,7 @@ Ext.grid.HybridSummary = Ext.ux.grid.HybridSummary;
 
 
 Ext.ns("Ext.ex");
+alert(123);
 Ext.ex.PagingToolbarEx = Ext.extend(Ext.PagingToolbar, {
 			mode : "local",pageSizeComboStore:undefined,
 			displayInfo : true,
@@ -696,7 +697,7 @@ Ext.ex.PagingToolbarEx = Ext.extend(Ext.PagingToolbar, {
 							editable : this.pageSizeComboEditable || false,
 							maskRe : /[0-9]/i,
 							triggerAction : "all",
-							width : 45,
+							width : 60,
 							listeners : {
 								scope : this,
 								blur : function(A) {

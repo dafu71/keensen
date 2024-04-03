@@ -12,8 +12,60 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
+	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
+			function() {
+
+				var reserve1 = this.inputWindow.reserve1.getValue();
+				if (reserve1 == '回流液') {
+					var reflux = this.inputWindow.reflux.getValue();
+					if (Ext.isEmpty(reflux)) {
+						Ext.Msg.alert("系统提示", "请添加回流液重量");
+						return false;
+					}
+					this.inputWindow.weight.setValue(reflux);
+				} else {
+					var c41Reality = this.inputWindow.c41Reality.getValue();
+					if (Ext.isEmpty(c41Reality)) {
+						Ext.Msg.alert("系统提示", "请添加C41重量");
+						return false;
+					}
+					this.inputWindow.weight.setValue(c41Reality);
+				}
+				
+				/*
+				 * var c41Reality = this.inputWindow.c41Reality.getValue(); var
+				 * reflux = this.inputWindow.reflux.getValue(); if
+				 * (!Ext.isEmpty(c41Reality) && !Ext.isEmpty(reflux)) { if
+				 * (parseFloat(c41Reality) != 0 && parseFloat(reflux) != 0) {
+				 * Ext.Msg.alert("系统提示", "不能同时添加C41和回流液重量"); return false; } }
+				 * if (Ext.isEmpty(c41Reality) && Ext.isEmpty(reflux)) {
+				 * Ext.Msg.alert("系统提示", "请添加C41或者回流液重量"); return false; } if
+				 * (parseFloat(c41Reality) == 0 && parseFloat(reflux) == 0) {
+				 * Ext.Msg.alert("系统提示", "请添加C41或者回流液重量"); return false; }
+				 */
+		}, this);
+
+	this.editWindow3.activeItem.mon(this.editWindow3.activeItem, 'beforeSave',
+			function() {
+
+				var c41Reality = this.editWindow3.c41Reality.getValue();
+				var reflux = this.editWindow3.reflux.getValue();
+				var weight = this.editWindow3.weight.getValue();
+				if (parseFloat(c41Reality) != 0 && parseFloat(reflux) != 0) {
+					Ext.Msg.alert("系统提示", "不能同时添加C41和回流液重量");
+					return false;
+				}
+
+				if (parseFloat(c41Reality) == 0 && parseFloat(reflux) == 0) {
+					//Ext.Msg.alert("系统提示", "请添加C41或者回流液重量");
+					//return false;
+				}
+				this.inputWindow.weight.setValue(weight);
+			}, this);
+
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterload',
 			function(win, data) {
+				
 				var step = data.step;
 				if (step != this.opt) {
 					Ext.Msg.alert("系统提示", "请选择待分析数据！", function() {
@@ -29,6 +81,23 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 
 					});
 
+				} else {
+					var mptype = this.editWindow.mptype.getValue();
+					var std = this.mptypeMap.get(mptype)[0];
+					var std2 = this.mptypeMap.get(mptype)[1];
+					var std3 = this.mptypeMap.get(mptype)[2];
+					var str = '上限' + std3 + ',' + '下限' + std;
+					this.editWindow.standard.setValue(str);
+					var reserve1 = this.editWindow.reserve1.getValue();
+		
+					if (reserve1 == '回流液') {
+						this.editWindow.batchNo.setVisible(false);
+						this.editWindow.refluxNo.setVisible(true);
+					}else{
+						this.editWindow.batchNo.setVisible(true);
+						this.editWindow.refluxNo.setVisible(false);
+					}
+				
 				}
 			}, this);
 
@@ -49,6 +118,8 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 
 					});
 
+				}else{
+					
 				}
 			}, this);
 
@@ -69,6 +140,16 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 
 					});
 
+				}else{
+					var reserve1 = this.editWindow3.reserve1.getValue();
+					if (reserve1 == '回流液') {
+						this.editWindow3.batchNo.setVisible(false);
+						this.editWindow3.refluxNo.setVisible(true);
+					}else{
+						this.editWindow3.batchNo.setVisible(true);
+						this.editWindow3.refluxNo.setVisible(false);
+						this.editWindow3.reflux.setVisible(false);
+					}
 				}
 			}, this);
 
@@ -142,7 +223,23 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onDel = function() {
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onAdd = function() {
 	this.inputWindow.show();
+	this.inputWindow.refluxNo.setVisible(false);
+	this.inputWindow.batchNo.setVisible(true);
+	this.inputWindow.reflux.setVisible(false);
+	this.inputWindow.c41Reality.setVisible(true);
+	this.inputWindow.c42Reality.setVisible(true);
+	this.inputWindow.reserve1.setValue('新配液');
 
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onAdd2 = function() {
+	this.inputWindow.show();
+	this.inputWindow.refluxNo.setVisible(true);
+	this.inputWindow.batchNo.setVisible(false);
+	this.inputWindow.reflux.setVisible(true);
+	this.inputWindow.c41Reality.setVisible(false);
+	this.inputWindow.c42Reality.setVisible(false);
+	this.inputWindow.reserve1.setValue('回流液');
 }
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.destroy = function() {

@@ -18,6 +18,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.initEvent = funct
 		}
 
 		store.baseParams = {
+			"condition/batchNoStr2" : batchNoStr == null ? '' : "'" + batchNoStr + "'",
 			"condition/batchNoStr" : arr2.join(",") == "''" ? null : arr2
 					.join(",")
 		};
@@ -28,7 +29,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.initEvent = funct
 					}
 				});
 	}, this);
-	
+
 	// 查询事件
 	this.queryPanel2.mon(this.queryPanel2, 'query', function(form, vals) {
 		var store = this.listPanel2.store;
@@ -105,6 +106,12 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 		}
 
 	}
+
+	if (templateName == '新MH发货模板') {
+		var param7 = this.bar.getComponent('param7').getValue();
+		var param8 = this.bar.getComponent('param8').getValue();
+		var param0 = this.bar.getComponent('param0').getValue();
+	}
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
@@ -117,7 +124,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 		var C = A.getSelectionModel().getSelections();
 		var LODOP = getLodop();// 创建打印控件对象
 		LODOP.PRINT_INIT("膜片唛头打印模板");
-		LODOP.SET_PRINT_STYLEA(0,"HtmWaitMilSecs",1000);
+		LODOP.SET_PRINT_STYLEA(0, "HtmWaitMilSecs", 1000);
 		LODOP.ADD_PRINT_SETUP_BKIMG(rootUrl + templateValue);
 
 		Ext.each(C, function(r) {
@@ -126,16 +133,24 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 					? r.data.materSpecCode
 					: materSpecCode2;
 			var outBatchNo = r.data.outBatchNo;
-			var usefulLength = r.data.usefulLength + 'm';
-			var qualifidLength = r.data.qualifidLength + 'm';
+			var usefulLength = Ext.isEmpty(r.data.usefulLength)
+					? ''
+					: 'null' == r.data.usefulLength ? '' : r.data.usefulLength
+							+ 'm';
+			var qualifidLength = Ext.isEmpty(r.data.qualifidLength)
+					? ''
+					: 'null' == r.data.qualifidLength
+							? ''
+							: r.data.qualifidLength + 'm';
 			var outLength = r.data.outLength + 'm';
 
 			LODOP.SET_PRINT_PAGESIZE(1, paperwidth, paperheight, "");
 			LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", true);
 			LODOP.SET_SHOW_MODE("BKIMG_PRINT", true);
 			if (templateName == '常用模板') {
-				LODOP.ADD_PRINT_IMAGE(10,21,265,33,rootUrl +"produce/diaphragm/print/img/log.jpg");
-				LODOP.SET_PRINT_STYLEA(0,"Stretch",1);
+				LODOP.ADD_PRINT_IMAGE(10, 21, 265, 33, rootUrl
+								+ "produce/diaphragm/print/img/log.jpg");
+				LODOP.SET_PRINT_STYLEA(0, "Stretch", 1);
 				LODOP.ADD_PRINT_TEXT(77, 20, 96, 36, "型号：");
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
@@ -226,24 +241,27 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 			} else if (templateName == 'BW SHEET模板') {
-				/*LODOP.ADD_PRINT_TEXT(66, 19, 139, 38, materSpecCode);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(115, 105, 275, 41, outBatchNo);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(167, 118, 177, 45, "1047mm");
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(218, 101, 166, 40, qualifidLength);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);*/
-				LODOP.ADD_PRINT_IMAGE(10,21,265,33,rootUrl +"produce/diaphragm/print/img/log.jpg");
-				LODOP.SET_PRINT_STYLEA(0,"Stretch",1);
+				/*
+				 * LODOP.ADD_PRINT_TEXT(66, 19, 139, 38, materSpecCode);
+				 * LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+				 * LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
+				 * LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				 * LODOP.ADD_PRINT_TEXT(115, 105, 275, 41, outBatchNo);
+				 * LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+				 * LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
+				 * LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				 * LODOP.ADD_PRINT_TEXT(167, 118, 177, 45, "1047mm");
+				 * LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+				 * LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
+				 * LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				 * LODOP.ADD_PRINT_TEXT(218, 101, 166, 40, qualifidLength);
+				 * LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+				 * LODOP.SET_PRINT_STYLEA(0, "FontSize", 30);
+				 * LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				 */
+				LODOP.ADD_PRINT_IMAGE(10, 21, 265, 33, rootUrl
+								+ "produce/diaphragm/print/img/log.jpg");
+				LODOP.SET_PRINT_STYLEA(0, "Stretch", 1);
 				LODOP.ADD_PRINT_TEXT(77, 20, 96, 36, materSpecCode);
 				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
@@ -356,7 +374,66 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", fontsize);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.ADD_PRINT_BARCODE(46, 229, 141, 97, "QRCode", outBatchNo);
+
 				// LODOP.SET_PRINT_STYLEA(0, "GroundColor", "#0080FF");
+			} else if (templateName == '新MH发货模板') {
+				var orderNo = Ext.isEmpty(param7) ? r.data.orderNo : param7;
+				var materCode = Ext.isEmpty(param8) ? r.data.materCode : param8;
+				var materSpecCode = Ext.isEmpty(param0)
+						? r.data.materSpecCode
+						: param0;
+				var outBatchNo = r.data.outBatchNo;
+				var fSaltRejection2 = r.data.fSaltRejection2;
+				var produceDt = r.data.produceDt;
+				usefulLength = Ext.isEmpty(usefulLength) ? '' : usefulLength;
+				qualifidLength = Ext.isEmpty(qualifidLength)
+						? ''
+						: qualifidLength;
+
+				orderNo = Ext.isEmpty(orderNo) ? '' : orderNo;
+				materCode = Ext.isEmpty(materCode) ? '' : materCode;
+				outBatchNo = Ext.isEmpty(outBatchNo) ? '' : outBatchNo;
+				fSaltRejection2 = Ext.isEmpty(fSaltRejection2)
+						? ''
+						: fSaltRejection2;
+				produceDt = Ext.isEmpty(produceDt) ? '' : produceDt.replace(
+						/-/g, ".");
+				produceDt = produceDt.replace(/\.0/g, ".");
+				LODOP.ADD_PRINT_IMAGE(10, 21, 265, 33, rootUrl
+								+ "produce/diaphragm/print/img/mpmark0.jpg");
+				LODOP.SET_PRINT_STYLEA(0, "Stretch", 1);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+				LODOP.ADD_PRINT_TEXT(5, 12, 100, 25, "MANN +");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 14);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(28, 12, 100, 30, "HUMMEL");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 14);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(68, 12, 200, 30, "订单号:" + orderNo);
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(68, 165, 200, 30, "物料号:" + materCode);
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(110, 12, 200, 30, "型号:" + materSpecCode);
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(110, 165, 200, 25, "卷号:" + outBatchNo);
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(152, 12, 200, 25, "截留率:" + fSaltRejection2);
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(152, 165, 200, 25, "实发数量:" + usefulLength);
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(190, 12, 200, 25, "生产日期:" + produceDt);
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				LODOP.ADD_PRINT_TEXT(190, 165, 200, 26, "可用数量:"
+								+ qualifidLength);
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 			}
 			LODOP.NewPage();
 		});
@@ -376,24 +453,22 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onTemplate = func
 
 com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.exportExcel2 = function() {
 	var _this = this;
-	//var daochu = _this.queryPanel.getForm().getValues();
-	
+	// var daochu = _this.queryPanel.getForm().getValues();
+
 	var batchNoStr = this.queryPanel.form.findField("condition/batchNoStr")
-				.getValue();
-		var regEx = new RegExp("\\n", "gi");
-		batchNoStr = batchNoStr.replace(regEx, ",");
-		batchNoStr = batchNoStr.replaceAll('，', ',');
-		batchNoStr = batchNoStr.replaceAll(' ', '');
-		var arr = [];
-		arr = batchNoStr.split(',');
+			.getValue();
+	var regEx = new RegExp("\\n", "gi");
+	batchNoStr = batchNoStr.replace(regEx, ",");
+	batchNoStr = batchNoStr.replaceAll('，', ',');
+	batchNoStr = batchNoStr.replaceAll(' ', '');
+	var arr = [];
+	arr = batchNoStr.split(',');
 
-		var arr2 = [];
-		for (var i = 0; i < arr.length; i++) {
-			arr2.push("'" + arr[i] + "'");
-		}
+	var arr2 = [];
+	for (var i = 0; i < arr.length; i++) {
+		arr2.push("'" + arr[i] + "'");
+	}
 
-	
-		
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
 			});
@@ -402,9 +477,10 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.exportExcel2 = fu
 		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlAndOpt.biz.ext",
 		method : "post",
 		jsonData : {
-			'map/condition/batchNoStr' : arr2.join(",") == "''" ? null : arr2.join(","),
-			'map/business':'导出发货请检单',
-			'map/opt':arr2.join(",") == "''" ? null : arr2.join(","),
+			'map/condition/batchNoStr' : arr2.join(",") == "''" ? null : arr2
+					.join(","),
+			'map/business' : '导出发货请检单',
+			'map/opt' : arr2.join(",") == "''" ? null : arr2.join(","),
 			namingsql : 'com.keensen.ump.produce.diaphragm.ship.ship.queryTumoOrigin',
 			templateFilename : 'ks_mp_fhqjd'
 		},
@@ -439,20 +515,20 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onCopyBatchNo = f
 		var records = A.getSelectionModel().getSelections();
 		var opt = records[0].get('opt');
 		opt = opt.replace(/'/g, "");;
-		//navigator.clipboard.writeText(opt);
+		// navigator.clipboard.writeText(opt);
 		copyToClipboard(opt);
 		Ext.Msg.alert("系统提示", "已复制到系统粘贴板！");
 	}
 }
 
 function copyToClipboard(text) {
-   var textarea = document.createElement("textarea");
-   textarea.value = text;
-   textarea.setAttribute("readonly", "");
-   textarea.style.position = "absolute";
-   textarea.style.left = "-9999px";
-   document.body.appendChild(textarea);
-   textarea.select();
-   document.execCommand("copy");
-   document.body.removeChild(textarea);
+	var textarea = document.createElement("textarea");
+	textarea.value = text;
+	textarea.setAttribute("readonly", "");
+	textarea.style.position = "absolute";
+	textarea.style.left = "-9999px";
+	document.body.appendChild(textarea);
+	textarea.select();
+	document.execCommand("copy");
+	document.body.removeChild(textarea);
 }

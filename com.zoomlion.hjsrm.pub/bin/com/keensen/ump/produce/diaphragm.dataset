@@ -6265,7 +6265,7 @@
   </nodes>
   <nodes xsi:type="model:PEntityNode" id="node9" name="KsProdDiaphragmZmxRecord" nodeType="table" displayName="KsProdDiaphragmZmxRecord" author="dafu" allUseViewModel="true" table="KS_PROD_DIAPHRAGM_ZMX_RECORD" genStrategy="assigned">
     <location x="1080" y="431"/>
-    <size height="950" width="150"/>
+    <size height="772" width="150"/>
     <figSize height="20" width="150"/>
     <comment>铸膜线生产记录</comment>
     <columnProperty id="property213" name="id" displayName="主键" columnName="ID" nullAble="false" PK="true" columnType="NUMBER" eosDataType="Long" length="22" dasType="long" overWriteDefaultColumnType="false" showType="Long" update="true" insert="true">
@@ -7384,6 +7384,34 @@
     <columnProperty id="property255" name="pumpSpeed" displayName="底膜泵速" columnName="PUMP_SPEED" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="50" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
       <comment>底膜泵速</comment>
       <viewField dict="false" displayName="底膜泵速" id="pumpSpeed" label="底膜泵速" name="pumpSpeed" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property256" name="base" displayName="基地" columnName="BASE" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="50" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>基地</comment>
+      <viewField dict="false" displayName="基地" id="base" label="基地" name="base" userDefined="true">
         <fieldView>
           <type name="write"/>
           <attr name="formatPattern"/>

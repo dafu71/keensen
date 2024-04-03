@@ -25,7 +25,8 @@
 	BIZ.ns('com.keensen.ump.produce.quality');
 </script>
 <ext:dict property="STORAGE_TYPE"   dictTypeId="STORAGE_TYPE" />
- <ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
+ <ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
+  <ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
 <js:load scriptPath="pub/common/storageCombo.js" />
 <js:load scriptPath="pub/common/supCombo.js" />
 <js:load scriptPath="pub/common/mpworkerCombo.js" />

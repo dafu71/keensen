@@ -21,10 +21,11 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【涂膜记录查询】',
+					//title : '【涂膜记录查询】',
 					fields : [{
 								xtype : 'textarea',
 								name : 'condition/batchNoStr',
+								height:100,
 								anchor : '75%',
 								fieldLabel : '膜片批次'
 							}, {
@@ -53,7 +54,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 					text : "发货请检单导出记录",
 					scope : this,
 					iconCls : 'icon-application_form_magnify',
-					handler : function(){
+					handler : function() {
 						this.optLogWindow.show();
 					}
 				});
@@ -160,11 +161,39 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 								itemId : 'param6',
 								ref : '../param6',
 								name : 'param6'
+							}, {
+								xtype : 'displayfield',
+								hidden : true,
+								itemId : 'label7',
+								ref : '../label7',
+								value : '订单号:'
+							}, {
+								xtype : 'textfield',
+								hidden : true,
+								itemId : 'param7',
+								ref : '../param7',
+								name : 'param7'
+							},{
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								hidden : true,
+								itemId : 'label8',
+								ref : '../label8',
+								value : '物料号:'
+							}, {
+								xtype : 'textfield',
+								hidden : true,
+								itemId : 'param8',
+								ref : '../param8',
+								name : 'param8'
 							}]
 				});
 
 		var templateData = [
 				["produce/diaphragm/print/img/mpmark1.png", "常用模板"],
+				["produce/diaphragm/print/img/mpmark0.jpg", "新MH发货模板"],
 				["produce/diaphragm/print/img/mpmark11.png", "BW SHEET模板"],
 				["produce/diaphragm/print/img/mpmark0.png",
 						"Reverse Osmosis sheet模板"],
@@ -181,7 +210,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 				});
 
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【涂膜记录列表】',
+			//title : '【涂膜记录列表】',
 			viewConfig : {
 				forceFit : true
 			},
@@ -288,6 +317,26 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 									_this.bar.getComponent('param6')
 											.setVisible(false);
 								}
+
+								if (record.get('text') == '新MH发货模板') {
+									_this.bar.getComponent('label7')
+											.setVisible(true);
+									_this.bar.getComponent('label8')
+											.setVisible(true);
+									_this.bar.getComponent('param7')
+											.setVisible(true);
+									_this.bar.getComponent('param8')
+											.setVisible(true);
+								} else {
+									_this.bar.getComponent('label7')
+											.setVisible(false);
+									_this.bar.getComponent('label8')
+											.setVisible(false);
+									_this.bar.getComponent('param7')
+											.setVisible(false);
+									_this.bar.getComponent('param8')
+											.setVisible(false);
+								}
 							}
 						}
 
@@ -332,6 +381,27 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 						dataIndex : 'loss',
 						header : '不良(米)'
 					}, {
+						dataIndex : 'fSaltRejection',
+						header : '初检脱盐率%',
+						renderer : function(v, m, r, i) {
+							var a = r.get('fSaltRejection');
+							var fSaltRejection = parseFloat(a);
+							if(fSaltRejection==0){
+								return "";
+							}
+							// MH发货脱盐率规则就是正常：初测脱盐率-0.05。单必须保证：计算后的脱盐率在99.65至99.79之间
+							if (fSaltRejection < 99.7 || fSaltRejection > 99.84) {
+								return "<span style='color:red'>"
+										+ fSaltRejection + "</span>";
+
+							} else {
+								return fSaltRejection;
+							}
+						}
+					}, {
+						dataIndex : 'fSaltRejection2',
+						header : '打印截留率'
+					}, {
 						dataIndex : 'dimoBatchNo',
 						header : '底膜批次'
 					}, {
@@ -343,6 +413,9 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 					}, {
 						dataIndex : 'materSpecCode',
 						header : '膜片型号'
+					}, {
+						dataIndex : 'materCode',
+						header : '物料号'
 					}, {
 						dataIndex : 'supName',
 						header : '无纺布供应商'
@@ -407,6 +480,12 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 							name : 'isQualified'
 						}, {
 							name : 'outBatchNo'
+						}, {
+							name : 'fSaltRejection'
+						}, {
+							name : 'fSaltRejection2'
+						}, {
+							name : 'materCode'
 						}]
 			})
 		})
@@ -422,11 +501,11 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
 			title : '【操作记录列表】',
 			region : 'center',
-			hsPage : true,			
+			hsPage : true,
 			viewConfig : {
 				forceFit : true
 			},
-			selModel : selModel2,			
+			selModel : selModel2,
 			tbar : [{
 						text : '复制膜片批号',
 						scope : this,
@@ -453,7 +532,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 						autoLoad : true,
 						totalProperty : 'totalCount',
 						baseParams : {
-							'condition/business':'导出发货请检单'
+							'condition/business' : '导出发货请检单'
 						},
 						fields : [{
 									name : 'id'

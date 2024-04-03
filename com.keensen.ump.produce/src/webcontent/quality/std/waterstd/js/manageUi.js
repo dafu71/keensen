@@ -87,10 +87,6 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.quality2.deleteWaterStdById.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
-						header : '测试台',
-						width : 50,
-						dataIndex : 'macName'
-					}, {
 						header : '膜片型号',
 						width : 120,
 						dataIndex : 'mpSpecCode'
@@ -211,8 +207,6 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 							name : 'bSpecCode'
 						}, {
 							name : 'bSpecName'
-						}, {
-							name : 'macName'
 						}]
 			})
 		})
@@ -249,19 +243,6 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 				columns : 2,
 				saveUrl : 'com.keensen.ump.produce.quality.quality2.insertWaterStd.biz.ext',
 				fields : [{
-							xtype : 'numberfield',
-							name : 'entity/macName',
-							ref : '../../macName',
-							fieldLabel : '测试台',
-							allowBlank : false,
-							anchor : '75%',
-							minValue : 1,
-							allowDecimals : false
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
 							xtype : 'mpspeccombobox',
 							hiddenName : 'entity/mpSpecId',
 							allowBlank : false,
@@ -398,20 +379,6 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 				loadUrl : 'com.keensen.ump.produce.quality.quality2.expandWaterStand.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.quality2.updateWaterStd.biz.ext',
 				fields : [{
-							xtype : 'numberfield',
-							dataIndex : 'macName',
-							name : 'entity/macName',
-							ref : '../../macName',
-							fieldLabel : '测试台',
-							allowBlank : false,
-							anchor : '75%',
-							minValue : 1,
-							allowDecimals : false
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
 							xtype : 'mpspeccombobox',
 							hiddenName : 'entity/mpSpecId',
 							dataIndex : 'mpSpecId',

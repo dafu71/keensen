@@ -1,7 +1,9 @@
 com.keensen.ump.produce.component.planweekMgr = function() {
 	this.initPanel = function() {
 		this.initWeekArr();
+		this.initPlanYear();
 		this.initPlanDateStore();
+		this.initMpStore();
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initEditPlanWeekWindow();
@@ -24,6 +26,13 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 				});
 	}
 
+	this.initPlanYear = function() {
+		this.planYearArr = [];
+		for (var i = 0; i < 10; i++) {
+			this.planYearArr.push([2024 + i, 2024 + i])
+		}
+	}
+
 	this.initWeekArr = function() {
 		this.weekArr = [];
 		for (var i = 1; i < 53; i++) {
@@ -44,11 +53,23 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 		})
 	}
 
+	this.initMpStore = function() {
+		this.mpStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.produce.component.select.selectMp.biz.ext',
+					root : 'data',
+					autoLoad : false,
+					totalProperty : '',
+					baseParams : {},
+					fields : [{
+								name : 'tumoBatchNo'
+							}]
+				})
+	}
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
-					columns : 3,
+					height : 120,
+					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -56,25 +77,21 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/orderNo2',
-								anchor : '75%',
+								// anchor : '75%',
 								fieldLabel : '订单号'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
-								anchor : '75%',
+								// anchor : '75%',
 								fieldLabel : '规格型号 '
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
-								anchor : '75%',
+								// anchor : '75%',
 								nameArray : ['condition/orderDateStart',
 										'condition/orderDateEnd'],
 								fieldLabel : "订单日期",
 								format : "Y-m-d"
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 3
 							}, {
 								xtype : 'combobox',
 								fieldLabel : '计划年度',
@@ -82,9 +99,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								hiddenName : 'condition/planYear',
 								emptyText : '--请选择--',
 								editable : false,
-								anchor : '75%',
-								store : [[2024, 2024], [2025, 2025],
-										[2026, 2026], [2027, 2027]],
+								// anchor : '75%',
+								store : this.planYearArr,
 								value : new Date().getFullYear(),
 								listeners : {
 									scope : this,
@@ -92,22 +108,15 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 										this.queryPanel.planYear.reset();
 									}
 								}
-							}, {
-								xtype : 'combobox',
-								fieldLabel : '计划制定周',
-								hiddenName : 'condition/planWeek',
-								ref : '../planWeek',
-								emptyText : '--请选择--',
-								editable : false,
-								anchor : '75%',
-								store : this.weekArr,
-								listeners : {
-									scope : this,
-									'expand' : function(A) {
-										this.queryPanel.planWeek.reset();
-									}
-								}
-							}]
+							}/*
+								 * , { xtype : 'combobox', fieldLabel : '计划制定周',
+								 * hiddenName : 'condition/planWeek', ref :
+								 * '../planWeek', emptyText : '--请选择--',
+								 * editable : false, anchor : '75%', store :
+								 * this.weekArr, listeners : { scope : this,
+								 * 'expand' : function(A) {
+								 * this.queryPanel.planWeek.reset(); } } }
+								 */]
 				});
 	}
 
@@ -130,7 +139,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
 					}, '-', {
-						text : '周计划日排产',
+						text : '计划日排产',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onPlanWeekDetail
@@ -158,17 +167,25 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						dataIndex : 'orderDate',
 						header : '订单日期'
 					}, {
+						dataIndex : 'orderNo',
+						header : '订单号'
+					}, {
+						dataIndex : 'orderAmount',
+						header : '订单数量'
+					}, {
 						dataIndex : 'planYear',
 						header : '计划制定年度'
-					}, {
-						dataIndex : 'planWeek',
-						header : '计划制定周'
-					}, {
+					}/*
+						 * , { dataIndex : 'planWeek', header : '计划制定周' }
+						 */, {
 						dataIndex : 'startDate',
 						header : '开始日期'
 					}, {
 						dataIndex : 'endDate',
 						header : '结束日期'
+					}, {
+						dataIndex : 'arrangeAmount',
+						header : '已排产数量'
 					}, {
 						dataIndex : 'bm',
 						header : '编码'
@@ -176,17 +193,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						dataIndex : 'performance',
 						header : '产品性能'
 					}, {
-						dataIndex : 'orderNo',
-						header : '订单号'
-					}, {
 						dataIndex : 'materSpecName',
 						header : '规格型号'
 					}, {
 						dataIndex : 'dryWet',
 						header : '干/湿膜'
-					}, {
-						dataIndex : 'orderAmount',
-						header : '数量'
 					}, {
 						dataIndex : 'xsc',
 						header : '需生产数量'
@@ -258,6 +269,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							name : 'id'
 						}, {
 							name : 'cnt'
+						}, {
+							name : 'arrangeAmount'
 						}]
 			})
 		})
@@ -267,7 +280,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 		var _this = this;
 		this.editPlanWeekWindow = this.editPlanWeekWindow
 				|| new Ext.fn.FormWindow({
-					title : '修改周生产主计划',
+					title : '修改生产主计划',
 					height : 600,
 					width : 800,
 					resizable : false,
@@ -316,8 +329,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 									allowBlank : false,
 									editable : false,
 									anchor : '85%',
-									store : [[2024, 2024], [2025, 2025],
-											[2026, 2026], [2027, 2027]],
+									store : this.planYearArr,
 									listeners : {
 										scope : this,
 										'expand' : function(A) {
@@ -325,25 +337,18 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 													.reset();
 										}
 									}
-								}, {
-									xtype : 'combobox',
-									fieldLabel : '计划制定周',
-									hiddenName : 'entity/planWeek',
-									ref : '../../planWeek',
-									emptyText : '--请选择--',
-									allowBlank : false,
-									editable : false,
-									anchor : '85%',
-									store : this.weekArr,
-									dataIndex : 'planWeek',
-									listeners : {
-										scope : this,
-										'expand' : function(A) {
-											this.editPlanWeekWindow.planWeek
-													.reset();
-										}
-									}
-								}, {
+								}/*
+									 * , { xtype : 'combobox', fieldLabel :
+									 * '计划制定周', hiddenName : 'entity/planWeek',
+									 * ref : '../../planWeek', emptyText :
+									 * '--请选择--', allowBlank : false, editable :
+									 * false, anchor : '85%', store :
+									 * this.weekArr, dataIndex : 'planWeek',
+									 * listeners : { scope : this, 'expand' :
+									 * function(A) {
+									 * this.editPlanWeekWindow.planWeek
+									 * .reset(); } } }
+									 */, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 2
@@ -555,6 +560,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								}, {
 									name : 'materSpecName'
 								}, {
+									name : 'materSpecId'
+								}, {
 									name : 'orderAmount'
 								}, {
 									name : 'xsc'
@@ -606,7 +613,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						colspan : 1
 					}, {
 						xtype : 'displayfield',
-						fieldLabel : '<p style="color:red;">周计划信息</p>',
+						fieldLabel : '<p style="color:red;">计划信息</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 2
 					}, {
@@ -616,14 +623,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						dataIndex : 'planYear',
 						anchor : '85%',
 						colspan : 1
-					}, {
-						xtype : 'displayfield',
-						fieldLabel : '计划制定周',
-						ref : '../planWeek',
-						dataIndex : 'planWeek',
-						anchor : '85%',
-						colspan : 1
-					}, {
+					}/*
+						 * , { xtype : 'displayfield', fieldLabel : '计划制定周', ref :
+						 * '../planWeek', dataIndex : 'planWeek', anchor :
+						 * '85%', colspan : 1 }
+						 */, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 2
@@ -657,6 +661,10 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						xtype : 'hidden',
 						ref : '../endDate',
 						dataIndex : 'endDate'
+					}, {
+						xtype : 'hidden',
+						ref : '../materSpecId',
+						dataIndex : 'materSpecId'
 					}]
 
 		})
@@ -748,12 +756,27 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							minValue : 1,
 							colspan : 1
 						}, {
-							xtype : 'textfield',
+							xtype : 'combobox',
 							fieldLabel : '膜片批次',
 							ref : '../../batchNo',
 							name : 'entity/batchNo',
 							anchor : '85%',
-							colspan : 1
+							colspan : 1,
+							hiddenName : 'entity/batchNo',
+							allowBlank : false,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.mpStore,
+							mode : "local",
+							displayField : "tumoBatchNo",
+							valueField : "tumoBatchNo",
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.planDayWindow.batchNo.reset();
+								}
+							}
+
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -853,7 +876,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							listeners : {
 								scope : this,
 								'expand' : function(A) {
-									this.planDayWindow.planDate.reset();
+									this.planDayWindow2.planDate.reset();
 								}
 							}
 
@@ -872,13 +895,28 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							minValue : 1,
 							colspan : 1
 						}, {
-							xtype : 'textfield',
+							xtype : 'combobox',
 							fieldLabel : '膜片批次',
 							ref : '../../batchNo',
-							dataIndex : 'batchNo',
 							name : 'entity/batchNo',
+							dataIndex : 'batchNo',
 							anchor : '85%',
-							colspan : 1
+							colspan : 1,
+							hiddenName : 'entity/batchNo',
+							allowBlank : false,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.mpStore,
+							mode : "local",
+							displayField : "tumoBatchNo",
+							valueField : "tumoBatchNo",
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.planDayWindow2.batchNo.reset();
+								}
+							}
+
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -989,6 +1027,15 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								dataIndex : 'jmAmount',
 								header : '计划卷膜数量'
 							}, {
+								dataIndex : 'batchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'meterAmount',
+								header : '米数'
+							}, {
+								dataIndex : 'position',
+								header : '仓位'
+							}, {
 								xtype : 'dictcolumn',
 								dataIndex : 'risk',
 								header : '风险评估',
@@ -1063,6 +1110,12 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 									name : 'planWeek'
 								}, {
 									name : 'enterDate'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'meterAmount'
+								}, {
+									name : 'position'
 								}]
 					})
 				})
@@ -1100,7 +1153,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								colspan : 1
 							}, {
 								xtype : 'displayfield',
-								fieldLabel : '<p style="color:red;">周计划信息</p>',
+								fieldLabel : '<p style="color:red;">计划信息</p>',
 								labelSeparator : '',// 去掉冒号
 								colspan : 2
 							}, {
@@ -1110,14 +1163,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								dataIndex : 'planYear',
 								anchor : '85%',
 								colspan : 1
-							}, {
-								xtype : 'displayfield',
-								fieldLabel : '计划制定周',
-								ref : '../planWeek',
-								dataIndex : 'planWeek',
-								anchor : '85%',
-								colspan : 1
-							}, {
+							}/*
+								 * , { xtype : 'displayfield', fieldLabel :
+								 * '计划制定周', ref : '../planWeek', dataIndex :
+								 * 'planWeek', anchor : '85%', colspan : 1 }
+								 */, {
 								xtype : 'displayfield',
 								height : '5',
 								colspan : 2
@@ -1230,6 +1280,42 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
+							xtype : 'textfield',
+							fieldLabel : '膜片批次',
+							ref : '../../batchNo',
+							anchor : '75%',
+							dataIndex : 'batchNo',
+							name : 'entity/batchNo',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							fieldLabel : '米数',
+							anchor : '75%',
+							ref : '../../meterAmount',
+							dataIndex : 'meterAmount',
+							name : 'entity/meterAmount',
+							minValue : 1,
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '仓位',
+							anchor : '75%',
+							ref : '../../position',
+							dataIndex : 'position',
+							name : 'entity/position',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 							xtype : 'dictcheckboxgroup',
 							ref : '../../myCheckboxGroup',
 							allowBlank : false,
@@ -1300,6 +1386,42 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							dataIndex : 'jmAmount',
 							anchor : '75%',
 							minValue : 1,
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '膜片批次',
+							ref : '../../batchNo',
+							anchor : '75%',
+							dataIndex : 'batchNo',
+							name : 'entity/batchNo',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							fieldLabel : '米数',
+							anchor : '75%',
+							ref : '../../meterAmount',
+							dataIndex : 'meterAmount',
+							name : 'entity/meterAmount',
+							minValue : 1,
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '仓位',
+							anchor : '75%',
+							ref : '../../position',
+							dataIndex : 'position',
+							name : 'entity/position',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -1433,7 +1555,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 		})
 
 		this.planWeekDaysWindow = this.planWeekDaysWindow || new Ext.Window({
-					title : '周计划日排产',
+					title : '计划日排产',
 					resizable : true,
 					minimizable : false,
 					maximizable : true,

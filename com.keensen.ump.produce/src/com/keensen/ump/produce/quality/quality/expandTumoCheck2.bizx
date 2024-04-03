@@ -22,8 +22,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link6</targetConnections>
     <targetConnections>link2</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link8</targetConnections>
     <location x="559" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -64,6 +65,7 @@
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>end0</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" description="" id="link3" name="link3" displayName="连接线" type="transition">
       <sourceNode>invokePojo0</sourceNode>
@@ -121,6 +123,16 @@
       <sourceNode>subprocess0</sourceNode>
       <targetNode>assign2</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="link7" displayName="连接线" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">ret/levelId</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link4</targetConnections>
     <location x="435" y="243"/>
     <size height="27" width="27"/>
@@ -162,6 +174,29 @@
     <location x="554" y="279"/>
     <figSize height="20" width="40"/>
     <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值3" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="480" y="182"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">300032</process:from>
+      <process:to type="query">data/perfFlagId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">ret/rule</process:from>
+      <process:to type="query">data/rule</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="474" y="218"/>
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

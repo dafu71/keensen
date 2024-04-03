@@ -128,7 +128,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 						header : '其它备注'
 					}, {
 						dataIndex : 'demandStockDate',
-						header : '要求入库日期'
+						header : '生产交期'
 					}, {
 						dataIndex : 'jhwcsj',
 						header : '计划完成时间'

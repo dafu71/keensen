@@ -9,8 +9,8 @@
     <size height="100" width="191"/>
   </nodes>
   <nodes xsi:type="model:Note" id="node4" name="注释4" displayName="注释" nodeType="note" type="note" content="日期判断" title="dafu&#x9;23-11-2 下午2:27">
-    <targetConnections>link73</targetConnections>
     <targetConnections>link74</targetConnections>
+    <targetConnections>link73</targetConnections>
     <location x="1569" y="437"/>
     <size height="100" width="182"/>
   </nodes>
@@ -56,15 +56,15 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link21</targetConnections>
-    <targetConnections>link48</targetConnections>
-    <targetConnections>link46</targetConnections>
-    <targetConnections>link37</targetConnections>
-    <targetConnections>link27</targetConnections>
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link54</targetConnections>
-    <targetConnections>link70</targetConnections>
     <targetConnections>link71</targetConnections>
+    <targetConnections>link70</targetConnections>
+    <targetConnections>link54</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link27</targetConnections>
+    <targetConnections>link37</targetConnections>
+    <targetConnections>link46</targetConnections>
+    <targetConnections>link48</targetConnections>
+    <targetConnections>link21</targetConnections>
     <location x="1335" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -183,8 +183,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link4</targetConnections>
     <targetConnections>link2</targetConnections>
+    <targetConnections>link4</targetConnections>
     <location x="498" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend0label</nodeLabel>
@@ -293,8 +293,8 @@
       <sourceNode>loopend1</sourceNode>
       <targetNode>loopstart2</targetNode>
     </sourceConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link10</targetConnections>
     <location x="945" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend1label</nodeLabel>
@@ -401,8 +401,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link35</targetConnections>
     <targetConnections>link34</targetConnections>
+    <targetConnections>link35</targetConnections>
     <location x="906" y="233"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend4label</nodeLabel>
@@ -436,7 +436,7 @@
     </process:copy>
     <process:copy>
       <process:from type="query" pattern="reference">orderNo</process:from>
-      <process:to type="query">map2/orderNo2</process:to>
+      <process:to type="query">map2/orderNo</process:to>
     </process:copy>
     <process:copy>
       <process:from type="query" pattern="reference">r/materSpecName</process:from>
@@ -745,9 +745,9 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link40</targetConnections>
-    <targetConnections>link51</targetConnections>
     <targetConnections>link57</targetConnections>
+    <targetConnections>link51</targetConnections>
+    <targetConnections>link40</targetConnections>
     <location x="1313" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend2label</nodeLabel>
@@ -878,9 +878,9 @@
       <sourceNode>loopend3</sourceNode>
       <targetNode>node4</targetNode>
     </sourceConnections>
-    <targetConnections>link58</targetConnections>
-    <targetConnections>link60</targetConnections>
     <targetConnections>link61</targetConnections>
+    <targetConnections>link60</targetConnections>
+    <targetConnections>link58</targetConnections>
     <location x="1105" y="678"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend3label</nodeLabel>
@@ -1047,8 +1047,8 @@
       <sourceNode>loopend6</sourceNode>
       <targetNode>node4</targetNode>
     </sourceConnections>
-    <targetConnections>link65</targetConnections>
     <targetConnections>link66</targetConnections>
+    <targetConnections>link65</targetConnections>
     <location x="1523" y="678"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend6label</nodeLabel>
@@ -1155,8 +1155,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link20</targetConnections>
     <targetConnections>link24</targetConnections>
+    <targetConnections>link20</targetConnections>
     <location x="659" y="708"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend7label</nodeLabel>

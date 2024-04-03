@@ -1,12 +1,15 @@
 com.keensen.ump.produce.component.yxorderMgr = function() {
 	this.initPanel = function() {
+
+		this.initPlanYear();
+		this.initWeekArr();
+
 		this.initQueryPanel();
 		this.initListPanel();
 
 		this.buildExcelUploadWin();
 		this.initUploadWindow();
 
-		this.initWeekArr();
 		this.initPlanWeekWindow();
 		this.initViewPlanWeekWindow();
 		this.initEditPlanWeekWindow();
@@ -17,6 +20,13 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					renderTo : 'componentyxordermgr',
 					panels : [this.queryPanel, this.listPanel]
 				});
+	}
+
+	this.initPlanYear = function() {
+		this.planYearArr = [];
+		for (var i = 0; i < 10; i++) {
+			this.planYearArr.push([2024 + i, 2024 + i])
+		}
 	}
 
 	this.initQueryPanel = function() {
@@ -78,16 +88,16 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 			hsPage : true,
 			id : mylistid,
 			tbar : [{
-						text : '新增周生产主计划',
+						text : '新增生产主计划',
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAddPlanWeek
-					}, '-', {
-						text : '查看周生产主计划',
+					}/*, '-', {
+						text : '查看生产主计划',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onViewPlanWeek
-					}, '->', {
+					}*/, '->', {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
@@ -101,6 +111,19 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, {
 						dataIndex : 'orderAmount',
 						header : '订单数量'
+					}, {
+						dataIndex : 'ifplan',
+						header : '制定计划与否',
+						renderer : function(v, m, r, i) {
+							var ifplan = r.get('ifplan');
+							if (ifplan == '已制定') {
+								return "<span style='color:red'>" + ifplan
+										+ "</span>";
+
+							} else {
+								return ifplan;
+							}
+						}
 					}, {
 						dataIndex : 'arrangeAmount',
 						header : '已排产数量'
@@ -181,7 +204,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						header : '其它备注'
 					}, {
 						dataIndex : 'demandStockDate',
-						header : '要求入库日期'
+						header : '生产交期'
 					}, {
 						dataIndex : 'rksl',
 						header : '入库数量（支）'
@@ -197,9 +220,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 				root : 'data',
 				autoLoad : true,
 				totalProperty : 'totalCount',
-				baseParams : {
-
-			}	,
+				baseParams : {},
 				fields : [{
 							name : 'id'
 						}, {
@@ -294,6 +315,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							name : 'cnt'
 						}, {
 							name : 'arrangeAmount'
+						}, {
+							name : 'ifplan'
 						}]
 			})
 		})
@@ -467,7 +490,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 	this.initPlanWeekWindow = function() {
 		var _this = this;
 		this.planWeekWindow = this.planWeekWindow || new Ext.fn.FormWindow({
-			title : '新增周生产主计划',
+			title : '新增生产主计划',
 			height : 600,
 			width : 800,
 			resizable : false,
@@ -595,6 +618,9 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
+							fieldLabel : '生产交期',
+							ref : '../../demandStockDate',
+							dataIndex : 'demandStockDate',
 							anchor : '85%',
 							colspan : 1
 						}, {
@@ -611,8 +637,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							allowBlank : false,
 							editable : false,
 							anchor : '85%',
-							store : [[2024, 2024], [2025, 2025], [2026, 2026],
-									[2027, 2027]],
+							store : this.planYearArr,
 							value : new Date().getFullYear(),
 							listeners : {
 								scope : this,
@@ -620,7 +645,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									this.planWeekWindow.planYear.reset();
 								}
 							}
-						}, {
+						}/*, {
 							xtype : 'combobox',
 							fieldLabel : '计划制定周',
 							ref : '../../planWeek',
@@ -637,7 +662,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									this.planWeekWindow.planWeek.reset();
 								}
 							}
-						}, {
+						}*/, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
@@ -751,10 +776,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, {
 						dataIndex : 'planYear',
 						header : '计划制定年度'
-					}, {
+					}/*, {
 						dataIndex : 'planWeek',
 						header : '计划制定周'
-					}, {
+					}*/, {
 						dataIndex : 'startDate',
 						header : '开始日期'
 					}, {
@@ -880,7 +905,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		var _this = this;
 		this.editPlanWeekWindow = this.editPlanWeekWindow
 				|| new Ext.fn.FormWindow({
-					title : '修改周生产主计划',
+					title : '修改生产主计划',
 					height : 600,
 					width : 800,
 					resizable : false,
@@ -938,8 +963,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									allowBlank : false,
 									editable : false,
 									anchor : '85%',
-									store : [[2024, 2024], [2025, 2025],
-											[2026, 2026], [2027, 2027]],
+									store : this.planYearArr,
 									listeners : {
 										scope : this,
 										'expand' : function(A) {
@@ -947,7 +971,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 													.reset();
 										}
 									}
-								}, {
+								}/*, {
 									xtype : 'combobox',
 									fieldLabel : '计划制定周',
 									hiddenName : 'entity/planWeek',
@@ -965,7 +989,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 													.reset();
 										}
 									}
-								}, {
+								}*/, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 2
