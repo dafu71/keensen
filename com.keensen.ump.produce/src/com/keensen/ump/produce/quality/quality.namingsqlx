@@ -345,6 +345,7 @@
      <isNotNull prepend = "and"  property = "checkDtEnd"> 
           TO_CHAR(t1.CHECK_DT, 'yyyy-MM-dd')  &lt;=  #checkDtEnd#
      </isNotNull>
+     order by t1.id desc
 	 </select>
 	 
 	 <select id="queryDeliveryReportCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >

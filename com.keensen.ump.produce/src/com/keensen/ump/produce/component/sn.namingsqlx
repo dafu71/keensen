@@ -3,14 +3,14 @@
 <sqlMap>
    
     <select id="query" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-    SELECT T.ID "id",
+    SELECT T.ID "id",t.prod_Spec_Name "prodSpecName",
        T.USE_TYPE "useType",
        T.PREFIX "prefix",
        T.NUM "num",
        DECODE(T.USE_TYPE,
               '工业',
-              T.PREFIX || LPAD(T.NUM, 7, 0),
-              T.PREFIX || LPAD(T.NUM, 8, 0)) "sn"
+              T.PREFIX || LPAD(T.NUM, 6, 0),
+              T.PREFIX || LPAD(T.NUM, 7, 0)) "sn"
   FROM KS_COMPONENT_SN T
   where 1=1
     <isNotNull prepend="and" property="id"> 
@@ -22,12 +22,16 @@
 	<isNotNull prepend="and" property="prefix"> 
 		       t.prefix = #prefix#
 	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodSpecName"> 
+		       t.prod_Spec_Name like '%' || #prodSpecName# || '%'
+	</isNotNull>
     </select>
     
     <insert id="insertSn" parameterClass="java.util.HashMap" >
     INSERT INTO KS_COMPONENT_SN
-  (id,use_type,prefix,NUM)
-  SELECT SEQ_COMPONENT_SN.NEXTVAL,#useType#,#prefix#,#num# FROM dual
+  (id,use_type,prefix,NUM,prod_Spec_Name)
+  SELECT SEQ_COMPONENT_SN.NEXTVAL,#useType#,#prefix#,#num#,#prodSpecName# FROM dual
   where not exists(select 1 from KS_COMPONENT_SN where use_type = #useType# and prefix = #prefix#)
     
     </insert>
@@ -39,7 +43,7 @@
     </update>
     
     <select id="querySn" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-    SELECT #prefix# || LPAD(TO_CHAR(ROWNUM + #num2#), DECODE(#useType#,'工业',7,8), '0') AS "sn"
+    SELECT #prefix# || LPAD(TO_CHAR(ROWNUM + #num2#), DECODE(#useType#,'工业',6,7), '0') AS "sn"
 	FROM dual
 	CONNECT BY LEVEL &lt;= #num#
     </select>

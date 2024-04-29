@@ -33,6 +33,31 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 								height : '5',
 								colspan : 1
 							}, {
+								xtype : 'combobox',
+								allowBlank : false,
+								anchor : '20%',
+								name : 'trend',
+								hiddenName : 'trend',
+								fieldLabel : '走向',
+								triggerAction : "all",
+								store : new Ext.data.ArrayStore({
+											fields : ['mykey', 'myvalue'],
+											data : [['仓库发货仓', '仓库发货仓'],
+													['仓库AB仓', '仓库AB仓'],
+													['仓库C仓', '仓库C仓']]
+										}),
+								mode : "local",
+								editable : false,
+								displayField : "myvalue",
+								valueField : "mykey",
+								forceSelection : true,
+								emptyText : "--请选择--",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
+							}, {
 								xtype : "hidden",
 								ref : '../processinstid',
 								value : processinstid,
@@ -89,6 +114,12 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'orderNo',
+						header : '原订单号'
+					}, {
+						dataIndex : 'trend',
+						header : '走向'
+					}, {
 						dataIndex : 'outLength',
 						header : '实发长度(m)'
 					}, {
@@ -134,6 +165,10 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 							name : 'outLength'
 						}, {
 							name : 'mpd'
+						}, {
+							name : 'orderNo'
+						}, {
+							name : 'trend'
 						}]
 			})
 		})
@@ -156,7 +191,7 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 					}, {
 						xtype : 'mpspeccombobox',
 						dataIndex : 'prodSpecId',
-						name :'prodSpecId',
+						name : 'prodSpecId',
 						readOnly : true,
 						anchor : '95%',
 						fieldLabel : '膜片型号 '
@@ -211,7 +246,7 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 						colspan : 2
 					}, {
 						xtype : 'displayfield',
-						ref:'../picturePanel',
+						ref : '../picturePanel',
 						height : '30',
 						colspan : 2
 					}, {
@@ -228,19 +263,19 @@ com.keensen.ump.produce.quality.concessionSeventhMgr = function() {
 					}, {
 						xtype : 'hidden',
 						dataIndex : 'pictureUrl',
-						ref:'../pictureUrl',
+						ref : '../pictureUrl',
 						name : 'pictureUrl'
 
 					}, {
 						xtype : 'hidden',
 						dataIndex : 'pictureUrl2',
-						ref:'../pictureUrl2',
+						ref : '../pictureUrl2',
 						name : 'pictureUrl2'
 
 					}, {
 						xtype : 'hidden',
 						dataIndex : 'pictureUrl3',
-						ref:'../pictureUrl3',
+						ref : '../pictureUrl3',
 						name : 'pictureUrl3'
 
 					}]

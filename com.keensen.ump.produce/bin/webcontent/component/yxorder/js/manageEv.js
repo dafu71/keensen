@@ -193,3 +193,48 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.doUpload = function() {
 	}
 
 }
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onRemark = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var pkid = C[0].data.id;
+		Ext.Msg.prompt('订单备注', '请输入', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.component.neworder.saveEntity.biz.ext",
+					method : "post",
+					jsonData : {
+						'entity/reserve1' : text,
+						'entity/id' : pkid
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.refresh();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "备注失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, true);
+	}
+}

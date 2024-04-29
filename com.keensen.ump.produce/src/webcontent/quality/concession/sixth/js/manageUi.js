@@ -102,6 +102,12 @@ com.keensen.ump.produce.quality.concessionSixthMgr = function() {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'orderNo',
+						header : '原订单号'
+					}, {
+						dataIndex : 'trend',
+						header : '走向'
+					}, {
 						dataIndex : 'outLength',
 						header : '实发长度(m)'
 					}, {
@@ -147,6 +153,10 @@ com.keensen.ump.produce.quality.concessionSixthMgr = function() {
 							name : 'outLength'
 						}, {
 							name : 'mpd'
+						}, {
+							name : 'orderNo'
+						}, {
+							name : 'trend'
 						}]
 			})
 		})

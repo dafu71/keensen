@@ -10,7 +10,7 @@
        TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
        T1.UPDATE_USER_ID AS "updateUserId",
        T1.UPDATE_NAME AS "updateName",	
-		T1.SCFS              AS "scfs",
+		T1.SCFS              AS "scfs",T1.reserve1 "reserve1",
        T1.BM                AS "bm",
        T1.SFFH              AS "sffh",
        T1.ORDER_TYPE        AS "orderType",
@@ -41,6 +41,7 @@
        T1.RKSL              AS "rksl",
        T1.JHWCSJ            AS "jhwcsj",
        T1.SCWCRQ            AS "scwcrq",
+       T1.lid_tape            AS "lidTape",
        t2.cnt "cnt",
        decode(nvl(t2.cnt,0),0,'未制定','已制定') "ifplan",
        t3.arrange_amount   as "arrangeAmount"
@@ -58,6 +59,7 @@
         <isNotNull prepend="and" property="materSpecName2">upper(t1.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
         <isNotNull prepend="and" property="orderDateStart">to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
         <isNotNull prepend="and" property="orderDateEnd">to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="ifplan2">decode(nvl(t2.cnt,0),0,'N','Y') = #ifplan2#</isNotNull>
      order by t1.id desc
 	 </select>
     <select id="queryPlanWeek" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
@@ -103,6 +105,7 @@
         <isNotNull prepend="and" property="planWeek">T1.PLAN_WEEK = #planWeek#</isNotNull>
         <isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
         <isNotNull prepend="and" property="orderNo">T2.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">T2.ORDER_NO = #orderNo2#</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
@@ -130,13 +133,13 @@
     FROM DUAL
   CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) -
              TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) + 1</insert>
-    <select id="queryPlanDate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT to_date(TRUNC(TO_DATE('2024-03-28', 'YYYY-MM-DD') + LEVEL - 1)) as "planDate"
+    <select id="queryPlanDate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT to_date(TRUNC(TO_DATE(#startDate#, 'YYYY-MM-DD') + LEVEL - 1)) as "planDate"
     FROM DUAL
   CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(#endDate#, 'YYYY-MM-DD')) -
              TRUNC(TO_DATE(#startDate#, 'YYYY-MM-DD')) + 1</select>
     <select id="queryPlanDay" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
-	SELECT T1.ID AS "id",
+	SELECT T1.ID AS "id",t1.confirm_Status "confirmStatus",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -159,22 +162,53 @@
        T1.POSITION        AS "position",
        T1.MP_REMARK       AS "mpRemark",
        T1.PROBLEM         AS "problem",
-       T1.PRODUCT_ORDER   AS "productOrder",
+       T5.PRODUCT_ORDER   AS "productOrder",
+       T1.cm_worker       AS "cmWorker",
+       decode(INSTR(T1.cm_worker, '('),0,T1.cm_worker,SUBSTR(T1.cm_worker,1,INSTR(T1.cm_worker, '(')-1)) AS "cmWorker2",
        T3.ORDER_NO        AS "orderNo",
        T3.MATER_SPEC_NAME AS "materSpecName",
        T3.MATER_SPEC_ID AS "materSpecId",
        T3.ORDER_AMOUNT    AS "orderAmount",
        T3.XSC             AS "xsc",
-       T3.ORDER_DATE      AS "orderDate",
+       to_char(T3.ORDER_DATE,'yyyy-MM-dd')      AS "orderDate",T5.order_Remark "orderRemark",
        T2.PLAN_YEAR       AS "planYear",
        T2.PLAN_WEEK       AS "planWeek",
        T2.ENTER_DATE      AS "enterDate",
-       T2.REMARK          AS "weekRemark"
-  FROM KS_COMPONENT_PLAN_DAY T1
+       T2.REMARK          AS "weekRemark",
+       t5.mater_spec_name  "prodSpecName",
+       t5.test_avg_gpd  "testAvgGpd",
+       t5.salt_rejection  "saltRejection",
+       t5.test_Mater_Spec "testMaterSpec",
+       t5.test_batch_no "testBatchNo",
+       t5.test_gpd "testGpd",
+       t5.test_salt_Rejection2 "testSaltRejection2" ,
+       t1.storage_name "storageName",
+       t1.storage_position "storagePosition" ,
+       nvl(t1.storage_name,' ') "storageName2",
+       nvl(t1.storage_position, ' ') "storagePosition2" ,
+       TO_CHAR(t1.confirm_date, 'yyyy-MM-dd') "confirmDate" ,
+       t6.cnt "cnt" ,
+       decode(instr(T3.MATER_SPEC_NAME,'-8'),0,'4寸','8寸') "size"  ,
+       nvl(t8.residue,0) "residue"
+  FROM KS_COMPONENT_PLAN_DAY T1  
+  LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue from V_KS_TUMO_ORIGIN2 t) t8
+      ON t8.batch_no=t1.batch_no
   LEFT JOIN KS_COMPONENT_PLAN_WEEK T2
-    ON T1.RELATION_ID = T2.ID
+    ON T1.RELATION_ID = T2.ID 
+  left join (SELECT COUNT(1) cnt,t.relation_id,t.plan_date from KS_COMPONENT_PLAN_DAY t
+	GROUP BY t.relation_id,t.plan_date) t6 on t6.relation_id=T2.ID and t1.plan_date = t6.plan_date 
+  left join KS_COMPONENT_PLAN_WEEK_DAYS t5
+    on T2.ID = T5.RELATION_ID and t1.plan_date = t5.plan_date
+       
   LEFT JOIN KS_PROD_COMPONENT_YXORDER T3
     ON T3.ID = T2.RELATION_ID
+  
+  left join (select t.tumo_batch_no,t.tumo_batch_id,t.test_avg_gpd,t.salt_rejection,t.prod_spec_id,m.mater_spec_name, 
+  t.test_Mater_Spec,t.test_batch_no,t.test_gpd,t.test_salt_Rejection2,t.storage_name,t.storage_position
+  from KS_COMPONENT_TUMO_SELECT t
+	LEFT JOIN QINSEN.PARA_MATER_SPEC m ON m.mater_spec_id = t.prod_spec_id
+	WHERE t.flag='合格') t5
+    on t5.tumo_batch_no = t1.batch_No  AND T3.MATER_SPEC_ID = t5.prod_spec_id
 	where 1=1
 	<isNotNull prepend="and" property="planYear">T2.PLAN_YEAR  = #planYear#</isNotNull>
         <isNotNull prepend="and" property="planWeek">T2.PLAN_WEEK = #planWeek#</isNotNull>
@@ -187,7 +221,11 @@
         <isNotNull prepend="and" property="materSpecName2">upper(t3.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
         <isNotNull prepend="and" property="orderDateStart">to_char(t3.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
         <isNotNull prepend="and" property="orderDateEnd">to_char(t3.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
-     order by t2.id desc,t1.id
+        <isNotNull prepend="and" property="planDateStart">to_char(T1.PLAN_DATE,'yyyy-MM-dd')  &gt;=  #planDateStart#</isNotNull>
+        <isNotNull prepend="and" property="planDateEnd">to_char(T1.PLAN_DATE,'yyyy-MM-dd')  &lt;=  #planDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="planDate">to_char(T1.PLAN_DATE,'yyyy-MM-dd')  =  #planDate#</isNotNull>
+        <isNotNull prepend="and" property="size">decode(instr(T3.MATER_SPEC_NAME,'-8'),0,'4','8') = #size#</isNotNull>
+     order by t3.id desc,t2.id,t1.id
 	 </select>
     <select id="queryPlanRoll" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
@@ -245,7 +283,7 @@
 	 </select>
     <select id="queryPlanWeekDays" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
-	SELECT T1.ID AS "id",
+	SELECT T1.ID AS "id",t2.order_no "orderNo",t2.mater_spec_name "materSpecName",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -262,10 +300,14 @@
        T1.RELATION_ID     AS "relationId",
        T1.ORDER_ID        AS "orderId",
        T1.PLAN_DATE      AS "planDate",
-       T1.AMOUNT         AS "amount",
+       nvl(T1.AMOUNT,0)         AS "amount",
+       t1.PRODUCT_ORDER "productOrder",
+       t1.ORDER_REMARK  "orderRemark",
        to_char(T1.PLAN_DATE,'D') AS "weekday",
        '星期' || DECODE(to_char(T1.PLAN_DATE,'D'),1,'日 ',2 ,'一',3,'二',4,'三',5,'四',6,'五','六') "weekdayname"
   FROM KS_COMPONENT_PLAN_WEEK_DAYS T1
+  left join KS_PROD_COMPONENT_YXORDER t2 
+  on t2.id =t1.order_id
 	where 1=1
 	
 	<isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
@@ -312,19 +354,23 @@
        T1.RKSL              AS "rksl",
        T1.JHWCSJ            AS "jhwcsj",
        T1.SCWCRQ            AS "scwcrq",
+       T1.lid_tape            AS "lidTape",
+       T1.lid            AS "lid",
+       T1.tape            AS "tape",
+       T1.tray            AS "tray",
        t2.amount AS "cdmAmount",
        t3.amount "jmAmount",
        t4.amount "qjAmount",
        t5.amount "rsAmount",
-		100*t2.amount/t1.order_amount || '%' "cdmFinish",
-		100*t3.amount/t1.order_amount || '%' "jmFinish",
-		100*t4.amount/t1.order_amount || '%' "qjFinish",
-		100*t5.amount/t1.order_amount || '%' "rsFinish"
+		round(100*t2.amount/t1.order_amount,0) || '%' "cdmFinish",
+		round(100*t3.amount/t1.order_amount,0) || '%' "jmFinish",
+		round(100*t4.amount/t1.order_amount,0) || '%' "qjFinish",
+		round(100*t5.amount/t1.order_amount,0) || '%' "rsFinish"
   FROM KS_PROD_COMPONENT_YXORDER T1
   LEFT JOIN
-(SELECT t.order_no,t.prod_spec_id mater_spec_id,count(t.quantity/t.num_per_wad) AS amount 
+(SELECT t.order_no,t.prod_spec_id mater_spec_id,sum(floor(t.quantity/m.num_per_wad))  AS amount 
 from qinsen.inst_caidiemo t
-WHERE t.num_per_wad !=0
+LEFT JOIN qinsen.PARA_MATER_SPEC m ON m.mater_spec_id = t.prod_spec_id
 GROUP BY t.order_no,t.prod_spec_id) t2 ON t1.order_no=t2.order_no AND t1.mater_spec_id=t2.mater_spec_id
 LEFT JOIN
 (SELECT t.order_no,t.prod_spec_id mater_spec_id, COUNT(1) amount from qinsen.inst_juanmo_main t
@@ -430,5 +476,23 @@ GROUP BY t2.order_no,t2.prod_spec_id) t5 ON t5.order_no = t1.order_no AND t1.mat
         <isNotNull prepend="and" property="orderNo2">T.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="materSpecName">upper(t2.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
 	order by T.ORDER_NO,t2.mater_spec_id
+    </select>
+    <select id="queryPlanStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	    select t1.length "length",
+    t1.BATCH_NO as "tumoBatchNo",
+    t5.prod_spec_id as "prodSpecId",
+     t1.storage_name "storageName",
+    t1.storage_position "storagePosition"
+    from KS_COMPONENT_PLAN_STOCK t1  
+    left join (select t.tumo_batch_no,t.tumo_batch_id,t.test_avg_gpd,t.salt_rejection,t.prod_spec_id,m.mater_spec_name, 
+  t.test_Mater_Spec,t.test_batch_no,t.test_gpd,t.test_salt_Rejection2,t.storage_name,t.storage_position
+  from KS_COMPONENT_TUMO_SELECT t
+	LEFT JOIN QINSEN.PARA_MATER_SPEC m ON m.mater_spec_id = t.prod_spec_id
+	WHERE t.flag='合格') t5
+    on t5.tumo_batch_no = t1.batch_No     
+    where t1.deleted = 'N'
+		<isNotNull prepend="and" property="prodSpecId">t5.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+	    
+		order by t1.BATCH_NO
     </select>
 </sqlMap>

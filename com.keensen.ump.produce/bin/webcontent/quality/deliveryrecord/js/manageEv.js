@@ -181,7 +181,24 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onView = function() 
 		var id = r.data.id;
 		var productName = r.data.productName;
 		window
-				.open('com.keensen.ump.produce.quality.deliveryreport.flow?entity/id='
+				.open('com.keensen.ump.produce.quality.deliveryreport.flow?opt=view&entity/id='
+						+ id, "top");
+
+	}
+
+};
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onPrint = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var id = r.data.id;
+		var productName = r.data.productName;
+		window
+				.open('com.keensen.ump.produce.quality.deliveryreport.flow?opt=print&entity/id='
 						+ id, "top");
 
 	}
@@ -198,7 +215,24 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onView2 = function()
 		var id = r.data.id;
 		var productName = r.data.productName;
 		window
-				.open('com.keensen.ump.produce.quality.deliveryreport.flow?type=e&entity/id='
+				.open('com.keensen.ump.produce.quality.deliveryreport.flow?opt=view&type=e&entity/id='
+						+ id, "top");
+
+	}
+
+};
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onPrint2 = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var id = r.data.id;
+		var productName = r.data.productName;
+		window
+				.open('com.keensen.ump.produce.quality.deliveryreport.flow?opt=print&type=e&entity/id='
 						+ id, "top");
 
 	}

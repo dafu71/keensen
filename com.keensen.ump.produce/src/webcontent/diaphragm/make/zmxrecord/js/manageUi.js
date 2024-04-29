@@ -84,6 +84,32 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 								hiddenName : 'condition/teamId',
 								anchor : '90%',
 								colspan : 1
+							}, {
+								xtype : 'combobox',
+								anchor : '90%',
+								colspan : 1,
+								name : 'condition/productType',
+								hiddenName : 'condition/productType',
+								ref : '../productType',
+								fieldLabel : '生产类型',
+								triggerAction : "all",
+								store : new Ext.data.ArrayStore({
+											fields : ['mykey', 'myvalue'],
+											data : [['量产', '量产'], ['实验', '实验'],
+													['试量产', '试量产']]
+										}),
+								mode : "local",
+								editable : false,
+								displayField : "myvalue",
+								valueField : "mykey",
+								forceSelection : true,
+								emptyText : "--请选择--",
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										this.queryPanel.productType.reset();
+									}
+								}
 							}]
 				});
 		this.queryPanel.addButton({
@@ -135,6 +161,9 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					}, {
 						dataIndex : 'line',
 						header : '生产线别'
+					}, {
+						dataIndex : 'productType',
+						header : '生产类型'
 					}, {
 						dataIndex : 'productDt',
 						header : '生产日期'
@@ -310,6 +339,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'cnt'
 						}, {
 							name : 'abnormal'
+						}, {
+							name : 'productType'
 						}]
 			})
 		})
@@ -339,8 +370,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					fieldLabel : '聚砜选项',
 					hiddenName : 'psf',
 					dictData : KS_PSF,
-					anchor : '47%',
-					colspan : 2,
+					anchor : '95%',
+					colspan : 1,
 					listeners : {
 						scope : this,
 						select : function(combo, record) {
@@ -352,6 +383,27 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							}
 						}
 					}
+				}, {
+					xtype : 'combobox',
+					anchor : '95%',
+					colspan : 1,
+					allowBlank : false,
+					name : 'entity/productType',
+					dataIndex : 'productType',
+					hiddenName : 'entity/productType',
+					fieldLabel : '生产类型',
+					triggerAction : "all",
+					store : new Ext.data.ArrayStore({
+								fields : ['mykey', 'myvalue'],
+								data : [['量产', '量产'], ['实验', '实验'],
+										['试量产', '试量产']]
+							}),
+					mode : "local",
+					editable : false,
+					displayField : "myvalue",
+					valueField : "mykey",
+					forceSelection : true,
+					emptyText : "--请选择--"
 				}, {
 					xtype : 'displayfield',
 					height : '5',
@@ -655,6 +707,31 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							dictData : KS_ZM_LINE,
 							anchor : '95%',
 							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							anchor : '95%',
+							colspan : 1,
+							allowBlank : false,
+							name : 'entity/productType',
+							dataIndex : 'productType',
+							hiddenName : 'entity/productType',
+							fieldLabel : '生产类型',
+							triggerAction : "all",
+							store : new Ext.data.ArrayStore({
+										fields : ['mykey', 'myvalue'],
+										data : [['量产', '量产'], ['实验', '实验'],
+												['试量产', '试量产']]
+									}),
+							mode : "local",
+							editable : false,
+							displayField : "myvalue",
+							valueField : "mykey",
+							forceSelection : true,
+							emptyText : "--请选择--"
 						}, {
 							xtype : 'displayfield',
 							height : '5',

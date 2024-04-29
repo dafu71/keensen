@@ -32,7 +32,7 @@
 		T2.mater_spec_name     AS "prodSpecName",
 		t1.ORDER_NO as "orderNo",
 		t1.PLAN_NO as "planNo",
-		t1.AMOUNT as "amount",
+		round(t1.AMOUNT,1) as "amount",
 		t1.STORAGE as "storage",
 		t1.CODE as "code",
 		t1.is_Judged "isJudged",
@@ -42,6 +42,12 @@
 		    on t1.PROD_SPEC_ID = t2.mater_spec_id
 		  where 1=1
 		  <isNotNull prepend="and" property="id">t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.id IN (
+	SELECT al.relation_id
+	from KS_PROD_DIAPHRAGM_APPLY_LIST al
+ 	LEFT JOIN qinsen.inst_tumo it ON al.record_id = it.record_id
+ 	where it.batch_no = #batchNo#
+	)</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="specId">t1.PROD_SPEC_ID = #specId#</isNotNull>

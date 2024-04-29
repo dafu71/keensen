@@ -111,6 +111,14 @@
       <process:from type="expression" pattern="reference">new Date()</process:from>
       <process:to type="query">entity/createTime</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/amount</process:from>
+      <process:to type="query">entity/needAmount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">进行</process:from>
+      <process:to type="query">entity/orderStatus</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="268" y="188"/>

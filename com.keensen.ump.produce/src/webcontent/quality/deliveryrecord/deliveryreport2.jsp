@@ -10,6 +10,9 @@
 			pageContext);
 	DataObject[] list2 = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
 			"list");
+	DataObject data = (DataObject) XpathUtil.getObjectByXpath(
+			rootObj, "data");
+	String opt = (String) XpathUtil.getObjectByXpath(rootObj, "opt");
 	//判断导入明细格式
 	//分为1、只有元件数据	2、包含测试数据
 	int flag = 1;//只有元件数据
@@ -19,7 +22,10 @@
 			flag = 2;
 			break;
 		}
-	}	
+	}
+	String labelingModel = data.getString("labelingModel");
+	int rowspan = 2;
+	if (labelingModel.equals("NF-60") || labelingModel.equals("NF-80")){ rowspan=1;};	
 %>
 
 <html>
@@ -41,11 +47,13 @@
 -->
     </style>
     
+<%if("print".equals(opt)){ %>
 <script type="text/javascript">
 	(function(){
 		window.print();
 	})();
-</script> 
+</script>
+<%} %>
 
 </head>
 <body>
@@ -125,7 +133,7 @@
     <td height="33"><div align="center" class="style1"><b:write property="data/press" /></div></td>
     <td height="33"><div align="center" class="style1"><b:write property="data/recovery" /></div></td>
   </tr>
-  
+   <% if (!labelingModel.equals("NF-60") && !labelingModel.equals("NF-80")){ %>
   <tr style="border: 1px solid black;">
     <td height="33"><div align="center" class="style1">MgSO<sub>4</sub></div></td>
     <td height="33"><div align="center" class="style1"><b:write property="data/solution2" /></div></td>
@@ -134,6 +142,7 @@
     <td height="33"><div align="center" class="style1"><b:write property="data/press2" /></div></td>
     <td height="33"><div align="center" class="style1"><b:write property="data/recovery2" /></div></td>
   </tr>
+  <% } %>
   </l:equal>
    <l:notEqual targetValue="NF Membrane" property="data/productName" compareType="string">
   <tr style="border: 1px solid black;">
@@ -170,14 +179,15 @@
   </tr>
   <l:equal targetValue="NF Membrane" property="data/productName" compareType="string">
   <tr  style="border: 1px solid black;">
-    <td height="38" rowspan="2"><div align="center" class="style1">2</div></td>
-    <td height="38" rowspan="2"><div align="center" class="style1">Average Permeate Flow</div></td>
+    <td height="38" rowspan="<%=rowspan %>"><div align="center" class="style1">2</div></td>
+    <td height="38" rowspan="<%=rowspan %>"><div align="center" class="style1">Average Permeate Flow</div></td>
     <td width="50" height="38"><div align="center" class="style1">NaCl</div></td>
     <td width="175" height="38"> <div align="center" class="style1"><b:write property="data/water" /> </div></td>
     <td height="38"> <div align="center" class="style1"><b:write property="data/waterCheck" /></div></td>
     <td height="38"><div align="center" class="style1">Product standard test</div></td>
     <td height="38"><div align="center" class="style1"><b:write property="data/waterResult" /></div></td>
   </tr>
+  <% if (!labelingModel.equals("NF-60") && !labelingModel.equals("NF-80")){ %>
   <tr  style="border: 1px solid black;">
     <td height="38"><div align="center" class="style1">MgSO<sub>4</sub></div></td>
     <td height="38"><div align="center" class="style1"> <b:write property="data/water2" /> </div></td>
@@ -185,15 +195,17 @@
     <td height="38"><div align="center" class="style1">Product standard test</div></td>
     <td height="38"><div align="center" class="style1"><b:write property="data/waterResult2" /></div></td>
   </tr>
+  <% } %>
   <tr  style="border: 1px solid black;">
-    <td height="38" rowspan="2"><div align="center" class="style1">3</div></td>
-    <td height="38" rowspan="2"><div align="center" class="style1">Average Salt Rejection</div></td>
+    <td height="38" rowspan="<%=rowspan %>"><div align="center" class="style1">3</div></td>
+    <td height="38" rowspan="<%=rowspan %>"><div align="center" class="style1">Average Salt Rejection</div></td>
     <td height="38"><div align="center" class="style1">NaCl</div></td>
     <td height="38"><div align="center" class="style1"> <b:write property="data/desalination" /> </div></td>
     <td height="38"><div align="center" class="style1"> <b:write property="data/desalinationCheck" /> </div></td>
     <td height="38"><div align="center" class="style1">Product standard test</div></td>
     <td height="38"><div align="center" class="style1"><b:write property="data/desalinationResult" /></div></td>
   </tr>
+  <% if (!labelingModel.equals("NF-60") && !labelingModel.equals("NF-80")){ %>
   <tr  style="border: 1px solid black;">
     <td height="38"><div align="center" class="style1">MgSO<sub>4</sub></div></td>
     <td height="38"><div align="center" class="style1"> <b:write property="data/desalination2" /> </div></td>
@@ -201,6 +213,7 @@
     <td height="38"><div align="center" class="style1">Product standard test</div></td>
     <td height="38"><div align="center" class="style1"><b:write property="data/desalinationResult2" /></div></td>
   </tr>
+  <% } %>
   </l:equal>
   <l:notEqual targetValue="NF Membrane" property="data/productName" compareType="string">
    <tr  style="border: 1px solid black;">
@@ -232,13 +245,33 @@
   </tr>
   <tr>
     <td width="50%" height="192"> <div align="center" class="style4"><strong><b:write property="data/result" /></strong></div> </td>
-	<td width="50%" height="192"><div align="center"><img src="produce/quality/deliveryrecord/img/image003.png" width="189" height="190"></div> </td>
+	<td width="50%" height="192"><div align="center">
+	<%if("view".equals(opt)){ %>
+	<img src="produce/quality/deliveryrecord/img/image003.png" width="189" height="190"></div> 
+	<%} %>
+	</td>
   </tr>
 </table>
 <table width="780" border="0" >
 <tr>
     <td width="33%"> <div align="left" class="style1">Inspector：<b:write property="data/inspector" /></div> </td>
-	<td width="33%"> <div align="left" class="style1"> Auditor：<b:write property="data/reviewer" /></div> </td>
+    
+    <l:equal property="data/reviewerId" targetValue="KS00610" >				
+			<td width="10%" height="56">						
+			<div align="left" class="style1">Auditor：</div>						
+			</td>
+			<td width="23%" height="56" align="left">
+			<img src="produce/quality/deliveryrecord/img/KS00610.jpg" width="120"
+			height="56">
+			</td>
+			</l:equal>
+			<l:notEqual property="data/reviewerId" targetValue="KS00610" >
+			<td width="33%" height="56">
+			<div align="left" class="style1">Auditor：<b:write
+				property="data/reviewer" /></div>
+			</td>			
+			</l:notEqual>
+
 	<td width="33%"> <div align="left" class="style1">Report Date：<b:write property="data/reportDt" formatPattern="yyyy/MM/dd"/></div> </td>
   </tr>
 </table>

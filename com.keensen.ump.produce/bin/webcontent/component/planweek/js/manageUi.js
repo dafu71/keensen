@@ -4,6 +4,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 		this.initPlanYear();
 		this.initPlanDateStore();
 		this.initMpStore();
+		this.initMpStore2();
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initEditPlanWeekWindow();
@@ -42,13 +43,17 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 
 	this.initPlanDateStore = function() {
 		this.planDateStore = new Ext.data.JsonStore({
-			url : 'com.keensen.ump.produce.component.neworder.queryPlanDate.biz.ext',
+			// url :
+			// 'com.keensen.ump.produce.component.neworder.queryPlanDate.biz.ext',
+			url : 'com.keensen.ump.produce.component.neworder.queryPlanWeekDays.biz.ext',
 			root : 'data',
 			autoLoad : false,
 			totalProperty : '',
 			baseParams : {},
 			fields : [{
 						name : 'planDate'
+					}, {
+						name : 'amount'
 					}]
 		})
 	}
@@ -62,8 +67,34 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					baseParams : {},
 					fields : [{
 								name : 'tumoBatchNo'
+							}, {
+								name : 'length'
+							}, {
+								name : 'storageName'
+							}, {
+								name : 'storagePosition'
 							}]
 				})
+	}
+	
+	this.initMpStore2 = function() {
+		this.mpStore2 = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.component.neworder.queryPlanStock.biz.ext',
+			root : 'data',
+			autoLoad : false,
+			totalProperty : '',
+			baseParams : {},
+			fields : [{
+						name : 'tumoBatchNo'
+					}, {
+						name : 'length'
+					}, {
+						name : 'storageName'
+					}, {
+						name : 'storagePosition'
+					}]
+		})
+
 	}
 	this.initQueryPanel = function() {
 		var _this = this;
@@ -487,8 +518,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								dataIndex : 'meterAmount',
 								header : '米数'
 							}, {
-								dataIndex : 'position',
-								header : '仓位'
+								dataIndex : 'storageName',
+								header : '仓库'
+							}, {
+								dataIndex : 'storagePosition',
+								header : '库位'
 							}, {
 								dataIndex : 'problem',
 								header : '存在问题'
@@ -575,6 +609,10 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 									name : 'planWeek'
 								}, {
 									name : 'enterDate'
+								}, {
+									name : 'storageName'
+								}, {
+									name : 'storagePosition'
 								}
 
 						]
@@ -694,6 +732,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 				});
 	}
 
+	// 新增日锁定计划
 	this.initAddPlanDayWindow = function() {
 		var _this = this;
 		this.planDayWindow = this.planDayWindow || new Ext.fn.FormWindow({
@@ -722,126 +761,263 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 				columns : 2,
 				saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanDay.biz.ext',
 				fields : [{
-							xtype : 'combobox',
-							fieldLabel : '计划日期',
-							ref : '../../planDate',
-							hiddenName : 'entity/planDate',
-							allowBlank : false,
-							anchor : '85%',
-							colspan : 1,
-							emptyText : '--请选择--',
-							editable : false,
-							store : this.planDateStore,
-							mode : "local",
-							displayField : "planDate",
-							valueField : "planDate",
-							listeners : {
-								scope : this,
-								'expand' : function(A) {
-									this.planDayWindow.planDate.reset();
-								}
+					xtype : 'combobox',
+					fieldLabel : '计划日期',
+					ref : '../../planDate',
+					hiddenName : 'entity/planDate',
+					allowBlank : false,
+					anchor : '85%',
+					colspan : 1,
+					emptyText : '--请选择--',
+					editable : false,
+					store : this.planDateStore,
+					mode : "local",
+					displayField : "planDate",
+					valueField : "planDate",
+					listeners : {
+						scope : this,
+						'expand' : function(A) {
+							this.planDayWindow.planDate.reset();
+							this.planDayWindow.jmAmount.setValue('');
+						},
+						'select' : function(combo, record, index) {
+							if (index > -1) {
+								this.planDayWindow.jmAmount.setValue(record
+										.get('amount'));
+							} else {
+								this.planDayWindow.jmAmount.setValue('');
 							}
+						}
+					}
 
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							fieldLabel : '卷膜数量',
-							allowBlank : false,
-							ref : '../../jmAmount',
-							name : 'entity/jmAmount',
-							anchor : '85%',
-							minValue : 1,
-							colspan : 1
-						}, {
-							xtype : 'combobox',
-							fieldLabel : '膜片批次',
-							ref : '../../batchNo',
-							name : 'entity/batchNo',
-							anchor : '85%',
-							colspan : 1,
-							hiddenName : 'entity/batchNo',
-							allowBlank : false,
-							emptyText : '--请选择--',
-							editable : false,
-							store : this.mpStore,
-							mode : "local",
-							displayField : "tumoBatchNo",
-							valueField : "tumoBatchNo",
-							listeners : {
-								scope : this,
-								'expand' : function(A) {
-									this.planDayWindow.batchNo.reset();
-								}
+				}, {
+					xtype : 'numberfield',
+					fieldLabel : '卷膜数量',
+					// allowBlank : false,
+					readOnly : true,
+					ref : '../../jmAmount',
+					name : 'entity/jmAmount',
+					anchor : '85%',
+					minValue : 1,
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'combobox',
+					triggerAction : "all",
+					mode : "local",
+					forceSelection : true,
+					fieldLabel : '线边仓膜片',
+					ref : '../../batchNoFrom',
+					anchor : '85%',
+					colspan : 1,
+					emptyText : '--请选择--',
+					typeAhead : true,
+					typeAheadDelay : 100,
+					minChars : 1,
+					queryMode : 'local',
+					lastQuery : '',
+					editable : true,
+					store : this.mpStore2,
+					// mode : "local",
+					displayField : "tumoBatchNo",
+					valueField : "tumoBatchNo",
+					listeners : {
+						scope : this,
+						'specialkey' : function() {
+							return false;
+						},
+						'expand' : function(A) {
+							this.planDayWindow.batchNoFrom.reset();
+							this.planDayWindow.batchNo.setValue('');
+							this.planDayWindow.meterAmount.setValue('');
+							this.planDayWindow.storageName.setValue('');
+							this.planDayWindow.storagePosition.setValue('');
+						},
+						'select' : function(combo, record, index) {
+							if (index > -1) {
+								this.planDayWindow.batchNoFrom2.reset();
+								this.planDayWindow.batchNo.setValue(record
+										.get('tumoBatchNo'));
+								this.planDayWindow.meterAmount.setValue(record
+										.get('length'));
+								this.planDayWindow.storageName.setValue(record
+										.get('storageName'));
+								this.planDayWindow.storagePosition
+										.setValue(record.get('storagePosition'));
+							} else {
+								this.planDayWindow.batchNo.setValue('');
+								this.planDayWindow.meterAmount.setValue('');
+								this.planDayWindow.storageName.setValue('');
+								this.planDayWindow.storagePosition.setValue('');
 							}
-
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							fieldLabel : '米数',
-							ref : '../../meterAmount',
-							name : 'entity/meterAmount',
-							minValue : 1,
-							anchor : '85%',
-							colspan : 1
-						}, {
-							xtype : 'textfield',
-							fieldLabel : '仓位',
-							ref : '../../position',
-							name : 'entity/position',
-							anchor : '85%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'textarea',
-							fieldLabel : '膜片备注',
-							ref : '../../mpRemark',
-							name : 'entity/mpRemark',
-							anchor : '85%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'textarea',
-							fieldLabel : '存在问题',
-							ref : '../../problem',
-							name : 'entity/problem',
-							anchor : '85%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							fieldLabel : '生产顺序',
-							ref : '../../productOrder',
-							name : 'entity/productOrder',
-							anchor : '85%',
-							colspan : 1
-						}, {
-							name : 'entity/relationId',
-							xtype : 'hidden',
-							ref : '../../relationId'
-						}, {
-							name : 'entity/orderId',
-							xtype : 'hidden',
-							ref : '../../orderId'
-						}]
+						}
+					}
+				}, {
+					xtype : 'combobox',
+					triggerAction : "all",
+					mode : "local",
+					forceSelection : true,
+					fieldLabel : 'AB/C仓膜片',
+					ref : '../../batchNoFrom2',
+					anchor : '85%',
+					colspan : 1,
+					emptyText : '--请选择--',
+					typeAhead : true,
+					typeAheadDelay : 100,
+					minChars : 1,
+					queryMode : 'local',
+					lastQuery : '',
+					editable : true,
+					store : this.mpStore,
+					// mode : "local",
+					displayField : "tumoBatchNo",
+					valueField : "tumoBatchNo",
+					listeners : {
+						scope : this,
+						'specialkey' : function() {
+							return false;
+						},
+						'expand' : function(A) {
+							this.planDayWindow.batchNoFrom2.reset();
+							this.planDayWindow.batchNo.setValue('');
+							this.planDayWindow.meterAmount.setValue('');
+							this.planDayWindow.storageName.setValue('');
+							this.planDayWindow.storagePosition.setValue('');
+						},
+						'select' : function(combo, record, index) {
+							if (index > -1) {
+								this.planDayWindow.batchNoFrom.reset();
+								this.planDayWindow.batchNo.setValue(record
+										.get('tumoBatchNo'));
+								this.planDayWindow.meterAmount.setValue(record
+										.get('length'));
+								this.planDayWindow.storageName.setValue(record
+										.get('storageName'));
+								this.planDayWindow.storagePosition
+										.setValue(record.get('storagePosition'));
+							} else {
+								this.planDayWindow.batchNo.setValue('');
+								this.planDayWindow.meterAmount.setValue('');
+								this.planDayWindow.storageName.setValue('');
+								this.planDayWindow.storagePosition.setValue('');
+							}
+						}
+					}
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'textfield',
+					fieldLabel : '膜片批次',
+					ref : '../../batchNo',
+					name : 'entity/batchNo',
+					allowBlank : false,
+					readOnly : true,
+					minValue : 1,
+					anchor : '85%',
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'numberfield',
+					fieldLabel : '米数',
+					ref : '../../meterAmount',
+					name : 'entity/meterAmount',
+					minValue : 1,
+					anchor : '85%',
+					colspan : 1
+				}, {
+					xtype : 'componentworkercombobox',
+					ref : '../../cmWorker',
+					name : 'entity/cmWorker',
+					hiddenName : 'entity/cmWorker',
+					valueField : "name",
+					displayField : "name",
+					anchor : '85%',
+					fieldLabel : '裁膜人员'
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'combobox',
+					anchor : '85%',
+					colspan : 1,
+					allowBlank : false,
+					ref : '../../storageName',
+					name : 'entity/storageName',
+					dataIndex : 'storageName',
+					hiddenName : 'entity/storageName',
+					fieldLabel : '仓库',
+					triggerAction : "all",
+					store : new Ext.data.ArrayStore({
+								fields : ['mykey', 'myvalue'],
+								data : [['膜片AB仓', '膜片AB仓'], ['膜片C仓', '膜片C仓']]
+							}),
+					mode : "local",
+					editable : true,
+					displayField : "myvalue",
+					valueField : "mykey",
+					// forceSelection : true,
+					emptyText : "--请选择--"
+				}, {
+					xtype : 'textfield',
+					fieldLabel : '库位',
+					ref : '../../storagePosition',
+					name : 'entity/storagePosition',
+					minValue : 1,
+					anchor : '85%',
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'textarea',
+					fieldLabel : '膜片备注',
+					ref : '../../mpRemark',
+					name : 'entity/mpRemark',
+					anchor : '85%',
+					colspan : 2
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'textarea',
+					fieldLabel : '存在问题',
+					ref : '../../problem',
+					name : 'entity/problem',
+					anchor : '85%',
+					colspan : 2
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}/*
+					 * , { xtype : 'numberfield', fieldLabel : '生产顺序', ref :
+					 * '../../productOrder', name : 'entity/productOrder',
+					 * anchor : '85%', colspan : 1 }
+					 */, {
+					name : 'entity/relationId',
+					xtype : 'hidden',
+					ref : '../../relationId'
+				}, {
+					name : 'entity/orderId',
+					xtype : 'hidden',
+					ref : '../../orderId'
+				}]
 			}]
 		});
 	}
 
+	// 修改日锁定计划
 	this.initPlanDayWindow2 = function() {
 		var _this = this;
 		this.planDayWindow2 = this.planDayWindow2 || new Ext.fn.FormWindow({
@@ -859,126 +1035,269 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 				loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanDay.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanDay.biz.ext',
 				fields : [{
-							xtype : 'combobox',
-							fieldLabel : '计划日期',
-							ref : '../../planDate',
-							hiddenName : 'entity/planDate',
-							dataIndex : 'planDate',
-							allowBlank : false,
-							anchor : '85%',
-							colspan : 1,
-							emptyText : '--请选择--',
-							editable : false,
-							store : this.planDateStore,
-							mode : "local",
-							displayField : "planDate",
-							valueField : "planDate",
-							listeners : {
-								scope : this,
-								'expand' : function(A) {
-									this.planDayWindow2.planDate.reset();
-								}
-							}
+					xtype : 'combobox',
+					fieldLabel : '计划日期',
+					ref : '../../planDate',
+					hiddenName : 'entity/planDate',
+					dataIndex : 'planDate',
+					allowBlank : false,
+					anchor : '85%',
+					colspan : 1,
+					emptyText : '--请选择--',
+					editable : false,
+					store : this.planDateStore,
+					mode : "local",
+					displayField : "planDate",
+					valueField : "planDate",
+					listeners : {
+						scope : this,
+						'expand' : function(A) {
+							this.planDayWindow2.planDate.reset();
+							this.planDayWindow2.jmAmount.setValue('');
 
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							fieldLabel : '卷膜数量',
-							allowBlank : false,
-							ref : '../../jmAmount',
-							dataIndex : 'jmAmount',
-							name : 'entity/jmAmount',
-							anchor : '85%',
-							minValue : 1,
-							colspan : 1
-						}, {
-							xtype : 'combobox',
-							fieldLabel : '膜片批次',
-							ref : '../../batchNo',
-							name : 'entity/batchNo',
-							dataIndex : 'batchNo',
-							anchor : '85%',
-							colspan : 1,
-							hiddenName : 'entity/batchNo',
-							allowBlank : false,
-							emptyText : '--请选择--',
-							editable : false,
-							store : this.mpStore,
-							mode : "local",
-							displayField : "tumoBatchNo",
-							valueField : "tumoBatchNo",
-							listeners : {
-								scope : this,
-								'expand' : function(A) {
-									this.planDayWindow2.batchNo.reset();
-								}
-							}
+						},
+						'select' : function(combo, record, index) {
+							if (index > -1) {
+								this.planDayWindow2.jmAmount.setValue(record
+										.get('amount'));
 
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							fieldLabel : '米数',
-							ref : '../../meterAmount',
-							dataIndex : 'meterAmount',
-							name : 'entity/meterAmount',
-							minValue : 1,
-							anchor : '85%',
-							colspan : 1
-						}, {
-							xtype : 'textfield',
-							fieldLabel : '仓位',
-							ref : '../../position',
-							dataIndex : 'position',
-							name : 'entity/position',
-							anchor : '85%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'textarea',
-							fieldLabel : '膜片备注',
-							ref : '../../mpRemark',
-							dataIndex : 'mpRemark',
-							name : 'entity/mpRemark',
-							anchor : '85%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'textarea',
-							fieldLabel : '存在问题',
-							ref : '../../problem',
-							dataIndex : 'problem',
-							name : 'entity/problem',
-							anchor : '85%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							fieldLabel : '生产顺序',
-							ref : '../../productOrder',
-							dataIndex : 'productOrder',
-							name : 'entity/productOrder',
-							anchor : '85%',
-							colspan : 1
-						}, {
-							name : 'entity/id',
-							xtype : 'hidden',
-							dataIndex : 'id'
-						}]
+							} else {
+								this.planDayWindow2.jmAmount.setValue('');
+							}
+						}
+					}
+
+				}, {
+					xtype : 'numberfield',
+					fieldLabel : '卷膜数量',
+					// allowBlank : false,
+					readOnly : true,
+					ref : '../../jmAmount',
+					dataIndex : 'jmAmount',
+					name : 'entity/jmAmount',
+					anchor : '85%',
+					minValue : 1,
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'combobox',
+					triggerAction : "all",
+					mode : "local",
+					forceSelection : true,
+					fieldLabel : '线边仓膜片',
+					ref : '../../batchNoFrom',
+					anchor : '85%',
+					colspan : 1,
+					emptyText : '--请选择--',
+					typeAhead : true,
+					typeAheadDelay : 100,
+					minChars : 1,
+					queryMode : 'local',
+					lastQuery : '',
+					editable : true,
+					store : this.mpStore2,
+					// mode : "local",
+					displayField : "tumoBatchNo",
+					valueField : "tumoBatchNo",
+					listeners : {
+						scope : this,
+						'specialkey' : function() {
+							return false;
+						},
+						'expand' : function(A) {
+							this.planDayWindow2.batchNoFrom.reset();
+							this.planDayWindow2.batchNo.setValue('');
+							this.planDayWindow2.meterAmount.setValue('');
+							this.planDayWindow2.storageName.setValue('');
+							this.planDayWindow2.storagePosition.setValue('');
+						},
+						'select' : function(combo, record, index) {
+							if (index > -1) {
+								this.planDayWindow2.batchNoFrom2.reset();
+								this.planDayWindow2.meterAmount.setValue(record
+										.get('length'));
+								this.planDayWindow2.batchNo.setValue(record
+										.get('tumoBatchNo'));
+								this.planDayWindow2.storageName.setValue(record
+										.get('storageName'));
+								this.planDayWindow2.storagePosition
+										.setValue(record.get('storagePosition'));
+							} else {
+								this.planDayWindow2.meterAmount.setValue('');
+								this.planDayWindow2.batchNo.setValue('');
+								this.planDayWindow2.storageName.setValue('');
+								this.planDayWindow2.storagePosition
+										.setValue('');
+							}
+						}
+					}
+
+				}, {
+					xtype : 'combobox',
+					triggerAction : "all",
+					mode : "local",
+					forceSelection : true,
+					fieldLabel : 'AB/C仓膜片',
+					ref : '../../batchNoFrom2',
+					anchor : '85%',
+					colspan : 1,
+					emptyText : '--请选择--',
+					typeAhead : true,
+					typeAheadDelay : 100,
+					minChars : 1,
+					queryMode : 'local',
+					lastQuery : '',
+					editable : true,
+					store : this.mpStore,
+					// mode : "local",
+					displayField : "tumoBatchNo",
+					valueField : "tumoBatchNo",
+					listeners : {
+						scope : this,
+						'specialkey' : function() {
+							return false;
+						},
+						'expand' : function(A) {
+							this.planDayWindow2.batchNoFrom2.reset();
+							this.planDayWindow2.meterAmount.setValue('');
+							this.planDayWindow2.batchNo.setValue('');
+							this.planDayWindow2.storageName.setValue('');
+							this.planDayWindow2.storagePosition.setValue('');
+						},
+						'select' : function(combo, record, index) {
+							if (index > -1) {
+								this.planDayWindow2.batchNoFrom.reset();
+								this.planDayWindow2.meterAmount.setValue(record
+										.get('length'));
+								this.planDayWindow2.batchNo.setValue(record
+										.get('tumoBatchNo'));
+								this.planDayWindow2.storageName.setValue(record
+										.get('storageName'));
+								this.planDayWindow2.storagePosition
+										.setValue(record.get('storagePosition'));
+							} else {
+								this.planDayWindow2.meterAmount.setValue('');
+								this.planDayWindow2.batchNo.setValue('');
+								this.planDayWindow2.storageName.setValue('');
+								this.planDayWindow2.storagePosition
+										.setValue('');
+							}
+						}
+					}
+
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'textfield',
+					fieldLabel : '膜片批次',
+					allowBlank : false,
+					readOnly : true,
+					ref : '../../batchNo',
+					dataIndex : 'batchNo',
+					name : 'entity/batchNo',
+					readOnly : true,
+					minValue : 1,
+					anchor : '85%',
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'numberfield',
+					fieldLabel : '米数',
+					ref : '../../meterAmount',
+					dataIndex : 'meterAmount',
+					name : 'entity/meterAmount',
+					minValue : 1,
+					anchor : '85%',
+					colspan : 1
+				}, {
+					xtype : 'componentworkercombobox',
+					ref : '../../cmWorker',
+					name : 'entity/cmWorker',
+					hiddenName : 'entity/cmWorker',
+					dataIndex : 'cmWorker',
+					valueField : "name",
+					displayField : "name",
+					anchor : '85%',
+					fieldLabel : '裁膜人员'
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'combobox',
+					anchor : '85%',
+					colspan : 1,
+					allowBlank : false,
+					ref : '../../storageName',
+					name : 'entity/storageName',
+					dataIndex : 'storageName',
+					hiddenName : 'entity/storageName',
+					fieldLabel : '仓库',
+					triggerAction : "all",
+					store : new Ext.data.ArrayStore({
+								fields : ['mykey', 'myvalue'],
+								data : [['膜片AB仓', '膜片AB仓'], ['膜片C仓', '膜片C仓']]
+							}),
+					mode : "local",
+					editable : true,
+					displayField : "myvalue",
+					valueField : "mykey",
+					// forceSelection : true,
+					emptyText : "--请选择--"
+				}, {
+					xtype : 'textfield',
+					fieldLabel : '库位',
+					dataIndex : 'storagePosition',
+					ref : '../../storagePosition',
+					name : 'entity/storagePosition',
+					minValue : 1,
+					anchor : '85%',
+					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'textarea',
+					fieldLabel : '膜片备注',
+					ref : '../../mpRemark',
+					dataIndex : 'mpRemark',
+					name : 'entity/mpRemark',
+					anchor : '85%',
+					colspan : 2
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'textarea',
+					fieldLabel : '存在问题',
+					ref : '../../problem',
+					dataIndex : 'problem',
+					name : 'entity/problem',
+					anchor : '85%',
+					colspan : 2
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}/*
+					 * , { xtype : 'numberfield', fieldLabel : '生产顺序', ref :
+					 * '../../productOrder', dataIndex : 'productOrder', name :
+					 * 'entity/productOrder', anchor : '85%', colspan : 1 }
+					 */, {
+					name : 'entity/id',
+					xtype : 'hidden',
+					dataIndex : 'id'
+				}]
 			}]
 		});
 	}
@@ -1478,6 +1797,12 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 			clicksToEdit : 1,
 			selModel : selModel2,
 			columns : [new Ext.grid.RowNumberer(), selModel2, {
+						dataIndex : 'orderNo',
+						header : '订单号'
+					}, {
+						dataIndex : 'materSpecName',
+						header : '规格型号号'
+					}, {
 						dataIndex : 'planDate',
 						header : '计划日期'
 					}, {
@@ -1494,6 +1819,40 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 									allowNegative : true,
 									decimalPrecision : 2,
 									minValue : 0,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}))
+
+					}, {
+
+						dataIndex : 'productOrder',
+						header : '生产顺序',
+						css : 'background:#c7c7c7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+								{
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									decimalPrecision : 0,
+									minValue : 1,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}))
+
+					}, {
+						dataIndex : 'orderRemark',
+						header : '订单备注',
+						css : 'background:#c7c7c7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									allowBlank : true,
+									scope : this,
 									listeners : {
 										'specialkey' : function() {
 											return false;
@@ -1550,6 +1909,14 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							name : 'weekdayname'
 						}, {
 							name : 'id'
+						}, {
+							name : 'productOrder'
+						}, {
+							name : 'orderRemark'
+						}, {
+							name : 'orderNo'
+						}, {
+							name : 'materSpecName'
 						}]
 			})
 		})

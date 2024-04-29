@@ -47,7 +47,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 			}, this);
 
 	this.storagecombo.mon(this.storagecombo, 'select', function(record, index) {
-				this.queryPanel.form.findField('condition/storageIds')
+			this.queryPanel.form.findField('condition/storageIds')
 						.setValue(this.storagecombo.myvalue);
 			}, this);
 }

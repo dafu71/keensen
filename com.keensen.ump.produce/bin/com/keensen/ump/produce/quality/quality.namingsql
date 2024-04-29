@@ -237,7 +237,8 @@
         <isNotNull prepend="and" property="reportDtEnd">TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd')  &lt;=  #reportDtEnd#</isNotNull>
         <isNotNull prepend="and" property="checkDtStart">TO_CHAR(t1.CHECK_DT, 'yyyy-MM-dd')  &gt;=  #checkDtStart#</isNotNull>
         <isNotNull prepend="and" property="checkDtEnd">TO_CHAR(t1.CHECK_DT, 'yyyy-MM-dd')  &lt;=  #checkDtEnd#</isNotNull>
-    </select>
+     order by t1.id desc
+	 </select>
     <select id="queryDeliveryReportCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 'QC' || CODE "code" from 
   (SELECT to_char(SYSDATE,'yyyyMMdd')|| '01' CODE FROM dual
   WHERE NOT EXISTS(

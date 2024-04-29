@@ -16,6 +16,57 @@ com.keensen.ump.produce.component.selectMgr = function() {
 
 	this.initQueryPanel = function() {
 		var _this = this;
+
+		var yearStore = new Ext.data.ArrayStore({
+					fields : ["id", "text"]
+				})
+		var currentYear = new Date().getFullYear();
+		for (var i = 2022; i <= currentYear; i++) {
+			var r = new Ext.data.Record({
+						id : i,
+						text : i + '年'
+					});
+			yearStore.add(r)
+		}
+
+		this.yearMonthPicker = this.yearMonthPicker || new Ext.Container({
+					autoEl : 'div',
+					layout : 'column',
+					anchor : "100%",
+					fieldLabel : '膜片生产年月',
+					defaults : {
+						xtype : "container",
+						autoEl : "div",
+						anchor : "100%"
+					},
+					items : [{
+								columnWidth : 0.45,
+								id : 'produceYearId',
+								anchor : "100%",
+								layout : "anchor",
+								xtype : 'combo',
+								displayField : 'text',
+								valueField : 'id',
+								hiddenName : 'condition/produceYear',
+								mode : "local",
+								forceSelection : true,
+								store : yearStore
+							}, {
+								columnWidth : 0.45,
+								anchor : "100%",
+								layout : "anchor",
+								xtype : 'combo',
+								hiddenName : 'condition/produceMonth',
+								store : [['01', '一月'], ['02', '二月'],
+										['03', '三月'], ['04', '四月'],
+										['05', '五月'], ['06', '六月'],
+										['07', '七月'], ['08', '八月'],
+										['09', '九月'], ['10', '十月'],
+										['11', '十一月'], ['12', '十二月']]
+
+							}]
+				});
+
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 120,
 					columns : 4,
@@ -30,14 +81,14 @@ com.keensen.ump.produce.component.selectMgr = function() {
 								'condition/produceDtEnd'],
 						fieldLabel : "膜片生产日期",
 						format : "Y-m-d"
-					}, {
+					}, this.yearMonthPicker, {
 						xtype : 'textarea',
 						name : 'condition/tumoBatchNo2',
 						emptyText : '多个批次请用逗号分隔，或一行一个批次',
-						colspan : 3,
+						colspan : 2,
 						// allowBlank : false,
 						anchor : '100%',
-						fieldLabel : '涂膜批号'
+						fieldLabel : '膜片批号'
 					}, {
 						xtype : 'hidden',
 						name : 'condition/tumoBatchNo'

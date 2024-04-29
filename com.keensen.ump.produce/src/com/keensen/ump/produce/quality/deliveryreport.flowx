@@ -18,6 +18,7 @@
         <process:parameter description="" historyStateLocation="client" isArray="false" name="result" primitiveType="String"/>
         <process:parameter anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="map"/>
         <process:parameter anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="list"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="opt" primitiveType="String"/>
       </process:inputParameters>
     </sourceConnections>
     <location x="100" y="150"/>
@@ -25,8 +26,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link4</targetConnections>
     <targetConnections>link1</targetConnections>
+    <targetConnections>link4</targetConnections>
     <location x="480" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -97,8 +98,8 @@
       <sourceNode>view1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link11</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link11</targetConnections>
     <location x="372" y="257"/>
     <size height="28" width="22"/>
     <nodeLabel>view1label</nodeLabel>

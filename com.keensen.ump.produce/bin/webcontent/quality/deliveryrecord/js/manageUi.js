@@ -32,7 +32,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 			border : true,
 			// collapsible : true,
 			titleCollapse : false,
-			title : '【元件出货质检报告查询】',
+			// title : '【元件出货质检报告查询】',
 			fields : [{
 				xtype : "dateregion",
 				colspan : 1,
@@ -79,7 +79,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【元件出货质检报告列表】',
+			// title : '【元件出货质检报告列表】',
 			viewConfig : {
 				forceFit : false
 			},
@@ -110,15 +110,43 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						iconCls : 'icon-application_excel',
 						handler : this.onRelation
 					}, '-', {
-						text : '查看报告',
-						scope : this,
+						xtype : 'splitbutton',
+						text : '中文报告',
+						// scale : 'small',
+						// rowspan : 1,
+						// iconAlign : 'top',
 						iconCls : 'icon-application_form_magnify',
-						handler : this.onView
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '打印',
+									scope : this,
+									iconCls : 'icon-printer',
+									handler : this.onPrint
+								}, {
+									text : '查看',
+									scope : this,
+									iconCls : 'icon-application_form_magnify',
+									handler : this.onView
+								}]
 					}, '-', {
-						text : '查看英文报告',
-						scope : this,
+						xtype : 'splitbutton',
+						text : '英文报告',
+						// scale : 'small',
+						// rowspan : 1,
+						// iconAlign : 'top',
 						iconCls : 'icon-application_form_magnify',
-						handler : this.onView2
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '打印',
+									scope : this,
+									iconCls : 'icon-printer',
+									handler : this.onPrint2
+								}, {
+									text : '查看',
+									scope : this,
+									iconCls : 'icon-application_form_magnify',
+									handler : this.onView2
+								}]
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.deliveryrecord.delete.biz.ext',

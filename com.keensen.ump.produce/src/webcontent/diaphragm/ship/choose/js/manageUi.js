@@ -151,6 +151,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 							}, '-', {
 								text : '变更订单后生成发货单',
 								scope : this,
+								disabled:true,
+								hidden:true,
 								iconCls : 'icon-application_edit',
 								handler : this.onCreate2
 							}, {

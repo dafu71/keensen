@@ -37,6 +37,12 @@ com.keensen.ump.produce.quality.concessionViewMgr = function() {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'orderNoBak',
+						header : '原订单号'
+					}, {
+						dataIndex : 'trend',
+						header : '走向'
+					}, {
 						dataIndex : 'outLength',
 						header : '实发长度(m)'
 					}, {
@@ -82,6 +88,10 @@ com.keensen.ump.produce.quality.concessionViewMgr = function() {
 							name : 'outLength'
 						}, {
 							name : 'mpd'
+						}, {
+							name : 'orderNoBak'
+						}, {
+							name : 'trend'
 						}]
 			})
 		})

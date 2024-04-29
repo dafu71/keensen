@@ -25,11 +25,17 @@
 </script>
 
 <js:load scriptPath="pub/common/mpspecCombo.js" />
+<js:load scriptPath="pub/common/supCombo.js" />
 <js:load scriptPath="produce/diaphragm/ship/order/js/manageUi.js"/>
 <js:load scriptPath="produce/diaphragm/ship/order/js/manageEv.js"/>
+<style type="text/css">
+.x-grid3-cell-inner {-webkit-user-select:text;}
+</style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var listid = Ext.id();
+  var arrangeAmountId = Ext.id();
+  var arrangeAmounText = Ext.id();
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.ship.OrderMgr
 		});

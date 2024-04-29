@@ -18,8 +18,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link5</targetConnections>
     <targetConnections>link2</targetConnections>
+    <targetConnections>link5</targetConnections>
     <location x="400" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -108,7 +108,7 @@
       <process:to type="query">recordIds</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="expression" pattern="reference">orderNo + &quot; 让步&quot;</process:from>
+      <process:from type="expression" pattern="reference">orderNo</process:from>
       <process:to type="query">map/orderNo</process:to>
     </process:copy>
     <process:copy>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.diaphragm.ship.order">
+    <select id="queryOrderTrace" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.CUSTOMER_CODE   AS "customerCode",
+       T1.ORDER_NO        AS "orderNo",
+       T1.MATER_SPEC_CODE AS "materSpecCode",
+       T1.AMOUNT          AS "amount",
+       T1.NEED_AMOUNT     AS "needAmount",
+       round(T1.ARRANGE_AMOUNT,2)  AS "arrangeAmount",
+       T1.UNIT            AS "unit",
+       T1.ORDER_DATE      AS "orderDate",
+       T1.DEMAND_DATE     AS "demandDate",
+       T1.DELIVERY_AMOUNT AS "deliveryAmount",
+       decode(t1.order_type,'FH',T1.STORAGE_AMOUNT,T1.STORAGE_AMOUNT2)  AS "storageAmount",
+       decode(t1.order_type,'FH',T1.VALID_PERCENT,T1.VALID_PERCENT2)   AS "validPercent",
+       T1.SPEC_ID         AS "specId",
+       T1.ARRANGE_PERCENT AS "arrangePercent",
+       T1.ORDER_STATUS    AS "orderStatus"
+  FROM (SELECT T1.CUSTOMER_CODE,
+               T1.ORDER_NO,
+               decode(substr(translate(t1.order_no,'1234567890','XXXXXXXXXX'),1,1),'X','FH','ZY') order_type,
+               T1.SPEC_ID,
+               T1.AMOUNT,
+               T1.NEED_AMOUNT,
+               T1.NEED_AMOUNT / (NVL(T1.ARRANGE_PERCENT, 100) / 100) ARRANGE_AMOUNT,
+               T1.UNIT,
+               T1.ORDER_DATE,
+               T1.DEMAND_DATE,
+               T2.MATER_SPEC_CODE,
+               T3.DELIVERY_AMOUNT,
+               T5.STORAGE_AMOUNT,
+               T6.STORAGE_AMOUNT STORAGE_AMOUNT2,
+               ROUND(100 * T5.STORAGE_AMOUNT /
+                     (T1.NEED_AMOUNT / (NVL(T1.ARRANGE_PERCENT, 100) / 100))) VALID_PERCENT,
+               ROUND(100 * T6.STORAGE_AMOUNT /
+                     (T1.NEED_AMOUNT / (NVL(T1.ARRANGE_PERCENT, 100) / 100))) VALID_PERCENT2,
+               T1.ARRANGE_PERCENT,
+               T1.ORDER_STATUS
+          FROM KS_PROD_DIAPHRAGM_ORDER T1
+          LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+            ON T1.SPEC_ID = T2.MATER_SPEC_ID
+          LEFT JOIN (SELECT SUM(T.AMOUNT) DELIVERY_AMOUNT, T.ORDER_NO
+                      FROM V_KS_PROD_DIAPHRAGM_SHIP T
+                     GROUP BY T.ORDER_NO) T3
+            ON T3.ORDER_NO = T1.ORDER_NO
+          LEFT JOIN (SELECT SUBSTR(REPLACE(REPLACE(TT.ORDER_NO, '让步', ','),
+                                          ' ',
+                                          ','),
+                                  1,
+                                  INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                        '让步',
+                                                        ','),
+                                                ' ',
+                                                ','),
+                                        ',') - 1) ORDER_NO,
+                           SUM(TT.USEFUL_LENGTH) STORAGE_AMOUNT
+                      FROM KS_PROD_DIAPHRAGM_TUMO T
+                      LEFT JOIN V_KS_TUMO_ORIGIN2 TT
+                        ON T.RECORD_ID = TT.RECORD_ID
+                     WHERE T.TREND = '仓库发货仓'
+                       AND SUBSTR(REPLACE(REPLACE(TT.ORDER_NO, '让步', ','),
+                                          ' ',
+                                          ','),
+                                  1,
+                                  INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                        '让步',
+                                                        ','),
+                                                ' ',
+                                                ','),
+                                        ',') - 1) IS NOT NULL
+                     GROUP BY SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                     '让步',
+                                                     ','),
+                                             ' ',
+                                             ','),
+                                     1,
+                                     INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                           '让步',
+                                                           ','),
+                                                   ' ',
+                                                   ','),
+                                           ',') - 1)
+                                                                             
+                                           ) T5                   
+            ON T5.ORDER_NO = T1.ORDER_NO
+            
+            LEFT JOIN (SELECT SUBSTR(REPLACE(REPLACE(TT.ORDER_NO, '让步', ','),
+                                          ' ',
+                                          ','),
+                                  1,
+                                  INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                        '让步',
+                                                        ','),
+                                                ' ',
+                                                ','),
+                                        ',') - 1) ORDER_NO,
+                           SUM(TT.USEFUL_LENGTH) STORAGE_AMOUNT
+                      FROM KS_PROD_DIAPHRAGM_TUMO T
+                      LEFT JOIN V_KS_TUMO_ORIGIN2 TT
+                        ON T.RECORD_ID = TT.RECORD_ID
+                     WHERE T.TREND = '仓库AB仓'
+                       AND SUBSTR(REPLACE(REPLACE(TT.ORDER_NO, '让步', ','),
+                                          ' ',
+                                          ','),
+                                  1,
+                                  INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                        '让步',
+                                                        ','),
+                                                ' ',
+                                                ','),
+                                        ',') - 1) IS NOT NULL
+                     GROUP BY SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                     '让步',
+                                                     ','),
+                                             ' ',
+                                             ','),
+                                     1,
+                                     INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                           '让步',
+                                                           ','),
+                                                   ' ',
+                                                   ','),
+                                           ',') - 1)
+                                                                             
+                                           ) T6                   
+            ON T6.ORDER_NO = T1.ORDER_NO
+             WHERE 1=1
+   <isEqual compareValue="Y" prepend="and" property="isClosed">t1.order_status = '进行'</isEqual>
+        <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderDateStart">to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
+        <isNotNull prepend="and" property="orderDateEnd">to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="specId">t1.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="demandDateStart">to_char(t1.demand_DATE,'yyyy-MM-dd')  &gt;=  #demandDateStart#</isNotNull>
+        <isNotNull prepend="and" property="demandDateEnd">to_char(t1.demand_DATE,'yyyy-MM-dd')  &lt;=  #demandDateEnd#</isNotNull>   ) T1
+            order by t1.order_no
+
+    </select>
+    <select id="queryDeliveryBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DISTINCT t.BATCH_NO "batchNo" from V_KS_PROD_DIAPHRAGM_SHIP t
+       WHERE t.ORDER_NO=#orderNo#</select>
+    <select id="queryDetails" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT TRUNC(TO_DATE(to_char(sysdate, 'YYYY-MM-DD'), 'YYYY-MM-DD') + LEVEL - 1) "workDt",
+        #line# "line", #supId# "supId",#relationId# "relationId",
+         (SELECT t.prop_value_name || '(' || t.prop_value_code || ')' 
+        from qinsen.CONF_PROP_VALUE_OPTION t
+        where t.prop_id = 30021 AND t.prop_value_id = #supId#) "supName", 
+        (SELECT round((NEED_AMOUNT / (NVL(ARRANGE_PERCENT, 100) / 100))/#days#,1) from KS_PROD_DIAPHRAGM_order WHERE ID=#relationId#) "arrangeAmount",
+        (SELECT order_no from KS_PROD_DIAPHRAGM_order WHERE ID=#relationId#) "orderNo",
+        (SELECT T2.MATER_SPEC_CODE FROM KS_PROD_DIAPHRAGM_ORDER T1
+          LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+            ON T1.SPEC_ID = T2.MATER_SPEC_ID WHERE t1.ID=#relationId#) "specName",
+         (select decode(substr(translate(t.order_no,'1234567890','XXXXXXXXXX'),1,1),'X','FH','ZY') 
+         FROM KS_PROD_DIAPHRAGM_order t WHERE t.ID=#relationId#) as "itype"
+    FROM DUAL
+  CONNECT BY LEVEL &lt;=#days#</select>
+    <select id="queryCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT CODE "code" from 
+  (SELECT 'MP' || #line# || #itype# || replace(substr(#workDt#,1,10),'-','')|| '001' CODE FROM dual
+  WHERE NOT EXISTS(
+  select t.code from KS_PROD_DIAPHRAGM_workplan t
+  WHERE SUBSTR(t.code,6,8) = replace(substr(#workDt#,1,10),'-',''))
+  UNION
+  select 'MP' || #line# || #itype# || to_char(to_number(max(substr(t.code,6,11)))+1) CODE 
+  from KS_PROD_DIAPHRAGM_workplan t
+  WHERE SUBSTR(t.code,6,8) = replace(substr(#workDt#,1,10),'-',''))
+  WHERE LENGTH(CODE)&gt;5</select>
+    <select id="queryWorkPlan" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  	SELECT T1.ID AS "id",
+       T1.CREATE_TIME AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       T1.UPDATE_TIME AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.RELATION_ID AS "relationId",
+       T1.WORK_DT AS "workDt",
+       T1.LINE AS "line",
+       T1.ARRANGE_AMOUNT AS "arrangeAmount",
+       T1.SUP_ID AS "supId",
+       T1.PERFORMANCE AS "performance",
+       T1.REMARK AS "remark",
+       T1.CODE AS "code",
+       T2.ORDER_NO "orderNo",
+       T2.SPEC_ID "specId",
+       T22.MATER_SPEC_NAME AS "materSpecName",
+       T3.PROP_VALUE_NAME || '(' || T3.PROP_VALUE_CODE || ')' "supName",
+       T4.PROD_AMOUNT "prodAmount",
+       decode(SUBSTR(t1.code,4,2),'FH',T5.STORAGE_AMOUNT,T6.STORAGE_AMOUNT) "storageAmount",
+       round(100*(decode(SUBSTR(t1.code,4,2),'FH',T5.STORAGE_AMOUNT,T6.STORAGE_AMOUNT))/T4.PROD_AMOUNT,2) "validPercent",
+       T4.PROD_AMOUNT - decode(SUBSTR(t1.code,4,2),'FH',T5.STORAGE_AMOUNT,T6.STORAGE_AMOUNT) "waitAmount"
+  FROM KS_PROD_DIAPHRAGM_WORKPLAN T1
+  LEFT JOIN (SELECT SUM(T.USEFUL_LENGTH) PROD_AMOUNT, T.PLAN_NO
+               FROM V_KS_TUMO_ORIGIN2 T
+              GROUP BY T.PLAN_NO) T4
+    ON T4.PLAN_NO = T1.CODE
+  LEFT JOIN (SELECT SUM(TT.USEFUL_LENGTH) STORAGE_AMOUNT, TT.PLAN_NO
+               FROM KS_PROD_DIAPHRAGM_TUMO T
+               LEFT JOIN V_KS_TUMO_ORIGIN2 TT
+                 ON T.RECORD_ID = TT.RECORD_ID
+              WHERE T.TREND = '仓库发货仓'
+              GROUP BY TT.PLAN_NO) T5
+    ON T5.PLAN_NO = T1.CODE
+  LEFT JOIN (SELECT SUM(TT.USEFUL_LENGTH) STORAGE_AMOUNT, TT.PLAN_NO
+               FROM KS_PROD_DIAPHRAGM_TUMO T
+               LEFT JOIN V_KS_TUMO_ORIGIN2 TT
+                 ON T.RECORD_ID = TT.RECORD_ID
+              WHERE T.TREND = '仓库AB仓'
+              GROUP BY TT.PLAN_NO) T6
+    ON T6.PLAN_NO = T1.CODE
+  LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION T3
+    ON T3.PROP_ID = 30021
+   AND T3.PROP_VALUE_ID = T1.SUP_ID
+  LEFT JOIN KS_PROD_DIAPHRAGM_ORDER T2
+    ON T2.ID = T1.RELATION_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC T22
+    ON T2.SPEC_ID = T22.MATER_SPEC_ID
+    
+     WHERE 1=1
+   <isNotNull prepend="and" property="orderNo">upper(t2.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="planNo">upper(t1.code) like '%' || upper(#planNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="specId">t2.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
+ ORDER BY T1.RELATION_ID, T1.ID
+
+  
+    </select>
+    <delete id="deleteWorkPlan" parameterClass="java.util.HashMap">delete from KS_PROD_DIAPHRAGM_WORKPLAN t
+	WHERE t.code NOT IN(SELECT tt.plan_no from qinsen.inst_tumo tt)
+	and 
+	  t.relation_id = #relationId#</delete>
+    <select id="queryDetails2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT TRUNC(TO_DATE(to_char(wp.work_dt, 'YYYY-MM-DD'), 'YYYY-MM-DD') + LEVEL - 1) "workDt",
+  		#id# "planId",
+wp.line "line",wp.sup_id "supId",wp.relation_Id "relationId",
+ (SELECT t.prop_value_name || '(' || t.prop_value_code || ')' 
+        from qinsen.CONF_PROP_VALUE_OPTION t
+        where t.prop_id = 30021 AND t.prop_value_id = wp.sup_id) "supName" ,
+        round(wp.ARRANGE_amount/#days#,1)  "arrangeAmount",
+        (SELECT order_no from KS_PROD_DIAPHRAGM_order WHERE ID=wp.relation_Id) "orderNo",
+        (SELECT T2.MATER_SPEC_CODE FROM KS_PROD_DIAPHRAGM_ORDER T1
+          LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+            ON T1.SPEC_ID = T2.MATER_SPEC_ID WHERE t1.ID=wp.relation_Id) "specName",
+             (select decode(substr(translate(t.order_no,'1234567890','XXXXXXXXXX'),1,1),'X','FH','ZY') 
+         FROM KS_PROD_DIAPHRAGM_order t WHERE t.ID=wp.relation_Id) as "itype"
+   FROM DUAL,(SELECT wp.* from Ks_Prod_Diaphragm_Workplan wp
+    WHERE ID=#id#) wp
+  CONNECT BY LEVEL &lt;=#days#</select>
+    <select id="queryTumoOrderNO" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.RECORD_ID    AS "recordId",
+       T1.BATCH_NO     AS "batchNo",
+       T1.ORDER_NO     AS "orderNo"，
+       T1.ORDER_NO     AS "orderNoBak"
+  FROM qinsen.INST_TUMO T1
+  WHERE 1=1
+   <isNotNull prepend="and" property="orderNo">upper(t1.order_No) = upper(#orderNo#)</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">t1.BATCH_NO in ($batchNoStr$)</isNotNull>
+    </select>
+    <update id="updateTumoOrderNo" parameterClass="java.util.HashMap">update qinsen.INST_TUMO T1
+    set T1.ORDER_NO_BAK = T1.ORDER_NO,
+    T1.ORDER_NO = #orderNo#,
+    T1.ORDER_NO_BAK_DT = sysdate
+    where record_id = #recordId#</update>
+    <update id="updateTumoOrderNo4Ship" parameterClass="java.util.HashMap">update KS_PROD_DIAPHRAGM_SHIP T1
+    set T1.ORDER_NO = #orderNo#,
+    T1.UPDATE_TIME = sysdate
+    where record_id = #recordId#</update>
+</sqlMap>

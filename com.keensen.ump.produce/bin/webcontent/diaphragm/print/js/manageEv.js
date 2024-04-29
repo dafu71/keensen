@@ -421,7 +421,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.ADD_PRINT_TEXT(110, 165, 200, 25, "卷号:" + outBatchNo);
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(152, 12, 200, 25, "截留率:" + fSaltRejection2);
+				LODOP.ADD_PRINT_TEXT(152, 12, 200, 25, "截留率:" + fSaltRejection2 + '%');
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 				LODOP.ADD_PRINT_TEXT(152, 165, 200, 25, "实发数量:" + usefulLength);

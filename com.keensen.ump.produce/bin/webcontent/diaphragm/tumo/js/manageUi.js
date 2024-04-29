@@ -22,7 +22,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【涂膜记录查询】',
+					//title : '【涂膜记录查询】',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
@@ -131,7 +131,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						triggerAction : "all",
 						store : new Ext.data.ArrayStore({
 									fields : ['mykey', 'myvalue'],
-									data : [['仓库发货仓', '仓库发货仓'],
+									data : [['仓库发货仓', '仓库发货仓'],									
+											['仓库AB仓', '仓库AB仓'],
 											['仓库C仓', '仓库C仓'],
 											['待二次判定', '待二次判定'],
 											['二次判定-发货', '二次判定-发货'],
@@ -175,6 +176,13 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						 */]
 				});
 
+		this.queryPanel.addButton({
+					text : "导出",
+					scope : this,
+					rescode : '10002661',
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel
+				});
 	}
 
 	this.initListPanel = function() {
@@ -188,7 +196,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【涂膜记录列表】',
+			//title : '【涂膜记录列表】',
 			viewConfig : {
 				forceFit : false
 			},
@@ -211,7 +219,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						text : '工艺员备注',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						hidden : gyyFlag !=1,
+						hidden : gyyFlag != 1,
 						handler : this.onRemark
 					}, '->', {
 						text : '二次判定-自用',
@@ -336,6 +344,9 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
+						dataIndex : 'orderNoBak',
+						header : '原订单号'
+					}, {
 						xtype : 'dictcolumn',
 						dataIndex : 'isQualified',
 						header : '合格',
@@ -438,6 +449,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'perfIsQualifiedName'
 						}, {
 							name : 'reserve4'
+						}, {
+							name : 'orderNoBak'
 						}]
 			})
 		})
@@ -463,6 +476,9 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 			columns : [new Ext.grid.RowNumberer(), selModel2, {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
+					}, {
+						dataIndex : 'trend',
+						header : '走向'
 					}, {
 						dataIndex : 'outLength',
 						header : '实发长度(m)'
@@ -504,6 +520,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'usefulLength'
 						}, {
 							name : 'outLength'
+						}, {
+							name : 'trend'
 						}]
 			})
 		})

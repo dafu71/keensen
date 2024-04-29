@@ -18,7 +18,7 @@ com.keensen.ump.produce.component.snMgr = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 100,
-					columns : 2,
+					columns : 3,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -27,6 +27,11 @@ com.keensen.ump.produce.component.snMgr = function() {
 								name : 'condition/prefix',
 								anchor : '75%',
 								fieldLabel : '前缀'
+							},{
+								xtype : 'textfield',
+								name : 'condition/prodSpecName',
+								anchor : '75%',
+								fieldLabel : '元件型号'
 							}, {
 
 								xtype : 'combobox',
@@ -77,6 +82,9 @@ com.keensen.ump.produce.component.snMgr = function() {
 						dataIndex : 'useType',
 						header : '元件类型'
 					}, {
+						dataIndex : 'prodSpecName',
+						header : '元件型号'
+					}, {
 						dataIndex : 'prefix',
 						header : '前缀'
 					}, {
@@ -102,6 +110,8 @@ com.keensen.ump.produce.component.snMgr = function() {
 							name : 'num'
 						}, {
 							name : 'sn'
+						}, {
+							name : 'prodSpecName'
 						}]
 			})
 		})
@@ -136,6 +146,18 @@ com.keensen.ump.produce.component.snMgr = function() {
 										this.inputWindow.useType.reset();
 									}
 								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 1
+							}, {
+								xtype : 'textfield',
+								name : 'condition/prodSpecName',
+								ref : '../../prodSpecName',
+								allowBlank : false,
+								fieldLabel : '元件型号',
+								anchor : '85%',
+								colspan : 1
 							}, {
 								xtype : 'displayfield',
 								height : '5',

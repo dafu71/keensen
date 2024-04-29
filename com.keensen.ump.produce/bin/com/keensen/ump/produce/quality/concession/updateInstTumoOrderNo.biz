@@ -88,7 +88,7 @@
       <process:to type="query">recordIds</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="expression" pattern="reference">orderNo + &quot; 让步&quot;</process:from>
+      <process:from type="expression" pattern="reference">orderNo</process:from>
       <process:to type="query">map/orderNo</process:to>
     </process:copy>
     <process:copy>

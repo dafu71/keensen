@@ -143,17 +143,24 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	var startDate = this.editPlanDayPanel.startDate.getValue();
 	var endDate = this.editPlanDayPanel.endDate.getValue();
 	var materSpecId = this.editPlanDayPanel.materSpecId.getValue();
-	
+
 	this.planDayWindow.planDate.store.load({
 				params : {
-					'condition/startDate' : startDate,
-					'condition/endDate' : endDate
+					// 'condition/startDate' : startDate,
+					// 'condition/endDate' : endDate
+					'condition/relationId' : relationId
 				}
 			});
-			
-	this.planDayWindow.batchNo.store.load({
+
+	this.planDayWindow.batchNoFrom.store.load({
 				params : {
 					'condition/prodSpecId' : materSpecId
+				}
+			});
+	this.planDayWindow.batchNoFrom2.store.load({
+				params : {
+					'condition/prodSpecId' : materSpecId,
+					'condition/choose' : 1
 				}
 			});
 	this.planDayWindow.relationId.setValue(relationId);
@@ -173,19 +180,29 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlanRoll = function
 }
 
 com.keensen.ump.produce.component.planweekMgr.prototype.onEditPlan = function() {
+	var relationId = this.editPlanDayPanel.relationId.getValue();
 	var startDate = this.editPlanDayPanel.startDate.getValue();
 	var endDate = this.editPlanDayPanel.endDate.getValue();
 	var materSpecId = this.editPlanDayPanel.materSpecId.getValue();
-	
-	this.planDayWindow2.batchNo.store.load({
+
+	this.planDayWindow2.batchNoFrom.store.load({
 				params : {
 					'condition/prodSpecId' : materSpecId
 				}
 			});
+
+	this.planDayWindow2.batchNoFrom2.store.load({
+				params : {
+					'condition/prodSpecId' : materSpecId,
+					'condition/choose' : 1
+				}
+			});
+
 	this.planDayWindow2.planDate.store.load({
 				params : {
-					'condition/startDate' : startDate,
-					'condition/endDate' : endDate
+					// 'condition/startDate' : startDate,
+					// 'condition/endDate' : endDate
+					'condition/relationId' : relationId
 				}
 			});
 	this.editPlanDayListPanel.onEdit();
@@ -225,7 +242,9 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onSaveWeekDays = functio
 	Ext.each(records, function(r) {
 				var d = {
 					'id' : r.data['id'],
-					'amount' : r.data['amount']
+					'amount' : r.data['amount'],
+					'productOrder' : r.data['productOrder'],
+					'orderRemark' : r.data['orderRemark']
 				}
 				details.push(d);
 

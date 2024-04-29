@@ -27,7 +27,7 @@
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
-
+<ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
 <js:load scriptPath="produce/component/yxorder/js/manageUi.js"/>
 <js:load scriptPath="produce/component/yxorder/js/manageEv.js"/>
 <script type="text/javascript">

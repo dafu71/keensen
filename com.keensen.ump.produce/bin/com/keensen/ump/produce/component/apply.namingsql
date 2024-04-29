@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.apply">
+    <select id="queryApply" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id",
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       T1.ORDER_NO          AS "orderNo",
+       T1.order_type "orderType",
+       T1.CODE              AS "code",
+       T1.PROD_SPEC_Name      AS "prodSpecName",
+       T1.ORDER_AMOUNT      AS "orderAmount",
+       T1.APPLY_AMOUNT      AS "applyAmount",
+       T1.CHECK_USER_ID     AS "checkUserId",
+       T1.CHECK_USER_NAME   AS "checkUserName",               
+       TO_CHAR(T1.APPLY_DATE, 'yyyy-MM-dd') AS "applyDate",
+       T1.APPLY_USER_ID     AS "applyUserId",
+       T1.APPLY_USER_NAME   AS "applyUserName",
+       T1.LID               AS "lid",
+       T1.PROD_CLASS_FLAG   AS "prodClassFlag",
+       T1.TAPE              AS "tape",
+       T1.MARK_SPECIAL_FLAG AS "markSpecialFlag",
+       T1.MARK_TYPE_FLAG    AS "markTypeFlag",
+       T1.MARK_SPEC_CODE    AS "markSpecCode",
+       T1.MARK_ISOK         AS "markIsok",
+       T1.LABEL_ISOK        AS "labelIsok",
+       T1.APPERANCE_ISOK    AS "apperanceIsok",
+       T1.DIAMETER          AS "diameter",
+       T1.FINAL             AS "final",
+       T1.DEAL              AS "deal",
+       T1.DEAL1             AS "deal1",
+       T1.DEAL2             AS "deal2",
+       T1.DEAL3             AS "deal3",
+       T1.STORAGE           AS "storage",
+       T1.MANAGE_USER_ID    AS "manageUserId",
+       T1.MANAGE_USER_NAME  AS "manageUserName"，
+       TO_CHAR(T1.Confirm_date, 'yyyy-MM-dd') "confirmDate", t1.print_cnt "printCnt",
+       T1.TRAY "tray", T1.BOX "box",T1.PERFORMANCE "performance",
+       t2.apply_amount "applyAmountTotal",
+       T1.is_examine "isExamine"
+  FROM KS_COMPONENT_CHECK_HEAD T1
+  left join (SELECT h.order_no,h.prod_spec_name,SUM(h.apply_amount) apply_amount from KS_COMPONENT_CHECK_HEAD h
+GROUP BY h.order_no,h.prod_spec_name) t2 on t1.order_no = t2.order_no and t1.prod_spec_name = t2.prod_spec_name
+	
+  where 1=1
+  
+   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t1.PROD_SPEC_Name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="markSpecCode">T1.MARK_SPEC_CODE like '%' || #markSpecCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="ifConfirm">decode(T1.Confirm_date,null,'N','Y') = #ifConfirm#</isNotNull>
+        <isNotNull prepend="and" property="code">T1.CODE like '%' || #code# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
+	order by t1.id desc
+    </select>
+    <select id="queryCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT CODE "code" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' CODE FROM dual
+  WHERE NOT EXISTS(
+  select t.code from KS_COMPONENT_CHECK_HEAD t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  select to_char(to_number(max(t.code))+1) CODE from KS_COMPONENT_CHECK_HEAD t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE CODE IS NOT NULL</select>
+    <select id="queryList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id",
+       T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",
+       DECODE(T3.JUANMO_BATCH_ID,NULL,'干','湿') "state",
+       h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
+       replace(t1.tumo_batch_str,',','&lt;br&gt;') "tumoBatchStr2",
+       h.code "code",T2.CHECK_RESULT "checkResult"
+  FROM KS_COMPONENT_CHECK_LIST T1
+  LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
+  LEFT JOIN QINSEN.INST_QIJIAN T2
+    ON T1.BATCH_NO = T2.BATCH_NO
+  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM QINSEN.INST_WATER_TEST) T3
+    ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
+  where 1=1
+    <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t2.PROD_SPEC_ID in($prodSpecId$)</isNotNull>
+        <isNotNull prepend="and" property="orderNo">h.order_no = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="relationId">t1.relation_id = #relationId#</isNotNull>
+	order by T1.batch_No
+    </select>
+    <select id="queryComponent" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.BATCH_NO AS "batchNo",
+       T1.JUANMO_BATCH_ID AS "juanmoBatchId",T1.CHECK_RESULT "checkResult",
+       T1.ORDER_NO AS "orderNo",
+       T1.PROD_SPEC_ID AS "prodSpecId",
+       DECODE(T3.JUANMO_BATCH_ID, NULL, '干', '湿') AS "state",
+       to_char(T1.PRODUCE_DT,'yyyy-MM-dd') "produceDt",
+       m.mater_spec_name "prodSpecName",
+       j.tumo_batch_str "tumoBatchStr"
+  FROM QINSEN.INST_QIJIAN T1
+  LEFT JOIN qinsen.inst_juanmo_main j ON t1.juanmo_batch_id=j.record_id
+  LEFT JOIN qinsen.para_mater_spec m ON m.mater_spec_id = T1.PROD_SPEC_ID
+  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM QINSEN.INST_WATER_TEST) T3
+    ON T3.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
+  where 1=1
+    and T1.BATCH_NO is not null
+    and not exists(select 1 from KS_COMPONENT_CHECK_LIST tt where tt.BATCH_NO = T1.BATCH_NO)
+	<isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID in($prodSpecId$)</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">m.mater_spec_name in($prodSpecName$)</isNotNull>
+        <isNotNull prepend="and" property="orderNo">t1.order_no = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="produceDtStart">to_char(T1.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="produceDtEnd">to_char(T1.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#</isNotNull>
+	order by T1.BATCH_NO
+    </select>
+    <select id="queryProd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select DISTINCT t.order_no,t.prod_spec_id AS "id",m.mater_spec_name "name" from qinsen.inst_qijian t
+	LEFT JOIN qinsen.para_mater_spec m ON t.prod_spec_id=m.mater_spec_id
+	WHERE 1=1 AND m.mater_spec_name IS NOT NULL
+	<isNotNull prepend="and" property="orderNo">t.order_no = #orderNo#</isNotNull>
+    </select>
+    <update id="updatePrintCnt" parameterClass="java.util.HashMap">update KS_COMPONENT_CHECK_HEAD
+    set print_cnt = nvl(print_cnt,0) + 1
+    where id = #id#</update>
+    <select id="queryList2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id",
+       T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",
+       DECODE(T3.JUANMO_BATCH_ID,NULL,'干','湿') "state",
+       h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
+       h.code "code",t4.BLANKING_SIZE "blankingSize",t2.CHECK_RESULT "checkResult",
+       h.prod_spec_name "orderProdSpecName",h.mark_Spec_Code "markSpecCode"
+  FROM KS_COMPONENT_CHECK_LIST T1
+  LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
+  LEFT JOIN QINSEN.INST_QIJIAN T2
+    ON T1.BATCH_NO = T2.BATCH_NO
+  LEFT JOIN QINSEN.INST_JUANMO_MAIN T4 ON t2.juanmo_batch_id = t4.record_id
+  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM QINSEN.INST_WATER_TEST) T3
+    ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
+  where 1=1
+    <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t2.PROD_SPEC_ID in($prodSpecId$)</isNotNull>
+        <isNotNull prepend="and" property="orderNo">h.order_no = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="relationId">t1.relation_id = #relationId#</isNotNull>
+	order by T1.batch_No
+    </select>
+</sqlMap>

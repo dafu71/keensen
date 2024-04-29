@@ -213,8 +213,7 @@ com.keensen.ump.produce.quality.concessionListMgr = function() {
 		var _this = this;
 
 		var selModel2 = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false
 				});
 
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
@@ -226,9 +225,21 @@ com.keensen.ump.produce.quality.concessionListMgr = function() {
 			hsPage : false,
 			autoScroll : false,
 			selModel : selModel2,
+			tbar : [{
+						text : '复制选择涂膜批次',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onCopy
+					}],
 			columns : [new Ext.grid.RowNumberer(), selModel2, {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
+					}, {
+						dataIndex : 'orderNoBak',
+						header : '原订单号'
+					}, {
+						dataIndex : 'trend',
+						header : '走向'
 					}, {
 						dataIndex : 'outLength',
 						header : '实发长度(m)'
@@ -270,6 +281,10 @@ com.keensen.ump.produce.quality.concessionListMgr = function() {
 							name : 'usefulLength'
 						}, {
 							name : 'outLength'
+						}, {
+							name : 'orderNoBak'
+						}, {
+							name : 'trend'
 						}]
 			})
 		})

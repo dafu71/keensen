@@ -32,8 +32,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
-					columns : 3,
+					height : 100,
+					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -41,21 +41,28 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/orderNo',
-								anchor : '75%',
+								//anchor : '75%',
 								fieldLabel : '订单号'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
-								anchor : '75%',
+								//anchor : '75%',
 								fieldLabel : '规格型号 '
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
-								anchor : '75%',
+								//anchor : '75%',
 								nameArray : ['condition/orderDateStart',
 										'condition/orderDateEnd'],
 								fieldLabel : "订单日期",
 								format : "Y-m-d"
+							}, {
+								xtype : 'dictcombobox',
+								name : 'condition/ifplan2',
+								hiddenName : 'condition/ifplan2',
+								fieldLabel : '是否已制定计划',
+								//anchor : '75%',
+								dictData : KS_YESORNO
 							}]
 				});
 
@@ -106,11 +113,20 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.neworder.deleteEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
+						dataIndex : 'orderType',
+						header : '订单类型'
+					}, {
 						dataIndex : 'orderNo',
 						header : '订单编号'
 					}, {
+						dataIndex : 'materSpecName',
+						header : '规格型号'
+					}, {
 						dataIndex : 'orderAmount',
 						header : '订单数量'
+					}, {
+						dataIndex : 'orderDate',
+						header : '订单日期'
 					}, {
 						dataIndex : 'ifplan',
 						header : '制定计划与否',
@@ -137,9 +153,6 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						dataIndex : 'sffh',
 						header : '是否发货'
 					}, {
-						dataIndex : 'orderType',
-						header : '订单类型'
-					}, {
 						dataIndex : 'type',
 						header : '类型'
 					}, {
@@ -152,17 +165,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						dataIndex : 'ddxj',
 						header : '订单星级'
 					}, {
-						dataIndex : 'orderDate',
-						header : '订单日期'
-					}, {
 						dataIndex : 'hpmc',
 						header : '货品名称'
 					}, {
 						dataIndex : 'dw',
 						header : '单位'
-					}, {
-						dataIndex : 'materSpecName',
-						header : '规格型号'
 					}, {
 						dataIndex : 'cpgg',
 						header : '产品规格'
@@ -200,6 +207,18 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						dataIndex : 'performance',
 						header : '产品性能'
 					}, {
+						dataIndex : 'lidTape',
+						header : '端盖+胶带'
+					}, {
+						dataIndex : 'lid',
+						header : '端盖'
+					}, {
+						dataIndex : 'tape',
+						header : '胶带'
+					}, {
+						dataIndex : 'tray',
+						header : '托盘'
+					}, {
 						dataIndex : 'remark',
 						header : '其它备注'
 					}, {
@@ -223,6 +242,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 				baseParams : {},
 				fields : [{
 							name : 'id'
+						}, {
+							name : 'lidTape'
 						}, {
 							name : 'createTime'
 						}, {

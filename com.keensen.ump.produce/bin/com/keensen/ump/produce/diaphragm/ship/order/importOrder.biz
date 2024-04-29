@@ -608,7 +608,7 @@
   <nodes xsi:type="process:tLoopStart" id="loopstart5" name="循环5" grouped="true" type="loopstart" matchedName="loopend5" loopType="iterate">
     <sourceConnections xsi:type="process:tLink" id="link50" name="link50" isDefault="true" type="transition">
       <sourceNode>loopstart5</sourceNode>
-      <targetNode>subprocess2</targetNode>
+      <targetNode>assign10</targetNode>
     </sourceConnections>
     <targetConnections>link39</targetConnections>
     <nodeLabel>loopstart5label</nodeLabel>
@@ -635,6 +635,7 @@
     <chidren>loopend5</chidren>
     <chidren>loopstart5</chidren>
     <chidren>subprocess2</chidren>
+    <chidren>assign10</chidren>
   </nodes>
   <nodes xsi:type="process:tTransactionBegin" id="transactionbegin0" name="事务开始" type="transactionbegin">
     <sourceConnections xsi:type="process:tLink" id="link39" name="link39" isDefault="true" type="transition">
@@ -681,7 +682,7 @@
       <sourceNode>subprocess2</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <targetConnections>link50</targetConnections>
+    <targetConnections>link40</targetConnections>
     <nodeLabel>subprocess2label</nodeLabel>
     <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
       <process:partner type="literal">this.saveEntity</process:partner>
@@ -758,6 +759,26 @@
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo0label" name="label" nodeType="label">
     <figSize height="20" width="146"/>
     <node>invokePojo0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign10" name="赋值10" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link40" name="link40" isDefault="true" type="transition">
+      <sourceNode>assign10</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <targetConnections>link50</targetConnections>
+    <nodeLabel>assign10label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">order/amount</process:from>
+      <process:to type="query">order/needAmount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">进行</process:from>
+      <process:to type="query">order/orderStatus</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign10label" name="label" nodeType="label">
+    <figSize height="20" width="49"/>
+    <node>assign10</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

@@ -1,14 +1,16 @@
 com.keensen.ump.produce.component.selectMgr.prototype.initEvent = function() {
 	var _this = this;
+	
+	// this.queryPanel.form.findField("condition/produceDtStart")
+	// .setValue(new Date().add(Date.DAY, -33).format('Y-m-d'));
 
-	this.queryPanel.form.findField("condition/produceDtStart")
-			.setValue(new Date().add(Date.DAY, -33).format('Y-m-d'));
-
-	this.queryPanel.form.findField("condition/produceDtEnd")
-			.setValue(new Date());
+	// this.queryPanel.form.findField("condition/produceDtEnd")
+	// .setValue(new Date());
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
+		this.queryPanel.getForm().findField('condition/tumoBatchNo')
+				.setValue('');
 		var store = this.listPanel.store;
 		var batchNoStr = this.queryPanel.form
 				.findField("condition/tumoBatchNo2").getValue();
@@ -18,9 +20,15 @@ com.keensen.ump.produce.component.selectMgr.prototype.initEvent = function() {
 		var produceDtEnd = this.queryPanel.form
 				.findField("condition/produceDtEnd").getValue();
 
+		var produceYear = this.queryPanel.form
+				.findField("condition/produceYear").getValue();
+		var produceMonth = this.queryPanel.form
+				.findField("condition/produceMonth").getValue();
+
 		if (Ext.isEmpty(batchNoStr)
-				&& (Ext.isEmpty(produceDtStart) || Ext.isEmpty(produceDtEnd))) {
-			Ext.Msg.alert("系统提示", "请输入批号或者选择查询时间段！");
+				&& (Ext.isEmpty(produceDtStart) || Ext.isEmpty(produceDtEnd))
+				&& (Ext.isEmpty(produceYear) || Ext.isEmpty(produceMonth))) {
+			Ext.Msg.alert("系统提示", "请输入批号或者选择查询时间段或者选择生产月份！");
 			return false;
 		}
 
@@ -83,6 +91,15 @@ com.keensen.ump.produce.component.selectMgr.prototype.initEvent = function() {
 				var testSaltRejection = cell.get('testSaltRejection');
 				var minSaltRejection = cell.get('minSaltRejection');
 				var maxSaltRejection = cell.get('maxSaltRejection');
+
+				var testMaterSpec = cell.get('testMaterSpec');
+				var testBatchNo = cell.get('checkBatchNo');
+				var testGpd = cell.get('gpd');
+				var testSaltRejection2 = cell.get('salt2');
+
+				var storageName = cell.get('storageName');
+				var storagePosition = cell.get('storagePosition');
+
 				var store = this.listPanel2.store;
 				if (this.opt == 'select') {
 					if (Ext.isEmpty(testAvgGpd) || Ext.isEmpty(testArea)) {
@@ -99,7 +116,13 @@ com.keensen.ump.produce.component.selectMgr.prototype.initEvent = function() {
 						"condition/minSaltRejection" : minSaltRejection,
 						"condition/maxSaltRejection" : maxSaltRejection,
 						"condition/recalc" : 'N',
-						"condition/testArea" : testArea
+						"condition/testArea" : testArea,
+						"condition/testMaterSpec" : testMaterSpec,
+						"condition/testBatchNo" : testBatchNo,
+						"condition/testGpd" : testGpd,
+						"condition/testSaltRejection2" : testSaltRejection2,
+						"condition/storageName" : storageName,
+						"condition/storagePosition" : storagePosition
 					}
 					store.load({
 								params : this.parmas
@@ -134,6 +157,14 @@ com.keensen.ump.produce.component.selectMgr.prototype.onDeal = function() {
 				var minSaltRejection = r.data.minSaltRejection;
 				var maxSaltRejection = r.data.maxSaltRejection;
 
+				var testMaterSpec = r.data.testMaterSpec;
+				var testBatchNo = r.data.checkBatchNo;
+				var testGpd = r.data.gpd;
+				var testSaltRejection2 = r.data.salt2;
+
+				var storageName = r.data.storageName;
+				var storagePosition = r.data.storagePosition;
+
 				if (Ext.isEmpty(testAvgGpd) || Ext.isEmpty(testArea)) {
 					// Ext.Msg.alert("系统提示", "换算后水量平均值或者涂膜面积为空，无法挑选！");
 					// return false;
@@ -148,7 +179,13 @@ com.keensen.ump.produce.component.selectMgr.prototype.onDeal = function() {
 						'saltRejection' : saltRejection,
 						'testSaltRejection' : testSaltRejection,
 						'minSaltRejection' : minSaltRejection,
-						'maxSaltRejection' : maxSaltRejection
+						'maxSaltRejection' : maxSaltRejection,
+						"testMaterSpec" : testMaterSpec,
+						"testBatchNo" : testBatchNo,
+						"testGpd" : testGpd,
+						"testSaltRejection2" : testSaltRejection2,
+						"storageName" : storageName,
+						"storagePosition" : storagePosition
 
 					}
 					arr.push(d);

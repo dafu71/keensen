@@ -41,7 +41,8 @@ com.keensen.ump.produce.component.snMgr.prototype.onSave = function() {
 			jsonData : {
 				'condition/num' : this.inputWindow.num.getValue(),
 				'condition/prefix' : this.inputWindow.prefix.getValue(),
-				'condition/useType' : this.inputWindow.useType.getValue()
+				'condition/useType' : this.inputWindow.useType.getValue(),
+				'condition/prodSpecName' : this.inputWindow.prodSpecName.getValue()
 			},
 			success : function(resp) {
 				var ret = Ext.decode(resp.responseText);

@@ -36,7 +36,7 @@
                MAX(PRODUCE_DT) PRODUCE_DT,
                MAX(IS_KEEP) IS_KEEP,
                MAX(REMARK) REMARK,
-               LISTAGG(TEST_GPD, ',') WITHIN GROUP(ORDER BY POSITION_LENGTH) TEST_GPD,
+               LISTAGG(round(TEST_GPD,0), ',') WITHIN GROUP(ORDER BY POSITION_LENGTH) TEST_GPD,
                ROUND(AVG(TEST_GPD),2) TEST_AVG_GPD,
                MAX(SALT) SALT,
                LISTAGG(TEST_SALT_REJECTION, ',') WITHIN GROUP(ORDER BY POSITION_LENGTH) TEST_SALT_REJECTION,
@@ -192,7 +192,7 @@
  WHERE 1 = 1
    AND T.MATER_SPEC_CODE IN
        ('SW1-1', 'NF1', 'NF2', 'BW2-1', 'BW1-1', 'BW3-1', 'NF1-R')
-
+   AND T3.NAME IN('膜片C仓','膜片AB仓')
 UNION ALL
 
 SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
@@ -339,12 +339,15 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
 
  WHERE 1 = 1
    AND T.MATER_SPEC_CODE IN ('ULP2-1', 'ULP1-1', 'ULP3-1', 'ULP4-1')
+   AND T3.NAME IN('膜片C仓','膜片AB仓')
 ) TT
          WHERE 1 = 1
         <isNotNull prepend="" property="tumoBatchNo">AND TT.TUMO_BATCH_NO in ($tumoBatchNo$)</isNotNull>
         <isNotNull prepend="" property="produceDtStart">and to_char(TT.mp_produce_dt,'yyyy-MM-dd') &gt;= #produceDtStart#</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">and to_char(TT.mp_produce_dt,'yyyy-MM-dd') &lt;= #produceDtEnd#</isNotNull>
-               
+        <isNotNull prepend="" property="produceYear">
+            <isNotNull prepend="" property="produceMonth">and to_char(TT.mp_produce_dt,'yyyy-MM') = #produceYear# || '-' || #produceMonth#</isNotNull>
+        </isNotNull>   
          GROUP BY TT.TUMO_BATCH_NO) T1
          
 
@@ -364,7 +367,9 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
    TEST_AREA,test_Salt_Rejection,min_Salt_Rejection,max_Salt_Rejection,
    PROD_SPEC_ID,
    STD_AREA,A_GPD_LOW_LIMIT,A_GPD_UP_LIMIT,A_SALT_LOW_LIMIT,MP_SALT_LOW_LIMIT,
-   flag
+   flag,
+   test_Mater_Spec,test_batch_no,test_gpd,test_salt_Rejection2,
+   STORAGE_NAME,STORAGE_POSITION
    )
   SELECT SEQ_COMPONENT_TUMO_SELECT.NEXTVAL,#tumoBatchId#,
          SYSDATE,
@@ -385,7 +390,9 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
       AND round(#testAvgGpd# * AREA/#testArea#,2)&lt;= nvl(A_GPD_UP_LIMIT,1000000)
       AND #saltRejection# &gt;= A_SALT_LOW_LIMIT 
        AND #minSaltRejection# &gt;= mp_salt 
-      THEN '合格' ELSE '不合格' END flag        
+      THEN '合格' ELSE '不合格' END flag,
+      #testMaterSpec#,#testBatchNo#,#testGpd#,#testSaltRejection2#,
+      #storageName#,#storagePosition#     
          
     FROM (SELECT DISTINCT TT.PROD_SPEC_ID, TT.AREA,A_GPD_LOW_LIMIT,A_GPD_UP_LIMIT,A_SALT_LOW_LIMIT,mp_salt
             FROM (SELECT A.RECORD_ID,
@@ -467,22 +474,28 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
         <isNotNull prepend="and" property="tumoBatchNo">T1.TUMO_BATCH_NO = #tumoBatchNo#</isNotNull>
     </select>
     <select id="selectMp" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-   	    select t1.TUMO_BATCH_ID as "tumoBatchId",
-		t1.TUMO_BATCH_NO as "tumoBatchNo",
-		t1.MP_SPEC_ID as "mpSpecId",
-		t1.PROD_SPEC_ID as "prodSpecId",
-		t1.MP_SPEC_CODE as "mpSpecCode",
-		t1.PROD_SPEC_NAME as "prodSpecName"
-		from   	    
-   	    (select t.tumo_batch_id,t.tumo_batch_no,t.mp_spec_id,t.prod_spec_id,m.mater_spec_code mp_spec_code
-		,p.mater_spec_name prod_spec_name from KS_COMPONENT_TUMO_SELECT t
-		LEFT JOIN QINSEN.PARA_MATER_SPEC m ON m.mater_spec_id = t.mp_spec_id
-		LEFT JOIN QINSEN.PARA_MATER_SPEC p ON p.mater_spec_id = t.prod_spec_id
-		WHERE t.flag='合格') t1
-		where 1=1
+   	    select t1.TUMO_BATCH_ID as "tumoBatchId",t2.length "length",
+    t1.TUMO_BATCH_NO as "tumoBatchNo",
+    t1.MP_SPEC_ID as "mpSpecId",
+    t1.PROD_SPEC_ID as "prodSpecId",
+    t1.MP_SPEC_CODE as "mpSpecCode",
+    t1.PROD_SPEC_NAME as "prodSpecName",
+    t1.storage_name "storageName",
+    t1.storage_position "storagePosition"
+    from        
+        (select t.tumo_batch_id,t.tumo_batch_no,t.mp_spec_id,t.prod_spec_id,m.mater_spec_code mp_spec_code
+    ,p.mater_spec_name prod_spec_name,t.storage_name,t.storage_position from KS_COMPONENT_TUMO_SELECT t
+    LEFT JOIN QINSEN.PARA_MATER_SPEC m ON m.mater_spec_id = t.mp_spec_id
+    LEFT JOIN QINSEN.PARA_MATER_SPEC p ON p.mater_spec_id = t.prod_spec_id
+    WHERE t.flag='合格') t1
+     LEFT JOIN (select t.RECORD_ID,t.USEFUL_LENGTH-nvl(t.CAIMO_LENGTH,0) LENGTH from V_KS_TUMO_ORIGIN2 t) t2
+      ON t2.record_id=t1.TUMO_BATCH_ID
+     
+    where 1=1
 		<isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID = #prodSpecId#</isNotNull>
         <isNotNull prepend="and" property="mpSpecId">t1.MP_SPEC_ID = #mpSpecId#</isNotNull>
         <isNotNull prepend="and" property="tumoBatchNo">upper(t1.TUMO_BATCH_NO) like '%' || upper(#tumoBatchNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="choose">t1.TUMO_BATCH_NO not in(select t.BATCH_NO from KS_COMPONENT_PLAN_STOCK t)</isNotNull>
 		order by t1.TUMO_BATCH_ID
     </select>
 </sqlMap>

@@ -8,6 +8,10 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 		this.buildExcelUploadWin();
 		this.initViewWindow();
 
+		this.initWorkPlanWindow();
+		this.initViewWorkPlanWindow();
+		this.initModifyOrderNoWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -19,12 +23,12 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 120,
 					columns : 3,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【订单查询】',
+					// title : '【订单查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/orderNo',
@@ -47,7 +51,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
-								anchor : '100%',
+								anchor : '75%',
 								nameArray : ['condition/orderDateStart',
 										'condition/orderDateEnd'],
 								fieldLabel : "下单日期",
@@ -55,12 +59,40 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
-								anchor : '100%',
+								anchor : '75%',
 								nameArray : ['condition/demandDateStart',
 										'condition/demandDateEnd'],
 								fieldLabel : "要求入库日期",
 								format : "Y-m-d"
+							}, {
+								fieldLabel : '不展示已关闭',
+								xtype : 'checkbox',
+								checked : true,
+								name : 'condition/isClosed',
+								inputValue : 'Y',
+								anchor : '100%'
 							}]
+				});
+
+		this.queryPanel.addButton({
+					text : "模板下载",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onDown
+				});
+
+		this.queryPanel.addButton({
+					text : "订单导入",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.importExcel
+				});
+
+		this.queryPanel.addButton({
+					text : "修改订单号",
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.onModifyOrderNo
 				});
 		/*
 		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
@@ -75,7 +107,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 					header : ''
 				});
 		this.listPanel = this.listPanel || new Ext.fn.EditListPanel({
-			title : '【订单列表】',
+			// title : '【订单列表】',
 			viewConfig : {
 				forceFit : true
 			},
@@ -102,23 +134,24 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onView
-					}, '-', {
-						text : '关联计划单',
+					}/*
+						 * , '-', { text : '关联计划单', scope : this, iconCls :
+						 * 'icon-application_edit', handler : this.onPlan }
+						 */, '->', {
+						text : '新增作业计划',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						handler : this.onPlan
+						handler : this.onWorkPlan
 					}, '-', {
-						text : '模板下载',
+						text : '查看作业计划',
 						scope : this,
-						iconCls : 'icon-application_excel',
-						// disabled : true,
-						handler : this.onDown
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onViewPlan
 					}, '-', {
-						text : '订单导入',
+						text : '删除作业计划',
 						scope : this,
-						iconCls : 'icon-application_excel',
-						// disabled : true,
-						handler : this.importExcel
+						iconCls : 'icon-application_delete',
+						handler : this.onDelPlan
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.ship.order.deleteEntity.biz.ext',
@@ -140,9 +173,11 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 										},
 										'change' : function(o, newValue,
 												oldValue) {
-											if(newValue==oldValue) return false;
-											var id = _this.rec.data['id'] ;
-											_this.saveCustormerCode(id,newValue,oldValue);
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.saveCustormerCode(id,
+													newValue, oldValue);
 										}
 									}
 								}))
@@ -159,6 +194,91 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						sortable : true,
 						header : '数量'
 					}, {
+						dataIndex : 'needAmount',
+						header : '订单需生产数量',
+						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+								{
+									allowBlank : false,
+									allowNegative : false,
+									css : 'background:#c7c7c7;',
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.saveNeedAmount(id, newValue,
+													oldValue);
+										}
+									}
+								}))
+					}, {
+						dataIndex : 'arrangeAmount',
+						sortable : true,
+						header : '建议排产数量'
+					}, {
+						dataIndex : 'arrangePercent',
+						header : '排产合格率%',
+						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+								{
+									allowBlank : false,
+									allowNegative : true,
+									minValue : 1,
+									maxValue : 100,
+									css : 'background:#c7c7c7;',
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.saveArrangePercent(id,
+													newValue, oldValue);
+										}
+									}
+								}))
+					}, {
+						dataIndex : 'orderStatus',
+						header : '订单状态',
+						editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+								{
+									allowBlank : true,
+									css : 'background:#c7c7c7;',
+									triggerAction : "all",
+									store : new Ext.data.ArrayStore({
+												fields : ['mykey', 'myvalue'],
+												data : [['进行', '进行'],
+														['关闭', '关闭']]
+											}),
+									mode : "local",
+									editable : false,
+									displayField : "myvalue",
+									valueField : "mykey",
+									forceSelection : true,
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.saveOrderStatus(id, newValue,
+													oldValue);
+										}
+									}
+								}))
+					}, {
 						dataIndex : 'unit',
 						header : '单位'
 					}, {
@@ -170,6 +290,9 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 					}, {
 						dataIndex : 'remark',
 						header : '备注'
+					}, {
+						dataIndex : 'planCount',
+						header : '计划条数'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.ship.order.queryByPage.biz.ext',
@@ -177,8 +300,8 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 				autoLoad : true,
 				totalProperty : 'totalCount',
 				baseParams : {
-
-			}	,
+					'condition/isClosed' : 'Y'
+				},
 				fields : [{
 							name : 'orderNo'
 						}, {
@@ -201,6 +324,16 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							name : 'demandDate'
 						}, {
 							name : 'unit'
+						}, {
+							name : 'needAmount'
+						}, {
+							name : 'arrangePercent'
+						}, {
+							name : 'orderStatus'
+						}, {
+							name : 'planCount'
+						}, {
+							name : 'arrangeAmount'
 						}]
 			})
 		})
@@ -1091,5 +1224,580 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						}]
 			}]
 		});
+	}
+
+	// 作业计划
+	this.initWorkPlanWindow = function() {
+
+		var selModel9 = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.planListPanel = this.planListPanel || new Ext.fn.EditListPanel({
+			title : '【作业计划明细】',
+			clicksToEdit : 1,
+			region : 'center',
+			viewConfig : {
+				forceFit : true
+			},
+			hsPage : false,
+			autoScroll : false,
+			tbar : [{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						ref : '../label0',
+						value : '当前排产数量:'
+					}, {
+						xtype : 'textfield',
+						id : arrangeAmountId
+
+					}, '->', {
+						text : '数量调整',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onCalculate
+					}],
+			delUrl : '1.biz.ext',
+			selModel : selModel9,
+			columns : [new Ext.grid.RowNumberer(), selModel9, {
+						dataIndex : 'workDt',
+						header : '作业日期',
+						format : "Y-m-d",
+						css : 'background:#c7c7c7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.DateField(
+								{
+									listeners : {
+										'blur' : function(o) {
+
+										}
+									},
+									format : "Y-m-d",
+									editable : true
+								})),
+						renderer : function(value) {
+							if (Ext.isEmpty(value))
+								return '';
+
+							if (typeof value == "string") {
+								return value;
+							} else {
+								return value.format("Y-m-d");
+							}
+						}
+					}, {
+						dataIndex : 'line',
+						header : '线体'
+					}, {
+						dataIndex : 'orderNo',
+						header : '订单编号'
+					}, {
+						dataIndex : 'arrangeAmount',
+						header : '排产数量',
+						css : 'background:#c7c7c7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+								{
+									id : arrangeAmounText,
+									allowBlank : false,
+									scope : this,
+									allowNegative : true,
+									decimalPrecision : 2,
+									minValue : 0,
+									listeners : {
+										scope : this,
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+
+											var arrangeAmount0 = Ext
+													.getCmp(arrangeAmountId)
+													.getValue();
+											var arrangeAmount2 = parseFloat(arrangeAmount0)
+													- parseFloat(oldValue)
+													+ parseFloat(newValue);
+											Ext.getCmp(arrangeAmountId)
+													.setValue(arrangeAmount2
+															.toFixed(1));
+
+										},
+										'focus' : function() {
+
+										}
+
+									}
+								}))
+					}, {
+						dataIndex : 'supName',
+						header : '无纺布供应商'
+					}, {
+						dataIndex : 'performance',
+						header : '性能要求',
+						css : 'background:#c7c7c7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									allowBlank : true
+								}))
+					}, {
+						dataIndex : 'remark',
+						css : 'background:#c7c7c7;',
+						header : '备注',
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									allowBlank : true
+								}))
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.produce.diaphragm.ship.order.queryDetails.biz.ext',
+				root : 'data',
+				autoLoad : false,
+				totalProperty : 'totalCount',
+				baseParams : {
+
+			}	,
+				fields : [{
+							name : 'workDt'
+						}, {
+							name : 'line'
+						}, {
+							name : 'orderNo'
+						}, {
+							name : 'arrangeAmount'
+						}, {
+							name : 'supName'
+						}, {
+							name : 'remark'
+						}, {
+							name : 'supId'
+						}, {
+							name : 'performance'
+						}, {
+							name : 'relationId'
+						}, {
+							name : 'itype'
+						}]
+			})
+		})
+
+		this.workPlanPanel = this.workPlanPanel || new Ext.fn.InputPanel({
+					height : 120,
+					region : 'north',
+					// baseCls : "x-panel",
+					autoHide : false,
+					autoScroll : false,
+					border : true,
+					columns : 6,
+					saveUrl : '1.biz.ext',
+					fields : [{
+								xtype : 'textfield',
+								readOnly : true,
+								ref : '../orderNo',
+								fieldLabel : '订单号',
+								anchor : '85%',
+								colspan : 2
+							}, {
+								xtype : 'textfield',
+								readOnly : true,
+								ref : '../needAmount',
+								fieldLabel : '订单需生产数量',
+								anchor : '85%',
+								colspan : 2
+							}, {
+								xtype : 'textfield',
+								readOnly : true,
+								ref : '../arrangeAmount',
+								fieldLabel : '建议排产数量',
+								anchor : '85%',
+								colspan : 2
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 6
+							}, {
+								xtype : 'combobox',
+								anchor : '85%',
+								hiddenName : 'condition/line',
+								colspan : 2,
+								allowBlank : false,
+								ref : '../line',
+								fieldLabel : '线体',
+								triggerAction : "all",
+								store : new Ext.data.ArrayStore({
+											fields : ['mykey', 'myvalue'],
+											data : [['A', 'A'], ['B', 'B'],
+													['C', 'C'], ['D', 'D'],
+													['E', 'E']]
+										}),
+								mode : "local",
+								editable : false,
+								displayField : "myvalue",
+								valueField : "mykey",
+								forceSelection : true,
+								emptyText : "--请选择--"
+							}, {
+								xtype : 'numberfield',
+								name : 'condition/days',
+								allowBlank : false,
+								ref : '../days',
+								fieldLabel : '排产天数',
+								anchor : '85%',
+								colspan : 2
+							}, {
+								xtype : 'supcombobox',
+								hiddenName : 'condition/supId',
+								allowBlank : false,
+								anchor : '85%',
+								fieldLabel : '无纺布供应商',
+								colspan : 2
+							}, {
+								xtype : 'hidden',
+								ref : '../relationId',
+								name : 'condition/relationId'
+							}],
+					buttons : [{
+								text : "生成计划明细",
+								scope : this,
+								handler : this.onCreateDetails
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.workPlanPanel.form.reset();
+									this.planListPanel.store.removeAll();
+									this.workPlanWindow.hide();
+								}
+							}]
+
+				})
+
+		this.workPlanWindow = this.workPlanWindow || new Ext.Window({
+					title : '新增作业计划',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 820,
+					height : 600,
+					layout : 'border',
+					items : [this.workPlanPanel, this.planListPanel],
+					buttons : [{
+								text : "保存",
+								scope : this,
+								handler : this.onSaveDetails
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.workPlanPanel.form.reset();
+									this.planListPanel.store.removeAll();
+									this.workPlanWindow.hide();
+								}
+							}]
+
+				});
+	}
+
+	this.initViewWorkPlanWindow = function() {
+
+		var viewWorkPlanSelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.viewPlanListPanel = this.viewPlanListPanel
+				|| new Ext.fn.EditListPanel({
+					title : '【作业计划明细】',
+					clicksToEdit : 1,
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					autoScroll : false,
+					delUrl : '1.biz.ext',
+					selModel : viewWorkPlanSelModel,
+					columns : [new Ext.grid.RowNumberer(),
+							viewWorkPlanSelModel, {
+								dataIndex : 'workDt',
+								header : '作业日期',
+								format : "Y-m-d"
+							}, {
+								dataIndex : 'line',
+								header : '线体'
+							}, {
+								dataIndex : 'orderNo',
+								header : '订单编号'
+							}, {
+								dataIndex : 'arrangeAmount',
+								header : '排产数量'
+							}, {
+								dataIndex : 'supName',
+								header : '无纺布供应商'
+							}, {
+								dataIndex : 'performance',
+								header : '性能要求'
+							}, {
+								dataIndex : 'remark',
+								header : '备注'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.diaphragm.ship.order.queryWorkPlan.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'workDt'
+								}, {
+									name : 'line'
+								}, {
+									name : 'orderNo'
+								}, {
+									name : 'arrangeAmount'
+								}, {
+									name : 'supName'
+								}, {
+									name : 'remark'
+								}, {
+									name : 'supId'
+								}, {
+									name : 'performance'
+								}, {
+									name : 'relationId'
+								}, {
+									name : 'itype'
+								}]
+					})
+				})
+
+		this.viewWorkPlanPanel = this.viewWorkPlanPanel
+				|| new Ext.fn.InputPanel({
+							height : 80,
+							region : 'north',
+							// baseCls : "x-panel",
+							autoHide : false,
+							autoScroll : false,
+							border : true,
+							columns : 6,
+							saveUrl : '1.biz.ext',
+							fields : [{
+										xtype : 'textfield',
+										readOnly : true,
+										ref : '../orderNo',
+										fieldLabel : '订单号',
+										anchor : '85%',
+										colspan : 2
+									}, {
+										xtype : 'textfield',
+										readOnly : true,
+										ref : '../needAmount',
+										fieldLabel : '订单需生产数量',
+										anchor : '85%',
+										colspan : 2
+									}, {
+										xtype : 'textfield',
+										readOnly : true,
+										ref : '../arrangeAmount',
+										fieldLabel : '建议排产数量',
+										anchor : '85%',
+										colspan : 2
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 6
+									}, {
+										xtype : 'combobox',
+										anchor : '85%',
+										colspan : 2,
+										readOnly : true,
+										ref : '../line',
+										fieldLabel : '线体',
+										triggerAction : "all",
+										store : new Ext.data.ArrayStore({
+													fields : ['mykey',
+															'myvalue'],
+													data : [['A', 'A'],
+															['B', 'B'],
+															['C', 'C'],
+															['D', 'D'],
+															['E', 'E']]
+												}),
+										mode : "local",
+										editable : false,
+										displayField : "myvalue",
+										valueField : "mykey",
+										forceSelection : true,
+										emptyText : ""
+									}, {
+										xtype : 'displayfield',
+										anchor : '85%',
+										colspan : 2
+									}, {
+										xtype : 'supcombobox',
+										ref : '../supId',
+										readOnly : true,
+										anchor : '85%',
+										fieldLabel : '无纺布供应商',
+										colspan : 2,
+										emptyText : ""
+									}, {
+										xtype : 'hidden',
+										ref : '../relationId',
+										name : 'condition/relationId'
+									}]
+
+						})
+
+		this.viewWorkPlanWindow = this.viewWorkPlanWindow || new Ext.Window({
+					title : '作业计划',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 820,
+					height : 600,
+					layout : 'border',
+					items : [this.viewWorkPlanPanel, this.viewPlanListPanel],
+					buttons : [{
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.viewWorkPlanPanel.form.reset();
+									this.planListPanel.store.removeAll();
+									this.viewWorkPlanWindow.hide();
+								}
+							}]
+
+				});
+	}
+
+	this.initModifyOrderNoWindow = function() {
+		var _this = this;
+		var modifyOrderNoSelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.modifyOrderNoListPanel = this.modifyOrderNoListPanel
+				|| new Ext.fn.EditListPanel({
+					viewConfig : {
+						forceFit : true
+					},
+					clicksToEdit : 1,
+					region : 'center',
+					hsPage : true,
+					selModel : modifyOrderNoSelModel,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							modifyOrderNoSelModel, {
+								dataIndex : 'batchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'orderNo',
+								header : '订单号',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											allowBlank : true,
+											css : 'background:#c7c7c7;',
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var recordId = _this.orderRec.data['recordId'];
+													_this.updateTumoOrderNO(
+															recordId, newValue,
+															oldValue);
+												}
+											}
+										}))
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.diaphragm.ship.order.queryTumoOrderNO.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'recordId'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'orderNo'
+								}, {
+									name : 'orderNoBak'
+								}]
+					})
+				})
+
+		this.queryModifyOrderNoPanel = this.queryModifyOrderNoPanel
+				|| new Ext.fn.QueryPanel({
+							height : 150,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/orderNo',
+										anchor : '85%',
+										fieldLabel : '订单号'
+									}, {
+										xtype : 'textarea',
+										height : 100,
+										name : 'condition/batchNoStr2',
+										emptyText : '多个批次请用逗号分隔，或一行一个批次',
+										colspan : 1,
+										anchor : '85%',
+										fieldLabel : '膜片批次'
+									}, {
+										xtype : 'hidden',
+										name : 'condition/batchNoStr'
+									}]
+						});
+		this.queryModifyOrderNoPanel.addButton({
+					text : "关闭",
+					scope : this,
+					resCode : 10002681,
+					handler : function() {
+						this.modifyOrderNoWindow.hide();
+					}
+
+				});
+
+		this.modifyOrderNoWindow = this.modifyOrderNoWindow || new Ext.Window({
+					title : '修改膜片订单号',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 820,
+					height : 600,
+					layout : 'border',
+					items : [this.queryModifyOrderNoPanel,
+							this.modifyOrderNoListPanel]
+
+				});
 	}
 }

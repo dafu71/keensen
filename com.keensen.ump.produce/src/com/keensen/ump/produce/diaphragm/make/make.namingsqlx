@@ -82,7 +82,7 @@
        T1.RESERVE5 AS "reserve5",
        T1.ORG_ID AS "orgId",
        T1.STATUS AS "status",
-       T1.DIMO_TYPE AS "dimoType",
+       T1.DIMO_TYPE AS "dimoType",T1.PRODUCT_TYPE AS "productType",
        T1.LINE AS "line",
        T1.PRODUCT_DT AS "productDt",
        T1.DIMO_BATCH_NO AS "dimoBatchNo",
@@ -132,6 +132,11 @@
 	<isNotNull prepend="" property="line"> 
 		       AND T1.LINE = #line#
 	</isNotNull>
+	<isNotNull prepend="" property="productType"> 
+		       AND T1.product_Type = #productType#
+	</isNotNull>
+	
+	
 	<isNotNull prepend = "and"  property = "productDtStart"> 
           to_char(T1.PRODUCT_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#
      </isNotNull>

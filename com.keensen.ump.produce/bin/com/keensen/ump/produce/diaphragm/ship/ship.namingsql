@@ -150,6 +150,7 @@
         <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="planNo">upper(t1.plan_No)  like '%' || upper(#planNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO  like '%' || #dimoBatchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">upper(t1.order_No) = upper(#orderNo2#)</isNotNull>
  order by t1.produce_dt desc
      </select>
     <select id="queryOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
@@ -180,19 +181,28 @@
 			t1.ext17 as "ext17",
 			t1.ext18 as "ext18",
 			t1.ext19 as "ext19",
-           
+           t1.need_amount "needAmount",
+           t1.arrange_percent "arrangePercent",
+           round(T1.NEED_AMOUNT / (NVL(T1.ARRANGE_PERCENT, 100) / 100),1) "arrangeAmount",
+           t1.order_status "orderStatus",
 	       T99.MATER_CLASS_CODE AS "materClassCode",
 	       T22.MATER_SPEC_CODE  AS "materSpecCode",
 	       T99.MATER_CLASS_NAME AS "materClassName",
-	       T22.MATER_SPEC_NAME  AS "materSpecName"
+	       T22.MATER_SPEC_NAME  AS "materSpecName",
+	       nvl(wp.cnt,0) "planCount"
 	  FROM KS_PROD_DIAPHRAGM_ORDER T1
+	  left join (select t.relation_id,COUNT(1) cnt from KS_PROD_DIAPHRAGM_WORKPLAN t
+		GROUP BY t.relation_id) wp on wp.relation_id = t1.id
 	  LEFT JOIN QINSEN.PARA_MATER_SPEC T22
 	    ON T1.SPEC_ID = T22.MATER_SPEC_ID
 	  LEFT JOIN QINSEN.PARA_MATER_CLASS T99
 	    ON T99.MATER_CLASS_ID = T22.MATER_CLASS_ID
      where 1=1
-     <isNotNull prepend="and" property="orderDateStart">to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
+     <isEqual compareValue="Y" prepend="and" property="isClosed">t1.order_status = '进行'</isEqual>
+        <isNotNull prepend="and" property="orderDateStart">to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
         <isNotNull prepend="and" property="orderDateEnd">to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="demandDateStart">to_char(t1.demand_DATE,'yyyy-MM-dd')  &gt;=  #demandDateStart#</isNotNull>
+        <isNotNull prepend="and" property="demandDateEnd">to_char(t1.demand_DATE,'yyyy-MM-dd')  &lt;=  #demandDateEnd#</isNotNull>
         <isNotNull prepend="and" property="specId">t1.spec_id = #specId#</isNotNull>
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
         <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
@@ -471,7 +481,7 @@
     <select id="queryTumoOrigin" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
  
  SELECT 
-       T1.RECORD_ID          AS "recordId",
+       T1.RECORD_ID          AS "recordId",T1.order_no_bak "orderNoBak",
        T1.PLAN_NO            AS "planNo",
        T1.DIMO_BATCH_NO      AS "dimoBatchNo",
        T1.BATCH_NO           AS "batchNo",
@@ -542,6 +552,7 @@
        T1.LAST_CAIMO_DATE    AS "lastCaimoDate",
        T1.USEFUL_LENGTH      AS "usefulLength",
        T1.QUALIFID_LENGTH    AS "qualifidLength",
+       (T1.QUALIFID_LENGTH-T1.CAIMO_LENGTH) AS "qualifidLength2",
        T1.F_GFD_AVG          AS "fGfdAvg",
        T1.F_SALT_REJECTION   AS "fSaltRejection",
        T1.R_GFD_AVG          AS "rGfdAvg",

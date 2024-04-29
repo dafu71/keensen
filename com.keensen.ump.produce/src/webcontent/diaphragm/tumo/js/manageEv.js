@@ -229,8 +229,10 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck2 = function() {
 		var planNo = C[0].data.planNo;
 		var specId = C[0].data.specId;
 		var list = [];
-		if (!Ext.isEmpty(orderNo)) {
-			Ext.Msg.alert("系统提示", "请选择没有有订单号的数据！");
+		
+				
+		if (!Ext.isEmpty(orderNo) && /^-?\d+$/.test(orderNo.substr(0, 1))) {
+			Ext.Msg.alert("系统提示", "请选择非销售订单数据！");
 			return false;
 		}
 		if (Ext.isEmpty(planNo)) {
@@ -686,4 +688,64 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onSecondJudge2 = functi
 		}
 	}
 
+}
+
+com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.exportExcel = function() {
+	var _this = this;
+
+	var start = this.queryPanel.form.findField('condition/produceDtStart')
+			.getValue();
+	var end = this.queryPanel.form.findField('condition/produceDtEnd')
+			.getValue();
+
+	if (Ext.isEmpty(start)) {
+		Ext.Msg.alert("系统提示", "查询开始日期不能为空！");
+		return false;
+	}
+	if (Ext.isEmpty(end)) {
+		Ext.Msg.alert("系统提示", "查询结束日期不能为空！");
+		return false;
+	}
+
+	if (dayDiff(start, end) > 91) {
+		Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+		return false;
+
+	}
+
+	var daochu = _this.queryPanel.getForm().getValues();
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlLimited.biz.ext",
+		method : "post",
+		jsonData : {
+			'map' : daochu,
+			'map/limited' : '20000',
+			namingsql : 'com.keensen.ump.produce.diaphragm.ship.ship.queryTumoOrigin',
+			templateFilename : 'ks_mp_tumo_export'
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+
+				var fname = ret.fname;
+				if (Ext.isIE) {
+					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
+							+ fname);
+				} else {
+					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
+							+ fname;
+				}
+
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
 }

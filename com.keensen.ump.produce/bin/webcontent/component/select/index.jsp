@@ -51,6 +51,7 @@ var operatorname = "<%=operatorname%>";
 var opt = '';
 var params = [];
   var listid = Ext.id();
+
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.selectMgr
 		});

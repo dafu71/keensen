@@ -14,12 +14,12 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
-					columns : 4,
+					height : 150,
+					columns : 3,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【请检单查询】',
+					// title : '【请检单查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/orderNo',
@@ -33,6 +33,15 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/title',
 								fieldLabel : '标题'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 3
+							}, {
+								xtype : 'textfield',
+								ref : '../batchNo',
+								name : 'condition/batchNo',
+								fieldLabel : '膜片批次'
 							}, {
 								xtype : "dateregion",
 								anchor : '100%',
@@ -55,7 +64,7 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 					text : "按计划单号导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden: planerflag == 0,
+					hidden : planerflag == 0,
 					handler : this.exportExcelByPlanNo
 				});
 
@@ -68,7 +77,7 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【请检单列表】',
+			// title : '【请检单列表】',
 			id : 'concession-list',
 			viewConfig : {
 				forceFit : true
@@ -240,7 +249,7 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 						dataIndex : 'usefulLength',
 						header : '可用长度(m)'
 					}, {
-						dataIndex : 'qualifidLength',
+						dataIndex : 'qualifidLength2',
 						header : '合格长度(m)'
 					}, {
 						dataIndex : 'fMacName',
@@ -295,6 +304,8 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 							name : 'thickIsQualifiedName'
 						}, {
 							name : 'perfIsQualifiedName'
+						}, {
+							name : 'qualifidLength2'
 						}]
 			})
 		})
