@@ -255,8 +255,8 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 				autoLoad : true,
 				totalProperty : 'totalCount',
 				baseParams : {
-
-			}	,
+					'condition/notZero' : 'Y'
+				},
 				fields : [{
 							name : 'storageName'
 						}, {

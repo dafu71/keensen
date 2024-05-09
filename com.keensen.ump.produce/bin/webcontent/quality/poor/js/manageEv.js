@@ -75,7 +75,7 @@ com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
 
 			},
 			callback : function() {
-				
+
 			}
 		})
 	})
@@ -232,4 +232,98 @@ com.keensen.ump.produce.quality.poorMgr.prototype.exportExcel = function() {
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.produce.quality.poorMgr.prototype.onGetBatchNo = function() {
+	var _this = this;
+	var juanmoBatchNo = _this.inputWindow.juanmoBatchNo.getValue();
+	if (Ext.isEmpty(juanmoBatchNo)) {
+		Ext.Msg.alert("系统提示", "请输入卷膜序号！");
+		return;
+	} else {
+		this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		this.requestMask.show();
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.quality.poorrecord.queryJuanmo.biz.ext",
+			method : "post",
+			jsonData : {
+				'condition/juanmoBatchNo' : juanmoBatchNo
+			},
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					var data = ret.data;
+					if (Ext.isEmpty(data) || Ext.isEmpty(data[0])) {
+						Ext.Msg.alert("系统提示", "没有查询到卷膜记录！")
+					} else {
+
+						var responsible = data[0].responsible;
+						var tumoBatchNo = data[0].tumoBatchNo;
+						var department = data[0].department;
+						_this.inputWindow.form.findField("entity/responsible")
+								.setValue(responsible);
+						_this.inputWindow.form.findField("entity/department")
+								.setValue(department);
+						_this.inputWindow.form.findField("entity/batchNo")
+								.setValue(tumoBatchNo);
+					}
+
+				}
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+	}
+}
+
+com.keensen.ump.produce.quality.poorMgr.prototype.onGetBatchNo2 = function() {
+	var _this = this;
+	var juanmoBatchNo = _this.editWindow.juanmoBatchNo.getValue();
+	if (Ext.isEmpty(juanmoBatchNo)) {
+		Ext.Msg.alert("系统提示", "请输入卷膜序号！");
+		return;
+	} else {
+		this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		this.requestMask.show();
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.quality.poorrecord.queryJuanmo.biz.ext",
+			method : "post",
+			jsonData : {
+				'condition/juanmoBatchNo' : juanmoBatchNo
+			},
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					var data = ret.data;
+					if (Ext.isEmpty(data) || Ext.isEmpty(data[0])) {
+						Ext.Msg.alert("系统提示", "没有查询到卷膜记录！")
+					} else {
+
+						var responsible = data[0].responsible;
+						var tumoBatchNo = data[0].tumoBatchNo;
+						var department = data[0].department;
+						_this.editWindow.form.findField("entity/responsible")
+								.setValue(responsible);
+						_this.editWindow.form.findField("entity/department")
+								.setValue(department);
+						_this.editWindow.form.findField("entity/batchNo")
+								.setValue(tumoBatchNo);
+					}
+
+				}
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+	}
 }

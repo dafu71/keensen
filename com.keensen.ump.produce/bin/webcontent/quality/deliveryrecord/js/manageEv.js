@@ -57,10 +57,16 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onStand = function()
 		Ext.Msg.alert("系统提示", "请选择品名！");
 		return;
 	}
+	var materSpecId = this.inputWindow.form.findField("entity/materSpecId")
+			.getValue();
+	if (Ext.isEmpty(materSpecId)) {
+		Ext.Msg.alert("系统提示", "请选择元件型号！");
+		return;
+	}
 	var labelingModel = this.inputWindow.form.findField("entity/labelingModel")
 			.getValue();
 	if (Ext.isEmpty(labelingModel)) {
-		Ext.Msg.alert("系统提示", "请输入规格！");
+		Ext.Msg.alert("系统提示", "请输入贴标型号！");
 		return;
 	}
 	var _this = this;
@@ -72,7 +78,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onStand = function()
 				url : "com.keensen.ump.produce.quality.deliverystand.query.biz.ext",
 				method : "post",
 				jsonData : {
-					'condition/labelingModel' : labelingModel
+					'condition/labelingModel' : labelingModel,
+					'condition/materSpecId' : materSpecId
 				},
 				success : function(resp) {
 					var ret = Ext.decode(resp.responseText);
@@ -135,6 +142,112 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onStand = function()
 										.setValue(water2);
 								var desalination2 = data[0].desalination2;
 								_this.inputWindow.form
+										.findField("entity/desalination2")
+										.setValue(desalination2);
+							}
+						}
+
+					}
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+};
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onStand2 = function() {
+	var productName = this.editWindow.form.findField("entity/productName")
+			.getValue();
+	if (Ext.isEmpty(productName)) {
+		Ext.Msg.alert("系统提示", "请选择品名！");
+		return;
+	}
+	var materSpecId = this.editWindow.form.findField("entity/materSpecId")
+			.getValue();
+	if (Ext.isEmpty(materSpecId)) {
+		Ext.Msg.alert("系统提示", "请选择元件型号！");
+		return;
+	}
+	var labelingModel = this.editWindow.form.findField("entity/labelingModel")
+			.getValue();
+	if (Ext.isEmpty(labelingModel)) {
+		Ext.Msg.alert("系统提示", "请输入贴标型号！");
+		return;
+	}
+	var _this = this;
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+				url : "com.keensen.ump.produce.quality.deliverystand.query.biz.ext",
+				method : "post",
+				jsonData : {
+					'condition/labelingModel' : labelingModel,
+					'condition/materSpecId' : materSpecId
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						var data = ret.data;
+						if (Ext.isEmpty(data) || Ext.isEmpty(data[0])
+								|| data[0].id == null) {
+							Ext.Msg.alert("系统提示", "没有查询到发货质检标准,请先维护质检标准数据！")
+						} else {
+
+							var solution = data[0].solution;
+							_this.editWindow.form.findField("entity/solution")
+									.setValue(solution);
+							var temperature = data[0].temperature;
+							_this.editWindow.form
+									.findField("entity/temperature")
+									.setValue(temperature);
+							var recovery = data[0].recovery;
+							_this.editWindow.form.findField("entity/recovery")
+									.setValue(recovery);
+							var ph = data[0].ph;
+							_this.editWindow.form.findField("entity/ph")
+									.setValue(ph);
+							var press = data[0].press;
+							_this.editWindow.form.findField("entity/press")
+									.setValue(press);
+
+							var water = data[0].water;
+							_this.editWindow.form.findField("entity/water")
+									.setValue(water);
+							var desalination = data[0].desalination;
+							_this.editWindow.form
+									.findField("entity/desalination")
+									.setValue(desalination);
+
+							if (productName == '纳滤膜元件') {
+								var solution2 = data[0].solution2;
+								_this.editWindow.form
+										.findField("entity/solution2")
+										.setValue(solution2);
+								var temperature2 = data[0].temperature2;
+								_this.editWindow.form
+										.findField("entity/temperature2")
+										.setValue(temperature2);
+								var recovery2 = data[0].recovery2;
+								_this.editWindow.form
+										.findField("entity/recovery2")
+										.setValue(recovery2);
+								var ph2 = data[0].ph2;
+								_this.editWindow.form.findField("entity/ph2")
+										.setValue(ph2);
+								var press2 = data[0].press2;
+								_this.editWindow.form
+										.findField("entity/press2")
+										.setValue(press2);
+
+								var water2 = data[0].water2;
+								_this.editWindow.form
+										.findField("entity/water2")
+										.setValue(water2);
+								var desalination2 = data[0].desalination2;
+								_this.editWindow.form
 										.findField("entity/desalination2")
 										.setValue(desalination2);
 							}

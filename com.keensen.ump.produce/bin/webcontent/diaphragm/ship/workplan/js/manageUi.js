@@ -6,6 +6,7 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 
 		this.initEditWindow();
 		this.initWorkPlanWindow();
+		this.initModifyPlanNoWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -18,27 +19,64 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 120,
 					columns : 3,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
 					// title : '【计划单查询】',
 					fields : [{
-								xtype : 'textfield',
-								name : 'condition/planNo',
+						xtype : 'combobox',
+						anchor : '75%',
+						hiddenName : 'condition/line',
+						colspan : 1,
+						ref : '../line',
+						fieldLabel : '线体',
+						triggerAction : "all",
+						store : new Ext.data.ArrayStore({
+									fields : ['mykey', 'myvalue'],
+									data : [['A', 'A'], ['B', 'B'], ['C', 'C'],
+											['D', 'D'], ['E', 'E']]
+								}),
+						mode : "local",
+						editable : false,
+						displayField : "myvalue",
+						valueField : "mykey",
+						forceSelection : true,
+						emptyText : "--请选择--",
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.line.reset();
+							}
+						}
+					}, {
+						xtype : 'textfield',
+						name : 'condition/planNo',
+						anchor : '75%',
+						fieldLabel : '计划单号'
+					}, {
+						xtype : 'textfield',
+						name : 'condition/orderNo',
+						anchor : '75%',
+						fieldLabel : '订单号'
+					}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 3
+						}, {
+						xtype : 'mpspeccombobox',
+						hiddenName : 'condition/specId',
+						anchor : '75%',
+						fieldLabel : '膜片型号 '
+					}, {
+								xtype : "dateregion",
+								colspan : 1,
 								anchor : '75%',
-								fieldLabel : '计划单号'
-							}, {
-								xtype : 'textfield',
-								name : 'condition/orderNo',
-								anchor : '75%',
-								fieldLabel : '订单号'
-							}, {
-								xtype : 'mpspeccombobox',
-								hiddenName : 'condition/specId',
-								anchor : '75%',
-								fieldLabel : '膜片型号 '
+								nameArray : ['condition/workDtStart',
+										'condition/workDtEnd'],
+								fieldLabel : "作业日期",
+								format : "Y-m-d"
 							}]
 				});
 
@@ -48,6 +86,12 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 					rescode : '10002661',
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
+				});
+		this.queryPanel.addButton({
+					text : "修改计划单号",
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.onModifyPlanNo
 				});
 	}
 
@@ -475,6 +519,130 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 									this.workPlanWindow.hide();
 								}
 							}]
+
+				});
+	}
+	
+	this.initModifyPlanNoWindow = function() {
+		var _this = this;
+		var modifyPlanNoSelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.modifyPlanNoListPanel = this.modifyPlanNoListPanel
+				|| new Ext.fn.EditListPanel({
+					viewConfig : {
+						forceFit : true
+					},
+					clicksToEdit : 1,
+					region : 'center',
+					hsPage : true,
+			tbar : [{
+						text : '修改所选批次计划单号',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onModifyBatch
+					}],
+					selModel : modifyPlanNoSelModel,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							modifyPlanNoSelModel, {
+								dataIndex : 'batchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'planNo',
+								header : '计划单号',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											allowBlank : true,
+											css : 'background:#c7c7c7;',
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var recordId = _this.orderRec.data['recordId'];
+													_this.updateTumoPlanNO(
+															recordId, newValue,
+															oldValue);
+												}
+											}
+										}))
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.diaphragm.ship.order.queryTumoOrderNO.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'recordId'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'planNo'
+								}, {
+									name : 'planNoBak'
+								}]
+					})
+				})
+
+		this.queryModifyPlanNoPanel = this.queryModifyPlanNoPanel
+				|| new Ext.fn.QueryPanel({
+							height : 150,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/planNo',
+										anchor : '85%',
+										fieldLabel : '计划单号'
+									}, {
+										xtype : 'textarea',
+										height : 100,
+										name : 'condition/batchNoStr2',
+										emptyText : '多个批次请用逗号分隔，或一行一个批次',
+										colspan : 1,
+										anchor : '85%',
+										fieldLabel : '膜片批次'
+									}, {
+										xtype : 'hidden',
+										name : 'condition/batchNoStr'
+									}]
+						});
+		this.queryModifyPlanNoPanel.addButton({
+					text : "关闭",
+					scope : this,
+					//resCode : 10002681,
+					handler : function() {
+						this.modifyPlanNoWindow.hide();
+					}
+
+				});
+
+		this.modifyPlanNoWindow = this.modifyPlanNoWindow || new Ext.Window({
+					title : '修改膜片计划单号',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 820,
+					height : 600,
+					layout : 'border',
+					items : [this.queryModifyPlanNoPanel,
+							this.modifyPlanNoListPanel]
 
 				});
 	}

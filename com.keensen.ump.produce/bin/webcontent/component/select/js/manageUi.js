@@ -41,7 +41,6 @@ com.keensen.ump.produce.component.selectMgr = function() {
 					},
 					items : [{
 								columnWidth : 0.45,
-								id : 'produceYearId',
 								anchor : "100%",
 								layout : "anchor",
 								xtype : 'combo',
@@ -50,12 +49,16 @@ com.keensen.ump.produce.component.selectMgr = function() {
 								hiddenName : 'condition/produceYear',
 								mode : "local",
 								forceSelection : true,
+								triggerAction : "all",
 								store : yearStore
 							}, {
 								columnWidth : 0.45,
 								anchor : "100%",
 								layout : "anchor",
 								xtype : 'combo',
+								mode : "local",
+								forceSelection : true,
+								triggerAction : "all",
 								hiddenName : 'condition/produceMonth',
 								store : [['01', '一月'], ['02', '二月'],
 										['03', '三月'], ['04', '四月'],

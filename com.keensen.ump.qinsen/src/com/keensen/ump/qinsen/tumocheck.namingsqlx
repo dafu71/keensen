@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   <!-- 按批次查询判定所需检测数据 -->
+<select id="qryBatchCheckRecForJudge" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT C.RECORD_ID            AS "recordId",
+       C.BATCH_ID             AS "batchId",
+       C.CHECK_NO             AS "checkNo",
+       C.POSITION_LENGTH      AS "positionLength",
+       C.GFD_AVG              AS "gfdAvg",
+       C.GFD_STR              AS "gfdStr",
+       C.CONDUCTIVITY_IN      AS "conductivityIn",
+       C.CONDUCTIVITY_OUT_AVG AS "conductivityOutAvg",
+       C.CONDUCTIVITY_STR     AS "conductivityStr",
+       C.SALT_REJECTION       AS "saltRejection",
+       C.RECHECK_FLAG         AS "recheckFlag",
+       C.SUBMITTER_ID         AS "submitterId",
+       C.SUBMIT_TM            AS "submitTm",
+       C.CHECKER_ID           AS "checkerId",
+       C.CHECK_TM             AS "checkTm",
+       C.PERF_FLAG_ID         AS "perfFlagId",
+       O.PROP_VALUE_CODE      AS "perfFlagCode",
+       O.PROP_VALUE_NAME      AS "propValueName",
+       O.DISP_ORDER           AS "dispOrder"
+  FROM QINSEN.INST_TUMO_CHECK C, QINSEN.CONF_PROP_VALUE_OPTION O
+ WHERE C.PERF_FLAG_ID = O.PROP_VALUE_ID
+ AND C.BATCH_ID = #batchId#
+	 ORDER BY O.DISP_ORDER DESC
+</select>
+
+</sqlMap>

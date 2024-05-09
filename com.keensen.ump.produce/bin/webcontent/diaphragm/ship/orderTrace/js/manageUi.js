@@ -85,33 +85,43 @@ com.keensen.ump.produce.diaphragm.ship.OrderTraceMgr = function() {
 			delUrl : '111.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'customerCode',
+						sortable : true,
 						header : '客户编码'
 					}, {
 						dataIndex : 'orderNo',
+						sortable : true,
 						header : '订单号'
 					}, {
 						dataIndex : 'materSpecCode',
+						sortable : true,
 						header : '膜片型号'
 					}, {
 						dataIndex : 'amount',
-						header : '需求数量'
+						sortable : true,
+						header : '订单数量'
 					}, {
 						dataIndex : 'needAmount',
+						sortable : true,
 						header : '订单需生产数量'
 					}, {
 						dataIndex : 'arrangeAmount',
+						sortable : true,
 						header : '建议排产数量'
 					}, {
 						dataIndex : 'unit',
+						sortable : true,
 						header : '单位'
 					}, {
 						dataIndex : 'orderDate',
+						sortable : true,
 						header : '下单日期'
 					}, {
 						dataIndex : 'demandDate',
+						sortable : true,
 						header : '要求入库日期'
 					}, {
 						dataIndex : 'deliveryAmount',
+						sortable : true,
 						header : '已发货数量',
 						scope : this,
 						renderer : function(v, m, r, i) {
@@ -128,17 +138,22 @@ com.keensen.ump.produce.diaphragm.ship.OrderTraceMgr = function() {
 								return v;
 							}
 						}
-					}, {
+					}/*, {
 						dataIndex : 'storageAmount',
+						sortable : true,
 						header : '合格数量'
-					}, {
-						dataIndex : 'validPercent',
-						header : '实际合格率'
+					}*/, {
+						dataIndex : 'fhPercent',
+						sortable : true,
+						header : '订单发货率'
+						//订单发货率=已发货数量/订单数量
 					}, {
 						dataIndex : 'arrangePercent',
+						sortable : true,
 						header : '排产合格率'
 					}, {
 						dataIndex : 'orderStatus',
+						sortable : true,
 						header : '订单状态'
 					}],
 			store : new Ext.data.JsonStore({
@@ -179,6 +194,8 @@ com.keensen.ump.produce.diaphragm.ship.OrderTraceMgr = function() {
 							name : 'arrangePercent'
 						}, {
 							name : 'orderStatus'
+						}, {
+							name : 'fhPercent'
 						}]
 			})
 		})

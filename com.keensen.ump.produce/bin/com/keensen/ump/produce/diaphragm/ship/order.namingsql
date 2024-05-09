@@ -2,24 +2,32 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.produce.diaphragm.ship.order">
     <select id="queryOrderTrace" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-     SELECT T1.CUSTOMER_CODE   AS "customerCode",
-       T1.ORDER_NO        AS "orderNo",
+     SELECT T1.CUSTOMER_CODE AS "customerCode",
+       T1.ORDER_NO AS "orderNo",
        T1.MATER_SPEC_CODE AS "materSpecCode",
-       T1.AMOUNT          AS "amount",
-       T1.NEED_AMOUNT     AS "needAmount",
-       round(T1.ARRANGE_AMOUNT,2)  AS "arrangeAmount",
-       T1.UNIT            AS "unit",
-       T1.ORDER_DATE      AS "orderDate",
-       T1.DEMAND_DATE     AS "demandDate",
+       T1.AMOUNT AS "amount",
+       T1.NEED_AMOUNT AS "needAmount",
+       ROUND(T1.ARRANGE_AMOUNT, 2) AS "arrangeAmount",
+       T1.UNIT AS "unit",
+       T1.ORDER_DATE AS "orderDate",
+       T1.DEMAND_DATE AS "demandDate",
        T1.DELIVERY_AMOUNT AS "deliveryAmount",
-       decode(t1.order_type,'FH',T1.STORAGE_AMOUNT,T1.STORAGE_AMOUNT2)  AS "storageAmount",
-       decode(t1.order_type,'FH',T1.VALID_PERCENT,T1.VALID_PERCENT2)   AS "validPercent",
-       T1.SPEC_ID         AS "specId",
+       DECODE(T1.ORDER_TYPE, 'FH', T1.STORAGE_AMOUNT, T1.STORAGE_AMOUNT2) AS "storageAmount",
+       DECODE(T1.ORDER_TYPE, 'FH', T1.VALID_PERCENT, T1.VALID_PERCENT2) AS "validPercent",
+       T1.SPEC_ID AS "specId",
        T1.ARRANGE_PERCENT AS "arrangePercent",
-       T1.ORDER_STATUS    AS "orderStatus"
+       T1.ORDER_STATUS AS "orderStatus",
+       T1.fhPercent "fhPercent"
   FROM (SELECT T1.CUSTOMER_CODE,
                T1.ORDER_NO,
-               decode(substr(translate(t1.order_no,'1234567890','XXXXXXXXXX'),1,1),'X','FH','ZY') order_type,
+               DECODE(SUBSTR(TRANSLATE(T1.ORDER_NO,
+                                       '1234567890',
+                                       'XXXXXXXXXX'),
+                             1,
+                             1),
+                      'X',
+                      'FH',
+                      'ZY') ORDER_TYPE,
                T1.SPEC_ID,
                T1.AMOUNT,
                T1.NEED_AMOUNT,
@@ -36,7 +44,8 @@
                ROUND(100 * T6.STORAGE_AMOUNT /
                      (T1.NEED_AMOUNT / (NVL(T1.ARRANGE_PERCENT, 100) / 100))) VALID_PERCENT2,
                T1.ARRANGE_PERCENT,
-               T1.ORDER_STATUS
+               T1.ORDER_STATUS,
+               round(100*T3.DELIVERY_AMOUNT/T1.AMOUNT)   fhPercent
           FROM KS_PROD_DIAPHRAGM_ORDER T1
           LEFT JOIN QINSEN.PARA_MATER_SPEC T2
             ON T1.SPEC_ID = T2.MATER_SPEC_ID
@@ -44,88 +53,114 @@
                       FROM V_KS_PROD_DIAPHRAGM_SHIP T
                      GROUP BY T.ORDER_NO) T3
             ON T3.ORDER_NO = T1.ORDER_NO
-          LEFT JOIN (SELECT SUBSTR(REPLACE(REPLACE(TT.ORDER_NO, '让步', ','),
-                                          ' ',
-                                          ','),
-                                  1,
-                                  INSTR(REPLACE(REPLACE(TT.ORDER_NO,
-                                                        '让步',
-                                                        ','),
-                                                ' ',
-                                                ','),
-                                        ',') - 1) ORDER_NO,
+          LEFT JOIN (SELECT DECODE(INSTR(TT.ORDER_NO, ' '),
+                                  0,
+                                  TRIM(REPLACE(TT.ORDER_NO, '让步', '')),
+                                  SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                         '让步',
+                                                         ','),
+                                                 ' ',
+                                                 ','),
+                                         1,
+                                         INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                               '让步',
+                                                               ','),
+                                                       ' ',
+                                                       ','),
+                                               ',') - 1)) ORDER_NO,
                            SUM(TT.USEFUL_LENGTH) STORAGE_AMOUNT
                       FROM KS_PROD_DIAPHRAGM_TUMO T
                       LEFT JOIN V_KS_TUMO_ORIGIN2 TT
                         ON T.RECORD_ID = TT.RECORD_ID
                      WHERE T.TREND = '仓库发货仓'
-                       AND SUBSTR(REPLACE(REPLACE(TT.ORDER_NO, '让步', ','),
-                                          ' ',
-                                          ','),
-                                  1,
-                                  INSTR(REPLACE(REPLACE(TT.ORDER_NO,
-                                                        '让步',
-                                                        ','),
-                                                ' ',
-                                                ','),
-                                        ',') - 1) IS NOT NULL
-                     GROUP BY SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
-                                                     '让步',
-                                                     ','),
-                                             ' ',
-                                             ','),
-                                     1,
-                                     INSTR(REPLACE(REPLACE(TT.ORDER_NO,
-                                                           '让步',
-                                                           ','),
-                                                   ' ',
-                                                   ','),
-                                           ',') - 1)
-                                                                             
-                                           ) T5                   
+                       AND DECODE(INSTR(TT.ORDER_NO, ' '),
+                                  0,
+                                  TRIM(REPLACE(TT.ORDER_NO, '让步', '')),
+                                  SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                         '让步',
+                                                         ','),
+                                                 ' ',
+                                                 ','),
+                                         1,
+                                         INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                               '让步',
+                                                               ','),
+                                                       ' ',
+                                                       ','),
+                                               ',') - 1)) IS NOT NULL
+                     GROUP BY DECODE(INSTR(TT.ORDER_NO, ' '),
+                                     0,
+                                     TRIM(REPLACE(TT.ORDER_NO, '让步', '')),
+                                     SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                            '让步',
+                                                            ','),
+                                                    ' ',
+                                                    ','),
+                                            1,
+                                            INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                                  '让步',
+                                                                  ','),
+                                                          ' ',
+                                                          ','),
+                                                  ',') - 1))
+                    
+                    ) T5
             ON T5.ORDER_NO = T1.ORDER_NO
-            
-            LEFT JOIN (SELECT SUBSTR(REPLACE(REPLACE(TT.ORDER_NO, '让步', ','),
-                                          ' ',
-                                          ','),
-                                  1,
-                                  INSTR(REPLACE(REPLACE(TT.ORDER_NO,
-                                                        '让步',
-                                                        ','),
-                                                ' ',
-                                                ','),
-                                        ',') - 1) ORDER_NO,
+        
+          LEFT JOIN (SELECT DECODE(INSTR(TT.ORDER_NO, ' '),
+                                  0,
+                                  TRIM(REPLACE(TT.ORDER_NO, '让步', '')),
+                                  SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                         '让步',
+                                                         ','),
+                                                 ' ',
+                                                 ','),
+                                         1,
+                                         INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                               '让步',
+                                                               ','),
+                                                       ' ',
+                                                       ','),
+                                               ',') - 1)) ORDER_NO,
                            SUM(TT.USEFUL_LENGTH) STORAGE_AMOUNT
                       FROM KS_PROD_DIAPHRAGM_TUMO T
                       LEFT JOIN V_KS_TUMO_ORIGIN2 TT
                         ON T.RECORD_ID = TT.RECORD_ID
                      WHERE T.TREND = '仓库AB仓'
-                       AND SUBSTR(REPLACE(REPLACE(TT.ORDER_NO, '让步', ','),
-                                          ' ',
-                                          ','),
-                                  1,
-                                  INSTR(REPLACE(REPLACE(TT.ORDER_NO,
-                                                        '让步',
-                                                        ','),
-                                                ' ',
-                                                ','),
-                                        ',') - 1) IS NOT NULL
-                     GROUP BY SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
-                                                     '让步',
-                                                     ','),
-                                             ' ',
-                                             ','),
-                                     1,
-                                     INSTR(REPLACE(REPLACE(TT.ORDER_NO,
-                                                           '让步',
-                                                           ','),
-                                                   ' ',
-                                                   ','),
-                                           ',') - 1)
-                                                                             
-                                           ) T6                   
+                       AND DECODE(INSTR(TT.ORDER_NO, ' '),
+                                  0,
+                                  TRIM(REPLACE(TT.ORDER_NO, '让步', '')),
+                                  SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                         '让步',
+                                                         ','),
+                                                 ' ',
+                                                 ','),
+                                         1,
+                                         INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                               '让步',
+                                                               ','),
+                                                       ' ',
+                                                       ','),
+                                               ',') - 1)) IS NOT NULL
+                     GROUP BY DECODE(INSTR(TT.ORDER_NO, ' '),
+                                     0,
+                                     TRIM(REPLACE(TT.ORDER_NO, '让步', '')),
+                                     SUBSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                            '让步',
+                                                            ','),
+                                                    ' ',
+                                                    ','),
+                                            1,
+                                            INSTR(REPLACE(REPLACE(TT.ORDER_NO,
+                                                                  '让步',
+                                                                  ','),
+                                                          ' ',
+                                                          ','),
+                                                  ',') - 1))
+                    
+                    ) T6
             ON T6.ORDER_NO = T1.ORDER_NO
-             WHERE 1=1
+         WHERE 1 = 1
    <isEqual compareValue="Y" prepend="and" property="isClosed">t1.order_status = '进行'</isEqual>
         <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="orderDateStart">to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
@@ -224,7 +259,10 @@
    <isNotNull prepend="and" property="orderNo">upper(t2.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="planNo">upper(t1.code) like '%' || upper(#planNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="specId">t2.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="line">T1.LINE = #line#</isNotNull>
         <isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="workDtStart">to_char(t1.WORK_DT,'yyyy-MM-dd')  &gt;=  #workDtStart#</isNotNull>
+        <isNotNull prepend="and" property="workDtEnd">to_char(t1.WORK_DT,'yyyy-MM-dd')  &lt;=  #workDtEnd#</isNotNull>
  ORDER BY T1.RELATION_ID, T1.ID
 
   
@@ -253,11 +291,12 @@ wp.line "line",wp.sup_id "supId",wp.relation_Id "relationId",
      SELECT T1.RECORD_ID    AS "recordId",
        T1.BATCH_NO     AS "batchNo",
        T1.ORDER_NO     AS "orderNo"，
-       T1.ORDER_NO     AS "orderNoBak"
+       T1.ORDER_NO     AS "orderNoBak",T1.plan_no "planNo",T1.plan_no     AS "planNoBak"
   FROM qinsen.INST_TUMO T1
   WHERE 1=1
    <isNotNull prepend="and" property="orderNo">upper(t1.order_No) = upper(#orderNo#)</isNotNull>
         <isNotNull prepend="and" property="batchNoStr">t1.BATCH_NO in ($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="planNo">t1.plan_no = #planNo#</isNotNull>
     </select>
     <update id="updateTumoOrderNo" parameterClass="java.util.HashMap">update qinsen.INST_TUMO T1
     set T1.ORDER_NO_BAK = T1.ORDER_NO,
@@ -266,6 +305,18 @@ wp.line "line",wp.sup_id "supId",wp.relation_Id "relationId",
     where record_id = #recordId#</update>
     <update id="updateTumoOrderNo4Ship" parameterClass="java.util.HashMap">update KS_PROD_DIAPHRAGM_SHIP T1
     set T1.ORDER_NO = #orderNo#,
+    T1.UPDATE_TIME = sysdate
+    where record_id = #recordId#</update>
+    <select id="queryTumo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.batch_no "batchNo",t.order_no "orderNo",t.record_id "recordId",
+    t.plan_no "planNo"
+     from QINSEN.INST_TUMO t
+    where t.record_id in($recordIds$)</select>
+    <update id="updateTumoPlanNo" parameterClass="java.util.HashMap">update qinsen.INST_TUMO T1
+    set 
+    T1.PLAN_NO = #planNo#
+    where record_id = #recordId#</update>
+    <update id="updateTumoPlanNo4Ship" parameterClass="java.util.HashMap">update KS_PROD_DIAPHRAGM_SHIP T1
+    set T1.Plan_NO = #planNo#,
     T1.UPDATE_TIME = sysdate
     where record_id = #recordId#</update>
 </sqlMap>

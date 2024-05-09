@@ -1685,8 +1685,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 	this.initModifyOrderNoWindow = function() {
 		var _this = this;
 		var modifyOrderNoSelModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : false,
-					header : ''
+					singleSelect : false
 				});
 
 		this.modifyOrderNoListPanel = this.modifyOrderNoListPanel
@@ -1697,6 +1696,12 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 					clicksToEdit : 1,
 					region : 'center',
 					hsPage : true,
+			tbar : [{
+						text : '修改所选批次订单号',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onModifyBatch
+					}],
 					selModel : modifyOrderNoSelModel,
 					delUrl : '1.biz.ext',
 					columns : [new Ext.grid.RowNumberer(),

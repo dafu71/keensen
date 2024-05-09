@@ -55,8 +55,8 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 									// 修改时加载
 								}
 							});
-				}else if (this.opt == 'examine') {
-					
+				} else if (this.opt == 'examine') {
+
 					this.examineWindow.show();
 					this.examinePanel.loadData(cell);
 					var relationId = cell.get('id');
@@ -206,10 +206,21 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
 		var records = A.getSelectionModel().getSelections();
-		this.listPanel2.store.removeAll();
+		// this.listPanel2.store.removeAll();
+		var records2 = this.listPanel2.store.getRange();
+
 		for (var i = 0; i < records.length; i++) {
-			this.listPanel2.store.add(records[i]);
+			var batchNo = records[i].data.batchNo;
+			var addFlag = true;
+			Ext.each(records2, function(r) {
+						var batchNo2 = r.data.batchNo;						
+						if (batchNo == batchNo2)
+							addFlag = false;
+					})
+			if (addFlag)
+				this.listPanel2.store.add(records[i]);
 		}
+
 		this.inputPanel.applyAmount.setValue(records.length);
 		this.chooseWindow.hide();
 	}
@@ -247,7 +258,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSave = function() {
 						// 返回值处理
 						var result = Ext.decode(response.responseText);
 						if (result.success) {
-							//_this.listPanel.store.load();
+							// _this.listPanel.store.load();
 							_this.listPanel.refresh();
 							_this.inputWindow.hide();
 						} else {
@@ -282,7 +293,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSaveCheck = function() {
 						// 返回值处理
 						var result = Ext.decode(response.responseText);
 						if (result.success) {
-							//_this.listPanel.store.load();
+							// _this.listPanel.store.load();
 							_this.listPanel.refresh();
 							_this.editWindow.hide();
 						} else {
@@ -317,7 +328,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSaveConfirm = function() 
 						// 返回值处理
 						var result = Ext.decode(response.responseText);
 						if (result.success) {
-							//_this.listPanel.store.load();
+							// _this.listPanel.store.load();
 							_this.listPanel.refresh();
 							_this.editWindow2.hide();
 						} else {
@@ -352,7 +363,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSaveModify = function() {
 						// 返回值处理
 						var result = Ext.decode(response.responseText);
 						if (result.success) {
-							//_this.listPanel.store.load();
+							// _this.listPanel.store.load();
 							_this.listPanel.refresh();
 							_this.modifyWindow.hide();
 						} else {
@@ -387,7 +398,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSaveExamine = function() 
 						// 返回值处理
 						var result = Ext.decode(response.responseText);
 						if (result.success) {
-							//_this.listPanel.store.load();
+							// _this.listPanel.store.load();
 							_this.listPanel.refresh();
 							_this.examineWindow.hide();
 						} else {
@@ -520,6 +531,16 @@ com.keensen.ump.produce.component.applyMgr.prototype.onDel2 = function() {
 		return false;
 	} else {
 		this.listPanel7.onDel();
+	}
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.onDel3 = function() {
+	var records = this.listPanel2.getSelectionModel().getSelected();
+	if (records.length == 1) {
+		Ext.Msg.alert("系统提示", "至少需要有一条元件记录！")
+		return false;
+	} else {
+		this.listPanel2.store.remove(records);
 	}
 }
 

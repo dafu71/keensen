@@ -192,7 +192,7 @@
  WHERE 1 = 1
    AND T.MATER_SPEC_CODE IN
        ('SW1-1', 'NF1', 'NF2', 'BW2-1', 'BW1-1', 'BW3-1', 'NF1-R')
-   AND T3.NAME IN('膜片C仓','膜片AB仓')
+   AND T3.NAME IN('膜片C仓','膜片AB仓','膜片发货仓')
 UNION ALL
 
 SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
@@ -339,7 +339,7 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
 
  WHERE 1 = 1
    AND T.MATER_SPEC_CODE IN ('ULP2-1', 'ULP1-1', 'ULP3-1', 'ULP4-1')
-   AND T3.NAME IN('膜片C仓','膜片AB仓')
+   AND T3.NAME IN('膜片C仓','膜片AB仓','膜片发货仓')
 ) TT
          WHERE 1 = 1
         <isNotNull prepend="" property="tumoBatchNo">

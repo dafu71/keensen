@@ -225,6 +225,9 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'juanmoBatchNo',
+						header : '卷膜序号'
+					}, {
 						dataIndex : 'componentNumber',
 						header : '元件序列号'
 					}, {
@@ -236,6 +239,9 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					}, {
 						dataIndex : 'machine',
 						header : '卷制机台'
+					}, {
+						dataIndex : 'tapColor',
+						header : '胶带颜色'
 					}, {
 						dataIndex : 'describe',
 						header : '不合格描述'
@@ -334,6 +340,10 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 							name : 'componentType'
 						}, {
 							name : 'materSpecName'
+						}, {
+							name : 'tapColor'
+						}, {
+							name : 'juanmoBatchNo'
 						}]
 			})
 		})
@@ -453,6 +463,25 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					height : '5',
 					colspan : 2
 				}, {
+					xtype : 'trigger',
+					allowBlank : true,
+					ref:'../../juanmoBatchNo',
+					name : 'entity/juanmoBatchNo',
+					emptyText : "输入卷膜序号，单击旁边按钮",
+					fieldLabel : '卷膜序号',
+					anchor : '75%',
+					colspan : 1,
+					editable : true,
+					hideTrigger : false,
+					scope : this,
+					onTriggerClick : function() {
+						_this.onGetBatchNo();
+					}
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
 					xtype : 'textfield',
 					allowBlank : false,
 					name : 'entity/batchNo',
@@ -524,6 +553,13 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					onTriggerClick : function() {
 						_this.onCalculate();
 					}
+				}, {
+					xtype : 'textfield',
+					allowBlank : true,
+					name : 'entity/tapColor',
+					fieldLabel : '胶带颜色',
+					anchor : '75%',
+					colspan : 1
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : ' ',
@@ -699,6 +735,26 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					height : '5',
 					colspan : 2
 				}, {
+					xtype : 'trigger',
+					allowBlank : true,
+					ref:'../../juanmoBatchNo',
+					name : 'entity/juanmoBatchNo',
+					dataIndex : 'juanmoBatchNo',
+					fieldLabel : '卷膜序号',
+					emptyText : "输入卷膜序号，单击旁边按钮",
+					anchor : '75%',
+					colspan : 1,
+					editable : true,
+					hideTrigger : false,
+					scope : this,
+					onTriggerClick : function() {
+						_this.onGetBatchNo2();
+					}
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
 					xtype : 'textfield',
 					allowBlank : false,
 					name : 'entity/batchNo',
@@ -776,6 +832,14 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					onTriggerClick : function() {
 						_this.onCalculate2();
 					}
+				}, {
+					xtype : 'textfield',
+					allowBlank : true,
+					name : 'entity/tapColor',
+					dataIndex : 'tapColor',
+					fieldLabel : '胶带颜色',
+					anchor : '75%',
+					colspan : 1
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : ' ',

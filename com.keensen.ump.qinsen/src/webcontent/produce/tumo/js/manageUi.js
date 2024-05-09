@@ -152,8 +152,17 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						fieldLabel : '膜片卷号'
 					}]
 				});
+				
+		this.queryPanel.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel
+				});
 
 	}
+	
+	
 
 	this.initListPanel = function() {
 		var _this = this;

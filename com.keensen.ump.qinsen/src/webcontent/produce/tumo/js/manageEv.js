@@ -541,6 +541,45 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModiTech = function() {
 
 }
 
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.exportExcel = function() {
+	var _this = this;
+	var daochu = _this.queryPanel.getForm().getValues();
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlLimited.biz.ext",
+		method : "post",
+		jsonData : {
+			'map' : daochu,
+			'map/limited' : '5000',
+			namingsql : 'com.keensen.ump.qinsen.tumo.queryRecords',
+			templateFilename : 'ks_inst_tumo'
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+
+				var fname = ret.fname;
+				if (Ext.isIE) {
+					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
+							+ fname);
+				} else {
+					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
+							+ fname;
+				}
+
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
 function isNonNegativeFloat(str) {
 	const regex = /^\d+(\.\d+)?$/;
 	return regex.test(str);

@@ -311,6 +311,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onChoose
+					}, '-', {
+						text : '删除',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDel3
 					}],
 			autoScroll : false,
 			selModel : selModel2,
@@ -329,8 +334,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
-					}
-],
+					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryComponent.biz.ext',
 				root : 'data',
@@ -658,8 +662,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
-					}
-],
+					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryComponent.biz.ext',
 				root : 'data',
@@ -779,8 +782,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
-					}
-],
+					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
 				root : 'data',
@@ -1157,8 +1159,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
-					}
-],
+					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
 				root : 'data',
@@ -1537,8 +1538,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
-					}
-],
+					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
 				root : 'data',
@@ -1911,8 +1911,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
-					}
-],
+					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
 				root : 'data',

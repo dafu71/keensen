@@ -160,6 +160,9 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						dataIndex : 'labelingModel',
 						header : '贴标型号'
 					}, {
+						dataIndex : 'materSpecName',
+						header : '元件型号'
+					}, {
 						dataIndex : 'batchNo',
 						header : '批号'
 					}, {
@@ -243,6 +246,10 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							name : 'reviewer'
 						}, {
 							name : 'reportDt'
+						}, {
+							name : 'materSpecId'
+						}, {
+							name : 'materSpecName'
 						}]
 			})
 		})
@@ -326,11 +333,33 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 								}
 							}
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'prodspeccombobox',
+							hiddenName : 'entity/materSpecId',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 3,
+							fieldLabel : '元件型号 ',
+							typeAhead : true,
+							typeAheadDelay : 100,
+							minChars : 1,
+							queryMode : 'local',
+							lastQuery : '',
+							editable : true,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							}
+						}, {
 							xtype : 'trigger',
 							name : 'entity/labelingModel',
 							allowBlank : false,
-							fieldLabel : '规格',
-							emptyText : "输入规格，单击旁边按钮",
+							fieldLabel : '贴标型号',
+							emptyText : "输入贴标型号，单击旁边按钮",
 							anchor : '75%',
 							colspan : 3,
 							dataIndex : 'labelingModel',
@@ -819,10 +848,33 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 								}
 							}
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'prodspeccombobox',
+							hiddenName : 'entity/materSpecId',
+							dataIndex : 'materSpecId',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 3,
+							fieldLabel : '元件型号 ',
+							typeAhead : true,
+							typeAheadDelay : 100,
+							minChars : 1,
+							queryMode : 'local',
+							lastQuery : '',
+							editable : true,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							}
+						}, {
 							xtype : 'trigger',
 							name : 'entity/labelingModel',
 							allowBlank : false,
-							fieldLabel : '规格',
+							fieldLabel : '贴标型号',
 							emptyText : "输入规格，单击旁边按钮",
 							anchor : '75%',
 							colspan : 3,
@@ -831,7 +883,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							hideTrigger : false,
 							scope : this,
 							onTriggerClick : function() {
-								_this.onStand();
+								_this.onStand2();
 							}
 						}, {
 							xtype : 'displayfield',
@@ -1282,12 +1334,37 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							forceSelection : true,
 							emptyText : "--请选择--"
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'prodspeccombobox',
+							//hiddenName : 'entity/materSpecId',
+							readOnly : true,
+							emptyText : "",
+							dataIndex : 'materSpecId',
+							//allowBlank : false,
+							anchor : '75%',
+							colspan : 3,
+							fieldLabel : '元件型号 ',
+							typeAhead : true,
+							typeAheadDelay : 100,
+							minChars : 1,
+							queryMode : 'local',
+							lastQuery : '',
+							editable : true,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							}
+						}, {
 							xtype : 'trigger',
 							// name : 'entity/labelingModel',
 
 							readOnly : true,
-							fieldLabel : '规格',
-							emptyText : "输入规格，单击旁边按钮",
+							fieldLabel : '贴标型号',
+							//emptyText : "输入规格，单击旁边按钮",
 							anchor : '75%',
 							colspan : 3,
 							dataIndex : 'labelingModel',

@@ -123,7 +123,7 @@
        decode(T1.WORKSHOP,'工业组件',T1.INVALID_TYPE,T1.INVALID_TYPE2) "invalidTypeName",
        T1.RESPONSIBLE AS "responsible",
        T1.DEAL_METHOD AS "dealMethod",
-       T1.DEPARTMENT AS "department",
+       T1.DEPARTMENT AS "department",T1.tap_color AS "tapColor",T1.juanmo_Batch_No "juanmoBatchNo",
        T1.COMPONENT_TYPE AS "componentType",
        T2.MATER_SPEC_NAME AS "materSpecName"
   FROM KS_PROD_QUALITY_POORRECORD T1
@@ -317,15 +317,22 @@
 		t1.INSPECTOR_ID as "inspectorId",
 		t1.REVIEWER_ID as "reviewerId",
 		TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd') as "reportDt",
-		TO_CHAR(t1.review_dt, 'yyyy-MM-dd') as "reportDt"
+		TO_CHAR(t1.review_dt, 'yyyy-MM-dd') as "reportDt",
+		t1.mater_spec_id "materSpecId",
+		t2.mater_spec_name "materSpecName"
 
   FROM KS_PROD_QUALITY_DELIVERYRECORD T1
+  left join qinsen.para_mater_spec t2 on t2.mater_spec_id = t1.mater_spec_id
   
 	where 1=1
 	
 	<isNotNull prepend="and" property="id"> 
 		       T1.ID = #id#
 	</isNotNull>
+	<isNotNull prepend="and" property="materSpecId"> 
+		       T1.MATER_SPEC_ID = #materSpecId#
+	</isNotNull>
+	
 	<isNotNull prepend="and" property="code"> 
 		       t1.code like '%' || #code# || '%'
 	</isNotNull>
@@ -833,5 +840,30 @@ SET
   AND qinsen.inst_tumo.record_id=#recordId#
 	</update>
 	
-	
+	<select id="queryJuanmo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >   
+	   SELECT T.BATCH_NO       "juanmoBatchNo",
+	       T.WORKER_ID,
+	       T2.STAFF_NAME    "responsible",
+	       T.RECORD_ID,
+	       T6.TUMO_BATCH_NO "tumoBatchNo",
+	       t.team_id,
+	       dd.dept_name "department"
+	  FROM QINSEN.INST_JUANMO_MAIN T
+	  LEFT JOIN QINSEN.BASE_STAFF T2
+	    ON T.WORKER_ID = T2.STAFF_ID
+	  LEFT JOIN qinsen.base_department dd ON dd.dept_id=t.team_id
+	  LEFT JOIN (SELECT T3.MAIN_BATCH_ID, WM_CONCAT(T3.BATCH_NO) TUMO_BATCH_NO
+	               FROM (SELECT T4.TUMO_BATCH_ID, T3.MAIN_BATCH_ID, T5.BATCH_NO
+	                       FROM QINSEN.INST_JUANMO_DETAIL T3
+	                       LEFT JOIN QINSEN.INST_CAIDIEMO T4
+	                         ON T3.CDM_BATCH_ID = T4.RECORD_ID
+	                       LEFT JOIN QINSEN.INST_TUMO T5
+	                         ON T4.TUMO_BATCH_ID = T5.RECORD_ID) T3
+	              GROUP BY T3.MAIN_BATCH_ID) T6
+	    ON T.RECORD_ID = T6.MAIN_BATCH_ID
+	 WHERE 1=1	
+	 	<isNotNull prepend = ""  property = "juanmoBatchNo">
+	   AND  T.BATCH_NO = #juanmoBatchNo#
+	</isNotNull>
+ </select>
 </sqlMap>

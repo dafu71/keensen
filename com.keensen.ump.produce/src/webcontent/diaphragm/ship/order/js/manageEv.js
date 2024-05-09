@@ -37,7 +37,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.initEvent = function()
 				}).defer(100);
 
 			}, this);
-			
+
 	this.modifyOrderNoListPanel.selModel.on('rowselect', function(o, i, r) {
 				var _this = this;
 	(function	() {
@@ -650,13 +650,15 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onCalculate = function
 }
 
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onModifyOrderNo = function() {
+	this.queryModifyOrderNoPanel.form.reset();
+	this.modifyOrderNoListPanel.store.removeAll();
 	this.modifyOrderNoWindow.show();
 }
 
 com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.updateTumoOrderNO = function(
 		recordId, newValue, oldValue) {
 	var _this = this;
-	
+
 	Ext.Ajax.request({
 		method : "post",
 		scope : this,
@@ -674,4 +676,53 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.updateTumoOrderNO = fu
 			// _this.requestMask.hide()
 		}
 	});
+};
+
+com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onModifyBatch = function() {
+	var _this = this;
+
+	var A = this.modifyOrderNoListPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var records = this.modifyOrderNoListPanel.getSelectionModel().getSelections();
+		var recordIds = [];
+		Ext.each(records, function(r) {
+					recordIds.push(r.data['recordId']);
+				});
+		Ext.Msg.prompt('修改订单号', '请输入订单号', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.diaphragm.ship.order.updateTumoOrderNOBatch.biz.ext",
+					method : "post",
+					jsonData : {
+						"map/recordIds" : recordIds.join(","),
+						"map/orderNo" : text
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.modifyOrderNoListPanel.store.reload();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "修改订单号失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, true);
+	}
 };
