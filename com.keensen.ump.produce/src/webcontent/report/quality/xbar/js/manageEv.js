@@ -36,6 +36,7 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = functi
 
 	this.listPanel.store.on('load', function() {
 				var cnt = _this.listPanel.store.getCount();
+				if(cnt==0) return;
 				if (cnt > 300) {
 					Ext.Msg.alert("系统提示", "数据太多,不进行图例展示！");
 					return;

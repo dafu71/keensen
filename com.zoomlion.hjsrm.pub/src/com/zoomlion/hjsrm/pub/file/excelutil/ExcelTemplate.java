@@ -50,10 +50,10 @@ import commonj.sdo.helper.DataFactory;
  * 实现通过自定义Excel数据模版,将结果集填充到模版相应位置，自动创建输出到指定的文件，允许Excel模版设置公式，调用方法如下：<BR>
  * 
  * <pre>
- *            ExcelTemplate template=new ExcelTemplate(templateFilePath,outputFilePath)
- *            //template.setIncludeFormula(true);设置包含公式
- *            template.generate(ResultSet);//resultset为ArrayList对象,数据行以Map封装
- *            //template.generate(titleMap,dataList)//显示主表、明细表信息
+ *             ExcelTemplate template=new ExcelTemplate(templateFilePath,outputFilePath)
+ *             //template.setIncludeFormula(true);设置包含公式
+ *             template.generate(ResultSet);//resultset为ArrayList对象,数据行以Map封装
+ *             //template.generate(titleMap,dataList)//显示主表、明细表信息
  * </pre>
  * 
  * @author primeton wengzr (mailto:)
@@ -443,7 +443,7 @@ public class ExcelTemplate {
 				int cells = row.getPhysicalNumberOfCells();
 				for (short c = 0; c < cells; c++) {
 					HSSFCell cell = row.getCell(c);
-					HSSFCellStyle oldStyle  = cell.getCellStyle();
+					HSSFCellStyle oldStyle = cell.getCellStyle();
 					if (cell != null) {
 						if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
 							String value = cell.getRichStringCellValue()
@@ -458,7 +458,8 @@ public class ExcelTemplate {
 									String content = obj + "";
 									// String
 									// content=exportInfo.getString(value);
-									if (content == null || "null".equals(content))
+									if (content == null
+											|| "null".equals(content))
 										content = "";
 									// 重建Cell，填充标题值
 									cell = row.createCell((short) c);
@@ -501,8 +502,9 @@ public class ExcelTemplate {
 			HSSFRow sourceRow = sheet.getRow(startRow);
 			HSSFRow row = sheet.createRow(startRow++);
 			for (int i = 0; i < sourceRow.getPhysicalNumberOfCells(); i++) {
-				
-				HSSFCellStyle oldStyle  = sourceRow.getCell((short)i).getCellStyle();
+
+				HSSFCellStyle oldStyle = sourceRow.getCell((short) i)
+						.getCellStyle();
 				// 输出自动生成的行号
 				if (fieldNames[i] != null
 						&& fieldNames[i].equals(FIELD_AUTO_ID)) {
@@ -515,7 +517,7 @@ public class ExcelTemplate {
 				if (fieldNames[i] != null) {
 					HSSFCell cell = row.createCell((short) i);
 					cell.setCellStyle(borderStyle);
-					
+
 					if (content != null) {
 						// 字段名支持xpath取值
 						Object value = XPathLocator.newInstance().getValue(
@@ -1212,65 +1214,72 @@ public class ExcelTemplate {
 				preIdx++;
 			}
 			XPathLocator locator = XPathLocator.newInstance();
-			//for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-				HSSFSheet sheet = workbook.getSheetAt(0);
-				int rowCount = sheet.getLastRowNum();
-				if (rowCount > 0){
-					for (int j = startLine - 1; j <= rowCount; j++) {
-						HSSFRow row = sheet.getRow(j);
-						DataObject obj = createDataObject(entityName);
-						if (row != null) {
-							for (int k = 0; k < alPty.size(); k++) {
-								String propertyXpath = (String) alPty.get(k);
-								int cellIdx = ((Integer) alColIdx.get(k))
-										.intValue() - 1;
-	
-								HSSFCell cell = row.getCell((short) cellIdx);
-								if (cell != null) {
-									int cellType = cell.getCellType();
-									Object cellValue = null;
-									switch (cellType) {
-									case 4:
-										cellValue = Boolean.valueOf(cell
-												.getBooleanCellValue());
-										break;
-									case 0:
-										short cellDataFormat = cell.getCellStyle()
-												.getDataFormat();
-	
-										if (((cellDataFormat >= 14) && (cellDataFormat <= 22))
-												|| ((cellDataFormat >= 45) && (cellDataFormat <= 47))) {
-											cellValue = cell.getDateCellValue();
-										} else {
-											double d = cell.getNumericCellValue();
-											if (d - (int) d < 4.9E-324D)
-												cellValue = Integer
-														.valueOf((int) d);
-											else {
-												cellValue = BigDecimal
-														.valueOf(Double
-																.valueOf(cell
-																		.getNumericCellValue()));
-											}
+			// for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+			HSSFSheet sheet = workbook.getSheetAt(0);
+			int rowCount = sheet.getLastRowNum();
+			if (rowCount > 0) {
+				for (int j = startLine - 1; j <= rowCount; j++) {
+					HSSFRow row = sheet.getRow(j);
+					DataObject obj = createDataObject(entityName);
+					if (row != null) {
+						for (int k = 0; k < alPty.size(); k++) {
+							String propertyXpath = (String) alPty.get(k);
+							int cellIdx = ((Integer) alColIdx.get(k))
+									.intValue() - 1;
+
+							HSSFCell cell = row.getCell((short) cellIdx);
+							if (cell != null) {
+								int cellType = cell.getCellType();
+								Object cellValue = null;
+								switch (cellType) {
+								case 4:
+									cellValue = Boolean.valueOf(cell
+											.getBooleanCellValue());
+									break;
+								case 0:
+
+									short cellDataFormat = cell.getCellStyle()
+											.getDataFormat();
+
+									if (((cellDataFormat >= 14) && (cellDataFormat <= 22))
+											|| ((cellDataFormat >= 45) && (cellDataFormat <= 47))) {
+										cellValue = cell.getDateCellValue();
+									} else {
+										double d = cell.getNumericCellValue();
+										if (d - (int) d < 4.9E-324D)
+											cellValue = Integer
+													.valueOf((int) d);
+										else {
+											/*
+											 * cellValue = BigDecimal
+											 * .valueOf(Double .valueOf(cell
+											 * .getNumericCellValue()));
+											 */
+											cellValue = new BigDecimal(String
+													.valueOf(d))
+													.stripTrailingZeros()
+													.toPlainString();// 不会丢失精度且兼容科学计数法E10，也不会截取小数点后的位数
+
 										}
-	
-										break;
-									case 5:
-										cellValue = Byte.valueOf(cell
-												.getErrorCellValue());
-										break;
-									default:
-										cellValue = cell.getRichStringCellValue()
-												.getString().trim();
 									}
-	
-									locator.setValue(obj, propertyXpath, cellValue);
+
+									break;
+								case 5:
+									cellValue = Byte.valueOf(cell
+											.getErrorCellValue());
+									break;
+								default:
+									cellValue = cell.getRichStringCellValue()
+											.getString().trim();
 								}
+
+								locator.setValue(obj, propertyXpath, cellValue);
 							}
 						}
-						dataList.add(obj);
 					}
+					dataList.add(obj);
 				}
+			}
 		} catch (Exception e) {
 			throw e;
 		} finally {

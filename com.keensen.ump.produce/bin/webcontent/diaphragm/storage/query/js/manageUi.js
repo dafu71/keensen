@@ -20,6 +20,8 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					data : [['1', '膜片AB仓'], ['2', '膜片C仓'], ['3', '膜片发货仓'],
 							['4', '试卷合格仓'], ['5', '半成品仓']]
 				});
+				
+		
 		this.storagecombo = new Ext.form.ComboBox({
 			store : store,
 			anchor : '100%',

@@ -61,12 +61,12 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 					handler : this.onPrint2
 				});
 
-		// this.queryPanel.addButton({
-		// text : "导出",
-		// scope : this,
-		// iconCls : 'icon-application_excel',
-		// handler : this.exportExcel
-		// });
+		this.queryPanel.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel
+				});
 
 	}
 

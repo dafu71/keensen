@@ -93,7 +93,7 @@
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" description="" id="link5" name="已经判定，不重复判定" displayName="连接线" type="transition">
       <sourceNode>loopstart0</sourceNode>
-      <targetNode>switch0</targetNode>
+      <targetNode>switch1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="NOTNULLANDEMPTY">
           <process:leftOperand type="query">data/perfFlagId</process:leftOperand>
@@ -137,6 +137,7 @@
     <chidren>subprocess1</chidren>
     <chidren>assign1</chidren>
     <chidren>switch0</chidren>
+    <chidren>switch1</chidren>
   </nodes>
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="queryMpCheckResult" displayName="queryMpCheckResult" collapsed="false" grouped="true" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
@@ -154,6 +155,7 @@
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link4</targetConnections>
+    <targetConnections>link12</targetConnections>
     <location x="465" y="206"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess0label</nodeLabel>
@@ -222,9 +224,9 @@
       <sourceNode>switch0</sourceNode>
       <targetNode>loopend0</targetNode>
     </sourceConnections>
-    <targetConnections>link5</targetConnections>
     <targetConnections>link0</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link11</targetConnections>
     <location x="660" y="114"/>
     <size height="28" width="28"/>
     <nodeLabel>switch0label</nodeLabel>
@@ -277,7 +279,7 @@
       <targetNode>loopend1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -298,8 +300,8 @@
       <sourceNode>loopend1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link16</targetConnections>
     <targetConnections>link15</targetConnections>
+    <targetConnections>link16</targetConnections>
     <location x="1167" y="393"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend1label</nodeLabel>
@@ -334,6 +336,31 @@
     <location x="996" y="359"/>
     <figSize height="20" width="40"/>
     <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" displayName="空操作" grouped="true" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>switch0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link12" name="link12" displayName="连接线" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">data/perfFlagId2</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="531" y="87"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
+    <location x="518" y="123"/>
+    <figSize height="20" width="55"/>
+    <node>switch1</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

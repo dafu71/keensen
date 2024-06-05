@@ -63,6 +63,7 @@ GROUP BY h.order_no,h.prod_spec_name) t2 on t1.order_no = t2.order_no and t1.pro
         <isNotNull prepend="and" property="ifConfirm">decode(T1.Confirm_date,null,'N','Y') = #ifConfirm#</isNotNull>
         <isNotNull prepend="and" property="code">T1.CODE like '%' || #code# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo">T1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.id in (select relation_id from KS_COMPONENT_CHECK_LIST where batch_No = #batchNo#)</isNotNull>
 	order by t1.id desc
     </select>
     <select id="queryCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT CODE "code" from 
@@ -135,9 +136,10 @@ GROUP BY h.order_no,h.prod_spec_name) t2 on t1.order_no = t2.order_no and t1.pro
    SELECT T1.ID                AS "id",
        T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",
        DECODE(T3.JUANMO_BATCH_ID,NULL,'干','湿') "state",
-       h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
-       h.code "code",t4.BLANKING_SIZE "blankingSize",t2.CHECK_RESULT "checkResult",
-       h.prod_spec_name "orderProdSpecName",h.mark_Spec_Code "markSpecCode"
+       h.order_no "orderNo",t2.prod_spec_id "prodSpecId",
+       t5.tumo_batch_str "tumoBatchStr",t5.page_size "pageSize",
+      h.code "code",t4.BLANKING_SIZE "blankingSize",t2.CHECK_RESULT "checkResult",
+       h.prod_spec_name "orderProdSpecName",h.mark_Spec_Code "markSpecCode",t2.juanmo_batch_id
   FROM KS_COMPONENT_CHECK_LIST T1
   LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
   LEFT JOIN QINSEN.INST_QIJIAN T2
@@ -146,12 +148,45 @@ GROUP BY h.order_no,h.prod_spec_name) t2 on t1.order_no = t2.order_no and t1.pro
   LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
                FROM QINSEN.INST_WATER_TEST) T3
     ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
+   LEFT JOIN (select t.record_id,LISTAGG(t.tumo_batch_no, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no) tumo_batch_str,
+LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no) page_size
+ from V_KS_JM_TM_INFO t GROUP BY t.record_id) t5 ON t5.record_id = t4.record_id
+ 
   where 1=1
     <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
         <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
         <isNotNull prepend="and" property="prodSpecId">t2.PROD_SPEC_ID in($prodSpecId$)</isNotNull>
         <isNotNull prepend="and" property="orderNo">h.order_no = #orderNo#</isNotNull>
         <isNotNull prepend="and" property="relationId">t1.relation_id = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(h.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(h.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+	order by T1.batch_No
+    </select>
+    <select id="queryList3" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id",
+       T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",
+       DECODE(T3.JUANMO_BATCH_ID,NULL,'干','湿') "state",
+       h.order_no "orderNo",t2.prod_spec_id "prodSpecId",
+       
+       h.code "code",t4.BLANKING_SIZE "blankingSize",t2.CHECK_RESULT "checkResult",
+       h.prod_spec_name "orderProdSpecName",h.mark_Spec_Code "markSpecCode",t2.juanmo_batch_id
+  FROM KS_COMPONENT_CHECK_LIST T1
+  LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
+  LEFT JOIN QINSEN.INST_QIJIAN T2
+    ON T1.BATCH_NO = T2.BATCH_NO
+  LEFT JOIN QINSEN.INST_JUANMO_MAIN T4 ON t2.juanmo_batch_id = t4.record_id
+  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM QINSEN.INST_WATER_TEST) T3
+    ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
+ 
+  where 1=1
+    <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t2.PROD_SPEC_ID in($prodSpecId$)</isNotNull>
+        <isNotNull prepend="and" property="orderNo">h.order_no = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="relationId">t1.relation_id = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(h.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(h.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
 	order by T1.batch_No
     </select>
 </sqlMap>

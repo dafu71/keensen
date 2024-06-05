@@ -40,7 +40,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【膜片质检判定查询】',
+					//title : '【膜片质检判定查询】',
 					fields : [{
 						xtype : "dateregion",
 						colspan : 1,
@@ -181,7 +181,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					singleSelect : false
 				});
 		this.listPanel = new Ext.fn.EditListPanel({
-			title : '【膜片质检判定列表】',
+			//title : '【膜片质检判定列表】',
 			viewConfig : {
 				forceFit : true
 			},

@@ -112,11 +112,14 @@
              SELECT '02.01.01.0070' AS MATER_CODE, 'NF2' AS MATER_NAME
                FROM DUAL) M
     ON M.MATER_NAME = T.MATER_SPEC_CODE
-
+<!--
   LEFT JOIN (SELECT T.BATCH_NO, T2.NAME, T.POSITION
                FROM KS_PROD_DIAPHRAGM_STOCK T
                LEFT JOIN KS_BASE_STORAGE T2
                  ON T.STORAGE_ID = T2.ID) T3
+    ON T3.BATCH_NO = T.BATCH_NO-->
+    
+    LEFT JOIN (select t.batch_no,t.storage_name NAME,t.position from KS_PROD_COMPONENT_STOCK t) T3
     ON T3.BATCH_NO = T.BATCH_NO
 
   LEFT JOIN (SELECT WT.*,
@@ -259,10 +262,14 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
                FROM DUAL) M
     ON M.MATER_NAME = T.MATER_SPEC_CODE
 
+<!--
   LEFT JOIN (SELECT T.BATCH_NO, T2.NAME, T.POSITION
                FROM KS_PROD_DIAPHRAGM_STOCK T
                LEFT JOIN KS_BASE_STORAGE T2
                  ON T.STORAGE_ID = T2.ID) T3
+    ON T3.BATCH_NO = T.BATCH_NO-->
+    
+     LEFT JOIN (select t.batch_no,t.storage_name NAME,t.position from KS_PROD_COMPONENT_STOCK t) T3
     ON T3.BATCH_NO = T.BATCH_NO
 
   LEFT JOIN (SELECT TO_CHAR(TM.produce_dt, 'yyyyMMdd') F_CHECK_DT,
@@ -343,6 +350,7 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
 ) TT
          WHERE 1 = 1
         <isNotNull prepend="" property="tumoBatchNo">AND TT.TUMO_BATCH_NO in ($tumoBatchNo$)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo3">AND TT.TUMO_BATCH_NO like '%' || #tumoBatchNo3# || '%'</isNotNull>
         <isNotNull prepend="" property="produceDtStart">and to_char(TT.mp_produce_dt,'yyyy-MM-dd') &gt;= #produceDtStart#</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">and to_char(TT.mp_produce_dt,'yyyy-MM-dd') &lt;= #produceDtEnd#</isNotNull>
         <isNotNull prepend="" property="produceYear">
@@ -427,7 +435,7 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
                          S3.MATER_SPEC_CODE     B_SPEC_CODE,
                          S3.MATER_SPEC_NAME     B_SPEC_NAME,
                          std.mp_salt
-                    FROM QINSEN.INST_PROD_WATER_STD A,
+                    FROM KS_PROD_WATER_STD A,
                          QINSEN.PARA_MATER_SPEC     S1,
                          QINSEN.PARA_MATER_SPEC     S2,
                          QINSEN.PARA_MATER_SPEC     S3,
@@ -440,6 +448,7 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
     <select id="querySelect" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
 	SELECT T1.TUMO_BATCH_NO    AS "tumoBatchNo",T1.id "id",
+		T1.test_Mater_Spec "testMaterSpec",T1.test_batch_no "testBatchNo",
        T1.MP_SPEC_ID       AS "mpSpecId",T1.TUMO_BATCH_ID    AS "tumoBatchId",
        PMS.mater_SPEC_CODE    AS "mpSpecCode",
        T1.TEST_AVG_GPD     AS "testAvgGpd",
@@ -474,6 +483,36 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
         <isNotNull prepend="and" property="tumoBatchNo">T1.TUMO_BATCH_NO = #tumoBatchNo#</isNotNull>
     </select>
     <select id="selectMp" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.MP_BATCH_NO      "tumoBatchNo",
+       T1.AMOUNT           "length",
+       T1.STORAGE_NAME     "storageName",
+       T1.STORAGE_POSITION "storagePosition",
+       T1.mater_spec_name "prodSpecName",
+       T1.prod_spec_id "prodSpecId" ,
+       T1.mp_spec_id "mpSpecId",
+       T1.mp_spec_code "mpSpecCode",
+       T1.area "area",
+       t1.dense_net "denseNet"
+    FROM V_KS_COMPONENT_MP_SELECT T1
+   WHERE T1.CONDITION1 = 'Y'
+       AND T1.CONDITION2 = 'Y'
+       AND T1.CONDITION3 = 'Y'
+       AND T1.CONDITION4 = 'Y'
+    <isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="mpSpecId">t1.MP_SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="and" property="tumoBatchNo">upper(t1.MP_BATCH_NO) like '%' || upper(#tumoBatchNo#) || '%'</isNotNull>
+        <!--1、不在线边仓；2、在即时库存；3、不在日计划已挑选膜片-->
+        <isNotNull prepend="and" property="choose">t1.MP_BATCH_NO not in (select t.BATCH_NO from KS_COMPONENT_PLAN_STOCK t where deleted='N')
+		       and
+		       t1.MP_BATCH_NO in(select batch_no from  KS_PROD_COMPONENT_STOCK)
+		       and
+		       t1.MP_BATCH_NO not in (select t.batch_no from KS_COMPONENT_PLAN_DAY t)</isNotNull>
+        <isNotNull prepend="and" property="line">substr(t1.MP_BATCH_NO,2,1) = #line##</isNotNull>
+        <isNotNull prepend="and" property="storageName">T1.STORAGE_NAME like '%' || #storageName# || '%'</isNotNull>
+        <isEqual compareValue="Y" prepend="and" property="isStorage">T1.MP_BATCH_NO in (select batch_no from  KS_PROD_COMPONENT_STOCK)</isEqual>
+	    
+	    ORDER BY SUBSTR(T1.MP_BATCH_NO,6,4) ,T1.MP_BATCH_NO
+		<!-- ORDER BY T1.TEST_YJ_SALT desc,SUBSTR(T1.MP_BATCH_NO,6,4) ,T1.MP_BATCH_NO--><!--
    	    select t1.TUMO_BATCH_ID as "tumoBatchId",t2.length "length",
     t1.TUMO_BATCH_NO as "tumoBatchNo",
     t1.MP_SPEC_ID as "mpSpecId",
@@ -488,14 +527,26 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
     LEFT JOIN QINSEN.PARA_MATER_SPEC m ON m.mater_spec_id = t.mp_spec_id
     LEFT JOIN QINSEN.PARA_MATER_SPEC p ON p.mater_spec_id = t.prod_spec_id
     WHERE t.flag='合格') t1
-     LEFT JOIN (select t.RECORD_ID,t.USEFUL_LENGTH-nvl(t.CAIMO_LENGTH,0) LENGTH from V_KS_TUMO_ORIGIN2 t) t2
+     LEFT JOIN (select t.IS_CUT_OVER,t.RECORD_ID,t.USEFUL_LENGTH-nvl(t.CAIMO_LENGTH,0) LENGTH from V_KS_TUMO_ORIGIN2 t) t2
       ON t2.record_id=t1.TUMO_BATCH_ID
      
     where 1=1
-		<isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID = #prodSpecId#</isNotNull>
-        <isNotNull prepend="and" property="mpSpecId">t1.MP_SPEC_ID = #mpSpecId#</isNotNull>
-        <isNotNull prepend="and" property="tumoBatchNo">upper(t1.TUMO_BATCH_NO) like '%' || upper(#tumoBatchNo#) || '%'</isNotNull>
-        <isNotNull prepend="and" property="choose">t1.TUMO_BATCH_NO not in(select t.BATCH_NO from KS_COMPONENT_PLAN_STOCK t)</isNotNull>
+    and t2.IS_CUT_OVER != 'Y'
+		<isNotNull prepend="and" property="prodSpecId"> 
+		       t1.PROD_SPEC_ID = #prodSpecId#
+	    </isNotNull>
+	    <isNotNull prepend="and" property="mpSpecId"> 
+		       t1.MP_SPEC_ID = #mpSpecId#
+	    </isNotNull>
+	    <isNotNull prepend="and" property="tumoBatchNo"> 
+		       upper(t1.TUMO_BATCH_NO) like '%' || upper(#tumoBatchNo#) || '%'
+	    </isNotNull>
+	    
+	    <isNotNull prepend="and" property="choose"> 
+		       t1.TUMO_BATCH_NO not in(select t.BATCH_NO from KS_COMPONENT_PLAN_STOCK t)
+	    </isNotNull>
 		order by t1.TUMO_BATCH_ID
-    </select>
+		--></select>
+    <delete id="deleteComponentStock" parameterClass="java.util.HashMap">delete from  KS_PROD_COMPONENT_STOCK</delete>
+    <delete id="deleteComponentTumoSelect" parameterClass="java.util.HashMap">delete from  KS_COMPONENT_TUMO_SELECT</delete>
 </sqlMap>

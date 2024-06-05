@@ -293,8 +293,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onView = function() 
 		var r = C[0];
 		var id = r.data.id;
 		var productName = r.data.productName;
-		window
-				.open('com.keensen.ump.produce.quality.deliveryreport.flow?opt=view&entity/id='
+		window.open(
+				'com.keensen.ump.produce.quality.deliveryreport.flow?opt=view&entity/id='
 						+ id, "top");
 
 	}
@@ -310,8 +310,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onPrint = function()
 		var r = C[0];
 		var id = r.data.id;
 		var productName = r.data.productName;
-		window
-				.open('com.keensen.ump.produce.quality.deliveryreport.flow?opt=print&entity/id='
+		window.open(
+				'com.keensen.ump.produce.quality.deliveryreport.flow?opt=print&entity/id='
 						+ id, "top");
 
 	}
@@ -328,8 +328,9 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onView2 = function()
 		var id = r.data.id;
 		var productName = r.data.productName;
 		window
-				.open('com.keensen.ump.produce.quality.deliveryreport.flow?opt=view&type=e&entity/id='
-						+ id, "top");
+				.open(
+						'com.keensen.ump.produce.quality.deliveryreport.flow?opt=view&type=e&entity/id='
+								+ id, "top");
 
 	}
 
@@ -345,8 +346,9 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onPrint2 = function(
 		var id = r.data.id;
 		var productName = r.data.productName;
 		window
-				.open('com.keensen.ump.produce.quality.deliveryreport.flow?opt=print&type=e&entity/id='
-						+ id, "top");
+				.open(
+						'com.keensen.ump.produce.quality.deliveryreport.flow?opt=print&type=e&entity/id='
+								+ id, "top");
 
 	}
 
@@ -374,11 +376,10 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onReview = function(
 				_this.reviewWindow.form.findField(arr[i]).setVisible(true);
 			}
 		}
-		
+
 		this.reviewWindow.show();
 		this.reviewWindow.loadData(cell);
-	
-		
+
 	}
 };
 
@@ -397,7 +398,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onRelation = functio
 		var C = A.getSelectionModel().getSelections();
 		var r = C[0];
 		var id = r.data.id;
-		this.uploadForm = this.excelUploadWin.getComponent('uploadForm').getForm();
+		this.uploadForm = this.excelUploadWin.getComponent('uploadForm')
+				.getForm();
 		this.uploadForm.reset();
 		this.excelUploadWin.show();
 
@@ -430,7 +432,8 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.doUpload = function(
 		var C = this.listPanel.getSelectionModel().getSelections();
 		var r = C[0];
 		var id = r.data.id;
-		var url = 'com.keensen.ump.produce.quality.importDeliveryReportList.flow?relationId=' + id;
+		var url = 'com.keensen.ump.produce.quality.importDeliveryReportList.flow?relationId='
+				+ id;
 		this.uploadInputPanel.form.submit({
 					method : "POST",
 					timeout : 1200,
@@ -460,3 +463,151 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.doUpload = function(
 	}
 
 }
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onTemplateCommon = function() {
+	var fname = "ks_quality_certificate_common_template.xls";
+	window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
+			+ fname;
+}
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onTemplateZh = function() {
+	var fname = "ks_quality_certificate_zh_template.xls";
+	window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
+			+ fname;
+}
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onTemplateToyobo = function() {
+	var fname = "ks_quality_certificate_toyobo_template.xls";
+	window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
+			+ fname;
+}
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onImportCertificate = function(
+		itype) {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var id = r.data.id;
+		this.uploadForm2 = this.excelUploadWin2.getComponent('uploadForm')
+				.getForm();
+		this.uploadForm2.reset();
+		this.excelUploadWin2.show();
+		this.excelUploadWin2.itype = itype;
+	}
+}
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onImportCommon = function() {
+	this.onImportCertificate('common');
+
+};
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onImportZh = function() {
+	this.onImportCertificate('zh');
+};
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onImportToyobo = function() {
+	this.onImportCertificate('toyobo');
+};
+
+// 合格证明细文件上传
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.doUpload2 = function() {
+	var _this = this;
+	// var store = this.listPanel.store;
+	this.uploadInputPanel = this.excelUploadWin2.getComponent('uploadForm');
+	// 校验
+	this.fileUploadObj = this.uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	this.filePath = this.fileUploadObj.getValue();
+	// 文件后缀
+	this.sfileName = this.filePath.split(".");
+
+	if (this.sfileName[1] == null || this.sfileName[1].toLowerCase() != "xls") {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为Excel xls文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+	if (this.uploadInputPanel.form.isValid()) {
+		var C = this.listPanel.getSelectionModel().getSelections();
+		var r = C[0];
+		var id = r.data.id;
+		var itype = this.excelUploadWin2.itype;
+		var url = 'com.keensen.ump.produce.quality.importCertificateList.flow?relationId='
+				+ id + '&itype=' + itype;
+		this.uploadInputPanel.form.submit({
+					method : "POST",
+					timeout : 1200,
+					url : url,
+					waitTitle : "操作提示",
+					waitMsg : "上传数据中...",
+					success : function(form, action) {
+						var result = action.result;
+						if (result.success) {
+							_this.excelUploadWin2.hide();
+							Ext.Msg.alert("操作提示", result.msg == "1"
+											? "上传成功"
+											: result.msg, function() {
+										// _this.listPanel.store.load();
+									}, this);
+						}
+					},
+					failure : function(form, action) {
+						Ext.MessageBox.show({
+									title : '操作提示',
+									buttons : Ext.MessageBox.OK,
+									msg : "导入失败，请检查文件格式或网络是否正常",
+									icon : Ext.MessageBox.ERROR
+								});
+					}
+				});
+	}
+
+}
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onCertificateView = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		Ext.Msg.prompt('合格证打印', '检验结论', function(btn, text) {
+					if (btn == 'ok') {
+						var C = A.getSelectionModel().getSelections();
+						var r = C[0];
+						var id = r.data.id;
+						var productName = r.data.productName;
+						window.open(
+								'com.keensen.ump.produce.quality.certificate.flow?opt=view&result=' + text + '&entity/id='
+										+ id, "top");
+					}
+				}, this, false, '合格')
+
+	}
+
+};
+
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onCertificatePrint = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		Ext.Msg.prompt('合格证打印', '检验结论', function(btn, text) {
+					if (btn == 'ok') {
+						var C = A.getSelectionModel().getSelections();
+						var r = C[0];
+						var id = r.data.id;
+						var productName = r.data.productName;
+						window.open(
+								'com.keensen.ump.produce.quality.certificate.flow?opt=print&result=' + text + '&entity/id='
+										+ id, "top");
+					}
+				}, this, false, '合格')
+
+	}
+
+};

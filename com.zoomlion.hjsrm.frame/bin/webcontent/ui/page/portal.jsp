@@ -972,31 +972,36 @@ var spacepanel = Ext.getCmp('spacepanel');
 	if(itemCode == ''){
 		return;
 	}
-	var myid = Ext.id();
-	var itemId = "menu" + myid;
+	var myid = '';
+	
 	var url='';
 	var title = '';	
 	if(itemCode == 'ipa'){
 		url = '/produce/quality/mptest/ipa/index.jsp';
 		title = 'IPA浓度';
+		myid = '10002223';
 	}
 	if(itemCode == 'gy'){
 		url = '/produce/quality/mptest/gy/index.jsp';
 		title = '甘油浓度';
+		myid = '10002222';
 	}
 	if(itemCode == 'water'){
 		url = '/produce/quality/mptest/water/index.jsp';
 		title = '水相液浓度';
+		myid = '10002262';
 	}
 	if(itemCode == 'oil'){
 		url = '/produce/quality/mptest/oil/index.jsp';
 		title = '油相液浓度';
+		myid = '10002202';
 	}
 	if(itemCode == 'zmy'){
 		url = '/produce/quality/mptest/zmy/index.jsp';
 		title = '铸膜液浓度';
+		myid = '10002221';
 	}
-	
+	var itemId = "menu" + myid;
 	spacepanel.remove(spacepanel.getItem(itemId));
 	spacepanel.open({
 		id: myid,

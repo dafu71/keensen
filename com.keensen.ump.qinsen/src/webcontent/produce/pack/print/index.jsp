@@ -70,6 +70,7 @@
 			<input type="hidden" name="logoId"/>
 			<input type="hidden" name="logoUrl"/>
 			<input type="hidden" name="withStar"/>
+			<input type="hidden" name="txt"/>
 		</form>
 	</div>
 

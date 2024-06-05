@@ -28,4 +28,86 @@
 	 ORDER BY O.DISP_ORDER DESC
 </select>
 
+  <!-- 质检标准查询 -->
+<select id="queryStdRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT T1.RECORD_ID       AS "recordId",
+       T1.SPEC_ID         AS "specId",
+       T1.STATE           AS "state",
+       T1.LEVEL_ID        AS "levelId",
+       T1.GFD_LOW_SYMBOL  AS "gfdLowSymbol",
+       T1.GFD_LOW_LIMIT   AS "gfdLowLimit",
+       T1.GFD_UP_SYMBOL   AS "gfdUpSymbol",
+       T1.GFD_UP_LIMIT    AS "gfdUpLimit",
+       T1.SALT_LOW_SYMBOL AS "saltLowSymbol",
+       T1.SALT_LOW_LIMIT  AS "saltLowLimit",
+       T1.SALT_UP_SYMBOL  AS "saltUpSymbol",
+       T1.SALT_UP_LIMIT   AS "saltUpLimit",
+       T1.CREATE_DT       AS "createDt",
+       T1.CHANGE_DT       AS "changeDt",
+       T1.CREATOR_ID      AS "creatorId",
+       T1.CHANGER_ID      AS "changerId",
+       T1.REMARK          AS "remark",
+       T1.GFD_STD_STR     AS "gfdStdStr",
+       T1.SALT_STD_STR    AS "saltStdStr",
+       T1.MATER_SPEC_CODE AS "materSpecCode",
+       T1.MATER_SPEC_NAME AS "materSpecName",
+       T1.DISP_ORDER      AS "dispOrder",
+       T1.JUDGE_PRIORITY  AS "judgePriority",
+       T1.LEVEL_CODE      AS "levelCode",
+       T1.STATE_NAME      AS "stateName"
+  FROM (SELECT A.RECORD_ID,
+               A.SPEC_ID,
+               A.STATE,
+               A.LEVEL_ID,
+               A.GFD_LOW_SYMBOL,
+               A.GFD_LOW_LIMIT,
+               A.GFD_UP_SYMBOL,
+               A.GFD_UP_LIMIT,
+               A.SALT_LOW_SYMBOL,
+               A.SALT_LOW_LIMIT,
+               A.SALT_UP_SYMBOL,
+               A.SALT_UP_LIMIT,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               A.GFD_LOW_SYMBOL || A.GFD_LOW_LIMIT || ' , ' ||
+               A.GFD_UP_SYMBOL || A.GFD_UP_LIMIT GFD_STD_STR,
+               A.SALT_LOW_SYMBOL || A.SALT_LOW_LIMIT || ' , ' ||
+               A.SALT_UP_SYMBOL || A.SALT_UP_LIMIT SALT_STD_STR,
+               S.MATER_SPEC_CODE,
+               S.MATER_SPEC_NAME,
+               S.DISP_ORDER,
+               O.DISP_ORDER JUDGE_PRIORITY,
+               QINSEN.PG_GET_INFO.GET_PROP_VALUE_CODE_BY_ID(A.LEVEL_ID) LEVEL_CODE,
+               DECODE(A.STATE, 'Y', '在用', 'N', '失效', '') STATE_NAME
+          FROM QINSEN.INST_MOPIAN_STD        A,
+               QINSEN.PARA_MATER_SPEC        S,
+               QINSEN.CONF_PROP_VALUE_OPTION O
+         WHERE A.SPEC_ID = S.MATER_SPEC_ID
+           AND A.LEVEL_ID = O.PROP_VALUE_ID
+           
+           	<isNotNull prepend = ""  property = "specId">
+	   		AND A.SPEC_ID = #specId#
+			</isNotNull>
+           	<isNotNull prepend = ""  property = "state">
+	   		AND A.STATE = #state#
+			</isNotNull>           
+           ) T1
+ 	ORDER BY T1.DISP_ORDER, T1.DISP_ORDER
+
+	</select>
+	
+	  <!-- 涂膜记录查询 -->
+	<select id="querytumo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT t.batch_no "batchNo",t.record_id "recordId",
+	t.spec_id "specId",pms.mater_spec_name "specName" from qinsen.inst_tumo t
+	LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id=t.spec_id
+	where 1=1
+	<isNotNull prepend = ""  property = "batchNo">
+	   		AND t.batch_no = #batchNo#
+	</isNotNull>
+	</select>
+
 </sqlMap>

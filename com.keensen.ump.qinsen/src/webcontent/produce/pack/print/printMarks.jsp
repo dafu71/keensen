@@ -9,6 +9,7 @@
 	String logoUrl = request.getParameter("logoUrl");
 	String logoId = request.getParameter("logoId");
 	String withStar = request.getParameter("withStar"); 
+	Object txt = request.getParameter("txt"); 
 	Object rootObj = XpathUtil.getDataContextRoot("request",
 			pageContext);
 	DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(
@@ -228,6 +229,16 @@ function initPage() {
 					htmlArr.push('<span class="specName">' + '<%=specName %>' + '</span>');
 					htmlArr.push('</td>');
 					htmlArr.push('</tr>');
+					<% if(null != txt){ %>
+					htmlArr.push('<tr>');
+					htmlArr.push('<td colspan=3 class="td_b">');
+					htmlArr.push('<span class="specName">' + '<%=txt.toString() %>' + '</span>');
+					htmlArr.push('</td>');
+					htmlArr.push('</tr>');
+					
+					<% } %>
+					
+					
 					htmlArr.push('<tr>');
 					htmlArr.push('<td colspan=3 style="height:1mm;">');
 					htmlArr.push('<hr color="#000000" size=2 class="line">');

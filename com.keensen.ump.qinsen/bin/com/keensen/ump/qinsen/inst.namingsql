@@ -90,4 +90,24 @@
         ) T1
 
    	</select>
+    <select id="genSeqNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.prefix || LPAD(t.now_seq_num+1,t.seq_length,'0') "seqNo",0 "myorder"
+ from qinsen.PARA_SEQ t
+WHERE t.scene = #scene#
+AND t.seq_series=#seqSeries#
+AND t.prefix = to_char(SYSDATE,'yyMMdd')
+UNION
+select to_char(SYSDATE,'yyMMdd')|| LPAD(1,t.seq_length,'0') "seqNo",1
+ from qinsen.PARA_SEQ t
+WHERE t.scene = #scene#
+AND t.seq_series=#seqSeries#
+AND t.prefix != to_char(SYSDATE,'yyMMdd')
+ORDER BY 2</select>
+    <update id="updateParaSeq" parameterClass="java.util.HashMap">
+	update qinsen.PARA_SEQ t
+	<isNull property="nowSeqNum">set t.now_seq_num = t.now_seq_num + 1</isNull>
+        <isNotNull property="nowSeqNum">set t.now_seq_num = 1,t.prefix = to_char(SYSDATE,'yyMMdd')</isNotNull>
+	WHERE t.scene = #scene#
+	AND t.seq_series=#seqSeries#
+
+</update>
 </sqlMap>

@@ -6,8 +6,10 @@
        T1.ORDER_NO AS "orderNo",
        T1.MATER_SPEC_CODE AS "materSpecCode",
        T1.AMOUNT AS "amount",
-       T1.NEED_AMOUNT AS "needAmount",
-       ROUND(T1.ARRANGE_AMOUNT, 2) AS "arrangeAmount",
+       <!--T1.NEED_AMOUNT-->
+       T1.AMOUNT - T1.DELIVERY_AMOUNT AS "needAmount",
+       <!--ROUND(T1.ARRANGE_AMOUNT, 2) AS "arrangeAmount",-->
+       round((T1.AMOUNT - T1.DELIVERY_AMOUNT) / (NVL(T1.ARRANGE_PERCENT, 100) / 100),2) AS "arrangeAmount",
        T1.UNIT AS "unit",
        T1.ORDER_DATE AS "orderDate",
        T1.DEMAND_DATE AS "demandDate",

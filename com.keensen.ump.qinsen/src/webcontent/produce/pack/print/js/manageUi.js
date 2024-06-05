@@ -80,6 +80,18 @@ com.keensen.ump.qinsen.produce.markprintMgr = function() {
 						height : '5',
 						colspan : 2
 					}, {
+						ref : '../txt',
+						allowBlank : true,
+						xtype : 'textfield',
+						colspan : 2,
+						anchor : '85%',
+						fieldLabel : '自定义文本',
+						name : 'entity/txt'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
 						ref : '../batchNoStr2',
 						allowBlank : false,
 						xtype : 'textarea',

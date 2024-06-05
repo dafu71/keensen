@@ -837,7 +837,7 @@
         <property name="checkerId" type="int">
             <column length="9" name="CHECKER_ID" not-null="true"/>
         </property>
-        <property name="checkTm" type="date">
+        <property name="checkTm" type="timestamp">
             <column name="CHECK_TM" not-null="true"/>
         </property>
         <property name="perfFlagId" type="int">
@@ -846,10 +846,10 @@
         <property name="isQualified" type="string">
             <column length="10" name="IS_QUALIFIED"/>
         </property>
-        <property name="createDt" type="date">
+        <property name="createDt" type="timestamp">
             <column name="CREATE_DT"/>
         </property>
-        <property name="changeDt" type="date">
+        <property name="changeDt" type="timestamp">
             <column name="CHANGE_DT"/>
         </property>
         <property name="creatorId" type="int">

@@ -75,6 +75,7 @@
 					无纺布（供应商）：<span class="span_label"><b:write property="data/supName" /></span><br/>
 				</td>
 			</tr>
+			
 		</table>
 </body>
 

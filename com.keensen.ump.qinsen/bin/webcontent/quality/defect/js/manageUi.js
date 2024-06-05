@@ -1,6 +1,11 @@
 com.keensen.ump.qinsen.quality.DefectMgr = function() {
 	this.initPanel = function() {
 
+		var defectTmWinId = Ext.id();
+		var defectZmWinId = Ext.id();
+		var defectTmWinId2 = Ext.id();
+		var defectZmWinId2 = Ext.id();
+
 		this.defectStore = new Ext.data.JsonStore({
 					url : 'com.keensen.ump.qinsen.inst.queryCdmDefectItemList.biz.ext',
 					root : 'data',
@@ -14,21 +19,25 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 							}]
 				})
 		this.defectTmWin = new com.keensen.ump.defectWindow({
+					id : defectTmWinId,
 					dutyTacheCode : 'TM',
 					recTacheCode : 'TM',
 					relationListId : 'qinsen_defect_list'
 				});
 		this.defectZmWin = new com.keensen.ump.defectWindow({
+					id : defectZmWinId,
 					dutyTacheCode : 'ZM',
 					recTacheCode : 'TM',
 					relationListId : 'qinsen_defect_list'
 				});
 		this.defectTmWin2 = new com.keensen.ump.defectWindow({
+					id : defectTmWinId2,
 					dutyTacheCode : 'TM',
 					recTacheCode : 'CM',
 					relationListId : 'qinsen_defect_list'
 				});
 		this.defectZmWin2 = new com.keensen.ump.defectWindow({
+					id : defectZmWinId2,
 					dutyTacheCode : 'ZM',
 					recTacheCode : 'CM',
 					relationListId : 'qinsen_defect_list'
@@ -52,14 +61,14 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					//title : '【膜片不良记录查询】',
+					// title : '【膜片不良记录查询】',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
 						fieldLabel : '不良产生时间',
 						colspan : 1,
 						anchor : '75%',
-						allowBlank : false,
+						//allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, -1)
@@ -72,7 +81,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						anchor : '75%',
 						editable : true,
 						format : 'Y-m-d H:i',
-						allowBlank : false,
+						//allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
 					}, {
@@ -157,7 +166,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【膜片不良记录列表】',
+			// title : '【膜片不良记录列表】',
 			id : 'qinsen_defect_list',
 			viewConfig : {
 				forceFit : true

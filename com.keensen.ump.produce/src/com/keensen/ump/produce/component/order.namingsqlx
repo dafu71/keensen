@@ -24,6 +24,7 @@
        T1.HPMC              AS "hpmc",
        T1.DW                AS "dw",
        T1.MATER_SPEC_NAME   AS "materSpecName",
+       T1.MATER_SPEC_NAME2   AS "materSpecName2",
        T1.CPGG              AS "cpgg",
        T1.DRY_WET           AS "dryWet",
        T1.ORDER_AMOUNT      AS "orderAmount",
@@ -72,6 +73,10 @@
 		       upper(t1.MATER_SPEC_NAME) = upper(#materSpecName2#) 
 	</isNotNull>
 	
+	<isNotNull prepend="and" property="dMaterSpecName"> 
+		       upper(t1.MATER_SPEC_NAME2) = upper(#dMaterSpecName#) 
+	</isNotNull>
+	
 	 <isNotNull prepend = "and"  property = "orderDateStart"> 
           to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#
      </isNotNull>
@@ -109,6 +114,7 @@
        T2.BM              AS "bm",
        T2.ORDER_NO        AS "orderNo",
        T2.MATER_SPEC_NAME AS "materSpecName",
+       T2.MATER_SPEC_ID AS "materSpecId",
        T2.DRY_WET         AS "dryWet",
        T2.BQ              AS "bq",
        T2.PERFORMANCE     AS "performance",
@@ -116,10 +122,16 @@
        t2.order_amount    AS "orderAmount",
        t2.xsc             AS "xsc",
        t3.cnt             AS "cnt",
-       t4.arrange_amount   as "arrangeAmount"
+       t4.arrange_amount   as "arrangeAmount",
+       t5.num_per_wad "numPerWad",
+       t5.blanking_size "blankingSize",
+       t5.dense_net "denseNet",
+       t5.area "area"
   FROM KS_COMPONENT_PLAN_WEEK T1
   left join KS_PROD_COMPONENT_YXORDER t2
   ON T1.relation_id = t2.id
+  LEFT JOIN qinsen.para_mater_spec t5
+  ON t5.mater_spec_id = t2.mater_spec_id
   left join (select relation_id ,count(*) cnt from KS_COMPONENT_PLAN_DAY group by relation_id) t3 
 	on t3.relation_id = t1.id
   left join (select sum(amount) arrange_amount,relation_id from KS_COMPONENT_PLAN_WEEK_DAYS group by relation_id) t4
@@ -198,6 +210,73 @@
    
    <select id="queryPlanDay" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	
+   	 SELECT T1.ID AS "id",t1.confirm_Status "confirmStatus",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",  
+     T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       T1.RELATION_ID     AS "relationId",
+       T1.ORDER_ID        AS "orderId",
+       T1.PLAN_DATE       AS "planDate",
+       T1.JM_AMOUNT       AS "jmAmount",
+       T1.BATCH_NO        AS "batchNo",
+       T1.METER_AMOUNT    AS "meterAmount",
+       T1.POSITION        AS "position",
+       T1.MP_REMARK       AS "mpRemark",
+       T1.PROBLEM         AS "problem",
+       T5.PRODUCT_ORDER   AS "productOrder",
+       T1.cm_worker       AS "cmWorker",
+       decode(INSTR(T1.cm_worker, '('),0,T1.cm_worker,SUBSTR(T1.cm_worker,1,INSTR(T1.cm_worker, '(')-1)) AS "cmWorker2",
+       T3.ORDER_NO        AS "orderNo",
+       T3.MATER_SPEC_NAME AS "materSpecName",
+       T3.MATER_SPEC_ID AS "materSpecId",
+       T3.ORDER_AMOUNT    AS "orderAmount",
+       T3.XSC             AS "xsc",
+       to_char(T3.ORDER_DATE,'yyyy-MM-dd')      AS "orderDate",T5.order_Remark "orderRemark",
+       T2.PLAN_YEAR       AS "planYear",
+       T2.PLAN_WEEK       AS "planWeek",
+       T2.ENTER_DATE      AS "enterDate",
+       T2.REMARK          AS "weekRemark",
+       t55.test_yj_spec_name  "prodSpecName",
+       t55.yj_Gpd_Avg  "testAvgGpd",
+       t55.test_Yj_Salt  "saltRejection",
+       t55.test_yj_spec_name "testMaterSpec",
+       t55.test_mp_batch_no "testBatchNo",
+       t55.test_yj_gpd "testGpd",
+       t55.test_yj_salt "testSaltRejection2" ,
+       t1.storage_name "storageName",
+       t1.storage_position "storagePosition" ,
+       nvl(t1.storage_name,' ') "storageName2",
+       nvl(t1.storage_position, ' ') "storagePosition2" ,
+       TO_CHAR(t1.confirm_date, 'yyyy-MM-dd') "confirmDate" ,
+       t6.cnt "cnt" ,
+       decode(instr(T3.MATER_SPEC_NAME,'-8'),0,'4寸','8寸') "size"  ,
+       nvl(t8.residue,0) "residue"
+  FROM KS_COMPONENT_PLAN_DAY T1  
+  LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue from V_KS_TUMO_ORIGIN2 t) t8
+      ON t8.batch_no=t1.batch_no
+  LEFT JOIN KS_COMPONENT_PLAN_WEEK T2
+    ON T1.RELATION_ID = T2.ID 
+  left join (SELECT COUNT(1) cnt,t.relation_id,t.plan_date from KS_COMPONENT_PLAN_DAY t
+  GROUP BY t.relation_id,t.plan_date) t6 on t6.relation_id=T2.ID and t1.plan_date = t6.plan_date 
+  left join KS_COMPONENT_PLAN_WEEK_DAYS t5
+    on T2.ID = T5.RELATION_ID and t1.plan_date = t5.plan_date
+       
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER T3
+    ON T3.ID = T2.RELATION_ID
+LEFT JOIN KS_COMPONENT_MP_SELECT t55  
+    on t55.mp_batch_no = t1.batch_No  
+  where 1=1
+  <!--
 	SELECT T1.ID AS "id",t1.confirm_Status "confirmStatus",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
@@ -255,7 +334,8 @@
   LEFT JOIN KS_COMPONENT_PLAN_WEEK T2
     ON T1.RELATION_ID = T2.ID 
   left join (SELECT COUNT(1) cnt,t.relation_id,t.plan_date from KS_COMPONENT_PLAN_DAY t
-	GROUP BY t.relation_id,t.plan_date) t6 on t6.relation_id=T2.ID and t1.plan_date = t6.plan_date 
+	GROUP BY t.relation_id,t.plan_date) t6 
+	on t6.relation_id=T2.ID and t1.plan_date = t6.plan_date 
   left join KS_COMPONENT_PLAN_WEEK_DAYS t5
     on T2.ID = T5.RELATION_ID and t1.plan_date = t5.plan_date
        
@@ -269,6 +349,7 @@
 	WHERE t.flag='合格') t5
     on t5.tumo_batch_no = t1.batch_No  AND T3.MATER_SPEC_ID = t5.prod_spec_id
 	where 1=1
+	-->
 	<isNotNull prepend="and" property="planYear"> 
 		       T2.PLAN_YEAR  = #planYear#
 	</isNotNull>
@@ -420,7 +501,9 @@
        T1.RELATION_ID     AS "relationId",
        T1.ORDER_ID        AS "orderId",
        T1.PLAN_DATE      AS "planDate",
-       nvl(T1.AMOUNT,0)         AS "amount",
+       nvl(T1.AMOUNT,0)         AS "amount", nvl(t3.selected,0) "selected",
+       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) "useAmount",
+       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) - nvl(t3.selected,0) "needAmount",
        t1.PRODUCT_ORDER "productOrder",
        t1.ORDER_REMARK  "orderRemark",
        to_char(T1.PLAN_DATE,'D') AS "weekday",
@@ -428,6 +511,12 @@
   FROM KS_COMPONENT_PLAN_WEEK_DAYS T1
   left join KS_PROD_COMPONENT_YXORDER t2 
   on t2.id =t1.order_id
+  LEFT JOIN qinsen.para_mater_spec t5
+  ON t5.mater_spec_id = t2.mater_spec_id
+  left join (select sum(t.meter_amount) selected,t.relation_id,t.plan_date from KS_COMPONENT_PLAN_DAY t
+	GROUP BY t.relation_id,t.plan_date) t3
+  on t3.relation_id = t1.relation_id and T1.PLAN_DATE = t3.PLAN_DATE
+  
 	where 1=1
 	
 	<isNotNull prepend="and" property="relationId"> 
@@ -644,8 +733,7 @@ GROUP BY t2.order_no,t2.prod_spec_id) t5 ON t5.order_no = t1.order_no AND t1.mat
 	</isNotNull>
 	order by T.ORDER_NO,t2.mater_spec_id
     </select> 
-    
-    
+        
      <select id="queryPlanStock" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	    select t1.length "length",
     t1.BATCH_NO as "tumoBatchNo",
@@ -666,4 +754,36 @@ GROUP BY t2.order_no,t2.prod_spec_id) t5 ON t5.order_no = t1.order_no AND t1.mat
 	    
 		order by t1.BATCH_NO
     </select>
+    
+     <!--订单下达对应生产型号-->
+    <select id="queryOrderMaterSpec" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.MATER_SPEC_NAME  AS "materSpecName",
+       T1.MATER_SPEC_NAME2 AS "materSpecName2",
+       T1.MATER_SPEC_ID    AS "materSpecId"
+  FROM KS_COMPONENT_MATER_RELATION T1
+  where 1=1
+   <isNotNull prepend="and" property="materSpecName2"> 
+		       T1.MATER_SPEC_NAME2 like '%' || #materSpecName2# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="materSpecName"> 
+		       T1.MATER_SPEC_NAME like '%' || #materSpecName# || '%'
+	</isNotNull>
+	order by T1.MATER_SPEC_NAME2,T1.MATER_SPEC_NAME
+   </select>
+   
+   <insert id="insertOrderMaterSpec" parameterClass="java.util.HashMap" >
+   insert into KS_COMPONENT_MATER_RELATION
+   (MATER_SPEC_NAME,MATER_SPEC_NAME2,MATER_SPEC_ID)
+   select mater_Spec_Name,#materSpecName2#,#materSpecId# 
+   from qinsen.para_mater_spec where mater_spec_id = #materSpecId#
+   and not exists(select 1 from KS_COMPONENT_MATER_RELATION
+   where MATER_SPEC_NAME2 = #materSpecName2# and mater_spec_id = #materSpecId#
+   )
+   </insert>
+   
+   <delete id="deleteOrderMaterSpec" parameterClass="java.util.HashMap" >
+   delete from KS_COMPONENT_MATER_RELATION 
+   where MATER_SPEC_NAME2 = #materSpecName2# and mater_spec_id = #materSpecId#
+   </delete>
 </sqlMap>

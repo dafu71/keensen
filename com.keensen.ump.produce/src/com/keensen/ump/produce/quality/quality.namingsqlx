@@ -169,6 +169,14 @@
 	<isNotNull prepend="and" property="componentType"> 
 		       T1.COMPONENT_TYPE = #componentType#
 	</isNotNull>
+	
+		<isNotNull prepend = "and"  property = "createTimeStart"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
 	order by T1.INVALID_CODE desc NULLS LAST
    	</select>
    	
@@ -380,8 +388,8 @@
        T1.GFD_AVG AS "gfdAvg",
        T1.SALT_REJECTION AS "saltRejection",
        T1.RECHECK_NAME AS "recheckName",
-       t4.PERF_FLAG_NAME AS "perfFlagName",
-       t3.PERF_FLAG_ID AS "perfFlagId",
+       nvl(t4.PERF_FLAG_NAME,t5.PERF_FLAG_NAME) AS "perfFlagName",
+       nvl(t3.PERF_FLAG_ID,t1.PERF_FLAG_ID) AS "perfFlagId",t3.PERF_FLAG_ID "perfFlagId2",
        T1.BATCH_PERF_FLAG_NAME AS "batchPerfFlagName",
        '' AS "appearance",
        T1.ORDER_NO AS "orderNo",
@@ -411,6 +419,11 @@
 		 from qinsen.CONF_PROP_VALUE_OPTION t
 		    where t.prop_id = 30023) t4 
   on t4.perf_flag_id = t3.perf_flag_id
+  left join ( select t.prop_value_id perf_flag_id,t.prop_value_code perf_flag_code,
+		t.prop_value_name perf_flag_name
+		 from qinsen.CONF_PROP_VALUE_OPTION t
+		    where t.prop_id = 30023) t5 
+  on t5.perf_flag_id = t1.perf_flag_id
   LEFT JOIN V_KS_TUMO T2
     ON T1.BATCH_ID = T2.RECORD_ID
     where 1=1
@@ -784,6 +797,7 @@
  
  </select>
  
+
  <!--BW1-1/BW2-1初复检差值-->
  <select id="queryDiff" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >   
    SELECT n.gfd_avg- y.gfd_avg "diff",n.gfd_avg,y.gfd_avg gfd_avg2,n.batch_no,y.batch_no batch_no2,n.batch_str
@@ -866,4 +880,37 @@ SET
 	   AND  T.BATCH_NO = #juanmoBatchNo#
 	</isNotNull>
  </select>
+ 
+ <delete id="deleteCertificateList" parameterClass="java.util.HashMap" >
+   delete from  KS_QUALITY_CERTIFICATE_LIST
+	WHERE
+	  relation_id = #relationId#
+	</delete>
+	
+	<select id="queryCertificateList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+
+	SELECT T1.ID           "id", rownum "rn",
+       T1.RELATION_ID  "relationId",
+       nvl(T1.ext0,'')        "ext0",
+       nvl(T1.ext1,'')        "ext1",
+       nvl(T1.ext2,'')        "ext2",
+       nvl(T1.ext3,'')        "ext3",
+       T1.BATCH_NO     "batchNo",
+       T1.itype "itype"
+  FROM KS_QUALITY_Certificate_LIST T1
+  WHERE 1=1
+  and t1.relation_id = #relationId#
+   </select>
+   
+   <delete id="deleteTumoCheck" parameterClass="java.util.HashMap" >
+   delete from  KS_PROD_DIAPHRAGM_TUMO_CHECK
+	WHERE
+	  record_id = #recordId#
+	</delete>
+	
+	<delete id="deleteInstTumoCheck" parameterClass="java.util.HashMap" >
+   delete from  qinsen.INST_TUMO_CHECK
+	WHERE
+	  record_id = #recordId#
+	</delete>
 </sqlMap>

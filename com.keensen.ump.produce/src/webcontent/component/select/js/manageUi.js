@@ -5,6 +5,8 @@ com.keensen.ump.produce.component.selectMgr = function() {
 
 		this.initViewWindow();
 		this.initChooseWindow();
+		
+		this.buildExcelUploadWin();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -12,6 +14,44 @@ com.keensen.ump.produce.component.selectMgr = function() {
 					renderTo : 'componentselectmgr',
 					panels : [this.queryPanel, this.listPanel]
 				});
+	}
+
+	// 导入excel面板
+	this.buildExcelUploadWin = function() {
+		this.excelUploadWin = new Ext.Window({
+			title : '导入Excel',
+			collapsible : false,
+			modal : true,
+			closeAction : 'hide',
+			buttonAlign : 'center',
+			layout : 'fit',
+			width : 480,
+			height : 120,
+			items : [{
+						xtype : 'columnform',
+						itemId : 'uploadForm',
+						saveUrl : 'com.keensen.ump.produce.component.importOrder.flow',
+						columns : 1,
+						fileUpload : true,
+						fields : [{
+									name : 'uploadFile',
+									fieldLabel : '选择文件',
+									allowBlank : false,
+									inputType : 'file'
+								}]
+					}],
+			buttons : [{
+						text : '上传',
+						handler : this.doUpload,
+						scope : this
+					}, {
+						text : '关闭',
+						scope : this,
+						handler : function() {
+							this.excelUploadWin.hide();
+						}
+					}]
+		});
 	}
 
 	this.initQueryPanel = function() {
@@ -88,10 +128,17 @@ com.keensen.ump.produce.component.selectMgr = function() {
 						xtype : 'textarea',
 						name : 'condition/tumoBatchNo2',
 						emptyText : '多个批次请用逗号分隔，或一行一个批次',
-						colspan : 2,
+						colspan : 1,
 						// allowBlank : false,
 						anchor : '100%',
 						fieldLabel : '膜片批号'
+					}, {
+						xtype : 'textfield',
+						name : 'condition/tumoBatchNo3',
+						colspan : 1,
+						// allowBlank : false,
+						anchor : '100%',
+						fieldLabel : '批号模糊查询'
 					}, {
 						xtype : 'hidden',
 						name : 'condition/tumoBatchNo'
@@ -103,6 +150,19 @@ com.keensen.ump.produce.component.selectMgr = function() {
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
+				});
+
+		this.queryPanel.addButton({
+					text : "导入即时库存",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.importExcel2
+				});
+		this.queryPanel.addButton({
+					text : "即时库存模板",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onDown2
 				});
 
 	}
@@ -120,7 +180,7 @@ com.keensen.ump.produce.component.selectMgr = function() {
 			pageSize : 1000,
 			pageSizeComboStore : [10, 15, 20, 30, 40, 50, 100, 200, 500, 1000],
 			hsPage : true,
-			id : mylistid,
+			// id : mylistid,
 			tbar : [{
 						text : '预计可卷元件',
 						scope : this,
@@ -141,68 +201,89 @@ com.keensen.ump.produce.component.selectMgr = function() {
 			delUrl : '1.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'materCode',
+						sortable : true,
 						header : '物料代码'
 					}, {
 						dataIndex : 'materSpecCode',
+						sortable : true,
 						header : '物料名称'
 					}, {
 						dataIndex : 'tumoBatchNo',
+						sortable : true,
 						header : '批号'
 					}, {
 						dataIndex : 'storageName',
+						sortable : true,
 						header : '仓库名称'
 					}, {
 						dataIndex : 'storagePosition',
+						sortable : true,
 						header : '仓位名称'
 					}, {
 						dataIndex : 'usefulLength',
+						sortable : true,
 						header : '数量'
 					}, {
 						dataIndex : 'remain',
+						sortable : true,
 						header : '裁膜后剩余<br>可用数量'
 					}, {
 						dataIndex : 'produceDt',
+						sortable : true,
 						header : '生产时间'
 					}, {
 						dataIndex : 'isKeep',
+						sortable : true,
 						header : '是否是保留品',
 						xtype : 'dictcolumn',
 						dictData : KS_YESORNO
 					}, {
 						dataIndex : 'remark',
+						sortable : true,
 						header : '生产备注'
 					}, {
 						dataIndex : 'testGpd',
+						sortable : true,
 						header : '同底膜试卷元件<br>换算后水量'
 					}, {
 						dataIndex : 'testAvgGpd',
+						sortable : true,
 						header : '同底膜试卷元件<br>换算后水量平均值'
 					}, {
 						dataIndex : 'salt',
+						sortable : true,
 						header : '同底膜试卷元件<br>换算后脱盐'
 					}, {
 						dataIndex : 'testSaltRejection',
+						sortable : true,
 						header : '膜片脱盐'
 					}, {
 						dataIndex : 'testMaterSpec',
+						sortable : true,
 						header : '同底膜试卷型号'
 					}, {
 						dataIndex : 'checkBatchNo',
+						sortable : true,
 						header : '试卷批号'
 					}, {
 						dataIndex : 'gpd',
+						sortable : true,
 						header : '试卷元件产水'
 					}, {
 						dataIndex : 'salt2',
+						sortable : true,
 						header : '试卷元件脱盐'
 					}, {
 						dataIndex : 'checkTm',
+						sortable : true,
 						header : '试卷时间'
 					}, {
 						dataIndex : 'saltRejection',
+						sortable : true,
 						header : '试卷批号膜片脱盐'
 					}, {
 						dataIndex : 'area',
+						sortable : true,
 						header : '膜面积'
 					}],
 			store : new Ext.data.JsonStore({
@@ -304,6 +385,12 @@ com.keensen.ump.produce.component.selectMgr = function() {
 						dataIndex : 'flag',
 						header : '合格与否'
 					}, {
+						dataIndex : 'testMaterSpec',
+						header : '试卷元件型号”'
+					}, {
+						dataIndex : 'testBatchNo',
+						header : '试卷元件膜批次'
+					}, {
 						dataIndex : 'testAvgGpd',
 						header : '同底膜试卷元件<br>换算后水量平均值'
 					}, {
@@ -342,7 +429,7 @@ com.keensen.ump.produce.component.selectMgr = function() {
 						}
 					}, {
 						dataIndex : 'calcAvgGpd',
-						header : '换算膜通量',
+						header : '换算元件产水量',
 						renderer : function(v, m, r, i) {
 							var aGpdLowLimit = r.get('aGpdLowLimit');
 							var aGpdUpLimit = r.get('aGpdUpLimit');
@@ -418,6 +505,10 @@ com.keensen.ump.produce.component.selectMgr = function() {
 							name : 'minSaltRejection'
 						}, {
 							name : 'mpSaltLowLimit'
+						}, {
+							name : 'testMaterSpec'
+						}, {
+							name : 'testBatchNo'
 						}]
 			})
 		})

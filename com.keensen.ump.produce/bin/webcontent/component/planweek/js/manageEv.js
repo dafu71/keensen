@@ -116,6 +116,15 @@ com.keensen.ump.produce.component.planweekMgr.prototype.initEvent = function() {
 				this.planRollWindow2.risk.setValue(itemArr.join(','));
 			}, this);
 
+	this.planDayWindow2.activeItem.mon(this.planDayWindow2.activeItem,
+			'afterload', function() {
+				var numPerWad = this.planDayWindow2.numPerWad.getValue();
+				var blankingSize = this.planDayWindow2.blankingSize.getValue();
+				var jmAmount = this.planDayWindow2.jmAmount.getValue();
+				var useAmount = numPerWad * blankingSize * jmAmount;
+				this.planDayWindow2.useAmount.setValue(useAmount.toFixed(1));
+			}, this);
+
 }
 
 com.keensen.ump.produce.component.planweekMgr.prototype.onEdit = function() {
@@ -143,6 +152,11 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	var startDate = this.editPlanDayPanel.startDate.getValue();
 	var endDate = this.editPlanDayPanel.endDate.getValue();
 	var materSpecId = this.editPlanDayPanel.materSpecId.getValue();
+	var materSpecName = this.editPlanDayPanel.materSpecName.getValue();
+	var orderNo = this.editPlanDayPanel.orderNo.getValue();
+
+	var records = this.listPanel.getSelectionModel().getSelections();
+	var r = records[0];
 
 	this.planDayWindow.planDate.store.load({
 				params : {
@@ -165,6 +179,13 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 			});
 	this.planDayWindow.relationId.setValue(relationId);
 	this.planDayWindow.orderId.setValue(orderId);
+	this.planDayWindow.materSpecName.setValue(materSpecName);
+	this.planDayWindow.orderNo.setValue(orderNo);
+	this.planDayWindow.numPerWad.setValue(r.data.numPerWad);
+	this.planDayWindow.blankingSize.setValue(r.data.blankingSize);
+	this.planDayWindow.denseNet.setValue(r.data.denseNet);
+	this.planDayWindow.area.setValue(r.data.area);
+
 	this.planDayWindow.show();
 }
 
@@ -184,6 +205,11 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onEditPlan = function() 
 	var startDate = this.editPlanDayPanel.startDate.getValue();
 	var endDate = this.editPlanDayPanel.endDate.getValue();
 	var materSpecId = this.editPlanDayPanel.materSpecId.getValue();
+	var materSpecName = this.editPlanDayPanel.materSpecName.getValue();
+	var orderNo = this.editPlanDayPanel.orderNo.getValue();
+
+	var records = this.listPanel.getSelectionModel().getSelections();
+	var r = records[0];
 
 	this.planDayWindow2.batchNoFrom.store.load({
 				params : {
@@ -205,7 +231,15 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onEditPlan = function() 
 					'condition/relationId' : relationId
 				}
 			});
+
+	this.planDayWindow2.numPerWad.setValue(r.data.numPerWad);
+	this.planDayWindow2.blankingSize.setValue(r.data.blankingSize);
+	this.planDayWindow2.denseNet.setValue(r.data.denseNet);
+	this.planDayWindow2.area.setValue(r.data.area);
 	this.editPlanDayListPanel.onEdit();
+	this.planDayWindow2.materSpecName.setValue(materSpecName);
+	this.planDayWindow2.orderNo.setValue(orderNo);
+
 }
 
 com.keensen.ump.produce.component.planweekMgr.prototype.onModifyPlanRoll = function() {

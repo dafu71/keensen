@@ -96,7 +96,8 @@ com.keensen.ump.qinsen.produce.markprintMgr.prototype.dealBatches = function() {
 					f.batchNoStr.value = arr2.join(",");
 					f.logoId.value = _this.inputPanel.logoId.getValue();
 					f.logoUrl.value = _this.inputPanel.logoUrl.getValue();
-					f.withStar.value = _this.inputPanel.withStar.getValue();;
+					f.withStar.value = _this.inputPanel.withStar.getValue();
+					f.txt.value = _this.inputPanel.txt.getValue();
 					var actionUrl = 'com.keensen.ump.qinsen.printMarks.flow?time='
 							+ Math.random() + '&token=' + Date.now();
 					f.action = actionUrl;

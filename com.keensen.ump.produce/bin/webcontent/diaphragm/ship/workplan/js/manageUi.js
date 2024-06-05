@@ -61,23 +61,23 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 						anchor : '75%',
 						fieldLabel : '订单号'
 					}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 3
-						}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 3
+					}, {
 						xtype : 'mpspeccombobox',
 						hiddenName : 'condition/specId',
 						anchor : '75%',
 						fieldLabel : '膜片型号 '
 					}, {
-								xtype : "dateregion",
-								colspan : 1,
-								anchor : '75%',
-								nameArray : ['condition/workDtStart',
-										'condition/workDtEnd'],
-								fieldLabel : "作业日期",
-								format : "Y-m-d"
-							}]
+						xtype : "dateregion",
+						colspan : 1,
+						anchor : '75%',
+						nameArray : ['condition/workDtStart',
+								'condition/workDtEnd'],
+						fieldLabel : "作业日期",
+						format : "Y-m-d"
+					}]
 				});
 
 		this.queryPanel.addButton({
@@ -118,9 +118,14 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onWorkPlan
+					}, '->', {
+						text : '删除',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDel
 					}],
 			selModel : selModel,
-			delUrl : '1.biz.ext',
+			delUrl : 'com.keensen.ump.produce.diaphragm.ship.order.deleteWorkPlanById.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'workDt',
 						sortable : true,
@@ -522,7 +527,7 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 
 				});
 	}
-	
+
 	this.initModifyPlanNoWindow = function() {
 		var _this = this;
 		var modifyPlanNoSelModel = new Ext.grid.CheckboxSelectionModel({
@@ -537,12 +542,12 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 					clicksToEdit : 1,
 					region : 'center',
 					hsPage : true,
-			tbar : [{
-						text : '修改所选批次计划单号',
-						scope : this,
-						iconCls : 'icon-application_edit',
-						handler : this.onModifyBatch
-					}],
+					tbar : [{
+								text : '修改所选批次计划单号',
+								scope : this,
+								iconCls : 'icon-application_edit',
+								handler : this.onModifyBatch
+							}],
 					selModel : modifyPlanNoSelModel,
 					delUrl : '1.biz.ext',
 					columns : [new Ext.grid.RowNumberer(),
@@ -622,7 +627,7 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 		this.queryModifyPlanNoPanel.addButton({
 					text : "关闭",
 					scope : this,
-					//resCode : 10002681,
+					// resCode : 10002681,
 					handler : function() {
 						this.modifyPlanNoWindow.hide();
 					}

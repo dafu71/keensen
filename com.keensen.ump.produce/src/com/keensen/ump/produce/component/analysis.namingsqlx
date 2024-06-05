@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   <select id="query" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+SELECT T1.ID             AS "id",
+       T1.STOCK_LENGTH   AS "stockLength",
+       T1.STOCK_AMOUNT   AS "stockAmount",
+       T1.PLAN_LENGTH    AS "planLength",
+       T1.PLAN_AMOUNT    AS "planAmount",
+       T1.IFOK           AS "ifok",
+       T1.PROD_SPEC_ID   AS "prodSpecId",
+       T1.MP_TYPE        AS "mpType",
+       T1.PRICE          AS "price",
+       T1.PRIORITY       AS "priority",
+       T1.PROD_TYPE      AS "prodType",
+       T1.PROD_SIZE      AS "prodSize",
+       T1.PROD_SPEC_NAME AS "prodSpecName",
+       T1.NUM_PER_WAD    AS "numPerWad",
+       T1.BLANKING_SIZE  AS "blankingSize",
+       T1.PAGE_SIZE      AS "pageSize",
+       T1.ARRANGE_LENGTH AS "arrangeLength"
+  FROM (SELECT T1.ID,
+               T1.STOCK_LENGTH,
+               T1.STOCK_AMOUNT,
+               T1.PLAN_LENGTH,
+               T1.PLAN_AMOUNT,
+               T1.IFOK,
+               T1.PROD_SPEC_ID,
+               T22.MP_TYPE,
+               T22.PRICE,
+               T22.PRIORITY,
+               T22.PROD_TYPE,
+               T22.PROD_SIZE,
+               T22.PROD_SPEC_NAME,
+               T22.NUM_PER_WAD,
+               T22.BLANKING_SIZE,
+               T22.PAGE_SIZE,
+               T9.ARRANGE_LENGTH
+          FROM KS_COMPONENT_MP_ANALYSIS T1
+          LEFT JOIN (SELECT T.PROD_SPEC_ID,
+                           T.MP_TYPE,
+                           T.PRICE,
+                           T.PRIORITY,
+                           T.PROD_TYPE,
+                           T.PROD_SIZE,
+                           T.PROD_SPEC_NAME,
+                           T2.NUM_PER_WAD,
+                           T2.BLANKING_SIZE,
+                           T2.NUM_PER_WAD * T2.BLANKING_SIZE PAGE_SIZE
+                      FROM KS_BASE_COMPONENT T
+                      LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+                        ON T.PROD_SPEC_ID = T2.MATER_SPEC_ID) T22
+            ON T1.PROD_SPEC_ID = T22.PROD_SPEC_ID
+          LEFT JOIN (SELECT SUM(AMOUNT) ARRANGE_LENGTH, PROD_SPEC_ID
+                      FROM KS_COMPONENT_MP_SELECTED
+                     GROUP BY PROD_SPEC_ID) T9
+            ON T1.PROD_SPEC_ID = T9.PROD_SPEC_ID) T1
+
+ WHERE 1 = 1
+  
+       
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="prodSpecName"> 
+		       t1.PROD_SPEC_Name like '%' || #prodSpecName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodSpecId"> 
+		       T1.PROD_SPEC_ID = #prodSpecId# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="mpType"> 
+		       T1.mp_Type = #mpType# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodType"> 
+		       T1.prod_Type = #prodType# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodSize"> 
+		       t1.PROD_SIZE like '%' || #prodSize# || '%'
+	</isNotNull>
+	
+	 ORDER BY T1.ID
+    </select>
+    
+    <delete id="deleteAnalysis" parameterClass="java.util.HashMap" >
+   	delete from  KS_COMPONENT_MP_ANALYSIS
+	</delete>
+	
+	<delete id="deleteSelected" parameterClass="java.util.HashMap" >
+   	DELETE FROM KS_COMPONENT_MP_SELECTED
+	</delete>
+	
+	<insert id="insertSelected" parameterClass="java.util.HashMap" >
+	INSERT INTO KS_COMPONENT_MP_SELECTED
+(MP_BATCH_NO, PROD_SPEC_ID, AMOUNT,RUNNING_AMOUNT)
+SELECT TTT.MP_BATCH_NO, TTT.PROD_SPEC_ID, TTT.AMOUNT,TTT.RUNNING_AMOUNT
+  FROM (SELECT 0 RN, TT.*
+          FROM (SELECT T1.MP_BATCH_NO,
+                       T1.PROD_SPEC_ID,
+                       T1.AMOUNT,
+                       SUM(T1.AMOUNT) OVER(PARTITION BY T1.PROD_SPEC_ID ORDER BY T1.TEST_YJ_SALT DESC, SUBSTR(T1.MP_BATCH_NO, 6, 4), T1.MP_BATCH_NO) RUNNING_AMOUNT
+                  FROM (SELECT *
+                          FROM V_KS_COMPONENT_MP_SELECT2
+                         WHERE 1=1
+                         AND CONDITION1 = 'Y'
+                   AND CONDITION2 = 'Y'
+                   AND CONDITION3 = 'Y'
+                   AND CONDITION4 = 'Y'
+                   <isNotNull prepend="and" property="storageName"> 
+		       		STORAGE_NAME in ($storageName$)
+					</isNotNull>      
+                   AND  MP_BATCH_NO NOT IN
+                               (SELECT MP_BATCH_NO
+                                  FROM KS_COMPONENT_MP_SELECTED
+                                 )) T1
+                 WHERE T1.PROD_SPEC_ID = #prodSpecId#
+                 ORDER BY T1.TEST_YJ_SALT DESC,
+                          SUBSTR(T1.MP_BATCH_NO, 6, 4),
+                          T1.MP_BATCH_NO) TT
+         WHERE TT.RUNNING_AMOUNT &lt; #planLength#
+        UNION ALL
+        SELECT ROWNUM RN, TT.*
+          FROM (SELECT T1.MP_BATCH_NO,
+                       T1.PROD_SPEC_ID,
+                       T1.AMOUNT,
+                       SUM(T1.AMOUNT) OVER(PARTITION BY T1.PROD_SPEC_ID ORDER BY T1.TEST_YJ_SALT DESC, SUBSTR(T1.MP_BATCH_NO, 6, 4), T1.MP_BATCH_NO) RUNNING_AMOUNT
+                  FROM (SELECT *
+                          FROM V_KS_COMPONENT_MP_SELECT2
+                         WHERE 1=1
+                         AND CONDITION1 = 'Y'
+                   AND CONDITION2 = 'Y'
+                   AND CONDITION3 = 'Y'
+                   AND CONDITION4 = 'Y'
+                   <isNotNull prepend="and" property="storageName"> 
+		       		STORAGE_NAME in ($storageName$)
+					</isNotNull>       
+                   AND  MP_BATCH_NO NOT IN
+                               (SELECT MP_BATCH_NO
+                                  FROM KS_COMPONENT_MP_SELECTED
+                                 )) T1
+                 WHERE T1.PROD_SPEC_ID = #prodSpecId#
+                 ORDER BY T1.TEST_YJ_SALT DESC,
+                          SUBSTR(T1.MP_BATCH_NO, 6, 4),
+                          T1.MP_BATCH_NO) TT
+         WHERE TT.RUNNING_AMOUNT >= #planLength#
+           AND ROWNUM = 1) TTT
+	
+	</insert>
+	
+	
+	<!--元件可卷数量分组求和-->
+	<select id="queryStockAmount" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+SELECT TT.*, T2.PAGE_SIZE, ROUND(TT.AMOUNT / T2.PAGE_SIZE, 0) "stockAmount",TT.amount "stockLength"
+  FROM (SELECT SUM(T1.AMOUNT) amount, T1.PROD_SPEC_ID, T1.MATER_SPEC_NAME
+          FROM (SELECT *
+                  FROM V_KS_COMPONENT_MP_SELECT2
+                 WHERE 1=1
+                 	<isNotNull prepend="and" property="storageName"> 
+		       		STORAGE_NAME in ($storageName$)
+					</isNotNull>
+                 
+                 and MP_BATCH_NO NOT IN
+                       (SELECT MP_BATCH_NO FROM KS_COMPONENT_MP_SELECTED)) T1
+         WHERE T1.CONDITION1 = 'Y'
+           AND T1.CONDITION2 = 'Y'
+           AND T1.CONDITION3 = 'Y'
+           AND T1.CONDITION4 = 'Y'
+         GROUP BY T1.PROD_SPEC_ID, T1.MATER_SPEC_NAME) TT
+  LEFT JOIN (SELECT T.MATER_SPEC_ID,
+                    T.MATER_SPEC_CODE,
+                    T.MATER_SPEC_NAME,
+                    T.NUM_PER_WAD,
+                    T.BLANKING_SIZE,
+                    T.NUM_PER_WAD * T.BLANKING_SIZE PAGE_SIZE
+               FROM QINSEN.PARA_MATER_SPEC T
+              WHERE T.STATE = 'Y') T2
+    ON T2.MATER_SPEC_ID = TT.PROD_SPEC_ID
+ WHERE TT.PROD_SPEC_ID = #prodSpecId#
+ </select>
+ 
+ <update id="updateAnalysis" parameterClass="java.util.HashMap" >
+ UPDATE KS_COMPONENT_MP_ANALYSIS t
+SET t.ifok = (CASE WHEN t.stock_length>=t.plan_length THEN 'Y' ELSE 'N' END)
+ </update>
+ 
+ <select id="querySelected" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ SELECT T1.MP_BATCH_NO    "mpBatchNo",
+       T1.PROD_SPEC_ID   "prodSpecId",
+       T1.AMOUNT         "amount",
+       M.MATER_SPEC_NAME "prodSpecName"
+  FROM KS_COMPONENT_MP_SELECTED T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC M
+    ON T1.PROD_SPEC_ID = M.MATER_SPEC_ID
+  where 1=1  
+    <isNotNull prepend="and" property="prodSpecName"> 
+		       M.MATER_SPEC_NAME like '%' || #prodSpecName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodSpecId"> 
+		       T1.PROD_SPEC_ID = #prodSpecId# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="mpType"> 
+		       T1.PROD_SPEC_ID in (SELECT PROD_SPEC_ID from KS_BASE_COMPONENT where mp_type = #mpType# )
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodType"> 
+		       T1.PROD_SPEC_ID in (SELECT PROD_SPEC_ID from KS_BASE_COMPONENT where prod_type = #prodType# )
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodSize"> 
+		       T1.PROD_SPEC_ID in (SELECT PROD_SPEC_ID from KS_BASE_COMPONENT where PROD_SIZE like '%' || #prodSize# || '%')
+	</isNotNull>
+	
+ ORDER BY T1.PROD_SPEC_ID,T1.RUNNING_AMOUNT
+ </select>
+    </sqlMap>

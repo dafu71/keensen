@@ -15,6 +15,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 		this.initReviewWindow();
 
 		this.buildExcelUploadWin();
+		this.buildExcelUploadWin2();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -27,7 +28,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-			height : 120,
+			height : 80,
 			columns : 3,
 			border : true,
 			// collapsible : true,
@@ -147,47 +148,119 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 									iconCls : 'icon-application_form_magnify',
 									handler : this.onView2
 								}]
+					}, '->', {
+						xtype : 'splitbutton',
+						text : '合格证',
+						scope : this,
+						arrowAlign : 'bottom',
+						iconCls : 'icon-application_form_magnify',
+						menu : [{
+									text : '打印',
+									scope : this,
+									iconCls : 'icon-printer',
+									handler : this.onCertificatePrint
+								}, {
+									text : '查看',
+									scope : this,
+									iconCls : 'icon-application_form_magnify',
+									handler : this.onCertificateView
+								}]
+					}, '-', {
+						xtype : 'splitbutton',
+						text : '合格证明细模板下载',
+						iconCls : 'icon-application_form_magnify',
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '通用模板',
+									scope : this,
+									iconCls : 'icon-application_excel',
+									handler : this.onTemplateCommon
+								}, {
+									text : 'ZH模板',
+									scope : this,
+									iconCls : 'icon-application_excel',
+									handler : this.onTemplateZh
+								}, {
+									text : 'TOYOBO模板',
+									scope : this,
+									iconCls : 'icon-application_excel',
+									handler : this.onTemplateToyobo
+								}]
+					}, '-', {
+						xtype : 'splitbutton',
+						text : '合格证明细导入',
+						iconCls : 'icon-application_form_magnify',
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '通用模板',
+									scope : this,
+									iconCls : 'icon-application_excel',
+									handler : this.onImportCommon
+								}, {
+									text : 'ZH模板',
+									scope : this,
+									iconCls : 'icon-application_excel',
+									handler : this.onImportZh
+								}, {
+									text : 'TOYOBO模板',
+									scope : this,
+									iconCls : 'icon-application_excel',
+									handler : this.onImportToyobo
+								}]
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.deliveryrecord.delete.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'code',
+						sortable : true,
 						header : '报告编号'
 					}, {
 						dataIndex : 'productName',
+						sortable : true,
 						header : '品名'
 					}, {
 						dataIndex : 'labelingModel',
+						sortable : true,
 						header : '贴标型号'
 					}, {
 						dataIndex : 'materSpecName',
+						sortable : true,
 						header : '元件型号'
 					}, {
 						dataIndex : 'batchNo',
+						sortable : true,
 						header : '批号'
 					}, {
 						dataIndex : 'orderNo',
+						sortable : true,
 						header : '订单号'
 					}, {
 						dataIndex : 'checkDt',
+						sortable : true,
 						header : '检验日期'
 					}, {
 						dataIndex : 'orderAmount',
+						sortable : true,
 						header : '订单数量'
 					}, {
 						dataIndex : 'checkAmount',
+						sortable : true,
 						header : '抽检数量'
 					}, {
 						dataIndex : 'result',
+						sortable : true,
 						header : '结论'
 					}, {
 						dataIndex : 'inspector',
+						sortable : true,
 						header : '检验员'
 					}, {
 						dataIndex : 'reviewer',
+						sortable : true,
 						header : '审核人'
 					}, {
 						dataIndex : 'reportDt',
+						sortable : true,
 						header : '报告日期'
 					}
 
@@ -1339,11 +1412,11 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 							colspan : 6
 						}, {
 							xtype : 'prodspeccombobox',
-							//hiddenName : 'entity/materSpecId',
+							// hiddenName : 'entity/materSpecId',
 							readOnly : true,
 							emptyText : "",
 							dataIndex : 'materSpecId',
-							//allowBlank : false,
+							// allowBlank : false,
 							anchor : '75%',
 							colspan : 3,
 							fieldLabel : '元件型号 ',
@@ -1364,7 +1437,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 
 							readOnly : true,
 							fieldLabel : '贴标型号',
-							//emptyText : "输入规格，单击旁边按钮",
+							// emptyText : "输入规格，单击旁边按钮",
 							anchor : '75%',
 							colspan : 3,
 							dataIndex : 'labelingModel',
@@ -1787,6 +1860,45 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						scope : this,
 						handler : function() {
 							this.excelUploadWin.hide();
+						}
+					}]
+		});
+	}
+	
+	// 导入合格证明细
+	this.buildExcelUploadWin2 = function() {
+		this.excelUploadWin2 = new Ext.Window({
+			title : '导入Excel',
+			collapsible : false,
+			modal : true,
+			closeAction : 'hide',
+			buttonAlign : 'center',
+			layout : 'fit',
+			width : 480,
+			height : 120,
+			itype:'',//自定义操作类型
+			items : [{
+				xtype : 'columnform',
+				itemId : 'uploadForm',
+				saveUrl : 'com.keensen.ump.produce.quality.importCertificateList.flow',
+				columns : 1,
+				fileUpload : true,
+				fields : [{
+							name : 'uploadFile',
+							fieldLabel : '选择文件',
+							allowBlank : false,
+							inputType : 'file'
+						}]
+			}],
+			buttons : [{
+						text : '上传',
+						handler : this.doUpload2,
+						scope : this
+					}, {
+						text : '关闭',
+						scope : this,
+						handler : function() {
+							this.excelUploadWin2.hide();
 						}
 					}]
 		});

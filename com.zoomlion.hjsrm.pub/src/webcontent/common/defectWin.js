@@ -147,7 +147,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 			},
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'defectName',
-						width : 500,
+						width : 150,
 						header : '不良项目'
 					}, {
 						dataIndex : 'loss',

@@ -127,8 +127,10 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck = function() {
 		var planNo = C[0].data.planNo;
 		var specId = C[0].data.specId;
 		var list = [];
-		if (Ext.isEmpty(orderNo)) {
-			Ext.Msg.alert("系统提示", "请选择有订单号的数据！");
+		if (Ext.isEmpty(orderNo)
+				|| (orderNo.substr(0, 3) != 'CRM' && !/^-?\d+$/.test(orderNo
+						.substr(0, 1)))) {
+			Ext.Msg.alert("系统提示", "请选择发货订单数据！");
 			return false;
 		}
 		if (Ext.isEmpty(planNo)) {
@@ -196,6 +198,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck = function() {
 						Ext.Msg.alert("系统提示", "已生成发货请检单", function() {
 									_this.inputPanel.form.reset();
 									_this.inputWindow.hide();
+									A.refresh();
 								});
 					}
 				},
@@ -229,8 +232,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck2 = function() {
 		var planNo = C[0].data.planNo;
 		var specId = C[0].data.specId;
 		var list = [];
-		
-				
+
 		if (!Ext.isEmpty(orderNo) && /^-?\d+$/.test(orderNo.substr(0, 1))) {
 			Ext.Msg.alert("系统提示", "请选择非销售订单数据！");
 			return false;
@@ -298,6 +300,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onCheck2 = function() {
 						Ext.Msg.alert("系统提示", "已生成自用请检单", function() {
 									_this.inputPanel.form.reset();
 									_this.inputWindow.hide();
+									A.refresh();
 								});
 					}
 				},

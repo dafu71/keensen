@@ -30,6 +30,7 @@
     <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess0</sourceNode>
       <targetNode>assign2</targetNode>
+      <process:transitionCondition/>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" description="" id="link3" name="link3" displayName="连接线" type="transition">
       <sourceNode>subprocess0</sourceNode>
@@ -138,12 +139,16 @@
     <size height="28" width="28"/>
     <nodeLabel>assign2label</nodeLabel>
     <process:copy>
-      <process:from type="query" pattern="reference">checkList[1]/perFlagId</process:from>
+      <process:from type="query" pattern="reference">checkList[1]/perfFlagId</process:from>
       <process:to type="query">perfFlagId</process:to>
     </process:copy>
     <process:copy>
       <process:from type="query" pattern="reference">checkList[1]/perfFlagCode</process:from>
       <process:to type="query">perfFlagCode</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">perfFlagId</process:from>
+      <process:to type="query">dm/perfFlagId</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">

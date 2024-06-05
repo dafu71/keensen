@@ -35,6 +35,21 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+				if (this.opt == 'updateMaterial') {
+					this.updatematerialWindow.show();
+					this.updatematerialWindow.loadData(cell);
+				}
+				
+				if (this.opt == 'updateAmount') {
+					this.updateAmountWindow.show();
+					this.updateAmountWindow.loadData(cell);
+				}
+				
+				if (this.opt == 'addOrder') {
+					this.addOrderWindow.show();
+					this.addOrderWindow.loadData(cell);
+				}
+				
 				if (this.opt == 'addplanweek') {
 					var cnt = cell.get('cnt');
 					if (cnt > 0) {
@@ -53,7 +68,24 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 				this.editPlanWeekWindow.loadData(cell);
 
 			}, this);
+			
+		// 查询事件
+	this.queryPanel3.mon(this.queryPanel3, 'query', function(form, vals) {
+		var store = this.listPanel3.store;
+		store.baseParams = vals;
+		store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel3.pagingToolbar.pageSize
+					}
+				});
+	}, this);
 
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateMaterial = function() {
+	this.opt = 'updateMaterial';
+	this.listPanel.onEdit();
 }
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.destroy = function() {
@@ -62,6 +94,11 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.destroy = function() {
 	this.planWeekWindow.destroy();
 	this.viewPlanWeekWindow.destroy();
 	this.editPlanWeekWindow.destroy();
+	this.updatematerialWindow.destroy();
+	this.updateAmountWindow.destroy();
+	this.addOrderWindow.destroy();
+	this.addOrderMaterSpecWindow.destroy();
+	this.orderMaterSpecWindow.destroy();
 }
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onDel = function() {
@@ -237,4 +274,26 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onRemark = function() {
 			}
 		}, this, true);
 	}
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateAmount = function() {
+	this.opt = 'updateAmount';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onAddOrder = function() {
+	this.opt = 'addOrder';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onOrderMaterSpec = function() {
+	this.orderMaterSpecWindow.show();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onAddSpec = function() {
+	this.addOrderMaterSpecWindow.show();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onDelSpec = function() {
+	this.listPanel3.onDel();
 }

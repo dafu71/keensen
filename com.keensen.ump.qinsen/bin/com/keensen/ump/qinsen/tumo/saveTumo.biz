@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="saveTumo" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="dafu&#x9;24-5-31 上午11:00">
+    <targetConnections>link13</targetConnections>
+  </nodes>
   <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
-      <targetNode>switch0</targetNode>
+      <targetNode>assign4</targetNode>
     </sourceConnections>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link10</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link10</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -39,7 +42,7 @@
       <sourceNode>switch0</sourceNode>
       <targetNode>subprocess0</targetNode>
     </sourceConnections>
-    <targetConnections>link0</targetConnections>
+    <targetConnections>link12</targetConnections>
     <nodeLabel>switch0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
@@ -237,6 +240,62 @@
     <figSize height="20" width="40"/>
     <node>assign3</node>
   </nodes>
+  <nodes xsi:type="process:tAssign" id="assign4" name="赋值4" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>switch0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" type="note">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>node0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/batchNo</process:from>
+      <process:to type="query">batchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/dimoBatchNo</process:from>
+      <process:to type="query">dimoBatchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/orderNo</process:from>
+      <process:to type="query">orderNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/wfBatchNo</process:from>
+      <process:to type="query">wfBatchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/planNo</process:from>
+      <process:to type="query">planNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">batchNo.toUpperCase()</process:from>
+      <process:to type="query">entity/batchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">dimoBatchNo.toUpperCase()</process:from>
+      <process:to type="query">entity/dimoBatchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">orderNo.toUpperCase()</process:from>
+      <process:to type="query">entity/orderNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">wfBatchNo.toUpperCase()</process:from>
+      <process:to type="query">entity/wfBatchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">planNo.toUpperCase()</process:from>
+      <process:to type="query">entity/planNo</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign4</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info version="6.3"/>
@@ -246,6 +305,11 @@
     <process:variable anyType="java.util.HashMap" historyStateLocation="client" isArray="false" name="map"/>
     <process:variable historyStateLocation="client" isArray="false" name="cnt" primitiveType="Int"/>
     <process:variable anyType="java.util.HashMap" historyStateLocation="client" isArray="false" name="map2"/>
+    <process:variable historyStateLocation="client" isArray="false" name="batchNo" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="dimoBatchNo" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="wfBatchNo" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="orderNo" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="planNo" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input isArray="false" modelType="com.keensen.ump.qinsen.inst.InstTumo" name="entity"/>

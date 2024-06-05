@@ -74,14 +74,24 @@
     <select id="queryProdSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
       select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
 	t.mater_spec_id "id",t.mater_spec_name "name",
-	 t.blanking_size "blankingSize", 
-	       t.dense_net "denseNet", t.area "area", t.page_width "pageWidth",t.NUM_PER_WAD "numPerWad"
+	 t.blanking_size "blankingSize", t.mater_spec_id "materSpecId",
+	       t.dense_net "denseNet", t.area "area", t.page_width "pageWidth",t.NUM_PER_WAD "numPerWad",
+	  t.blanking_size * t.NUM_PER_WAD "pageSize"    
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030027)
 	<isNotNull prepend="and" property="materSpecName">upper(t.MATER_SPEC_NAME) = upper(#materSpecName#)</isNotNull>
         <isNotNull prepend="and" property="materSpecId">t.mater_spec_id = #materSpecId#</isNotNull>
 	order by t.mater_spec_code
      </select>
+    <!-- 元件型号查询 -->
+    <select id="queryProdSpec2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t.mater_spec_name "materSpecName",
+t.mater_spec_id "materSpecId",
+t.mater_spec_name2 "materSpecName2"
+ from KS_COMPONENT_MATER_RELATION t
+ where 1=1
+ 	<isNotNull prepend="and" property="materSpecName2">t.MATER_SPEC_NAME2 = #materSpecName2#</isNotNull>
+    </select>
     <!-- 工序查询 -->
     <select id="queryTache" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T.*, P.PRODCUT_CODE, P.PRODUCT_NAME,
 	t.tache_id "id",t.tache_name || '(' || p.product_name || ')' "name"
@@ -256,4 +266,26 @@
 	t.line_id "id",t.line_name || '(' || t.line_code || ')' "name"
 	from qinsen.BASE_PROD_LINE t
 	where t.prod_tache_id=101</select>
+    <!-- 操作工查询 -->
+    <select id="qryExecutorOption" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	 SELECT T.STAFF_ID "staffId",
+       T.STAFF_CODE "staffCode",
+       T.STAFF_NAME "staffName",
+       T.STAFF_NAME || '(' || T.STAFF_CODE || ')' "staffNameCode"
+  		FROM QINSEN.BASE_STAFF T
+ 	WHERE T.DEPT_ID IN (SELECT BD.DEPT_ID
+                       FROM QINSEN.RELA_TACHE_2_TEAM T
+                       LEFT JOIN QINSEN.BASE_PRODUCE_TACHE BPT
+                         ON BPT.TACHE_ID = T.TACHE_ID
+                       LEFT JOIN QINSEN.BASE_PRODUCT BP
+                         ON BP.PRODUCT_ID = BPT.PRODUCT_ID
+                       LEFT JOIN QINSEN.BASE_DEPARTMENT BD
+                         ON BD.DEPT_ID = T.TEAM_ID
+                         
+                      WHERE 1=1
+                      	<isNotNull prepend="and" property="tacheCode">BPT.TACHE_CODE = #tacheCode#</isNotNull>                      
+                      )
+                      <isNotNull prepend="and" property="state">T.STATE = #state#</isNotNull>   
+ 		ORDER BY T.STAFF_NAME
+	 </select>
 </sqlMap>

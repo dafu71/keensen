@@ -1,7 +1,7 @@
 com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.initEvent = function() {
-	
+
 	var _this = this;
-	
+
 	this.modifyPlanNoListPanel.selModel.on('rowselect', function(o, i, r) {
 				var _this = this;
 	(function	() {
@@ -26,7 +26,7 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.initEvent = functio
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
 			}, this);
-			
+
 	this.planListPanel.store.on('load', function() {
 				var cnt = _this.planListPanel.store.getCount();
 				if (cnt == 0) {
@@ -37,7 +37,7 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.initEvent = functio
 									.getValue());
 				}
 			})
-			
+
 	// 查询事件
 	this.queryModifyPlanNoPanel.mon(this.queryModifyPlanNoPanel, 'query',
 			function(form, vals) {
@@ -74,6 +74,10 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.initEvent = functio
 			}, this);
 
 }
+
+com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.onDel = function() {
+	this.listPanel.onDel();
+};
 
 com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.exportExcel = function() {
 	var _this = this;
@@ -115,8 +119,8 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.exportExcel = funct
 	})
 }
 
-com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.onEdit = function() {
-	this.listPanel.onEdit();
+com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.onDel = function() {
+	this.listPanel.onDel();
 };
 
 com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.onWorkPlan = function() {
@@ -267,7 +271,8 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.onModifyBatch = fun
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
 		var C = A.getSelectionModel().getSelections();
-		var records = this.modifyPlanNoListPanel.getSelectionModel().getSelections();
+		var records = this.modifyPlanNoListPanel.getSelectionModel()
+				.getSelections();
 		var recordIds = [];
 		Ext.each(records, function(r) {
 					recordIds.push(r.data['recordId']);
@@ -290,7 +295,8 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.onModifyBatch = fun
 						var ret = Ext.decode(resp.responseText);
 						if (ret.success) {
 							Ext.Msg.alert("系统提示", "操作成功！", function() {
-										_this.modifyPlanNoListPanel.store.reload();
+										_this.modifyPlanNoListPanel.store
+												.reload();
 
 									})
 						} else {
@@ -307,3 +313,8 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.onModifyBatch = fun
 		}, this, true);
 	}
 };
+
+com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.onEdit = function() {
+	this.listPanel.onEdit();
+	
+}

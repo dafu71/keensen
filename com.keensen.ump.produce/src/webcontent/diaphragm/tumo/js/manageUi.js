@@ -265,6 +265,9 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						dataIndex : 'trend',
 						header : '走向'
 					}, {
+						dataIndex : 'judgeRemark',
+						header : '判定说明'
+					}, {
 						dataIndex : 'appearanceIsQualifiedName',
 						header : '外观'
 					}, {
@@ -451,6 +454,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'reserve4'
 						}, {
 							name : 'orderNoBak'
+						}, {
+							name : 'judgeRemark'
 						}]
 			})
 		})

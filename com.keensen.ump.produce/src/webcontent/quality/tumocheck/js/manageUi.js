@@ -19,7 +19,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【膜片分析查询】',
+					//title : '【膜片分析查询】',
 					fields : [{
 						xtype : "dateregion",
 						colspan : 1,
@@ -57,41 +57,23 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						hiddenName : 'condition/perfFlagId',
 						anchor : '75%',
 						fieldLabel : '样块性能'
-					}/*, {
-						xtype : 'combobox',
-						anchor : '75%',
-						fieldLabel : '批次判定',
-						triggerAction : "all",
-						store : new Ext.data.ArrayStore({
-									fields : ['mykey', 'myvalue'],
-									data : [['Y', '合格'], ['N', '不合格']]
-								}),
-						valueField : 'mykey',
-						displayField : 'myvalue',
-						hiddenName : 'condition/isBatchQualified',
-						name : 'condition/isBatchQualified',
-						editable : false,
-						forceSelection : true,
-						mode : 'local',
-
-						listeners : {
-							"expand" : function(A) {
-								this.reset()
-							}
-						},
-						emptyText : '--请选择--'
-					}, {
-						xtype : 'dictcombobox',
-						name : 'condition/isBatchValid',
-						hiddenName : 'condition/isBatchValid',
-						fieldLabel : '批次验证',
-						anchor : '75%',
-						dictData : ABF_YESORNO
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}*/, {
+					}/*
+						 * , { xtype : 'combobox', anchor : '75%', fieldLabel :
+						 * '批次判定', triggerAction : "all", store : new
+						 * Ext.data.ArrayStore({ fields : ['mykey', 'myvalue'],
+						 * data : [['Y', '合格'], ['N', '不合格']] }), valueField :
+						 * 'mykey', displayField : 'myvalue', hiddenName :
+						 * 'condition/isBatchQualified', name :
+						 * 'condition/isBatchQualified', editable : false,
+						 * forceSelection : true, mode : 'local',
+						 * 
+						 * listeners : { "expand" : function(A) { this.reset() } },
+						 * emptyText : '--请选择--' }, { xtype : 'dictcombobox',
+						 * name : 'condition/isBatchValid', hiddenName :
+						 * 'condition/isBatchValid', fieldLabel : '批次验证', anchor :
+						 * '75%', dictData : ABF_YESORNO }, { xtype :
+						 * 'displayfield', height : '5', colspan : 4 }
+						 */, {
 						xtype : 'dictcombobox',
 						name : 'condition/isWx',
 						hiddenName : 'condition/isWx',
@@ -122,24 +104,28 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 		var selModel = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : false
 				});
-		this.listPanel = new Ext.fn.EditListPanel({
-			title : '【膜片分析列表】',
+		this.listPanel = new Ext.fn.ListPanel({
+			//title : '【膜片分析列表】',
 			viewConfig : {
 				forceFit : false
 			},
 			hsPage : true,
-			tbar : [/*{
-						text : '批次判定',
-						scope : this,
-						iconCls : 'icon-application_edit',
-						handler : this.onJudgeBatch
-					}*/{
+			tbar : [/*
+					 * { text : '批次判定', scope : this, iconCls :
+					 * 'icon-application_edit', handler : this.onJudgeBatch }
+					 */{
 						text : '样块性能判定',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onJudgeBlock
+					}, '->', {
+						text : '删除',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDel
 					}],
 			id : 'tumocheck-list',
+			delUrl : 'com.keensen.ump.produce.quality.quality.deleteTumoCheck.biz.ext',			
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'macName',
@@ -179,10 +165,10 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					}, {
 						dataIndex : 'perfFlagName',
 						header : '样块性能等级'
-					}/*, {
-						dataIndex : 'batchPerfFlagName',
-						header : '批次性能等级'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'batchPerfFlagName', header :
+						 * '批次性能等级' }
+						 */, {
 						dataIndex : 'appearance',
 						header : '外观'
 					}, {
@@ -208,17 +194,16 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					}, {
 						dataIndex : 'judgerName',
 						header : '质检员'
-					}/*, {
-						dataIndex : 'isBatchQualifiedName',
-						header : '批次合格'
-					}*//*
+					}/*
+						 * , { dataIndex : 'isBatchQualifiedName', header :
+						 * '批次合格' }
+						 *//*
 						 * , { dataIndex : 'gfdStr', header : '膜通量数据' }, {
 						 * dataIndex : 'conductivityIn', header : '进水电导' }, {
 						 * dataIndex : 'conductivityStr', header : '出水电导数据' }
-						 *//*, {
-						dataIndex : 'isValidName',
-						header : '批次验证'
-					}*/, {
+						 *//*
+						 * , { dataIndex : 'isValidName', header : '批次验证' }
+						 */, {
 						dataIndex : 'checkerName',
 						header : '分析员'
 					}, {

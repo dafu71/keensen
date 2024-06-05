@@ -62,12 +62,12 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 80,
 					columns : 3,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【Xbar-R控制图查询】',
+					//title : '【Xbar-R控制图查询】',
 					fields : [{
 								xtype : 'mpspeccombobox',
 								hiddenName : 'condition/specId',
@@ -107,7 +107,7 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【Xbar-R控制图列表】',
+			//title : '【Xbar-R控制图列表】',
 			viewConfig : {
 				forceFit : false
 			},

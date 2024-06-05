@@ -153,6 +153,14 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						hiddenName : 'condition/invalidType2',
 						fieldLabel : '不合格类型<br>(民用）',
 						dictData : KS_CIVIL_INVALID_TYPE
+					},{
+						xtype : "dateregion",
+						colspan : 1,
+						anchor : '95%',
+						nameArray : ['condition/createTimeStart',
+								'condition/createTimeEnd'],
+						fieldLabel : "录入日期",
+						format : "Y-m-d"
 					}]
 				});
 

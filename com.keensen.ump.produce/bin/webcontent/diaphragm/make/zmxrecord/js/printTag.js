@@ -10,5 +10,8 @@ function paint() {
 
 	// 不转换打印时会变模糊
 	document.getElementById('canvas').childNodes[0].toDataURL("image/pcx");
+
+	
+
 	window.print();
 }

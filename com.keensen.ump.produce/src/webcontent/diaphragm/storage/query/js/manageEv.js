@@ -19,7 +19,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 		this.queryPanel.getForm().findField('condition/batchNoStr')
 				.setValue(arr2.join(",") == "''" ? null : arr2.join(","));
 		var store = this.listPanel.store;
-		store.baseParams = vals;
+		store.baseParams = this.queryPanel.getForm().getValues();
 		store.load({
 					params : {
 						"pageCond/begin" : 0,

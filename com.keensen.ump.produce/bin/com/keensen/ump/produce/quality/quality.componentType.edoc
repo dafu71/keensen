@@ -24,12 +24,12 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveTumocheckBatch2&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveTumocheckBatch&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.saveTumocheckBatch2&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;batchId(String):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;perfIsQualified(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.produce.quality.quality.queryDiff(String)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryDiff&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryDiff&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.queryDiff&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;batchNo(String):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;diff(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
     <string>com.keensen.ump.produce.quality.quality.saveDiaphragmTumo(com.keensen.ump.produce.quality.KsProdDiaphragmTumo)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveDiaphragmTumo&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;保存涂膜信息&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.saveDiaphragmTumo&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.quality.KsProdDiaphragmTumo):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.quality.quality.queryDiff(String)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryDiff&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryDiff&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.queryDiff&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;batchNo(String):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;diff(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.quality.quality.mpdJudge(String, String, String, String)</string>
@@ -40,8 +40,20 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryDiamStandByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.queryDiamStandByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
+    <string>com.keensen.ump.produce.quality.quality.deleteTumoCheck(commonj.sdo.DataObject[])</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteTumoCheck&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteTumoCheck&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.deleteTumoCheck&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.quality.quality.Copy_of_ExpandTumoJudge(commonj.sdo.DataObject)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;Copy_of_ExpandTumoJudge&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandTumoCheck&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.Copy_of_ExpandTumoJudge&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(commonj.sdo.DataObject):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>com.keensen.ump.produce.quality.quality.queryTumoByPage(java.util.Map, com.eos.foundation.PageCond)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryTumoByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.queryTumoByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.quality.quality.queryTumoCheck(java.util.Map)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryTumoCheck&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.queryTumoCheck&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.quality.quality.expandDiamThickStandEntity(java.util.HashMap)</string>
@@ -56,12 +68,12 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;thickJudge&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;thickJudge&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.thickJudge&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;specId(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;isWx(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;thickMin(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;thickMax(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;thickAvg(String):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;thickIsQualified(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.produce.quality.quality.queryMpStand(java.util.Map)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMpStand&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.queryMpStand&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
     <string>com.keensen.ump.produce.quality.quality.saveDiaphragmTumoTrend(String, String)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveDiaphragmTumoTrend&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveDiaphragmTumo&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.saveDiaphragmTumoTrend&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;recordIds(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;trend(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.quality.quality.queryMpStand(java.util.Map)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMpStand&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.queryMpStand&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.quality.quality.saveTumocheckBatch(String)</string>
@@ -124,15 +136,15 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMpStandByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.queryMpStandByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
+    <string>com.keensen.ump.produce.quality.quality.saveDiamStand(com.keensen.ump.produce.quality.KsProdQualityDiamstand)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveDiamStand&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.saveDiamStand&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.quality.KsProdQualityDiamstand):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>quality</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;quality.componentType&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;quality&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.quality.quality.queryTumocheckByPage(java.util.Map, com.eos.foundation.PageCond)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryTumocheckByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.queryTumocheckByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
-    <string>com.keensen.ump.produce.quality.quality.saveDiamStand(com.keensen.ump.produce.quality.KsProdQualityDiamstand)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveDiamStand&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.quality.saveDiamStand&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.quality.KsProdQualityDiamstand):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
 </map>

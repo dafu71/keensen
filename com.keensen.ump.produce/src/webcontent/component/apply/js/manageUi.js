@@ -1,7 +1,7 @@
 com.keensen.ump.produce.component.applyMgr = function() {
 
 	this.initPanel = function() {
-
+		
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
@@ -12,64 +12,82 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		this.initModifyWindow();
 
 		this.initExaminWindow();
-
-		return new Ext.fn.fnLayOut({
+		
+		this.lay = new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
 					renderTo : "componentapplymgr",
 					panels : [this.queryPanel, this.listPanel]
 				});
+
+		return this.lay;
 	}
+
+	
 
 	this.initQueryPanel = function() {
 
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 120,
-					columns : 3,
+					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/orderNo',
-								anchor : '75%',
+								anchor : '100%',
 								fieldLabel : '订单号'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/code',
-								anchor : '75%',
+								anchor : '100%',
 								fieldLabel : '栈板号 '
 							}, {
 								xtype : 'textfield',
 								name : 'condition/markSpecCode',
-								anchor : '75%',
+								anchor : '100%',
 								fieldLabel : '唛头显示型号 '
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 3
 							}, {
 								xtype : 'textfield',
 								name : 'condition/prodSpecName',
-								anchor : '75%',
+								anchor : '100%',
 								fieldLabel : '元件型号 '
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
 							}, {
 								xtype : 'dictcombobox',
 								name : 'condition/ifConfirm',
 								hiddenName : 'condition/ifConfirm',
 								fieldLabel : '是否已确认',
-								anchor : '75%',
+								anchor : '100%',
 								dictData : KS_YESORNO
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
-								anchor : '75%',
+								anchor : '100%',
 								nameArray : ['condition/createTimeStart',
 										'condition/createTimeEnd'],
 								fieldLabel : "请检日期",
 								format : "Y-m-d"
+							}, {
+								xtype : 'textfield',
+								name : 'condition/batchNo',
+								anchor : '100%',
+								fieldLabel : '元件序列号 '
 							}]
+				});
+
+		this.queryPanel.addButton({
+					text : "批量导出请检元件",
+					scope : this,
+					hidden : exportflag == '0' ,
+					//rescode : '10002781',
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcelBatch
 				});
 		/*
 		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
@@ -104,7 +122,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
-						disabled : uid != 'KS00610',
+						disabled : (uid != 'KS00610') && (uid != 'KS01313'),
 						handler : this.onDeleteOrder
 					}, '-', {
 						text : '审核',
@@ -139,11 +157,15 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.apply.deleteHead.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel, {
 						dataIndex : 'code',
+						sortable : true,
 						header : '栈板号'
 					}, {
 						dataIndex : 'orderNo',
+						sortable : true,
 						header : '订单号',
 						renderer : function(v, m, r, i) {
 							var confirmDate = r.get('confirmDate');
@@ -156,30 +178,43 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						}
 					}, {
 						dataIndex : 'markSpecCode',
+						sortable : true,
 						header : '唛头显示型号'
 					}, {
 						dataIndex : 'prodSpecName',
+						sortable : true,
 						header : '元件型号'
 					}, {
 						dataIndex : 'orderAmount',
+						sortable : true,
 						header : '订单数量'
 					}, {
 						dataIndex : 'applyAmount',
+						sortable : true,
 						header : '请检数量'
 					}, {
 						dataIndex : 'printCnt',
+						sortable : true,
 						header : '打印次数'
 					}, {
 						dataIndex : 'applyAmountTotal',
+						sortable : true,
 						header : '请检总数量'
 					}, {
+						dataIndex : 'performance',
+						sortable : true,
+						header : '性能'
+					}, {
 						dataIndex : 'applyUserName',
+						sortable : true,
 						header : '请检人'
 					}, {
 						dataIndex : 'createTime',
+						sortable : true,
 						header : '请检时间'
 					}, {
 						xtype : 'dictcolumn',
+						sortable : true,
 						dictData : KS_YESORNO,
 						dataIndex : 'isExamine',
 						header : '是否已审核'
@@ -286,6 +321,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'applyAmountTotal'
 						}, {
 							name : 'isExamine'
+						}, {
+							name : 'performance'
 						}]
 			})
 		})
@@ -319,7 +356,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}],
 			autoScroll : false,
 			selModel : selModel2,
-			columns : [new Ext.grid.RowNumberer(), selModel2, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel2, {
 						dataIndex : 'batchNo',
 						header : '元件序列号'
 					}, {
@@ -644,7 +683,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						handler : this.onSelect
 					}],
 			delUrl : '111.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel3, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel3, {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
@@ -767,7 +808,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}],
 			autoScroll : false,
 			selModel : selModel4,
-			columns : [new Ext.grid.RowNumberer(), selModel4, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel4, {
 						dataIndex : 'batchNo',
 						header : '元件序列号'
 					}, {
@@ -1144,7 +1187,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			hsPage : false,
 			autoScroll : false,
 			selModel : selModel5,
-			columns : [new Ext.grid.RowNumberer(), selModel5, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel5, {
 						dataIndex : 'batchNo',
 						header : '元件序列号'
 					}, {
@@ -1523,7 +1568,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			hsPage : false,
 			autoScroll : false,
 			selModel : selModel6,
-			columns : [new Ext.grid.RowNumberer(), selModel6, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel6, {
 						dataIndex : 'batchNo',
 						header : '元件序列号'
 					}, {
@@ -1889,6 +1936,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			hsPage : false,
 			delUrl : 'com.keensen.ump.produce.component.apply.deleteList.biz.ext',
 			tbar : [{
+						text : '选择元件',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onChoose
+					}, {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
@@ -1896,7 +1948,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}],
 			autoScroll : false,
 			selModel : selModel6,
-			columns : [new Ext.grid.RowNumberer(), selModel6, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel6, {
 						dataIndex : 'batchNo',
 						header : '元件序列号'
 					}, {
@@ -1951,7 +2005,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						anchor : '95%',
 						colspan : 6,
 						dataIndex : 'orderType',
-						hiddenName : 'entity/orderType',
+						hiddenName : 'orderType',
 						// readOnly : true,
 						fieldLabel : '订单类型',
 						triggerAction : "all",
@@ -1982,7 +2036,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'numberfield',
 						dataIndex : 'orderAmount',
-						name : 'entity/orderAmount',
+						name : 'orderAmount',
 						// readOnly : true,
 						fieldLabel : '订单数量',
 						allowBlank : false,
@@ -1992,7 +2046,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'numberfield',
 						ref : '../applyAmount',
 						dataIndex : 'applyAmount',
-						name : 'entity/applyAmount',
+						name : 'applyAmount',
 						allowBlank : false,
 						fieldLabel : '请检数量',
 						anchor : '95%',
@@ -2005,7 +2059,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'prodSpecName',
-						name : 'entity/prodSpecName',
+						name : 'prodSpecName',
 						fieldLabel : '元件型号',
 						allowBlank : false,
 						anchor : '95%',
@@ -2013,7 +2067,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'prodClassFlag',
-						hiddenName : 'entity/prodClassFlag',
+						hiddenName : 'prodClassFlag',
 						allowBlank : false,
 						fieldLabel : '元件类型',
 						dictData : KS_PROD_CLASS_FLAG,
@@ -2026,7 +2080,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'lid',
-						hiddenName : 'entity/lid',
+						hiddenName : 'lid',
 						fieldLabel : '端盖',
 						// readOnly : true,
 						dictData : KS_PROD_LID,
@@ -2035,7 +2089,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'markTypeFlag',
-						hiddenName : 'entity/markTypeFlag',
+						hiddenName : 'markTypeFlag',
 						// readOnly : true,
 						fieldLabel : '唛头情况',
 						dictData : KS_PROD_MARK_TYPE_FLAG,
@@ -2048,7 +2102,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'markSpecCode',
-						name : 'entity/markSpecCode',
+						name : 'markSpecCode',
 						// readOnly : true,
 						fieldLabel : '唛头显示型号',
 						anchor : '95%',
@@ -2056,7 +2110,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'tape',
-						hiddenName : 'entity/tape',
+						hiddenName : 'tape',
 						// readOnly : true,
 						fieldLabel : '膜体所裹胶带',
 						dictData : KS_PROD_TAPE,
@@ -2069,7 +2123,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'markSpecialFlag',
-						hiddenName : 'entity/markSpecialFlag',
+						hiddenName : 'markSpecialFlag',
 						// readOnly : true,
 						fieldLabel : '加贴特殊唛头',
 						dictData : KS_YESORNO,
@@ -2078,7 +2132,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'performance',
-						name : 'entity/performance',
+						name : 'performance',
 						fieldLabel : '性能',
 						// readOnly : true,
 						anchor : '95%',
@@ -2090,7 +2144,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'box',
-						name : 'entity/box',
+						name : 'box',
 						fieldLabel : '包装箱',
 						// readOnly : true,
 						anchor : '95%',
@@ -2098,7 +2152,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'combobox',
 						dataIndex : 'tray',
-						hiddenName : 'entity/tray',
+						hiddenName : 'tray',
 						anchor : '95%',
 						colspan : 6,
 						// readOnly : true,
@@ -2126,12 +2180,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 					}, {
 						xtype : 'hidden',
-						name : 'entity/id',
+						name : 'id',
 						ref : '../pkid',
 						dataIndex : 'id'
 					}, {
 						xtype : 'hidden',
-						name : 'entity/opt',
+						name : 'opt',
 						value : 'modify'
 					}],
 			buttons : [{
@@ -2184,7 +2238,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			delUrl : '1.biz.ext',
 			autoScroll : false,
 			selModel : examinSelModel,
-			columns : [new Ext.grid.RowNumberer(), examinSelModel, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), examinSelModel, {
 						dataIndex : 'batchNo',
 						header : '元件序列号'
 					}, {

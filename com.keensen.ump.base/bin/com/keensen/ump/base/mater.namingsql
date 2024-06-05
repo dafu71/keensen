@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.base.mater">
+    <!-- 查询物料分类树 -->
+    <select id="queryMaterClassTree" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">WITH TB AS
+	 (SELECT * FROM QINSEN.PARA_MATER_CLASS)
+	SELECT LEVEL AS "level",
+	       C.MATER_CLASS_ID AS "materClassId",
+	       C.MATER_CLASS_CODE AS "materClassCode",
+	       C.MATER_CLASS_NAME AS "materClassName",
+	       (case  when C.UP_ID is null then 0 else C.UP_ID end) AS "upId",
+	       C.DISP_ORDER AS "dispOrder",
+	       C.CREATE_DT AS "createDt",
+	       C.CHANGE_DT AS "changeDt",
+	       C.CREATOR_ID AS "creatorId",
+	       C.CHANGER_ID AS "changerId",
+	       C.REMARK AS "remark",
+	       TO_CHAR(C.CREATE_DT, 'YYYY-MM-DD HH24:MI:SS') AS "createDate",
+	       TO_CHAR(C.CHANGE_DT, 'YYYY-MM-DD HH24:MI:SS') AS "changeDate",
+	       (SELECT BS.STAFF_NAME
+	          FROM QINSEN.BASE_STAFF BS
+	         WHERE BS.STAFF_ID = C.CREATOR_ID) AS "creator",
+	       (SELECT BS.STAFF_NAME
+	          FROM QINSEN.BASE_STAFF BS
+	         WHERE BS.STAFF_ID = C.CHANGER_ID) AS "changer"
+	  FROM TB C
+	 WHERE 1 = 1
+	CONNECT BY PRIOR C.MATER_CLASS_ID = C.UP_ID
+	 START WITH C.UP_ID IS NULL
+	 ORDER BY LEVEL, C.DISP_ORDER, C.MATER_CLASS_NAME</select>
+</sqlMap>

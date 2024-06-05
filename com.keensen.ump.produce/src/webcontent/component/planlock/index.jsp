@@ -24,6 +24,15 @@
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
 
+<script type="text/javascript">
+	function dayDiff(start,end){
+		var datediff = (new Date(end)) - (new Date(start));
+		datediff = datediff / 24 / 60 / 60 / 1000;
+		return datediff;
+		
+	}
+</script>
+
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
@@ -41,6 +50,9 @@ function getCurrentWeekNumber() {
   return currentWeekNumber;
 }
 
+function formatStr(str){
+	return ((Ext.isEmpty(str)) || ('null' == str)) ? '':str;
+}
   var mylistid = Ext.id();
   var uid = "<%=uid %>";
   var dataorgid = "<%=dataorgid%>";

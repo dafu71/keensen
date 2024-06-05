@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.mpselect">
+    <insert id="insertSelect" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_MP_SELECT
+	(MP_MATER_CODE,MP_SPEC_CODE,MP_BATCH_NO,STORAGE_NAME,STORAGE_POSITION,AMOUNT,IS_KEEP,MP_SALT_LOW_LIMIT,
+	MP_POINT_SALT_REJECTION,MP_MIN_SALT_REJECTION,R_MP_POINT_SALT_REJECTION,MP_POINT_GFD,MP_MIN_GFD,
+	MP_MAX_GFD,MP_AVG_GFD,R_MP_POINT_GFD,YJ_GPD_LOW_LIMIT,YJ_GPD_UP_LIMIT,YJ_GPD_AVG,TEST_MP_BATCH_NO,
+	TEST_YJ_SPEC_NAME,TEST_YJ_AREA,TEST_YJ_DENSE_NET,TEST_YJ_GPD,TEST_YJ_SALT,TEST_YJ_GPD_LOW_LIMIT,
+	TEST_YJ_GPD_UP_LIMIT,TEST_YJ_SALT_LOW_LIMIT,MP_PRODUCE_DT,REMARK,mp_record_ID,mp_spec_ID,TEST_MP_GFD_AVG)
+	SELECT tt.mp_mater_code,tt.mp_spec_code,tt.mp_batch_NO,tt.storage_name,tt.storage_position,
+	tt.amount,tt.is_keep,tt.mp_salt_low_limit,
+	tt.mp_point_salt_rejection,tt.mp_min_salt_rejection,tt.r_mp_point_salt_rejection,
+	tt.mp_point_gfd,tt.mp_min_gfd,tt.mp_max_gfd,tt.mp_avg_gfd,tt.r_mp_point_gfd,
+	tt.yj_gpd_low_limit,tt.yj_gpd_up_limit,tt.yj_gpd_avg,
+	tt.test_mp_batch_no,tt.test_yj_spec_name,test_yj_area,test_yj_dense_net,tt.test_yj_gpd,tt.test_yj_salt,
+	tt.test_yj_gpd_low_limit,tt.test_yj_gpd_up_limit,tt.test_yj_salt_low_limit,
+	tt.MP_produce_dt,tt.remark ,tt.mp_record_ID,tt.mp_spec_ID,TEST_MP_GFD_AVG
+	 from (
+	SELECT t.batch_no mp_batch_no,it.DIMO_BATCH_NO,wt.tumo_BATCH_NO test_mp_BATCH_NO,wt.tumo_record_id test_mp_record_id,
+	it.SPEC_ID mp_spec_ID,it.LINE_ID,it.LINE_CODE,it.LINE_NAME,itc.mac_name,
+	it.produce_dt MP_produce_dt,it.REMARK,tcm.MATER_CODE mp_MATER_CODE ,it.MATER_SPEC_CODE mp_spec_code,
+	it.record_id mp_record_id,
+	t.storage_name,t.position storage_position,t.amount,
+	it.USEFUL_LENGTH,it.IS_KEEP, 
+	itc.point_salt_rejection mp_point_salt_rejection,
+	itc.point_gfd mp_point_gfd,
+	itc2.point_salt_rejection r_mp_point_salt_rejection,itc2.point_gfd r_mp_point_gfd,
+	itc.min_gfd mp_min_gfd,
+	itc.max_gfd mp_max_gfd,
+	itc.avg_gfd mp_avg_gfd,
+	ms.SALT_LOW_LIMIT mp_SALT_LOW_LIMIT,itc.min_salt_rejection mp_min_salt_rejection,
+	(CASE WHEN itc.min_salt_rejection &gt;=ms.SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) condition1,
+	wt.record_id water_test_record_id,
+	nvl(wt.r_GPD,wt.F_GPD) test_yj_gpd, 
+	nvl(wt.r_SALT,wt.F_SALT) test_yj_salt,
+	wt.TEST_SPEC_NAME TEST_yj_SPEC_NAME ,wt.TEST_SPEC_ID TEST_yj_SPEC_ID,
+	wt.dense_net test_yj_dense_net,wt.area TEST_yj_area,
+	pws.a_gpd_low_limit test_yj_gpd_low_limit,
+	pws.a_gpd_up_limit test_yj_gpd_up_limit,
+	pws.a_salt_low_limit test_yj_salt_low_limit,
+	(CASE WHEN nvl(wt.r_SALT,wt.F_SALT) &gt;=pws.a_salt_low_limit THEN 'Y' ELSE 'N' END) condition2,
+	tmc.gfd_avg test_mp_gfd_avg,
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.min_gfd / tmc.gfd_avg,0) yj_gpd_low_limit,
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.max_gfd / tmc.gfd_avg,0) yj_gpd_up_limit,
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.avg_gfd / tmc.gfd_avg,0) yj_gpd_avg
+	 from ks_prod_component_stock t
+	 LEFT JOIN V_KS_TUMO_ORIGIN2 it 
+	 ON it.batch_no=t.batch_no
+	 LEFT JOIN V_TUMO_CHECK_MATER tcm
+	 ON tcm.MATER_NAME = it.MATER_SPEC_CODE
+	 LEFT JOIN
+	 (SELECT LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
+	 round(MIN(itc.salt_rejection),2) min_salt_rejection, itc.batch_id,
+	 LISTAGG(itc.gfd_avg, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_gfd,
+	 round(MIN(itc.gfd_avg),2) min_gfd,round(MAX(itc.gfd_avg),2) max_gfd,round(AVG(itc.gfd_avg),2) avg_gfd,
+	 MIN(nvl(itc.mac_name,1)) mac_name
+	  from qinsen.inst_tumo_check itc
+	  WHERE itc.recheck_flag ='N'
+	  GROUP BY itc.batch_id) itc ON itc.batch_id = it.RECORD_ID
+	   LEFT JOIN
+	 (SELECT LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
+	 itc.batch_id,
+	 LISTAGG(itc.gfd_avg, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_gfd
+	  from qinsen.inst_tumo_check itc
+	  WHERE itc.recheck_flag ='Y'
+	  GROUP BY itc.batch_id) itc2 ON itc2.batch_id = it.RECORD_ID
+	LEFT JOIN V_TUMO_CHECK_MP_STAND ms 
+	ON ms.is_wx = 'N' AND ms.level_id = 300029 AND ms.mac_name=itc.mac_name AND ms.spec_id=it.SPEC_ID
+	LEFT JOIN V_TUMO_CHECK_WATER_TEST2 wt ON wt.prefix = substr(t.batch_no,1,10)
+	LEFT JOIN KS_PROD_WATER_STD pws ON pws.mp_spec_id=it.SPEC_ID AND pws.prod_spec_id = wt.TEST_SPEC_ID
+	
+	LEFT JOIN (SELECT t.* from qinsen.inst_tumo_check t
+	WHERE t.record_id IN(SELECT MAX(record_id) FROM qinsen.inst_tumo_check WHERE recheck_flag ='N' GROUP BY batch_id)) tmc
+	ON tmc.batch_id = wt.tumo_record_id
+	WHERE substr(it.MATER_SPEC_CODE,1,2) IN('BW','NF','SW')   
+	) tt</insert>
+    <insert id="insertSelect2" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_MP_SELECT
+	(MP_MATER_CODE,MP_SPEC_CODE,MP_BATCH_NO,STORAGE_NAME,STORAGE_POSITION,AMOUNT,IS_KEEP,MP_SALT_LOW_LIMIT,
+	MP_POINT_SALT_REJECTION,MP_MIN_SALT_REJECTION,R_MP_POINT_SALT_REJECTION,MP_POINT_GFD,MP_MIN_GFD,
+	MP_MAX_GFD,MP_AVG_GFD,R_MP_POINT_GFD,YJ_GPD_LOW_LIMIT,YJ_GPD_UP_LIMIT,YJ_GPD_AVG,TEST_MP_BATCH_NO,
+	TEST_YJ_SPEC_NAME,TEST_YJ_AREA,TEST_YJ_DENSE_NET,TEST_YJ_GPD,TEST_YJ_SALT,TEST_YJ_GPD_LOW_LIMIT,
+	TEST_YJ_GPD_UP_LIMIT,TEST_YJ_SALT_LOW_LIMIT,MP_PRODUCE_DT,REMARK,mp_record_ID,mp_spec_ID,TEST_MP_GFD_AVG)
+	SELECT tt.mp_mater_code,tt.mp_spec_code,tt.mp_batch_NO,tt.storage_name,tt.storage_position,
+	tt.amount,tt.is_keep,tt.mp_salt_low_limit,
+	tt.mp_point_salt_rejection,tt.mp_min_salt_rejection,tt.r_mp_point_salt_rejection,
+	tt.mp_point_gfd,tt.mp_min_gfd,tt.mp_max_gfd,tt.mp_avg_gfd,tt.r_mp_point_gfd,
+	tt.yj_gpd_low_limit,tt.yj_gpd_up_limit,tt.yj_gpd_avg,
+	tt.test_mp_batch_no,tt.test_yj_spec_name,test_yj_area,test_yj_dense_net,tt.test_yj_gpd,tt.test_yj_salt,
+	tt.test_yj_gpd_low_limit,tt.test_yj_gpd_up_limit,tt.test_yj_salt_low_limit,
+	tt.MP_produce_dt,tt.remark,tt.mp_record_ID,tt.mp_spec_ID,TEST_MP_GFD_AVG
+	 from (
+	SELECT t.batch_no mp_batch_no,it.DIMO_BATCH_NO,
+	decode(wt.record_id,null,wt2.tumo_BATCH_NO,wt.tumo_BATCH_NO) test_mp_BATCH_NO,
+	decode(wt.record_id,null,wt2.tumo_record_id,wt.tumo_record_id) test_mp_record_id,
+	it.SPEC_ID mp_spec_ID,it.LINE_ID,it.LINE_CODE,it.LINE_NAME,itc.mac_name,
+	it.produce_dt MP_produce_dt,it.REMARK,tcm.MATER_CODE mp_MATER_CODE ,it.MATER_SPEC_CODE mp_spec_code,
+	it.record_id mp_record_id,
+	t.storage_name,t.position storage_position,t.amount,
+	it.USEFUL_LENGTH,it.IS_KEEP, 
+	itc.point_salt_rejection mp_point_salt_rejection,
+	itc.point_gfd mp_point_gfd,
+	itc2.point_salt_rejection r_mp_point_salt_rejection,itc2.point_gfd r_mp_point_gfd,
+	itc.min_gfd mp_min_gfd,
+	itc.max_gfd mp_max_gfd,
+	itc.avg_gfd mp_avg_gfd,
+	ms.SALT_LOW_LIMIT mp_SALT_LOW_LIMIT,itc.min_salt_rejection mp_min_salt_rejection,
+	(CASE WHEN itc.min_salt_rejection &gt;=ms.SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) condition1,
+	decode(wt.record_id,null,wt2.record_id,wt.record_id) water_test_record_id,
+	decode(wt.record_id,null,nvl(wt2.r_GPD,wt2.F_GPD),nvl(wt.r_GPD,wt.F_GPD)) test_yj_gpd, 
+	decode(wt.record_id,null,nvl(wt2.r_SALT,wt2.F_SALT),nvl(wt.r_SALT,wt.F_SALT)) test_yj_salt,
+	decode(wt.record_id,null,wt2.TEST_SPEC_NAME,wt.TEST_SPEC_NAME) TEST_yj_SPEC_NAME ,
+	decode(wt.record_id,null,wt2.TEST_SPEC_ID,wt.TEST_SPEC_ID) TEST_yj_SPEC_ID,
+	decode(wt.record_id,null,wt2.dense_net,wt.dense_net) test_yj_dense_net,
+	decode(wt.record_id,null,wt2.area,wt.area) TEST_yj_area,
+	decode(wt.record_id,null,pws2.a_gpd_low_limit,pws.a_gpd_low_limit) test_yj_gpd_low_limit,
+	decode(wt.record_id,null,pws2.a_gpd_up_limit,pws.a_gpd_up_limit) test_yj_gpd_up_limit,
+	decode(wt.record_id,null,pws2.a_salt_low_limit,pws.a_salt_low_limit) test_yj_salt_low_limit,
+	decode(wt.record_id,null,
+	(CASE WHEN nvl(wt2.r_SALT,wt2.F_SALT) &gt;=pws2.a_salt_low_limit THEN 'Y' ELSE 'N' END),
+	(CASE WHEN nvl(wt.r_SALT,wt.F_SALT) &gt;=pws.a_salt_low_limit THEN 'Y' ELSE 'N' END)) condition2,
+	decode(wt.record_id,null,tmc2.gfd_avg,tmc.gfd_avg) test_mp_gfd_avg,
+	decode(wt.record_id,null,
+	round(nvl(wt2.r_GPD,wt2.F_GPD)* itc.min_gfd / tmc2.gfd_avg,1),
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.min_gfd / tmc.gfd_avg,1)) yj_gpd_low_limit,
+	decode(wt.record_id,null,
+	round(nvl(wt2.r_GPD,wt2.F_GPD)* itc.max_gfd / tmc2.gfd_avg,1),
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.max_gfd / tmc.gfd_avg,1)) yj_gpd_up_limit,
+	decode(wt.record_id,null,
+	round(nvl(wt2.r_GPD,wt2.F_GPD) * itc.avg_gfd / tmc2.gfd_avg,1),
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.avg_gfd / tmc.gfd_avg,1)) yj_gpd_avg
+	 from ks_prod_component_stock t
+	 LEFT JOIN V_KS_TUMO_ORIGIN2 it 
+	 ON it.batch_no=t.batch_no
+	 LEFT JOIN V_TUMO_CHECK_MATER tcm
+	 ON tcm.MATER_NAME = it.MATER_SPEC_CODE
+	 LEFT JOIN
+	 (SELECT LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
+	 round(MIN(itc.salt_rejection),2) min_salt_rejection, itc.batch_id,
+	 LISTAGG(itc.gfd_avg, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_gfd,
+	 round(MIN(itc.gfd_avg),2) min_gfd,round(MAX(itc.gfd_avg),2) max_gfd,round(AVG(itc.gfd_avg),2) avg_gfd,
+	 MIN(nvl(itc.mac_name,1)) mac_name
+	  from qinsen.inst_tumo_check itc
+	  WHERE itc.recheck_flag ='N'
+	  GROUP BY itc.batch_id) itc ON itc.batch_id = it.RECORD_ID
+	   LEFT JOIN
+	 (SELECT LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
+	 itc.batch_id,
+	 LISTAGG(itc.gfd_avg, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_gfd
+	  from qinsen.inst_tumo_check itc
+	  WHERE itc.recheck_flag ='Y'
+	  GROUP BY itc.batch_id) itc2 ON itc2.batch_id = it.RECORD_ID
+	LEFT JOIN V_TUMO_CHECK_MP_STAND ms 
+	ON ms.is_wx = 'N' AND ms.level_id = 300029 AND ms.mac_name=itc.mac_name AND ms.spec_id=it.SPEC_ID
+	LEFT JOIN V_TUMO_CHECK_WATER_TEST2 wt ON wt.prefix = substr(t.batch_no,1,10)
+	LEFT JOIN V_TUMO_CHECK_WATER_TEST4 wt2 ON wt2.prefix = substr(t.batch_no,1,4) || substr(t.batch_no,6,4)
+	LEFT JOIN KS_PROD_WATER_STD pws ON pws.mp_spec_id=it.SPEC_ID AND pws.prod_spec_id = wt.TEST_SPEC_ID
+	LEFT JOIN KS_PROD_WATER_STD pws2 ON pws2.mp_spec_id=it.SPEC_ID AND pws2.prod_spec_id = wt2.TEST_SPEC_ID
+	LEFT JOIN (SELECT t.* from qinsen.inst_tumo_check t
+	WHERE t.record_id IN(SELECT MAX(record_id) FROM qinsen.inst_tumo_check WHERE recheck_flag ='N' GROUP BY batch_id)) tmc
+	ON tmc.batch_id = wt.tumo_record_id
+	LEFT JOIN (SELECT t.* from qinsen.inst_tumo_check t
+	WHERE t.record_id IN(SELECT MAX(record_id) FROM qinsen.inst_tumo_check WHERE recheck_flag ='N' GROUP BY batch_id)) tmc2
+	ON tmc2.batch_id = wt2.tumo_record_id
+	WHERE substr(it.MATER_SPEC_CODE,1,3) IN('ULP')  
+	) tt</insert>
+    <delete id="deleteComponentStock" parameterClass="java.util.HashMap">delete from  KS_PROD_COMPONENT_STOCK</delete>
+    <!--删除在即时库存里面的记录-->
+    <delete id="deleteComponentMpSelect" parameterClass="java.util.HashMap">delete from  KS_COMPONENT_MP_SELECT
+   where MP_BATCH_NO in (select batch_no from  KS_PROD_COMPONENT_STOCK)</delete>
+    <select id="query" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	   SELECT T1.MP_MATER_CODE             AS "mpMaterCode",
+       T1.MP_SPEC_CODE              AS "mpSpecCode",
+       T1.MP_BATCH_NO               AS "mpBatchNo",
+       T1.STORAGE_NAME              AS "storageName",
+       T1.STORAGE_POSITION          AS "storagePosition",
+       T1.AMOUNT                    AS "amount",
+       T1.IS_KEEP                   AS "isKeep",
+       T1.MP_POINT_SALT_REJECTION   AS "mpPointSaltRejection",
+       T1.MP_MIN_SALT_REJECTION     AS "mpMinSaltRejection",
+       T1.MP_SALT_LOW_LIMIT         AS "mpSaltLowLimit",
+       T1.R_MP_POINT_SALT_REJECTION AS "rMpPointSaltRejection",
+       T1.MP_POINT_GFD              AS "mpPointGfd",
+       T1.MP_MIN_GFD                AS "mpMinGfd",
+       T1.MP_MAX_GFD                AS "mpMaxGfd",
+       T1.MP_AVG_GFD                AS "mpAvgGfd",
+       T1.R_MP_POINT_GFD            AS "rMpPointGfd",
+       T1.YJ_GPD_LOW_LIMIT          AS "yjGpdLowLimit",
+       T1.YJ_GPD_UP_LIMIT           AS "yjGpdUpLimit",
+       T1.YJ_GPD_AVG                AS "yjGpdAvg",
+       T1.TEST_MP_BATCH_NO          AS "testMpBatchNo",
+       T1.TEST_YJ_SPEC_NAME         AS "testYjSpecName",
+       T1.TEST_YJ_AREA              AS "testYjArea",
+       T1.TEST_YJ_DENSE_NET         AS "testYjDenseNet",
+       T1.TEST_YJ_GPD               AS "testYjGpd",
+       T1.TEST_YJ_SALT              AS "testYjSalt",
+       T1.TEST_YJ_GPD_LOW_LIMIT     AS "testYjGpdLowLimit",
+       T1.TEST_YJ_GPD_UP_LIMIT      AS "testYjGpdUpLimit",
+       T1.TEST_YJ_SALT_LOW_LIMIT    AS "testYjSaltLowLimit",
+       to_char(T1.mp_produce_dt,'yyyy-MM-dd HH24:mi:ss')             AS "mpProduceDt",
+       T1.REMARK                    AS "remark",
+       T1.mp_record_ID              AS "mpRecordId",
+       T1.mp_spec_ID               AS "mpSpecId",
+       (CASE WHEN T1.MP_MIN_SALT_REJECTION &gt;=T1.MP_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) "condition1",
+       (CASE WHEN T1.TEST_YJ_SALT &gt;=T1.TEST_YJ_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) "condition2"
+  FROM KS_COMPONENT_MP_SELECT T1
+  where 1=1
+  
+  		<isEqual compareValue="Y" prepend="and" property="isStorage">T1.MP_BATCH_NO in (select batch_no from  KS_PROD_COMPONENT_STOCK)</isEqual>
+        <isNotNull prepend="and" property="tumoBatchNo3">upper(t1.MP_BATCH_NO) like '%' || upper(#tumoBatchNo3#) || '%'</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND T1.MP_BATCH_NO in ($tumoBatchNo$)</isNotNull>
+        <isNotNull prepend="" property="produceDtStart">and to_char(T1.mp_produce_dt,'yyyy-MM-dd') &gt;= #produceDtStart#</isNotNull>
+        <isNotNull prepend="" property="produceDtEnd">and to_char(T1.mp_produce_dt,'yyyy-MM-dd') &lt;= #produceDtEnd#</isNotNull>
+        <isNotNull prepend="" property="produceYear">
+            <isNotNull prepend="" property="produceMonth">and to_char(T1.mp_produce_dt,'yyyy-MM') = #produceYear# || '-' || #produceMonth#</isNotNull>
+        </isNotNull>
+    </select>
+    <select id="querySelect" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT T1.MP_BATCH_NO            AS "mpBatchNo",
+       T1.MP_SPEC_CODE           AS "mpSpecCode",
+       T1.MATER_SPEC_NAME        AS "materSpecName",
+       T1.AREA                   AS "area",
+       T1.DENSE_NET              AS "denseNet",
+       T1.YJ_GPD_LOW             AS "yjGpdLow",
+       T1.YJ_GPD_UP              AS "yjGpdUp",
+       T1.YJ_GPD_AVG             AS "yjGpdAvg",
+       T1.YJ_GPD_LOW_LIMIT       AS "yjGpdLowLimit",
+       T1.YJ_GPD_UP_LIMIT        AS "yjGpdUpLimit",
+       T1.YJ_SALT_LOW_LIMIT      AS "yjSaltLowLimit",
+       T1.MP_MIN_SALT_REJECTION  AS "mpMinSaltRejection",
+       T1.MP_SALT_LOW_LIMIT      AS "mpSaltLowLimit",
+       T1.TEST_YJ_SALT           AS "testYjSalt",
+       T1.TEST_YJ_SALT_LOW_LIMIT AS "testYjSaltLowLimit",
+       T1.CONDITION1             AS "condition1",
+       T1.CONDITION2             AS "condition2",
+       T1.CONDITION3             AS "condition3",
+       T1.CONDITION4             AS "condition4",
+       T1.PROD_SPEC_ID           AS "prodSpecId",
+       T1.YJ_GPD_LOW_LIMIT_TRS   AS "yjGpdLowLimitTrs",
+       T1.YJ_GPD_UP_LIMIT_TRS    AS "yjGpdUpLimitTrs",
+       T1.YJ_GPD_AVG_TRS         AS "yjGpdAvgTrs",
+       T1.TEST_YJ_AREA           AS "testYjArea",
+       (case when T1.CONDITION1='Y' and T1.CONDITION2='Y' and T1.CONDITION3='Y'
+       and T1.CONDITION4='Y' then '是' else '否' end) "condition"
+  FROM V_KS_COMPONENT_MP_SELECT T1
+  where 1=1
+ 		 <isNotNull prepend="" property="tumoBatchNo3">AND T1.MP_BATCH_NO like '%' || #tumoBatchNo3# || '%'</isNotNull>
+        <isNotNull prepend="and" property="mpSpecCode">upper(T1.MP_SPEC_CODE) like '%' || upper(#mpSpecCode#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">upper(T1.MATER_SPEC_NAME) like '%' || upper(#prodSpecName#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="mpSpecId">t1.MP_SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND T1.MP_BATCH_NO in ($tumoBatchNo$)</isNotNull>
+          order by T1.MP_BATCH_NO
+  </select>
+    <insert id="insertSelectTest" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_MP_SELECT2
+	(MP_MATER_CODE,MP_SPEC_CODE,MP_BATCH_NO,STORAGE_NAME,STORAGE_POSITION,AMOUNT,IS_KEEP,MP_SALT_LOW_LIMIT,
+	MP_POINT_SALT_REJECTION,MP_MIN_SALT_REJECTION,R_MP_POINT_SALT_REJECTION,MP_POINT_GFD,MP_MIN_GFD,
+	MP_MAX_GFD,MP_AVG_GFD,R_MP_POINT_GFD,YJ_GPD_LOW_LIMIT,YJ_GPD_UP_LIMIT,YJ_GPD_AVG,TEST_MP_BATCH_NO,
+	TEST_YJ_SPEC_NAME,TEST_YJ_AREA,TEST_YJ_DENSE_NET,TEST_YJ_GPD,TEST_YJ_SALT,TEST_YJ_GPD_LOW_LIMIT,
+	TEST_YJ_GPD_UP_LIMIT,TEST_YJ_SALT_LOW_LIMIT,MP_PRODUCE_DT,REMARK,mp_record_ID,mp_spec_ID,TEST_MP_GFD_AVG)
+	SELECT tt.mp_mater_code,tt.mp_spec_code,tt.mp_batch_NO,tt.storage_name,tt.storage_position,
+	tt.amount,tt.is_keep,tt.mp_salt_low_limit,
+	tt.mp_point_salt_rejection,tt.mp_min_salt_rejection,tt.r_mp_point_salt_rejection,
+	tt.mp_point_gfd,tt.mp_min_gfd,tt.mp_max_gfd,tt.mp_avg_gfd,tt.r_mp_point_gfd,
+	tt.yj_gpd_low_limit,tt.yj_gpd_up_limit,tt.yj_gpd_avg,
+	tt.test_mp_batch_no,tt.test_yj_spec_name,test_yj_area,test_yj_dense_net,tt.test_yj_gpd,tt.test_yj_salt,
+	tt.test_yj_gpd_low_limit,tt.test_yj_gpd_up_limit,tt.test_yj_salt_low_limit,
+	tt.MP_produce_dt,tt.remark ,tt.mp_record_ID,tt.mp_spec_ID,TEST_MP_GFD_AVG
+	 from (
+	SELECT t.batch_no mp_batch_no,it.DIMO_BATCH_NO,wt.tumo_BATCH_NO test_mp_BATCH_NO,wt.tumo_record_id test_mp_record_id,
+	it.SPEC_ID mp_spec_ID,it.LINE_ID,it.LINE_CODE,it.LINE_NAME,itc.mac_name,
+	it.produce_dt MP_produce_dt,it.REMARK,tcm.MATER_CODE mp_MATER_CODE ,it.MATER_SPEC_CODE mp_spec_code,
+	it.record_id mp_record_id,
+	t.storage_name,t.position storage_position,t.amount,
+	it.USEFUL_LENGTH,it.IS_KEEP, 
+	itc.point_salt_rejection mp_point_salt_rejection,
+	itc.point_gfd mp_point_gfd,
+	itc2.point_salt_rejection r_mp_point_salt_rejection,itc2.point_gfd r_mp_point_gfd,
+	itc.min_gfd mp_min_gfd,
+	itc.max_gfd mp_max_gfd,
+	itc.avg_gfd mp_avg_gfd,
+	ms.SALT_LOW_LIMIT mp_SALT_LOW_LIMIT,itc.min_salt_rejection mp_min_salt_rejection,
+	(CASE WHEN itc.min_salt_rejection &gt;=ms.SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) condition1,
+	wt.record_id water_test_record_id,
+	nvl(wt.r_GPD,wt.F_GPD) test_yj_gpd, 
+	nvl(wt.r_SALT,wt.F_SALT) test_yj_salt,
+	wt.TEST_SPEC_NAME TEST_yj_SPEC_NAME ,wt.TEST_SPEC_ID TEST_yj_SPEC_ID,
+	wt.dense_net test_yj_dense_net,wt.area TEST_yj_area,
+	pws.a_gpd_low_limit test_yj_gpd_low_limit,
+	pws.a_gpd_up_limit test_yj_gpd_up_limit,
+	pws.a_salt_low_limit test_yj_salt_low_limit,
+	(CASE WHEN nvl(wt.r_SALT,wt.F_SALT) &gt;=pws.a_salt_low_limit THEN 'Y' ELSE 'N' END) condition2,
+	tmc.gfd_avg test_mp_gfd_avg,
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.min_gfd / tmc.gfd_avg,0) yj_gpd_low_limit,
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.max_gfd / tmc.gfd_avg,0) yj_gpd_up_limit,
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.avg_gfd / tmc.gfd_avg,0) yj_gpd_avg
+	 from ks_prod_component_stock t
+	 LEFT JOIN V_KS_TUMO_ORIGIN2 it 
+	 ON it.batch_no=t.batch_no
+	 LEFT JOIN V_TUMO_CHECK_MATER tcm
+	 ON tcm.MATER_NAME = it.MATER_SPEC_CODE
+	 LEFT JOIN
+	 (SELECT LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
+	 round(MIN(itc.salt_rejection),2) min_salt_rejection, itc.batch_id,
+	 LISTAGG(itc.gfd_avg, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_gfd,
+	 round(MIN(itc.gfd_avg),1) min_gfd,round(MAX(itc.gfd_avg),1) max_gfd,round(AVG(itc.gfd_avg),1) avg_gfd,
+	 MIN(nvl(itc.mac_name,1)) mac_name
+	  from qinsen.inst_tumo_check itc
+	  WHERE itc.recheck_flag ='N'
+	  GROUP BY itc.batch_id) itc ON itc.batch_id = it.RECORD_ID
+	   LEFT JOIN
+	 (SELECT LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
+	 itc.batch_id,
+	 LISTAGG(itc.gfd_avg, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_gfd
+	  from qinsen.inst_tumo_check itc
+	  WHERE itc.recheck_flag ='Y'
+	  GROUP BY itc.batch_id) itc2 ON itc2.batch_id = it.RECORD_ID
+	LEFT JOIN V_TUMO_CHECK_MP_STAND ms 
+	ON ms.is_wx = 'N' AND ms.level_id = 300029 AND ms.mac_name=itc.mac_name AND ms.spec_id=it.SPEC_ID
+	LEFT JOIN V_TUMO_CHECK_WATER_TEST2 wt ON wt.prefix = substr(t.batch_no,1,10)
+	LEFT JOIN KS_PROD_WATER_STD pws ON pws.mp_spec_id=it.SPEC_ID AND pws.prod_spec_id = wt.TEST_SPEC_ID
+	
+	LEFT JOIN (SELECT t.* from qinsen.inst_tumo_check t
+	WHERE t.record_id IN(SELECT MAX(record_id) FROM qinsen.inst_tumo_check GROUP BY batch_id)) tmc
+	ON tmc.batch_id = wt.tumo_record_id
+	WHERE substr(it.MATER_SPEC_CODE,1,2) IN('BW','NF','SW')   
+	) tt</insert>
+    <insert id="insertSelectTest2" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_MP_SELECT2
+	(MP_MATER_CODE,MP_SPEC_CODE,MP_BATCH_NO,STORAGE_NAME,STORAGE_POSITION,AMOUNT,IS_KEEP,MP_SALT_LOW_LIMIT,
+	MP_POINT_SALT_REJECTION,MP_MIN_SALT_REJECTION,R_MP_POINT_SALT_REJECTION,MP_POINT_GFD,MP_MIN_GFD,
+	MP_MAX_GFD,MP_AVG_GFD,R_MP_POINT_GFD,YJ_GPD_LOW_LIMIT,YJ_GPD_UP_LIMIT,YJ_GPD_AVG,TEST_MP_BATCH_NO,
+	TEST_YJ_SPEC_NAME,TEST_YJ_AREA,TEST_YJ_DENSE_NET,TEST_YJ_GPD,TEST_YJ_SALT,TEST_YJ_GPD_LOW_LIMIT,
+	TEST_YJ_GPD_UP_LIMIT,TEST_YJ_SALT_LOW_LIMIT,MP_PRODUCE_DT,REMARK,mp_record_ID,mp_spec_ID,TEST_MP_GFD_AVG)
+	SELECT tt.mp_mater_code,tt.mp_spec_code,tt.mp_batch_NO,tt.storage_name,tt.storage_position,
+	tt.amount,tt.is_keep,tt.mp_salt_low_limit,
+	tt.mp_point_salt_rejection,tt.mp_min_salt_rejection,tt.r_mp_point_salt_rejection,
+	tt.mp_point_gfd,tt.mp_min_gfd,tt.mp_max_gfd,tt.mp_avg_gfd,tt.r_mp_point_gfd,
+	tt.yj_gpd_low_limit,tt.yj_gpd_up_limit,tt.yj_gpd_avg,
+	tt.test_mp_batch_no,tt.test_yj_spec_name,test_yj_area,test_yj_dense_net,tt.test_yj_gpd,tt.test_yj_salt,
+	tt.test_yj_gpd_low_limit,tt.test_yj_gpd_up_limit,tt.test_yj_salt_low_limit,
+	tt.MP_produce_dt,tt.remark,tt.mp_record_ID,tt.mp_spec_ID,TEST_MP_GFD_AVG
+	 from (
+	SELECT t.batch_no mp_batch_no,it.DIMO_BATCH_NO,
+	decode(wt.record_id,null,wt2.tumo_BATCH_NO,wt.tumo_BATCH_NO) test_mp_BATCH_NO,
+	decode(wt.record_id,null,wt2.tumo_record_id,wt.tumo_record_id) test_mp_record_id,
+	it.SPEC_ID mp_spec_ID,it.LINE_ID,it.LINE_CODE,it.LINE_NAME,itc.mac_name,
+	it.produce_dt MP_produce_dt,it.REMARK,tcm.MATER_CODE mp_MATER_CODE ,it.MATER_SPEC_CODE mp_spec_code,
+	it.record_id mp_record_id,
+	t.storage_name,t.position storage_position,t.amount,
+	it.USEFUL_LENGTH,it.IS_KEEP, 
+	itc.point_salt_rejection mp_point_salt_rejection,
+	itc.point_gfd mp_point_gfd,
+	itc2.point_salt_rejection r_mp_point_salt_rejection,itc2.point_gfd r_mp_point_gfd,
+	itc.min_gfd mp_min_gfd,
+	itc.max_gfd mp_max_gfd,
+	itc.avg_gfd mp_avg_gfd,
+	ms.SALT_LOW_LIMIT mp_SALT_LOW_LIMIT,itc.min_salt_rejection mp_min_salt_rejection,
+	(CASE WHEN itc.min_salt_rejection &gt;=ms.SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) condition1,
+	decode(wt.record_id,null,wt2.record_id,wt.record_id) water_test_record_id,
+	decode(wt.record_id,null,nvl(wt2.r_GPD,wt2.F_GPD),nvl(wt.r_GPD,wt.F_GPD)) test_yj_gpd, 
+	decode(wt.record_id,null,nvl(wt2.r_SALT,wt2.F_SALT),nvl(wt.r_SALT,wt.F_SALT)) test_yj_salt,
+	decode(wt.record_id,null,wt2.TEST_SPEC_NAME,wt.TEST_SPEC_NAME) TEST_yj_SPEC_NAME ,
+	decode(wt.record_id,null,wt2.TEST_SPEC_ID,wt.TEST_SPEC_ID) TEST_yj_SPEC_ID,
+	decode(wt.record_id,null,wt2.dense_net,wt.dense_net) test_yj_dense_net,
+	decode(wt.record_id,null,wt2.area,wt.area) TEST_yj_area,
+	decode(wt.record_id,null,pws2.a_gpd_low_limit,pws.a_gpd_low_limit) test_yj_gpd_low_limit,
+	decode(wt.record_id,null,pws2.a_gpd_up_limit,pws.a_gpd_up_limit) test_yj_gpd_up_limit,
+	decode(wt.record_id,null,pws2.a_salt_low_limit,pws.a_salt_low_limit) test_yj_salt_low_limit,
+	decode(wt.record_id,null,
+	(CASE WHEN nvl(wt2.r_SALT,wt2.F_SALT) &gt;=pws2.a_salt_low_limit THEN 'Y' ELSE 'N' END),
+	(CASE WHEN nvl(wt.r_SALT,wt.F_SALT) &gt;=pws.a_salt_low_limit THEN 'Y' ELSE 'N' END)) condition2,
+	decode(wt.record_id,null,tmc2.gfd_avg,tmc.gfd_avg) test_mp_gfd_avg,
+	decode(wt.record_id,null,
+	round(nvl(wt2.r_GPD,wt2.F_GPD)* itc.min_gfd / tmc2.gfd_avg,1),
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.min_gfd / tmc.gfd_avg,1)) yj_gpd_low_limit,
+	decode(wt.record_id,null,
+	round(nvl(wt2.r_GPD,wt2.F_GPD)* itc.max_gfd / tmc2.gfd_avg,1),
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.max_gfd / tmc.gfd_avg,1)) yj_gpd_up_limit,
+	decode(wt.record_id,null,
+	round(nvl(wt2.r_GPD,wt2.F_GPD) * itc.avg_gfd / tmc2.gfd_avg,1),
+	round(nvl(wt.r_GPD,wt.F_GPD) * itc.avg_gfd / tmc.gfd_avg,1)) yj_gpd_avg
+	 from ks_prod_component_stock t
+	 LEFT JOIN V_KS_TUMO_ORIGIN2 it 
+	 ON it.batch_no=t.batch_no
+	 LEFT JOIN V_TUMO_CHECK_MATER tcm
+	 ON tcm.MATER_NAME = it.MATER_SPEC_CODE
+	 LEFT JOIN
+	 (SELECT LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
+	 round(MIN(itc.salt_rejection),2) min_salt_rejection, itc.batch_id,
+	 LISTAGG(itc.gfd_avg, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_gfd,
+	 round(MIN(itc.gfd_avg),1) min_gfd,round(MAX(itc.gfd_avg),1) max_gfd,round(AVG(itc.gfd_avg),1) avg_gfd,
+	 MIN(nvl(itc.mac_name,1)) mac_name
+	  from qinsen.inst_tumo_check itc
+	  WHERE itc.recheck_flag ='N'
+	  GROUP BY itc.batch_id) itc ON itc.batch_id = it.RECORD_ID
+	   LEFT JOIN
+	 (SELECT LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
+	 itc.batch_id,
+	 LISTAGG(itc.gfd_avg, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_gfd
+	  from qinsen.inst_tumo_check itc
+	  WHERE itc.recheck_flag ='Y'
+	  GROUP BY itc.batch_id) itc2 ON itc2.batch_id = it.RECORD_ID
+	LEFT JOIN V_TUMO_CHECK_MP_STAND ms 
+	ON ms.is_wx = 'N' AND ms.level_id = 300029 AND ms.mac_name=itc.mac_name AND ms.spec_id=it.SPEC_ID
+	LEFT JOIN V_TUMO_CHECK_WATER_TEST2 wt ON wt.prefix = substr(t.batch_no,1,10)
+	LEFT JOIN V_TUMO_CHECK_WATER_TEST4 wt2 ON wt2.prefix = substr(t.batch_no,1,4) || substr(t.batch_no,6,4)
+	LEFT JOIN KS_PROD_WATER_STD pws ON pws.mp_spec_id=it.SPEC_ID AND pws.prod_spec_id = wt.TEST_SPEC_ID
+	LEFT JOIN KS_PROD_WATER_STD pws2 ON pws2.mp_spec_id=it.SPEC_ID AND pws2.prod_spec_id = wt2.TEST_SPEC_ID
+	LEFT JOIN (SELECT t.* from qinsen.inst_tumo_check t
+	WHERE t.record_id IN(SELECT MAX(record_id) FROM qinsen.inst_tumo_check GROUP BY batch_id)) tmc
+	ON tmc.batch_id = wt.tumo_record_id
+	LEFT JOIN (SELECT t.* from qinsen.inst_tumo_check t
+	WHERE t.record_id IN(SELECT MAX(record_id) FROM qinsen.inst_tumo_check GROUP BY batch_id)) tmc2
+	ON tmc2.batch_id = wt2.tumo_record_id
+	WHERE substr(it.MATER_SPEC_CODE,1,3) IN('ULP')  
+	) tt</insert>
+    <delete id="deleteComponentMpSelectTest" parameterClass="java.util.HashMap">delete from  KS_COMPONENT_MP_SELECT2</delete>
+    <select id="queryStand" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT T1.MP_SPEC_NAME     AS "mpSpecName",
+       T1.PROD_SPEC_NAME   AS "prodSpecName",
+       T1.A_GPD_LOW_LIMIT  AS "aGpdLowLimit",
+       T1.A_GPD_UP_LIMIT   AS "aGpdUpLimit",
+       T1.A_GPD_CENTER     AS "aGpdCenter",
+       T1.A_SALT_LOW_LIMIT AS "aSaltLowLimit",
+       T2.AREA             AS "area",
+       T2.DENSE_NET        AS "denseNet",
+       T1.MP_SPEC_ID       AS "mpSpecId",
+       T1.PROD_SPEC_ID     AS "prodSpecId",
+       T1.RECORD_ID        AS "recordId"
+  FROM KS_PROD_WATER_STD T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+    ON T1.PROD_SPEC_ID = T2.MATER_SPEC_ID
+    where 1=1
+     <isNotNull prepend="and" property="mpSpecName">upper(T1.MP_SPEC_NAME) like '%' || upper(#mpSpecName#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">upper(T1.PROD_SPEC_NAME) like '%' || upper(#prodSpecName#) || '%'</isNotNull>
+    </select>
+    <insert id="insertStand" parameterClass="java.util.HashMap">insert into KS_PROD_WATER_STD
+   (MP_SPEC_NAME,PROD_SPEC_NAME,CREATE_DT,
+       CREATOR_ID,
+       A_GPD_LOW_LIMIT,
+       A_GPD_UP_LIMIT,
+       A_GPD_CENTER,
+       A_SALT_LOW_LIMIT,
+       MP_SPEC_ID,
+       PROD_SPEC_ID,
+       RECORD_ID)
+   select #mpSpecName#,#prodSpecName#,sysdate, #creatorId#,#aGpdLowLimit#,#aGpdUpLimit#,
+   #aGpdCenter#,#aSaltLowLimit#,#mpSpecId#,#prodSpecId#,SEQU_PROD_WATER_STD.Nextval 
+   from dual
+   where 1=1 
+   and not exists(select 1 from KS_PROD_WATER_STD
+   where MP_SPEC_ID = #mpSpecId# and PROD_SPEC_ID = #prodSpecId#
+   )</insert>
+    <delete id="deleteStand" parameterClass="java.util.HashMap">delete from  KS_PROD_WATER_STD where record_id=#recordId#</delete>
+</sqlMap>

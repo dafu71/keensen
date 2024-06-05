@@ -1,21 +1,28 @@
 com.keensen.ump.qinsen.produce.tumoMgr = function() {
 	this.initPanel = function() {
 
+		var defectTmWinId = Ext.id();
+		var defectZmWinId = Ext.id();
+
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
 		this.initEditWindow();
 		this.initEditMpdWindow();
-		
+
+		this.initSendChecWindow();
+
 		this.defectTmWin = new com.keensen.ump.defectWindow({
+					id : defectTmWinId,
 					dutyTacheCode : 'TM',
 					recTacheCode : 'TM'
 				});
 		this.defectZmWin = new com.keensen.ump.defectWindow({
+					id : defectZmWinId,
 					dutyTacheCode : 'ZM',
 					recTacheCode : 'TM'
 				});
-				
+
 		this.defectViewWindow = new com.keensen.ump.defectViewWindow({
 					id : 'tm-defectviewwindow'
 				});
@@ -35,7 +42,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					border : true,
 					collapsible : true,
 					titleCollapse : false,
-					//title : '【涂膜记录查询】',
+					// title : '【涂膜记录查询】',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
@@ -152,7 +159,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						fieldLabel : '膜片卷号'
 					}]
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "导出",
 					scope : this,
@@ -161,8 +168,6 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 				});
 
 	}
-	
-	
 
 	this.initListPanel = function() {
 		var _this = this;
@@ -203,6 +208,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								scope : this,
 								iconCls : 'icon-application_edit',
 								handler : this.onModiTech
+							}, '->', {
+								text : '送检',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onSendCheck
 							}]
 				});
 
@@ -215,7 +225,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【涂膜记录列表】',
+			// title : '【涂膜记录列表】',
 			id : listid,
 			viewConfig : {
 				forceFit : false
@@ -759,7 +769,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									xtype : 'textfield',
 									name : 'entity/orderNo',
 									fieldLabel : '订单号',
-									allowBlank : true,
+									allowBlank : false,
 									anchor : '75%',
 									colspan : 1
 								}, {
@@ -1099,7 +1109,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'entity/orderNo',
 									dataIndex : 'orderNo',
 									fieldLabel : '订单号',
-									allowBlank : true,
+									allowBlank : false,
 									anchor : '75%',
 									colspan : 1
 								}, {
@@ -1298,7 +1308,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}]
 		});
 	}
-	
+
 	this.initEditMpdWindow = function() {
 		var _this = this;
 		this.editMpdWindow = this.editMpdWindow || new Ext.fn.FormWindow({
@@ -1371,5 +1381,117 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}]
 					}]
 		});
+	}
+
+	this.initSendChecWindow = function() {
+		var _this = this;
+		this.sendChecWindow = this.sendChecWindow || new Ext.fn.FormWindow({
+			title : '膜片送检',
+			height : 300,
+			width : 400,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				successFn : function(i, r) {
+					if (r.err != '0') {
+						Ext.Msg.show({
+									width : 400,
+									title : "操作提示",
+									msg : r.msg,
+									icon : Ext.Msg.WARNING,
+									buttons : Ext.Msg.OK,
+									fn : function() {
+										_this.sendChecWindow.hide();
+									}
+								})
+					} else {
+						Ext.getCmp(listid).store.load();
+						_this.sendChecWindow.hide();
+					}
+				},
+				columns : 2,
+				loadUrl : 'com.keensen.ump.qinsen.tumo.expandTumo4SendCheck.biz.ext',
+				saveUrl : '1.biz.ext',
+				fields : [{
+							xtype : 'mpspeccombobox',
+							dataIndex : 'specId',
+							ref : '../../specId',
+							readOnly : true,
+							anchor : '75%',
+							fieldLabel : '膜片型号 ',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							dataIndex : 'batchNo',
+							ref : '../../batchNo',
+							fieldLabel : '膜片批次',
+							readOnly : true,
+							anchor : '75%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/checkNo',
+							ref : '../../checkNo',
+							dataIndex : 'checkNo',
+							fieldLabel : '送检单号',
+							readOnly : true,
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							decimals : 0,
+							minValue : 0,
+							maxValue : 10000,
+							allowBlank : false,
+							name : 'entity/positionLength',
+							ref : '../../positionLength',
+							dataIndex : 'mpd',
+							fieldLabel : '取样位置',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 2
+						}, {
+							name : 'entity/batchId',
+							dataIndex : 'recordId',
+							xtype : 'hidden'
+						}]
+			}]
+		});
+
+		this.sendChecWindow.buttons[0].hide();
+		this.sendChecWindow.buttons[1].hide();
+		this.sendChecWindow.addButton({
+					text : "打印",
+					scope : this,
+					// iconCls : 'icon-application_excel',
+					handler : this.onPrintSendCheck
+				});
+		this.sendChecWindow.addButton({
+					text : "关闭",
+					scope : this,
+					// iconCls : 'icon-application_excel',
+					handler : function() {
+						this.sendChecWindow.form.reset();
+						this.sendChecWindow.hide()
+					}
+				});
+
 	}
 }
