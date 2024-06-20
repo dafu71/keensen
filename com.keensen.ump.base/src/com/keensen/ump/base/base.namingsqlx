@@ -386,5 +386,37 @@ t.mater_spec_name2 "materSpecName2"
                       </isNotNull>   
  		ORDER BY T.STAFF_NAME
 	 </select>
-     
+	 
+	 <!-- 通过字典code查询字典项值 -->
+	  <select id="getPropOptionByPropCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	 SELECT T1.PROP_VALUE_ID   AS "propValueId",
+       T1.PROP_VALUE_CODE AS "propValueCode",
+       T1.PROP_VALUE_NAME AS "propValueName",
+       T1.IS_DEFAULT      AS "isDefault",
+       T1.STATE           AS "state",
+       T1.DISP_ORDER      AS "dispOrder"
+  FROM (SELECT A.PROP_VALUE_ID,
+               A.PROP_VALUE_CODE,
+               A.PROP_VALUE_NAME,
+               A.IS_DEFAULT,
+               A.DISP_ORDER,
+               A.STATE,
+               B.BELONG_SYS_ID
+          FROM QINSEN.CONF_PROP_VALUE_OPTION A, QINSEN.CONF_PROP B
+         WHERE A.PROP_ID = B.PROP_ID
+           AND A.STATE = 'Y'           
+           AND B.PROP_CODE = #propCode#
+          <isNotNull prepend="" property="sysId">
+	   AND B.BELONG_SYS_ID = #sysId#
+	 </isNotNull>
+	  <isNotNull prepend="" property="sysCode">
+           AND B.BELONG_SYS_ID =
+               (SELECT O.PROP_VALUE_ID
+                  FROM QINSEN.CONF_PROP_VALUE_OPTION O
+                 WHERE O.PROP_ID = 1
+                   AND O.PROP_VALUE_CODE = #sysCode#)
+                   
+        </isNotNull>) T1
+ 		ORDER BY T1.DISP_ORDER
+     </select>
      </sqlMap>

@@ -16,12 +16,12 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 80,
 					columns : 2,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【产品水测标准查询】',
+					//title : '【产品水测标准查询】',
 					fields : [{
 								xtype : 'mpspeccombobox',
 								hiddenName : 'condition/mpSpecId',
@@ -62,7 +62,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【产品水测标准列表】',
+			//title : '【产品水测标准列表】',
 			id : mylistid,
 			viewConfig : {
 				forceFit : false

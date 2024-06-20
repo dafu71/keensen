@@ -179,7 +179,16 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onQuery
+					}, '-', {
+						text : '单卷膜片重新计算',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onReCalc
 					}, '->', {
+						xtype : 'displayfield',
+						ref : '../stockTime',
+						value : '库存更新时间'
+					}, '-', {
 						text : '元件性能标准',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
@@ -917,7 +926,7 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 					titleCollapse : false,
 					fields : [{
 								xtype : 'textfield',
-								name : 'condition/prodrSpecName',
+								name : 'condition/prodSpecName',
 								anchor : '85%',
 								fieldLabel : '元件型号'
 							}, {

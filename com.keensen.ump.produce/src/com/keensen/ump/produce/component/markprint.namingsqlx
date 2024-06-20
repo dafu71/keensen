@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <select id="query" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT T1.ID            AS "id",
+	       T1.TEMPLATE_NAME AS "templateName",
+	       T1.URL           AS "url",
+	       T1.REMARK        AS "remark",
+	       T1.CODE          AS "code"
+	  FROM KS_COMPONENT_MARK_TEMPLATE T1
+	
+	 WHERE 1 = 1  
+       
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="templateName"> 
+		       t1.TEMPLATE_NAME like '%' || #templateName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="remark"> 
+		       t1.REMARK like '%' || #remark# || '%'
+	</isNotNull>
+	
+	 ORDER BY T1.ID
+    </select>
+    
+    <select id="queryJuanmo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT T1.ORDER_NO        "orderNo",
+       T1.TUMO_BATCH_STR  "batchNo",
+       T1.CNT             "cnt",
+       T1.PROD_SPEC_ID    "prodSpecId",
+       T2.MATER_SPEC_NAME "prodSpecName"
+  FROM (SELECT T.ORDER_NO,
+               T.TUMO_BATCH_STR,
+               COUNT(*) CNT,
+               MAX(T.PROD_SPEC_ID) PROD_SPEC_ID
+          FROM QINSEN.INST_JUANMO_MAIN T
+         WHERE T.TUMO_BATCH_STR IS NOT NULL
+         AND t.order_no=#orderNo#
+         GROUP BY T.ORDER_NO, T.TUMO_BATCH_STR) T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+    ON T1.PROD_SPEC_ID = T2.MATER_SPEC_ID	
+    </select>
+</sqlMap>

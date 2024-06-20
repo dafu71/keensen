@@ -155,7 +155,22 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 						header : '生产数量'
 					}, {
 						dataIndex : 'storageAmount',
-						header : '合格数量'
+						header : '合格数量',
+						scope : this,
+						renderer : function(v, m, r, i) {
+							var code = r.get('code');
+							if (!Ext.isEmpty(v)) {
+								var style = "<a title='查看膜片批次' style='color:red;text-decoration:none'";
+								var str = style
+										+ " href='javascript:queryDelivery("
+										+ Ext.encode(code) + ");'>" + v
+										+ "</a>";
+
+								return str;
+							} else {
+								return v;
+							}
+						}
 					}, {
 						dataIndex : 'validPercent',
 						header : '合格率%'

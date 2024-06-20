@@ -18,6 +18,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 		this.initPlanRollWindow2();
 
 		this.initPlanWeekDaysWindow();
+		this.initAddPlanWeekDaysWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -175,6 +176,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
+					}, '-', {
+						text : '延长计划日期',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onAddPlanWeekDays
 					}, '-', {
 						text : '计划日排产',
 						scope : this,
@@ -499,6 +505,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					viewConfig : {
 						forceFit : true
 					},
+					// autoExpandColumn : '3',
 					hsPage : false,
 					autoScroll : true,
 					delUrl : 'com.keensen.ump.produce.component.neworder.deletePlanDay.biz.ext',
@@ -527,6 +534,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								header : '卷膜数量'
 							}, {
 								dataIndex : 'batchNo',
+								width : 150,
 								header : '膜片批次'
 							}, {
 								dataIndex : 'meterAmount',
@@ -851,7 +859,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								'select' : function(combo, record, index) {
 									if (index > -1) {
 										this.planDayWindow.needAmount
-												.setValue(record.get('needAmount'));
+												.setValue(record
+														.get('needAmount'));
 										this.planDayWindow.jmAmount
 												.setValue(record.get('amount'));
 										var numPerWad = this.planDayWindow.numPerWad
@@ -879,7 +888,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							readOnly : true,
 							ref : '../../needAmount',
 							anchor : '85%',
-							minValue : 1,
+							// minValue : 1,
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -1272,7 +1281,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							xtype : 'numberfield',
 							fieldLabel : '膜片用量',
 							// allowBlank : false,
-							readOnly : true,
+							// readOnly : true,
 							ref : '../../useAmount',
 							anchor : '85%',
 							minValue : 1,
@@ -2168,5 +2177,54 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 
 				});
 
+	}
+
+	this.initAddPlanWeekDaysWindow = function() {
+		var _this = this;
+		this.addPlanWeekDaysWindow = this.addPlanWeekDaysWindow
+				|| new Ext.fn.FormWindow({
+					title : '延长计划日期',
+					height : 300,
+					width : 480,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek.biz.ext.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.neworder.addPlanWeekDays.biz.ext',
+						fields : [{
+									xtype : 'datefield',
+									fieldLabel : '原作业结束日期',
+									ref : '../../oldEndDate',
+									dataIndex : 'endDate',
+									format : 'Y-m-d',
+									readOnly : true,
+									anchor : '75%',
+									colspan : 2
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'datefield',
+									fieldLabel : '新作业结束日期',
+									ref : '../../newEndDate',
+									dataIndex : 'endDate',
+									name : 'entity/endDate',
+									format : 'Y-m-d',
+									allowBlank : false,
+									anchor : '75%',
+									colspan : 2
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
+								}]
+					}]
+				});
 	}
 }

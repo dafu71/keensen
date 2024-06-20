@@ -1,4 +1,5 @@
 com.keensen.ump.produce.component.mpselectMgr.prototype.initEvent = function() {
+	this.modifyStockTime();
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		this.queryPanel.getForm().findField('condition/tumoBatchNo')
@@ -91,10 +92,10 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.initEvent = function() {
 					}
 				});
 	}, this);
-	
+
 	// 查询事件
 	this.queryPanel5.mon(this.queryPanel5, 'query', function(form, vals) {
-		
+
 		var store = this.listPanel5.store;
 		store.baseParams = vals;
 		store.load({
@@ -104,8 +105,8 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.initEvent = function() {
 					}
 				});
 	}, this);
-	
-		// 查询事件
+
+	// 查询事件
 	this.queryPanel6.mon(this.queryPanel6, 'query', function(form, vals) {
 		var store = this.listPanel6.store;
 		store.baseParams = vals;
@@ -173,6 +174,7 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.doUpload = function() {
 											? "批量上传成功"
 											: result.msg, function() {
 										_this.listPanel.store.load();
+										_this.modifyStockTime();
 									}, this);
 						}
 					},
@@ -221,7 +223,7 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.onQuery = function() {
 
 com.keensen.ump.produce.component.mpselectMgr.prototype.onQuery2 = function() {
 	this.viewWindow.show();
-	
+
 }
 
 com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel2 = function() {
@@ -343,7 +345,7 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel = function()
 
 com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel3 = function() {
 	var _this = this;
-	
+
 	var daochu = _this.queryPanel5.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
@@ -384,7 +386,7 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel3 = function(
 			_this.requestMask.hide()
 		}
 	})
-} 
+}
 
 com.keensen.ump.produce.component.mpselectMgr.prototype.destroy = function() {
 	this.excelUploadWin.destroy();
@@ -404,6 +406,70 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.onAddStand = function() 
 
 com.keensen.ump.produce.component.mpselectMgr.prototype.onDelStand = function() {
 	this.listPanel6.onDel();
+}
+
+// 库存更新时间
+com.keensen.ump.produce.component.mpselectMgr.prototype.modifyStockTime = function() {
+	var _this = this;
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.mpselect.queryStockTime.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				var stockTime = ret.stockTime;
+				if (!Ext.isEmpty(stockTime)) {
+					_this.listPanel.stockTime
+							.setValue('库存更新时间:<font color=red>' + stockTime
+									+ '</font>');
+				}
+
+			}
+
+		},
+		callback : function() {
+
+		}
+	})
+}
+
+com.keensen.ump.produce.component.mpselectMgr.prototype.onReCalc = function() {
+	var _this = this;
+	var records = this.listPanel.getSelectionModel().getSelections();
+	if (records != null && records.length == 1) {
+		this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		this.requestMask.show();
+		var r = records[0];
+		var tumoBatchNo = r.data.mpBatchNo;
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.component.mpselect.insertSelect2.biz.ext",
+			jsonData : {
+				'param/tumoBatchNo' : tumoBatchNo
+			},
+			method : "post",
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					Ext.Msg.alert("系统提示", "已重新计算", function() {
+								_this.listPanel.refresh();
+							});
+
+				}
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+
+	} else {
+		Ext.Msg.alert("系统提示", '请选择一条记录');
+		return false;
+	}
+
 }
 
 function dayDiff(start, end) {

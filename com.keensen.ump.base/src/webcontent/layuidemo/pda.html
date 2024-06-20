@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 
+  - Author(s): dafu
+  - Date: 2024-06-12 10:50:39
+  - Description:
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>pda</title>
+    <!-- 引入layui的核心css文件 -->
+    <link rel="stylesheet" type="text/css" href="/default/base/layui/css/layui.css">
+    
+</head>
+<body>
+
+    <!--
+        栅格系统
+            列组合：
+                1.定义行   .layui-row
+                2.定义列   .layui-col-md*
+                    md 表示不同屏幕的标识 (xs sm md lg)
+                    * 列的数量
+                3.每一行被均分为12列，列的总数不能超过12，否则会自动换行
+                4.响应式规则
+                    栅格会自动根据屏幕的分辨率选择对应的效果。
+
+            列边距
+                .layui-col-space*
+                    * 代表的是px值 (1-30)
+
+            列偏移
+                将列向右偏移指定列数
+                .*layui-col-md-offset*‘
+                    *代表的是列数
+
+            列嵌套
+                列之间可以无限嵌套
+    -->
+
+    <!-- 布局容器:固定宽度 -->
+    <div class="layui-container">
+       <hr>
+        <div class="layui-row">
+            <!-- 小屏幕占12列，中屏幕占8列 -->
+            <div class="layui-col-sm12" style="">
+			  	<div class="layui-col-sm11" style=""> 
+				<input type="text" name="orderNo" required lay-verify="required" placeholder="请输入订单号" autocomplete="off" class="layui-input" />
+				</div>
+				<div class="layui-col-sm1" style=""> 
+				<button class="layui-btn layui-btn-radius" lay-on="alert">查询</button>
+				</div>
+            </div>
+        </div>
+
+
+        
+
+    </div>
+
+
+<script src="/default/base/layui/layui.js" type="text/javascript" charset="UTF-8"></script>
+<script type="text/javascript">
+	layui.use(['util', 'layer'],function(){		
+  		var layer = layui.layer;
+  		var util = layui.util;
+  		var $ = layui.$;	
+        
+  		util.on('lay-on', {
+    		'alert': function(){
+    		    var orderNo = $("input[name='orderNo']").val();
+    		    if (orderNo === '') {
+				    // 输入框为空
+				    layer.open({
+            			type: 0,						  // 0为信息框
+            			//title:"系统消息",
+            			// title: false,  				   //不显示标题
+            			title: ['系统消息', 'color:red;'],   // 自定义标题区域样式
+  				        content: "请输入订单号"
+        			});
+
+				    //layer.alert('请输入订单号');
+				}else{
+					layer.alert(orderNo);
+				}
+			     			
+      		}
+    	})
+  		
+  })
+  
+ </script> 
+</body>
+</html>

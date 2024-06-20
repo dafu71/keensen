@@ -87,8 +87,8 @@
       <sourceNode>loopstart5</sourceNode>
       <targetNode>subprocess0</targetNode>
     </sourceConnections>
-    <targetConnections>link15</targetConnections>
     <targetConnections>link19</targetConnections>
+    <targetConnections>link15</targetConnections>
     <nodeLabel>loopstart5label</nodeLabel>
     <process:condition/>
     <process:iterate iterable="arr" iterableElement="a"/>
@@ -133,8 +133,8 @@
       <sourceNode>invokeSpring2</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link12</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link12</targetConnections>
     <nodeLabel>invokeSpring2label</nodeLabel>
     <process:spring methodType="beanID" synchronization="true" transactionType="join">
       <process:partner type="literal">com.zoomlion.hjsrm.pub.busi.common.SrmCommonBean.deleteFile</process:partner>
@@ -166,8 +166,8 @@
       <sourceNode>transactioncommit0</sourceNode>
       <targetNode>invokeSpring2</targetNode>
     </sourceConnections>
-    <targetConnections>link17</targetConnections>
     <targetConnections>link18</targetConnections>
+    <targetConnections>link17</targetConnections>
     <nodeLabel>transactioncommit0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="transactioncommit0label" name="label" nodeType="label">
@@ -221,7 +221,7 @@
       <targetNode>transactioncommit0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -282,7 +282,7 @@
       <targetNode>loopstart5</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>

@@ -73,7 +73,10 @@
 	LEFT JOIN (SELECT t.* from qinsen.inst_tumo_check t
 	WHERE t.record_id IN(SELECT MAX(record_id) FROM qinsen.inst_tumo_check WHERE recheck_flag ='N' GROUP BY batch_id)) tmc
 	ON tmc.batch_id = wt.tumo_record_id
-	WHERE substr(it.MATER_SPEC_CODE,1,2) IN('BW','NF','SW')   
+	WHERE substr(it.MATER_SPEC_CODE,1,2) IN('BW','NF','SW') 
+	<isNotNull prepend="" property="tumoBatchNo">
+           AND t.batch_no = #tumoBatchNo#
+    </isNotNull>  
 	) tt
 
 
@@ -169,6 +172,9 @@
 	WHERE t.record_id IN(SELECT MAX(record_id) FROM qinsen.inst_tumo_check WHERE recheck_flag ='N' GROUP BY batch_id)) tmc2
 	ON tmc2.batch_id = wt2.tumo_record_id
 	WHERE substr(it.MATER_SPEC_CODE,1,3) IN('ULP')  
+	<isNotNull prepend="" property="tumoBatchNo">
+           AND t.batch_no = #tumoBatchNo#
+    </isNotNull>
 	) tt
 	
 	</insert>
@@ -181,6 +187,9 @@
 	<delete id="deleteComponentMpSelect" parameterClass="java.util.HashMap" >
    delete from  KS_COMPONENT_MP_SELECT
    where MP_BATCH_NO in (select batch_no from  KS_PROD_COMPONENT_STOCK)
+    <isNotNull prepend="" property="tumoBatchNo">
+           AND MP_BATCH_NO = #tumoBatchNo#
+    </isNotNull>
 	</delete>
 	
 	<select id="query" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
@@ -528,4 +537,7 @@
    delete from  KS_PROD_WATER_STD where record_id=#recordId#
 	</delete>
    
+   <select id="queryStockTime" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select to_char(MAX(t.update_time),'yyyy-MM-dd HH24:mi:ss') "stockTime" from KS_PROD_COMPONENT_STOCK t
+   </select>
  </sqlMap>

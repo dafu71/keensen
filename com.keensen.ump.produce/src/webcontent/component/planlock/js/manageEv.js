@@ -3,8 +3,24 @@ com.keensen.ump.produce.component.planlockMgr.prototype.initEvent = function() {
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
+		var batchNoStr = this.queryPanel.form
+				.findField("condition/batchNoStr2").getValue();
+		var regEx = new RegExp("\\n", "gi");
+		batchNoStr = batchNoStr.replace(regEx, ",");
+		batchNoStr = batchNoStr.replaceAll('，', ',');
+		batchNoStr = batchNoStr.replaceAll(' ', '');
+		var arr = [];
+		arr = batchNoStr.split(',');
+		var arr2 = [];
+		for (var i = 0; i < arr.length; i++) {
+			arr2.push("'" + arr[i] + "'");
+		}
+
+		this.queryPanel.getForm().findField('condition/batchNoStr')
+				.setValue(arr2.join(",") == "''" ? null : arr2.join(","));
+				
 		var store = this.listPanel.store;
-		store.baseParams = vals;
+		store.baseParams = this.queryPanel.getForm().getValues();
 		store.load({
 					params : {
 						"pageCond/begin" : 0,
@@ -20,7 +36,7 @@ com.keensen.ump.produce.component.planlockMgr.prototype.destroy = function() {
 }
 
 com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function() {
-	var _this = this;
+	/*var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
@@ -55,7 +71,7 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 com.keensen.ump.produce.component.planlockMgr.prototype.onPrint = function() {
@@ -180,10 +196,11 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 		url : "com.keensen.ump.produce.component.neworder.queryPlanDay.biz.ext",
 		method : "post",
 		responseType : 'blob',
-		jsonData : {
-			'condition/orderDateStart' : start,
-			'condition/orderDateEnd' : end
-		},
+		jsonData : vals,
+		//jsonData : {
+		//	'condition/orderDateStart' : start,
+		//	'condition/orderDateEnd' : end
+		//},
 		success : function(resp) {
 			var ret = Ext.decode(resp.responseText);
 			if (ret.success) {

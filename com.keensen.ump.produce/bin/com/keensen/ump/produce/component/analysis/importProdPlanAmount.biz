@@ -24,11 +24,11 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link7</targetConnections>
-    <targetConnections>link23</targetConnections>
-    <targetConnections>link26</targetConnections>
-    <targetConnections>link34</targetConnections>
     <targetConnections>link37</targetConnections>
+    <targetConnections>link34</targetConnections>
+    <targetConnections>link26</targetConnections>
+    <targetConnections>link23</targetConnections>
+    <targetConnections>link7</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -140,8 +140,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link5</targetConnections>
     <targetConnections>link6</targetConnections>
+    <targetConnections>link5</targetConnections>
     <nodeLabel>loopend0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" grouped="true" type="switch">
@@ -255,8 +255,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link10</targetConnections>
     <nodeLabel>loopend1label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign3" name="赋值3" grouped="true" type="assign">
@@ -350,8 +350,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link15</targetConnections>
     <targetConnections>link18</targetConnections>
+    <targetConnections>link15</targetConnections>
     <nodeLabel>loopend7label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign15" name="赋值15" grouped="true" type="assign">
@@ -546,8 +546,8 @@
       <sourceNode>transactionrollback0</sourceNode>
       <targetNode>assign11</targetNode>
     </sourceConnections>
-    <targetConnections>link33</targetConnections>
     <targetConnections>link41</targetConnections>
+    <targetConnections>link33</targetConnections>
     <nodeLabel>transactionrollback0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="transactionrollback0label" name="label" nodeType="label">

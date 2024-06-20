@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.watertest">
+    <!-- 查询水测记录列表 -->
+    <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT T1.RECORD_ID               AS "recordId",
+       T1.JUANMO_BATCH_ID         AS "juanmoBatchId",
+       T1.TEST_TYPE_ID            AS "testTypeId",
+       T1.TEMP                    AS "temp",
+       T1.F_GPD                   AS "fGpd",
+       T1.F_SALT                  AS "fSalt",
+       T1.F_FACTOR_B              AS "fFactorB",
+       T1.F_CHECKER_ID            AS "fCheckerId",
+       T1.F_CHECK_TM              AS "fCheckTm",
+       T1.R_GPD                   AS "rGpd",
+       T1.R_SALT                  AS "rSalt",
+       T1.R_FACTOR_B              AS "rFactorB",
+       T1.R_CHECKER_ID            AS "rCheckerId",
+       T1.R_CHECK_TM              AS "rCheckTm",
+       T1.IS_BATCH_QUALIFIED      AS "isBatchQualified",
+       T1.BATCH_GPD_STD_STR       AS "batchGpdStdStr",
+       T1.BATCH_SALT_STD          AS "batchSaltStd",
+       T1.BATCH_FACTOR_B_STD      AS "batchFactorBStd",
+       T1.IS_PROD_QUALIFIED       AS "isProdQualified",
+       T1.PROD_GPD_STD_STR        AS "prodGpdStdStr",
+       T1.PROD_SALT_STD           AS "prodSaltStd",
+       T1.PROD_FACTOR_B_STD       AS "prodFactorBStd",
+       T1.IF_PROD_SPEC_ID         AS "ifProdSpecId",
+       T1.TEST_SPEC_ID            AS "testSpecId",
+       T1.MARK_SPEC_NAME          AS "markSpecName",
+       T1.CREATE_DT               AS "createDt",
+       T1.CHANGE_DT               AS "changeDt",
+       T1.CREATOR_ID              AS "creatorId",
+       T1.CHANGER_ID              AS "changerId",
+       T1.REMARK                  AS "remark",
+       T1.F_MAC_NAME              AS "fMacName",
+       T1.R_MAC_NAME              AS "rMacName",
+       T1.IS_BATCH_QUALIFIED_NAME AS "isBatchQualifiedName",
+       T1.IS_PROD_QUALIFIED_NAME  AS "isProdQualifiedName",
+       T1.TEST_TYPE_CODE          AS "testTypeCode",
+       T1.TEST_TYPE_NAME          AS "testTypeName",
+       T1.F_CHECKER_NAME          AS "fCheckerName",
+       T1.F_CHECK_TIME            AS "fCheckTime",
+       T1.R_CHECKER_NAME          AS "rCheckerName",
+       T1.R_CHECK_TIME            AS "rCheckTime",
+       T1.IF_PROD_SPEC_CODE       AS "ifProdSpecCode",
+       T1.IF_PROD_SPEC_NAME       AS "ifProdSpecName",
+       T1.IF_PROD_SPEC_AREA       AS "ifProdSpecArea",
+       T1.TEST_SPEC_CODE          AS "testSpecCode",
+       T1.TEST_SPEC_NAME          AS "testSpecName",
+       T1.TEST_SPEC_AREA          AS "testSpecArea",
+       T1.PROD_BATCH_NO           AS "prodBatchNo",
+       T1.AIR_RESULT              AS "airResult",
+       T1.AIR_QUALIFIED           AS "airQualified",
+       T1.AIR_QUALIFIED_NAME      AS "airQualifiedName",
+       T1.AIR_DATE                AS "airDate",
+       T1.PROD_SPEC_CODE          AS "prodSpecCode",
+       T1.PROD_SPEC_NAME          AS "prodSpecName",
+       T1.JUANMO_BATCH_NO         AS "juanmoBatchNo",
+       T1.JUANMO_SPEC_ID          AS "juanmoSpecId",
+       T1.JUANMO_SPEC_CODE        AS "juanmoSpecCode",
+       T1.JUANMO_SPEC_NAME        AS "juanmoSpecName",
+       T1.CDM_BATCH_STR           AS "cdmBatchStr",
+       T1.TUMO_BATCH_STR          AS "tumoBatchStr",
+       T1.DIMO_BATCH_STR          AS "dimoBatchStr",
+       T1.JM_BATCH_NO             AS "jmBatchNo"
+  FROM (SELECT A.RECORD_ID,
+               A.JUANMO_BATCH_ID,
+               A.TEST_TYPE_ID,
+               A.TEMP,
+               A.F_GPD,
+               A.F_SALT,
+               A.F_FACTOR_B,
+               A.F_CHECKER_ID,
+               A.F_CHECK_TM,
+               A.R_GPD,
+               A.R_SALT,
+               A.R_FACTOR_B,
+               A.R_CHECKER_ID,
+               A.R_CHECK_TM,
+               A.IS_BATCH_QUALIFIED,
+               A.BATCH_GPD_STD_STR,
+               A.BATCH_SALT_STD,
+               A.BATCH_FACTOR_B_STD,
+               A.IS_PROD_QUALIFIED,
+               A.PROD_GPD_STD_STR,
+               A.PROD_SALT_STD,
+               A.PROD_FACTOR_B_STD,
+               A.IF_PROD_SPEC_ID,
+               A.TEST_SPEC_ID,
+               A.MARK_SPEC_NAME,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               A.F_MAC_NAME,
+               A.R_MAC_NAME,
+               DECODE(A.IS_BATCH_QUALIFIED, 'Y', '合格', 'N', '不合格', '') IS_BATCH_QUALIFIED_NAME,
+               DECODE(A.IS_PROD_QUALIFIED, 'Y', '合格', 'N', '不合格', '') IS_PROD_QUALIFIED_NAME,
+               QINSEN.PG_GET_INFO.GET_PROP_VALUE_CODE_BY_ID(A.TEST_TYPE_ID) TEST_TYPE_CODE,
+               QINSEN.PG_GET_INFO.GET_PROP_VALUE_NAME_BY_ID(A.TEST_TYPE_ID) TEST_TYPE_NAME,
+               QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(A.F_CHECKER_ID) F_CHECKER_NAME,
+               TO_CHAR(A.F_CHECK_TM, 'YYYY-MM-DD HH24:MI') F_CHECK_TIME,
+               QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(A.R_CHECKER_ID) R_CHECKER_NAME,
+               TO_CHAR(A.R_CHECK_TM, 'YYYY-MM-DD HH24:MI') R_CHECK_TIME,
+               (SELECT S.MATER_SPEC_CODE
+                  FROM QINSEN.PARA_MATER_SPEC S
+                 WHERE S.MATER_SPEC_ID = A.IF_PROD_SPEC_ID) IF_PROD_SPEC_CODE,
+               (SELECT S.MATER_SPEC_NAME
+                  FROM QINSEN.PARA_MATER_SPEC S
+                 WHERE S.MATER_SPEC_ID = A.IF_PROD_SPEC_ID) IF_PROD_SPEC_NAME,
+               (SELECT S.AREA
+                  FROM QINSEN.PARA_MATER_SPEC S
+                 WHERE S.MATER_SPEC_ID = A.IF_PROD_SPEC_ID) IF_PROD_SPEC_AREA,
+               (SELECT S.MATER_SPEC_CODE
+                  FROM QINSEN.PARA_MATER_SPEC S
+                 WHERE S.MATER_SPEC_ID = A.TEST_SPEC_ID) TEST_SPEC_CODE,
+               (SELECT S.MATER_SPEC_NAME
+                  FROM QINSEN.PARA_MATER_SPEC S
+                 WHERE S.MATER_SPEC_ID = A.TEST_SPEC_ID) TEST_SPEC_NAME,
+               (SELECT S.AREA
+                  FROM QINSEN.PARA_MATER_SPEC S
+                 WHERE S.MATER_SPEC_ID = A.TEST_SPEC_ID) TEST_SPEC_AREA,
+               Q.BATCH_NO PROD_BATCH_NO,
+               Q.CHECK_RESULT AIR_RESULT,
+               Q.IS_QUALIFIED AIR_QUALIFIED,
+               DECODE(Q.IS_QUALIFIED, 'Y', '合格', 'N', '不合格', '') AIR_QUALIFIED_NAME,
+               TO_CHAR(Q.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') AIR_DATE,
+               QINSEN.PG_GET_INFO.GET_MATER_SPEC_CODE_BY_ID(Q.PROD_SPEC_ID) PROD_SPEC_CODE,
+               QINSEN.PG_GET_INFO.GET_MATER_SPEC_NAME_BY_ID(Q.PROD_SPEC_ID) PROD_SPEC_NAME,
+               J.BATCH_NO JUANMO_BATCH_NO,
+               J.PROD_SPEC_ID JUANMO_SPEC_ID,
+               QINSEN.PG_GET_INFO.GET_MATER_SPEC_CODE_BY_ID(J.PROD_SPEC_ID) JUANMO_SPEC_CODE,
+               QINSEN.PG_GET_INFO.GET_MATER_SPEC_NAME_BY_ID(J.PROD_SPEC_ID) JUANMO_SPEC_NAME,
+               (SELECT WM_CONCAT(DISTINCT C.BATCH_NO)
+                  FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C
+                 WHERE D.CDM_BATCH_ID = C.RECORD_ID
+                   AND D.MAIN_BATCH_ID = J.RECORD_ID) CDM_BATCH_STR,
+               (SELECT WM_CONCAT(DISTINCT M.BATCH_NO)
+                  FROM QINSEN.INST_JUANMO_DETAIL D,
+                       QINSEN.INST_CAIDIEMO      C,
+                       QINSEN.INST_TUMO          M
+                 WHERE D.CDM_BATCH_ID = C.RECORD_ID
+                   AND C.TUMO_BATCH_ID = M.RECORD_ID
+                   AND D.MAIN_BATCH_ID = J.RECORD_ID) TUMO_BATCH_STR,
+               (SELECT WM_CONCAT(DISTINCT M.DIMO_BATCH_NO)
+                  FROM QINSEN.INST_JUANMO_DETAIL D,
+                       QINSEN.INST_CAIDIEMO      C,
+                       QINSEN.INST_TUMO          M
+                 WHERE D.CDM_BATCH_ID = C.RECORD_ID
+                   AND C.TUMO_BATCH_ID = M.RECORD_ID
+                   AND D.MAIN_BATCH_ID = J.RECORD_ID) DIMO_BATCH_STR,
+               J.BATCH_NO JM_BATCH_NO
+          FROM QINSEN.INST_WATER_TEST  A,
+               QINSEN.INST_QIJIAN      Q,
+               QINSEN.INST_JUANMO_MAIN J
+         WHERE A.JUANMO_BATCH_ID = Q.JUANMO_BATCH_ID
+           AND A.JUANMO_BATCH_ID = J.RECORD_ID
+           <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchId">AND A.JUANMO_BATCH_ID = #juanMoBatchId#</isNotNull>
+        <isNotNull prepend="" property="testTypeId">AND A.TEST_TYPE_ID = #testTypeId#</isNotNull>
+        <isNotNull prepend="" property="ifProdSpecId">AND A.IF_PROD_SPEC_ID = #ifProdSpecId#</isNotNull>
+        <isNotNull prepend="" property="testSpecId">AND A.TEST_SPEC_ID = #testSpecId#</isNotNull>
+        <isNotNull prepend="" property="isBatchQualified">AND A.IS_BATCH_QUALIFIED = #isBatchQualified#</isNotNull>
+        <isNotNull prepend="" property="isProdQualified">AND A.IS_PROD_QUALIFIED = #isProdQualified#</isNotNull>
+        <isNotNull prepend="" property="fCheckBeginDate">AND A.F_CHECK_TM &gt;= TO_DATE(#fCheckBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="fCheckEndDate">AND A.F_CHECK_TM &lt; TO_DATE(#fCheckEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="prodBatchId">AND Q.RECORD_ID = #prodBatchId#</isNotNull>
+        <isNotNull prepend="" property="prodBatchNo">AND Q.BATCH_NO = UPPER(#prodBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND Q.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="produceBeginDate">AND Q.PRODUCE_DT &gt;= TO_DATE(#produceBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceEndDate">AND Q.PRODUCE_DT &lt; TO_DATE(#produceEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchNo">AND J.BATCH_NO = UPPER(#juanMoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="juanmoBatchNo">AND J.BATCH_NO = UPPER(#juanmoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="juanMoSpecId">AND J.PROD_SPEC_ID = #juanMoSpecId#</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND EXISTS
+		 (SELECT 1
+	          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C, QINSEN.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.DIMO_BATCH_NO = #dimoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchId">AND EXISTS
+		 (SELECT 1
+	          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = #tumoBatchId#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND EXISTS
+		 (SELECT 1
+	          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C, QINSEN.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO = #tumoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNoStr">AND EXISTS
+		 (SELECT 1
+	          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C, QINSEN.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%')</isNotNull>
+        <isNotNull prepend="" property="cdmBatchId">AND EXISTS (SELECT 1
+	          FROM QINSEN.INST_JUANMO_DETAIL D
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = #cdmBatchId#)</isNotNull>
+        <isNotNull prepend="" property="cdmBatchNo">AND EXISTS (SELECT 1
+	          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.BATCH_NO = #cdmBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND EXISTS
+		 (SELECT 1
+	          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C, QINSEN.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.SPEC_ID = #mpSpecId#)</isNotNull>
+        <isNotNull prepend="" property="prodBatchIdList">AND Q.RECORD_ID IN ($prodBatchIdList$)</isNotNull>
+           
+           
+           
+           ) T1
+
+ ORDER BY T1.F_CHECK_TM DESC, T1.JM_BATCH_NO
+	
+   </select>
+    <!-- 查询是否有唯一键冲突记录 -->
+    <select id="queryDuplicateRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		SELECT 1
+		 FROM INST_WATER_TEST A
+		 WHERE A.JUANMO_BATCH_ID = #juanmoBatchId#
+		<isNotNull prepend="" property="recordId">AND A.RECORD_ID &lt;&gt; #recordId#</isNotNull>
+    </select>
+    <insert id="backupWatertest" parameterClass="java.util.HashMap">INSERT INTO KS_INST_WATER_TEST_DEL_BAK
+	(RECORD_ID,JUANMO_BATCH_ID,TEST_TYPE_ID,TEMP,F_GPD,F_SALT,F_FACTOR_B,
+	F_CHECKER_ID,F_CHECK_TM,R_GPD,R_SALT,R_FACTOR_B,R_CHECKER_ID,R_CHECK_TM,
+	IS_BATCH_QUALIFIED,BATCH_GPD_STD_STR,BATCH_SALT_STD,BATCH_FACTOR_B_STD,
+	IS_PROD_QUALIFIED,PROD_GPD_STD_STR,PROD_SALT_STD,PROD_FACTOR_B_STD,
+	CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,IF_PROD_SPEC_ID,
+	TEST_SPEC_ID,MARK_SPEC_NAME,F_MAC_NAME,R_MAC_NAME)
+	SELECT RECORD_ID,JUANMO_BATCH_ID,TEST_TYPE_ID,TEMP,F_GPD,F_SALT,F_FACTOR_B,
+	F_CHECKER_ID,F_CHECK_TM,R_GPD,R_SALT,R_FACTOR_B,R_CHECKER_ID,R_CHECK_TM,
+	IS_BATCH_QUALIFIED,BATCH_GPD_STD_STR,BATCH_SALT_STD,BATCH_FACTOR_B_STD,
+	IS_PROD_QUALIFIED,PROD_GPD_STD_STR,PROD_SALT_STD,PROD_FACTOR_B_STD,
+	CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,IF_PROD_SPEC_ID,
+	TEST_SPEC_ID,MARK_SPEC_NAME,F_MAC_NAME,R_MAC_NAME
+	FROM qinsen.INST_WATER_TEST 
+	WHERE RECORD_ID=#recordId#</insert>
+</sqlMap>

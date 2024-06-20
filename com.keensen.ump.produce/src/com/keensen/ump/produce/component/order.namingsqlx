@@ -201,6 +201,39 @@
              TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) + 1
    </insert>
    
+   
+   <insert id="addPlanWeekDays" parameterClass="java.util.HashMap" >
+     INSERT INTO KS_COMPONENT_PLAN_WEEK_DAYS
+  (ID,
+   PLAN_DATE,
+   CREATE_TIME,
+   CREATE_USER_ID,
+   CREATE_NAME,
+   relation_id,
+   order_id)
+ SELECT SEQ_COMPONENT_PLAN_DAY.NEXTVAL,
+       TRUNC((SELECT T.END_DATE
+                FROM KS_COMPONENT_PLAN_WEEK T
+               WHERE T.ID = #id#) + LEVEL),
+       SYSDATE,
+       (SELECT T.create_User_Id
+                FROM KS_COMPONENT_PLAN_WEEK T
+               WHERE T.ID = #id#),
+        (SELECT T.create_Name
+                FROM KS_COMPONENT_PLAN_WEEK T
+               WHERE T.ID = #id#),
+         #id#,
+         (SELECT T.relation_id
+                FROM KS_COMPONENT_PLAN_WEEK T
+               WHERE T.ID = #id#)
+       FROM DUAL
+CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) -
+           TRUNC((SELECT T.END_DATE
+                           FROM KS_COMPONENT_PLAN_WEEK T
+                          WHERE T.ID = #id#)) + 1
+   </insert>
+   
+   
    <select id="queryPlanDate" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    SELECT to_date(TRUNC(TO_DATE(#startDate#, 'YYYY-MM-DD') + LEVEL - 1)) as "planDate"
     FROM DUAL
@@ -230,7 +263,7 @@
        T1.JM_AMOUNT       AS "jmAmount",
        T1.BATCH_NO        AS "batchNo",
        T1.METER_AMOUNT    AS "meterAmount",
-       T1.POSITION        AS "position",
+       nvl(T1.POSITION,' ')        AS "position",
        T1.MP_REMARK       AS "mpRemark",
        T1.PROBLEM         AS "problem",
        T5.PRODUCT_ORDER   AS "productOrder",
@@ -240,7 +273,7 @@
        T3.MATER_SPEC_NAME AS "materSpecName",
        T3.MATER_SPEC_ID AS "materSpecId",
        T3.ORDER_AMOUNT    AS "orderAmount",
-       T3.XSC             AS "xsc",
+       T3.XSC             AS "xsc",to_char(T3.demand_Stock_Date,'yyyy-MM-dd')      AS "demandStockDate",
        to_char(T3.ORDER_DATE,'yyyy-MM-dd')      AS "orderDate",T5.order_Remark "orderRemark",
        T2.PLAN_YEAR       AS "planYear",
        T2.PLAN_WEEK       AS "planWeek",
@@ -254,13 +287,14 @@
        t55.test_yj_gpd "testGpd",
        t55.test_yj_salt "testSaltRejection2" ,
        t1.storage_name "storageName",
-       t1.storage_position "storagePosition" ,
+       nvl(t1.storage_position, ' ') "storagePosition" ,
        nvl(t1.storage_name,' ') "storageName2",
        nvl(t1.storage_position, ' ') "storagePosition2" ,
        TO_CHAR(t1.confirm_date, 'yyyy-MM-dd') "confirmDate" ,
        t6.cnt "cnt" ,
        decode(instr(T3.MATER_SPEC_NAME,'-8'),0,'4寸','8寸') "size"  ,
-       nvl(t8.residue,0) "residue"
+       nvl(t8.residue,0) "residue",
+       t66.yj_Gpd_Avg  "yjAvgGpd"
   FROM KS_COMPONENT_PLAN_DAY T1  
   LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue from V_KS_TUMO_ORIGIN2 t) t8
       ON t8.batch_no=t1.batch_no
@@ -274,8 +308,13 @@
   LEFT JOIN KS_PROD_COMPONENT_YXORDER T3
     ON T3.ID = T2.RELATION_ID
 LEFT JOIN KS_COMPONENT_MP_SELECT t55  
-    on t55.mp_batch_no = t1.batch_No  
+    on t55.mp_batch_no = t1.batch_No 
+LEFT JOIN v_KS_COMPONENT_MP_SELECT t66
+ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID 
   where 1=1
+  <isNotNull prepend="and" property="batchNoStr"> 
+  T1.BATCH_NO in($batchNoStr$)
+  </isNotNull>
   <!--
 	SELECT T1.ID AS "id",t1.confirm_Status "confirmStatus",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 
+  - Author(s): dafu
+  - Date: 2024-06-12 10:50:39
+  - Description:
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>栅格系统.</title>
+    <!-- 引入layui的核心css文件 -->
+    <link rel="stylesheet" type="text/css" href="/default/base/layui/css/layui.css">
+</head>
+<body>
+
+    <!--
+        栅格系统
+            列组合：
+                1.定义行   .layui-row
+                2.定义列   .layui-col-md*
+                    md 表示不同屏幕的标识 (xs sm md lg)
+                    * 列的数量
+                3.每一行被均分为12列，列的总数不能超过12，否则会自动换行
+                4.响应式规则
+                    栅格会自动根据屏幕的分辨率选择对应的效果。
+
+            列边距
+                .layui-col-space*
+                    * 代表的是px值 (1-30)
+
+            列偏移
+                将列向右偏移指定列数
+                .*layui-col-md-offset*‘
+                    *代表的是列数
+
+            列嵌套
+                列之间可以无限嵌套
+    -->
+
+    <!-- 布局容器:固定宽度 -->
+    <div class="layui-container">
+        <!-- 定义行 -->
+        <div class="layui-row">
+            <!-- 定义列 -->
+            <div class="layui-col-md5" style="background-color: deepskyblue">
+                内容5/12
+            </div>
+            <div class="layui-col-md7" style="background-color: bisque">
+                内容7/12
+            </div>
+        </div>
+
+        <!-- 定义行 -->
+        <div class="layui-row">
+            <!-- 定义列 -->
+            <div class="layui-col-md4" style="background-color: powderblue">
+                内容4/12
+            </div>
+            <div class="layui-col-md4" style="background-color: mediumaquamarine">
+                内容4/12
+            </div>
+            <div class="layui-col-md6" style="background-color: gray">
+                内容6/12
+            </div>
+        </div>
+
+        <!--响应式-->
+        <hr>
+        <h3>平板、桌面端的不同表现：</h3>
+        <div class="layui-row">
+            <!-- 小屏幕占6列，中屏幕占4列 -->
+            <div class="layui-col-sm6 layui-col-md4" style="background-color: thistle">
+                平板≥768px：6/12 | 桌面端≥992px：4/12
+            </div>
+        </div>
+        <div class="layui-row">
+            <!-- 小屏幕占4列，中屏幕占6列 -->
+            <div class="layui-col-sm4 layui-col-md6" style="background-color: mediumaquamarine;">
+                平板≥768px：4/12 | 桌面端≥992px：6/12
+            </div>
+        </div>
+        <div class="layui-row">
+            <!-- 小屏幕占12列，中屏幕占8列 -->
+            <div class="layui-col-sm12 layui-col-md8" style="background-color: coral">
+                平板≥768px：12/12 | 桌面端≥992px：8/12
+            </div>
+        </div>
+
+
+        <hr>
+        <h3>列边距</h3>
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-md4">
+                <div  style="background-color: hotpink">4</div>
+            </div>
+            <div class="layui-col-md4">
+                <div  style="background-color: indianred">4</div>
+            </div>
+            <div class="layui-col-md4">
+                <div  style="background-color: powderblue">4</div>
+            </div>
+        </div>
+
+
+        <hr/>
+        <h3>列偏移</h3>
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <div  style="background-color: cyan">4</div>
+            </div>
+            <div class="layui-col-md4 layui-col-md-offset4">
+                <div  style="background-color: fuchsia">4
+                    向右移动4列
+                </div>
+            </div>
+        </div>
+
+
+        <hr/>
+        <h3>列嵌套</h3>
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div  style="background-color: mediumaquamarine">
+                    <div class="layui-row">
+                        <!-- 嵌套列 -->
+                        <div class="layui-col-md3" style="background-color: burlywood;">
+                            内部列
+                        </div>
+                        <div class="layui-col-md5" style="background-color: indianred;">
+                            内部列
+                        </div>
+                        <div class="layui-col-md2" style="background-color: red;">
+                            内部列
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

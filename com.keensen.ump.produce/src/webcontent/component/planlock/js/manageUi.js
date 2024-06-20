@@ -14,7 +14,7 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 100,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -45,7 +45,21 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 										'condition/orderDateEnd'],
 								fieldLabel : "订单日期",
 								format : "Y-m-d"
-							}]
+							}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'textarea',
+						name : 'condition/batchNoStr2',
+						emptyText : '多个批次请用逗号分隔，或一行一个批次',
+						colspan : 2,
+						anchor : '85%',
+						fieldLabel : '膜片批次'
+					}, {
+						xtype : 'hidden',
+						name : 'condition/batchNoStr'
+					}]
 				});
 
 		this.queryPanel.addButton({
@@ -188,7 +202,7 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 						header : '试卷元件脱盐'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.component.neworder.queryPlanDay.biz.ext',
+				url : 'com.keensen.ump.produce.component.neworder.queryPlanDayByPage.biz.ext',
 				root : 'data',
 				autoLoad : true,
 				totalProperty : 'totalCount',

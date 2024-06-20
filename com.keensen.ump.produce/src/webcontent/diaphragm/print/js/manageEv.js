@@ -124,29 +124,32 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 		var C = A.getSelectionModel().getSelections();
 		var LODOP = getLodop();// 创建打印控件对象
 		LODOP.PRINT_INIT("膜片唛头打印模板");
-		LODOP.SET_PRINT_STYLEA(0, "HtmWaitMilSecs", 1000);
+		LODOP.SET_PRINT_STYLEA(0, "HtmWaitMilSecs", 1000);		
+		
 		LODOP.ADD_PRINT_SETUP_BKIMG(rootUrl + templateValue);
 
 		Ext.each(C, function(r) {
-
+			var caimoLength = r.data.caimoLength;
 			var materSpecCode = Ext.isEmpty(materSpecCode2)
 					? r.data.materSpecCode
 					: materSpecCode2;
 			var outBatchNo = r.data.outBatchNo;
-			var usefulLength = Ext.isEmpty(r.data.usefulLength)
+			var usefulLength = Ext.isEmpty(r.data.usefulLength2)
 					? ''
-					: 'null' == r.data.usefulLength ? '' : r.data.usefulLength
+					: 'null' == r.data.usefulLength2 ? '' : r.data.usefulLength2
 							+ 'm';
-			var qualifidLength = Ext.isEmpty(r.data.qualifidLength)
+			var qualifidLength = Ext.isEmpty(r.data.qualifidLength2)
 					? ''
-					: 'null' == r.data.qualifidLength
+					: 'null' == r.data.qualifidLength2
 							? ''
-							: r.data.qualifidLength + 'm';
+							: r.data.qualifidLength2 + 'm';
 			var outLength = r.data.outLength + 'm';
 
 			LODOP.SET_PRINT_PAGESIZE(1, paperwidth, paperheight, "");
 			LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", true);
 			LODOP.SET_SHOW_MODE("BKIMG_PRINT", true);
+			LODOP.SET_PRINT_STYLEA(0,"Stretch",1);
+
 			if (templateName == '常用模板') {
 				LODOP.ADD_PRINT_IMAGE(10, 21, 265, 33, rootUrl
 								+ "produce/diaphragm/print/img/log.jpg");

@@ -153,4 +153,46 @@ ORDER BY 2
 
 </update>
 
+<!-- 查询待选操作工 -->
+<select id="qryExecutorOption" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT A.STAFF_ID "staffId", A.STAFF_CODE "staffCode", 
+	A.STAFF_NAME "staffName", A.PRODUCE_NO "produceNo",
+		   A.PRODUCE_NO||'|'||A.STAFF_NAME "produceMan",
+		   A.STAFF_NAME || '(' || A.STAFF_CODE || ')' "staffNameCode"
+	  FROM qinsen.BASE_STAFF A
+	 WHERE 1=1
+	 <isNotNull property = "state">
+	  AND A.STATE = #state#
+	 </isNotNull>
+	 <isNull property = "state">
+	 AND A.STATE = 'A'
+	 </isNull>
+	 <isNotNull property = "teamId">
+	   AND A.DEPT_ID = #teamId#
+	 </isNotNull>
+	 <isNotNull property = "upDeptId">
+	   AND EXISTS
+	 (SELECT 1
+	          FROM BASE_DEPARTMENT BD
+	         WHERE BD.UP_DEPT_ID = #upDeptId# AND BD.DEPT_ID = A.DEPT_ID)
+	 </isNotNull>
+	 <isNotNull property = "teamIdList">
+	   AND A.DEPT_ID IN 
+		($teamIdList$)
+	 </isNotNull>
+	 <isNotNull property = "prodTacheId">
+	   AND EXISTS (SELECT 1
+	          FROM RELA_TACHE_2_TEAM T2T
+	         WHERE T2T.TEAM_ID = A.DEPT_ID
+	           AND T2T.TACHE_ID = #prodTacheId#)
+	 </isNotNull>
+	 <isNotNull property = "prodTacheCode">
+	   AND EXISTS (SELECT 1
+	          FROM RELA_TACHE_2_TEAM T2T, BASE_PRODUCE_TACHE T
+	         WHERE T2T.TACHE_ID = T.TACHE_ID
+	           AND T2T.TEAM_ID = A.DEPT_ID
+	           AND T.TACHE_CODE = #prodTacheCode#)
+	 </isNotNull>
+	 ORDER BY A.STAFF_NAME
+</select>
 </sqlMap>

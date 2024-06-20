@@ -32,28 +32,28 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 80,
 					columns : 4,
 					border : true,
 					//collapsible : true,
 					titleCollapse : false,
-					title : '【膜片出库查询】',
+					//title : '【膜片出库查询】',
 					fields : [{
 								xtype : 'storagecombobox',
 								hiddenName : 'condition/storageId',
-								anchor : '60%',
+								anchor : '80%',
 								fieldLabel : '仓库'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/batchNo',
-								anchor : '60%',
+								anchor : '80%',
 								fieldLabel : '批号'
 							}, {
 								xtype : 'dictcombobox',
 								name : 'condition/type',
 								hiddenName : 'condition/type',
 								fieldLabel : '出库类型',
-								anchor : '60%',
+								anchor : '80%',
 								dictData : OUTOFSTOCK_TYPE
 							}, {
 								xtype : "dateregion",
@@ -78,7 +78,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【膜片出库列表】',
+			//title : '【膜片出库列表】',
 			id : 'outofstock-list',
 			viewConfig : {
 				forceFit : true

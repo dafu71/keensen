@@ -55,6 +55,10 @@ com.keensen.ump.produce.component.planweekMgr.prototype.initEvent = function() {
 					this.planWeekDaysWindow.show();
 
 				}
+				if (this.opt == 'addplanweekdays') {
+					this.addPlanWeekDaysWindow.show();
+					this.addPlanWeekDaysWindow.loadData(cell);
+				}
 
 			}, this);
 
@@ -123,6 +127,19 @@ com.keensen.ump.produce.component.planweekMgr.prototype.initEvent = function() {
 				var jmAmount = this.planDayWindow2.jmAmount.getValue();
 				var useAmount = numPerWad * blankingSize * jmAmount;
 				this.planDayWindow2.useAmount.setValue(useAmount.toFixed(1));
+			}, this);
+
+	this.addPlanWeekDaysWindow.activeItem.mon(
+			this.addPlanWeekDaysWindow.activeItem, 'beforeSave', function() {
+				var oldEndDate = this.addPlanWeekDaysWindow.oldEndDate
+						.getValue();
+				var newEndDate = this.addPlanWeekDaysWindow.newEndDate
+						.getValue();
+				if (newEndDate <= oldEndDate) {
+					Ext.Msg.alert('提示', '新作业结束日期必须大于原作业结束日期！')
+					return false;
+				}
+				
 			}, this);
 
 }
@@ -201,6 +218,14 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlanRoll = function
 }
 
 com.keensen.ump.produce.component.planweekMgr.prototype.onEditPlan = function() {
+
+	var editRecords = this.editPlanDayListPanel.getSelectionModel()
+			.getSelections();
+	if (null == editRecords || editRecords.length == 0) {
+		Ext.Msg.alert('提示', '请选择修改数据行！')
+		return false
+	}
+
 	var relationId = this.editPlanDayPanel.relationId.getValue();
 	var startDate = this.editPlanDayPanel.startDate.getValue();
 	var endDate = this.editPlanDayPanel.endDate.getValue();
@@ -309,6 +334,11 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onSaveWeekDays = functio
 
 }
 
+com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlanWeekDays = function() {
+	this.opt = 'addplanweekdays';
+	this.listPanel.onEdit();
+}
+
 com.keensen.ump.produce.component.planweekMgr.prototype.destroy = function() {
 	this.editPlanWeekWindow.destroy();
 	this.editPlanDayWindow.destroy();
@@ -318,4 +348,5 @@ com.keensen.ump.produce.component.planweekMgr.prototype.destroy = function() {
 	this.planRollWindow.destroy();
 	this.planRollWindow2.destroy();
 	this.planWeekDaysWindow.destroy();
+	this.addPlanWeekDaysWindow.destroy();
 }

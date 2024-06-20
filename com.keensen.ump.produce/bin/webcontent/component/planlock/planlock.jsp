@@ -152,7 +152,7 @@
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("jmAmount")%></div>
 		</td>
 		<td rowspan=<%=rowspan %>>
-		<div align="center" valign="middle" class="style1"><%=list[i].getString("orderDate")%></div>
+		<div align="center" valign="middle" class="style1"><%=list[i].getString("demandStockDate")%></div>
 		</td>
 		<td rowspan=<%=rowspan %>>
 		<div align="center" valign="middle" class="style1"><%=(null == list[i].get("orderRemark")) ? ""
@@ -186,7 +186,8 @@
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("materSpecName")%></div>
 		</td>
 		<td>
-		<div align="center" valign="middle" class="style1"><%=list[i].getString("testAvgGpd")%></div>
+		<div align="center" valign="middle" class="style1"><%=(null == list[i].get("yjAvgGpd")) ? ""
+							: list[i].getString("yjAvgGpd")%></div>
 		</td>
 		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("saltRejection")%></div>
@@ -222,7 +223,8 @@
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("materSpecName")%></div>
 		</td>
 		<td>
-		<div align="center" valign="middle" class="style1"><%=list[i].getString("testAvgGpd")%></div>
+		<div align="center" valign="middle" class="style1"><%=(null == list[i].get("yjAvgGpd")) ? ""
+							: list[i].getString("yjAvgGpd")%></div>
 		</td>
 		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("saltRejection")%></div>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.trialwaterstd">
+    <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	  
+    SELECT T1.RECORD_ID          AS "recordId",
+       T1.MP_SPEC_ID         AS "mpSpecId",
+       T1.TRIAL_SPEC_ID      AS "trialSpecId",
+       T1.PROD_SPEC_ID       AS "prodSpecId",
+       T1.GPD_LOW_LIMIT      AS "gpdLowLimit",
+       T1.GPD_UP_LIMIT       AS "gpdUpLimit",
+       T1.GPD_CENTER         AS "gpdCenter",
+       T1.SALT_LOW_LIMIT     AS "saltLowLimit",
+       T1.SALT_UP_LIMIT      AS "saltUpLimit",
+       T1.FACTOR_B_LOW_LIMIT AS "factorBLowLimit",
+       T1.FACTOR_B_UP_LIMIT  AS "factorBUpLimit",
+       T1.CREATE_DT          AS "createDt",
+       T1.CHANGE_DT          AS "changeDt",
+       T1.CREATOR_ID         AS "creatorId",
+       T1.CHANGER_ID         AS "changerId",
+       T1.REMARK             AS "remark",
+       T1.MP_SPEC_CODE       AS "mpSpecCode",
+       T1.TRIAL_SPEC_CODE    AS "trialSpecCode",
+       T1.TRIAL_SPEC_NAME    AS "trialSpecName",
+       T1.AREA               AS "area",
+       T1.DENSE_NET          AS "denseNet",
+       T1.PROD_SPEC_CODE     AS "prodSpecCode",
+       T1.PROD_SPEC_NAME     AS "prodSpecName",
+       T1.DISP_ORDER         AS "dispOrder"
+
+  FROM (
+        
+        SELECT A.RECORD_ID,
+                A.MP_SPEC_ID,
+                A.TRIAL_SPEC_ID,
+                A.PROD_SPEC_ID,
+                A.GPD_LOW_LIMIT,
+                A.GPD_UP_LIMIT,
+                A.GPD_CENTER,
+                A.SALT_LOW_LIMIT,
+                A.SALT_UP_LIMIT,
+                A.FACTOR_B_LOW_LIMIT,
+                A.FACTOR_B_UP_LIMIT,
+                A.CREATE_DT,
+                A.CHANGE_DT,
+                A.CREATOR_ID,
+                A.CHANGER_ID,
+                A.REMARK,
+                S1.MATER_SPEC_CODE   MP_SPEC_CODE,
+                S2.MATER_SPEC_CODE   TRIAL_SPEC_CODE,
+                S2.MATER_SPEC_NAME   TRIAL_SPEC_NAME,
+                S2.AREA,
+                S2.DENSE_NET,
+                S3.MATER_SPEC_CODE   PROD_SPEC_CODE,
+                S3.MATER_SPEC_NAME   PROD_SPEC_NAME,
+                S2.DISP_ORDER
+          FROM INST_TRIAL_WATER_STD A,
+                PARA_MATER_SPEC      S1,
+                PARA_MATER_SPEC      S2,
+                PARA_MATER_SPEC      S3
+         WHERE A.MP_SPEC_ID = S1.MATER_SPEC_ID
+           AND A.TRIAL_SPEC_ID = S2.MATER_SPEC_ID
+           AND A.PROD_SPEC_ID = S3.MATER_SPEC_ID
+           <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND A.MP_SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="" property="trialSpecId">AND A.TRIAL_SPEC_ID = #trialSpecId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="mpSpecCode">AND S1.MATER_SPEC_CODE = #mpSpecCode#</isNotNull>
+        <isNotNull prepend="" property="trialSpecName">AND S2.MATER_SPEC_NAME = #trialSpecName#</isNotNull>
+        <isNotNull prepend="" property="prodSpecName">AND S3.MATER_SPEC_NAME = #prodSpecName#</isNotNull>
+         ORDER BY S2.DISP_ORDER) T1
+ ORDER BY DISP_ORDER
+
+    
+    </select>
+    <select id="queryRecords4Export" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	  
+    SELECT T1.RECORD_ID          AS "recordId",
+       T1.MP_SPEC_ID         AS "mpSpecId",
+       T1.TRIAL_SPEC_ID      AS "trialSpecId",
+       T1.PROD_SPEC_ID       AS "prodSpecId",
+       T1.GPD_LOW_LIMIT      AS "gpdLowLimit",
+       T1.GPD_UP_LIMIT       AS "gpdUpLimit",
+       T1.GPD_CENTER         AS "gpdCenter",
+       T1.SALT_LOW_LIMIT     AS "saltLowLimit",
+       T1.SALT_UP_LIMIT      AS "saltUpLimit",
+       T1.FACTOR_B_LOW_LIMIT AS "factorBLowLimit",
+       T1.FACTOR_B_UP_LIMIT  AS "factorBUpLimit",
+       T1.CREATE_DT          AS "createDt",
+       T1.CHANGE_DT          AS "changeDt",
+       T1.CREATOR_ID         AS "creatorId",
+       T1.CHANGER_ID         AS "changerId",
+       T1.REMARK             AS "remark",
+       T1.MP_SPEC_CODE       AS "mpSpecCode",
+       T1.TRIAL_SPEC_CODE    AS "trialSpecCode",
+       T1.TRIAL_SPEC_NAME    AS "trialSpecName",
+       T1.AREA               AS "area",
+       T1.DENSE_NET          AS "denseNet",
+       T1.PROD_SPEC_CODE     AS "prodSpecCode",
+       T1.PROD_SPEC_NAME     AS "prodSpecName",
+       T1.DISP_ORDER         AS "dispOrder"
+
+  FROM (
+        
+        SELECT A.RECORD_ID,
+                A.MP_SPEC_ID,
+                A.TRIAL_SPEC_ID,
+                A.PROD_SPEC_ID,
+                A.GPD_LOW_LIMIT,
+                A.GPD_UP_LIMIT,
+                A.GPD_CENTER,
+                A.SALT_LOW_LIMIT,
+                A.SALT_UP_LIMIT,
+                A.FACTOR_B_LOW_LIMIT,
+                A.FACTOR_B_UP_LIMIT,
+                A.CREATE_DT,
+                A.CHANGE_DT,
+                A.CREATOR_ID,
+                A.CHANGER_ID,
+                A.REMARK,
+                S1.MATER_SPEC_CODE   MP_SPEC_CODE,
+                S2.MATER_SPEC_CODE   TRIAL_SPEC_CODE,
+                S2.MATER_SPEC_NAME   TRIAL_SPEC_NAME,
+                S2.AREA,
+                S2.DENSE_NET,
+                S3.MATER_SPEC_CODE   PROD_SPEC_CODE,
+                S3.MATER_SPEC_NAME   PROD_SPEC_NAME,
+                S2.DISP_ORDER
+          FROM QINSEN.INST_TRIAL_WATER_STD A,
+                QINSEN.PARA_MATER_SPEC      S1,
+                QINSEN.PARA_MATER_SPEC      S2,
+                QINSEN.PARA_MATER_SPEC      S3
+         WHERE A.MP_SPEC_ID = S1.MATER_SPEC_ID
+           AND A.TRIAL_SPEC_ID = S2.MATER_SPEC_ID
+           AND A.PROD_SPEC_ID = S3.MATER_SPEC_ID
+           <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND A.MP_SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="" property="trialSpecId">AND A.TRIAL_SPEC_ID = #trialSpecId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="mpSpecCode">AND S1.MATER_SPEC_CODE = #mpSpecCode#</isNotNull>
+        <isNotNull prepend="" property="trialSpecName">AND S2.MATER_SPEC_NAME = #trialSpecName#</isNotNull>
+        <isNotNull prepend="" property="prodSpecName">AND S3.MATER_SPEC_NAME = #prodSpecName#</isNotNull>
+         ORDER BY S2.DISP_ORDER) T1
+ ORDER BY DISP_ORDER
+
+    
+    </select>
+    <!-- 查询是否有唯一键冲突记录 -->
+    <select id="queryDuplicateTrialWaterStd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT *
+	  FROM qinsen.INST_TRIAL_WATER_STD A
+	 WHERE A.TRIAL_SPEC_ID = #trialSpecId#
+	<isNotNull prepend="" property="recordId">AND A.RECORD_ID &lt;&gt; #recordId#</isNotNull>
+    </select>
+    <insert id="insertTrialWaterStd" parameterClass="java.util.HashMap">INSERT INTO qinsen.INST_TRIAL_WATER_STD
+	  (RECORD_ID, MP_SPEC_ID, TRIAL_SPEC_ID, PROD_SPEC_ID, 
+	   GPD_LOW_LIMIT, GPD_UP_LIMIT, GPD_CENTER, 
+	   SALT_LOW_LIMIT, SALT_UP_LIMIT, FACTOR_B_LOW_LIMIT, FACTOR_B_UP_LIMIT, 
+	   CREATE_DT, CHANGE_DT, CREATOR_ID, CHANGER_ID, REMARK)
+	VALUES
+	  (#recordId#, #mpSpecId#, #trialSpecId#, #prodSpecId#, 
+	   #gpdLowLimit#, #gpdUpLimit#, #gpdCenter#, 
+	   #saltLowLimit#, #saltUpLimit#, #factorBLowLimit#, #factorBUpLimit#,
+	   SYSDATE, SYSDATE, #operatorId#, #operatorId#, #remark# )</insert>
+    <!-- 修改记录 -->
+    <update id="updateTrialWaterStdById" parameterClass="java.util.HashMap">
+	UPDATE qinsen.INST_TRIAL_WATER_STD A
+	   SET A.CHANGE_DT = SYSDATE, 
+	 <isNotNull prepend="" property="mpSpecId">A.MP_SPEC_ID = #mpSpecId#,</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">A.PROD_SPEC_ID = #prodSpecId#,</isNotNull>
+        <isNotNull prepend="" property="gpdLowLimit">A.GPD_LOW_LIMIT = #gpdLowLimit#,</isNotNull>
+        <isNotNull prepend="" property="gpdUpLimit">A.GPD_UP_LIMIT = #gpdUpLimit#,</isNotNull>
+        <isNotNull prepend="" property="gpdCenter">A.GPD_CENTER = #gpdCenter#,</isNotNull>
+        <isNotNull prepend="" property="saltLowLimit">A.SALT_LOW_LIMIT = #saltLowLimit#,</isNotNull>
+        <isNotNull prepend="" property="saltUpLimit">A.SALT_UP_LIMIT = #saltUpLimit#,</isNotNull>
+        <isNotNull prepend="" property="factorBLowLimit">A.FACTOR_B_LOW_LIMIT = #factorBLowLimit#,</isNotNull>
+        <isNotNull prepend="" property="factorBUpLimit">A.FACTOR_B_UP_LIMIT = #factorBUpLimit#,</isNotNull>
+        <isNotNull prepend="" property="remark">A.REMARK = #remark#,</isNotNull>
+	       A.CHANGER_ID = #operatorId#
+	 WHERE A.RECORD_ID = #recordId#
+</update>
+    <!-- 按ID删除记录 -->
+    <delete id="deleteTrialWaterStdById" parameterClass="java.util.Map">DELETE FROM qinsen.INST_TRIAL_WATER_STD WHERE RECORD_ID = #recordId#</delete>
+</sqlMap>

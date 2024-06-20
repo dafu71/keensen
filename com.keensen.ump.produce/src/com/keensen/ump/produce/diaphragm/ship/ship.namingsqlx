@@ -622,7 +622,10 @@
        lower(t1.IS_QUALIFIED)    as "isQualified",
        t1.OUT_LENGTH      as "outLength",
        t1.LOSS            as "loss",
-       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+       t1.USEFUL_LENGTH as "usefulLength",
+       nvl(t1.USEFUL_LENGTH,0) - nvl(T22.CAIMO_LENGTH,0)  as "usefulLength2",
+       t1.QUALIFID_LENGTH as "qualifidLength",
+       nvl(t1.QUALIFID_LENGTH,0) - nvl(T22.CAIMO_LENGTH,0) as "qualifidLength2",
        t1.PLAN_NO         as "planNo",
        t1.ORDER_NO        as "orderNo",
        t1.SUP_ID          as "supId",
@@ -651,9 +654,16 @@
        nvl(t7.SALT_REJECTION,0) "fSaltRejection",
        case when t7.SALT_REJECTION-0.05 &gt; 99.79 or t7.SALT_REJECTION-0.05 &lt; 99.65 
        then round(DBMS_RANDOM.VALUE(99.65, 99.79),2) else t7.SALT_REJECTION-0.05 end "fSaltRejection2",
-       m.mater_code "materCode"
+       m.mater_code "materCode",
+       nvl(T22.CAIMO_LENGTH,0) "caimoLength"
   from v_ks_tumo4 t1
   
+   LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,
+                           C.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
+                     WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
+                     GROUP BY C.TUMO_BATCH_ID) T22
+  on t1.RECORD_ID = t22.TUMO_BATCH_ID
   left join (SELECT sum(nvl(t.amount,0)) amount ,record_id 
 			from KS_PROD_DIAPHRAGM_SHIP t
 			GROUP BY record_id) t3

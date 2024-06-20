@@ -128,8 +128,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link4</targetConnections>
     <targetConnections>link12</targetConnections>
+    <targetConnections>link4</targetConnections>
     <nodeLabel>subprocess0label</nodeLabel>
     <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
       <process:partner type="literal">this.queryMpCheckResult</process:partner>
@@ -189,9 +189,9 @@
       <sourceNode>switch0</sourceNode>
       <targetNode>loopend0</targetNode>
     </sourceConnections>
+    <targetConnections>link11</targetConnections>
     <targetConnections>link0</targetConnections>
     <targetConnections>link7</targetConnections>
-    <targetConnections>link11</targetConnections>
     <nodeLabel>switch0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">

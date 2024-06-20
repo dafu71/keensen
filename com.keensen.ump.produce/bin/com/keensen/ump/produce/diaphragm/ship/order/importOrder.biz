@@ -32,12 +32,12 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link48</targetConnections>
-    <targetConnections>link46</targetConnections>
-    <targetConnections>link37</targetConnections>
-    <targetConnections>link30</targetConnections>
-    <targetConnections>link27</targetConnections>
     <targetConnections>link15</targetConnections>
+    <targetConnections>link27</targetConnections>
+    <targetConnections>link30</targetConnections>
+    <targetConnections>link37</targetConnections>
+    <targetConnections>link46</targetConnections>
+    <targetConnections>link48</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -140,8 +140,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link4</targetConnections>
     <targetConnections>link2</targetConnections>
+    <targetConnections>link4</targetConnections>
     <nodeLabel>loopend0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" grouped="true" type="switch">
@@ -236,8 +236,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link10</targetConnections>
     <nodeLabel>loopend1label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign3" name="赋值3" grouped="true" type="assign">
@@ -364,8 +364,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link25</targetConnections>
     <targetConnections>link18</targetConnections>
+    <targetConnections>link25</targetConnections>
     <nodeLabel>loopend2label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:GroupNode" id="group3" name="group3" grouped="true" gstart="loopstart3" gend="loopend3">
@@ -519,8 +519,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link35</targetConnections>
     <targetConnections>link34</targetConnections>
+    <targetConnections>link35</targetConnections>
     <nodeLabel>loopend4label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopend4label" name="label" nodeType="label">

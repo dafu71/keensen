@@ -44,7 +44,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【膜片质检标准查询】',
+					//title : '【膜片质检标准查询】',
 					fields : [{
 								xtype : 'mpspeccombobox',
 								hiddenName : 'condition/specId',
@@ -85,7 +85,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【膜片质检标准列表】',
+			//title : '【膜片质检标准列表】',
 			viewConfig : {
 				forceFit : true
 			},

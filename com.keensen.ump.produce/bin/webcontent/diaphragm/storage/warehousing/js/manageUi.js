@@ -17,33 +17,33 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 120,
 					columns : 4,
 					border : true,
 					//collapsible : true,
 					titleCollapse : false,
-					title : '【膜片入库查询】',
+					//title : '【膜片入库查询】',
 					fields : [{
 								xtype : 'storagecombobox',
 								hiddenName : 'condition/storageId',
-								anchor : '60%',
+								anchor : '80%',
 								fieldLabel : '仓库'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/batchNo',
-								anchor : '60%',
+								anchor : '80%',
 								fieldLabel : '批号'
 							}, {
 								xtype : 'dictcombobox',
 								name : 'condition/type',
 								hiddenName : 'condition/type',
 								fieldLabel : '入库类型',
-								anchor : '60%',
+								anchor : '80%',
 								dictData : WAREHOUSING_TYPE
 							}, {
 								xtype : 'mpspeccombobox2',
 								hiddenName : 'condition/model',
-								anchor : '60%',
+								anchor : '80%',
 								fieldLabel : '膜片型号 '
 							}, {
 								xtype : 'displayfield',
@@ -59,7 +59,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 								format : "Y-m-d"
 							}, {
 								xtype : 'combobox',
-								anchor : '60%',
+								anchor : '80%',
 								name : 'condition/class',
 								hiddenName : 'condition/class',
 								fieldLabel : '膜片等级',
@@ -79,7 +79,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 							}, {
 								xtype : 'storageposcombobox',
 								hiddenName : 'condition/position',
-								anchor : '60%',
+								anchor : '80%',
 								fieldLabel : '库位'
 							}/*
 								 * , { xtype : 'combobox', name :
@@ -117,8 +117,8 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【膜片入库列表】',
-			id : listid,
+			//title : '【膜片入库列表】',
+			id : 'warehousingmgrlist',
 			viewConfig : {
 				forceFit : true
 			},
@@ -236,6 +236,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 				pgrid : this.listPanel,
 				autoHide : false,
 				successFn : function(i, r) {
+					
 					if (r.ret != '1') {
 						Ext.Msg.show({
 									width : 400,
@@ -245,12 +246,12 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 									buttons : Ext.Msg.OK,
 									fn : function() {
 										currentWindow = 'inputWindow';
-										Ext.getCmp(listid).store.load();
+										Ext.getCmp('warehousingmgrlist').store.load();
 									}
 								})
 					} else {
 						currentWindow = 'inputWindow';
-						Ext.getCmp(listid).store.load();
+						Ext.getCmp('warehousingmgrlist').store.load();
 					}
 				},
 				columns : 2,
@@ -446,12 +447,12 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 									buttons : Ext.Msg.OK,
 									fn : function() {
 										currentWindow = 'inputWindow2';
-										Ext.getCmp(listid).store.reload();
+										Ext.getCmp('warehousingmgrlist').store.reload();
 									}
 								})
 					} else {
 						currentWindow = 'inputWindow2';
-						Ext.getCmp(listid).store.reload();
+						Ext.getCmp('warehousingmgrlist').store.reload();
 					}
 				},
 				columns : 2,
@@ -511,7 +512,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					colspan : 2
 				}, {
 					xtype : 'textfield',
-					allowBlank : false,
+					allowBlank : true,
 					name : 'warehousing/customerCode',
 					fieldLabel : '客户',
 					colspan : 2

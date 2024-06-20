@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.prodwaterstd">
+    <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		SELECT T1.RECORD_ID            AS "recordId",
+       T1.MP_SPEC_ID           AS "mpSpecId",
+       T1.PROD_SPEC_ID         AS "prodSpecId",
+       T1.A_GPD_LOW_LIMIT      AS "aGpdLowLimit",
+       T1.A_GPD_UP_LIMIT       AS "aGpdUpLimit",
+       T1.A_GPD_CENTER         AS "aGpdCenter",
+       T1.A_SALT_LOW_LIMIT     AS "aSaltLowLimit",
+       T1.A_SALT_UP_LIMIT      AS "aSaltUpLimit",
+       T1.A_FACTOR_B_LOW_LIMIT AS "aFactorBLowLimit",
+       T1.A_FACTOR_B_UP_LIMIT  AS "aFactorBUpLimit",
+       T1.B_SPEC_ID            AS "bSpecId",
+       T1.B_GPD_LOW_LIMIT      AS "bGpdLowLimit",
+       T1.B_GPD_UP_LIMIT       AS "bGpdUpLimit",
+       T1.B_GPD_CENTER         AS "bGpdCenter",
+       T1.B_SALT_LOW_LIMIT     AS "bSaltLowLimit",
+       T1.B_SALT_UP_LIMIT      AS "bSaltUpLimit",
+       T1.B_FACTOR_B_LOW_LIMIT AS "bFactorBLowLimit",
+       T1.B_FACTOR_B_UP_LIMIT  AS "bFactorBUpLimit",
+       T1.CREATE_DT            AS "createDt",
+       T1.CHANGE_DT            AS "changeDt",
+       T1.CREATOR_ID           AS "creatorId",
+       T1.CHANGER_ID           AS "changerId",
+       T1.REMARK               AS "remark",
+       T1.MP_SPEC_CODE         AS "mpSpecCode",
+       T1.PROD_SPEC_CODE       AS "prodSpecCode",
+       T1.PROD_SPEC_NAME       AS "prodSpecName",
+       T1.AREA                 AS "area",
+       T1.DENSE_NET            AS "denseNet",
+       T1.B_SPEC_CODE          AS "bSpecCode",
+       T1.B_SPEC_NAME          AS "bSpecName",
+       T1.DISP_ORDER           AS "dispOrder"
+
+  FROM (
+        
+        SELECT A.RECORD_ID,
+                A.MP_SPEC_ID,
+                A.PROD_SPEC_ID,
+                A.A_GPD_LOW_LIMIT,
+                A.A_GPD_UP_LIMIT,
+                A.A_GPD_CENTER,
+                A.A_SALT_LOW_LIMIT,
+                A.A_SALT_UP_LIMIT,
+                A.A_FACTOR_B_LOW_LIMIT,
+                A.A_FACTOR_B_UP_LIMIT,
+                A.B_SPEC_ID,
+                A.B_GPD_LOW_LIMIT,
+                A.B_GPD_UP_LIMIT,
+                A.B_GPD_CENTER,
+                A.B_SALT_LOW_LIMIT,
+                A.B_SALT_UP_LIMIT,
+                A.B_FACTOR_B_LOW_LIMIT,
+                A.B_FACTOR_B_UP_LIMIT,
+                A.CREATE_DT,
+                A.CHANGE_DT,
+                A.CREATOR_ID,
+                A.CHANGER_ID,
+                A.REMARK,
+                S1.MATER_SPEC_CODE     MP_SPEC_CODE,
+                S2.MATER_SPEC_CODE     PROD_SPEC_CODE,
+                S2.MATER_SPEC_NAME     PROD_SPEC_NAME,
+                S2.AREA,
+                S2.DENSE_NET,
+                S3.MATER_SPEC_CODE     B_SPEC_CODE,
+                S3.MATER_SPEC_NAME     B_SPEC_NAME,
+                S2.DISP_ORDER
+          FROM INST_PROD_WATER_STD A,
+                PARA_MATER_SPEC     S1,
+                PARA_MATER_SPEC     S2,
+                PARA_MATER_SPEC     S3
+         WHERE A.MP_SPEC_ID = S1.MATER_SPEC_ID
+           AND A.PROD_SPEC_ID = S2.MATER_SPEC_ID
+           AND A.B_SPEC_ID = S3.MATER_SPEC_ID(+)
+           <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND A.MP_SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="bSpecId">AND A.B_SPEC_ID = #bSpecId#</isNotNull>
+        <isNotNull prepend="" property="mpSpecCode">AND S1.MATER_SPEC_CODE = #mpSpecCode#</isNotNull>
+        <isNotNull prepend="" property="prodSpecName">AND S2.MATER_SPEC_NAME = #prodSpecName#</isNotNull>
+        <isNotNull prepend="" property="bSpecName">AND S3.MATER_SPEC_NAME = #bSpecName#</isNotNull>
+           
+           ) T1
+ 		ORDER BY DISP_ORDER
+		
+	
+	</select>
+</sqlMap>

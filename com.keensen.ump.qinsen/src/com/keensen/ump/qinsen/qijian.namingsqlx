@@ -139,6 +139,9 @@
 	<isNotNull prepend = ""  property = "juanMoBatchNo">
 	   AND J.BATCH_NO = UPPER(#juanMoBatchNo#)
 	</isNotNull>
+	<isNotNull prepend = ""  property = "juanmoBatchNo">
+	   AND J.BATCH_NO = UPPER(#juanmoBatchNo#)
+	</isNotNull>
 	<isNotNull prepend = ""  property = "dimoBatchNo">
 	   AND EXISTS
 		 (SELECT 1
@@ -384,4 +387,51 @@
 	t.change_dt = SYSDATE,t.changer_id = #changerId#
 	WHERE t.record_id IN($recordIds$)
 	</update>
+	
+	<!-- 查询是否有唯一键冲突记录 -->
+<select id="queryDuplicateQjStd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT *
+	  FROM QINSEN.INST_QJ_STD A
+	 WHERE A.STATE = 'Y'
+	   AND A.PROD_SPEC_ID = #prodSpecId#
+	<isNotNull prepend = ""  property = "recordId">
+	   AND A.RECORD_ID &lt;&gt; #recordId#
+	</isNotNull>
+</select>
+
+<!-- 创建记录 -->
+<insert id="insertQjStd" parameterClass="java.util.HashMap">
+	
+	INSERT INTO QINSEN.INST_QJ_STD
+	  (RECORD_ID, PROD_SPEC_ID, LOW_LIMIT, UP_LIMIT, STATE, 
+	   CREATE_DT, CHANGE_DT, CREATOR_ID, CHANGER_ID, REMARK)
+	VALUES
+	  (#recordId#, #prodSpecId#, #lowLimit#, #upLimit#, #state#, 
+	   SYSDATE, SYSDATE, #operatorId#, #operatorId#, #remark# )
+</insert>
+
+<!-- 修改记录 -->
+<update id="updateQjStdById" parameterClass="java.util.HashMap">
+	UPDATE QINSEN.INST_QJ_STD A
+	   SET A.CHANGE_DT = SYSDATE, 
+	 <isNotNull prepend = ""  property = "state">
+	       A.STATE = #state#, 
+	 </isNotNull>
+	 <isNotNull prepend = ""  property = "lowLimit">
+	       A.LOW_LIMIT = #lowLimit#,
+	 </isNotNull>
+	 <isNotNull prepend = ""  property = "upLimit">
+	       A.UP_LIMIT = #upLimit#,
+	 </isNotNull>
+	 <isNotNull prepend = ""  property = "remark">
+	       A.REMARK = #remark#,
+	 </isNotNull>
+	       A.CHANGER_ID = #operatorId#
+	 WHERE A.RECORD_ID = #recordId#
+</update>
+
+<!-- 按ID删除记录 -->
+	<delete id="deleteQjStdById" parameterClass="java.util.Map">
+		DELETE FROM QINSEN.INST_QJ_STD WHERE RECORD_ID = #recordId#
+	</delete>
 </sqlMap>

@@ -318,3 +318,41 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr.prototype.onEdit = function()
 	this.listPanel.onEdit();
 	
 }
+
+function queryDelivery(v) {
+	var requestMask = new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	requestMask.show();
+	Ext.Ajax.request({
+		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+		method : "post",
+		jsonData : {
+			'map' : {
+				'condition/planNo' : v
+			},
+			namingsql : 'com.keensen.ump.produce.diaphragm.ship.order.queryBatchNoByPlanNO',
+			templateFilename : 'ks_component_order_batchNo'
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				if (ret.success) {
+					var fname = ret.fname;
+					if (Ext.isIE) {
+						window
+								.open('/default/deliverynote/seek/down4IE.jsp?fname='
+										+ fname);
+					} else {
+						window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
+								+ fname;
+					}
+				}
+			}
+
+		},
+		callback : function() {
+			requestMask.hide()
+		}
+	})
+}

@@ -391,4 +391,23 @@ wp.line "line",wp.sup_id "supId",wp.relation_Id "relationId",
     T1.UPDATE_TIME = sysdate
     where record_id = #recordId#
     </update>
+    
+    <select id="queryBatchNoByPlanNO" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+    SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
+               FROM KS_PROD_DIAPHRAGM_TUMO T
+               LEFT JOIN V_KS_TUMO_ORIGIN2 TT
+                 ON T.RECORD_ID = TT.RECORD_ID
+              WHERE T.TREND = '仓库发货仓'
+              AND TT.PLAN_NO=#planNo#
+              AND UPPER(SUBSTR(TT.PLAN_NO,4,2)) != 'ZY'
+              UNION
+SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
+               FROM KS_PROD_DIAPHRAGM_TUMO T
+               LEFT JOIN V_KS_TUMO_ORIGIN2 TT
+                 ON T.RECORD_ID = TT.RECORD_ID
+              WHERE T.TREND = '仓库AB仓'
+              AND TT.PLAN_NO=#planNo#
+              AND UPPER(SUBSTR(TT.PLAN_NO,4,2)) = 'ZY'  
+              </select>
     </sqlMap>

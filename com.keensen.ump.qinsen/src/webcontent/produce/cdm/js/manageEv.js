@@ -283,9 +283,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function(
 										.setValue(last.pageWidth);
 								_this.inputWindow.tumoBatchId
 										.setValue(last.tumoBatchId);
-								alert(last.tumoBatchId);
-								alert(_this.inputWindow.tumoBatchId
-										.getValue());
+								//alert(last.tumoBatchId);
+								//alert(_this.inputWindow.tumoBatchId.getValue());
 							} else {
 								Ext.Msg.alert("系统提示", "膜片批次不存在，请检查！",
 										function() {

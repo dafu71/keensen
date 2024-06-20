@@ -378,6 +378,9 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 						dataIndex : 'qualifidLength',
 						header : '合格长度(米)'
 					}, {
+						dataIndex : 'caimoLength',
+						header : '裁膜产出(米)'
+					}, {
 						dataIndex : 'loss',
 						header : '不良(米)'
 					}, {
@@ -486,6 +489,12 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 							name : 'fSaltRejection2'
 						}, {
 							name : 'materCode'
+						}, {
+							name : 'caimoLength'
+						}, {
+							name : 'usefulLength2'
+						}, {
+							name : 'qualifidLength2'
 						}]
 			})
 		})

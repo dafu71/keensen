@@ -169,7 +169,7 @@
       <targetNode>assign2</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -241,15 +241,15 @@
       <targetNode>invokePojo0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <targetConnections>link9</targetConnections>
     <targetConnections>link5</targetConnections>
     <targetConnections>link6</targetConnections>
-    <targetConnections>link9</targetConnections>
-    <targetConnections>link11</targetConnections>
     <nodeLabel>switch1label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">

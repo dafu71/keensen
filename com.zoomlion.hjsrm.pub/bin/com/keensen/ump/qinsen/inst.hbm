@@ -51,88 +51,6 @@
             <column length="500" name="REMARK"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.ParaMaterSpec" table="PARA_MATER_SPEC">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="materSpecId" type="int">
-            <column length="9" name="MATER_SPEC_ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="materSpecCode" type="string">
-            <column length="50" name="MATER_SPEC_CODE" not-null="true"/>
-        </property>
-        <property name="materSpecName" type="string">
-            <column length="100" name="MATER_SPEC_NAME" not-null="true"/>
-        </property>
-        <property name="materClassId" type="int">
-            <column length="9" name="MATER_CLASS_ID" not-null="true"/>
-        </property>
-        <property name="state" type="string">
-            <column length="1" name="STATE"/>
-        </property>
-        <property name="safetyStock" type="int">
-            <column length="9" name="SAFETY_STOCK"/>
-        </property>
-        <property name="supplierId" type="int">
-            <column length="9" name="SUPPLIER_ID"/>
-        </property>
-        <property name="measurementUnit" type="int">
-            <column length="9" name="MEASUREMENT_UNIT"/>
-        </property>
-        <property name="plannedUnitPrice" type="big_decimal">
-            <column length="9" name="PLANNED_UNIT_PRICE" precision="9" scale="2"/>
-        </property>
-        <property name="thickness" type="string">
-            <column length="24" name="THICKNESS"/>
-        </property>
-        <property name="width" type="string">
-            <column length="24" name="WIDTH"/>
-        </property>
-        <property name="length" type="string">
-            <column length="24" name="LENGTH"/>
-        </property>
-        <property name="propString" type="string">
-            <column length="2000" name="PROP_STRING"/>
-        </property>
-        <property name="dispOrder" type="int">
-            <column length="4" name="DISP_ORDER"/>
-        </property>
-        <property name="createDt" type="date">
-            <column name="CREATE_DT"/>
-        </property>
-        <property name="changeDt" type="date">
-            <column name="CHANGE_DT"/>
-        </property>
-        <property name="creatorId" type="int">
-            <column length="9" name="CREATOR_ID"/>
-        </property>
-        <property name="changerId" type="int">
-            <column length="9" name="CHANGER_ID"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="mpBatchCode" type="string">
-            <column length="20" name="MP_BATCH_CODE"/>
-        </property>
-        <property name="qtJudgeFlag" type="string">
-            <column length="1" name="QT_JUDGE_FLAG"/>
-        </property>
-        <property name="numPerWad" type="big_decimal">
-            <column length="5" name="NUM_PER_WAD" precision="5" scale="1"/>
-        </property>
-        <property name="blankingSize" type="big_decimal">
-            <column length="7" name="BLANKING_SIZE" precision="7" scale="3"/>
-        </property>
-        <property name="denseNet" type="int">
-            <column length="3" name="DENSE_NET"/>
-        </property>
-        <property name="area" type="big_decimal">
-            <column length="8" name="AREA" precision="8" scale="3"/>
-        </property>
-        <property name="pageWidth" type="big_decimal">
-            <column length="8" name="PAGE_WIDTH" precision="8" scale="3"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstCdmDefect" table="INST_CDM_DEFECT">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="recordId" type="int">
@@ -232,61 +150,6 @@
         </property>
         <property name="isToMix" type="string">
             <column length="1" name="IS_TO_MIX"/>
-        </property>
-        <property name="pageWidth" type="big_decimal">
-            <column length="8" name="PAGE_WIDTH" precision="8" scale="3"/>
-        </property>
-    </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstJuanmoMain" table="INST_JUANMO_MAIN">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="recordId" type="int">
-            <column length="9" name="RECORD_ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="batchNo" type="string">
-            <column length="20" name="BATCH_NO" not-null="true"/>
-        </property>
-        <property name="lineId" type="int">
-            <column length="9" name="LINE_ID" not-null="true"/>
-        </property>
-        <property name="isTrial" type="string">
-            <column length="1" name="IS_TRIAL" not-null="true"/>
-        </property>
-        <property name="orderNo" type="string">
-            <column length="20" name="ORDER_NO" not-null="true"/>
-        </property>
-        <property name="prodSpecId" type="int">
-            <column length="9" name="PROD_SPEC_ID" not-null="true"/>
-        </property>
-        <property name="blankingSize" type="big_decimal">
-            <column length="7" name="BLANKING_SIZE" precision="7" scale="3"/>
-        </property>
-        <property name="denseNet" type="int">
-            <column length="3" name="DENSE_NET"/>
-        </property>
-        <property name="produceDt" type="timestamp">
-            <column name="PRODUCE_DT" not-null="true"/>
-        </property>
-        <property name="teamId" type="int">
-            <column length="9" name="TEAM_ID"/>
-        </property>
-        <property name="workerId" type="int">
-            <column length="9" name="WORKER_ID"/>
-        </property>
-        <property name="createDt" type="timestamp">
-            <column name="CREATE_DT"/>
-        </property>
-        <property name="changeDt" type="timestamp">
-            <column name="CHANGE_DT"/>
-        </property>
-        <property name="creatorId" type="int">
-            <column length="9" name="CREATOR_ID"/>
-        </property>
-        <property name="changerId" type="int">
-            <column length="9" name="CHANGER_ID"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
         </property>
         <property name="pageWidth" type="big_decimal">
             <column length="8" name="PAGE_WIDTH" precision="8" scale="3"/>
@@ -990,6 +853,255 @@
         </property>
         <property name="orderNoBakDt" type="date">
             <column name="ORDER_NO_BAK_DT"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstWaterTest" table="INST_WATER_TEST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="juanmoBatchId" type="int">
+            <column length="9" name="JUANMO_BATCH_ID" not-null="true"/>
+        </property>
+        <property name="testTypeId" type="int">
+            <column length="9" name="TEST_TYPE_ID" not-null="true"/>
+        </property>
+        <property name="temp" type="big_decimal">
+            <column length="4" name="TEMP" not-null="true" precision="4" scale="1"/>
+        </property>
+        <property name="fGpd" type="int">
+            <column length="6" name="F_GPD" not-null="true"/>
+        </property>
+        <property name="fSalt" type="big_decimal">
+            <column length="6" name="F_SALT" not-null="true" precision="6" scale="2"/>
+        </property>
+        <property name="fFactorB" type="big_decimal">
+            <column length="8" name="F_FACTOR_B" not-null="true" precision="8" scale="4"/>
+        </property>
+        <property name="fCheckerId" type="int">
+            <column length="9" name="F_CHECKER_ID" not-null="true"/>
+        </property>
+        <property name="fCheckTm" type="timestamp">
+            <column name="F_CHECK_TM" not-null="true"/>
+        </property>
+        <property name="rGpd" type="int">
+            <column length="6" name="R_GPD"/>
+        </property>
+        <property name="rSalt" type="big_decimal">
+            <column length="6" name="R_SALT" precision="6" scale="2"/>
+        </property>
+        <property name="rFactorB" type="big_decimal">
+            <column length="8" name="R_FACTOR_B" precision="8" scale="4"/>
+        </property>
+        <property name="rCheckerId" type="int">
+            <column length="9" name="R_CHECKER_ID"/>
+        </property>
+        <property name="rCheckTm" type="timestamp">
+            <column name="R_CHECK_TM"/>
+        </property>
+        <property name="isBatchQualified" type="string">
+            <column length="1" name="IS_BATCH_QUALIFIED"/>
+        </property>
+        <property name="batchGpdStdStr" type="string">
+            <column length="20" name="BATCH_GPD_STD_STR"/>
+        </property>
+        <property name="batchSaltStd" type="big_decimal">
+            <column length="6" name="BATCH_SALT_STD" precision="6" scale="2"/>
+        </property>
+        <property name="batchFactorBStd" type="big_decimal">
+            <column length="6" name="BATCH_FACTOR_B_STD" precision="6" scale="4"/>
+        </property>
+        <property name="isProdQualified" type="string">
+            <column length="1" name="IS_PROD_QUALIFIED" not-null="true"/>
+        </property>
+        <property name="prodGpdStdStr" type="string">
+            <column length="20" name="PROD_GPD_STD_STR"/>
+        </property>
+        <property name="prodSaltStd" type="big_decimal">
+            <column length="6" name="PROD_SALT_STD" precision="6" scale="2"/>
+        </property>
+        <property name="prodFactorBStd" type="big_decimal">
+            <column length="6" name="PROD_FACTOR_B_STD" precision="6" scale="4"/>
+        </property>
+        <property name="createDt" type="timestamp">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="timestamp">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="ifProdSpecId" type="int">
+            <column length="9" name="IF_PROD_SPEC_ID" not-null="true"/>
+        </property>
+        <property name="testSpecId" type="int">
+            <column length="9" name="TEST_SPEC_ID" not-null="true"/>
+        </property>
+        <property name="markSpecName" type="string">
+            <column length="50" name="MARK_SPEC_NAME"/>
+        </property>
+        <property name="fMacName" type="string">
+            <column length="10" name="F_MAC_NAME"/>
+        </property>
+        <property name="rMacName" type="string">
+            <column length="10" name="R_MAC_NAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstJuanmoMain" table="INST_JUANMO_MAIN">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="batchNo" type="string">
+            <column length="20" name="BATCH_NO" not-null="true"/>
+        </property>
+        <property name="lineId" type="int">
+            <column length="9" name="LINE_ID" not-null="true"/>
+        </property>
+        <property name="isTrial" type="string">
+            <column length="1" name="IS_TRIAL" not-null="true"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="20" name="ORDER_NO" not-null="true"/>
+        </property>
+        <property name="prodSpecId" type="int">
+            <column length="9" name="PROD_SPEC_ID" not-null="true"/>
+        </property>
+        <property name="blankingSize" type="big_decimal">
+            <column length="7" name="BLANKING_SIZE" precision="7" scale="3"/>
+        </property>
+        <property name="denseNet" type="int">
+            <column length="3" name="DENSE_NET"/>
+        </property>
+        <property name="produceDt" type="timestamp">
+            <column name="PRODUCE_DT" not-null="true"/>
+        </property>
+        <property name="teamId" type="int">
+            <column length="9" name="TEAM_ID"/>
+        </property>
+        <property name="workerId" type="int">
+            <column length="9" name="WORKER_ID"/>
+        </property>
+        <property name="createDt" type="timestamp">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="timestamp">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="pageWidth" type="big_decimal">
+            <column length="8" name="PAGE_WIDTH" precision="8" scale="3"/>
+        </property>
+        <property name="cdmBatchStr" type="string">
+            <column length="500" name="CDM_BATCH_STR"/>
+        </property>
+        <property name="tumoBatchStr" type="string">
+            <column length="500" name="TUMO_BATCH_STR"/>
+        </property>
+        <property name="dimoBatchStr" type="string">
+            <column length="500" name="DIMO_BATCH_STR"/>
+        </property>
+        <property name="pageCntStr" type="string">
+            <column length="100" name="PAGE_CNT_STR"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.ParaMaterSpec" table="PARA_MATER_SPEC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="materSpecId" type="int">
+            <column length="9" name="MATER_SPEC_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="materSpecCode" type="string">
+            <column length="50" name="MATER_SPEC_CODE" not-null="true"/>
+        </property>
+        <property name="materSpecName" type="string">
+            <column length="100" name="MATER_SPEC_NAME" not-null="true"/>
+        </property>
+        <property name="materClassId" type="int">
+            <column length="9" name="MATER_CLASS_ID" not-null="true"/>
+        </property>
+        <property name="state" type="string">
+            <column length="1" name="STATE"/>
+        </property>
+        <property name="safetyStock" type="int">
+            <column length="9" name="SAFETY_STOCK"/>
+        </property>
+        <property name="supplierId" type="int">
+            <column length="9" name="SUPPLIER_ID"/>
+        </property>
+        <property name="measurementUnit" type="int">
+            <column length="9" name="MEASUREMENT_UNIT"/>
+        </property>
+        <property name="plannedUnitPrice" type="big_decimal">
+            <column length="9" name="PLANNED_UNIT_PRICE" precision="9" scale="2"/>
+        </property>
+        <property name="thickness" type="string">
+            <column length="24" name="THICKNESS"/>
+        </property>
+        <property name="width" type="string">
+            <column length="24" name="WIDTH"/>
+        </property>
+        <property name="length" type="string">
+            <column length="24" name="LENGTH"/>
+        </property>
+        <property name="propString" type="string">
+            <column length="2000" name="PROP_STRING"/>
+        </property>
+        <property name="dispOrder" type="int">
+            <column length="4" name="DISP_ORDER"/>
+        </property>
+        <property name="createDt" type="date">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="date">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="mpBatchCode" type="string">
+            <column length="20" name="MP_BATCH_CODE"/>
+        </property>
+        <property name="qtJudgeFlag" type="string">
+            <column length="1" name="QT_JUDGE_FLAG"/>
+        </property>
+        <property name="numPerWad" type="big_decimal">
+            <column length="5" name="NUM_PER_WAD" precision="5" scale="1"/>
+        </property>
+        <property name="blankingSize" type="big_decimal">
+            <column length="7" name="BLANKING_SIZE" precision="7" scale="3"/>
+        </property>
+        <property name="denseNet" type="int">
+            <column length="3" name="DENSE_NET"/>
+        </property>
+        <property name="area" type="big_decimal">
+            <column length="8" name="AREA" precision="8" scale="3"/>
+        </property>
+        <property name="pageWidth" type="big_decimal">
+            <column length="8" name="PAGE_WIDTH" precision="8" scale="3"/>
         </property>
     </class>
 </hibernate-mapping>

@@ -102,11 +102,27 @@ com.keensen.ump.produce.diaphragm.ship.OrderTraceMgr = function() {
 					}, {
 						dataIndex : 'needAmount',
 						sortable : true,
-						header : '订单需生产数量'
+						header : '订单需生产数量',
+						renderer : function(v, m, r, i) {
+							var v2 = parseFloat(v);
+							if (v2 < 0) {
+								return '';
+							} else {
+								return v;
+							}
+						}
 					}, {
 						dataIndex : 'arrangeAmount',
 						sortable : true,
-						header : '建议排产数量'
+						header : '建议排产数量',
+						renderer : function(v, m, r, i) {
+							var v2 = parseFloat(v);
+							if (v2 < 0) {
+								return '';
+							} else {
+								return v;
+							}
+						}
 					}, {
 						dataIndex : 'unit',
 						sortable : true,
@@ -138,16 +154,15 @@ com.keensen.ump.produce.diaphragm.ship.OrderTraceMgr = function() {
 								return v;
 							}
 						}
-					}/*, {
-						dataIndex : 'storageAmount',
-						sortable : true,
-						header : '合格数量'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'storageAmount', sortable : true,
+						 * header : '合格数量' }
+						 */, {
 						dataIndex : 'fhPercent',
 						sortable : true,
 						header : '订单发货率'
-						//订单发货率=已发货数量/订单数量
-					}, {
+						// 订单发货率=已发货数量/订单数量
+				}	, {
 						dataIndex : 'arrangePercent',
 						sortable : true,
 						header : '排产合格率'
