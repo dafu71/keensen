@@ -14,8 +14,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link8</targetConnections>
     <targetConnections>link13</targetConnections>
+    <targetConnections>link24</targetConnections>
     <location x="965" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -117,8 +117,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link11</targetConnections>
     <targetConnections>link22</targetConnections>
+    <targetConnections>link11</targetConnections>
     <location x="816" y="303"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend0label</nodeLabel>
@@ -136,7 +136,6 @@
     <chidren>assign1</chidren>
     <chidren>invokePojo0</chidren>
     <chidren>assign2</chidren>
-    <chidren>subprocess0</chidren>
     <chidren>assign4</chidren>
     <chidren>assign3</chidren>
     <chidren>invokePojo1</chidren>
@@ -145,6 +144,7 @@
     <chidren>subprocess2</chidren>
     <chidren>invokePojo2</chidren>
     <chidren>invokePojo3</chidren>
+    <chidren>subprocess0</chidren>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" grouped="true" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
@@ -346,7 +346,7 @@
   <nodes xsi:type="process:tTransactionCommit" id="transactioncommit0" name="事务提交" displayName="事务提交" type="transactioncommit">
     <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>transactioncommit0</sourceNode>
-      <targetNode>end0</targetNode>
+      <targetNode>subprocess3</targetNode>
     </sourceConnections>
     <targetConnections>link7</targetConnections>
     <location x="964" y="297"/>
@@ -363,8 +363,8 @@
       <sourceNode>transactionrollback0</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link12</targetConnections>
     <targetConnections>link23</targetConnections>
+    <targetConnections>link12</targetConnections>
     <location x="572" y="95"/>
     <size height="28" width="28"/>
     <nodeLabel>transactionrollback0label</nodeLabel>
@@ -563,6 +563,28 @@
     <location x="398" y="154"/>
     <figSize height="20" width="40"/>
     <node>assign7</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="updateJuanmoBatchStr" displayName="updateJuanmoBatchStr" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link24" name="link24" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="885" y="225"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.updateJuanmoBatchStr</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="jmBatchId" type="query" value="String" valueType="Primitive" pattern="reference">juanmo/recordId</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="813" y="260"/>
+    <figSize height="20" width="170"/>
+    <node>subprocess3</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

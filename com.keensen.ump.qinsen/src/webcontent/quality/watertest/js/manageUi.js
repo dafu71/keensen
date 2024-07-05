@@ -18,21 +18,21 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 	}
 
 	this.initTrialPanel = function() {
-			this.trialmgr = new com.keensen.ump.qinsen.quality.trialMgr();
-			this.trialPanel = this.trialmgr.initPanel();
-			this.trialmgr.initEvent();
-			this.reTestWindow = this.trialPanel[0];
-			this.modifyWindow = this.trialPanel[1];
-		};
-		
+		this.trialmgr = new com.keensen.ump.qinsen.quality.trialMgr();
+		this.trialPanel = this.trialmgr.initPanel();
+		this.trialmgr.initEvent();
+		this.reTestWindow = this.trialPanel[0];
+		this.modifyWindow = this.trialPanel[1];
+	};
+
 	this.initProdPanel = function() {
-			this.prodmgr = new com.keensen.ump.qinsen.quality.prodMgr();
-			this.prodPanel = this.prodmgr.initPanel();
-			this.prodmgr.initEvent();
-			this.reTestWindow2 = this.prodPanel[0];
-			this.modifyWindow2 = this.prodPanel[1];
-		};
-		
+		this.prodmgr = new com.keensen.ump.qinsen.quality.prodMgr();
+		this.prodPanel = this.prodmgr.initPanel();
+		this.prodmgr.initEvent();
+		this.reTestWindow2 = this.prodPanel[0];
+		this.modifyWindow2 = this.prodPanel[1];
+	};
+
 	this.initQueryPanel = function() {
 
 		var _this = this;
@@ -81,6 +81,12 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						hiddenName : 'condition/testSpecId',
 						anchor : '85%',
 						fieldLabel : '测试型号',
+						typeAhead : true,
+						typeAheadDelay : 100,
+						minChars : 1,
+						queryMode : 'local',
+						lastQuery : '',
+						editable : true,
 						listeners : {
 							"expand" : function(A) {
 								this.reset()
@@ -135,6 +141,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 
 		this.queryPanel.addButton({
 					text : "导出",
+					rescode : '10002661',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel

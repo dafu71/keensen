@@ -36,14 +36,14 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					border : true,
 					collapsible : true,
 					titleCollapse : false,
-					//title : '【裁叠膜记录查询】',
+					// title : '【裁叠膜记录查询】',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceBeginDate',
 						fieldLabel : '生产时间',
 						colspan : 1,
 						anchor : '75%',
-						allowBlank : false,
+						//allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, -1)
@@ -56,7 +56,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						anchor : '75%',
 						editable : true,
 						format : 'Y-m-d H:i',
-						allowBlank : false,
+						//allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
 					}, {
@@ -121,6 +121,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					scope : this,
+					rescode : '10002661',
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
@@ -172,7 +173,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 				});
 
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【裁叠膜记录列表】',
+			// title : '【裁叠膜记录列表】',
 			viewConfig : {
 				forceFit : false
 			},
@@ -419,7 +420,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 				fields : [{
 							ref : '../../tumoBatchNo',
 							name : 'entity/tumoBatchNo',
-							style:'{font-weight:bold;}',
+							style : '{font-weight:bold;}',
 							fieldLabel : '膜片批次',
 							allowBlank : false,
 							colspan : 2,
@@ -500,8 +501,17 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							lastQuery : '',
 							editable : true,
 							listeners : {
+								scope : this,
 								'specialkey' : function() {
 									return false;
+								},
+								'select' : function(combo, record, eOpts) {
+									this.inputWindow.blankingSize
+											.setValue(record.data.blankingSize);
+									this.inputWindow.pageWidth
+											.setValue(record.data.pageWidth);
+									this.inputWindow.denseNet
+											.setValue(record.data.denseNet);
 								}
 							}
 						}, {
@@ -642,15 +652,15 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 	this.initEditWindow = function() {
 		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
-			title : '修改裁叠膜记录',
-			height : 600,
-			width : 800,
-			// itemCls:'required',
-			// style:'margin-top:10px',
-			resizable : true,
-			minimizable : false,
-			maximizable : true,
-			items : [{
+					title : '修改裁叠膜记录',
+					height : 600,
+					width : 800,
+					// itemCls:'required',
+					// style:'margin-top:10px',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
 						xtype : 'editpanel',
 						pgrid : this.listPanel,
 						autoHide : false,
@@ -737,8 +747,18 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									lastQuery : '',
 									editable : true,
 									listeners : {
+										scope : this,
 										'specialkey' : function() {
 											return false;
+										},
+										'select' : function(combo, record,
+												eOpts) {
+											this.editWindow.blankingSize
+													.setValue(record.data.blankingSize);
+											this.editWindow.pageWidth
+													.setValue(record.data.pageWidth);
+											this.editWindow.denseNet
+													.setValue(record.data.denseNet);
 										}
 									}
 								}, {
@@ -859,6 +879,6 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									dataIndex : 'recordId'
 								}]
 					}]
-		});
+				});
 	}
 }

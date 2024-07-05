@@ -4,7 +4,7 @@
     <select id="query" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	SELECT T1.ID            AS "id",
 	       T1.TEMPLATE_NAME AS "templateName",
-	       T1.URL           AS "url",
+	       T1.URL           AS "url",T1.URL2           AS "url2",
 	       T1.REMARK        AS "remark",
 	       T1.CODE          AS "code"
 	  FROM KS_COMPONENT_MARK_TEMPLATE T1
@@ -32,4 +32,120 @@
          GROUP BY T.ORDER_NO, T.TUMO_BATCH_STR) T1
   LEFT JOIN QINSEN.PARA_MATER_SPEC T2
     ON T1.PROD_SPEC_ID = T2.MATER_SPEC_ID</select>
+    <select id="queryMarkPrint" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.JUANMO_BATCH_ID AS "juanmoBatchId",
+       T1.PROD_BATCH_NO AS "prodBatchNo",
+       T1.PROD_SPEC_ID AS "prodSpecId",
+       T1.ORDER_NO AS "orderNo",
+       T1.JUANMO_BATCH_NO AS "juanmoBatchNo",
+       T1.PROD_SPEC_NAME AS "prodSpecName",
+       T1.TEMPLATE_NAME AS "templateName",
+       T1.URL AS "url",
+       T1.TEMPLATE_ID AS "templateId",
+       T1.DRY_WET AS "dryWet",
+       DECODE(T1.MARK, '公司标准', 'Y', 'N') AS "markStand",
+       DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿') AS "dryWet2",
+       T1.MATER_SPEC_NAME2 AS "prodSpecName2",
+       T1.CODE AS "code"
+  FROM (
+        
+        SELECT T1.JUANMO_BATCH_ID,
+                T1.BATCH_NO         PROD_BATCH_NO,
+                T1.PROD_SPEC_ID,
+                T4.ORDER_NO,
+                T2.BATCH_NO         JUANMO_BATCH_NO,
+                T3.MATER_SPEC_NAME  PROD_SPEC_NAME,
+                T4.TEMPLATE_NAME,
+                T5.URL,
+                T5.ID               TEMPLATE_ID,
+                T4.DRY_WET,
+                T4.MARK,
+                T4.MATER_SPEC_NAME2,
+                T6.RECORD_ID        WATER_BATCH_ID,
+                T5.CODE
+          FROM QINSEN.INST_QIJIAN T1
+          LEFT JOIN QINSEN.INST_WATER_TEST T6
+            ON T6.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
+          LEFT JOIN QINSEN.INST_JUANMO_MAIN T2
+            ON T1.JUANMO_BATCH_ID = T2.RECORD_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC T3
+            ON T3.MATER_SPEC_ID = T1.PROD_SPEC_ID
+          LEFT JOIN (SELECT MATER_SPEC_ID,
+                            ORDER_NO,
+                            MAX(TEMPLATE_NAME) TEMPLATE_NAME,
+                            MAX(DRY_WET) DRY_WET,
+                            MAX(MARK) MARK， MAX(MATER_SPEC_NAME2) MATER_SPEC_NAME2
+                       FROM KS_PROD_COMPONENT_YXORDER
+                      GROUP BY ORDER_NO, MATER_SPEC_ID) T4
+            ON T4.ORDER_NO = T1.ORDER_NO
+           AND T4.MATER_SPEC_ID = T1.PROD_SPEC_ID
+          LEFT JOIN KS_COMPONENT_MARK_TEMPLATE T5
+            ON T5.TEMPLATE_NAME = T4.TEMPLATE_NAME
+         WHERE T1.BATCH_NO = #prodBatchNo#) T1</select>
+    <select id="queryMarkPrintList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   
+    SELECT T1.JUANMO_BATCH_ID AS "juanmoBatchId",
+       T1.PROD_BATCH_NO AS "prodBatchNo",
+       T1.PROD_SPEC_ID AS "prodSpecId",
+       T1.ORDER_NO AS "orderNo",
+       T1.JUANMO_BATCH_NO AS "juanmoBatchNo",
+       T1.PROD_SPEC_NAME AS "prodSpecName",
+       T1.TEMPLATE_NAME AS "templateName",
+       T1.URL AS "url",
+       T1.TEMPLATE_ID AS "templateId",
+       T1.DRY_WET AS "dryWet",
+       DECODE(T1.MARK, '公司标准', 'Y', 'N') AS "markStand",
+       DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿') AS "dryWet2",
+       T1.MATER_SPEC_NAME2 AS "prodSpecName2",
+       T1.CODE AS "code",
+       T1.PRINT_CNT AS "printCnt",
+       case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
+       then '是' else '否' end "ifPrint"
+  FROM (
+        
+        SELECT T1.JUANMO_BATCH_ID,
+                T1.BATCH_NO         PROD_BATCH_NO,
+                T1.PROD_SPEC_ID,
+                T4.ORDER_NO,
+                T2.BATCH_NO         JUANMO_BATCH_NO,
+                T3.MATER_SPEC_NAME  PROD_SPEC_NAME,
+                T4.TEMPLATE_NAME,
+                T5.URL,
+                T5.ID               TEMPLATE_ID,
+                T4.DRY_WET,
+                T4.MARK,
+                T4.MATER_SPEC_NAME2,
+                T6.RECORD_ID        WATER_BATCH_ID,
+                T5.CODE,
+                T7.CNT              PRINT_CNT
+          FROM QINSEN.INST_QIJIAN T1
+          LEFT JOIN QINSEN.INST_WATER_TEST T6
+            ON T6.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
+          LEFT JOIN QINSEN.INST_JUANMO_MAIN T2
+            ON T1.JUANMO_BATCH_ID = T2.RECORD_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC T3
+            ON T3.MATER_SPEC_ID = T1.PROD_SPEC_ID
+          LEFT JOIN (SELECT MATER_SPEC_ID,
+                            ORDER_NO,
+                            MAX(TEMPLATE_NAME) TEMPLATE_NAME,
+                            MAX(DRY_WET) DRY_WET,
+                            MAX(MARK) MARK， MAX(MATER_SPEC_NAME2) MATER_SPEC_NAME2
+                       FROM KS_PROD_COMPONENT_YXORDER
+                      GROUP BY ORDER_NO, MATER_SPEC_ID) T4
+            ON T4.ORDER_NO = T1.ORDER_NO
+           AND T4.MATER_SPEC_ID = T1.PROD_SPEC_ID
+          LEFT JOIN KS_COMPONENT_MARK_TEMPLATE T5
+            ON T5.TEMPLATE_NAME = T4.TEMPLATE_NAME
+          LEFT JOIN (SELECT T.PROD_BATCH_NO, COUNT(*) CNT
+                       FROM KS_COMPONENT_MARK_PRINT_RECORD T
+                      GROUP BY T.PROD_BATCH_NO) T7
+            ON T7.PROD_BATCH_NO = T1.BATCH_NO
+            where 1=1
+            <isNotNull prepend="and" property="prodBatchNo">T1.BATCH_NO = #prodBatchNo#</isNotNull>
+        <isNotNull prepend="and" property="prodBatchNos">T1.BATCH_NO in ($prodBatchNos$)</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T4.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName2">T4.MATER_SPEC_NAME2 like '%' || #prodSpecName2# || '%'</isNotNull>
+        
+        ) T1
+ ORDER BY T1.JUANMO_BATCH_ID DESC
+ </select>
 </sqlMap>

@@ -65,6 +65,10 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 					var remark = this.inputPanel.form.findField('remark')
 							.getValue();
 
+					if(Ext.isEmpty(tumoRecordId)){
+						Ext.Msg.alert("系统提示", "请先校验涂膜批号");
+						return;
+					}
 					var mk = new Ext.LoadMask(this.id, {
 								msg : '正在保存，请稍候!',
 								removeMask : true
@@ -255,7 +259,8 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 				allowBlank : false,
 				fieldLabel : '不良产生日期',
 				format : "Y-m-d",
-				value : new Date()
+				value : new Date(),
+				maxValue : new Date()
 			}, {
 				xtype : 'displayfield',
 				fieldLabel : ' ',

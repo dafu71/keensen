@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="http://127.0.0.1:8080/default/base/jquery/jquery-1.11.3.min.js"></script>
+<script type='text/javascript'
+	src="http://127.0.0.1:8080/default/base/jquery/plugins/JsBarcode.all.min.js"></script>
+<script type='text/javascript' src="http://127.0.0.1:8080/default/base/utility/utf.js"></script>
+<script type="text/javascript"
+	src="http://127.0.0.1:8080/default/base/jquery/plugins/jquery.qrcode.js"></script>
+<style>
+
+.symbol_dry {
+	width:6mm;
+	height:6mm;
+	vertical-align: middle;
+}
+
+.symbol_wet {
+	margin-left:15mm;
+	width:6mm;
+	height:6mm;
+	vertical-align: middle;
+}
+
+.span_a {
+	vertical-align: middle;
+	margin-left: 1mm;
+	font-size: 18pt;
+	font-family:simsun;
+	font-color: #000000;
+	font-weight: bold;
+}
+
+
+@media print {
+         body{
+            -webkit-print-color-adjust:exact;
+            -moz-print-color-adjust:exact;
+            -ms-print-color-adjust:exact;
+            print-color-adjust:exact;
+        } 
+    }     
+
+
+
+</style>
+
+
+</head>
+<body onload="initPage()">
+
+<div id="printContent" align="center">
+<table background='http://127.0.0.1:8080/default/myupload/markprint/2c9086e0906bbab901906d04b05d1cd2.png?ver=42' 
+style="background-repeat: no-repeat;"
+width="800px" height="600px" border=1>
+   <tr height="100px">
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>	
+  </tr>
+  <tr height="100px">
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>	
+  </tr>
+  <tr height="100px">
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>	
+  </tr>
+  <tr height="100px">
+	<td width="100px" ></td>
+	<td colspan=2 align="center" valign="middle"><img src="http://127.0.0.1:8080/default/qinsen/produce/pack/print/image/round.png" class="symbol_dry"/><span class="span_a">DRY</span></td>
+	<td colspan=2 align="center" valign="middle"><img src="http://127.0.0.1:8080/default/qinsen/produce/pack/print/image/ring.png" class="symbol_wet"/><span class="span_a">WET</span></td>
+	
+	
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>	
+  </tr>
+  <tr height="130px">
+    <td width="100px" ></td>
+	<td colspan=4 align="left" valign="middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<svg id="barcode_123123" style="width:80mm"></svg></td>	
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>	
+  </tr>
+  
+  <tr height="70px">
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>
+	<td width="100px" ></td>	
+  </tr>
+</table>
+</div>
+ <script type="text/javascript">
+
+	function initPage() {
+						//var batchNo = 'K28FR008382';
+						var batchNo = '123123';
+						var barcode = document.getElementById('barcode_' + batchNo), 
+						options = {
+						format : "CODE128",
+						displayValue : true,
+						fontSize : 16,
+						font : 'msyhbd',
+						fontOptions : 'bold',
+						textMargin : 0,
+						height : 50,
+						margin : 0,
+						width : 3
+						};
+						
+					JsBarcode(barcode, batchNo, options);
+					window.print();
+					
+	};
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="printMark.flowx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3" state="stateless">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" description="" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="prodBatchNo" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="dryWet" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="prodSpecName" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="prodSpecName2" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="dryWet2" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="id" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="code" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <location x="100" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="570" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="99" y="186"/>
+    <figSize height="20" width="31"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="569" y="186"/>
+    <figSize height="20" width="31"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view0" name="printMark.jsp" displayName="printMark.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMark.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link1" name="link1" lineType="reference" isDefault="true" type="action" actionName="action1">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="405" y="150"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <location x="367" y="186"/>
+    <figSize height="20" width="98"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="101" y="258"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">prodBatchNo</process:from>
+      <process:to type="query">f:entity/prodBatchNo</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="100" y="294"/>
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="saveMarkPrintRecord" displayName="saveMarkPrintRecord" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>switch0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="248" y="150"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.component.makprint.saveMarkPrintRecord</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="entity" type="query" value="com.keensen.ump.produce.component.KsComponentMarkPrintRecord" valueType="DataObject" pattern="reference">f:entity</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="id" type="query" value="String" valueType="Primitive">id</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="183" y="185"/>
+    <figSize height="20" width="157"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>view0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link5" name="link5" displayName="连接线" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">code</process:leftOperand>
+          <process:rightOperand type="literal">2</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="247" y="258"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <location x="238" y="294"/>
+    <figSize height="20" width="46"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view1" name="printMark2.jsp" displayName="printMark2.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMark2.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link6" name="link6" lineType="reference" isDefault="true" type="action" actionName="action2">
+      <sourceNode>view1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="400" y="257"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <location x="358" y="293"/>
+    <figSize height="20" width="107"/>
+    <node>view1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="dafu" createTime="2024-06-27 17:35:43" date="2024-06-27Z" description="" name="printMark" version="6.3"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.component.KsComponentMarkPrintRecord" name="entity"/>
+  </process:variables>
+</process:tPageFlow>

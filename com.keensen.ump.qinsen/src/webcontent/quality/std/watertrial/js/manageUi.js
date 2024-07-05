@@ -64,6 +64,7 @@ com.keensen.ump.produce.quality.watertrialstdMgr = function() {
 
 		this.queryPanel.addButton({
 					text : "导出",
+					rescode : '10002661',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel

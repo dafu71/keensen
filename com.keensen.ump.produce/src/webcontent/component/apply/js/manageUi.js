@@ -122,7 +122,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
-						disabled : (uid != 'KS00610') && (uid != 'KS01313'),
+						disabled : (uid != 'KS00610') && (uid != 'KS01313') && (uid != 'KS00524'),
 						handler : this.onDeleteOrder
 					}, '-', {
 						text : '审核',

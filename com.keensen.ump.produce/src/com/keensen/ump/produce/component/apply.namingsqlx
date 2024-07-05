@@ -146,7 +146,13 @@ GROUP BY h.order_no,h.prod_spec_name) t2 on t1.order_no = t2.order_no and t1.pro
        m.mater_spec_name "prodSpecName",
        j.tumo_batch_str "tumoBatchStr"
   FROM QINSEN.INST_QIJIAN T1
-  LEFT JOIN qinsen.inst_juanmo_main j ON t1.juanmo_batch_id=j.record_id
+  LEFT JOIN (select wm_concat(distinct m.batch_no) tumo_batch_str,dd.main_batch_id record_id
+          from qinsen.inst_juanmo_detail dd,
+               qinsen.inst_caidiemo      c,
+               qinsen.inst_tumo          m
+         where dd.cdm_batch_id = c.record_id
+           and c.tumo_batch_id = m.record_id
+           GROUP BY dd.main_batch_id) j ON t1.juanmo_batch_id=j.record_id
   LEFT JOIN qinsen.para_mater_spec m ON m.mater_spec_id = T1.PROD_SPEC_ID
   LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
                FROM QINSEN.INST_WATER_TEST) T3

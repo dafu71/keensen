@@ -15,8 +15,8 @@
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
     <targetConnections>link26</targetConnections>
-    <targetConnections>link13</targetConnections>
     <targetConnections>link1</targetConnections>
+    <targetConnections>link40</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -213,6 +213,7 @@
         <process:rightOperand type="query">cnt</process:rightOperand>
       </process:simpleCondition>
     </process:condition>
+    <process:iterate/>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopstart1label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
@@ -233,8 +234,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link31</targetConnections>
     <targetConnections>link19</targetConnections>
+    <targetConnections>link37</targetConnections>
     <nodeLabel>loopend1label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopend1label" name="label" nodeType="label">
@@ -254,6 +255,7 @@
     <chidren>invokePojo1</chidren>
     <chidren>invokePojo2</chidren>
     <chidren>group2</chidren>
+    <chidren>invokePojo4</chidren>
   </nodes>
   <nodes xsi:type="process:tTransactionBegin" id="transactionbegin0" name="事务开始" type="transactionbegin">
     <sourceConnections xsi:type="process:tLink" id="link11" name="link11" isDefault="true" type="transition">
@@ -270,7 +272,7 @@
   <nodes xsi:type="process:tTransactionCommit" id="transactioncommit0" name="事务提交" type="transactioncommit">
     <sourceConnections xsi:type="process:tLink" id="link13" name="link13" isDefault="true" type="transition">
       <sourceNode>transactioncommit0</sourceNode>
-      <targetNode>end0</targetNode>
+      <targetNode>assign10</targetNode>
     </sourceConnections>
     <targetConnections>link12</targetConnections>
     <nodeLabel>transactioncommit0label</nodeLabel>
@@ -424,7 +426,7 @@
   <nodes xsi:type="process:tAssign" id="assign7" name="赋值7" collapsed="false" grouped="true" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link21" name="link21" isDefault="true" type="transition">
       <sourceNode>assign7</sourceNode>
-      <targetNode>invokePojo1</targetNode>
+      <targetNode>invokePojo4</targetNode>
     </sourceConnections>
     <targetConnections>link20</targetConnections>
     <nodeLabel>assign7label</nodeLabel>
@@ -480,6 +482,10 @@
       <process:from type="query" pattern="reference">batchNo</process:from>
       <process:to type="query">juanmo/batchNo</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">juanmo/recordId</process:from>
+      <process:to type="query">recordId</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign7label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
@@ -494,7 +500,7 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>assign9</targetNode>
     </sourceConnections>
-    <targetConnections>link21</targetConnections>
+    <targetConnections>link42</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.saveEntity</process:partner>
@@ -561,7 +567,7 @@
     <node>loopstart2</node>
   </nodes>
   <nodes xsi:type="process:tLoopEnd" id="loopend2" name="循环结束2" grouped="true" type="loopend" matchedName="loopstart2">
-    <sourceConnections xsi:type="process:tLink" id="link31" name="link31" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link37" name="link37" isDefault="true" type="transition">
       <sourceNode>loopend2</sourceNode>
       <targetNode>loopend1</targetNode>
     </sourceConnections>
@@ -666,6 +672,95 @@
     <figSize height="20" width="40"/>
     <node>assign9</node>
   </nodes>
+  <nodes xsi:type="process:tLoopStart" id="loopstart3" name="循环3" grouped="true" type="loopstart" matchedName="loopend3" loopType="iterate">
+    <sourceConnections xsi:type="process:tLink" id="link38" name="link38" isDefault="true" type="transition">
+      <sourceNode>loopstart3</sourceNode>
+      <targetNode>subprocess4</targetNode>
+    </sourceConnections>
+    <targetConnections>link43</targetConnections>
+    <nodeLabel>loopstart3label</nodeLabel>
+    <process:iterate iterable="arr" iterableElement="rid"/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopstart3label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>loopstart3</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopEnd" id="loopend3" name="循环结束3" grouped="true" type="loopend" matchedName="loopstart3">
+    <sourceConnections xsi:type="process:tLink" id="link40" name="link40" isDefault="true" type="transition">
+      <sourceNode>loopend3</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link39</targetConnections>
+    <nodeLabel>loopend3label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopend3label" name="label" nodeType="label">
+    <figSize height="20" width="70"/>
+    <node>loopend3</node>
+  </nodes>
+  <nodes xsi:type="model:GroupNode" id="group3" name="group3" grouped="true" gstart="loopstart3" gend="loopend3">
+    <chidren>loopend3</chidren>
+    <chidren>loopstart3</chidren>
+    <chidren>subprocess4</chidren>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess4" name="updateJuanmoBatchStr" collapsed="false" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link39" name="link39" isDefault="true" type="transition">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>loopend3</targetNode>
+    </sourceConnections>
+    <targetConnections>link38</targetConnections>
+    <nodeLabel>subprocess4label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.updateJuanmoBatchStr</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="jmBatchId" type="query" value="String" valueType="Primitive" pattern="reference">rid</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess4label" name="label" nodeType="label">
+    <figSize height="20" width="170"/>
+    <node>subprocess4</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokePojo4" name="concat1" grouped="true" nodeType="common" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
+    <sourceConnections xsi:type="process:tLink" id="link42" name="link42" isDefault="true" type="transition">
+      <sourceNode>invokePojo4</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link21</targetConnections>
+    <nodeLabel>invokePojo4label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.common.utils.StringUtil.concat</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="joinString" type="literal" value="java.lang.String" valueType="Java" pattern="reference">,</process:inputVariable>
+      <process:inputVariable id="1" name="strings" type="query" value="java.lang.String" valueType="Java" pattern="reference">recordIds</process:inputVariable>
+      <process:inputVariable id="2" name="param1" type="query" value="java.lang.String" valueType="Java" pattern="reference">recordId</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">recordIds</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo4label" name="label" nodeType="label">
+    <figSize height="20" width="59"/>
+    <node>invokePojo4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign10" name="赋值10" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link43" name="link43" isDefault="true" type="transition">
+      <sourceNode>assign10</sourceNode>
+      <targetNode>loopstart3</targetNode>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <nodeLabel>assign10label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">recordIds.split(&quot;,&quot;)</process:from>
+      <process:to type="query">arr</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign10label" name="label" nodeType="label">
+    <figSize height="20" width="49"/>
+    <node>assign10</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info version="6.3"/>
@@ -687,6 +782,11 @@
     <process:variable historyStateLocation="client" isArray="false" name="batchNo" primitiveType="String"/>
     <process:variable historyStateLocation="client" isArray="false" name="cnt2" primitiveType="Int"/>
     <process:variable historyStateLocation="client" isArray="false" modelType="com.keensen.ump.qinsen.inst.InstJuanmoMain" name="juanmo"/>
+    <process:variable historyStateLocation="client" isArray="false" name="recordIds" primitiveType="String"/>
+    <process:variable anyType="java.util.HashMap" historyStateLocation="client" isArray="false" name="mp"/>
+    <process:variable historyStateLocation="client" isArray="false" name="recordId" primitiveType="Int"/>
+    <process:variable historyStateLocation="client" isArray="true" name="arr" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="rid" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input anyType="java.util.HashMap" isArray="false" name="info"/>

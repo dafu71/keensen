@@ -328,7 +328,7 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 					}, {
 						dataIndex : 'testYjSalt',
 						sortable : true,
-						header : '试卷<br>元件脱盐率',
+						header : '试卷<br>元件脱盐率'/*,
 						renderer : function(v, m, r, i) {
 							if (v == null || v == 'null')
 								return '';
@@ -341,7 +341,7 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 								return "<span style='color:green'>" + v
 										+ "</span>";
 							}
-						}
+						}*/
 					}, {
 						dataIndex : 'testYjGpdLowLimit',
 						sortable : true,
@@ -511,6 +511,22 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 					}, {
 						dataIndex : 'yjGpdUpLimit',
 						header : '可卷制元件产<br>水量上限'
+					}, {
+						dataIndex : 'testYjSalt',
+						header : '试卷<br>元件脱盐率',
+						renderer : function(v, m, r, i) {
+							if (v == null || v == 'null')
+								return '';
+							var condition2 = r.get('condition2');
+							if (condition2 == '否') {
+								return "<span style='color:red'>" + v
+										+ "</span>";
+
+							} else {
+								return "<span style='color:green'>" + v
+										+ "</span>";
+							}
+						}
 					}, {
 						dataIndex : 'yjSaltLowLimit',
 						header : '可卷制元件<br>脱盐率下限'

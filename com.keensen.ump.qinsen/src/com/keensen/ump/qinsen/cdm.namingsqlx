@@ -133,11 +133,11 @@
 	<isNotNull prepend = ""  property = "mpSpecId">
 	   AND TM.SPEC_ID = #mpSpecId#
 	</isNotNull>
-	<isNotNull prepend = ""  property = "juanMoBatchId">
+	<isNotNull prepend = ""  property = "juanmoBatchId">
 	   AND EXISTS (SELECT 1
-	          FROM INST_JUANMO_DETAIL D
+	          FROM QINSEN.INST_JUANMO_DETAIL D
 	         WHERE D.CDM_BATCH_ID = A.RECORD_ID
-	           AND D.MAIN_BATCH_ID = #juanMoBatchId#)
+	           AND D.MAIN_BATCH_ID = #juanmoBatchId#)
 	</isNotNull> 
 	ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO
         ) T1

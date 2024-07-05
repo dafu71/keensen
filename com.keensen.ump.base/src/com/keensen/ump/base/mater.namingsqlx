@@ -6,10 +6,12 @@
 		WITH TB AS
 	 (SELECT * FROM QINSEN.PARA_MATER_CLASS)
 	SELECT LEVEL AS "level",
-	       C.MATER_CLASS_ID AS "materClassId",
-	       C.MATER_CLASS_CODE AS "materClassCode",
-	       C.MATER_CLASS_NAME AS "materClassName",
+			LEVEL AS "orglevel",
+	       C.MATER_CLASS_ID AS "materClassId",C.MATER_CLASS_ID AS "orgid",
+	       C.MATER_CLASS_CODE AS "materClassCode",C.MATER_CLASS_CODE AS "orgcode",
+	       C.MATER_CLASS_NAME AS "materClassName",C.MATER_CLASS_NAME AS "orgname",
 	       (case  when C.UP_ID is null then 0 else C.UP_ID end) AS "upId",
+	        (case  when C.UP_ID is null then 0 else C.UP_ID end) AS "parentorgid",
 	       C.DISP_ORDER AS "dispOrder",
 	       C.CREATE_DT AS "createDt",
 	       C.CHANGE_DT AS "changeDt",
@@ -30,4 +32,231 @@
 	 START WITH C.UP_ID IS NULL
 	 ORDER BY LEVEL, C.DISP_ORDER, C.MATER_CLASS_NAME
 	</select>
+	
+	<!-- 查询物料规格列表 -->
+<select id="queryMaterSpecList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+SELECT T1.MATER_SPEC_ID         AS "materSpecId",
+       T1.MATER_SPEC_CODE       AS "materSpecCode",
+       T1.MATER_SPEC_NAME       AS "materSpecName",
+       T1.MATER_CLASS_ID        AS "materClassId",
+       T1.STATE                 AS "state",
+       T1.SAFETY_STOCK          AS "safetyStock",
+       T1.SUPPLIER_ID           AS "supplierId",
+       T1.MEASUREMENT_UNIT      AS "measurementUnit",
+       T1.PLANNED_UNIT_PRICE    AS "plannedUnitPrice",
+       T1.THICKNESS             AS "thickness",
+       T1.WIDTH                 AS "width",
+       T1.LENGTH                AS "length",
+       T1.PROP_STRING           AS "propString",
+       T1.DISP_ORDER            AS "dispOrder",
+       T1.DISP_ORDER2           AS "dispOrder2",
+       T1.CREATE_DT             AS "createDt",
+       T1.CHANGE_DT             AS "changeDt",
+       T1.CREATOR_ID            AS "creatorId",
+       T1.CHANGER_ID            AS "changerId",
+       T1.REMARK                AS "remark",
+       T1.MP_BATCH_CODE         AS "mpBatchCode",
+       T1.QT_JUDGE_FLAG         AS "qtJudgeFlag",
+       T1.NUM_PER_WAD           AS "numPerWad",
+       T1.BLANKING_SIZE         AS "blankingSize",
+       T1.DENSE_NET             AS "denseNet",
+       T1.AREA                  AS "area",
+       T1.PAGE_WIDTH            AS "pageWidth",
+       T1.MATER_CLASS_CODE      AS "materClassCode",
+       T1.MATER_CLASS_NAME      AS "materClassName",
+       T1.STATE_NAME            AS "stateName",
+       T1.QT_JUDGE_FLAG_NAME    AS "qtJudgeFlagName",
+       T1.MEASUREMENT_UNIT_CODE AS "measurementUnitCode",
+       T1.MEASUREMENT_UNIT_NAME AS "measurementUnitName",
+       T1.CREATE_DATE           AS "createDate",
+       T1.CHANGE_DATE           AS "changeDate",
+       T1.CREATOR               AS "creator",
+       T1.CHANGER               AS "changer"
+  FROM (SELECT S.MATER_SPEC_ID,
+               S.MATER_SPEC_CODE,
+               S.MATER_SPEC_NAME,
+               S.MATER_CLASS_ID,
+               S.STATE,
+               S.SAFETY_STOCK,
+               S.SUPPLIER_ID,
+               S.MEASUREMENT_UNIT,
+               S.PLANNED_UNIT_PRICE,
+               S.THICKNESS,
+               S.WIDTH,
+               S.LENGTH,
+               S.PROP_STRING,
+               S.DISP_ORDER,
+               C.DISP_ORDER DISP_ORDER2,
+               S.CREATE_DT,
+               S.CHANGE_DT,
+               S.CREATOR_ID,
+               S.CHANGER_ID,
+               S.REMARK,
+               S.MP_BATCH_CODE,
+               S.QT_JUDGE_FLAG,
+               S.NUM_PER_WAD,
+               S.BLANKING_SIZE,
+               S.DENSE_NET,
+               S.AREA,
+               S.PAGE_WIDTH,
+               C.MATER_CLASS_CODE,
+               C.MATER_CLASS_NAME,
+               DECODE(S.STATE, 'Y', '在用', 'N', '停用', '') STATE_NAME,
+               DECODE(S.QT_JUDGE_FLAG, 'F', '初检', 'L', '复检', '') QT_JUDGE_FLAG_NAME,
+               (SELECT O.PROP_VALUE_CODE
+                  FROM QINSEN.CONF_PROP_VALUE_OPTION O
+                 WHERE O.PROP_VALUE_ID = S.MEASUREMENT_UNIT) MEASUREMENT_UNIT_CODE,
+               (SELECT O.PROP_VALUE_NAME
+                  FROM QINSEN.CONF_PROP_VALUE_OPTION O
+                 WHERE O.PROP_VALUE_ID = S.MEASUREMENT_UNIT) MEASUREMENT_UNIT_NAME,
+               TO_CHAR(C.CREATE_DT, 'YYYY-MM-DD HH24:MI:SS') CREATE_DATE,
+               TO_CHAR(C.CHANGE_DT, 'YYYY-MM-DD HH24:MI:SS') CHANGE_DATE,
+               (SELECT BS.STAFF_NAME
+                  FROM QINSEN.BASE_STAFF BS
+                 WHERE BS.STAFF_ID = C.CREATOR_ID) CREATOR,
+               (SELECT BS.STAFF_NAME
+                  FROM QINSEN.BASE_STAFF BS
+                 WHERE BS.STAFF_ID = C.CHANGER_ID) CHANGER
+          FROM QINSEN.PARA_MATER_SPEC S, QINSEN.PARA_MATER_CLASS C
+         WHERE S.MATER_CLASS_ID = C.MATER_CLASS_ID
+         <isNotNull prepend="" property="materSpecId">
+	   AND S.MATER_SPEC_ID = #materSpecId#
+	</isNotNull>
+	<isNotNull prepend="" property="materSpecCode">
+	   AND S.MATER_SPEC_CODE LIKE '%'||UPPER(#materSpecCode#)||'%'
+	</isNotNull>
+	<isNotNull prepend="" property="materSpecName">
+	   AND S.MATER_SPEC_NAME LIKE '%'||#materSpecName#||'%'
+	</isNotNull>
+	<isNotNull prepend="" property="materClassId">
+	   AND S.MATER_CLASS_ID = #materClassId#
+	</isNotNull>
+	<isNotNull prepend="" property="materClassIds">
+		AND S.MATER_CLASS_ID IN
+		($materClassIds$)
+	</isNotNull>
+	<isNotNull prepend="" property="materClassCode">
+	   AND C.MATER_CLASS_CODE = #materClassCode#
+	</isNotNull>
+	<isNotNull prepend="" property="state">
+	   AND S.STATE = #state#
+	</isNotNull>
+	<isNotNull prepend="" property="supplierId">
+	   AND S.SUPPLIER_ID = #supplierId#
+	</isNotNull>
+         
+         ) T1
+ ORDER BY T1.DISP_ORDER2, T1.DISP_ORDER, T1.MATER_SPEC_NAME
+
+
+</select>
+
+<!-- 获取默认的新物料规格编号 -->
+<select id="getNewMaterSpecCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+
+	SELECT 
+    (SELECT B.mater_Class_Code FROM qinsen.para_mater_class B WHERE B.MATER_CLASS_ID = #materClassId#) 
+    || '_' || (SELECT LPAD(COUNT(*) + 1, 4, '0') FROM qinsen.PARA_MATER_SPEC A WHERE A.MATER_CLASS_ID = #materClassId#)
+    "materSpecCode"
+    FROM dual
+	
+</select>
+
+<!-- 创建物料规格 -->
+<insert id="insertMaterSpec" parameterClass="java.util.HashMap">
+	
+	INSERT INTO qinsen.PARA_MATER_SPEC
+	  (MATER_SPEC_ID, MATER_SPEC_CODE, MATER_SPEC_NAME,
+	   MATER_CLASS_ID, MEASUREMENT_UNIT, PLANNED_UNIT_PRICE,
+	   STATE, DISP_ORDER, REMARK, THICKNESS, WIDTH, LENGTH, SUPPLIER_ID,
+	   MP_BATCH_CODE, QT_JUDGE_FLAG, NUM_PER_WAD, BLANKING_SIZE, DENSE_NET, AREA, PAGE_WIDTH,
+	   CREATE_DT, CHANGE_DT, CREATOR_ID, CHANGER_ID)
+	VALUES
+	  (#materSpecId#, UPPER(#materSpecCode#), #materSpecName#, 
+	   #materClassId#, #measurementUnit#, #plannedUnitPrice#, 
+	   'Y', #dispOrder#, #remark#, #thickness#, #width#, #length#, #supplierId#,
+	   #mpBatchCode#, #qtJudgeFlag#, #numPerWad#, #blankingSize#, #denseNet#, #area#, #pageWidth#,
+	   sysdate, sysdate, #operatorId#, #operatorId#)
+</insert>
+
+<!-- 修改物料规格 -->
+<update id="updateMaterSpecById" parameterClass="java.util.HashMap">
+	UPDATE qinsen.PARA_MATER_SPEC A
+	   SET A.CHANGE_DT = SYSDATE, 
+	 <isNotNull prepend="" property="materSpecCode">
+	       A.MATER_SPEC_CODE = UPPER(#materSpecCode#), 
+	 </isNotNull>
+	 <isNotNull prepend="" property="materSpecName">
+	       A.MATER_SPEC_NAME = #materSpecName#, 
+	 </isNotNull>
+	 <isNotNull prepend="" property="supplierId">
+	       A.SUPPLIER_ID = #supplierId#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="measurementUnit">
+	       A.MEASUREMENT_UNIT = #measurementUnit#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="plannedUnitPrice">
+	       A.PLANNED_UNIT_PRICE = #plannedUnitPrice#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="dispOrder">
+	       A.DISP_ORDER = #dispOrder#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="remark">
+	       A.REMARK = #remark#, 
+	 </isNotNull>
+	 <isNotNull prepend="" property="propString">
+	       A.PROP_STRING = #propString#, 
+	 </isNotNull>
+	 <isNotNull prepend="" property="thickness">
+	       A.THICKNESS = #thickness#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="width">
+	       A.WIDTH = #width#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="length">
+	       A.LENGTH = #length#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="state">
+	       A.STATE = #state#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="safetyStock">
+	       A.SAFETY_STOCK = #safetyStock#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="mpBatchCode">
+	       A.MP_BATCH_CODE = #mpBatchCode#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="qtJudgeFlag">
+	       A.QT_JUDGE_FLAG = #qtJudgeFlag#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="numPerWad">
+	       A.NUM_PER_WAD = #numPerWad#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="blankingSize">
+	       A.BLANKING_SIZE = #blankingSize#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="denseNet">
+	       A.DENSE_NET = #denseNet#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="area">
+	       A.AREA = #area#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="pageWidth">
+	       A.PAGE_WIDTH = #pageWidth#,
+	 </isNotNull>
+	       A.CHANGER_ID = #operatorId#
+	 WHERE A.MATER_SPEC_ID = #materSpecId#
+</update>
+
+<!-- 查询是否有重复的物料规格编码，全局唯一 -->
+<select id="queryDuplicateMaterSpecCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT *
+	  FROM qinsen.PARA_MATER_SPEC S
+	 WHERE S.MATER_SPEC_CODE = UPPER(#materSpecCode#)
+	<isNotNull prepend="" property="materSpecId">
+	   AND S.MATER_SPEC_ID &lt;&gt; #materSpecId#
+	</isNotNull>
+	<isNotNull prepend="" property="materClassIds">
+		AND S.MATER_CLASS_ID IN($materClassIds$)
+	</isNotNull>
+</select>
 </sqlMap>

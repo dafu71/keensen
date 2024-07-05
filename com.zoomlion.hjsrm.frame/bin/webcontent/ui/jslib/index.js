@@ -653,12 +653,13 @@ Frame.ui.Footer = Ext.extend(Ext.Panel, {
 				+ '<span id="myClock"></span>'
 				+ '</td>'
 				+ '<td width="30%" height="20" align="right" id="btm_menu">'
-				// + '<span><a href="javascript:modifypass()">修改密码</a></span>'
-				// + '<span>|</span><span><a
+				+ '<span><a href="javascript:modifypass()">修改密码</a></span>'
+				//+ '<span>|</span>'
+				//<span><a
 				// href="javascript:switchorg()">切换机构</a></span>'
 				+ '<span>|</span><span><a href="javascript:login_Phase_I()">一期系统</a></span>'
 				+ '<span>|</span><span><a href="javascript:loginOut()" class="loginout-icon">注销登录</a></span>'
-				+ '<span>|</span><span><a href="javascript:changeStyle()">更换主题</a></span>'
+				//+ '<span>|</span><span><a href="javascript:changeStyle()">更换主题</a></span>'
 				+ '</td></tr>' + '</table>');
 	}
 });
@@ -679,7 +680,7 @@ function display() {
 		var time = nowdata + " " + nowweek + " " + nowtime; // 拼接显示时间(2013年4月3日
 		// 星期三
 	}
-	if (kicktime > 30) {
+	/*if (kicktime > 30) {
 		kicktime = 0;
 
 		url = 'com.zoomlion.hjsrm.frame.auth.login.LoginManager.isLogin.biz.ext';
@@ -692,7 +693,7 @@ function display() {
 
 		}
 
-		/*
+		
 		 * Ext.Ajax.request({ url :
 		 * 'com.zoomlion.hjsrm.frame.auth.login.LoginManager.isLogin.biz.ext',
 		 * asynl:ture, success : function(response, action) { var result =
@@ -700,12 +701,12 @@ function display() {
 		 * Ext.Msg.alert("系统提示", "已有其他用户使用现有账号登录,请确认", function() {
 		 * location.href = "/default/frame/ui/page/kick.jsp"; }) } }, callback :
 		 * function() { } });
-		 */
+		 
 
 	} else {
 		kicktime += 1;
 
-	}
+	}*/
 	// 10:28:38)
 	document.getElementById('myClock').innerHTML = time; // 显示时间
 }
@@ -851,9 +852,9 @@ Frame.ui.IndexLayout = Ext.extend(Ext.Viewport, {
 				}, this);
 		this.navigate.on("menuClick", function(D, C) {
 					if (setpassword == "1") {
-						Ext.getCmp("modifyWindow").show();
-						Ext.getCmp("modifyWindow").setTitle("密码过于简单，请立即修改！");
-						return
+						//Ext.getCmp("modifyWindow").show();
+						//Ext.getCmp("modifyWindow").setTitle("密码过于简单，请立即修改！");
+						//return
 					}
 					if (D.isLeaf()) {
 						this.workspaceTabPanel.open(D);
@@ -1450,7 +1451,7 @@ Frame.ui.modifyFormPanel = Ext.extend(Ext.form.FormPanel, {
 			return false
 		} else {
 			if (password1.length < 6) {
-				Ext.Msg.alert("操作提示", "密码长度为6-100位!请重新输入原始密码!", function() {
+				Ext.Msg.alert("操作提示", "密码长度为6-16位!请重新输入原始密码!", function() {
 							this.pass1.focus(true, 100)
 						});
 				return false
@@ -1463,7 +1464,7 @@ Frame.ui.modifyFormPanel = Ext.extend(Ext.form.FormPanel, {
 			return false
 		} else {
 			if (password2.length < 6) {
-				Ext.Msg.alert("操作提示", "密码长度为6-100位!请重新输入新密码", function() {
+				Ext.Msg.alert("操作提示", "密码长度为6-16位!请重新输入新密码", function() {
 							this.pass2.focus(true, 100)
 						});
 				return false
@@ -1476,7 +1477,7 @@ Frame.ui.modifyFormPanel = Ext.extend(Ext.form.FormPanel, {
 			return false
 		} else {
 			if (password3.length < 6) {
-				Ext.Msg.alert("操作提示", "密码长度为6-100位!请重新输入重复新密码!", function() {
+				Ext.Msg.alert("操作提示", "密码长度为6-16位!请重新输入重复新密码!", function() {
 							this.pass3.focus(true, 100)
 						});
 				return false
@@ -1504,7 +1505,8 @@ Frame.ui.modifyFormPanel = Ext.extend(Ext.form.FormPanel, {
 			if (A == "yes") {
 				Ext.Ajax.request({
 					method : "post",
-					url : "com.zoomlion.hjsrm.frame.auth.login.LoginManager.modifyPwd.biz.ext",
+					//url : "com.zoomlion.hjsrm.frame.auth.login.LoginManager.modifyPwd.biz.ext",
+					url : "com.keensen.ump.base.organduser.modiStaffPassword.biz.ext",
 					jsonData : {
 						pwd1 : H,
 						pwd2 : G
@@ -1516,6 +1518,11 @@ Frame.ui.modifyFormPanel = Ext.extend(Ext.form.FormPanel, {
 							Ext.Msg.alert("系统提示", "密码修改成功！", function() {
 										B.reset();
 										Ext.getCmp("modifyWindow").hide()
+									})
+						}else{
+							Ext.Msg.alert("系统提示", "密码修改失败，请检查原密码是否正确！", function() {
+										//B.reset();
+										//Ext.getCmp("modifyWindow").hide()
 									})
 						}
 					}

@@ -11,7 +11,7 @@
        T1.UPDATE_USER_ID AS "updateUserId",
        T1.UPDATE_NAME AS "updateName",	
 		T1.SCFS              AS "scfs",T1.reserve1 "reserve1",
-       T1.BM                AS "bm",
+       T1.BM                AS "bm",T1.template_Name                AS "templateName",
        T1.SFFH              AS "sffh",
        T1.ORDER_TYPE        AS "orderType",
        T1.TYPE              AS "type",
@@ -227,8 +227,10 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        t6.cnt "cnt" ,
        decode(instr(T3.MATER_SPEC_NAME,'-8'),0,'4寸','8寸') "size"  ,
        nvl(t8.residue,0) "residue",
-       t66.yj_Gpd_Avg  "yjAvgGpd"
-  FROM KS_COMPONENT_PLAN_DAY T1  
+       t66.yj_Gpd_Avg  "yjAvgGpd",cnt.cnt "cnt2"
+  FROM KS_COMPONENT_PLAN_DAY T1 
+  LEFT JOIN (select t.plan_date,t.batch_no,COUNT(1) cnt from KS_COMPONENT_PLAN_DAY t
+  GROUP BY t.plan_date,t.batch_no ) cnt ON cnt.batch_no = t1.batch_no AND cnt.plan_date = t1.plan_date
   LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue from V_KS_TUMO_ORIGIN2 t) t8
       ON t8.batch_no=t1.batch_no
   LEFT JOIN KS_COMPONENT_PLAN_WEEK T2

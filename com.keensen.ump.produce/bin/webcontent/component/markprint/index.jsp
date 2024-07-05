@@ -11,6 +11,8 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("/produce/component/markprint/index.jsp","");
 %>
 <html>
 <!-- 
@@ -19,7 +21,7 @@
   - Description:
 -->
 <head>
-<title>元件唛头打印</title>
+<title>元件唛头模板</title>
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
@@ -27,11 +29,12 @@
 <js:load scriptPath="produce/component/markprint/js/manageUi.js"/>
 <js:load scriptPath="produce/component/markprint/js/manageEv.js"/>
 <script type="text/javascript">
+  var rootUrl2 = "<%=rootUrl %>";
   var uid = "<%=uid %>";
   var listid = Ext.id();
   
   FunctionMgr.load({ 
-			mainfn:com.keensen.ump.produce.component.markprintMgr
+			mainfn:com.keensen.ump.produce.component.markprinttemplateMgr
 		});
  </script>
  
@@ -40,6 +43,6 @@
 </style>
 </head>
 <body>
-<div id="componentmarkprintmgr"></div>
+<div id="componentmarkprinttemplatemgr"></div>
 </body>
 </html>

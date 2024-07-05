@@ -145,7 +145,7 @@
 	<isNotNull prepend = ""  property = "dimoBatchNo">
 	   AND EXISTS
 		 (SELECT 1
-	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C, INST_TUMO M
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
 	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
 	           AND D.CDM_BATCH_ID = C.RECORD_ID
 	           AND C.TUMO_BATCH_ID = M.RECORD_ID
@@ -154,7 +154,7 @@
 	<isNotNull prepend = ""  property = "tumoBatchId">
 	   AND EXISTS
 		 (SELECT 1
-	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
 	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
 	           AND D.CDM_BATCH_ID = C.RECORD_ID
 	           AND C.TUMO_BATCH_ID = #tumoBatchId#)
@@ -162,7 +162,7 @@
 	<isNotNull prepend = ""  property = "tumoBatchNo">
 	   AND EXISTS
 		 (SELECT 1
-	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C, INST_TUMO M
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
 	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
 	           AND D.CDM_BATCH_ID = C.RECORD_ID
 	           AND C.TUMO_BATCH_ID = M.RECORD_ID
@@ -171,7 +171,7 @@
 	<isNotNull prepend = ""  property = "tumoBatchNoStr">
 	   AND EXISTS
 		 (SELECT 1
-	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C, INST_TUMO M
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
 	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
 	           AND D.CDM_BATCH_ID = C.RECORD_ID
 	           AND C.TUMO_BATCH_ID = M.RECORD_ID
@@ -179,13 +179,13 @@
 	</isNotNull>
 	<isNotNull prepend = ""  property = "cdmBatchId">
 	   AND EXISTS (SELECT 1
-	          FROM INST_JUANMO_DETAIL D
+	          FROM qinsen.INST_JUANMO_DETAIL D
 	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
 	           AND D.CDM_BATCH_ID = #cdmBatchId#)
 	</isNotNull>
 	<isNotNull prepend = ""  property = "cdmBatchNo">
 	   AND EXISTS (SELECT 1
-	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
 	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
 	           AND D.CDM_BATCH_ID = C.RECORD_ID
 	           AND C.BATCH_NO = #cdmBatchNo#)
@@ -193,7 +193,7 @@
 	<isNotNull prepend = ""  property = "mpSpecId">
 	   AND EXISTS
 		 (SELECT 1
-	          FROM INST_JUANMO_DETAIL D, INST_CAIDIEMO C, INST_TUMO M
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
 	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
 	           AND D.CDM_BATCH_ID = C.RECORD_ID
 	           AND C.TUMO_BATCH_ID = M.RECORD_ID
@@ -205,7 +205,7 @@
 	</isNotNull>
 	<isNotNull prepend = ""  property = "lastTagWorkerId">
 	   AND EXISTS
-            (SELECT 1 FROM INST_QIJIAN_CHANGE X
+            (SELECT 1 FROM qinsen.INST_QIJIAN_CHANGE X
               WHERE X.JUANMO_BATCH_ID = A.JUANMO_BATCH_ID)
 	   AND qinsen.PG_GET_INFO.GET_LAST_TAG_WORKER(A.JUANMO_BATCH_ID) =	#lastTagWorkerId#
 	</isNotNull>
@@ -288,7 +288,7 @@
 	</isNotNull>
 	<isNotNull prepend = ""  property = "batchNo">
 	   AND EXISTS 
-		 (SELECT 1 FROM INST_QIJIAN Q 
+		 (SELECT 1 FROM QINSEN.INST_QIJIAN Q 
 	         WHERE Q.JUANMO_BATCH_ID = M.RECORD_ID 
 	           AND Q.BATCH_NO = UPPER(#batchNo#))
 	</isNotNull>
@@ -434,4 +434,7 @@
 	<delete id="deleteQjStdById" parameterClass="java.util.Map">
 		DELETE FROM QINSEN.INST_QJ_STD WHERE RECORD_ID = #recordId#
 	</delete>
+	
+	
+	
 </sqlMap>

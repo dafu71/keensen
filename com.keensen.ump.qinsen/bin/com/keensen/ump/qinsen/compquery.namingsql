@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.qinsen.compquery">
+    <!-- 查询产品综合信息记录列表 -->
+    <select id="query" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT T1.RECORD_ID          AS "recordId",
+       T1.JUANMO_BATCH_ID    AS "juanmoBatchId",
+       T1.BATCH_NO           AS "batchNo",
+       T1.LINE_ID            AS "lineId",
+       T1.PROD_SPEC_ID       AS "prodSpecId",
+       T1.ORDER_NO           AS "orderNo",
+       T1.PRODUCE_DT         AS "produceDt",
+       T1.PRESURE            AS "presure",
+       T1.CHECK_RESULT       AS "checkResult",
+       T1.IS_QUALIFIED       AS "isQualified",
+       T1.IS_FIRST           AS "isFirst",
+       T1.STD_STR            AS "stdStr",
+       T1.TEAM_ID            AS "teamId",
+       T1.WORKER_ID          AS "workerId",
+       T1.NG_REASON_ID       AS "ngReasonId",
+       T1.REMARK             AS "remark",
+       T1.JUDGE_FLAG         AS "judgeFlag",
+       T1.NG_ITEM            AS "ngItem",
+       T1.JUDGER_ID          AS "judgerId",
+       T1.JUDGE_DT           AS "judgeDt",
+       T1.PROD_SPEC_AREA     AS "prodSpecArea",
+       T1.PROD_SPEC_CODE     AS "prodSpecCode",
+       T1.PROD_SPEC_NAME     AS "prodSpecName",
+       T1.JUANMO_BATCH_NO    AS "juanmoBatchNo",
+       T1.JUANMO_LINE_ID     AS "juanmoLineId",
+       T1.IS_TRIAL           AS "isTrial",
+       T1.JUANMO_ORDER_NO    AS "juanmoOrderNo",
+       T1.JUANMO_SPEC_ID     AS "juanmoSpecId",
+       T1.BLANKING_SIZE      AS "blankingSize",
+       T1.DENSE_NET          AS "denseNet",
+       T1.PAGE_WIDTH         AS "pageWidth",
+       T1.JUANMO_DT          AS "juanmoDt",
+       T1.JUANMO_TEAM_ID     AS "juanmoTeamId",
+       T1.JUANMO_WORKER_ID   AS "juanmoWorkerId",
+       T1.JUANMO_REMARK      AS "juanmoRemark",
+       T1.IS_QUALIFIED_NAME  AS "isQualifiedName",
+       T1.IS_FIRST_NAME      AS "isFirstName",
+       T1.JUDGE_FLAG_NAME    AS "judgeFlagName",
+       T1.PRODUCE_DATE       AS "produceDate",
+       T1.JUDGE_DATE         AS "judgeDate",
+       T1.NG_REASON_CODE     AS "ngReasonCode",
+       T1.NG_REASON_NAME     AS "ngReasonName",
+       T1.TEAM_NAME          AS "teamName",
+       T1.WORKER_NAME        AS "workerName",
+       T1.JUDGER_NAME        AS "judgerName",
+       T1.LINE_CODE          AS "lineCode",
+       T1.IS_TRIAL_NAME      AS "isTrialName",
+       T1.JUANMO_LINE_CODE   AS "juanmoLineCode",
+       T1.JUANMO_SPEC_CODE   AS "juanmoSpecCode",
+       T1.JUANMO_SPEC_NAME   AS "juanmoSpecName",
+       T1.JUANMO_DATE        AS "juanmoDate",
+       T1.JUANMO_TEAM_NAME   AS "juanmoTeamName",
+       T1.JUANMO_WORKER_NAME AS "juanmoWorkerName",
+       T1.IN_PAGE_CNT        AS "inPageCnt",
+       T1.IN_PAGE_LENGTH     AS "inPageLength",
+       T1.PAGE_CNT           AS "pageCnt",
+       T1.PAGE_LENGTH        AS "pageLength",
+       T1.CDM_BATCH_STR      AS "cdmBatchStr",
+       T1.TUMO_BATCH_STR     AS "tumoBatchStr",
+       T1.DIMO_BATCH_STR     AS "dimoBatchStr",
+       T1.IS_MIX_STR         AS "isMixStr",
+       T1.PAGE_CNT_STR       AS "pageCntStr",
+       T1.APPLY_JUDGE_RESULT AS "applyJudgeResult",
+       T1.APPLY_TIME         AS "applyTime"
+  FROM (
+        
+        SELECT Z.*,
+                DECODE(Z.IS_QUALIFIED, 'Y', '是', 'N', '否', '') IS_QUALIFIED_NAME,
+                DECODE(Z.IS_FIRST, 'Y', '首检', 'N', '复检', '') IS_FIRST_NAME,
+                DECODE(Z.JUDGE_FLAG, 'Y', '是', 'N', '否', '') JUDGE_FLAG_NAME,
+                TO_CHAR(Z.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
+                TO_CHAR(Z.JUDGE_DT, 'YYYY-MM-DD HH24:MI') JUDGE_DATE,
+                QINSEN.PG_GET_INFO.GET_PROP_VALUE_CODE_BY_ID(Z.NG_REASON_ID) NG_REASON_CODE,
+                QINSEN.PG_GET_INFO.GET_PROP_VALUE_NAME_BY_ID(Z.NG_REASON_ID) NG_REASON_NAME,
+                QINSEN.PG_GET_INFO.GET_DEPT_NAME_BY_ID(Z.TEAM_ID) TEAM_NAME,
+                QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(Z.WORKER_ID) WORKER_NAME,
+                QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(Z.JUDGER_ID) JUDGER_NAME,
+                QINSEN.PG_GET_INFO.GET_PROD_LINE_CODE_BY_ID(Z.LINE_ID) LINE_CODE,
+                
+                DECODE(Z.IS_TRIAL, 'Y', '是', 'N', '否', '') IS_TRIAL_NAME,
+                QINSEN.PG_GET_INFO.GET_PROD_LINE_CODE_BY_ID(Z.JUANMO_LINE_ID) JUANMO_LINE_CODE,
+                QINSEN.PG_GET_INFO.GET_MATER_SPEC_CODE_BY_ID(Z.JUANMO_SPEC_ID) JUANMO_SPEC_CODE,
+                QINSEN.PG_GET_INFO.GET_MATER_SPEC_NAME_BY_ID(Z.JUANMO_SPEC_ID) JUANMO_SPEC_NAME,
+                TO_CHAR(Z.JUANMO_DT, 'YYYY-MM-DD HH24:MI') JUANMO_DATE,
+                QINSEN.PG_GET_INFO.GET_DEPT_NAME_BY_ID(Z.JUANMO_TEAM_ID) JUANMO_TEAM_NAME,
+                QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(Z.JUANMO_WORKER_ID) JUANMO_WORKER_NAME,
+                
+                (SELECT SUM(D.IN_QUANTITY)
+                   FROM QINSEN.INST_JUANMO_DETAIL D
+                  WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) IN_PAGE_CNT,
+                (SELECT SUM(D.IN_QUANTITY) * Z.BLANKING_SIZE
+                   FROM QINSEN.INST_JUANMO_DETAIL D
+                  WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) IN_PAGE_LENGTH,
+                (SELECT SUM(D.OUT_QUANTITY)
+                   FROM QINSEN.INST_JUANMO_DETAIL D
+                  WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) PAGE_CNT,
+                (SELECT SUM(D.OUT_QUANTITY) * Z.BLANKING_SIZE
+                   FROM QINSEN.INST_JUANMO_DETAIL D
+                  WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) PAGE_LENGTH,
+                
+                (SELECT WM_CONCAT(DISTINCT C.BATCH_NO)
+                   FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C
+                  WHERE D.CDM_BATCH_ID = C.RECORD_ID
+                    AND D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) CDM_BATCH_STR,
+                (SELECT WM_CONCAT(DISTINCT M.BATCH_NO)
+                   FROM QINSEN.INST_JUANMO_DETAIL D,
+                        QINSEN.INST_CAIDIEMO      C,
+                        QINSEN.INST_TUMO          M
+                  WHERE D.CDM_BATCH_ID = C.RECORD_ID
+                    AND C.TUMO_BATCH_ID = M.RECORD_ID
+                    AND D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) TUMO_BATCH_STR,
+                (SELECT WM_CONCAT(DISTINCT M.DIMO_BATCH_NO)
+                   FROM QINSEN.INST_JUANMO_DETAIL D,
+                        QINSEN.INST_CAIDIEMO      C,
+                        QINSEN.INST_TUMO          M
+                  WHERE D.CDM_BATCH_ID = C.RECORD_ID
+                    AND C.TUMO_BATCH_ID = M.RECORD_ID
+                    AND D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) DIMO_BATCH_STR,
+                (SELECT DECODE(COUNT(1), 1, '否', '是')
+                   FROM QINSEN.INST_JUANMO_DETAIL D
+                  WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) IS_MIX_STR,
+                (SELECT WM_CONCAT(D.OUT_QUANTITY)
+                   FROM QINSEN.INST_JUANMO_DETAIL D
+                  WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) PAGE_CNT_STR,
+                DECODE((SELECT COUNT(1)
+                         FROM QINSEN.INST_PROD_APPLY_JUDGE  AJ,
+                              QINSEN.INST_PROD_APPLY_DETAIL AD
+                        WHERE Z.BATCH_NO = AD.BATCH_NO
+                          AND AD.APPLY_ID = AJ.APPLY_ID
+                          AND AJ.IS_QUALIFIED = 'Y'),
+                       0,
+                       '',
+                       '合格入库') APPLY_JUDGE_RESULT,
+                (SELECT TO_CHAR(MAX(AJ.CREATE_DT), 'YYYY-MM-DD HH24:MI:SS')
+                   FROM QINSEN.INST_PROD_APPLY_JUDGE  AJ,
+                        QINSEN.INST_PROD_APPLY_DETAIL AD
+                  WHERE Z.BATCH_NO = AD.BATCH_NO
+                    AND AD.APPLY_ID = AJ.APPLY_ID
+                    AND AJ.IS_QUALIFIED = 'Y') APPLY_TIME
+          FROM (SELECT T.*
+                   FROM (
+                         
+                         SELECT A.RECORD_ID,
+                                 A.JUANMO_BATCH_ID,
+                                 A.BATCH_NO,
+                                 A.LINE_ID,
+                                 A.PROD_SPEC_ID,
+                                 A.ORDER_NO,
+                                 A.PRODUCE_DT,
+                                 A.PRESURE,
+                                 A.CHECK_RESULT,
+                                 A.IS_QUALIFIED,
+                                 A.IS_FIRST,
+                                 A.STD_STR,
+                                 A.TEAM_ID,
+                                 A.WORKER_ID,
+                                 A.NG_REASON_ID,
+                                 A.REMARK,
+                                 A.JUDGE_FLAG,
+                                 A.NG_ITEM,
+                                 A.JUDGER_ID,
+                                 A.JUDGE_DT,
+                                 MS.AREA            PROD_SPEC_AREA,
+                                 MS.MATER_SPEC_CODE PROD_SPEC_CODE,
+                                 MS.MATER_SPEC_NAME PROD_SPEC_NAME,
+                                 J.BATCH_NO         JUANMO_BATCH_NO,
+                                 J.LINE_ID          JUANMO_LINE_ID,
+                                 J.IS_TRIAL,
+                                 J.ORDER_NO         JUANMO_ORDER_NO,
+                                 J.PROD_SPEC_ID     JUANMO_SPEC_ID,
+                                 J.BLANKING_SIZE,
+                                 J.DENSE_NET,
+                                 J.PAGE_WIDTH,
+                                 J.PRODUCE_DT       JUANMO_DT,
+                                 J.TEAM_ID          JUANMO_TEAM_ID,
+                                 J.WORKER_ID        JUANMO_WORKER_ID,
+                                 J.REMARK           JUANMO_REMARK
+                           FROM QINSEN.INST_QIJIAN      A,
+                                 QINSEN.INST_JUANMO_MAIN J,
+                                 QINSEN.PARA_MATER_SPEC  MS
+                          WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
+                            AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
+                            <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = UPPER(#batchNo#)</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="lineId">AND A.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="teamId">AND A.TEAM_ID = #teamId#</isNotNull>
+        <isNotNull prepend="" property="produceBeginDate">AND A.PRODUCE_DT &gt;= TO_DATE(#produceBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceEndDate">AND A.PRODUCE_DT &lt; TO_DATE(#produceEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchNo">AND J.BATCH_NO = UPPER(#juanMoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND EXISTS
+								 (SELECT 1
+							          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C, QINSEN.INST_TUMO M
+							         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+							           AND D.CDM_BATCH_ID = C.RECORD_ID
+							           AND C.TUMO_BATCH_ID = M.RECORD_ID
+							           AND M.DIMO_BATCH_NO = #dimoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND EXISTS
+								 (SELECT 1
+							          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C, QINSEN.INST_TUMO M
+							         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+							           AND D.CDM_BATCH_ID = C.RECORD_ID
+							           AND C.TUMO_BATCH_ID = M.RECORD_ID
+							           AND M.BATCH_NO = #tumoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNoStr">AND EXISTS
+								 (SELECT 1
+							          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C, QINSEN.INST_TUMO M
+							         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+							           AND D.CDM_BATCH_ID = C.RECORD_ID
+							           AND C.TUMO_BATCH_ID = M.RECORD_ID
+							           AND M.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%')</isNotNull>
+        <isNotNull prepend="" property="cdmBatchNo">AND EXISTS (SELECT 1
+							          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C
+							         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+							           AND D.CDM_BATCH_ID = C.RECORD_ID
+							           AND C.BATCH_NO = #cdmBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND EXISTS
+								 (SELECT 1
+							          FROM QINSEN.INST_JUANMO_DETAIL D, QINSEN.INST_CAIDIEMO C, QINSEN.INST_TUMO M
+							         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+							           AND D.CDM_BATCH_ID = C.RECORD_ID
+							           AND C.TUMO_BATCH_ID = M.RECORD_ID
+							           AND M.SPEC_ID = #mpSpecId#)</isNotNull>
+                          ORDER BY A.PRODUCE_DT DESC,
+                                    A.CREATE_DT  DESC,
+                                    A.BATCH_NO
+                         
+                         ) T) Z) T1
+
+</select>
+</sqlMap>

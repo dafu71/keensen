@@ -50,6 +50,11 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 					this.addOrderWindow.loadData(cell);
 				}
 				
+				if (this.opt == 'updateTemplateName') {
+					this.updateTemplateNameWindow.show();
+					this.updateTemplateNameWindow.loadData(cell);
+				}
+				
 				if (this.opt == 'addplanweek') {
 					var cnt = cell.get('cnt');
 					if (cnt > 0) {
@@ -296,4 +301,9 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onAddSpec = function() {
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onDelSpec = function() {
 	this.listPanel3.onDel();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateTemplateName = function() {
+	this.opt = 'updateTemplateName';
+	this.listPanel.onEdit();
 }

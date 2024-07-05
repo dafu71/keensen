@@ -160,6 +160,15 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						dataIndex : 'saltRejection',
 						header : '脱盐率%'
 					}, {
+						dataIndex : 'gfdStr',
+						header : '膜通量数据'
+					}, {
+						dataIndex : 'conductivityIn',
+						header : '进水电导'
+					}, {
+						dataIndex : 'conductivityStr',
+						header : '出水电导数据'
+					}, {
 						dataIndex : 'recheckName',
 						header : '首/复检'
 					}, {
@@ -225,7 +234,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality.queryTumocheckByPage.biz.ext',
 				root : 'data',
-				autoLoad : true,
+				autoLoad : false,
 				totalProperty : 'totalCount',
 				baseParams : {
 

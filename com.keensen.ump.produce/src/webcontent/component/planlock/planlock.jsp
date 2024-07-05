@@ -159,7 +159,16 @@
 							: list[i].getString("orderRemark")%></div>
 		</td>
 		<td>
-		<div align="center" valign="middle" class="style1"><%=list[i].getString("batchNo")%></div>
+		
+		<div align="center" valign="middle" class="style1">
+		<% if(!"1".equals(list[i].getString("cnt2"))){ %>
+		<font color="red">
+		<% } %>
+		<%=list[i].getString("batchNo")%>
+		<% if("1".equals(list[i].getString("cnt2"))){ %>
+		</font>
+		<% } %>
+		</div>
 		</td>
 		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("meterAmount")%></div>
@@ -199,7 +208,17 @@
 	<tr>
 
 		<td>
-		<div align="center" valign="middle" class="style1"><%=list[i].getString("batchNo")%></div>
+		
+		<div align="center" valign="middle" class="style1">
+		
+		<% if(!"1".equals(list[i].getString("cnt2"))){ %>
+		<font color="red">
+		<% } %>
+		<%=list[i].getString("batchNo")%>
+		<% if("1".equals(list[i].getString("cnt2"))){ %>
+		</font>
+		<% } %>
+		</div>
 		</td>
 		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("meterAmount")%></div>

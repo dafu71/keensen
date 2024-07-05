@@ -195,4 +195,29 @@ ORDER BY 2
 	 </isNotNull>
 	 ORDER BY A.STAFF_NAME
 </select>
+
+
+<update id="updateJuanmoBatchStr" parameterClass="java.util.HashMap">
+	UPDATE  qinsen.inst_juanmo_main
+	SET
+	  qinsen.inst_juanmo_main.tumo_batch_str  =  (SELECT  tumobatchstr  FROM  V_JM_BATCH_STR 
+	   WHERE   V_JM_BATCH_STR.record_id = qinsen.inst_juanmo_main.record_id),
+	  qinsen.inst_juanmo_main.cdm_batch_str  =  (SELECT  cdmbatchstr  FROM  V_JM_BATCH_STR 
+	   WHERE   V_JM_BATCH_STR.record_id = qinsen.inst_juanmo_main.record_id),
+	   qinsen.inst_juanmo_main.dimo_batch_str  =  (SELECT  dimobatchstr  FROM  V_JM_BATCH_STR 
+	   WHERE   V_JM_BATCH_STR.record_id = qinsen.inst_juanmo_main.record_id)
+	WHERE
+	  EXISTS ( SELECT 1 FROM   V_JM_BATCH_STR  WHERE V_JM_BATCH_STR.record_id = qinsen.inst_juanmo_main.record_id)
+	  AND qinsen.inst_juanmo_main.tumo_batch_str IS NULL
+</update>
+
+<update id="updateCheckListTumoBatchStr" parameterClass="java.util.HashMap">
+	UPDATE  KS_COMPONENT_CHECK_LIST
+	SET
+	  KS_COMPONENT_CHECK_LIST.tumo_batch_str  =  (SELECT  tumobatchstr  FROM  V_JM_BATCH_STR 
+	   WHERE   V_JM_BATCH_STR.prod_batch_no = KS_COMPONENT_CHECK_LIST.Batch_No)
+	WHERE
+	  EXISTS ( SELECT 1 FROM   V_JM_BATCH_STR  WHERE V_JM_BATCH_STR.prod_batch_no = KS_COMPONENT_CHECK_LIST.Batch_No)
+	  AND KS_COMPONENT_CHECK_LIST.tumo_batch_str IS NULL
+</update>
 </sqlMap>

@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="autoJudge" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node2" name="注释2" displayName="注释" nodeType="note" type="note" content="C21为空，走向为空" title="dafu&#x9;24-6-26 下午2:10">
+    <targetConnections>link42</targetConnections>
+    <location x="1095" y="29"/>
+    <size height="100" width="436"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="大于200米" title="dafu&#x9;24-6-25 上午11:19">
+    <targetConnections>link37</targetConnections>
+    <location x="93" y="585"/>
+    <size height="100" width="191"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="自动判定" title="dafu&#x9;24-6-24 上午11:05">
+    <location x="586" y="570"/>
+    <size height="100" width="309"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <location x="100" y="273"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
+    <targetConnections>link43</targetConnections>
+    <targetConnections>link29</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="630" y="270"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="99" y="309"/>
+    <figSize height="20" width="31"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="629" y="306"/>
+    <figSize height="20" width="31"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="214" y="242"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">batchId</process:from>
+      <process:to type="query">entity/recordId</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="213" y="278"/>
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="expandTumoJudge" displayName="expandTumoJudge" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link43" name="link43" displayName="连接线" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">data</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="344" y="242"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.quality.quality.expandTumoJudge</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="entity" type="query" value="commonj.sdo.DataObject" valueType="Java" pattern="reference">entity</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="data" type="query" value="commonj.sdo.DataObject" valueType="Java">data</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="287" y="277"/>
+    <figSize height="20" width="141"/>
+    <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="link9" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>isWx.equals(&quot;Y&quot;) &amp;&amp; perfFlagId.equals(&quot;300029&quot;) &amp;&amp; isBatchQualified.equals(&quot;Y&quot;)</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>switch0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="189" y="165"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/batchPerfFlagId</process:from>
+      <process:to type="query">perfFlagId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/isWx</process:from>
+      <process:to type="query">isWx</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/isBatchQualified</process:from>
+      <process:to type="query">isBatchQualified</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/qualifidLength</process:from>
+      <process:to type="query">qualifidLength</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/produceRemark</process:from>
+      <process:to type="query">produceRemark</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/tagNum</process:from>
+      <process:to type="query">tagNum</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/tagLength</process:from>
+      <process:to type="query">tagLength</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/isKeep</process:from>
+      <process:to type="query">isKeep</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="183" y="201"/>
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="queryTumoOrigin" displayName="queryTumoOrigin" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>assign3</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link6" name="link6" displayName="连接线" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">tumos</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="214" y="406"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.quality.quality.queryTumoOrigin</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="condition" type="query" value="java.util.Map" valueType="Java" pattern="reference">condition</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="data" type="query" value="commonj.sdo.DataObject[]" valueType="Java">tumos</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="162" y="441"/>
+    <figSize height="20" width="130"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="99" y="406"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">batchId</process:from>
+      <process:to type="query">condition/recordIds</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="93" y="442"/>
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值3" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition/>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link8" name="link8" displayName="连接线" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="GE">
+          <process:leftOperand type="query">outLength</process:leftOperand>
+          <process:rightOperand type="literal">200</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link37" name="link37" displayName="连接线" type="note">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>node1</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="213" y="354"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">tumos[1]/outLength</process:from>
+      <process:to type="query">outLength</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">tumos[1]/mpd</process:from>
+      <process:to type="query">mpd</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="207" y="390"/>
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="发货膜片, A等品, 合格,走向仓库发货仓" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" description="" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>switch1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="186" y="76"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">仓库发货仓</process:from>
+      <process:to type="query">ret</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="72" y="112"/>
+    <figSize height="20" width="257"/>
+    <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign5" name="C等品 不合格 走向待二次判定" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>switch1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand/>
+          <process:rightOperand/>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="370" y="49"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign5label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">待二次判定</process:from>
+      <process:to type="query">ret</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
+    <location x="285" y="85"/>
+    <figSize height="20" width="199"/>
+    <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign6" name="保留品 不合格 走向仓库C仓" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link31" name="link31" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign6</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <location x="507" y="22"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign6label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">仓库C仓</process:from>
+      <process:to type="query">ret</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign6label" name="label" nodeType="label">
+    <location x="429" y="58"/>
+    <figSize height="20" width="184"/>
+    <node>assign6</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign7" name="自用膜片 A/B等品 合格 走向仓库AB仓" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign7</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="773" y="22"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign7label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">仓库AB仓</process:from>
+      <process:to type="query">ret</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign7label" name="label" nodeType="label">
+    <location x="660" y="58"/>
+    <figSize height="20" width="254"/>
+    <node>assign7</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign8" name="赋值4" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link39" name="link39" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign8</sourceNode>
+      <targetNode>assign14</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link41" name="link41" displayName="连接线" type="transition">
+      <sourceNode>assign8</sourceNode>
+      <targetNode>subprocess2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">mpd</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link36</targetConnections>
+    <targetConnections>link35</targetConnections>
+    <targetConnections>link27</targetConnections>
+    <location x="605" y="173"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign8label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">batchId</process:from>
+      <process:to type="query">newEntity/recordId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/appearanceIsQualified</process:from>
+      <process:to type="query">newEntity/appearanceIsQualified</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/thickIsQualified</process:from>
+      <process:to type="query">newEntity/thickIsQualified</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/perfIsQualified</process:from>
+      <process:to type="query">newEntity/perfIsQualified</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/batchNo</process:from>
+      <process:to type="query">newEntity/batchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/orderNo</process:from>
+      <process:to type="query">newEntity/orderNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/perfFlagId</process:from>
+      <process:to type="query">newEntity/perfFlagId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/isQualified</process:from>
+      <process:to type="query">newEntity/isQualified</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/isKeep</process:from>
+      <process:to type="query">newEntity/isKeep</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">自动判定</process:from>
+      <process:to type="query">newEntity/judgeRemark</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/attributes/operatorid</process:from>
+      <process:to type="query">newEntity/judgerId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">ret</process:from>
+      <process:to type="query">newEntity/trend</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign8label" name="label" nodeType="label">
+    <location x="599" y="209"/>
+    <figSize height="20" width="40"/>
+    <node>assign8</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign9" name="C等品 不合格 走向仓库AB仓" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign9</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link18</targetConnections>
+    <location x="870" y="165"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign9label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">仓库AB仓</process:from>
+      <process:to type="query">ret</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign9label" name="label" nodeType="label">
+    <location x="790" y="201"/>
+    <figSize height="20" width="189"/>
+    <node>assign9</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign10" name="保留品 不合格 走向仓库C仓" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link21" name="link21" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign10</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link20</targetConnections>
+    <location x="869" y="269"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign10label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">仓库C仓</process:from>
+      <process:to type="query">ret</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign10label" name="label" nodeType="label">
+    <location x="791" y="305"/>
+    <figSize height="20" width="184"/>
+    <node>assign10</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign11" name="外销，合格长度小于300m入AB仓" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link23" name="link23" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign11</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link22</targetConnections>
+    <location x="896" y="365"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign11label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">仓库AB仓</process:from>
+      <process:to type="query">ret</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign11label" name="label" nodeType="label">
+    <location x="797" y="401"/>
+    <figSize height="20" width="227"/>
+    <node>assign11</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign12" name="异常备注里面出现整卷，两个字，系统自动外观判定不合格+流向AB仓" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link36" name="link36" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign12</sourceNode>
+      <targetNode>assign8</targetNode>
+    </sourceConnections>
+    <targetConnections>link24</targetConnections>
+    <location x="896" y="475"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign12label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">仓库AB仓</process:from>
+      <process:to type="query">ret</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign12label" name="label" nodeType="label">
+    <location x="677" y="511"/>
+    <figSize height="20" width="467"/>
+    <node>assign12</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign13" name="发货请检单内瑕疵标签个数＞10个，瑕疵总长度＞30m，自动流向AB仓" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link27" name="link27" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign13</sourceNode>
+      <targetNode>assign8</targetNode>
+    </sourceConnections>
+    <targetConnections>link25</targetConnections>
+    <location x="413" y="466"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign13label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">仓库AB仓</process:from>
+      <process:to type="query">ret</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign13label" name="label" nodeType="label">
+    <location x="189" y="502"/>
+    <figSize height="20" width="476"/>
+    <node>assign13</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="saveTumoCheck" displayName="saveTumoCheck" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link29" name="link29" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link40</targetConnections>
+    <targetConnections>link41</targetConnections>
+    <location x="435" y="173"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess2label</nodeLabel>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.quality.quality.saveTumoCheck</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="entity" type="query" value="com.keensen.ump.produce.quality.KsProdDiaphragmTumo" valueType="DataObject" pattern="reference">newEntity</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess2label" name="label" nodeType="label">
+    <location x="389" y="208"/>
+    <figSize height="20" width="119"/>
+    <node>subprocess2</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" description="" id="link11" name="link11" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign5</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>isWx.equals(&quot;Y&quot;) &amp;&amp; perfFlagId.equals(&quot;300032&quot;) &amp;&amp; isBatchQualified.equals(&quot;N&quot;)</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>switch2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="291" y="165"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <location x="282" y="201"/>
+    <figSize height="20" width="46"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" description="" id="link24" name="link24" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>assign12</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>null !=produceRemark &amp;&amp; produceRemark.indexOf(&quot;整卷&quot;) > -1</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link26" name="link26" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>switch7</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link34</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link12</targetConnections>
+    <targetConnections>link31</targetConnections>
+    <targetConnections>link16</targetConnections>
+    <targetConnections>link19</targetConnections>
+    <targetConnections>link21</targetConnections>
+    <targetConnections>link23</targetConnections>
+    <location x="679" y="381"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
+    <location x="666" y="417"/>
+    <figSize height="20" width="55"/>
+    <node>switch1</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch2" name="空操作2" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link30" name="link30" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch2</sourceNode>
+      <targetNode>switch3</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link13" name="link13" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>switch2</sourceNode>
+      <targetNode>assign6</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>isWx.equals(&quot;Y&quot;) &amp;&amp; isKeep .equals(&quot;Y&quot;) &amp;&amp; isBatchQualified .equals(&quot;N&quot;)</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link17</targetConnections>
+    <location x="397" y="138"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch2label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch2label" name="label" nodeType="label">
+    <location x="384" y="174"/>
+    <figSize height="20" width="55"/>
+    <node>switch2</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch3" name="空操作3" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" description="" id="link15" name="link15" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>switch3</sourceNode>
+      <targetNode>assign7</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>isWx .equals(&quot;N&quot;) &amp;&amp; (perfFlagId.equals(&quot;300029&quot;) || perfFlagId.equals(&quot;300030&quot;))	&amp;&amp; isBatchQualified .equals(&quot;Y&quot;)</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link14" name="link14" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch3</sourceNode>
+      <targetNode>switch4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link30</targetConnections>
+    <location x="572" y="85"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch3label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch3label" name="label" nodeType="label">
+    <location x="559" y="121"/>
+    <figSize height="20" width="55"/>
+    <node>switch3</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch4" name="空操作4" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link32" name="link32" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch4</sourceNode>
+      <targetNode>switch5</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link18" name="link18" displayName="连接线" type="transition">
+      <sourceNode>switch4</sourceNode>
+      <targetNode>assign9</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>isWx .equals(&quot;N&quot;) &amp;&amp; perfFlagId.equals(&quot;300032&quot;) &amp;&amp; isBatchQualified .equals(&quot;N&quot;)</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <location x="720" y="121"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch4label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch4label" name="label" nodeType="label">
+    <location x="707" y="157"/>
+    <figSize height="20" width="55"/>
+    <node>switch4</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch5" name="空操作5" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link33" name="link33" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch5</sourceNode>
+      <targetNode>switch6</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link20" name="link20" displayName="连接线" type="transition">
+      <sourceNode>switch5</sourceNode>
+      <targetNode>assign10</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>isWx .equals(&quot;N&quot;) &amp;&amp; isKeep .equals(&quot;Y&quot;) &amp;&amp; isBatchQualified .equals(&quot;N&quot;)</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link32</targetConnections>
+    <location x="999" y="117"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch5label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch5label" name="label" nodeType="label">
+    <location x="986" y="153"/>
+    <figSize height="20" width="55"/>
+    <node>switch5</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch6" name="空操作6" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" description="" id="link22" name="link22" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>switch6</sourceNode>
+      <targetNode>assign11</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>(isWx .equals(&quot;Y&quot;)) &amp;&amp; (null != qualifidLength) &amp;&amp; (Float.parseFloat(qualifidLength)&lt;300)</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link34" name="link34" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch6</sourceNode>
+      <targetNode>switch1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link33</targetConnections>
+    <location x="1042" y="242"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch6label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch6label" name="label" nodeType="label">
+    <location x="1029" y="278"/>
+    <figSize height="20" width="55"/>
+    <node>switch6</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch7" name="空操作7" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" description="" id="link25" name="link25" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>switch7</sourceNode>
+      <targetNode>assign13</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>null != tagNum &amp;&amp; null !=tagLength &amp;&amp; Float.parseFloat(tagNum)>10 &amp;&amp; Float.parseFloat(tagLength)>30&#xD;
+</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link35" name="link35" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch7</sourceNode>
+      <targetNode>assign8</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link26</targetConnections>
+    <location x="586" y="415"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch7label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch7label" name="label" nodeType="label">
+    <location x="573" y="451"/>
+    <figSize height="20" width="55"/>
+    <node>switch7</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign14" name="赋值5" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link40" name="link40" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign14</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link42" name="link42" displayName="连接线" type="note">
+      <sourceNode>assign14</sourceNode>
+      <targetNode>node2</targetNode>
+    </sourceConnections>
+    <targetConnections>link39</targetConnections>
+    <location x="507" y="128"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign14label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">null</process:from>
+      <process:to type="query">newEntity/trend</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign14label" name="label" nodeType="label">
+    <location x="501" y="164"/>
+    <figSize height="20" width="40"/>
+    <node>assign14</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="dafu" createTime="2024-06-24 10:31:05" date="2024-06-24Z" description="" name="自动判定" version="6.3"/>
+  <process:variables>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.qinsen.inst.InstTumo" name="entity"/>
+    <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="false" name="data"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="perfFlagId" primitiveType="String"/>
+    <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="condition"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="outLength" primitiveType="String"/>
+    <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="tumos"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="isWx" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="isBatchQualified" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="qualifidLength" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="produceRemark" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="tagNum" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="tagLength" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="ret" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.quality.KsProdDiaphragmTumo" name="newEntity"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="isKeep" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="mpd" primitiveType="String"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input description="涂膜批次id" isArray="false" name="batchId" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs/>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

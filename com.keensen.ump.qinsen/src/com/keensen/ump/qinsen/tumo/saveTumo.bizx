@@ -15,8 +15,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link11</targetConnections>
     <targetConnections>link10</targetConnections>
+    <targetConnections>link11</targetConnections>
     <location x="691" y="161"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -76,6 +76,14 @@
     <process:copy>
       <process:from type="expression" pattern="reference">new Date()</process:from>
       <process:to type="query">entity/changeDt</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/batchNo</process:from>
+      <process:to type="query">map2/batchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/recordId</process:from>
+      <process:to type="query">map2/recordId</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">

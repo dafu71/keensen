@@ -14,8 +14,8 @@ com.keensen.ump.qinsen.produce.marklogoMgr.prototype.initEvent = function() {
 				var recordId = cell.data.recordId;
 				recordId = recordId + '';
 				if (recordId.substr(0, 1) != '2') {
-					Ext.Msg.alert('系统提示', '一期数据不能修改');
-					return false;
+					//Ext.Msg.alert('系统提示', '一期数据不能修改');
+					//return false;
 				}
 				this.logoEditWindow.show();
 				this.logoEditWindow.loadData(cell);

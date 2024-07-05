@@ -98,10 +98,10 @@
         <isNotNull prepend="" property="tumoBatchNo">AND TM.BATCH_NO = #tumoBatchNo#</isNotNull>
         <isNotNull prepend="" property="tumoBatchNoStr">AND TM.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%'</isNotNull>
         <isNotNull prepend="" property="mpSpecId">AND TM.SPEC_ID = #mpSpecId#</isNotNull>
-        <isNotNull prepend="" property="juanMoBatchId">AND EXISTS (SELECT 1
-	          FROM INST_JUANMO_DETAIL D
+        <isNotNull prepend="" property="juanmoBatchId">AND EXISTS (SELECT 1
+	          FROM QINSEN.INST_JUANMO_DETAIL D
 	         WHERE D.CDM_BATCH_ID = A.RECORD_ID
-	           AND D.MAIN_BATCH_ID = #juanMoBatchId#)</isNotNull> 
+	           AND D.MAIN_BATCH_ID = #juanmoBatchId#)</isNotNull> 
 	ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO
         ) T1
 		

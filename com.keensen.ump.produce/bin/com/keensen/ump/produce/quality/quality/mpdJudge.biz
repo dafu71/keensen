@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="mpdJudge.bizx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node2" name="注释2" nodeType="note" type="note" title="dafu&#x9;24-7-3 上午9:24">
+    <targetConnections>link0</targetConnections>
+  </nodes>
   <nodes xsi:type="model:Note" id="node1" name="注释1" nodeType="note" type="note" title="dafu&#x9;24-3-12 上午11:40"/>
   <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="dafu&#x9;24-3-7 上午10:31"/>
   <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
@@ -135,13 +138,13 @@
     <node>switch3</node>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
-    <sourceConnections xsi:type="process:tLink" id="link12" name="超过15外观不合格" isDefault="false" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="超过13外观不合格" isDefault="false" type="transition">
       <sourceNode>assign0</sourceNode>
       <targetNode>assign1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="GT">
           <process:leftOperand type="query">mpd2</process:leftOperand>
-          <process:rightOperand type="literal">15</process:rightOperand>
+          <process:rightOperand type="literal">13</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
@@ -170,6 +173,10 @@
     <sourceConnections xsi:type="process:tLink" id="link14" name="link14" isDefault="true" type="transition">
       <sourceNode>assign1</sourceNode>
       <targetNode>end0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" type="note">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>node2</targetNode>
     </sourceConnections>
     <targetConnections>link12</targetConnections>
     <nodeLabel>assign1label</nodeLabel>

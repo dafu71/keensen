@@ -243,7 +243,7 @@ function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
 	}
 
 	// 异常备注里面出现整卷，两个字，系统自动外观判定不合格+流向AB仓
-	if (produceRemark.indexOf('整卷') > -1) {
+	if (!Ext.isEmpty(produceRemark) && produceRemark.indexOf('整卷') > -1) {
 		ret = '仓库AB仓';
 	}
 	// 发货请检单内瑕疵标签个数＞10个，瑕疵总长度＞30m，自动流向AB仓

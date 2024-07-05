@@ -4,13 +4,34 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
-		var start = vals['condition/produceBeginDate'];
-		var end = vals['condition/produceEndDate'];
-		if (dayDiff(start, end) > 31) {
-			Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
-			return false;
+
+		if (Ext.isEmpty(vals['condition/orderNo'])
+				&& Ext.isEmpty(vals['condition/batchNo'])
+				&& Ext.isEmpty(vals['condition/tumoBatchNoStr'])) {
+			if (Ext.isEmpty(vals['condition/produceBeginDate'])
+					|| Ext.isEmpty(vals['condition/produceEndDate'])) {
+				Ext.Msg.alert("系统提示", "请选择查询日期！");
+				return false;
+
+			}
+
+			var start = vals['condition/produceBeginDate'];
+			var end = vals['condition/produceEndDate'];
+			if (dayDiff(start, end) > 93) {
+				Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+				return false;
+
+			}
 
 		}
+
+		// var start = vals['condition/produceBeginDate'];
+		// var end = vals['condition/produceEndDate'];
+		// if (dayDiff(start, end) > 31) {
+		// Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
+		// return false;
+
+		// }
 		var store = this.listPanel.store;
 
 		store.baseParams = this.queryPanel.getForm().getValues();
@@ -27,8 +48,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 				var recordId = cell.data.recordId;
 				recordId = recordId + '';
 				if (recordId.substr(0, 1) != '2') {
-					Ext.Msg.alert('系统提示', '一期数据不能修改');
-					return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能修改');
+					// return false;
 				}
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
@@ -39,7 +60,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 			function() {
 				if (this.editWindow.batchNo.getValue()
 						.indexOf(this.editWindow.tumoBatchNo.getValue()) != 0) {
-					Ext.Msg.alert('系统提示','栈板号应以膜片批次开头！');
+					Ext.Msg.alert('系统提示', '栈板号应以膜片批次开头！');
 					return false;
 				}
 			}, this);
@@ -210,14 +231,22 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportExcel = function() {
 		success : function(resp) {
 			var ret = Ext.decode(resp.responseText);
 			if (ret.success) {
+				if (ret.success) {
+					var fname = ret.fname;
+					if (!Ext.isEmpty(fname)) {
+						if (Ext.isIE) {
+							window
+									.open('/default/deliverynote/seek/down4IE.jsp?fname='
+											+ fname);
+						} else {
+							window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
+									+ fname;
+						}
+					} else {
+						Ext.Msg.alert("系统提示", ret.msg);
+						return false;
+					}
 
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
 				}
 
 			}
@@ -283,8 +312,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function(
 										.setValue(last.pageWidth);
 								_this.inputWindow.tumoBatchId
 										.setValue(last.tumoBatchId);
-								//alert(last.tumoBatchId);
-								//alert(_this.inputWindow.tumoBatchId.getValue());
+								// alert(last.tumoBatchId);
+								// alert(_this.inputWindow.tumoBatchId.getValue());
 							} else {
 								Ext.Msg.alert("系统提示", "膜片批次不存在，请检查！",
 										function() {

@@ -87,7 +87,9 @@ com.keensen.ump.qinsen.produce.marklogoMgr = function() {
 						dataIndex : 'imgUrl',
 						renderer : function(value, metaData, rec, rowIndex,
 								colIndex, store, view) {
-							if (value) {
+							if (!Ext.isEmpty(value)) {							
+								
+											
 								if (rec.data.flag == 'first') {
 									return '<img src="'
 											+ value

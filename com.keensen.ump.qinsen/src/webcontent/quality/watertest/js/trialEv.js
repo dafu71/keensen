@@ -194,8 +194,8 @@ com.keensen.ump.qinsen.quality.trialMgr.prototype.judgeBatch = function() {
 	var _this = this;
 	var rGpd = _this.reTestWindow.rGpd.getValue();
 	var rSalt = _this.reTestWindow.rSalt.getValue();
-	var fFactorB = _this.reTestWindow.fFactorB.getValue();
-	if (Ext.isEmpty(rGpd) || Ext.isEmpty(rSalt) || Ext.isEmpty(fFactorB)) {
+	var rFactorB = _this.reTestWindow.rFactorB.getValue();
+	if (Ext.isEmpty(rGpd) || Ext.isEmpty(rSalt) || Ext.isEmpty(rFactorB)) {
 		return;
 	}
 
@@ -226,10 +226,10 @@ com.keensen.ump.qinsen.quality.trialMgr.prototype.judgeBatch = function() {
 			_this.reTestWindow.isBatchQualified.setValue('N');
 			judgeInfo.push('脱盐率超下限');
 		}
-		if (!Ext.isEmpty(batchFactorBUpLimit) && fFactorB > batchFactorBUpLimit) {
+		/*if (!Ext.isEmpty(batchFactorBUpLimit) && rFactorB > batchFactorBUpLimit) {
 			_this.reTestWindow.isBatchQualified.setValue('N');
 			judgeInfo.push('系数B超上限');
-		}
+		}*/
 		if (_this.reTestWindow.isBatchQualified.getValue() == 'N') {
 			_this.reTestWindow.batchJudgeInfo
 					.setValue('<span style="color:red;">' + judgeInfo.join(',')
@@ -249,8 +249,8 @@ com.keensen.ump.qinsen.quality.trialMgr.prototype.judgeProd = function() {
 	var _this = this;
 	var rGpd = _this.reTestWindow.rGpd.getValue();
 	var rSalt = _this.reTestWindow.rSalt.getValue();
-	var fFactorB = _this.reTestWindow.fFactorB.getValue();
-	if (Ext.isEmpty(rGpd) || Ext.isEmpty(rSalt) || Ext.isEmpty(fFactorB)) {
+	var rFactorB = _this.reTestWindow.rFactorB.getValue();
+	if (Ext.isEmpty(rGpd) || Ext.isEmpty(rSalt) || Ext.isEmpty(rFactorB)) {
 		return;
 	}
 
@@ -288,10 +288,10 @@ com.keensen.ump.qinsen.quality.trialMgr.prototype.judgeProd = function() {
 			judgeInfo.push('脱盐率超下限');
 		}
 
-		if (!Ext.isEmpty(prodFactorBUpLimit) && (fFactorB > prodFactorBUpLimit)) {
+		/*if (!Ext.isEmpty(prodFactorBUpLimit) && (rFactorB > prodFactorBUpLimit)) {
 			_this.reTestWindow.isProdQualified.setValue('N');
 			judgeInfo.push('系数B超上限');
-		}
+		}*/
 		if (_this.reTestWindow.isProdQualified.getValue() == 'N') {
 			_this.reTestWindow.prodJudgeInfo
 					.setValue('<span style="color:red;">' + judgeInfo.join(',')

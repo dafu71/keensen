@@ -159,6 +159,7 @@
            AND A.JUANMO_BATCH_ID = J.RECORD_ID
            <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
         <isNotNull prepend="" property="juanMoBatchId">AND A.JUANMO_BATCH_ID = #juanMoBatchId#</isNotNull>
+        <isNotNull prepend="" property="juanmoBatchId">AND A.JUANMO_BATCH_ID = #juanmoBatchId#</isNotNull>
         <isNotNull prepend="" property="testTypeId">AND A.TEST_TYPE_ID = #testTypeId#</isNotNull>
         <isNotNull prepend="" property="ifProdSpecId">AND A.IF_PROD_SPEC_ID = #ifProdSpecId#</isNotNull>
         <isNotNull prepend="" property="testSpecId">AND A.TEST_SPEC_ID = #testSpecId#</isNotNull>

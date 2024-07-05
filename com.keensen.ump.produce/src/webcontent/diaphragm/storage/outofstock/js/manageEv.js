@@ -174,6 +174,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.onScan = funct
 	});
 }
 
+
 /*
  * com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.onEdit =
  * function() { this.listPanel.onEdit(); };

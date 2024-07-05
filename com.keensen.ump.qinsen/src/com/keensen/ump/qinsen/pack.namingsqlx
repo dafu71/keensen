@@ -29,13 +29,12 @@
                A.REMARK,
                A.STATE,
                DECODE(A.STATE, 'A', '在用', 'X', '停用') STATE_NAME,
-               DECODE(SUBSTR(A.RECORD_ID, 1, 1),
-                      1,
-                      (SELECT C.VALUE
+                
+               CASE WHEN (SUBSTR(A.RECORD_ID, 1, 1) = 2 AND (length(A.RECORD_ID)=9)) THEN  A.IMG_URI ELSE  (SELECT C.VALUE
                          FROM QINSEN.BASE_SYS_CONFIG C
-                        WHERE C.CODE = 'PACK_MARK_LOGO_DOMIAN'),
-                      '') || A.IMG_URI IMG_URL,
-               DECODE(SUBSTR(A.RECORD_ID, 1, 1), 1, 'first', 'second') FLAG
+                        WHERE C.CODE = 'PACK_MARK_LOGO_DOMIAN'
+                      ) || A.IMG_URI END IMG_URL,
+                CASE WHEN (SUBSTR(A.RECORD_ID, 1, 1) = 2 AND (length(A.RECORD_ID)=9)) THEN  'second' ELSE  'first' END FLAG
           FROM QINSEN.INST_PACK_MARK_LOGO A
           where 1=1
 	<isNotNull prepend = ""  property = "recordId">

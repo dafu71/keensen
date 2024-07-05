@@ -27,8 +27,8 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.initEvent = function() {
 				recordId = recordId + '';
 
 				if (recordId.substr(0, 1) != '2') {
-					Ext.Msg.alert('系统提示', '一期数据不能删除');
-					return false;
+					//Ext.Msg.alert('系统提示', '一期数据不能删除');
+					//return false;
 				}
 			})
 	// 查询事件
@@ -63,7 +63,7 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.exportExcel = function() {
 			});
 	this.requestMask.show();
 	Ext.Ajax.request({
-		url : "com.keensen.ump.base.storage.exportStorage.biz.ext",
+		url : "com.keensen.ump.qinsen.quality.exportDefect.biz.ext",
 		method : "post",
 		jsonData : daochu,
 		success : function(resp) {

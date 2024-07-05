@@ -20,6 +20,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 		this.initOrderMaterSpecWindow();
 		this.initAddOrderMaterSpecWindow();
+		
+		this.initUpdateTemplateNameWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -121,6 +123,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						iconCls : 'icon-application_edit',
 						handler : this.onUpdateAmount
 					}, '-', {
+						text : '修改唛头图纸编号',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onUpdateTemplateName
+					}, '-', {
 						text : '订单复制新增',
 						scope : this,
 						iconCls : 'icon-application_add',
@@ -144,6 +151,9 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, {
 						dataIndex : 'orderNo',
 						header : '订单编号'
+					}, {
+						dataIndex : 'templateName',
+						header : '唛头图纸编号'
 					}, {
 						dataIndex : 'materSpecName2',
 						header : '订单下达型号'
@@ -369,6 +379,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							name : 'ifplan'
 						}, {
 							name : 'materSpecName2'
+						}, {
+							name : 'templateName'
 						}]
 			})
 		})
@@ -1525,6 +1537,52 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 											return false;
 										}
 									}
+								}]
+					}]
+				});
+	}
+	
+	this.initUpdateTemplateNameWindow = function() {
+		var _this = this;
+		this.updateTemplateNameWindow = this.updateTemplateNameWindow
+				|| new Ext.fn.FormWindow({
+					title : '修改唛头图纸编号',
+					height : 240,
+					width : 300,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+							_this.updateTemplateNameWindow.items.items[0].form
+									.reset();
+							_this.updateTemplateNameWindow.hide();
+							_this.listPanel.refresh();
+						},
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandYxOrder.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.neworder.saveEntity.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/templateName',
+									dataIndex : 'templateName',
+									fieldLabel : '唛头图纸编号 ',
+									ref : '../../templateName',
+									allowBlank : false,
+									anchor : '100%',
+									colspan : 2
+
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
 								}]
 					}]
 				});

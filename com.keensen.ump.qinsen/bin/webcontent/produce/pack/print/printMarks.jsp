@@ -229,7 +229,7 @@ function initPage() {
 					htmlArr.push('<span class="specName">' + '<%=specName %>' + '</span>');
 					htmlArr.push('</td>');
 					htmlArr.push('</tr>');
-					<% if(null != txt){ %>
+					<% if(null != txt && !"".equals(txt) ){ %>
 					htmlArr.push('<tr>');
 					htmlArr.push('<td colspan=3 class="td_b">');
 					htmlArr.push('<span class="specName">' + '<%=txt.toString() %>' + '</span>');

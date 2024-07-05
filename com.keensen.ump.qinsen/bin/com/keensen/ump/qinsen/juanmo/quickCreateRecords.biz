@@ -10,7 +10,7 @@
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
     <targetConnections>link13</targetConnections>
-    <targetConnections>link8</targetConnections>
+    <targetConnections>link24</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -113,7 +113,6 @@
     <chidren>assign1</chidren>
     <chidren>invokePojo0</chidren>
     <chidren>assign2</chidren>
-    <chidren>subprocess0</chidren>
     <chidren>assign4</chidren>
     <chidren>assign3</chidren>
     <chidren>invokePojo1</chidren>
@@ -122,6 +121,7 @@
     <chidren>subprocess2</chidren>
     <chidren>invokePojo2</chidren>
     <chidren>invokePojo3</chidren>
+    <chidren>subprocess0</chidren>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign1" name="赋值1" grouped="true" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link4" name="link4" isDefault="true" type="transition">
@@ -305,7 +305,7 @@
   <nodes xsi:type="process:tTransactionCommit" id="transactioncommit0" name="事务提交" type="transactioncommit">
     <sourceConnections xsi:type="process:tLink" id="link8" name="link8" isDefault="true" type="transition">
       <sourceNode>transactioncommit0</sourceNode>
-      <targetNode>end0</targetNode>
+      <targetNode>subprocess3</targetNode>
     </sourceConnections>
     <targetConnections>link7</targetConnections>
     <nodeLabel>transactioncommit0label</nodeLabel>
@@ -495,6 +495,25 @@
   <nodes xsi:type="model:NodeElementLabel" id="assign7label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
     <node>assign7</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess3" name="updateJuanmoBatchStr" collapsed="false" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link24" name="link24" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.updateJuanmoBatchStr</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="jmBatchId" type="query" value="String" valueType="Primitive" pattern="reference">juanmo/recordId</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <figSize height="20" width="170"/>
+    <node>subprocess3</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

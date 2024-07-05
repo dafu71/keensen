@@ -9,8 +9,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				recordId = recordId + '';
 
 				if (recordId.substr(0, 1) != '2') {
-					Ext.Msg.alert('系统提示', '一期数据不能删除');
-					return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能删除');
+					// return false;
 				}
 			})
 
@@ -18,11 +18,28 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var start = vals['condition/produceDtStart'];
 		var end = vals['condition/produceDtEnd'];
-		if (dayDiff(start, end) > 31) {
-			Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
-			return false;
+
+		if (Ext.isEmpty(vals['condition/orderNoStr'])
+				&& Ext.isEmpty(vals['condition/planNo'])
+				&& Ext.isEmpty(vals['condition/dimoBatchNo'])
+				&& Ext.isEmpty(vals['condition/batchNoStr'])
+				&& Ext.isEmpty(vals['condition/outBatchNo'])) {
+
+			if (Ext.isEmpty(vals['condition/produceDtStart'])
+					|| Ext.isEmpty(vals['condition/produceDtEnd'])) {
+				Ext.Msg.alert("系统提示", "请选择查询日期！");
+				return false;
+
+			}
+
+			if (dayDiff(start, end) > 93) {
+				Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+				return false;
+
+			}
 
 		}
+
 		var store = this.listPanel.store;
 
 		store.baseParams = this.queryPanel.getForm().getValues();
@@ -39,8 +56,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				var recordId = cell.data.recordId;
 				recordId = recordId + '';
 				if (recordId.substr(0, 1) != '2') {
-					Ext.Msg.alert('系统提示', '一期数据不能修改');
-					return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能修改');
+					// return false;
 				}
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
@@ -518,6 +535,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.destroy = function() {
 	this.defectTmWin.destroy();
 	this.defectZmWin.destroy();
 	Ext.getCmp('tm-defectviewwindow').destroy();
+	Ext.getCmp('produce-tumo-list').destroy();
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModiTech = function() {
@@ -530,8 +548,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModiTech = function() {
 		var recordId = cell.data.recordId;
 		recordId = recordId + '';
 		if (recordId.substr(0, 1) != '2') {
-			Ext.Msg.alert('系统提示', '一期数据不能修改');
-			return false;
+			// Ext.Msg.alert('系统提示', '一期数据不能修改');
+			// return false;
 		}
 		this.editMpdWindow.show();
 		this.editMpdWindow.loadData(cell);
@@ -621,7 +639,7 @@ function defectView(tumoBatchNo) {
 	// };
 	// store.load();
 	// Ext.getCmp('tm-defectviewwindow').show();
-	var spacepanel = Ext.getCmp('spacepanel');	
+	var spacepanel = Ext.getCmp('spacepanel');
 
 	if (tumoBatchNo == '') {
 		return;

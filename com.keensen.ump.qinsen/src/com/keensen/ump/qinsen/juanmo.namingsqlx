@@ -365,7 +365,9 @@
 	   AND TM.SPEC_ID = #mpSpecId#
 	</isNotNull>
            
-           
+    <isNotNull prepend = ""  property = "juanmoBatchId">
+	   AND A.MAIN_BATCH_ID = #juanmoBatchId#
+	</isNotNull>       
            
            ) T1
  ORDER BY T1.JUANMO_PRODUCE_DT DESC, T1.JUANMO_BATCH_NO, T1.RECORD_ID
@@ -411,4 +413,35 @@
 	MAIN_BATCH_ID=#mainBatchId#
 	</isNotNull>
    </delete>
+   
+   <select id="queryBatchStr" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   
+    SELECT z.record_id ,z.batch_no jm_batch_no,
+ (select wm_concat(distinct c.batch_no)
+          from qinsen.inst_juanmo_detail d, qinsen.inst_caidiemo c
+         where d.cdm_batch_id = c.record_id
+           and d.main_batch_id = z.record_id) "cdmBatchStr",
+       (select wm_concat(distinct m.batch_no)
+          from qinsen.inst_juanmo_detail d,
+               qinsen.inst_caidiemo      c,
+               qinsen.inst_tumo          m
+         where d.cdm_batch_id = c.record_id
+           and c.tumo_batch_id = m.record_id
+           and d.main_batch_id = z.record_id) "tumoBatchStr",
+       (select wm_concat(distinct m.dimo_batch_no)
+          from qinsen.inst_juanmo_detail d,
+               qinsen.inst_caidiemo      c,
+               qinsen.inst_tumo          m
+         where d.cdm_batch_id = c.record_id
+           and c.tumo_batch_id = m.record_id
+           and d.main_batch_id = z.record_id) "dimoBatchStr"
+           FROM qinsen.inst_juanmo_main z
+           where z.record_id = #jmBatchId#
+     </select>
+     
+      <update id="updateJuanmoBatchStr" parameterClass="java.util.HashMap" >
+    update qinsen.inst_juanmo_main set tumo_batch_str = #tumoBatchStr#,
+    dimo_batch_str = #dimoBatchStr#,cdm_batch_str = #cdmBatchStr#    
+	WHERE record_id=#jmBatchId#
+   </update>
 </sqlMap>

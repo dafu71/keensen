@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.base.organduser">
+    <!-- 修改员工密码 -->
+    <update id="modiStaffPassword" parameterClass="java.util.HashMap">UPDATE qinsen.BASE_STAFF BS
+		   SET BS.PASSWORD = #newPassword#, 
+		   BS.PASSWORD_CHANGED_DT = SYSDATE,
+		   BS.CHANGE_DT = SYSDATE,
+		   BS.CHANGER_ID = #operatorId#
+		 WHERE BS.STAFF_ID = #staffId#</update>
+    <!-- 按工号和密码获取用户信息 -->
+    <select id="getUserInfoByStaffCodePassword" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT A.*,
+		       (SELECT BD.DEPT_NAME FROM qinsen.BASE_DEPARTMENT BD WHERE BD.DEPT_ID = A.DEPT_ID) DEPT_NAME
+		  FROM qinsen.BASE_STAFF A
+		 WHERE A.STAFF_CODE = UPPER(#staffCode#)
+		 	AND A.PASSWORD = #password#
+		 	AND A.STATE = 'A'</select>
+</sqlMap>

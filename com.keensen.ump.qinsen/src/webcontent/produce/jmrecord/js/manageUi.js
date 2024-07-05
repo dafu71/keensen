@@ -38,7 +38,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						fieldLabel : '生产时间',
 						colspan : 1,
 						anchor : '75%',
-						allowBlank : false,
+						//allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, -1)
@@ -51,7 +51,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						anchor : '75%',
 						editable : true,
 						format : 'Y-m-d H:i',
-						allowBlank : false,
+						//allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
 					}, {
@@ -126,6 +126,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 				
 		this.queryPanel.addButton({
 					text : "导出",
+					rescode : '10002661',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel

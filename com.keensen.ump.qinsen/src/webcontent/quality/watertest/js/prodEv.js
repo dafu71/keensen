@@ -113,6 +113,9 @@ com.keensen.ump.qinsen.quality.prodMgr.prototype.loadStd = function() {
 
 com.keensen.ump.qinsen.quality.prodMgr.prototype.calcFactorB = function() {
 	var _this = this;
+	if(Ext.isEmpty(_this.reTestWindow.area.getValue())){
+		return false;
+	}
 	var rGpd = _this.reTestWindow.rGpd.getValue();
 	var rSalt = _this.reTestWindow.rSalt.getValue();
 	var area = _this.reTestWindow.area.getValue() * 1;
@@ -128,8 +131,8 @@ com.keensen.ump.qinsen.quality.prodMgr.prototype.judge = function() {
 	var _this = this;
 	var rGpd = _this.reTestWindow.rGpd.getValue();
 	var rSalt = _this.reTestWindow.rSalt.getValue();
-	var fFactorB = _this.reTestWindow.fFactorB.getValue();
-	if (Ext.isEmpty(rGpd) || Ext.isEmpty(rSalt) || Ext.isEmpty(fFactorB)) {
+	var rFactorB = _this.reTestWindow.rFactorB.getValue();
+	if (Ext.isEmpty(rGpd) || Ext.isEmpty(rSalt) || Ext.isEmpty(rFactorB)) {
 		return;
 	}
 	// 标准1
@@ -143,7 +146,7 @@ com.keensen.ump.qinsen.quality.prodMgr.prototype.judge = function() {
 
 	// 优先标准2
 	var prodGpdLowLimit, prodGpdUpLimit, prodSaltLowLimit, prodFactorBUpLimit;
-	if (!Ext.isEmpty(bGpdLowLimit)) {
+	if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit !=0) {
 		prodGpdLowLimit = bGpdLowLimit;
 		prodSaltLowLimit = bSaltLowLimit;
 	} else {
@@ -169,10 +172,10 @@ com.keensen.ump.qinsen.quality.prodMgr.prototype.judge = function() {
 			_this.reTestWindow.isProdQualified.setValue('N');
 			judgeInfo.push('脱盐率超下限');
 		}
-		if (!Ext.isEmpty(prodFactorBUpLimit) && fFactorB > prodFactorBUpLimit) {
+		/*if (!Ext.isEmpty(prodFactorBUpLimit) && rFactorB > prodFactorBUpLimit) {
 			_this.reTestWindow.isProdQualified.setValue('N');
 			judgeInfo.push('系数B超上限');
-		}
+		}*/
 		if (_this.reTestWindow.isProdQualified.getValue() == 'N') {
 			_this.reTestWindow.judgeInfo
 					.setValue('<span style="color:red;">' + judgeInfo.join(',')

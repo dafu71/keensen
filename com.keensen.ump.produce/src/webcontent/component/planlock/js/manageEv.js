@@ -203,6 +203,7 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 		//},
 		success : function(resp) {
 			var ret = Ext.decode(resp.responseText);
+	
 			if (ret.success) {
 				if (!Ext.isEmpty(ret.data)) {
 					var str = '<style>td{border:1px black solid;}</style>'
@@ -237,7 +238,9 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 							
 							
 							+ '</tr>';
+
 					Ext.each(ret.data, function(r) {
+								var cnt2 = r.cnt2;
 								str += '<tr><td align="center">' + r.orderNo
 										+ '</td><td align="center">'
 										+ r.materSpecName
@@ -250,7 +253,10 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 										+ '</td><td align="center">'
 										+ formatStr(r.orderRemark) + '</td>' 										
 										+ '<td align="center">'
-										+ formatStr(r.batchNo) + '</td>'
+
+										+ formatStr(r.batchNo) 
+
+										+ '</td>'
 										+ '<td align="center">'
 										+ formatStr(r.meterAmount) + '</td>' 
 										+ '<td align="center">'
@@ -284,6 +290,7 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 										+ '</tr>';
 							})
 					str += '</table>';
+					
 					// application/vnd.ms-excel;charset=utf-8
 					var blob = new Blob(["\ufeff", str], {
 								type : 'application/vnd.ms-excel;charset=utf-8'

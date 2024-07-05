@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.testtrace">
+    <select id="queryTestTrace" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.BATCH_NO "batchNo",T1.id "id",
+       T1.CATEGORY "category",
+       T1.test_Type "testType",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_NAME "createName",
+       T1.FROM_IP "fromIp",
+       T1.RECORD_ID "recordId"
+  	FROM KS_COMPONENT_TEST_TRACE T1
+  	where 1=1
+  	<isNotNull prepend="and" property="batchNo">T1.BATCH_NO = #batchNo#</isNotNull>
+  	order by t1.id desc
+    </select>
+    <select id="query4Scan" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.batch_no "batchNo",'涂膜' "category",T.RECORD_ID "recordId" from qinsen.inst_tumo t
+	WHERE t.batch_no=#batchNo#
+	UNION
+	SELECT t.batch_no,'卷膜',T.RECORD_ID  from qinsen.inst_juanmo_main t
+	WHERE t.batch_no=#batchNo#</select>
+    <select id="queryTrace" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.BATCH_NO           AS "batchNo",
+       T1.LINE_CODE          AS "lineCode",
+       T1.MATER_CLASS_CODE   AS "materClassCode",
+       T1.MATER_SPEC_NAME    AS "materSpecName",
+       T1.OUT_LENGTH         AS "outLength",
+       T1.QUALIFID_LENGTH    AS "qualifidLength",
+       T1.PRODUCE_DT         AS "produceDt",
+       T1.TO_CDM_DT          AS "toCdmDt",
+       T1.CDM_PRODUCE_DT     AS "cdmProduceDt",
+       T1.CDM_PROD_SPEC_NAME AS "cdmProdSpecName",
+       T1.CDM_AMOUNT         AS "cdmAmount",
+       T1.JM_PRODUCE_DT      AS "jmProduceDt",
+       T1.JM_PROD_SPEC_NAME  AS "jmProdSpecName",
+       T1.JM_BATCH_NO        AS "jmBatchNo",
+       T1.QJ_PRODUCE_DT      AS "qjProduceDt",
+       T1.TO_WATER_DT        AS "toWaterDt",
+       T1.F_CHECK_TM         AS "fCheckTm",
+       T1.R_CHECK_TM         AS "rCheckTm",
+       T1.CHECK_RESULT       AS "qjResult",
+       T1.F_GPD              AS "fGpd",
+       T1.F_SALT             AS "fSalt",
+       T1.R_GPD              AS "rGpd",
+       T1.R_SALT             AS "rSalt",
+       T1.A_GPD_LOW_LIMIT    AS "aGpdLowLimit",
+       T1.A_GPD_UP_LIMIT     AS "aGpdUpLimit",
+       T1.A_SALT_LOW_LIMIT   AS "aSaltLowLimit",
+       T1.JUDGE              AS "judge",
+       T1.test_type          AS "testType",
+       T1.tm_to_cdm_diff     AS "tmToCdmDiff",
+       T1.tm_cdm_diff     AS "tmCdmDiff",
+       T1.cdm_jm_diff     AS "cdmJmDiff",
+       t1.jm_dt_add_4        AS "jmDtAdd4",
+       t1.jm_dt_23        AS "jmDt23",
+       t1.qj_dt_23        AS "qjDt23"
+
+  FROM (
+        
+        SELECT T.BATCH_NO,
+                T.LINE_CODE,
+                T.MATER_CLASS_CODE,
+                T.MATER_SPEC_NAME,
+                T.OUT_LENGTH,
+                T.QUALIFID_LENGTH,
+                TO_CHAR(T.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss') PRODUCE_DT,
+                TO_CHAR(T3.TO_CDM_DT, 'yyyy-MM-dd HH24:mi:ss') TO_CDM_DT,
+                TO_CHAR(CDM.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss') CDM_PRODUCE_DT,
+                CDMP.MATER_SPEC_NAME CDM_PROD_SPEC_NAME,
+                T2.CNT CDM_AMOUNT,
+                TO_CHAR(JM.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss') JM_PRODUCE_DT,
+                JMP.MATER_SPEC_NAME JM_PROD_SPEC_NAME,
+                JM.BATCH_NO JM_BATCH_NO,
+                TO_CHAR(QJ.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss') QJ_PRODUCE_DT,
+                TO_CHAR(T4.TO_WATER_DT, 'yyyy-MM-dd HH24:mi:ss') TO_WATER_DT,
+                TO_CHAR(WT.F_CHECK_TM, 'yyyy-MM-dd HH24:mi:ss') F_CHECK_TM,
+                TO_CHAR(WT.R_CHECK_TM, 'yyyy-MM-dd HH24:mi:ss') R_CHECK_TM,
+                JMD.MAIN_BATCH_ID JM_BATCH_ID,
+                CDM.BATCH_NO CDM_BATCH_NO,
+                QJ.CHECK_RESULT,
+                WT.F_GPD,
+                WT.F_SALT,
+                WT.R_GPD,
+                WT.R_SALT,
+                T.SPEC_ID,
+                JM.PROD_SPEC_ID,
+                WSTD.A_GPD_LOW_LIMIT,
+                WSTD.A_GPD_UP_LIMIT,
+                WSTD.A_SALT_LOW_LIMIT,
+                CASE
+                  WHEN (NVL(WT.R_GPD, WT.F_GPD) &gt;= WSTD.A_GPD_LOW_LIMIT) AND
+                       (NVL(WT.R_GPD, WT.F_GPD) &lt;= WSTD.A_GPD_UP_LIMIT) AND
+                       (NVL(WT.R_SALT, WT.F_SALT) &gt;= WSTD.A_SALT_LOW_LIMIT) THEN
+                   '合格'
+                  ELSE
+                   '不合格'
+                END JUDGE,
+                T3.test_type,
+                round(TO_DATE(TO_CHAR(T3.TO_CDM_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss')
+                -
+                TO_DATE(TO_CHAR(T.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss'),2) tm_to_cdm_diff,
+                
+                round(TO_DATE(TO_CHAR(CDM.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss')
+                -
+                TO_DATE(TO_CHAR(T.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss'),2) tm_cdm_diff,
+                
+                round(TO_DATE(TO_CHAR(JM.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss')
+                -
+                TO_DATE(TO_CHAR(CDM.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss'),2) cdm_jm_diff,
+                
+                JM.PRODUCE_DT+ INTERVAL '4' HOUR jm_dt_add_4,
+                
+                CASE WHEN JM.PRODUCE_DT IS NULL THEN NULL ELSE 
+                  TO_DATE(TO_CHAR(JM.PRODUCE_DT, 'yyyy/MM/dd') || ' 22:59:59', 'yyyy-MM-dd HH24:mi:ss') END 
+                jm_dt_23,
+                
+                 CASE WHEN QJ.PRODUCE_DT IS NULL THEN NULL ELSE 
+                  TO_DATE(TO_CHAR(QJ.PRODUCE_DT, 'yyyy/MM/dd') || ' 22:59:59', 'yyyy-MM-dd HH24:mi:ss') END 
+                qj_dt_23
+          FROM (SELECT *
+                   FROM V_KS_TUMO_ORIGIN2
+                  WHERE RECORD_ID IN (SELECT T.RECORD_ID
+                                        FROM KS_COMPONENT_TEST_TRACE T
+                                       WHERE T.CATEGORY = '涂膜')) T
+          LEFT JOIN (SELECT *
+                       FROM QINSEN.INST_CAIDIEMO
+                      WHERE ORDER_NO = '试卷') CDM
+            ON CDM.TUMO_BATCH_ID = T.RECORD_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC CDMP
+            ON CDMP.MATER_SPEC_ID = CDM.PROD_SPEC_ID
+          LEFT JOIN (SELECT T.TUMO_BATCH_ID, COUNT(1) CNT
+                       FROM QINSEN.INST_CAIDIEMO T
+                      WHERE T.ORDER_NO = '试卷'
+                      GROUP BY T.TUMO_BATCH_ID, T.PROD_SPEC_ID) T2
+            ON T2.TUMO_BATCH_ID = T.RECORD_ID
+          LEFT JOIN QINSEN.INST_JUANMO_DETAIL JMD
+            ON JMD.CDM_BATCH_ID = CDM.RECORD_ID
+          LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+            ON JM.RECORD_ID = JMD.MAIN_BATCH_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC JMP
+            ON JM.PROD_SPEC_ID = JMP.MATER_SPEC_ID
+          LEFT JOIN QINSEN.INST_QIJIAN QJ
+            ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID
+          LEFT JOIN QINSEN.INST_WATER_TEST WT
+            ON WT.JUANMO_BATCH_ID = JM.RECORD_ID
+          LEFT JOIN (SELECT TB.RECORD_ID,
+                            TB.TEST_TYPE,
+                            TB.CREATE_TIME TO_CDM_DT
+                       FROM KS_COMPONENT_TEST_TRACE TB
+                      WHERE TB.ID IN (SELECT MAX(ID)
+                                        FROM KS_COMPONENT_TEST_TRACE T
+                                       WHERE T.CATEGORY = '涂膜'
+                                       GROUP BY T.RECORD_ID)) T3
+            ON T3.RECORD_ID = T.RECORD_ID
+          LEFT JOIN (SELECT T.RECORD_ID, MAX(T.CREATE_TIME) TO_WATER_DT
+                       FROM KS_COMPONENT_TEST_TRACE T
+                      WHERE T.CATEGORY = '卷膜'
+                      GROUP BY T.RECORD_ID) T4
+            ON T4.RECORD_ID = JM.RECORD_ID
+          LEFT JOIN (SELECT T.MP_SPEC_ID,
+                            T.PROD_SPEC_ID,
+                            T.A_GPD_LOW_LIMIT,
+                            T.A_GPD_UP_LIMIT,
+                            T.A_SALT_LOW_LIMIT
+                       FROM KS_PROD_WATER_STD T) WSTD
+            ON WSTD.MP_SPEC_ID = T.SPEC_ID
+           AND WSTD.PROD_SPEC_ID = JM.PROD_SPEC_ID
+            where 1=1
+         <isNotNull prepend="and" property="batchNo">T.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="jmBatchNo">JM.BATCH_NO = #jmBatchNo#</isNotNull>
+        <isNotNull prepend="and" property="testType">T3.test_Type = #testType#</isNotNull>
+         ORDER BY T.BATCH_NO, JM.BATCH_NO) T1
+
+    </select>
+</sqlMap>

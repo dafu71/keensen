@@ -27,7 +27,7 @@ com.keensen.ump.qinsen.produce.printrecordsMgr = function() {
 						fieldLabel : '打印时间',
 						colspan : 1,
 						anchor : '75%',
-						allowBlank : false,
+						//allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, -1)
@@ -40,7 +40,7 @@ com.keensen.ump.qinsen.produce.printrecordsMgr = function() {
 						anchor : '75%',
 						editable : true,
 						format : 'Y-m-d H:i',
-						allowBlank : false,
+						//allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
 					}, {
@@ -64,12 +64,12 @@ com.keensen.ump.qinsen.produce.printrecordsMgr = function() {
 				forceFit : true
 			},
 			id : listid,
-			tbar : [{
+			tbar : [/*{
 						text : '复制请检',
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.copyBatches
-					}],
+					}*/],
 			selModel : selModel,
 			delUrl : '111.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {

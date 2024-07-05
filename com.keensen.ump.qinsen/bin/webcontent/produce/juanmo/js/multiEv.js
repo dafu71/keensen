@@ -27,11 +27,16 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.initEvent = function() 
 			});
 
 	this.mainPanel.lineId.mon(this.mainPanel.lineId, "change", function(
-					thisFiled, newValue, oldValue) {
-				var now = new Date();
-				var expiry = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);// 保存一年
-				Ext.util.Cookies.set('juanMoInput.lineSel.defaultValue',
-						newValue, expiry);// 写入cookie
+			thisFiled, newValue, oldValue) {
+		var now = new Date();
+		var expiry = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);// 保存一年
+		Ext.util.Cookies.set('juanMoInput.lineSel.defaultValue', newValue,
+				expiry);// 写入cookie
+			// _this.dealCdmBatchNo();
+		});
+
+	this.mainPanel.lineId.mon(this.mainPanel.lineId, "select", function() {
+
 				_this.dealCdmBatchNo();
 			});
 
@@ -65,9 +70,11 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.initEvent = function() 
 }
 
 com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.dealCdmBatchNo = function() {
+
 	var _this = this;
 	var cdmBatchNo = _this.cdmPanel.cdmBatchNo.getValue();
-	if (cdmBatchNo) {
+
+	if (!Ext.isEmpty(cdmBatchNo)) {
 		_this.requestMask = this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
 							msg : "后台正在操作,请稍候!"

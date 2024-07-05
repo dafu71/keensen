@@ -20,9 +20,9 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					height : 120,
 					columns : 4,
 					border : true,
-					//collapsible : true,
+					// collapsible : true,
 					titleCollapse : false,
-					//title : '【膜片入库查询】',
+					// title : '【膜片入库查询】',
 					fields : [{
 								xtype : 'storagecombobox',
 								hiddenName : 'condition/storageId',
@@ -104,10 +104,13 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 								 */]
 				});
 
-		/*
-		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
-		 * 'icon-application_excel', handler : this.exportExcel });
-		 */
+		this.queryPanel.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel
+				});
+
 	}
 
 	this.initListPanel = function() {
@@ -117,7 +120,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【膜片入库列表】',
+			// title : '【膜片入库列表】',
 			id : 'warehousingmgrlist',
 			viewConfig : {
 				forceFit : true
@@ -136,19 +139,13 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					}/*
 						 * , '-', { text : '仓库接收确认', scope : this, iconCls :
 						 * 'icon-application_edit', handler : this.onConfirm }
-						 *//*, '-', {
-						text : '模板下载',
-						scope : this,
-						iconCls : 'icon-application_excel',
-						disabled : true,
-						handler : this.down
-					}, '-', {
-						text : '批量导入',
-						scope : this,
-						iconCls : 'icon-application_excel',
-						disabled : true,
-						handler : this.importwarehousing
-					}*/],
+						 *//*
+						 * , '-', { text : '模板下载', scope : this, iconCls :
+						 * 'icon-application_excel', disabled : true, handler :
+						 * this.down }, '-', { text : '批量导入', scope : this,
+						 * iconCls : 'icon-application_excel', disabled : true,
+						 * handler : this.importwarehousing }
+						 */],
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'storageName',
@@ -236,7 +233,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 				pgrid : this.listPanel,
 				autoHide : false,
 				successFn : function(i, r) {
-					
+
 					if (r.ret != '1') {
 						Ext.Msg.show({
 									width : 400,
@@ -246,7 +243,8 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 									buttons : Ext.Msg.OK,
 									fn : function() {
 										currentWindow = 'inputWindow';
-										Ext.getCmp('warehousingmgrlist').store.load();
+										Ext.getCmp('warehousingmgrlist').store
+												.load();
 									}
 								})
 					} else {
@@ -440,16 +438,16 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 				successFn : function(i, r) {
 					if (r.ret != '1') {
 						Ext.Msg.show({
-									width : 350,
-									title : "操作提示",
-									msg : r.ret,
-									icon : Ext.Msg.WARNING,
-									buttons : Ext.Msg.OK,
-									fn : function() {
-										currentWindow = 'inputWindow2';
-										Ext.getCmp('warehousingmgrlist').store.reload();
-									}
-								})
+							width : 350,
+							title : "操作提示",
+							msg : r.ret,
+							icon : Ext.Msg.WARNING,
+							buttons : Ext.Msg.OK,
+							fn : function() {
+								currentWindow = 'inputWindow2';
+								Ext.getCmp('warehousingmgrlist').store.reload();
+							}
+						})
 					} else {
 						currentWindow = 'inputWindow2';
 						Ext.getCmp('warehousingmgrlist').store.reload();

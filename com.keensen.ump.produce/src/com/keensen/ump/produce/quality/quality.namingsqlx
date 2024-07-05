@@ -478,6 +478,14 @@
 	<isNotNull prepend = ""  property = "isWx">
 	   AND lower(t1.IS_WX) = #isWx#
 	</isNotNull>
+	
+	<isNotNull prepend = ""  property = "juanmoBatchId"> 
+	   	AND T1.BATCH_ID IN(SELECT T2.TUMO_BATCH_ID from QINSEN.INST_JUANMO_DETAIL T
+			LEFT JOIN QINSEN.INST_CAIDIEMO T2 ON T.CDM_BATCH_ID=T2.RECORD_ID
+			WHERE T.MAIN_BATCH_ID = #juanmoBatchId#
+			)
+		</isNotNull>
+	
 	ORDER BY t1.PRODUCE_DT DESC, t1.BATCH_NO, t1.CHECK_TM DESC
    </select>
    
@@ -588,7 +596,7 @@
  
  
  <select id="queryTumoJudge" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-	 SELECT T1.RECORD_ID AS "recordId",T1.mpd "mpd",T1.order_no "orderNo",T1.is_keep "isKeep",
+	 SELECT T1.RECORD_ID AS "recordId",T1.mpd "mpd",T1.order_no "orderNo",T1.is_keep "isKeep",T1.out_length "outLength",
 	 	T8.GFD_AVG "rGfdAvg",T9.title "title",
        	T8.SALT_REJECTION "rSaltRejection",
        T1.BATCH_NO AS "batchNo",
@@ -620,7 +628,7 @@
        DECODE(NVL(t2.appearance_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "appearanceIsQualifiedName",
        t2.thick_is_qualified "thickIsQualified",
        DECODE(NVL(t2.thick_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "thickIsQualifiedName"
-  FROM (SELECT T.RECORD_ID,T.PRODUCE_DT,T.PROD_FLAG_ID,T.order_no,
+  FROM (SELECT T.RECORD_ID,T.PRODUCE_DT,T.PROD_FLAG_ID,T.order_no,T.out_length,
                T.BATCH_NO,T.mpd,
                T.LINE_ID,
                T.SPEC_ID,

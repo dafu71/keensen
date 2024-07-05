@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.qinsen.tumo">
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-   		SELECT T1.RECORD_ID         AS "recordId",
+   		SELECT T1.RECORD_ID         AS "recordId", T1.dm_Use_Length as "dmUseLength",
        T1.PLAN_NO           AS "planNo",
        T1.DIMO_BATCH_NO     AS "dimoBatchNo",
        T1.BATCH_NO          AS "batchNo",
@@ -78,7 +78,7 @@
        T1.R_MAC_NAME        AS "rMacName",
        T1.R_GFD_AVG         AS "rGfdAvg",
        T1.R_SALT_REJECTION  AS "rSaltRejection"
-  FROM (SELECT A.RECORD_ID,
+  FROM (SELECT A.RECORD_ID,A.dm_Use_Length,
                A.PLAN_NO,
                A.DIMO_BATCH_NO,
                A.BATCH_NO,
@@ -240,6 +240,11 @@
         <isNotNull prepend="" property="batchNoStr">AND T1.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
         <isNotNull prepend="" property="outBatchNo">AND T1.OUT_BATCH_NO = #outBatchNo#</isNotNull>
         <isNotNull prepend="" property="tumoBatchNo">AND T1.BATCH_NO = #tumoBatchNo#</isNotNull>
+        <isNotNull prepend="" property="juanmoBatchId">AND T1.RECORD_ID IN(SELECT T2.TUMO_BATCH_ID from QINSEN.INST_JUANMO_DETAIL T
+			LEFT JOIN QINSEN.INST_CAIDIEMO T2 ON T.CDM_BATCH_ID=T2.RECORD_ID
+			WHERE T.MAIN_BATCH_ID = #juanmoBatchId#
+			)</isNotNull>
+		
  ORDER BY T1.PRODUCE_DT DESC, T1.BATCH_NO
 
    	</select>

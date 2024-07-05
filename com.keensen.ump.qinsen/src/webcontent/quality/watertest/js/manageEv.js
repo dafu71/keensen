@@ -430,10 +430,10 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judgeBatch = function() {
 			_this.firstTestWindow.isBatchQualified.setValue('N');
 			judgeInfo.push('脱盐率超下限');
 		}
-		if (!Ext.isEmpty(batchFactorBUpLimit) && fFactorB > batchFactorBUpLimit) {
+		/*if (!Ext.isEmpty(batchFactorBUpLimit) && fFactorB > batchFactorBUpLimit) {
 			_this.firstTestWindow.isBatchQualified.setValue('N');
 			judgeInfo.push('系数B超上限');
-		}
+		}*/
 		if (_this.firstTestWindow.isBatchQualified.getValue() == 'N') {
 			_this.firstTestWindow.batchJudgeInfo
 					.setValue('<span style="color:red;">' + judgeInfo.join(',')
@@ -494,10 +494,10 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judgeProd = function() {
 			judgeInfo.push('脱盐率超下限');
 		}
 
-		if (!Ext.isEmpty(prodFactorBUpLimit) && (fFactorB > prodFactorBUpLimit)) {
+		/*if (!Ext.isEmpty(prodFactorBUpLimit) && (fFactorB > prodFactorBUpLimit)) {
 			_this.firstTestWindow.isProdQualified.setValue('N');
 			judgeInfo.push('系数B超上限');
-		}
+		}*/
 		if (_this.firstTestWindow.isProdQualified.getValue() == 'N') {
 			_this.firstTestWindow.prodJudgeInfo
 					.setValue('<span style="color:red;">' + judgeInfo.join(',')
@@ -762,7 +762,7 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judge = function() {
 
 	// 优先标准2
 	var prodGpdLowLimit, prodGpdUpLimit, prodSaltLowLimit, prodFactorBUpLimit;
-	if (!Ext.isEmpty(bGpdLowLimit)) {
+	if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit !=0) {
 		prodGpdLowLimit = bGpdLowLimit;
 		prodSaltLowLimit = bSaltLowLimit;
 	} else {
@@ -788,10 +788,10 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judge = function() {
 			_this.firstTestWindow2.isProdQualified.setValue('N');
 			judgeInfo.push('脱盐率超下限');
 		}
-		if (!Ext.isEmpty(prodFactorBUpLimit) && fFactorB > prodFactorBUpLimit) {
+		/*if (!Ext.isEmpty(prodFactorBUpLimit) && fFactorB > prodFactorBUpLimit) {
 			_this.firstTestWindow2.isProdQualified.setValue('N');
 			judgeInfo.push('系数B超上限');
-		}
+		}*/
 		if (_this.firstTestWindow2.isProdQualified.getValue() == 'N') {
 			_this.firstTestWindow2.judgeInfo
 					.setValue('<span style="color:red;">' + judgeInfo.join(',')
