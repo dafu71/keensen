@@ -36,7 +36,7 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 						store : new Ext.data.ArrayStore({
 									fields : ['mykey', 'myvalue'],
 									data : [['A', 'A'], ['B', 'B'], ['C', 'C'],
-											['D', 'D'], ['E', 'E']]
+											['D', 'D'], ['E', 'E'], ['F', 'F']]
 								}),
 						mode : "local",
 						editable : false,

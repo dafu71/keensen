@@ -11,6 +11,18 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    String gyy = "0";//工艺员
+    String fxy = "0";//分析员
+    String ply = "0";//配料员
+    if(roleId.toString().indexOf("10001322")!=-1 || uid.equals("sysadmin")){
+		gyy="1";
+  	}
+  	if(roleId.toString().indexOf("10001323")!=-1 || uid.equals("sysadmin")){
+		fxy="1";
+  	}
+  	if(roleId.toString().indexOf("10001321")!=-1 || uid.equals("sysadmin")){
+		ply="1";
+  	}	
 %>
 <html>
 <!-- 
@@ -24,6 +36,11 @@
 	BIZ.ns('com.keensen.ump.produce.quality.mptest');
 </script>
 
+<ext:dict property="KS_GC_ITEM"   dictTypeId="KS_GC_ITEM" />
+<ext:dict property="KS_HPLC_ITEM"   dictTypeId="KS_HPLC_ITEM" />
+
+<js:load scriptPath="pub/common/mpspecCombo.js" />
+<js:load scriptPath="pub/common/operatorroleCombo.js"/>
 <js:load scriptPath="produce/quality/mptest/water/js/manageUi.js"/>
 <js:load scriptPath="produce/quality/mptest/water/js/manageEv.js"/>
 
@@ -32,7 +49,12 @@
 </style>
 
 <script type="text/javascript">
+  var gyy = "<%=gyy %>";
+  var fxy = "<%=fxy %>";
+  var ply = "<%=ply %>";
+  
   var uid = "<%=uid %>";
+  
   var opt = '';
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.quality.mptest.waterMgr

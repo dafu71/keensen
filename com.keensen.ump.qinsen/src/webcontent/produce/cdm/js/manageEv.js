@@ -150,7 +150,11 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPrintCaidieMoTag = functi
 	} else {
 		var C = A.getSelectionModel().getSelections();
 		var rec = C[0];
-		var f = document.getElementById('printForm');
+		
+		var produceDate = rec.data.produceDate;
+		produceDate = produceDate.slice(0,10);
+		
+		var f = document.getElementById('cdmprintForm');
 		f.batchId.value = rec.data.batchId;
 		f.batchNo.value = rec.data.batchNo;
 		f.orderNo.value = rec.data.orderNo;
@@ -158,6 +162,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPrintCaidieMoTag = functi
 		f.prodSpecName.value = rec.data.cdmSpecName;
 		f.isToMixStr.value = rec.data.isToMixStr;
 		f.quantity.value = rec.data.quantity;
+		f.produceDate.value = produceDate;
 		f.numPerWad.value = rec.data.numPerWad ? rec.data.numPerWad : '';
 		f.blankingSize.value = rec.data.blankingSize
 				? rec.data.blankingSize

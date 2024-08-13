@@ -302,8 +302,20 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						dataIndex : 'qualifidLength',
 						header : '合格长度(米)'
 					}, {
+						header : '裁膜产出m',
+						width : 80,
+						dataIndex : 'caimoLength'
+					}, {
 						dataIndex : 'caimoLoss',
 						header : '不良(米)'
+					}, {
+						header : '已裁完',
+						width : 50,
+						dataIndex : 'isCutOverName'
+					}, {
+						header : '最后裁膜时间',
+						width : 110,
+						dataIndex : 'lastCaimoDate'
 					}, {
 						dataIndex : 'dimoBatchNo',
 						header : '底膜批次'
@@ -456,6 +468,12 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'orderNoBak'
 						}, {
 							name : 'judgeRemark'
+						}, {
+							name : 'caimoLength'
+						}, {
+							name : 'isCutOverName'
+						}, {
+							name : 'lastCaimoDate'
 						}]
 			})
 		})

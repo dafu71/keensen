@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   
+    <select id="queryProdBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	
+	SELECT NVL(t.batch_no,jm.batch_no) "prodBatchNo" from qinsen.inst_qijian t
+	LEFT JOIN qinsen.inst_juanmo_main jm ON t.juanmo_batch_id=jm.record_id
+	WHERE t.batch_no=#prodBatchNo# OR jm.batch_no =#prodBatchNo#
+    </select>
+    
+    <update id="updateDiameter" parameterClass="java.util.HashMap">
+    UPDATE qinsen.INST_QIJIAN t
+	SET t.diameter = #diameter#,t.diameter_name = #diameterName#,t.diameter2 = #diameter2#
+	WHERE t.record_id = (SELECT t.record_id from qinsen.inst_qijian t
+	LEFT JOIN qinsen.inst_juanmo_main jm ON t.juanmo_batch_id=jm.record_id
+	WHERE t.batch_no=#prodBatchNo# OR jm.batch_no =#prodBatchNo#)
+    </update>
+</sqlMap>

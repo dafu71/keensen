@@ -30,10 +30,10 @@
   <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
-      <targetNode>invokePojo0</targetNode>
+      <targetNode>assign3</targetNode>
     </sourceConnections>
     <targetConnections>link6</targetConnections>
-    <location x="257" y="150"/>
+    <location x="258" y="90"/>
     <size height="28" width="28"/>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
@@ -78,7 +78,7 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
-    <location x="256" y="186"/>
+    <location x="257" y="126"/>
     <figSize height="20" width="31"/>
     <node>assign0</node>
   </nodes>
@@ -87,7 +87,8 @@
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
-    <targetConnections>link1</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link8</targetConnections>
     <location x="405" y="150"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo0label</nodeLabel>
@@ -184,12 +185,122 @@
     <figSize height="20" width="77"/>
     <node>subprocess0</node>
   </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="queryCheckResult" displayName="queryCheckResult" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link8" name="不合格" displayName="连接线" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">checkResult</process:leftOperand>
+          <process:rightOperand type="literal">0</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="257" y="252"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.quality.mpwatertest.queryCheckResult</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="condition" type="query" value="java.util.Map" valueType="Java" pattern="reference">condition</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="checkResult" type="query" value="Int" valueType="Primitive">checkResult</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="204" y="287"/>
+    <figSize height="20" width="132"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="258" y="345"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">entity/state</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">produce</process:from>
+      <process:to type="query">entity/step</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="252" y="381"/>
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值3" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="256" y="159"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c21Test</process:from>
+      <process:to type="query">condition/c21Test</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c22Test</process:from>
+      <process:to type="query">condition/c22Test</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c23Test</process:from>
+      <process:to type="query">condition/c23Test</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c27Test</process:from>
+      <process:to type="query">condition/c27Test</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c28Test</process:from>
+      <process:to type="query">condition/c28Test</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c30Test</process:from>
+      <process:to type="query">condition/c30Test</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/mptype</process:from>
+      <process:to type="query">condition/mptype</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/line</process:from>
+      <process:to type="query">condition/line</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/watertype</process:from>
+      <process:to type="query">condition/watertype</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="250" y="195"/>
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="dafu" createTime="2024-03-04 15:17:27" date="2024-03-04Z" description="" name="modiOilList" version="6.3"/>
   <process:variables>
     <process:variable description="" historyStateLocation="client" isArray="false" name="flag" primitiveType="Boolean"/>
     <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.quality.KsQualityMpTestWaterHead" name="entity2"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="checkResult" primitiveType="Int"/>
+    <process:variable anyType="java.util.Map" description="" historyStateLocation="client" isArray="false" name="condition"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.keensen.ump.produce.quality.KsQualityMpTestWaterHead" name="entity"/>

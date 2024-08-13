@@ -14,6 +14,7 @@
     String uid = userObject.getUserId();
     String userOrgId = userObject.getUserOrgId();
     String uname = userObject.getUserName();
+    int gyyFlag = roleId.indexOf("10001322")>-1?1:0;
 %>
 <html>
 <!-- 
@@ -50,6 +51,7 @@
 </style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  var gyyFlag = <%=gyyFlag %>;
    var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;
    <% if(workerflag){ %>

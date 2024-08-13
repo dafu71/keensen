@@ -227,7 +227,7 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr.prototype.onSave = function() {
 														_this.genBatchNo();
 														if (btn === 'yes') {
 															var f = document
-																	.getElementById('printForm');
+																	.getElementById('juanmoprintForm');
 															f.batchIdStr.value = recordIdStr;
 															var actionUrl = 'com.keensen.ump.qinsen.printJuanmoTags.flow?token='
 																	+ Date

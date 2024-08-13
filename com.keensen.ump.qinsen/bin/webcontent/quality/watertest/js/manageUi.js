@@ -37,13 +37,13 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
-					columns : 4,
-					border : true,
-					id : 'watertestmgrqueryform',
-					// collapsible : true,
-					titleCollapse : false,
-					fields : [{
+			height : 150,
+			columns : 4,
+			border : true,
+			id : 'watertestmgrqueryform',
+			// collapsible : true,
+			titleCollapse : false,
+			fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/fCheckBeginDate',
 						fieldLabel : '初检时间',
@@ -79,17 +79,65 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 					}, {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'condition/testSpecId',
+						ref : '../testSpecId',
 						anchor : '85%',
 						fieldLabel : '测试型号',
 						typeAhead : true,
-						typeAheadDelay : 100,
+						lazyRender : true,
+						// typeAheadDelay : 100,
 						minChars : 1,
-						queryMode : 'local',
-						lastQuery : '',
+						mode : 'local',
+						// anyMatch : true,
+						// lastQuery : '',
+						forceSelection : true,
 						editable : true,
+						queryDelay : 200,// 查询延时，毫秒,
 						listeners : {
+							'focus' : {
+								fn : function(e) {
+									e.expand();
+									this.doQuery(this.allQuery, true);
+								},
+								buffer : 200
+							},
 							"expand" : function(A) {
-								this.reset()
+								// this.reset()
+							},
+							'beforequery' : function(e) {
+								var combo = _this.queryPanel.testSpecId, size = 15, idx = 1;
+
+								if (e.query === '' || e.query == null) {// 当输入框删除内容后，清除过滤器，
+									// 显示原本store数据,使其能够再次检索
+									combo.store.clearFilter();
+									combo.expand();
+
+								} else {
+									if (!e.forceAll) {
+
+										combo.store.clearFilter();// 使每次输入都能进行检索，不用担心输入过慢
+										var input = e.query;
+										// 检索的正则
+										var regExp = new RegExp(".*" + input
+												+ ".*");
+										// 执行检索
+										combo.store.filterBy(function(record,
+														id) {
+													if (idx > size) {
+														return false;
+													}
+													var text = record
+															.get(combo.displayField);
+													var flag = regExp
+															.test(text);
+													if (flag) {
+														idx++;
+													}
+													return flag;
+												});
+										combo.expand();
+										return false;
+									}
+								}
 							}
 						}
 					}, {
@@ -137,7 +185,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						xtype : 'textfield',
 						fieldLabel : '元件序号'
 					}]
-				});
+		});
 
 		this.queryPanel.addButton({
 					text : "导出",

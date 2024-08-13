@@ -243,6 +243,12 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '-', {
+						text : '工艺员备注',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : gyyFlag != 1,
+						handler : this.onRemark
 					}, '->', {
 						text : '换标',
 						scope : this,
@@ -307,6 +313,9 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						width : 80,
 						dataIndex : 'judgeFlagName'
 					}, {
+						dataIndex : 'gyyRemark',
+						header : '工艺员备注'
+					}, {
 						header : '不良原因',
 						width : 120,
 						dataIndex : 'ngItem'
@@ -318,6 +327,14 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						header : '判定时间',
 						width : 110,
 						dataIndex : 'judgeDate'
+					}, {
+						header : '上端直径',
+						width : 70,
+						dataIndex : 'diameter'
+					}, {
+						header : '下端直径',
+						width : 70,
+						dataIndex : 'diameter2'
 					}, {
 						header : '膜片长度',
 						width : 70,
@@ -487,6 +504,12 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							name : 'lastTagDate'
 						}, {
 							name : 'lastTagWorker'
+						}, {
+							name : 'gyyRemark'
+						}, {
+							name : 'diameter'
+						}, {
+							name : 'diameter2'
 						}]
 			})
 		})

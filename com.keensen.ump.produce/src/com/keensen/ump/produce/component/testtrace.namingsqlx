@@ -6,14 +6,59 @@
     SELECT T1.BATCH_NO "batchNo",T1.id "id",
        T1.CATEGORY "category",
        T1.test_Type "testType",
+       T1.test_condition "testCondition",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_NAME "createName",
        T1.FROM_IP "fromIp",
-       T1.RECORD_ID "recordId"
+       T1.RECORD_ID "recordId",
+       T1.RESERVE1  "prodSpecName",
+       T1.RESERVE2  "confirmUser"
   	FROM KS_COMPONENT_TEST_TRACE T1
   	where 1=1
   	<isNotNull prepend="and" property="batchNo"> 
 		       T1.BATCH_NO = #batchNo#
+	</isNotNull>
+	<isNotNull prepend="and" property="category"> 
+		       T1.category = #category#
+	</isNotNull>
+	<isNotNull prepend="and" property="testType"> 
+		       T1.test_Type = #testType#
+	</isNotNull>
+	<isNotNull prepend="and" property="testCondition"> 
+		       T1.test_condition = #testCondition#
+	</isNotNull>
+  	order by t1.id desc
+    </select>
+    
+     <select id="queryTestTrace2" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT T1.BATCH_NO "batchNo",T1.id "id",
+       T1.CATEGORY "category",
+       T1.test_Type "testType",
+       T1.test_condition "testCondition",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_NAME "createName",
+       T1.FROM_IP "fromIp",
+       T1.RECORD_ID "recordId",
+       T1.RESERVE1  "prodSpecName",
+       T1.RESERVE2  "confirmUser",
+       T2.prod_spec_name "prodSpecName2"
+  	FROM (select * from KS_COMPONENT_TEST_TRACE where category = '卷膜') T1
+  	LEFT JOIN (select t.batch_no jm_batch_no,t.prod_spec_id,pms.mater_spec_name prod_spec_name 
+  	from qinsen.inst_juanmo_main t
+		LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id=t.prod_spec_id) T2
+	on T1.BATCH_NO = t2.jm_batch_no
+  	
+  	<isNotNull prepend="and" property="batchNo"> 
+		       T1.BATCH_NO = #batchNo#
+	</isNotNull>
+	<isNotNull prepend="and" property="category"> 
+		       T1.category = #category#
+	</isNotNull>
+	<isNotNull prepend="and" property="testType"> 
+		       T1.test_Type = #testType#
+	</isNotNull>
+	<isNotNull prepend="and" property="testCondition"> 
+		       T1.test_condition = #testCondition#
 	</isNotNull>
   	order by t1.id desc
     </select>
@@ -27,7 +72,7 @@
 	</select>
 	
 	<select id="queryTrace" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-    SELECT T1.BATCH_NO           AS "batchNo",
+       SELECT T1.BATCH_NO           AS "batchNo",
        T1.LINE_CODE          AS "lineCode",
        T1.MATER_CLASS_CODE   AS "materClassCode",
        T1.MATER_SPEC_NAME    AS "materSpecName",
@@ -55,13 +100,33 @@
        T1.A_SALT_LOW_LIMIT   AS "aSaltLowLimit",
        T1.JUDGE              AS "judge",
        T1.test_type          AS "testType",
+       T1.test_condition          AS "testCondition",
        T1.tm_to_cdm_diff     AS "tmToCdmDiff",
        T1.tm_cdm_diff     AS "tmCdmDiff",
        T1.cdm_jm_diff     AS "cdmJmDiff",
        t1.jm_dt_add_4        AS "jmDtAdd4",
        t1.jm_dt_23        AS "jmDt23",
-       t1.qj_dt_23        AS "qjDt23"
-
+       t1.qj_dt_23        AS "qjDt23",
+       t1.plan_date      as "planDate",
+       t1.to_cdm_cdm_diff  as "toCdmCdmDiff",
+       t1.to_water_fcheck_diff as "toWaterFcheckDiff",
+       t1.fcheck_rcheck_diff as "fcheckRcheckDiff",
+       t1.is_prod_qualified as "isProdQualified",
+       t1.TO_CDM_NAME AS "toCdmName",
+       t1.cdm_name AS "cdmName",
+       t1.jm_name AS "jmName",
+       t1.qj_name AS "qjName",
+       t1.TO_WATER_NAME AS "toWaterName",
+       t1.f_checker_name AS "fCheckerName",
+       t1.r_checker_name AS "rCheckerName",
+       t1.cdm_produce_dt_before "cdmProduceDtBefore",
+       t1.jm_produce_dt_before "jmProduceDtBefore",
+       t1.jm_produce_dt_after "jmProduceDtAfter",
+       t1.to_water_dt_after "toWaterDtAfter",
+       nvl(t1.cdm_produce_dt_before_rest,0) "cdmProduceDtBeforeRest",
+        nvl(t1.jm_produce_dt_before_rest,0) "jmProduceDtBeforeRest",
+        nvl(t1.jm_produce_dt_after_rest,0) "jmProduceDtAfterRest",
+        nvl(T1.to_water_dt_after_rest,0) "toWaterDtAfterRest"
   FROM (
         
         SELECT T.BATCH_NO,
@@ -87,7 +152,7 @@
                 QJ.CHECK_RESULT,
                 WT.F_GPD,
                 WT.F_SALT,
-                WT.R_GPD,
+                WT.R_GPD,wt.is_prod_qualified,
                 WT.R_SALT,
                 T.SPEC_ID,
                 JM.PROD_SPEC_ID,
@@ -102,10 +167,15 @@
                   ELSE
                    '不合格'
                 END JUDGE,
-                T3.test_type,
+                T3.test_type,T4.TEST_CONDITION,T3.TO_CDM_NAME,CDM.cdm_name,JM.jm_name,qj.qj_name,t4.TO_WATER_NAME,
+                WT.f_Checker_name,WT.r_Checker_name,
                 round(TO_DATE(TO_CHAR(T3.TO_CDM_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss')
                 -
                 TO_DATE(TO_CHAR(T.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss'),2) tm_to_cdm_diff,
+                
+                round(TO_DATE(TO_CHAR(CDM.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss')
+                -
+                TO_DATE(TO_CHAR(T3.TO_CDM_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss'),2) to_cdm_cdm_diff,
                 
                 round(TO_DATE(TO_CHAR(CDM.PRODUCE_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss')
                 -
@@ -123,47 +193,100 @@
                 
                  CASE WHEN QJ.PRODUCE_DT IS NULL THEN NULL ELSE 
                   TO_DATE(TO_CHAR(QJ.PRODUCE_DT, 'yyyy/MM/dd') || ' 22:59:59', 'yyyy-MM-dd HH24:mi:ss') END 
-                qj_dt_23
+                qj_dt_23,
+                plan.plan_date,
+                
+                 round(TO_DATE(TO_CHAR(WT.F_CHECK_TM, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss')
+                -
+                TO_DATE(TO_CHAR(T4.TO_WATER_DT, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss'),2) to_water_fcheck_diff,
+                
+                 round(TO_DATE(TO_CHAR(WT.R_CHECK_TM, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss')
+                -
+                TO_DATE(TO_CHAR(WT.F_CHECK_TM, 'yyyy-MM-dd HH24:mi:ss'), 'yyyy-MM-dd HH24:mi:ss'),2) fcheck_rcheck_diff
+                ,CDM.PRODUCE_DT -1 cdm_produce_dt_before
+                ,jm.produce_dt - 1 jm_produce_dt_before
+                ,jm.produce_dt + 1 jm_produce_dt_after
+                ,T4.TO_WATER_DT +1 to_water_dt_after
+                <!--,(SELECT if_rest from ks_base_calendar WHERE to_char(CDM.PRODUCE_DT -1,'yyyy-MM-dd') = calendar_date ) cdm_produce_dt_before_rest
+                ,(SELECT if_rest from ks_base_calendar WHERE to_char(jm.produce_dt - 1,'yyyy-MM-dd') = calendar_date ) jm_produce_dt_before_rest
+                ,(SELECT if_rest from ks_base_calendar WHERE to_char(jm.produce_dt + 1,'yyyy-MM-dd') = calendar_date ) jm_produce_dt_after_rest
+                ,(SELECT if_rest from ks_base_calendar WHERE to_char(T4.TO_WATER_DT +1,'yyyy-MM-dd') = calendar_date ) to_water_dt_after_rest-->
+               
+           		,CDM.cdm_produce_dt_before_rest
+                ,jm.jm_produce_dt_before_rest
+                ,jm.jm_produce_dt_after_rest
+                ,bc.calendar_date to_water_dt_after_rest
           FROM (SELECT *
                    FROM V_KS_TUMO_ORIGIN2
                   WHERE RECORD_ID IN (SELECT T.RECORD_ID
                                         FROM KS_COMPONENT_TEST_TRACE T
                                        WHERE T.CATEGORY = '涂膜')) T
-          LEFT JOIN (SELECT *
-                       FROM QINSEN.INST_CAIDIEMO
+          LEFT JOIN (SELECT cdm2.*,bs.staff_name cdm_name,bc.calendar_date cdm_produce_dt_before_rest
+                       FROM QINSEN.INST_CAIDIEMO cdm2
+                       LEFT JOIN qinsen.base_staff bs ON cdm2.worker_id=bs.staff_id
+                       LEFT JOIN ks_base_calendar bc ON bc.calendar_date = to_char(CDM2.PRODUCE_DT -1,'yyyy-MM-dd')
                       WHERE ORDER_NO = '试卷') CDM
             ON CDM.TUMO_BATCH_ID = T.RECORD_ID
           LEFT JOIN QINSEN.PARA_MATER_SPEC CDMP
             ON CDMP.MATER_SPEC_ID = CDM.PROD_SPEC_ID
-          LEFT JOIN (SELECT T.TUMO_BATCH_ID, COUNT(1) CNT
-                       FROM QINSEN.INST_CAIDIEMO T
-                      WHERE T.ORDER_NO = '试卷'
-                      GROUP BY T.TUMO_BATCH_ID, T.PROD_SPEC_ID) T2
-            ON T2.TUMO_BATCH_ID = T.RECORD_ID
-          LEFT JOIN QINSEN.INST_JUANMO_DETAIL JMD
-            ON JMD.CDM_BATCH_ID = CDM.RECORD_ID
-          LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+         
+          LEFT JOIN (SELECT * FROM QINSEN.INST_JUANMO_DETAIL 
+          WHERE main_batch_id NOT IN(SELECT t.main_batch_id from QINSEN.INST_JUANMO_DETAIL t
+                GROUP BY t.main_batch_id
+                HAVING COUNT(1)>1)
+          ) JMD
+          ON JMD.CDM_BATCH_ID = CDM.RECORD_ID
+          LEFT JOIN 
+          (SELECT jm2.*,bs.staff_name jm_name,bc.calendar_date jm_produce_dt_before_rest,bc2.calendar_date jm_produce_dt_after_rest
+          FROM QINSEN.INST_JUANMO_MAIN jm2
+          LEFT JOIN qinsen.base_staff bs ON jm2.worker_id=bs.staff_id
+           LEFT JOIN ks_base_calendar bc ON bc.calendar_date = to_char(jm2.PRODUCE_DT -1,'yyyy-MM-dd') 
+            LEFT JOIN ks_base_calendar bc2 ON bc.calendar_date = to_char(jm2.PRODUCE_DT + 1,'yyyy-MM-dd') 
+           ) JM
             ON JM.RECORD_ID = JMD.MAIN_BATCH_ID
+            
+          LEFT JOIN (select ttt.cdm_batch_id,COUNT(1) cnt from QINSEN.INST_JUANMO_DETAIL ttt
+          WHERE ttt.main_batch_id NOT IN(SELECT t.main_batch_id from QINSEN.INST_JUANMO_DETAIL t
+                GROUP BY t.main_batch_id
+                HAVING COUNT(1)>1)
+          GROUP BY ttt.cdm_batch_id) t2 
+          ON t2.cdm_batch_id = CDM.Record_Id            
+            
           LEFT JOIN QINSEN.PARA_MATER_SPEC JMP
             ON JM.PROD_SPEC_ID = JMP.MATER_SPEC_ID
-          LEFT JOIN QINSEN.INST_QIJIAN QJ
+          LEFT JOIN 
+          (SELECT qj2.*,bs.staff_name qj_name
+          FROM QINSEN.INST_QIJIAN qj2
+          LEFT JOIN qinsen.base_staff bs ON qj2.worker_id=bs.staff_id)  QJ
             ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID
-          LEFT JOIN QINSEN.INST_WATER_TEST WT
+          LEFT JOIN 
+          
+          (select wt2.*,bs.staff_name f_checker_name,bs2.staff_name r_checker_name
+           from QINSEN.INST_WATER_TEST wt2
+            LEFT JOIN qinsen.base_staff bs ON wt2.f_checker_id=bs.staff_id
+            LEFT JOIN qinsen.base_staff bs2 ON wt2.r_checker_id=bs2.staff_id) WT            
             ON WT.JUANMO_BATCH_ID = JM.RECORD_ID
           LEFT JOIN (SELECT TB.RECORD_ID,
                             TB.TEST_TYPE,
-                            TB.CREATE_TIME TO_CDM_DT
+                            TB.CREATE_TIME TO_CDM_DT,
+                            TB.Create_Name TO_CDM_NAME
                        FROM KS_COMPONENT_TEST_TRACE TB
                       WHERE TB.ID IN (SELECT MAX(ID)
                                         FROM KS_COMPONENT_TEST_TRACE T
                                        WHERE T.CATEGORY = '涂膜'
                                        GROUP BY T.RECORD_ID)) T3
             ON T3.RECORD_ID = T.RECORD_ID
-          LEFT JOIN (SELECT T.RECORD_ID, MAX(T.CREATE_TIME) TO_WATER_DT
-                       FROM KS_COMPONENT_TEST_TRACE T
-                      WHERE T.CATEGORY = '卷膜'
-                      GROUP BY T.RECORD_ID) T4
+          LEFT JOIN (SELECT TB.RECORD_ID,
+                            TB.TEST_CONDITION,
+                            TB.CREATE_TIME TO_WATER_DT,
+                            TB.Create_Name TO_WATER_NAME
+                       FROM KS_COMPONENT_TEST_TRACE TB
+                      WHERE TB.ID IN (SELECT MAX(ID)
+                                        FROM KS_COMPONENT_TEST_TRACE T
+                                       WHERE T.CATEGORY = '卷膜'
+                                       GROUP BY T.RECORD_ID)) T4
             ON T4.RECORD_ID = JM.RECORD_ID
+            LEFT JOIN ks_base_calendar bc ON bc.calendar_date = to_char(t4.TO_WATER_DT + 1,'yyyy-MM-dd')
           LEFT JOIN (SELECT T.MP_SPEC_ID,
                             T.PROD_SPEC_ID,
                             T.A_GPD_LOW_LIMIT,
@@ -172,7 +295,11 @@
                        FROM KS_PROD_WATER_STD T) WSTD
             ON WSTD.MP_SPEC_ID = T.SPEC_ID
            AND WSTD.PROD_SPEC_ID = JM.PROD_SPEC_ID
-            where 1=1
+           
+           left join(select MAX(t.plan_date) plan_date,t.batch_no from KS_COMPONENT_PLAN_DAY t
+      GROUP BY t.batch_no) plan on plan.batch_no = T.batch_no 
+      where 1=1
+           
          <isNotNull prepend="and" property="batchNo"> 
 		       T.BATCH_NO = #batchNo#
 	    </isNotNull>
@@ -182,7 +309,44 @@
 	    <isNotNull prepend="and" property="testType"> 
 		       T3.test_Type = #testType#
 	    </isNotNull>
+	    
+	     <isNotNull prepend="and" property="lineId"> 
+		       T.line_id = #lineId#
+	    </isNotNull>
+	    
+	    <isNotNull prepend="and" property="mpSpecId"> 
+		       T.spec_id = #mpSpecId#
+	    </isNotNull>
+	    
+	    <isNotNull prepend="and" property="prodSpecId">
+	    	CDMP.MATER_SPEC_ID = #prodSpecId#
+	    </isNotNull>
          ORDER BY T.BATCH_NO, JM.BATCH_NO) T1
 
     </select>
+    
+    <select id="queryProdSpecName" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    
+    SELECT t1.prod_spec_name "prodSpecName" from  KS_BASE_SPEC_RELATION t1
+    
+    </select>
+    
+    <select id="queryBaseCalendar" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    select t.calendar_date "calendarDate",t.weekday_number "weekdayNumber",t.if_rest "ifRest"
+ 	from KS_BASE_CALENDAR t
+ 	where 1=1
+    <isNotNull prepend="and" property="yearmonth"> 
+		       substr(t.calendar_date,0,7) = #yearmonth#
+	    </isNotNull>
+         ORDER BY T.calendar_date
+    </select>
+    
+    <select id="queryYearmonth" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT yearmonth "yearmonth",
+	replace(yearmonth,'-','年') || '月' "text"
+	 from 
+	(SELECT DISTINCT(substr(t.calendar_date,0,7)) yearmonth
+	 from KS_BASE_CALENDAR t)
+	ORDER BY 1
+	</select>
 </sqlMap>

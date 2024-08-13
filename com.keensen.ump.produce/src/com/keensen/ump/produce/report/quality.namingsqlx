@@ -380,4 +380,40 @@ SELECT 2 MYORDER,
          
     
     </select>
+    
+    <!--泄压值查询-->
+    <select id="queryIMR" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT t.record_id "recordId",t.batch_no "batchNo",t.order_no "orderNo",
+	t.prod_spec_id "prodSpecId",
+	t.check_result "checkResult",pms.mater_spec_name "prodSpecName"，
+	to_char(T.PRODUCE_DT,'yyyy-MM-dd') "produceDt"
+	 from qinsen.inst_qijian t
+	LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id =  t.prod_spec_id
+	WHERE t.order_no=#orderNo#  AND t.prod_spec_id=#prodSpecId#
+	<isNotNull prepend = ""  property = "produceDtStart"> 
+		AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "produceDtEnd"> 
+		AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#
+	</isNotNull>
+	ORDER BY t.record_id	
+	</select>
+	
+	<!--平均值查询-->
+    <select id="queryIMRAvg" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT t.order_no "orderNo",t.prod_spec_id "prodSpecId",
+	round(AVG(t.check_result),2) "avgResult",COUNT(1) "cnt" 
+	from qinsen.inst_qijian t
+	WHERE t.order_no=#orderNo#  AND t.prod_spec_id=#prodSpecId#
+	<isNotNull prepend = ""  property = "produceDtStart"> 
+		AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#
+	</isNotNull>
+	<isNotNull prepend = ""  property = "produceDtEnd"> 
+		AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#
+	</isNotNull>
+	GROUP BY t.order_no,t.prod_spec_id	
+	</select>
+	
+	
+	
    </sqlMap>

@@ -1,6 +1,7 @@
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 	var _this = this;
 
+	
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 
@@ -14,8 +15,10 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 					}
 				});
 	}, this);
-	
-	
+
+	this.queryPanel.testSpecId.store.on('load', function(o) {
+				
+			})
 
 	this.firstTestWindow.fCheckerId.store.on('load', function(o) {
 				if (o.find('staffId', nowStaffId) > -1) {
@@ -118,7 +121,7 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 						this.reTestWindow2.loadData(cell);
 					}
 				}
-				
+
 				if (this.opt == 'modify') {
 					if (testTypeId == '300040') {
 						this.modifyWindow.show();
@@ -430,10 +433,12 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judgeBatch = function() {
 			_this.firstTestWindow.isBatchQualified.setValue('N');
 			judgeInfo.push('脱盐率超下限');
 		}
-		/*if (!Ext.isEmpty(batchFactorBUpLimit) && fFactorB > batchFactorBUpLimit) {
-			_this.firstTestWindow.isBatchQualified.setValue('N');
-			judgeInfo.push('系数B超上限');
-		}*/
+		/*
+		 * if (!Ext.isEmpty(batchFactorBUpLimit) && fFactorB >
+		 * batchFactorBUpLimit) {
+		 * _this.firstTestWindow.isBatchQualified.setValue('N');
+		 * judgeInfo.push('系数B超上限'); }
+		 */
 		if (_this.firstTestWindow.isBatchQualified.getValue() == 'N') {
 			_this.firstTestWindow.batchJudgeInfo
 					.setValue('<span style="color:red;">' + judgeInfo.join(',')
@@ -494,10 +499,12 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judgeProd = function() {
 			judgeInfo.push('脱盐率超下限');
 		}
 
-		/*if (!Ext.isEmpty(prodFactorBUpLimit) && (fFactorB > prodFactorBUpLimit)) {
-			_this.firstTestWindow.isProdQualified.setValue('N');
-			judgeInfo.push('系数B超上限');
-		}*/
+		/*
+		 * if (!Ext.isEmpty(prodFactorBUpLimit) && (fFactorB >
+		 * prodFactorBUpLimit)) {
+		 * _this.firstTestWindow.isProdQualified.setValue('N');
+		 * judgeInfo.push('系数B超上限'); }
+		 */
 		if (_this.firstTestWindow.isProdQualified.getValue() == 'N') {
 			_this.firstTestWindow.prodJudgeInfo
 					.setValue('<span style="color:red;">' + judgeInfo.join(',')
@@ -762,7 +769,7 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judge = function() {
 
 	// 优先标准2
 	var prodGpdLowLimit, prodGpdUpLimit, prodSaltLowLimit, prodFactorBUpLimit;
-	if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit !=0) {
+	if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit != 0) {
 		prodGpdLowLimit = bGpdLowLimit;
 		prodSaltLowLimit = bSaltLowLimit;
 	} else {
@@ -788,10 +795,12 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judge = function() {
 			_this.firstTestWindow2.isProdQualified.setValue('N');
 			judgeInfo.push('脱盐率超下限');
 		}
-		/*if (!Ext.isEmpty(prodFactorBUpLimit) && fFactorB > prodFactorBUpLimit) {
-			_this.firstTestWindow2.isProdQualified.setValue('N');
-			judgeInfo.push('系数B超上限');
-		}*/
+		/*
+		 * if (!Ext.isEmpty(prodFactorBUpLimit) && fFactorB >
+		 * prodFactorBUpLimit) {
+		 * _this.firstTestWindow2.isProdQualified.setValue('N');
+		 * judgeInfo.push('系数B超上限'); }
+		 */
 		if (_this.firstTestWindow2.isProdQualified.getValue() == 'N') {
 			_this.firstTestWindow2.judgeInfo
 					.setValue('<span style="color:red;">' + judgeInfo.join(',')
@@ -834,11 +843,11 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.reTest = function() {
 	}
 }
 
-com.keensen.ump.qinsen.quality.watertestMgr.prototype.delRecord= function() {
+com.keensen.ump.qinsen.quality.watertestMgr.prototype.delRecord = function() {
 	this.listPanel.onDel();
 }
 
-com.keensen.ump.qinsen.quality.watertestMgr.prototype.modiRecord= function() {
+com.keensen.ump.qinsen.quality.watertestMgr.prototype.modiRecord = function() {
 	var B = this.listPanel.getSelectionModel().getSelections();
 	if (B && B.length != 0) {
 		if (B.length > 1) {

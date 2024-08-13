@@ -24,10 +24,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link43</targetConnections>
-    <targetConnections>link29</targetConnections>
-    <targetConnections>link7</targetConnections>
     <targetConnections>link6</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link29</targetConnections>
+    <targetConnections>link43</targetConnections>
     <location x="630" y="270"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -212,14 +212,13 @@
       <targetNode>end0</targetNode>
       <process:transitionCondition/>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link8" name="link8" displayName="连接线" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link8" name="大于200米" displayName="连接线" type="transition">
       <sourceNode>assign3</sourceNode>
       <targetNode>assign0</targetNode>
       <process:transitionCondition>
-        <process:simpleCondition operator="GE">
-          <process:leftOperand type="query">outLength</process:leftOperand>
-          <process:rightOperand type="literal">200</process:rightOperand>
-        </process:simpleCondition>
+        <process:complexCondition>
+          <process:code>Float.parseFloat(outLength)>200</process:code>
+        </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link37" name="link37" displayName="连接线" type="note">
@@ -347,9 +346,9 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link36</targetConnections>
-    <targetConnections>link35</targetConnections>
     <targetConnections>link27</targetConnections>
+    <targetConnections>link35</targetConnections>
+    <targetConnections>link36</targetConnections>
     <location x="605" y="173"/>
     <size height="28" width="28"/>
     <nodeLabel>assign8label</nodeLabel>

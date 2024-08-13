@@ -36,11 +36,32 @@
        vkt.mater_class_code as "materClassCode",
        vkt.mater_spec_code as "materSpecCode",
        vkt.mater_class_Name as "materClassName",
-       vkt.mater_spec_Name as "materSpecName"
+       vkt.mater_spec_Name as "materSpecName",
+       T7.MAC_NAME        AS "fMacName",
+       T7.GFD_AVG         AS "fGfdAvg",
+       T7.SALT_REJECTION  AS "fSaltRejection",
+       T8.MAC_NAME        AS "rMacName",
+       T8.GFD_AVG         AS "rGfdAvg",
+       T8.SALT_REJECTION  AS "rSaltRejection"
   from KS_PROD_DIAPHRAGM_STOCK t1
   left join ks_base_storage t2 on t1.storage_id=t2.id
   left join V_KS_TUMO vkt on t1.batch_no = vkt.batch_no
-   
+   LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'N'
+                     GROUP BY C.BATCH_ID) T7
+            ON T7.BATCH_ID = vkt.RECORD_ID
+          LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'Y'
+                     GROUP BY C.BATCH_ID) T8
+            ON T8.BATCH_ID = vkt.RECORD_ID
   where 1=1
    <isEqual prepend="and" property="notZero" compareValue="Y">
  			   t1.AMOUNT > 0

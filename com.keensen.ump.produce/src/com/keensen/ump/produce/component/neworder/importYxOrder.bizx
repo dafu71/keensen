@@ -9,8 +9,8 @@
     <size height="115" width="223"/>
   </nodes>
   <nodes xsi:type="model:Note" id="node4" name="注释4" displayName="注释" nodeType="note" type="note" content="日期判断" title="dafu&#x9;23-11-2 下午2:27">
-    <targetConnections>link73</targetConnections>
     <targetConnections>link74</targetConnections>
+    <targetConnections>link73</targetConnections>
     <location x="1569" y="437"/>
     <size height="100" width="182"/>
   </nodes>
@@ -56,15 +56,15 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link21</targetConnections>
-    <targetConnections>link48</targetConnections>
-    <targetConnections>link46</targetConnections>
-    <targetConnections>link37</targetConnections>
-    <targetConnections>link27</targetConnections>
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link54</targetConnections>
-    <targetConnections>link70</targetConnections>
     <targetConnections>link71</targetConnections>
+    <targetConnections>link70</targetConnections>
+    <targetConnections>link54</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link27</targetConnections>
+    <targetConnections>link37</targetConnections>
+    <targetConnections>link46</targetConnections>
+    <targetConnections>link48</targetConnections>
+    <targetConnections>link21</targetConnections>
     <location x="1335" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -92,7 +92,7 @@
     <size height="28" width="28"/>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
-      <process:from type="literal" pattern="reference">scfs,bm,sffh,orderType,type,khxj,cpxj,ddxj,orderNo,orderDate,hpmc,dw,materSpecName2,cpgg,dryWet,orderAmount,dfh,xsc,sbkcgm,sbkcsm,bq,bag,box,mark,pack,performance,lid,tape,tray,remark,demandStockDate,rksl,jhwcsj,scwcrq</process:from>
+      <process:from type="literal" pattern="reference">scfs,bm,sffh,orderType,type,khxj,cpxj,ddxj,orderNo,orderDate,hpmc,dw,materSpecName2,cpgg,dryWet,orderAmount,dfh,xsc,sbkcgm,sbkcsm,bq,bag,box,mark,pack,performance,lid,tape,tray,remark,demandStockDate,rksl,jhwcsj,scwcrq,templateName</process:from>
       <process:to type="query">propertyList</process:to>
     </process:copy>
     <process:copy>
@@ -183,8 +183,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link4</targetConnections>
     <targetConnections>link2</targetConnections>
+    <targetConnections>link4</targetConnections>
     <location x="498" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend0label</nodeLabel>
@@ -293,8 +293,8 @@
       <sourceNode>loopend1</sourceNode>
       <targetNode>loopstart2</targetNode>
     </sourceConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link10</targetConnections>
     <location x="945" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend1label</nodeLabel>
@@ -401,8 +401,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link35</targetConnections>
     <targetConnections>link34</targetConnections>
+    <targetConnections>link35</targetConnections>
     <location x="906" y="233"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend4label</nodeLabel>
@@ -512,17 +512,17 @@
   <nodes xsi:type="process:tLoopStart" description="" id="loopstart5" name="循环5" displayName="循环" grouped="true" type="loopstart" matchedName="loopend5" loopType="iterate">
     <sourceConnections xsi:type="process:tLink" id="link50" name="link50" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>loopstart5</sourceNode>
-      <targetNode>subprocess2</targetNode>
+      <targetNode>subprocess0</targetNode>
     </sourceConnections>
     <targetConnections>link39</targetConnections>
-    <location x="555" y="92"/>
+    <location x="555" y="98"/>
     <size height="24" width="24"/>
     <nodeLabel>loopstart5label</nodeLabel>
     <process:condition/>
     <process:iterate iterable="orderArr" iterableElement="order"/>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopstart5label" name="label" nodeType="label">
-    <location x="547" y="124"/>
+    <location x="547" y="130"/>
     <figSize height="20" width="40"/>
     <node>loopstart5</node>
   </nodes>
@@ -532,21 +532,22 @@
       <targetNode>transactioncommit0</targetNode>
     </sourceConnections>
     <targetConnections>link42</targetConnections>
-    <location x="882" y="92"/>
+    <location x="882" y="98"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend5label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopend5label" name="label" nodeType="label">
-    <location x="859" y="124"/>
+    <location x="859" y="130"/>
     <figSize height="20" width="70"/>
     <node>loopend5</node>
   </nodes>
   <nodes xsi:type="model:GroupNode" id="group5" name="group5" grouped="true" gstart="loopstart5" gend="loopend5">
     <location x="555" y="79"/>
-    <size height="67" width="352"/>
+    <size height="78" width="352"/>
     <chidren>loopend5</chidren>
     <chidren>loopstart5</chidren>
     <chidren>subprocess2</chidren>
+    <chidren>subprocess0</chidren>
   </nodes>
   <nodes xsi:type="process:tTransactionBegin" id="transactionbegin0" name="事务开始" displayName="事务开始" type="transactionbegin">
     <sourceConnections xsi:type="process:tLink" id="link39" name="link39" displayName="连接线" isDefault="true" type="transition">
@@ -602,7 +603,7 @@
       <sourceNode>subprocess2</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <targetConnections>link50</targetConnections>
+    <targetConnections>link25</targetConnections>
     <location x="739" y="95"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess2label</nodeLabel>
@@ -745,9 +746,9 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link40</targetConnections>
-    <targetConnections>link51</targetConnections>
     <targetConnections>link57</targetConnections>
+    <targetConnections>link51</targetConnections>
+    <targetConnections>link40</targetConnections>
     <location x="1313" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend2label</nodeLabel>
@@ -878,9 +879,9 @@
       <sourceNode>loopend3</sourceNode>
       <targetNode>node4</targetNode>
     </sourceConnections>
-    <targetConnections>link58</targetConnections>
-    <targetConnections>link60</targetConnections>
     <targetConnections>link61</targetConnections>
+    <targetConnections>link60</targetConnections>
+    <targetConnections>link58</targetConnections>
     <location x="1105" y="678"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend3label</nodeLabel>
@@ -1047,8 +1048,8 @@
       <sourceNode>loopend6</sourceNode>
       <targetNode>node4</targetNode>
     </sourceConnections>
-    <targetConnections>link65</targetConnections>
     <targetConnections>link66</targetConnections>
+    <targetConnections>link65</targetConnections>
     <location x="1523" y="678"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend6label</nodeLabel>
@@ -1155,8 +1156,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link20</targetConnections>
     <targetConnections>link24</targetConnections>
+    <targetConnections>link20</targetConnections>
     <location x="659" y="708"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend7label</nodeLabel>
@@ -1286,6 +1287,31 @@
     <location x="514" y="707"/>
     <figSize height="20" width="49"/>
     <node>assign17</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="createTemplateName" displayName="createTemplateName" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>subprocess2</targetNode>
+    </sourceConnections>
+    <targetConnections>link50</targetConnections>
+    <location x="643" y="95"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.createTemplateName</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="materSpecName2" type="query" value="String" valueType="Primitive" pattern="reference">order/materSpecName2</process:inputVariable>
+        <process:inputVariable id="1" name="templateName" type="query" value="String" valueType="Primitive" pattern="reference">order/templateName</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="templateName" type="query" value="String" valueType="Primitive">order/templateName</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="577" y="130"/>
+    <figSize height="20" width="159"/>
+    <node>subprocess0</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

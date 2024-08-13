@@ -13,6 +13,25 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
+	this.listPanel.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					var C = _this.listPanel.getSelectionModel().getSelections();
+					if (C.length == 0) {
+						_this.rec = {};
+					} else {
+						_this.rec = r;
+					}
+				}).defer(100);
+			}, this);
+
+	this.listPanel.selModel.on('rowdeselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					_this.rec = {};
+				}).defer(100);
+			}, this);
+
 	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
 				var C = gird.getSelectionModel().getSelections();
 				var r = C[0];
@@ -39,22 +58,27 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 					this.updatematerialWindow.show();
 					this.updatematerialWindow.loadData(cell);
 				}
-				
+
+				if (this.opt == 'updateMaterial2') {
+					this.updatematerialWindow2.show();
+					this.updatematerialWindow2.loadData(cell);
+				}
+
 				if (this.opt == 'updateAmount') {
 					this.updateAmountWindow.show();
 					this.updateAmountWindow.loadData(cell);
 				}
-				
+
 				if (this.opt == 'addOrder') {
 					this.addOrderWindow.show();
 					this.addOrderWindow.loadData(cell);
 				}
-				
+
 				if (this.opt == 'updateTemplateName') {
 					this.updateTemplateNameWindow.show();
 					this.updateTemplateNameWindow.loadData(cell);
 				}
-				
+
 				if (this.opt == 'addplanweek') {
 					var cnt = cell.get('cnt');
 					if (cnt > 0) {
@@ -73,8 +97,8 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 				this.editPlanWeekWindow.loadData(cell);
 
 			}, this);
-			
-		// 查询事件
+
+	// 查询事件
 	this.queryPanel3.mon(this.queryPanel3, 'query', function(form, vals) {
 		var store = this.listPanel3.store;
 		store.baseParams = vals;
@@ -104,6 +128,8 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.destroy = function() {
 	this.addOrderWindow.destroy();
 	this.addOrderMaterSpecWindow.destroy();
 	this.orderMaterSpecWindow.destroy();
+	this.updatematerialWindow2.destroy();
+	this.addOrderWindow2.destroy();
 }
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onDel = function() {
@@ -306,4 +332,13 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onDelSpec = function() {
 com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateTemplateName = function() {
 	this.opt = 'updateTemplateName';
 	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateMaterial2 = function() {
+	this.opt = 'updateMaterial2';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onAddOrder2 = function() {
+	this.addOrderWindow2.show();
 }

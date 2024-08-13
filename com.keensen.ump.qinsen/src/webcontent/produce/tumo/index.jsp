@@ -13,6 +13,10 @@
   	boolean workerflag = roleId.indexOf("10001161")>-1;
     String uid = userObject.getUserId();
     String userOrgId = userObject.getUserOrgId();
+     //10001322膜片测试-工艺员
+    int gyyFlag = roleId.indexOf("10001322")>-1?1:0;
+    //10001441 更换漂洗槽提醒
+    int replaceTroughFlag = roleId.indexOf("10001441")>-1?1:0;
 %>
 <html>
 <!-- 
@@ -35,6 +39,7 @@
 </script>
 <ext:dict property="STORAGE_TYPE"   dictTypeId="STORAGE_TYPE" />
 <ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
+<ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
 <ext:dict property="KS_QUALITY_JUDGE_ITEM"   dictTypeId="KS_QUALITY_JUDGE_ITEM" />
 
 <js:load scriptPath="pub/common/storageCombo.js" />
@@ -63,6 +68,13 @@
   <% }else{ %>
   var teamId = '';
   <% } %>
+  
+  var gyyFlag = <%=gyyFlag %>;
+  var replaceTroughFlag = <%=replaceTroughFlag %>;
+  
+  var maxMpd = 10;
+  //var sumOutLength = 10;
+  
   var listid = 'produce-tumo-list';
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.tumoMgr

@@ -46,20 +46,35 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 								fieldLabel : "订单日期",
 								format : "Y-m-d"
 							}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, {
-						xtype : 'textarea',
-						name : 'condition/batchNoStr2',
-						emptyText : '多个批次请用逗号分隔，或一行一个批次',
-						colspan : 2,
-						anchor : '85%',
-						fieldLabel : '膜片批次'
-					}, {
-						xtype : 'hidden',
-						name : 'condition/batchNoStr'
-					}]
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'textarea',
+								name : 'condition/batchNoStr2',
+								emptyText : '多个批次请用逗号分隔，或一行一个批次',
+								colspan : 2,
+								anchor : '85%',
+								fieldLabel : '膜片批次'
+							}, {
+								xtype : 'combo',
+								fieldLabel : '尺寸',
+								ref : '../size',
+								hiddenName : 'condition/size',
+								emptyText : '--请选择--',
+								anchor : '95%',
+								colspan : 1,
+								store : [['8', '8寸'], ['4', '4寸']],
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										this.queryPanel.size.reset();
+									}
+								}
+							}, {
+								xtype : 'hidden',
+								name : 'condition/batchNoStr'
+							}]
 				});
 
 		this.queryPanel.addButton({
@@ -156,6 +171,15 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'materSpecCode',
+						header : '膜片物料编码'
+					}, {
+						dataIndex : 'yjAvgGpd',
+						header : '可卷制元件<br>换算平均产水量'
+					}, {
+						dataIndex : 'saltRejection',
+						header : '按试卷型号<br>换算脱盐率'
+					}, {
 						dataIndex : 'meterAmount',
 						header : '米数'
 					}, {
@@ -185,9 +209,6 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 					}, {
 						dataIndex : 'testAvgGpd',
 						header : '按试卷型号<br>换算平均产水量'
-					}, {
-						dataIndex : 'saltRejection',
-						header : '按试卷型号<br>换算脱盐率'
 					}, {
 						dataIndex : 'testMaterSpec',
 						header : '试卷元件型号'
@@ -307,6 +328,12 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 							name : 'residue'
 						}, {
 							name : 'confirmStatus'
+						}, {
+							name : 'yjAvgGpd'
+						}, {
+							name : 'yjAvgGpd'
+						}, {
+							name : 'materSpecCode'
 						}]
 			})
 		})

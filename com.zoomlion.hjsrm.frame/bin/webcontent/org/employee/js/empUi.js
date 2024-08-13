@@ -162,7 +162,7 @@ com.zoomlion.hjsrm.org.employeeMgr = function() {
 		this.empGridPanel = new Ext.fn.ListPanel({
 			height : 600,
 			delUrl : 'com.zoomlion.hjsrm.frame.org.employee.EmployeeManager.discardedEmpBatch.biz.ext',
-			tbar : [{
+			tbar : [/*{
 						text : '新增',
 						scope : this,
 						ref : '../addNewOrgBtn',
@@ -173,16 +173,21 @@ com.zoomlion.hjsrm.org.employeeMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
-					}, '-', {
-						text : '注销',
+					}, '-',*/ {
+						text : '禁用',
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDelete
 					}, '-', {
-						text : '恢复',
+						text : '启用',
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onRegainEmp
+					}, '-', {
+						text : '密码重置',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onResetPassword
 					}],
 			sm : selModel,
 			viewConfig : {
@@ -219,11 +224,11 @@ com.zoomlion.hjsrm.org.employeeMgr = function() {
 						width : 400,
 						header : '业务机构',
 						sortable : false
-					}, {
+					}/*, {
 						dataIndex : 'mainorgname',
 						header : '所属公司',
 						sortable : false
-					}],
+					}*/],
 			store : store
 		});
 	}

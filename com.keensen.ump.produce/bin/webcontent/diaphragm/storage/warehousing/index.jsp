@@ -23,6 +23,19 @@
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.diaphragm.storage');
 </script>
+<script type="text/javascript">
+	function dayDiff(start,end){
+		var datediff = (new Date(end)) - (new Date(start));
+		datediff = datediff / 24 / 60 / 60 / 1000;
+		return datediff;
+		
+	}
+	
+	function formatStr(str){
+	return ((Ext.isEmpty(str)) || ('null' == str)) ? '':str;
+}
+</script>
+
 <ext:dict property="WAREHOUSING_TYPE"   dictTypeId="WAREHOUSING_TYPE" />
 <ext:dict property="STORAGE_TYPE"   dictTypeId="STORAGE_TYPE" />
 <js:load scriptPath="pub/common/storageCombo.js" />

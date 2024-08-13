@@ -6,8 +6,11 @@
 	       T1.TEMPLATE_NAME AS "templateName",
 	       T1.URL           AS "url",T1.URL2           AS "url2",
 	       T1.REMARK        AS "remark",
-	       T1.CODE          AS "code"
+	       T1.CODE          AS "code",
+	       T2.remark        as "codeRemark"
 	  FROM KS_COMPONENT_MARK_TEMPLATE T1
+	  left join KS_COMPONENT_MARK_CODE t2
+	  on t1.code = t2.code
 	
 	 WHERE 1 = 1  
        
@@ -21,8 +24,11 @@
 	<isNotNull prepend="and" property="remark"> 
 		       t1.REMARK like '%' || #remark# || '%'
 	</isNotNull>
+	<isNotNull prepend="and" property="code"> 
+		       t1.code = #code#
+	</isNotNull>
 	
-	 ORDER BY T1.ID
+	 ORDER BY T1.TEMPLATE_NAME 
     </select>
     
     <select id="queryJuanmo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
@@ -92,7 +98,8 @@
            AND T4.MATER_SPEC_ID = T1.PROD_SPEC_ID
           LEFT JOIN KS_COMPONENT_MARK_TEMPLATE T5
             ON T5.TEMPLATE_NAME = T4.TEMPLATE_NAME
-         WHERE T1.BATCH_NO = #prodBatchNo#) T1
+         <!--卷膜序号-->
+         WHERE T2.BATCH_NO = #prodBatchNo#) T1
     
     </select>
     
@@ -112,7 +119,7 @@
        DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿') AS "dryWet2",
        T1.MATER_SPEC_NAME2 AS "prodSpecName2",
        T1.CODE AS "code",
-       T1.PRINT_CNT AS "printCnt",
+       nvl(T1.PRINT_CNT,0) AS "printCnt",to_char(t1.max_print_date,'yyyy-MM-dd HH24:mi:ss') "maxPrintDate",
        case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
        then '是' else '否' end "ifPrint"
   FROM (
@@ -131,7 +138,8 @@
                 T4.MATER_SPEC_NAME2,
                 T6.RECORD_ID        WATER_BATCH_ID,
                 T5.CODE,
-                T7.CNT              PRINT_CNT
+                T7.CNT              PRINT_CNT,
+                t7.max_print_date
           FROM QINSEN.INST_QIJIAN T1
           LEFT JOIN QINSEN.INST_WATER_TEST T6
             ON T6.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
@@ -150,11 +158,12 @@
            AND T4.MATER_SPEC_ID = T1.PROD_SPEC_ID
           LEFT JOIN KS_COMPONENT_MARK_TEMPLATE T5
             ON T5.TEMPLATE_NAME = T4.TEMPLATE_NAME
-          LEFT JOIN (SELECT T.PROD_BATCH_NO, COUNT(*) CNT
+          LEFT JOIN (SELECT T.PROD_BATCH_NO, COUNT(*) CNT,MAX(t.create_time) max_print_date
                        FROM KS_COMPONENT_MARK_PRINT_RECORD T
                       GROUP BY T.PROD_BATCH_NO) T7
             ON T7.PROD_BATCH_NO = T1.BATCH_NO
             where 1=1
+            and T1.BATCH_NO is not null
             <isNotNull prepend="and" property="prodBatchNo"> 
 		       T1.BATCH_NO = #prodBatchNo#
 			</isNotNull>
@@ -169,6 +178,48 @@
 			</isNotNull>
         
         ) T1
+        where 1=1
+        <isNotNull prepend="" property="templateName"> 
+		      AND t1.template_name=#templateName#
+		</isNotNull>
+		<isNotNull prepend="" property="testView"> 
+		       AND case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
+       			then '是' else '否' end  =  '是'
+		</isNotNull>
+		
+		<isNotNull prepend="" property="ifPrint"> 
+		       AND case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
+       			then 'Y' else 'N' end  =  #ifPrint#
+		</isNotNull>
+		
+		
+		<isNotNull prepend="" property="printCnt"> 
+		      AND nvl(T1.PRINT_CNT,0) = #printCnt#
+        </isNotNull>
  ORDER BY T1.JUANMO_BATCH_ID DESC
  </select>
+ 
+ 	    <!-- 查询是否有唯一图例名称冲突记录 -->
+<select id="queryDuplicateRecord" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT 1
+	  FROM KS_COMPONENT_MARK_TEMPLATE A
+	 WHERE A.template_name = #templateName#
+	<isNotNull prepend = ""  property = "id">
+	   AND A.id &lt;&gt; #id#
+	</isNotNull>
+</select>
+
+	<select id="queryTemplateName" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		select DISTINCT t.template_name "templateName" from KS_COMPONENT_MARK_TEMPLATE t
+    </select>
+    
+    <select id="queryTemplateCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		select t.code "code", t.remark "remark",
+		'模板'|| t.code || '-' || t.remark "text"
+		 from KS_COMPONENT_MARK_CODE t
+		 order by t.code
+    </select>
+    
+    
+ 
 </sqlMap>

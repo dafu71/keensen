@@ -88,19 +88,19 @@ ThemePicker = Ext.extend(Ext.ColorPalette, {
 					Ext.getCmp("indexLayout").items.itemAt(0).get("head")
 							.doLayout();
 
-					//if (DATAORGID == '81') {
-						//Ext.Msg.alert("系统提示", "非UMP系统用户不能保存设置!");
+					// if (DATAORGID == '81') {
+					// Ext.Msg.alert("系统提示", "非UMP系统用户不能保存设置!");
 
-					//} else {
-						Ext.Ajax.request({
-							url : "com.zoomlion.hjsrm.frame.auth.login.LoginManager.setTheme.biz.ext?theme="
-									+ D,
-							success : function(C) {
+					// } else {
+					Ext.Ajax.request({
+						url : "com.zoomlion.hjsrm.frame.auth.login.LoginManager.setTheme.biz.ext?theme="
+								+ D,
+						success : function(C) {
 
-							}
-						})
+						}
+					})
 
-					//}
+					// }
 				}
 
 			}
@@ -654,12 +654,13 @@ Frame.ui.Footer = Ext.extend(Ext.Panel, {
 				+ '</td>'
 				+ '<td width="30%" height="20" align="right" id="btm_menu">'
 				+ '<span><a href="javascript:modifypass()">修改密码</a></span>'
-				//+ '<span>|</span>'
-				//<span><a
+				// + '<span>|</span>'
+				// <span><a
 				// href="javascript:switchorg()">切换机构</a></span>'
 				+ '<span>|</span><span><a href="javascript:login_Phase_I()">一期系统</a></span>'
 				+ '<span>|</span><span><a href="javascript:loginOut()" class="loginout-icon">注销登录</a></span>'
-				//+ '<span>|</span><span><a href="javascript:changeStyle()">更换主题</a></span>'
+				// + '<span>|</span><span><a
+				// href="javascript:changeStyle()">更换主题</a></span>'
 				+ '</td></tr>' + '</table>');
 	}
 });
@@ -680,33 +681,39 @@ function display() {
 		var time = nowdata + " " + nowweek + " " + nowtime; // 拼接显示时间(2013年4月3日
 		// 星期三
 	}
-	/*if (kicktime > 30) {
+	if (kicktime > 30) {
 		kicktime = 0;
 
 		url = 'com.zoomlion.hjsrm.frame.auth.login.LoginManager.isLogin.biz.ext';
 		result = Ext.ex.XMLHttpRequestEx.synchRequest("POST", url);
 		ret = Ext.decode(result);
 		if (ret.ret == false) {
-			Ext.Msg.alert("系统提示", "已有其他用户使用现有账号登录,请确认", function() {
+			//Ext.Msg.alert("系统提示", "已有其他用户使用现有账号登录,请确认", function() {
+			Ext.Msg.alert("系统提示", "请重新登录", function() {
 						location.href = "/default/frame/ui/page/kick.jsp";
 					})
 
 		}
 
-		
-		 * Ext.Ajax.request({ url :
-		 * 'com.zoomlion.hjsrm.frame.auth.login.LoginManager.isLogin.biz.ext',
-		 * asynl:ture, success : function(response, action) { var result =
-		 * Ext.decode(response.responseText); if (result.ret == false) {
-		 * Ext.Msg.alert("系统提示", "已有其他用户使用现有账号登录,请确认", function() {
-		 * location.href = "/default/frame/ui/page/kick.jsp"; }) } }, callback :
-		 * function() { } });
-		 
+		/*Ext.Ajax.request({
+			url : 'com.zoomlion.hjsrm.frame.auth.login.LoginManager.isLogin.biz.ext',
+			asynl : ture,
+			success : function(response, action) {
+				var result = Ext.decode(response.responseText);
+				if (result.ret == false) {
+					Ext.Msg.alert("系统提示", "已有其他用户使用现有账号登录,请确认", function() {
+								location.href = "/default/frame/ui/page/kick.jsp";
+							})
+				}
+			},
+			callback : function() {
+			}
+		});*/
 
 	} else {
 		kicktime += 1;
 
-	}*/
+	}
 	// 10:28:38)
 	document.getElementById('myClock').innerHTML = time; // 显示时间
 }
@@ -852,9 +859,9 @@ Frame.ui.IndexLayout = Ext.extend(Ext.Viewport, {
 				}, this);
 		this.navigate.on("menuClick", function(D, C) {
 					if (setpassword == "1") {
-						//Ext.getCmp("modifyWindow").show();
-						//Ext.getCmp("modifyWindow").setTitle("密码过于简单，请立即修改！");
-						//return
+						// Ext.getCmp("modifyWindow").show();
+						// Ext.getCmp("modifyWindow").setTitle("密码过于简单，请立即修改！");
+						// return
 					}
 					if (D.isLeaf()) {
 						this.workspaceTabPanel.open(D);
@@ -1505,7 +1512,8 @@ Frame.ui.modifyFormPanel = Ext.extend(Ext.form.FormPanel, {
 			if (A == "yes") {
 				Ext.Ajax.request({
 					method : "post",
-					//url : "com.zoomlion.hjsrm.frame.auth.login.LoginManager.modifyPwd.biz.ext",
+					// url :
+					// "com.zoomlion.hjsrm.frame.auth.login.LoginManager.modifyPwd.biz.ext",
 					url : "com.keensen.ump.base.organduser.modiStaffPassword.biz.ext",
 					jsonData : {
 						pwd1 : H,
@@ -1519,10 +1527,11 @@ Frame.ui.modifyFormPanel = Ext.extend(Ext.form.FormPanel, {
 										B.reset();
 										Ext.getCmp("modifyWindow").hide()
 									})
-						}else{
-							Ext.Msg.alert("系统提示", "密码修改失败，请检查原密码是否正确！", function() {
-										//B.reset();
-										//Ext.getCmp("modifyWindow").hide()
+						} else {
+							Ext.Msg.alert("系统提示", "密码修改失败，请检查原密码是否正确！",
+									function() {
+										// B.reset();
+										// Ext.getCmp("modifyWindow").hide()
 									})
 						}
 					}

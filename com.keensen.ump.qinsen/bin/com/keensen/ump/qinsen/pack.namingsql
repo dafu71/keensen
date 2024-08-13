@@ -40,7 +40,7 @@
 	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
         <isNotNull prepend="" property="batchId">AND A.CUSTOMER_ID = #batchId#</isNotNull>
         <isNotNull prepend="" property="logoCode">AND A.LOGO_CODE = #logoCode#</isNotNull>
-        <isNotNull prepend="" property="logoCodeStr">AND A.LOGO_CODE LIKE '%' || #logoCodeStr# || '%'</isNotNull>
+        <isNotNull prepend="" property="logoCodeStr">AND upper(A.LOGO_CODE) LIKE '%' || upper(#logoCodeStr#) || '%'</isNotNull>
         <isNotNull prepend="" property="logoName">AND A.LOGO_NAME = #logoName#</isNotNull>
         <isNotNull prepend="" property="logoNameStr">AND A.LOGO_NAME LIKE '%' || #logoNameStr# || '%'</isNotNull>
         <isNotNull prepend="" property="state">AND A.STATE = #state#</isNotNull>

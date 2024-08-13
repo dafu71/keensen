@@ -1777,5 +1777,21 @@
         <property name="testType" type="string">
             <column length="24" name="TEST_TYPE"/>
         </property>
+        <property name="testCondition" type="string">
+            <column length="50" name="TEST_CONDITION"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsBaseCalendar" table="KS_BASE_CALENDAR">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="calendarDate" type="string">
+            <column length="10" name="CALENDAR_DATE"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="weekdayNumber" type="long">
+            <column length="22" name="WEEKDAY_NUMBER"/>
+        </property>
+        <property name="ifRest" type="long">
+            <column length="22" name="IF_REST"/>
+        </property>
     </class>
 </hibernate-mapping>

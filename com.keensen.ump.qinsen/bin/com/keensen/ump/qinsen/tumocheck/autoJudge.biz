@@ -184,14 +184,13 @@
       <targetNode>end0</targetNode>
       <process:transitionCondition/>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="大于200米" type="transition">
       <sourceNode>assign3</sourceNode>
       <targetNode>assign0</targetNode>
       <process:transitionCondition>
-        <process:simpleCondition operator="GE">
-          <process:leftOperand type="query">outLength</process:leftOperand>
-          <process:rightOperand type="literal">200</process:rightOperand>
-        </process:simpleCondition>
+        <process:complexCondition>
+          <process:code>Float.parseFloat(outLength)>200</process:code>
+        </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link37" name="link37" type="note">

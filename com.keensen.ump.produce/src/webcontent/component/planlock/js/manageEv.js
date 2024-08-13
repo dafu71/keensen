@@ -35,7 +35,7 @@ com.keensen.ump.produce.component.planlockMgr.prototype.destroy = function() {
 
 }
 
-com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function() {
+//com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function() {
 	/*var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
@@ -72,7 +72,7 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 			_this.requestMask.hide()
 		}
 	})*/
-}
+//}
 
 com.keensen.ump.produce.component.planlockMgr.prototype.onPrint = function() {
 
@@ -212,12 +212,14 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 					str += '<td align="center" colspan=22>日锁定计划(' + 	start + '至' + end + ')</td></tr><tr>'	
 							
 					str += '<td align="center">订单号</td>' 
+							
 							+ '<td align="center">规格型号</td>'
 							+ '<td align="center">尺寸</td>'
 							+ '<td align="center">卷膜数量</td>'
 							+ '<td align="center">订单交期</td>'
 							+ '<td align="center">订单备注</td>'
 							+ '<td align="center">膜片批次</td>'
+							+ '<td align="center">物料编码</td>'
 							+ '<td align="center">米数</td>' 							
 							
 							+ '<td align="center">剩余米数</td>'
@@ -242,6 +244,7 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 					Ext.each(ret.data, function(r) {
 								var cnt2 = r.cnt2;
 								str += '<tr><td align="center">' + r.orderNo
+								        
 										+ '</td><td align="center">'
 										+ r.materSpecName
 										+ '</td><td align="center">'
@@ -257,6 +260,11 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 										+ formatStr(r.batchNo) 
 
 										+ '</td>'
+										
+										+ '<td align="center">'
+										+ r.materSpecCode
+										+ '</td>'
+										
 										+ '<td align="center">'
 										+ formatStr(r.meterAmount) + '</td>' 
 										+ '<td align="center">'

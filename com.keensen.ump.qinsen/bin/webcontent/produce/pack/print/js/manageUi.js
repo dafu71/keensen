@@ -42,12 +42,12 @@ com.keensen.ump.qinsen.produce.markprintMgr = function() {
 						anchor : '85%',
 						colspan : 2,
 						fieldLabel : '唛头显示型号 ',
-						//typeAhead : true,
-						//typeAheadDelay : 100,
+						// typeAhead : true,
+						// typeAheadDelay : 100,
 						minChars : 1,
 						queryMode : 'local',
 						forceSelection : false,
-						//lastQuery : '',
+						// lastQuery : '',
 						editable : true,
 						allowBlank : false,
 						listeners : {
@@ -183,7 +183,7 @@ com.keensen.ump.qinsen.produce.markprintMgr = function() {
 											+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
 								} else {
 									return '<img src="'
-											+ rootUrl
+											+ markprintrootUrl
 											+ value
 											+ '?ver='
 											+ rec.data.changeDt
@@ -202,7 +202,7 @@ com.keensen.ump.qinsen.produce.markprintMgr = function() {
 						autoLoad : true,
 						totalProperty : '',
 						baseParams : {
-			// 'condition/werks' : 3000
+			 'condition/state' : 'A'
 						},
 						fields : [{
 									name : 'recordId'
@@ -244,12 +244,26 @@ com.keensen.ump.qinsen.produce.markprintMgr = function() {
 					// collapsible : true,
 					titleCollapse : false,
 					fields : [{
-								xtype : 'textfield',
-								ref : '../logoCodeStr',
-								name : 'condition/logoCodeStr',
-								anchor : '50%',
-								fieldLabel : '%编码%'
-							}]
+						xtype : 'textfield',
+						ref : '../logoCodeStr',
+						name : 'condition/logoCodeStr',
+						anchor : '50%',
+						fieldLabel : '%编码%',
+						listeners : {
+							scope : this,
+							change : function(field, newValue, oldValue, eOpts) {
+								// 执行检索
+								this.listPanel2.getStore().filterBy(
+										function(record, id) {
+											var regExp = new RegExp('.*'
+															+ field.getValue()
+															+ '.*', 'i');// 检索的正则
+											var text = record.get('logoCode');// 得到每个record的项目名称值
+											return regExp.test(text);
+										});
+							}
+						}
+					}]
 				});
 
 		this.logoQueryWindow = this.logoQueryWindow || new Ext.Window({

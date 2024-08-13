@@ -67,7 +67,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						name : 'condition/produceDtStart',
 						fieldLabel : '不良产生时间',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						//allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
@@ -78,7 +78,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						name : 'condition/produceDtEnd',
 						fieldLabel : '至',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						editable : true,
 						format : 'Y-m-d H:i',
 						//allowBlank : false,
@@ -87,7 +87,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 					}, {
 						xtype : 'mpspeccombobox',
 						hiddenName : 'condition/specId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '膜片型号 '
 					}, {
 
@@ -96,7 +96,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						ref : '../dutyTacheId',
 						hiddenName : 'condition/dutyTacheId',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '95%',
 						store : [[null, '全部'], [99, '铸膜'], [100, '涂膜']],
 						listeners : {
 							scope : this,
@@ -115,7 +115,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						ref : '../recTacheId',
 						hiddenName : 'condition/recTacheId',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '95%',
 						store : [[null, '全部'], [100, '涂膜'], [101, '裁叠膜']],
 						listeners : {
 							scope : this,
@@ -125,7 +125,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						}
 					}, {
 						xtype : 'combobox',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '不良项目',
 						triggerAction : "all",
 						store : this.defectStore,
@@ -145,7 +145,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						colspan : 1
 					}, {
 						ref : '../tumoBatchNoStr',
-						anchor : '75%',
+						anchor : '95%',
 						xtype : 'textfield',
 						fieldLabel : '膜片批次%-%',
 						name : 'condition/tumoBatchNoStr'

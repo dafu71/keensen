@@ -32,7 +32,7 @@ Frame.ui.LoginWindow = Ext.extend(Ext.Window, {
 		
 		Frame.ui.LoginWindow.superclass.initComponent.call(this);
 		this.on("afterrender", function() {
-			var B = ' <div><img border="0" width="420" height="70" src="frame/ui/img/login_ks.jpg" /></div';
+			var B = '<div align=center><img border="0" width="420" height="70" src="frame/ui/img/login_ks.jpg" /></div>';
 			//刘鑫：2014.11.11更改登录界面的图片
 			Ext.DomHelper.insertFirst(this.loginpanel.getEl(), B)
 		}, this)

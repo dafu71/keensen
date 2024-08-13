@@ -505,6 +505,15 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					viewConfig : {
 						forceFit : true
 					},
+					listeners : {
+						scope : this,
+						'rowdblclick' : function(o, rowIndex, e) {
+							var store = o.store;
+							var rec = store.getAt(rowIndex);
+							_this.onEditPlan();
+
+						}
+					},
 					// autoExpandColumn : '3',
 					hsPage : false,
 					autoScroll : true,
@@ -1232,6 +1241,14 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							mode : "local",
 							displayField : "planDate",
 							valueField : "planDate",
+
+							// 增量查询
+							typeAhead : true,
+							lazyRender : true,
+							minChars : 1,
+							queryDelay : 200,// 查询延时，毫秒,
+							editable : true,
+
 							listeners : {
 								scope : this,
 								'expand' : function(A) {
@@ -1259,7 +1276,51 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 										this.planDayWindow2.useAmount
 												.setValue('');
 									}
+								},
+								'focus' : {
+									fn : function(e) {
+										e.expand();
+										this.planDayWindow2.planDate.doQuery(this.planDayWindow2.planDate.allQuery, true);
+									},
+									buffer : 200
+								},
+								'beforequery' : function(e) {
+									var combo = this.planDayWindow2.planDate, size = 15, idx = 1;
+
+									if (e.query === '' || e.query == null) {// 当输入框删除内容后，清除过滤器，
+										// 显示原本store数据,使其能够再次检索
+										combo.store.clearFilter();
+										combo.expand();
+
+									} else {
+										if (!e.forceAll) {
+
+											combo.store.clearFilter();// 使每次输入都能进行检索，不用担心输入过慢
+											var input = e.query;
+											// 检索的正则
+											var regExp = new RegExp(".*"
+													+ input.toUpperCase()
+													+ ".*");
+											// 执行检索
+											combo.store.filterBy(function(
+													record, id) {
+												if (idx > size) {
+													return false;
+												}
+												var text = record
+														.get(combo.displayField);
+												var flag = regExp.test(text);
+												if (flag) {
+													idx++;
+												}
+												return flag;
+											});
+											combo.expand();
+											return false;
+										}
+									}
 								}
+
 							}
 
 						}, {
@@ -2227,4 +2288,5 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					}]
 				});
 	}
+
 }

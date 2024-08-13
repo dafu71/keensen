@@ -294,3 +294,8 @@ com.keensen.ump.qinsen.produce.compqueryMgr.prototype.onView = function() {
 	}
 
 }
+
+com.keensen.ump.qinsen.produce.compqueryMgr.prototype.destroy = function() {
+	this.viewWindow.destroy();
+	
+}

@@ -10,8 +10,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link5</targetConnections>
     <targetConnections>link4</targetConnections>
+    <targetConnections>link5</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="commonj.sdo.DataObject[]" name="data" type="query" valueType="Java">data</process:return>
@@ -64,7 +64,7 @@
   <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
-      <targetNode>invokePojo1</targetNode>
+      <targetNode>assign3</targetNode>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link7" name="link7" type="transition">
       <sourceNode>assign0</sourceNode>
@@ -149,8 +149,8 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>subprocess0</targetNode>
     </sourceConnections>
-    <targetConnections>link2</targetConnections>
     <targetConnections>link8</targetConnections>
+    <targetConnections>link9</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.common.utils.StringUtil.concat</process:partner>
@@ -183,10 +183,30 @@
       <process:from type="query" pattern="reference">condition/testType</process:from>
       <process:to type="query">entity/testType</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">condition/prodSpecName</process:from>
+      <process:to type="query">entity/reserve1</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
     <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign3" name="赋值3" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">condition/testCondition</process:from>
+      <process:to type="query">entity/testCondition</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

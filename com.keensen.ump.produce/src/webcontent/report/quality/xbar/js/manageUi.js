@@ -115,7 +115,7 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr = function() {
 			height : 300,
 			selModel : selModel,
 			delUrl : '1.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel, {
+			columns : [new Ext.grid.RowNumberer({ width:50}), selModel, {
 						dataIndex : 'specName',
 						header : '膜片类型'
 					}, {

@@ -2,13 +2,13 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 	var _this = this;
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
-		//var start = vals['condition/produceDtStart'];
-		//var end = vals['condition/produceDtEnd'];
-		//if (dayDiff(start, end) > 93) {
-			//Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
-			//return false;
+		// var start = vals['condition/produceDtStart'];
+		// var end = vals['condition/produceDtEnd'];
+		// if (dayDiff(start, end) > 93) {
+		// Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+		// return false;
 
-		//}
+		// }
 		var store = this.listPanel.store;
 
 		store.baseParams = this.queryPanel.getForm().getValues();
@@ -69,8 +69,8 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 				var recordId = cell.data.recordId;
 				recordId = recordId + '';
 				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能修改');
-					//return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能修改');
+					// return false;
 				}
 
 				if (this.opt == 'onEdit') {
@@ -96,8 +96,8 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 				recordId = recordId + '';
 
 				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能删除');
-					//return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能删除');
+					// return false;
 				}
 			})
 
@@ -124,8 +124,8 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 				var recordId = cell.data.recordId;
 				recordId = recordId + '';
 				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能修改');
-					//return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能修改');
+					// return false;
 				}
 
 			}, this);
@@ -177,7 +177,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.makeupTag = function() {
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiOrder = function() {
 	var _this = this;
 	var grid = this.listPanel;
-	
+
 	var records = grid.getSelectionModel().getSelections();
 	if (records.length == 0) {
 		Ext.Msg.alert('系统提示', '请先选择数据');
@@ -189,8 +189,8 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiOrder = function() {
 		var recordId = records[i].get('recordId');
 		recordId = recordId + '';
 		if (recordId.substr(0, 1) != '2') {
-			//Ext.Msg.alert('系统提示', '一期数据不能修改');
-			//return false;
+			// Ext.Msg.alert('系统提示', '一期数据不能修改');
+			// return false;
 		}
 		arr.push(recordId);
 	}
@@ -214,10 +214,12 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiOrder = function() {
 								success : function(resp) {
 									var ret = Ext.decode(resp.responseText);
 									if (ret.success) {
-										Ext.Msg.alert("系统提示", "操作成功！",function(){
-											_this.listPanel.store.load();
-											
-										})
+										Ext.Msg.alert("系统提示", "操作成功！",
+												function() {
+													_this.listPanel.store
+															.load();
+
+												})
 									} else {
 										Ext.Msg.alert("系统提示", "修改订单号失败！")
 
@@ -377,4 +379,53 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.exportExcel = function() {
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onRemark = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		Ext.each(C, function(r) {
+					recordIds.push(r.data['recordId']);
+				});
+		var gyyRemark = C[0].data.gyyRemark;
+		Ext.Msg.prompt('工艺员备注', '请输入', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+							url : "com.keensen.ump.qinsen.qijian.saveGyyRemark.biz.ext",
+							method : "post",
+							jsonData : {
+								'gyyRemark' : text,
+								'recordIds' : recordIds.join(",")
+							},
+							success : function(resp) {
+								var ret = Ext.decode(resp.responseText);
+								if (ret.success) {
+									Ext.Msg.alert("系统提示", "操作成功！", function() {
+												_this.listPanel.store.load();
+
+											})
+								} else {
+									Ext.Msg.alert("系统提示", "备注失败！")
+
+								}
+
+							},
+							callback : function() {
+								_this.requestMask.hide()
+							}
+						})
+			}
+		}, this, true, gyyRemark);
+	}
 }

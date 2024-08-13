@@ -11,6 +11,9 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.initEditMpdWindow();
 
 		this.initSendChecWindow();
+		this.initReplaceTroughWindow();
+
+		this.initChooseWindow();
 
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
@@ -48,8 +51,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						name : 'condition/produceDtStart',
 						fieldLabel : '生产时间',
 						colspan : 1,
-						anchor : '75%',
-						//allowBlank : false,
+						anchor : '90%',
+						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, -1)
@@ -59,10 +62,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						name : 'condition/produceDtEnd',
 						fieldLabel : '至',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '90%',
 						editable : true,
 						format : 'Y-m-d H:i',
-						//allowBlank : false,
+						// allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
 					}/*
@@ -72,12 +75,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'linecombobox',
 						prodTacheId : '100',
 						hiddenName : 'condition/lineId',
-						anchor : '75%',
+						anchor : '90%',
 						fieldLabel : '生产线 '
 					}, {
 						xtype : 'mpspeccombobox',
 						hiddenName : 'condition/specId',
-						anchor : '75%',
+						anchor : '90%',
 						fieldLabel : '膜片型号 '
 					}, {
 						xtype : 'displayfield',
@@ -86,7 +89,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}, {
 						xtype : 'supcombobox',
 						hiddenName : 'condition/supId',
-						anchor : '75%',
+						anchor : '90%',
 						fieldLabel : '无纺布供应商'
 					}, {
 
@@ -95,7 +98,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						ref : '../isQualified',
 						hiddenName : 'condition/isQualified',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '90%',
 						store : [[null, '全部'], ['Y', '合格'], ['N', '不合格']],
 						listeners : {
 							scope : this,
@@ -110,7 +113,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						ref : '../isWx',
 						hiddenName : 'condition/isWx',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '90%',
 						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
 						listeners : {
 							scope : this,
@@ -121,7 +124,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}, {
 						xtype : 'mpworkercombobox',
 						hiddenName : 'condition/workerId',
-						anchor : '75%',
+						anchor : '90%',
 						fieldLabel : '操作工'
 					}, {
 						xtype : 'displayfield',
@@ -130,23 +133,23 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/orderNoStr',
-						anchor : '75%',
+						anchor : '90%',
 						fieldLabel : '订单号%-%'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/planNo',
-						anchor : '75%',
+						anchor : '90%',
 						fieldLabel : '计划单号'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/dimoBatchNo',
-						anchor : '75%',
+						anchor : '90%',
 						fieldLabel : '底膜批次'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/batchNoStr',
-						anchor : '75%',
+						anchor : '90%',
 						fieldLabel : '膜片批次%-%'
 					}, {
 						xtype : 'displayfield',
@@ -155,8 +158,40 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/outBatchNo',
-						anchor : '75%',
+						anchor : '90%',
 						fieldLabel : '膜片卷号'
+					}, {
+
+						xtype : 'combo',
+						fieldLabel : '是否保留品',
+						ref : '../isKeep',
+						hiddenName : 'condition/isKeep',
+						emptyText : '--请选择--',
+						anchor : '90%',
+						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.isKeep.reset();
+							}
+						}
+					},{
+						xtype : 'datefield',
+						name : 'condition/lastCaimoDateStart',
+						fieldLabel : '最后裁膜时间',
+						colspan : 1,
+						anchor : '90%',
+						// allowBlank : false,
+						editable : true,
+						format : 'Y-m-d'
+					}, {
+						xtype : 'datefield',
+						name : 'condition/lastCaimoDateEnd',
+						fieldLabel : '至',
+						colspan : 1,
+						anchor : '90%',
+						editable : true,
+						format : 'Y-m-d'
 					}]
 				});
 
@@ -166,6 +201,13 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
+				});
+
+		this.queryPanel.addButton({
+					text : "更换漂洗槽提醒",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.replaceTroughInfo
 				});
 
 	}
@@ -189,6 +231,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								scope : this,
 								iconCls : 'icon-printer',
 								handler : this.onPrintTumoTag
+							}, '-', {
+								text : '工艺员备注',
+								scope : this,
+								iconCls : 'icon-application_edit',
+								hidden : gyyFlag != 1,
+								handler : this.onRemark
 							}, '->', {
 								text : '删除涂膜记录',
 								scope : this,
@@ -307,13 +355,28 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							}
 						}
 					}, {
+						header : '剩余可用长度',
+						width : 80,
+						dataIndex : 'remainLength'
+					}, {
 						header : '底膜放卷长度',
 						width : 80,
 						dataIndex : 'dmUseLength'
 					}, {
 						header : '已裁完',
 						width : 50,
-						dataIndex : 'isCutOverName'
+						dataIndex : 'isCutOverName',
+						renderer : function(v, m, r, i) {
+							if (v == '是') {
+								var QMinusClength = r.get('QMinusClength')
+								QMinusClength = parseFloat(QMinusClength);
+								if (QMinusClength < 0 || QMinusClength > 50) {
+									return "<span style='color:red'>" + v
+											+ "</span>";
+								}
+							}
+							return v;
+						}
 					}, {
 						header : '最后裁膜时间',
 						width : 110,
@@ -326,6 +389,21 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : '生产线',
 						width : 50,
 						dataIndex : 'lineCode'
+					}, {
+						header : '水相液批号',
+						width : 100,
+						dataIndex : 'waterBatchNo'
+					}, {
+						header : '更换漂洗槽',
+						width : 100,
+						dataIndex : 'isReplaceTrough',
+						xtype : 'dictcolumn',
+						dictData : KS_YESORNO
+
+					}, {
+						header : '累计生产数量',
+						width : 100,
+						dataIndex : 'sumOutLength'
 					}, {
 						header : '膜片系列',
 						width : 80,
@@ -403,6 +481,9 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 70,
 						dataIndex : 'isKeepName'
 					}, {
+						dataIndex : 'reserve4',
+						header : '工艺员备注'
+					}, {
 						header : '质检验证',
 						width : 70,
 						dataIndex : 'isValidName'
@@ -442,11 +523,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : '操作工',
 						width : 100,
 						dataIndex : 'workerName'
-					}, {
-						header : '质检员',
-						width : 100,
-						dataIndex : 'judgerName'
-					}, {
+					}/*
+						 * , { header : '质检员', width : 100, dataIndex :
+						 * 'judgerName' }
+						 */, {
 						header : '判定时间',
 						width : 110,
 						dataIndex : 'judgeTime'
@@ -623,6 +703,22 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'rSaltRejection'
 								}, {
 									name : 'dmUseLength'
+								}, {
+									name : 'reserve4'
+								}, {
+									name : 'isReplaceTrough'
+								}, {
+									name : 'trend'
+								}, {
+									name : 'replaceTroughId'
+								}, {
+									name : 'sumOutLength'
+								}, {
+									name : 'remainLength'
+								}, {
+									name : 'QMinusClength'
+								}, {
+									name : 'waterBatchNo'
 								}]
 					})
 		})
@@ -652,11 +748,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 											icon : Ext.Msg.WARNING,
 											buttons : Ext.Msg.OK,
 											fn : function() {
-												_this.inputWindow.hide();
+												// _this.inputWindow.hide();
 											}
 										})
 							} else {
-								Ext.getCmp('produce-tumo-list').store.load();
+								Ext.getCmp('produce-tumo-list').store.reload();
 								_this.inputWindow.hide();
 							}
 						},
@@ -793,6 +889,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}, {
 
 									xtype : 'combo',
+									editable : false,
 									fieldLabel : '保留品',
 									ref : '../../isKeep',
 									hiddenName : 'entity/isKeep',
@@ -938,6 +1035,50 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									minValue : 0,
 									allowBlank : true,
 									anchor : '75%'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+
+									xtype : 'combo',
+									fieldLabel : '是否更换漂洗槽',
+									ref : '../../isReplaceTrough',
+									hiddenName : 'entity/isReplaceTrough',
+									emptyText : '--请选择--',
+									allowBlank : false,
+									anchor : '75%',
+									store : [['Y', '是'], ['N', '否']],
+									listeners : {
+										scope : this,
+										'expand' : function(A) {
+											this.inputWindow.isReplaceTrough
+													.reset();
+										},
+										'select' : function(combo, record,
+												index) {
+											if (index == 0) {
+												Ext.Msg.alert("系统提示",
+														"您已选择更换漂洗槽！");
+											}
+										}
+
+									}
+								}, {
+									xtype : 'trigger',
+									emptyText : '单击旁边选择',
+									editable : true,
+									hideTrigger : false,
+									scope : this,
+									onTriggerClick : function() {
+										_this.onWaterBatchNo();
+									},
+									ref : '../../waterBatchNo',
+									name : 'entity/waterBatchNo',
+									fieldLabel : '水相液批次号',
+									// allowBlank : false,
+									anchor : '75%',
+									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									height : '5',
@@ -1143,6 +1284,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 									xtype : 'combo',
 									fieldLabel : '保留品',
+									editable : false,
 									dataIndex : 'isKeep',
 									ref : '../../isKeep',
 									hiddenName : 'entity/isKeep',
@@ -1304,6 +1446,45 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									height : '5',
 									colspan : 2
 								}, {
+
+									xtype : 'combo',
+									dataIndex : 'isReplaceTrough',
+									fieldLabel : '是否更换漂洗槽',
+									ref : '../../isReplaceTrough',
+									hiddenName : 'entity/isReplaceTrough',
+									emptyText : '--请选择--',
+									allowBlank : false,
+									readOnly : true,
+									anchor : '75%',
+									store : [['Y', '是'], ['N', '否']],
+									listeners : {
+										scope : this,
+										'expand' : function(A) {
+											this.editWindow.isReplaceTrough
+													.reset();
+										}
+									}
+								}, {
+									xtype : 'trigger',
+									emptyText : '单击旁边选择',
+									editable : true,
+									hideTrigger : false,
+									scope : this,
+									onTriggerClick : function() {
+										_this.onWaterBatchNo();
+									},
+									ref : '../../waterBatchNo',
+									name : 'entity/waterBatchNo',
+									dataIndex : 'waterBatchNo',
+									fieldLabel : '水相液批次号',
+									// allowBlank : false,
+									anchor : '75%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
 									name : 'entity/remark',
 									dataIndex : 'remark',
 									xtype : 'textarea',
@@ -1360,7 +1541,13 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 										})
 							} else {
 								Ext.getCmp('produce-tumo-list').store.load();
+
+								var mpd = _this.editMpdWindow.mpd.getValue();
 								_this.editMpdWindow.hide();
+								if (parseFloat(mpd) >= 10) {
+									_this.replaceTroughInfo();
+								}
+
 							}
 						},
 						columns : 2,
@@ -1394,14 +1581,32 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}, {
 									xtype : 'textfield',
 									name : 'entity/mpd',
+									ref : '../../mpd',
 									dataIndex : 'mpd',
 									fieldLabel : 'C21浓度',
 									allowBlank : false,
 									anchor : '75%',
 									colspan : 2
 								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									// name : 'entity/mpd',
+									// dataIndex : 'mpd',
+									ref : '../../sumOutLength',
+									fieldLabel : '累计生产长度',
+									readOnly : true,
+									anchor : '75%',
+									colspan : 2
+								}, {
 									name : 'entity/recordId',
 									dataIndex : 'recordId',
+									xtype : 'hidden'
+								}, {
+									name : 'entity/replaceTroughId',
+									dataIndex : 'replaceTroughId',
 									xtype : 'hidden'
 								}]
 					}]
@@ -1518,5 +1723,255 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}
 				});
 
+	}
+
+	this.initReplaceTroughWindow = function() {
+
+		var selModel5 = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel5 = this.listPanel5 || new Ext.fn.ListPanel({
+			region : 'center',
+			viewConfig : {
+				forceFit : true
+			},
+			hsPage : false,
+			selModel : selModel5,
+			delUrl : '111.biz.ext',
+			columns : [new Ext.grid.RowNumberer(), selModel5, {
+						dataIndex : 'lineFullname',
+						header : '生产线'
+					}, {
+						dataIndex : 'maxMpd',
+						header : 'C21最高浓度',
+						renderer : function(v, m, r, i) {
+							var str = v;
+							if (parseFloat(v) >= maxMpd) {
+								str = "<span style='color:red'>" + v
+										+ "</span>";
+							}
+							return str;
+						}
+					}, {
+						dataIndex : 'sumOutLength',
+						header : '累计生产数量',
+						renderer : function(v, m, r, i) {
+							var str = v;
+							var upOutLenght = r.get('upOutLenght');
+							if (parseFloat(v) >= parseFloat(upOutLenght)) {
+								str = "<span style='color:red'>" + v
+										+ "</span>";
+							}
+							return str;
+						}
+					}, {
+						dataIndex : 'materClassCode',
+						header : '生产型号类别'
+					}, {
+						dataIndex : 'replaceTime',
+						header : '上次更换时间'
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.qinsen.tumo.queryRelaceTroughInfo.biz.ext',
+				root : 'data',
+				autoLoad : false,
+				totalProperty : '',
+				baseParams : {
+					'condition/maxMpd' : maxMpd
+				},
+				fields : [{
+							name : 'replaceTroughId'
+						}, {
+							name : 'maxMpd'
+						}, {
+							name : 'sumOutLength'
+						}, {
+							name : 'lineFullname'
+						}, {
+							name : 'replaceTime'
+						}, {
+							name : 'materClassCode'
+						}, {
+							name : 'upOutLenght'
+						}]
+			})
+		})
+
+		this.replaceTroughWindow = this.replaceTroughWindow || new Ext.Window({
+					title : '更换漂洗槽提醒',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 600,
+					height : 480,
+					layout : 'border',
+					items : [this.listPanel5]
+
+				});
+	}
+
+	this.initChooseWindow = function() {
+		var _this = this;
+
+		var selModel3 = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel3 = this.listPanel3 || new Ext.fn.ListPanel({
+			region : 'center',
+			viewConfig : {
+				forceFit : true
+			},
+			hsPage : false,
+			selModel : selModel3,
+			tbar : [{
+						text : '确定选择',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onSelectWaterBatchNo
+					}],
+			delUrl : '111.biz.ext',
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel3, {
+						dataIndex : 'createTime',
+						header : '日期'
+					}, {
+						dataIndex : 'watertype',
+						header : '水相类型'
+					}, {
+						dataIndex : 'line',
+						header : '线别'
+					}, {
+						dataIndex : 'mptype',
+						header : '膜片型号'
+					}, {
+						dataIndex : 'batchNo',
+						header : '水相液批号',
+						renderer : function(v, m, r, i) {
+							var watertype = r.get('watertype');
+							var relationBatchNo = r.get('relationBatchNo');
+							if (watertype == '水相循环液') {
+								return relationBatchNo;
+							} else {
+								return v;
+							}
+						}
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.produce.quality.mpwatertest.queryWaterRecords.biz.ext',
+				root : 'data',
+				autoLoad : false,
+				totalProperty : '',
+				baseParams : {
+					'condition/state' : 1,
+					'condition/watertype' : '水相液'
+				},
+				fields : [{
+							name : 'id'
+						}, {
+							name : 'createTime'
+						}, {
+							name : 'createUserId'
+						}, {
+							name : 'createName'
+						}, {
+							name : 'updateTime'
+						}, {
+							name : 'updateUserId'
+						}, {
+							name : 'updateName'
+						}, {
+							name : 'reserve1'
+						}, {
+							name : 'reserve2'
+						}, {
+							name : 'reserve3'
+						}, {
+							name : 'reserve4'
+						}, {
+							name : 'reserve5'
+						}, {
+							name : 'orgId'
+						}, {
+							name : 'status'
+						}, {
+							name : 'line'
+						}, {
+							name : 'mptype'
+						}, {
+							name : 'batchNo'
+						}, {
+							name : 'state'
+						}, {
+							name : 'step'
+						}, {
+							name : 'stateName'
+						}, {
+							name : 'stepName'
+						}, {
+							name : 'watertype'
+						}, {
+							name : 'relationBatchNo'
+						}]
+			})
+		})
+
+		this.queryPanel3 = this.queryPanel3 || new Ext.fn.QueryPanel({
+					height : 80,
+					columns : 3,
+					border : true,
+					region : 'north',
+					// collapsible : true,
+					titleCollapse : false,
+					fields : [{
+								xtype : 'textfield',
+								name : 'condition/batchNo2',
+								ref : '../batchNo2',
+								// anchor : '85%',
+								fieldLabel : '水相液批号'
+							}, {
+								xtype : 'hidden',
+								ref : '../mptype',
+								name : 'condition/mptype'
+							}, {
+								xtype : 'hidden',
+								ref : '../line',
+								name : 'condition/line'
+							}]
+				})
+
+		this.queryPanel3.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.queryPanel3.batchNo2.setValue('');
+						this.chooseWindow.hide();
+					}
+
+				});
+
+		this.chooseWindow = this.chooseWindow || new Ext.Window({
+					title : '水相液查询',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 900,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel3, this.listPanel3]
+
+				})
 	}
 }

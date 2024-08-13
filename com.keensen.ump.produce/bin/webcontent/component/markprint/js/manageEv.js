@@ -1,5 +1,6 @@
 com.keensen.ump.produce.component.markprinttemplateMgr.prototype.initEvent = function() {
 	var _this = this;
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -11,6 +12,12 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.initEvent = fun
 					}
 				});
 	}, this);
+
+	// 增加修改事件
+	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+				this.editWindow.show();
+				this.editPanel.loadData(cell);
+			}, this);
 }
 
 com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onAdd = function() {
@@ -23,13 +30,18 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onDelete = func
 
 }
 
+com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onEdit = function() {
+	this.listPanel.onEdit();
+};
+
 com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onUploadWindowShow = function(
 		o) {
 	this.uploadWin.myflag = o;
 	this.uploadForm = this.uploadWin.getComponent('uploadForm').getForm();
 	this.uploadForm.reset();
 	this.uploadWin.show();
-	//Ext.getCmp('uploadMarkTemplate').onClick();
+	// Ext.getCmp('uploadMarkTemplate').onClick();
+	$('#marktemplateupload').click();
 
 };
 
@@ -82,6 +94,16 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.doUpload = func
 										.setValue(_this.filePath);
 								_this.inputPanel.form.findField('entity/url2')
 										.setValue(fname);
+							} else if (myflag == '3') {
+								_this.editPanel.form.findField('localurl')
+										.setValue(_this.filePath);
+								_this.editPanel.form.findField('entity/url')
+										.setValue(fname);
+							} else if (myflag == '4') {
+								_this.editPanel.form.findField('localurl2')
+										.setValue(_this.filePath);
+								_this.editPanel.form.findField('entity/url2')
+										.setValue(fname);
 							}
 
 						}
@@ -123,10 +145,53 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onSave = functi
 				// 返回值处理
 				var result = Ext.decode(response.responseText);
 				if (result.success) {
+					if (!Ext.isEmpty(result.id)) {
+						Ext.Msg.alert("系统提示", "提交成功", function() {
+									_thislist.store.reload();
+									_this.inputPanel.form.reset();
+									_this.inputWindow.hide();
+								});
+					}else{
+						Ext.Msg.alert("系统提示", "图纸编号不能重复");
+					}
+				}
+			},
+			failure : function(resp, opts) {
+				mk.hide();
+			}
+		});
+	}
+
+}
+
+com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onSave2 = function() {
+	var _thispanel = this.editPanel;
+	var _thislist = this.listPanel;
+	var _this = this;
+
+	if (_thispanel.form.isValid()) {
+		var mk = new Ext.LoadMask(_thispanel.id, {
+					msg : '正在保存，请稍候!',
+					removeMask : true
+				});
+		mk.show();
+
+		var forms = _thispanel.getForm().getValues();
+
+		Ext.Ajax.request({
+			method : "post",
+			scope : this,
+			url : 'com.keensen.ump.produce.component.makprint.saveMarkPrint.biz.ext',
+			jsonData : forms,
+			success : function(response, action) {
+				mk.hide();
+				// 返回值处理
+				var result = Ext.decode(response.responseText);
+				if (result.success) {
 					Ext.Msg.alert("系统提示", "提交成功", function() {
 								_thislist.store.reload();
-								_this.inputPanel.form.reset();
-								_this.inputWindow.hide();
+								_this.editPanel.form.reset();
+								_this.editWindow.hide();
 							});
 				}
 			},
@@ -135,5 +200,54 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onSave = functi
 			}
 		});
 	}
+
+}
+
+com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onView = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	}
+	var records = A.getSelectionModel().getSelections();
+	var templateName = records[0].data.templateName;
+
+	var mk = new Ext.LoadMask(Ext.getBody(), {
+				msg : '正在保存，请稍候!',
+				removeMask : true
+			});
+	mk.show();
+
+	Ext.Ajax.request({
+		method : "post",
+		scope : this,
+		url : 'com.keensen.ump.produce.component.makprint.queryMarkPrint4View.biz.ext',
+		jsonData : {
+			'condition/templateName' : templateName,
+			'condition/testView' : '1'
+		},
+		success : function(response, action) {
+			mk.hide();
+			// 返回值处理
+			var result = Ext.decode(response.responseText);
+			var data = result.data;
+			if (!Ext.isEmpty(data)) {
+				var f = document.getElementById('componentmarktemplateForm');
+				f.prodBatchNos.value = "'" + data.prodBatchNo + "'";
+				f.code.value = data.code;
+				var actionUrl = 'com.keensen.ump.produce.component.printMarks.flow?time='
+						+ Math.random() + '&token=' + Date.now();
+
+				f.action = actionUrl;
+				f.submit();
+			} else {
+				Ext.Msg.alert("系统提示", "没有可预览数据！");
+				return;
+			}
+		},
+		failure : function(resp, opts) {
+			mk.hide();
+		}
+	});
 
 }

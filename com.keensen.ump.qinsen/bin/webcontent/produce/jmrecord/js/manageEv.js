@@ -208,7 +208,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onPrintTag = function() {
 	} else {
 		var C = A.getSelectionModel().getSelections();
 		var rec = C[0];
-		var f = document.getElementById('printForm');
+		var f = document.getElementById('jmprintForm');
 		f.batchIdStr.value = rec.data.recordId;
 		var actionUrl = 'com.keensen.ump.qinsen.printJuanmoTag.flow?token='
 				+ Date.now();

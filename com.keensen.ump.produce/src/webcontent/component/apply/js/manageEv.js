@@ -152,10 +152,10 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 }
 
 com.keensen.ump.produce.component.applyMgr.prototype.onDeleteOrder = function() {
-
-	var records = this.listPanel.store.getRange();
-	if (records.length == 1) {
-		Ext.Msg.alert("系统提示", "至少需要有一条元件记录！")
+	var records = this.listPanel.getSelectionModel().getSelections();
+	//var records = this.listPanel.store.getRange();
+	if (records.length != 1) {
+		Ext.Msg.alert("系统提示", "至少需要有一条记录！")
 		return false;
 	} else {
 		this.listPanel.onDel();

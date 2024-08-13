@@ -59,11 +59,25 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 				var produceRemark = _this.editPanel.produceRemark.getValue();
 				var tagNum = _this.editPanel.tagNum.getValue();
 				var tagLength = _this.editPanel.tagLength.getValue();
+				
+				//c21
+				var mpd = _this.editPanel.mpd.getValue();
+				if(!Ext.isEmpty(mpd) && parseFloat(mpd)>=10)
+					_this.editPanel.mpdIsQualified.setValue('N')
+				else
+					_this.editPanel.mpdIsQualified.setValue('Y')
+				var mpdIsQualified = _this.editPanel.mpdIsQualified.getValue();
 				if (Ext.isEmpty(trendText)) {
 					_this.editPanel.trend.setValue(trend(perfFlagId,
 							isBatchQualified, isKeep, isWx, qualifidLength,
-							produceRemark, tagNum, tagLength));
+							produceRemark, tagNum, tagLength,mpdIsQualified));
+					
+					
 				}
+				
+				
+				
+				
 				_this.listPanel2.store.load({
 							params : {
 								"condition/batchId" : recordId
@@ -204,16 +218,25 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onJudge = function() {
 }
 
 function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
-		produceRemark, tagNum, tagLength) {
-	// alert(perfFlagId + '---' + isBatchQualified + '---' + isKeep + '---' +
-	// isWx);
+		produceRemark, tagNum, tagLength,mpdIsQualified) {
+	 //alert(perfFlagId + '---' + isBatchQualified + '---' + isKeep + '---' +
+	 //isWx);
 	// 发货膜片
 	// A等品 合格 走向仓库发货仓
 	// alert(perfFlagId);
+	
+	
+			
+	if(mpdIsQualified=='N'){
+		perfFlagId = 300032;
+		isBatchQualified = 'N'
+	}
+			
 	var ret = '';
 	if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified == 'Y') {
 		ret = '仓库发货仓';
 	}
+	
 	// C等品 不合格 走向待二次判定
 	if (isWx == 'Y' && perfFlagId == 300032 && isBatchQualified == 'N') {
 		ret = '待二次判定';

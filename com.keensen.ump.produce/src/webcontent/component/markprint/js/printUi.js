@@ -38,10 +38,16 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						name : 'condition/prodBatchNo',
 						style : '{font-weight:bold;}',
 						allowBlank : false,
-						fieldLabel : '元件序号',
+						fieldLabel : '卷膜序号',
 						ref : '../prodBatchNo',
 						anchor : '80%',
 						colspan : 1,
+						keys : {
+							key : Ext.EventObject.ENTER,
+							fn : function(btn, e) {
+								searchData();
+							}
+						},
 						listeners : {
 							scope : this,
 							specialkey : function(C, D) {
@@ -120,7 +126,7 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						displayField : "myvalue",
 						valueField : "mykey",
 						forceSelection : true,
-						emptyText : "--请选择--"
+						emptyText : ""
 					}, {
 						xtype : 'displayfield',
 						height : '10',

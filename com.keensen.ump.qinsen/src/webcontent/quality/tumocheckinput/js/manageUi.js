@@ -159,7 +159,7 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 						anchor : '90%',
 						colspan : 3,
 						store : [['1', '1'], ['2', '2'], ['3', '3'],
-								['4', '4'], ['5', '5'], ['6', '6']],
+								['4', '4'], ['5', '5'], ['6', '6'], ['7', '7']],
 						listeners : {
 							scope : this,
 							'expand' : function(A) {

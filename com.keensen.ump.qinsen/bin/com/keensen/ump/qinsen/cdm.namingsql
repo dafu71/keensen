@@ -34,8 +34,8 @@
        T1.WORKER_NAME     AS "workerName",
        T1.LINE_CODE       AS "lineCode",
        T1.TOTAL_LOSS      AS "totalLoss",
-       T1.UNUSED_QUANTITY AS "unusedQuantity"
-
+       T1.UNUSED_QUANTITY AS "unusedQuantity",
+       t1.is_cut_over "isCutOver",t1.IS_CUT_OVER_NAME "isCutOverName"
   FROM (SELECT A.RECORD_ID,
                A.BATCH_NO,
                A.LINE_ID,
@@ -56,7 +56,8 @@
                A.REMARK,
                A.IS_TO_MIX,
                A.PAGE_WIDTH,
-               TM.BATCH_NO TUMO_BATCH_NO,
+               TM.BATCH_NO TUMO_BATCH_NO,tm.is_cut_over,
+               DECODE(tm.IS_CUT_OVER, 'Y', '是', 'N', '否', '') IS_CUT_OVER_NAME,
                MST.MATER_SPEC_CODE MP_SPEC_CODE,
                MST.MATER_SPEC_NAME MP_SPEC_NAME,
                MSC.MATER_SPEC_CODE CDM_SPEC_CODE,
@@ -98,6 +99,7 @@
         <isNotNull prepend="" property="tumoBatchNo">AND TM.BATCH_NO = #tumoBatchNo#</isNotNull>
         <isNotNull prepend="" property="tumoBatchNoStr">AND TM.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%'</isNotNull>
         <isNotNull prepend="" property="mpSpecId">AND TM.SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="" property="isCutOver">AND tm.is_cut_over = #isCutOver#</isNotNull>
         <isNotNull prepend="" property="juanmoBatchId">AND EXISTS (SELECT 1
 	          FROM QINSEN.INST_JUANMO_DETAIL D
 	         WHERE D.CDM_BATCH_ID = A.RECORD_ID

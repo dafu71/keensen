@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="queryWaterBatchNo" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
-  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="com.keensen.ump.produce.quality.mptest5.queryWaterBatchNo" title="dafu&#x9;24-3-4 上午10:35">
-    <location x="113" y="279"/>
-    <size height="100" width="503"/>
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="com.keensen.ump.produce.quality.mpwatertest.queryWaterBatchNo" title="dafu&#x9;24-3-4 上午10:35">
+    <location x="99" y="285"/>
+    <size height="100" width="548"/>
   </nodes>
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
@@ -47,7 +47,7 @@
     </process:pojo>
     <process:inputVariables>
       <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
-      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.keensen.ump.produce.quality.mptest5.queryWaterBatchNo</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.keensen.ump.produce.quality.mpwatertest.queryWaterBatchNo</process:inputVariable>
       <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">map</process:inputVariable>
     </process:inputVariables>
     <process:outputVariables>
@@ -82,10 +82,11 @@
   <leftRuler/>
   <process:info author="dafu" createTime="2024-03-04 10:06:26" date="2024-03-04Z" description="" name="genCheckNo" version="6.3"/>
   <process:variables>
-    <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="map"/>
     <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="data"/>
   </process:variables>
-  <process:inputs varArgs="false"/>
+  <process:inputs varArgs="false">
+    <process:input anyType="java.util.HashMap" description="" isArray="false" name="map"/>
+  </process:inputs>
   <process:outputs>
     <process:output description="" isArray="false" name="batchNo" primitiveType="String"/>
   </process:outputs>

@@ -1,13 +1,10 @@
 /*******************************************************************************
- * 版权所有： 中联重科环境产业公司 
- * 描 述： 修改密码策略
- * 创建日期： 2014-9-18
- * 补丁编号： G3_P_20140915_01_249 
- * 作 者： 吕俊涛
+ * 版权所有： 中联重科环境产业公司 描 述： 修改密码策略 创建日期： 2014-9-18 补丁编号： G3_P_20140915_01_249 作 者：
+ * 吕俊涛
  ******************************************************************************/
 // ==============================修改历史===========================
-// 补丁编号                 修改人  日期          区域   备注
-// G3_P_20140915_01_249 吕俊涛   2014-9-18  集团
+// 补丁编号 修改人 日期 区域 备注
+// G3_P_20140915_01_249 吕俊涛 2014-9-18 集团
 //
 // =================================================================
 /*******************************************************************************
@@ -25,7 +22,7 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.initEvent = function() {
 	this.buildEmpEditWin();
 	this.buildEmpInputWin();
 	var o = this.empGridPanel.tbar.dom;
-	o.hidden = true;
+	// o.hidden = true;
 	/**
 	 * @description 查询按钮触发事件处理
 	 */
@@ -50,15 +47,16 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.initEvent = function() {
 				this.empEditForm.loadData(record);
 			}, this);
 
-//	this.empEditForm.mon(this.empEditForm, 'afterload', function(gird, data) {
-//				var cm = this.empEditForm.form.findField('emp/bizorgids');
-//				cm.loader.baseParams = {
-//					'query/dataorgid' : data.mainorgid,
-//					'query/status' : 'running',
-//					'query/delflag' : 'n'
-//				};
-//				cm.setReadOnly(false);
-//			}, this);
+	// this.empEditForm.mon(this.empEditForm, 'afterload', function(gird, data)
+	// {
+	// var cm = this.empEditForm.form.findField('emp/bizorgids');
+	// cm.loader.baseParams = {
+	// 'query/dataorgid' : data.mainorgid,
+	// 'query/status' : 'running',
+	// 'query/delflag' : 'n'
+	// };
+	// cm.setReadOnly(false);
+	// }, this);
 	this.empInpuPanel.mon(this.empInpuPanel, 'beforesave', function() {
 				var userId = this.empInpuPanel.form.findField('emp/userid');
 				var password = this.empInpuPanel.form.findField('emp/password');
@@ -76,8 +74,8 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.initEvent = function() {
 						return false;
 					}
 					return true;
-				}else{
-				  return true;
+				} else {
+					return true;
 				}
 			}, this);
 };
@@ -120,7 +118,7 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.onInput = function(btn, e) {
 };
 
 /**
- * 注销按钮处理
+ * 禁用按钮处理
  */
 com.zoomlion.hjsrm.org.employeeMgr.prototype.onDelete = function(btn, e) {
 	// 保存this
@@ -131,6 +129,10 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.onDelete = function(btn, e) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
 		return;
 	}
+	if (record.length > 1) {
+		Ext.Msg.alert("系统提示", "请选择一行数据，暂不支持批量禁用!");
+		return;
+	}
 	for (var i = 0; i < record.length; i++) {
 		if (record[i].data.empstatus == 'leave') {
 			Ext.Msg.alert("系统提示", "员工--" + record[i].data.empname
@@ -138,7 +140,7 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.onDelete = function(btn, e) {
 			return;
 		}
 		if (record[i].data.empcode == 'sysadmin') {
-			Ext.Msg.alert("系统提示", "员工--" + record[i].data.empname + "--不允许注销!");
+			Ext.Msg.alert("系统提示", "员工--" + record[i].data.empname + "--不允许禁用!");
 			return;
 		}
 		data.push(record[i].data);
@@ -152,29 +154,35 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.onDelete = function(btn, e) {
 							});
 			me.requestMask.show();
 			Ext.Ajax.request({
-				url : 'com.zoomlion.hjsrm.frame.org.employee.EmployeeManager.discardedEmpBatch.biz.ext',
-				jsonData : {
-					entitys : data
-				},
-				success : function(resp) {
-					var ret = Ext.decode(resp.responseText);
-					if (ret.success) {
-						me.requestMask.hide();
-						Ext.Msg.alert('系统提示', '注销员工成功!', function() {
-									this.empGridPanel.refresh();
-								}, me);
-					} else {
-						me.requestMask.hide();
-						Ext.Msg.alert('系统提示', '注销员工失败!');
-					}
-				}
-			});
+						// url :
+						// 'com.zoomlion.hjsrm.frame.org.employee.EmployeeManager.discardedEmpBatch.biz.ext',
+						url : 'com.keensen.ump.base.organduser.modiStaffState.biz.ext',
+						// jsonData : {
+						// entitys : data
+						// },
+						jsonData : {
+							newState : 'X',
+							staffId : record[0].data.empid
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								me.requestMask.hide();
+								Ext.Msg.alert('系统提示', '禁用员工成功!', function() {
+											this.empGridPanel.refresh();
+										}, me);
+							} else {
+								me.requestMask.hide();
+								Ext.Msg.alert('系统提示', '禁用员工失败!');
+							}
+						}
+					});
 		}
 	}, this);
 };
 
 /**
- * 恢复人员按钮点击处理
+ * 启用人员按钮点击处理
  */
 com.zoomlion.hjsrm.org.employeeMgr.prototype.onRegainEmp = function() {
 	// 保存this
@@ -185,6 +193,10 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.onRegainEmp = function() {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
 		return;
 	}
+	if (record.length > 1) {
+		Ext.Msg.alert("系统提示", "请选择一行数据，暂不支持批量启用!");
+		return;
+	}
 	for (var i = 0; i < record.length; i++) {
 		if (record[i].data.empstatus == 'on') {
 			Ext.Msg.alert("系统提示", "员工--" + record[i].data.empname
@@ -193,7 +205,7 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.onRegainEmp = function() {
 		}
 		data.push(record[i].data);
 	}
-	Ext.Msg.confirm("系统提示", "您确定要恢复该员工吗?", function(btnText) {
+	Ext.Msg.confirm("系统提示", "您确定要启用该员工吗?", function(btnText) {
 		if (btnText == "yes") {
 			me.requestMask = this.requestMask
 					|| new Ext.LoadMask(Ext.getBody(), {
@@ -201,23 +213,29 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.onRegainEmp = function() {
 							});
 			me.requestMask.show();
 			Ext.Ajax.request({
-				url : 'com.zoomlion.hjsrm.frame.org.employee.EmployeeManager.regainEmpBatch.biz.ext',
-				jsonData : {
-					entitys : data
-				},
-				success : function(resp) {
-					var ret = Ext.decode(resp.responseText);
-					if (ret.success) {
-						me.requestMask.hide();
-						Ext.Msg.alert('系统提示', '恢复员工成功!', function() {
-									this.empGridPanel.refresh();
-								}, me);
-					} else {
-						me.requestMask.hide();
-						Ext.Msg.alert('系统提示', '恢复员工失败!');
-					}
-				}
-			});
+						// url :
+						// 'com.zoomlion.hjsrm.frame.org.employee.EmployeeManager.regainEmpBatch.biz.ext',
+						url : 'com.keensen.ump.base.organduser.modiStaffState.biz.ext',
+						// jsonData : {
+						// entitys : data
+						// },
+						jsonData : {
+							newState : 'A',
+							staffId : record[0].data.empid
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								me.requestMask.hide();
+								Ext.Msg.alert('系统提示', '启用员工成功!', function() {
+											this.empGridPanel.refresh();
+										}, me);
+							} else {
+								me.requestMask.hide();
+								Ext.Msg.alert('系统提示', '启用员工失败!');
+							}
+						}
+					});
 		}
 	}, this);
 }
@@ -228,3 +246,47 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.onRegainEmp = function() {
 com.zoomlion.hjsrm.org.employeeMgr.prototype.onEdit = function() {
 	this.empGridPanel.onEdit();
 };
+
+com.zoomlion.hjsrm.org.employeeMgr.prototype.onResetPassword = function() {
+	var me = this;
+	var record = this.empGridPanel.selModel.getSelections();
+	var data = [];
+	if (record.length == 0) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
+		return;
+	}
+	if (record.length > 1) {
+		Ext.Msg.alert("系统提示", "请选择一行数据，暂不支持批量启用!");
+		return;
+	}
+
+	Ext.Msg.confirm("系统提示", "您确定要重置该员工密码吗?", function(btnText) {
+		if (btnText == "yes") {
+			me.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			me.requestMask.show();
+			Ext.Ajax.request({
+						
+						url : 'com.keensen.ump.base.organduser.resetStaffPassword.biz.ext',
+						jsonData : {
+							newPassword : '888888',
+							staffId : record[0].data.empid
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								me.requestMask.hide();
+								Ext.Msg.alert('系统提示', '重置密码成功!', function() {
+											this.empGridPanel.refresh();
+										}, me);
+							} else {
+								me.requestMask.hide();
+								Ext.Msg.alert('系统提示', '重置密码失败!');
+							}
+						}
+					});
+		}
+	}, this);
+}

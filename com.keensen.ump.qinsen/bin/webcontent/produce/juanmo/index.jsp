@@ -74,7 +74,7 @@
 <div id="juanmomgr"></div>
 <div style="display: none">
 		
-		<form name="printForm" id="printForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+		<form name="printForm" id="juanmoprintForm" action="" target="_blank" method="post" accept-charset="UTF-8">
 			<input type="hidden" name="batchId"/>
 			<input type="hidden" name="batchIdStr"/>
 			<input type="hidden" name="batchNo"/>

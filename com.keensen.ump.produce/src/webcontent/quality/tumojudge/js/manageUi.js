@@ -40,7 +40,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					//title : '【膜片质检判定查询】',
+					// title : '【膜片质检判定查询】',
 					fields : [{
 						xtype : "dateregion",
 						colspan : 1,
@@ -181,7 +181,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					singleSelect : false
 				});
 		this.listPanel = new Ext.fn.EditListPanel({
-			//title : '【膜片质检判定列表】',
+			// title : '【膜片质检判定列表】',
 			viewConfig : {
 				forceFit : true
 			},
@@ -495,17 +495,6 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						fieldLabel : '异常备注',
 						anchor : '95%',
 						height : 30,
-						colspan : 4
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, {
-						xtype : 'textfield',
-						dataIndex : 'mpd',
-						readOnly : true,
-						fieldLabel : 'C21浓度',
-						anchor : '95%',
 						colspan : 2
 					}, {
 						xtype : 'combobox',
@@ -536,6 +525,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 								var thickIsQualified = _this.editPanel.form
 										.findField('entity/thickIsQualified')
 										.getValue();
+								var mpdIsQualified = _this.editPanel.mpdIsQualified
+										.getValue();
 								if ("N" == appearanceIsQualified) {
 									_this.editPanel.form
 											.findField('entity/isQualified')
@@ -551,7 +542,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 											.fireEvent('change');
 								} else {
 									if ("Y" == isBatchQualified
-											&& "Y" == thickIsQualified) {
+											&& "Y" == thickIsQualified
+											&& "Y" == mpdIsQualified) {
 										_this.editPanel.form
 												.findField('entity/isQualified')
 												.setValue("Y");
@@ -570,6 +562,89 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						},
 						emptyText : '--请选择--'
 					}, {
+						xtype : 'displayfield',
+						fieldLabel : "<span style='color:red;'>C21浓度判定</span>",
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'mpd',
+						ref : '../mpd',
+						readOnly : true,
+						fieldLabel : 'C21浓度',
+						anchor : '95%',
+						colspan : 2
+					}, {
+						xtype : 'combobox',
+						allowBlank : false,
+						dataIndex : 'mpdIsQualified',
+						ref : '../mpdIsQualified',
+						anchor : '95%',
+						colspan : 2,
+						fieldLabel : 'C21是否合格',
+						triggerAction : "all",
+						store : this.validStore,
+						valueField : 'mykey',
+						displayField : 'myvalue',
+						hiddenName : 'entity/mpdIsQualified',
+						name : 'entity/mpdIsQualified',
+						editable : false,
+						readOnly : true,
+						forceSelection : true,
+						mode : 'local',
+
+						listeners : {
+							"expand" : function(A) {
+								// this.reset()
+							},
+							"select" : function(combo, record) {
+								var isBatchQualified = _this.editPanel.form
+										.findField('isBatchQualified2')
+										.getValue();
+								var mpdIsQualified = combo.getValue();
+								var thickIsQualified = _this.editPanel.form
+										.findField('entity/thickIsQualified')
+										.getValue();
+								var appearanceIsQualified = _this.editPanel.form
+										.findField('entity/appearanceIsQualified')
+										.getValue();
+									if ("N" == mpdIsQualified) {
+									_this.editPanel.form
+											.findField('entity/isQualified')
+											.setValue("N");
+									_this.editPanel.form
+											.findField('entity/isQualified')
+											.fireEvent('change');
+									_this.editPanel.form
+											.findField('entity/perfFlagId')
+											.setValue("300032");
+									_this.editPanel.form
+											.findField('entity/perfFlagId')
+											.fireEvent('change');
+								} else {
+									if ("Y" == isBatchQualified
+											&& "Y" == thickIsQualified
+											&& "Y" == appearanceIsQualified) {
+										
+										_this.editPanel.form
+												.findField('entity/isQualified')
+												.setValue("Y");
+										_this.editPanel.form
+												.findField('entity/isQualified')
+												.fireEvent('change');
+										_this.editPanel.form
+												.findField('entity/perfFlagId')
+												.setValue("300029");
+										_this.editPanel.form
+												.findField('entity/perfFlagId')
+												.fireEvent('change');
+									}
+								}
+							}
+						},
+						emptyText : '--请选择--'
+					},
+
+					{
 						xtype : 'displayfield',
 						fieldLabel : "<span style='color:red;'>厚度判定</span>",
 						colspan : 4
@@ -627,6 +702,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 								var appearanceIsQualified = _this.editPanel.form
 										.findField('entity/appearanceIsQualified')
 										.getValue();
+								var mpdIsQualified = _this.editPanel.mpdIsQualified
+										.getValue();
 								if ("N" == thickIsQualified) {
 									_this.editPanel.form
 											.findField('entity/isQualified')
@@ -642,7 +719,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 											.fireEvent('change');
 								} else {
 									if ("Y" == isBatchQualified
-											&& "Y" == appearanceIsQualified) {
+											&& "Y" == appearanceIsQualified
+											&& "Y" == mpdIsQualified) {
 										_this.editPanel.form
 												.findField('entity/isQualified')
 												.setValue("Y");
@@ -731,9 +809,11 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 										.getValue();
 								var isKeep = _this.editPanel.isKeep.getValue();
 								var isWx = _this.editPanel.isWx.getValue();
+								var mpdIsQualified = _this.editPanel.mpdIsQualified
+										.getValue();
 								_this.editPanel.trend.setValue(trend(
 										perfFlagId, isBatchQualified, isKeep,
-										isWx));
+										isWx, mpdIsQualified));
 							}
 						}
 
@@ -767,9 +847,11 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 										.getValue();
 								var isKeep = _this.editPanel.isKeep.getValue();
 								var isWx = _this.editPanel.isWx.getValue();
+								var mpdIsQualified = _this.editPanel.mpdIsQualified
+										.getValue();
 								_this.editPanel.trend.setValue(trend(
 										perfFlagId, isBatchQualified, isKeep,
-										isWx));
+										isWx, mpdIsQualified));
 							}
 						},
 						emptyText : '--请选择--'
@@ -810,11 +892,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						fieldLabel : '判定说明',
 						anchor : '95%',
 						height : 30,
-						colspan : 4
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'trend',

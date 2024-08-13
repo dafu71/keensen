@@ -4,7 +4,7 @@
     <!-- 查询气检记录列表 -->
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	
-	SELECT Z.RECORD_ID as "recordId",
+	SELECT Z.RECORD_ID as "recordId",z.gyy_remark "gyyRemark",
 		Z.JUANMO_BATCH_ID as "juanmoBatchId",
 		Z.BATCH_NO as "batchNo",
 		Z.LINE_ID as "lineId",
@@ -35,7 +35,7 @@
 		Z.JUANMO_BATCH_NO as "juanmoBatchNo",
 		Z.PROD_SPEC_AREA as "prodSpecArea",
 		Z.PROD_SPEC_CODE as "prodSpecCode",
-		Z.PROD_SPEC_NAME as "prodSpecName",
+		Z.PROD_SPEC_NAME as "prodSpecName",Z.diameter "diameter" ,Z.diameter2 "diameter2",
        DECODE(Z.IS_QUALIFIED, 'Y', '是', 'N', '否', '') "isQualifiedName",
        DECODE(Z.IS_FIRST, 'Y', '首检', 'N', '复检', '') "isFirstName",
        DECODE(Z.JUDGE_FLAG, 'Y', '是', 'N', '否', '') "judgeFlagName",
@@ -73,11 +73,11 @@
 	  FROM (SELECT  T.* 
 	          FROM (
 
-	SELECT A.RECORD_ID, A.JUANMO_BATCH_ID, A.BATCH_NO, A.LINE_ID,
+	SELECT A.RECORD_ID, A.JUANMO_BATCH_ID, A.BATCH_NO, A.LINE_ID,A.gyy_remark,
 	       A.PROD_SPEC_ID, A.ORDER_NO, A.PRODUCE_DT, A.PRESURE, A.CHECK_RESULT,
 	       A.IS_QUALIFIED, A.IS_FIRST, A.STD_STR, A.TEAM_ID, A.WORKER_ID, A.NG_REASON_ID, 
 	       A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID, A.CHANGER_ID, A.REMARK,
-	       A.JUDGE_FLAG, A.NG_ITEM, A.JUDGER_ID, A.JUDGE_DT,
+	       A.JUDGE_FLAG, A.NG_ITEM, A.JUDGER_ID, A.JUDGE_DT,A.diameter,A.diameter2,
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
@@ -276,11 +276,11 @@
 	(RECORD_ID,JUANMO_BATCH_ID,BATCH_NO,LINE_ID,PROD_SPEC_ID,
 	ORDER_NO,PRODUCE_DT,PRESURE,CHECK_RESULT,IS_QUALIFIED,IS_FIRST,
 	STD_STR,TEAM_ID,WORKER_ID,CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,
-	REMARK,NG_REASON_ID,JUDGE_FLAG,NG_ITEM,JUDGER_ID,JUDGE_DT)
+	REMARK,NG_REASON_ID,JUDGE_FLAG,NG_ITEM,JUDGER_ID,JUDGE_DT,gyy_remark)
 	SELECT RECORD_ID,JUANMO_BATCH_ID,BATCH_NO,LINE_ID,PROD_SPEC_ID,
 	ORDER_NO,PRODUCE_DT,PRESURE,CHECK_RESULT,IS_QUALIFIED,IS_FIRST,
 	STD_STR,TEAM_ID,WORKER_ID,CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,
-	REMARK,NG_REASON_ID,JUDGE_FLAG,NG_ITEM,JUDGER_ID,JUDGE_DT
+	REMARK,NG_REASON_ID,JUDGE_FLAG,NG_ITEM,JUDGER_ID,JUDGE_DT,gyy_remark
 	FROM qinsen.INST_QIJIAN 
 	WHERE RECORD_ID=#recordId#</insert>
     <!-- 查询气检不良项目 -->
@@ -318,4 +318,10 @@
 </update>
     <!-- 按ID删除记录 -->
     <delete id="deleteQjStdById" parameterClass="java.util.Map">DELETE FROM QINSEN.INST_QJ_STD WHERE RECORD_ID = #recordId#</delete>
+    <!-- 修改记录 -->
+    <update id="updateGyyRemark" parameterClass="java.util.HashMap">UPDATE QINSEN.inst_qijian A
+	   SET A.CHANGE_DT = SYSDATE,
+	   A.GYY_REMARK = #gyyRemark#,
+	   A.CHANGER_ID = #operatorId#
+	 WHERE A.RECORD_ID in ($recordIds$)</update>
 </sqlMap>

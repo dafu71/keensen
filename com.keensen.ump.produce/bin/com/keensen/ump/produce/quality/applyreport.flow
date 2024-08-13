@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="applyreport.flowx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3" state="stateless">
+  <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="dafu&#x9;24-7-8 上午9:40">
+    <targetConnections>link8</targetConnections>
+  </nodes>
   <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tActionLink" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
       <sourceNode>start0</sourceNode>
@@ -14,8 +17,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end" contextPath="" method="forward" uri="produce/quality/diaphragmapply/applyreport.jsp">
-    <targetConnections>link7</targetConnections>
     <targetConnections>link6</targetConnections>
+    <targetConnections>link7</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:inputVariables/>
     <process:returns/>
@@ -117,10 +120,14 @@
       <sourceNode>assign2</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" type="note">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>node0</targetNode>
+    </sourceConnections>
     <targetConnections>link4</targetConnections>
     <nodeLabel>assign2label</nodeLabel>
     <process:copy>
-      <process:from type="query" pattern="reference">list[1]/judgerName</process:from>
+      <process:from type="literal" pattern="reference">李卓</process:from>
       <process:to type="query">data/judgerName</process:to>
     </process:copy>
   </nodes>

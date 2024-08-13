@@ -2,6 +2,33 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 
 	var _this = this;
 
+	// 查询事件
+	this.queryPanel3.mon(this.queryPanel3, 'query', function(form, vals) {
+				var store = this.listPanel3.store;
+				store.baseParams = vals;
+				store.load({
+							params : {
+								'condition/state' : 1,
+								'condition/watertype' : '水相液'
+							}
+						});
+			}, this);
+
+	// 更换漂洗槽提醒
+	if (replaceTroughFlag == 1) {
+		this.replaceTroughInfo();
+	}
+
+	this.listPanel5.store.on('load', function() {
+				var ret = _this.listPanel5.store.getRange();
+				if (Ext.isEmpty(ret) || ret.length == 0) {
+
+				} else {
+					_this.replaceTroughWindow.show();
+				}
+
+			})
+
 	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
 				var C = gird.getSelectionModel().getSelections();
 				var r = C[0];
@@ -97,6 +124,11 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 					}
 				}
 			})
+
+	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
+			function() {
+
+			}, this);
 
 	this.listPanel.store.on('load', function() {
 		var _me = _this;
@@ -553,6 +585,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModiTech = function() {
 		}
 		this.editMpdWindow.show();
 		this.editMpdWindow.loadData(cell);
+		var sumOutLength = cell.data.sumOutLength;
+		this.editMpdWindow.sumOutLength.setValue(sumOutLength);
 	}
 
 }
@@ -657,4 +691,110 @@ function defectView(tumoBatchNo) {
 				}
 			});
 
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onRemark = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var trend = C[0].data.trend;
+		var recordId = C[0].data.recordId;
+		if (Ext.isEmpty(trend)) {
+			Ext.Msg.alert("系统提示", "请选择品管已经判定过的数据！");
+			return false;
+		}
+		Ext.Msg.prompt('工艺员备注', '请输入', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.quality.quality.saveDiaphragmTumo.biz.ext",
+					method : "post",
+					jsonData : {
+						'entity/reserve4' : text,
+						'entity/reserve5' : uid + '----' + (new Date()),
+						'entity/recordId' : recordId
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.load();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "备注失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, true);
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.replaceTroughInfo = function() {
+	this.listPanel5.store.load();
+	// this.replaceTroughWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onWaterBatchNo = function() {
+	var line = '';
+	var mptype = '';
+	if (!this.inputWindow.hidden) {
+		line = this.inputWindow.lineId.getRawValue();
+		mptype = this.inputWindow.specId.getRawValue();
+	}else{
+		line = this.editWindow.lineId.getRawValue();
+		mptype = this.editWindow.specId.getRawValue();
+	}
+	if (Ext.isEmpty(line)) {
+		Ext.Msg.alert("系统提示", "请选择线别!");
+		return;
+	}
+	line = line.substr(-2, 1);
+	if (Ext.isEmpty(mptype)) {
+		Ext.Msg.alert("系统提示", "请选择膜片型号!");
+		return;
+	}
+	this.queryPanel3.mptype.setValue(mptype);
+	this.queryPanel3.line.setValue(line);
+	var store = this.listPanel3.store;
+
+	store.baseParams = {
+		'condition/state' : 1,
+		'condition/watertype' : '水相液',
+		'condition/mptype' : mptype,
+		'condition/line' : line
+	};
+	store.load();
+	this.chooseWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSelectWaterBatchNo = function() {
+	var A = this.listPanel3;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var waterBatchNo = records[0].data.batchNo;
+		// this.listPanel2.store.removeAll();
+		if (!this.inputWindow.hidden) {
+			this.inputWindow.waterBatchNo.setValue(waterBatchNo);
+		} else {
+			this.editWindow.waterBatchNo.setValue(waterBatchNo);
+		}
+		this.chooseWindow.hide();
+	}
 }

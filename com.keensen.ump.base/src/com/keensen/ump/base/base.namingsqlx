@@ -78,6 +78,8 @@
 	,t.mp_batch_code "mpBatchCode"
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030024,100030025,100030023,100030022)
+	AND t.mater_spec_name IN('ULP1-1','ULP2-1','ULP3-1','ULP4-1','ULP5-1',
+  'ULP6-1','BW1-1','BW2-1','BW3-1','HW1-1','SW1-1','SW2-1','SW3-1','NF1','NF2','NF1-R')
      </select>
      
       <!-- 膜片生产线查询 -->
@@ -86,6 +88,7 @@
 	t.line_id "id",t.line_name || '(' || t.line_code || ')' "name"
 	from qinsen.BASE_PROD_LINE t
 	where t.line_id in(select distinct line_id from qinsen.INST_TUMO)
+	ORDER BY t.line_code
      </select>
      
       <!-- 膜片等级查询 -->
@@ -112,7 +115,7 @@
 	<isNotNull prepend="and" property="materSpecId"> 
 		       t.mater_spec_id = #materSpecId#
 	</isNotNull>
-	order by t.mater_spec_code
+	order by t.mater_spec_name
      </select>
      
       <!-- 元件型号查询 -->
@@ -232,7 +235,7 @@ t.mater_spec_name2 "materSpecName2"
 	   <isNotNull prepend="" property="prodTacheId"> 
 	   AND L.PROD_TACHE_ID in($prodTacheId$)
 	   </isNotNull>
-
+       ORDER BY L.line_code
      </select>
      
      <!-- 查询物料规格列表 -->

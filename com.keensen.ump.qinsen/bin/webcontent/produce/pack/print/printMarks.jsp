@@ -77,6 +77,7 @@ table {
 	margin:0px;
 }
 
+
 .td_c {
 	height:7mm;
 	text-align:center;
@@ -147,6 +148,13 @@ table {
 	font-weight: bold;
 }
 
+.mytxt {
+	vertical-align: middle;
+	font-family: Microsoft YaHei;
+	font-size: 14pt;
+	font-color: #000000;
+}
+
 .line {
 	width: 68mm;
 	margin-block-start: 0;
@@ -214,9 +222,9 @@ function initPage() {
 	
 					var htmlArr = new Array();
 					if (i == <%=list.length-1 %>) {
-						htmlArr.push('<table id="printview" class="main_table">');
+						htmlArr.push('<table id="printview" class="main_table" border=0>');
 					} else {
-						htmlArr.push('<table id="printview" class="main_table" style="page-break-after:always;">');
+						htmlArr.push('<table id="printview" class="main_table" style="page-break-after:always;" border=0>');
 					}
 					htmlArr.push('<tr>');
 					htmlArr.push('<td colspan=3 class="td_a">');
@@ -232,7 +240,7 @@ function initPage() {
 					<% if(null != txt && !"".equals(txt) ){ %>
 					htmlArr.push('<tr>');
 					htmlArr.push('<td colspan=3 class="td_b">');
-					htmlArr.push('<span class="specName">' + '<%=txt.toString() %>' + '</span>');
+					htmlArr.push('<span class="mytxt">' + '<%=txt.toString() %>' + '</span>');
 					htmlArr.push('</td>');
 					htmlArr.push('</tr>');
 					
@@ -288,18 +296,18 @@ function initPage() {
 						format : "CODE128",
 						displayValue : true,
 						fontSize : 14,
-						font : 'msyhbd',
+						font : 'arial',
 						fontOptions : 'bold',
 						textMargin : 0,
 						height : 50,
 						margin : 0,
-						width : 1
+						width : 1.5
 					};
 					JsBarcode(barcode, batchNo, options);// 原生
 				
 	<% } %>
 	//dwr.engine.setAsync(true);
-	// window.print();
+	window.print();
 }
 
 /*

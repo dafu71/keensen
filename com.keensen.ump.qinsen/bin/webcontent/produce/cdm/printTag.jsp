@@ -66,6 +66,7 @@
 	var numPerWad = '<b:write property="numPerWad" />';
 	var blankingSize = '<b:write property="blankingSize" />';
 	var denseNet = '<b:write property="denseNet" />';
+	var produceDate = '<b:write property="produceDate" />';
 
 </script>
     
@@ -82,6 +83,8 @@
 					元件型号：<span class="span_label"><b:write property="prodSpecName" /></span><br/>
 					订&nbsp;单&nbsp;号&nbsp;：<span class="span_label"><b:write property="orderNo" /></span><br/>
 					单&nbsp;&nbsp;/&nbsp;&nbsp;混&nbsp;：<span class="span_label"><b:write property="isToMixStr" /></span><br/>
+					日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期&nbsp;：<span class="span_label"><b:write property="produceDate" /></span>
+					<br/>
 					总&nbsp;页&nbsp;数&nbsp;：<span class="span_label" style="display:inline-block;width:10mm;"><b:write property="quantity" /></span>
 					每叠页数：<span class="span_label"><b:write property="numPerWad" /></span><br/>
 					下料尺寸：<span class="span_label" style="display:inline-block;width:10mm;"><b:write property="blankingSize" /></span>

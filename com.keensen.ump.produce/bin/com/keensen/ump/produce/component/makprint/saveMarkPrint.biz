@@ -5,9 +5,20 @@
       <sourceNode>start0</sourceNode>
       <targetNode>invokePojo0</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link1" name="修改" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">entity/id</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
+    <targetConnections>link8</targetConnections>
     <targetConnections>link7</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
@@ -45,7 +56,7 @@
   <nodes xsi:type="process:tAssign" id="assign1" name="赋值1" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link3" name="link3" isDefault="true" type="transition">
       <sourceNode>assign1</sourceNode>
-      <targetNode>invokePojo1</targetNode>
+      <targetNode>subprocess0</targetNode>
     </sourceConnections>
     <targetConnections>link2</targetConnections>
     <nodeLabel>assign1label</nodeLabel>
@@ -77,6 +88,10 @@
       <process:from type="expression" pattern="reference">new Date()</process:from>
       <process:to type="query">entity/applyDate</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/templateName</process:from>
+      <process:to type="query">map/templateName</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
@@ -87,7 +102,7 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>assign2</targetNode>
     </sourceConnections>
-    <targetConnections>link3</targetConnections>
+    <targetConnections>link6</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.saveEntity</process:partner>
@@ -119,10 +134,77 @@
     <figSize height="20" width="40"/>
     <node>assign2</node>
   </nodes>
+  <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/updateUserId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/updateName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">entity/updateTime</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/templateName</process:from>
+      <process:to type="query">map/templateName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/id</process:from>
+      <process:to type="query">map/id</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess0" name="queryDuplicateRecord" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link8" name="重复数据" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="GT">
+          <process:leftOperand type="query">cnt</process:leftOperand>
+          <process:rightOperand type="literal">0</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link3</targetConnections>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.queryDuplicateRecord</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="map" type="query" value="java.util.HashMap" valueType="Java" pattern="reference">map</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="cnt" type="query" value="Int" valueType="Primitive">cnt</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <figSize height="20" width="165"/>
+    <node>subprocess0</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info version="6.3"/>
-  <process:variables/>
+  <process:variables>
+    <process:variable anyType="java.util.HashMap" historyStateLocation="client" isArray="false" name="map"/>
+    <process:variable historyStateLocation="client" isArray="false" name="cnt" primitiveType="Int"/>
+  </process:variables>
   <process:inputs varArgs="false">
     <process:input isArray="false" modelType="com.keensen.ump.produce.component.KsComponentMarkTemplate" name="entity"/>
   </process:inputs>

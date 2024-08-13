@@ -122,7 +122,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
-						disabled : (uid != 'KS00610') && (uid != 'KS01313') && (uid != 'KS00524'),
+						disabled : (uid != 'KS00610') && (uid != 'KS01313') && (uid != 'KS00524') && (uid != 'XXB'),
 						handler : this.onDeleteOrder
 					}, '-', {
 						text : '审核',
@@ -176,6 +176,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								return v;
 							}
 						}
+					}, {
+						dataIndex : 'orderType',
+						sortable : true,
+						header : '订单类型'
 					}, {
 						dataIndex : 'markSpecCode',
 						sortable : true,

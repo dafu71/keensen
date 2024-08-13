@@ -185,7 +185,8 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 						}],
 				baseParams : {
 					'condition/dutyTacheCode' : dutyTacheCode,
-					'condition/recTacheCode' : recTacheCode
+					'condition/recTacheCode' : recTacheCode,
+					'condition/state' : 'A'
 				},
 				listeners : {
 					scope : this,

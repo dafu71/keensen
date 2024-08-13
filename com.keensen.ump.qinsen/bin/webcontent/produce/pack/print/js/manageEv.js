@@ -27,7 +27,7 @@ com.keensen.ump.qinsen.produce.markprintMgr.prototype.onSelect = function() {
 		var logoId = r.data.recordId;
 		var imgUrl = r.data.imgUrl;
 		var logoUrl = '';
-		logoUrl = r.data.flag == 'second' ? rootUrl + imgUrl : imgUrl;
+		logoUrl = r.data.flag == 'second' ? markprintrootUrl + imgUrl : imgUrl;
 		this.inputPanel.img
 				.update('<img src="'
 						+ logoUrl
@@ -55,7 +55,7 @@ com.keensen.ump.qinsen.produce.markprintMgr.prototype.dealBatches = function() {
 	var regEx = new RegExp("\\n", "gi");
 	batchNoStr = batchNoStr.replace(regEx, ",");
 	batchNoStr = batchNoStr.replaceAll('，', ',');
-	batchNoStr = batchNoStr.replaceAll(' ', '');
+	//batchNoStr = batchNoStr.replaceAll(' ', '');
 	var arr = [];
 	arr = batchNoStr.split(',');
 	var arr2 = [];
@@ -90,7 +90,7 @@ com.keensen.ump.qinsen.produce.markprintMgr.prototype.dealBatches = function() {
 					Ext.Msg.alert("系统提示", ret.msg);
 					return;
 				} else {
-					var f = document.getElementById('printForm');
+					var f = document.getElementById('logoprintForm');
 					f.specName.value = _this.inputPanel.markSpecName.getValue();
 					f.batchNoStr2.value = batchNoStr;
 					f.batchNoStr.value = arr2.join(",");

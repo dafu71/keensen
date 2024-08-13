@@ -77,8 +77,13 @@
        T1.F_SALT_REJECTION  AS "fSaltRejection",
        T1.R_MAC_NAME        AS "rMacName",
        T1.R_GFD_AVG         AS "rGfdAvg",
-       T1.R_SALT_REJECTION  AS "rSaltRejection"
-  FROM (SELECT A.RECORD_ID,A.dm_Use_Length,
+       T1.R_SALT_REJECTION  AS "rSaltRejection",
+       T1.reserve4 as "reserve4",t1.trend "trend",
+       T1.is_replace_trough as "isReplaceTrough",T1.replace_trough_id "replaceTroughId",T1.water_batch_no "waterBatchNo",
+       T1.sumOutLength "sumOutLength",
+       nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) - nvl(T1.CAIMO_LOSS,0) "remainLength",
+       nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength"
+  FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,A.water_batch_no,
                A.PLAN_NO,
                A.DIMO_BATCH_NO,
                A.BATCH_NO,
@@ -159,8 +164,13 @@
                T7.SALT_REJECTION F_SALT_REJECTION,
                T8.MAC_NAME R_MAC_NAME,
                T8.GFD_AVG R_GFD_AVG,
-               T8.SALT_REJECTION R_SALT_REJECTION
+               T8.SALT_REJECTION R_SALT_REJECTION,
+               t33.reserve4,t33.trend,
+               vkrc.sumOutLength
           FROM QINSEN.INST_TUMO A
+          left join KS_PROD_DIAPHRAGM_TUMO t33
+  				on A.record_id = t33.record_id
+  		  	
           LEFT JOIN QINSEN.BASE_PROD_LINE L
             ON A.LINE_ID = L.LINE_ID
           LEFT JOIN QINSEN.PARA_MATER_SPEC S
@@ -181,6 +191,11 @@
             ON BD.DEPT_ID = A.TEAM_ID
           LEFT JOIN QINSEN.PARA_MATER_CLASS PMC
             ON PMC.MATER_CLASS_ID = S.MATER_CLASS_ID
+            
+          left join V_KS_REPLACETROUGH_COUNT vkrc
+  		    on vkrc.replace_trough_id = a.replace_trough_id 
+  		    and vkrc.MATER_CLASS_CODE = PMC.MATER_CLASS_CODE 
+            
           LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,
                            C.TUMO_BATCH_ID
                       FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
@@ -224,7 +239,13 @@
                       FROM QINSEN.INST_TUMO_CHECK C
                      WHERE C.RECHECK_FLAG = 'Y'
                      GROUP BY C.BATCH_ID) T8
-            ON T8.BATCH_ID = A.RECORD_ID) T1
+            ON T8.BATCH_ID = A.RECORD_ID
+            
+            where 1=1
+            <isNotNull prepend="" property="lastCaimoDateStart">AND SUBSTR(T4.LAST_CAIMO_DATE,1,10) &gt;= #lastCaimoDateStart#</isNotNull>
+        <isNotNull prepend="" property="lastCaimoDateEnd">AND SUBSTR(T4.LAST_CAIMO_DATE,1,10) &lt;= #lastCaimoDateEnd#</isNotNull>
+            
+            ) T1
        where 1=1
        	<isNotNull prepend="" property="produceDtStart">AND T1.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">AND T1.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
@@ -240,10 +261,13 @@
         <isNotNull prepend="" property="batchNoStr">AND T1.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
         <isNotNull prepend="" property="outBatchNo">AND T1.OUT_BATCH_NO = #outBatchNo#</isNotNull>
         <isNotNull prepend="" property="tumoBatchNo">AND T1.BATCH_NO = #tumoBatchNo#</isNotNull>
+        <isNotNull prepend="" property="isKeep">AND T1.IS_KEEP = #isKeep#</isNotNull>
         <isNotNull prepend="" property="juanmoBatchId">AND T1.RECORD_ID IN(SELECT T2.TUMO_BATCH_ID from QINSEN.INST_JUANMO_DETAIL T
 			LEFT JOIN QINSEN.INST_CAIDIEMO T2 ON T.CDM_BATCH_ID=T2.RECORD_ID
 			WHERE T.MAIN_BATCH_ID = #juanmoBatchId#
 			)</isNotNull>
+		
+		
 		
  ORDER BY T1.PRODUCE_DT DESC, T1.BATCH_NO
 
@@ -328,14 +352,57 @@
 	CHANGER_ID,REMARK,JUDGE_REMARK,DIMO_BATCH_NO,PLAN_NO,IS_VALID,
 	VALID_TM,VERIFIER_ID,WF_BATCH_NO,THICK_AVG,THICK_MIN,THICK_MAX,
 	TAG_NUM,TAG_LENGTH,INBOUND_REMARK,ORDER_NO,IS_WX,IS_CUT_OVER,
-	OUT_BATCH_NO,IS_KEEP,MPD)
+	OUT_BATCH_NO,IS_KEEP,MPD,is_replace_trough,replace_trough_id)
 	SELECT RECORD_ID,BATCH_NO,LINE_ID,SPEC_ID,WF_SUP_ID,PROD_FLAG_ID,
 	PRODUCE_DT,TEAM_ID,TEAM_SEG,OUT_LENGTH,WORKER_ID,PERF_FLAG_ID,
 	IS_QUALIFIED,JUDGER_ID,JUDGE_DT,CREATE_DT,CHANGE_DT,CREATOR_ID,
 	CHANGER_ID,REMARK,JUDGE_REMARK,DIMO_BATCH_NO,PLAN_NO,IS_VALID,
 	VALID_TM,VERIFIER_ID,WF_BATCH_NO,THICK_AVG,THICK_MIN,THICK_MAX,
 	TAG_NUM,TAG_LENGTH,INBOUND_REMARK,ORDER_NO,IS_WX,IS_CUT_OVER,
-	OUT_BATCH_NO,IS_KEEP,MPD
+	OUT_BATCH_NO,IS_KEEP,MPD,is_replace_trough,replace_trough_id
 	FROM qinsen.inst_tumo 
 	WHERE RECORD_ID=#recordId#</insert>
+    <!-- 查询更换漂洗槽 -->
+    <select id="queryRelaceTrough4Tumo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.line_id "lineId",MAX(ID) "maxId" from KS_DIAPHRAGM_REPLACE_TROUGH t
+   	WHERE t.line_id= #lineId#
+	GROUP BY t.line_id</select>
+    <!-- 批量更新mpd -->
+    <update id="updateTumoMpd" parameterClass="java.util.HashMap">UPDATE qinsen.inst_tumo t SET t.mpd = #mpd#,t.change_dt = sysdate
+	WHERE (t.mpd IS NULL) and (t.batch_no &lt;= #batchNo#)
+	AND (t.replace_trough_id = #replaceTroughId#)</update>
+    <!-- 查询更换漂洗槽提醒 -->
+    <select id="queryRelaceTroughInfo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.REPLACE_TROUGH_ID "replaceTroughId",
+       T2.MAX_MPD "maxMpd",
+       T2.SUM_OUT_LENGTH "sumOutLength",T2.MATER_CLASS_CODE "materClassCode",
+       T3.LINE_FULLNAME "lineFullname",
+       TO_CHAR(T1.REPLACE_TIME, 'yyyy-MM-dd HH24:mi:ss') "replaceTime",
+       DECODE(T2.MATER_CLASS_CODE,'BW',15000,'ULP',30000,1000000000) "upOutLenght"
+  FROM (SELECT T.LINE_ID,
+               MAX(T.ID) REPLACE_TROUGH_ID,
+               MAX(T.CREATE_TIME) REPLACE_TIME
+          FROM KS_DIAPHRAGM_REPLACE_TROUGH T
+         GROUP BY T.LINE_ID) T1
+  LEFT JOIN (SELECT T.LINE_ID,
+                    T.LINE_CODE,
+                    T.LINE_NAME,
+                    T.LINE_NAME || '(' || T.LINE_CODE || ')' LINE_FULLNAME
+               FROM QINSEN.BASE_PROD_LINE T
+              WHERE T.PROD_TACHE_ID IN (100)) T3
+    ON T1.LINE_ID = T3.LINE_ID
+  LEFT JOIN (SELECT SUM(T.OUT_LENGTH) SUM_OUT_LENGTH,
+                    MAX(MPD) MAX_MPD,
+                    T.REPLACE_TROUGH_ID,T.MATER_CLASS_CODE
+               FROM (SELECT IT.*, PMC.MATER_CLASS_ID, PMC.MATER_CLASS_CODE
+                       FROM QINSEN.INST_TUMO IT
+                       LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                         ON PMS.MATER_SPEC_ID = IT.SPEC_ID
+                       LEFT JOIN QINSEN.PARA_MATER_CLASS PMC
+                         ON PMC.MATER_CLASS_ID = PMS.MATER_CLASS_ID) T
+              WHERE T.REPLACE_TROUGH_ID IS NOT NULL
+              GROUP BY T.REPLACE_TROUGH_ID,t.MATER_CLASS_CODE) T2
+    ON T1.REPLACE_TROUGH_ID = T2.REPLACE_TROUGH_ID
+ WHERE 1 = 1
+    
+       AND (t2.max_mpd &gt;= #maxMpd# 	
+	   or T2.SUM_OUT_LENGTH &gt;=  DECODE(T2.MATER_CLASS_CODE,'BW',15000,'ULP',30000,1000000000) )</select>
 </sqlMap>

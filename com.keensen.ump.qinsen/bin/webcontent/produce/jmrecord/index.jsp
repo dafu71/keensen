@@ -67,7 +67,7 @@
 <div id="jmrecordmgr"></div>
 <div style="display: none">
 		
-		<form name="printForm" id="printForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+		<form name="printForm" id="jmprintForm" action="" target="_blank" method="post" accept-charset="UTF-8">
 			<input type="hidden" name="batchIdStr"/>			
 		</form>
 	</div>

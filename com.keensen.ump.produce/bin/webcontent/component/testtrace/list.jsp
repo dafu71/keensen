@@ -24,6 +24,9 @@
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
 
+<js:load scriptPath="pub/common/lineCombo.js" />
+<js:load scriptPath="pub/common/mpspecCombo.js" />
+<js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="produce/component/testtrace/js/listUi.js"/>
 <js:load scriptPath="produce/component/testtrace/js/listEv.js"/>
 

@@ -22,6 +22,7 @@
 -->
 <head>
 <title>元件唛头模板</title>
+<script type="text/javascript" src="base/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
@@ -29,7 +30,7 @@
 <js:load scriptPath="produce/component/markprint/js/manageUi.js"/>
 <js:load scriptPath="produce/component/markprint/js/manageEv.js"/>
 <script type="text/javascript">
-  var rootUrl2 = "<%=rootUrl %>";
+  var markRootUrl = "<%=rootUrl %>";
   var uid = "<%=uid %>";
   var listid = Ext.id();
   
@@ -44,5 +45,14 @@
 </head>
 <body>
 <div id="componentmarkprinttemplatemgr"></div>
+
+<div style="display: none">
+		<form name="printForm" id="componentmarktemplateForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+			<input type="hidden" name="prodBatchNos"/>
+			<input type="hidden" name="code"/>
+			<input type="hidden" name="testView" value="1"/>
+		</form>
+	</div>
+	
 </body>
 </html>

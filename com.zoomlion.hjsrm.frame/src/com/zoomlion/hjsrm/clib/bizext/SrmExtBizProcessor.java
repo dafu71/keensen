@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONWriter;
 import org.w3c.dom.Node;
 
+import com.eos.data.datacontext.DataContextManager;
+import com.eos.data.datacontext.IMUODataContext;
+import com.eos.data.datacontext.IUserObject;
+import com.eos.data.datacontext.UserObject;
 import com.eos.runtime.core.TraceLoggerFactory;
 import com.eos.system.exception.EOSException;
 import com.eos.system.exception.EOSRuntimeException;
@@ -23,6 +29,7 @@ import com.eos.system.utility.XmlUtil;
 import com.primeton.engine.core.impl.process.parameter.ParameterBuilder;
 import com.primeton.ext.access.http.ExceptionObject;
 import com.primeton.ext.common.muo.MUOCallback;
+import com.primeton.ext.common.muo.MUODataContextHelper;
 import com.primeton.ext.common.muo.MUOTemplate;
 import com.primeton.ext.data.serialize.ExtendedXMLSerializer;
 import com.primeton.ext.data.serialize.SerializationConstants;
@@ -120,8 +127,23 @@ public class SrmExtBizProcessor extends AbstractProcessor {
 		bizAction = bizAction.replaceAll(getRequestSuffix(), "");
 		final String componentName = bizAction.substring(0, bizAction.lastIndexOf("."));
 		final String flowName = bizAction.substring(bizAction.lastIndexOf(".") + 1);
+		String flowNames = "modifyDiameter,updateBatchStr,queryStock4View,insertSelect";
+		
+		
+		
 		boolean invalid = false;
 		try {
+			if (flowNames.indexOf(flowName)>-1){
+				/*Map<String, UserObject> userMap = new HashMap<String, UserObject>();
+				UserObject userObject = new UserObject();// 用户的身份
+				userMap.put(IUserObject.KEY_IN_CONTEXT, userObject);			
+				IMUODataContext muo = MUODataContextHelper.create(userMap);
+				// 设置其他的MUO属性
+				muo.set("userId", "guest");
+				DataContextManager.current().setMUODataContext(muo);*/
+ 
+			}			
+			 
 			MUOTemplate.execute(request.getSession(), new MUOCallback() {
 				public Object run() throws Throwable {
 					IBizRuntimeContext context = (IBizRuntimeContext) ClassUtil

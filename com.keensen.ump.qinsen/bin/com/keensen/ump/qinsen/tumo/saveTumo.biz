@@ -11,8 +11,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link10</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link10</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -71,6 +71,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">entity/recordId</process:from>
       <process:to type="query">map2/recordId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">flag</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
@@ -139,7 +143,8 @@
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>assign2</targetNode>
     </sourceConnections>
-    <targetConnections>link8</targetConnections>
+    <targetConnections>link16</targetConnections>
+    <targetConnections>link14</targetConnections>
     <nodeLabel>invokePojo0label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.saveEntity</process:partner>
@@ -177,11 +182,7 @@
     <node>subprocess1</node>
   </nodes>
   <nodes xsi:type="process:tSubprocess" id="subprocess2" name="queryDuplicateRecord" type="subprocess">
-    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" isDefault="true" type="transition">
-      <sourceNode>subprocess2</sourceNode>
-      <targetNode>invokePojo0</targetNode>
-    </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" isDefault="false" type="transition">
       <sourceNode>subprocess2</sourceNode>
       <targetNode>assign3</targetNode>
       <process:transitionCondition>
@@ -190,6 +191,10 @@
           <process:rightOperand type="literal">0</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" isDefault="true" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>switch1</targetNode>
     </sourceConnections>
     <targetConnections>link4</targetConnections>
     <targetConnections>link5</targetConnections>
@@ -304,6 +309,49 @@
     <figSize height="20" width="40"/>
     <node>assign4</node>
   </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess3" name="getIsReplaceTrough" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.getIsReplaceTrough</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="entity" type="query" value="com.keensen.ump.qinsen.inst.InstTumo" valueType="DataObject" pattern="reference">entity</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="entity" type="query" value="com.keensen.ump.qinsen.inst.InstTumo" valueType="DataObject">entity</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <figSize height="20" width="148"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" isDefault="true" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>subprocess3</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link16" name="修改操作" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">flag</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <nodeLabel>switch1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
+    <figSize height="20" width="55"/>
+    <node>switch1</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info version="6.3"/>
@@ -318,6 +366,7 @@
     <process:variable historyStateLocation="client" isArray="false" name="wfBatchNo" primitiveType="String"/>
     <process:variable historyStateLocation="client" isArray="false" name="orderNo" primitiveType="String"/>
     <process:variable historyStateLocation="client" isArray="false" name="planNo" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="flag" primitiveType="Int"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input isArray="false" modelType="com.keensen.ump.qinsen.inst.InstTumo" name="entity"/>

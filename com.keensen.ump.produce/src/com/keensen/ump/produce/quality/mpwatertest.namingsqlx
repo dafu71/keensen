@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+	<select id="queryWaterBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		SELECT
+		DECODE(#watertype#,'水相液','A','水相补充液','S','') || 
+		#line# ||
+		(SELECT mp_batch_code FROM qinsen.PARA_MATER_SPEC WHERE mater_spec_name=#mptype#)||
+		'A' ||
+		(SELECT ymd FROM v_ks_ymd) ||   
+		(SELECT SUBSTR('ABCDEFGHIJKLMNOPQRSTUVWXYZ',COUNT(1)+1 ,1)
+		  FROM KS_QUALITY_MP_TEST_WATER_HEAD T
+		 WHERE TO_CHAR(T.CREATE_TIME, 'yyyyMMdd') > '20240807'
+		 AND SUBSTR(T.BATCH_NO, 6, 4) = (SELECT ymd FROM v_ks_ymd)) || '1' "batchNo"
+		 FROM DUAL
+	     
+	</select> 
+	
+	<select id="queryWeight" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT T.MPTYPE,t.line,t.watertype,
+       ROUND(T.C21 * #weight# * 10, 0) "c21",
+       ROUND(T.C22 * #weight# * 10, 0) "c22",
+       ROUND(T.C23 * #weight# * 10, 0) "c23",
+       ROUND(T.C27 * #weight# * 10, 0) "c27",
+       ROUND(T.C28 * #weight# * 10, 0) "c28",
+       ROUND(T.C30 * #weight# * 10, 0) "c30",
+       ROUND(#weight# -
+             (ROUND(T.C21 * #weight# * 10, 0) + ROUND(T.C22 * #weight# * 10, 0) +
+             ROUND(T.C23 * #weight# * 10, 0) + ROUND(T.C27 * #weight# * 10, 0) +
+             ROUND(T.C28 * #weight# * 10, 0) + ROUND(T.C30 * #weight# * 10, 0)) / 1000,
+             2) "ro"
+	  FROM KS_BASE_FORMULA T
+	 WHERE T.MPTYPE = #mptype#
+	 and t.line = #line#
+	 and t.watertype = decode(#watertype#,'水相循环液','水相液',#watertype#)
+   </select>
+   
+   <select id="queryCheckResult" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT * from V_KS_BASE_FORMULA t
+	 WHERE T.MPTYPE = #mptype# and t.line = #line# and t.watertype = decode(#watertype#,'水相补充液','水相液',#watertype#)
+	 AND #c21Test# &lt;= t.up21 AND #c21Test# >=t.low21
+	 AND #c22Test# &lt;= t.up22 AND #c22Test# >=t.low22
+	 AND #c23Test# &lt;= t.up23 AND #c23Test# >=t.low23
+	 AND #c27Test# &lt;= t.up27 AND #c27Test# >=t.low27
+	 AND #c28Test# &lt;= t.up28 AND #c28Test# >=t.low28
+	 AND #c30Test# &lt;= t.up30 AND #c30Test# >=t.low30
+   </select>
+   
+   <select id="queryPrintTag" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	   SELECT T1.RELATION_ID,
+	       TO_CHAR(T1.THIRD_DATE, 'yyyy-MM-dd') "plDt",
+	       T2.LINE "line",
+	       T2.BATCH_NO "batchNo",
+	       T2.MPTYPE "mptype",
+	       T1.WEIGHT_PLAN "weightPlan",
+	       V2.OPERATORNAME "appointName2"
+	  FROM (SELECT *
+	          FROM KS_QUALITY_MP_TEST_WATER_LIST
+	         WHERE ID IN (SELECT MAX(T.ID) LIST_ID
+	                        FROM KS_QUALITY_MP_TEST_WATER_LIST T
+	                       WHERE TO_CHAR(T.CREATE_TIME, 'yyyyMMdd') > '20240807'
+	                       GROUP BY T.RELATION_ID)) T1
+	  LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD T2
+	    ON T2.ID = T1.RELATION_ID
+	  LEFT JOIN V_AC_OPERATOR_TRS V2
+	    ON V2.USERID = T1.APPOINT_ID2
+	   WHERE 1=1
+	   AND T1.RELATION_ID = #relationId#
+       AND t2.state=1 AND t2.watertype IN('水相补充液','水相液')
+   </select>
+   
+    <select id="queryTumo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T.BATCH_NO "batchNo",
+       T.WATER_BATCH_NO "waterBatchNo",
+       T.LINE_ID "lineId",
+       T.SPEC_ID "specId",
+       PMS.MATER_SPEC_NAME "materSpecName",
+       L.LINE_CODE "lineCode"
+  FROM QINSEN.INST_TUMO T
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = T.SPEC_ID
+  LEFT JOIN QINSEN.BASE_PROD_LINE L
+    ON T.LINE_ID = L.LINE_ID
+ WHERE T.BATCH_NO = #batchNo#
+   </select>
+ </sqlMap>

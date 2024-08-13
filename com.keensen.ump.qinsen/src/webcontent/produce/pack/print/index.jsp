@@ -44,7 +44,7 @@
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
 <script type="text/javascript">
-	var rootUrl = "<%=rootUrl %>";
+	var markprintrootUrl = "<%=rootUrl %>";
 
   var uid = "<%=uid %>";
    var nowStaffName = "<%=uname %>";
@@ -63,7 +63,7 @@
 <body>
 <div id="markprintmgr"></div>
 <div style="display: none">
-		<form name="printForm" id="printForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+		<form name="printForm" id="logoprintForm" action="" target="_blank" method="post" accept-charset="UTF-8">
 			<input type="hidden" name="specName"/>
 			<input type="hidden" name="batchNoStr"/>
 			<input type="hidden" name="batchNoStr2"/>

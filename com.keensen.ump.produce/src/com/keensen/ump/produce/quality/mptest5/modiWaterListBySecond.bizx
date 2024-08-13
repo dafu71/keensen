@@ -10,8 +10,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link4</targetConnections>
     <targetConnections>link13</targetConnections>
+    <targetConnections>link4</targetConnections>
     <location x="585" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -91,9 +91,10 @@
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
-    <targetConnections>link10</targetConnections>
-    <targetConnections>link2</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link16</targetConnections>
     <location x="405" y="150"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo0label</nodeLabel>
@@ -141,13 +142,23 @@
       <sourceNode>switch0</sourceNode>
       <targetNode>assign2</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link6" name="合格" displayName="连接线" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link6" name="正常使用" displayName="连接线" type="transition">
       <sourceNode>switch0</sourceNode>
       <targetNode>assign1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query">entity/ifok</process:leftOperand>
-          <process:rightOperand type="literal">Y</process:rightOperand>
+          <process:leftOperand type="query">list/secondAdvise</process:leftOperand>
+          <process:rightOperand type="literal">正常使用</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link15" name="水相报废" displayName="连接线" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign5</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list/secondAdvise</process:leftOperand>
+          <process:rightOperand type="literal">水相报废</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
@@ -404,6 +415,57 @@
     <location x="197" y="50"/>
     <figSize height="20" width="77"/>
     <node>subprocess0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign5" name="赋值5" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="246" y="465"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign5label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">entity/updateTime</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/updateUserId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/updateName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/relationId</process:from>
+      <process:to type="query">entity/id</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">2</process:from>
+      <process:to type="query">entity/state</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">invalid</process:from>
+      <process:to type="query">entity/step</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">list/secondDate</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">list/secondId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">list/secondName</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
+    <location x="240" y="501"/>
+    <figSize height="20" width="40"/>
+    <node>assign5</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

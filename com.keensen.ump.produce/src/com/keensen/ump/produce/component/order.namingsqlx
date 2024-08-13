@@ -172,10 +172,10 @@
 	</isNotNull>
 	
 	 <isNotNull prepend = "and"  property = "orderDateStart"> 
-          to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#
+          to_char(t2.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#
      </isNotNull>
      <isNotNull prepend = "and"  property = "orderDateEnd"> 
-          to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#
+          to_char(t2.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#
      </isNotNull>
      order by t1.relation_Id desc,t1.id desc
 	 </select>
@@ -271,7 +271,7 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        decode(INSTR(T1.cm_worker, '('),0,T1.cm_worker,SUBSTR(T1.cm_worker,1,INSTR(T1.cm_worker, '(')-1)) AS "cmWorker2",
        T3.ORDER_NO        AS "orderNo",
        T3.MATER_SPEC_NAME AS "materSpecName",
-       T3.MATER_SPEC_ID AS "materSpecId",
+       T3.MATER_SPEC_ID AS "materSpecId",kbd.mater_code "materSpecCode",
        T3.ORDER_AMOUNT    AS "orderAmount",
        T3.XSC             AS "xsc",to_char(T3.demand_Stock_Date,'yyyy-MM-dd')      AS "demandStockDate",
        to_char(T3.ORDER_DATE,'yyyy-MM-dd')      AS "orderDate",T5.order_Remark "orderRemark",
@@ -298,7 +298,7 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
   FROM KS_COMPONENT_PLAN_DAY T1 
   LEFT JOIN (select t.plan_date,t.batch_no,COUNT(1) cnt from KS_COMPONENT_PLAN_DAY t
   GROUP BY t.plan_date,t.batch_no ) cnt ON cnt.batch_no = t1.batch_no AND cnt.plan_date = t1.plan_date
-  LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue from V_KS_TUMO_ORIGIN2 t) t8
+  LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue,t.spec_id from V_KS_TUMO_ORIGIN2 t) t8
       ON t8.batch_no=t1.batch_no
   LEFT JOIN KS_COMPONENT_PLAN_WEEK T2
     ON T1.RELATION_ID = T2.ID 
@@ -309,6 +309,8 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        
   LEFT JOIN KS_PROD_COMPONENT_YXORDER T3
     ON T3.ID = T2.RELATION_ID
+  left join KS_BASE_DIAPHRAGM kbd
+    on kbd.mater_spec_id = t8.spec_id
 LEFT JOIN KS_COMPONENT_MP_SELECT t55  
     on t55.mp_batch_no = t1.batch_No 
 LEFT JOIN v_KS_COMPONENT_MP_SELECT t66

@@ -178,6 +178,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								allowBlank : false,
 								anchor : '100%',
 								colspan : 4,
+								value : 1,
 								minValue : 1,
 								decimalPrecision : 0
 							}, {

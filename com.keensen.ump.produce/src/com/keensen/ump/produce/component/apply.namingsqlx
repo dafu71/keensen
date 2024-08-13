@@ -50,8 +50,8 @@
        t2.apply_amount "applyAmountTotal",
        T1.is_examine "isExamine"
   FROM KS_COMPONENT_CHECK_HEAD T1
-  left join (SELECT h.order_no,h.prod_spec_name,SUM(h.apply_amount) apply_amount from KS_COMPONENT_CHECK_HEAD h
-GROUP BY h.order_no,h.prod_spec_name) t2 on t1.order_no = t2.order_no and t1.prod_spec_name = t2.prod_spec_name
+  left join (SELECT h.order_no,h.mark_spec_code,SUM(h.apply_amount) apply_amount from KS_COMPONENT_CHECK_HEAD h
+GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mark_spec_code = t2.mark_spec_code
 	
   where 1=1
   

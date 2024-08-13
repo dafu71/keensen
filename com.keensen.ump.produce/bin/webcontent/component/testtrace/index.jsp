@@ -19,9 +19,11 @@
   - Description:
 -->
 <head>
-<title>膜片跟踪记录</title>
+<title>膜片送样扫码登记</title>
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
+	
+	
 </script>
 
 <js:load scriptPath="produce/component/testtrace/js/manageUi.js"/>

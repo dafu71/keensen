@@ -20,8 +20,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					data : [['1', '膜片AB仓'], ['2', '膜片C仓'], ['3', '膜片发货仓'],
 							['4', '试卷合格仓'], ['5', '半成品仓']]
 				});
-				
-		
+
 		this.storagecombo = new Ext.form.ComboBox({
 			store : store,
 			anchor : '100%',
@@ -242,6 +241,30 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
+						header : '初检测试台',
+						width : 90,
+						dataIndex : 'fMacName'
+					}, {
+						header : '初检膜通量',
+						width : 90,
+						dataIndex : 'fGfdAvg'
+					}, {
+						header : '初检脱盐率%',
+						width : 90,
+						dataIndex : 'fSaltRejection'
+					}, {
+						header : '复检测试台',
+						width : 90,
+						dataIndex : 'rMacName'
+					}, {
+						header : '复检膜通量',
+						width : 90,
+						dataIndex : 'rGfdAvg'
+					}, {
+						header : '复检脱盐率%',
+						width : 90,
+						dataIndex : 'rSaltRejection'
+					}, {
 						dataIndex : 'perfFlagName',
 						header : '等级'
 					}, {
@@ -301,6 +324,18 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 							name : 'position'
 						}, {
 							name : 'qualifidLength'
+						}, {
+							name : 'fMacName'
+						}, {
+							name : 'fGfdAvg'
+						}, {
+							name : 'fSaltRejection'
+						}, {
+							name : 'rMacName'
+						}, {
+							name : 'rGfdAvg'
+						}, {
+							name : 'rSaltRejection'
 						}]
 			})
 		})

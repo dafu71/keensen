@@ -162,6 +162,7 @@ width="800px" height="600px" border=0>
 </table>
 </div>
  <script type="text/javascript">
+ 
 	function initPage() {
 						var batchNo = '<%=prodBatchNo %>';
 						var barcode = document.getElementById('barcode_' + batchNo), 

@@ -15,4 +15,11 @@
 		 WHERE A.STAFF_CODE = UPPER(#staffCode#)
 		 	AND A.PASSWORD = #password#
 		 	AND A.STATE = 'A'</select>
+    <!-- 按ID修改员工状态信息 -->
+    <update id="modiStaffState" parameterClass="java.util.HashMap">UPDATE qinsen.BASE_STAFF BS
+	   SET 
+	       BS.STATE = #newState#,	       
+	       BS.CHANGE_DT = SYSDATE,
+	       BS.CHANGER_ID = #operatorId#
+	 WHERE BS.STAFF_ID = #staffId#</update>
 </sqlMap>

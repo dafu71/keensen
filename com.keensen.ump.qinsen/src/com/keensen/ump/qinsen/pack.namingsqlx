@@ -47,7 +47,7 @@
 	   AND A.LOGO_CODE = #logoCode#
 	</isNotNull>
 	<isNotNull prepend = ""  property = "logoCodeStr">
-	   AND A.LOGO_CODE LIKE '%' || #logoCodeStr# || '%'
+	   AND upper(A.LOGO_CODE) LIKE '%' || upper(#logoCodeStr#) || '%'
 	</isNotNull>
 	<isNotNull prepend = ""  property = "logoName">
 	   AND A.LOGO_NAME = #logoName#

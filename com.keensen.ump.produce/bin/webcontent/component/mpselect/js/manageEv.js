@@ -286,7 +286,7 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel2 = function(
 com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel = function() {
 	var _this = this;
 
-	var tumoBatchNo2 = this.queryPanel3.getForm()
+	/*var tumoBatchNo2 = this.queryPanel3.getForm()
 			.findField('condition/tumoBatchNo2').getValue();
 	if (!Ext.isEmpty(tumoBatchNo2)) {
 		var arr = [];
@@ -298,7 +298,29 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel = function()
 		this.queryPanel3.getForm().findField('condition/tumoBatchNo')
 				.setValue(arr2.join(",") == "''" ? null : arr2.join(","));
 
-	}
+	}*/
+	
+	var batchNoStr = this.queryPanel3.form
+				.findField("condition/tumoBatchNo2").getValue();
+		if (!Ext.isEmpty(batchNoStr)) {
+			var regEx = new RegExp("\\n", "gi");
+			batchNoStr = batchNoStr.replace(regEx, ",");
+			batchNoStr = batchNoStr.replaceAll('，', ',');
+			batchNoStr = batchNoStr.replaceAll(' ', '');
+			var arr = [];
+			arr = batchNoStr.split(',');
+			if (arr.length > 999) {
+				// Ext.Msg.alert("系统提示", "批号数量不能超过999条，否则无法挑选！");
+				// return false;
+			}
+
+			var arr2 = [];
+			for (var i = 0; i < arr.length; i++) {
+				arr2.push("'" + arr[i] + "'");
+			}
+			this.queryPanel3.getForm().findField('condition/tumoBatchNo')
+					.setValue(arr2.join(",") == "''" ? null : arr2.join(","));
+		}
 
 	var daochu = _this.queryPanel3.getForm().getValues();
 

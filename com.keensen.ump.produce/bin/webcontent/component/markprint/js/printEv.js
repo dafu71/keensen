@@ -9,9 +9,10 @@ com.keensen.ump.produce.component.markprintMgr.prototype.onScan = function() {
 	var obj = this.inputPanel.prodBatchNo;
 	var prodBatchNo = obj.getValue();
 	if (Ext.isEmpty(prodBatchNo)) {
-		Ext.Msg.alert("系统提示", "请输入元件序号！");
+		Ext.Msg.alert("系统提示", "请输入卷膜序号！");
 		return;
 	}
+	this.inputPanel.remark.setValue('');
 	Ext.Ajax.request({
 		method : "post",
 		scope : this,
@@ -53,7 +54,7 @@ com.keensen.ump.produce.component.markprintMgr.prototype.onScan = function() {
 				}
 
 				var f = document.getElementById('componentmarkprintForm');
-				f.prodBatchNo.value = prodBatchNo;
+				f.prodBatchNo.value = data.prodBatchNo;
 				f.dryWet.value = data.dryWet2;
 				f.url.value = data.url;
 				f.prodSpecName.value = data.prodSpecName;
@@ -63,6 +64,7 @@ com.keensen.ump.produce.component.markprintMgr.prototype.onScan = function() {
 						+ Math.random() + '&token=' + Date.now();
 
 				f.action = actionUrl;
+				this.inputPanel.prodBatchNo.setValue('');
 				f.submit();
 			}
 		}

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="createTemplateName.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="关于公司标准的唛头背景选择，订单下达型号中有“NF”字符的选不带NSF的背景图，其他的选带NSF的背景图&#xD;&#xA;&#xD;&#xA;公司标准1  带NSF的背景图  MT-KS-0001-A&#xD;&#xA;公司标准2  不带NSF的背景图   MT-KS-0002-A&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" title="dafu&#x9;24-7-10 下午4:17">
+    <location x="99" y="420"/>
+    <size height="183" width="465"/>
+  </nodes>
+  <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>switch2</targetNode>
+    </sourceConnections>
+    <location x="72" y="149"/>
+    <size height="28" width="28"/>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <location x="585" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns>
+      <process:return id="0" language="String" name="templateName" type="query" valueType="Primitive">templateName</process:return>
+    </process:returns>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
+    <location x="71" y="185"/>
+    <figSize height="20" width="31"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" displayName="label" nodeType="label">
+    <location x="584" y="186"/>
+    <figSize height="20" width="31"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>switch3</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link3" name="图例名称包含公司标准" displayName="连接线" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>switch1</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>templateName.indexOf(&quot;公司标准&quot;)>-1</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <location x="200" y="149"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <location x="191" y="185"/>
+    <figSize height="20" width="46"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign1" name="赋值1" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="450" y="210"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">MT-KS-0001-A</process:from>
+      <process:to type="query">templateName</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <location x="444" y="246"/>
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link5" name="订单下达型号中有“NF”字符的选不带NSF的背景图" displayName="连接线" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>materSpecName2.indexOf(&quot;NF&quot;)>-1</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <location x="191" y="265"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
+    <location x="178" y="301"/>
+    <figSize height="20" width="55"/>
+    <node>switch1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <location x="453" y="309"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">MT-KS-0002-A</process:from>
+      <process:to type="query">templateName</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="447" y="345"/>
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch2" name="空操作2" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch2</sourceNode>
+      <targetNode>switch0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="入参有空值" displayName="连接线" type="transition">
+      <sourceNode>switch2</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>null == materSpecName2 || null == templateName</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <location x="200" y="60"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch2label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch2label" name="label" nodeType="label">
+    <location x="187" y="96"/>
+    <figSize height="20" width="55"/>
+    <node>switch2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <location x="375" y="186"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">MT-ZX-0001-A</process:from>
+      <process:to type="query">templateName</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <location x="374" y="222"/>
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch3" name="空操作3" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" description="" id="link2" name="中性" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>switch3</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>templateName.indexOf(&quot;中性&quot;)>-1</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch3</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link1</targetConnections>
+    <location x="289" y="149"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch3label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch3label" name="label" nodeType="label">
+    <location x="276" y="185"/>
+    <figSize height="20" width="55"/>
+    <node>switch3</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info author="dafu" createTime="2024-07-10 16:16:38" date="2024-07-10Z" description="" name="createTemplateName" version="6.3"/>
+  <process:variables/>
+  <process:inputs varArgs="false">
+    <process:input description="订单下达型号" isArray="false" name="materSpecName2" primitiveType="String"/>
+    <process:input description="图例名称" isArray="false" name="templateName" primitiveType="String"/>
+  </process:inputs>
+  <process:outputs>
+    <process:output description="" isArray="false" name="templateName" primitiveType="String"/>
+  </process:outputs>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

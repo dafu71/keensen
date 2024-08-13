@@ -77,7 +77,7 @@
 <body>
 <div id="caidiemomgr"></div>
 <div style="display: none">
-<form name="printForm" id="printForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+<form name="printForm" id="cdmprintForm" action="" target="_blank" method="post" accept-charset="UTF-8">
 			<input type="hidden" name="batchId"/>
 			<input type="hidden" name="batchIdStr"/>
 			<input type="hidden" name="batchNo"/>
@@ -89,6 +89,7 @@
 			<input type="hidden" name="numPerWad"/>
 			<input type="hidden" name="blankingSize"/>
 			<input type="hidden" name="denseNet"/>
+			<input type="hidden" name="produceDate"/>
 		</form>
 </div>
 </body>

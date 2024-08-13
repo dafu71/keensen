@@ -96,7 +96,7 @@
       <targetNode>switch1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="NOTNULLANDEMPTY">
-          <process:leftOperand type="query">data/perfFlagId</process:leftOperand>
+          <process:leftOperand type="query">data/perfFlagId2</process:leftOperand>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -154,8 +154,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link4</targetConnections>
     <targetConnections>link12</targetConnections>
+    <targetConnections>link4</targetConnections>
     <location x="465" y="206"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess0label</nodeLabel>
@@ -224,9 +224,9 @@
       <sourceNode>switch0</sourceNode>
       <targetNode>loopend0</targetNode>
     </sourceConnections>
+    <targetConnections>link11</targetConnections>
     <targetConnections>link0</targetConnections>
     <targetConnections>link7</targetConnections>
-    <targetConnections>link11</targetConnections>
     <location x="660" y="114"/>
     <size height="28" width="28"/>
     <nodeLabel>switch0label</nodeLabel>

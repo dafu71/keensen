@@ -3,7 +3,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
-		
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -130,13 +130,11 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
-				
-		/*this.queryPanel.addButton({
-					text : "导出发货请检单",
-					scope : this,
-					iconCls : 'icon-application_excel',
-					handler : this.exportExcel2
-				});*/
+
+		/*
+		 * this.queryPanel.addButton({ text : "导出发货请检单", scope : this, iconCls :
+		 * 'icon-application_excel', handler : this.exportExcel2 });
+		 */
 	}
 
 	this.initListPanel = function() {
@@ -151,8 +149,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 							}, '-', {
 								text : '变更订单后生成发货单',
 								scope : this,
-								disabled:true,
-								hidden:true,
+								disabled : true,
+								hidden : true,
 								iconCls : 'icon-application_edit',
 								handler : this.onCreate2
 							}, {
@@ -188,6 +186,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 			viewConfig : {
 				forceFit : false
 			},
+			enableHdMenu : true,
+			columnLines : true,
 			tbar : [{
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
@@ -422,7 +422,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 
 	this.initInputWindow = function() {
 		var _this = this;
-		
+
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
 			height : 300,
 			pgrid : this.listPanel,
@@ -432,24 +432,24 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 			columns : 1,
 			saveUrl : 'com.keensen.ump.produce.diaphragm.ship.choose.createShips2.biz.ext',
 			fields : [{
-				xtype : 'textfield',
-				name : 'entity/orderNo',
-				allowBlank : false,
-				fieldLabel : '订单号',
-				anchor : '85%',
-				colspan : 1
-			}, {
-				xtype : 'displayfield',
-				height : '5',
-				colspan : 1
-			}, {
-				xtype : 'textfield',
-				name : 'entity/planNo',
-				allowBlank : false,
-				anchor : '85%',
-				fieldLabel : '计划单号 ',
-				colspan : 1
-			}],
+						xtype : 'textfield',
+						name : 'entity/orderNo',
+						allowBlank : false,
+						fieldLabel : '订单号',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						name : 'entity/planNo',
+						allowBlank : false,
+						anchor : '85%',
+						fieldLabel : '计划单号 ',
+						colspan : 1
+					}],
 			buttons : [{
 						text : "确定",
 						scope : this,
@@ -464,7 +464,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					}]
 
 		});
-		
+
 		this.inputWindow = this.inputWindow || new Ext.Window({
 					title : '变更订单后生成发货单',
 					height : 300,

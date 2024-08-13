@@ -25,7 +25,7 @@
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
-
+<ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
 <js:load scriptPath="produce/component/markprint/js/listUi.js"/>
 <js:load scriptPath="produce/component/markprint/js/listEv.js"/>
 <script type="text/javascript">

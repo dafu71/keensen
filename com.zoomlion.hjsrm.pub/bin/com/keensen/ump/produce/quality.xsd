@@ -528,84 +528,6 @@
             <xs:element minOccurs="0" name="mptype" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="KsQualityMpTestWaterHead">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="id" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="line" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="mptype" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="step" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="watertype" nillable="true" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="KsQualityMpTestWaterList">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="id" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c21Test" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c22Test" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c23Test" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c27Test" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c28Test" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c29Test" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c30Test" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c21Plan" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c22Plan" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c23Plan" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c27Plan" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c28Plan" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c29Plan" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c30Plan" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="roPlan" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c21Reality" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c22Reality" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c23Reality" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c27Reality" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c28Reality" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c29Reality" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="c30Reality" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="roReality" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="firstId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="secondName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="secondId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="thirdName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="thirdId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="firstDate" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="secondDate" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="thirdDate" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="relationId" nillable="true" type="xs:long"/>
-            <xs:element minOccurs="0" name="position" nillable="true" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="KsQualityMpWetStand">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -901,6 +823,93 @@
             <xs:element minOccurs="0" name="ext3" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="relationId" nillable="true" type="xs:int"/>
             <xs:element minOccurs="0" name="itype" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsQualityMpTestWaterList">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c21Test" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c22Test" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c23Test" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c27Test" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c28Test" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c29Test" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c30Test" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c21Plan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c22Plan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c23Plan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c27Plan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c28Plan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c29Plan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c30Plan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="roPlan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c21Reality" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c22Reality" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c23Reality" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c27Reality" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c28Reality" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c29Reality" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c30Reality" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="roReality" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="firstId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="secondName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="secondId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="thirdName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="thirdId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="firstDate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="secondDate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="thirdDate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="relationId" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="position" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="weightPlan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="appointId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="weightReality" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hplc" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="appointId2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="appointId3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="secondAdvise" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsQualityMpTestWaterHead">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="line" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mptype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="step" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="watertype" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="relationId" nillable="true" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

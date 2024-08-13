@@ -667,6 +667,15 @@
             <xs:element minOccurs="0" name="fromIp" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
             <xs:element minOccurs="0" name="testType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testCondition" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsBaseCalendar">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="calendarDate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="weekdayNumber" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="ifRest" nillable="true" type="xs:long"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

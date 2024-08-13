@@ -1,6 +1,8 @@
 com.keensen.ump.produce.component.yxorderMgr = function() {
 	this.initPanel = function() {
+		this.rec = {};
 
+		this.initTemplateNameStore();
 		this.initPlanYear();
 		this.initWeekArr();
 
@@ -20,8 +22,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 		this.initOrderMaterSpecWindow();
 		this.initAddOrderMaterSpecWindow();
-		
+
 		this.initUpdateTemplateNameWindow();
+		this.initUpdatematerialWindow2();
+
+		this.initAddOrderWindow2();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -36,6 +41,19 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		for (var i = 0; i < 10; i++) {
 			this.planYearArr.push([2024 + i, 2024 + i])
 		}
+	}
+
+	this.initTemplateNameStore = function() {
+		this.templateNameStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.component.makprint.queryTemplateName.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			totalProperty : '',
+			baseParams : {},
+			fields : [{
+						name : 'templateName'
+					}]
+		})
 	}
 
 	this.initQueryPanel = function() {
@@ -101,6 +119,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 			viewConfig : {
 				forceFit : false
 			},
+			enableHdMenu : true,
+			columnLines : true,
 			hsPage : true,
 			id : mylistid,
 			tbar : [{
@@ -108,6 +128,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAddPlanWeek
+					}, '-', {
+						text : '修改订单下达型号',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onUpdateMaterial2
 					}/*
 						 * , '-', { text : '查看生产主计划', scope : this, iconCls :
 						 * 'icon-application_form_magnify', handler :
@@ -132,6 +157,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAddOrder
+					}, '-', {
+						text : '订单新增',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onAddOrder2
 					}, '->', {
 						text : '订单生产型号查询',
 						scope : this,
@@ -147,25 +177,32 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 			delUrl : 'com.keensen.ump.produce.component.neworder.deleteEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'orderType',
-						header : '订单类型'
+						header : '订单类型',
+						sortable : true
 					}, {
 						dataIndex : 'orderNo',
-						header : '订单编号'
+						header : '订单编号',
+						sortable : true
 					}, {
 						dataIndex : 'templateName',
-						header : '唛头图纸编号'
+						header : '唛头图纸编号',
+						sortable : true
 					}, {
 						dataIndex : 'materSpecName2',
-						header : '订单下达型号'
+						header : '订单下达型号',
+						sortable : true
 					}, {
 						dataIndex : 'materSpecName',
-						header : '对应生产规格'
+						header : '对应生产规格',
+						sortable : true
 					}, {
 						dataIndex : 'orderAmount',
-						header : '订单数量'
+						header : '订单数量',
+						sortable : true
 					}, {
 						dataIndex : 'orderDate',
-						header : '订单日期'
+						header : '订单日期',
+						sortable : true
 					}, {
 						dataIndex : 'ifplan',
 						header : '制定计划与否',
@@ -178,100 +215,135 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							} else {
 								return ifplan;
 							}
-						}
+						},
+						sortable : true
 					}, {
 						dataIndex : 'arrangeAmount',
-						header : '已排产数量'
+						header : '已排产数量',
+						sortable : true
 					}, {
 						dataIndex : 'scfs',
-						header : '生产方式'
+						header : '生产方式',
+						sortable : true
 					}, {
 						dataIndex : 'bm',
-						header : '编码'
+						header : '编码',
+						sortable : true
 					}, {
 						dataIndex : 'sffh',
-						header : '是否发货'
+						header : '是否发货',
+						sortable : true
 					}, {
 						dataIndex : 'type',
-						header : '类型'
+						header : '类型',
+						sortable : true
+					}, {
+						dataIndex : 'createTime',
+						header : '最近导入时间',
+						sortable : true
 					}, {
 						dataIndex : 'khxj',
-						header : '客户星级'
+						header : '客户星级',
+						sortable : true
 					}, {
 						dataIndex : 'cpxj',
-						header : '产品星级'
+						header : '产品星级',
+						sortable : true
 					}, {
 						dataIndex : 'ddxj',
-						header : '订单星级'
+						header : '订单星级',
+						sortable : true
 					}, {
 						dataIndex : 'hpmc',
-						header : '货品名称'
+						header : '货品名称',
+						sortable : true
 					}, {
 						dataIndex : 'dw',
-						header : '单位'
+						header : '单位',
+						sortable : true
 					}, {
 						dataIndex : 'cpgg',
-						header : '产品规格'
+						header : '产品规格',
+						sortable : true
 					}, {
 						dataIndex : 'dryWet',
-						header : '干膜/湿'
+						header : '干膜/湿',
+						sortable : true
 					}, {
 						dataIndex : 'dfh',
-						header : '待发货（发库存）'
+						header : '待发货（发库存）',
+						sortable : true
 					}, {
 						dataIndex : 'xsc',
-						header : '需生产或入库数量'
+						header : '需生产或入库数量',
+						sortable : true
 					}, {
 						dataIndex : 'sbkcgm',
-						header : '司标库存（干膜）'
+						header : '司标库存（干膜）',
+						sortable : true
 					}, {
 						dataIndex : 'sbkcsm',
-						header : '司标库存（湿膜）'
+						header : '司标库存（湿膜）',
+						sortable : true
 					}, {
 						dataIndex : 'bq',
-						header : '标签'
+						header : '标签',
+						sortable : true
 					}, {
 						dataIndex : 'bag',
-						header : '真空包装袋'
+						header : '真空包装袋',
+						sortable : true
 					}, {
 						dataIndex : 'box',
-						header : '包装箱'
+						header : '包装箱',
+						sortable : true
 					}, {
 						dataIndex : 'mark',
-						header : '唛头'
+						header : '唛头',
+						sortable : true
 					}, {
 						dataIndex : 'pack',
-						header : '打包方式'
+						header : '打包方式',
+						sortable : true
 					}, {
 						dataIndex : 'performance',
-						header : '产品性能'
+						header : '产品性能',
+						sortable : true
 					}, {
 						dataIndex : 'lidTape',
-						header : '端盖+胶带'
+						header : '端盖+胶带',
+						sortable : true
 					}, {
 						dataIndex : 'lid',
-						header : '端盖'
+						header : '端盖',
+						sortable : true
 					}, {
 						dataIndex : 'tape',
-						header : '胶带'
+						header : '胶带',
+						sortable : true
 					}, {
 						dataIndex : 'tray',
-						header : '托盘'
+						header : '托盘',
+						sortable : true
 					}, {
 						dataIndex : 'remark',
 						header : '其它备注'
 					}, {
 						dataIndex : 'demandStockDate',
-						header : '生产交期'
+						header : '生产交期',
+						sortable : true
 					}, {
 						dataIndex : 'rksl',
-						header : '入库数量（支）'
+						header : '入库数量（支）',
+						sortable : true
 					}, {
 						dataIndex : 'jhwcsj',
-						header : '计划完成时间'
+						header : '计划完成时间',
+						sortable : true
 					}, {
 						dataIndex : 'scwcrq',
-						header : '生产完成日期'
+						header : '生产完成日期',
+						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.neworder.queryYxOrderByPage.biz.ext',
@@ -384,6 +456,66 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						}]
 			})
 		})
+
+		// 右键菜单
+		this.listPanel.addListener('rowcontextmenu', rightClickFn);// 右键菜单代码关键部分
+		var rightClick = new Ext.menu.Menu({
+			// id : 'rightClickCont',
+			items : [{
+						handler : function() {
+							if (Ext.isEmpty(_this.rec.data)) {
+								Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
+								return;
+							} else {
+								copyToClipboard(_this.rec.data['orderNo']);
+							}
+						},
+						text : '复制订单编号'
+					}, {
+						handler : function() {
+							if (Ext.isEmpty(_this.rec.data)) {
+								Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
+								return;
+							} else {
+								if (!Ext
+										.isEmpty(_this.rec.data['templateName']))
+									copyToClipboard(_this.rec.data['templateName'])
+								else
+									copyToClipboard(' ');
+							}
+						},
+						text : '复制唛头图纸编号'
+					}, {
+						handler : function() {
+							if (Ext.isEmpty(_this.rec.data)) {
+								Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
+								return;
+							} else {
+								copyToClipboard(_this.rec.data['materSpecName2']);
+							}
+						},
+						text : '复制订单下达型号'
+					}, {
+						handler : function() {
+							if (Ext.isEmpty(_this.rec.data)) {
+								Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
+								return;
+							} else {
+								copyToClipboard(_this.rec.data['materSpecName']);
+							}
+						},
+						text : '复制对应生产规格'
+					}]
+		});
+		// 右键菜单代码关键部分
+		function rightClickFn(grid, rowindex, e) {
+			var B = _this.listPanel.getSelectionModel().getSelections();
+			if (B.length != 0) {
+				e.preventDefault();
+				rightClick.showAt(e.getXY());
+			}
+		}
+
 	}
 
 	// 导入excel面板
@@ -1166,6 +1298,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									colspan : 2
 								}, {
 									xtype : 'prodspeccombobox',
+									dataIndex : 'materSpecId',
 									hiddenName : 'entity/materSpecId',
 									ref : '../../materSpecId',
 									allowBlank : false,
@@ -1541,7 +1674,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}]
 				});
 	}
-	
+
 	this.initUpdateTemplateNameWindow = function() {
 		var _this = this;
 		this.updateTemplateNameWindow = this.updateTemplateNameWindow
@@ -1570,14 +1703,79 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									height : '5',
 									colspan : 2
 								}, {
-									xtype : 'textfield',
-									name : 'entity/templateName',
+									xtype : 'combobox',
 									dataIndex : 'templateName',
-									fieldLabel : '唛头图纸编号 ',
+									typeAhead : true,
+									typeAheadDelay : 100,
+									triggerAction : "all",
+									lazyRender : true,
+									forceSelection : true,
+									mode : 'local',
+									fieldLabel : '唛头图纸编号',
 									ref : '../../templateName',
-									allowBlank : false,
-									anchor : '100%',
-									colspan : 2
+									hiddenName : 'entity/templateName',
+									//allowBlank : false,
+									anchor : '95%',
+									colspan : 2,
+									emptyText : '--请选择--',
+									editable : true,
+									store : this.templateNameStore,
+									displayField : "templateName",
+									valueField : "templateName",
+									queryDelay : 200,// 查询延时，毫秒,
+									listeners : {
+										'focus' : {
+											fn : function(e) {
+												e.expand();
+												this.doQuery(this.allQuery,
+														true);
+											},
+											buffer : 200
+										},
+										"expand" : function(A) {
+											// this.reset()
+										},
+										'beforequery' : function(e) {
+											var combo = _this.updateTemplateNameWindow.templateName, size = 15, idx = 1;
+
+											if (e.query === ''
+													|| e.query == null) {// 当输入框删除内容后，清除过滤器，
+												// 显示原本store数据,使其能够再次检索
+												combo.store.clearFilter();
+												combo.expand();
+
+											} else {
+												if (!e.forceAll) {
+
+													combo.store.clearFilter();// 使每次输入都能进行检索，不用担心输入过慢
+													var input = e.query;
+													// 检索的正则
+													var regExp = new RegExp(".*"
+															+ input + ".*");
+													// 执行检索
+													combo.store
+															.filterBy(
+																	function(
+																			record,
+																			id) {
+																		if (idx > size) {
+																			return false;
+																		}
+																		var text = record
+																				.get(combo.displayField);
+																		var flag = regExp
+																				.test(text);
+																		if (flag) {
+																			idx++;
+																		}
+																		return flag;
+																	});
+													combo.expand();
+													return false;
+												}
+											}
+										}
+									}
 
 								}, {
 									name : 'entity/id',
@@ -1586,5 +1784,158 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 								}]
 					}]
 				});
+	}
+
+	this.initUpdatematerialWindow2 = function() {
+		var _this = this;
+		this.updatematerialWindow2 = this.updatematerialWindow2
+				|| new Ext.fn.FormWindow({
+					title : '修改订单下达型号',
+					height : 240,
+					width : 300,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+
+											}
+										})
+							} else {
+								_this.updatematerialWindow2.items.items[0].form
+										.reset();
+								_this.updatematerialWindow2.hide();
+								_this.listPanel.refresh();
+							}
+						},
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandYxOrder.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.neworder.saveEntity4.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/materSpecName2',
+									dataIndex : 'materSpecName2',
+									ref : '../../materSpecName2',
+									allowBlank : false,
+									anchor : '100%',
+									colspan : 2,
+									fieldLabel : '订单下达型号 '
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
+								}]
+					}]
+				});
+	}
+
+	this.initAddOrderWindow2 = function() {
+		var _this = this;
+		this.addOrderWindow2 = this.addOrderWindow2 || new Ext.fn.FormWindow({
+			title : '新增订单',
+			height : 480,
+			width : 600,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'inputpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				successFn : function(i, r) {
+					_this.addOrderWindow2.items.items[0].form.reset();
+					_this.addOrderWindow2.hide();
+					_this.listPanel.refresh();
+
+				},
+				columns : 2,
+				saveUrl : 'com.keensen.ump.produce.component.neworder.saveEntity.biz.ext',
+				fields : [{
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/orderNo',
+							dataIndex : 'orderNo',
+							fieldLabel : '订单编号 ',
+							ref : '../../orderNo',
+							allowBlank : false,
+							anchor : '80%',
+							colspan : 2
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'prodspeccombobox',
+							hiddenName : 'entity/materSpecId',
+							ref : '../../materSpecId',
+							allowBlank : false,
+							anchor : '80%',
+							colspan : 2,
+							fieldLabel : '对应生产规格',
+							typeAhead : true,
+							typeAheadDelay : 100,
+							minChars : 1,
+							queryMode : 'local',
+							lastQuery : '',
+							editable : true,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									var materSpecName = _this.addOrderWindow2.materSpecId
+											.getRawValue();
+									_this.addOrderWindow2.materSpecName
+											.setValue(materSpecName);
+									_this.addOrderWindow2.materSpecName2
+											.setValue(materSpecName);
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/orderAmount',
+							dataIndex : 'orderAmount',
+							fieldLabel : '订单数量 ',
+							ref : '../../orderAmount',
+							allowBlank : false,
+							anchor : '80%',
+							colspan : 2
+
+						}, {
+							name : 'entity/materSpecName2',
+							ref : '../../materSpecName2',
+							xtype : 'hidden'
+						}, {
+							name : 'entity/materSpecName',
+							ref : '../../materSpecName',
+							xtype : 'hidden'
+						}]
+			}]
+		});
 	}
 }

@@ -18,7 +18,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.initEvent = function() 
 
 	this.cdmPanel.inQuantity.on("change", function(thisFiled, newValue,
 					oldValue) {
-				this.cdmPanel.outQuantity.setValue(newValue);
+				_this.cdmPanel.outQuantity.setValue(newValue);
 			});
 
 	this.mainPanel.produceDt.mon(this.mainPanel.produceDt, "change", function(
@@ -382,7 +382,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 								_this.genBatchNo();
 								if (btn === 'yes') {
 									var f = document
-											.getElementById('printForm');
+											.getElementById('juanmoprintForm');
 									f.batchIdStr.value = recordIdStr;
 									var actionUrl = 'com.keensen.ump.qinsen.printJuanmoTags.flow?token='
 											+ Date.now();

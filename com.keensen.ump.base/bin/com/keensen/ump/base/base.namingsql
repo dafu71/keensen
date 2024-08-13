@@ -58,12 +58,15 @@
 	t.mater_spec_id "id",t.mater_spec_name "name",t.mater_spec_code "code"
 	,t.mp_batch_code "mpBatchCode"
 	 from qinsen.PARA_MATER_SPEC t
-	WHERE T.Mater_Class_Id IN(100030024,100030025,100030023,100030022)</select>
+	WHERE T.Mater_Class_Id IN(100030024,100030025,100030023,100030022)
+	AND t.mater_spec_name IN('ULP1-1','ULP2-1','ULP3-1','ULP4-1','ULP5-1',
+  'ULP6-1','BW1-1','BW2-1','BW3-1','HW1-1','SW1-1','SW2-1','SW3-1','NF1','NF2','NF1-R')</select>
     <!-- 膜片生产线查询 -->
     <select id="queryMpLine" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.line_id,t.line_code "code",t.line_name ,
 	t.line_id "id",t.line_name || '(' || t.line_code || ')' "name"
 	from qinsen.BASE_PROD_LINE t
-	where t.line_id in(select distinct line_id from qinsen.INST_TUMO)</select>
+	where t.line_id in(select distinct line_id from qinsen.INST_TUMO)
+	ORDER BY t.line_code</select>
     <!-- 膜片等级查询 -->
     <select id="queryMpPerf" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.prop_value_id perf_flag_id,t.prop_value_code perf_flag_code,
 		t.prop_value_name perf_flag_name,
@@ -81,7 +84,7 @@
 	WHERE T.Mater_Class_Id IN(100030027)
 	<isNotNull prepend="and" property="materSpecName">upper(t.MATER_SPEC_NAME) = upper(#materSpecName#)</isNotNull>
         <isNotNull prepend="and" property="materSpecId">t.mater_spec_id = #materSpecId#</isNotNull>
-	order by t.mater_spec_code
+	order by t.mater_spec_name
      </select>
     <!-- 元件型号查询 -->
     <select id="queryProdSpec2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
@@ -174,7 +177,8 @@ t.mater_spec_name2 "materSpecName2"
 	   AND L.WORKSHOP_ID = W.DEPT_ID(+)
 	   AND L.FACTORY_ID = F.DEPT_ID(+)
 	   <isNotNull prepend="" property="prodTacheId">AND L.PROD_TACHE_ID in($prodTacheId$)</isNotNull>
-    </select>
+       ORDER BY L.line_code
+     </select>
     <!-- 查询物料规格列表 -->
     <select id="queryMaterSpecList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
      SELECT S.MATER_SPEC_ID, S.MATER_SPEC_CODE, S.MATER_SPEC_NAME, S.MATER_CLASS_ID,
