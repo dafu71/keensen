@@ -16,7 +16,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 			function() {
 
 				var reserve1 = this.inputWindow.reserve1.getValue();
-				if (reserve1 == '回流液') {
+				if (reserve1 == '回流油相液') {
 					var reflux = this.inputWindow.reflux.getValue();
 					if (Ext.isEmpty(reflux)) {
 						Ext.Msg.alert("系统提示", "请添加回流液重量");
@@ -90,7 +90,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 					this.editWindow.standard.setValue(str);
 					var reserve1 = this.editWindow.reserve1.getValue();
 		
-					if (reserve1 == '回流液') {
+					if (reserve1 == '回流油相液') {
 						this.editWindow.batchNo.setVisible(false);
 						this.editWindow.refluxNo.setVisible(true);
 					}else{
@@ -142,7 +142,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 
 				}else{
 					var reserve1 = this.editWindow3.reserve1.getValue();
-					if (reserve1 == '回流液') {
+					if (reserve1 == '回流油相液') {
 						this.editWindow3.batchNo.setVisible(false);
 						this.editWindow3.refluxNo.setVisible(true);
 					}else{
@@ -228,7 +228,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onAdd = function() {
 	this.inputWindow.reflux.setVisible(false);
 	this.inputWindow.c41Reality.setVisible(true);
 	this.inputWindow.c42Reality.setVisible(true);
-	this.inputWindow.reserve1.setValue('新配液');
+	this.inputWindow.reserve1.setValue('新配油相液');
 
 }
 
@@ -239,7 +239,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onAdd2 = function() {
 	this.inputWindow.reflux.setVisible(true);
 	this.inputWindow.c41Reality.setVisible(false);
 	this.inputWindow.c42Reality.setVisible(false);
-	this.inputWindow.reserve1.setValue('回流液');
+	this.inputWindow.reserve1.setValue('回流油相液');
 }
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.destroy = function() {

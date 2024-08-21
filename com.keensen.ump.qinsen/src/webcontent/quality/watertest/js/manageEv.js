@@ -33,14 +33,14 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 			})
 
 	this.firstTestWindow2.testTypeId.store.on('load', function(o) {
-				var records = _this.firstTestWindow2.testTypeId.store
+				/*var records = _this.firstTestWindow2.testTypeId.store
 						.getRange();
 				Ext.each(records, function(r) {
 							if (r.data['propValueId'] == 300040) {
 								_this.firstTestWindow2.testTypeId.store
 										.remove(r);
 							}
-						})
+						})*/
 
 			})
 
@@ -113,23 +113,23 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 				var testTypeId = cell.get('testTypeId');
 
 				if (this.opt == 'reTest') {
-					if (testTypeId == '300040') {
+					/*if (testTypeId == '300040') {
 						this.reTestWindow.show();
 						this.reTestWindow.loadData(cell);
-					} else {
+					} else {*/
 						this.reTestWindow2.show();
 						this.reTestWindow2.loadData(cell);
-					}
+					//}
 				}
 
 				if (this.opt == 'modify') {
-					if (testTypeId == '300040') {
+					/*if (testTypeId == '300040') {
 						this.modifyWindow.show();
 						this.modifyWindow.loadData(cell);
-					} else {
+					} else {*/
 						this.modifyWindow2.show();
 						this.modifyWindow2.loadData(cell);
-					}
+					//}
 				}
 			}, this);
 

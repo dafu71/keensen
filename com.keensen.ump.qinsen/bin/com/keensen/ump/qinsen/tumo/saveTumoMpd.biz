@@ -197,6 +197,18 @@
       <process:from type="query" pattern="reference">entity/batchNo</process:from>
       <process:to type="query">map3/batchNo</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/absorbance</process:from>
+      <process:to type="query">map3/absorbance</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/ro</process:from>
+      <process:to type="query">map3/ro</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/fxy</process:from>
+      <process:to type="query">map3/fxy</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>

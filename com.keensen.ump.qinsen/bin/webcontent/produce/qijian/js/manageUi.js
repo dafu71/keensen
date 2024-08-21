@@ -226,6 +226,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 		this.listPanel = new Ext.fn.ListPanel({
 
 			region : 'center',
+			enableHdMenu : true,
 			hsPage : true,
 			id : 'produce-qijianmgr-list',
 			tbar : [{
@@ -274,119 +275,148 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 			delUrl : 'com.keensen.ump.qinsen.qijian.deleteQijian.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						header : '元件序号',
+						sortable : true,
 						width : 120,
 						dataIndex : 'batchNo'
 					}, {
 						header : '卷膜序号',
+						sortable : true,
 						width : 120,
 						dataIndex : 'juanmoBatchNo'
 					}, {
 						header : '元件型号',
 						width : 120,
-						dataIndex : 'prodSpecName'
+						dataIndex : 'prodSpecName',
+						sortable : true
 					}, {
 						header : '检测气压',
 						width : 80,
-						dataIndex : 'presure'
+						dataIndex : 'presure',
+						sortable : true
 					}, {
 						header : '泄压值',
+						sortable : true,
 						width : 60,
 						dataIndex : 'checkResult'
 					}, {
 						header : '泄压合格',
 						width : 70,
-						dataIndex : 'isQualifiedName'
+						dataIndex : 'isQualifiedName',
+						sortable : true
 					}, {
 						header : '首/复检',
 						width : 60,
-						dataIndex : 'isFirstName'
+						dataIndex : 'isFirstName',
+						sortable : true
 					}, {
 						header : '生产时间',
+						sortable : true,
 						width : 110,
 						dataIndex : 'produceDate'
 					}, {
 						header : '不良类型',
 						width : 80,
-						dataIndex : 'ngReasonName'
+						dataIndex : 'ngReasonName',
+						sortable : true
 					}, {
 						header : '质检合格',
 						width : 80,
-						dataIndex : 'judgeFlagName'
+						dataIndex : 'judgeFlagName',
+						sortable : true
 					}, {
 						dataIndex : 'gyyRemark',
-						header : '工艺员备注'
+						header : '工艺员备注',
+						sortable : true
 					}, {
 						header : '不良原因',
 						width : 120,
-						dataIndex : 'ngItem'
+						dataIndex : 'ngItem',
+						sortable : true
 					}, {
 						header : '质检员',
 						width : 80,
-						dataIndex : 'judgerName'
+						dataIndex : 'judgerName',
+						sortable : true
 					}, {
 						header : '判定时间',
 						width : 110,
-						dataIndex : 'judgeDate'
+						dataIndex : 'judgeDate',
+						sortable : true
 					}, {
 						header : '上端直径',
 						width : 70,
-						dataIndex : 'diameter'
+						dataIndex : 'diameter',
+						sortable : true
 					}, {
 						header : '下端直径',
 						width : 70,
-						dataIndex : 'diameter2'
+						dataIndex : 'diameter2',
+						sortable : true
 					}, {
 						header : '膜片长度',
 						width : 70,
-						dataIndex : 'juanmoLength'
+						dataIndex : 'juanmoLength',
+						sortable : true
 					}, {
 						header : '膜片批次',
+						sortable : true,
 						width : 190,
 						dataIndex : 'tumoBatchStr'
 					}, {
 						header : '叠膜栈板号',
+						sortable : true,
 						width : 210,
 						dataIndex : 'cdmBatchStr'
 					}, {
 						header : '底膜批次',
+						sortable : true,
 						width : 190,
 						dataIndex : 'dimoBatchStr'
 					}, {
 						header : '订单号',
 						width : 120,
-						dataIndex : 'orderNo'
+						dataIndex : 'orderNo',
+						sortable : true
 					}, {
 						header : '生产线',
 						width : 100,
-						dataIndex : 'lineCode'
+						dataIndex : 'lineCode',
+						sortable : true
 					}, {
 						header : '班组',
 						width : 70,
-						dataIndex : 'teamName'
+						dataIndex : 'teamName',
+						sortable : true
 					}, {
 						header : '操作工',
 						width : 100,
-						dataIndex : 'workerName'
+						dataIndex : 'workerName',
+						sortable : true
 					}, {
 						header : '补换标者',
 						width : 100,
-						dataIndex : 'lastTagWorker'
+						dataIndex : 'lastTagWorker',
+						sortable : true
 					}, {
 						header : '补换标时间',
 						width : 110,
-						dataIndex : 'lastTagDate'
+						dataIndex : 'lastTagDate',
+						sortable : true
 					}, {
 						header : '卷膜机台',
 						width : 80,
-						dataIndex : 'jmLineCode'
+						dataIndex : 'jmLineCode',
+						sortable : true
 					}, {
 						header : '卷膜工',
 						width : 100,
-						dataIndex : 'jmWorkerName'
+						dataIndex : 'jmWorkerName',
+						sortable : true
 					}, {
 						header : '备注',
 						width : 160,
-						dataIndex : 'remark'
+						dataIndex : 'remark',
+						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.qinsen.qijian.queryRecordsByPage.biz.ext',

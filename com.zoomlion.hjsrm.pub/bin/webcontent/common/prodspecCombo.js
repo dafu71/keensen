@@ -15,6 +15,10 @@ Ext.ns("com.keensen.ump");
 com.keensen.ump.ProdspecComboBox = Ext.extend(Ext.form.ComboBox, {
 			editable : false,
 			triggerAction : "all",
+
+			// 自定义属性
+			state : '',
+
 			// 增量查询
 			typeAhead : true,
 			lazyRender : true,
@@ -46,7 +50,8 @@ com.keensen.ump.ProdspecComboBox = Ext.extend(Ext.form.ComboBox, {
 							combo.store.clearFilter();// 使每次输入都能进行检索，不用担心输入过慢
 							var input = e.query;
 							// 检索的正则
-							var regExp = new RegExp(".*" + input.toUpperCase() + ".*");
+							var regExp = new RegExp(".*" + input.toUpperCase()
+									+ ".*");
 							// 执行检索
 							combo.store.filterBy(function(record, id) {
 										if (idx > size) {
@@ -86,6 +91,9 @@ com.keensen.ump.ProdspecComboBox = Ext.extend(Ext.form.ComboBox, {
 							url : 'com.keensen.ump.base.base.queryProdspec.biz.ext',
 							root : 'data',
 							autoLoad : true,
+							baseParams : {
+								'condition/state' : this.state
+							},
 							fields : [{
 										name : "id"
 									}, {

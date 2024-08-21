@@ -46,7 +46,7 @@
 	round(nvl(wt.r_GPD,wt.F_GPD) * itc.avg_gfd / tmc.gfd_avg,0) yj_gpd_avg
 	 from ks_prod_component_stock t
 	 LEFT JOIN V_KS_TUMO_ORIGIN2 it 
-	 ON it.batch_no=t.batch_no
+	 ON it.batch_no=t.batch_no	 
 	 LEFT JOIN V_TUMO_CHECK_MATER tcm
 	 ON tcm.MATER_NAME = it.MATER_SPEC_CODE
 	 LEFT JOIN
@@ -73,7 +73,7 @@
 	LEFT JOIN (SELECT t.* from qinsen.inst_tumo_check t
 	WHERE t.record_id IN(SELECT MAX(record_id) FROM qinsen.inst_tumo_check WHERE recheck_flag ='N' GROUP BY batch_id)) tmc
 	ON tmc.batch_id = wt.tumo_record_id
-	WHERE substr(it.MATER_SPEC_CODE,1,2) IN('BW','NF','SW') 
+	WHERE substr(it.MATER_SPEC_CODE,1,2) IN('BW','NF','SW','HW') 
 	<isNotNull prepend="" property="tumoBatchNo">AND t.batch_no = #tumoBatchNo#</isNotNull>  
 	) tt
 
@@ -204,8 +204,23 @@
        T1.TEST_YJ_SPEC_NAME         AS "testYjSpecName",
        T1.TEST_YJ_AREA              AS "testYjArea",
        T1.TEST_YJ_DENSE_NET         AS "testYjDenseNet",
-       T1.TEST_YJ_GPD               AS "testYjGpd",
-       T1.TEST_YJ_SALT              AS "testYjSalt",
+       
+       <!--试卷膜批次的第2位是“D”第3-4位是“22和24”第6-9位在“4401-4731区间“
+		试卷元件产水量=实际值x1.15，试卷元件脱盐率=实际值-0.05-->
+		
+		case when SUBSTR(T1.TEST_MP_BATCH_NO,2,3) IN( 'D22','D24')
+		AND (SUBSTR(T1.TEST_MP_BATCH_NO,6,4) BETWEEN '4401' AND '4731')
+		then round(nvl(T1.TEST_YJ_GPD,0) * 1.15,2)
+		else		
+        T1.TEST_YJ_GPD 
+        end              AS "testYjGpd",
+        case when SUBSTR(T1.TEST_MP_BATCH_NO,2,3) IN( 'D22','D24')
+		AND (SUBSTR(T1.TEST_MP_BATCH_NO,6,4) BETWEEN '4401' AND '4731')
+		then round(nvl(T1.TEST_YJ_SALT,0) - 0.05 ,2)
+		else
+        T1.TEST_YJ_SALT 
+        end      AS "testYjSalt",
+       
        T1.TEST_YJ_GPD_LOW_LIMIT     AS "testYjGpdLowLimit",
        T1.TEST_YJ_GPD_UP_LIMIT      AS "testYjGpdUpLimit",
        T1.TEST_YJ_SALT_LOW_LIMIT    AS "testYjSaltLowLimit",
@@ -213,9 +228,25 @@
        T1.REMARK                    AS "remark",
        T1.mp_record_ID              AS "mpRecordId",
        T1.mp_spec_ID               AS "mpSpecId",
-       (CASE WHEN T1.MP_MIN_SALT_REJECTION &gt;=T1.MP_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) "condition1",
-       (CASE WHEN T1.TEST_YJ_SALT &gt;=T1.TEST_YJ_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) "condition2"
+       t2.mp_salt_avg  "mpSaltAvg",
+       decode(upper(substr(T1.MP_SPEC_CODE ,1,3)), 'ULP','1','0') "isUlp",
+       case when upper(substr(T1.MP_SPEC_CODE ,1,3)) = 'ULP' then
+       (CASE WHEN t2.mp_salt_avg &gt;=T1.MP_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END)
+       else
+       (CASE WHEN T1.MP_MIN_SALT_REJECTION &gt;=T1.MP_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) end "condition1",
+       (CASE WHEN 
+       (case when SUBSTR(T1.TEST_MP_BATCH_NO,2,3) IN( 'D22','D24')
+		AND (SUBSTR(T1.TEST_MP_BATCH_NO,6,4) BETWEEN '4401' AND '4731')
+		then round(nvl(T1.TEST_YJ_SALT,0) - 0.05 ,2)
+		else
+        T1.TEST_YJ_SALT 
+        end ) &gt;=T1.TEST_YJ_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) "condition2"
   FROM KS_COMPONENT_MP_SELECT T1
+  
+  left join (SELECT t.batch_id mp_record_ID,round(avg(t.salt_rejection) ,2) mp_salt_avg
+	from qinsen.inst_tumo_check t
+	GROUP BY t.batch_id) t2 on T1.mp_record_ID = t2.mp_record_ID
+  
   where 1=1
   
   		<isEqual compareValue="Y" prepend="and" property="isStorage">T1.MP_BATCH_NO in (select batch_no from  KS_PROD_COMPONENT_STOCK)</isEqual>
@@ -252,8 +283,11 @@
        T1.YJ_GPD_UP_LIMIT_TRS    AS "yjGpdUpLimitTrs",
        T1.YJ_GPD_AVG_TRS         AS "yjGpdAvgTrs",
        T1.TEST_YJ_AREA           AS "testYjArea",
-       (case when T1.CONDITION1='Y' and T1.CONDITION2='Y' and T1.CONDITION3='Y'
-       and T1.CONDITION4='Y' then '是' else '否' end) "condition"
+       <!--(case when T1.CONDITION1='Y' and T1.CONDITION2='Y' and T1.CONDITION3='Y'
+       and T1.CONDITION4='Y' then '是' else '否' end) "condition"-->
+       (case when T1.CONDITION1='Y' and T1.CONDITION2='Y' and T1.CONDITION5='Y' then '是' else '否' end) "condition",
+       T1.CONDITION5             AS "condition5"
+       
   FROM V_KS_COMPONENT_MP_SELECT T1
   where 1=1
  		 <isNotNull prepend="" property="tumoBatchNo3">AND T1.MP_BATCH_NO like '%' || #tumoBatchNo3# || '%'</isNotNull>

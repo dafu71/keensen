@@ -175,7 +175,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								this.queryPanel.isKeep.reset();
 							}
 						}
-					},{
+					}, {
 						xtype : 'datefield',
 						name : 'condition/lastCaimoDateStart',
 						fieldLabel : '最后裁膜时间',
@@ -1518,8 +1518,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		var _this = this;
 		this.editMpdWindow = this.editMpdWindow || new Ext.fn.FormWindow({
 			title : '修改C21浓度',
-			height : 300,
-			width : 400,
+			height : 480,
+			width : 600,
 			resizable : false,
 			minimizable : false,
 			maximizable : false,
@@ -1540,7 +1540,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 											}
 										})
 							} else {
-								Ext.getCmp('produce-tumo-list').store.load();
+								Ext.getCmp('produce-tumo-list').store.reload();
 
 								var mpd = _this.editMpdWindow.mpd.getValue();
 								_this.editMpdWindow.hide();
@@ -1551,14 +1551,14 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							}
 						},
 						columns : 2,
-						loadUrl : 'com.keensen.ump.qinsen.tumo.expandTumo.biz.ext',
+						loadUrl : 'com.keensen.ump.qinsen.tumo.expandTumo4C21.biz.ext',
 						saveUrl : 'com.keensen.ump.qinsen.tumo.saveTumoMpd.biz.ext',
 						fields : [{
 									xtype : 'mpspeccombobox',
 									dataIndex : 'specId',
 									ref : '../../specId',
 									readOnly : true,
-									anchor : '75%',
+									anchor : '95%',
 									fieldLabel : '膜片型号 ',
 									colspan : 2
 								}, {
@@ -1572,20 +1572,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'entity/batchNo',
 									fieldLabel : '膜片批次',
 									readOnly : true,
-									anchor : '75%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'textfield',
-									name : 'entity/mpd',
-									ref : '../../mpd',
-									dataIndex : 'mpd',
-									fieldLabel : 'C21浓度',
-									allowBlank : false,
-									anchor : '75%',
+									anchor : '95%',
 									colspan : 2
 								}, {
 									xtype : 'displayfield',
@@ -1598,8 +1585,110 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									ref : '../../sumOutLength',
 									fieldLabel : '累计生产长度',
 									readOnly : true,
-									anchor : '75%',
+									anchor : '95%',
 									colspan : 2
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/ro',
+									ref : '../../ro',
+									dataIndex : 'ro',
+									fieldLabel : 'RO水质量(g)',
+									decimalPrecision : 3,
+									allowBlank : false,
+									anchor : '95%',
+									colspan : 2,
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											_this.calculateC21();
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/absorbance',
+									ref : '../../absorbance',
+									dataIndex : 'absorbance',
+									decimalPrecision : 3,
+									fieldLabel : '吸光度值',
+									allowBlank : false,
+									anchor : '95%',
+									colspan : 2,
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											_this.calculateC21();
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/a',
+									ref : '../../a',
+									dataIndex : 'a',
+									fieldLabel : 'A值',
+									readOnly : true,
+									anchor : '75%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									name : 'entity/b',
+									ref : '../../b',
+									dataIndex : 'b',
+									fieldLabel : 'B值',
+									readOnly : true,
+									anchor : '75%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/mpd',
+									ref : '../../mpd',
+									dataIndex : 'mpd',
+									fieldLabel : 'C21浓度',
+									allowBlank : false,
+									anchor : '95%',
+									colspan : 2
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'operatorrolecombobox',
+									currentRolecode : '10001323',
+									valueField : "operatorname",
+									dataIndex : 'fxy',
+									allowBlank : false,
+									anchor : '95%',
+									colspan : 2,
+									ref : '../../fxy',
+									hiddenName : 'entity/fxy',
+									fieldLabel : '分析员'
 								}, {
 									name : 'entity/recordId',
 									dataIndex : 'recordId',

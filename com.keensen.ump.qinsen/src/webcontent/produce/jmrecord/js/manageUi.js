@@ -568,6 +568,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 							hiddenName : 'entity/prodSpecId',
 							dataIndex : 'prodSpecId',
 							ref : '../../prodSpecId',
+							state:'Y',
 							anchor : '85%',
 							fieldLabel : '元件型号 ',
 							typeAhead : true,

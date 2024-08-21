@@ -496,8 +496,9 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
     FROM V_KS_COMPONENT_MP_SELECT T1
    WHERE T1.CONDITION1 = 'Y'
        AND T1.CONDITION2 = 'Y'
-       AND T1.CONDITION3 = 'Y'
-       AND T1.CONDITION4 = 'Y'
+      <!-- AND T1.CONDITION3 = 'Y'
+       AND T1.CONDITION4 = 'Y'-->
+       AND T1.CONDITION5 = 'Y'
     <isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID = #prodSpecId#</isNotNull>
         <isNotNull prepend="and" property="mpSpecId">t1.MP_SPEC_ID = #mpSpecId#</isNotNull>
         <isNotNull prepend="and" property="tumoBatchNo">upper(t1.MP_BATCH_NO) like '%' || upper(#tumoBatchNo#) || '%'</isNotNull>

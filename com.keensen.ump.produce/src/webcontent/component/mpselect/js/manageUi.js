@@ -249,12 +249,35 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 						sortable : true,
 						header : '膜片<br>单点脱盐率'
 					}, {
+						dataIndex : 'mpSaltAvg',
+						sortable : true,
+						header : '膜片<br>平均脱盐率',
+						renderer : function(v, m, r, i) {
+							var isUlp = r.get('isUlp');
+							if (v == null || v == 'null')
+								return '';
+							if (isUlp == '0')
+								return v;
+							var condition1 = r.get('condition1');
+							if (condition1 == 'N') {
+								return "<span style='color:red'>" + v
+										+ "</span>";
+
+							} else {
+								return "<span style='color:green'>" + v
+										+ "</span>";
+							}
+						}
+					}, {
 						dataIndex : 'mpMinSaltRejection',
 						sortable : true,
 						header : '膜片<br>最低脱盐率',
 						renderer : function(v, m, r, i) {
+							var isUlp = r.get('isUlp');
 							if (v == null || v == 'null')
 								return '';
+							if (isUlp == '1')
+								return v;
 							var condition1 = r.get('condition1');
 							if (condition1 == 'N') {
 								return "<span style='color:red'>" + v
@@ -328,20 +351,17 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 					}, {
 						dataIndex : 'testYjSalt',
 						sortable : true,
-						header : '试卷<br>元件脱盐率'/*,
-						renderer : function(v, m, r, i) {
-							if (v == null || v == 'null')
-								return '';
-							var condition2 = r.get('condition2');
-							if (condition2 == 'N') {
-								return "<span style='color:red'>" + v
-										+ "</span>";
-
-							} else {
-								return "<span style='color:green'>" + v
-										+ "</span>";
-							}
-						}*/
+						header : '试卷<br>元件脱盐率'/*
+												 * , renderer : function(v, m,
+												 * r, i) { if (v == null || v ==
+												 * 'null') return ''; var
+												 * condition2 =
+												 * r.get('condition2'); if
+												 * (condition2 == 'N') { return "<span
+												 * style='color:red'>" + v + "</span>";
+												 *  } else { return "<span
+												 * style='color:green'>" + v + "</span>"; } }
+												 */
 					}, {
 						dataIndex : 'testYjGpdLowLimit',
 						sortable : true,
@@ -435,6 +455,10 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 							name : 'condition1'
 						}, {
 							name : 'condition2'
+						}, {
+							name : 'mpSaltAvg'
+						}, {
+							name : 'isUlp'
 						}]
 			})
 		})
@@ -472,27 +496,46 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 						header : '可卷制元件<br>浓网规格'
 					}, {
 						dataIndex : 'yjGpdLow',
-						header : '可卷制元件<br>最低产水量(理论换算)',
-						renderer : function(v, m, r, i) {
-							if (v == null || v == 'null')
-								return '';
-							var condition = r.get('condition3');
-							if (condition == 'N') {
-								return "<span style='color:red'>" + v
-										+ "</span>";
-
-							} else {
-								return "<span style='color:green'>" + v
-										+ "</span>";
-							}
-						}
+						header : '可卷制元件<br>最低产水量(理论换算)'/*
+														 * , renderer :
+														 * function(v, m, r, i) {
+														 * if (v == null || v ==
+														 * 'null') return '';
+														 * var condition =
+														 * r.get('condition3');
+														 * if (condition == 'N') {
+														 * return "<span
+														 * style='color:red'>" +
+														 * v + "</span>";
+														 *  } else { return "<span
+														 * style='color:green'>" +
+														 * v + "</span>"; } }
+														 */
 					}, {
 						dataIndex : 'yjGpdUp',
-						header : '可卷制元件<br>最高产水量(理论换算)',
+						header : '可卷制元件<br>最高产水量(理论换算)'/*
+														 * , renderer :
+														 * function(v, m, r, i) {
+														 * if (v == null || v ==
+														 * 'null') return '';
+														 * var condition =
+														 * r.get('condition4');
+														 * if (condition == 'N') {
+														 * return "<span
+														 * style='color:red'>" +
+														 * v + "</span>";
+														 *  } else { return "<span
+														 * style='color:green'>" +
+														 * v + "</span>"; } }
+														 */
+					}, {
+						dataIndex : 'yjGpdAvg',
+						header : '可卷制元件<br>平均产水量(理论换算)',
 						renderer : function(v, m, r, i) {
 							if (v == null || v == 'null')
 								return '';
-							var condition = r.get('condition4');
+							var condition = r.get('condition5');
+
 							if (condition == 'N') {
 								return "<span style='color:red'>" + v
 										+ "</span>";
@@ -502,9 +545,6 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 										+ "</span>";
 							}
 						}
-					}, {
-						dataIndex : 'yjGpdAvg',
-						header : '可卷制元件<br>平均产水量(理论换算)'
 					}, {
 						dataIndex : 'yjGpdLowLimit',
 						header : '可卷制元件产<br>水量下限'
@@ -605,6 +645,8 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 							name : 'testYjArea'
 						}, {
 							name : 'condition'
+						}, {
+							name : 'condition5'
 						}]
 			})
 		})

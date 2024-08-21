@@ -23,6 +23,7 @@
     <targetConnections>link1</targetConnections>
     <targetConnections>link6</targetConnections>
     <targetConnections>link17</targetConnections>
+    <targetConnections>link21</targetConnections>
     <nodeLabel>end0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
@@ -236,6 +237,16 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link20" name="link20" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view7</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">7</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link12</targetConnections>
     <targetConnections>link13</targetConnections>
     <nodeLabel>switch1label</nodeLabel>
@@ -279,6 +290,18 @@
   <nodes xsi:type="model:NodeElementLabel" id="view6label" name="label" nodeType="label">
     <figSize height="20" width="114"/>
     <node>view6</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view7" name="printMarks7.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks7.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link21" name="link21" lineType="reference" isDefault="true" type="action" actionName="action8">
+      <sourceNode>view7</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link20</targetConnections>
+    <nodeLabel>view7label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view7label" name="label" nodeType="label">
+    <figSize height="20" width="114"/>
+    <node>view7</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

@@ -405,7 +405,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增裁叠膜记录',
-			height : 600,
+			height : 480,
 			width : 800,
 			// itemCls:'required',
 			// style:'margin-top:10px',
@@ -521,6 +521,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							xtype : 'prodspeccombobox',
 							ref : '../../prodSpecId',
 							hiddenName : 'entity/prodSpecId',
+							state:'Y',
 							anchor : '75%',
 							fieldLabel : '元件型号 ',
 							allowBlank : false,
@@ -683,7 +684,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '修改裁叠膜记录',
-			height : 600,
+			height : 480,
 			width : 800,
 			// itemCls:'required',
 			// style:'margin-top:10px',
@@ -767,6 +768,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							ref : '../../prodSpecId',
 							hiddenName : 'entity/prodSpecId',
 							dataIndex : 'prodSpecId',
+							state:'Y',
 							anchor : '75%',
 							fieldLabel : '元件型号 ',
 							allowBlank : false,

@@ -21,15 +21,15 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					//title : '【产品水测标准查询】',
-					fields : [{
-								xtype : 'mpspeccombobox',
-								hiddenName : 'condition/mpSpecId',
-								anchor : '75%',
-								fieldLabel : '膜片型号 '
-							}, {
+					// title : '【产品水测标准查询】',
+					fields : [/*
+								 * { xtype : 'mpspeccombobox', hiddenName :
+								 * 'condition/mpSpecId', anchor : '75%',
+								 * fieldLabel : '膜片型号 ' },
+								 */{
 								xtype : 'prodspeccombobox',
 								hiddenName : 'condition/prodSpecId',
+								colspan : 1,
 								anchor : '75%',
 								fieldLabel : '元件型号 ',
 								typeAhead : true,
@@ -62,7 +62,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【产品水测标准列表】',
+			// title : '【产品水测标准列表】',
 			id : mylistid,
 			viewConfig : {
 				forceFit : false
@@ -86,14 +86,37 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.quality2.deleteWaterStdById.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel, {
-						header : '膜片型号',
-						width : 120,
-						dataIndex : 'mpSpecCode'
-					}, {
+			columns : [new Ext.grid.RowNumberer(), selModel, /*
+																 * { header :
+																 * '膜片型号', width :
+																 * 120,
+																 * dataIndex :
+																 * 'mpSpecCode' },
+																 */		{
 						header : '元件型号',
 						width : 120,
 						dataIndex : 'prodSpecName'
+					}, {
+						dataIndex : 'componentSpec',
+						header : '元件规格'
+					}, {
+						dataIndex : 'testLiquid',
+						header : '测试液'
+					}, {
+						dataIndex : 'density',
+						header : '浓度'
+					}, {
+						dataIndex : 'pressure',
+						header : '压力'
+					}, {
+						dataIndex : 'tempreture',
+						header : '温度'
+					}, {
+						dataIndex : 'ph',
+						header : 'PH'
+					}, {
+						dataIndex : 'recovery',
+						header : '回收率'
 					}, {
 						header : '膜面积',
 						width : 60,
@@ -103,35 +126,35 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 						width : 60,
 						dataIndex : 'denseNet'
 					}, {
-						header : '标准1<br>产水量-下限',
+						header : '量产<br>产水量-下限',
 						width : 100,
 						dataIndex : 'aGpdLowLimit'
 					}, {
-						header : '标准1<br>产水量-上限',
+						header : '量产<br>产水量-上限',
 						width : 100,
 						dataIndex : 'aGpdUpLimit'
 					}, {
-						header : '标准1<br>产水量-中心线',
+						header : '量产<br>产水量-中心线',
 						width : 100,
 						dataIndex : 'aGpdCenter'
 					}, {
-						header : '标准1<br>脱盐率',
+						header : '量产<br>脱盐率',
 						width : 80,
 						dataIndex : 'aSaltLowLimit'
 					}, {
-						header : '标准1<br>系数B',
+						header : '量产<br>系数B',
 						width : 80,
 						dataIndex : 'aFactorBUpLimit'
 					}, {
-						header : '标准2<br>产水量-下限',
+						header : '单品<br>产水量-下限',
 						width : 100,
 						dataIndex : 'bGpdLowLimit'
 					}, {
-						header : '标准2<br>脱盐率',
+						header : '单品<br>脱盐率',
 						width : 80,
 						dataIndex : 'bSaltLowLimit'
 					}, {
-						header : '标准2<br>贴标元件型号',
+						header : '单品<br>贴标元件型号',
 						width : 120,
 						dataIndex : 'bSpecName'
 					}, {
@@ -207,6 +230,20 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 							name : 'bSpecCode'
 						}, {
 							name : 'bSpecName'
+						}, {
+							name : 'componentSpec'
+						}, {
+							name : 'testLiquid'
+						}, {
+							name : 'density'
+						}, {
+							name : 'pressure'
+						}, {
+							name : 'tempreture'
+						}, {
+							name : 'ph'
+						}, {
+							name : 'recovery'
 						}]
 			})
 		})
@@ -257,7 +294,65 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 							fieldLabel : '元件型号 '
 						}, {
 							xtype : 'displayfield',
-							value : '<p style="color:red;">标准1</p>',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/componentSpec',
+							fieldLabel : '元件规格',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquid',
+							fieldLabel : '测试液',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/density',
+							fieldLabel : '浓度',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/pressure',
+							fieldLabel : '压力',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/tempreture',
+							fieldLabel : '温度',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/ph',
+							fieldLabel : 'PH',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/recovery',
+							fieldLabel : '回收率',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							value : '<p style="color:red;">量产</p>',
 							colspan : 2
 						}, {
 							xtype : 'numberfield',
@@ -306,7 +401,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 							decimalPrecision : 4
 						}, {
 							xtype : 'displayfield',
-							value : '<p style="color:red;">标准2</p>',
+							value : '<p style="color:red;">单品</p>',
 							colspan : 2
 						}, {
 							xtype : 'numberfield',
@@ -347,7 +442,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 	}
 
 	this.initEditWindow = function() {
-
+		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '修改产品水测标准',
 			height : 600,
@@ -372,6 +467,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 									}
 								})
 					} else {
+						_this.editWindow.hide();
 						Ext.getCmp(mylistid).store.load();
 					}
 				},
@@ -396,7 +492,72 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 							fieldLabel : '元件型号 '
 						}, {
 							xtype : 'displayfield',
-							value : '<p style="color:red;">标准1</p>',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/componentSpec',
+							dataIndex : 'componentSpec',
+							fieldLabel : '元件规格',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquid',
+							dataIndex : 'testLiquid',
+							fieldLabel : '测试液',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/density',
+							dataIndex : 'density',
+							fieldLabel : '浓度',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/pressure',
+							dataIndex : 'pressure',
+							fieldLabel : '压力',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/tempreture',
+							dataIndex : 'tempreture',
+							fieldLabel : '温度',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/ph',
+							dataIndex : 'ph',
+							fieldLabel : 'PH',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/recovery',
+							dataIndex : 'recovery',
+							fieldLabel : '回收率',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							value : '<p style="color:red;">量产</p>',
 							colspan : 2
 						}, {
 							xtype : 'hidden',
@@ -455,7 +616,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 							decimalPrecision : 4
 						}, {
 							xtype : 'displayfield',
-							value : '<p style="color:red;">标准2</p>',
+							value : '<p style="color:red;">单品</p>',
 							colspan : 2
 						}, {
 							xtype : 'numberfield',

@@ -1,15 +1,11 @@
-/******************************************************************
-*版权所有： 中联重科环境产业公司
-*描    述：  
-*创建日期： 2014-9-17
-*补丁编号： G3_P_20140915_01_243
-*作    者： 吕俊涛
-*******************************************************************/
-//==============================修改历史===========================
-// 补丁编号                    修改人     日期           区域       备注
-// G3_P_20140915_01_243    吕俊涛     2014-9-17    集团      
+/*******************************************************************************
+ * 版权所有： 中联重科环境产业公司 描 述： 创建日期： 2014-9-17 补丁编号： G3_P_20140915_01_243 作 者： 吕俊涛
+ ******************************************************************************/
+// ==============================修改历史===========================
+// 补丁编号 修改人 日期 区域 备注
+// G3_P_20140915_01_243 吕俊涛 2014-9-17 集团
 //
-//=================================================================
+// =================================================================
 /*
  * 角色管理
  */
@@ -101,6 +97,7 @@ com.zoomlion.hjsrm.role.RolesMgr = function() {
 					}, {
 						header : "角色名称",
 						dataIndex : "rolename",
+						width : 150,
 						sortable : true
 					}, {
 						header : "角色描述",
@@ -270,7 +267,7 @@ com.zoomlion.hjsrm.role.RolesMgr = function() {
 	}
 
 	this.initAuthWindow = function() {
-		var _this=this;
+		var _this = this;
 		this.authTreePanel = this.authTreePanel || new Ext.tree.TreePanel({
 			checkModel : 'cascade', // 对树的级联多选
 			onlyLeafCheckable : false,// 对树所有结点都可选
@@ -279,7 +276,7 @@ com.zoomlion.hjsrm.role.RolesMgr = function() {
 			autoScroll : true,
 			leafOnly : true,
 			isOver : true,
-			buttonAlign:'center',
+			buttonAlign : 'center',
 			loader : new Ext.tree.TreeLoader({
 				listeners : {
 					beforeload : function(tree, node) {
@@ -331,7 +328,7 @@ com.zoomlion.hjsrm.role.RolesMgr = function() {
 						text : '收起',
 						scope : this,
 						handler : this.doCollapseAll
-					},{
+					}, {
 						text : '保存',
 						scope : this,
 						handler : this.onAuthSave

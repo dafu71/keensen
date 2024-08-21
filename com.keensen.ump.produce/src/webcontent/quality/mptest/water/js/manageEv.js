@@ -130,7 +130,31 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 						this.editWindow2.position.setVisible(false);
 						// this.editWindow2.position.setDisabled(true);
 					}
+
+					// 将分析结果不合格的物质浓度显示红色
+					var displays = [this.editWindow2.displayfield18,
+							this.editWindow2.displayfield19,
+							this.editWindow2.displayfield21,
+							this.editWindow2.displayfield22,
+							this.editWindow2.displayfield24,
+							this.editWindow2.displayfield27];
+					var resultc21 = this.editWindow2.resultc21.getValue();
+					var resultc22 = this.editWindow2.resultc22.getValue();
+					var resultc23 = this.editWindow2.resultc23.getValue();
+					var resultc27 = this.editWindow2.resultc27.getValue();
+					var resultc28 = this.editWindow2.resultc28.getValue();
+					var resultc30 = this.editWindow2.resultc30.getValue();
+
+					var results = [resultc21, resultc22, resultc23, resultc27,
+							resultc28, resultc30];
+					for (var i = 0; i < results.length; i++) {
+						var v = displays[i].getValue();
+						v = results[i] == '0' ? "<span style='color:red'>" + v
+								+ "</span>" : v;
+						displays[i].update(v);
+					}
 				}
+
 			}, this);
 
 	this.editWindow3.activeItem.mon(this.editWindow3.activeItem, 'afterload',
@@ -177,7 +201,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 
 	this.inputWindow2.activeItem.mon(this.inputWindow2.activeItem,
 			'beforeSave', function() {
-				
+
 				var relationBatchNo = this.inputWindow2.relationBatchNo
 						.getValue();
 				if (Ext.isEmpty(relationBatchNo)) {
@@ -210,6 +234,14 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 				} else if (this.opt == 'third' && step == 'third') {
 					this.editWindow3.show();
 					this.editWindow3.loadData(cell);
+				}
+				
+				if (step != 'second') {
+					Ext.Msg.alert("系统提示", "请选择待调整数据！");
+					return false;
+				} else if (this.opt == 'modifyTest' && step == 'second') {
+					this.editWindow4.show();
+					this.editWindow4.loadData(cell);
 				}
 			}, this);
 
@@ -259,8 +291,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onAdd2 = function() {
 	 * A.data.id; var batchNo = A.data.batchNo;
 	 * this.inputWindow2.relationBatchNo.setValue(batchNo);
 	 * this.inputWindow2.relationId.setValue(id); this.inputWindow2.show(); }
-	 * else { Ext.Msg.alert("系统提示", "请选择已完结的水相液或水相补充液!") }
-	 *  } } else { Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!") }
+	 * else { Ext.Msg.alert("系统提示", "请选择已完结的水相液或水相补充液!") } } } else {
+	 * Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!") }
 	 */
 
 }
@@ -272,6 +304,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.destroy = function() {
 	this.inputWindow.destroy();
 	this.inputWindow2.destroy();
 	this.viewWindow.destroy();
+	this.editWindow4.destroy();
 }
 
 com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onEdit = function() {
@@ -281,6 +314,11 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onEdit = function() {
 
 com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onEdit2 = function() {
 	this.opt = 'second';
+	this.listPanel.onEdit();
+};
+
+com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onEdit4 = function() {
+	this.opt = 'modifyTest';
 	this.listPanel.onEdit();
 };
 

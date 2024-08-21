@@ -209,13 +209,13 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 			},
 			hsPage : true,
 			id : 'watertestmgrlist',
-			tbar : [{
+			tbar : [/*{
 						text : '试卷初检',
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.firstTest
-					}, '-', {
-						text : '其它初检',
+					}, '-',*/ {
+						text : '初检',
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.otherFirstTest
@@ -1063,7 +1063,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 							fieldLabel : '测试膜壳'
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : "<span style='color:red;'>适配标准1</span>",
+							fieldLabel : "<span style='color:red;'>适配量产</span>",
 							colspan : 24
 						}, {
 							xtype : 'textfield',
@@ -1097,7 +1097,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 							fieldLabel : '系数B'
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : "<span style='color:red;'>适配标准2</span>",
+							fieldLabel : "<span style='color:red;'>适配单品</span>",
 							colspan : 24
 						}, {
 							xtype : 'textfield',

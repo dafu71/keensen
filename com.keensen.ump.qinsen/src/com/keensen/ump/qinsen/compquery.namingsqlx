@@ -255,6 +255,22 @@
 							           AND C.TUMO_BATCH_ID = M.RECORD_ID
 							           AND M.SPEC_ID = #mpSpecId#)
 							</isNotNull>
+							
+							<isNotNull prepend = ""  property = "juanmoDateBegin">
+							   AND J.PRODUCE_DT &gt;= TO_DATE(#juanmoDateBegin#, 'YYYY-MM-DD HH24:MI')
+							</isNotNull>
+							<isNotNull prepend = ""  property = "juanmoDateEnd">
+							   AND J.PRODUCE_DT &lt; TO_DATE(#juanmoDateEnd#, 'YYYY-MM-DD HH24:MI')
+							</isNotNull>
+							
+							
+					  		<isEqual prepend="and" property="batchNOIsEmpty" compareValue="Y">
+					 			   A.BATCH_NO is null
+					        </isEqual>
+					  		<isEqual prepend="and" property="batchNOIsEmpty" compareValue="N">
+					 			   A.BATCH_NO is not null
+					        </isEqual>
+							
                           ORDER BY A.PRODUCE_DT DESC,
                                     A.CREATE_DT  DESC,
                                     A.BATCH_NO

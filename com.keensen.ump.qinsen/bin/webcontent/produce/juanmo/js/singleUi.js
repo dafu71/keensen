@@ -115,6 +115,7 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'entity/prodSpecId',
 						ref : '../prodSpecId',
+						state:'Y',
 						anchor : '85%',
 						fieldLabel : '元件型号 ',
 						typeAhead : true,

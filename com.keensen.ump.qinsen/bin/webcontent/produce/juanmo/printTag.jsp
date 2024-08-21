@@ -35,13 +35,13 @@
     
 <style type="text/css">
 .main_table {
-	width: 85mm;
-	height: 45mm;
+	width: 98mm;
+	height: 28mm;
 	text-align: center;
-	vertical-align: middle;
+	vertical-align: top;
 	margin: auto;
- 	margin-top: 2mm;
-	font-size: 10px;
+ 	margin-top: 0mm;
+	font-size: 6px;
 	/*  		border:1px solid #000000;  */
 }
 
@@ -49,7 +49,7 @@
 	text-align: left;
 	vertical-align: middle;
 	padding-left: 2mm;
-	font-size: 12px;
+	font-size: 6px;
 }
 
 .span_label {
@@ -57,7 +57,17 @@
 	text-align: left;
 	vertical-align: middle;
 	font-family: Microsoft YaHei;
-	font-size: 12px;
+	font-size: 6px;
+	font-color: #000000;
+	font-weight: bold;
+}
+
+.span_label2 {
+	align: center;
+	text-align: left;
+	vertical-align: middle;
+	font-family: Microsoft YaHei;
+	font-size: 8px;
 	font-color: #000000;
 	font-weight: bold;
 }
@@ -65,8 +75,8 @@
 .square {
 	display: inline-block;
 	border: 1px solid #000000;
-	height: 7px;
-	width: 7px;
+	height: 5px;
+	width: 5px;
 }
 </style>
 
@@ -92,12 +102,12 @@
 </script>
 </head>
 <body onload="paint()">
-		<table id="printview" class="main_table">
+		<table id="printview" class="main_table" border=0>
 			<tr>
-				<td style="height:32mm;vertical-align: middle;">
-					<div id="canvas" style="margin:auto;width:102px;height:102px"></div>
+				<td style="height:15mm;vertical-align: middle; width:24mm">
+					<div id="canvas" style="margin:auto;width:61px;height:61px"></div>
 				</td>
-				<td class="td_label">
+				<td class="td_label" style="width:24mm">
 					卷膜序号：<span class="span_label"><%=list[0].get("batchNo") %></span><br/>
 					元件型号：<span class="span_label"><%=list[0].get("prodSpecName") %></span><br/>
 					卷制日期：<span class="span_label"><%=list[0].get("produceDay") %></span><br/>
@@ -105,18 +115,31 @@
 					订单号：<span class="span_label"><%=list[0].get("orderNo") %></span><br/>
 					操作工：<span class="span_label"><%=list[0].get("workerName") %></span>
 				</td>
-			</tr>
-			<tr>
-				<td colspan="2" style="text-align:center;padding:0px;margin:0px">
-					膜片批次：<span id="tumoBatchStr" class="span_label"><%=list[0].get("tumoBatchStr") %></span>
+				
+				<td style="height:15mm;vertical-align: middle; width:24mm">
+					<div id="canvas" style="margin:auto;width:61px;height:61px"></div>
+				</td>
+				<td class="td_label" style="width:24mm">
+					&nbsp;
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" style="text-align:center;padding:0px;margin:0px;">
+				<td colspan="2" style="height:3mm;text-align:center;padding:0px;margin:0px">
+					膜片批次：<span id="tumoBatchStr" class="span_label2"><%=list[0].get("tumoBatchStr") %></span>
+				</td>
+				<td colspan="2" style="height:3mm;text-align:center;padding:0px;margin:0px">
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="height:3mm;text-align:center;padding:0px;margin:0px;">
 					测试结果：
 					<div class="square"></div> 合格  
 					<div class="square"></div> 报废  
 					<div class="square"></div> 待处理
+				</td>
+				<td colspan="2" style="height:3mm;text-align:center;padding:0px;margin:0px;">
+					&nbsp;
 				</td>
 			</tr>
 		</table>

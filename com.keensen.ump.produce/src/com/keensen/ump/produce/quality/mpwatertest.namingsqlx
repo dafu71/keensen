@@ -36,10 +36,10 @@
    </select>
    
    <select id="queryCheckResult" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-   SELECT * from V_KS_BASE_FORMULA t
-	 WHERE T.MPTYPE = #mptype# and t.line = #line# and t.watertype = decode(#watertype#,'水相补充液','水相液',#watertype#)
+   SELECT t.* from V_KS_BASE_FORMULA t
+	 WHERE T.MPTYPE = #mptype# and t.line = #line# and t.watertype = decode(#watertype#,'水相循环液','水相液',#watertype#)
 	 AND #c21Test# &lt;= t.up21 AND #c21Test# >=t.low21
-	 AND #c22Test# &lt;= t.up22 AND #c22Test# >=t.low22
+	 <!--AND #c22Test# &lt;= t.up22 AND #c22Test# >=t.low22-->
 	 AND #c23Test# &lt;= t.up23 AND #c23Test# >=t.low23
 	 AND #c27Test# &lt;= t.up27 AND #c27Test# >=t.low27
 	 AND #c28Test# &lt;= t.up28 AND #c28Test# >=t.low28
@@ -82,5 +82,24 @@
   LEFT JOIN QINSEN.BASE_PROD_LINE L
     ON T.LINE_ID = L.LINE_ID
  WHERE T.BATCH_NO = #batchNo#
+   </select>
+   
+   <select id="queryFormulat" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT * from V_KS_BASE_FORMULA t
+	 WHERE T.MPTYPE = #mptype# and t.line = #line# and t.watertype = decode(#watertype#,'水相循环液','水相液',#watertype#)
+	 
+   </select>
+   
+    <select id="queryCheckResult2" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT t.*,
+   case when #c21Test# &lt;= t.up21 AND #c21Test# >=t.low21 then 1 else 0 end "resultc21",
+	case when #c22Test# &lt;= t.up22 AND #c22Test# >=t.low22 then 1 else 0 end "resultc22",
+	case when #c23Test# &lt;= t.up23 AND #c23Test# >=t.low23 then 1 else 0 end "resultc23",
+	case when #c27Test# &lt;= t.up27 AND #c27Test# >=t.low27 then 1 else 0 end "resultc27",
+	case when #c28Test# &lt;= t.up28 AND #c28Test# >=t.low28 then 1 else 0 end "resultc28",
+	case when #c30Test# &lt;= t.up30 AND #c30Test# >=t.low30 then 1 else 0 end "resultc30"
+    from V_KS_BASE_FORMULA t
+	 WHERE T.MPTYPE = #mptype# and t.line = #line# and t.watertype = decode(#watertype#,'水相循环液','水相液',#watertype#)
+	 
    </select>
  </sqlMap>

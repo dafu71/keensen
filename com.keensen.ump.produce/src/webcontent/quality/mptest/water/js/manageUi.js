@@ -8,6 +8,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 		this.initEditWindow2();
 		this.initEditWindow3();
 		this.initViewWindow();
+		this.initEditWindow4();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -173,6 +174,12 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 				iconCls : 'icon-application_edit',
 				disabled : gyy != '1',
 				handler : this.onEdit2
+			}, '-', {
+				text : '修改测试浓度',
+				scope : this,
+				iconCls : 'icon-application_edit',
+				disabled : fxy != '1',
+				handler : this.onEdit4
 			}, '-', {
 				text : '配料',
 				scope : this,
@@ -778,6 +785,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'numberfield',
 							ref : '../../c21Test',
 							fieldLabel : '测试浓度C21',
+							decimalPrecision : 3,
 							name : 'list/c21Test',
 							allowBlank : false,
 							anchor : '95%',
@@ -786,6 +794,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'numberfield',
 							ref : '../../c22Test',
 							fieldLabel : '测试浓度C22',
+							decimalPrecision : 3,
 							name : 'list/c22Test',
 							allowBlank : false,
 							anchor : '95%',
@@ -798,6 +807,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'numberfield',
 							ref : '../../c23Test',
 							fieldLabel : '测试浓度C23',
+							decimalPrecision : 3,
 							name : 'list/c23Test',
 							allowBlank : false,
 							anchor : '95%',
@@ -806,6 +816,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'numberfield',
 							ref : '../../c27Test',
 							fieldLabel : '测试浓度C27',
+							decimalPrecision : 3,
 							allowBlank : false,
 							name : 'list/c27Test',
 							anchor : '95%',
@@ -818,6 +829,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'numberfield',
 							ref : '../../c28Test',
 							fieldLabel : '测试浓度C28',
+							decimalPrecision : 3,
 							allowBlank : false,
 							name : 'list/c28Test',
 							anchor : '95%',
@@ -826,6 +838,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'numberfield',
 							ref : '../../c30Test',
 							fieldLabel : '测试浓度C30',
+							decimalPrecision : 3,
 							allowBlank : false,
 							name : 'list/c30Test',
 							anchor : '95%',
@@ -899,7 +912,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
 				columns : 2,
-				loadUrl : 'com.keensen.ump.produce.quality.mptest5.expandWaterList.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.quality.mptest5.expandWaterList4Second.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.mptest5.modiWaterListBySecond.biz.ext',
 				fields : [{
 							dataIndex : 'batchNo',
@@ -1297,6 +1310,30 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}, {
 							xtype : 'hidden',
 							ref : '../../ifok'
+						}, {
+							xtype : 'hidden',
+							ref : '../../resultc21',
+							dataIndex : 'resultc21'
+						}, {
+							xtype : 'hidden',
+							ref : '../../resultc22',
+							dataIndex : 'resultc22'
+						}, {
+							xtype : 'hidden',
+							ref : '../../resultc23',
+							dataIndex : 'resultc23'
+						}, {
+							xtype : 'hidden',
+							ref : '../../resultc27',
+							dataIndex : 'resultc27'
+						}, {
+							xtype : 'hidden',
+							ref : '../../resultc28',
+							dataIndex : 'resultc28'
+						}, {
+							xtype : 'hidden',
+							ref : '../../resultc30',
+							dataIndex : 'resultc30'
 						}]
 			}]
 		});
@@ -1855,5 +1892,212 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 
 				});
 
+	}
+	
+	this.initEditWindow4 = function() {
+		this.editWindow4 = this.editWindow4 || new Ext.fn.FormWindow({
+			title : '修改测试浓度',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.quality.mptest5.expandWaterList.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.mptest5.modiWaterListByModifyTest.biz.ext',
+				fields : [{
+							dataIndex : 'batchNo',
+							anchor : '95%',
+							xtype : 'displayfield',
+							colspan : 1,
+							fieldLabel : '水相液批号<br>/膜片批次'
+						}, {
+
+							xtype : 'displayfield',
+							fieldLabel : '水相类型',
+							ref : '../../watertype',
+							dataIndex : 'watertype',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+
+							xtype : 'displayfield',
+
+							fieldLabel : '线别',
+							ref : '../../line',
+							dataIndex : 'line',
+							anchor : '95%',
+							colspan : 1
+						}, {
+
+							xtype : 'displayfield',
+							fieldLabel : '膜片型号',
+							ref : '../../mptype',
+							dataIndex : 'mptype',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'dictcombobox',
+							name : 'list/gc',
+							hiddenName : 'list/gc',
+							fieldLabel : '气相色谱仪',
+							dataIndex : 'gc',
+							dictData : KS_GC_ITEM,
+							anchor : '95%',
+							colspan : 1,
+							allowBlank : false
+						}, {
+							xtype : 'dictcombobox',
+							name : 'list/hplc',
+							hiddenName : 'list/hplc',
+							fieldLabel : '液相色谱仪',
+							dataIndex : 'hplc',
+							dictData : KS_HPLC_ITEM,
+							anchor : '95%',
+							colspan : 1,
+							allowBlank : false
+						}
+
+						, {
+							xtype : 'displayfield',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c21Test',
+							fieldLabel : '测试浓度C21',
+							dataIndex : 'c21Test',
+							decimalPrecision : 3,
+							name : 'list/c21Test',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c22Test',
+							fieldLabel : '测试浓度C22',
+							dataIndex : 'c22Test',
+							decimalPrecision : 3,
+							name : 'list/c22Test',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c23Test',
+							fieldLabel : '测试浓度C23',
+							dataIndex : 'c23Test',
+							decimalPrecision : 3,
+							name : 'list/c23Test',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c27Test',
+							fieldLabel : '测试浓度C27',
+							dataIndex : 'c27Test',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c27Test',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c28Test',
+							dataIndex : 'c28Test',
+							fieldLabel : '测试浓度C28',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c28Test',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c30Test',
+							fieldLabel : '测试浓度C30',
+							dataIndex : 'c30Test',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c30Test',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							ref : '../../position',
+							dataIndex : 'position',
+							fieldLabel : '取样位置',
+							dataIndex : 'position',
+							// allowBlank : false,
+							name : 'list/position',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'operatorrolecombobox',
+							currentRolecode : '10001323',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							ref : '../../appointId3',
+							hiddenName : 'list/appointId3',
+							fieldLabel : '分析员'
+						}, {
+							xtype : 'hidden',
+							name : 'list/id',
+							dataIndex : 'id'
+						}, {
+							xtype : 'hidden',
+							name : 'list/relationId',
+							dataIndex : 'relationId'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/step',
+							value : 'second'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/mptype',
+							dataIndex : 'mptype2'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/line',
+							dataIndex : 'line2'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/watertype',
+							dataIndex : 'watertype2'
+						}]
+			}]
+		});
 	}
 }

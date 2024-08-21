@@ -526,8 +526,9 @@ SELECT T.RECORD_ID,T.produce_dt MP_produce_dt,
     FROM V_KS_COMPONENT_MP_SELECT T1
    WHERE T1.CONDITION1 = 'Y'
        AND T1.CONDITION2 = 'Y'
-       AND T1.CONDITION3 = 'Y'
-       AND T1.CONDITION4 = 'Y'
+      <!-- AND T1.CONDITION3 = 'Y'
+       AND T1.CONDITION4 = 'Y'-->
+       AND T1.CONDITION5 = 'Y'
     <isNotNull prepend="and" property="prodSpecId"> 
 		       t1.PROD_SPEC_ID = #prodSpecId#
 	    </isNotNull>

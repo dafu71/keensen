@@ -29,7 +29,7 @@ com.keensen.ump.qinsen.produce.compqueryMgr = function() {
 		var _this = this;
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 165,
+					height : 175,
 					columns : 4,
 					border : true,
 					collapsible : false,
@@ -38,9 +38,9 @@ com.keensen.ump.qinsen.produce.compqueryMgr = function() {
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceBeginDate',
-						fieldLabel : '生产时间',
+						fieldLabel : '气检时间',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
@@ -51,7 +51,7 @@ com.keensen.ump.qinsen.produce.compqueryMgr = function() {
 						name : 'condition/produceEndDate',
 						fieldLabel : '至',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						editable : true,
 						format : 'Y-m-d H:i',
 						// allowBlank : false,
@@ -61,12 +61,12 @@ com.keensen.ump.qinsen.produce.compqueryMgr = function() {
 						xtype : 'linecombobox',
 						prodTacheId : '103',
 						hiddenName : 'condition/lineId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '气检生产线 '
 					}, {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'condition/prodSpecId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '气检元件型号 '
 					}, {
 						xtype : 'displayfield',
@@ -75,24 +75,24 @@ com.keensen.ump.qinsen.produce.compqueryMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/orderNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '气检订单号'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/dimoBatchNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '底膜批次'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/tumoBatchNoStr',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '膜片批次%-%'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/cdmBatchNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '叠膜栈板号'
 					}, {
 						xtype : 'displayfield',
@@ -102,14 +102,50 @@ com.keensen.ump.qinsen.produce.compqueryMgr = function() {
 
 						xtype : 'textfield',
 						name : 'condition/juanMoBatchNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '卷膜序号'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/batchNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '元件序号'
+					},{
+						xtype : 'datetimefield',
+						name : 'condition/juanmoDateBegin',
+						fieldLabel : '卷膜时间',
+						colspan : 1,
+						anchor : '95%',
+						// allowBlank : false,
+						editable : true,
+						format : 'Y-m-d H:i'
+					}, {
+						xtype : 'datetimefield',
+						name : 'condition/juanmoDateEnd',
+						fieldLabel : '至',
+						colspan : 1,
+						anchor : '95%',
+						editable : true,
+						format : 'Y-m-d H:i'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+
+						xtype : 'combo',
+						fieldLabel : '元件序号<br>是否为空',
+						ref : '../batchNOIsEmpty',
+						hiddenName : 'condition/batchNOIsEmpty',
+						emptyText : '--请选择--',
+						anchor : '90%',
+						store : [[null, '全部'], ['Y', '为空'], ['N', '不为空']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.batchNOIsEmpty.reset();
+							}
+						}
 					}]
 				});
 
@@ -144,6 +180,10 @@ com.keensen.ump.qinsen.produce.compqueryMgr = function() {
 						width : 120,
 						dataIndex : 'batchNo'
 					}, {
+						header : '卷膜序号',
+						width : 140,
+						dataIndex : 'juanmoBatchNo'
+					}, {
 						header : '生产线',
 						width : 120,
 						dataIndex : 'lineCode'
@@ -175,6 +215,10 @@ com.keensen.ump.qinsen.produce.compqueryMgr = function() {
 						header : '气检时间',
 						width : 110,
 						dataIndex : 'produceDate'
+					}, {
+						header : '卷膜时间',
+						width : 110,
+						dataIndex : 'juanmoDate'
 					}, {
 						header : '合格入库',
 						width : 120,

@@ -44,7 +44,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【新配液浓度查询】',
+					//title : '【新配液浓度查询】',
 					fields : [{
 						xtype : 'combobox',
 						fieldLabel : '线别',
@@ -55,7 +55,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						editable : false,
 						anchor : '85%',
 						store : [['A', 'A'], ['B', 'B'], ['C', 'C'],
-								['D', 'D'], ['E', 'E']],
+								['D', 'D'], ['E', 'E'], ['F', 'F']],
 						listeners : {
 							scope : this,
 							'expand' : function(A) {
@@ -84,7 +84,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						name : 'condition/batchNo',
 						anchor : '85%',
 						xtype : 'textfield',
-						fieldLabel : '新配液/回流液批号',
+						fieldLabel : '物料批号',
 						allowBlank : true
 					}, {
 
@@ -123,7 +123,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【新配液浓度列表】',
+			//title : '【新配液浓度列表】',
 			viewConfig : {
 				forceFit : true
 			},
@@ -137,12 +137,12 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						iconCls : 'icon-application_add',
 						arrowAlign : 'bottom',
 						menu : [{
-									text : '新配液',
+									text : '新配油相液',
 									scope : this,
 									iconCls : 'icon-application_add',
 									handler : this.onAdd
 								}, {
-									text : '回流液',
+									text : '回流油相液',
 									scope : this,
 									iconCls : 'icon-application_add',
 									handler : this.onAdd2
@@ -172,8 +172,8 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						dataIndex : 'createTime',
 						header : '日期'
 					}, {
-						dataIndex : 'tank',
-						header : '备料罐'
+						dataIndex : 'reserve1',
+						header : '油相类型'
 					}, {
 						dataIndex : 'line',
 						header : '线别'
@@ -182,13 +182,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						header : '膜片类型'
 					}, {
 						dataIndex : 'batchNo',
-						header : '新配液/回流液批号',
-						renderer : function(v, m, r, i) {
-							var reserve1 = r.get('reserve1');
-							var batchNo = r.get('batchNo');
-							var refluxNo = r.get('refluxNo');
-							return reserve1 == '新配液' ? batchNo : refluxNo;
-						}
+						header : '物料批号'
 					}, {
 						dataIndex : 'stateName',
 						header : '状态'
@@ -257,7 +251,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 
 	this.initInputWindow = function() {
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
-			title : '新增新配液浓度配料',
+			title : '新增新配油相液浓度配料',
 			height : 600,
 			width : 800,
 			// itemCls:'required',
@@ -273,39 +267,17 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 				fields : [{
 							ref : '../../batchNo',
 							value : '自动生成',
-							anchor : '85%',
+							anchor : '95%',
 							xtype : 'textfield',
-							fieldLabel : '新配液批号',
+							fieldLabel : '物料批号',
 							readOnly : true
 						}, {
 							ref : '../../refluxNo',
 							value : '自动生成',
-							anchor : '85%',
+							anchor : '95%',
 							xtype : 'textfield',
 							fieldLabel : '回流液批号',
 							readOnly : true
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-
-							xtype : 'combobox',
-							fieldLabel : '备料罐',
-							ref : '../../tank',
-							hiddenName : 'entity/tank',
-							emptyText : '--请选择--',
-							allowBlank : true,
-							editable : false,
-							anchor : '85%',
-							colspan : 2,
-							store : [['1号', '1号'], ['2号', '2号'], ['3号', '3号']],
-							listeners : {
-								scope : this,
-								'expand' : function(A) {
-									this.inputWindow.tank.reset();
-								}
-							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -319,10 +291,10 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							emptyText : '--请选择--',
 							allowBlank : false,
 							editable : false,
-							anchor : '85%',
+							anchor : '95%',
 							colspan : 2,
 							store : [['A', 'A'], ['B', 'B'], ['C', 'C'],
-									['D', 'D'], ['E', 'E']],
+									['D', 'D'], ['E', 'E'], ['F', 'F']],
 							listeners : {
 								scope : this,
 								'expand' : function(A) {
@@ -342,7 +314,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							emptyText : '--请选择--',
 							allowBlank : false,
 							editable : false,
-							anchor : '85%',
+							anchor : '95%',
 							colspan : 2,
 							store : this.mptypeArr,
 							listeners : {
@@ -352,20 +324,47 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 								}
 							}
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c41PlanTotal',
+							allowBlank : false,
+							//hidden : true,
+							fieldLabel : '配料总重量(kg)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'operatorrolecombobox',
+							currentRolecode : '10001321',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							ref : '../../appointPly',
+							hiddenName : 'list/appointPly',
+							fieldLabel : '配料人'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 							xtype : 'numberfield',
 							name : 'list/c41Plan',
-							allowBlank : true,
-							hidden : true,
+							//allowBlank : true,
+							readOnly : true,
+							//hidden : true,
 							fieldLabel : '计划添加C41(kg)',
-							anchor : '85%',
+							anchor : '95%',
 							colspan : 1
 						}, {
 							xtype : 'numberfield',
 							name : 'list/c42Plan',
-							allowBlank : true,
-							hidden : true,
+							//allowBlank : true,
+							readOnly : true,
+							//hidden : true,
 							fieldLabel : '计划添加C42(g)',
-							anchor : '85%',
+							anchor : '95%',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -375,9 +374,9 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							xtype : 'numberfield',
 							name : 'list/c41Reality',
 							ref : '../../c41Reality',
-							allowBlank : true,
+							allowBlank : false,
 							fieldLabel : '实际添加C41(kg)',
-							anchor : '85%',
+							anchor : '95%',
 							colspan : 1,
 							listeners : {
 								scope : this,
@@ -404,7 +403,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							xtype : 'numberfield',
 							name : 'list/c42Reality',
 							ref : '../../c42Reality',
-							allowBlank : true,
+							allowBlank : false,
 							fieldLabel : '实际添加C42(g)',
 							anchor : '85%',
 							colspan : 1

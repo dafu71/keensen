@@ -42,6 +42,7 @@
 <ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
 <ext:dict property="KS_QUALITY_JUDGE_ITEM"   dictTypeId="KS_QUALITY_JUDGE_ITEM" />
 
+<js:load scriptPath="pub/common/operatorroleCombo.js"/>
 <js:load scriptPath="pub/common/storageCombo.js" />
 <js:load scriptPath="pub/common/supCombo.js" />
 <js:load scriptPath="pub/common/mpworkerCombo.js" />

@@ -115,6 +115,9 @@
 	<isNotNull prepend="and" property="materSpecId"> 
 		       t.mater_spec_id = #materSpecId#
 	</isNotNull>
+	<isNotNull prepend="and" property="state"> 
+		       t.state = #state#
+	</isNotNull>
 	order by t.mater_spec_name
      </select>
      

@@ -755,7 +755,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onWaterBatchNo = function() {
 	if (!this.inputWindow.hidden) {
 		line = this.inputWindow.lineId.getRawValue();
 		mptype = this.inputWindow.specId.getRawValue();
-	}else{
+	} else {
 		line = this.editWindow.lineId.getRawValue();
 		mptype = this.editWindow.specId.getRawValue();
 	}
@@ -796,5 +796,19 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSelectWaterBatchNo = function
 			this.editWindow.waterBatchNo.setValue(waterBatchNo);
 		}
 		this.chooseWindow.hide();
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.calculateC21 = function() {
+	var ro = this.editMpdWindow.ro.getValue();
+	var absorbance = this.editMpdWindow.absorbance.getValue();
+	var a = this.editMpdWindow.a.getValue();
+	var b = this.editMpdWindow.b.getValue();
+	if (!Ext.isEmpty(ro) && !Ext.isEmpty(absorbance) && !Ext.isEmpty(a)
+			& !Ext.isEmpty(b)) {
+		//（a * 吸光度值 - b ）* RO水质量(g)/10
+		var mpd = (parseFloat(a) * parseFloat(absorbance) - parseFloat(b)) * parseFloat(ro)/10;
+		mpd =  Math.round(mpd * 100) / 100
+		this.editMpdWindow.mpd.setValue(mpd);
 	}
 }

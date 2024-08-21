@@ -44,7 +44,8 @@
        T2.MATER_SPEC_CODE AS "prodSpecCode",
        T2.MATER_SPEC_NAME AS "prodSpecName",
        T3.Staff_Name  AS "workerName",
-       t4.TUMO_BATCH_STR AS "tumoBatchStr"      
+       t4.TUMO_BATCH_STR AS "tumoBatchStr" ,
+       CASE WHEN INSTR( T2.MATER_SPEC_NAME,'-8')>0 THEN 0 ELSE 1 END "isFour"       
   FROM QINSEN.INST_JUANMO_MAIN T1, QINSEN.PARA_MATER_SPEC T2,qinsen.base_staff t3,
   (SELECT WM_CONCAT(DISTINCT M.BATCH_NO) TUMO_BATCH_STR,D.MAIN_BATCH_ID
 	           FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M

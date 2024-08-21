@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   	<select id="queryOilBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		SELECT
+		DECODE(#watertype#,'新配油相液','Y','回流油相液','J','') || 
+		#line# ||
+		(SELECT mp_batch_code FROM qinsen.PARA_MATER_SPEC WHERE mater_spec_name=#mptype#)||
+		'A' ||
+		(SELECT ymd FROM v_ks_ymd) ||   
+		(SELECT SUBSTR('ABCDEFGHIJKLMNOPQRSTUVWXYZ',COUNT(1)+1 ,1)
+		  FROM KS_QUALITY_MP_TEST_OIL_HEAD T
+		 WHERE TO_CHAR(T.CREATE_TIME, 'yyyyMMdd') > '20240820'
+		 AND SUBSTR(T.BATCH_NO, 6, 4) = (SELECT ymd FROM v_ks_ymd)) || '1' "batchNo"
+		 FROM DUAL
+	     
+	</select> 
+</sqlMap>

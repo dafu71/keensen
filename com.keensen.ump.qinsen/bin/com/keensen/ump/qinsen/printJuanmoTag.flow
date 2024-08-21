@@ -8,12 +8,14 @@
       <process:inputParameters>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="batchIdStr" primitiveType="String"/>
         <process:parameter anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="list"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="isFour" primitiveType="String"/>
       </process:inputParameters>
     </sourceConnections>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
     <targetConnections>link1</targetConnections>
+    <targetConnections>link5</targetConnections>
     <nodeLabel>end0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
@@ -27,7 +29,7 @@
   <nodes xsi:type="process:tSubprocess" id="subprocess0" name="queryRecords4Print" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
       <sourceNode>subprocess0</sourceNode>
-      <targetNode>view1</targetNode>
+      <targetNode>assign0</targetNode>
     </sourceConnections>
     <targetConnections>link0</targetConnections>
     <nodeLabel>subprocess0label</nodeLabel>
@@ -45,19 +47,63 @@
     <figSize height="20" width="146"/>
     <node>subprocess0</node>
   </nodes>
-  <nodes xsi:type="process:tView" id="view1" name="printTags.jsp" type="view" contextPath="" contributionName="com.keensen.ump.qinsen" method="forward" uri="/qinsen/produce/juanmo/printTag.jsp">
+  <nodes xsi:type="process:tView" id="view1" name="printTag.jsp" type="view" contextPath="" contributionName="com.keensen.ump.qinsen" method="forward" uri="/qinsen/produce/juanmo/printTag.jsp">
     <sourceConnections xsi:type="process:tActionLink" id="link1" name="link1" lineType="reference" isDefault="true" type="action" actionName="action1">
       <sourceNode>view1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link2</targetConnections>
+    <targetConnections>link3</targetConnections>
     <nodeLabel>view1label</nodeLabel>
     <process:inputParameters/>
     <process:outputVariables/>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
-    <figSize height="20" width="95"/>
+    <figSize height="20" width="88"/>
     <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="4寸" isDefault="false" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">isFour</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">list[1]/isFour</process:from>
+      <process:to type="query">isFour</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view0" name="printTag8.jsp" type="view" contributionName="com.keensen.ump.qinsen" uri="/qinsen/produce/juanmo/printTag8.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link5" name="link5" lineType="reference" isDefault="true" type="action" actionName="action2">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <nodeLabel>view0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <figSize height="20" width="97"/>
+    <node>view0</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

@@ -10,9 +10,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link12</targetConnections>
-    <targetConnections>link2</targetConnections>
     <targetConnections>link8</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <targetConnections>link12</targetConnections>
     <location x="600" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -73,8 +73,8 @@
       <sourceNode>subprocess1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link3</targetConnections>
     <targetConnections>link14</targetConnections>
+    <targetConnections>link3</targetConnections>
     <location x="473" y="150"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess1label</nodeLabel>
@@ -187,14 +187,13 @@
       <sourceNode>subprocess2</sourceNode>
       <targetNode>assign4</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="存在未完结的水相循环液" displayName="连接线" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="取消（存在未完结的水相循环液）" displayName="连接线" type="transition">
       <sourceNode>subprocess2</sourceNode>
       <targetNode>assign3</targetNode>
       <process:transitionCondition>
-        <process:simpleCondition operator="NOTNULLANDEMPTY">
-          <process:leftOperand type="query">data</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
+        <process:complexCondition>
+          <process:code>1==2</process:code>
+        </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link5</targetConnections>

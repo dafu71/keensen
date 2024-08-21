@@ -192,7 +192,15 @@
        T1.DENSE_NET            AS "denseNet",
        T1.B_SPEC_CODE          AS "bSpecCode",
        T1.B_SPEC_NAME          AS "bSpecName",
-       T1.MAC_NAME             AS "macName"
+       T1.MAC_NAME             AS "macName",
+       t1.COMPONENT_SPEC as "componentSpec",
+		t1.TEST_LIQUID as "testLiquid",
+		t1.DENSITY as "density",
+		t1.PRESSURE as "pressure",
+		t1.TEMPRETURE as "tempreture",
+		t1.PH as "ph",
+		t1.RECOVERY as "recovery"
+       
   FROM (SELECT A.RECORD_ID,
                A.MP_SPEC_ID,
                A.PROD_SPEC_ID,
@@ -217,6 +225,7 @@
                A.CREATOR_ID,
                A.CHANGER_ID,
                A.REMARK,
+               A.COMPONENT_SPEC,A.TEST_LIQUID,A.DENSITY,A.PRESSURE,A.TEMPRETURE,A.PH,A.RECOVERY,
                S1.MATER_SPEC_CODE     MP_SPEC_CODE,
                S2.MATER_SPEC_CODE     PROD_SPEC_CODE,
                S2.MATER_SPEC_NAME     PROD_SPEC_NAME,
@@ -263,14 +272,16 @@
 	   A_SALT_LOW_LIMIT, A_SALT_UP_LIMIT, A_FACTOR_B_LOW_LIMIT, A_FACTOR_B_UP_LIMIT, 
 	   B_SPEC_ID, B_GPD_LOW_LIMIT, B_GPD_UP_LIMIT, B_GPD_CENTER, 
 	   B_SALT_LOW_LIMIT, B_SALT_UP_LIMIT, B_FACTOR_B_LOW_LIMIT, B_FACTOR_B_UP_LIMIT, 
-	   CREATE_DT, CHANGE_DT, CREATOR_ID, CHANGER_ID, REMARK)
+	   CREATE_DT, CHANGE_DT, CREATOR_ID, CHANGER_ID, REMARK,
+	   COMPONENT_SPEC,TEST_LIQUID,DENSITY,PRESSURE,TEMPRETURE,PH,RECOVERY)
 	VALUES
 	  (#recordId#, #mpSpecId#, #prodSpecId#, #macName#,
 	   #aGpdLowLimit#, #aGpdUpLimit#, #aGpdCenter#, 
 	   #aSaltLowLimit#, #aSaltUpLimit#, #aFactorBLowLimit#, #aFactorBUpLimit#, 
 	   #bSpecId#, #bGpdLowLimit#, #bGpdUpLimit#, #bGpdCenter#, 
 	   #bSaltLowLimit#, #bSaltUpLimit#, #bFactorBLowLimit#, #bFactorBUpLimit#,
-	   SYSDATE, SYSDATE, #operatorId#, #operatorId#, #remark# )
+	   SYSDATE, SYSDATE, #operatorId#, #operatorId#, #remark#,
+	   #componentSpec#,#testLiquid#,#density#,#pressure#,#tempreture#,#ph#,#recovery# )
    </insert>
 
 	<update id="updateWaterStdById" parameterClass="java.util.HashMap">
@@ -333,6 +344,29 @@
 	 <isNotNull prepend="" property="remark">
 	       REMARK = #remark#,
 	 </isNotNull>
+	 
+	 <isNotNull prepend="" property="componentSpec">
+	       component_Spec = #componentSpec#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="testLiquid">
+	       TEST_LIQUID = #testLiquid#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="density">
+	       density = #density#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="pressure">
+	       pressure = #pressure#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="tempreture">
+	       tempreture = #tempreture#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="ph">
+	       ph = #ph#,
+	 </isNotNull>
+	 <isNotNull prepend="" property="recovery">
+	       recovery = #recovery#,
+	 </isNotNull>
+	 
 	       CHANGER_ID = #operatorId#
 	 WHERE RECORD_ID = #recordId#
 </update>
@@ -352,5 +386,36 @@
 	<isNotNull prepend="" property="recordId">
 	   AND A.RECORD_ID &lt;&gt; #recordId#
 	</isNotNull>
+</select>
+
+<select id="queryC21Std" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+  select 
+    t1.ID as "id",
+	to_char(T1.CREATE_TIME,'yyyy-MM-dd')  as "createTime",
+	t1.CREATE_USER_ID as "createUserId",
+	t1.CREATE_NAME as "createName",
+	t1.UPDATE_TIME as "updateTime",
+	t1.UPDATE_USER_ID as "updateUserId",
+	t1.UPDATE_NAME as "updateName",
+	t1.RESERVE1 as "reserve1",
+	t1.RESERVE2 as "reserve2",
+	t1.RESERVE3 as "reserve3",
+	t1.RESERVE4 as "reserve4",
+	t1.RESERVE5 as "reserve5",
+	t1.ORG_ID as "orgId",
+	t1.STATUS as "status",
+	t1.A as "a",
+	t1.B as "b"
+	from KS_BASE_C21 t1
+	where 1=1
+	<isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+	order by id desc
+    
+
 </select>
 	 </sqlMap>

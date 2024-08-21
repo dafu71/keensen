@@ -120,7 +120,7 @@ com.keensen.ump.qinsen.quality.prodMgr = function() {
 							fieldLabel : '测试膜壳'
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : "<span style='color:red;'>适配标准1</span>",
+							fieldLabel : "<span style='color:red;'>适配量产</span>",
 							colspan : 24
 						}, {
 							xtype : 'textfield',
@@ -154,7 +154,7 @@ com.keensen.ump.qinsen.quality.prodMgr = function() {
 							fieldLabel : '系数B'
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : "<span style='color:red;'>适配标准2</span>",
+							fieldLabel : "<span style='color:red;'>适配单品</span>",
 							colspan : 24
 						}, {
 							xtype : 'textfield',

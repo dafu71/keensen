@@ -1,9 +1,10 @@
 function paint() {
+
 	$('#canvas').qrcode({
 		render : 'canvas',// 设置渲染方式，有table和canvas
 		text : batchNo,
-		width : 100, // 二维码的宽度
-		height : 100, // 二维码的高度
+		width : 60, // 二维码的宽度
+		height : 60, // 二维码的高度
 		correctLevel : 2
 			// 纠错级别，低
 		});
