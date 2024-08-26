@@ -10,7 +10,9 @@
 		(SELECT SUBSTR('ABCDEFGHIJKLMNOPQRSTUVWXYZ',COUNT(1)+1 ,1)
 		  FROM KS_QUALITY_MP_TEST_WATER_HEAD T
 		 WHERE TO_CHAR(T.CREATE_TIME, 'yyyyMMdd') &gt; '20240807'
-		 AND SUBSTR(T.BATCH_NO, 6, 4) = (SELECT ymd FROM v_ks_ymd)) || '1' "batchNo"
+		 AND SUBSTR(T.BATCH_NO, 6, 4) = (SELECT ymd FROM v_ks_ymd) 
+		 and t.watertype &lt;&gt; '水相循环液') || '1' "batchNo"
+		
 		 FROM DUAL</select>
     <select id="queryWeight" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T.MPTYPE,t.line,t.watertype,
        ROUND(T.C21 * #weight# * 10, 0) "c21",

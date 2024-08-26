@@ -3,16 +3,32 @@
 <sqlMap>
    	<select id="queryOilBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
 		SELECT
-		DECODE(#watertype#,'新配油相液','Y','回流油相液','J','') || 
+		DECODE(#oiltype#,'新配油相液','Y','回流油相液','J','') || 
 		#line# ||
-		(SELECT mp_batch_code FROM qinsen.PARA_MATER_SPEC WHERE mater_spec_name=#mptype#)||
-		'A' ||
+		(SELECT mp_batch_code FROM qinsen.PARA_MATER_SPEC WHERE mater_spec_name=#mptype#)
+		||		
 		(SELECT ymd FROM v_ks_ymd) ||   
-		(SELECT SUBSTR('ABCDEFGHIJKLMNOPQRSTUVWXYZ',COUNT(1)+1 ,1)
+		(SELECT trim(to_char(COUNT(1)+1 ,'00'))
 		  FROM KS_QUALITY_MP_TEST_OIL_HEAD T
 		 WHERE TO_CHAR(T.CREATE_TIME, 'yyyyMMdd') > '20240820'
-		 AND SUBSTR(T.BATCH_NO, 6, 4) = (SELECT ymd FROM v_ks_ymd)) || '1' "batchNo"
+		 AND SUBSTR(T.BATCH_NO, 5, 4) = (SELECT ymd FROM v_ks_ymd)) "batchNo"
 		 FROM DUAL
 	     
 	</select> 
+	
+	<select id="queryWeight" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT T.MPTYPE,t.line,t.c42 "c42std",
+       ROUND(T.C42 *#weight# * 10, 2) "c42",
+       ROUND((#weight# - ROUND(T.C42 *#weight# * 10/1000, 2)),2) "c41"
+	  FROM KS_BASE_OIL_FORMULA T
+	 WHERE T.MPTYPE = #mptype#
+	 and t.line = #line#
+	
+   </select>
+   
+   <select id="queryFormulat" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT t.c42 "c42",t.up42 "up42",t.low42 "low42",t.mptype "mptype",t.line "line" from V_KS_BASE_OIL_FORMULA t
+	 WHERE T.MPTYPE = #mptype# and t.line = #line# 
+	 
+   </select>
 </sqlMap>

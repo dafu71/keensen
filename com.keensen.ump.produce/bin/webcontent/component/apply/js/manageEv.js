@@ -1,6 +1,7 @@
 com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 
 	var _this = this;
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -148,12 +149,12 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 					sm.grid.getView().focusRow(rowIndex);
 				}
 			}, this);
-	
+
 }
 
 com.keensen.ump.produce.component.applyMgr.prototype.onDeleteOrder = function() {
 	var records = this.listPanel.getSelectionModel().getSelections();
-	//var records = this.listPanel.store.getRange();
+	// var records = this.listPanel.store.getRange();
 	if (records.length != 1) {
 		Ext.Msg.alert("系统提示", "至少需要有一条记录！")
 		return false;
@@ -265,6 +266,16 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSave = function() {
 		return false;
 	}
 
+	var itemArr = [];
+	var myCheckboxGroup = this.inputPanel.myabnormal;
+	for (var i = 0; i < myCheckboxGroup.items.length; i++) {
+		if (myCheckboxGroup.items.itemAt(i).checked) {
+			itemArr.push(i);
+		}
+	}
+
+	this.inputPanel.abnormal.setValue(itemArr.join(','));
+	
 	if (this.inputPanel.form.isValid()) {
 
 		var datas = [];
@@ -383,6 +394,16 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSaveModify = function() {
 		Ext.Msg.alert("系统提示", "请选择元件！");
 		return false;
 	}
+
+	var itemArr = [];
+	var myCheckboxGroup = this.modifyPanel.myabnormal;
+	for (var i = 0; i < myCheckboxGroup.items.length; i++) {
+		if (myCheckboxGroup.items.itemAt(i).checked) {
+			itemArr.push(i);
+		}
+	}
+
+	this.modifyPanel.abnormal.setValue(itemArr.join(','));
 
 	if (this.modifyPanel.form.isValid()) {
 
@@ -662,7 +683,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.exportExcelBatch = function
 	Ext.Ajax.request({
 		url : "com.keensen.ump.produce.component.apply.queryList2.biz.ext",
 		method : "post",
-		responseType: 'blob',
+		responseType : 'blob',
 		jsonData : {
 			'condition/createTimeStart' : start,
 			'condition/createTimeEnd' : end
@@ -673,20 +694,29 @@ com.keensen.ump.produce.component.applyMgr.prototype.exportExcelBatch = function
 				if (!Ext.isEmpty(ret.data)) {
 					var str = '<style>td{border:1px black solid;}</style>'
 							+ '<table class="table-data table-bordered table"><tr>';
-					str += '<td align="center">订单号</td><td align="center">栈板号</td>' + '<td align="center">订单元件型号</td>'
-							+ '<td align="center">唛头显示型号</td>' + '<td align="center">元件型号（卷制）</td>'
-							+ '<td align="center">元件序列号</td>' + '<td align="center">膜片批次</td>' + '</tr>';
+					str += '<td align="center">订单号</td><td align="center">栈板号</td>'
+							+ '<td align="center">订单元件型号</td>'
+							+ '<td align="center">唛头显示型号</td>'
+							+ '<td align="center">元件型号（卷制）</td>'
+							+ '<td align="center">元件序列号</td>'
+							+ '<td align="center">膜片批次</td>' + '</tr>';
 					Ext.each(ret.data, function(r) {
-								str += '<tr><td align="center">' + r.orderNo + '</td><td align="center">'
-										+ String(r.code) + '</td><td align="center">'
-										+ r.orderProdSpecName + '</td><td align="center">'
-										+ r.markSpecCode + '</td><td align="center">'
-										+ r.prodSpecName + '</td><td align="center">'
-										+ String(r.batchNo) + '</td><td align="center">'
+								str += '<tr><td align="center">' + r.orderNo
+										+ '</td><td align="center">'
+										+ String(r.code)
+										+ '</td><td align="center">'
+										+ r.orderProdSpecName
+										+ '</td><td align="center">'
+										+ r.markSpecCode
+										+ '</td><td align="center">'
+										+ r.prodSpecName
+										+ '</td><td align="center">'
+										+ String(r.batchNo)
+										+ '</td><td align="center">'
 										+ r.tumoBatchStr + '</td></tr>';
 							})
 					str += '</table>';
-					//application/vnd.ms-excel;charset=utf-8
+					// application/vnd.ms-excel;charset=utf-8
 					var blob = new Blob(["\ufeff", str], {
 								type : 'application/vnd.ms-excel;charset=utf-8'
 							});
@@ -697,7 +727,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.exportExcelBatch = function
 					document.body.appendChild(link);
 					link.click();
 					document.body.removeChild(link);
-				}else{
+				} else {
 					Ext.Msg.alert("系统提示", "没有查询到数据!");
 				}
 			}
@@ -708,5 +738,4 @@ com.keensen.ump.produce.component.applyMgr.prototype.exportExcelBatch = function
 		}
 	})
 
-	
 }

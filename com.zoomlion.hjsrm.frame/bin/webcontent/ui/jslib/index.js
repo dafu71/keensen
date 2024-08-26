@@ -503,29 +503,29 @@ Frame.ui.Header = Ext.extend(Ext.Panel, {
 					idIndex : 0
 				});
 
-		// var Y = new Frame.ui.ToastWindow({
-		// store : S,
-		// listeners : {
-		// "pagechange" : function(E, D, C) {
-		// var B = D.total - C;
-		// var F = String.format("({0})", B);
-		// var A = Ext.get("newsnum");
-		// A.update(F);
-		// if (B == 0) {
-		// updateImg(false)
-		// }
-		// },
-		// "afterRead" : function(B, A) {
-		// Ext.Ajax.request({
-		// url :
-		// "com.zoomlion.hjsrm.frame.tools.notice.NoticeManage.setNoticeReaded.biz.ext",
-		// params : {
-		// noticeid : A.get("noticeid")
-		// }
-		// })
-		// }
-		// }
-		// });
+//		 var Y = new Frame.ui.ToastWindow({
+//		 store : S,
+//		 listeners : {
+//		 "pagechange" : function(E, D, C) {
+//		 var B = D.total - C;
+//		 var F = String.format("({0})", B);
+//		 var A = Ext.get("newsnum");
+//		 A.update(F);
+//		 if (B == 0) {
+//		 updateImg(false)
+//		 }
+//		 },
+//		 "afterRead" : function(B, A) {
+//		 Ext.Ajax.request({
+//		 url :
+//		 "com.zoomlion.hjsrm.frame.tools.notice.NoticeManage.setNoticeReaded.biz.ext",
+//		 params : {
+//		 noticeid : A.get("noticeid")
+//		 }
+//		 })
+//		 }
+//		 }
+//		 });
 
 		var X = 0;
 		var R = 0;
@@ -546,7 +546,7 @@ Frame.ui.Header = Ext.extend(Ext.Panel, {
 				updateImg(false)
 			}
 		};
-
+		
 		var noticeTask = {
 			run : function() {
 				this.noticeStore.load({

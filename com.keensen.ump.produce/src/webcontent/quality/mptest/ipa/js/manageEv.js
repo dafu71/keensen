@@ -93,6 +93,7 @@ com.keensen.ump.produce.quality.mptest.ipaMgr.prototype.initEvent = function() {
 	}, this);
 
 	this.editPanel2.mon(this.editPanel2, 'beforeSave', function() {
+		
 				var labelArr = ['计划排放量', 'IPA计划添加量', 'RO水计划添加量'];
 				var objArr = ['outPlan', 'ipaPlan', 'roPlan'];
 				var ifok = this.editPanel2.ifok.getValue();

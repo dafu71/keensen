@@ -226,7 +226,7 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
  	on t2.prop_id = 30021 and t2.prop_value_id = t.SUP_ID) t3 ON t3.dimo_batch_no=t1.DIMO_BATCH_NO
  WHERE 1 = 1
  AND 
- T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)&gt;500
+ T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)&gt;#num#
  
   <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
         <isNotNull prepend="" property="base">AND t3.base = #base#</isNotNull>

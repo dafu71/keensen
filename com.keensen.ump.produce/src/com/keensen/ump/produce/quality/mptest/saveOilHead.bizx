@@ -57,6 +57,10 @@
       <process:from type="query" pattern="reference">entity/mptype</process:from>
       <process:to type="query">condition/mptype</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/reserve1</process:from>
+      <process:to type="query">condition/oiltype</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <location x="202" y="184"/>
@@ -148,7 +152,7 @@
       <process:to type="query">batchNo</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="expression" pattern="reference">batchNo + &quot;HLY&quot;</process:from>
+      <process:from type="query" pattern="reference">batchNo</process:from>
       <process:to type="query">entity/refluxNo</process:to>
     </process:copy>
   </nodes>

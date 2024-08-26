@@ -24,7 +24,7 @@
        T1.WATERTYPE      AS "watertype",
        decode(T1.STATE,0,'处理中',1,'完结','报废') "stateName",
        T1.STEP           AS "step",
-       decode(T1.STEP,'first','分析','second','调整','third','配料','生产使用') "stepName",
+       decode(T1.STEP,'first','分析','second','调整','third','配料','invalid','报废','生产使用') "stepName",
        t2.batch_no "relationBatchNo",t1.relation_Id "relationId"
   FROM KS_QUALITY_MP_TEST_WATER_HEAD T1
   left join KS_QUALITY_MP_TEST_WATER_HEAD T2 on t1.relation_id = t2.id
@@ -85,14 +85,14 @@
        T1.appoint_id3       AS "appointId",v3.operatorname "appointName3",       
        T1.ORG_ID         AS "orgId",
        T1.STATUS         AS "status",
-       T1.C21_TEST    AS "c21Test",
+       T1.C21_TEST    AS "c21Test",T1.C24_TEST    AS "c24Test",
        T1.C22_TEST    AS "c22Test",
        T1.C23_TEST    AS "c23Test",
        T1.C27_TEST    AS "c27Test",
        T1.C28_TEST    AS "c28Test",
        T1.C29_TEST    AS "c29Test",
        T1.C30_TEST    AS "c30Test",
-       T1.C21_PLAN    AS "c21Plan",
+       T1.C21_PLAN    AS "c21Plan", T1.C24_PLAN    AS "c24Plan",
        T1.C22_PLAN    AS "c22Plan",
        T1.C23_PLAN    AS "c23Plan",
        T1.C27_PLAN    AS "c27Plan",
@@ -101,7 +101,7 @@
        T1.C30_PLAN    AS "c30Plan",T1.weight_PLAN    AS "weightPlan",
        T1.POSITION       AS "position",
        T1.RO_PLAN     AS "roPlan",
-       T1.C21_REALITY AS "c21Reality",
+       T1.C21_REALITY AS "c21Reality",T1.C24_REALITY AS "c24Reality",
        T1.C22_REALITY AS "c22Reality",
        T1.C23_REALITY AS "c23Reality",
        T1.C27_REALITY AS "c27Reality",
@@ -118,7 +118,7 @@
        T1.THIRD_ID    AS "thirdId",       
        T2.LINE        AS "line",T2.LINE        AS "line2",
        T2.MPTYPE      AS "mptype",T2.MPTYPE      AS "mptype2",
-       T2.BATCH_NO    AS "batchNo",
+       decode(t2.watertype,'水相循环液',T3.BATCH_NO,T2.BATCH_NO)    AS "batchNo",
        T2.STATE       AS "state",
        T2.STEP        AS "step",
        T2.WATERTYPE   AS "watertype",T2.WATERTYPE   AS "watertype2",
@@ -129,6 +129,8 @@
   FROM KS_QUALITY_MP_TEST_WATER_LIST T1
   LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD T2
     ON T1.RELATION_ID = T2.ID
+  LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD T3
+  on t2.relation_id = t3.id
   left join V_AC_OPERATOR_TRS v on v.userid = t1.appoint_id
   left join V_AC_OPERATOR_TRS v2 on v2.userid = t1.appoint_id2
   left join V_AC_OPERATOR_TRS v3 on v3.userid = t1.appoint_id3
@@ -159,10 +161,10 @@
     </select> 
     
     <select id="query4Board" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-    SELECT t.watertype "materName",
+    SELECT t.watertype "materName",t.create_time,
        '涂膜' || T.LINE || '线' "line",
        T.MPTYPE "mptype",
-       T.BATCH_NO "batchNo",
+        decode(t.watertype,'水相循环液',T2.BATCH_NO,t.BATCH_NO) "batchNo",
        DECODE(T.STEP,
               'first',
               '分析',
@@ -172,16 +174,33 @@
               '配料',
               '生产使用') "stepName",1 iorder
   FROM KS_QUALITY_MP_TEST_WATER_HEAD T
+  left join KS_QUALITY_MP_TEST_WATER_HEAD t2 on t.relation_id=t2.id
  WHERE T.STEP IN ('first','second') 
- ORDER BY iorder,t.create_time
+ union
+ SELECT t.reserve1 "materName",t.create_time,
+       '涂膜' || T.LINE || '线' "line",
+       T.MPTYPE "mptype",
+       t.BATCH_NO "batchNo",
+       DECODE(T.STEP,
+              'first',
+              '分析',
+              'second',
+              '调整',
+              'third',
+              '配料',
+              '生产使用') "stepName",1 iorder
+  FROM KS_QUALITY_MP_TEST_OIL_HEAD T
+  
+ WHERE T.STEP IN ('first') 
+ ORDER BY iorder,create_time
     
     </select>
     
       <select id="query4Board2" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-    SELECT t.watertype "materName",
+    SELECT t.watertype "materName",t.create_time,
        '涂膜' || T.LINE || '线' "line",
        T.MPTYPE "mptype",
-       T.BATCH_NO "batchNo",
+        decode(t.watertype,'水相循环液',T2.BATCH_NO,t.BATCH_NO) "batchNo",
        DECODE(T.STEP,
               'first',
               '分析',
@@ -191,8 +210,25 @@
               '配料',
               '生产使用') "stepName",1 iorder
   FROM KS_QUALITY_MP_TEST_WATER_HEAD T
+  left join KS_QUALITY_MP_TEST_WATER_HEAD t2 on t.relation_id=t2.id
  WHERE T.STEP IN ('third')
- ORDER BY iorder,t.create_time
+ union
+ SELECT t.reserve1 "materName",t.create_time,
+       '涂膜' || T.LINE || '线' "line",
+       T.MPTYPE "mptype",
+       t.BATCH_NO "batchNo",
+       DECODE(T.STEP,
+              'first',
+              '分析',
+              'second',
+              '调整',
+              'third',
+              '配料',
+              '生产使用') "stepName",1 iorder
+  FROM KS_QUALITY_MP_TEST_OIL_HEAD T
+  
+ WHERE T.STEP IN ('third') 
+ ORDER BY iorder,create_time
     
     </select>
 </sqlMap>

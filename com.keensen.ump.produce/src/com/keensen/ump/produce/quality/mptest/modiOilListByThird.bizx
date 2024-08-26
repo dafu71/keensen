@@ -10,8 +10,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link4</targetConnections>
     <targetConnections>link5</targetConnections>
+    <targetConnections>link4</targetConnections>
     <location x="585" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -98,6 +98,34 @@
       <process:from type="query" pattern="reference">list/reflux</process:from>
       <process:to type="query">reflux</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c41Plan</process:from>
+      <process:to type="query">c41Plan</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c42Plan</process:from>
+      <process:to type="query">c42Plan</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c41Reality2</process:from>
+      <process:to type="query">c41Reality2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c42Reality2</process:from>
+      <process:to type="query">c42Reality2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c42Reality</process:from>
+      <process:to type="query">c42Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c42Reality + c42Plan</process:from>
+      <process:to type="query">list/c42Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c41Reality + c41Plan</process:from>
+      <process:to type="query">list/c41Reality</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <location x="256" y="186"/>
@@ -109,8 +137,8 @@
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link10</targetConnections>
     <location x="405" y="150"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo0label</nodeLabel>
@@ -178,7 +206,7 @@
       <targetNode>end0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -223,7 +251,19 @@
     <size height="28" width="28"/>
     <nodeLabel>assign1label</nodeLabel>
     <process:copy>
-      <process:from type="expression" pattern="reference">c41Reality + weight</process:from>
+      <process:from type="query" pattern="reference">list/c42Reality</process:from>
+      <process:to type="query">c42Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c41Reality</process:from>
+      <process:to type="query">c41Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c42Reality/1000</process:from>
+      <process:to type="query">c42Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c42Reality+c41Reality</process:from>
       <process:to type="query">list/weight</process:to>
     </process:copy>
   </nodes>
@@ -242,7 +282,7 @@
     <size height="28" width="28"/>
     <nodeLabel>assign3label</nodeLabel>
     <process:copy>
-      <process:from type="expression" pattern="reference">c41Reality + reflux</process:from>
+      <process:from type="query" pattern="reference">reflux</process:from>
       <process:to type="query">list/weight</process:to>
     </process:copy>
   </nodes>
@@ -260,6 +300,11 @@
     <process:variable description="" historyStateLocation="client" isArray="false" name="weight" primitiveType="Float"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="c41Reality" primitiveType="Float"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="reflux" primitiveType="Float"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="c41Plan" primitiveType="Float"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="c41Reality2" primitiveType="Float"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="c42Reality2" primitiveType="Float"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="c42Reality" primitiveType="Float"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="c42Plan" primitiveType="Float"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.keensen.ump.produce.quality.KsQualityMpTestOilHead" name="entity"/>

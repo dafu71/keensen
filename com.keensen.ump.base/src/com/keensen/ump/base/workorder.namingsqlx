@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <!-- 机台查询 -->
+     <select id="queryMachine" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.code "code",t.name "name",t.ip "ip",t.type "type"
+ 		from KS_BASE_MACHINE t
+ 		where 1=1
+ 		<isNotNull prepend="and" property="code"> 
+		       t.code like '%'||#code#||'%'
+		</isNotNull>
+		<isNotNull prepend="and" property="name"> 
+		       t.name like '%'||#name#||'%'
+		</isNotNull>
+		<isNotNull prepend="and" property="type"> 
+		       t.type like '%'||#type#||'%'
+		</isNotNull>
+		order by t.code
+     </select>
+     
+      <select id="queryMachineCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select decode(#type#,'裁叠膜','C','卷膜','J','X') || (nvl(max(SUBSTR(t.code,2,10)),0) +1)  "code"
+ 		from KS_BASE_MACHINE t
+ 		where 1=1 		
+		and t.type = #type#
+		
+     </select>
+     
+     <select id="queryPlanDay" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.*
+ 		from KS_COMPONENT_PLAN_DAY t
+ 		where 1=1 		
+		and t.cdm_code = #code#		
+     </select>
+   </sqlMap>

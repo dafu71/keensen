@@ -84,6 +84,10 @@
       <process:from type="query" pattern="reference">datas[1]</process:from>
       <process:to type="query">data</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/weight</process:from>
+      <process:to type="query">data/weight2</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="413" y="189"/>

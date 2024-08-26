@@ -25,7 +25,7 @@
        T1.CREATOR_ID           AS "creatorId",
        T1.CHANGER_ID           AS "changerId",
        T1.REMARK               AS "remark",
-       T1.MP_SPEC_CODE         AS "mpSpecCode",
+      <!-- T1.MP_SPEC_CODE         AS "mpSpecCode",-->
        T1.PROD_SPEC_CODE       AS "prodSpecCode",
        T1.PROD_SPEC_NAME       AS "prodSpecName",
        T1.AREA                 AS "area",
@@ -59,7 +59,7 @@
                 A.CREATOR_ID,
                 A.CHANGER_ID,
                 A.REMARK,
-                S1.MATER_SPEC_CODE     MP_SPEC_CODE,
+               <!-- S1.MATER_SPEC_CODE     MP_SPEC_CODE,-->
                 S2.MATER_SPEC_CODE     PROD_SPEC_CODE,
                 S2.MATER_SPEC_NAME     PROD_SPEC_NAME,
                 S2.AREA,
@@ -68,10 +68,11 @@
                 S3.MATER_SPEC_NAME     B_SPEC_NAME,
                 S2.DISP_ORDER
           FROM INST_PROD_WATER_STD A,
-                PARA_MATER_SPEC     S1,
+                <!-- PARA_MATER_SPEC     S1,-->
                 PARA_MATER_SPEC     S2,
                 PARA_MATER_SPEC     S3
-         WHERE A.MP_SPEC_ID = S1.MATER_SPEC_ID
+         WHERE 1=1
+           <!--AND A.MP_SPEC_ID = S1.MATER_SPEC_ID-->
            AND A.PROD_SPEC_ID = S2.MATER_SPEC_ID
            AND A.B_SPEC_ID = S3.MATER_SPEC_ID(+)
            <isNotNull prepend="" property="recordId">

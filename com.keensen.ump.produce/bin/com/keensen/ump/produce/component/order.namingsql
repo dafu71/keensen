@@ -176,7 +176,14 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
              TRUNC(TO_DATE(#startDate#, 'YYYY-MM-DD')) + 1</select>
     <select id="queryPlanDay" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
-   	 SELECT T1.ID AS "id",t1.confirm_Status "confirmStatus",
+   	 SELECT T1.ID AS "id",t1.confirm_Status "confirmStatus",T1.cdm_code "cdmCode"
+   	 ,T1.cdm_state "cdmState", decode(T1.cdm_state,0,'处理中',1,'完成',2,'异常','') "cdmStateName",
+   	 TO_CHAR(T1.duty_TIME, 'yyyy-MM-dd HH24:mi:ss') "dutyTime",
+       T1.duty_USER_ID AS "dutyUserId",
+       T1.duty_NAME AS "dutyName",
+        TO_CHAR(T1.cdm_report_TIME, 'yyyy-MM-dd HH24:mi:ss') "cdmReportTime",
+       T1.cdm_report_USER_ID AS "cdmReportUserId",
+       T1.cdm_report_NAME AS "cdmReportName",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -199,7 +206,7 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        nvl(T1.POSITION,' ')        AS "position",
        T1.MP_REMARK       AS "mpRemark",
        T1.PROBLEM         AS "problem",
-       T5.PRODUCT_ORDER   AS "productOrder",
+       <!--T5.PRODUCT_ORDER   AS "productOrder"-->T1.PRODUCT_ORDER   AS "productOrder",
        T1.cm_worker       AS "cmWorker",
        decode(INSTR(T1.cm_worker, '('),0,T1.cm_worker,SUBSTR(T1.cm_worker,1,INSTR(T1.cm_worker, '(')-1)) AS "cmWorker2",
        T3.ORDER_NO        AS "orderNo",
@@ -339,8 +346,10 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
         <isNotNull prepend="and" property="planDateEnd">to_char(T1.PLAN_DATE,'yyyy-MM-dd')  &lt;=  #planDateEnd#</isNotNull>
         <isNotNull prepend="and" property="planDate">to_char(T1.PLAN_DATE,'yyyy-MM-dd')  =  #planDate#</isNotNull>
         <isNotNull prepend="and" property="size">decode(instr(T3.MATER_SPEC_NAME,'-8'),0,'4','8') = #size#</isNotNull>
-     order by t3.id desc,t2.id,t1.id
-	 </select>
+        <isNotNull prepend="and" property="machineCode">T1.cdm_code = #machineCode#</isNotNull>
+        <isNull prepend="" property="orderby">order by t3.id desc,t2.id,t1.id</isNull>
+        <isNotNull prepend="" property="orderby">order by T1.PLAN_DATE desc,t1.cdm_Code,t1.product_Order</isNotNull>
+    </select>
     <select id="queryPlanRoll" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
 	SELECT T1.ID AS "id",

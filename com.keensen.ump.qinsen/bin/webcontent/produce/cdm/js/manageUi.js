@@ -675,9 +675,24 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							name : 'entity/startSeq',
 							xtype : 'hidden',
 							ref : '../../startSeq'
+						}, {
+							name : 'entity/planId',
+							xtype : 'hidden',
+							ref : '../../planId'
 						}]
 			}]
 		});
+		
+		this.inputWindow.addButton({
+					text : "领取任务",
+					scope : this,
+					handler : this.onPlan
+				});
+		this.inputWindow.addButton({
+					text : "完工报告",
+					scope : this,
+					handler : this.onReport
+				});
 	}
 
 	this.initEditWindow = function() {

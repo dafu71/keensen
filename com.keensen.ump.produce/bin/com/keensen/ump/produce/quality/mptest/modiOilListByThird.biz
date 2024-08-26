@@ -90,6 +90,34 @@
       <process:from type="query" pattern="reference">list/reflux</process:from>
       <process:to type="query">reflux</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c41Plan</process:from>
+      <process:to type="query">c41Plan</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c42Plan</process:from>
+      <process:to type="query">c42Plan</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c41Reality2</process:from>
+      <process:to type="query">c41Reality2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c42Reality2</process:from>
+      <process:to type="query">c42Reality2</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c42Reality</process:from>
+      <process:to type="query">c42Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c42Reality + c42Plan</process:from>
+      <process:to type="query">list/c42Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c41Reality + c41Plan</process:from>
+      <process:to type="query">list/c41Reality</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>
@@ -200,7 +228,19 @@
     <targetConnections>link1</targetConnections>
     <nodeLabel>assign1label</nodeLabel>
     <process:copy>
-      <process:from type="expression" pattern="reference">c41Reality + weight</process:from>
+      <process:from type="query" pattern="reference">list/c42Reality</process:from>
+      <process:to type="query">c42Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list/c41Reality</process:from>
+      <process:to type="query">c41Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c42Reality/1000</process:from>
+      <process:to type="query">c42Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c42Reality+c41Reality</process:from>
       <process:to type="query">list/weight</process:to>
     </process:copy>
   </nodes>
@@ -216,7 +256,7 @@
     <targetConnections>link9</targetConnections>
     <nodeLabel>assign3label</nodeLabel>
     <process:copy>
-      <process:from type="expression" pattern="reference">c41Reality + reflux</process:from>
+      <process:from type="query" pattern="reference">reflux</process:from>
       <process:to type="query">list/weight</process:to>
     </process:copy>
   </nodes>
@@ -233,6 +273,11 @@
     <process:variable historyStateLocation="client" isArray="false" name="weight" primitiveType="Float"/>
     <process:variable historyStateLocation="client" isArray="false" name="c41Reality" primitiveType="Float"/>
     <process:variable historyStateLocation="client" isArray="false" name="reflux" primitiveType="Float"/>
+    <process:variable historyStateLocation="client" isArray="false" name="c41Plan" primitiveType="Float"/>
+    <process:variable historyStateLocation="client" isArray="false" name="c41Reality2" primitiveType="Float"/>
+    <process:variable historyStateLocation="client" isArray="false" name="c42Reality2" primitiveType="Float"/>
+    <process:variable historyStateLocation="client" isArray="false" name="c42Reality" primitiveType="Float"/>
+    <process:variable historyStateLocation="client" isArray="false" name="c42Plan" primitiveType="Float"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input isArray="false" modelType="com.keensen.ump.produce.quality.KsQualityMpTestOilHead" name="entity"/>

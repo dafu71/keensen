@@ -1,7 +1,7 @@
 com.keensen.ump.produce.component.applyMgr = function() {
 
 	this.initPanel = function() {
-		
+
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
@@ -12,7 +12,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		this.initModifyWindow();
 
 		this.initExaminWindow();
-		
+
 		this.lay = new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -22,8 +22,6 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 		return this.lay;
 	}
-
-	
 
 	this.initQueryPanel = function() {
 
@@ -78,14 +76,22 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								name : 'condition/batchNo',
 								anchor : '100%',
 								fieldLabel : '元件序列号 '
+							}, {
+								xtype : 'dictcombobox',
+								dataIndex : 'storage',
+								hiddenName : 'condition/storage',
+								fieldLabel : '入库仓位',
+								dictData : KS_PROD_STORAGE,
+								emptyText : "",
+								anchor : '100%'
 							}]
 				});
 
 		this.queryPanel.addButton({
 					text : "批量导出请检元件",
 					scope : this,
-					hidden : exportflag == '0' ,
-					//rescode : '10002781',
+					hidden : exportflag == '0',
+					// rescode : '10002781',
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcelBatch
 				});
@@ -122,7 +128,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
-						disabled : (uid != 'KS00610') && (uid != 'KS01313') && (uid != 'KS00524') && (uid != 'XXB'),
+						disabled : (uid != 'KS00610') && (uid != 'KS01313')
+								&& (uid != 'KS00524') && (uid != 'XXB'),
 						handler : this.onDeleteOrder
 					}, '-', {
 						text : '审核',
@@ -196,6 +203,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'applyAmount',
 						sortable : true,
 						header : '请检数量'
+					}, {
+						dataIndex : 'storage',
+						xtype : 'dictcolumn',
+						dictData : KS_PROD_STORAGE,
+						sortable : true,
+						header : '入库位'
 					}, {
 						dataIndex : 'printCnt',
 						sortable : true,
@@ -341,7 +354,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				});
 
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
-			title : '【请检元件清单】',
+			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
 				forceFit : true
@@ -401,18 +414,18 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
-					height : 280,
+					height : 380,
 					region : 'north',
 					// baseCls : "x-panel",
 					autoHide : false,
 					autoScroll : false,
 					border : true,
-					columns : 2,
+					columns : 12,
 					saveUrl : 'com.keensen.ump.produce.component.apply.add.biz.ext',
 					fields : [{
 						xtype : 'combobox',
 						anchor : '95%',
-						colspan : 1,
+						colspan : 6,
 						allowBlank : false,
 						name : 'orderType',
 						dataIndex : 'orderType',
@@ -438,7 +451,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						allowBlank : false,
 						fieldLabel : '订单号',
 						anchor : '95%',
-						colspan : 1,
+						colspan : 6,
 						editable : true,
 						hideTrigger : false,
 						scope : this,
@@ -448,14 +461,14 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 12
 					}, {
 						xtype : 'numberfield',
 						name : 'orderAmount',
 						allowBlank : false,
 						fieldLabel : '订单数量',
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'numberfield',
 						ref : '../applyAmount',
@@ -463,19 +476,19 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						allowBlank : false,
 						fieldLabel : '请检数量',
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;">订单要求  </p>',
 						labelSeparator : '',// 去掉冒号
-						colspan : 2
+						colspan : 12
 					}, {
 						xtype : 'textfield',
 						name : 'prodSpecName',
 						fieldLabel : '元件型号',
 						allowBlank : false,
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'dictcombobox',
 						name : 'prodClassFlag',
@@ -484,11 +497,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '元件类型',
 						dictData : KS_PROD_CLASS_FLAG,
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 12
 					}, {
 						xtype : 'dictcombobox',
 						name : 'lid',
@@ -497,7 +510,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '端盖',
 						dictData : KS_PROD_LID,
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'dictcombobox',
 						name : 'markTypeFlag',
@@ -506,18 +519,18 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '唛头情况',
 						dictData : KS_PROD_MARK_TYPE_FLAG,
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 12
 					}, {
 						xtype : 'textfield',
 						name : 'markSpecCode',
 						fieldLabel : '唛头显示型号',
 						allowBlank : false,
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'dictcombobox',
 						name : 'tape',
@@ -526,11 +539,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						allowBlank : false,
 						dictData : KS_PROD_TAPE,
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 12
 					}, {
 						xtype : 'dictcombobox',
 						name : 'markSpecialFlag',
@@ -539,29 +552,30 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '加贴特殊唛头',
 						dictData : KS_YESORNO,
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'textfield',
 						name : 'performance',
 						fieldLabel : '性能',
 						// allowBlank : false,
 						anchor : '95%',
-						colspan : 1
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 12
 					}, {
 						xtype : 'textfield',
 						name : 'box',
 						fieldLabel : '包装箱',
 						// allowBlank : false,
 						anchor : '95%',
-						colspan : 1
+						colspan : 4
 					}, {
 						xtype : 'combobox',
 						name : 'tray',
 						anchor : '95%',
+						colspan : 4,
 						hiddenName : 'tray',
 						ref : '../tray',
 						fieldLabel : '托盘',
@@ -584,6 +598,50 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								this.inputPanel.tray.reset();
 							}
 						}
+					}, {
+						xtype : 'dictcombobox',
+						name : 'label',
+						fieldLabel : '标签',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 4,
+						dictData : KS_COMPONENT_INDUSTRY_LABEL
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'dictcheckboxgroup',
+						columns : 6,
+						ref : '../myabnormal',
+						// hiddenName : 'abnormal',
+						fieldLabel : '外观异常类型',
+						anchor : '95%',
+						colspan : 12,
+						dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textarea',
+						name : 'abnormalExplain',
+						fieldLabel : '外观异常说明',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'textarea',
+						name : 'abnormalOther',
+						fieldLabel : '其他异常备注',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'hidden',
+						ref : '../abnormal',
+						name : 'abnormal'
 					}],
 					buttons : [{
 								text : "保存",
@@ -797,7 +855,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				});
 
 		this.listPanel4 = this.listPanel4 || new Ext.fn.ListPanel({
-			title : '【请检元件清单】',
+			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
 				forceFit : true
@@ -855,7 +913,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 400,
+			height : 450,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -925,7 +983,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '元件型号',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'prodClassFlag',
@@ -933,11 +991,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '元件类型',
 						dictData : KS_PROD_CLASS_FLAG,
 						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'lid',
@@ -945,7 +999,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						readOnly : true,
 						dictData : KS_PROD_LID,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'markTypeFlag',
@@ -953,7 +1007,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '唛头情况',
 						dictData : KS_PROD_MARK_TYPE_FLAG,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -964,7 +1018,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						readOnly : true,
 						fieldLabel : '唛头显示型号',
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'tape',
@@ -972,11 +1026,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '膜体所裹胶带',
 						dictData : KS_PROD_TAPE,
 						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'markSpecialFlag',
@@ -984,14 +1034,14 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '加贴特殊唛头',
 						dictData : KS_YESORNO,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'performance',
 						fieldLabel : '性能',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -1002,7 +1052,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '包装箱',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'combobox',
 						dataIndex : 'tray',
@@ -1023,6 +1073,52 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						valueField : "mykey",
 						forceSelection : true,
 						emptyText : "",
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						name : 'label',
+						dataIndex : 'label',
+						readOnly : true,
+						fieldLabel : '标签',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 3,
+						dictData : KS_COMPONENT_INDUSTRY_LABEL
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'dictcheckboxgroup',
+						columns : 6,
+						readOnly : true,
+						dataIndex : 'abnormal',
+						fieldLabel : '外观异常类型',
+						anchor : '95%',
+						colspan : 12,
+						dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textarea',
+						readOnly : true,
+						height : 35,
+						dataIndex : 'abnormalExplain',
+						fieldLabel : '外观异常说明',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'textarea',
+						readOnly : true,
+						height : 35,
+						dataIndex : 'abnormalOther',
+						fieldLabel : '其他异常备注',
+						// allowBlank : false,
+						anchor : '95%',
 						colspan : 6
 					}, {
 						xtype : 'displayfield',
@@ -1183,7 +1279,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				});
 
 		this.listPanel5 = this.listPanel5 || new Ext.fn.ListPanel({
-			title : '【请检元件清单】',
+			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
 				forceFit : true
@@ -1234,7 +1330,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.editPanel2 = this.editPanel2 || new Ext.fn.EditPanel({
-			height : 400,
+			height : 450,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -1302,7 +1398,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '元件型号',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'prodClassFlag',
@@ -1310,11 +1406,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '元件类型',
 						dictData : KS_PROD_CLASS_FLAG,
 						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'lid',
@@ -1322,7 +1414,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						readOnly : true,
 						dictData : KS_PROD_LID,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'markTypeFlag',
@@ -1330,7 +1422,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '唛头情况',
 						dictData : KS_PROD_MARK_TYPE_FLAG,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -1341,7 +1433,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						readOnly : true,
 						fieldLabel : '唛头显示型号',
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'tape',
@@ -1349,11 +1441,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '膜体所裹胶带',
 						dictData : KS_PROD_TAPE,
 						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'markSpecialFlag',
@@ -1361,14 +1449,14 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '加贴特殊唛头',
 						dictData : KS_YESORNO,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'performance',
 						fieldLabel : '性能',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -1379,7 +1467,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '包装箱',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'combobox',
 						dataIndex : 'tray',
@@ -1400,6 +1488,52 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						valueField : "mykey",
 						forceSelection : true,
 						emptyText : "",
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						name : 'label',
+						dataIndex : 'label',
+						readOnly : true,
+						fieldLabel : '标签',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 3,
+						dictData : KS_COMPONENT_INDUSTRY_LABEL
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'dictcheckboxgroup',
+						columns : 6,
+						readOnly : true,
+						dataIndex : 'abnormal',
+						fieldLabel : '外观异常类型',
+						anchor : '95%',
+						colspan : 12,
+						dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textarea',
+						readOnly : true,
+						height : 35,
+						dataIndex : 'abnormalExplain',
+						fieldLabel : '外观异常说明',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'textarea',
+						readOnly : true,
+						height : 35,
+						dataIndex : 'abnormalOther',
+						fieldLabel : '其他异常备注',
+						// allowBlank : false,
+						anchor : '95%',
 						colspan : 6
 					}, {
 						xtype : 'displayfield',
@@ -1564,7 +1698,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				});
 
 		this.listPanel6 = this.listPanel6 || new Ext.fn.ListPanel({
-			title : '【请检元件清单】',
+			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
 				forceFit : true
@@ -1615,7 +1749,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.editPanel3 = this.editPanel3 || new Ext.fn.EditPanel({
-			height : 400,
+			height : 450,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -1683,7 +1817,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '元件型号',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'prodClassFlag',
@@ -1691,11 +1825,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '元件类型',
 						dictData : KS_PROD_CLASS_FLAG,
 						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'lid',
@@ -1703,7 +1833,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						readOnly : true,
 						dictData : KS_PROD_LID,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'markTypeFlag',
@@ -1711,7 +1841,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '唛头情况',
 						dictData : KS_PROD_MARK_TYPE_FLAG,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -1722,7 +1852,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						readOnly : true,
 						fieldLabel : '唛头显示型号',
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'tape',
@@ -1730,11 +1860,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '膜体所裹胶带',
 						dictData : KS_PROD_TAPE,
 						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
+						colspan : 3
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'markSpecialFlag',
@@ -1742,14 +1868,14 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '加贴特殊唛头',
 						dictData : KS_YESORNO,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'performance',
 						fieldLabel : '性能',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -1760,7 +1886,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '包装箱',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 3
 					}, {
 						xtype : 'combobox',
 						dataIndex : 'tray',
@@ -1781,6 +1907,52 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						valueField : "mykey",
 						forceSelection : true,
 						emptyText : "",
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						// name : 'label',
+						dataIndex : 'label',
+						readOnly : true,
+						fieldLabel : '标签',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 3,
+						dictData : KS_COMPONENT_INDUSTRY_LABEL
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'dictcheckboxgroup',
+						columns : 6,
+						readOnly : true,
+						dataIndex : 'abnormal',
+						fieldLabel : '外观异常类型',
+						anchor : '95%',
+						colspan : 12,
+						dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textarea',
+						readOnly : true,
+						height : 35,
+						dataIndex : 'abnormalExplain',
+						fieldLabel : '外观异常说明',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'textarea',
+						readOnly : true,
+						height : 35,
+						dataIndex : 'abnormalOther',
+						fieldLabel : '其他异常备注',
+						// allowBlank : false,
+						anchor : '95%',
 						colspan : 6
 					}, {
 						xtype : 'displayfield',
@@ -1932,7 +2104,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				});
 
 		this.listPanel7 = this.listPanel7 || new Ext.fn.ListPanel({
-			title : '【请检元件清单】',
+			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
 				forceFit : true
@@ -1995,7 +2167,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.modifyPanel = this.modifyPanel || new Ext.fn.EditPanel({
-			height : 280,
+			height : 380,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -2152,13 +2324,13 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '包装箱',
 						// readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 4
 					}, {
 						xtype : 'combobox',
 						dataIndex : 'tray',
 						hiddenName : 'tray',
 						anchor : '95%',
-						colspan : 6,
+						colspan : 4,
 						// readOnly : true,
 						ref : '../tray',
 						fieldLabel : '托盘',
@@ -2183,6 +2355,51 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						}
 
 					}, {
+						xtype : 'dictcombobox',
+						name : 'label',
+						dataIndex : 'label',
+						fieldLabel : '标签',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 4,
+						dictData : KS_COMPONENT_INDUSTRY_LABEL
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'dictcheckboxgroup',
+						columns : 6,
+						ref : '../myabnormal',
+						// name : 'abnormal',
+						// hiddenName : 'abnormal',
+						dataIndex : 'abnormal',
+						fieldLabel : '外观异常类型',
+						anchor : '95%',
+						colspan : 12,
+						dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textarea',
+						name : 'abnormalExplain',
+						dataIndex : 'abnormalExplain',
+						fieldLabel : '外观异常说明',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'textarea',
+						name : 'abnormalOther',
+						dataIndex : 'abnormalOther',
+						fieldLabel : '其他异常备注',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
 						xtype : 'hidden',
 						name : 'id',
 						ref : '../pkid',
@@ -2191,6 +2408,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'hidden',
 						name : 'opt',
 						value : 'modify'
+					}, {
+						xtype : 'hidden',
+						ref : '../abnormal',
+						name : 'abnormal'
 					}],
 			buttons : [{
 						text : "保存",
@@ -2233,7 +2454,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				});
 
 		this.examineListPanel = this.examineListPanel || new Ext.fn.ListPanel({
-			title : '【请检元件清单】',
+			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
 				forceFit : true
@@ -2285,7 +2506,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.examinePanel = this.examinePanel || new Ext.fn.EditPanel({
-			height : 280,
+			height : 380,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -2432,7 +2653,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '包装箱',
 						readOnly : true,
 						anchor : '95%',
-						colspan : 6
+						colspan : 4
 					}, {
 						xtype : 'combobox',
 						dataIndex : 'tray',
@@ -2453,6 +2674,54 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						valueField : "mykey",
 						forceSelection : true,
 						emptyText : "",
+						colspan : 4
+					}, {
+						xtype : 'dictcombobox',
+						// name : 'label',
+						dataIndex : 'label',
+						readOnly : true,
+						fieldLabel : '标签',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 4,
+						dictData : KS_COMPONENT_INDUSTRY_LABEL
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'dictcheckboxgroup',
+						columns : 6,
+						// name : 'abnormal',
+						readOnly : true,
+						hiddenName : 'abnormal',
+						dataIndex : 'abnormal',
+						fieldLabel : '外观异常类型',
+						anchor : '95%',
+						colspan : 12,
+						dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textarea',
+						// name : 'abnormalExplain',
+						readOnly : true,
+						dataIndex : 'abnormalExplain',
+						fieldLabel : '外观异常说明',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'textarea',
+						// name : 'abnormalOther',
+						readOnly : true,
+						dataIndex : 'abnormalOther',
+						fieldLabel : '其他异常备注',
+						// allowBlank : false,
+						anchor : '95%',
 						colspan : 6
 					}, {
 						xtype : 'hidden',

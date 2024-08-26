@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.workorder">
+    <select id="queryCdmDuty" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t1.id "planId",t1.product_order,t1.order_id,to_char(T1.PLAN_DATE,'yyyy-MM-dd') PLAN_DATE ,t1.cdm_code,
+	t1.batch_no "batchNo",
+	t2.id  "orderId",t2.order_no "orderNo" from KS_COMPONENT_PLAN_DAY t1
+	LEFT JOIN KS_PROD_COMPONENT_YXORDER t2
+	ON t1.order_id = t2.id
+	WHERE 1=1
+	AND t1.cdm_state = '0'
+	AND t1.product_order is not null
+	AND t1.cdm_code IN ( SELECT CODE FROM KS_BASE_MACHINE WHERE ip =#ip#)
+	ORDER BY to_char(T1.PLAN_DATE,'yyyy-MM-dd'),t1.product_order</select>
+</sqlMap>

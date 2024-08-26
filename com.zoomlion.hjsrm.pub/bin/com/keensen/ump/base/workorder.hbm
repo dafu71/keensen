@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.base.workorder.KsBaseMachine" table="KS_BASE_MACHINE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="code" type="string">
+            <column length="20" name="CODE"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="name" type="string">
+            <column length="50" name="NAME"/>
+        </property>
+        <property name="ip" type="string">
+            <column length="50" name="IP"/>
+        </property>
+        <property name="type" type="string">
+            <column length="20" name="TYPE"/>
+        </property>
+    </class>
+</hibernate-mapping>

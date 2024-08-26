@@ -16,12 +16,15 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 			function() {
 
 				var reserve1 = this.inputWindow.reserve1.getValue();
+
 				if (reserve1 == '回流油相液') {
 					var reflux = this.inputWindow.reflux.getValue();
 					if (Ext.isEmpty(reflux)) {
 						Ext.Msg.alert("系统提示", "请添加回流液重量");
 						return false;
 					}
+					// this.inputWindow.weight.setValue(parseFloat(weight) +
+					// parseFloat(reflux));
 					this.inputWindow.weight.setValue(reflux);
 				} else {
 					var c41Reality = this.inputWindow.c41Reality.getValue();
@@ -29,9 +32,60 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 						Ext.Msg.alert("系统提示", "请添加C41重量");
 						return false;
 					}
-					this.inputWindow.weight.setValue(c41Reality);
+					var c42Reality = this.inputWindow.c42Reality.getValue();
+					if (Ext.isEmpty(c42Reality))
+						this.inputWindow.weight.setValue(c41Reality);
+					else
+						this.inputWindow.weight.setValue(parseFloat(c41Reality)
+								+ parseFloat(c42Reality) / 1000)
+					// this.inputWindow.weight.setValue(parseFloat(weight) +
+					// parseFloat(c41Reality)/1000);
 				}
-				
+
+				/*
+				 * var c41Reality = this.inputWindow.c41Reality.getValue(); var
+				 * reflux = this.inputWindow.reflux.getValue(); if
+				 * (!Ext.isEmpty(c41Reality) && !Ext.isEmpty(reflux)) { if
+				 * (parseFloat(c41Reality) != 0 && parseFloat(reflux) != 0) {
+				 * Ext.Msg.alert("系统提示", "不能同时添加C41和回流液重量"); return false; } }
+				 * if (Ext.isEmpty(c41Reality) && Ext.isEmpty(reflux)) {
+				 * Ext.Msg.alert("系统提示", "请添加C41或者回流液重量"); return false; } if
+				 * (parseFloat(c41Reality) == 0 && parseFloat(reflux) == 0) {
+				 * Ext.Msg.alert("系统提示", "请添加C41或者回流液重量"); return false; }
+				 */
+		}, this);
+
+	this.inputWindow2.activeItem.mon(this.inputWindow2.activeItem,
+			'beforeSave', function() {
+
+				var reserve1 = this.inputWindow2.reserve1.getValue();
+
+				if (reserve1 == '回流油相液') {
+					var reflux = this.inputWindow2.reflux.getValue();
+					if (Ext.isEmpty(reflux)) {
+						Ext.Msg.alert("系统提示", "请添加回流液重量");
+						return false;
+					}
+					// this.inputWindow.weight.setValue(parseFloat(weight) +
+					// parseFloat(reflux));
+					this.inputWindow2.weight.setValue(reflux);
+				} else {
+					var c41Reality = this.inputWindow2.c41Reality.getValue();
+					if (Ext.isEmpty(c41Reality)) {
+						Ext.Msg.alert("系统提示", "请添加C41重量");
+						return false;
+					}
+					var c42Reality = this.inputWindow2.c42Reality.getValue();
+					if (Ext.isEmpty(c42Reality))
+						this.inputWindow2.weight.setValue(c41Reality);
+					else
+						this.inputWindow2.weight
+								.setValue(parseFloat(c41Reality)
+										+ parseFloat(c42Reality) / 1000)
+					// this.inputWindow.weight.setValue(parseFloat(weight) +
+					// parseFloat(c41Reality)/1000);
+				}
+
 				/*
 				 * var c41Reality = this.inputWindow.c41Reality.getValue(); var
 				 * reflux = this.inputWindow.reflux.getValue(); if
@@ -52,20 +106,20 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 				var reflux = this.editWindow3.reflux.getValue();
 				var weight = this.editWindow3.weight.getValue();
 				if (parseFloat(c41Reality) != 0 && parseFloat(reflux) != 0) {
-					Ext.Msg.alert("系统提示", "不能同时添加C41和回流液重量");
-					return false;
+					//Ext.Msg.alert("系统提示", "不能同时添加C41和回流液重量");
+					//return false;
 				}
 
 				if (parseFloat(c41Reality) == 0 && parseFloat(reflux) == 0) {
-					//Ext.Msg.alert("系统提示", "请添加C41或者回流液重量");
-					//return false;
+					// Ext.Msg.alert("系统提示", "请添加C41或者回流液重量");
+					// return false;
 				}
-				this.inputWindow.weight.setValue(weight);
+
 			}, this);
 
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterload',
 			function(win, data) {
-				
+
 				var step = data.step;
 				if (step != this.opt) {
 					Ext.Msg.alert("系统提示", "请选择待分析数据！", function() {
@@ -82,22 +136,26 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 					});
 
 				} else {
-					var mptype = this.editWindow.mptype.getValue();
-					var std = this.mptypeMap.get(mptype)[0];
-					var std2 = this.mptypeMap.get(mptype)[1];
-					var std3 = this.mptypeMap.get(mptype)[2];
-					var str = '上限' + std3 + ',' + '下限' + std;
-					this.editWindow.standard.setValue(str);
+					/*
+					 * var mptype = this.editWindow.mptype.getValue(); var std =
+					 * this.mptypeMap.get(mptype)[0]; var std2 =
+					 * this.mptypeMap.get(mptype)[1]; var std3 =
+					 * this.mptypeMap.get(mptype)[2]; var str = '上限' + std3 +
+					 * ',' + '下限' + std; this.editWindow.standard.setValue(str);
+					 */
 					var reserve1 = this.editWindow.reserve1.getValue();
-		
+
 					if (reserve1 == '回流油相液') {
 						this.editWindow.batchNo.setVisible(false);
 						this.editWindow.refluxNo.setVisible(true);
-					}else{
+						this.editWindow.reflux.setVisible(true);
+						
+					} else {
 						this.editWindow.batchNo.setVisible(true);
 						this.editWindow.refluxNo.setVisible(false);
+						this.editWindow.reflux.setVisible(false);
 					}
-				
+
 				}
 			}, this);
 
@@ -118,8 +176,8 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 
 					});
 
-				}else{
-					
+				} else {
+
 				}
 			}, this);
 
@@ -140,12 +198,15 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 
 					});
 
-				}else{
+				} else {
 					var reserve1 = this.editWindow3.reserve1.getValue();
+
 					if (reserve1 == '回流油相液') {
 						this.editWindow3.batchNo.setVisible(false);
 						this.editWindow3.refluxNo.setVisible(true);
-					}else{
+						this.editWindow3.reflux.setVisible(true);
+						this.onCalc4pl();
+					} else {
 						this.editWindow3.batchNo.setVisible(true);
 						this.editWindow3.refluxNo.setVisible(false);
 						this.editWindow3.reflux.setVisible(false);
@@ -230,16 +291,20 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onAdd = function() {
 	this.inputWindow.c42Reality.setVisible(true);
 	this.inputWindow.reserve1.setValue('新配油相液');
 
+	this.inputWindow.weightPlan.setVisible(true);
+	this.inputWindow.concentration.setVisible(true);
+	this.inputWindow.c41Plan.setVisible(true);
+	this.inputWindow.c42Plan.setVisible(true);
+	this.inputWindow.displayfield100.setVisible(true);
+	this.inputWindow.displayfield200.setVisible(true);
+	this.inputWindow.displayfield300.setVisible(true);
+
 }
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onAdd2 = function() {
-	this.inputWindow.show();
-	this.inputWindow.refluxNo.setVisible(true);
-	this.inputWindow.batchNo.setVisible(false);
-	this.inputWindow.reflux.setVisible(true);
-	this.inputWindow.c41Reality.setVisible(false);
-	this.inputWindow.c42Reality.setVisible(false);
-	this.inputWindow.reserve1.setValue('回流油相液');
+	this.inputWindow2.show();
+
+	this.inputWindow2.reserve1.setValue('回流油相液');
 }
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.destroy = function() {
@@ -248,6 +313,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.destroy = function() {
 	this.editWindow3.destroy();
 	this.inputWindow.destroy();
 	this.viewWindow.destroy();
+	this.inputWindow2.destroy();
 }
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onEdit = function() {
@@ -311,4 +377,211 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.exportExcel = function()
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc = function() {
+	var _this = this;
+	var mptype = this.inputWindow.mptype.getValue();
+	if (Ext.isEmpty(mptype)) {
+		Ext.Msg.alert("系统提示", "请选择膜片类型!");
+		return;
+	}
+	var weightPlan = this.inputWindow.weightPlan.getValue();
+	if (Ext.isEmpty(weightPlan)) {
+		Ext.Msg.alert("系统提示", "请输入配料总重量!");
+		return;
+	}
+	var line = this.inputWindow.line.getValue();
+	if (Ext.isEmpty(line)) {
+		Ext.Msg.alert("系统提示", "请选择线别!");
+		return;
+	}
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+				url : "com.keensen.ump.produce.quality.mpoiltest.queryWeight.biz.ext",
+				method : "post",
+				jsonData : {
+					'condition/weight' : weightPlan,
+					'condition/mptype' : mptype,
+					'condition/line' : line
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						var datas = ret.data;
+
+						if (!Ext.isEmpty(datas)) {
+							var data = datas[0];
+							_this.inputWindow.concentration
+									.setValue(data.c42std);
+							_this.inputWindow.c41Plan.setValue(data.c41);
+							_this.inputWindow.c42Plan.setValue(data.c42);
+						} else {
+							Ext.Msg.alert("系统提示", "系统没有计算标准，请手动输入!");
+
+						}
+					}
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
+
+	var oiltype = this.editWindow.reserve1.getValue();
+	var weight = this.editWindow.weight2.getValue();
+	weight = parseFloat(weight);
+	var concentration = this.editWindow.concentration.getValue();
+	if (Ext.isEmpty(concentration)) {
+		Ext.Msg.alert("系统提示", "请输入C42浓度!");
+		return;
+	}
+	var concentration2 = this.editWindow.concentration2.getValue();
+	// 测试的
+	concentration = parseFloat(concentration) / 100;
+	// 理论的
+	concentration2 = parseFloat(concentration2) / 100;
+
+	if (oiltype == '新配油相液') {
+		// =(99.7/(1-0.0025)- 99.7/(1-0.0024))*1000
+		// 测试的小于理论的
+		if (concentration < concentration2) {
+			var c41Reality = this.editWindow.c41Reality.getValue();
+			c41Reality = parseFloat(c41Reality);
+			var c41Plan = 0;
+			var c42Plan = (c41Reality / (1 - concentration2) - c41Reality
+					/ (1 - concentration))
+					* 1000;
+			c42Plan = Math.round(c42Plan * 100) / 100;
+			this.editWindow.c41Plan.setValue(0);
+			this.editWindow.c42Plan.setValue(c42Plan);
+			weight = weight + c42Plan / 1000;
+			weight = Math.round(weight * 100) / 100;
+			this.editWindow.weight.setValue(weight);
+			return;
+		}
+		// =(300/0.0025-300/0.0026)/1000
+		// 测试的大于理论的
+		if (concentration > concentration2) {
+			var c42Reality = this.editWindow.c42Reality.getValue();
+			c42Reality = parseFloat(c42Reality);
+			var c42Plan = 0;
+			var c41Plan = (c42Reality / concentration2 - c42Reality
+					/ concentration)
+					/ 1000;
+			c41Plan = Math.round(c41Plan * 100) / 100;
+			this.editWindow.c41Plan.setValue(c41Plan);
+			this.editWindow.c42Plan.setValue(0);
+			weight = weight + c41Plan;
+			weight = Math.round(weight * 100) / 100;
+			this.editWindow.weight.setValue(weight);
+			return;
+		}
+	}else{//回流油相液
+		if (concentration < concentration2) {
+			var c41Plan = 0;
+			var c42Plan = weight * 1000 * (concentration2-concentration);
+			c42Plan = Math.round(c42Plan * 100) / 100;
+			this.editWindow.c41Plan.setValue(0);
+			this.editWindow.c42Plan.setValue(c42Plan);
+			weight = weight + c42Plan / 1000;
+			weight = Math.round(weight * 100) / 100;
+			this.editWindow.weight.setValue(weight);
+			return;			
+		}else{
+			var c42Plan = 0;
+			var c41Plan = 100 * (concentration/concentration2 -1);
+			c41Plan = Math.round(c41Plan * 100) / 100;
+			this.editWindow.c41Plan.setValue(c41Plan);
+			this.editWindow.c42Plan.setValue(0);
+			weight = weight + c41Plan;
+			weight = Math.round(weight * 100) / 100;
+			this.editWindow.weight.setValue(weight);
+			return;
+		}
+	}
+	this.editWindow.c41Plan.setValue(0);
+	this.editWindow.c42Plan.setValue(0);
+
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc2 = function() {
+	var _this = this;
+	var mptype = this.inputWindow2.mptype.getValue();
+	if (Ext.isEmpty(mptype)) {
+		Ext.Msg.alert("系统提示", "请选择膜片类型!");
+		return;
+	}
+
+	var line = this.inputWindow2.line.getValue();
+	if (Ext.isEmpty(line)) {
+		Ext.Msg.alert("系统提示", "请选择线别!");
+		return;
+	}
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+				url : "com.keensen.ump.produce.quality.mpoiltest.queryWeight.biz.ext",
+				method : "post",
+				jsonData : {
+					'condition/weight' : 100,
+					'condition/mptype' : mptype,
+					'condition/line' : line
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						var datas = ret.data;
+
+						if (!Ext.isEmpty(datas)) {
+							var data = datas[0];
+							_this.inputWindow2.concentration
+									.setValue(data.c42std);
+
+						} else {
+							Ext.Msg.alert("系统提示", "系统没有对应标准，请手动输入!");
+							_this.inputWindow2.concentration.setValue('');
+						}
+					}
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4pl = function() {
+	var c41Plan = this.editWindow3.c41Plan.getValue();
+	c41Plan = parseFloat(c41Plan);
+	var c42Plan = this.editWindow3.c42Plan.getValue();
+	c42Plan = parseFloat(c42Plan);
+	var weight2 = this.editWindow3.weight2.getValue();
+	weight2 = parseFloat(weight2);
+	var c41Reality = this.editWindow3.c41Reality.getValue();
+	c41Reality = parseFloat(c41Reality);
+	var c42Reality = this.editWindow3.c42Reality.getValue();
+	c42Reality = parseFloat(c42Reality);
+	//var reflux = weight2 - c41Plan - c42Plan/1000 +  c41Reality + c42Reality/1000;
+	var reflux = weight2 +  c41Reality + c42Reality/1000;
+	reflux = Math.round(reflux * 1000) / 1000;
+	this.editWindow3.reflux.setValue(reflux);	
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onBoard = function() {
+	window.open('com.keensen.ump.produce.quality.queryBoard.flow?flag=1');
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onBoard2 = function() {
+	window.open('com.keensen.ump.produce.quality.queryBoard.flow?flag=2');
 }

@@ -40,6 +40,10 @@
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
+
+<ext:dict property="KS_COMPONENT_INDUSTRY_ABNORMAL" dictTypeId="KS_COMPONENT_INDUSTRY_ABNORMAL" />
+<ext:dict property="KS_COMPONENT_INDUSTRY_LABEL" dictTypeId="KS_COMPONENT_INDUSTRY_LABEL" />
+
 <ext:dict property="KS_YESORNO" dictTypeId="KS_YESORNO" />
 <ext:dict property="KS_PROD_CLASS_FLAG" dictTypeId="KS_PROD_CLASS_FLAG" />
 <ext:dict property="KS_PROD_LID" dictTypeId="KS_PROD_LID" />

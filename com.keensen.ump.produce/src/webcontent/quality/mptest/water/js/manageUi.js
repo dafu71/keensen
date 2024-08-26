@@ -192,6 +192,12 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 				iconCls : 'icon-application_form_magnify',
 				disabled : (ply != '1') && (fxy != '1') && (gyy != '1'),
 				handler : this.onView
+			}, '->', {
+				text : '报废',
+				scope : this,
+				iconCls : 'icon-application_delete',
+				disabled : invalid != '1',
+				handler : this.onInvalid
 			}/*
 				 * , '->', { text : '打印标签', scope : this, iconCls :
 				 * 'icon-printer', handler : this.onPrint }
@@ -410,7 +416,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							onTriggerClick : function() {
 								_this.onCalc();
 							},
-							regex : /^[0-9]\d*$/,
+							regex : /^\d+(\.\d+)?$/,
 							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'displayfield',
@@ -480,6 +486,28 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							readOnly : true,
 							allowBlank : false,
 							name : 'list/c30Plan',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							ref : '../../c24Plan',
+							fieldLabel : '计划添加C24(g)',
+							//readOnly : true,
+							allowBlank : false,
+							name : 'list/c24Plan',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							ref : '../../c29Plan',
+							fieldLabel : '计划添加C29(g)',
+							//readOnly : true,
+							allowBlank : false,
+							name : 'list/c29Plan',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -848,6 +876,28 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
+							xtype : 'numberfield',
+							ref : '../../c24Test',
+							fieldLabel : '测试浓度C24',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c24Test',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c29Test',
+							fieldLabel : '测试浓度C29',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c29Test',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 							xtype : 'textfield',
 							ref : '../../position',
 							fieldLabel : '取样位置',
@@ -911,14 +961,15 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 				xtype : 'editpanel',
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
-				columns : 2,
+				columns : 6,
 				loadUrl : 'com.keensen.ump.produce.quality.mptest5.expandWaterList4Second.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.mptest5.modiWaterListBySecond.biz.ext',
 				fields : [{
 							dataIndex : 'batchNo',
 							anchor : '95%',
 							xtype : 'displayfield',
-							fieldLabel : '水相液批号<br>/膜片批次'
+							fieldLabel : '批号/膜片批次',
+							colspan : 3
 						}, {
 
 							xtype : 'displayfield',
@@ -926,11 +977,11 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							ref : '../../watertype',
 							dataIndex : 'watertype',
 							anchor : '95%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 
 							xtype : 'displayfield',
@@ -938,7 +989,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							ref : '../../line',
 							dataIndex : 'line',
 							anchor : '95%',
-							colspan : 1
+							colspan : 3
 						}, {
 
 							xtype : 'displayfield',
@@ -946,30 +997,25 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							ref : '../../mptype',
 							dataIndex : 'mptype',
 							anchor : '95%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
 							ref : '../../displayfield1',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield2',
 							dataIndex : 'c21Plan',
 							fieldLabel : '原计划添加C21(g)',
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield3',
 							fieldLabel : '原计划添加C22(g)',
 							dataIndex : 'c22Plan',
 							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							ref : '../../displayfield4',
-							height : '5',
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
@@ -977,18 +1023,18 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							fieldLabel : '原计划添加C23(g)',
 							dataIndex : 'c23Plan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield4',
+							height : '5',
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield6',
 							fieldLabel : '原计划添加C27(g)',
 							dataIndex : 'c27Plan',
 							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							ref : '../../displayfield7',
-							height : '5',
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
@@ -996,18 +1042,32 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							fieldLabel : '原计划添加C28(g)',
 							dataIndex : 'c28Plan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield11',
 							fieldLabel : '原计划添加C30(g)',
 							dataIndex : 'c30Plan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield14',
 							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield240',
+							fieldLabel : '原计划添加C24(g)',
+							dataIndex : 'c24Plan',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield290',
+							fieldLabel : '原计划添加C29(g)',
+							dataIndex : 'c29Plan',
+							anchor : '95%',
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
@@ -1015,11 +1075,11 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							fieldLabel : '原计划添加RO水(kg)',
 							dataIndex : 'roPlan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							ref : '../../position',
@@ -1027,30 +1087,25 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							dataIndex : 'position',
 							// allowBlank : false,
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield14',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield18',
 							dataIndex : 'c21Test',
 							fieldLabel : '测试浓度C21',
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield19',
 							dataIndex : 'c22Test',
 							fieldLabel : '测试浓度C22',
 							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							ref : '../../displayfield20',
-							height : '5',
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
@@ -1058,18 +1113,18 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							dataIndex : 'c23Test',
 							fieldLabel : '测试浓度C23',
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield20',
+							height : '5',
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield22',
 							dataIndex : 'c27Test',
 							fieldLabel : '测试浓度C27',
 							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							ref : '../../displayfield23',
-							height : '5',
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
@@ -1077,18 +1132,37 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							dataIndex : 'c28Test',
 							fieldLabel : '测试浓度C28',
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield27',
 							dataIndex : 'c30Test',
 							fieldLabel : '测试浓度C30',
 							anchor : '95%',
-							colspan : 1
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield20',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield2400',
+							dataIndex : 'c24Test',
+							fieldLabel : '测试浓度C24',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield2900',
+							dataIndex : 'c29Test',
+							fieldLabel : '测试浓度C29',
+							anchor : '95%',
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 
 							xtype : 'combobox',
@@ -1099,8 +1173,9 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							allowBlank : false,
 							editable : false,
 							anchor : '95%',
+							colspan : 3,
 							store : [['正常使用', '正常使用'], ['调整', '调整'],
-									['水相报废', '水相报废']],
+									['报废', '报废']],
 							listeners : {
 								scope : this,
 								'expand' : function(A) {
@@ -1122,6 +1197,10 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 											.setReadOnly(ireadonly);
 									this.editWindow2.roPlan
 											.setReadOnly(ireadonly);
+									this.editWindow2.c24Plan
+											.setReadOnly(ireadonly);
+									this.editWindow2.c29Plan
+											.setReadOnly(ireadonly);
 
 									this.editWindow2.c21Plan
 											.setDisabled(ireadonly);
@@ -1139,6 +1218,10 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 											.setDisabled(ireadonly);
 									this.editWindow2.weightPlan
 											.setDisabled(ireadonly);
+									this.editWindow2.c24Plan
+											.setDisabled(ireadonly);
+									this.editWindow2.c29Plan
+											.setDisabled(ireadonly);
 
 									if (index != 1) {
 										this.editWindow2.c21Plan.setValue('');
@@ -1148,6 +1231,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 										this.editWindow2.c28Plan.setValue('');
 										this.editWindow2.c30Plan.setValue('');
 										this.editWindow2.roPlan.setValue('');
+										this.editWindow2.c24Plan.setValue('');
+										this.editWindow2.c29Plan.setValue('');
 										this.editWindow2.weightPlan
 												.setValue('');
 									}
@@ -1158,14 +1243,14 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							currentRolecode : '10001322',
 							allowBlank : false,
 							anchor : '95%',
-							colspan : 1,
+							colspan : 3,
 							ref : '../../appointId',
 							hiddenName : 'list/appointId',
 							fieldLabel : '工艺员'
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textfield',
 							ref : '../../c21Plan',
@@ -1173,7 +1258,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'list/c21Plan',
 							readOnly : true,
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
 							listeners : {
 								'change' : function(o, newValue, oldValue) {
 									if (newValue == oldValue)
@@ -1190,7 +1275,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'list/c22Plan',
 							readOnly : true,
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
 							listeners : {
 								'change' : function(o, newValue, oldValue) {
 									if (newValue == oldValue)
@@ -1200,10 +1285,6 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 									}
 								}
 							}
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
 						}, {
 							xtype : 'textfield',
 							ref : '../../c23Plan',
@@ -1211,7 +1292,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'list/c23Plan',
 							readOnly : true,
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
 							listeners : {
 								'change' : function(o, newValue, oldValue) {
 									if (newValue == oldValue)
@@ -1222,16 +1303,16 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 								}
 							}
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
 							xtype : 'textfield',
 							ref : '../../c27Plan',
 							fieldLabel : '计划添加C27(g)',
 							readOnly : true,
 							name : 'list/c27Plan',
 							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
 							colspan : 2
 						}, {
 							xtype : 'textfield',
@@ -1240,7 +1321,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							readOnly : true,
 							name : 'list/c28Plan',
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
 							listeners : {
 								'change' : function(o, newValue, oldValue) {
 									if (newValue == oldValue)
@@ -1257,7 +1338,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							readOnly : true,
 							name : 'list/c30Plan',
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
 							listeners : {
 								'change' : function(o, newValue, oldValue) {
 									if (newValue == oldValue)
@@ -1270,14 +1351,15 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textfield',
-							ref : '../../roPlan',
-							fieldLabel : '计划添加RO水(kg)',
-							name : 'list/roPlan',
+							ref : '../../c24Plan',
+							fieldLabel : '计划添加C24(g)',
+							readOnly : true,
+							name : 'list/c24Plan',
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
 							listeners : {
 								'change' : function(o, newValue, oldValue) {
 									if (newValue == oldValue)
@@ -1289,12 +1371,58 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							}
 						}, {
 							xtype : 'textfield',
-							ref : '../../weightPlan',
+							ref : '../../c29Plan',
+							fieldLabel : '计划添加C29(g)',
 							readOnly : true,
+							name : 'list/c29Plan',
+							anchor : '95%',
+							colspan : 2,
+							listeners : {
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									else {
+										_this.onCalc4tz();
+									}
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							ref : '../../roPlan',
+							fieldLabel : '计划添加RO水(kg)',
+							name : 'list/roPlan',
+							anchor : '95%',
+							colspan : 2,
+							listeners : {
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									else {
+										_this.onCalc4tz();
+									}
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'trigger',
+							emptyText : '输入完毕单击旁边按钮计算',
+							ref : '../../weightPlan',
+							//readOnly : true,
 							fieldLabel : '计划总重量(kg)',
 							name : 'list/weightPlan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 3,
+							editable : true,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onCalc4tz();
+							},
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'hidden',
 							name : 'list/relationId',
@@ -1556,6 +1684,60 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
+							fieldLabel : '计划添加C24(g)',
+							dataIndex : 'c24Plan',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'list/c24Reality',
+							ref : '../../c24Reality',
+							allowBlank : false,
+							fieldLabel : '实际添加C24(g)',
+							anchor : '95%',
+							colspan : 1,
+							listeners : {
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									else {
+										_this.onCalc4pl();
+									}
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '计划添加C29(g)',
+							dataIndex : 'c29Plan',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'list/c29Reality',
+							ref : '../../c29Reality',
+							allowBlank : false,
+							fieldLabel : '实际添加C29(g)',
+							anchor : '95%',
+							colspan : 1,
+							listeners : {
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									else {
+										_this.onCalc4pl();
+									}
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
 							fieldLabel : '计划添加RO水(kg)',
 							dataIndex : 'roPlan',
 							anchor : '95%',
@@ -1588,14 +1770,20 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							anchor : '95%',
 							colspan : 1
 						}, {
-							xtype : 'numberfield',
+							xtype : 'trigger',
+							emptyText : '单击旁边按钮计算',
 							ref : '../../weightReality',
 							name : 'list/weightReality',
-							readOnly : true,
 							allowBlank : false,
+							editable : false,
 							fieldLabel : '配料实际总重量(kg)',
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onCalc4pl();
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -1668,11 +1856,17 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						dataIndex : 'c23Test',
 						header : 'c23测试浓度'
 					}, {
+						dataIndex : 'c24Test',
+						header : 'c24测试浓度'
+					}, {
 						dataIndex : 'c27Test',
 						header : 'c27测试浓度'
 					}, {
 						dataIndex : 'c28Test',
 						header : 'c28测试浓度'
+					}, {
+						dataIndex : 'c29Test',
+						header : 'c29测试浓度'
 					}, {
 						dataIndex : 'c30Test',
 						header : 'c30测试浓度'
@@ -1686,11 +1880,17 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						dataIndex : 'c23Plan',
 						header : 'c23计划添加量'
 					}, {
+						dataIndex : 'c24Plan',
+						header : 'c24计划添加量'
+					}, {
 						dataIndex : 'c27Plan',
 						header : 'c27计划添加量'
 					}, {
 						dataIndex : 'c28Plan',
 						header : 'c28计划添加量'
+					}, {
+						dataIndex : 'c29Plan',
+						header : 'c29计划添加量'
 					}, {
 						dataIndex : 'c30Plan',
 						header : 'c30计划添加量'
@@ -1707,11 +1907,17 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						dataIndex : 'c23Reality',
 						header : 'c23实际添加量'
 					}, {
+						dataIndex : 'c24Reality',
+						header : 'c24实际添加量'
+					}, {
 						dataIndex : 'c27Reality',
 						header : 'c27实际添加量'
 					}, {
 						dataIndex : 'c28Reality',
 						header : 'c28实际添加量'
+					}, {
+						dataIndex : 'c29Reality',
+						header : 'c29实际添加量'
 					}, {
 						dataIndex : 'c30Reality',
 						header : 'c30实际添加量'
@@ -1794,6 +2000,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}, {
 							name : 'c30Test'
 						}, {
+							name : 'c24Test'
+						}, {
 							name : 'c21Plan'
 						}, {
 							name : 'c22Plan'
@@ -1807,6 +2015,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'c29Plan'
 						}, {
 							name : 'c30Plan'
+						}, {
+							name : 'c24Plan'
 						}, {
 							name : 'roPlan'
 						}, {
@@ -1823,6 +2033,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'c29Reality'
 						}, {
 							name : 'c30Reality'
+						}, {
+							name : 'c24Reality'
 						}, {
 							name : 'roReality'
 						}, {
@@ -1914,7 +2126,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							anchor : '95%',
 							xtype : 'displayfield',
 							colspan : 1,
-							fieldLabel : '水相液批号<br>/膜片批次'
+							fieldLabel : '批号/膜片批次'
 						}, {
 
 							xtype : 'displayfield',
@@ -2043,6 +2255,30 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							decimalPrecision : 3,
 							allowBlank : false,
 							name : 'list/c30Test',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c24Test',
+							dataIndex : 'c24Test',
+							fieldLabel : '测试浓度C24',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c24Test',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c29Test',
+							fieldLabel : '测试浓度C29',
+							dataIndex : 'c29Test',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c29Test',
 							anchor : '95%',
 							colspan : 1
 						}, {

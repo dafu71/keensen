@@ -150,10 +150,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPrintCaidieMoTag = functi
 	} else {
 		var C = A.getSelectionModel().getSelections();
 		var rec = C[0];
-		
+
 		var produceDate = rec.data.produceDate;
-		produceDate = produceDate.slice(0,10);
-		
+		produceDate = produceDate.slice(0, 10);
+
 		var f = document.getElementById('cdmprintForm');
 		f.batchId.value = rec.data.batchId;
 		f.batchNo.value = rec.data.batchNo;
@@ -335,6 +335,75 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function(
 					}
 				})
 	}
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPlan = function() {
+	var _this = this;
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.workorder.queryCdmDuty.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				if (!Ext.isEmpty(ret.data)) {
+					var tumoBatchNo = ret.data[0].batchNo;
+					var planId = ret.data[0].planId;
+					_this.inputWindow.tumoBatchNo.setValue(tumoBatchNo);
+					_this.inputWindow.planId.setValue(planId);
+					_this.dealTumoBatchNo();
+				} else {
+					Ext.Msg.alert("系统提示", "该机台没有分配任务，请检查！", function() {
+								_this.inputWindow.batchNo.setValue('');
+								return false;
+							})
+
+				}
+			}
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onReport = function() {
+	var planId = this.inputWindow.planId.getValue();
+	if (Ext.isEmpty(planId))
+		return;
+	var _this = this;
+
+	Ext.Msg.confirm('提示', '是否立即提交完工报告？', function(btn) {
+		if (btn === 'yes') {
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.produce.component.workorder.finishCdm.biz.ext",
+				method : "post",
+				jsonData : {
+					'planId' : planId
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					Ext.Msg.alert("系统提示", "报告已提交！", function() {
+								_this.inputWindow.tumoBatchNo.setValue('');
+								_this.inputWindow.planId.setValue('');
+								return false;
+							})
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+		}
+	});
 }
 
 function defectView(tumoBatchNo) {

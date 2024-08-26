@@ -1377,6 +1377,7 @@ com.zoomlion.hjsrm.inspect.InspectwxlljywhMgr = function() {
 					allowBlank : false,
 					scope : this,
 					renderer : function(value) {
+			
 						var rowIndex = this.storewtsxa.find("fid", "" + value);
 						if (rowIndex < 0)
 							return '';

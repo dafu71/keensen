@@ -38,6 +38,10 @@
       <process:from type="literal" pattern="reference">老基地</process:from>
       <process:to type="query">map/base</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">100</process:from>
+      <process:to type="query">map/num</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>
@@ -74,6 +78,10 @@
     <process:copy>
       <process:from type="literal" pattern="reference">新基地</process:from>
       <process:to type="query">map2/base</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">100</process:from>
+      <process:to type="query">map2/num</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">

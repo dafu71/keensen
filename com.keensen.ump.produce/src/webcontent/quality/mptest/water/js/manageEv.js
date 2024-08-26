@@ -68,7 +68,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 						this.editWindow2.displayfield4.hide();
 						this.editWindow2.displayfield5.hide();
 						this.editWindow2.displayfield6.hide();
-						this.editWindow2.displayfield7.hide();
+						// this.editWindow2.displayfield7.hide();
 						this.editWindow2.displayfield8.hide();
 						// this.editWindow2.displayfield9.hide();
 						// this.editWindow2.displayfield10.hide();
@@ -84,7 +84,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 						this.editWindow2.displayfield20.hide();
 						this.editWindow2.displayfield21.hide();
 						this.editWindow2.displayfield22.hide();
-						this.editWindow2.displayfield23.hide();
+						// this.editWindow2.displayfield23.hide();
 						this.editWindow2.displayfield24.hide();
 						// this.editWindow2.displayfield25.hide();
 						// this.editWindow2.displayfield26.hide();
@@ -99,7 +99,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 						this.editWindow2.displayfield4.show();
 						this.editWindow2.displayfield5.show();
 						this.editWindow2.displayfield6.show();
-						this.editWindow2.displayfield7.show();
+						// this.editWindow2.displayfield7.show();
 						this.editWindow2.displayfield8.show();
 						// this.editWindow2.displayfield9.show();
 						// this.editWindow2.displayfield10.show();
@@ -115,7 +115,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 						this.editWindow2.displayfield20.show();
 						this.editWindow2.displayfield21.show();
 						this.editWindow2.displayfield22.show();
-						this.editWindow2.displayfield23.show();
+						// this.editWindow2.displayfield23.show();
 						this.editWindow2.displayfield24.show();
 						// this.editWindow2.displayfield25.show();
 						// this.editWindow2.displayfield26.show();
@@ -148,6 +148,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 					var results = [resultc21, resultc22, resultc23, resultc27,
 							resultc28, resultc30];
 					for (var i = 0; i < results.length; i++) {
+						if (i == 1)
+							continue;
 						var v = displays[i].getValue();
 						v = results[i] == '0' ? "<span style='color:red'>" + v
 								+ "</span>" : v;
@@ -235,7 +237,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 					this.editWindow3.show();
 					this.editWindow3.loadData(cell);
 				}
-				
+
 				if (step != 'second') {
 					Ext.Msg.alert("系统提示", "请选择待调整数据！");
 					return false;
@@ -457,16 +459,20 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc4pl = function()
 	var c27Reality = this.editWindow3.c27Reality.getValue();
 	var c28Reality = this.editWindow3.c28Reality.getValue();
 	var c30Reality = this.editWindow3.c30Reality.getValue();
+	var c24Reality = this.editWindow3.c24Reality.getValue();
+	var c29Reality = this.editWindow3.c29Reality.getValue();
 	var roReality = this.editWindow3.roReality.getValue();
 	if (Ext.isEmpty(c21Reality) || Ext.isEmpty(c22Reality)
 			|| Ext.isEmpty(c23Reality) || Ext.isEmpty(c27Reality)
 			|| Ext.isEmpty(c28Reality) || Ext.isEmpty(c30Reality)
-			|| Ext.isEmpty(roReality)) {
+			|| Ext.isEmpty(roReality) || Ext.isEmpty(c24Reality)
+			|| Ext.isEmpty(c29Reality)) {
 		return;
 	} else {
 		var weightReality = parseFloat(c21Reality) + parseFloat(c22Reality)
 				+ parseFloat(c23Reality) + parseFloat(c27Reality)
-				+ parseFloat(c28Reality) + parseFloat(c30Reality);
+				+ parseFloat(c28Reality) + parseFloat(c30Reality)
+				+ parseFloat(c24Reality) + parseFloat(c29Reality);
 		weightReality = returnFloat(parseFloat(roReality) + weightReality
 				/ 1000);
 		this.editWindow3.weightReality.setValue(weightReality);
@@ -483,15 +489,19 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc4tz = function()
 	var c27Plan = this.editWindow2.c27Plan.getValue();
 	var c28Plan = this.editWindow2.c28Plan.getValue();
 	var c30Plan = this.editWindow2.c30Plan.getValue();
+	var c24Plan = this.editWindow2.c24Plan.getValue();
+	var c29Plan = this.editWindow2.c29Plan.getValue();
 	var roPlan = this.editWindow2.roPlan.getValue();
 	if (Ext.isEmpty(c21Plan) || Ext.isEmpty(c22Plan) || Ext.isEmpty(c23Plan)
 			|| Ext.isEmpty(c27Plan) || Ext.isEmpty(c28Plan)
-			|| Ext.isEmpty(c30Plan) || Ext.isEmpty(roPlan)) {
+			|| Ext.isEmpty(c30Plan) || Ext.isEmpty(roPlan)
+			|| Ext.isEmpty(c24Plan) || Ext.isEmpty(c29Plan)) {
 		return;
 	} else {
 		var weightPlan = parseFloat(c21Plan) + parseFloat(c22Plan)
 				+ parseFloat(c23Plan) + parseFloat(c27Plan)
-				+ parseFloat(c28Plan) + parseFloat(c30Plan);
+				+ parseFloat(c28Plan) + parseFloat(c30Plan)
+				+ parseFloat(c24Plan) + parseFloat(c29Plan);
 		weightPlan = returnFloat(parseFloat(roPlan) + weightPlan / 1000);
 		this.editWindow2.weightPlan.setValue(weightPlan);
 
@@ -570,6 +580,49 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onBoard = function() {
 
 com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onBoard2 = function() {
 	window.open('com.keensen.ump.produce.quality.queryBoard.flow?flag=2');
+}
+
+com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onInvalid = function() {
+	var _this = this;
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+			var A = B[0];
+			if (A.data.state == '0') {
+				var id = A.data.id;
+				this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.quality.mptest5.invalidWater.biz.ext",
+					method : "post",
+					jsonData : {
+						'id' : id
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							_this.listPanel.store.reload();
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			} else {
+				Ext.Msg.alert("系统提示", "只能作废未完结的记录!")
+			}
+
+		}
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
 }
 
 function returnFloat(value) {
