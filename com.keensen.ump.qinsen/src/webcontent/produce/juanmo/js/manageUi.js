@@ -16,6 +16,8 @@ com.keensen.ump.qinsen.produce.juanmo.juanmoMgr = function() {
 				});
 		return this.tabPanel;
 	};
+	
+	
 
 	this.createQuickPanel = function() {
 		this.quickmgr = new com.keensen.ump.qinsen.produce.juanmo.quickMgr(this.lay);

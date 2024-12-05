@@ -418,13 +418,13 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc = function() {
 					_this.inputWindow.c28Plan.setValue(data.c28);
 					_this.inputWindow.c30Plan.setValue(data.c30);
 					_this.inputWindow.roPlan.setValue(data.ro);
-					_this.inputWindow.c21Plan.setReadOnly(true);
-					_this.inputWindow.c22Plan.setReadOnly(true);
-					_this.inputWindow.c23Plan.setReadOnly(true);
-					_this.inputWindow.c27Plan.setReadOnly(true);
-					_this.inputWindow.c28Plan.setReadOnly(true);
-					_this.inputWindow.c30Plan.setReadOnly(true);
-					_this.inputWindow.roPlan.setReadOnly(true);
+					//_this.inputWindow.c21Plan.setReadOnly(true);
+					//_this.inputWindow.c22Plan.setReadOnly(true);
+					//_this.inputWindow.c23Plan.setReadOnly(true);
+					//_this.inputWindow.c27Plan.setReadOnly(true);
+					//_this.inputWindow.c28Plan.setReadOnly(true);
+					//_this.inputWindow.c30Plan.setReadOnly(true);
+					//_this.inputWindow.roPlan.setReadOnly(true);
 				} else {
 					Ext.Msg.alert("系统提示", "系统没有计算标准，请手动输入!");
 					_this.inputWindow.c21Plan.setValue('');
@@ -434,13 +434,13 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc = function() {
 					_this.inputWindow.c28Plan.setValue('');
 					_this.inputWindow.c30Plan.setValue('');
 					_this.inputWindow.roPlan.setValue('');
-					_this.inputWindow.c21Plan.setReadOnly(false);
-					_this.inputWindow.c22Plan.setReadOnly(false);
-					_this.inputWindow.c23Plan.setReadOnly(false);
-					_this.inputWindow.c27Plan.setReadOnly(false);
-					_this.inputWindow.c28Plan.setReadOnly(false);
-					_this.inputWindow.c30Plan.setReadOnly(false);
-					_this.inputWindow.roPlan.setReadOnly(false);
+					//_this.inputWindow.c21Plan.setReadOnly(false);
+					//_this.inputWindow.c22Plan.setReadOnly(false);
+					//_this.inputWindow.c23Plan.setReadOnly(false);
+					//_this.inputWindow.c27Plan.setReadOnly(false);
+					//_this.inputWindow.c28Plan.setReadOnly(false);
+					//_this.inputWindow.c30Plan.setReadOnly(false);
+					//_this.inputWindow.roPlan.setReadOnly(false);
 				}
 			}
 

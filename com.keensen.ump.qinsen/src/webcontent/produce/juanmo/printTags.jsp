@@ -36,21 +36,21 @@
 
 <style type="text/css">
 .main_table {
-	width: 98mm;
+	width: 110mm;
 	height: 28mm;
 	text-align: center;
 	vertical-align: top;
 	margin: auto;
  	margin-top: 0mm;
-	font-size: 6px;
-	/*  		border:1px solid #000000;  */
+	font-size: 2px;
+	  		
 }
 
 .td_label {
 	text-align: left;
 	vertical-align: middle;
 	padding-left: 2mm;
-	font-size: 6px;
+	font-size: 2px;
 }
 
 .span_label {
@@ -58,7 +58,7 @@
 	text-align: left;
 	vertical-align: middle;
 	font-family: Microsoft YaHei;
-	font-size: 6px;
+	font-size: 2px;
 	font-color: #000000;
 	font-weight: bold;
 }
@@ -68,7 +68,7 @@
 	text-align: left;
 	vertical-align: middle;
 	font-family: Microsoft YaHei;
-	font-size: 8px;
+	font-size: 2px;
 	font-color: #000000;
 	font-weight: bold;
 }
@@ -109,52 +109,52 @@ function initPage() {
 <% 	for (int i = 0; i < list.length; i+=2) { 
         br = i%2==0;
 		if (br) { %>
-			htmlArr.push('<table id="printview" class="main_table">');
+			htmlArr.push('<table id="printview" align=left border=0 class="main_table">');
 <% 		} else {   %>
 			htmlArr
-					.push('<table id="printview" class="main_table" style="page-break-after:always;">');
+					.push('<table id="printview" align=left border=0 class="main_table" style="page-break-after:always;">');
 <% 		}  %>
 <% 	
 		j = i+1;
 		secondPrint = j<len;
 %>		
 		htmlArr.push('<tr>');
-		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:24mm">');
+		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:12mm">');
 		htmlArr.push('<div id="canvas_' + <%=i %>
 				+ '" style="margin:auto;width:61px;height:61px"></div>');
 		htmlArr.push('</td>');
-		htmlArr.push('<td class="td_label" style="width:24mm">');
-		htmlArr.push('卷膜序号：<span class="span_label">' + '<%=list[i].get("batchNo") %>'
+		htmlArr.push('<td class="td_label" style="width:37mm">');
+		htmlArr.push('<span class="span_label">' + '<%=list[i].get("batchNo") %>'
 				+ '</span><br/>');
-		htmlArr.push('元件型号：<span class="span_label">' + '<%=list[i].get("prodSpecName") %>'
+		htmlArr.push('<span class="span_label">' + '<%=list[i].get("prodSpecName") %>'
 				+ '</span><br/>');
-		htmlArr.push('卷制日期：<span class="span_label">' + '<%=list[i].get("produceDay") %>'
+		htmlArr.push('<span class="span_label">' + '<%=list[i].get("produceDay") %>'
 				+ '</span><br/>');
-		htmlArr.push('卷制机台：<span class="span_label">' + '<%=list[i].get("lineCode") %>'
+		<%--htmlArr.push('<span class="span_label">' + '<%=list[i].get("lineCode") %>'
+				+ '</span><br/>');--%>
+		htmlArr.push('<span class="span_label">' + '<%=list[i].get("orderNo") %>'
 				+ '</span><br/>');
-		htmlArr.push('订单号：<span class="span_label">' + '<%=list[i].get("orderNo") %>'
-				+ '</span><br/>');
-		htmlArr.push('操作工：<span class="span_label">' + '<%=list[i].get("workerName") %>'
+		htmlArr.push('<span class="span_label">' + '<%=list[i].get("workerName") %>'
 				+ '</span>');
 		htmlArr.push('</td>');
 		
 		<% if(secondPrint){ %>
-		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:24mm">');
+		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:12mm">');
 		htmlArr.push('<div id="canvas_' + <%=j %>
 				+ '" style="margin:auto;width:61px;height:61px"></div>');
 		htmlArr.push('</td>');
-		htmlArr.push('<td class="td_label" style="width:24mm">');
-		htmlArr.push('卷膜序号：<span class="span_label">' + '<%=list[j].get("batchNo") %>'
+		htmlArr.push('<td class="td_label" style="width:37mm">');
+		htmlArr.push('<span class="span_label">' + '<%=list[j].get("batchNo") %>'
 				+ '</span><br/>');
-		htmlArr.push('元件型号：<span class="span_label">' + '<%=list[j].get("prodSpecName") %>'
+		htmlArr.push('<span class="span_label">' + '<%=list[j].get("prodSpecName") %>'
 				+ '</span><br/>');
-		htmlArr.push('卷制日期：<span class="span_label">' + '<%=list[j].get("produceDay") %>'
+		htmlArr.push('<span class="span_label">' + '<%=list[j].get("produceDay") %>'
 				+ '</span><br/>');
-		htmlArr.push('卷制机台：<span class="span_label">' + '<%=list[j].get("lineCode") %>'
+		<%--htmlArr.push('<span class="span_label">' + '<%=list[j].get("lineCode") %>'
+				+ '</span><br/>');--%>
+		htmlArr.push('<span class="span_label">' + '<%=list[j].get("orderNo") %>'
 				+ '</span><br/>');
-		htmlArr.push('订单号：<span class="span_label">' + '<%=list[j].get("orderNo") %>'
-				+ '</span><br/>');
-		htmlArr.push('操作工：<span class="span_label">' + '<%=list[j].get("workerName") %>'
+		htmlArr.push('<span class="span_label">' + '<%=list[j].get("workerName") %>'
 				+ '</span>');
 		htmlArr.push('</td>');
 		
@@ -173,7 +173,7 @@ function initPage() {
 		if (tumoBatchArr.length >= 3) {
 			tumoBatchStr = tumoBatchArr[0] + ',' + tumoBatchArr[1] + ',省略';
 		}
-		htmlArr.push('膜片批次：<span id="tumoBatchStr" class="span_label2">'
+		htmlArr.push('<span id="tumoBatchStr" class="span_label2">'
 				+ tumoBatchStr + '</span>');
 		htmlArr.push('</td>');
 		
@@ -185,7 +185,7 @@ function initPage() {
 		if (tumoBatchArr.length >= 3) {
 			tumoBatchStr = tumoBatchArr[0] + ',' + tumoBatchArr[1] + ',省略';
 		}
-		htmlArr.push('膜片批次：<span id="tumoBatchStr" class="span_label2">'
+		htmlArr.push('<span id="tumoBatchStr" class="span_label2">'
 				+ tumoBatchStr + '</span>');
 		htmlArr.push('</td>');
 		<% }else{ %>		
@@ -193,7 +193,7 @@ function initPage() {
 		<% } %>
 				
 		htmlArr.push('</tr>');
-		htmlArr.push('<tr>');
+		<%--htmlArr.push('<tr>');
 		htmlArr
 				.push('<td colspan="2" style="height:3mm;text-align:center;padding:0px;margin:0px;">');
 		htmlArr.push('测试结果：');
@@ -214,7 +214,7 @@ function initPage() {
 		htmlArr.push('<td colspan="2" style="height:3mm;text-align:center;padding:0px;margin:0px;">	&nbsp;</td>');
 		<% } %>
 		
-		htmlArr.push('</tr>');
+		htmlArr.push('</tr>');--%>
 		htmlArr.push('</table>');
 	<% } %>
 	$("body").append(htmlArr.join(''));
@@ -227,8 +227,8 @@ function paint() {
 		$('#canvas_' + <%=i %>).qrcode({
 			render : 'canvas',// 设置渲染方式，有table和canvas
 			text : '<%=list[i].get("batchNo") %>',
-			width : 60, // 二维码的宽度
-			height : 60, // 二维码的高度
+			width : 42, // 二维码的宽度
+			height : 42, // 二维码的高度
 			correctLevel : 2
 				// 纠错级别，低
 			});

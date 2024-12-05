@@ -1396,21 +1396,21 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 								readOnly : true,
 								ref : '../orderNo',
 								fieldLabel : '订单号',
-								anchor : '85%',
+								anchor : '100%',
 								colspan : 2
 							}, {
 								xtype : 'textfield',
 								readOnly : true,
 								ref : '../needAmount',
 								fieldLabel : '订单需生产数量',
-								anchor : '85%',
+								anchor : '100%',
 								colspan : 2
 							}, {
 								xtype : 'textfield',
 								readOnly : true,
 								ref : '../arrangeAmount',
 								fieldLabel : '建议排产数量',
-								anchor : '85%',
+								anchor : '100%',
 								colspan : 2
 							}, {
 								xtype : 'displayfield',
@@ -1418,7 +1418,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 								colspan : 6
 							}, {
 								xtype : 'combobox',
-								anchor : '85%',
+								anchor : '100%',
 								hiddenName : 'condition/line',
 								colspan : 2,
 								allowBlank : false,
@@ -1429,7 +1429,8 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 											fields : ['mykey', 'myvalue'],
 											data : [['A', 'A'], ['B', 'B'],
 													['C', 'C'], ['D', 'D'],
-													['E', 'E']]
+													['E', 'E'],
+													['F', 'F']]
 										}),
 								mode : "local",
 								editable : false,
@@ -1443,13 +1444,13 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 								allowBlank : false,
 								ref : '../days',
 								fieldLabel : '排产天数',
-								anchor : '85%',
+								anchor : '100%',
 								colspan : 2
 							}, {
 								xtype : 'supcombobox',
 								hiddenName : 'condition/supId',
 								allowBlank : false,
-								anchor : '85%',
+								anchor : '100%',
 								fieldLabel : '无纺布供应商',
 								colspan : 2
 							}, {

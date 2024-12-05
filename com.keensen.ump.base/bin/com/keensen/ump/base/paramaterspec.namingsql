@@ -15,4 +15,56 @@
         <isNotNull prepend="and" property="materSpecCode">t.mater_spec_code = #materSpecCode#</isNotNull>
         <isNotNull prepend="and" property="state">t.state = #state#</isNotNull>
     </select>
+    <select id="queryLabelDrawing" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.DRAWING_NAME AS "drawingName",
+       T1.USED_DATE    AS "usedDate",
+       T1.DRAWING_CODE AS "drawingCode",
+       T1.MATER_CODE   AS "materCode",
+       T1.LOGO         AS "logo",
+       T1.SPEC_NAME    AS "specName",
+       T1.LABEL_SIZE   AS "labelSize",
+       T1.BUSINESSMAN  AS "businessman",
+       T1.REMARK       AS "remark"
+  FROM KS_BASE_LABEL_DRAWING T1 
+    where 1=1
+    
+	<isNotNull prepend="and" property="logo">T1.LOGO = #logo#</isNotNull>
+        <isNotNull prepend="and" property="specName">T1.SPEC_NAME = #specName#</isNotNull>
+        <isNotNull prepend="and" property="logo2">T1.LOGO like '%' || #logo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="specName2">T1.SPEC_NAME like '%' || #specName2# || '%'</isNotNull>
+	
+	ORDER BY T1.LOGO,T1.SPEC_NAME
+     </select>
+    <select id="queryMarkDrawing" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.DRAWING_NAME AS "drawingName",
+       T1.USED_DATE    AS "usedDate",
+       T1.DRAWING_CODE AS "drawingCode",
+       T1.MATER_CODE   AS "materCode",
+       T1.LOGO         AS "logo",
+       T1.SPEC_NAME    AS "specName",
+       T1.LABEL_SIZE   AS "labelSize",
+       T1.BUSINESSMAN  AS "businessman",
+       T1.REMARK       AS "remark"
+  FROM KS_BASE_MARK_DRAWING T1 
+    where 1=1
+    
+	<isNotNull prepend="and" property="logo">T1.LOGO = #logo#</isNotNull>
+        <isNotNull prepend="and" property="specName">T1.SPEC_NAME = #specName#</isNotNull>
+        <isNotNull prepend="and" property="logo2">T1.LOGO like '%' || #logo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="specName2">T1.SPEC_NAME like '%' || #specName2# || '%'</isNotNull>
+	
+	ORDER BY T1.LOGO,T1.SPEC_NAME
+     </select>
+    <select id="queryMarkDrawingLogo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DISTINCT T1.LOGO         AS "logo"
+	  FROM KS_BASE_MARK_DRAWING T1
+	 ORDER BY T1.LOGO</select>
+    <select id="queryLabelDrawingLogo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DISTINCT T1.LOGO         AS "logo"
+	  FROM KS_BASE_LABEL_DRAWING T1
+	 ORDER BY T1.LOGO</select>
+    <select id="queryLabelDrawingSpecName" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DISTINCT T1.SPEC_NAME    AS "specName"
+	  FROM KS_BASE_LABEL_DRAWING T1
+	 ORDER BY T1.SPEC_NAME</select>
+    <select id="queryMarkDrawingSpecName" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DISTINCT T1.SPEC_NAME    AS "specName"
+	  FROM KS_BASE_Mark_DRAWING T1
+	 ORDER BY T1.SPEC_NAME</select>
 </sqlMap>

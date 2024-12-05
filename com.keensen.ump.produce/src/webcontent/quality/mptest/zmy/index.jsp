@@ -23,7 +23,7 @@
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.quality.mptest');
 </script>
-
+<js:load scriptPath="pub/common/operatorroleCombo.js"/>
 <js:load scriptPath="produce/quality/mptest/zmy/js/manageUi.js"/>
 <js:load scriptPath="produce/quality/mptest/zmy/js/manageEv.js"/>
 

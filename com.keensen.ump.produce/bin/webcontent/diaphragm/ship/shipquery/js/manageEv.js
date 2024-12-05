@@ -4,6 +4,21 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr.prototype.initEvent = functi
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
+		var batchNoStr = this.queryPanel.form
+				.findField("condition/batchNoStr2").getValue();
+		var regEx = new RegExp("\\n", "gi");
+		batchNoStr = batchNoStr.replace(regEx, ",");
+		batchNoStr = batchNoStr.replaceAll('，', ',');
+		batchNoStr = batchNoStr.replaceAll(' ', '');
+		var arr = [];
+		arr = batchNoStr.split(',');
+		var arr2 = [];
+		for (var i = 0; i < arr.length; i++) {
+			arr2.push("'" + arr[i] + "'");
+		}
+
+		this.queryPanel.getForm().findField('condition/batchNoStr')
+				.setValue(arr2.join(",") == "''" ? null : arr2.join(","));
 		store.baseParams = vals;
 		store.load({
 					params : {
@@ -15,7 +30,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr.prototype.initEvent = functi
 
 }
 
-com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr.prototype.exportExcel = function() {
+/*com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr.prototype.exportExcel = function() {
 	var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
@@ -51,6 +66,11 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr.prototype.exportExcel = func
 			_this.requestMask.hide()
 		}
 	})
+}*/
+
+com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr.prototype.exportExcel = function() {
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '发货单',
+				'com.keensen.ump.produce.diaphragm.ship.ship.queryFhd','0,1,2');
 }
 
 function dealship(index) {

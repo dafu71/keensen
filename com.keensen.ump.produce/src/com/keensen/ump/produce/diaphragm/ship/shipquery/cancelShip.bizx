@@ -14,8 +14,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link3</targetConnections>
     <targetConnections>link4</targetConnections>
+    <targetConnections>link3</targetConnections>
     <location x="495" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -105,6 +105,8 @@
         <process:inputVariable id="4" name="sendAmount" type="query" value="String" valueType="Primitive" pattern="reference">ship/amount</process:inputVariable>
         <process:inputVariable id="5" name="orderNo" type="query" value="String" valueType="Primitive" pattern="reference">ship/orderNo</process:inputVariable>
         <process:inputVariable id="6" name="planNo" type="query" value="String" valueType="Primitive" pattern="reference">ship/planNo</process:inputVariable>
+        <process:inputVariable id="7" name="deliveryOrderNo" type="query" value="String" valueType="Primitive" pattern="reference">ship/deliveryOrderNo</process:inputVariable>
+        <process:inputVariable id="8" name="deliveryDt" type="query" value="String" valueType="Primitive" pattern="reference">ship/deliveryDt</process:inputVariable>
       </process:inputVariables>
       <process:outputVariables/>
     </process:flow>

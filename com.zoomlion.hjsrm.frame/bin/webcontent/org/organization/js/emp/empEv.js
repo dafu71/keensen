@@ -104,24 +104,25 @@ com.zoomlion.hjsrm.org.empMgr.prototype.onInput = function(btn, e) {
 
 				if (param.orgid == param.dataorgid) {
 					form.loadRecord(new Ext.data.Record({
-								orgid : param['dataorgid'],
-								empcode : code
+								orgid : param['dataorgid']//,
+								//empcode : code
 							}));
 				} else {
 					form.loadRecord(new Ext.data.Record({
 								orgid : param['dataorgid'],
-								bizorgids : param['orgid'],
-								empcode : code
+								bizorgids : param['orgid']//,
+								//empcode : code
 							}));
 				}
 
 			} else {
 				form.loadRecord(new Ext.data.Record({
-							empcode : code
+							//empcode : code
 						}))
 			}
 		}
 	});
+	
 };
 
 /**

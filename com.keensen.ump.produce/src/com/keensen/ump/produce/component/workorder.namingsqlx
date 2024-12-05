@@ -2,15 +2,466 @@
 <!-- author:dafu -->
 <sqlMap>
     <select id="queryCdmDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-    SELECT t1.id "planId",t1.product_order,t1.order_id,to_char(T1.PLAN_DATE,'yyyy-MM-dd') PLAN_DATE ,t1.cdm_code,
+    <!-- SELECT t1.id "planId",t1.product_order,t1.order_id,
+    to_char(T1.PLAN_DATE,'yyyy-MM-dd') "planDate" ,
+    to_char(T1.arrange_DATE,'yyyy-MM-dd') arrange_DATE ,t1.cdm_code,
 	t1.batch_no "batchNo",
-	t2.id  "orderId",t2.order_no "orderNo" from KS_COMPONENT_PLAN_DAY t1
+	t2.id  "orderId",t2.order_no "orderNo",
+	t2.order_type "orderType",
+	t2.mater_spec_name2 "materSpecName2",
+	t2.order_amount "orderAmount",
+	t1.jm_amount "jmAmount",
+	nvl(t1.storage_position, ' ') "storagePosition" 
+	 from KS_COMPONENT_PLAN_DAY t1
 	LEFT JOIN KS_PROD_COMPONENT_YXORDER t2
 	ON t1.order_id = t2.id
 	WHERE 1=1
 	AND t1.cdm_state = '0'
 	AND t1.product_order is not null
 	AND t1.cdm_code IN ( SELECT CODE FROM KS_BASE_MACHINE WHERE ip =#ip#)
-	ORDER BY to_char(T1.PLAN_DATE,'yyyy-MM-dd'),t1.product_order
+	ORDER BY to_char(T1.arrange_DATE,'yyyy-MM-dd'),t1.product_order
+	-->
+	
+	SELECT t1.id "planId",t3.product_order,t1.order_id "orderId",
+    to_char(T3.PLAN_DATE,'yyyy-MM-dd') "planDate" ,
+    to_char(T3.arrange_DATE,'yyyy-MM-dd') arrange_DATE ,t3.cdm_codes,
+  t1.batch_no "batchNo",
+  t2.id  "orderId",t2.order_no "orderNo",
+  t2.order_type "orderType",
+  t2.mater_spec_name2 "materSpecName2",t2.mater_spec_id "materSpecId",
+  t2.order_amount "orderAmount",
+  t1.jm_amount "jmAmount",
+  nvl(t1.storage_position, ' ') "storagePosition" ,
+  tm.is_cut_over "isCutOver",
+  t3.cdm_state "cdmState"
+   from KS_COMPONENT_PLAN_DAY t1
+   left join (select t.plan_date,t.order_id,wm_concat(t.cdm_code) cdm_codes,
+	max(t.PRODUCT_ORDER) PRODUCT_ORDER,max(ARRANGE_DATE) ARRANGE_DATE ,
+	max(t.cdm_state) cdm_state
+	from KS_COMPONENT_DUTY_CDM t
+	GROUP BY t.plan_date,t.order_id) t3 
+	on t1.order_id = t3.order_id and t1.plan_date = t3.plan_date
+  LEFT JOIN qinsen.inst_tumo tm ON tm.batch_no=t1.batch_no
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER t2
+  ON t1.order_id = t2.id
+  WHERE 1=1
+  AND tm.is_cut_over = 'N'
+  AND t3.cdm_state = '0'
+  AND t1.product_order is not null
+  AND EXISTS(
+  SELECT 1 FROM KS_COMPONENT_DUTY_CDM dc LEFT JOIN KS_BASE_MACHINE bm ON bm.code=dc.cdm_code
+  WHERE bm.ip =#ip# AND 
+  (to_char(dc.arrange_date,'yyyy-MM-dd') = to_char(SYSDATE,'yyyy-MM-dd')
+     OR to_char(dc.arrange_date,'yyyy-MM-dd') = to_char(SYSDATE-1,'yyyy-MM-dd'))
+  )
+  ORDER BY to_char(T3.arrange_DATE,'yyyy-MM-dd'),t3.product_order
+
+	</select>
+	
+	<select id="query4CdmDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT t1.plan_date "planDate",t1.meter_amount "meterAmount",nvl(t1.jm_amount,0) "jmAmount",
+    t1.order_id "orderId", decode(substr(t2.order_no,1,2),'SG','1','0') "testOrder",
+  t2.order_no "orderNo",t2.mater_spec_id "materSpecId",t2.mater_spec_name "materSpecName",
+  t2.order_type "orderType",
+    t2.mater_spec_name2 "materSpecName2",
+    t2.order_amount "orderAmount",
+    
+    
+  nvl(t3.cdm_codes,m.machine_code) "cdmCodes",
+  
+  
+  t3.PRODUCT_ORDER "productOrder",
+  <!--nvl(t3.ARRANGE_DATE,t1.plan_date) "arrangeDate"-->
+  t3.ARRANGE_DATE "arrangeDate"
+  <!--,t1.order_id || '-' || t2.mater_spec_id || to_char(t1.plan_date,'yyyyMMdd') "idx",-->
+  ,rownum "idx",
+  nvl(t3.cdm_state,0) "cdmState",
+  decode(nvl(t3.cdm_state,0),0,'处理中',1,'完成',2,'异常','') "cdmStateName",
+  nvl(v.reality_Amount,0) "realityAmount"
+   from 
+  (select t.plan_date,sum(t.meter_amount) meter_amount,t.order_id ,min(t.jm_amount) jm_amount
+  from KS_COMPONENT_PLAN_DAY t
+   WHERE t.plan_date IS NOT NULL
+  GROUP BY t.order_id,plan_date) t1
+  
+  left join (SELECT order_id,machine_code from V_KS_COMPONENT_DUTY_MACHINE
+	WHERE machine_type='C') m on m.order_id = t1.order_id
+  
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER t2 ON t1.order_id=t2.id
+  left join (select t.plan_date,t.order_id,wm_concat(t.cdm_code) cdm_codes,
+  max(t.PRODUCT_ORDER) PRODUCT_ORDER,max(ARRANGE_DATE) ARRANGE_DATE ,
+  max(t.cdm_state) cdm_state
+  from KS_COMPONENT_DUTY_CDM t
+  GROUP BY t.plan_date,t.order_id) t3 
+  on t1.order_id = t3.order_id and t1.plan_date = t3.plan_date
+  left join v_ks_cdm_reality_Amount v 
+  on v.order_id=t1.order_id 
+  AND to_char(v.plan_date,'yyyy-MM-dd') = to_char(t1.plan_date ,'yyyy-MM-dd')
+  AND v.prod_spec_id=t2.mater_spec_id
+  
+  where 1=1
+	
+	<isNotNull prepend="and" property="cdmState"> 
+		       nvl(t3.cdm_state,0) = #cdmState#
+	</isNotNull>
+	<isNotNull prepend="and" property="planDate"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') = #planDate#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="planDateStart"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') >= #planDateStart#
+	</isNotNull>
+	<isNotNull prepend="and" property="planDateEnd"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') &lt;= #planDateEnd#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="arrangeDate"> 
+		       to_char(t3.ARRANGE_DATE,'yyyy-MM-dd') = #arrangeDate#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="orderNo"> 
+		       t2.order_no = #orderNo#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderId"> 
+		       t1.order_id = #orderId#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderNo2"> 
+		       t2.order_no like '%' || #orderNo2# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="materSpecId"> 
+		       t2.mater_spec_id = #materSpecId#
+	</isNotNull>
+	<isNotNull prepend="and" property="cdmCode2"> 
+		       t3.cdm_codes like '%' || #cdmCode2# || '%'
+	</isNotNull>	
+	
+	<isNotEqual prepend="" property="getduty" compareValue="y">	
+	ORDER BY t1.plan_date DESC,t1.order_id desc
+	</isNotEqual>
+	<isEqual prepend="" property="getduty" compareValue="y">	
+	ORDER BY t3.product_order
+	</isEqual>
+	</select>
+	
+	<select id="queryModifyCdmDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT T1.CODE               AS "code",
+       T1.NAME               AS "name",
+       T2.PLAN_DATE          AS "planDate",
+       T2.ORDER_ID           AS "orderId",
+       nvl(T2.CDM_CODE ,T1.CODE)          AS "cdmCode",
+       T2.CDM_STATE          AS "cdmState",
+       T2.DUTY_TIME          AS "dutyTime",
+       T2.DUTY_USER_ID       AS "dutyUserId",
+       T2.DUTY_NAME          AS "dutyName",
+       T2.CDM_REPORT_TIME    AS "cdmReportTime",
+       T2.CDM_REPORT_USER_ID AS "cdmReportUserId",
+       T2.CDM_REPORT_NAME    AS "cdmReportName",
+       T2.ARRANGE_DATE       AS "arrangeDate",
+       T2.PRODUCT_ORDER      AS "productOrder"
+  FROM (SELECT * FROM KS_BASE_MACHINE T WHERE T.TYPE = '裁叠膜') T1
+  LEFT JOIN (SELECT *
+               FROM KS_COMPONENT_DUTY_CDM T
+              WHERE T.PLAN_DATE = #planDate#
+              <isNotNull prepend="" property="orderId"> 
+                AND T.ORDER_ID = #orderId#
+              </isNotNull>  
+                ) T2
+    ON T1.CODE = T2.CDM_CODE
+    order by T2.ORDER_ID,T1.CODE
+	</select>
+	
+	<delete id="deleteCdmDuty" parameterClass="java.util.HashMap" >
+   	DELETE FROM KS_COMPONENT_DUTY_CDM T
+   	where T.PLAN_DATE = to_date(#planDate#,'yyyy-MM-dd') and t.order_id = #orderId#
+	</delete>
+	
+	<select id="queryBatchNo4CdmDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	select t.order_id "orderId",t.plan_date "planDate",t.batch_no "batchNo",t.id "planId" from KS_COMPONENT_PLAN_DAY t
+	WHERE nvl(t.cdm_state,0) =0
+	<isNotNull prepend="and" property="orderId"> 
+		       t.order_id = #orderId#
+	</isNotNull>
+	<isNotNull prepend="and" property="planDate"> 
+		       to_char(t.plan_date,'yyyy-MM-dd') = #planDate#
+	</isNotNull>
+	<isNotNull prepend="and" property="cdmCode"> 
+		       t.cdm_Code = #cdmCode#
+	</isNotNull>
+	</select>
+	
+	<update id="updateCdmDutyState" parameterClass="java.util.HashMap" >
+   	update KS_COMPONENT_DUTY_CDM T
+   	set t.cdm_state = #cdmState#,
+   	t.cdm_report_time = sysdate ,t.cdm_report_user_id = #userId#,t.cdm_report_name = #userName#
+   	where T.PLAN_DATE = to_date(#planDate#,'yyyy-MM-dd') and t.order_id = #orderId#
+	</update>
+	
+	<!--更新裁叠膜任务状态为完成-->
+	<update id="updateCdmDutyState2" parameterClass="java.util.HashMap" >
+   	update KS_COMPONENT_DUTY_CDM T
+   	set t.cdm_state = 1,
+   	t.cdm_report_time = sysdate ,t.cdm_report_user_id = #userId#,t.cdm_report_name = #userName#
+   	where T.PLAN_DATE = to_date(#planDate#,'yyyy-MM-dd') and t.order_id = #orderId#
+   	and not exists(select 1 from KS_COMPONENT_PLAN_DAY t
+   	where T.PLAN_DATE = to_date(#planDate#,'yyyy-MM-dd') and t.order_id = #orderId#
+   	and t.cdm_state=0)
+   	
+   	
+	</update>
+	
+	<select id="query4JmDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT t1.plan_date "planDate",t1.meter_amount "meterAmount",nvl(t1.jm_amount,0) "jmAmount",
+    t1.order_id "orderId",
+  t2.order_no "orderNo",t2.mater_spec_id "materSpecId",t2.mater_spec_name "materSpecName",
+  t2.order_type "orderType",
+    t2.mater_spec_name2 "materSpecName2",
+    t2.order_amount "orderAmount",
+    
+    nvl(t3.jm_codes,m.machine_code) "jmCodes",
+  
+  t3.PRODUCT_ORDER "productOrder",
+  <!--nvl(t3.ARRANGE_DATE,t1.plan_date) "arrangeDate"-->
+  
+  t3.ARRANGE_DATE "arrangeDate"
+  
+  ,t1.order_id || '-' || t2.mater_spec_id || to_char(t1.plan_date,'yyyyMMdd') "idx",
+  nvl(t3.jm_state,0) "jmState",
+  decode(nvl(t3.jm_state,0),0,'处理中',1,'完成',2,'异常','') "jmStateName",
+  nvl(v.reality_Amount,0) "realityAmount"
+  <!--, cm.product_order "cmProductOrder"
+  , cm.ARRANGE_DATE "cmArrangeDate"-->
+   from 
+  (select t.plan_date,sum(t.meter_amount) meter_amount,t.order_id ,min(t.jm_amount) jm_amount
+  from KS_COMPONENT_PLAN_DAY t
+  GROUP BY t.order_id,plan_date) t1
+  <!--LEFT JOIN KS_COMPONENT_DUTY_CDM cm
+  ON  t1.order_id = cm.order_id and t1.plan_date = cm.plan_date-->
+  left join (SELECT order_id,machine_code from V_KS_COMPONENT_DUTY_MACHINE
+	WHERE machine_type='J') m on m.order_id = t1.order_id
+	
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER t2 ON t1.order_id=t2.id
+  left join (select t.plan_date,t.order_id,wm_concat(t.jm_code) jm_codes,
+  max(t.PRODUCT_ORDER) PRODUCT_ORDER,max(ARRANGE_DATE) ARRANGE_DATE ,
+  max(t.jm_state) jm_state
+  from KS_COMPONENT_DUTY_JM t
+  GROUP BY t.plan_date,t.order_id) t3 
+  on t1.order_id = t3.order_id and t1.plan_date = t3.plan_date
+  left join V_KS_JM_REALITY_AMOUNT v 
+  on v.order_id=t1.order_id 
+  AND to_char(v.plan_date,'yyyy-MM-dd') = to_char(t1.plan_date ,'yyyy-MM-dd')
+  AND v.prod_spec_id=t2.mater_spec_id
+  
+  where 1=1
+	
+	<isNotNull prepend="and" property="jmState"> 
+		       nvl(t3.jm_state,0) = #jmState#
+	</isNotNull>
+	<isNotNull prepend="and" property="planDate"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') = #planDate#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="planDateStart"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') >= #planDateStart#
+	</isNotNull>
+	<isNotNull prepend="and" property="planDateEnd"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') &lt;= #planDateEnd#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="arrangeDate"> 
+		       (to_char(t3.ARRANGE_DATE,'yyyy-MM-dd') = #arrangeDate#)
+		       
+		    <!--   <isNotNull prepend="or" property="getduty"> 	
+		         to_char(t3.ARRANGE_DATE,'yyyy-MM-dd')=(SELECT to_char(MAX(t.arrange_date),'yyyy-MM-dd') from KS_COMPONENT_DUTY_JM t
+				WHERE to_char(t.ARRANGE_DATE,'yyyy-MM-dd') &lt;> #arrangeDate# and t.jm_code = #jmCode2#)
+				)
+		       </isNotNull>
+		       
+		       <isNull prepend="" property="getduty"> 	
+		       	)
+		       </isNull>-->
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="orderNo"> 
+		       t2.order_no = #orderNo#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderId"> 
+		       t1.order_id = #orderId#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderNo2"> 
+		       t2.order_no like '%' || #orderNo2# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="materSpecId"> 
+		       t2.mater_spec_id = #materSpecId#
+	</isNotNull>
+	<isNotNull prepend="and" property="jmCode2"> 
+		       ',' || t3.jm_codes || ',' like '%,' ||  #jmCode2# || ',%'
+	</isNotNull>	
+	<isNull prepend="" property="getduty"> 	
+	ORDER BY t1.plan_date desc,t1.order_id desc,t3.ARRANGE_DATE desc
+	</isNull>
+	<isNotNull prepend="" property="getduty"> 	
+	ORDER BY t3.ARRANGE_DATE,t3.product_order
+	</isNotNull>
+	</select>
+	
+	<delete id="deleteJmDuty" parameterClass="java.util.HashMap" >
+   	DELETE FROM KS_COMPONENT_DUTY_JM T
+   	where T.PLAN_DATE = to_date(#planDate#,'yyyy-MM-dd') and t.order_id = #orderId#
+	</delete>
+	
+	
+	
+	
+	
+	<select id="queryBatchNo4JmDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT T1.BATCH_NO  "tmBatchNo",
+       TM.RECORD_ID "tmBatchId",
+       CM.RECORD_ID "cdmRecordId",
+       cm.batch_no "batchNo",
+       cm.location "location",
+       t1.mix_batch_no  "mixBatchNo"
+  FROM (SELECT T.*
+          FROM KS_COMPONENT_PLAN_DAY T
+         WHERE 1 = 1
+           AND TO_CHAR(T.PLAN_DATE, 'yyyy-MM-dd') = #planDate#
+           AND T.ORDER_ID = #orderId#
+           <isNotNull prepend="" property="jmCode"> 
+           AND ',' || T.JM_CODE || ',' LIKE '%,' || #jmCode# || ',%'
+           </isNotNull>
+           ) T1
+  LEFT JOIN QINSEN.INST_TUMO TM
+    ON TM.BATCH_NO = T1.BATCH_NO
+  LEFT JOIN (SELECT * FROM QINSEN.INST_CAIDIEMO c
+  WHERE EXISTS(select 1 from V_KS_CDM_AMOUNT tt WHERE tt.UNUSED_QUANTITY >0
+     	AND tt.record_id = C.RECORD_ID)) CM
+    ON CM.TUMO_BATCH_ID = TM.RECORD_ID
+       ORDER BY CM.RECORD_ID
+	</select>
+	
+	
+	
+	<!--在裁膜里面有，在卷膜里面没有卷完的裁膜记录  -->
+	<select id="queryCdmNotInJm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT * from (SELECT * FROM V_KS_TM_CDM WHERE cm_batch_no IN(
+	select t.Batch_No cm_batch_no from V_KS_CDM_AMOUNT t WHERE t.UNUSED_QUANTITY >0)) tt
+	WHERE (tt.tm_batch_no,tt.order_id) IN (
+	select batch_no,order_id from KS_COMPONENT_PLAN_DAY t
+	WHERE t.order_id = (SELECT order_id from V_KS_TM_CDM t
+	WHERE t.cm_batch_no=#cmBatchNo#)
+	AND to_char(t.plan_date,'yyyy-MM-dd')=#planDate#)
+	AND tt.cm_batch_no NOT IN(
+	SELECT tt.cm_batch_no from V_KS_TM_CDM_JM tt
+	WHERE (tt.tm_batch_no,tt.order_id) IN (
+	select batch_no,order_id from KS_COMPONENT_PLAN_DAY t
+	WHERE t.order_id = (SELECT order_id from V_KS_TM_CDM t
+	WHERE t.cm_batch_no=#cmBatchNo#)
+	AND to_char(t.plan_date,'yyyy-MM-dd')=#planDate#))
+	</select>
+	
+	<update id="updateJmDutyState" parameterClass="java.util.HashMap" >
+   	update KS_COMPONENT_DUTY_JM T
+   	set t.jm_state = #jmState#,
+   	t.jm_report_time = sysdate ,t.jm_report_user_id = #userId#,t.jm_report_name = #userName#
+   	where T.PLAN_DATE = to_date(#planDate#,'yyyy-MM-dd') and t.order_id = #orderId#
+	</update>
+	
+	<update id="updateTmBatchNoJmDutyState" parameterClass="java.util.HashMap" >
+	UPDATE KS_COMPONENT_PLAN_DAY t
+	SET t.jm_state='1'
+	WHERE to_char(t.plan_date,'yyyy-MM-dd')=#planDate#
+	AND t.order_id=#orderId#
+	AND t.batch_no=SUBSTR(#cmBatchNo#,1,12)
+	AND NOT EXISTS(select tt.tm_batch_No,tt.UNUSED_QUANTITY from V_KS_CDM_AMOUNT tt
+	WHERE tt.UNUSED_QUANTITY>0 AND tt.tm_batch_No=t.batch_no)
+	</update>
+
+	
+	<!--订单分配机台  -->
+	<select id="queryMachine4Order" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	  SELECT T1.ID "orderId",
+       T1.ORDER_NO "orderNo",
+       T1.MATER_SPEC_ID "materSpecId",
+       T1.MATER_SPEC_NAME "materSpecName",
+       (SELECT MACHINE_CODE
+          FROM V_KS_COMPONENT_DUTY_MACHINE V
+         WHERE MACHINE_TYPE = 'C'
+           AND V.ORDER_ID = T1.ID) "cdmCodes",
+       (SELECT MACHINE_CODE
+          FROM V_KS_COMPONENT_DUTY_MACHINE V2
+         WHERE MACHINE_TYPE = 'J'
+           AND V2.ORDER_ID = T1.ID) "jmCodes"
+	  FROM (SELECT *
+	          FROM KS_PROD_COMPONENT_YXORDER T
+	         WHERE T.ID IN (SELECT ORDER_ID FROM KS_COMPONENT_PLAN_DAY)) T1
+	 WHERE 1 = 1
+	    <isNotNull prepend="and" property="orderId"> 
+		       t1.id = #orderId#
+		</isNotNull>
+		<isNotNull prepend="and" property="orderNo2"> 
+		       t1.order_no like '%' || #orderNo2# || '%'
+		</isNotNull>
+		<isNotNull prepend="and" property="materSpecId"> 
+		       t1.mater_spec_id = #materSpecId#
+		</isNotNull>
+		
+		<isNotNull prepend="and" property="size"> 
+		       t1.mater_spec_name like '%-' || #size# || '%'
+		</isNotNull>
+		
+		<isNotNull prepend="and" property="machineCode"> 
+		       t1.id in(select m.order_id from KS_COMPONENT_DUTY_MACHINE m
+		       where m.code = #machineCode#)
+		</isNotNull>
+	
+	 ORDER BY T1.ID DESC
+ </select>
+ 
+ <delete id="deleteMachine4Order" parameterClass="java.util.HashMap" >
+   	delete from KS_COMPONENT_DUTY_MACHINE T
+   	where  t.order_id in ($orderIds$)
+	</delete>
+	
+	<insert id="insertMachine4Order" parameterClass="java.util.HashMap" >
+   	insert into  KS_COMPONENT_DUTY_MACHINE 
+   	(order_id,code,machine_type,create_time,create_user_id,create_name)
+   	SELECT ORDER_ID,CODE,TYPE,create_time,create_user_id,create_name
+	FROM
+	(SELECT t.id ORDER_ID FROM KS_PROD_COMPONENT_YXORDER T
+	WHERE t.id IN($orderIds$)),
+	(SELECT T.CODE,SUBSTR(t.code,1,1) TYPE,sysdate create_time,#userId# create_user_id,#userName# create_name FROM KS_BASE_MACHINE T
+	WHERE T.CODE IN ($machineCodes$))
+	</insert>
+	
+	<update id="updateJmDutyState2" parameterClass="java.util.HashMap" >
+   	update KS_COMPONENT_DUTY_JM T
+   	set t.jm_state = (select MIN(t.jm_state) from KS_COMPONENT_PLAN_DAY t
+	WHERE t.order_id=#orderId# AND T.PLAN_DATE = to_date(#planDate#,'yyyy-MM-dd')),
+   	t.jm_report_time = sysdate ,t.jm_report_user_id = #userId#,t.jm_report_name = #userName#
+   	where T.PLAN_DATE = to_date(#planDate#,'yyyy-MM-dd') and t.order_id = #orderId#
+	</update>
+	
+	<!--卷膜选择裁叠膜-->
+	<select id="queryJmChooseCdm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	 select t1.cdm_batch_no "cdmBatchNo",t1.state "state",t2.order_no "orderNo",
+	t2.prod_spec_id "prodSpecId",pms.mater_spec_name "prodSpecName",
+	'com.keensen.ump.produce.component.KsComponentDutyJmChoose' "entityName"
+	 from KS_COMPONENT_DUTY_JM_CHOOSE t1
+	 LEFT JOIN qinsen.inst_caidiemo t2 ON t1.cdm_batch_no=t2.batch_no
+	 LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id=t2.prod_spec_id
+	 where t1.state='0'
+	 <isNotNull prepend="and" property="orderNo"> 
+		       t2.order_no like '%' || #orderNo# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="cdmBatchNo"> 
+		       t1.cdm_batch_no like '%' || #cdmBatchNo# || '%'
+	</isNotNull>
+	 </select>
+	 
+	 <!--查询计划id-->
+	<select id="queryPlanDayId" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	 select t.id "id" from KS_COMPONENT_PLAN_DAY t
+	WHERE to_char(t.plan_date,'yyyy-MM-dd')=#planDate#
+	AND t.order_id=#orderId#
+	AND t.batch_no=#batchNo#
 	</select>
 </sqlMap>

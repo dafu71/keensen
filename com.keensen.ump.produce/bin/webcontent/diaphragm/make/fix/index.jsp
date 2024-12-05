@@ -23,10 +23,25 @@
 -->
 <head>
 <title>铸膜混料记录管理</title>
+
+<!-- 导出Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.1/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="base/exceljs/doQueryAndExport.js"></script>
+
+<style type="text/css">
+.x-grid3-cell-inner {-webkit-user-select:text;}
+</style>
+
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.diaphragm.make');
 </script>
 
+<ext:dict property="KS_PSF"   dictTypeId="KS_PSF" />
+
+<js:load scriptPath="pub/common/operatorroleCombo.js" />
+<js:load scriptPath="pub/common/mpworkerCombo.js" />
 <%--<js:load scriptPath="pub/common/mpworkerCombo2.js" />--%>
 <js:load scriptPath="produce/diaphragm/make/fix/js/manageUi.js"/>
 <js:load scriptPath="produce/diaphragm/make/fix/js/manageEv.js"/>

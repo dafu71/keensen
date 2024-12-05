@@ -31,14 +31,14 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 					border : true,
 					collapsible : false,
 					titleCollapse : false,
-					//title : '【卷膜记录查询】',
+					// title : '【卷膜记录查询】',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
 						fieldLabel : '生产时间',
 						colspan : 1,
 						anchor : '75%',
-						//allowBlank : false,
+						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, -1)
@@ -51,7 +51,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						anchor : '75%',
 						editable : true,
 						format : 'Y-m-d H:i',
-						//allowBlank : false,
+						// allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
 					}, {
@@ -123,7 +123,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						fieldLabel : '卷膜序号'
 					}]
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "导出",
 					rescode : '10002661',
@@ -140,7 +140,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【卷膜记录列表】',
+			// title : '【卷膜记录列表】',
 			region : 'center',
 			hsPage : true,
 			id : 'produce-jmrecord-list',
@@ -162,7 +162,9 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.juanmo.deleteJuanmoMain.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 40
+							}), selModel, {
 						header : '卷膜序号',
 						width : 120,
 						dataIndex : 'batchNo'
@@ -560,6 +562,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 							name : 'entity/orderNo',
 							dataIndex : 'orderNo',
 							allowBlank : false,
+							readOnly : true,
 							ref : '../../orderNo',
 							anchor : '85%',
 							fieldLabel : '订单号'
@@ -568,7 +571,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 							hiddenName : 'entity/prodSpecId',
 							dataIndex : 'prodSpecId',
 							ref : '../../prodSpecId',
-							state:'Y',
+							state : 'Y',
 							anchor : '85%',
 							fieldLabel : '元件型号 ',
 							typeAhead : true,

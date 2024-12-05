@@ -15,6 +15,23 @@
     String userOrgId = userObject.getUserOrgId();
     String uname = userObject.getUserName();
     int gyyFlag = roleId.indexOf("10001322")>-1?1:0;
+    int modifyOrderNoFlag = roleId.indexOf("10001561")>-1?1:0;
+    int monitorFlag = roleId.indexOf("30431")>-1?1:0;
+    int waterTestFlag = roleId.indexOf("30622")>-1?1:0;
+    //修改干湿膜订单号权限
+    int modifyOrderNoFlag4Wet = 0;
+    int modifyOrderNoFlag4Dry = 0;
+    if(modifyOrderNoFlag==1){
+    	//气检湿膜贴标,梁彪、李长林
+    	if(uid.equals("KS00141")||uid.equals("KS00524")){
+    		modifyOrderNoFlag4Wet = 1;
+    	}
+    	//气检干膜贴标,罗海鹰、任栋、吴敏
+		if(uid.equals("LHY")||uid.equals("KS00307")||uid.equals("KS01147")||uid.equals("XXB")){   		
+    		modifyOrderNoFlag4Dry = 1;
+    	}
+    }
+    
 %>
 <html>
 <!-- 
@@ -35,7 +52,7 @@
 		
 	}
 </script>
-<ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
+<ext:dict property="ABF_YESORNO" dictTypeId="ABF_YESORNO" />
 
 <js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="pub/common/lineCombo.js" />
@@ -43,8 +60,8 @@
 <js:load scriptPath="pub/common/tacheteamCombo.js" />
 <js:load scriptPath="pub/common/mpspecCombo.js" />
 
-<js:load scriptPath="qinsen/produce/qijian/js/manageUi.js"/>
-<js:load scriptPath="qinsen/produce/qijian/js/manageEv.js"/>
+<js:load scriptPath="qinsen/produce/qijian/js/manageUi.js" />
+<js:load scriptPath="qinsen/produce/qijian/js/manageEv.js" />
 
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
@@ -52,6 +69,13 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var gyyFlag = <%=gyyFlag %>;
+  var monitorFlag = <%=monitorFlag %>;
+  var modifyOrderNoFlag = <%=modifyOrderNoFlag %>;
+  
+  var modifyOrderNoFlag4Wet = <%=modifyOrderNoFlag4Wet %>;
+  var modifyOrderNoFlag4Dry = <%=modifyOrderNoFlag4Dry %>;
+  
+  var waterTestFlag = <%=waterTestFlag %>;
    var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;
    <% if(workerflag){ %>

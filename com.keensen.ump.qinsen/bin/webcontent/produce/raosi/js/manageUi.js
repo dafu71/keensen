@@ -116,8 +116,8 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false//,
+					//header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			hsPage : true,
@@ -140,6 +140,12 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '->', {
+						text : '批量改订单',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : modifyOrderNoFlag != 1,
+						handler : this.modiOrder
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.raosi.deleteQijian.biz.ext',
@@ -229,6 +235,8 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							name : 'cdmBatchStr'
 						}, {
 							name : 'tumoBatchStr'
+						}, {
+							name : 'qjBatchId'
 						}]
 			})
 		})

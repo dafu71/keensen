@@ -247,7 +247,9 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.addDetail = function() 
 					produceDate : cdm.produceDate
 				});
 		_this.detailGrid.store.insert(cnt, [detail]);
+		var mixBatchNo = _this.cdmPanel.mixBatchNo.getValue();
 		_this.cdmPanel.form.reset();
+		_this.cdmPanel.mixBatchNo.setValue(mixBatchNo);
 	}
 }
 
@@ -262,6 +264,12 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.clearInfo = function() 
 	_this.cdmPanel.cdmBatchNo.focus();
 	_this.mainPanel.teamId.setValue(teamId);// 班组维持不变
 	_this.mainPanel.produceDt.setValue(new Date());
+	
+	//重置自由卷
+	var	vals = {};
+	vals['nameSqlId'] = 'com.keensen.ump.produce.component.workorder.queryJmChooseCdm';
+	_this.chooseCdmStore.baseParams = vals;
+	_this.chooseCdmStore.load();
 }
 
 // 获取新数据
@@ -286,6 +294,10 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.getNewInfo = function()
 
 	newRec.startSeq = _this.mainPanel.startSeq.getValue();
 	newRec.prefix = _this.mainPanel.prefix.getValue();
+	
+	newRec.orderId = _this.mainPanel.orderId.getValue();
+	newRec.planDate = _this.mainPanel.planDate.getValue();
+	newRec.cdmBatchNo = _this.mainPanel.cdmBatchNo.getValue();
 
 	return newRec;
 }
@@ -412,4 +424,67 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 			}
 		})
 	}
+}
+
+com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onGetDuty = function() {
+	var _this = this;
+	var records = this.detailGrid.store.getRange();
+	if (records.length > 0) {
+		Ext.Msg.alert("系统提示", "已领取任务！")
+		return false;
+	} else {
+		_this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		_this.requestMask.show();
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.component.workorder2.getJmDuty.biz.ext",
+			method : "post",
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					if (!Ext.isEmpty(ret.data)) {
+						var orderNo = ret.data[0].orderNo;
+						var orderId = ret.data[0].orderId;
+						var orderType = ret.data[0].orderType;
+						var materSpecName2 = ret.data[0].materSpecName2;
+						var orderAmount = ret.data[0].orderAmount;
+						var planDate = ret.data[0].planDate;
+						var jmAmount = ret.data[0].jmAmount;
+						var orderAmount = ret.data[0].orderAmount;
+						var materSpecId = ret.data[0].materSpecId;
+						var realityAmount = ret.data[0].realityAmount;
+						
+						_this.mainPanel.orderNo.setValue(orderNo);
+						_this.mainPanel.prodSpecId.setValue(materSpecId);
+						_this.mainPanel.planDate.setValue(planDate);
+						_this.mainPanel.orderId.setValue(orderId);
+
+						var store = _this.jmdutyStore;
+						store.load({
+									params : {
+										'condition/planDate' : planDate,
+										'condition/orderId' : orderId
+									}
+								});
+						// _this.dealTumoBatchNo();
+					} else {
+						Ext.Msg.alert("系统提示", "该机台没有分配任务，请检查！", function() {
+									_this.cdmPanel.cdmBatchNo.setValue('');
+									return false;
+								})
+
+					}
+				}
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+	}
+}
+
+com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onChooseCdm = function() {
+	this.chooseCdmWindow.show();
 }

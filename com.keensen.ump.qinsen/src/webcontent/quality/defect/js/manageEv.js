@@ -21,15 +21,15 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.initEvent = function() {
 	}
 
 	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
-				var C = gird.getSelectionModel().getSelections();
-				var r = C[0];
-				var recordId = r.data.recordId;
-				recordId = recordId + '';
 
-				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能删除');
-					//return false;
-				}
+				//var C = gird.getSelectionModel().getSelections();
+				//var r = C[0];
+				//var recordId = r.data.recordId;
+				//var flag = r.data.flag;
+				//if (flag == 'DM') {
+				//	return false;
+				//}
+
 			})
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -45,8 +45,42 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-				this.editWindow.show();
-				this.editWindow.loadData(cell);
+
+				var flag = cell.get('flag');
+				if (flag == 'TM') {
+					this.editWindow.show();
+					this.editWindow.loadData(cell);
+				} else {
+					this.editWindow2.show();
+					this.editWindow2.loadData(cell);
+				}
+
+			}, this);
+
+	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterload',
+			function(win, data) {
+				var regEx = new RegExp("\\-", "gi");
+				if (data.produceDt) {
+					data.produceDt = data.produceDt.split('.')[0];
+					var date1 = data.produceDt.replace(regEx, "/");
+					this.editWindow.items.items[0].form
+							.findField('entity/produceDt')
+							.setValue(new Date(date1));
+				}
+
+			}, this);
+
+	this.editWindow2.activeItem.mon(this.editWindow2.activeItem, 'afterload',
+			function(win, data) {
+				var regEx = new RegExp("\\-", "gi");
+				if (data.produceDt) {
+					data.produceDt = data.produceDt.split('.')[0];
+					var date1 = data.produceDt.replace(regEx, "/");
+					this.editWindow2.items.items[0].form
+							.findField('entity/produceDt')
+							.setValue(new Date(date1));
+				}
+
 			}, this);
 
 }
@@ -56,7 +90,10 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.onDel = function() {
 };
 
 com.keensen.ump.qinsen.quality.DefectMgr.prototype.exportExcel = function() {
-	var _this = this;
+	
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '膜片不良记录',
+			'com.keensen.ump.qinsen.quality.queryDefect');
+	/*var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
@@ -86,7 +123,7 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.exportExcel = function() {
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 com.keensen.ump.qinsen.quality.DefectMgr.prototype.onAdd = function() {

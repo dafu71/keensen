@@ -24,7 +24,7 @@
   - Description:
 -->
 <head>
-<title>元件入库请检</title>
+<title>工业膜入库请检</title>
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
@@ -40,6 +40,8 @@
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
+
+<ext:dict property="KS_COMPONENT_INDUSTRY_BOX" dictTypeId="KS_COMPONENT_INDUSTRY_BOX" />
 
 <ext:dict property="KS_COMPONENT_INDUSTRY_ABNORMAL" dictTypeId="KS_COMPONENT_INDUSTRY_ABNORMAL" />
 <ext:dict property="KS_COMPONENT_INDUSTRY_LABEL" dictTypeId="KS_COMPONENT_INDUSTRY_LABEL" />

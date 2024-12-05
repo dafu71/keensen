@@ -7,7 +7,7 @@
     <!-- 查询裁叠膜不良项目列表 -->
     <select id="queryCdmDefectItemList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	SELECT CD.RECORD_ID "recordId", CD.DUTY_TACHE_ID "dutyTacheId", CD.REC_TACHE_ID "recTacheId"
-	, CD.DEFECT_CODE,PT1.TACHE_NAME || '-' || CD.DEFECT_NAME "defectFullName",
+	, CD.DEFECT_CODE,decode(CD.rec_TACHE_ID,'99',PT1.TACHE_NAME || '-' || CD.DEFECT_NAME || '(' || PT2.TACHE_NAME || '录入)' ,PT1.TACHE_NAME || '-' || CD.DEFECT_NAME) "defectFullName",
 	       CD.DEFECT_NAME "defectName", CD.DISP_ORDER, CD.REMARK,
 	       PT1.TACHE_CODE "dutyTacheCode", PT1.TACHE_NAME DUTY_TACHE_NAME,
 	       PT2.TACHE_CODE "recTacheCode", PT2.TACHE_NAME REC_TACHE_NAME

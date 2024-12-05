@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.semifinished">
+    <select id="queryWarehousing" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID             AS "id",T1.qj_batch_id "qjBatchId",
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.BATCH_NO       AS "batchNo",
+       T1.POSITION       AS "position",
+       T1.REMARK         AS "remark",
+       T1.ORDER_NO AS "orderNo",
+       T1.PROD_SPEC_ID AS "prodSpecId",
+       PMS.MATER_SPEC_NAME AS "prodSpecName"
+  FROM KS_COMPONENT_SEMI_WAREHOUSING T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = T1.PROD_SPEC_ID
+
+  where 1=1
+
+  
+   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.BATCH_NO like '%' || #batchNo# || '%'</isNotNull>
+	
+	
+	order by t1.id desc
+    </select>
+    <select id="queryStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:MI:SS') AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",T1.qj_batch_id "qjBatchId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:MI:SS') AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.BATCH_NO AS "batchNo",
+       T1.ORDER_NO AS "orderNo",
+       T1.PROD_SPEC_ID AS "prodSpecId",
+       T1.DELETED AS "deleted",
+       T1.NEW_ORDER_NO AS "newOrderNo",
+       T1.POSITION AS "position",
+       TO_CHAR(T1.IN_TIME, 'yyyy-MM-dd HH24:MI:SS') AS "inTime",
+       TO_CHAR(T1.OUT_TIME, 'yyyy-MM-dd HH24:MI:SS') AS "outTime",
+       PMS.MATER_SPEC_NAME AS "prodSpecName",
+       TO_CHAR(jm.produce_dt, 'yyyy-MM-dd HH24:MI:SS') AS "produceDt",
+       trunc(SYSDATE - jm.produce_dt) "diff",
+       CASE WHEN trunc(SYSDATE - jm.produce_dt)&gt;60 AND T1.DELETED = 'N' THEN '是'
+         ELSE '否' END  "ifDull",
+       CASE WHEN trunc(SYSDATE - jm.produce_dt)&gt;60 AND T1.DELETED = 'N' THEN 'red'
+        WHEN trunc(SYSDATE - jm.produce_dt)&gt;45 AND T1.DELETED = 'N' THEN 'yellow'
+         ELSE '' END  "ifWarn"       
+  FROM KS_COMPONENT_SEMI_STOCK T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = T1.PROD_SPEC_ID
+  left join qinsen.inst_juanmo_main jm
+  ON jm.batch_no = t1.batch_no
+
+  where 1=1
+
+	 <isNotNull prepend="and" property="ifDull">(CASE WHEN trunc(SYSDATE - jm.produce_dt)&gt;60 AND T1.DELETED = 'N' THEN '是'
+         ELSE '否' END) = #ifDull#</isNotNull>
+        <isNotNull prepend="and" property="ifWarn">(CASE WHEN trunc(SYSDATE - jm.produce_dt)&gt;60 AND T1.DELETED = 'N' THEN 'red'
+        WHEN trunc(SYSDATE - jm.produce_dt)&gt;45 AND T1.DELETED = 'N' THEN 'yellow'
+         ELSE '' END) = #ifWarn#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="inTimeStart">to_char(T1.IN_TIME,'yyyy-MM-dd')  &gt;=  #inTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="inTimeEnd">to_char(T1.IN_TIME,'yyyy-MM-dd')  &lt;=  #inTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">T1.ORDER_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T1.BATCH_NO like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="newOrderNo">T1.NEW_ORDER_NO like '%' || #newOrderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="deleted">t1.deleted = #deleted#</isNotNull>
+        <isNotNull prepend="and" property="deleted2">t1.deleted = #deleted2#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">PMS.MATER_SPEC_NAME like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">T1.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">t1.BATCH_NO in ($batchNoStr$)</isNotNull>
+	
+	order by T1.CREATE_TIME desc
+    </select>
+    <select id="queryJuanmo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  		SELECT jm.batch_no "batchNo",jm.prod_spec_id "prodSpecId",qj.record_id "qjBatchId",
+    jm.order_no "orderNo" ,PMS.MATER_SPEC_NAME AS "prodSpecName"
+    from qinsen.inst_qijian qj
+    left join qinsen.inst_juanmo_main jm ON qj.juanmo_batch_id = jm.record_id
+    LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+        ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID
+    where 1=1
+    and not exists(select 1 from KS_COMPONENT_SEMI_STOCK where batch_no=jm.batch_no)
+		<isNotNull prepend="and" property="batchNo">jm.BATCH_NO = #batchNo#</isNotNull>
+    </select>
+    <select id="queryOutofstock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID             AS "id",T1.qj_batch_id "qjBatchId",
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",T1.BATCH_NO       AS "batchNo",
+       t1.POSITION as "position",
+		t1.ORDER_NO as "orderNo",
+		t1.PROD_SPEC_ID as "prodSpecId",
+		t1.NEW_ORDER_NO as "newOrderNo",
+		t1.TAKE_USER_ID as "takeUserId",
+		t1.TAKE_USER_NAME as "takeUserName",
+       PMS.MATER_SPEC_NAME AS "prodSpecName"
+  FROM KS_COMPONENT_SEMI_OUTOFSTOCK T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = T1.PROD_SPEC_ID
+
+  where 1=1
+
+  
+   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.BATCH_NO like '%' || #batchNo# || '%'</isNotNull>
+	
+	
+	order by t1.id desc
+    </select>
+    <select id="queryStockCount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT SUM(DECODE(tt.if_dull,'是',1,0)) "dullAmount",
+	 SUM(DECODE(tt.if_Warn,'red',1,0)) "warnAmount",
+	 SUM(DECODE(tt.if_Warn,'yellow',1,0)) "warnAmount2"
+	  from (
+	   SELECT 
+	       T1.BATCH_NO, 
+	       trunc(SYSDATE - jm.produce_dt) diff,
+	       CASE WHEN trunc(SYSDATE - jm.produce_dt)&gt;60 AND T1.DELETED = 'N' THEN '是'
+	         ELSE '否' END  if_Dull,
+	       CASE WHEN trunc(SYSDATE - jm.produce_dt)&gt;60 AND T1.DELETED = 'N' THEN 'red'
+	        WHEN trunc(SYSDATE - jm.produce_dt)&gt;45 AND T1.DELETED = 'N' THEN 'yellow'
+	         ELSE '' END  if_Warn       
+	  FROM KS_COMPONENT_SEMI_STOCK T1
+	  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+	    ON PMS.MATER_SPEC_ID = T1.PROD_SPEC_ID
+	  left join qinsen.inst_juanmo_main jm
+	  ON jm.batch_no = t1.batch_no
+	
+	  where 1=1
+	
+		 <isNotNull prepend="and" property="ifDull">(CASE WHEN trunc(SYSDATE - jm.produce_dt)&gt;60 AND T1.DELETED = 'N' THEN '是'
+	         ELSE '否' END) = #ifDull#</isNotNull>
+        <isNotNull prepend="and" property="ifWarn">(CASE WHEN trunc(SYSDATE - jm.produce_dt)&gt;60 AND T1.DELETED = 'N' THEN 'red'
+	        WHEN trunc(SYSDATE - jm.produce_dt)&gt;45 AND T1.DELETED = 'N' THEN 'yellow'
+	         ELSE '' END) = #ifWarn#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="inTimeStart">to_char(T1.IN_TIME,'yyyy-MM-dd')  &gt;=  #inTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="inTimeEnd">to_char(T1.IN_TIME,'yyyy-MM-dd')  &lt;=  #inTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">T1.ORDER_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T1.BATCH_NO like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="newOrderNo">T1.NEW_ORDER_NO like '%' || #newOrderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="deleted">t1.deleted = #deleted#</isNotNull>
+        <isNotNull prepend="and" property="deleted2">t1.deleted = #deleted2#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">PMS.MATER_SPEC_NAME like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">t1.BATCH_NO in ($batchNoStr$)</isNotNull>
+		
+		) tt
+    </select>
+    <select id="queryStocktaking" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID             AS "id",T2.qj_batch_id "qjBatchId",
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.BATCH_NO       AS "batchNo",
+       T2.POSITION       AS "position",
+       t2.ORDER_NO as "orderNo",
+		t2.PROD_SPEC_ID as "prodSpecId",
+		t2.NEW_ORDER_NO as "newOrderNo",
+		t3.TAKE_USER_ID as "takeUserId",
+		t3.TAKE_USER_NAME as "takeUserName",
+       PMS.MATER_SPEC_NAME AS "prodSpecName"
+  FROM ks_component_SEMI_STOCKTAKING T1
+  left join ks_component_SEMI_STOCK t2
+  on T1.BATCH_NO = T2.BATCH_NO
+   LEFT JOIN KS_COMPONENT_SEMI_OUTOFSTOCK t3
+  on T1.BATCH_NO = T3.BATCH_NO
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+	    ON PMS.MATER_SPEC_ID = T2.PROD_SPEC_ID
+  
+  where 1=1
+
+  
+   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.BATCH_NO like '%' || #batchNo# || '%'</isNotNull>
+	
+	
+	order by t1.id desc
+    </select>
+</sqlMap>

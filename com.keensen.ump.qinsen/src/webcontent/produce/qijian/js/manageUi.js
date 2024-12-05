@@ -12,6 +12,9 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 		this.initQjChangeEditWindow();
 		this.initQiJianJudgeWindow();
+		
+		this.initRemindGyyWindow();
+		this.initRemindMonitorWindow();
 
 		this.opt = '';
 
@@ -67,7 +70,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 165,
-					columns : 4,
+					columns : 16,
 					border : true,
 					collapsible : false,
 					titleCollapse : false,
@@ -76,39 +79,41 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
 						fieldLabel : '生产时间',
-						colspan : 1,
+						colspan : 4,
 						anchor : '75%',
-						//allowBlank : false,
+						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
-						value : new Date().add(Date.DAY, -1)
+						value : new Date().add(Date.DAY, -3)
 								.format('Y-m-d 00:00')
 					}, {
 						xtype : 'datetimefield',
 						name : 'condition/produceDtEnd',
 						fieldLabel : '至',
-						colspan : 1,
+						colspan : 4,
 						anchor : '75%',
 						editable : true,
 						format : 'Y-m-d H:i',
-						//allowBlank : false,
+						// allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
 					}, {
 						xtype : 'linecombobox',
 						prodTacheId : '103',
+						colspan : 4,
 						hiddenName : 'condition/lineId',
 						anchor : '75%',
 						fieldLabel : '生产线 '
 					}, {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'condition/prodSpecId',
+						colspan : 4,
 						anchor : '75%',
 						fieldLabel : '元件型号 '
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 4
+						colspan : 16
 					}, {
 
 						xtype : 'combo',
@@ -117,6 +122,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						hiddenName : 'condition/isQualified',
 						emptyText : '--请选择--',
 						anchor : '75%',
+						colspan : 4,
 						store : [[null, '全部'], ['Y', '合格'], ['N', '不合格']],
 						listeners : {
 							scope : this,
@@ -132,6 +138,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						hiddenName : 'condition/judgeFlag',
 						emptyText : '--请选择--',
 						anchor : '75%',
+						colspan : 4,
 						store : [[null, '全部'], ['Y', '合格'], ['N', '不合格']],
 						listeners : {
 							scope : this,
@@ -142,6 +149,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					}, {
 						ref : '../ngReasonId',
 						anchor : '75%',
+						colspan : 4,
 						xtype : 'combobox',
 						hiddenName : 'condition/ngReasonId',
 						fieldLabel : '不良类型',
@@ -163,50 +171,96 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						xtype : 'componentworkercombobox',
 						hiddenName : 'condition/workerId',
 						anchor : '75%',
+						colspan : 4,
 						fieldLabel : '操作工'
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 4
+						colspan : 16
 					}, {
 						xtype : 'textfield',
 						name : 'condition/orderNo',
 						anchor : '75%',
+						colspan : 4,
 						fieldLabel : '订单号'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/dimoBatchNo',
 						anchor : '75%',
+						colspan : 4,
 						fieldLabel : '底膜批次'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/tumoBatchNoStr',
 						anchor : '75%',
+						colspan : 4,
 						fieldLabel : '膜片批次%-%'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/cdmBatchNo',
 						anchor : '75%',
+						colspan : 4,
 						fieldLabel : '叠膜栈板号'
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 4
+						colspan : 16
 					}, {
 
 						xtype : 'textfield',
-						name : 'condition/juanMoBatchNo',
-						anchor : '75%',
+						name : 'condition/juanMoBatchNoMin',
+						anchor : '100%',
+						colspan : 3,
 						fieldLabel : '卷膜序号'
 					}, {
 
 						xtype : 'textfield',
-						name : 'condition/batchNo',
-						anchor : '75%',
+						name : 'condition/juanMoBatchNoMax',
+						anchor : '100%',
+						colspan : 3,
+						fieldLabel : '至'
+					}, {
+
+						xtype : 'textfield',
+						name : 'condition/batchNoMin',
+						anchor : '100%',
+						colspan : 3,
 						fieldLabel : '元件序号'
-					}]
+					}, {
+
+						xtype : 'textfield',
+						name : 'condition/batchNoMax',
+						anchor : '100%',
+						colspan : 3,
+						fieldLabel : '至'
+					}, {
+
+						xtype : 'combo',
+						fieldLabel : '干湿膜',
+						ref : '../dryWet',
+						hiddenName : 'condition/dryWet',
+						emptyText : '--请选择--',
+						anchor : '75%',
+						colspan : 4,
+						store : [[null, '全部'], ['干', '干'], ['湿', '湿']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.dryWet.reset();
+							}
+						}
+					}/*
+						 * , {
+						 * 
+						 * xtype : 'textfield', name :
+						 * 'condition/juanMoBatchNo', anchor : '75%', fieldLabel :
+						 * '卷膜序号' }, {
+						 * 
+						 * xtype : 'textfield', name : 'condition/batchNo',
+						 * anchor : '75%', fieldLabel : '元件序号' }
+						 */]
 				});
 
 		this.queryPanel.addButton({
@@ -245,11 +299,29 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}, '-', {
+						text : '班长挑水测',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : monitorFlag != 1,
+						handler : this.onMonitorRemark
+					}, '-', {
+						text : '水测员工接收',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : waterTestFlag != 1,
+						handler : this.onWaterRemark
+					}, '-', {
 						text : '工艺员备注',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						hidden : gyyFlag != 1,
 						handler : this.onRemark
+					}, '-', {
+						text : '班长确认工艺员意见',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : monitorFlag != 1,
+						handler : this.onMonitorRemark2
 					}, '->', {
 						text : '换标',
 						scope : this,
@@ -269,6 +341,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						text : '批量改订单',
 						scope : this,
 						iconCls : 'icon-application_edit',
+						hidden : modifyOrderNoFlag != 1,
 						handler : this.modiOrder
 					}],
 			selModel : selModel,
@@ -287,6 +360,11 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						header : '元件型号',
 						width : 120,
 						dataIndex : 'prodSpecName',
+						sortable : true
+					}, {
+						header : '干湿膜',
+						width : 120,
+						dataIndex : 'dryWet',
 						sortable : true
 					}, {
 						header : '检测气压',
@@ -327,6 +405,27 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						dataIndex : 'gyyRemark',
 						header : '工艺员备注',
 						sortable : true
+					}, {
+						dataIndex : 'gyyRemarkTime',
+						header : '工艺备注时间'
+					}, {
+						dataIndex : 'monitorRemark',
+						header : '班长挑水测'
+					}, {
+						dataIndex : 'monitorRemarkTime',
+						header : '班长安排<br>水测时间'
+					}, {
+						dataIndex : 'waterRemark',
+						header : '水测员工接收'
+					}, {
+						dataIndex : 'waterRemarkTime',
+						header : '水测员工<br>接收时间'
+					}, {
+						dataIndex : 'monitorRemark2',
+						header : '班长确认<br>工艺员意见'
+					}, {
+						dataIndex : 'monitorRemarkTime2',
+						header : '班长确认时间'
 					}, {
 						header : '不良原因',
 						width : 120,
@@ -540,6 +639,38 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							name : 'diameter'
 						}, {
 							name : 'diameter2'
+						}, {
+							name : 'gyyRemarkTime'
+						}, {
+							name : 'gyyRemarkUserId'
+						}, {
+							name : 'gyyRemarkUserName'
+						}, {
+							name : 'monitorRemark'
+						}, {
+							name : 'monitorRemarkTime'
+						}, {
+							name : 'monitorRemarkUserId'
+						}, {
+							name : 'monitorRemarkUserName'
+						}, {
+							name : 'waterRemark'
+						}, {
+							name : 'waterRemarkTime'
+						}, {
+							name : 'waterRemarkUserId'
+						}, {
+							name : 'waterRemarkUserName'
+						}, {
+							name : 'monitorRemark2'
+						}, {
+							name : 'monitorRemarkTime2'
+						}, {
+							name : 'monitorRemarkUserId2'
+						}, {
+							name : 'monitorRemarkUserName2'
+						}, {
+							name : 'dryWet'
 						}]
 			})
 		})
@@ -1004,6 +1135,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									name : 'entity/orderNo',
 									dataIndex : 'orderNo',
 									allowBlank : false,
+									readOnly : true,
 									ref : '../../orderNo',
 									anchor : '90%',
 									fieldLabel : '订单号'
@@ -1610,5 +1742,140 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 								}]
 					}]
 				})
+	}
+	
+	this.initRemindGyyWindow = function() {
+
+		var remindGyySelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.remindGyyListPanel = this.remindGyyListPanel || new Ext.fn.ListPanel({
+			region : 'center',
+			viewConfig : {
+				forceFit : true
+			},
+			hsPage : false,
+			selModel : remindGyySelModel,
+			delUrl : '111.biz.ext',
+			columns : [new Ext.grid.RowNumberer(), remindGyySelModel, {
+						dataIndex : 'batchNo',
+						header : '元件序号'
+					}, {
+						dataIndex : 'waterRemark',
+						header : '水测员工意见'
+					}, {
+						dataIndex : 'waterRemarkTime',
+						header : '水测员工接收时间'
+					}, {
+						dataIndex : 'waterRemarkUserName',
+						header : '水测员工'
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.qinsen.qijian.query4Gyy.biz.ext',
+				root : 'data',
+				autoLoad : false,
+				totalProperty : '',
+				baseParams : {
+					
+				},
+				fields : [{
+							name : 'batchNo'
+						}, {
+							name : 'waterRemark'
+						}, {
+							name : 'waterRemarkTime'
+						}, {
+							name : 'waterRemarkUserName'
+						}, {
+							name : 'recordId'
+						}]
+			})
+		})
+
+		this.remindGyyWindow = this.remindGyyWindow || new Ext.Window({
+					title : '水测提醒工艺员',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 600,
+					height : 480,
+					layout : 'border',
+					items : [this.remindGyyListPanel]
+
+				});
+	}
+	
+	this.initRemindMonitorWindow = function() {
+
+		var remindMonitorSelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.remindMonitorListPanel = this.remindMonitorListPanel || new Ext.fn.ListPanel({
+			region : 'center',
+			viewConfig : {
+				forceFit : true
+			},
+			hsPage : false,
+			selModel : remindMonitorSelModel,
+			delUrl : '111.biz.ext',
+			columns : [new Ext.grid.RowNumberer(), remindMonitorSelModel, {
+						dataIndex : 'batchNo',
+						header : '元件序号'
+					}, {
+						dataIndex : 'gyyRemark',
+						header : '工艺员意见'
+					}, {
+						dataIndex : 'gyyRemarkTime',
+						header : '工艺员备注时间'
+					}, {
+						dataIndex : 'gyyRemarkUserName',
+						header : '工艺员'
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.qinsen.qijian.query4Monitor.biz.ext',
+				root : 'data',
+				autoLoad : false,
+				totalProperty : '',
+				baseParams : {
+					
+				},
+				fields : [{
+							name : 'batchNo'
+						}, {
+							name : 'gyyRemark'
+						}, {
+							name : 'gyyRemarkTime'
+						}, {
+							name : 'gyyRemarkUserName'
+						}, {
+							name : 'recordId'
+						}]
+			})
+		})
+
+		this.remindMonitorWindow = this.remindMonitorWindow || new Ext.Window({
+					title : '水测提醒班长',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					//animCollapse: true,
+					modal : true,
+					width : 600,
+					height : 480,
+					layout : 'border',
+					items : [this.remindMonitorListPanel]
+
+				});
 	}
 }

@@ -60,6 +60,7 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 					text : "导入盘库",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					rescode : '10003201',
 					handler : this.importExcel
 				});
 		this.queryPanel.addButton({
@@ -93,6 +94,10 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 			selModel : selModel,
 			delUrl:'com.keensen.ump.produce.component.stocktaking.deleteEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
+						dataIndex : 'batchNo2',
+						header : '导入序号',
+						width:100
+					}, {
 						dataIndex : 'batchNo',
 						header : '元件序号',
 						width:100
@@ -108,11 +113,11 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 						dataIndex : 'orderMaterSpecName',
 						header : '订单下达型号',
 						width:100
-					}, {
+					}/*, {
 						dataIndex : 'markSpecCode',
 						header : '唛头标签型号',
 						width:100
-					}, {
+					}*/, {
 						dataIndex : 'produceDt',
 						header : '卷膜日期',
 						width:100
@@ -157,6 +162,8 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 							name : 'markSpecCode'
 						}, {
 							name : 'id'
+						}, {
+							name : 'batchNo2'
 						}]
 			})
 		})
@@ -173,19 +180,36 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 			// baseCls : "x-plain",
 
 			width : '600',
-			height : '240',
+			height : '280',
 			// title : '生产入库',
 			pgrid : '',
-			columns : 1,
+			columns : 2,
 			autoHide : false,
 			border : true,
 			saveUrl : 'com.keensen.ump.produce.component.stocktaking.saveEntity.biz.ext',
 			fields : [{
 						xtype : 'displayfield',
 						height : '50',
+						colspan : 2
+					},{
+						xtype : 'displayfield',
+						ref : '../lastBatchNo',
+						fieldLabel:'<p style="color:red;font-size:12px;">上支元件</p>',
+						labelSeparator : '',// 去掉冒号
 						colspan : 1
+					},{
+						xtype : 'displayfield',
+						fieldLabel:'<p style="color:red;font-size:12px;">总数量</p>',
+						labelSeparator : '',// 去掉冒号
+						ref : '../count',
+						colspan : 1
+					},{
+						xtype : 'displayfield',
+						height : 10,
+						colspan : 2
 					}, {
 						xtype : 'radiogroup',
+						colspan : 2,
 						columns : 3,
 						name : 'reserve1',
 						ref : '../reserve1',
@@ -237,12 +261,11 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 									boxLabel : '白膜仓库',
 									name : 'entity/reserve1',
 									inputValue : '10'
-								}],
-						colspan : 1
+								}]
 					}, {
 						xtype : 'displayfield',
 						height : '10',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						name : 'entity/batchNo',
@@ -251,7 +274,7 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 						fieldLabel : '批号',
 						ref : '../batchNo',
 						anchor : '80%',
-						colspan : 1,
+						colspan : 2,
 						listeners : {
 							scope : this,
 							specialkey : function(C, D) {
@@ -267,7 +290,7 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 						fieldLabel : ' ',
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 						labelSeparator : '',// 去掉冒号
-						colspan : 1
+						colspan : 2
 					}],
 			buttons : [{
 						text : "确定",

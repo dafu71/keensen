@@ -3,7 +3,8 @@
 <sqlMap>
    <select id="queryFix" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
     select 
-    t1.ID as "id",	 
+    t1.ID as "id",t1.mptype "mptype",t1.machine "machine",t1.psf "psf",	t1.weight "weight", 
+    t2.dictname "psfName",
 	to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mi')as "createTime",
 	t1.CREATE_USER_ID as "createUserId",
 	t1.CREATE_NAME as "createName",
@@ -20,6 +21,8 @@
 	t1.BATCH_NO as "batchNo",
 	t1.C11 as "c11",
 	t1.C12 as "c12",
+	t1.C13 as "c13",
+	t1.C14 as "c14",t1.concentration "concentration",
 	to_char(t1.FIX_STARTTIME,'yyyy-MM-dd hh24:mi') as "fixStarttime",
 	to_char(t1.HOTTIME,'yyyy-MM-dd hh24:mi') as "hottime",
 	to_char(t1.REACHTIME,'yyyy-MM-dd hh24:mi') as "reachtime",
@@ -39,9 +42,11 @@
 	t1.HIT_USERNAME as "hitUsername"，
 	CEIL((TO_DATE(TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24-mi-ss'), 'yyyy-mm-dd hh24-mi-ss') -
             TO_DATE(TO_CHAR(t1.create_time, 'yyyy-mm-dd hh24-mi-ss'), 'yyyy-mm-dd hh24-mi-ss')) * 24) "diff"
+	,nvl(t1.used,nvl2(zmx.zmy_batch_no,'是','否')) "used"
 	from KS_PROD_DIAPHRAGM_MAKE_FIX t1
-	
-
+	left join EOS_DICT_ENTRY t2 on t2.dictid=t1.psf and t2.dicttypeid='KS_PSF'
+    left join (select distinct t.zmy_batch_no from KS_PROD_DIAPHRAGM_ZMX_RECORD t) zmx 
+    on zmx.zmy_batch_no = t1.BATCH_NO
      where 1=1
      <isNotNull prepend="" property="batchNo"> 
 		       AND t1.BATCH_NO = #batchNo#
@@ -64,6 +69,12 @@
      <isNotNull prepend = "and"  property = "createTimeEnd"> 
           to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
      </isNotNull>
+     
+      <isNotNull prepend="" property="machine"> 
+		       AND t1.machine = #machine#
+	</isNotNull>
+     
+     
 	 ORDER BY t1.CREATE_TIME desc
      </select>
      
@@ -99,10 +110,11 @@
        T1.LOSE5 AS "lose5",
        T1.LOSE6 AS "lose6",
        T1.LOSE7 AS "lose7",
-       NVL(T1.THEORY_AMOUNT, 0) -
+       <!--NVL(T1.THEORY_AMOUNT, 0) - nvl(defect.loss,0) - 
        (NVL(T1.LOSE0, 0) + NVL(T1.LOSE1, 0) + NVL(T1.LOSE2, 0) +
         NVL(T1.LOSE3, 0) + NVL(T1.LOSE4, 0) + NVL(T1.LOSE5, 0) +
-        NVL(T1.LOSE6, 0) + NVL(T1.LOSE7, 0)) "dimoAmount",
+        NVL(T1.LOSE6, 0) + NVL(T1.LOSE7, 0)) "dimoAmount",-->
+        NVL(T1.THEORY_AMOUNT, 0) - nvl(defect.loss,0) "dimoAmount",
        T1.FLAW0 AS "flaw0",
        T1.FLAW1 AS "flaw1",
        T1.FLAW2 AS "flaw2",
@@ -111,8 +123,11 @@
        T1.BEFORE_AMOUNT AS "beforeAmount",
        T1.CUR_AMOUNT AS "curAmount",
        NVL(T1.BEFORE_AMOUNT, 0) + NVL(T1.CUR_AMOUNT, 0) "totalAmount",
-       t4.cnt "cnt"
+       t4.cnt "cnt",
+       defect.loss "loss"
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+  left join (select sum(t.loss) loss ,t.dm_batch_id from QINSEN.Inst_Cdm_Defect2 t
+	GROUP BY t.dm_batch_id) defect on defect.dm_batch_id = t1.id
   left join qinsen.CONF_PROP_VALUE_OPTION t2
  	on t2.prop_id = 30021 and t2.prop_value_id = t1.SUP_ID
   left join qinsen.BASE_DEPARTMENT t3
@@ -232,7 +247,7 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
 	<isNotNull prepend="" property="dimoBatchNo2"> 
 		       AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'
 	</isNotNull>
-     order by T1.PRODUCT_DT desc
+     order by t1.y desc,t1.m DESC,t1.d DESC
      </select>
      
      

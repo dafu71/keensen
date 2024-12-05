@@ -178,14 +178,15 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 					}
 				},
 				columns : 2,
-				saveUrl : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock.biz.ext',
+				//saveUrl : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock4part.biz.ext',
 				fields : [{
 							xtype : 'textfield',
 							name : 'outofstock/batchNo',
 							allowBlank : false,
 							fieldLabel : '批号',
 							ref : '../batchNo',
-							colspan : 2,
+							colspan : 1,
 							listeners : {
 								scope : this,
 								specialkey : function(C, D) {
@@ -197,11 +198,21 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 								}
 							}
 						}, {
+							xtype : 'numberfield',
+							name : 'outofstock/stockAmount',
+							//allowBlank : false,
+							fieldLabel : '库存数量',
+							readOnly : true,
+							colspan : 1
+						}, {
 							xtype : 'displayfield',
 							fieldLabel : ' ',
 							value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 							labelSeparator : '',// 去掉冒号
-							colspan : 2
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							colspan : 2,
@@ -217,9 +228,9 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 						}, {
 							xtype : 'numberfield',
 							name : 'outofstock/amount',
-							//allowBlank : false,
-							fieldLabel : '数量',
-							readOnly : true,
+							allowBlank : false,
+							fieldLabel : '出库数量',
+							readOnly : false,
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -266,6 +277,9 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 							xtype : 'hidden',
 							name : 'outofstock/type',
 							value : '非发货出库'
+						}, {
+							xtype : 'hidden',
+							name : 'outofstock/position'
 						}]
 			}]
 		});

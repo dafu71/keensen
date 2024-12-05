@@ -4,6 +4,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 		this.initListPanel();
 		this.initInputWindow();
 
+		this.initOrderNoWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -20,7 +22,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【涂膜记录查询】',
+					//title : '【涂膜记录查询】',
 					fields : [{
 								xtype : 'datetimefield',
 								name : 'condition/produceDtStart',
@@ -182,7 +184,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 
 		});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【涂膜记录列表】',
+			//title : '【涂膜记录列表】',
 			viewConfig : {
 				forceFit : false
 			},
@@ -476,6 +478,67 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					maximizable : true,
 					layout : 'fit',
 					items : [this.inputPanel]
+				});
+
+	}
+
+	this.initOrderNoWindow = function() {
+		var _this = this;
+		this.orderNoWindow = this.orderNoWindow || new Ext.fn.FormWindow({
+					title : '实际发货订单',
+					height : 240,
+					width : 300,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+								xtype : 'inputpanel',
+								baseCls : "x-plain",
+								pgrid : this.listPanel,
+								columns : 2,
+								saveUrl : '1.biz.ext',
+								fields : [{
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'textfield',
+											ref : '../../deliveryOrderNo',
+											fieldLabel : '实际发货订单号',
+											anchor : '100%',
+											colspan : 2
+
+										}, {
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'datetimefield',
+											ref : '../../deliveryDt',
+											fieldLabel : '实际发货时间',
+											format : "Y-m-d H:i:00",
+											value : new Date(),
+											anchor : '100%',
+											colspan : 2
+										}]
+							}]
+				});
+		this.orderNoWindow.buttons[0].hide();
+		this.orderNoWindow.buttons[1].hide();
+
+		this.orderNoWindow.addButton({
+					text : "确定",
+					scope : this,
+					iconCls : 'icon-application_add',
+					handler : this.onCreateOrder
+				});
+
+		this.orderNoWindow.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.orderNoWindow.hide();
+					}
 				});
 
 	}

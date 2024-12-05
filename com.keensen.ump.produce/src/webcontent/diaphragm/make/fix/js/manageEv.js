@@ -20,8 +20,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				var hitUserid = r.data.hitUserid;
 				var diff = r.data.diff;
 				if (diff > 48) {
-					Ext.Msg.alert('系统提示', '不能删除两天前的记录');
-					return false;
+					 Ext.Msg.alert('系统提示', '不能删除两天前的记录');0910
+					 return false;
 				}
 				if (uid != createUserId) {
 					Ext.Msg.alert('系统提示', '不能删除' + createName + '的记录');
@@ -32,12 +32,24 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				}
 			})
 
+	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
+			function() {
+				var fixUsername = this.inputWindow.fixUserid.getRawValue();
+				this.inputWindow.fixUsername.setValue(fixUsername);
+			}, this);
+			
+	this.editWindow2.activeItem.mon(this.editWindow2.activeItem, 'beforeSave',
+			function() {
+				var hitUsername = this.editWindow2.hitUserid.getRawValue();
+				this.editWindow2.hitUsername.setValue(hitUsername);
+			}, this);
+
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 				if (opt == 'fix' || opt == 'hit') {
 					var diff = cell.get('diff');
 					if (diff > 48) {
-						Ext.Msg.alert('系统提示', '不能修改两天前的记录');
+						Ext.Msg.alert('系统提示', '不能修改两天前的记录');0910
 						return false;
 					}
 				}
@@ -45,7 +57,10 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 					var fixUserid = cell.get('fixUserid');
 					var fixUsername = cell.get('fixUsername');
 					if (uid != fixUserid) {
-						Ext.Msg.alert('系统提示', '不能修改' + fixUsername + '的记录');
+						// Ext.Msg.alert('系统提示', '不能修改' + fixUsername +
+						// '的记录');0910
+						this.editWindow.show();
+						this.editWindow.loadData(cell);
 					} else {
 						this.editWindow.show();
 						this.editWindow.loadData(cell);
@@ -55,7 +70,10 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 					var hitUserid = cell.get('hitUserid');
 					var hitUsername = cell.get('hitUsername');
 					if (!Ext.isEmpty(hitUserid) && uid != hitUserid) {
-						Ext.Msg.alert('系统提示', '不能修改' + hitUsername + '的记录');
+						// Ext.Msg.alert('系统提示', '不能修改' + hitUsername +
+						// '的记录');0910
+						this.editWindow2.show();
+						this.editWindow2.loadData(cell);
 					} else {
 						this.editWindow2.show();
 						this.editWindow2.loadData(cell);
@@ -74,6 +92,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 					}
 				}
 			}, this);
+
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterSave',
 			function(gird, cell) {
 			}, this);
@@ -153,8 +172,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 							.setValue(uname);
 				}
 			}, this);
-	
-			// 修改加载数据后事件
+
+	// 修改加载数据后事件
 	this.editWindow3.activeItem.mon(this.editWindow3.activeItem, 'afterload',
 			function(win, data) {
 				var regEx = new RegExp("\\-", "gi");
@@ -215,7 +234,6 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 							.findField('entity/usetime')
 							.setValue(new Date(date1));
 				}
-				
 
 			}, this);
 }
@@ -242,7 +260,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
 };
 
-com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel = function() {
+/*com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel = function() {
 	var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
@@ -278,12 +296,62 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel = function()
 			_this.requestMask.hide()
 		}
 	})
-}
+}*/
 
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onEdit3 = function() {
 	opt = 'modify';
 	this.listPanel.onEdit();
 };
 
+com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onCalc = function() {
+	var _this = this;
+	var weight = this.inputWindow.weight.getValue();
+	var mptype = this.inputWindow.mptype.getValue();
+	if (Ext.isEmpty(weight) || Ext.isEmpty(mptype))
+		return;
+	var rowIndex = this.mptypeStore.find("mptype", mptype);
+	if (rowIndex < 0)
+		return;
+	var record = this.mptypeStore.getAt(rowIndex);
+	var c11 = record.get('c11');
+	var c12 = record.get('c12');
+	var c13 = record.get('c13');
+	var c14 = record.get('c14');
+	this.inputWindow.c11.setValue((parseFloat(weight) * parseFloat(c11)/100)
+			.toFixed(1));
+	this.inputWindow.c12.setValue((parseFloat(weight) * parseFloat(c12)/100)
+			.toFixed(1));
+	this.inputWindow.c13.setValue((parseFloat(weight) * parseFloat(c13)/100)
+			.toFixed(1));
+	this.inputWindow.c14.setValue((parseFloat(weight) * parseFloat(c14)/100)
+			.toFixed(1));
+}
 
+com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onCalc2 = function() {
+	var _this = this;
+	var weight = this.editWindow3.weight.getValue();
+	var mptype = this.editWindow3.mptype.getValue();
+	if (Ext.isEmpty(weight) || Ext.isEmpty(mptype))
+		return;
+	var rowIndex = this.mptypeStore.find("mptype", mptype);
+	if (rowIndex < 0)
+		return;
+	var record = this.mptypeStore.getAt(rowIndex);
+	var c11 = record.get('c11');
+	var c12 = record.get('c12');
+	var c13 = record.get('c13');
+	var c14 = record.get('c14');
+	this.editWindow3.c11.setValue((parseFloat(weight) * parseFloat(c11)/100)
+			.toFixed(1));
+	this.editWindow3.c12.setValue((parseFloat(weight) * parseFloat(c12)/100)
+			.toFixed(1));
+	this.editWindow3.c13.setValue((parseFloat(weight) * parseFloat(c13)/100)
+			.toFixed(1));
+	this.editWindow3.c14.setValue((parseFloat(weight) * parseFloat(c14)/100)
+			.toFixed(1));
+}
 
+com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel = function() {
+	doQueryAndExport(this,this.queryPanel,this.listPanel,'铸膜混料','com.keensen.ump.produce.diaphragm.make.make.queryFix.biz.ext')
+
+}

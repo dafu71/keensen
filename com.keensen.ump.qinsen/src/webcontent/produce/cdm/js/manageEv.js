@@ -265,12 +265,34 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportExcel = function() {
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 	this.inputWindow.produceDt.setValue(new Date());
+	this.inputWindow.buttons[0].setDisabled(true);
+
+	this.inputWindow.displayfield1.setVisible(true);
+	this.inputWindow.orderType.setVisible(true);
+	this.inputWindow.materSpecName2.setVisible(true);
+	this.inputWindow.displayfield2.setVisible(true);
+	this.inputWindow.orderAmount.setVisible(true);
+	this.inputWindow.planDate.setVisible(true);
+	this.inputWindow.displayfield3.setVisible(true);
+	this.inputWindow.jmAmount.setVisible(true);
+	this.inputWindow.realityAmount.setVisible(true);
+
+	this.inputWindow.tumoBatchNo.setVisible(true);
+	this.inputWindow.tumoBatchNo.setDisabled(false);
+
+	this.onPlan();
 	this.inputWindow.show();
 }
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function() {
 	var _this = this;
-	var batchNo = this.inputWindow.tumoBatchNo.getValue();
+	var batchNo = '';
+	if (this.inputWindow.tumoBatchNo.hidden) {
+		batchNo = this.inputWindow.tumoBatchNo2.getValue();
+	}else{
+		batchNo = this.inputWindow.tumoBatchNo.getValue();
+	}
+	
 	if (batchNo.length != 11 && batchNo.length != 12) {
 		Ext.Msg.alert("系统提示", "膜片批次长度应为11或12位，请检查！");
 		return false;
@@ -299,22 +321,24 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function(
 								_this.inputWindow.startSeq.setValue(startSeq);
 								_this.inputWindow.batchNo.setValue(batchNo
 										+ '-' + nextSeq);
-								_this.inputWindow.orderNo
-										.setValue(last.orderNo);
-								_this.inputWindow.prodSpecId
-										.setValue(last.prodSpecId);
+								// _this.inputWindow.orderNo
+								// .setValue(last.orderNo);
+								// _this.inputWindow.prodSpecId
+								// .setValue(last.prodSpecId);
 								_this.inputWindow.isToMix
 										.setValue(last.isToMix);
 								_this.inputWindow.quantity
 										.setValue(last.quantity);
 								_this.inputWindow.numPerWad
 										.setValue(last.numPerWad);
-								_this.inputWindow.blankingSize
-										.setValue(last.blankingSize);
-								_this.inputWindow.denseNet
-										.setValue(last.denseNet);
-								_this.inputWindow.pageWidth
-										.setValue(last.pageWidth);
+
+								// _this.inputWindow.blankingSize
+								// .setValue(last.blankingSize);
+								// _this.inputWindow.denseNet
+								// .setValue(last.denseNet);
+								// _this.inputWindow.pageWidth
+								// .setValue(last.pageWidth);
+
 								_this.inputWindow.tumoBatchId
 										.setValue(last.tumoBatchId);
 								// alert(last.tumoBatchId);
@@ -339,22 +363,56 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function(
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPlan = function() {
 	var _this = this;
+	// this.cdmdutyStore.reload();
 	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
 			});
 	_this.requestMask.show();
 	Ext.Ajax.request({
-		url : "com.keensen.ump.produce.component.workorder.queryCdmDuty.biz.ext",
+		url : "com.keensen.ump.produce.component.workorder2.getCdmDuty.biz.ext",
 		method : "post",
 		success : function(resp) {
 			var ret = Ext.decode(resp.responseText);
 			if (ret.success) {
 				if (!Ext.isEmpty(ret.data)) {
+					var orderNo = ret.data[0].orderNo;
 					var tumoBatchNo = ret.data[0].batchNo;
-					var planId = ret.data[0].planId;
+					var orderId = ret.data[0].orderId;
+
+					var orderType = ret.data[0].orderType;
+					var materSpecName2 = ret.data[0].materSpecName2;
+					var orderAmount = ret.data[0].orderAmount;
+					var planDate = ret.data[0].planDate;
+					var jmAmount = ret.data[0].jmAmount;
+					var materSpecId = ret.data[0].materSpecId;
+					var realityAmount = ret.data[0].realityAmount;
+					_this.inputWindow.orderNo.setValue(orderNo);
 					_this.inputWindow.tumoBatchNo.setValue(tumoBatchNo);
-					_this.inputWindow.planId.setValue(planId);
-					_this.dealTumoBatchNo();
+					_this.inputWindow.orderType.setValue(orderType);
+					_this.inputWindow.materSpecName2.setValue(materSpecName2);
+					_this.inputWindow.orderAmount.setValue(orderAmount);
+					_this.inputWindow.planDate.setValue(planDate);
+					_this.inputWindow.jmAmount.setValue(jmAmount);
+					_this.inputWindow.prodSpecId.setValue(materSpecId);
+					_this.inputWindow.orderId.setValue(orderId);
+					_this.inputWindow.realityAmount.setValue(realityAmount);
+
+					var i = _this.inputWindow.prodSpecId.store.find('id',
+							materSpecId);
+					var rec = _this.inputWindow.prodSpecId.store.getAt(i);
+					_this.inputWindow.blankingSize
+							.setValue(rec.data.blankingSize);
+					_this.inputWindow.pageWidth.setValue(rec.data.pageWidth);
+					_this.inputWindow.denseNet.setValue(rec.data.denseNet);
+
+					var store = _this.cdmdutyStore;
+					store.load({
+								params : {
+									'condition/planDate' : planDate,
+									'condition/orderId' : orderId
+								}
+							});
+					// _this.dealTumoBatchNo();
 				} else {
 					Ext.Msg.alert("系统提示", "该机台没有分配任务，请检查！", function() {
 								_this.inputWindow.batchNo.setValue('');
@@ -404,6 +462,64 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onReport = function() {
 			})
 		}
 	});
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.checkTumoBatchNo = function() {
+	if (!this.inputWindow.tumoBatchNo.hidden) {
+		var tumoBatchNo = this.inputWindow.tumoBatchNo.getValue();
+		var tumoBatchNo2 = this.inputWindow.tumoBatchNo2.getValue();
+		if (tumoBatchNo != tumoBatchNo2) {
+			Ext.Msg.alert("系统提示", "流转单上的二维码，与领取任务中的膜批次不一致！", function() {
+
+					})
+
+		}
+		this.inputWindow.buttons[0].setDisabled(tumoBatchNo != tumoBatchNo2)
+	}else{
+		this.dealTumoBatchNo();
+	}
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onUpdateLocation = function() {
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		this.updateLocationWindow.batchNo.setValue('');
+		this.updateLocationWindow.recordId.setValue('');
+		this.updateLocationWindow.location.setValue('');
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var rec = C[0];
+		var batchNo = rec.data.batchNo;
+		var recordId = rec.data.recordId;
+		var location = rec.data.location;
+		this.updateLocationWindow.batchNo.setValue(batchNo);
+		this.updateLocationWindow.recordId.setValue(recordId);
+		this.updateLocationWindow.location.setValue(location);
+
+	}
+	this.updateLocationWindow.show();
+}
+
+// 家用膜
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
+	this.inputWindow.produceDt.setValue(new Date());
+	this.inputWindow.buttons[0].setDisabled(false);
+	// this.onPlan();
+	this.inputWindow.displayfield1.setVisible(false);
+	this.inputWindow.orderType.setVisible(false);
+	this.inputWindow.materSpecName2.setVisible(false);
+	this.inputWindow.displayfield2.setVisible(false);
+	this.inputWindow.orderAmount.setVisible(false);
+	this.inputWindow.planDate.setVisible(false);
+	this.inputWindow.displayfield3.setVisible(false);
+	this.inputWindow.jmAmount.setVisible(false);
+	this.inputWindow.realityAmount.setVisible(false);
+
+	this.inputWindow.tumoBatchNo.setVisible(false);
+	this.inputWindow.tumoBatchNo.setDisabled(true);
+
+	this.inputWindow.show();
 }
 
 function defectView(tumoBatchNo) {

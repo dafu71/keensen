@@ -58,6 +58,19 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.initEvent = fu
 				// this.listPanel.store.reload();
 
 			}, this);
+			
+	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
+			function() {
+		var stockAmount = this.inputWindow.form
+						.findField("outofstock/stockAmount").getValue();
+		var amount = this.inputWindow.form
+						.findField("outofstock/amount").getValue();
+		if(parseFloat(amount)>parseFloat(stockAmount)){
+			Ext.Msg.alert("系统提示", "出库数量大于库存无法出库！");
+			return false;
+		}
+
+			}, this);
 
 	// 增加修改事件
 	/*
@@ -162,12 +175,16 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.onScan = funct
 				var data = data[0]
 				this.inputWindow.form.findField("outofstock/storageId")
 						.setValue(data.storageId);
+				this.inputWindow.form.findField("outofstock/stockAmount")
+						.setValue(data.amount);
 				this.inputWindow.form.findField("outofstock/amount")
 						.setValue(data.amount);
 				this.inputWindow.form.findField("outofstock/model")
 						.setValue(data.materSpecCode);
 				this.inputWindow.form.findField("outofstock/class")
 						.setValue(data.perfFlagName);
+				this.inputWindow.form.findField("outofstock/position")
+						.setValue(data.position);
 				
 			}
 		}

@@ -161,6 +161,13 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel2
 				});
+				
+		this.queryPanel.addButton({
+					text : "计算",
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.calculate
+				});
 
 	}
 

@@ -1,5 +1,36 @@
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 	var _this = this;
+
+	// 工艺员提醒
+	if (gyyFlag == 1) {
+		this.remindGyyInfo();
+	}
+	
+	// 班长提醒
+	if (monitorFlag == 1) {
+		this.remindMonitorInfo();
+	}
+	
+	this.remindGyyListPanel.store.on('load', function() {
+				var ret = _this.remindGyyListPanel.store.getRange();
+				if (Ext.isEmpty(ret) || ret.length == 0) {
+
+				} else {
+					_this.remindGyyWindow.show();
+				}
+
+			})
+			
+	this.remindMonitorListPanel.store.on('load', function() {
+				var ret = _this.remindMonitorListPanel.store.getRange();
+				if (Ext.isEmpty(ret) || ret.length == 0) {
+
+				} else {
+					_this.remindMonitorWindow.show();
+				}
+
+			})
+			
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		// var start = vals['condition/produceDtStart'];
@@ -187,6 +218,18 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiOrder = function() {
 	for (var i = 0; i < records.length; i++) {
 
 		var recordId = records[i].get('recordId');
+		var dryWet = records[i].get('dryWet');
+		
+		if(dryWet == '干' && modifyOrderNoFlag4Dry == 0){
+			Ext.Msg.alert('系统提示', '您无权修改干膜订单号');
+			return false;
+		}
+		
+		if(dryWet == '湿' && modifyOrderNoFlag4Wet == 0){
+			Ext.Msg.alert('系统提示', '您无权修改湿膜订单号');
+			return false;
+		}
+		
 		recordId = recordId + '';
 		if (recordId.substr(0, 1) != '2') {
 			// Ext.Msg.alert('系统提示', '一期数据不能修改');
@@ -395,6 +438,76 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onRemark = function() {
 				});
 		var gyyRemark = C[0].data.gyyRemark;
 		Ext.Msg.prompt('工艺员备注', '请输入', function(btn, text) {
+			if (btn == 'ok' && !Ext.isEmpty(text)) {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.qinsen.qijian.saveGyyRemark.biz.ext",
+					method : "post",
+					jsonData : {
+						'gyyRemark' : text,
+						'recordIds' : recordIds.join(",")
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.load();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "备注失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, true, gyyRemark);
+	}
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onMonitorRemark = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			var judgeFlag = r.data['judgeFlag'];
+			var monitorRemark = r.data['monitorRemark'];
+			if (judgeFlag == 'Y') {
+				Ext.Msg.alert("系统提示", "请选择质检不合格的记录！");
+				return;
+
+			} else if (!Ext.isEmpty(monitorRemark)) {
+				Ext.Msg.alert("系统提示", "班长已经挑过水测，无需重复操作！");
+				return;
+			} else {
+				recordIds.push(r.data['recordId']);
+			}
+		}
+		// var gyyRemark = C[0].data.gyyRemark;
+		// if (Ext.isEmpty(gyyRemark)) {
+		// Ext.Msg.alert("系统提示", "工艺员备注为空，无需确认！");
+		// return;
+		// }
+
+		var monitorRemark = Ext.isEmpty(C[0].data.monitorRemark)
+				? '本次元件已送水测'
+				: C[0].data.monitorRemark;
+		Ext.Msg.prompt('班长挑水测', '请输入', function(btn, text) {
 			if (btn == 'ok') {
 				_this.requestMask = this.requestMask
 						|| new Ext.LoadMask(Ext.getBody(), {
@@ -402,30 +515,170 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onRemark = function() {
 								});
 				_this.requestMask.show();
 				Ext.Ajax.request({
-							url : "com.keensen.ump.qinsen.qijian.saveGyyRemark.biz.ext",
-							method : "post",
-							jsonData : {
-								'gyyRemark' : text,
-								'recordIds' : recordIds.join(",")
-							},
-							success : function(resp) {
-								var ret = Ext.decode(resp.responseText);
-								if (ret.success) {
-									Ext.Msg.alert("系统提示", "操作成功！", function() {
-												_this.listPanel.store.load();
+					url : "com.keensen.ump.qinsen.qijian.saveMonitorRemark.biz.ext",
+					method : "post",
+					jsonData : {
+						'monitorRemark' : text,
+						'recordIds' : recordIds.join(",")
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.load();
 
-											})
-								} else {
-									Ext.Msg.alert("系统提示", "备注失败！")
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "备注失败！")
 
-								}
+						}
 
-							},
-							callback : function() {
-								_this.requestMask.hide()
-							}
-						})
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
 			}
-		}, this, true, gyyRemark);
+		}, this, true, monitorRemark);
 	}
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onWaterRemark = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			var monitorRemark = r.data['monitorRemark'];
+			if (Ext.isEmpty(monitorRemark)) {
+				Ext.Msg.alert("系统提示", "班长挑水测为空，无需接收！");
+				return;
+			} else {
+				recordIds.push(r.data['recordId']);
+			}
+		}
+
+		// var gyyRemark = C[0].data.gyyRemark;
+		// if (Ext.isEmpty(gyyRemark)) {
+		// Ext.Msg.alert("系统提示", "工艺员备注为空，无需确认！");
+		// return;
+		// }
+
+		var waterRemark = Ext.isEmpty(C[0].data.waterRemark)
+				? '该支元件已送水测'
+				: C[0].data.waterRemark;
+		Ext.Msg.prompt('水测员工接收', '请输入', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.qinsen.qijian.saveWaterRemark.biz.ext",
+					method : "post",
+					jsonData : {
+						'waterRemark' : text,
+						'recordIds' : recordIds.join(",")
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.load();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "备注失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, true, waterRemark);
+	}
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onMonitorRemark2 = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			var gyyRemark = r.data['gyyRemark'];
+			if (Ext.isEmpty(gyyRemark)) {
+				Ext.Msg.alert("系统提示", "工艺员备注为空，无需确认！");
+				return;
+			} else {
+				recordIds.push(r.data['recordId']);
+			}
+		}
+		var gyyRemark = C[0].data.gyyRemark;
+		if (Ext.isEmpty(gyyRemark)) {
+			Ext.Msg.alert("系统提示", "工艺员备注为空，无需确认！");
+			return;
+		}
+
+		var monitorRemark2 = Ext.isEmpty(C[0].data.monitorRemark2)
+				? '工艺员意见已安排'
+				: C[0].data.monitorRemark;
+		Ext.Msg.prompt('班长确认工艺员意见', '请输入', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.qinsen.qijian.saveMonitorRemark2.biz.ext",
+					method : "post",
+					jsonData : {
+						'monitorRemark2' : text,
+						'recordIds' : recordIds.join(",")
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.load();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "备注失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, true, monitorRemark2);
+	}
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.remindGyyInfo = function() {
+	this.remindGyyListPanel.store.load();
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.remindMonitorInfo = function() {
+	this.remindMonitorListPanel.store.load();
 }

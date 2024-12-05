@@ -58,6 +58,7 @@
 	var batchNo = '<b:write property="batchNo" />';
 	var materSpecName = '<b:write property="materSpecName" />';
 	var outLength = '<b:write property="outLength" />m';
+	var usefulLength = '<b:write property="usefulLength" />m';
 </script> 
     
 </head>
@@ -71,6 +72,7 @@
 					批次：<span class="span_label"><b:write property="batchNo" /></span><br/>
 					型号：<span class="span_label"><b:write property="materSpecName" /></span><br/>
 					长度：<span class="span_label"><b:write property="outLength" />m</span><br/>
+					可用长度：<span class="span_label"><b:write property="usefulLength" />m</span><br/>
 				</td>
 			</tr>
 		</table>

@@ -2,6 +2,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 	this.initPanel = function() {
 
+		this.initStore();
+
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
@@ -12,6 +14,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		this.initModifyWindow();
 
 		this.initExaminWindow();
+		this.initCStockWindow();
 
 		this.lay = new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -23,11 +26,27 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		return this.lay;
 	}
 
+	this.initStore = function() {
+
+		this.prodSpecNameStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.base.common.query.biz.ext',
+			root : 'data',
+			autoLoad : false,
+			baseParams : {
+				nameSqlId : 'com.keensen.ump.produce.component.apply.queryOrderSpecName'
+			},
+			fields : [{
+						name : 'prodSpecName'
+					}]
+		})
+
+	}
+
 	this.initQueryPanel = function() {
 
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 140,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -84,6 +103,17 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								dictData : KS_PROD_STORAGE,
 								emptyText : "",
 								anchor : '100%'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'dictcombobox',
+								name : 'condition/ifcstock',
+								hiddenName : 'condition/ifcstock',
+								fieldLabel : '已确认入C仓',
+								anchor : '100%',
+								dictData : KS_YESORNO
 							}]
 				});
 
@@ -129,7 +159,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						disabled : (uid != 'KS00610') && (uid != 'KS01313')
-								&& (uid != 'KS00524') && (uid != 'XXB'),
+								&& (uid != 'KS00524') && (uid != 'XXB')
+								&& (uid != 'KS00307'),
 						handler : this.onDeleteOrder
 					}, '-', {
 						text : '审核',
@@ -157,6 +188,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						iconCls : 'icon-application_excel',
 						handler : this.exportExcel
 					}, '->', {
+						text : '确认入C仓',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onCStock
+					}, '-', {
 						text : '打印',
 						scope : this,
 						iconCls : 'icon-printer',
@@ -184,6 +220,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							}
 						}
 					}, {
+						dataIndex : 'ifcstock',
+						sortable : true,
+						header : '已确认入C仓'
+					}, {
 						dataIndex : 'orderType',
 						sortable : true,
 						header : '订单类型'
@@ -208,7 +248,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'dictcolumn',
 						dictData : KS_PROD_STORAGE,
 						sortable : true,
-						header : '入库位'
+						header : '入库'
 					}, {
 						dataIndex : 'printCnt',
 						sortable : true,
@@ -340,6 +380,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'isExamine'
 						}, {
 							name : 'performance'
+						}, {
+							name : 'ifcstock'
 						}]
 			})
 		})
@@ -357,7 +399,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : false,
 			tbar : [{
@@ -385,14 +427,38 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'tumoBatchStr',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'tape',
+						header : '卷膜胶带'
+					}, {
+						dataIndex : 'lid',
+						header : '端盖'
+					}, {
+						dataIndex : 'label',
+						header : '标签'
+					}, {
+						dataIndex : 'box',
+						header : '包装箱'
+					}, {
+						dataIndex : 'markTypeFlag',
+						header : '唛头'
+					}, {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
+					}, {
+						dataIndex : 'gpdAvg',
+						header : '产水量，GPD'
+					}, {
+						dataIndex : 'saltAvg',
+						header : '脱盐率，%'
+					}, {
+						dataIndex : 'fcode',
+						header : '元件返工单号'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.component.apply.queryComponent.biz.ext',
+				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
 				root : 'data',
 				autoLoad : false,
 				totalProperty : 'totalCount',
@@ -400,6 +466,22 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'tape'
+						}, {
+							name : 'lid'
+						}, {
+							name : 'label'
+						}, {
+							name : 'box'
+						}, {
+							name : 'markTypeFlag'
+						}, {
+							name : 'gpdAvg'
+						}, {
+							name : 'saltAvg'
+						}, {
+							name : 'fcode'
+						}, {
 							name : 'batchNo'
 						}, {
 							name : 'state'
@@ -483,12 +565,24 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						labelSeparator : '',// 去掉冒号
 						colspan : 12
 					}, {
-						xtype : 'textfield',
-						name : 'prodSpecName',
-						fieldLabel : '元件型号',
-						allowBlank : false,
+
 						anchor : '95%',
-						colspan : 6
+						colspan : 6,
+						xtype : 'combo',
+						mode : 'local',
+						ref : '../prodSpecName',
+						displayField : 'prodSpecName',
+						valueField : 'prodSpecName',
+						hiddenName : 'prodSpecName',
+						allowBlank : false,
+						fieldLabel : '元件型号',
+						store : _this.prodSpecNameStore,
+						listeners : {
+							'expand' : function(A) {
+								_this.inputPanel.prodSpecName.reset();
+							}
+						}
+
 					}, {
 						xtype : 'dictcombobox',
 						name : 'prodClassFlag',
@@ -565,8 +659,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						height : '5',
 						colspan : 12
 					}, {
-						xtype : 'textfield',
+						xtype : 'dictcombobox',
+						dictData : KS_COMPONENT_INDUSTRY_BOX,
 						name : 'box',
+						hiddenName : 'box',
 						fieldLabel : '包装箱',
 						// allowBlank : false,
 						anchor : '95%',
@@ -601,6 +697,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'dictcombobox',
 						name : 'label',
+						hiddenName : 'label',
 						fieldLabel : '标签',
 						// allowBlank : false,
 						anchor : '95%',
@@ -677,6 +774,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 	}
 
 	this.initChooseWindow = function() {
+	
 		var _this = this;
 		var prodStore = new Ext.data.JsonStore({
 					url : 'com.keensen.ump.produce.component.apply.queryProd.biz.ext',
@@ -734,7 +832,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			region : 'center',
 			id : listid3,
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : false,
 			selModel : selModel3,
@@ -760,11 +858,35 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'tumoBatchStr',
 						header : '涂膜批次'
 					}, {
+						dataIndex : 'tape',
+						header : '卷膜胶带'
+					}, {
+						dataIndex : 'lid',
+						header : '端盖'
+					}, {
+						dataIndex : 'label',
+						header : '标签'
+					}, {
+						dataIndex : 'box',
+						header : '包装箱'
+					}, {
+						dataIndex : 'markTypeFlag',
+						header : '唛头'
+					}, {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
+					}, {
+						dataIndex : 'gpdAvg',
+						header : '产水量，GPD'
+					}, {
+						dataIndex : 'saltAvg',
+						header : '脱盐率，%'
+					}, {
+						dataIndex : 'fcode',
+						header : '元件返工单号'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryComponent.biz.ext',
@@ -775,6 +897,22 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			// 'condition/werks' : 3000
 				},
 				fields : [{
+							name : 'tape'
+						}, {
+							name : 'lid'
+						}, {
+							name : 'label'
+						}, {
+							name : 'box'
+						}, {
+							name : 'markTypeFlag'
+						}, {
+							name : 'gpdAvg'
+						}, {
+							name : 'saltAvg'
+						}, {
+							name : 'fcode'
+						}, {
 							name : 'orderNo'
 						}, {
 							name : 'batchNo'
@@ -858,7 +996,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : false,
 			delUrl : 'com.keensen.ump.produce.component.apply.deleteList.biz.ext',
@@ -882,11 +1020,35 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'tumoBatchStr',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'tape',
+						header : '卷膜胶带'
+					}, {
+						dataIndex : 'lid',
+						header : '端盖'
+					}, {
+						dataIndex : 'label',
+						header : '标签'
+					}, {
+						dataIndex : 'box',
+						header : '包装箱'
+					}, {
+						dataIndex : 'markTypeFlag',
+						header : '唛头'
+					}, {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
+					}, {
+						dataIndex : 'gpdAvg',
+						header : '产水量，GPD'
+					}, {
+						dataIndex : 'saltAvg',
+						header : '脱盐率，%'
+					}, {
+						dataIndex : 'fcode',
+						header : '元件返工单号'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
@@ -897,6 +1059,22 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'tape'
+						}, {
+							name : 'lid'
+						}, {
+							name : 'label'
+						}, {
+							name : 'box'
+						}, {
+							name : 'markTypeFlag'
+						}, {
+							name : 'gpdAvg'
+						}, {
+							name : 'saltAvg'
+						}, {
+							name : 'fcode'
+						}, {
 							name : 'batchNo'
 						}, {
 							name : 'state'
@@ -1047,7 +1225,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						height : '5',
 						colspan : 12
 					}, {
-						xtype : 'textfield',
+						xtype : 'dictcombobox',
+						dictData : KS_COMPONENT_INDUSTRY_BOX,
+						name : 'box',
+						hiddenName : 'box',
 						dataIndex : 'box',
 						fieldLabel : '包装箱',
 						readOnly : true,
@@ -1282,7 +1463,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : false,
 			autoScroll : false,
@@ -1299,11 +1480,35 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'tumoBatchStr',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'tape',
+						header : '卷膜胶带'
+					}, {
+						dataIndex : 'lid',
+						header : '端盖'
+					}, {
+						dataIndex : 'label',
+						header : '标签'
+					}, {
+						dataIndex : 'box',
+						header : '包装箱'
+					}, {
+						dataIndex : 'markTypeFlag',
+						header : '唛头'
+					}, {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
+					}, {
+						dataIndex : 'gpdAvg',
+						header : '产水量，GPD'
+					}, {
+						dataIndex : 'saltAvg',
+						header : '脱盐率，%'
+					}, {
+						dataIndex : 'fcode',
+						header : '元件返工单号'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
@@ -1314,6 +1519,22 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'tape'
+						}, {
+							name : 'lid'
+						}, {
+							name : 'label'
+						}, {
+							name : 'box'
+						}, {
+							name : 'markTypeFlag'
+						}, {
+							name : 'gpdAvg'
+						}, {
+							name : 'saltAvg'
+						}, {
+							name : 'fcode'
+						}, {
 							name : 'batchNo'
 						}, {
 							name : 'state'
@@ -1462,7 +1683,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						height : '5',
 						colspan : 12
 					}, {
-						xtype : 'textfield',
+						xtype : 'dictcombobox',
+						dictData : KS_COMPONENT_INDUSTRY_BOX,
+						name : 'box',
+						hiddenName : 'box',
 						dataIndex : 'box',
 						fieldLabel : '包装箱',
 						readOnly : true,
@@ -1701,7 +1925,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : false,
 			autoScroll : false,
@@ -1718,11 +1942,35 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'tumoBatchStr',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'tape',
+						header : '卷膜胶带'
+					}, {
+						dataIndex : 'lid',
+						header : '端盖'
+					}, {
+						dataIndex : 'label',
+						header : '标签'
+					}, {
+						dataIndex : 'box',
+						header : '包装箱'
+					}, {
+						dataIndex : 'markTypeFlag',
+						header : '唛头'
+					}, {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
+					}, {
+						dataIndex : 'gpdAvg',
+						header : '产水量，GPD'
+					}, {
+						dataIndex : 'saltAvg',
+						header : '脱盐率，%'
+					}, {
+						dataIndex : 'fcode',
+						header : '元件返工单号'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
@@ -1733,6 +1981,22 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'tape'
+						}, {
+							name : 'lid'
+						}, {
+							name : 'label'
+						}, {
+							name : 'box'
+						}, {
+							name : 'markTypeFlag'
+						}, {
+							name : 'gpdAvg'
+						}, {
+							name : 'saltAvg'
+						}, {
+							name : 'fcode'
+						}, {
 							name : 'batchNo'
 						}, {
 							name : 'state'
@@ -1881,7 +2145,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						height : '5',
 						colspan : 12
 					}, {
-						xtype : 'textfield',
+						xtype : 'dictcombobox',
+						dictData : KS_COMPONENT_INDUSTRY_BOX,
+						name : 'box',
+						hiddenName : 'box',
 						dataIndex : 'box',
 						fieldLabel : '包装箱',
 						readOnly : true,
@@ -2107,7 +2374,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : false,
 			delUrl : 'com.keensen.ump.produce.component.apply.deleteList.biz.ext',
@@ -2136,11 +2403,35 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'tumoBatchStr',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'tape',
+						header : '卷膜胶带'
+					}, {
+						dataIndex : 'lid',
+						header : '端盖'
+					}, {
+						dataIndex : 'label',
+						header : '标签'
+					}, {
+						dataIndex : 'box',
+						header : '包装箱'
+					}, {
+						dataIndex : 'markTypeFlag',
+						header : '唛头'
+					}, {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
+					}, {
+						dataIndex : 'gpdAvg',
+						header : '产水量，GPD'
+					}, {
+						dataIndex : 'saltAvg',
+						header : '脱盐率，%'
+					}, {
+						dataIndex : 'fcode',
+						header : '元件返工单号'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
@@ -2151,6 +2442,22 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'tape'
+						}, {
+							name : 'lid'
+						}, {
+							name : 'label'
+						}, {
+							name : 'box'
+						}, {
+							name : 'markTypeFlag'
+						}, {
+							name : 'gpdAvg'
+						}, {
+							name : 'saltAvg'
+						}, {
+							name : 'fcode'
+						}, {
 							name : 'batchNo'
 						}, {
 							name : 'state'
@@ -2233,13 +2540,25 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						labelSeparator : '',// 去掉冒号
 						colspan : 12
 					}, {
-						xtype : 'textfield',
-						dataIndex : 'prodSpecName',
-						name : 'prodSpecName',
-						fieldLabel : '元件型号',
-						allowBlank : false,
+
 						anchor : '95%',
-						colspan : 6
+						colspan : 6,
+						xtype : 'combo',
+						mode : 'local',
+						ref : '../prodSpecName',
+						dataIndex : 'prodSpecName',
+						displayField : 'prodSpecName',
+						valueField : 'prodSpecName',
+						hiddenName : 'prodSpecName',
+						allowBlank : false,
+						fieldLabel : '元件型号',
+						store : _this.prodSpecNameStore,
+						listeners : {
+							'expand' : function(A) {
+								_this.modifyPanel.prodSpecName.reset();
+							}
+						}
+
 					}, {
 						xtype : 'dictcombobox',
 						dataIndex : 'prodClassFlag',
@@ -2318,9 +2637,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						height : '5',
 						colspan : 12
 					}, {
-						xtype : 'textfield',
-						dataIndex : 'box',
+						xtype : 'dictcombobox',
+						dictData : KS_COMPONENT_INDUSTRY_BOX,
 						name : 'box',
+						hiddenName : 'box',
+						dataIndex : 'box',
 						fieldLabel : '包装箱',
 						// readOnly : true,
 						anchor : '95%',
@@ -2457,7 +2778,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			// title : '【请检元件清单】',
 			region : 'center',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : false,
 			delUrl : '1.biz.ext',
@@ -2475,11 +2796,35 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'tumoBatchStr',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'tape',
+						header : '卷膜胶带'
+					}, {
+						dataIndex : 'lid',
+						header : '端盖'
+					}, {
+						dataIndex : 'label',
+						header : '标签'
+					}, {
+						dataIndex : 'box',
+						header : '包装箱'
+					}, {
+						dataIndex : 'markTypeFlag',
+						header : '唛头'
+					}, {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
+					}, {
+						dataIndex : 'gpdAvg',
+						header : '产水量，GPD'
+					}, {
+						dataIndex : 'saltAvg',
+						header : '脱盐率，%'
+					}, {
+						dataIndex : 'fcode',
+						header : '元件返工单号'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
@@ -2490,6 +2835,22 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'tape'
+						}, {
+							name : 'lid'
+						}, {
+							name : 'label'
+						}, {
+							name : 'box'
+						}, {
+							name : 'markTypeFlag'
+						}, {
+							name : 'gpdAvg'
+						}, {
+							name : 'saltAvg'
+						}, {
+							name : 'fcode'
+						}, {
 							name : 'batchNo'
 						}, {
 							name : 'state'
@@ -2765,4 +3126,464 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				});
 
 	}
+
+	// 入C仓确认
+	this.initCStockWindow = function() {
+		var _this = this;
+
+		var selModel5 = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel8 = this.listPanel8 || new Ext.fn.ListPanel({
+			region : 'center',
+			viewConfig : {
+				forceFit : false
+			},
+			hsPage : false,
+			autoScroll : false,
+			selModel : selModel5,
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel5, {
+						dataIndex : 'batchNo',
+						header : '元件序列号'
+					}, {
+						dataIndex : 'prodSpecName',
+						header : '元件型号'
+					}, {
+						dataIndex : 'tumoBatchStr',
+						header : '膜片批次'
+					}, {
+						dataIndex : 'tape',
+						header : '卷膜胶带'
+					}, {
+						dataIndex : 'lid',
+						header : '端盖'
+					}, {
+						dataIndex : 'label',
+						header : '标签'
+					}, {
+						dataIndex : 'box',
+						header : '包装箱'
+					}, {
+						dataIndex : 'markTypeFlag',
+						header : '唛头'
+					}, {
+						dataIndex : 'state',
+						header : '状态'
+					}, {
+						dataIndex : 'checkResult',
+						header : '气检值'
+					}, {
+						dataIndex : 'gpdAvg',
+						header : '产水量，GPD'
+					}, {
+						dataIndex : 'saltAvg',
+						header : '脱盐率，%'
+					}, {
+						dataIndex : 'fcode',
+						header : '元件返工单号'
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.produce.component.apply.queryList.biz.ext',
+				root : 'data',
+				autoLoad : false,
+				totalProperty : 'totalCount',
+				baseParams : {
+
+			}	,
+				fields : [{
+							name : 'tape'
+						}, {
+							name : 'lid'
+						}, {
+							name : 'label'
+						}, {
+							name : 'box'
+						}, {
+							name : 'markTypeFlag'
+						}, {
+							name : 'gpdAvg'
+						}, {
+							name : 'saltAvg'
+						}, {
+							name : 'fcode'
+						}, {
+							name : 'batchNo'
+						}, {
+							name : 'state'
+						}, {
+							name : 'id'
+						}, {
+							name : 'prodSpecName'
+						}, {
+							name : 'tumoBatchStr'
+						}, {
+							name : 'checkResult'
+						}]
+			})
+		})
+
+		this.editPanel8 = this.editPanel8 || new Ext.fn.EditPanel({
+			height : 450,
+			region : 'north',
+			// baseCls : "x-panel",
+			autoHide : false,
+			autoScroll : false,
+			border : true,
+			columns : 12,
+			saveUrl : '111.biz.ext',
+			loadUrl : 'com.keensen.ump.produce.component.apply.expandHead.biz.ext',
+			fields : [{
+						xtype : 'combobox',
+						anchor : '95%',
+						colspan : 6,
+						readOnly : true,
+						dataIndex : 'orderType',
+						hiddenName : 'orderType',
+						fieldLabel : '订单类型',
+						triggerAction : "all",
+						store : new Ext.data.ArrayStore({
+									fields : ['mykey', 'myvalue'],
+									data : [['公司标准', '公司标准'],
+											['非公司标准', '非公司标准']]
+								}),
+						mode : "local",
+						editable : false,
+						displayField : "myvalue",
+						valueField : "mykey",
+						forceSelection : true,
+						emptyText : "--请选择--"
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'orderNo',
+						ref : '../orderNo',
+						readOnly : true,
+						fieldLabel : '订单号',
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'orderAmount',
+						readOnly : true,
+						fieldLabel : '订单数量',
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'numberfield',
+						ref : '../applyAmount',
+						dataIndex : 'applyAmount',
+						readOnly : true,
+						fieldLabel : '请检数量',
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">订单要求  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'prodSpecName',
+						// name : 'prodSpecName',
+						fieldLabel : '元件型号',
+						readOnly : true,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'prodClassFlag',
+						readOnly : true,
+						fieldLabel : '元件类型',
+						dictData : KS_PROD_CLASS_FLAG,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'lid',
+						fieldLabel : '端盖',
+						readOnly : true,
+						dictData : KS_PROD_LID,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'markTypeFlag',
+						readOnly : true,
+						fieldLabel : '唛头情况',
+						dictData : KS_PROD_MARK_TYPE_FLAG,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'markSpecCode',
+						readOnly : true,
+						fieldLabel : '唛头显示型号',
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'tape',
+						readOnly : true,
+						fieldLabel : '膜体所裹胶带',
+						dictData : KS_PROD_TAPE,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'markSpecialFlag',
+						readOnly : true,
+						fieldLabel : '加贴特殊唛头',
+						dictData : KS_YESORNO,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'performance',
+						fieldLabel : '性能',
+						readOnly : true,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'box',
+						fieldLabel : '包装箱',
+						readOnly : true,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'combobox',
+						dataIndex : 'tray',
+						anchor : '95%',
+						readOnly : true,
+						ref : '../tray',
+						fieldLabel : '托盘',
+						triggerAction : "all",
+						store : new Ext.data.ArrayStore({
+									id : 0,
+									fields : ['mykey', 'myvalue'],
+									data : [['木托盘', '木托盘'], ['塑料托盘', '塑料托盘'],
+											['免熏蒸托盘', '免熏蒸托盘'], ['其它', '其它']]
+								}),
+						mode : "local",
+						editable : false,
+						displayField : "myvalue",
+						valueField : "mykey",
+						forceSelection : true,
+						emptyText : "",
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						name : 'label',
+						dataIndex : 'label',
+						readOnly : true,
+						fieldLabel : '标签',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 3,
+						dictData : KS_COMPONENT_INDUSTRY_LABEL
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'dictcheckboxgroup',
+						columns : 6,
+						readOnly : true,
+						dataIndex : 'abnormal',
+						fieldLabel : '外观异常类型',
+						anchor : '95%',
+						colspan : 12,
+						dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textarea',
+						readOnly : true,
+						height : 35,
+						dataIndex : 'abnormalExplain',
+						fieldLabel : '外观异常说明',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'textarea',
+						readOnly : true,
+						height : 35,
+						dataIndex : 'abnormalOther',
+						fieldLabel : '其他异常备注',
+						// allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">外观和尺寸检查  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'markIsok',
+						hiddenName : 'entity/markIsok',
+						allowBlank : false,
+						fieldLabel : '包装箱唛头',
+						dictData : KS_YESORNO,
+						anchor : '95%',
+						emptyText : "是否合格",
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'labelIsok',
+						hiddenName : 'entity/labelIsok',
+						allowBlank : false,
+						fieldLabel : '元件标签',
+						dictData : KS_YESORNO,
+						anchor : '95%',
+						emptyText : "是否合格",
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'apperanceIsok',
+						hiddenName : 'entity/apperanceIsok',
+						allowBlank : false,
+						fieldLabel : '元件外观',
+						dictData : KS_YESORNO,
+						anchor : '95%',
+						emptyText : "是否合格",
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'diameter',
+						hiddenName : 'entity/diameter',
+						allowBlank : false,
+						fieldLabel : '元件直径',
+						dictData : KS_YESORNO,
+						anchor : '95%',
+						emptyText : "是否合格",
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'final',
+						hiddenName : 'entity/final',
+						allowBlank : false,
+						fieldLabel : '最终判定',
+						dictData : KS_YESORNO,
+						anchor : '95%',
+						emptyText : "是否合格",
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'deal',
+						hiddenName : 'entity/deal',
+						// allowBlank : false,
+						fieldLabel : '不合格处理方式',
+						dictData : KS_PROD_APPLY_DEAL,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'storage',
+						hiddenName : 'entity/storage',
+						allowBlank : false,
+						fieldLabel : '入库仓位',
+						dictData : KS_PROD_STORAGE,
+						anchor : '95%',
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;">不合格处理方式  </p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
+						xtype : 'dictcombobox',
+						dataIndex : 'deal1',
+						ref : '../deal1',
+						hiddenName : 'entity/deal1',
+						// allowBlank : false,
+						fieldLabel : '返工重新<br>检验结果',
+						dictData : KS_YESORNO,
+						anchor : '100%%',
+						emptyText : "是否合格",
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'deal2',
+						ref : '../deal2',
+						name : 'entity/deal2',
+						// allowBlank : false,
+						fieldLabel : '让步接收品质<br>异常单编号',
+						anchor : '100%%',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'deal3',
+						ref : '../deal3',
+						name : 'entity/deal3',
+						// allowBlank : false,
+						fieldLabel : '待处理建议<br>元件型号',
+						anchor : '100%%',
+						colspan : 4
+					}, {
+						xtype : 'hidden',
+						name : 'entity/id',
+						ref : '../pkid',
+						dataIndex : 'id'
+					}, {
+						xtype : 'hidden',
+						name : 'entity/opt',
+						value : 'cstock'
+					}],
+			buttons : [{
+						text : "确认入C仓",
+						scope : this,
+						handler : this.onSaveCStcok
+					}, {
+						text : "关闭",
+						scope : this,
+						handler : function() {
+							this.editPanel8.form.reset();
+							this.cstockWindow.hide();
+						}
+					}]
+
+		})
+
+		this.cstockWindow = this.cstockWindow || new Ext.Window({
+					title : '入C仓确认',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.editPanel8, this.listPanel8]
+
+				});
+
+	}
+
 }

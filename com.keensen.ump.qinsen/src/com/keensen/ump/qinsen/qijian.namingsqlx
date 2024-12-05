@@ -37,6 +37,27 @@
 		Z.PROD_SPEC_AREA as "prodSpecArea",
 		Z.PROD_SPEC_CODE as "prodSpecCode",
 		Z.PROD_SPEC_NAME as "prodSpecName",Z.diameter "diameter" ,Z.diameter2 "diameter2",
+		TO_CHAR(Z.GYY_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "gyyRemarkTime",
+		Z.GYY_REMARK_USER_ID as "gyyRemarkUserId",
+		Z.GYY_REMARK_USER_NAME as "gyyRemarkUserName",
+		Z.MONITOR_REMARK as "monitorRemark",
+		TO_CHAR(Z.MONITOR_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "monitorRemarkTime",
+		Z.MONITOR_REMARK_USER_ID as "monitorRemarkUserId",
+		Z.MONITOR_REMARK_USER_NAME as "monitorRemarkUserName",
+		
+		Z.MONITOR_REMARK2 as "monitorRemark2",
+		TO_CHAR(Z.MONITOR_REMARK_TIME2, 'YYYY-MM-DD HH24:MI') as "monitorRemarkTime2",
+		Z.MONITOR_REMARK_USER_ID2 as "monitorRemarkUserId2",
+		Z.MONITOR_REMARK_USER_NAME2 as "monitorRemarkUserName2",
+		
+		Z.WATER_REMARK as "waterRemark",
+		TO_CHAR(Z.WATER_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "waterRemarkTime",
+		Z.WATER_REMARK_USER_ID as "waterRemarkUserId",
+		Z.WATER_REMARK_USER_NAME as "waterRemarkUserName",
+		z.DRY_WET as "dryWet",
+		
+		
+		
        DECODE(Z.IS_QUALIFIED, 'Y', '是', 'N', '否', '') "isQualifiedName",
        DECODE(Z.IS_FIRST, 'Y', '首检', 'N', '复检', '') "isFirstName",
        DECODE(Z.JUDGE_FLAG, 'Y', '是', 'N', '否', '') "judgeFlagName",
@@ -79,12 +100,33 @@
 	       A.IS_QUALIFIED, A.IS_FIRST, A.STD_STR, A.TEAM_ID, A.WORKER_ID, A.NG_REASON_ID, 
 	       A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID, A.CHANGER_ID, A.REMARK,
 	       A.JUDGE_FLAG, A.NG_ITEM, A.JUDGER_ID, A.JUDGE_DT,A.diameter,A.diameter2,
+	       
+	       A.GYY_REMARK_TIME,A.GYY_REMARK_USER_ID,A.GYY_REMARK_USER_NAME,
+			A.MONITOR_REMARK,A.MONITOR_REMARK_TIME,A.MONITOR_REMARK_USER_ID,
+			A.MONITOR_REMARK_USER_NAME,
+			A.MONITOR_REMARK2,A.MONITOR_REMARK_TIME2,A.MONITOR_REMARK_USER_ID2,
+			A.MONITOR_REMARK_USER_NAME2,
+	       A.WATER_REMARK ,
+			A.WATER_REMARK_TIME ,
+			A.WATER_REMARK_USER_ID ,
+			A.WATER_REMARK_USER_NAME ,A.DRY_WET,
+		       
+	       
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
-	  FROM qinsen.INST_QIJIAN A, qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
+	  FROM (SELECT QJ.*, 
+CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET
+  FROM QINSEN.INST_QIJIAN QJ
+  LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+  ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID) A, 
+  qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
 	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
 	   AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
+	   
+	  <isNotNull prepend = ""  property = "dryWet">
+	   AND A.DRY_WET = #dryWet#
+	</isNotNull>
 	   
    <isNotNull prepend = ""  property = "batchNoList">
 	   AND A.BATCH_NO in($batchNoList$)
@@ -103,6 +145,14 @@
 	<isNotNull prepend = ""  property = "batchNo">
 	   AND A.BATCH_NO = UPPER(#batchNo#)
 	</isNotNull>
+	
+	<isNotNull prepend = ""  property = "batchNoMin">
+	   AND A.BATCH_NO >= UPPER(#batchNoMin#)
+	</isNotNull>
+	<isNotNull prepend = ""  property = "batchNoMax">
+	   AND A.BATCH_NO &lt;= UPPER(#batchNoMax#)
+	</isNotNull>
+	
 	<isNotNull prepend = ""  property = "batchNoStr">
 	   AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'
 	</isNotNull>
@@ -142,6 +192,15 @@
 	<isNotNull prepend = ""  property = "juanmoBatchNo">
 	   AND J.BATCH_NO = UPPER(#juanmoBatchNo#)
 	</isNotNull>
+	
+	<isNotNull prepend = ""  property = "juanMoBatchNoMin">
+	   AND J.BATCH_NO >= UPPER(#juanMoBatchNoMin#)
+	</isNotNull>
+	<isNotNull prepend = ""  property = "juanMoBatchNoMax">
+	   AND J.BATCH_NO &lt;= UPPER(#juanMoBatchNoMax#)
+	</isNotNull>
+	
+	
 	<isNotNull prepend = ""  property = "dimoBatchNo">
 	   AND EXISTS
 		 (SELECT 1
@@ -435,12 +494,89 @@
 		DELETE FROM QINSEN.INST_QJ_STD WHERE RECORD_ID = #recordId#
 	</delete>
 	
-	<!-- 修改记录 -->
+	<!-- 修改工艺处理意见 -->
 <update id="updateGyyRemark" parameterClass="java.util.HashMap">
 	UPDATE QINSEN.inst_qijian A
 	   SET A.CHANGE_DT = SYSDATE,
 	   A.GYY_REMARK = #gyyRemark#,
-	   A.CHANGER_ID = #operatorId#
+	   A.CHANGER_ID = #operatorId#,
+	   A.gyy_remark_time = SYSDATE,
+	   A.gyy_remark_user_id = #userId#,
+	   A.gyy_remark_user_name = #userName#
 	 WHERE A.RECORD_ID in ($recordIds$)
 </update>	
+
+<!-- 修改班长挑水测 -->
+<update id="updateMonitorRemark" parameterClass="java.util.HashMap">
+	UPDATE QINSEN.inst_qijian A
+	   SET A.CHANGE_DT = SYSDATE,
+	   A.monitor_REMARK = #monitorRemark#,
+	   A.CHANGER_ID = #operatorId#,
+	   A.monitor_remark_time = SYSDATE,
+	   A.monitor_remark_user_id = #userId#,
+	   A.monitor_remark_user_name = #userName#
+	 WHERE A.RECORD_ID in ($recordIds$)
+</update>	
+
+<!-- 修改水测员工接收 -->
+<update id="updateWaterRemark" parameterClass="java.util.HashMap">
+	UPDATE QINSEN.inst_qijian A
+	   SET A.CHANGE_DT = SYSDATE,
+	   A.water_REMARK = #waterRemark#,
+	   A.CHANGER_ID = #operatorId#,
+	   A.water_remark_time = SYSDATE,
+	   A.water_remark_user_id = #userId#,
+	   A.water_remark_user_name = #userName#
+	 WHERE A.RECORD_ID in ($recordIds$)
+</update>
+
+<!-- 修改班长确认 -->
+<update id="updateMonitorRemark2" parameterClass="java.util.HashMap">
+	UPDATE QINSEN.inst_qijian A
+	   SET A.CHANGE_DT = SYSDATE,
+	   A.monitor_REMARK2 = #monitorRemark2#,
+	   A.CHANGER_ID = #operatorId#,
+	   A.monitor_remark_time2 = SYSDATE,
+	   A.monitor_remark_user_id2 = #userId#,
+	   A.monitor_remark_user_name2 = #userName#
+	 WHERE A.RECORD_ID in ($recordIds$)
+</update>	
+
+<!-- 水测员工接收确认时间+24小时后→ 开始向工艺员推送气泡，直至写“工艺员备注”为止。 -->
+<select id="query4Gyy" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT T.BATCH_NO "batchNo",
+       T.RECORD_ID "recordId",
+       TO_CHAR(T.WATER_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "waterRemarkTime",
+       T.WATER_REMARK "waterRemark",
+       T.WATER_REMARK_USER_ID as "waterRemarkUserId",
+       T.WATER_REMARK_USER_NAME "waterRemarkUserName",
+       EXTRACT(DAY FROM (SYSDATE - T.WATER_REMARK_TIME)) * 24 +
+       EXTRACT(HOUR FROM (SYSDATE - T.WATER_REMARK_TIME)) diff
+  FROM QINSEN.INST_QIJIAN T
+  WHERE 1=1
+  AND t.gyy_remark IS NULL
+  AND EXTRACT(DAY FROM (SYSDATE - T.WATER_REMARK_TIME)) * 24 +
+       EXTRACT(HOUR FROM (SYSDATE - T.WATER_REMARK_TIME))>=24
+</select>
+
+<!-- 工艺员备注时间+2小时后→ 开始向班长推磅气泡，直至班长点“工艺员意见已安排”	 -->
+<select id="query4Monitor" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	
+SELECT T.BATCH_NO "batchNo",
+       T.RECORD_ID "recordId",
+       TO_CHAR(T.GYY_REMARK_TIME, 'YYYY-MM-DD HH24:MI') "gyyRemarkTime",
+       T.GYY_REMARK "gyyRemark",
+       T.GYY_REMARK_USER_ID as "gyyRemarkUserId",
+       T.GYY_REMARK_USER_NAME "gyyRemarkUserName",
+       EXTRACT(DAY FROM (SYSDATE - T.WATER_REMARK_TIME)) * 24 +
+       EXTRACT(HOUR FROM (SYSDATE - T.WATER_REMARK_TIME)) diff
+  FROM QINSEN.INST_QIJIAN T
+  WHERE 1=1
+  AND t.water_remark IS NOT NULL
+  AND t.monitor_remark2 IS NULL
+  AND t.gyy_remark IS NOT NULL
+  AND EXTRACT(DAY FROM (SYSDATE - T.GYY_REMARK_TIME)) * 24 +
+       EXTRACT(HOUR FROM (SYSDATE - T.GYY_REMARK_TIME))>=2
+</select>
+
 </sqlMap>

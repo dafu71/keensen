@@ -229,6 +229,9 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							}
 						}
 					}, {
+						dataIndex : 'position',
+						header : '取样位置'
+					}, {
 						dataIndex : 'stateName',
 						header : '状态'
 					}, {
@@ -301,6 +304,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'watertype'
 						}, {
 							name : 'relationBatchNo'
+						}, {
+							name : 'position'
 						}]
 			})
 		})
@@ -430,20 +435,24 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c21Plan',
 							fieldLabel : '计划添加C21(g)',
-							readOnly : true,
+							//readOnly : true,
 							name : 'list/c21Plan',
 							allowBlank : false,
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'textfield',
 							ref : '../../c22Plan',
 							fieldLabel : '计划添加C22(g)',
-							readOnly : true,
+							//readOnly : true,
 							name : 'list/c22Plan',
 							allowBlank : false,
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -452,20 +461,24 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c23Plan',
 							fieldLabel : '计划添加C23(g)',
-							readOnly : true,
+							//readOnly : true,
 							name : 'list/c23Plan',
 							allowBlank : false,
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'textfield',
 							ref : '../../c27Plan',
 							fieldLabel : '计划添加C27(g)',
-							readOnly : true,
+							//readOnly : true,
 							allowBlank : false,
 							name : 'list/c27Plan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -474,20 +487,24 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c28Plan',
 							fieldLabel : '计划添加C28(g)',
-							readOnly : true,
+							//readOnly : true,
 							allowBlank : false,
 							name : 'list/c28Plan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'textfield',
 							ref : '../../c30Plan',
 							fieldLabel : '计划添加C30(g)',
-							readOnly : true,
+							//readOnly : true,
 							allowBlank : false,
 							name : 'list/c30Plan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -500,7 +517,9 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							allowBlank : false,
 							name : 'list/c24Plan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'textfield',
 							ref : '../../c29Plan',
@@ -509,7 +528,9 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							allowBlank : false,
 							name : 'list/c29Plan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -518,11 +539,13 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../roPlan',
 							fieldLabel : '计划添加RO水(kg)',
-							readOnly : true,
+							//readOnly : true,
 							allowBlank : false,
 							name : 'list/roPlan',
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'displayfield',
 							height : '5',

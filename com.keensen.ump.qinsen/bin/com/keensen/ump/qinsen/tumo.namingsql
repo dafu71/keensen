@@ -32,6 +32,11 @@
        T1.THICK_AVG         AS "thickAvg",
        T1.THICK_MIN         AS "thickMin",
        T1.THICK_MAX         AS "thickMax",
+       
+       T1.THICK_AVG_flag         AS "thickAvgFlag",
+       T1.THICK_MIN_flag         AS "thickMinFlag",
+       T1.THICK_MAX_flag         AS "thickMaxFlag",
+       
        T1.TAG_NUM           AS "tagNum",
        T1.TAG_LENGTH        AS "tagLength",
        T1.INBOUND_REMARK    AS "inboundRemark",
@@ -110,9 +115,14 @@
                A.VALID_TM,
                A.VERIFIER_ID,
                A.WF_BATCH_NO,
-               A.THICK_AVG,
-               A.THICK_MIN,
-               A.THICK_MAX,
+               nvl(kdd.diameter_avg,A.THICK_AVG) THICK_AVG,
+               nvl(kdd.diameter_min,A.THICK_MIN) THICK_MIN,
+               nvl(kdd.diameter_max,A.THICK_MAX) THICK_MAX,
+               
+               decode(kdd.diameter_avg,null,0,1) THICK_AVG_Flag,
+               decode(kdd.diameter_min,null,0,1) THICK_MIN_flag,
+               decode(kdd.diameter_max,null,0,1) THICK_MAX_flag,
+               
                A.TAG_NUM,
                A.TAG_LENGTH,
                A.INBOUND_REMARK,
@@ -168,6 +178,7 @@
                t33.reserve4,t33.trend,
                vkrc.sumOutLength
           FROM QINSEN.INST_TUMO A
+          left join KS_DIAPHRAGM_DIAMETER kdd on kdd.batch_no = A.batch_no 
           left join KS_PROD_DIAPHRAGM_TUMO t33
   				on A.record_id = t33.record_id
   		  	
@@ -222,6 +233,8 @@
                       FROM QINSEN.INST_CDM_DEFECT D,
                            QINSEN.PARA_CDM_DEFECT P
                      WHERE D.DEFECT_ITEM_ID = P.RECORD_ID
+                     <!--不良排除发货不良-->
+                     AND p.duty_tache_id &lt;&gt;106
                      GROUP BY D.TUMO_BATCH_ID) T6
             ON T6.TUMO_BATCH_ID = A.RECORD_ID
           LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
@@ -262,6 +275,7 @@
         <isNotNull prepend="" property="outBatchNo">AND T1.OUT_BATCH_NO = #outBatchNo#</isNotNull>
         <isNotNull prepend="" property="tumoBatchNo">AND T1.BATCH_NO = #tumoBatchNo#</isNotNull>
         <isNotNull prepend="" property="isKeep">AND T1.IS_KEEP = #isKeep#</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr2">t1.batch_No in ($batchNoStr2$)</isNotNull>
         <isNotNull prepend="" property="juanmoBatchId">AND T1.RECORD_ID IN(SELECT T2.TUMO_BATCH_ID from QINSEN.INST_JUANMO_DETAIL T
 			LEFT JOIN QINSEN.INST_CAIDIEMO T2 ON T.CDM_BATCH_ID=T2.RECORD_ID
 			WHERE T.MAIN_BATCH_ID = #juanmoBatchId#
@@ -332,7 +346,7 @@
 		WHERE to_char(t.create_dt,'yyyy')=to_char(SYSDATE,'yyyy'))
 		UNION 
 		SELECT SUBSTR(to_char(SYSDATE,'yyyy'),4,1) || 
-		DECODE(to_char(SYSDATE,'mm'),10,'0',11,'A',12,'B',to_number(to_char(SYSDATE,'mm')))
+		DECODE(to_char(SYSDATE,'mm'),10,'A',11,'B',12,'C',to_number(to_char(SYSDATE,'mm')))
 		|| trim(to_char(to_number(substr(nvl(MAX(t.out_batch_no),'00000'),3,5))+1,'00000'))
 		FROM qinsen.inst_tumo t 
 		WHERE EXISTS (SELECT 1 FROM qinsen.inst_tumo t 

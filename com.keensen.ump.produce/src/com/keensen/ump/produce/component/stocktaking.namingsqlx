@@ -18,37 +18,39 @@
 	</isNotNull>
 	-->
 	
-	SELECT t.id "id", t.juanmo_batch_no "juanmoBatchNo",t.batch_no "batchNo" ,
+	SELECT t.batch_no2 "batchNo2",t.id "id", t.juanmo_batch_no "juanmoBatchNo",t.batch_no "batchNo" ,
 	nvl(t.reserve2,decode(t.reserve1,0,'裁叠膜工序',1,'卷膜工序',2,'气检工序',3,'新基地水测工序',4,'老基地水测工序',5,'绕丝工序',
 	6,'包装工序',7,'保留区',8,'走廊存放区',9,'历史呆滞品区',10,'白膜仓库')) "step",t.create_time "createTime", t.create_name "createName"
-	, t.mater_spec_name "materSpecName",t.mater_spec_name2 "orderMaterSpecName",t.produce_dt "produceDt",t2.mark_spec_code "markSpecCode"
+	, t.mater_spec_name "materSpecName",t.mater_spec_name2 "orderMaterSpecName",t.produce_dt "produceDt"
+	<!--,t2.mark_spec_code "markSpecCode"-->
 	from 
 	(
-	select t.id,jm.batch_no juanmo_batch_no ,qj.batch_no,t.reserve1,t.reserve2,to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss') create_time,t.create_name
+	select t.batch_no batch_no2,t.id,jm.batch_no juanmo_batch_no ,qj.batch_no,t.reserve1,t.reserve2,to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss') create_time,t.create_name
 	  ,pms.mater_spec_name,jm.order_no,od.mater_spec_name2,to_char(jm.produce_dt,'yyyy-MM-dd') produce_dt from KS_PROD_COMPONENT_STOCKTAKING t
 	  LEFT JOIN qinsen.inst_juanmo_main jm ON jm.batch_no=t.batch_no
 	  LEFT JOIN qinsen.inst_qijian qj ON qj.juanmo_batch_id = jm.record_id
 	  LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id = jm.prod_spec_id
-	  LEFT JOIN ks_prod_component_yxorder od ON od.order_no = qj.order_no AND od.mater_spec_id = qj.prod_spec_id
+	  LEFT JOIN (SELECT DISTINCT order_no,mater_spec_id,mater_spec_name2 FROM ks_prod_component_yxorder) od ON od.order_no = qj.order_no AND od.mater_spec_id = qj.prod_spec_id
 	  WHERE upper(SUBSTR(t.batch_no,1,1))='J'
 	  UNION all
-	  select t.id,jm.batch_no ,qj.batch_no,t.reserve1,t.reserve2,to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss'),t.create_name
+	  select t.batch_no batch_no2,t.id,jm.batch_no ,qj.batch_no,t.reserve1,t.reserve2,to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss'),t.create_name
 	  ,pms.mater_spec_name,jm.order_no,od.mater_spec_name2,to_char(jm.produce_dt,'yyyy-MM-dd') produce_dt  from KS_PROD_COMPONENT_STOCKTAKING t
 	  LEFT JOIN qinsen.inst_qijian qj ON qj.batch_no = t.batch_no
 	  LEFT JOIN qinsen.inst_juanmo_main jm ON qj.juanmo_batch_id = jm.record_id
 	  LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id = jm.prod_spec_id
-	  LEFT JOIN ks_prod_component_yxorder od ON od.order_no = qj.order_no AND od.mater_spec_id = qj.prod_spec_id
+	  LEFT JOIN (SELECT DISTINCT order_no,mater_spec_id,mater_spec_name2 FROM ks_prod_component_yxorder) od ON od.order_no = qj.order_no AND od.mater_spec_id = qj.prod_spec_id
 		WHERE upper(SUBSTR(t.batch_no,1,1))&lt;>'J') t
-		left join (SELECT t1.batch_no,t1.relation_id,t2.mark_spec_code from 
+		<!--left join (SELECT t1.batch_no,t1.relation_id,t2.mark_spec_code from 
 		(select t.batch_no,max(t.relation_id) relation_id  
 		 from KS_COMPONENT_CHECK_LIST t
 		 GROUP BY t.batch_no) t1
 		 LEFT JOIN KS_COMPONENT_CHECK_HEAD t2
 		 ON t1.relation_id = t2.id) t2
-		 on t2.batch_no = t.batch_no
+		 on t2.batch_no = t.batch_no-->
 		
 		
-	where 1=1 and (T.BATCH_NO is not null or T.JUANMO_BATCH_NO is not null)
+	where 1=1 
+	<!--and (T.BATCH_NO is not null or T.JUANMO_BATCH_NO is not null) -->
 	 <isNotNull prepend="and" property="batchNo"> 
 		       upper(T.BATCH_NO) like '%' || upper(#batchNo#) || '%'
 		       or
@@ -68,5 +70,46 @@
 	</isNotNull>
    	
    	</select>
+   	
+   	<delete id="deleteStocktaking" parameterClass="java.util.HashMap" >
+   	delete from KS_PROD_COMPONENT_STOCKTAKING
+	</delete>
+	
+	<insert id="backupStocktaking" parameterClass="java.util.HashMap" >
+   	INSERT INTO KS_COMPONENT_STOCKTAKING_H
+  (ID,
+   CREATE_TIME,
+   CREATE_USER_ID,
+   CREATE_NAME,
+   UPDATE_TIME,
+   UPDATE_USER_ID,
+   UPDATE_NAME,
+   RESERVE1,
+   RESERVE2,
+   RESERVE3,
+   RESERVE4,
+   RESERVE5,
+   ORG_ID,
+   STATUS,
+   BATCH_NO)
+  SELECT ID,
+         CREATE_TIME,
+         CREATE_USER_ID,
+         CREATE_NAME,
+         UPDATE_TIME,
+         UPDATE_USER_ID,
+         UPDATE_NAME,
+         RESERVE1,
+         RESERVE2,
+         RESERVE3,
+         RESERVE4,
+         RESERVE5,
+         ORG_ID,
+         STATUS,
+         BATCH_NO
+    FROM KS_PROD_COMPONENT_STOCKTAKING
+
+	</insert>
+	
     
     </sqlMap>

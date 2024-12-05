@@ -1,11 +1,525 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.produce.component.applys">
-    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
-        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
-    </parameterMap>
-    <resultMap class="commonj.sdo.DataObject" id="resultMap">
-        <result column="TYPEID" javaType="string" property="typeId"/>
-    </resultMap>
-    <select id="select_id" parameterMap="parameterMap" resultMap="resultMap"><![CDATA[sql statement]]></select>
+    <select id="queryCStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 		SELECT T1.ID "id",t1.dcode "dcode",
+       T1.BATCH_NO "batchNo",
+       T1.CODE "code",
+       T1.TYPE "type",
+       T1.STATE "state",
+       DECODE(T1.STATE, 0, '待入库', 1, '入库', 2, '出库', '') "stateName",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.update_USER_ID AS "updateUserId",
+       T1.update_NAME AS "updateName",
+       TO_CHAR(T1.update_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       t1.apply_date "applyDate",t1.check_date "checkDate",
+       t1.PROD_SPEC_Name "prodSpecName" ,t1.MARK_SPEC_CODE "markSpecCode"
+  	FROM 
+  	(select cs.id,cs.batch_no,cs.code,cs.type,cs.state,cs.create_user_id,cs.dcode,
+  	cs.create_name,cs.create_time,cs.update_user_id,cs.update_name,cs.update_time,
+  	ch.PROD_SPEC_Name,ch.MARK_SPEC_CODE,ch.apply_date,ch.check_date
+  	from KS_COMPONENT_C_STOCK cs
+  	left join KS_COMPONENT_CHECK_HEAD ch on cs.code=ch.code
+  	where cs.type='工业膜' and substr(cs.code,1,1) != 'F'
+  	union
+  	select cs.id,cs.batch_no,cs.code,cs.type,cs.state,cs.create_user_id,cs.dcode,
+  	cs.create_name,cs.create_time,cs.update_user_id,cs.update_name,cs.update_time,
+  	ch.PROD_SPEC_Name,ch.MARK_SPEC_CODE,ch.apply_date,ch.check_date
+  	from KS_COMPONENT_C_STOCK cs
+  	left join KS_COMPONENT_HH_CHECK_HEAD ch on cs.code=ch.code
+  	where cs.type='家用膜' and substr(cs.code,1,1) != 'F'
+  	 ) T1
+  	
+  	where 1=1
+  
+   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
+        <isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="code">t1.code = #code#</isNotNull>
+        <isNotNull prepend="and" property="dcode">t1.dcode = #dcode#</isNotNull>
+	order by T1.CREATE_TIME desc
+    </select>
+    <insert id="insertCStock" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_C_STOCK
+	(ID,batch_no,CODE,TYPE,state,create_time,create_user_id,create_name)
+	select SEQU_COMPONENT_C_STOCK.Nextval,t.batch_no "batchNo",t2.code "code",'工业膜' "type",0 state ,
+	SYSDATE,#userId#,#userName#
+	from KS_COMPONENT_CHECK_LIST t
+	LEFT JOIN KS_COMPONENT_CHECK_HEAD t2
+	ON t.relation_id=t2.id
+	WHERE t.relation_id=#relationId#
+	AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_C_STOCK WHERE CODE = t2.code and type='工业膜')</insert>
+    <select id="queryCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select DISTINCT t.code "code" from KS_COMPONENT_C_STOCK t
+	 WHERE t.type='工业膜' AND t.state =0</select>
+    <select id="queryHHApply" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id",
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       T1.ORDER_NO          AS "orderNo",
+       T1.order_type "orderType",
+       T1.CODE              AS "code",
+       T1.PROD_SPEC_Name      AS "prodSpecName",
+       T1.ORDER_AMOUNT      AS "orderAmount",
+       T1.APPLY_AMOUNT      AS "applyAmount",
+       T1.CHECK_USER_ID     AS "checkUserId",
+       T1.CHECK_USER_NAME   AS "checkUserName",               
+       TO_CHAR(T1.APPLY_DATE, 'yyyy-MM-dd') AS "applyDate",
+       T1.APPLY_USER_ID     AS "applyUserId",
+       T1.APPLY_USER_NAME   AS "applyUserName",
+       T1.LID               AS "lid",
+       T1.PROD_CLASS_FLAG   AS "prodClassFlag",
+       T1.TAPE              AS "tape",
+       T1.MARK_SPECIAL_FLAG AS "markSpecialFlag",
+       T1.MARK_TYPE_FLAG    AS "markTypeFlag",
+       T1.MARK_SPEC_CODE    AS "markSpecCode",
+       T1.MARK_ISOK         AS "markIsok",
+       T1.LABEL_ISOK        AS "labelIsok",
+       T1.APPERANCE_ISOK    AS "apperanceIsok",
+       T1.DIAMETER          AS "diameter",
+       T1.FINAL             AS "final",
+       T1.DEAL              AS "deal",
+       T1.DEAL1             AS "deal1",
+       T1.DEAL2             AS "deal2",
+       T1.DEAL3             AS "deal3",
+       T1.STORAGE           AS "storage",
+       T1.MANAGE_USER_ID    AS "manageUserId",
+       T1.MANAGE_USER_NAME  AS "manageUserName",
+       TO_CHAR(T1.Confirm_date, 'yyyy-MM-dd') "confirmDate", t1.print_cnt "printCnt",
+       T1.TRAY "tray", T1.BOX "box",T1.PERFORMANCE "performance",
+       <!--t2.apply_amount "applyAmountTotal",-->
+       T1.is_examine "isExamine",
+       decode(t5.code,null,'否','是') "ifcstock"
+  FROM KS_COMPONENT_HH_CHECK_HEAD T1
+  
+  left join (select DISTINCT t.code code from KS_COMPONENT_C_STOCK t
+WHERE t.type='家用膜') t5 on t5.code=t1.code
+
+  <!--left join (SELECT h.order_no,h.mark_spec_code,SUM(h.apply_amount) apply_amount from KS_COMPONENT_HH_CHECK_HEAD h
+GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mark_spec_code = t2.mark_spec_code-->
+	
+  where 1=1
+  
+   <isNotNull prepend="and" property="ifcstock">decode(t5.code,null,'N','Y')  = #ifcstock#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t1.PROD_SPEC_Name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="markSpecCode">T1.MARK_SPEC_CODE like '%' || #markSpecCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="ifConfirm">decode(T1.Confirm_date,null,'N','Y') = #ifConfirm#</isNotNull>
+        <isNotNull prepend="and" property="code">T1.CODE like '%' || #code# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.id in (select relation_id from KS_COMPONENT_CHECK_LIST where batch_No = #batchNo#)</isNotNull>
+        <isNotNull prepend="and" property="storage">T1.storage = #storage#</isNotNull>
+	
+	order by t1.id desc
+    </select>
+    <select id="queryHHList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id",
+       T1.batch_No    AS "batchNo",h.prod_spec_name "prodSpecName",
+       t1.state "state",t1.tumo_batch_str "tumoBatchStr",
+       h.code "code"
+  FROM KS_COMPONENT_HH_CHECK_LIST T1
+  LEFT JOIN KS_COMPONENT_HH_CHECK_HEAD h on t1.relation_id = h.id 
+  where 1=1
+    <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="relationId">t1.relation_id = #relationId#</isNotNull>
+	order by T1.batch_No
+    </select>
+    <insert id="insertHHCStock" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_C_STOCK
+	(ID,batch_no,CODE,TYPE,state,create_time,create_user_id,create_name
+	,update_time,update_user_id,update_name,dcode)
+	select SEQU_COMPONENT_C_STOCK.Nextval,t.batch_no "batchNo",t2.code "code",'家用膜' "type",1 state ,
+	SYSDATE,#userId#,#userName#,SYSDATE,#userId#,#userName#,#dcode#
+	from KS_COMPONENT_HH_CHECK_LIST t
+	LEFT JOIN KS_COMPONENT_HH_CHECK_HEAD t2
+	ON t.relation_id=t2.id
+	WHERE t.relation_id=#relationId#
+	AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_C_STOCK WHERE CODE = t2.code and type='家用膜')</insert>
+    <insert id="insertStock4HH" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_STOCK
+	(batch_no,storage,type,code,update_time,update_user_id,update_name,dcode)
+	select t.batch_no "batchNo",'C仓','家用膜',code,SYSDATE,#userId#,#userName#,dcode
+	from KS_COMPONENT_C_STOCK t
+	WHERE t.code = (select code from KS_COMPONENT_HH_CHECK_HEAD where id = #relationId#)
+	AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_STOCK WHERE batch_no = t.batch_no)</insert>
+    <select id="queryStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.BATCH_NO "batchNo",
+       T1.TYPE "type",
+       T1.CODE "code",
+       cl.PROD_SPEC_NAME "prodSpecName",
+       CASE
+         WHEN INSTR(CH.PROD_SPEC_NAME, '8040') &gt; 0 THEN
+          '工业8寸'
+         WHEN INSTR(CH.PROD_SPEC_NAME, '4040') &gt; 0 THEN
+          '工业4寸'
+         WHEN (INSTR(CH.PROD_SPEC_NAME, '25') &gt; 0 OR
+              INSTR(CH.PROD_SPEC_NAME, '21') &gt; 0) THEN
+          '工业类4寸'
+       END "prodType",
+       CH.MARK_SPEC_CODE "markSpecCode",
+       DECODE(CH.PROD_CLASS_FLAG, 'D', '干', 'W', '湿', '0', '干湿均可') "dryWet",
+       JM.BATCH_NO "jmBatchNo",
+       TO_CHAR(JM.PRODUCE_DT, 'yyyy-MM-dd') "jmProduceDt",
+       JM.TUMO_BATCH_STR "tumoBatchStr",
+       D1.DICTNAME "tape",
+       D2.DICTNAME "lid",
+       nvl(D6.DICTNAME,CH.label) "label",
+       '' "bag",
+       D3.DICTNAME "box",
+       D4.DICTNAME "markTypeFlag",
+       to_char(round(CL.gpd,0)) "gpdAvg",
+       CL.salt "saltAvg",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "stockTime",
+       (SELECT WM_CONCAT(DICT.DICTNAME)
+          FROM EOS_DICT_ENTRY DICT
+         WHERE DICT.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_ABNORMAL'
+           AND DICT.DICTID IN
+               (SELECT COLUMN_VALUE DICTID
+                  FROM TABLE(SPLIT(CH.ABNORMAL, ',')))) "abnormal",
+       CH.ABNORMAL_EXPLAIN "abnormalExplain",
+       DECODE(CH.APPERANCE_ISOK, 'Y', '合格', 'N', '不合格', '') "apperanceIsok",
+       CH.ABNORMAL_OTHER "abnormalOther",
+       std.a_gpd_low_limit "gpdLow",
+       std.a_gpd_up_limit "gdUp",
+       std.a_salt_low_limit "saltLow"
+        ,CASE WHEN CL.gpd&gt;=std.a_gpd_low_limit AND CL.gpd &lt;=std.a_gpd_up_limit AND CL.salt&gt;std.a_salt_low_limit
+         THEN '合格' ELSE '不合格' END "performanceIsok",
+        <!--产水量合格，且脱盐率低于“量产脱盐率-->
+		CASE WHEN CL.gpd&gt;=std.a_gpd_low_limit AND CL.gpd &lt;=std.a_gpd_up_limit AND CL.salt &lt; std.a_salt_low_limit
+		         THEN '脱盐率偏低' 
+		<!--产水量低于“量产产水量-下限”，且脱盐率低于“量产脱盐率”-->
+		WHEN CL.gpd &lt;  std.a_gpd_low_limit AND CL.salt &lt; std.a_salt_low_limit
+		         THEN '产水量和脱盐率均偏低' 
+		
+		<!--产水量高于“量产产水量-上限”，且脱盐率低于“量产脱盐率”-->
+		WHEN CL.gpd &gt;  std.a_gpd_up_limit AND CL.salt &lt; std.a_salt_low_limit
+		         THEN '产水重偏高,脱盐率偏低' 
+		<!--产水量低于“量产产水量-下限”，且脱盐率合格-->
+		WHEN CL.gpd &lt;  std.a_gpd_low_limit AND CL.salt &gt;= std.a_salt_low_limit
+		         THEN '产水量偏低' 
+		<!--产水量高于“重产产水里-上限”，且脱盐率合格-->
+		WHEN CL.gpd &gt; std.a_gpd_up_limit AND CL.salt &gt;= std.a_salt_low_limit
+		         THEN '产水量偏高'
+		end "performanceErr"
+  FROM KS_COMPONENT_STOCK T1
+  LEFT JOIN KS_COMPONENT_CHECK_HEAD CH
+    ON T1.CODE = CH.CODE
+  LEFT JOIN (SELECT cl.*,ch.code FROM KS_COMPONENT_CHECK_LIST CL
+  LEFT JOIN KS_COMPONENT_CHECK_HEAD CH
+    ON CL.RELATION_ID = CH.ID) cl ON cl.code=t1.code AND cl.batch_no=t1.batch_no
+  left join (SELECT t.prod_spec_id,t.a_gpd_low_limit,t.a_gpd_up_limit,t.a_salt_low_limit,t2.mater_spec_name from 
+	QINSEN.INST_PROD_WATER_STD t
+	LEFT JOIN qinsen.para_mater_spec t2 ON t.prod_spec_id=t2.mater_spec_id) std  
+   on std.mater_spec_name = cl.prod_spec_name 
+  LEFT JOIN QINSEN.INST_QIJIAN QJ
+    ON QJ.BATCH_NO = T1.BATCH_NO  
+  LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+    ON JM.RECORD_ID = QJ.JUANMO_BATCH_ID
+  LEFT JOIN EOS_DICT_ENTRY D1
+    ON D1.DICTTYPEID = 'KS_PROD_TAPE'
+   AND D1.DICTID = CH.TAPE
+  LEFT JOIN EOS_DICT_ENTRY D2
+    ON D2.DICTTYPEID = 'KS_PROD_LID'
+   AND D2.DICTID = CH.LID
+  LEFT JOIN EOS_DICT_ENTRY D3
+    ON D3.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_LABEL'
+   AND D3.DICTID = CH.BOX
+  LEFT JOIN EOS_DICT_ENTRY D4
+    ON D4.DICTTYPEID = 'KS_PROD_MARK_TYPE_FLAG'
+   AND D4.DICTID = CH.MARK_TYPE_FLAG
+  LEFT JOIN EOS_DICT_ENTRY D6
+		    ON D6.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_LABEL'
+		    AND D6.DICTID = CH.label
+ WHERE T1.TYPE = '工业膜'
+		  		<isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodType">( CASE
+			         WHEN INSTR(CH.PROD_SPEC_NAME, '8040') &gt; 0 THEN
+			          '工业8寸'
+			         WHEN INSTR(CH.PROD_SPEC_NAME, '4040') &gt; 0 THEN
+			          '工业4寸'
+			         WHEN (INSTR(CH.PROD_SPEC_NAME, '25') &gt; 0 OR
+			              INSTR(CH.PROD_SPEC_NAME, '21') &gt; 0) THEN
+			          '工业类4寸'
+			       END )= #prodType#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">CH.PROD_SPEC_NAME like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dryWet">DECODE(CH.PROD_CLASS_FLAG, 'D', '干', 'W', '湿', '0', '干湿均可') like '%' || #dryWet# || '%'</isNotNull>
+        <isNotNull prepend="and" property="apperanceIsok">CH.APPERANCE_ISOK = #apperanceIsok#</isNotNull>
+	
+		UNION
+		SELECT T1.BATCH_NO "batchNo",
+		       T1.TYPE "type",
+		       T1.CODE "code",
+		       CH.PROD_SPEC_NAME "prodSpecName",
+		       '家用膜' "prodType",
+		       CH.MARK_SPEC_CODE "markSpecCode"，ch.dry_wet,
+		       '',
+		       TO_CHAR(CH.JM_DATE, 'yyyy-MM-dd'),
+		       CH.TUMO_BATCH_STR,
+		       CH.TAP_COLOR,
+		       '',
+		       nvl(D6.DICTNAME,CH.label),
+		       D5.DICTNAME,
+		       D3.DICTNAME,
+		       D4.DICTNAME,
+		       CH.GPD_AVG "gpdAvg",
+		       CH.SALT_AVG "saltAvg",
+		       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss'),
+		       (SELECT WM_CONCAT(DICT.DICTNAME)
+		          FROM EOS_DICT_ENTRY DICT
+		         WHERE DICT.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_ABNORMAL'
+		           AND DICT.DICTID IN
+		               (SELECT COLUMN_VALUE DICTID
+		                  FROM TABLE(SPLIT(CH.ABNORMAL, ',')))) "abnormal",
+		       CH.ABNORMAL_EXPLAIN "abnormalExplain",
+		       DECODE(CH.APPERANCE_ISOK, 'Y', '合格', 'N', '不合格', '') "apperanceIsok",
+		       CH.ABNORMAL_OTHER "abnormalOther",
+		       std.a_gpd_low_limit "gpdLow",
+		       std.a_gpd_up_limit "gdUp",
+		       std.a_salt_low_limit "saltLow"
+		        ,CASE WHEN CH.GPD_AVG&gt;=std.a_gpd_low_limit AND CH.GPD_AVG &lt;=std.a_gpd_up_limit 
+           AND replace(CH.SALT_AVG,'%','')&gt;std.a_salt_low_limit
+         THEN '合格' ELSE '不合格' END "performanceIsok",
+        <!--产水量合格，且脱盐率低于“量产脱盐率-->
+		CASE WHEN CH.GPD_AVG&gt;=std.a_gpd_low_limit AND CH.GPD_AVG &lt;=std.a_gpd_up_limit AND REPLACE(CH.SALT_AVG, '%', '') &lt; std.a_salt_low_limit
+		         THEN '脱盐率偏低' 
+		<!--产水量低于“量产产水量-下限”，且脱盐率低于“量产脱盐率”-->
+		WHEN CH.GPD_AVG &lt;  std.a_gpd_low_limit AND REPLACE(CH.SALT_AVG, '%', '') &lt; std.a_salt_low_limit
+		         THEN '产水量和脱盐率均偏低' 
+		
+		<!--产水量高于“量产产水量-上限”，且脱盐率低于“量产脱盐率”-->
+		WHEN CH.GPD_AVG &gt;  std.a_gpd_up_limit AND REPLACE(CH.SALT_AVG, '%', '') &lt; std.a_salt_low_limit
+		         THEN '产水重偏高,脱盐率偏低' 
+		<!--产水量低于“量产产水量-下限”，且脱盐率合格-->
+		WHEN CH.GPD_AVG &lt;  std.a_gpd_low_limit AND REPLACE(CH.SALT_AVG, '%', '') &gt;= std.a_salt_low_limit
+		         THEN '产水量偏低' 
+		<!--产水量高于“重产产水里-上限”，且脱盐率合格-->
+		WHEN CH.GPD_AVG &gt; std.a_gpd_up_limit AND REPLACE(CH.SALT_AVG, '%', '') &gt;= std.a_salt_low_limit
+		         THEN '产水量偏高'
+		end "performanceErr"
+		  FROM KS_COMPONENT_STOCK T1
+		  LEFT JOIN KS_COMPONENT_HH_CHECK_HEAD CH
+		    ON T1.CODE = CH.CODE
+		  LEFT JOIN (SELECT cl.*,ch.code FROM KS_COMPONENT_hh_CHECK_LIST CL
+		  LEFT JOIN KS_COMPONENT_hh_CHECK_HEAD CH
+		    ON CL.RELATION_ID = CH.ID) cl ON cl.code=t1.code AND cl.batch_no=t1.batch_no
+		  left join (SELECT t.prod_spec_id,t.a_gpd_low_limit,t.a_gpd_up_limit,t.a_salt_low_limit,t2.mater_spec_name from 
+			QINSEN.INST_PROD_WATER_STD t
+			LEFT JOIN qinsen.para_mater_spec t2 ON t.prod_spec_id=t2.mater_spec_id) std  
+		   on std.mater_spec_name = ch.prod_spec_name 
+		  LEFT JOIN EOS_DICT_ENTRY D1
+		    ON D1.DICTTYPEID = 'KS_PROD_TAPE'
+		   AND D1.DICTID = CH.TAPE
+		  LEFT JOIN EOS_DICT_ENTRY D2
+		    ON D2.DICTTYPEID = 'KS_PROD_LID'
+		   AND D2.DICTID = CH.LID
+		  LEFT JOIN EOS_DICT_ENTRY D3
+		    ON D3.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_LABEL'
+		   AND D3.DICTID = CH.BOX
+		  LEFT JOIN EOS_DICT_ENTRY D4
+		    ON D4.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_LABEL'
+		    AND D4.DICTID = CH.BOX
+		  LEFT JOIN EOS_DICT_ENTRY D5
+		    ON D5.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_LABEL'
+		    AND D5.DICTID = CH.BAG
+		   LEFT JOIN EOS_DICT_ENTRY D6
+		    ON D6.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_LABEL'
+		    AND D6.DICTID = CH.label
+		 WHERE T1.TYPE = '家用膜'
+			 <isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodType">'家用膜' = #prodType#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">CH.PROD_SPEC_NAME like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dryWet">ch.dry_wet like '%' || #dryWet# || '%'</isNotNull>
+        <isNotNull prepend="and" property="apperanceIsok">CH.APPERANCE_ISOK = #apperanceIsok#</isNotNull>
+		
+		order by 3 desc
+	</select>
+    <insert id="insertStockOut" parameterClass="java.util.HashMap">
+    INSERT INTO KS_COMPONENT_STOCK_OUT
+	(ID,batch_no,storage,type,code,stock_time,stock_user_id,stock_name,
+	create_time,create_user_id,create_name)
+	SELECT SEQU_COMPONENT_STOCK_OUT.Nextval,t.batch_no,t.storage,t.type,t.code,t.update_time,t.update_user_id,t.update_name, 
+	SYSDATE,#userId#,#userName#
+	from KS_COMPONENT_STOCK t
+	WHERE 1=1 and t.type= #type#
+	<isNotNull prepend="and" property="batchNo">t.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNos">t.batch_no in ($batchNos$)</isNotNull>
+    </insert>
+    <delete id="deleteStock" parameterClass="java.util.HashMap">
+     delete from KS_COMPONENT_STOCK t
+     WHERE 1=1 and t.type= #type#
+	<isNotNull prepend="and" property="batchNo">t.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNos">t.batch_no in ($batchNos$)</isNotNull>
+    </delete>
+    <select id="queryHHApplyCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT CODE "code" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' CODE FROM dual
+  WHERE NOT EXISTS(
+  select t.code from KS_COMPONENT_HH_CHECK_HEAD t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  select to_char(to_number(max(t.code))+1) CODE from KS_COMPONENT_HH_CHECK_HEAD t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE CODE IS NOT NULL</select>
+    <select id="queryHHBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT REPLACE(#prodSpecName#,'-','') || to_char(SYSDATE,'MMdd') || 
+	trim(to_char((nvl(MAX(to_number(SUBSTR(t.batch_no,-4))),0)+#num#),'0000')) "batchNo"
+	from KS_COMPONENT_HH_CHECK_LIST t
+	WHERE SUBSTR(t.batch_no,-8,4) = to_char(SYSDATE,'MMdd')</select>
+    <select id="queryStockOut" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT  TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.ID             AS "id",
+       T1.BATCH_NO       AS "batchNo",
+       T1.STORAGE        AS "storage",
+       T1.TYPE           AS "type",
+       T1.CODE           AS "code",
+       TO_CHAR(T1.STOCK_TIME, 'yyyy-MM-dd HH24:mi:ss')     AS "stockTime",
+       T1.STOCK_USER_ID  AS "stockUserId",
+       T1.STOCK_NAME     AS "stockName"
+  FROM KS_COMPONENT_STOCK_OUT T1
+  where 1=1
+  
+   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+    </select>
+    <select id="queryRework" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	 
+	 SELECT T1.ID               AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID   AS "updateUserId",
+       T1.UPDATE_NAME      AS "updateName",
+       T1.RESERVE1         AS "reserve1",
+       T1.RESERVE2         AS "reserve2",
+       T1.RESERVE3         AS "reserve3",
+       T1.RESERVE4         AS "reserve4",
+       T1.RESERVE5         AS "reserve5",
+       T1.ORG_ID           AS "orgId",
+       T1.STATUS           AS "status",
+       T1.CODE             AS "code",
+       T1.HAPPEN_DATE      AS "happenDate",
+       T1.TACHE            AS "tache",
+       T1.DESCRIBE         AS "describe",
+       T1.ORDER_NO         AS "orderNo",
+       T1.PROD_SPEC_ID     AS "prodSpecId",
+       T1.DEFECT_TYPE      AS "defectType",
+       T1.DEFECT_AMOUNT    AS "defectAmount",
+       T1.BATCH_NO_STR     AS "batchNoStr",
+       T1.FIRST_ID         AS "firstId",
+       T1.FIRST_NAME       AS "firstName",
+       T1.REWORK_METHOD    AS "reworkMethod",
+       T1.REWORK_DEAL      AS "reworkDeal",
+       T1.SECOND_ID        AS "secondId",
+       T1.SECOND_NAME      AS "secondName",
+       TO_CHAR(T1.SECOND_TIME, 'YYYY-MM-DD HH24:MI:SS')      AS "secondTime",
+           T1.REWORK_RESPONSE  AS "reworkResponse",
+       T1.REWORK_INCENTIVE AS "reworkIncentive",
+       T1.PLAN_FINISH_DATE AS "planFinishDate",
+       T1.REWORK_ORDER_NO  AS "reworkOrderNo",
+       T1.THIRD_ID         AS "thirdId",
+       T1.THIRD_NAME       AS "thirdName",
+       TO_CHAR(T1.THIRD_TIME, 'YYYY-MM-DD HH24:MI:SS')        AS "thirdTime",
+       T1.IF_ONTIME        AS "ifOntime",
+       T1.NOT_ONTIME       AS "notOntime",
+       T1.IF_OK            AS "ifOk",
+       T1.FOURTH_ID        AS "fourthId",
+       T1.FOURTH_NAME      AS "fourthName",
+       TO_CHAR(T1.FOURTH_TIME, 'YYYY-MM-DD HH24:MI:SS')       AS "fourthTime",
+       T2.MATER_SPEC_NAME  AS "materSpecName",
+       T1.STEP      AS "step",t1.type "type",t1.dept "dept",
+       decode(T1.STEP,'second','返工指令','third','返工安排','thirdhalf','返工实施','fourth','结果确认','完结') "stepName"
+  FROM KS_COMPONENT_REWORK_HEAD T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC T2
+    ON T1.PROD_SPEC_ID = T2.MATER_SPEC_ID
+    where 1=1
+    <isNotNull prepend="and" property="step">T1.step = #step#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="code">T1.code like '%' || #code# || '%'</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">upper(t2.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="dept">T1.dept = #dept#</isNotNull>
+        <isNotNull prepend="and" property="type">T1.type = #type#</isNotNull>
+	order by t1.id desc
+	 </select>
+    <select id="queryReworkCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 'F' || CODE "code" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' CODE FROM dual
+  WHERE NOT EXISTS(
+  select t.code from KS_COMPONENT_REWORK_HEAD t
+  WHERE SUBSTR(t.code,2,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  SELECT TO_CHAR(TO_NUMBER(MAX(REPLACE(T.CODE, 'F', ''))) + 1) CODE FROM KS_COMPONENT_REWORK_HEAD T 
+WHERE SUBSTR(T.CODE, 2, 8) = TO_CHAR(SYSDATE, 'yyyyMMdd'))
+  WHERE CODE IS NOT NULL</select>
+    <insert id="insertReworkList" parameterClass="java.util.HashMap">
+    insert into KS_COMPONENT_REWORK_LIST
+	(id,create_time,create_user_id,create_name,type,batch_no,code,relation_id)
+	<isEqual compareValue="工业膜" prepend="" property="type">SELECT SEQU_COMPONENT_REWORK_LIST.Nextval,sysdate,#userId#,#userName#,'工业膜', batch_no  , CODE,#relationId# FROM 
+	(SELECT cl.batch_no batch_no , MAX(ch.CODE) code from
+	ks_component_check_list cl 
+	LEFT JOIN ks_component_check_head ch ON cl.relation_id=ch.id 
+	where cl.batch_no in($batchNoStr$)
+	GROUP BY cl.batch_no)</isEqual>
+        <isEqual compareValue="家用膜" prepend="" property="type">SELECT SEQU_COMPONENT_REWORK_LIST.Nextval,sysdate,#userId#,#userName#,'家用膜', batch_no  , CODE,#relationId# FROM 
+	(SELECT cl.batch_no batch_no , MAX(ch.CODE) code from
+	ks_component_hh_check_list cl 
+	LEFT JOIN ks_component_hh_check_head ch ON cl.relation_id=ch.id 
+	where cl.batch_no in($batchNoStr$)
+	GROUP BY cl.batch_no)</isEqual>
+    </insert>
+    <delete id="deleteReworkList" parameterClass="java.util.HashMap">delete from KS_COMPONENT_REWORK_LIST t
+     WHERE 1=1 and t.relation_id= #relationId#</delete>
+    <!-- 
+    返工单元件insertC仓入库记录
+    <insert id="insertCStock4Rework" parameterClass="java.util.HashMap" >
+    INSERT INTO KS_COMPONENT_C_STOCK
+	(ID,batch_no,CODE,TYPE,state,create_time,create_user_id,create_name)	
+	select SEQU_COMPONENT_C_STOCK.Nextval,t.batch_no,t2.code,t2.type,0 state ,
+	SYSDATE,#userId#,#userName# from KS_COMPONENT_REWORK_LIST t
+	LEFT JOIN KS_COMPONENT_REWORK_HEAD t2
+	ON t.relation_id = t2.id	
+	WHERE t.relation_id=#relationId# 
+	AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_C_STOCK WHERE CODE = t2.code)    
+    </insert>
+    
+    返工单元件C仓入库
+    <insert id="insertStock4HHRework" parameterClass="java.util.HashMap" >
+    INSERT INTO KS_COMPONENT_STOCK
+	(batch_no,storage,type,code,update_time,update_user_id,update_name)
+	select t.batch_no "batchNo",'C仓','家用膜',code,SYSDATE,#userId#,#userName#
+	from KS_COMPONENT_C_STOCK t
+	WHERE t.code = (select code from KS_COMPONENT_REWORK_HEAD where id = #relationId#)
+	AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_STOCK WHERE batch_no = t.batch_no)    
+    </insert>
+    -->
 </sqlMap>

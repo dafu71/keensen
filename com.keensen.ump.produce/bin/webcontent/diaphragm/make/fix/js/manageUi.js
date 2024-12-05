@@ -1,5 +1,6 @@
 com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 	this.initPanel = function() {
+		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
@@ -14,15 +15,71 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 				});
 	}
 
+	// 初始化store
+	this.initStore = function() {
+
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
+
+		this.concentrationStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['16%', '16%'], ['17%', '17%'], ['18%', '18%']]
+				});
+
+		this.machineStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['A', '罗斯混料机A'], ['B', '豪杰特混料机B'], ['C', '豪杰特混料机C']]
+				});
+
+		this.tankStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'],
+							['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'],
+							['9', '9'], ['A', 'A'], ['B', 'B'], ['C', 'C'],
+							['D', 'D'], ['E', 'E'], ['F', 'F']]
+				});
+
+		this.mptypeStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.quality.mpzmytest.queryZmyStd.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			totalProperty : '',
+			baseParams : {},
+			fields : [{
+						name : 'code'
+					}, {
+						name : 'mptype'
+					}, {
+						name : 'line'
+					}, {
+						name : 'c11'
+					}, {
+						name : 'c12'
+					}, {
+						name : 'c13'
+					}, {
+						name : 'c14'
+					}]
+		})
+	}
+
 	this.initQueryPanel = function() {
 		var _this = this;
+
+		this.machineStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['A', '罗斯混料机A'], ['B', '豪杰特混料机B'], ['C', '豪杰特混料机C']]
+				});
+
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 120,
 					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【铸膜混料记录查询】',
+					// title : '【铸膜混料记录查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/batchNo',
@@ -38,11 +95,35 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
-								//anchor : '75%',
+								// anchor : '75%',
 								nameArray : ['condition/createTimeStart',
 										'condition/createTimeEnd'],
 								fieldLabel : "记录日期",
 								format : "Y-m-d"
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'combobox',
+								forceSelection : true,
+								mode : 'local',
+								fieldLabel : '混料机',
+								ref : '../../machine',
+								hiddenName : 'condition/machine',
+								// allowBlank : false,
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.machineStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
 							}]
 				});
 		this.queryPanel.addButton({
@@ -60,19 +141,17 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【铸膜混料记录列表】',
+			// title : '【铸膜混料记录列表】',
 			hsPage : true,
 			tbar : [{
 						text : '新增混料',
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
-					}, '-', {
-						text : '混料记录',
-						scope : this,
-						iconCls : 'icon-application_edit',
-						handler : this.onEdit
-					}, '-', {
+					}/*
+						 * , '-', { text : '混料记录', scope : this, iconCls :
+						 * 'icon-application_edit', handler : this.onEdit }
+						 */, '-', {
 						text : '打料记录',
 						scope : this,
 						iconCls : 'icon-application_edit',
@@ -86,7 +165,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						text : '修改记录',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						hidden : modifyFlag !=1,
+						hidden : modifyFlag != 1,
 						handler : this.onEdit3
 					}],
 			selModel : selModel,
@@ -95,11 +174,35 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						dataIndex : 'batchNo',
 						header : '混料批次'
 					}, {
+						dataIndex : 'mptype',
+						header : '产品类型'
+					}, {
+						dataIndex : 'machine',
+						header : '混料机'
+					}, {
+						dataIndex : 'psfName',
+						header : '聚砜类型'
+					}, {
+						dataIndex : 'used',
+						header : '已用完'
+					}, {
+						dataIndex : 'weight',
+						header : '配料总重量(kg)'
+					}, {
 						dataIndex : 'c11',
-						header : 'C11重量'
+						header : 'C11重量(kg)'
 					}, {
 						dataIndex : 'c12',
-						header : 'C12重量'
+						header : 'C12重量(kg)'
+					}, {
+						dataIndex : 'c13',
+						header : 'C13重量(kg)'
+					}, {
+						dataIndex : 'c14',
+						header : 'C14重量(kg)'
+					}, {
+						dataIndex : 'concentration',
+						header : '聚砜浓度'
 					}, {
 						dataIndex : 'fixStarttime',
 						header : '混料开始时间'
@@ -133,19 +236,15 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 					}, {
 						dataIndex : 'jarVacuum',
 						header : '脱气罐 真空度'
-					}, {
-						dataIndex : 'vacuumDuration',
-						header : '真空保持时长'
-					}, {
-						dataIndex : 'usetime',
-						header : '料液使用时间'
-					}, {
+					}/*
+						 * , { dataIndex : 'vacuumDuration', header : '真空保持时长' }, {
+						 * dataIndex : 'usetime', header : '料液使用时间' }
+						 */, {
 						dataIndex : 'hitUsername',
 						header : '打料人'
-					}, {
-						dataIndex : 'remark',
-						header : '备注'
-					}],
+					}/*
+						 * , { dataIndex : 'remark', header : '备注' }
+						 */],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.make.make.queryFixByPage.biz.ext',
 				root : 'data',
@@ -189,6 +288,10 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						}, {
 							name : 'c12'
 						}, {
+							name : 'c13'
+						}, {
+							name : 'c14'
+						}, {
 							name : 'fixStarttime'
 						}, {
 							name : 'hottime'
@@ -224,6 +327,20 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							name : 'hitUsername'
 						}, {
 							name : 'diff'
+						}, {
+							name : 'mptype'
+						}, {
+							name : 'machine'
+						}, {
+							name : 'psf'
+						}, {
+							name : 'weight'
+						}, {
+							name : 'psfName'
+						}, {
+							name : 'concentration'
+						}, {
+							name : 'used'
 						}]
 			})
 		})
@@ -233,8 +350,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增铸膜混料',
-			height : 480,
-			width : 600,
+			height : 600,
+			width : 800,
 			// itemCls:'required',
 			// style:'margin-top:10px',
 			resizable : true,
@@ -246,28 +363,165 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 				columns : 2,
 				saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.saveEntity4Fix.biz.ext',
 				fields : [{
-							xtype : 'textfield',
+							xtype : 'combobox',
+							forceSelection : true,
 							allowBlank : false,
-							name : 'entity/batchNo',
-							fieldLabel : '混料批次',
-							anchor : '47%',
+							mode : 'local',
+							fieldLabel : '混料机',
+							ref : '../../machine',
+							hiddenName : 'entity/machine',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.machineStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '产品类型',
+							ref : '../../mptype',
+							hiddenName : 'entity/mptype',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.mptypeStore,
+							displayField : "mptype",
+							valueField : "mptype",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
 							colspan : 2
+						}, {
+							xtype : 'dictcombobox',
+							name : 'entity/psf',
+							allowBlank : false,
+							fieldLabel : '聚砜类型',
+							hiddenName : 'entity/psf',
+							dictData : KS_PSF,
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '脱气罐',
+							ref : '../../jarNo',
+							hiddenName : 'entity/jarNo',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.tankStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'trigger',
+							emptyText : '输入完毕单击旁边按钮计算',
+							allowBlank : false,
+							ref : '../../weight',
+							name : 'entity/weight',
+							fieldLabel : '配料总重量(kg)',
+							anchor : '95%',
+							colspan : 2,
+							editable : true,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onCalc();
+							},
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
 						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
 						}, {
 							xtype : 'numberfield',
+							ref : '../../c11',
 							name : 'entity/c11',
-							fieldLabel : 'C11重量',
+							allowBlank : false,
+							fieldLabel : 'C11重量(kg)',
 							anchor : '95%',
 							colspan : 1
 						}, {
 							xtype : 'numberfield',
+							ref : '../../c12',
 							name : 'entity/c12',
-							fieldLabel : 'C12重量',
+							allowBlank : false,
+							fieldLabel : 'C12重量(kg)',
 							anchor : '95%',
 							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c13',
+							name : 'entity/c13',
+							fieldLabel : 'C13重量(kg)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c14',
+							name : 'entity/c14',
+							fieldLabel : 'C14重量(kg)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '聚砜浓度',
+							ref : '../../concentration',
+							hiddenName : 'entity/concentration',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.concentrationStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -308,26 +562,24 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'textfield',
-							readOnly : true,
-							fieldLabel : '混料人',
-							name : 'entity/fixUsername',
+							xtype : 'operatorrolecombobox',
+							currentRolecode : '10001501',
+							allowBlank : false,
 							anchor : '95%',
-							colspan : 1
-
+							ref : '../../fixUserid',
+							hiddenName : 'entity/fixUserid',
+							fieldLabel : '混料人'
 						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
-						}, {
-							xtype : 'textarea',
-							name : 'entity/remark',
-							fieldLabel : '备注',
-							anchor : '95%',
-							colspan : 2
-						}, {
+						}/*
+							 * , { xtype : 'textarea', name : 'entity/remark',
+							 * fieldLabel : '备注', anchor : '95%', colspan : 2 }
+							 */, {
 							xtype : 'hidden',
-							name : 'entity/fixUserid'
+							ref : '../../fixUsername',
+							name : 'entity/fixUsername'
 						}]
 			}]
 		});
@@ -453,8 +705,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 	this.initEditWindow2 = function() {
 		this.editWindow2 = this.editWindow2 || new Ext.fn.FormWindow({
 			title : '打料记录',
-			height : 480,
-			width : 600,
+			height : 600,
+			width : 800,
 			resizable : false,
 			minimizable : false,
 			maximizable : false,
@@ -468,6 +720,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 				fields : [{
 							xtype : 'textfield',
 							allowBlank : false,
+							readOnly : true,
 							name : 'entity/batchNo',
 							dataIndex : 'batchNo',
 							fieldLabel : '混料批次',
@@ -520,6 +773,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						}, {
 							xtype : 'textfield',
 							name : 'entity/jarNo',
+							readOnly : true,
 							dataIndex : 'jarNo',
 							fieldLabel : '脱气罐编号',
 							anchor : '95%',
@@ -531,66 +785,58 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							fieldLabel : '脱气罐 真空度',
 							anchor : '95%',
 							colspan : 1
-						}, {
+						}/*
+							 * , { xtype : 'displayfield', height : '5', colspan :
+							 * 2 }, { xtype : 'textfield', name :
+							 * 'entity/vacuumDuration', dataIndex :
+							 * 'vacuumDuration', fieldLabel : '真空保持时长', anchor :
+							 * '95%', colspan : 1 }, { xtype : 'datetimefield',
+							 * format : 'Y-m-d H:i:00', name : 'entity/usetime',
+							 * dataIndex : 'usetime', fieldLabel : '料液使用时间',
+							 * anchor : '95%', colspan : 1 }
+							 */, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'textfield',
-							name : 'entity/vacuumDuration',
-							dataIndex : 'vacuumDuration',
-							fieldLabel : '真空保持时长',
+							xtype : 'operatorrolecombobox',
+							currentRolecode : '10001501',
+							ref : '../../hitUserid',
+							allowBlank : false,
 							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'datetimefield',
-							format : 'Y-m-d H:i:00',
-							name : 'entity/usetime',
-							dataIndex : 'usetime',
-							fieldLabel : '料液使用时间',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'textfield',
-							dataIndex : 'hitUsername',
-							name : 'entity/hitUsername',
-							readOnly:true,
-							fieldLabel : '打料人',
-							anchor : '47%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'textarea',
-							name : 'entity/remark',
-							dataIndex : 'remark',
-							fieldLabel : '备注',
-							anchor : '95%',
-							colspan : 2
-						}, {
+							ref : '../../hitUserid',
+							hiddenName : 'entity/hitUserid',
+							fieldLabel : '打料人'
+						}/*
+							 * , { xtype : 'displayfield', height : '5', colspan :
+							 * 2 }, { xtype : 'textarea', name :
+							 * 'entity/remark', dataIndex : 'remark', fieldLabel :
+							 * '备注', anchor : '95%', colspan : 2 }
+							 */, {
 							xtype : 'hidden',
 							dataIndex : 'id',
 							name : 'entity/id'
 						}, {
 							xtype : 'hidden',
-							dataIndex : 'hitUserid',
-							name : 'entity/hitUserid'
+							ref : '../../hitUsername',
+							dataIndex : 'hitUsername',
+							name : 'entity/hitUsername'
+						}, {
+							xtype : 'hidden',
+							value : '1',
+							name : 'entity/submit'
 						}]
 			}]
 		});
 	}
-	
+
 	this.initEditWindow3 = function() {
+
+		var _this = this;
 		this.editWindow3 = this.editWindow3 || new Ext.fn.FormWindow({
 			title : '修改记录',
-			height : 480,
-			width : 600,
+			height : 600,
+			width : 800,
 			resizable : false,
 			minimizable : false,
 			maximizable : false,
@@ -604,6 +850,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 				fields : [{
 							xtype : 'textfield',
 							allowBlank : false,
+							readOnly : true,
 							name : 'entity/batchNo',
 							dataIndex : 'batchNo',
 							fieldLabel : '混料批次',
@@ -614,19 +861,179 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '混料机',
+							ref : '../../machine',
+							hiddenName : 'entity/machine',
+							dataIndex : 'machine',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.machineStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '产品类型',
+							ref : '../../mptype',
+							hiddenName : 'entity/mptype',
+							dataIndex : 'mptype',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.mptypeStore,
+							displayField : "mptype",
+							valueField : "mptype",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'dictcombobox',
+							name : 'entity/psf',
+							allowBlank : false,
+							readOnly : true,
+							fieldLabel : '聚砜类型',
+							hiddenName : 'entity/psf',
+							dataIndex : 'psf',
+							dictData : KS_PSF,
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '脱气罐',
+							ref : '../../jarNo',
+							hiddenName : 'entity/jarNo',
+							dataIndex : 'jarNo',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.tankStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'trigger',
+							emptyText : '输入完毕单击旁边按钮计算',
+							allowBlank : false,
+							ref : '../../weight',
+							name : 'entity/weight',
+							fieldLabel : '配料总重量(kg)',
+							dataIndex : 'weight',
+							anchor : '95%',
+							colspan : 2,
+							editable : true,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onCalc2();
+							},
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 							xtype : 'numberfield',
+							ref : '../../c11',
 							name : 'entity/c11',
 							dataIndex : 'c11',
-							fieldLabel : 'C11重量',
+							allowBlank : false,
+							fieldLabel : 'C11重量(kg)',
 							anchor : '95%',
 							colspan : 1
 						}, {
 							xtype : 'numberfield',
+							ref : '../../c12',
 							name : 'entity/c12',
 							dataIndex : 'c12',
-							fieldLabel : 'C12重量',
+							allowBlank : false,
+							fieldLabel : 'C12重量(kg)',
 							anchor : '95%',
 							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c13',
+							name : 'entity/c13',
+							dataIndex : 'c13',
+							fieldLabel : 'C13重量(kg)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c14',
+							name : 'entity/c14',
+							dataIndex : 'c14',
+							fieldLabel : 'C14重量(kg)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '聚砜浓度',
+							ref : '../../concentration',
+							hiddenName : 'entity/concentration',
+							dataIndex : 'concentration',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.concentrationStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -724,38 +1131,21 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'textfield',
-							name : 'entity/jarNo',
-							dataIndex : 'jarNo',
-							fieldLabel : '脱气罐编号',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'textfield',
 							name : 'entity/jarVacuum',
 							dataIndex : 'jarVacuum',
 							fieldLabel : '脱气罐 真空度',
 							anchor : '95%',
 							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'textfield',
-							name : 'entity/vacuumDuration',
-							dataIndex : 'vacuumDuration',
-							fieldLabel : '真空保持时长',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'datetimefield',
-							format : 'Y-m-d H:i:00',
-							name : 'entity/usetime',
-							dataIndex : 'usetime',
-							fieldLabel : '料液使用时间',
-							anchor : '95%',
-							colspan : 1
-						}, {
+						}/*
+							 * , { xtype : 'displayfield', height : '5', colspan :
+							 * 2 }, { xtype : 'textfield', name :
+							 * 'entity/vacuumDuration', dataIndex :
+							 * 'vacuumDuration', fieldLabel : '真空保持时长', anchor :
+							 * '95%', colspan : 1 }, { xtype : 'datetimefield',
+							 * format : 'Y-m-d H:i:00', name : 'entity/usetime',
+							 * dataIndex : 'usetime', fieldLabel : '料液使用时间',
+							 * anchor : '95%', colspan : 1 }
+							 */, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
@@ -771,13 +1161,32 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'textarea',
-							name : 'entity/remark',
-							dataIndex : 'remark',
-							fieldLabel : '备注',
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '已用完',
+							ref : '../../used',
+							hiddenName : 'entity/used',
+							dataIndex : 'used',
 							anchor : '95%',
-							colspan : 2
-						}, {
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}/*
+							 * , { xtype : 'displayfield', height : '5', colspan :
+							 * 2 }, { xtype : 'textarea', name :
+							 * 'entity/remark', dataIndex : 'remark', fieldLabel :
+							 * '备注', anchor : '95%', colspan : 2 }
+							 */, {
 							xtype : 'hidden',
 							dataIndex : 'id',
 							name : 'entity/id'

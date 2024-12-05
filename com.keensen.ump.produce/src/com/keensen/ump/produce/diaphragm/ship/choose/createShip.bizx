@@ -16,9 +16,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link2</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link2</targetConnections>
+    <targetConnections>link15</targetConnections>
     <location x="585" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -166,6 +166,14 @@
     <process:copy>
       <process:from type="query" pattern="reference">planNo</process:from>
       <process:to type="query">ship/planNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">deliveryDt</process:from>
+      <process:to type="query">ship/deliveryDt</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">deliveryOrderNo</process:from>
+      <process:to type="query">ship/deliveryOrderNo</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
@@ -386,6 +394,8 @@
     <process:input description="" isArray="false" name="sendAmount" primitiveType="String"/>
     <process:input description="" isArray="false" name="orderNo" primitiveType="String"/>
     <process:input description="" isArray="false" name="planNo" primitiveType="String"/>
+    <process:input description="" isArray="false" name="deliveryOrderNo" primitiveType="String"/>
+    <process:input description="" isArray="false" name="deliveryDt" primitiveType="String"/>
   </process:inputs>
   <process:outputs/>
   <process:extAttribute1>public</process:extAttribute1>

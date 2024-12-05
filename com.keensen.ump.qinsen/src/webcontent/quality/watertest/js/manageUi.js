@@ -184,6 +184,11 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						anchor : '85%',
 						xtype : 'textfield',
 						fieldLabel : '元件序号'
+					}, {
+						name : 'condition/testSpecName',
+						xtype : 'textfield',
+						fieldLabel : '测试型号%-%',
+						anchor : '85%'
 					}]
 		});
 
@@ -234,6 +239,17 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.delRecord
+					}, '-', {
+						text : '判定说明',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onViewRemark
+					}, '-', {
+						text : '工艺员备注',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : gyyFlag != 1,
+						handler : this.onRemark
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.watertest.deleteWatertest.biz.ext',
@@ -274,10 +290,14 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				width : 120,
 				dataIndex : 'prodBatchNo'
 			}, {
+				header : '工艺员备注 ',
+				width : 120,
+				dataIndex : 'gyyRemark'
+			}, {
 				header : '测试型号',
 				width : 80,
 				dataIndex : 'testSpecName'
-			}, {
+			}/*, {
 				header : '拟入库型号',
 				width : 120,
 				dataIndex : 'ifProdSpecName'
@@ -285,7 +305,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				header : '拟贴标型号',
 				width : 120,
 				dataIndex : 'markSpecName'
-			}, {
+			}*/, {
 				header : '膜片批次',
 				width : 190,
 				dataIndex : 'tumoBatchStr'
@@ -385,7 +405,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				dataIndex : 'prodFactorBStd'
 			}, {
 				header : '判定说明',
-				width : 120,
+				width : 300,
 				dataIndex : 'remark'
 			}],
 			store : new Ext.data.JsonStore({
@@ -516,6 +536,8 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 							name : 'dimoBatchStr'
 						}, {
 							name : 'jmBatchNo'
+						}, {
+							name : 'gyyRemark'
 						}]
 			})
 		})

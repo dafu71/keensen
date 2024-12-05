@@ -5,15 +5,17 @@
     <select id="queryTestTrace" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
     SELECT T1.BATCH_NO "batchNo",T1.id "id",
        T1.CATEGORY "category",
-       T1.test_Type "testType",
+       T1.test_Type "testType", T1.test_length "testLength", T1.test_amount "testAmount",
        T1.test_condition "testCondition",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_NAME "createName",
        T1.FROM_IP "fromIp",
        T1.RECORD_ID "recordId",
        T1.RESERVE1  "prodSpecName",
-       T1.RESERVE2  "confirmUser"
-  	FROM KS_COMPONENT_TEST_TRACE T1
+       T1.RESERVE2  "confirmUser",
+       pms.mater_spec_id "prodSpecId"
+    FROM KS_COMPONENT_TEST_TRACE T1
+    LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_name=T1.RESERVE1
   	where 1=1
   	<isNotNull prepend="and" property="batchNo"> 
 		       T1.BATCH_NO = #batchNo#
@@ -27,6 +29,11 @@
 	<isNotNull prepend="and" property="testCondition"> 
 		       T1.test_condition = #testCondition#
 	</isNotNull>
+	
+	<isNotNull prepend="and" property="batchNo2"> 
+		       T1.BATCH_NO like '%' || #batchNo2# || '%'
+	</isNotNull>
+	
   	order by t1.id desc
     </select>
     
@@ -327,7 +334,8 @@
     
     <select id="queryProdSpecName" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
     
-    SELECT t1.prod_spec_name "prodSpecName" from  KS_BASE_SPEC_RELATION t1
+    SELECT t1.prod_spec_name "prodSpecName",pms.mater_spec_id "prodSpecId" from  KS_BASE_SPEC_RELATION t1
+    LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_name=t1.prod_spec_name 
     
     </select>
     
@@ -349,4 +357,53 @@
 	 from KS_BASE_CALENDAR t)
 	ORDER BY 1
 	</select>
+	
+	<select id="queryDate4PlanWeek" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ 	SELECT to_date(to_char(LAST_DAY(SYSDATE),'yyyy-MM-dd'),'yyyy-MM-dd') AS "endDate",
+	to_date(to_char(SYSDATE,'yyyy-MM')|| '-01','yyyy-MM-dd') AS "startDate",
+	to_char(SYSDATE,'yyyy') AS "planYear",
+	to_date(to_char(SYSDATE,'yyyy-MM-dd'),'yyyy-MM-dd') AS "planDate"
+	 FROM DUAL
+    </select>
+    
+    <insert id="insertPlanWeekDays" parameterClass="java.util.HashMap" >
+     INSERT INTO KS_COMPONENT_PLAN_WEEK_DAYS
+  (ID,
+   PLAN_DATE,
+   CREATE_TIME,
+   CREATE_USER_ID,
+   CREATE_NAME,
+   relation_id,
+   order_id,amount)
+  SELECT SEQ_COMPONENT_PLAN_DAY.NEXTVAL,
+         TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD') + LEVEL - 1),
+         SYSDATE,
+         #createUserId#,
+         #createName#,
+         #relationId#,
+         #orderId#,5
+    FROM DUAL
+  CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) -
+             TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) + 1
+   </insert>
+   
+   <select id="queryDiaphragmTest" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT T1.MATER_SPEC_NAME AS "materSpecName",
+       T1.MATER_SPEC_ID AS "materSpecId",
+       T1.MATER_CODE AS "materCode",
+       T1.PROD_SPEC_NAME AS "prodSpecName", T1.PROD_SPEC_ID AS "prodSpecId",
+       CASE
+         WHEN INSTR(T1.PROD_SPEC_NAME, '-4') > 0 THEN
+          10
+         ELSE
+          40.25
+       END "length"
+  FROM KS_BASE_DIAPHRAGM_TEST T1
+	</select>
+	
+	<update id="updateCdmState" parameterClass="java.util.HashMap" >
+	UPDATE KS_COMPONENT_DUTY_CDM t 
+	SET t.cdm_state=0
+	WHERE to_char(t.plan_date,'yyyy-MM-dd')=#planDate# AND t.order_id=#orderId#
+    </update>
 </sqlMap>

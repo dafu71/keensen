@@ -19,12 +19,12 @@ com.keensen.ump.produce.component.TempareaMgr = function() {
 
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 80,
 					columns : 3,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【膜片待用区查询】',
+					//title : '【膜片待用区查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/batchNo2',
@@ -55,7 +55,7 @@ com.keensen.ump.produce.component.TempareaMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【膜片待用区列表】',
+			//title : '【膜片待用区列表】',
 			viewConfig : {
 				forceFit : true
 			},

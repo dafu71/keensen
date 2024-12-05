@@ -48,14 +48,17 @@
        TO_CHAR(T1.Confirm_date, 'yyyy-MM-dd') "confirmDate", t1.print_cnt "printCnt",
        T1.TRAY "tray", T1.BOX "box",T1.PERFORMANCE "performance",
        t2.apply_amount "applyAmountTotal",
-       T1.is_examine "isExamine"
+       T1.is_examine "isExamine",
+       decode(t5.code,null,'否','是') "ifcstock"
   FROM KS_COMPONENT_CHECK_HEAD T1
   left join (SELECT h.order_no,h.mark_spec_code,SUM(h.apply_amount) apply_amount from KS_COMPONENT_CHECK_HEAD h
 GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mark_spec_code = t2.mark_spec_code
-	
+  left join (select DISTINCT t.code code from KS_COMPONENT_C_STOCK t
+WHERE t.type='工业膜') t5 on t5.code=t1.code
   where 1=1
   
-   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+  <isNotNull prepend="and" property="ifcstock">decode(t5.code,null,'N','Y')  = #ifcstock#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
         <isNotNull prepend="and" property="prodSpecName">t1.PROD_SPEC_Name like '%' || #prodSpecName# || '%'</isNotNull>
@@ -78,7 +81,7 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
   WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
   WHERE CODE IS NOT NULL</select>
     <select id="queryList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-   SELECT T1.ID                AS "id",
+   SELECT T1.ID                AS "id",t5.fcode "fcode",
        T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",
        DECODE(T3.JUANMO_BATCH_ID,NULL,'干','湿') "state",
        h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
@@ -91,6 +94,10 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
   LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
                FROM QINSEN.INST_WATER_TEST) T3
     ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
+  left join (select t.batch_no,max(h.code) fcode from KS_COMPONENT_REWORK_LIST t
+LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
+  GROUP BY t.batch_no) t5
+	on t5.batch_no = T1.BATCH_NO
   where 1=1
     <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
         <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
@@ -100,7 +107,7 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
 	order by T1.batch_No
     </select>
     <select id="queryComponent" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-   SELECT T1.BATCH_NO AS "batchNo",
+   SELECT T1.BATCH_NO AS "batchNo",t5.fcode "fcode",
        T1.JUANMO_BATCH_ID AS "juanmoBatchId",T1.CHECK_RESULT "checkResult",
        T1.ORDER_NO AS "orderNo",
        T1.PROD_SPEC_ID AS "prodSpecId",
@@ -120,9 +127,15 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
   LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
                FROM QINSEN.INST_WATER_TEST) T3
     ON T3.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
+   
+  left join (select t.batch_no,max(t.code) fcode from KS_COMPONENT_REWORK_LIST t
+	GROUP BY t.batch_no) t5
+	on t5.batch_no = T1.BATCH_NO
   where 1=1
     and T1.BATCH_NO is not null
-    and not exists(select 1 from KS_COMPONENT_CHECK_LIST tt where tt.BATCH_NO = T1.BATCH_NO)
+    and (not exists(select 1 from KS_COMPONENT_CHECK_LIST tt where tt.BATCH_NO = T1.BATCH_NO)
+    <!--元件做了返工单，可以重复发起请检-->
+    or exists(select 1 from KS_COMPONENT_REWORK_LIST tt where tt.BATCH_NO = T1.BATCH_NO))
 	<isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
         <isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID in($prodSpecId$)</isNotNull>
         <isNotNull prepend="and" property="prodSpecName">m.mater_spec_name in($prodSpecName$)</isNotNull>
@@ -147,7 +160,9 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
        h.order_no "orderNo",t2.prod_spec_id "prodSpecId",
        t5.tumo_batch_str "tumoBatchStr",t5.page_size "pageSize",
       h.code "code",t4.BLANKING_SIZE "blankingSize",t2.CHECK_RESULT "checkResult",
-       h.prod_spec_name "orderProdSpecName",h.mark_Spec_Code "markSpecCode",t2.juanmo_batch_id
+       h.prod_spec_name "orderProdSpecName",h.mark_Spec_Code "markSpecCode",t2.juanmo_batch_id,
+       t4.batch_no "jmBatchNo",TO_CHAR(T4.produce_dt, 'yyyy-MM-dd HH24:mi:ss') "jmProduceDt",
+       TO_CHAR(h.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "applyTime"
   FROM KS_COMPONENT_CHECK_LIST T1
   LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
   LEFT JOIN QINSEN.INST_QIJIAN T2
@@ -168,6 +183,7 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
         <isNotNull prepend="and" property="relationId">t1.relation_id = #relationId#</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(h.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(h.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="storage">h.storage = #storage#</isNotNull>
 	order by T1.batch_No
     </select>
     <select id="queryList3" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
@@ -196,5 +212,33 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
         <isNotNull prepend="and" property="createTimeStart">to_char(h.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(h.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
 	order by T1.batch_No
+    </select>
+    <select id="queryComponentParams" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT round(SALT,2) "salt",round(prod_gpd,2) "gpd" from 
+	(
+	SELECT ROWNUM RN,TT.* from (
+	SELECT * from 
+	(SELECT T1.*,1 MYORDER
+	FROM V_KS_COMPONENT_PARAMS T1
+	UNION ALL
+	SELECT T2.*,1 MYORDER
+	FROM V_KS_COMPONENT_PARAMS2 T2
+	UNION ALL
+	SELECT T3.*,2 MYORDER
+	FROM V_KS_COMPONENT_PARAMS3 T3)
+	ORDER BY BATCH_NO,MYORDER) TT 
+	WHERE TT.BATCH_NO =#batchNo#
+	)</select>
+    <select id="queryAllocate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject"> 
+	 select t.dcode,t.code,t.batch_no "batchNo",h.id,cl.id "lid" from KS_COMPONENT_C_STOCK t
+	LEFT JOIN ks_component_check_head h ON t.code=h.code AND t.type='工业膜'
+	LEFT JOIN ks_component_check_list cl ON cl.batch_no=t.batch_no AND cl.relation_id=h.id
+	WHERE t.dcode IS NOT NULL AND t.type='工业膜'
+	<isNotNull prepend="and" property="dcode">t.dcode = #dcode#</isNotNull>
+    </select>
+    <select id="queryOrderSpecName" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject"> 
+	 select distinct t.order_no "orderNo",t.mater_spec_name2 "prodSpecName" 
+	 from KS_PROD_COMPONENT_YXORDER t
+	 where 1=1
+	<isNotNull prepend="and" property="orderNo">t.order_no = #orderNo#</isNotNull>
     </select>
 </sqlMap>

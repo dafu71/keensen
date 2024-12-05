@@ -636,7 +636,8 @@ Frame.ui.Footer = Ext.extend(Ext.Panel, {
 		version : version,
 		hotline : hotline,
 		username : username,
-		orgnames : orgnames
+		orgnames : orgnames,
+		remoteIP : remoteIP
 	},
 	initComponent : function() {
 		this.buildTpl();
@@ -646,7 +647,7 @@ Frame.ui.Footer = Ext.extend(Ext.Panel, {
 		this.tpl = new Ext.XTemplate('<table width="100%" class="menufsl" cellpadding="0" cellspacing="0" >'
 				+ '<tr valign="middle">'
 				+ '<td valign="middle" width="50%" align="left"> '
-				+ '{sysname}  {version} | 技术支持:  {hotline} <span>当前用户：{username}</span><span>业务机构：{orgnames}</span>'
+				+ '{sysname}  {version} | 本机IP:  {remoteIP} <span>当前用户：{username}</span><span>业务机构：{orgnames}</span>'
 				+ '<span><div id="readmail" class="icon_read_mail">  </div></span>'
 				+ '</td>'
 				+ '<td valign="middle" width="20%" align="center"> '
@@ -657,7 +658,7 @@ Frame.ui.Footer = Ext.extend(Ext.Panel, {
 				// + '<span>|</span>'
 				// <span><a
 				// href="javascript:switchorg()">切换机构</a></span>'
-				+ '<span>|</span><span><a href="javascript:login_Phase_I()">一期系统</a></span>'
+				//+ '<span>|</span><span><a href="javascript:login_Phase_I()">一期系统</a></span>'
 				+ '<span>|</span><span><a href="javascript:loginOut()" class="loginout-icon">注销登录</a></span>'
 				// + '<span>|</span><span><a
 				// href="javascript:changeStyle()">更换主题</a></span>'
@@ -1133,12 +1134,12 @@ Frame.ui.NavigatePanel = Ext.extend(Ext.Panel, {
 					B.innerList.setWidth(B.list.width)
 				},
 				beforequery : function(e) {
-					var combo = e.combo;
+					var combo = e.combo; 
 					if (!e.forceAll) {
 						var input = e.query;
 						var regExp = new RegExp(".*" + input + ".*");
 						combo.store.filterBy(function(record, id) {
-									var text = record.get(combo.displayField);
+									var text = record.get(combo.displayField);									
 									return regExp.test(text);
 								});
 						combo.expand();

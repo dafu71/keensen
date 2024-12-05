@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   <select id="queryCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT CODE "code" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' CODE FROM dual
+  WHERE NOT EXISTS(
+  select t.code from KS_COMPONENT_C_ALLOCATE t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  select to_char(to_number(max(t.code))+1) CODE from KS_COMPONENT_C_ALLOCATE t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE CODE IS NOT NULL     
+    </select>
+    
+   <select id="queryNotCheck" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT t1.batch_no "batchNo" FROM
+	(SELECT COLUMN_VALUE batch_no
+	                  FROM TABLE(SPLIT(#batchNoStr#, ','))) t1
+	 WHERE t1.batch_no NOT IN(
+	 SELECT batch_no from KS_COMPONENT_CHECK_LIST
+	 )
+
+  </select>
+  
+  <insert id="insertCStock" parameterClass="java.util.HashMap" >
+    INSERT INTO KS_COMPONENT_C_STOCK
+	(ID,batch_no,CODE,TYPE,state,create_time,create_user_id,create_name,dcode)
+	select SEQU_COMPONENT_C_STOCK.Nextval,t1.batch_no "batchNo",t2.code "code",'工业膜' "type",0 state ,
+	SYSDATE,#userId#,#userName#,#dcode#
+	FROM
+	(SELECT COLUMN_VALUE batch_no
+	                  FROM TABLE(SPLIT(#batchNoStr#, ','))) t1
+	LEFT JOIN
+	(SELECT MAX(CODE) CODE,batch_no
+	FROM
+	(SELECT t.batch_no,t2.code
+	from KS_COMPONENT_CHECK_LIST t
+	  LEFT JOIN KS_COMPONENT_CHECK_HEAD t2
+	  ON t.relation_id=t2.id)
+	  GROUP BY batch_no) t2 ON t1.batch_no=t2.batch_no    
+    </insert>
+  
+   <select id="queryDCode4Scan" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select DISTINCT t.dcode "dcode" from KS_COMPONENT_C_STOCK t
+	 WHERE t.type='工业膜' AND t.state =0
+	</select>
+   </sqlMap>

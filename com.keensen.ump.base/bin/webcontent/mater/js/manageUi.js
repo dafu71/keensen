@@ -63,90 +63,106 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						header : '物料编号',
 						width : 120,
-						dataIndex : 'materSpecId'
+						dataIndex : 'materSpecId',
+						sortable : true
 					}, {
 						header : '物料规格编码',
 						width : 160,
 						dataIndex : 'materSpecCode',
 						hidden : true,
-						ref : '../materSpecCode'
+						ref : '../materSpecCode',
+						sortable : true
 					}, {
 						header : '物料规格名称',
 						width : 240,
-						dataIndex : 'materSpecName'
+						dataIndex : 'materSpecName',
+						sortable : true
 					}, {
 
 						header : '批次代码',
 						width : 70,
 						dataIndex : 'mpBatchCode',
 						ref : '../../mpBatchCode',
-						hidden : true
+						hidden : true,
+						sortable : true
 					}, {
 						header : '质检依据',
 						width : 70,
 						dataIndex : 'qtJudgeFlagName',
 						ref : '../qtJudgeFlag',
-						hidden : true
+						hidden : true,
+						sortable : true
 					}, {
 						itemId : 'numPerWad',
 						header : '膜页数',
 						width : 70,
 						dataIndex : 'numPerWad',
 						ref : '../numPerWad',
-						hidden : true
+						hidden : true,
+						sortable : true
 					}, {
 
 						header : '下料尺寸(m)',
 						width : 90,
 						dataIndex : 'blankingSize',
 						ref : '../blankingSize',
-						hidden : true
+						hidden : true,
+						sortable : true
 					}, {
 						header : '浓网(mil)',
 						width : 70,
 						dataIndex : 'denseNet',
-						hidden : true
+						hidden : true,
+						sortable : true
 					}, {
 
 						header : '膜面积',
 						width : 70,
 						dataIndex : 'area',
 						ref : '../area',
-						hidden : true
+						hidden : true,
+						sortable : true
 					}, {
 						header : '页宽(m)',
 						width : 70,
 						dataIndex : 'pageWidth',
 						ref : '../pageWidth',
-						hidden : true
+						hidden : true,
+						sortable : true
 					}, {
 						header : '状态',
 						width : 40,
-						dataIndex : 'stateName'
+						dataIndex : 'stateName',
+						sortable : true
 					}, {
 						header : '计量单位',
 						width : 80,
-						dataIndex : 'measurementUnitName'
+						dataIndex : 'measurementUnitName',
+						sortable : true
 					}, {
 
 						header : '安全库存',
 						width : 80,
 						dataIndex : 'safetyStock',
 						ref : '../safetyStock',
-						hidden : true
+						hidden : true,
+						sortable : true
 					}, {
 
 						header : '计划单价(元)',
 						width : 100,
-						dataIndex : 'plannedUnitPrice'
+						dataIndex : 'plannedUnitPrice',
+						sortable : true
 					}, {
 						header : '显示排序',
 						width : 80,
-						dataIndex : 'dispOrder'
+						dataIndex : 'dispOrder',
+						sortable : true
 					}, {
 						header : '备注',
 						width : 320,
-						dataIndex : 'remark'
+						dataIndex : 'remark',
+						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.base.mater.queryMaterSpecList.biz.ext',

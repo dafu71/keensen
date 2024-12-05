@@ -44,6 +44,10 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.initEvent = function() {
 
 	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
 				var C = gird.getSelectionModel().getSelections();
+				if (C.length > 1) {
+					Ext.Msg.alert('系统提示', '不能批量删除');
+					return false;
+				}
 				var r = C[0];
 				var recordId = r.data.recordId;
 				recordId = recordId + '';
@@ -148,4 +152,70 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.exportExcel = function() {
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.modiOrder = function() {
+	var _this = this;
+	var grid = this.listPanel;
+
+	var records = grid.getSelectionModel().getSelections();
+	if (records.length == 0) {
+		Ext.Msg.alert('系统提示', '请先选择数据');
+		return false;
+	}
+	var arr = new Array();
+	for (var i = 0; i < records.length; i++) {
+
+		//var recordId = records[i].get('recordId');
+		var recordId = records[i].get('qjBatchId');
+		
+		recordId = recordId + '';
+
+		if (recordId.substr(0, 1) != '2') {
+			// Ext.Msg.alert('系统提示', '一期数据不能修改');
+			// return false;
+		}
+		arr.push(recordId);
+	}
+	
+	Ext.Msg.confirm('提示', '共' + records.length + '个批次，您确定要修改这些产品的订单号？',
+			function(btn) {
+				if (btn === 'yes') {
+					Ext.Msg.prompt('批量改订单', '请输入新订单号', function(btn, text) {
+						if (btn == 'ok') {
+							_this.requestMask = this.requestMask
+									|| new Ext.LoadMask(Ext.getBody(), {
+												msg : "后台正在操作,请稍候!"
+											});
+							_this.requestMask.show();
+							Ext.Ajax.request({
+								url : "com.keensen.ump.qinsen.raosi.modiOrder.biz.ext",
+								method : "post",
+								jsonData : {
+									orderNo : text,
+									recordIds : arr.join(',')
+								},
+								success : function(resp) {
+									var ret = Ext.decode(resp.responseText);
+									if (ret.success) {
+										Ext.Msg.alert("系统提示", "操作成功！",
+												function() {
+													_this.listPanel.store
+															.load();
+
+												})
+									} else {
+										Ext.Msg.alert("系统提示", "修改订单号失败！")
+
+									}
+
+								},
+								callback : function() {
+									_this.requestMask.hide()
+								}
+							})
+						}
+					});
+				}
+			});
 }

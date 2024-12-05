@@ -522,8 +522,8 @@
 	</delete>
 	
 	<select id="queryStand" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-   	SELECT T1.MP_SPEC_NAME     AS "mpSpecName",
-       T1.PROD_SPEC_NAME   AS "prodSpecName",
+   	SELECT T3.mater_SPEC_NAME     AS "mpSpecName",
+       t2.mater_SPEC_NAME   AS "prodSpecName",
        T1.A_GPD_LOW_LIMIT  AS "aGpdLowLimit",
        T1.A_GPD_UP_LIMIT   AS "aGpdUpLimit",
        T1.A_GPD_CENTER     AS "aGpdCenter",
@@ -536,13 +536,15 @@
   FROM KS_PROD_WATER_STD T1
   LEFT JOIN QINSEN.PARA_MATER_SPEC T2
     ON T1.PROD_SPEC_ID = T2.MATER_SPEC_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC T3
+    ON T1.MP_SPEC_ID = T3.MATER_SPEC_ID
     where 1=1
      <isNotNull prepend="and" property="mpSpecName"> 
-		       upper(T1.MP_SPEC_NAME) like '%' || upper(#mpSpecName#) || '%'
+		       upper(T3.mater_SPEC_NAME) like '%' || upper(#mpSpecName#) || '%'
 	    </isNotNull>
 	    
 	    <isNotNull prepend="and" property="prodSpecName"> 
-		       upper(T1.PROD_SPEC_NAME) like '%' || upper(#prodSpecName#) || '%'
+		       upper(t2.mater_SPEC_NAME) like '%' || upper(#prodSpecName#) || '%'
 	    </isNotNull>
    	
    	</select>

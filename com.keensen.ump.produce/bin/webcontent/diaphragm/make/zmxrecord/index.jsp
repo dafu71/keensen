@@ -34,6 +34,10 @@
 <js:load scriptPath="pub/common/supCombo.js" />
 <js:load scriptPath="produce/diaphragm/make/zmxrecord/js/manageUi.js"/>
 <js:load scriptPath="produce/diaphragm/make/zmxrecord/js/manageEv.js"/>
+<js:load scriptPath="pub/common/defectWin.js" />
+
+<js:load scriptPath="pub/common/defectZmViewWin.js" />
+
 
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}

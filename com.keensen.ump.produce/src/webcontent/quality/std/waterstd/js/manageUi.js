@@ -98,7 +98,8 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 						dataIndex : 'prodSpecName'
 					}, {
 						dataIndex : 'componentSpec',
-						header : '元件规格'
+						header : '元件规格',
+						hidden : true
 					}, {
 						dataIndex : 'testLiquid',
 						header : '测试液'
@@ -279,13 +280,11 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 				},
 				columns : 2,
 				saveUrl : 'com.keensen.ump.produce.quality.quality2.insertWaterStd.biz.ext',
-				fields : [/*{
-							xtype : 'mpspeccombobox',
-							hiddenName : 'entity/mpSpecId',
-							allowBlank : false,
-							anchor : '75%',
-							fieldLabel : '膜片型号 '
-						},*/ {
+				fields : [/*
+							 * { xtype : 'mpspeccombobox', hiddenName :
+							 * 'entity/mpSpecId', allowBlank : false, anchor :
+							 * '75%', fieldLabel : '膜片型号 ' },
+							 */{
 							xtype : 'prodspeccombobox',
 							hiddenName : 'entity/prodSpecId',
 							ref : '../../prodSpecId',
@@ -474,14 +473,12 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 				columns : 2,
 				loadUrl : 'com.keensen.ump.produce.quality.quality2.expandWaterStand.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.quality2.updateWaterStd.biz.ext',
-				fields : [/*{
-							xtype : 'mpspeccombobox',
-							hiddenName : 'entity/mpSpecId',
-							dataIndex : 'mpSpecId',
-							allowBlank : false,
-							anchor : '75%',
-							fieldLabel : '膜片型号 '
-						},*/ {
+				fields : [/*
+							 * { xtype : 'mpspeccombobox', hiddenName :
+							 * 'entity/mpSpecId', dataIndex : 'mpSpecId',
+							 * allowBlank : false, anchor : '75%', fieldLabel :
+							 * '膜片型号 ' },
+							 */{
 							xtype : 'prodspeccombobox',
 							hiddenName : 'entity/prodSpecId',
 							dataIndex : 'prodSpecId',

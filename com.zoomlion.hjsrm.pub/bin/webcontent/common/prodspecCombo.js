@@ -92,7 +92,9 @@ com.keensen.ump.ProdspecComboBox = Ext.extend(Ext.form.ComboBox, {
 							root : 'data',
 							autoLoad : true,
 							baseParams : {
-								'condition/state' : this.state
+								'condition/state' : Ext.isEmpty(this.state)
+										? 'Y'
+										: this.state
 							},
 							fields : [{
 										name : "id"

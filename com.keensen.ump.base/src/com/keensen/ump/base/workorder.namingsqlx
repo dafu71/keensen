@@ -15,6 +15,11 @@
 		<isNotNull prepend="and" property="type"> 
 		       t.type like '%'||#type#||'%'
 		</isNotNull>
+		
+		<isNotNull prepend="and" property="ip"> 
+		       t.ip = #ip# 
+		</isNotNull>
+		
 		order by t.code
      </select>
      

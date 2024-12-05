@@ -130,6 +130,22 @@ com.keensen.ump.produce.component.workorder.dutyMgr.prototype.onArrange = functi
 	
 }
 
+com.keensen.ump.produce.component.workorder.dutyMgr.prototype.saveArrangeDate = function(
+		id, newValue, oldValue) {
+	Ext.Ajax.request({
+				method : "post",
+				scope : this,
+				url : 'com.keensen.ump.produce.component.workorder.savePlanDay.biz.ext',
+				jsonData : {
+					"entity/id" : id,
+					"entity/arrangeDate" : newValue
+				},
+				success : function(response, action) {
+					// Ext.Msg.alert("系统提示", "库位修改成功！");
+				}
+			});
+};
+
 function formatDate(date) {
 	const year = date.getFullYear()
 	const month = (date.getMonth() + 1 + '').padStart(2, '0')

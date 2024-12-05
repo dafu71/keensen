@@ -1,5 +1,7 @@
 com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 	this.initPanel = function() {
+		this.initStore();
+		this.initChooseCdmWindow();
 		this.createPanel();
 		return new Ext.fn.fnLayOut({
 					title : '混卷录入',
@@ -9,20 +11,121 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 				});
 	}
 
+	this.initStore = function() {
+		this.jmdutyStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.component.workorder2.queryBatchNo4JmDuty.biz.ext',
+			root : 'data',
+			autoLoad : false,
+			baseParams : {},
+			fields : [{
+						name : 'cdmRecordId'
+					}, {
+						name : 'batchNo'
+					}, {
+						name : 'mixBatchNo'
+					}, {
+						name : 'location'
+					}]
+		})
+
+		this.chooseCdmStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.base.common.query.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			baseParams : {
+				'nameSqlId' : 'com.keensen.ump.produce.component.workorder.queryJmChooseCdm'
+			},
+			fields : [{
+						name : 'prodSpecName'
+					}, {
+						name : 'cdmBatchNo'
+					}, {
+						name : 'orderNo'
+					}]
+		})
+
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
+	}
+
 	this.createPanel = function() {
+		var _this = this;
+
 		this.cdmPanel = this.cdmPanel || new Ext.fn.ColumnFormPanel({
-					height : 140,
+					height : 170,
 					width : 800,
 					title : '叠膜信息',
 					columns : 12,
 					autoHide : true,
 					border : false,
 					fields : [{
+								xtype : 'checkbox',
+								fieldLabel : '是否自由卷',
+								ref : '../ifFree',
+								anchor : '100%',
+								colspan : 2
+							}, {
+								xtype : 'combobox',
+								forceSelection : true,
+								// readOnly : true,
+								// allowBlank : false,
+								mode : 'local',
+								fieldLabel : '叠膜栈板号',
+								ref : '../cdmBatchNo2',
+								anchor : '100%',
+								colspan : 4,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.jmdutyStore,
+								displayField : "batchNo",
+								valueField : "batchNo",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									},
+									'select' : function(combo, record, index) {
+										if (index > -1) {
+											var mixBatchNo = record
+													.get('mixBatchNo');
+											_this.cdmPanel.mixBatchNo
+													.setValue(mixBatchNo);
+											_this.mainPanel.cdmBatchNo
+													.setValue(record
+															.get('batchNo'));
+											_this.cdmPanel.location
+													.setValue(record
+															.get('location'));
+
+										}
+									}
+								}
+							}, {
+								ref : '../mixBatchNo',
+								fieldLabel : '建议混卷膜片',
+								xtype : 'textfield',
+								readOnly : true,
+								anchor : '100%',
+								colspan : 3
+							}, {
+								xtype : 'textfield',
+								ref : '../location',
+								readOnly : true,
+								// allowBlank : false,
+								anchor : '100%',
+								fieldLabel : '膜页栈板储位',
+								colspan : 3
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
 								xtype : 'textfield',
 								name : 'cdmBatchNo',
 								style : '{font-weight:bold;}',
 								allowBlank : false,
-								fieldLabel : '叠膜栈板号',
+								fieldLabel : '扫码栈板号',
 								ref : '../cdmBatchNo',
 								anchor : '100%',
 								colspan : 4,
@@ -30,7 +133,47 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 									scope : this,
 									specialkey : function(C, D) {
 										if (D.getKey() == Ext.EventObject.ENTER) {
-											this.dealCdmBatchNo();
+
+											var records = this.detailGrid.store
+													.getRange();
+											if (records.length > 0) {
+												this.dealCdmBatchNo();
+												return;
+											}
+											var cdmBatchNo = this.cdmPanel.cdmBatchNo
+													.getValue();
+											// 自由卷
+											if (this.cdmPanel.ifFree.checked) {
+												var i = this.chooseCdmStore
+														.find('cdmBatchNo',
+																cdmBatchNo);
+												if (i == -1) {
+													Ext.Msg
+															.alert(
+																	"系统提示",
+																	"不是自由卷设置的裁叠膜栈板号，请确认！",
+																	function() {
+
+																	});
+													return;
+												} else {
+													this.dealCdmBatchNo();
+													return;
+												}
+											}
+											var cdmBatchNo2 = this.cdmPanel.cdmBatchNo2
+													.getValue();
+
+											if (cdmBatchNo2 != cdmBatchNo) {
+												Ext.Msg.alert("系统提示",
+														"栈板号验证不一致！",
+														function() {
+
+														})
+											} else {
+												this.dealCdmBatchNo();
+											}
+
 										}
 
 									}
@@ -63,7 +206,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								xtype : 'prodspeccombobox',
 								hiddenName : 'prodSpecId',
 								ref : '../prodSpecId',
-								state:'Y',
+								state : 'Y',
 								anchor : '100%',
 								fieldLabel : '元件型号 ',
 								typeAhead : true,
@@ -108,6 +251,12 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								xtype : 'hidden'
 							}],
 					buttons : [{
+								text : "领取任务",
+								scope : this,
+								iconCls : 'icon-page_save',
+								handler : this.onGetDuty
+
+							}, {
 								text : "添加",
 								scope : this,
 								iconCls : 'icon-application_add',
@@ -121,6 +270,12 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 									this.cdmPanel.form.reset();
 									this.cdmPanel.cdmBatchNo.focus();
 								}
+							}, {
+								text : "查看自由卷裁叠膜",
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onChooseCdm
+
 							}]
 
 				})
@@ -206,7 +361,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								xtype : 'prodspeccombobox',
 								hiddenName : 'prodSpecId',
 								ref : '../prodSpecId',
-								state:'Y',
+								state : 'Y',
 								anchor : '100%',
 								colspan : 4,
 								fieldLabel : '元件型号 ',
@@ -304,6 +459,18 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								name : 'workerId',
 								xtype : 'hidden',
 								value : nowStaffId
+							}, {
+								name : 'orderId',
+								xtype : 'hidden',
+								ref : '../orderId'
+							}, {
+								name : 'planDate',
+								xtype : 'hidden',
+								ref : '../planDate'
+							}, {
+								name : 'cdmBatchNo',
+								xtype : 'hidden',
+								ref : '../cdmBatchNo'
 							}],
 					buttons : [{
 								text : "保存",
@@ -324,7 +491,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 		this.detailGrid = this.detailGrid || new Ext.grid.GridPanel({
 					width : '100%',
 					title : '混卷组成',
-					height : 150,
+					height : 120,
 					autoScroll : true,
 					// margin : '5 3 2 3',
 					store : new Ext.data.JsonStore({
@@ -398,5 +565,93 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 					items : [this.cdmPanel, this.mainPanel, this.detailGrid]
 
 				})
+	}
+	
+	this.initChooseCdmWindow = function() {
+
+		var selModel4ChooseCdm = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4ChooseCdm = this.listPanel4ChooseCdm || new Ext.fn.ListPanel({
+			region : 'center',
+			viewConfig : {
+				forceFit : true
+			},
+			/*tbar : [{
+						text : '新增',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onAdd4ChooseCdm
+					}, '-', {
+						text : '删除',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDel4ChooseCdm
+					}],*/
+			hsPage : true,
+			selModel : selModel4ChooseCdm,
+			delUrl : 'com.keensen.ump.produce.component.workorder2.deleteChooseCdm.biz.ext',
+			columns : [new Ext.grid.RowNumberer(), selModel4ChooseCdm, {
+						dataIndex : 'cdmBatchNo',
+						header : '裁叠膜栈板号'
+					}, {
+						dataIndex : 'orderNo',
+						header : '订单号'
+					}, {
+						dataIndex : 'prodSpecName',
+						header : '生产型号'
+					}],
+			store : this.chooseCdmStore
+		})
+
+		this.queryPanel4ChooseCdm = this.queryPanel4ChooseCdm || new Ext.fn.QueryPanel({
+					height : 80,
+					columns : 2,
+					border : true,
+					region : 'north',
+					// collapsible : true,
+					titleCollapse : false,
+					fields : [{
+								xtype : 'textfield',
+								name : 'condition/orderNo',
+								anchor : '85%',
+								fieldLabel : '订单号'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/cdmBatchNo',
+								anchor : '85%',
+								fieldLabel : '裁叠膜栈板号'
+							}]
+				});
+
+	
+		this.queryPanel4ChooseCdm.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.chooseCdmWindow.hide();
+					}
+
+				});
+	
+		this.chooseCdmWindow = this.chooseCdmWindow
+				|| new Ext.Window({
+							title : '自由卷设置裁叠膜',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 800,
+							height : 600,
+							layout : 'border',
+							items : [this.queryPanel4ChooseCdm, this.listPanel4ChooseCdm]
+
+						});
+		
 	}
 }

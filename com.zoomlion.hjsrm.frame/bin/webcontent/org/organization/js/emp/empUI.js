@@ -255,8 +255,8 @@ com.zoomlion.hjsrm.org.empMgr = function() {
 						anchor : '90%',
 						maxLength : 20,
 						allowBlank : false,
-						blankText : "请输入员工编号!",
-						vtype : 'empcode'
+						blankText : "请输入员工编号!"//,
+						//vtype : 'empcode'
 					}, {
 						id : companyid,
 						xtype : 'orgtreecombo',
@@ -358,9 +358,9 @@ com.zoomlion.hjsrm.org.empMgr = function() {
 						minLengthText : '最小长度为6个字符，请检查...',
 						maxLength : '14',
 						maxLengthText : '最大长度为14个字符，请检查...',
-						regex : /[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/,
-						regexText : '密码必须包含字母和数字，请检查...',
-						value : 'abc000000'
+						//regex : /[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/,
+						//regexText : '密码必须包含字母和数字，请检查...',
+						value : '888888'
 					}, {
 						xtype : 'datefield',
 						name : 'emp/invaldate',
@@ -471,19 +471,22 @@ com.zoomlion.hjsrm.org.empMgr = function() {
 						ref : '../addNewOrgBtn',
 						iconCls : 'icon-application_add',
 						handler : this.onInput
-					}, '-', {
+					}, /*'-',*/ {
 						text : '修改',
 						scope : this,
+						hidden:true,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
-					}, '-', {
+					}, /*'-', */{
 						text : '注销',
 						scope : this,
+						hidden:true,
 						iconCls : 'icon-application_delete',
 						handler : this.onDelete
-					}, '-', {
+					}, /*'-',*/ {
 						text : '恢复',
 						scope : this,
+						hidden:true,
 						iconCls : 'icon-application_reset',
 						handler : this.onRegainEmp
 					}],

@@ -23,7 +23,7 @@ com.keensen.ump.base.BomMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【BOM查询】',
+					//title : '【BOM查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
@@ -74,7 +74,7 @@ com.keensen.ump.base.BomMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【BOM列表】',
+			//title : '【BOM列表】',
 			viewConfig : {
 				forceFit : true
 			},

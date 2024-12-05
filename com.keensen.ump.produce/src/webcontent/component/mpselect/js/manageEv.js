@@ -229,8 +229,16 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.onQuery2 = function() {
 com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel2 = function() {
 	var _this = this;
 	var tumoBatchNo2 = this.queryPanel.getForm()
-			.findField('condition/tumoBatchNo2').getValue();
+			.findField('condition/tumoBatchNo2').getValue();			
+			
 	if (!Ext.isEmpty(tumoBatchNo2)) {
+		
+		var regEx = new RegExp("\\n", "gi");
+		tumoBatchNo2 = tumoBatchNo2.replace(regEx, ",");
+		tumoBatchNo2 = tumoBatchNo2.replaceAll('，', ',');
+		tumoBatchNo2 = tumoBatchNo2.replaceAll(' ', '');	
+		
+		
 		var arr = [];
 		arr = tumoBatchNo2.split(',');
 		var arr2 = [];
@@ -492,6 +500,36 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.onReCalc = function() {
 		return false;
 	}
 
+}
+
+com.keensen.ump.produce.component.mpselectMgr.prototype.calculate = function() {
+	var _this = this;
+	var records = this.listPanel.getSelectionModel().getSelections();
+	if (records != null) {
+		this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		this.requestMask.show();
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.component.mpselect.insertSelect.biz.ext",
+			method : "post",
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					Ext.Msg.alert("系统提示", "已重新计算", function() {
+								_this.listPanel.refresh();
+							});
+
+				}
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+
+	} 
 }
 
 function dayDiff(start, end) {

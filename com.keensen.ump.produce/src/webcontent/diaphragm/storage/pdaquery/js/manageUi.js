@@ -113,11 +113,22 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr = function() {
 						colspan : 1
 					}, {
 						xtype : 'numberfield',
-						name : 'amount',
+						name : 'stockAmount',
 						anchor : '80%',
 						allowBlank : false,
 						readOnly : true,
-						fieldLabel : '数量',
+						fieldLabel : '库存数量',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '10',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						name : 'amount',
+						anchor : '80%',
+						allowBlank : false,
+						fieldLabel : '出库数量',
 						colspan : 1
 					}, {
 						xtype : 'displayfield',

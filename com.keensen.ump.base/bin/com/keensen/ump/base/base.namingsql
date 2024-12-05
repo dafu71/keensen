@@ -60,7 +60,9 @@
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030024,100030025,100030023,100030022)
 	AND t.mater_spec_name IN('ULP1-1','ULP2-1','ULP3-1','ULP4-1','ULP5-1',
-  'ULP6-1','BW1-1','BW2-1','BW3-1','HW1-1','SW1-1','SW2-1','SW3-1','NF1','NF2','NF1-R')</select>
+  'ULP6-1','BW1-1','BW2-1','BW3-1','HW1-1','SW1-1','SW2-1','SW3-1','NF1','NF2','NF1-R','ULP1-2'
+  ,'ULP2-2','SW4-1','ULP3-2','NF2-1','NF1-1','ULP1-2','HW3-1')
+   ORDER BY t.mater_spec_name</select>
     <!-- 膜片生产线查询 -->
     <select id="queryMpLine" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.line_id,t.line_code "code",t.line_name ,
 	t.line_id "id",t.line_name || '(' || t.line_code || ')' "name"
@@ -205,6 +207,7 @@ t.mater_spec_name2 "materSpecName2"
     FROM qinsen.PARA_MATER_SPEC S, qinsen.PARA_MATER_CLASS C
    WHERE S.MATER_CLASS_ID = C.MATER_CLASS_ID
    <isNotNull prepend="" property="materClassIds">AND  S.MATER_CLASS_ID IN ($materClassIds$)</isNotNull>
+        <isNotNull prepend="" property="materSpecId">AND s.mater_spec_id=#materSpecId#</isNotNull>
    AND  S.STATE = 'Y'
    ORDER BY C.DISP_ORDER, S.DISP_ORDER, S.MATER_SPEC_NAME
      
@@ -319,5 +322,33 @@ t.mater_spec_name2 "materSpecName2"
                  WHERE O.PROP_ID = 1
                    AND O.PROP_VALUE_CODE = #sysCode#)</isNotNull>) T1
  		ORDER BY T1.DISP_ORDER
+     </select>
+    <!-- 元件订单下达型号查询 -->
+    <select id="queryProdSpec3" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t.prod_spec_name "prodSpecName",
+		t.hpmc "hpmc",
+		t.type "type"
+		 from KS_BASE_MARKETING_SPEC t
+		 where 1=1
+ 	<isNotNull prepend="and" property="prodSpecName">t.prod_spec_name = #prodSpecName#</isNotNull>
+        <isNotNull prepend="and" property="hpmc">t.hpmc = #hpmc#</isNotNull>
+        <isNotNull prepend="and" property="type">t.type = #type#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName2">t.prod_spec_name like '%' || #prodSpecName2# || '%'</isNotNull>
+    </select>
+    <select id="queryUserOptColumn" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T.USER_ID   "userId",
+       T.USER_NAME "userName",
+       T.MODULE    "module",
+       T.FIELD     "field",
+       T.FIELD_NAME     "fieldName",
+       T.CHECKED   "checked",
+       T.SORT_NO   "sortNo"
+	  FROM KS_USER_OPT_COLUMN T
+	  where 1=1
+	  <isNotNull prepend="and" property="userId">T.USER_ID = #userId#</isNotNull>
+        <isNotNull prepend="and" property="module">T.MODULE = #module#</isNotNull>
+        <isNotNull prepend="and" property="field">T.FIELD = #field#</isNotNull>
+        <isNotNull prepend="and" property="checked">T.CHECKED = #checked#</isNotNull>
+      order by T.USER_ID,T.MODULE,T.SORT_NO
      </select>
 </sqlMap>

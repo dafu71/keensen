@@ -20,7 +20,7 @@ com.keensen.ump.base.StorageMgr = function() {
 					border : true,
 					//collapsible : true,
 					titleCollapse : false,
-					title : '【仓库配置查询】',
+					//title : '【仓库配置查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/code',
@@ -52,7 +52,7 @@ com.keensen.ump.base.StorageMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【仓库配置列表】',
+			//title : '【仓库配置列表】',
 			viewConfig : {
 				forceFit : true
 			},

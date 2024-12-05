@@ -45,6 +45,60 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.destroy = function() {
 }
 
 com.keensen.ump.produce.component.testtraceMgr.prototype.onScan = function() {
+	var batchNo = this.inputPanel.batchNo.getValue();
+	if (Ext.isEmpty(batchNo) && batchNo.length < 11) {
+		return;
+	}
+	var materCode = batchNo.substr(2, 2);
+	var i = this.diaphragmTestStore.find('materCode', materCode);
+	var rec2 = this.diaphragmTestStore.getAt(i);
+	var prodSpecName = rec2.get('prodSpecName');
+	var prodSpecId = rec2.get('prodSpecId');
+	this.inputPanel.prodSpecName.setValue(prodSpecName);
+	this.inputPanel.prodSpecId.setValue(prodSpecId);
+}
+
+com.keensen.ump.produce.component.testtraceMgr.prototype.onCalc = function() {
+	var batchNo = this.inputPanel.batchNo.getValue();
+	if (Ext.isEmpty(batchNo) && batchNo.length < 11) {
+		return;
+	}
+	var prodSpecName = this.inputPanel.prodSpecName.getValue();
+	if (Ext.isEmpty(prodSpecName)) {
+		Ext.Msg.alert("系统提示", "叠膜型号不能为空！");
+		return;
+	}
+	var testLength = this.inputPanel.testLength.getValue();
+	if (Ext.isEmpty(testLength)) {
+		Ext.Msg.alert("系统提示", "试卷膜片长度不能为空！");
+		return;
+	}
+	var length = prodSpecName.indexOf('-4') > -1 ? 10 : 40.25;
+	var testAmount = Math.floor(testLength / length);
+	this.inputPanel.testAmount.setValue(testAmount);
+}
+
+com.keensen.ump.produce.component.testtraceMgr.prototype.onCalc2 = function() {
+	var batchNo = this.inputPanel.batchNo.getValue();
+	if (Ext.isEmpty(batchNo) && batchNo.length < 11) {
+		return;
+	}
+	var prodSpecName = this.inputPanel.prodSpecName.getValue();
+	if (Ext.isEmpty(prodSpecName)) {
+		Ext.Msg.alert("系统提示", "叠膜型号不能为空！");
+		return;
+	}
+	var testAmount = this.inputPanel.testAmount.getValue();
+	if (Ext.isEmpty(testAmount)) {
+		Ext.Msg.alert("系统提示", "试卷支数不能为空！");
+		return;
+	}
+	var length = prodSpecName.indexOf('-4') > -1 ? 10 : 40.25;
+	var testLength = Math.floor(testAmount * length);
+	this.inputPanel.testLength.setValue(testLength);
+}
+
+com.keensen.ump.produce.component.testtraceMgr.prototype.onSubmit = function() {
 	var _this = this;
 	var batchNo = this.inputPanel.batchNo.getValue();
 	// var testType = this.inputPanel.testType.getValue();
@@ -54,6 +108,9 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onScan = function() {
 	var testType = arr[obj.getRawValue()];
 
 	var prodSpecName = this.inputPanel.prodSpecName.getValue();
+	var prodSpecId = this.inputPanel.prodSpecId.getValue();
+	var testAmount = this.inputPanel.testAmount.getValue();
+	var testLength = this.inputPanel.testLength.getValue();
 
 	if (Ext.isEmpty(batchNo) || Ext.isEmpty(prodSpecName)) {
 		Ext.Msg.alert("系统提示", "请输入完整信息");
@@ -66,7 +123,10 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onScan = function() {
 				jsonData : {
 					"condition/batchNo" : batchNo,
 					"condition/testType" : testType,
-					"condition/prodSpecName" : prodSpecName
+					"condition/prodSpecName" : prodSpecName,
+					"condition/prodSpecId" : prodSpecId,
+					"condition/testAmount" : testAmount,
+					"condition/testLength" : testLength
 				},
 				success : function(response, action) {
 					var result = Ext.decode(response.responseText);
@@ -78,6 +138,12 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onScan = function() {
 						Ext.Msg.alert("系统提示", result.msg, function() {
 									_this.listPanel.store.reload();
 									_this.inputPanel.batchNo.setValue('');
+									_this.inputPanel.testAmount.setValue('');
+									_this.inputPanel.testLength.setValue('');
+									_this.inputPanel.prodSpecName
+											.setValue('');
+									_this.inputPanel.prodSpecId
+											.setValue('');
 								});
 
 					}

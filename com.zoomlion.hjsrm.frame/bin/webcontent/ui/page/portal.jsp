@@ -1001,6 +1001,12 @@ var spacepanel = Ext.getCmp('spacepanel');
 		title = '铸膜液浓度';
 		myid = '10002221';
 	}
+	
+	if(itemCode == 'orderconfirm'){
+		url = '/produce/component/yxorderbase/index.jsp';
+		title = '产品销售统计表';
+		myid = '10003221';
+	}
 	var itemId = "menu" + myid;
 	spacepanel.remove(spacepanel.getItem(itemId));
 	spacepanel.open({
@@ -1280,12 +1286,12 @@ function loadWroking(){
 //业务提醒查询
 function loadBusiness(){
 	Ext.Ajax.request({
-				url : 'com.keensen.ump.produce.quality.mptest.queryTestItems.biz.ext.biz.ext',
+				url : 'com.keensen.ump.produce.quality.mptest.queryTestItems.biz.ext',
 				success : function(resp) {
 					var res = Ext.decode(resp.responseText);
 					var works = res.data;
 					if(!!works){
-						var l = works.length<6? works.length: 5;
+						var l = works.length<8? works.length: 8;
 						var htmls = "";
 						for (var i=0;i<l;i++){					
 							htmls+="<li><a style='text-decoration:none;color:#000000' href='javascript:businesslink(" + '"' + works[i].itemCode + '"' +")'>"+'<img  src="frame/ui/img/dot6.jpg" ext:qtip="点击查看业务信息">'+"  "+works[i].title+"</a>"+'<img  src="frame/ui/img/new.gif" >'+"</li>"
@@ -1371,8 +1377,8 @@ var mailtask = new Ext.util.DelayedTask(loademail);
 var worktask = new Ext.util.DelayedTask(loadWroking);
 					worktask.delay(350);
 
-//膜片测试-分析员,工艺员，配料员
-<% if(roleCodes.indexOf("10001323")>-1 || roleCodes.indexOf("10001322")>-1 || roleCodes.indexOf("10001321")>-1){ %>					
+//膜片测试-分析员,工艺员，配料员,计划员
+<% if(roleCodes.indexOf("10001323")>-1 || roleCodes.indexOf("10001322")>-1 || roleCodes.indexOf("10001321")>-1 || roleCodes.indexOf("10001141")>-1){ %>					
 //业务提醒					
 var businesstask = new Ext.util.DelayedTask(loadBusiness);
 businesstask.delay(450);

@@ -14,6 +14,11 @@
     String uid = userObject.getUserId();
     String userOrgId = userObject.getUserOrgId();
     String uname = userObject.getUserName();
+    int modifyOrderNoFlag = 0;
+    //焦朝凤、李雅淇
+    if(uid.equals("KS00610")||uid.equals("KS01295")){
+    		modifyOrderNoFlag = 1;
+    }
 %>
 <html>
 <!-- 
@@ -34,7 +39,7 @@
 		
 	}
 </script>
-<ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
+<ext:dict property="ABF_YESORNO" dictTypeId="ABF_YESORNO" />
 
 <js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="pub/common/lineCombo.js" />
@@ -42,8 +47,8 @@
 <js:load scriptPath="pub/common/tacheteamCombo.js" />
 <js:load scriptPath="pub/common/mpspecCombo.js" />
 
-<js:load scriptPath="qinsen/produce/raosi/js/manageUi.js"/>
-<js:load scriptPath="qinsen/produce/raosi/js/manageEv.js"/>
+<js:load scriptPath="qinsen/produce/raosi/js/manageUi.js" />
+<js:load scriptPath="qinsen/produce/raosi/js/manageEv.js" />
 
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
@@ -51,6 +56,8 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
    var nowStaffName = "<%=uname %>";
+   var modifyOrderNoFlag = <%=modifyOrderNoFlag %>;
+
   var nowStaffId = <%=operatorid %>;
    <% if(workerflag){ %>
   var teamId = "<%=userOrgId %>";

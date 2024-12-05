@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <select id="queryProjectBase" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.PROJECT_CODE   AS "projectCode",T1.ID  AS "projectId",
+       T1.PROJECT_NAME   AS "projectName",
+       TO_CHAR(T1.PROJECT_START, 'yyyy-MM-dd')  AS "projectStart",
+       TO_CHAR(T1.PROJECT_END, 'yyyy-MM-dd')    AS "projectEnd",
+       T1.headman_id "headmanId",T1.headman_name "headmanName",
+       'com.keensen.ump.produce.research.KsResearchProjectBase' "entityName",
+       t2.user_count "userCount",
+       t3.filling_hours "fillingHours",
+       t3.confirm_hours "confirmHours"
+  FROM KS_RESEARCH_PROJECT_BASE T1
+  left join (select COUNT(1) user_count,t.project_id from KS_RESEARCH_PROJECT_USER t
+	GROUP BY t.project_id) t2 on t2.project_id=t1.id
+  left join (select SUM(t.filling_hours) filling_hours,SUM(t.confirm_hours) confirm_hours,
+	t.project_id from KS_RESEARCH_PROJECT_WORK t GROUP BY t.project_id) t3 on t3.project_id=t1.id
+      where 1=1
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="projectName"> 
+		       T1.PROJECT_NAME like '%' || #projectName# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="projectCode"> 
+		       T1.PROJECT_CODE like '%' || #projectCode# || '%'
+	</isNotNull> 
+	
+	<isNotNull prepend="and" property="belongUserId"> 
+		       t1.id in (select project_id from KS_RESEARCH_PROJECT_USER where user_id = #belongUserId#)
+	</isNotNull>
+	
+	<isEqual prepend="" property="manageFlag" compareValue="0">
+		and t1.id in(select id from KS_RESEARCH_PROJECT_BASE where headman_Id = #headmanId#)
+	</isEqual>
+	
+	order by t1.project_code
+    </select>
+    
+    <delete id="deleteProjectDuration" parameterClass="java.util.HashMap" >
+     delete from KS_RESEARCH_PROJECT_DURATION t
+     WHERE 1=1 and t.project_id= #projectId#
+    
+	</delete>
+	
+	<insert id="insertProjectDuration"  parameterClass="java.util.HashMap" >
+   INSERT INTO KS_RESEARCH_PROJECT_DURATION
+	(project_id,work_date)
+	select #projectId#, to_date(TRUNC(TO_DATE(#projectStart#, 'YYYY-MM-DD') + LEVEL - 1)) 
+    FROM DUAL
+  CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(#projectEnd#, 'YYYY-MM-DD')) -
+             TRUNC(TO_DATE(#projectStart#, 'YYYY-MM-DD')) + 1
+   </insert>
+   
+   <select id="queryProjectUser" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+         select T1.PROJECT_ID "projectId",t1.user_id "userId" ,
+		t2.project_code "projectCode",t2.project_name "projectName",
+		v.operatorname "userName",
+		'com.keensen.ump.produce.research.KsResearchProjectUser' "entityName"
+		from KS_RESEARCH_PROJECT_USER t1
+		LEFT JOIN KS_RESEARCH_PROJECT_BASE t2 ON t1.project_id=t2.id
+		LEFT JOIN v_ac_operator_trs v ON v.userid=t1.user_id
+		where 1=1
+		 <isNotNull prepend="and" property="projectId"> 
+		       t2.id = #projectId#
+		</isNotNull>
+		<isNotNull prepend="and" property="userName"> 
+		       v.operatorname like '%'||#userName#||'%'
+		</isNotNull>
+		<isNotNull prepend="and" property="userId"> 
+			       v.userid = #userId#
+		</isNotNull>
+		<isNotNull prepend="and" property="projectName"> 
+		       T2.PROJECT_NAME like '%' || #projectName# || '%'
+		</isNotNull>
+		<isNotNull prepend="and" property="projectCode"> 
+			       T2.PROJECT_CODE like '%' || #projectCode# || '%'
+		</isNotNull> 
+		order by T1.PROJECT_ID,v.operatorname
+   </select>
+   
+   <insert id="insertProjectUser"  parameterClass="java.util.HashMap" >
+   insert into KS_RESEARCH_PROJECT_USER
+   (PROJECT_ID,user_id,create_User_Id,create_name,CREATE_TIME)
+   select #projectId#,#userId#,#createUserId#,#createName#,sysdate from dual
+   where (#projectId#,#userId#) not in 
+   (select T1.PROJECT_ID ,t1.user_id  from KS_RESEARCH_PROJECT_USER t1)
+   </insert>
+   
+   <delete id="deleteProjectUser" parameterClass="java.util.HashMap" >
+     delete from KS_RESEARCH_PROJECT_USER t
+     WHERE 1=1 and t.project_id= #projectId# 
+	<isNotNull prepend="and" property="userId"> 
+ 		t.user_id = #userId#
+ 	</isNotNull>
+	</delete>
+	
+	<delete id="deleteProjectWork" parameterClass="java.util.HashMap" >
+     delete from KS_RESEARCH_PROJECT_WORK t
+     WHERE 1=1 and t.project_id= #projectId# 
+	<isNotNull prepend="and" property="userId"> 
+ 		t.user_id = #userId#
+ 	</isNotNull>
+	</delete>
+	
+	 <select id="queryProjectWork" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+         SELECT T1.PROJECT_ID      AS "projectId",decode(t1.confirm_hours,null,0,1) "flag",
+       to_char(T1.WORK_DATE,'yyyy-MM-dd')       AS "workDate",
+       T1.USER_ID         AS "userId",V.OPERATORNAME "userName",
+       T1.FILLING_HOURS   AS "fillingHours",
+       T1.CONFIRM_HOURS   AS "confirmHours",
+       T1.FILLING_TIME    AS "fillingTime",
+       T1.FILLING_USER_ID AS "fillingUserId",
+       T1.CONFIRM_TIME    AS "confirmTime",
+       T1.CONFIRM_USER_ID AS "confirmUserId",
+       T2.PROJECT_CODE    "projectCode",
+       T2.PROJECT_NAME    "projectName"
+	  FROM KS_RESEARCH_PROJECT_WORK T1
+	  LEFT JOIN KS_RESEARCH_PROJECT_BASE T2
+	    ON T1.PROJECT_ID = T2.ID
+	  LEFT JOIN V_AC_OPERATOR_TRS V
+	    ON V.USERID = T1.USER_ID
+			where 1=1
+		 <isNotNull prepend="and" property="projectId"> 
+		       t2.id = #projectId#
+		</isNotNull>
+		
+		<isNotNull prepend="and" property="userId"> 
+			       T1.USER_ID = #userId#
+		</isNotNull>
+		
+		<isNotNull prepend="and" property="userName"> 
+		       v.operatorname like '%'||#userName#||'%'
+		</isNotNull>
+		
+		<isNotNull prepend="and" property="projectName"> 
+		       T2.PROJECT_NAME like '%' || #projectName# || '%'
+		</isNotNull>
+		<isNotNull prepend="and" property="projectCode"> 
+			       T2.PROJECT_CODE like '%' || #projectCode# || '%'
+		</isNotNull> 
+	
+		order by T1.PROJECT_ID,T1.USER_ID,to_char(T1.WORK_DATE,'yyyy-MM-dd') 
+   </select>
+   
+   <select id="queryProjectDurationByUserId" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+         SELECT t1.work_date "workDate",t1.project_id "projectId",
+	nvl(t2.user_id,#userId#)  "userId",
+	t2.filling_hours "fillingHours",t2.confirm_hours "confirmHours" from 
+	(select t.work_date,t.project_id from KS_RESEARCH_PROJECT_DURATION t
+	WHERE t.project_id=#projectId#) t1
+	LEFT JOIN 
+	(select * from KS_RESEARCH_PROJECT_WORK t WHERE t.user_id=#userId#) t2
+	ON t1.project_id=t2.project_id AND t1.work_date=t2.work_date
+	ORDER BY t1.project_id,t1.work_date
+   </select>
+   
+   <select id="queryProjectUserWork" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select decode(t.confirm_hours,null,0,1) "flag",
+     to_char(t.work_date,'yyyy-MM-dd') "workDate",t.project_id "projectId",
+	nvl(t.user_id,#userId#)  "userId",
+	t.filling_hours "fillingHours",t.confirm_hours "confirmHours"     
+      from KS_RESEARCH_PROJECT_WORK t
+	WHERE t.project_id=#projectId# AND t.user_id=#userId# 
+	AND t.work_date = #workDate#
+	</select>
+	 
+	 <update id="updateProjectWork" parameterClass="java.util.HashMap" >
+	 UPDATE KS_RESEARCH_PROJECT_WORK T
+   SET 
+   <isEqual prepend="" property="flag" compareValue="0">
+   T.CONFIRM_HOURS     = T.FILLING_HOURS,
+   </isEqual>
+   <isEqual prepend="" property="flag" compareValue="1">
+   T.CONFIRM_HOURS     = null,
+   </isEqual>
+       T.CONFIRM_TIME      = SYSDATE,
+       T.CONFIRM_USER_ID   = #createUserId#,
+       T.CONFIRM_USER_NAME = #createName#
+ 	WHERE T.PROJECT_ID = #projectId#
+   	AND T.USER_ID = #userId#
+   	AND to_char(T.WORK_DATE,'yyyy-MM-dd') = #workDate#
+	  </update> 
+	  
+	   <select id="countUserWork" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	     SELECT T1.ID            "projectId",
+	       T3.USERID        "userId",
+	       T1.PROJECT_CODE  "projectCode",
+	       T1.PROJECT_NAME  "projectName",
+	       T3.OPERATORNAME  "userName",
+	       T2.FILLING_HOURS "fillingHours",
+	       T2.CONFIRM_HOURS "confirmHours"
+	  FROM KS_RESEARCH_PROJECT_BASE T1
+	  LEFT JOIN (SELECT T.PROJECT_ID,
+	                    T.USER_ID,
+	                    SUM(T.FILLING_HOURS) FILLING_HOURS,
+	                    SUM(T.CONFIRM_HOURS) CONFIRM_HOURS
+	               FROM KS_RESEARCH_PROJECT_WORK T
+	               where (t.project_id,t.work_date) in (select t.project_id,t.work_date from KS_RESEARCH_PROJECT_DURATION t)
+	              GROUP BY T.PROJECT_ID, T.USER_ID) T2
+	    ON T1.ID = T2.PROJECT_ID
+	  LEFT JOIN V_AC_OPERATOR_TRS T3
+	    ON T2.USER_ID = T3.USERID
+	     WHERE 1=1
+	     <isNotNull prepend="and" property="projectName"> 
+		       T1.PROJECT_NAME like '%' || #projectName# || '%'
+		</isNotNull>
+		<isNotNull prepend="and" property="projectCode"> 
+				T1.PROJECT_CODE like '%' || #projectCode# || '%'
+		</isNotNull> 
+	 ORDER BY T1.ID, T2.USER_ID
+	</select>
+ </sqlMap>

@@ -111,8 +111,12 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onAdd = function() {
 }
 
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.destroy = function() {
-	// this.editWindow.destroy();
+	this.editWindow.destroy();
 	this.inputWindow.destroy();
+	this.chooseWindow.destroy();
+	this.defectZmWin.destroy();
+	this.defectZmViewWindow.destroy();
+
 }
 
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onEdit = function() {
@@ -223,4 +227,51 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onPrint = function() {
 
 	}
 
-};
+}
+
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onAddZmDefect = function() {
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var dimoBatchNo = r.data.dimoBatchNo;
+		var dimoRecordId = r.data.id;
+		this.defectZmWin.inputPanel.tumoBatchNo.setValue(dimoBatchNo);
+		this.defectZmWin.inputPanel.tumoRecordId.setValue(dimoRecordId);
+		this.defectZmWin.show();
+	}
+}
+
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onViewDefect = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var dimoBatchNo = r.data.dimoBatchNo;
+		var store = this.defectZmViewWindow.listPanel.store;
+		store.baseParams = {
+			'condition/dmBatchNo' : Ext.isEmpty(dimoBatchNo)
+					? "0"
+					: dimoBatchNo
+		};
+		store.load();
+		this.defectZmViewWindow.show();
+	}
+
+}
+
+function defectZmView(dimoBatchNo) {
+	Ext.getCmp('zm-defectzmviewwindow').dmBatchNo = dimoBatchNo;
+	var store = Ext.getCmp('zm-defectzmviewwindow').listPanel.store;
+	store.baseParams = {
+		'condition/dmBatchNo' : Ext.isEmpty(dimoBatchNo) ? "0" : dimoBatchNo
+	};
+	store.load();
+	Ext.getCmp('zm-defectzmviewwindow').show();
+
+}

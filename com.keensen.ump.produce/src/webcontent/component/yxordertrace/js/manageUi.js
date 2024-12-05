@@ -40,7 +40,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 								format : "Y-m-d"
 							}]
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "导出",
 					scope : this,
@@ -79,6 +79,9 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 						dataIndex : 'materSpecName',
 						header : '规格型号'
 					}, {
+						dataIndex : 'demandStockDate',
+						header : '生产交期'
+					}, {
 						dataIndex : 'cdmAmount',
 						header : '裁叠膜<br>生产数量（支）'
 					}, {
@@ -102,39 +105,46 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 					}, {
 						dataIndex : 'rsFinish',
 						header : '完成比例'
-					}, {
-						dataIndex : 'orderDate',
-						header : '订单日期'
-					}, {
-						dataIndex : 'hpmc',
-						header : '货品名称'
-					}, {
-						dataIndex : 'dw',
-						header : '单位'
-					}, {
+					}/*
+						 * , { dataIndex : 'orderDate', header : '订单日期' }, {
+						 * dataIndex : 'hpmc', header : '货品名称' }, { dataIndex :
+						 * 'dw', header : '单位' }
+						 */, {
 						dataIndex : 'dryWet',
 						header : '干膜/湿'
+					}/*
+						 * , { dataIndex : 'dfh', header : '待发货（发库存）' }, {
+						 * dataIndex : 'xsc', header : '需生产或入库数量' }, { dataIndex :
+						 * 'performance', header : '产品性能' }, { dataIndex :
+						 * 'remark', header : '其它备注' }
+						 *//*
+						 * , { dataIndex : 'jhwcsj', header : '计划完成时间' }, {
+						 * dataIndex : 'scwcrq', header : '生产完成日期' }
+						 */, {
+						dataIndex : 'applyAmount',
+						header : '请检总数量'
 					}, {
-						dataIndex : 'dfh',
-						header : '待发货（发库存）'
+						dataIndex : 'applyPercent',
+						header : '完成比例',
+						renderer : function(v, m, r, i) {
+							return v + '%'
+						}
 					}, {
-						dataIndex : 'xsc',
-						header : '需生产或入库数量'
-					}, {
-						dataIndex : 'performance',
-						header : '产品性能'
-					}, {
-						dataIndex : 'remark',
-						header : '其它备注'
-					}, {
-						dataIndex : 'demandStockDate',
-						header : '生产交期'
-					}, {
-						dataIndex : 'jhwcsj',
-						header : '计划完成时间'
-					}, {
-						dataIndex : 'scwcrq',
-						header : '生产完成日期'
+						dataIndex : 'applyPercent',
+						header : '完成判定',
+						renderer : function(v, m, r, i) {
+							//完成比例≥100%时，用绿色填充本格并填完成
+							if (v >= 100) {								
+								return "<span style='color:green;text-decoration:none'>完成</span>"
+							}
+							//裁叠膜没有生产，则显示“未投料”
+							var cdmAmount = r.get('cdmAmount');
+							if(Ext.isEmpty(cdmAmount)){
+								return "未投料"
+							}
+							//否则则显示“进行中”
+							return "进行中";
+						}
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.neworder.queryYxOrderTraceByPage.biz.ext',
@@ -250,6 +260,10 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 							name : 'qjFinish'
 						}, {
 							name : 'rsFinish'
+						}, {
+							name : 'applyAmount'
+						}, {
+							name : 'applyPercent'
 						}]
 			})
 		})

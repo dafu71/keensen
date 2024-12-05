@@ -65,3 +65,4 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr.prototype.exportExcel = function(
 		}
 	})
 }
+

@@ -18,7 +18,7 @@ com.keensen.ump.base.ParamaterspecMgr = function() {
 					border : true,
 					//collapsible : true,
 					titleCollapse : false,
-					title : '【物料规格查询】',
+					//title : '【物料规格查询】',
 					fields : [  {
 								xtype : 'textfield',
 								name : 'condition/materSpecCode',
@@ -55,7 +55,7 @@ com.keensen.ump.base.ParamaterspecMgr = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【物料规格列表】',
+			//title : '【物料规格列表】',
 			hsPage : true,
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {

@@ -23,82 +23,102 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-				var confirmDate = cell.get('confirmDate');
-				if (this.opt == 'check') {
-					if (!Ext.isEmpty(confirmDate)) {
-						Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
-						return;
-					}
-					this.editWindow.show();
-					this.editPanel.loadData(cell);
-					var relationId = cell.get('id');
+		var confirmDate = cell.get('confirmDate');
+		if (this.opt == 'check') {
+			if (!Ext.isEmpty(confirmDate)) {
+				Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
+				return;
+			}
+			this.editWindow.show();
+			this.editPanel.loadData(cell);
+			var relationId = cell.get('id');
 
-					var store = this.listPanel4.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				} else if (this.opt == 'confirm') {
-					if (!Ext.isEmpty(confirmDate)) {
-						Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
-						return;
-					}
-					this.editWindow2.show();
-					this.editPanel2.loadData(cell);
-					var relationId = cell.get('id');
+			var store = this.listPanel4.store;
+			store.load({
+						params : {
+							'condition/relationId' : relationId
+							// 修改时加载
+						}
+					});
+		} else if (this.opt == 'confirm') {
+			if (!Ext.isEmpty(confirmDate)) {
+				Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
+				return;
+			}
+			this.editWindow2.show();
+			this.editPanel2.loadData(cell);
+			var relationId = cell.get('id');
 
-					var store = this.listPanel5.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				} else if (this.opt == 'examine') {
+			var store = this.listPanel5.store;
+			store.load({
+						params : {
+							'condition/relationId' : relationId
+							// 修改时加载
+						}
+					});
+		} else if (this.opt == 'examine') {
 
-					this.examineWindow.show();
-					this.examinePanel.loadData(cell);
-					var relationId = cell.get('id');
+			this.examineWindow.show();
+			this.examinePanel.loadData(cell);
+			var relationId = cell.get('id');
 
-					var store = this.examineListPanel.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				} else if (this.opt == 'modify') {
-					if (!Ext.isEmpty(confirmDate)) {
-						Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
-						return;
-					}
-					this.modifyWindow.show();
-					this.modifyPanel.loadData(cell);
-					var relationId = cell.get('id');
+			var store = this.examineListPanel.store;
+			store.load({
+						params : {
+							'condition/relationId' : relationId
+							// 修改时加载
+						}
+					});
+		} else if (this.opt == 'modify') {
+			if (!Ext.isEmpty(confirmDate)) {
+				Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
+				return;
+			}
+			this.modifyWindow.show();
+			this.modifyPanel.loadData(cell);
+			var relationId = cell.get('id');
 
-					var store = this.listPanel7.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				} else {
-					this.editWindow3.show();
-					this.editPanel3.loadData(cell);
-					var relationId = cell.get('id');
+			var orderNo = cell.get('orderNo');
+			var prodSpecNameStore = this.prodSpecNameStore;
+			prodSpecNameStore.baseParams = {
+				'condition/orderNo' : orderNo,
+				nameSqlId : 'com.keensen.ump.produce.component.apply.queryOrderSpecName'
+			};
+			prodSpecNameStore.load();
 
-					var store = this.listPanel6.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				}
-			}, this);
+			var store = this.listPanel7.store;
+			store.load({
+						params : {
+							'condition/relationId' : relationId
+							// 修改时加载
+						}
+					});
+		} else if (this.opt == 'cstock') {
+			this.cstockWindow.show();
+			this.editPanel8.loadData(cell);
+			var relationId = cell.get('id');
+
+			var store = this.listPanel8.store;
+			store.load({
+						params : {
+							'condition/relationId' : relationId
+							// 修改时加载
+						}
+					});
+		} else {
+			this.editWindow3.show();
+			this.editPanel3.loadData(cell);
+			var relationId = cell.get('id');
+
+			var store = this.listPanel6.store;
+			store.load({
+						params : {
+							'condition/relationId' : relationId
+							// 修改时加载
+						}
+					});
+		}
+	}, this);
 
 	// 增加删除后事件
 	this.listPanel4.mon(this.listPanel4, 'afterdel', function(gird, cell) {
@@ -203,6 +223,14 @@ com.keensen.ump.produce.component.applyMgr.prototype.onChoose = function() {
 		// 'condition/prodSpecId' : prodSpecId
 	};
 	store.load();
+
+	var prodSpecNameStore = this.prodSpecNameStore;
+	prodSpecNameStore.baseParams = {
+		'condition/orderNo' : orderNo,
+		nameSqlId : 'com.keensen.ump.produce.component.apply.queryOrderSpecName'
+	};
+	prodSpecNameStore.load();
+
 	this.chooseWindow.show();
 }
 
@@ -275,7 +303,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSave = function() {
 	}
 
 	this.inputPanel.abnormal.setValue(itemArr.join(','));
-	
+
 	if (this.inputPanel.form.isValid()) {
 
 		var datas = [];
@@ -564,6 +592,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.destroy = function() {
 	this.editWindow2.destroy();
 	this.editWindow3.destroy();
 	this.modifyWindow.destroy();
+	this.cstockWindow.destroy();
 }
 
 com.keensen.ump.produce.component.applyMgr.prototype.onPrint = function() {
@@ -610,6 +639,8 @@ com.keensen.ump.produce.component.applyMgr.prototype.onDel3 = function() {
 		return false;
 	} else {
 		this.listPanel2.store.remove(records);
+		var cnt = this.listPanel2.store.getCount();
+		this.inputPanel.applyAmount.setValue(cnt);
 	}
 }
 
@@ -628,7 +659,9 @@ com.keensen.ump.produce.component.applyMgr.prototype.exportExcel = function() {
 						});
 		this.requestMask.show();
 		Ext.Ajax.request({
-			url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+			// url :
+			// "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+			url : 'com.keensen.ump.qinsen.inst.exportExcelByNamingSql.biz.ext',
 			method : "post",
 			jsonData : {
 				'map' : {
@@ -684,24 +717,29 @@ com.keensen.ump.produce.component.applyMgr.prototype.exportExcelBatch = function
 		url : "com.keensen.ump.produce.component.apply.queryList2.biz.ext",
 		method : "post",
 		responseType : 'blob',
-		jsonData : {
-			'condition/createTimeStart' : start,
-			'condition/createTimeEnd' : end
-		},
+		jsonData : this.queryPanel.form.getValues(),
+		// jsonData : {
+		// 'condition/createTimeStart' : start,
+		// 'condition/createTimeEnd' : end
+		// },
 		success : function(resp) {
 			var ret = Ext.decode(resp.responseText);
 			if (ret.success) {
 				if (!Ext.isEmpty(ret.data)) {
 					var str = '<style>td{border:1px black solid;}</style>'
 							+ '<table class="table-data table-bordered table"><tr>';
-					str += '<td align="center">订单号</td><td align="center">栈板号</td>'
+					str += '<td align="center">请检时间</td><td align="center">订单号</td><td align="center">栈板号</td>'
 							+ '<td align="center">订单元件型号</td>'
 							+ '<td align="center">唛头显示型号</td>'
 							+ '<td align="center">元件型号（卷制）</td>'
 							+ '<td align="center">元件序列号</td>'
+							+ '<td align="center">卷膜序号</td>'
+							+ '<td align="center">卷膜生产日期</td>'
 							+ '<td align="center">膜片批次</td>' + '</tr>';
 					Ext.each(ret.data, function(r) {
-								str += '<tr><td align="center">' + r.orderNo
+								str += '<tr><td align="center">' + r.applyTime
+										+ '</td>'
+								str += '<td align="center">' + r.orderNo
 										+ '</td><td align="center">'
 										+ String(r.code)
 										+ '</td><td align="center">'
@@ -710,9 +748,17 @@ com.keensen.ump.produce.component.applyMgr.prototype.exportExcelBatch = function
 										+ r.markSpecCode
 										+ '</td><td align="center">'
 										+ r.prodSpecName
+
 										+ '</td><td align="center">'
 										+ String(r.batchNo)
 										+ '</td><td align="center">'
+										+ String(r.jmBatchNo)
+										+ '</td>' 
+										+'<td align="center">'
+										+ String(r.jmProduceDt)
+										+ '</td>'
+										
+										+'<td align="center">'
 										+ r.tumoBatchStr + '</td></tr>';
 							})
 					str += '</table>';
@@ -738,4 +784,65 @@ com.keensen.ump.produce.component.applyMgr.prototype.exportExcelBatch = function
 		}
 	})
 
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.onCStock = function() {
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+			var storage = B[0].data.storage;
+			if (storage != 3) {
+				Ext.Msg.alert("系统提示", "请选择入库为C仓库记录!");
+				return
+			}
+			this.opt = 'cstock';
+			this.listPanel.onEdit();
+		}
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.onSaveCStcok = function() {
+	var _this = this;
+	var pkid = _this.editPanel8.pkid.getValue();
+
+	Ext.Msg.confirm("操作确认", "您确实要入C仓吗?", function(A) {
+
+		if (A == "yes") {
+
+			var mk = new Ext.LoadMask(_this.cstockWindow.id, {
+						msg : '正在保存，请稍候!',
+						removeMask : true
+					});
+			mk.show();
+			Ext.Ajax.request({
+				method : "post",
+				scope : _this,
+				url : 'com.keensen.ump.produce.component.applys.insertCStock.biz.ext',
+				jsonData : {
+					'map/relationId' : pkid
+				},
+				success : function(response, action) {
+					mk.hide();
+					// 返回值处理
+					var result = Ext.decode(response.responseText);
+					if (result.success) {
+						// _this.listPanel.store.load();
+						_this.listPanel.refresh();
+						_this.editPanel8.form.reset();
+						_this.cstockWindow.hide();
+					} else {
+						mk.hide();
+					}
+				},
+				failure : function(resp, opts) {
+					mk.hide();
+				}
+			});
+		}
+	})
 }

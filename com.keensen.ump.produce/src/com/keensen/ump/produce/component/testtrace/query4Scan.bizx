@@ -18,7 +18,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link5</targetConnections>
+    <targetConnections>link16</targetConnections>
+    <targetConnections>link13</targetConnections>
     <targetConnections>link4</targetConnections>
     <location x="450" y="150"/>
     <size height="28" width="28"/>
@@ -115,6 +116,10 @@
       <process:from type="query" pattern="reference">m:userObject/userRemoteIP</process:from>
       <process:to type="query">entity/fromIp</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">condition/testType</process:from>
+      <process:to type="query">testType</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <location x="239" y="278"/>
@@ -147,10 +152,24 @@
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="saveTestTrace" displayName="saveTestTrace" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link5" name="link5" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess0</sourceNode>
-      <targetNode>end0</targetNode>
+      <targetNode>transactioncommit0</targetNode>
     </sourceConnections>
-    <targetConnections>link6</targetConnections>
-    <location x="450" y="242"/>
+    <sourceConnections xsi:type="process:tLink" description="" id="link10" name="link10" displayName="连接线" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>switch0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">entity/category</process:leftOperand>
+          <process:rightOperand type="literal">涂膜</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <location x="510" y="304"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess0label</nodeLabel>
     <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
@@ -164,14 +183,14 @@
     </process:flow>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
-    <location x="411" y="277"/>
+    <location x="471" y="339"/>
     <figSize height="20" width="104"/>
     <node>subprocess0</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="concat" displayName="concat" nodeType="common" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
     <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo1</sourceNode>
-      <targetNode>subprocess0</targetNode>
+      <targetNode>transactionbegin0</targetNode>
     </sourceConnections>
     <targetConnections>link9</targetConnections>
     <targetConnections>link8</targetConnections>
@@ -216,6 +235,18 @@
       <process:from type="query" pattern="reference">condition/prodSpecName</process:from>
       <process:to type="query">entity/reserve1</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">condition/prodSpecId</process:from>
+      <process:to type="query">entity/reserve4</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">condition/testLength</process:from>
+      <process:to type="query">entity/testLength</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">condition/testAmount</process:from>
+      <process:to type="query">entity/testAmount</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
     <location x="335" y="362"/>
@@ -241,12 +272,112 @@
     <figSize height="20" width="40"/>
     <node>assign3</node>
   </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="createPlanDay" displayName="createPlanDay" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" lineType="note" type="exception">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>transactionrollback0</targetNode>
+    </sourceConnections>
+    <targetConnections>link17</targetConnections>
+    <location x="635" y="304"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.createPlanDay</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="entity" type="query" value="com.keensen.ump.produce.component.KsComponentTestTrace" valueType="DataObject" pattern="reference">entity</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <location x="596" y="339"/>
+    <figSize height="20" width="104"/>
+    <node>subprocess1</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionBegin" id="transactionbegin0" name="事务开始" displayName="事务开始" type="transactionbegin">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>transactionbegin0</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="418" y="304"/>
+    <size height="28" width="28"/>
+    <nodeLabel>transactionbegin0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactionbegin0label" name="label" nodeType="label">
+    <location x="402" y="340"/>
+    <figSize height="20" width="61"/>
+    <node>transactionbegin0</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionCommit" id="transactioncommit0" name="事务提交" displayName="事务提交" type="transactioncommit">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>transactioncommit0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link18</targetConnections>
+    <location x="617" y="150"/>
+    <size height="28" width="28"/>
+    <nodeLabel>transactioncommit0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactioncommit0label" name="label" nodeType="label">
+    <location x="601" y="186"/>
+    <figSize height="20" width="61"/>
+    <node>transactioncommit0</node>
+  </nodes>
+  <nodes xsi:type="process:tTransactionRollback" id="transactionrollback0" name="事务回滚" displayName="事务回滚" type="transactionrollback">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>transactionrollback0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="511" y="215"/>
+    <size height="28" width="28"/>
+    <nodeLabel>transactionrollback0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="transactionrollback0label" name="label" nodeType="label">
+    <location x="495" y="251"/>
+    <figSize height="20" width="61"/>
+    <node>transactionrollback0</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link18" name="实验试卷" displayName="连接线" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">testType</process:leftOperand>
+          <process:rightOperand type="literal">实验试卷</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <location x="509" y="402"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <location x="500" y="438"/>
+    <figSize height="20" width="46"/>
+    <node>switch0</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="dafu" createTime="2023-09-21 09:05:29" date="2023-09-21Z" description="" name="queryStock" version="6.3"/>
   <process:variables>
     <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.component.KsComponentTestTrace" name="entity"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="id" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="testType" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input anyType="java.util.HashMap" description="" isArray="false" name="condition"/>

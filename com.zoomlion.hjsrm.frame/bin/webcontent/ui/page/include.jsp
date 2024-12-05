@@ -33,7 +33,7 @@
 		user = com.eos.data.datacontext.DataContextManager.current()
 		.getMUODataContext().getUserObject();
 	}
-
+	
 	//用户为空 或是临时用户登录  跳转到登录页面
 	CheckedResult ishsright = PermissionUtil.hasPermission(request
 			.getRequestURI(), user);

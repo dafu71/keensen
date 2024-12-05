@@ -171,6 +171,18 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
 					}, {
+						dataIndex : 'isCutOver',
+						header : '已裁完',
+						renderer : function(v, m, r, i) {
+							
+							if (v=='Y') {
+								return "<span style='color:red'>" + "是"
+										+ "</span>";
+							} else {
+								return "否";
+							}
+						}
+					}, {
 						dataIndex : 'materSpecCode',
 						header : '膜片物料编码'
 					}, {
@@ -334,6 +346,8 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 							name : 'yjAvgGpd'
 						}, {
 							name : 'materSpecCode'
+						}, {
+							name : 'isCutOver'
 						}]
 			})
 		})

@@ -22,4 +22,19 @@
 	       BS.CHANGE_DT = SYSDATE,
 	       BS.CHANGER_ID = #operatorId#
 	 WHERE BS.STAFF_ID = #staffId#</update>
+    <insert id="insertStaff" parameterClass="java.util.HashMap">INSERT INTO qinsen.base_staff
+ (staff_id,staff_code,staff_name,state,dept_id,password,sex,password_valid,
+  password_changed_dt,multi_point_sign,create_dt,creator_id,mobile_phone)
+  SELECT qinsen.SEQ_ALL_MEMBER.NEXTVAL, #staffCode#,#staffName#,'A',#deptId#,#password#,
+  upper(#sex#),'Y',sysdate,'N',sysdate,#creatorId#,#mobilePhone# from dual
+  WHERE NOT EXISTS(SELECT 1 FROM qinsen.base_staff WHERE staff_code = #staffCode#)</insert>
+    <select id="queryUser" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	 select t.userid "userId",t.operatorname "userName" from V_AC_OPERATOR_TRS t
+	WHERE t.userid NOT IN('virtual','sysadmin','AUTO','ADMIN')
+	
+	<isNotNull prepend="and" property="userName">t.operatorname like '%'||#userName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="userId">t.userid like '%'||#userId#||'%'</isNotNull>
+        <!--研发项目调用-->
+        <isNotNull prepend="and" property="projectId">t.userid not in (select user_id from KS_RESEARCH_PROJECT_USER where project_id=#projectId#)</isNotNull>
+    </select>
 </sqlMap>

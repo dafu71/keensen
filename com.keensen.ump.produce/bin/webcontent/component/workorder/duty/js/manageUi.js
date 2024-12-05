@@ -5,6 +5,7 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initArrangeWindow();
+		this.initMachineStore();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -119,7 +120,6 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 							}]
 				});
 
-		
 	}
 
 	this.initListPanel = function() {
@@ -149,6 +149,10 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 						header : '订单编号',
 						sortable : true
 					}, {
+						dataIndex : 'materSpecName',
+						header : '规格型号',
+						sortable : true
+					}, {
 						dataIndex : 'planDate',
 						header : '作业日期',
 						sortable : true
@@ -156,6 +160,59 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 						dataIndex : 'batchNo',
 						header : '膜片批次',
 						sortable : true
+					}, {
+						dataIndex : 'arrangeDate',
+						header : '排产日期',
+						format : "Y-m-d",
+						sortable : true,
+						css : 'background:#c7c7c7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.DateField(
+								{
+									listeners : {
+										'blur' : function(o) {
+											var cdmState = _this.rec.data['cdmState'];
+											if (cdmState != '0') {
+												_this.queryPanel.orderNo
+														.focus();
+												return false;
+											}
+										},
+										'focus' : function() {
+											var cdmState = _this.rec.data['cdmState'];
+											if (cdmState != '0') {
+												_this.queryPanel.orderNo
+														.focus();
+												return false;
+											}
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var cdmState = _this.rec.data['cdmState'];
+											if (cdmState != '0') {
+												return false;
+											} else {
+												var id = _this.rec.data['id'];
+												_this.saveArrangeDate(id,
+														newValue, oldValue);
+											}
+										}
+									},
+									format : "Y-m-d",
+									editable : true
+								})),
+						renderer : function(value) {
+							
+							if (Ext.isEmpty(value))
+								return '';
+						
+							if (typeof value == "string") {								
+								return value;
+							} else {								
+								return value.format("Y-m-d");
+							}
+						}
 					}, {
 						dataIndex : 'productOrder',
 						header : '生产顺序',
@@ -173,7 +230,8 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 										'focus' : function() {
 											var cdmState = _this.rec.data['cdmState'];
 											if (cdmState != '0') {
-												_this.queryPanel.orderNo.focus();
+												_this.queryPanel.orderNo
+														.focus();
 												return false;
 											}
 										},
@@ -228,7 +286,8 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 										'focus' : function() {
 											var cdmState = _this.rec.data['cdmState'];
 											if (cdmState != '0') {
-												_this.queryPanel.orderNo.focus();
+												_this.queryPanel.orderNo
+														.focus();
 												return false;
 											}
 										},
@@ -248,6 +307,11 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 									}
 								}))
 					}, {
+						dataIndex : 'cdmStateName',
+						header : '裁叠膜生产状态',
+						width : 150,
+						sortable : true
+					}, {
 						dataIndex : 'dutyName',
 						header : '任务安排人',
 						sortable : true
@@ -257,11 +321,6 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 						header : '任务安排时间',
 						sortable : true
 					}, {
-						dataIndex : 'cdmStateName',
-						header : '裁叠膜生产状态',
-						width : 150,
-						sortable : true
-					}, {
 						dataIndex : 'cdmReportName',
 						header : '裁叠膜报告人',
 						sortable : true
@@ -269,10 +328,6 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 						dataIndex : 'cdmReportTime',
 						width : 150,
 						header : '裁叠膜报告时间',
-						sortable : true
-					}, {
-						dataIndex : 'materSpecName',
-						header : '规格型号',
 						sortable : true
 					}, {
 						dataIndex : 'size',
@@ -472,6 +527,8 @@ com.keensen.ump.produce.component.workorder.dutyMgr = function() {
 							name : 'cdmReportUserId'
 						}, {
 							name : 'cdmReportName'
+						}, {
+							name : 'arrangeDate'
 						}]
 			})
 		})

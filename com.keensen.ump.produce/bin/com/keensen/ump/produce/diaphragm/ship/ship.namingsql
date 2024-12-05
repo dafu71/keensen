@@ -115,6 +115,10 @@
        t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
        t2.PLAN_NO         as "planNo",
        t2.ORDER_NO        as "orderNo",
+       t2.delivery_order_no as "deliveryOrderNo",
+        
+       to_char(t2.delivery_dt,'YYYY-MM-DD HH24:MI:SS') as "deliveryDt",
+       
        t1.SUP_ID          as "supId",
        t1.SUP_NAME        as "supName",
        t1.SUP_CODE        as "supCode",
@@ -151,7 +155,12 @@
         <isNotNull prepend="and" property="planNo">upper(t1.plan_No)  like '%' || upper(#planNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO  like '%' || #dimoBatchNo# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo2">upper(t1.order_No) = upper(#orderNo2#)</isNotNull>
- order by t1.produce_dt desc
+        <isNotNull prepend="and" property="deliveryOrderNo">t2.delivery_Order_No like '%' || #deliveryOrderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="deliveryDtStart">to_char(t2.delivery_DT,'yyyy-MM-dd')  &gt;=  #deliveryDtStart#</isNotNull>
+        <isNotNull prepend="and" property="deliveryDtEnd">to_char(t2.delivery_DT,'yyyy-MM-dd')  &lt;=  #deliveryDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">t1.batch_No in ($batchNoStr$)</isNotNull>
+	
+ order by t2.delivery_Order_No desc nulls last, t1.produce_dt desc 
      </select>
     <select id="queryOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
       

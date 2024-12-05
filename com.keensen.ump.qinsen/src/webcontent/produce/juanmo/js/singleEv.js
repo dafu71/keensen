@@ -62,8 +62,8 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr.prototype.dealCdmBatchNo = funct
 				if (ret.success) {
 					if (!Ext.isEmpty(ret.data)) {
 						var dd = ret.data[0];
-						_this.inputPanel.orderNo.setValue(dd.orderNo);
-						_this.inputPanel.prodSpecId.setValue(dd.prodSpecId);
+						//_this.inputPanel.orderNo.setValue(dd.orderNo);
+						//_this.inputPanel.prodSpecId.setValue(dd.prodSpecId);
 						_this.inputPanel.inQuantity.setValue(dd.numPerWad);
 						_this.inputPanel.outQuantity.setValue(dd.numPerWad);
 						_this.inputPanel.blankingSize.setValue(dd.blankingSize);
@@ -266,4 +266,61 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr.prototype.onSave = function() {
 			}
 		})
 	}
+}
+
+com.keensen.ump.qinsen.produce.juanmo.singleMgr.prototype.onGetDuty = function() {
+	var _this = this;
+	// this.cdmdutyStore.reload();
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.workorder2.getJmDuty.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				if (!Ext.isEmpty(ret.data)) {
+					var orderNo = ret.data[0].orderNo;
+					var orderId = ret.data[0].orderId;
+					var orderType = ret.data[0].orderType;
+					var materSpecName2 = ret.data[0].materSpecName2;
+					var orderAmount = ret.data[0].orderAmount;
+					var planDate = ret.data[0].planDate;
+					var jmAmount = ret.data[0].jmAmount;
+					var orderAmount = ret.data[0].orderAmount;
+					var materSpecId = ret.data[0].materSpecId;
+					var realityAmount = ret.data[0].realityAmount;
+					_this.inputPanel.orderNo.setValue(orderNo);
+					_this.inputPanel.orderAmount.setValue(orderAmount);
+					_this.inputPanel.planDate.setValue(planDate);
+					_this.inputPanel.jmAmount.setValue(jmAmount);
+					_this.inputPanel.prodSpecId.setValue(materSpecId);
+					_this.inputPanel.orderId.setValue(orderId);
+					_this.inputPanel.orderAmount.setValue(orderAmount);
+					_this.inputPanel.realityAmount.setValue(realityAmount);
+					
+					
+					var store = _this.jmdutyStore;
+					store.load({
+								params : {
+									'condition/planDate' : planDate,
+									'condition/orderId' : orderId
+								}
+							});
+					// _this.dealTumoBatchNo();
+				} else {
+					Ext.Msg.alert("系统提示", "该机台没有分配任务，请检查！", function() {
+								_this.inputPanel.cdmBatchNo.setValue('');
+								return false;
+							})
+
+				}
+			}
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
 }

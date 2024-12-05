@@ -3,6 +3,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		var defectTmWinId = Ext.id();
 		var defectZmWinId = Ext.id();
+		var defectFhWinId = Ext.id();
 
 		this.initQueryPanel();
 		this.initListPanel();
@@ -24,6 +25,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					id : defectZmWinId,
 					dutyTacheCode : 'ZM',
 					recTacheCode : 'TM'
+				});
+
+		this.defectFhWin = new com.keensen.ump.defectWindow({
+					id : defectFhWinId,
+					dutyTacheCode : 'FH',
+					recTacheCode : 'FH'
 				});
 
 		this.defectViewWindow = new com.keensen.ump.defectViewWindow({
@@ -209,6 +216,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					iconCls : 'icon-application_form_magnify',
 					handler : this.replaceTroughInfo
 				});
+		this.queryPanel.addButton({
+					text : "多批号查询",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQueryByBatchNos
+				});
 
 	}
 
@@ -243,11 +256,15 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								iconCls : 'icon-application_delete',
 								handler : this.onDel
 							}, '->', {
-								text : '录入铸膜不良',
+								text : '录入发货不良',
 								scope : this,
 								iconCls : 'icon-application_add',
-								handler : this.onaddZmDefect
-							}, '->', {
+								handler : this.onaddFhDefect
+							}/*
+								 * , '->', { text : '录入铸膜不良', scope : this,
+								 * iconCls : 'icon-application_add', handler :
+								 * this.onaddZmDefect }
+								 */, '->', {
 								text : '录入涂膜不良',
 								scope : this,
 								iconCls : 'icon-application_add',
@@ -423,15 +440,36 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}, {
 						header : '厚度(平均)',
 						width : 80,
-						dataIndex : 'thickAvg'
+						dataIndex : 'thickAvg',
+						renderer : function(v, m, r, i) {
+							var thickAvgFlag = r.get('thickAvgFlag');
+							if (thickAvgFlag == 1) {
+								return '<font color=red>' + v + '</font>'
+							} else
+								return v;
+						}
 					}, {
 						header : '厚度(最小)',
 						width : 80,
-						dataIndex : 'thickMin'
+						dataIndex : 'thickMin',
+						renderer : function(v, m, r, i) {
+							var thickMinFlag = r.get('thickMinFlag');
+							if (thickMinFlag == 1) {
+								return '<font color=red>' + v + '</font>'
+							} else
+								return v;
+						}
 					}, {
 						header : '厚度(最大)',
 						width : 80,
-						dataIndex : 'thickMax'
+						dataIndex : 'thickMax',
+						renderer : function(v, m, r, i) {
+							var thickMaxFlag = r.get('thickMaxFlag');
+							if (thickMaxFlag == 1) {
+								return '<font color=red>' + v + '</font>'
+							} else
+								return v;
+						}
 					}, {
 						header : '标签数',
 						width : 60,
@@ -719,6 +757,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'QMinusClength'
 								}, {
 									name : 'waterBatchNo'
+								}, {
+									name : 'thickAvgFlag'
+								}, {
+									name : 'thickMinFlag'
+								}, {
+									name : 'thickMaxFlag'
 								}]
 					})
 		})
@@ -1419,10 +1463,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									hiddenName : 'entity/isCutOver',
 									value : 'N',
 									emptyText : '--请选择--',
-									readOnly : true,
+									// readOnly : true,
 									allowBlank : true,
 									value : 'N',
-									anchor : '37.5%',
+									anchor : '75%',
 									colspan : 1,
 									store : [[null, '全部'], ['Y', '是'],
 											['N', '否']],

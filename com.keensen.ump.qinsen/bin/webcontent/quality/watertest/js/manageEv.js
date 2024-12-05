@@ -1,7 +1,6 @@
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 	var _this = this;
 
-	
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 
@@ -17,7 +16,7 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 	}, this);
 
 	this.queryPanel.testSpecId.store.on('load', function(o) {
-				
+
 			})
 
 	this.firstTestWindow.fCheckerId.store.on('load', function(o) {
@@ -33,14 +32,12 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 			})
 
 	this.firstTestWindow2.testTypeId.store.on('load', function(o) {
-				/*var records = _this.firstTestWindow2.testTypeId.store
-						.getRange();
-				Ext.each(records, function(r) {
-							if (r.data['propValueId'] == 300040) {
-								_this.firstTestWindow2.testTypeId.store
-										.remove(r);
-							}
-						})*/
+				/*
+				 * var records = _this.firstTestWindow2.testTypeId.store
+				 * .getRange(); Ext.each(records, function(r) { if
+				 * (r.data['propValueId'] == 300040) {
+				 * _this.firstTestWindow2.testTypeId.store .remove(r); } })
+				 */
 
 			})
 
@@ -113,23 +110,29 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 				var testTypeId = cell.get('testTypeId');
 
 				if (this.opt == 'reTest') {
-					/*if (testTypeId == '300040') {
-						this.reTestWindow.show();
-						this.reTestWindow.loadData(cell);
-					} else {*/
-						this.reTestWindow2.show();
-						this.reTestWindow2.loadData(cell);
-					//}
+					/*
+					 * if (testTypeId == '300040') { this.reTestWindow.show();
+					 * this.reTestWindow.loadData(cell); } else {
+					 */
+					this.reTestWindow2.show();
+					this.reTestWindow2.loadData(cell);
+					// }
 				}
 
 				if (this.opt == 'modify') {
-					/*if (testTypeId == '300040') {
-						this.modifyWindow.show();
-						this.modifyWindow.loadData(cell);
-					} else {*/
-						this.modifyWindow2.show();
-						this.modifyWindow2.loadData(cell);
-					//}
+					/*
+					 * if (testTypeId == '300040') { this.modifyWindow.show();
+					 * this.modifyWindow.loadData(cell); } else {
+					 */
+					this.modifyWindow2.show();
+					this.modifyWindow2.loadData(cell);
+					// }
+				}
+
+				if (this.opt == 'viewremark') {
+					var remark = cell.get('remark');
+					Ext.Msg.alert("判定说明", remark);
+
 				}
 			}, this);
 
@@ -859,6 +862,60 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.modiRecord = function() {
 		}
 	} else {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
+}
+
+com.keensen.ump.qinsen.quality.watertestMgr.prototype.onViewRemark = function() {
+	this.opt = 'viewremark';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.qinsen.quality.watertestMgr.prototype.onRemark = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		Ext.each(C, function(r) {
+					recordIds.push(r.data['recordId']);
+				});
+		var gyyRemark = C[0].data.gyyRemark;
+		Ext.Msg.prompt('工艺员备注', '请输入', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+							url : "com.keensen.ump.qinsen.watertest.saveGyyRemark.biz.ext",
+							method : "post",
+							jsonData : {
+								'gyyRemark' : text,
+								'recordIds' : recordIds.join(",")
+							},
+							success : function(resp) {
+								var ret = Ext.decode(resp.responseText);
+								if (ret.success) {
+									Ext.Msg.alert("系统提示", "操作成功！", function() {
+												_this.listPanel.store.load();
+
+											})
+								} else {
+									Ext.Msg.alert("系统提示", "备注失败！")
+
+								}
+
+							},
+							callback : function() {
+								_this.requestMask.hide()
+							}
+						})
+			}
+		}, this, true, gyyRemark);
 	}
 }
 

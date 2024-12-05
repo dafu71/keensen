@@ -332,7 +332,10 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onEdit3 = function() {
 };
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.exportExcel = function() {
-	var _this = this;
+	
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '油相液浓度',
+			'com.keensen.ump.produce.quality.mptest.queryOilRecords','7,8');
+	/*var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
@@ -344,7 +347,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.exportExcel = function()
 		method : "post",
 		jsonData : {
 			'map' : daochu,
-			'map/limited' : '1000',
+			'map/limited' : '10000',
 			namingsql : 'com.keensen.ump.produce.quality.mptest.queryOilListRecords',
 			templateFilename : 'ks_mp_mptest_oil'
 		},
@@ -376,7 +379,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.exportExcel = function()
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc = function() {
@@ -435,6 +438,35 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc = function() {
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 
+	var rec = this.c42Store.getAt(0);
+	var a = rec.data.a;
+	var b = rec.data.b;
+	
+	var concentration2 = this.editWindow.concentration2.getValue();
+	
+	var light = this.editWindow.light.getValue();
+	var light2 = this.editWindow.light2.getValue();
+	
+	if (Ext.isEmpty(light)) {
+		Ext.Msg.alert("系统提示", "请输入标样吸光度!");
+		return;
+	}
+	
+	if (Ext.isEmpty(light2)) {
+		Ext.Msg.alert("系统提示", "请输入样品吸光度!");
+		return;
+	}
+	
+	var test = (parseFloat(light)-parseFloat(a))/parseFloat(b);
+	var factor = parseFloat(concentration2)/test;
+	factor = Math.round(factor * 1000) / 1000;
+	this.editWindow.factor.setValue(factor);
+	
+	var test2 = (parseFloat(light2)-parseFloat(a))/parseFloat(b);
+	test2 = test2 * factor;
+	test2 = Math.round(test2 * 100) / 100;
+	this.editWindow.concentration.setValue(test2);
+	
 	var oiltype = this.editWindow.reserve1.getValue();
 	var weight = this.editWindow.weight2.getValue();
 	weight = parseFloat(weight);
@@ -443,7 +475,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 		Ext.Msg.alert("系统提示", "请输入C42浓度!");
 		return;
 	}
-	var concentration2 = this.editWindow.concentration2.getValue();
+	
 	// 测试的
 	concentration = parseFloat(concentration) / 100;
 	// 理论的

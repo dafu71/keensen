@@ -89,6 +89,16 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 						this.planWeekWindow.loadData(cell);
 					}
 				}
+				
+				if (this.opt == 'orderview') {
+					var baseId = cell.get('baseId');
+					if(Ext.isEmpty(baseId)){
+						Ext.Msg.alert('系统提示', '不是营销导入数据，没有详情查看');
+						return false;
+					}
+					this.orderViewWindow.show();
+					this.orderViewWindow.loadData(cell);
+				}
 			}, this);
 
 	// 增加修改事件
@@ -341,4 +351,9 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateMaterial2 = funct
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onAddOrder2 = function() {
 	this.addOrderWindow2.show();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onOrderView = function() {
+	this.opt = 'orderview';
+	this.listPanel.onEdit();
 }

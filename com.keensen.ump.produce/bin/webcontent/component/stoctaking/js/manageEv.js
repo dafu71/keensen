@@ -14,6 +14,11 @@ com.keensen.ump.produce.component.PdastocktakingMgr.prototype.initEvent = functi
 				});
 	}, this);
 
+	this.listPanel.store.on('load', function() {
+				 var count = _this.listPanel.store.getTotalCount();
+				 _this.inputPanel.count.setValue(count);
+			})
+
 }
 
 com.keensen.ump.produce.component.PdastocktakingMgr.prototype.destroy = function() {
@@ -22,8 +27,12 @@ com.keensen.ump.produce.component.PdastocktakingMgr.prototype.destroy = function
 }
 
 com.keensen.ump.produce.component.PdastocktakingMgr.prototype.onSave = function() {
+
 	var _this = this;
+
 	if (this.inputPanel.form.isValid()) {
+		var lastBatchNo = _this.inputPanel.form.findField('entity/batchNo')
+				.getValue();
 		this.inputPanel.form.submit({
 					method : "POST",
 					url : this.inputPanel.saveUrl,
@@ -33,16 +42,24 @@ com.keensen.ump.produce.component.PdastocktakingMgr.prototype.onSave = function(
 						var D = B.result;
 						if (D.success) {
 							var code = D.code;
-							if (code == 0)
-								Ext.MessageBox.alert("操作提示", "保存成功!",
-										function() {
-											_this.listPanel.refresh();
-											_this.inputPanel.form.reset();
-											_this.inputPanel.form
-													.findField('entity/batchNo')
-													.focus(false, 100);
-										})
-							else {
+							if (code == 0) {
+								_this.listPanel.refresh();
+								_this.inputPanel.lastBatchNo.setValue(lastBatchNo);
+								_this.inputPanel.form
+										.findField('entity/batchNo')
+										.setValue('');
+								_this.inputPanel.form
+										.findField('entity/batchNo').focus(
+												false, 100);
+								/*
+								 * Ext.MessageBox.alert("操作提示", "保存成功!",
+								 * function() { _this.listPanel.refresh();
+								 * _this.inputPanel.form.reset();
+								 * _this.inputPanel.form
+								 * .findField('entity/batchNo') .focus(false,
+								 * 100); })
+								 */
+							} else {
 								Ext.MessageBox.alert("操作提示", "数据重复，不能保存!",
 										function() {
 										})
@@ -165,7 +182,7 @@ com.keensen.ump.produce.component.PdastocktakingMgr.prototype.exportExcel = func
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
 			});
-	
+
 	this.requestMask.show();
 	Ext.Ajax.request({
 		url : "com.keensen.ump.produce.component.stocktaking.queryStocktaking.biz.ext",
@@ -190,14 +207,15 @@ com.keensen.ump.produce.component.PdastocktakingMgr.prototype.exportExcel = func
 					var str = '<style>td{border:1px black solid;}</style>'
 							+ '<table class="table-data table-bordered table"><tr>';
 
-					str += '<td align="center" colspan=9>' + date + '盘库</td></tr><tr>'
+					str += '<td align="center" colspan=9>' + date
+							+ '盘库</td></tr><tr>'
 
+					str += '<td align="center">导入序号</td>'
 					str += '<td align="center">元件序号</td>'
 
 					+ '<td align="center">卷膜批号</td>'
 							+ '<td align="center">生产规格型号</td>'
 							+ '<td align="center">订单下达型号</td>'
-							+ '<td align="center">唛头标签型号</td>'
 							+ '<td align="center">卷膜日期</td>'
 							+ '<td align="center">区域</td>'
 							+ '<td align="center">盘库时间</td>'
@@ -207,14 +225,16 @@ com.keensen.ump.produce.component.PdastocktakingMgr.prototype.exportExcel = func
 
 					Ext.each(ret.data, function(r) {
 								var cnt2 = r.cnt2;
-								str += '<tr><td align="center">' + formatStr(r.batchNo)
-
-								+ '</td><td align="center">' + formatStr(r.juanmoBatchNo)
-										+ '</td><td align="center">' + formatStr(r.materSpecName)
+								str += '<tr><td align="center">'
+										+ formatStr(r.batchNo2)
+										+ '</td><td align="center">'
+										+ formatStr(r.batchNo)
+										+ '</td><td align="center">'
+										+ formatStr(r.juanmoBatchNo)
+										+ '</td><td align="center">'
+										+ formatStr(r.materSpecName)
 										+ '</td><td align="center">'
 										+ formatStr(r.orderMaterSpecName)
-										+ '</td><td align="center">'
-										+ formatStr(r.markSpecCode)
 										+ '</td><td align="center">'
 										+ formatStr(r.produceDt) + '</td>'
 										+ '<td align="center">'
@@ -223,11 +243,12 @@ com.keensen.ump.produce.component.PdastocktakingMgr.prototype.exportExcel = func
 
 										+ '</td>'
 
-										+ '<td align="center">'
-										+ r.createTime + '</td>'
+										+ '<td align="center">' + r.createTime
+										+ '</td>'
 
 										+ '<td align="center">'
-										+ formatStr(r.createName) + '</td>' + '</tr>';
+										+ formatStr(r.createName) + '</td>'
+										+ '</tr>';
 							})
 					str += '</table>';
 
@@ -254,6 +275,6 @@ com.keensen.ump.produce.component.PdastocktakingMgr.prototype.exportExcel = func
 	})
 }
 
-function formatStr(str){
-	return ((Ext.isEmpty(str)) || ('null' == str)) ? '':str;
+function formatStr(str) {
+	return ((Ext.isEmpty(str)) || ('null' == str)) ? '' : str;
 }

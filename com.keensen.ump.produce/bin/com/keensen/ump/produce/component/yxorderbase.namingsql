@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.yxorderbase">
+    <select id="queryYxOrderBase" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID AS "id",T1.DELIVERY_STATE "deliveryState",
+	TO_CHAR(T1.CHANGE_TIME, 'yyyy-MM-dd') "changeTime",
+       T1.CHANGE_USER_ID AS "changeUserId",
+       T1.CHANGE_NAME AS "changeName",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",	
+		t1.DEPT as "dept",
+		t1.KHXJ as "khxj",
+		t1.CPXJ as "cpxj",
+		t1.CPLB as "cplb",
+		t1.ORDER_NO as "orderNo",
+		t1.DIRECTOR as "director",
+		t1.CLIENT as "client",
+		t1.NATION as "nation",
+		t1.PROVINCE as "province",
+		t1.CITY as "city",
+		t1.DISTRICT as "district",
+		substr(t1.ORDER_DATE,1,10) as "orderDate",
+		t1.PROD_NAME as "prodName",
+		t1.DRY_WET as "dryWet",
+		t1.ORDER_AMOUNT as "orderAmount",
+		t1.LABEL as "label",
+		t1.LABEL_DRAWING_CODE as "labelDrawingCode",
+		t1.BAG as "bag",
+		t1.BAG_DRAWING_CODE as "bagDrawingCode",
+		t1.BOX as "box",
+		t1.BOX_DRAWING_CODE as "boxDrawingCode",
+		t1.MARK as "mark",
+		t1.MARK_DRAWING_CODE as "markDrawingCode",
+		t1.PRODUCT_REMARK as "productRemark",
+		substr(t1.DELIVERY_DATE,1,10) as "deliveryDate",
+        t1.state "state"，
+        t1.order_Type as "orderType",
+		t1.mater_Spec_Name2 as "materSpecName2",
+		t1.type as "type",
+		t1.style as "style",
+		t1.wet_percent as "wetPercent",
+		t1.dry_amount as "dryAmount",
+		t1.wet_amount as "wetAmount",
+		t1.stock_amount as "stockAmount",
+		t1.prod_Amount as "prodAmount",
+		substr(t1.DEMAND_STOCK_DATE,1,10) as "demandStockDate",
+		t1.period as "period",
+		t1.salt_low as "saltLow",
+		t1.gpd_low as "gpdLow",
+		t1.gpd_up as "gpdUp",
+		t1.test_stand as "testStand",
+		t1.pressure as "pressure",
+		t1.temperature as "temperature",
+		t1.concentration as "concentration",
+		t1.recycle_percent as "recyclePercent",
+		t1.ph as "ph",
+		t1.DENSE_NET as "denseNet",
+		t1.LID as "lid",
+		t1.tape as "tape",
+		t1.aar as "aar",
+		t1.color as "color",
+		t1.color_code as "colorCode",
+		t1.make_label as "makeLabel",
+		t1.new_make_label as "newMakeLabel",
+		t1.water_arrow as "waterArrow",
+		t1.sn_regular as "snRegular",
+		t1.label_nsf as "labelNsf",
+		t1.sn_start as "snStart",
+		t1.sn_end as "snEnd",
+		t1.label_double as "labelDouble",
+		t1.label_rule_double as "labelRuleDouble",
+		t1.position_Label as "positionLabel",
+		t1.make_mark as "makeMark",
+		t1.new_make_mark as "newMakeMark",
+		t1.mark_nsf as "markNsf",
+		t1.mark_regular as "markRegular",
+		t1.mark_start as "markStart",
+		t1.mark_end as "markEnd",
+		t1.ifkeep as "ifkeep",
+		t1.mark_double as "markDouble",
+		t1.mark_rule_double as "markRuleDouble",
+		t1.position_mark as "positionMark",
+		t1.ifphoto as "ifphoto",
+		t1.ifanyone as "ifanyone",
+		t1.photo_single as "photoSingle",
+		t1.photo_all as "photoAll",
+		t1.packing_num as "packingNum",
+		t1.ifpolish as "ifpolish",
+		t1.TRAY as "tray",
+		t1.TRAY_size as "traySize",t1.seal_position as "sealPosition",t1.seal_amount as "sealAmount",
+		t1.packing_layer as "packingLayer",
+		t1.packing_txt as "packingTxt",t1.hpmc "hpmc",
+		t1.goods_with_report as "goodsWithReport",
+		REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(T1.PHOTO_SINGLE,
+                                                       '0',
+                                                       '绕丝后标签状态'),
+                                               '1',
+                                               '绕丝后整支效果'),
+                                       '2',
+                                       '抽真空后状态'),
+                               '3',
+                               '入箱时状态'),
+                       '4',
+                       '包完整支效果'),
+               '5',
+               '包完后唛头') "photoSingleName",
+        REPLACE(REPLACE(REPLACE(REPLACE(T1.PHOTO_ALL,
+                                                       '0',
+                                                       '绕保鲜膜前整体效果'),
+                                               '1',
+                                               '绕保鲜膜前唛头及特殊要求拍照确认'),
+                                       '2',
+                                       '装车前整体效果'),
+                               '3',
+                               '关车门前的状态') "photoAllName",
+        t1.logo_Label as "logoLabel",
+		t1.logo_Label2 as "logoLabel2",
+		t1.spec_Name_Label as "specNameLabel",
+		t1.spec_Name_Label2 as "specNameLabel2",
+		t1.logo_Mark as "logoMark",
+		t1.logo_Mark2 as "logoMark2",
+		t1.spec_Name_Mark as "specNameMark",
+		t1.spec_Name_Mark2 as "specNameMark2",
+		t1.label_Drawing_Code2 as "labelDrawingCode2",
+		t1.mark_Drawing_Code2 as "markDrawingCode2"
+        
+  FROM KS_COMPONENT_YXORDER_BASE T1
+  
+	where 1=1
+	<isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="prodName">upper(t1.prod_Name) like '%' || upper(#prodName#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodName2">t1.prod_Name = #prodName2#</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
+        <isNotNull prepend="and" property="orderDateStart">substr(t1.order_Date,1,10)  &gt;=  #orderDateStart#</isNotNull>
+        <isNotNull prepend="and" property="orderDateEnd">substr(t1.order_Date,1,10)  &lt;=  #orderDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="client">t1.client like '%' || #client# || '%'</isNotNull>
+        <isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+        <isNotNull prepend="and" property="hpmc">t1.hpmc = #hpmc#</isNotNull>
+        <isNotNull prepend="and" property="deliveryState">t1.delivery_State = #deliveryState#</isNotNull>
+        <isNotNull prepend="and" property="createName">t1.create_Name like '%' || #createName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="ids">T1.ID in ($ids$)</isNotNull>
+    
+     order by t1.id desc
+	 </select>
+    <select id="queryYxOrderConfirm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT 
+   		 T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       T1.ORDER_BRAND    AS "orderBrand",
+       T1.IFBOOK         AS "ifbook",
+       T1.IFALL          AS "ifall",
+       T1.IFDELIVERY     AS "ifdelivery",
+       T1.IFSATISFY      AS "ifsatisfy",
+       T1.IFCONSIDER     AS "ifconsider",
+       T1.IFCONSIDER2    AS "ifconsider2",
+       T1.IFWAREHOUSING  AS "ifwarehousing",
+       T1.IFGET          AS "ifget",
+       T1.REASON         AS "reason",
+       T1.ADVISE_DATE    AS "adviseDate",
+       T1.RELATION_ID    AS "relationId",T1.if_sale_label "ifSaleLabel",
+       T1.m_Reason "mReason",
+       T2.ORDER_NO       "orderNo",t2.order_type "orderType",
+       T2.ORDER_AMOUNT   "orderAmount",t2.demand_Stock_Date "demandStockDate",
+       T2.NEW_MAKE_LABEL "newMakeLabel",
+       T2.NEW_MAKE_MARK  "newMakeMark",
+       T2.PERIOD         "period"，
+       t1.t_advise "tAdvise",	
+		t1.t_route	"tRoute",
+		t1.t_user_id "tUserId",
+		t1.t_name	"tName",
+		TO_CHAR(t1.t_time, 'yyyy-MM-dd')	"tTime"
+  FROM KS_COMPONENT_YXORDER_BASE T2
+  LEFT JOIN KS_COMPONENT_YXORDER_CONFIRM T1
+    ON T1.RELATION_ID = T2.ID
+    WHERE 1=1
+	<isNotNull prepend="and" property="relationId">T1.RELATION_ID = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+ ORDER BY T1.ID DESC
+
+	 </select>
+    <insert id="insertYxOrder" parameterClass="java.util.HashMap">
+    INSERT INTO KS_PROD_COMPONENT_YXORDER
+  (ORDER_TYPE,
+   TYPE,
+   ORDER_NO,
+   ORDER_DATE,
+   DRY_WET,
+   ORDER_AMOUNT,
+   PROD_AMOUNT,
+   LABEL,
+   BAG,
+   BOX,
+   MARK,
+   REMARK,
+   DEMAND_STOCK_DATE,
+   KHXJ,
+   CPXJ,
+   DDXJ,
+   HPMC,
+   CPGG,
+   DFH,
+   XSC,
+   SBKCGM,
+   SBKCSM,
+   BQ,
+   LID_TAPE,
+   LID,
+   TAPE,
+   TRAY,
+   MATER_SPEC_NAME2,
+   TEMPLATE_NAME,
+   id,CREATE_TIME,create_name,CREATE_USER_ID,base_id)
+  SELECT ORDER_TYPE,
+         TYPE,
+         ORDER_NO,
+         to_date(ORDER_DATE,'yyyy-MM-dd'),
+         DRY_WET,
+         ORDER_AMOUNT,
+         PROD_AMOUNT,
+         LABEL,
+         BAG,
+         BOX,
+         MARK,
+         PRODUCT_REMARK    REMARK,
+         to_date(DEMAND_STOCK_DATE,'yyyy-MM-dd'),
+         KHXJ,
+         CPXJ,
+         DDXJ,
+         HPMC,
+         TYPE              CPGG,
+         STOCK_AMOUNT      DFH,
+         PROD_AMOUNT       XSC,
+         DRY_AMOUNT        SBKCGM,
+         WET_AMOUNT        SBKCSM,
+         LABEL             BQ,
+         LID               LID_TAPE,
+         LID,
+         TAPE,
+         TRAY,
+         MATER_SPEC_NAME2,
+         MARK_DRAWING_CODE TEMPLATE_NAME,
+         #id#,sysdate,#createName#,#createUserId#,#baseId# 
+    FROM KS_COMPONENT_YXORDER_BASE
+		where 1=1
+		 <isNotNull prepend="and" property="baseId">id = #baseId#</isNotNull>
+    </insert>
+    <delete id="deleteYxOrder" parameterClass="java.util.HashMap">delete from KS_PROD_COMPONENT_YXORDER
+    where base_id = #baseId#
+    and not exists(SELECT 1 from KS_COMPONENT_PLAN_WEEK t
+	WHERE t.relation_id IN(SELECT ID from KS_PROD_COMPONENT_YXORDER
+	WHERE base_id=#baseId#))</delete>
+    <select id="queryPlanWeekByBaseId" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT * from KS_COMPONENT_PLAN_WEEK t
+	WHERE t.relation_id IN(SELECT ID from KS_PROD_COMPONENT_YXORDER
+	WHERE base_id=#baseId#)</select>
+    <select id="queryYxOrderAdjust" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT 
+   		 T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       t1.adjust_reason as "adjustReason",
+		t2.id as "baseId",
+		t1.adjust_content as "adjustContent",
+		t1.d_confirm as "dConfirm",
+		t1.d_date as "dDate",
+		t1.d_user_name as "dUserName",
+		t1.d_user_id as "dUserId",
+		t1.ifall as "ifall",
+		t1.ifsatisfy as "ifsatisfy",
+		t1.ifdelivery as "ifdelivery",
+		t1.ifget as "ifget",
+		t1.p_date as "pDate",
+		t1.p_user_name as "pUserName",
+		t1.p_user_id as "pUserId",
+		t1.m_confirm as "mConfirm",
+		t1.m_date as "mDate",
+		t1.m_user_name as "mUserName",
+		t1.m_user_id as "mUserId",
+		t2.order_no "orderNo"
+
+  FROM KS_COMPONENT_YXORDER_BASE T2
+  LEFT JOIN KS_COMPONENT_YXORDER_ADJUST T1
+    ON T1.base_ID = T2.ID
+    WHERE 1=1
+	<isNotNull prepend="and" property="baseId">T2.ID = #baseId#</isNotNull>
+ ORDER BY T1.ID DESC
+
+	 </select>
+    <delete id="deleteAdjust" parameterClass="java.util.HashMap">delete from KS_COMPONENT_YXORDER_ADJUST
+    where base_id = #baseId#</delete>
+    <insert id="backupAdjust" parameterClass="java.util.HashMap">insert into KS_COMPONENT_YXORDER_ADJUST_bk
+    (ID,CREATE_TIME,CREATE_USER_ID,CREATE_NAME,
+    UPDATE_TIME,UPDATE_USER_ID,UPDATE_NAME,RESERVE1,RESERVE2,
+    RESERVE3,RESERVE4,RESERVE5,ORG_ID,STATUS,ADJUST_REASON,BASE_ID,
+    ADJUST_CONTENT,D_CONFIRM,D_DATE,D_USER_NAME,D_USER_ID,IFALL,
+    IFSATISFY,IFDELIVERY,IFGET,P_DATE,P_USER_NAME,P_USER_ID,
+    M_CONFIRM,M_DATE,M_USER_NAME,M_USER_ID)
+    select ID,CREATE_TIME,CREATE_USER_ID,CREATE_NAME,
+    UPDATE_TIME,UPDATE_USER_ID,UPDATE_NAME,RESERVE1,RESERVE2,
+    RESERVE3,RESERVE4,RESERVE5,ORG_ID,STATUS,ADJUST_REASON,BASE_ID,
+    ADJUST_CONTENT,D_CONFIRM,D_DATE,D_USER_NAME,D_USER_ID,IFALL,
+    IFSATISFY,IFDELIVERY,IFGET,P_DATE,P_USER_NAME,P_USER_ID,
+    M_CONFIRM,M_DATE,M_USER_NAME,M_USER_ID 
+    from KS_COMPONENT_YXORDER_ADJUST
+    where base_id = #baseId#</insert>
+    <update id="saveDeliveryStateBatch" parameterClass="java.util.HashMap">update KS_COMPONENT_YXORDER_BASE t
+    	set t.delivery_state = decode(nvl(t.delivery_state,'否'),'是','否','是'),
+    	t.change_time = sysdate,t.change_name = #changeName#,t.change_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
+    <select id="queryYxOrderMCConfirm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+   	SELECT 
+   		 T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",t1.reserve1 "reserve1",t1.reserve2 "reserve2",
+       t1.PLAN_STATE as "planState",
+		t1.GOODS_STATE as "goodsState",
+		t1.APPLY_DATE as "applyDate",
+		t1.MATER_CODE as "materCode",
+		t1.MATER_NAME as "materName",t1.MATER_TYPE as "materType",
+		t1.SPEC_NAME as "specName",
+		t1.UNIT as "unit",
+		t1.AMOUNT as "amount",
+		t1.K3 as "k3",
+		t1.DEMAND_DATE as "demandDate",
+		t1.REMARK as "remark",
+		t1.RELATION_ID as "relationId",
+		t1.BASE_ID as "baseId",
+		decode(t1.BASE_ID,null,t1.reserve1,t2.order_no) "orderNo",
+		
+		decode(t1.BASE_ID,null,t1.reserve3,T2.order_amount) "orderAmount",
+		t2.LABEL_DRAWING_CODE as "labelDrawingCode",
+		t2.BAG_DRAWING_CODE as "bagDrawingCode",
+		t2.BOX_DRAWING_CODE as "boxDrawingCode",
+		t2.MARK_DRAWING_CODE as "markDrawingCode",
+		decode(t1.mater_type,'标签',t2.LABEL_DRAWING_CODE,'唛头',t2.MARK_DRAWING_CODE
+		,'真空袋',decode(t1.BASE_ID,null,t1.BAG_DRAWING_CODE,t2.BAG_DRAWING_CODE) 
+		,'纸箱',decode(t1.BASE_ID,null,t1.BOX_DRAWING_CODE,t2.BOX_DRAWING_CODE),'') "drawingCode",
+		t2.sn_start as "snStart",
+		t2.sn_end as "snEnd",
+		decode(t1.BASE_ID,null,t1.reserve2,t2.prod_Name) "prodName"
+	  FROM KS_COMPONENT_YXORDER_MCONFIRM T1
+	  LEFT JOIN KS_COMPONENT_YXORDER_BASE T2
+	    ON T1.base_ID = T2.ID
+	    WHERE 1=1
+	<isNotNull prepend="and" property="baseId">t1.BASE_ID = #baseId#</isNotNull>
+        <isNotNull prepend="and" property="relationId">t1.RELATION_ID = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">decode(t1.BASE_ID,null,t1.reserve1,t2.order_no) like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodName">decode(t1.BASE_ID,null,t1.reserve2,t2.prod_Name) like '%' || #prodName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="materName">t1.MATER_NAME like '%' || #materName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="specName">t1.SPEC_NAME like '%' || #specName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="applyDateStart">to_char(t1.apply_date,'yyyy-MM-dd')  &gt;=  #applyDateStart#</isNotNull>
+        <isNotNull prepend="and" property="applyDateEnd">to_char(t1.apply_date,'yyyy-MM-dd')  &lt;=  #applyDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="demandDateStart">to_char(t1.demand_date,'yyyy-MM-dd')  &gt;=  #demandDateStart#</isNotNull>
+        <isNotNull prepend="and" property="demandDateEnd">to_char(t1.demand_date,'yyyy-MM-dd')  &lt;=  #demandDateEnd#</isNotNull>
+	
+ 	ORDER BY t1.RELATION_ID,T1.ID
+
+	 </select>
+    <insert id="backupMConfirm" parameterClass="java.util.HashMap">insert into KS_COMPONENT_YX_MCONFIRM_BAK
+    (ID,CREATE_TIME,CREATE_USER_ID,CREATE_NAME,UPDATE_TIME,
+    UPDATE_USER_ID,UPDATE_NAME,RESERVE1,RESERVE2,RESERVE3,RESERVE4,
+    RESERVE5,ORG_ID,STATUS,PLAN_STATE,GOODS_STATE,APPLY_DATE,
+    MATER_CODE,MATER_NAME,SPEC_NAME,UNIT,AMOUNT,K3,DEMAND_DATE,
+    REMARK,RELATION_ID,BASE_ID)
+    select ID,CREATE_TIME,CREATE_USER_ID,CREATE_NAME,UPDATE_TIME,
+    UPDATE_USER_ID,UPDATE_NAME,RESERVE1,RESERVE2,RESERVE3,RESERVE4,
+    RESERVE5,ORG_ID,STATUS,PLAN_STATE,GOODS_STATE,APPLY_DATE,
+    MATER_CODE,MATER_NAME,SPEC_NAME,UNIT,AMOUNT,K3,DEMAND_DATE,
+    REMARK,RELATION_ID,BASE_ID 
+    from KS_COMPONENT_YXORDER_MCONFIRM
+    where id = #id#</insert>
+    <delete id="deleteMCConfirm" parameterClass="java.util.HashMap">delete from KS_COMPONENT_YXORDER_MCONFIRM
+    where relation_id = #relationId#</delete>
+    <delete id="deleteYxorderStock" parameterClass="java.util.HashMap">delete from KS_COMPONENT_YXORDER_STOCK</delete>
+    <select id="queryYxorderStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.MATER_CODE AS "materCode",
+       T1.MATER_NAME AS "materName",
+       T1.SPEC_NAME  AS "specName",
+       T1.STORAGE    AS "storage",
+       T1.UNIT       AS "unit",
+       T1.AMOUNT     AS "amount"
+  	FROM KS_COMPONENT_YXORDER_STOCK T1</select>
+    <select id="queryYxorderStockAmount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.MATER_CODE "materCode",SUM(T1.AMOUNT) "amount"
+  FROM KS_COMPONENT_YXORDER_STOCK T1
+  GROUP BY t1.mater_code</select>
+</sqlMap>

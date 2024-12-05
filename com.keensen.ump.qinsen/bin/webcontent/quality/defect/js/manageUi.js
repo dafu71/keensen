@@ -18,6 +18,23 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 								name : 'defectFullName'
 							}]
 				})
+
+		this.defectStore2 = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.qinsen.inst.queryCdmDefectItemList.biz.ext',
+					root : 'data',
+					autoLoad : true,
+					totalProperty : '',
+					baseParams : {
+						'condition/recTacheId' : '99',
+						'condition/dutyTacheId' : '99'
+					},
+					fields : [{
+								name : 'recordId'
+							}, {
+								name : 'defectFullName'
+							}]
+				})
+
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
 					dutyTacheCode : 'TM',
@@ -45,6 +62,9 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initEditWindow();
+		this.initEditWindow2();
+		
+		
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -68,7 +88,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						fieldLabel : '不良产生时间',
 						colspan : 1,
 						anchor : '95%',
-						//allowBlank : false,
+						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, -1)
@@ -81,7 +101,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						anchor : '95%',
 						editable : true,
 						format : 'Y-m-d H:i',
-						//allowBlank : false,
+						// allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
 					}, {
@@ -149,6 +169,12 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						xtype : 'textfield',
 						fieldLabel : '膜片批次%-%',
 						name : 'condition/tumoBatchNoStr'
+					}, {
+						ref : '../dimoBatchNo',
+						anchor : '95%',
+						xtype : 'textfield',
+						fieldLabel : '底膜批次%-%',
+						name : 'condition/dimoBatchNo'
 					}]
 				});
 		this.queryPanel.addButton({
@@ -209,6 +235,12 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'tumoBatchNo',
 						header : '膜片批次'
+					}, {
+						dataIndex : 'dimoBatchNo',
+						header : '底膜批次'
+					}, {
+						dataIndex : 'productType',
+						header : '生产类型'
 					}, {
 						header : '膜片型号',
 						dataIndex : 'mpSpecName'
@@ -285,6 +317,12 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 							name : 'mpSpecName'
 						}, {
 							name : 'produceDate'
+						}, {
+							name : 'dimoBatchNo'
+						}, {
+							name : 'flag'
+						}, {
+							name : 'productType'
 						}]
 			})
 		})
@@ -306,7 +344,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 				successFn : function(i, r) {
 					_this.editWindow.items.items[0].form.reset();
 					_this.editWindow.hide();
-					_this.listPanel.store.load();
+					_this.listPanel.store.reload();
 				},
 				columns : 2,
 				loadUrl : 'com.keensen.ump.qinsen.quality.expandDefect.biz.ext',
@@ -324,14 +362,14 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'datefield',
+							xtype : 'datetimefield',
 							anchor : '95%',
 							ref : '../produceDt',
 							name : 'entity/produceDt',
 							dataIndex : 'produceDt',
 							allowBlank : false,
-							fieldLabel : '不良产生日期',
-							format : "Y-m-d",
+							fieldLabel : '不良产生时间',
+							format : "Y-m-d H:i:00",
 							anchor : '75%',
 							colspan : 2
 						}, {
@@ -343,6 +381,117 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 							fieldLabel : '不良项目',
 							triggerAction : "all",
 							store : this.defectStore,
+							valueField : 'recordId',
+							displayField : 'defectFullName',
+							hiddenName : 'entity/defectItemId',
+							name : 'entity/defectItemId',
+							dataIndex : 'defectId',
+							editable : false,
+							forceSelection : true,
+							mode : 'local',
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							},
+							emptyText : '--请选择--',
+							anchor : '75%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/loss',
+							fieldLabel : '不良损失',
+							dataIndex : 'loss',
+							allowNegative : false,
+							allowDecimals : true,
+							minValue : 0,
+							allowBlank : true,
+							anchor : '75%',
+							colspan : 2,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							dataIndex : 'remark',
+							anchor : '75%',
+							colspan : 2,
+							ref : '../remark',
+							name : 'entity/remark',
+							allowBlank : true,
+							fieldLabel : '备注'
+						}, {
+							name : 'entity/recordId',
+							dataIndex : 'recordId',
+							xtype : 'hidden'
+						}]
+			}]
+		});
+	}
+
+	this.initEditWindow2 = function() {
+		var _this = this;
+		this.editWindow2 = this.editWindow2 || new Ext.fn.FormWindow({
+			title : '修改',
+			height : 480,
+			width : 600,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				successFn : function(i, r) {
+					_this.editWindow2.items.items[0].form.reset();
+					_this.editWindow2.hide();
+					_this.listPanel.store.reload();
+				},
+				columns : 2,
+				loadUrl : 'com.keensen.ump.qinsen.quality.expandDefect.biz.ext',
+				saveUrl : 'com.keensen.ump.qinsen.quality.modifyZmDefect.biz.ext',
+				fields : [{
+							xtype : 'textfield',
+							dataIndex : 'dimoBatchNo',
+							ref : '../../dimoBatchNo',
+							fieldLabel : '底膜批次',
+							readOnly : true,
+							anchor : '75%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datetimefield',
+							anchor : '95%',
+							ref : '../produceDt',
+							name : 'entity/produceDt',
+							dataIndex : 'produceDt',
+							allowBlank : false,
+							fieldLabel : '不良产生时间',
+							format : "Y-m-d H:i:00",
+							anchor : '75%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							fieldLabel : '不良项目',
+							triggerAction : "all",
+							store : this.defectStore2,
 							valueField : 'recordId',
 							displayField : 'defectFullName',
 							hiddenName : 'entity/defectItemId',

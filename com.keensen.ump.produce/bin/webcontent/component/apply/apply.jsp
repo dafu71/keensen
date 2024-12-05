@@ -124,7 +124,7 @@
 		<div align="left" class="style1"><strong>性能:</strong><b:write property="data/performance"/></div>
 		</td>
 		<td width="33%" height="38">
-		<div align="left" class="style1"><strong>包装箱:</strong><b:write property="data/box"/></div>
+		<div align="left" class="style1"><strong>包装箱:</strong><d:write property="data/box" dictTypeId="KS_COMPONENT_INDUSTRY_BOX"/></div>
 		</td>
 		<td width="33%" height="38">
 		<div align="left" class="style1"><strong>托盘:</strong><b:write property="data/tray"/></div>

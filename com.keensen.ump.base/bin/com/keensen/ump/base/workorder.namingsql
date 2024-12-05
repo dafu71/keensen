@@ -9,6 +9,8 @@
  		<isNotNull prepend="and" property="code">t.code like '%'||#code#||'%'</isNotNull>
         <isNotNull prepend="and" property="name">t.name like '%'||#name#||'%'</isNotNull>
         <isNotNull prepend="and" property="type">t.type like '%'||#type#||'%'</isNotNull>
+        <isNotNull prepend="and" property="ip">t.ip = #ip#</isNotNull>
+		
 		order by t.code
      </select>
     <select id="queryMachineCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select decode(#type#,'裁叠膜','C','卷膜','J','X') || (nvl(max(SUBSTR(t.code,2,10)),0) +1)  "code"

@@ -2,13 +2,13 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.initEvent = function() {
 	var _this = this;
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
-		//var start = vals['condition/produceDtStart'];
-		//var end = vals['condition/produceDtEnd'];
-		//if (dayDiff(start, end) > 31) {
-			//Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
-			//return false;
+		// var start = vals['condition/produceDtStart'];
+		// var end = vals['condition/produceDtEnd'];
+		// if (dayDiff(start, end) > 31) {
+		// Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
+		// return false;
 
-		//}
+		// }
 		var store = this.listPanel.store;
 
 		store.baseParams = this.queryPanel.getForm().getValues();
@@ -33,8 +33,8 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.initEvent = function() {
 				var recordId = cell.data.recordId;
 				recordId = recordId + '';
 				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能修改');
-					//return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能修改');
+					// return false;
 				}
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
@@ -47,11 +47,11 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.initEvent = function() {
 				recordId = recordId + '';
 
 				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能删除');
-					//return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能删除');
+					// return false;
 				}
 			})
-			
+
 	this.detailGrid.mon(this.detailGrid, 'beforedel', function(gird, cell) {
 				var C = gird.getSelectionModel().getSelections();
 				var r = C[0];
@@ -59,8 +59,8 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.initEvent = function() {
 				recordId = recordId + '';
 
 				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能删除');
-					//return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能删除');
+					// return false;
 				}
 			})
 
@@ -88,14 +88,14 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.initEvent = function() {
 				this.editWindow.denseNet.setValue(record.data.denseNet);
 				this.editWindow.pageWidth.setValue(record.data.pageWidth);
 			}, this);
-			
+
 	// 增加修改事件
 	this.detailGrid.mon(this.detailGrid, 'update', function(gird, cell) {
 				var recordId = cell.data.recordId;
 				recordId = recordId + '';
 				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能修改');
-					//return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能修改');
+					// return false;
 				}
 				this.detailEditWindow.show();
 				this.detailEditWindow.loadData(cell);
@@ -111,7 +111,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.mainSelected = function(
 			})
 }
 
-com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.modiDetailRecord= function() {
+com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.modiDetailRecord = function() {
 	this.detailGrid.onEdit();
 }
 
@@ -210,10 +210,12 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onPrintTag = function() {
 		var rec = C[0];
 		var f = document.getElementById('jmprintForm');
 		f.batchIdStr.value = rec.data.recordId;
-		var actionUrl = 'com.keensen.ump.qinsen.printJuanmoTag.flow?token='
+		var actionUrl = 'com.keensen.ump.qinsen.printJuanmoTags.flow?token='
 				+ Date.now();
 		f.action = actionUrl;
 		f.submit();
+
+		
 
 	}
 }
@@ -221,9 +223,9 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onPrintTag = function() {
 com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onSave = function() {
 	var _this = this;
 	if (this.detailAddWindow.form.isValid()) {
-		if(Ext.isEmpty(this.detailAddWindow.cdmBatchId.getValue())){
+		if (Ext.isEmpty(this.detailAddWindow.cdmBatchId.getValue())) {
 			Ext.Msg.alert("系统提示", "请选择或者输入叠膜栈板号！");
-			return false;			
+			return false;
 		}
 		_this.requestMask = this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
@@ -231,19 +233,19 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onSave = function() {
 						});
 		_this.requestMask.show();
 		Ext.Ajax.request({
-			url : "com.keensen.ump.qinsen.juanmo.createDetailRecord.biz.ext",
-			method : "post",
-			jsonData : this.detailAddWindow.form.getValues(),
-			success : function(resp) {
-				var ret = Ext.decode(resp.responseText);
-				if (ret.success) {
-					this.detailAddWindow.close();
-				}
-			},
-			callback : function() {
-				_this.requestMask.hide()
-			}
-		})
+					url : "com.keensen.ump.qinsen.juanmo.createDetailRecord.biz.ext",
+					method : "post",
+					jsonData : this.detailAddWindow.form.getValues(),
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							this.detailAddWindow.close();
+						}
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
 	}
 
 }
@@ -300,5 +302,5 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.destroy = function() {
 	this.detailAddWindow.destroy();
 	this.detailEditWindow.destroy();
 	this.editWindow.destroy();
-	
+
 }

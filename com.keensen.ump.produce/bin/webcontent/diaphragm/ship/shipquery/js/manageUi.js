@@ -13,12 +13,11 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 175,
 					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【发货单查询】',
 					fields : [{
 						xtype : "dateregion",
 						colspan : 1,
@@ -83,6 +82,33 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 						hiddenName : 'condition/perfFlagId',
 						anchor : '75%',
 						fieldLabel : '膜片等级'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						name : 'condition/deliveryOrderNo',
+						anchor : '75%',
+						fieldLabel : '实际发货<br>订单号'
+					}, {
+						xtype : "dateregion",
+						colspan : 1,
+						anchor : '95%',
+						nameArray : ['condition/deliveryDtStart',
+								'condition/deliveryDtEnd'],
+						fieldLabel : "实际发货日期",
+						format : "Y-m-d"
+					}, {
+						xtype : 'textarea',
+						name : 'condition/batchNoStr2',
+						emptyText : '多个批次请用逗号分隔，或一行一个批次',
+						colspan : 2,
+						anchor : '95%',
+						fieldLabel : '多膜片批次'
+					}, {
+						xtype : 'hidden',
+						name : 'condition/batchNoStr'
 					}/*
 						 * , { xtype : 'displayfield', height : '5', colspan : 4 }
 						 *//*
@@ -110,7 +136,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.EditListPanel({
-			title : '【发货单列表】',
+
 			viewConfig : {
 				forceFit : false
 			},
@@ -134,6 +160,12 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 			}, {
 				dataIndex : 'batchNo',
 				header : '膜片批次'
+			}, {
+				dataIndex : 'deliveryOrderNo',
+				header : '实际发货<br>订单号'
+			}, {
+				dataIndex : 'deliveryDt',
+				header : '实际发货时间'
 			}, {
 				dataIndex : 'produceDt',
 				header : '生产日期'
@@ -237,6 +269,10 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 							name : 'createTime'
 						}, {
 							name : 'sendAmount'
+						}, {
+							name : 'deliveryOrderNo'
+						}, {
+							name : 'deliveryDt'
 						}]
 			})
 		})

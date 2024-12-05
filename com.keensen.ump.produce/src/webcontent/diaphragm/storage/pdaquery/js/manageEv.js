@@ -30,9 +30,13 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.onScan = functio
 			var data = datas[0];
 			this.inputPanel.form.findField("id").setValue(data.id);
 			this.inputPanel.form.findField("oldValue").setValue(data.position);
-			this.inputPanel.form.findField("position").setValue(data.position);
+			//库存大于0
+			if(!Ext.isEmpty(data.amount) && data.amount > 0)
+				this.inputPanel.form.findField("position").setValue(data.position);
 			this.inputPanel.form.findField("storageId")
 					.setValue(data.storageId);
+			this.inputPanel.form.findField("stockAmount")
+					.setValue(data.amount);
 			this.inputPanel.form.findField("amount")
 					.setValue(data.amount);
 			this.inputPanel.form.findField("model")
@@ -89,16 +93,31 @@ com.keensen.ump.produce.diaphragm.storage.PdaqueryMgr.prototype.saveOutofstock =
 	var _this = this;
 	var stockId = this.inputPanel.form.findField("id").getValue();
 	var amount = this.inputPanel.form.findField("amount").getValue();
-	if(amount==0 || amount=='0'){
+	var stockAmount = this.inputPanel.form.findField("stockAmount").getValue();
+	var batchNo = this.inputPanel.form.findField("batchNo").getValue();
+	var storageId = this.inputPanel.form.findField("storageId").getValue();
+	if(stockAmount==0 || stockAmount=='0'){
 		Ext.Msg.alert("系统提示", "库存为零，不能出库！");
+		return;
+	}
+	if(Ext.isEmpty(amount) || amount==0 || amount=='0'){
+		Ext.Msg.alert("系统提示", "出库为零，不能出库！");
+		return;
+	}
+	if(amount>stockAmount){
+		Ext.Msg.alert("系统提示", "出库数量不能大于库存数量，不能出库！");
 		return;
 	}
 	Ext.Ajax.request({
 		method : "post",
 		scope : this,
-		url : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock.biz.ext',
+		url : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock4part.biz.ext',
 		jsonData : {
-			"outofstock/stockId" : stockId
+			"outofstock/stockId" : stockId,
+			"outofstock/storageId" : storageId,
+			"outofstock/batchNo" : batchNo,
+			"outofstock/amount" : amount,
+			"outofstock/stockAmount" : stockAmount
 		},
 		success : function(response, action) {
 			_this.inputPanel.form.reset();

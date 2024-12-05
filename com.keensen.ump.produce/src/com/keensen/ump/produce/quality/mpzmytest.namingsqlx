@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   <select id="queryZmyStd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	SELECT T1.CODE   AS "code",
+       T1.MPTYPE AS "mptype",
+       T1.LINE   AS "line",
+       T1.C11    AS "c11",
+       T1.C12    AS "c12",
+       T1.C13    AS "c13",
+       T1.C14    AS "c14",
+       T1.DIFF11 AS "diff11",
+       T1.DIFF12 AS "diff12",
+       T1.DIFF13 AS "diff13",
+       T1.DIFF14 AS "diff14"
+  FROM KS_BASE_ZMY T1
+	
+   </select>
+   
+   <select id="queryZmyBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		SELECT 'H' || #machine# || (SELECT CODE FROM KS_BASE_ZMY WHERE mptype=#mptype#) || #psf#
+	|| (SELECT ymd FROM v_ks_ymd)
+	|| (SELECT chr(COUNT(1)+65) FROM KS_PROD_DIAPHRAGM_MAKE_FIX t WHERE TO_CHAR(T.CREATE_TIME, 'yyyyMMdd') > '20240910'
+			 AND SUBSTR(T.BATCH_NO, 6, 4) = (SELECT ymd FROM v_ks_ymd) and t.machine=#machine#)
+	|| #jarNo# "batchNo"
+	FROM dual
+	     
+	</select> 
+ </sqlMap>

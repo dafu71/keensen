@@ -480,7 +480,19 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					allowBlank : false,
 					fieldLabel : '库位',
 					ref : '../position',
-					colspan : 1
+					colspan : 1,
+					listeners : {
+						scope : this,
+						specialkey : function(C, D) {
+							if (D.getKey() == Ext.EventObject.ENTER) {
+								// this.onScan();
+								this.inputWindow2.form
+										.findField("warehousing/storageId")
+										.focus(false, 100);
+							}
+
+						}
+					}
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : ' ',

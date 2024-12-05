@@ -195,19 +195,38 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onSaveCreate = fu
 }
 
 // 批量生成
+
 com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate = function() {
 	var A = this.listPanel;
 
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
+		this.orderNoWindow.deliveryOrderNo.setValue();
+		this.orderNoWindow.deliveryDt.setValue(new Date());
+		this.orderNoWindow.show();
+	}
+}
+
+com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreateOrder = function() {
+	var A = this.listPanel;
+	var _this = this;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
 		var records = A.getSelectionModel().getSelections();
+		var deliveryDt = this.orderNoWindow.deliveryDt.getValue();
+		if (!Ext.isEmpty(deliveryDt))
+			deliveryDt = formatTime(deliveryDt);
+		var deliveryOrderNo = this.orderNoWindow.deliveryOrderNo.getValue();
+	
 		for (var i = 0; i < records.length; i++) {
 			// var shipflag = records[i].get('shipflag');
 			// if (shipflag == 'y') {
 			// Ext.Msg.alert("系统提示", "所选数据中有已生成发货单数据，请重新选择！");
 			// return;
 			// }
+
 			var delivery = records[i].get('delivery');
 			if (delivery <= 0) {
 				Ext.Msg.alert("系统提示", "所选数据中有发货已完成的数据，请重新选择！");
@@ -235,6 +254,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate = functi
 		Ext.each(records, function(r) {
 					r.set('sendAmount', r.get('delivery'));
 					r.set('shipflag', 'n');
+					r.set('deliveryDt', deliveryDt);
+					r.set('deliveryOrderNo', deliveryOrderNo);
 					list.push(r.data);
 				});
 		Ext.Msg.confirm("系统提示", '是否生成发货单?', function(btnText) {
@@ -247,6 +268,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreate = functi
 						list : list
 					},
 					success : function(response, action) {
+						_this.orderNoWindow.hide();
 						A.store.reload({});
 					}
 				});
@@ -369,4 +391,20 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.exportExcel2 = fu
 			_this.requestMask.hide()
 		}
 	})
+}
+
+function formatTime(date) {
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	const hours = date.getHours();
+	const minutes = date.getMinutes();
+	const seconds = date.getSeconds();
+
+	// 使用模板字符串进行格式化
+	return year + '-' + month.toString().padStart(2, '0') + '-'
+			+ day.toString().padStart(2, '0') + ' '
+			+ hours.toString().padStart(2, '0') + ':'
+			+ minutes.toString().padStart(2, '0') + ':'
+			+ seconds.toString().padStart(2, '0');
 }

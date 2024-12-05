@@ -259,4 +259,44 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 		AND S.MATER_CLASS_ID IN($materClassIds$)
 	</isNotNull>
 </select>
+
+
+<!-- 查询基础物料 -->
+<select id="queryBaseMater" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+SELECT T1.DRAWING_CODE AS "drawingCode",
+       T1.MATER_CODE   AS "materCode",
+       T1.MATER_NAME   AS "materName",
+       T1.SPEC_NAME    AS "specName",
+       T1.UNIT         AS "unit",
+       T1.ID           "id"
+  FROM KS_BASE_MATER T1
+	where 1=1
+	<isNotNull prepend="" property="id">
+	   AND T1.ID = #id#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="drawingCode"> 
+		       T1.DRAWING_CODE = #drawingCode#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="drawingCode2"> 
+		       T1.DRAWING_CODE like '%'||#drawingCode2#||'%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="materCode"> 
+		       t1.MATER_CODE = #materCode#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="materCode2"> 
+		       t1.MATER_CODE like '%'||#materCode2#||'%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="materName"> 
+		       T1.MATER_NAME like '%'||#materName#||'%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="specName"> 
+		       T1.SPEC_NAME like '%'||#specName#||'%'
+	</isNotNull>
+</select>
 </sqlMap>

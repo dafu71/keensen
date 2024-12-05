@@ -3,7 +3,7 @@
 <sqlMap namespace="com.keensen.ump.qinsen.watertest">
     <!-- 查询水测记录列表 -->
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-	SELECT T1.RECORD_ID               AS "recordId",
+	SELECT T1.RECORD_ID               AS "recordId",t1.gyy_remark "gyyRemark",
        T1.JUANMO_BATCH_ID         AS "juanmoBatchId",
        T1.TEST_TYPE_ID            AS "testTypeId",
        T1.TEMP                    AS "temp",
@@ -64,7 +64,7 @@
        T1.TUMO_BATCH_STR          AS "tumoBatchStr",
        T1.DIMO_BATCH_STR          AS "dimoBatchStr",
        T1.JM_BATCH_NO             AS "jmBatchNo"
-  FROM (SELECT A.RECORD_ID,
+  FROM (SELECT A.RECORD_ID,A.gyy_remark,
                A.JUANMO_BATCH_ID,
                A.TEST_TYPE_ID,
                A.TEMP,
@@ -223,6 +223,8 @@
            
            
            ) T1
+           where 1=1
+           <isNotNull prepend="" property="testSpecName">AND t1.TEST_SPEC_NAME like '%' || #testSpecName# || '%'</isNotNull>
 
  ORDER BY T1.F_CHECK_TM DESC, T1.JM_BATCH_NO
 	
@@ -249,4 +251,10 @@
 	TEST_SPEC_ID,MARK_SPEC_NAME,F_MAC_NAME,R_MAC_NAME
 	FROM qinsen.INST_WATER_TEST 
 	WHERE RECORD_ID=#recordId#</insert>
+    <!-- 修改记录 -->
+    <update id="updateGyyRemark" parameterClass="java.util.HashMap">UPDATE QINSEN.INST_WATER_TEST A
+	   SET A.CHANGE_DT = SYSDATE,
+	   A.GYY_REMARK = #gyyRemark#,
+	   A.CHANGER_ID = #operatorId#
+	 WHERE A.RECORD_ID in ($recordIds$)</update>
 </sqlMap>

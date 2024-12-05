@@ -6,6 +6,21 @@ Ext.ns("com.keensen.ump");
  *          <p>
  *          新增不良弹出窗
  */
+function formatTime(date) {
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+	const hours = date.getHours();
+	const minutes = date.getMinutes();
+	const seconds = date.getSeconds();
+
+	// 使用模板字符串进行格式化
+	return year + '-' + month.toString().padStart(2, '0') + '-'
+			+ day.toString().padStart(2, '0') + ' '
+			+ hours.toString().padStart(2, '0') + ':'
+			+ minutes.toString().padStart(2, '0') + ':'
+			+ seconds.toString().padStart(2, '0');
+}
 com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 	title : "新增不良",
 	resizable : false,
@@ -62,10 +77,13 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 							.findField('tumoRecordId').getValue();
 					var produceDt = this.inputPanel.form.findField('produceDt')
 							.getValue();
+
+					produceDt = formatTime(produceDt);
+
 					var remark = this.inputPanel.form.findField('remark')
 							.getValue();
 
-					if(Ext.isEmpty(tumoRecordId)){
+					if (Ext.isEmpty(tumoRecordId)) {
 						Ext.Msg.alert("系统提示", "请先校验涂膜批号");
 						return;
 					}
@@ -74,10 +92,16 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 								removeMask : true
 							});
 					mk.show();
+
+					var saveUrl = 'com.keensen.ump.qinsen.quality.saveCdmDefect.biz.ext';
+
+					if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
+						saveUrl = 'com.keensen.ump.qinsen.quality.saveZmDefect.biz.ext';
+					}
 					Ext.Ajax.request({
 						method : "post",
 						scope : this,
-						url : 'com.keensen.ump.qinsen.quality.saveCdmDefect.biz.ext',
+						url : saveUrl,
 						jsonData : {
 							"details" : details,
 							"map/tumoBatchNo" : tumoBatchNo,
@@ -132,7 +156,9 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 		com.keensen.ump.defectWindow.superclass.initComponent.call(this);
 	},
 	buildListPanel : function() {
-		var title = this.dutyTacheCode == 'TM' ? '【 涂膜不良列表 】' : '【 铸膜不良列表 】';
+		var title = this.dutyTacheCode == 'TM'
+				? '【 涂膜不良列表 】'
+				: this.dutyTacheCode == 'ZM' ? '【 铸膜不良列表 】' : '【 发货不良列表 】';
 		var dutyTacheCode = this.dutyTacheCode;
 		var recTacheCode = this.recTacheCode;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
@@ -200,6 +226,13 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 	},
 	buildInputPanel : function() {
 		var _this = this;
+
+		var fieldLabel = '膜片批次';
+
+		if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
+			fieldLabel = '底膜批次';
+		}
+
 		this.inputPanel = new Ext.fn.InputPanel({
 			ref : '../inputPanel',
 			height : 120,
@@ -216,11 +249,18 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 				allowBlank : false,
 				name : 'tumoBatchNo',
 				ref : '../tumoBatchNo',
-				fieldLabel : '膜片批次',
+				fieldLabel : fieldLabel,
 				listeners : {
 					scope : this,
 					specialkey : function(C, D) {
 						if (D.getKey() == Ext.EventObject.ENTER) {
+
+							var queryUrl = 'com.keensen.ump.qinsen.inst.queryTmRecordIdByBatchNo.biz.ext';
+							if (this.dutyTacheCode == 'ZM'
+									&& this.recTacheCode == 'ZM') {
+								queryUrl = 'com.keensen.ump.qinsen.inst.queryZmRecordIdByBatchNo.biz.ext';
+							}
+
 							var obj = this.inputPanel.tumoBatchNo;
 							var batchNo = obj.getValue();
 							if (Ext.isEmpty(batchNo)) {
@@ -228,40 +268,42 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 								return;
 							}
 							Ext.Ajax.request({
-								method : "post",
-								scope : this,
-								url : 'com.keensen.ump.qinsen.inst.queryTmRecordIdByBatchNo.biz.ext',
-								jsonData : {
-									"map/batchNo" : batchNo
-								},
-								success : function(response, action) {
-									var result = Ext
-											.decode(response.responseText);
-									var recordId = result.recordId;
-									if (Ext.isEmpty(recordId)) {
-										Ext.Msg.alert("系统提示", '膜片批次不存在，请检查！');
-									} else {
-										_this.inputPanel.tumoRecordId
-												.setValue(recordId);
-										_this.inputPanel.produceDt.focus();
-										
-									}
-								}
-							});
+										method : "post",
+										scope : this,
+										url : queryUrl,
+										jsonData : {
+											"map/batchNo" : batchNo
+										},
+										success : function(response, action) {
+											var result = Ext
+													.decode(response.responseText);
+											var recordId = result.recordId;
+											if (Ext.isEmpty(recordId)) {
+												Ext.Msg.alert("系统提示",
+														'膜片批次不存在，请检查！');
+											} else {
+												_this.inputPanel.tumoRecordId
+														.setValue(recordId);
+												_this.inputPanel.produceDt
+														.focus();
+
+											}
+										}
+									});
 						}
 
 					}
 				}
 			}, {
-				xtype : 'datefield',
+				xtype : 'datetimefield',
 				anchor : '95%',
 				ref : '../produceDt',
 				name : 'produceDt',
 				allowBlank : false,
-				fieldLabel : '不良产生日期',
-				format : "Y-m-d",
+				fieldLabel : '不良产生时间',
+				format : "Y-m-d H:i:00",
 				value : new Date(),
-				maxValue : new Date()
+				maxValue : new Date() + 1
 			}, {
 				xtype : 'displayfield',
 				fieldLabel : ' ',

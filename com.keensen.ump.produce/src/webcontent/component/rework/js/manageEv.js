@@ -89,6 +89,12 @@ com.keensen.ump.produce.component.reworkMgr.prototype.initEvent = function() {
 				}
 			})
 
+	this.viewWindow.loadData = function() {
+		var B = _this.listPanel.getSelectionModel().getSelections();
+		var A = B[0];
+		_this.viewWindow.items.items[0].loadData(A);
+
+	};
 }
 
 com.keensen.ump.produce.component.reworkMgr.prototype.onDel = function() {

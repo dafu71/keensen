@@ -23,6 +23,29 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 			baseParams : {},
 			fields : [{
 						name : 'prodSpecName'
+					}, {
+						name : 'prodSpecId'
+					}]
+		})
+
+		this.diaphragmTestStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.component.testtrace.queryDiaphragmTest.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			totalProperty : '',
+			baseParams : {},
+			fields : [{
+						name : 'materSpecName'
+					}, {
+						name : 'materSpecId'
+					}, {
+						name : 'materCode'
+					}, {
+						name : 'prodSpecName'
+					}, {
+						name : 'prodSpecId'
+					}, {
+						name : 'length'
 					}]
 		})
 	}
@@ -58,7 +81,7 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 					}, {
 						xtype : 'textfield',
 						colspan : 1,
-						name : 'condition/batchNo',
+						name : 'condition/batchNo2',
 						anchor : '75%',
 						fieldLabel : '涂膜批号'
 					}, {
@@ -79,13 +102,13 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 			},
 			autoExpandColumn : '7',
 			tbar : [{
-						text : '删除',
-						scope : this,
-						iconCls : 'icon-application_delete',
-						// disabled : (uid != 'KS00610') && (uid != 'KS01313')
-						// && (uid != 'KS00524'),
-						handler : this.onDelete
-					}],
+				text : '删除',
+				scope : this,
+				iconCls : 'icon-application_delete',
+				disabled : (uid != 'KS00610') && (uid != 'KS01313')
+						&& (uid != 'KS00524') && (uid != 'XXB') && (uid != 'KS00307'),
+				handler : this.onDelete
+			}],
 			delUrl : 'com.keensen.ump.produce.component.testtrace.delete.biz.ext',
 			hsPage : true,
 			id : 'testtracemgr-list',
@@ -114,7 +137,7 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 									mode : 'local',
 									emptyText : '--请选择--',
 									lastQuery : '',
-									store : _this.prodStore,
+									store : _this.diaphragmTestStore,
 									hiddenName : 'prodSpecName',
 									editable : true,
 									valueField : 'prodSpecName',
@@ -134,8 +157,16 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 									}
 								}))
 					}, {
+						dataIndex : 'testLength',
+						width : 80,
+						header : '试卷膜片<br>长度'
+					}, {
+						dataIndex : 'testAmount',
+						width : 60,
+						header : '试卷支数'
+					}, {
 						dataIndex : 'createTime',
-						width : 120,
+						width : 60,
 						header : '录入时间'
 					}, {
 						dataIndex : 'createName',
@@ -186,6 +217,10 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 							name : 'prodSpecName'
 						}, {
 							name : 'confirmUser'
+						}, {
+							name : 'testLength'
+						}, {
+							name : 'testAmount'
 						}]
 			})
 		})
@@ -200,17 +235,17 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 				});
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
 			// baseCls : "x-plain",
-			width : '480',
-			height : '240',
+			width : '520',
+			height : '300',
 			pgrid : '',
-			columns : 1,
+			columns : 2,
 			autoHide : false,
 			border : true,
 			saveUrl : '1.biz.ext',
 			fields : [{
 						xtype : 'displayfield',
 						height : '50',
-						colspan : 1
+						colspan : 2
 					}/*
 						 * , {
 						 * 
@@ -228,7 +263,7 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 						ref : '../testType',
 						allowBlank : false,
 						fieldLabel : '试卷类型<span style="color:red">*</span>',
-						anchor : '100%',
+						anchor : '90%',
 						items : [{
 									boxLabel : '换产试卷',
 									name : 'entity/testType',
@@ -255,36 +290,11 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 									name : 'entity/testType',
 									inputValue : '5'
 								}],
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
-						height : '10',
-						colspan : 1
-					}, {
-						xtype : 'combobox',
-						allowBlank : false,
-						triggerAction : "all",
-						mode : "local",
-						// forceSelection : true,
-						fieldLabel : '叠膜型号',
-						ref : '../prodSpecName',
-						anchor : '80%',
-						colspan : 1,
-						emptyText : '--请选择--',
-						// typeAhead : true,
-						// typeAheadDelay : 100,
-						// minChars : 1,
-						// queryMode : 'local',
-						// lastQuery : '',
-						editable : true,
-						store : this.prodStore,
-						// mode : "local",
-						displayField : "prodSpecName",
-						valueField : "prodSpecName"
-					}, {
-						xtype : 'displayfield',
-						height : '10',
-						colspan : 1
+						height : '20',
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						name : 'entity/batchNo',
@@ -292,8 +302,8 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 						allowBlank : false,
 						fieldLabel : '涂膜批号',
 						ref : '../batchNo',
-						anchor : '80%',
-						colspan : 1,
+						anchor : '90%',
+						colspan : 2,
 						listeners : {
 							scope : this,
 							specialkey : function(C, D) {
@@ -306,15 +316,109 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 						}
 					}, {
 						xtype : 'displayfield',
+						height : '20',
 						fieldLabel : ' ',
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 						labelSeparator : '',// 去掉冒号
-						colspan : 1
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						height : '10',
+						colspan : 2
+					}, {
+						xtype : 'combobox',
+						allowBlank : false,
+						triggerAction : "all",
+						mode : "local",
+						// forceSelection : true,
+						fieldLabel : '叠膜型号',
+						ref : '../prodSpecName',
+						anchor : '90%',
+						colspan : 2,
+						emptyText : '--请选择--',
+						// typeAhead : true,
+						// typeAheadDelay : 100,
+						// minChars : 1,
+						// queryMode : 'local',
+						// lastQuery : '',
+						editable : false,
+						store : this.diaphragmTestStore,
+						// mode : "local",
+						displayField : "prodSpecName",
+						valueField : "prodSpecName",
+						hiddenName : 'entity/reserve1',
+						listeners : {
+							scope : this,
+							'specialkey' : function() {
+								return false;
+							},
+							'select' : function(combo, record, eOpts) {
+								this.inputPanel.prodSpecId
+										.setValue(record.data.prodSpecId);
+
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '20',
+						colspan : 2
+					}, {
+						xtype : 'trigger',
+						emptyText : '单击旁边按钮计算',
+						name : 'entity/testLength',
+						dataIndex : 'testLength',
+						ref : '../testLength',
+						// readOnly : true,
+						allowBlank : false,
+						editable : true,
+						fieldLabel : '试卷膜片&nbsp;&nbsp;<br>长度(米)',
+						// readOnly : true,
+						anchor : '90%',
+						colspan : 1,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onCalc();
+						},
+						regex : /^\d+(\.\d+)?$/,
+						regexText : "不合法的数据格式"
+					}/*
+						 * , { xtype : 'numberfield', fieldLabel : '试卷膜片长度',
+						 * anchor : '95%', // allowBlank : false, ref :
+						 * '../testLength', name : 'entity/testLength', colspan :
+						 * 1 }, { xtype : 'numberfield', fieldLabel : '试卷支数',
+						 * anchor : '95%', // allowBlank : false, ref :
+						 * '../testAmount', name : 'entity/testAmount', colspan :
+						 * 1 }
+						 */, {
+						xtype : 'trigger',
+						emptyText : '单击旁边按钮计算',
+						name : 'entity/testAmount',
+						dataIndex : 'testAmount',
+						ref : '../testAmount',
+						// readOnly : true,
+						allowBlank : false,
+						editable : true,
+						fieldLabel : '试卷支数',
+						// readOnly : true,
+						anchor : '90%',
+						colspan : 1,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onCalc2();
+						},
+						regex : /^\d+(\.\d+)?$/,
+						regexText : "不合法的数据格式"
+					}, {
+						xtype : 'hidden',
+						name : 'entity/reserve4',
+						ref : '../prodSpecId'
 					}],
 			buttons : [{
 						text : "确定",
 						scope : this,
-						handler : this.onScan
+						handler : this.onSubmit
 					}]
 		})
 

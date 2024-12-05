@@ -35,9 +35,9 @@
        T1.WORKER_NAME     AS "workerName",
        T1.LINE_CODE       AS "lineCode",
        T1.TOTAL_LOSS      AS "totalLoss",
-       T1.UNUSED_QUANTITY AS "unusedQuantity",
+       T1.UNUSED_QUANTITY AS "unusedQuantity",T1.LOCATION       AS "location",
        t1.is_cut_over "isCutOver",t1.IS_CUT_OVER_NAME "isCutOverName"
-  FROM (SELECT A.RECORD_ID,
+  FROM (SELECT A.RECORD_ID,A.LOCATION,
                A.BATCH_NO,
                A.LINE_ID,
                A.TUMO_BATCH_ID,

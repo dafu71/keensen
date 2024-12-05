@@ -1,9 +1,11 @@
 com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 	this.initPanel = function() {
-		this.rec = {};
+		
+		this.initStore();
+		
 		this.initQueryPanel();
 		this.initListPanel();
-		this.initEditWindow();
+		
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -62,7 +64,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【库存查询】',
+					// title : '【库存查询】',
 					fields : [this.storagecombo/*
 												 * ,{ xtype : 'storagecombobox',
 												 * hiddenName :
@@ -125,6 +127,13 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								anchor : '75%',
 								fieldLabel : '批号'
 							}, {
+								xtype : 'dictcombobox',
+								anchor : '75%',
+								hiddenName : 'condition/ifChoice',
+								fieldLabel : '是否备货',
+								dictData : ABF_YESORNO,
+								colspan : 1
+							}, {
 								fieldLabel : '不展示库存为零',
 								xtype : 'checkbox',
 								checked : true,
@@ -151,14 +160,15 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 
 	this.initListPanel = function() {
 		var _this = this;
+
 		var selModel = new Ext.grid.CheckboxSelectionModel({
 			singleSelect : false
 				// header : ''
 			});
 		this.listPanel = this.listPanel || new Ext.fn.EditListPanel({
-			title : '【库存列表】',
+			// title : '【库存列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			id : listid,
@@ -169,6 +179,12 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						iconCls : 'icon-application_edit',
 						hidden : modifyFlag != 1,
 						handler : this.onEdit
+					}, '-', {
+						text : '备货',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						// hidden : modifyFlag != 1,
+						handler : this.onChoice
 					}],
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
@@ -210,6 +226,9 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					}, {
 						dataIndex : 'batchNo',
 						header : '批号'
+					}, {
+						dataIndex : 'amount',
+						header : '库存数量'
 					}, {
 						dataIndex : 'produceDt',
 						header : '生产日期'
@@ -268,11 +287,19 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						dataIndex : 'perfFlagName',
 						header : '等级'
 					}, {
-						dataIndex : 'amount',
-						header : '库存数量'
-					}, {
 						dataIndex : 'updateTime',
 						header : '更新日期'
+					}, {
+						dataIndex : 'ifChoice',
+						header : '是否备货',
+						xtype : 'dictcolumn',
+						dictData : ABF_YESORNO
+					}, {
+						dataIndex : 'clientName',
+						header : '客户名称'
+					}, {
+						dataIndex : 'choiceDt',
+						header : '备货日期'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.storage.query.queryStockByPage.biz.ext',
@@ -336,6 +363,12 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 							name : 'rGfdAvg'
 						}, {
 							name : 'rSaltRejection'
+						}, {
+							name : 'ifChoice'
+						}, {
+							name : 'clientName'
+						}, {
+							name : 'choiceDt'
 						}]
 			})
 		})
@@ -400,4 +433,83 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 		});
 	}
 
+	this.initChoiceWindow = function() {
+		var _this = this;
+		this.choiceWindow = this.choiceWindow || new Ext.fn.FormWindow({
+					title : '备货',
+					height : 240,
+					width : 300,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+								xtype : 'inputpanel',
+								baseCls : "x-plain",
+								pgrid : this.listPanel,
+								columns : 2,
+								saveUrl : '1.biz.ext',
+								fields : [{
+											xtype : 'dictcombobox',
+											anchor : '100%',
+											ref : '../../ifChoice',
+											hiddenName : 'param/ifChoice',
+											fieldLabel : '是否备货',
+											allowBlank : false,
+											dictData : ABF_YESORNO,
+											colspan : 2
+										}, {
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'textfield',
+											ref : '../../clientName',
+											name : 'param/clientName',
+											fieldLabel : '客户名称',
+											anchor : '100%',
+											colspan : 2
+
+										}, {
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'datefield',
+											ref : '../../choiceDt',
+											name : 'param/choiceDt',
+											fieldLabel : '备货日期',
+											format : "Y-m-d",
+											value : new Date(),
+											anchor : '100%',
+											colspan : 2
+										}, {
+											xtype : 'hidden',
+											name : 'param/ids',
+											ref : '../../ids'
+										}]
+							}]
+				});
+		this.choiceWindow.buttons[0].hide();
+		this.choiceWindow.buttons[1].hide();
+
+		this.choiceWindow.addButton({
+					text : "确定",
+					scope : this,
+					iconCls : 'icon-application_add',
+					handler : this.onCreateChoice
+				});
+
+		this.choiceWindow.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.choiceWindow.hide();
+					}
+				});
+
+	}
 }

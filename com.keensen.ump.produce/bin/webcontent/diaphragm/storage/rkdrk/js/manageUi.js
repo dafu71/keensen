@@ -18,7 +18,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageRkdrkMgr = function() {
 					border : true,
 					//collapsible : true,
 					titleCollapse : false,
-					title : '【入库单查询】',
+					//title : '【入库单查询】',
 					fields : [{
 						xtype : "dateregion",
 						colspan : 1,
@@ -134,7 +134,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageRkdrkMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.EditListPanel({
-			title : '【入库单列表】',
+			//title : '【入库单列表】',
 			viewConfig : {
 				forceFit : true
 			},

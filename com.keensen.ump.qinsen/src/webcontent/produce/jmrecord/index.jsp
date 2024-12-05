@@ -65,10 +65,25 @@
 </head>
 <body>
 <div id="jmrecordmgr"></div>
-<div style="display: none">
+<%--<div style="display: none">
 		
 		<form name="printForm" id="jmprintForm" action="" target="_blank" method="post" accept-charset="UTF-8">
 			<input type="hidden" name="batchIdStr"/>			
+		</form>
+	</div>--%>
+	
+	<div style="display: none">
+		
+		<form name="printForm" id="jmprintForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+			<input type="hidden" name="batchId"/>
+			<input type="hidden" name="batchIdStr"/>
+			<input type="hidden" name="batchNo"/>
+			<input type="hidden" name="orderNo"/>
+			<input type="hidden" name="tumoBatchStr"/>
+			<input type="hidden" name="prodSpecName"/>
+			<input type="hidden" name="produceDay"/>
+			<input type="hidden" name="lineCode"/>
+			<input type="hidden" name="workerName"/>
 		</form>
 	</div>
 </body>

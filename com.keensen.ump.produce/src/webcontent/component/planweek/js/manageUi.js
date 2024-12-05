@@ -322,6 +322,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							name : 'denseNet'
 						}, {
 							name : 'area'
+						}, {
+							name : 'pageWidth'
 						}]
 			})
 		})
@@ -501,7 +503,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					// title : '【日计划】',
 					height : 400,
 					sm : selModel,
-					// region : 'center',
+					region : 'center',
 					viewConfig : {
 						forceFit : true
 					},
@@ -652,7 +654,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 
 		this.editPlanDayPanel = this.editPlanDayPanel || new Ext.fn.EditPanel({
 			height : 150,
-			// region : 'north',
+			region : 'north',
 			baseCls : "x-plain",
 			pgrid : this.listPanel,
 			autoHide : false,
@@ -734,6 +736,26 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						xtype : 'hidden',
 						ref : '../materSpecId',
 						dataIndex : 'materSpecId'
+					}, {
+						xtype : 'hidden',
+						ref : '../numPerWad',
+						dataIndex : 'numPerWad'
+					}, {
+						xtype : 'hidden',
+						ref : '../pageWidth',
+						dataIndex : 'pageWidth'
+					}, {
+						xtype : 'hidden',
+						ref : '../blankingSize',
+						dataIndex : 'blankingSize'
+					}, {
+						xtype : 'hidden',
+						ref : '../denseNet',
+						dataIndex : 'denseNet'
+					}, {
+						xtype : 'hidden',
+						ref : '../area',
+						dataIndex : 'area'
 					}]
 
 		})
@@ -749,7 +771,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					modal : true,
 					width : 800,
 					height : 600,
-					layout : 'form',
+					layout : 'border',
 					items : [this.editPlanDayPanel, this.editPlanDayListPanel],
 					buttons : [{
 								text : "关闭",
@@ -789,7 +811,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					_this.planDayWindow.hide();
 
 				},
-				columns : 2,
+				columns : 6,
 				saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanDay.biz.ext',
 				fields : [{
 							xtype : 'textfield',
@@ -797,54 +819,61 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							ref : '../../orderNo',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '规格型号',
 							ref : '../../materSpecName',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '页数',
 							ref : '../../numPerWad',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '膜页尺寸',
 							ref : '../../blankingSize',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '页宽',
+							ref : '../../pageWidth',
+							readOnly : true,
+							anchor : '85%',
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '浓网',
 							ref : '../../denseNet',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '面积',
 							ref : '../../area',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'combobox',
 							fieldLabel : '计划日期',
@@ -852,7 +881,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							hiddenName : 'entity/planDate',
 							allowBlank : false,
 							anchor : '85%',
-							colspan : 1,
+							colspan : 3,
 							emptyText : '--请选择--',
 							editable : false,
 							store : this.planDateStore,
@@ -876,9 +905,12 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 												.getValue();
 										var blankingSize = this.planDayWindow.blankingSize
 												.getValue();
+										var pageWidth = this.planDayWindow.pageWidth
+												.getValue();
 										var jmAmount = record.get('amount');
 										var useAmount = numPerWad
-												* blankingSize * jmAmount;
+												* blankingSize * jmAmount
+												* pageWidth;
 										this.planDayWindow.useAmount
 												.setValue(useAmount.toFixed(1));
 									} else {
@@ -898,11 +930,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							ref : '../../needAmount',
 							anchor : '85%',
 							// minValue : 1,
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'numberfield',
 							fieldLabel : '卷膜数量',
@@ -912,7 +944,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							name : 'entity/jmAmount',
 							anchor : '85%',
 							minValue : 1,
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'numberfield',
 							fieldLabel : '膜片用量',
@@ -921,11 +953,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							ref : '../../useAmount',
 							anchor : '85%',
 							minValue : 1,
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'combobox',
 							triggerAction : "all",
@@ -934,7 +966,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							fieldLabel : '线边仓膜片',
 							ref : '../../batchNoFrom',
 							anchor : '85%',
-							colspan : 1,
+							colspan : 3,
 							emptyText : '--请选择--',
 							typeAhead : true,
 							typeAheadDelay : 100,
@@ -992,7 +1024,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							fieldLabel : 'AB/C仓膜片',
 							ref : '../../batchNoFrom2',
 							anchor : '85%',
-							colspan : 1,
+							colspan : 3,
 							emptyText : '--请选择--',
 							typeAhead : true,
 							typeAheadDelay : 100,
@@ -1045,7 +1077,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '膜片批次',
@@ -1055,11 +1087,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							// readOnly : true,
 							minValue : 1,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'numberfield',
 							fieldLabel : '米数',
@@ -1067,7 +1099,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							name : 'entity/meterAmount',
 							minValue : 1,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'componentworkercombobox',
 							ref : '../../cmWorker',
@@ -1076,15 +1108,16 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							valueField : "name",
 							displayField : "name",
 							anchor : '85%',
-							fieldLabel : '裁膜人员'
+							fieldLabel : '裁膜人员',
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'combobox',
 							anchor : '85%',
-							colspan : 1,
+							colspan : 3,
 							allowBlank : false,
 							ref : '../../storageName',
 							name : 'entity/storageName',
@@ -1110,33 +1143,62 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							name : 'entity/storagePosition',
 							minValue : 1,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textarea',
 							fieldLabel : '膜片备注',
 							ref : '../../mpRemark',
 							name : 'entity/mpRemark',
 							anchor : '85%',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textarea',
 							fieldLabel : '存在问题',
 							ref : '../../problem',
 							name : 'entity/problem',
 							anchor : '85%',
-							colspan : 2
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">混卷信息</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '混卷膜片批次',
+							//allowBlank : false,
+							// readOnly : true,
+							ref : '../../mixBatchNo',
+							//dataIndex : 'mixBatchNo',
+							name : 'entity/mixBatchNo',
+							//readOnly : true,
+							minValue : 1,
+							anchor : '85%',
+							colspan : 3
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '混卷比例',
+							//allowBlank : false,
+							// readOnly : true,
+							ref : '../../mixProportion',
+							//dataIndex : 'mixProportion',
+							name : 'entity/mixProportion',
+							//readOnly : true,
+							minValue : 1,
+							anchor : '85%',
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}/*
 							 * , { xtype : 'numberfield', fieldLabel : '生产顺序',
 							 * ref : '../../productOrder', name :
@@ -1169,7 +1231,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 				xtype : 'editpanel',
 				baseCls : "x-plain",
 				pgrid : this.editPlanDayListPanel,
-				columns : 2,
+				columns : 6,
 				loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanDay.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanDay.biz.ext',
 				fields : [{
@@ -1178,54 +1240,61 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							ref : '../../orderNo',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '规格型号',
 							ref : '../../materSpecName',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '页数',
 							ref : '../../numPerWad',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '膜页尺寸',
 							ref : '../../blankingSize',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '页宽',
+							ref : '../../pageWidth',
+							readOnly : true,
+							anchor : '85%',
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '浓网',
 							ref : '../../denseNet',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '面积',
 							ref : '../../area',
 							readOnly : true,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'combobox',
 							fieldLabel : '计划日期',
@@ -1234,7 +1303,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							dataIndex : 'planDate',
 							allowBlank : false,
 							anchor : '85%',
-							colspan : 1,
+							colspan : 3,
 							emptyText : '--请选择--',
 							editable : false,
 							store : this.planDateStore,
@@ -1264,9 +1333,12 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 												.getValue();
 										var blankingSize = this.planDayWindow2.blankingSize
 												.getValue();
+										var pageWidth = this.planDayWindow2.pageWidth
+												.getValue();
 										var jmAmount = record.get('amount');
 										var useAmount = numPerWad
-												* blankingSize * jmAmount;
+												* blankingSize * jmAmount
+												* pageWidth;
 										this.planDayWindow2.useAmount
 												.setValue(useAmount.toFixed(1));
 
@@ -1280,7 +1352,10 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								'focus' : {
 									fn : function(e) {
 										e.expand();
-										this.planDayWindow2.planDate.doQuery(this.planDayWindow2.planDate.allQuery, true);
+										this.planDayWindow2.planDate
+												.doQuery(
+														this.planDayWindow2.planDate.allQuery,
+														true);
 									},
 									buffer : 200
 								},
@@ -1326,7 +1401,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'numberfield',
 							fieldLabel : '卷膜数量',
@@ -1337,7 +1412,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							name : 'entity/jmAmount',
 							anchor : '85%',
 							minValue : 1,
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'numberfield',
 							fieldLabel : '膜片用量',
@@ -1346,11 +1421,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							ref : '../../useAmount',
 							anchor : '85%',
 							minValue : 1,
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'combobox',
 							triggerAction : "all",
@@ -1359,7 +1434,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							fieldLabel : '线边仓膜片',
 							ref : '../../batchNoFrom',
 							anchor : '85%',
-							colspan : 1,
+							colspan : 3,
 							emptyText : '--请选择--',
 							typeAhead : true,
 							typeAheadDelay : 100,
@@ -1422,7 +1497,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							fieldLabel : 'AB/C仓膜片',
 							ref : '../../batchNoFrom2',
 							anchor : '85%',
-							colspan : 1,
+							colspan : 3,
 							emptyText : '--请选择--',
 							typeAhead : true,
 							typeAheadDelay : 100,
@@ -1479,7 +1554,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '膜片批次',
@@ -1491,11 +1566,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							readOnly : true,
 							minValue : 1,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'numberfield',
 							fieldLabel : '米数',
@@ -1504,7 +1579,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							name : 'entity/meterAmount',
 							minValue : 1,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'componentworkercombobox',
 							ref : '../../cmWorker',
@@ -1514,15 +1589,16 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							valueField : "name",
 							displayField : "name",
 							anchor : '85%',
-							fieldLabel : '裁膜人员'
+							fieldLabel : '裁膜人员',
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'combobox',
 							anchor : '85%',
-							colspan : 1,
+							colspan : 3,
 							allowBlank : false,
 							ref : '../../storageName',
 							name : 'entity/storageName',
@@ -1549,11 +1625,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							name : 'entity/storagePosition',
 							minValue : 1,
 							anchor : '85%',
-							colspan : 1
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textarea',
 							fieldLabel : '膜片备注',
@@ -1561,11 +1637,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							dataIndex : 'mpRemark',
 							name : 'entity/mpRemark',
 							anchor : '85%',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textarea',
 							fieldLabel : '存在问题',
@@ -1573,11 +1649,40 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							dataIndex : 'problem',
 							name : 'entity/problem',
 							anchor : '85%',
-							colspan : 2
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">混卷信息</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '混卷膜片批次',
+							//allowBlank : false,
+							// readOnly : true,
+							ref : '../../mixBatchNo',
+							dataIndex : 'mixBatchNo',
+							name : 'entity/mixBatchNo',
+							//readOnly : true,
+							minValue : 1,
+							anchor : '85%',
+							colspan : 3
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '混卷比例',
+							//allowBlank : false,
+							// readOnly : true,
+							ref : '../../mixProportion',
+							dataIndex : 'mixProportion',
+							name : 'entity/mixProportion',
+							//readOnly : true,
+							minValue : 1,
+							anchor : '85%',
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}/*
 							 * , { xtype : 'numberfield', fieldLabel : '生产顺序',
 							 * ref : '../../productOrder', dataIndex :

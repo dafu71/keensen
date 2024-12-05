@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="quickCreateRecords.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="更新卷膜任务状态" title="dafu&#x9;24-10-17 下午5:11">
+    <targetConnections>link26</targetConnections>
+    <location x="888" y="480"/>
+    <size height="100" width="249"/>
+  </nodes>
   <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="快速录入" title="dafu&#x9;24-2-18 上午10:42">
     <location x="98" y="450"/>
     <size height="100" width="191"/>
@@ -14,8 +19,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
+    <targetConnections>link25</targetConnections>
     <targetConnections>link13</targetConnections>
-    <targetConnections>link24</targetConnections>
+    <targetConnections>link27</targetConnections>
     <location x="965" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -567,7 +573,17 @@
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="updateJuanmoBatchStr" displayName="updateJuanmoBatchStr" collapsed="false" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link24" name="link24" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess3</sourceNode>
+      <targetNode>subprocess4</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link27" name="没有订单id" displayName="连接线" type="transition">
+      <sourceNode>subprocess3</sourceNode>
       <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">entity/orderId</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link8</targetConnections>
     <location x="885" y="225"/>
@@ -585,6 +601,34 @@
     <location x="813" y="260"/>
     <figSize height="20" width="170"/>
     <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess4" name="updateJmDutyState" displayName="updateJmDutyState" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link26" name="link26" displayName="连接线" type="note">
+      <sourceNode>subprocess4</sourceNode>
+      <targetNode>node1</targetNode>
+    </sourceConnections>
+    <targetConnections>link24</targetConnections>
+    <location x="1110" y="225"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess4label</nodeLabel>
+    <process:flow index="3" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.updateJmDutyState</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="planDate" type="query" value="String" valueType="Primitive" pattern="reference">entity/planDate</process:inputVariable>
+        <process:inputVariable id="1" name="orderId" type="query" value="String" valueType="Primitive" pattern="reference">entity/orderId</process:inputVariable>
+        <process:inputVariable id="2" name="cmBatchNo" type="query" value="String" valueType="Primitive" pattern="reference">entity/cdmBatchNo</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess4label" name="label" nodeType="label">
+    <location x="1051" y="260"/>
+    <figSize height="20" width="145"/>
+    <node>subprocess4</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

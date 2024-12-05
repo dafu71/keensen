@@ -46,11 +46,16 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 		var start = vals['condition/produceDtStart'];
 		var end = vals['condition/produceDtEnd'];
 
+		var start2 = vals['condition/lastCaimoDateStart'];
+		var end2 = vals['condition/lastCaimoDateEnd'];
+
 		if (Ext.isEmpty(vals['condition/orderNoStr'])
 				&& Ext.isEmpty(vals['condition/planNo'])
 				&& Ext.isEmpty(vals['condition/dimoBatchNo'])
 				&& Ext.isEmpty(vals['condition/batchNoStr'])
-				&& Ext.isEmpty(vals['condition/outBatchNo'])) {
+				&& Ext.isEmpty(vals['condition/outBatchNo'])
+				&& (Ext.isEmpty(vals['condition/lastCaimoDateStart']) || Ext
+						.isEmpty(vals['condition/lastCaimoDateEnd']))) {
 
 			if (Ext.isEmpty(vals['condition/produceDtStart'])
 					|| Ext.isEmpty(vals['condition/produceDtEnd'])) {
@@ -65,6 +70,14 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 
 			}
 
+		}
+
+		if (!Ext.isEmpty(start2) && !Ext.isEmpty(end2)) {
+			if (dayDiff(start2, end2) > 93) {
+				Ext.Msg.alert("系统提示", "查询裁膜时间间隔日期不能大于3个月！");
+				return false;
+
+			}
 		}
 
 		var store = this.listPanel.store;
@@ -395,9 +408,10 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onPrintTumoTag = function() {
 			var batchNo = r.data.batchNo;
 			var outLength = r.data.outLength;
 			var materSpecName = r.data.materSpecName;
+			var usefulLength = r.data.usefulLength;
 			window.open('com.keensen.ump.qinsen.printTumoTag.flow?batchNo='
 					+ batchNo + '&outLength=' + outLength + '&materSpecName='
-					+ materSpecName);
+					+ materSpecName + '&usefulLength=' + usefulLength);
 		}
 	}
 
@@ -704,8 +718,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onRemark = function() {
 		var trend = C[0].data.trend;
 		var recordId = C[0].data.recordId;
 		if (Ext.isEmpty(trend)) {
-			Ext.Msg.alert("系统提示", "请选择品管已经判定过的数据！");
-			return false;
+			// Ext.Msg.alert("系统提示", "请选择品管已经判定过的数据！");
+			// return false;
 		}
 		Ext.Msg.prompt('工艺员备注', '请输入', function(btn, text) {
 			if (btn == 'ok') {
@@ -806,9 +820,60 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.calculateC21 = function() {
 	var b = this.editMpdWindow.b.getValue();
 	if (!Ext.isEmpty(ro) && !Ext.isEmpty(absorbance) && !Ext.isEmpty(a)
 			& !Ext.isEmpty(b)) {
-		//（a * 吸光度值 - b ）* RO水质量(g)/10
-		var mpd = (parseFloat(a) * parseFloat(absorbance) - parseFloat(b)) * parseFloat(ro)/10;
-		mpd =  Math.round(mpd * 100) / 100
+		// （a * 吸光度值 - b ）* RO水质量(g)/10
+		var mpd = (parseFloat(a) * parseFloat(absorbance) - parseFloat(b))
+				* parseFloat(ro) / 10;
+		mpd = Math.round(mpd * 100) / 100
 		this.editMpdWindow.mpd.setValue(mpd);
 	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddFhDefect = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var tumoBatchNo = r.data.batchNo;
+		var tumoRecordId = r.data.recordId;
+		this.defectFhWin.inputPanel.tumoBatchNo.setValue(tumoBatchNo);
+		this.defectFhWin.inputPanel.tumoRecordId.setValue(tumoRecordId);
+		this.defectFhWin.show();
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onQueryByBatchNos = function() {
+	Ext.Msg.prompt('多批次查询', '多个批次请用逗号分隔，或一行一个批次', function(btn, text) {
+		if (btn == 'ok') {
+			if (Ext.isEmpty(text)) {
+				Ext.Msg.alert("系统提示", "请输入批次号！");
+				return;
+			}
+
+			var store = this.listPanel.store;
+			var batchNoStr = text;
+			var regEx = new RegExp("\\n", "gi");
+			batchNoStr = batchNoStr.replace(regEx, ",");
+			batchNoStr = batchNoStr.replaceAll('，', ',');
+			batchNoStr = batchNoStr.replaceAll(' ', '');
+			var arr = [];
+			arr = batchNoStr.split(',');
+			var arr2 = [];
+			for (var i = 0; i < arr.length; i++) {
+				arr2.push("'" + arr[i] + "'");
+			}
+
+			store.baseParams = {
+				'condition/batchNoStr2' : arr2.join(",") == "''" ? null : arr2
+						.join(",")
+			};
+			store.load({
+						params : {
+							"pageCond/begin" : 0,
+							"pageCond/length" : this.listPanel.pagingToolbar.pageSize
+						}
+					});
+		}
+	}, this, true);
 }

@@ -3,12 +3,12 @@
 <sqlMap namespace="com.keensen.ump.qinsen.quality">
     <!-- 查询膜片不良列表 -->
     <select id="queryDefect" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-	SELECT T1.RECORD_ID       AS "recordId",T1.BATCH_NO as "batchNo",
+	SELECT T1.RECORD_ID       AS "recordId",T1.BATCH_NO as "batchNo",t1.flag "flag",
        T1.TUMO_BATCH_ID   AS "tumoBatchId",
        T1.DEFECT_ID  AS "defectId",
        T1.LOSS            AS "loss",
        T1.WORKER_ID       AS "workerId",
-       T1.PRODUCE_DT      AS "produceDt",
+       to_char(T1.PRODUCE_DT,'yyyy-MM-dd HH24:mi:ss')      AS "produceDt",
        T1.CREATE_DT       AS "createDt",
        T1.CHANGE_DT       AS "changeDt",
        T1.CREATOR_ID      AS "creatorId",
@@ -26,8 +26,9 @@
        T1.MP_SPEC_CODE    AS "mpSpecCode",
        T1.MP_SPEC_NAME    AS "mpSpecName",
        T1.PRODUCE_DATE    AS "produceDate",
-       T1.DISP_ORDER     AS "dispOrder"
-  FROM (SELECT A.RECORD_ID,
+       T1.DISP_ORDER     AS "dispOrder",T1.Dimo_Batch_No "dimoBatchNo",
+       T2.product_type "productType"
+  FROM (SELECT A.RECORD_ID,'TM' flag,
                A.TUMO_BATCH_ID,
                A.DEFECT_ITEM_ID,
                A.LOSS,
@@ -45,7 +46,7 @@
                B.TACHE_NAME DUTY_TACHE_NAME,
                B2.TACHE_CODE REC_TACHE_CODE,
                B2.TACHE_NAME REC_TACHE_NAME,
-               IT.BATCH_NO TUMO_BATCH_NO,
+               IT.BATCH_NO TUMO_BATCH_NO,IT.Dimo_Batch_No,
                IT.SPEC_ID MP_SPEC_ID,IT.BATCH_NO,
                MS.MATER_SPEC_CODE MP_SPEC_CODE,
                MS.MATER_SPEC_NAME MP_SPEC_NAME,
@@ -60,8 +61,50 @@
           LEFT JOIN QINSEN.PARA_MATER_SPEC MS
             ON IT.SPEC_ID = MS.MATER_SPEC_ID
           LEFT JOIN QINSEN.BASE_PRODUCE_TACHE B2
-            ON P.REC_TACHE_ID = B2.TACHE_ID) T1
-	WHERE 1 = 1
+            ON P.REC_TACHE_ID = B2.TACHE_ID
+            
+            UNION ALL
+            
+          SELECT A.RECORD_ID,'DM',
+               A.dm_BATCH_ID,
+               A.DEFECT_ITEM_ID,
+               A.LOSS,
+               A.WORKER_ID,
+               A.PRODUCE_DT,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               P.DUTY_TACHE_ID,P.record_id DEFECT_ID,
+               P.REC_TACHE_ID,
+               P.DEFECT_NAME,P.DISP_ORDER,
+               B.TACHE_CODE DUTY_TACHE_CODE,
+               B.TACHE_NAME DUTY_TACHE_NAME,
+               B2.TACHE_CODE REC_TACHE_CODE,
+               B2.TACHE_NAME REC_TACHE_NAME,
+               '',IT.Dimo_Batch_No,
+               0,'',
+               '',
+               it.dimo_type,
+               TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE
+          FROM QINSEN.INST_CDM_DEFECT2 A
+          LEFT JOIN QINSEN.PARA_CDM_DEFECT P
+            ON A.DEFECT_ITEM_ID = P.RECORD_ID
+          LEFT JOIN QINSEN.BASE_PRODUCE_TACHE B
+            ON P.DUTY_TACHE_ID = B.TACHE_ID
+          LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD IT
+            ON A.DM_BATCH_ID = IT.ID
+         
+          LEFT JOIN QINSEN.BASE_PRODUCE_TACHE B2
+            ON P.REC_TACHE_ID = B2.TACHE_ID  
+            
+            
+            ) T1
+            
+            left join KS_PROD_DIAPHRAGM_ZMX_RECORD T2
+            on t1.Dimo_Batch_No = t2.Dimo_Batch_No
+  WHERE 1 = 1
 	<isNotNull prepend="" property="tumoBatchNo">AND t1.BATCH_NO = UPPER(#tumoBatchNo#)</isNotNull>
         <isNotNull prepend="" property="tumoBatchNoStr">AND t1.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%'</isNotNull>
         <isNotNull prepend="" property="specId">AND t1.MP_SPEC_ID = #specId#</isNotNull>
@@ -74,6 +117,8 @@
         <isNotNull prepend="" property="dutyTacheCode">AND T1.DUTY_TACHE_CODE = #dutyTacheCode#</isNotNull>
         <isNotNull prepend="" property="produceDtStart">AND T1.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">AND T1.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND UPPER(t1.Dimo_Batch_No) LIKE '%' || UPPER(#dimoBatchNo#) || '%'</isNotNull>
+	
 	 ORDER BY t1.PRODUCE_DT DESC, t1.TUMO_BATCH_NO, t1.DISP_ORDER
 </select>
     <!-- 按ID删除记录 -->
@@ -86,4 +131,72 @@
 	PRODUCE_DT,CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,PAGE_NUM
 	FROM QINSEN.INST_CDM_DEFECT
 	WHERE RECORD_ID =#recordId#</insert>
+    <insert id="backupDefect2" parameterClass="java.util.HashMap">INSERT INTO  KS_INST_CDM_DEFECT2_DEL_BAK
+	(RECORD_ID,DM_BATCH_ID,DEFECT_ITEM_ID,LOSS,WORKER_ID,
+	PRODUCE_DT,CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,PAGE_NUM)
+	SELECT
+	RECORD_ID,DM_BATCH_ID,DEFECT_ITEM_ID,LOSS,WORKER_ID,
+	PRODUCE_DT,CREATE_DT,CHANGE_DT,CREATOR_ID,CHANGER_ID,REMARK,PAGE_NUM
+	FROM QINSEN.INST_CDM_DEFECT2
+	WHERE RECORD_ID =#recordId#</insert>
+    <!-- 查询铸膜不良列表 -->
+    <select id="queryZmDefect" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	  SELECT T1.RECORD_ID       AS "recordId",T1.Dimo_Batch_No as "dmBatchNo",
+       T1.DM_BATCH_ID   AS "dmBatchId",t1.dimo_type "dimoType",
+       T1.DEFECT_ID  AS "defectId",
+       T1.LOSS            AS "loss",
+       T1.WORKER_ID       AS "workerId",
+       to_char(T1.PRODUCE_DT,'yyyy-MM-dd HH24:mi:ss')      AS "produceDt",
+       T1.CREATE_DT       AS "createDt",
+       T1.CHANGE_DT       AS "changeDt",
+       T1.CREATOR_ID      AS "creatorId",
+       T1.CHANGER_ID      AS "changerId",
+       T1.REMARK          AS "remark",
+       T1.DUTY_TACHE_ID   AS "dutyTacheId",
+       T1.REC_TACHE_ID    AS "recTacheId",
+       T1.DEFECT_NAME     AS "defectName",
+       T1.DUTY_TACHE_CODE AS "dutyTacheCode",
+       T1.DUTY_TACHE_NAME AS "dutyTacheName",
+       T1.REC_TACHE_CODE  AS "recTacheCode",
+       T1.REC_TACHE_NAME  AS "recTacheName",
+       
+       T1.PRODUCE_DATE    AS "produceDate",
+       T1.DISP_ORDER     AS "dispOrder",T1.Dimo_Batch_No "dimoBatchNo"
+  FROM (SELECT A.RECORD_ID,
+               A.DM_BATCH_ID,
+               A.DEFECT_ITEM_ID,
+               A.LOSS,
+               A.WORKER_ID,
+               A.PRODUCE_DT,
+               A.CREATE_DT,
+               A.CHANGE_DT,
+               A.CREATOR_ID,
+               A.CHANGER_ID,
+               A.REMARK,
+               P.DUTY_TACHE_ID,P.record_id DEFECT_ID,
+               P.REC_TACHE_ID,
+               P.DEFECT_NAME,P.DISP_ORDER,
+               B.TACHE_CODE DUTY_TACHE_CODE,
+               B.TACHE_NAME DUTY_TACHE_NAME,
+               B2.TACHE_CODE REC_TACHE_CODE,
+               B2.TACHE_NAME REC_TACHE_NAME,
+               IT.Dimo_Batch_No,
+               IT.dimo_type,
+               
+               TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE
+          FROM QINSEN.INST_CDM_DEFECT2 A
+          LEFT JOIN QINSEN.PARA_CDM_DEFECT P
+            ON A.DEFECT_ITEM_ID = P.RECORD_ID
+          LEFT JOIN QINSEN.BASE_PRODUCE_TACHE B
+            ON P.DUTY_TACHE_ID = B.TACHE_ID
+          LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD IT
+            ON A.DM_BATCH_ID = IT.ID
+          
+          LEFT JOIN QINSEN.BASE_PRODUCE_TACHE B2
+            ON P.REC_TACHE_ID = B2.TACHE_ID) T1
+  WHERE 1 = 1
+	<isNotNull prepend="" property="dmBatchNo">AND T1.Dimo_Batch_No = UPPER(#dmBatchNo#)</isNotNull>
+	
+	ORDER BY t1.PRODUCE_DT DESC, t1.dimo_BATCH_NO, t1.DISP_ORDER
+</select>
 </sqlMap>

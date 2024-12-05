@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="queryMaterClassTree" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
-  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="校验元件序号" title="dafu&#x9;24-7-22 上午9:23">
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="物料树" title="dafu&#x9;24-7-22 上午9:23">
     <location x="162" y="483"/>
     <size height="100" width="304"/>
   </nodes>
-  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="com.keensen.ump.base.myinterface.queryProdBatchNo" title="dafu&#x9;23-9-15 下午3:12">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="com.keensen.ump.base.mater.queryMaterClassTree" title="dafu&#x9;23-9-15 下午3:12">
     <location x="161" y="341"/>
     <size height="100" width="605"/>
   </nodes>
@@ -52,7 +52,7 @@
     </process:pojo>
     <process:inputVariables>
       <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
-      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.keensen.ump.base.myinterface.queryProdBatchNo</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.keensen.ump.base.mater.queryMaterClassTree</process:inputVariable>
       <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">condition</process:inputVariable>
     </process:inputVariables>
     <process:outputVariables>

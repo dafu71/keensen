@@ -131,7 +131,7 @@
 					&nbsp;
 				</td>
 			</tr>
-			<tr>
+			<%--<tr>
 				<td colspan="2" style="height:3mm;text-align:center;padding:0px;margin:0px;">
 					测试结果：
 					<div class="square"></div> 合格  
@@ -141,7 +141,7 @@
 				<td colspan="2" style="height:3mm;text-align:center;padding:0px;margin:0px;">
 					&nbsp;
 				</td>
-			</tr>
+			</tr>--%>
 		</table>
 </body>
 </html>

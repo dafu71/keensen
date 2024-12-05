@@ -6,6 +6,11 @@
        t1.batch_no   as "batchNo",
        t1.AMOUNT     as "amount",
        t1.REMARK     as "remark",
+       
+       t1.if_Choice   as "ifChoice",
+       t1.client_Name   as "clientName",
+       t1.choice_Dt   as "choiceDt",
+       
        t2.name as "storageName"，
        to_char(nvl(t1.UPDATE_TIME,t1.CREATE_TIME),'yyyy-MM-dd') as "updateTime",
        vkt.RECORD_ID       as "recordId",vkt.is_wx "isWx",
@@ -79,6 +84,7 @@
         <isNotNull prepend="and" property="orderNo">upper(vkt.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="planNo">upper(vkt.plan_No) '%' || upper(#planNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="batchNoStr">t1.batch_no in($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="ifChoice">t1.if_Choice = #ifChoice#</isNotNull>
 	
 	order by t1.STORAGE_ID
      </select>
@@ -307,7 +313,7 @@
         <isNotNull prepend="and" property="orderNo">upper(t1.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="planNo">upper(t1.plan_No) '%' || upper(#planNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="dimoBatchNo">t1.DIMO_BATCH_NO '%' || #dimoBatchNo# || '%'</isNotNull>
- order by t1.produce_dt desc
+ order by t1.produce_dt desc nulls last
      </select>
     <select id="queryVTumo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
      select * from V_KS_TUMO t1
@@ -322,4 +328,9 @@
 		WHERE (v.RECORD_ID,v.BATCH_NO)
 		NOT IN(select RECORD_ID,BATCH_NO from KS_PROD_DIAPHRAGM_RUKUDAN t)
 		and not exists(select 1 from KS_PROD_DIAPHRAGM_WAREHOUSING w where w.batch_No=v.batch_No)</insert>
+    <update id="updateBatchStockChoice" parameterClass="java.util.HashMap">update KS_PROD_DIAPHRAGM_STOCK t
+     set t.if_Choice = #ifChoice#,t.client_name = #clientName#,
+     t.choice_dt = to_date(#choiceDt#,'yyyy-MM-dd'),t.update_time = sysdate,
+     t.update_user_id = #updateUserId#,t.update_name = #updateName#
+     where t.id in($ids$)</update>
 </sqlMap>

@@ -27,6 +27,9 @@
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
+
+<ext:dict property="KS_YXORDER_PHOTO_SINGLE" dictTypeId="KS_YXORDER_PHOTO_SINGLE" />
+<ext:dict property="KS_YXORDER_PHOTO_ALL" dictTypeId="KS_YXORDER_PHOTO_ALL" />
 <ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
 <js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="produce/component/yxorder/js/manageUi.js"/>

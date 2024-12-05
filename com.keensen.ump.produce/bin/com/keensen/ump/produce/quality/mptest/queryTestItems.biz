@@ -3,8 +3,8 @@
   <nodes xsi:type="model:Note" id="node1" name="注释1" nodeType="note" type="note" title="dafu&#x9;23-11-14 下午12:27"/>
   <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="dafu&#x9;23-9-15 下午3:12"/>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" collapsed="false" nodeType="common" type="end">
-    <targetConnections>link14</targetConnections>
     <targetConnections>link0</targetConnections>
+    <targetConnections>link14</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="commonj.sdo.DataObject[]" name="data" type="query" valueType="Java">data</process:return>
@@ -112,7 +112,7 @@
   <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" type="switch">
     <sourceConnections xsi:type="process:tLink" id="link5" name="link5" isDefault="true" type="transition">
       <sourceNode>switch1</sourceNode>
-      <targetNode>switch2</targetNode>
+      <targetNode>switch4</targetNode>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link6" name="膜片测试-工艺员" type="transition">
       <sourceNode>switch1</sourceNode>
@@ -145,8 +145,8 @@
         </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link8</targetConnections>
-    <targetConnections>link5</targetConnections>
+    <targetConnections>link18</targetConnections>
+    <targetConnections>link17</targetConnections>
     <nodeLabel>switch2label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="switch2label" name="label" nodeType="label">
@@ -195,7 +195,7 @@
   <nodes xsi:type="process:tInvoke" id="invokePojo0" name="concat" nodeType="common" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
     <sourceConnections xsi:type="process:tLink" id="link8" name="link8" isDefault="true" type="transition">
       <sourceNode>invokePojo0</sourceNode>
-      <targetNode>switch2</targetNode>
+      <targetNode>switch4</targetNode>
     </sourceConnections>
     <targetConnections>link6</targetConnections>
     <nodeLabel>invokePojo0label</nodeLabel>
@@ -239,6 +239,74 @@
   <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
     <figSize height="20" width="59"/>
     <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch4" name="空操作4" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="计划员" isDefault="false" type="transition">
+      <sourceNode>switch4</sourceNode>
+      <targetNode>invokePojo3</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>roleCodes.indexOf(&quot;10001141&quot;)>-1</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" isDefault="true" type="transition">
+      <sourceNode>switch4</sourceNode>
+      <targetNode>switch2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <nodeLabel>switch4label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch4label" name="label" nodeType="label">
+    <figSize height="20" width="55"/>
+    <node>switch4</node>
+  </nodes>
+  <nodes xsi:type="process:tInvoke" id="invokePojo3" name="concat2" collapsed="false" nodeType="common" type="invoke" index="2" invokeType="invoke_pojo" varArgs="true">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" isDefault="true" type="transition">
+      <sourceNode>invokePojo3</sourceNode>
+      <targetNode>assign2</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <nodeLabel>invokePojo3label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.common.utils.StringUtil.concat</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="joinString" type="literal" value="java.lang.String" valueType="Java" pattern="reference">,</process:inputVariable>
+      <process:inputVariable id="1" name="strings" type="query" value="java.lang.String" valueType="Java" pattern="reference">steps</process:inputVariable>
+      <process:inputVariable id="2" name="param1" type="literal" value="java.lang.String" valueType="Java" pattern="reference">'orderconfirm'</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables>
+      <process:outputVariable id="0" name="out0" type="query" value="java.lang.String" valueType="Java">steps</process:outputVariable>
+    </process:outputVariables>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo3label" name="label" nodeType="label">
+    <figSize height="20" width="59"/>
+    <node>invokePojo3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign2" name="赋值2" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>switch2</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">orderconfirm</process:from>
+      <process:to type="query">condition/opt</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

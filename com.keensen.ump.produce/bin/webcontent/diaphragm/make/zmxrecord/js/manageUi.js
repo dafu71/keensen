@@ -5,6 +5,17 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 		this.initInputWindow();
 		this.initEditWindow();
 		this.initChooseWindow();
+
+		this.defectZmWin = new com.keensen.ump.defectWindow({
+					dutyTacheCode : 'ZM',
+					recTacheCode : 'ZM',
+					relationListId : 'diaphragm_zmx_list'
+				});
+
+		this.defectZmViewWindow = new com.keensen.ump.defectZmViewWindow({
+					id : 'zm-defectzmviewwindow'
+				});
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -131,6 +142,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 			viewConfig : {
 				forceFit : false
 			},
+			id:'diaphragm_zmx_list',
 			hsPage : true,
 			tbar : [{
 						text : '新增',
@@ -148,10 +160,20 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}, '-', {
+						text : '查看不良',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onViewDefect
+					}, '-', {
 						text : '打印标签',
 						scope : this,
 						iconCls : 'icon-printer',
 						handler : this.onPrint
+					}, '->', {
+						text : '录入铸膜不良',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onAddZmDefect
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.make.deleteZmxEntity.biz.ext',
@@ -197,39 +219,33 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						dataIndex : 'dimoAmount',
 						header : '底膜实际长度'
 					}, {
-						dataIndex : 'lose0',
-						header : '无纺布取样'
-					}, {
-						dataIndex : 'lose1',
-						header : '拼接固损'
-					}, {
-						dataIndex : 'lose2',
-						header : '底膜取样'
-					}, {
-						dataIndex : 'lose3',
-						header : '工艺取样'
-					}, {
-						dataIndex : 'lose4',
-						header : '无纺布来料不良'
-					}, {
-						dataIndex : 'lose5',
-						header : '设备故障报废'
-					}, {
-						dataIndex : 'lose6',
-						header : '铸膜不良（已扯）'
-					}, {
-						dataIndex : 'lose7',
-						header : '扯掉（打折/开头末尾刮痕）'
-					}, {
-						dataIndex : 'flaw0',
-						header : '浅刮痕'
-					}, {
-						dataIndex : 'flaw1',
-						header : '深刮痕'
-					}, {
-						dataIndex : 'flaw2',
-						header : '铸膜不良'
-					}, {
+						header : '不良米数',
+						width : 80,
+						dataIndex : 'loss',
+						renderer : function(v, m, r, i) {
+							if (!Ext.isEmpty(v) && v > 0) {
+								var dimoBatchNo = r.get('dimoBatchNo');
+								var style = "<a style='text-decoration:none'";
+								var str = style
+										+ " href='javascript:defectZmView("
+										+ Ext.encode(dimoBatchNo) + ");'>" + v
+										+ "</a>";
+
+								return str;
+							}
+						}
+					}/*
+						 * , { dataIndex : 'lose0', header : '无纺布取样' }, {
+						 * dataIndex : 'lose1', header : '拼接固损' }, { dataIndex :
+						 * 'lose2', header : '底膜取样' }, { dataIndex : 'lose3',
+						 * header : '工艺取样' }, { dataIndex : 'lose4', header :
+						 * '无纺布来料不良' }, { dataIndex : 'lose5', header : '设备故障报废' }, {
+						 * dataIndex : 'lose6', header : '铸膜不良（已扯）' }, {
+						 * dataIndex : 'lose7', header : '扯掉（打折/开头末尾刮痕）' }, {
+						 * dataIndex : 'flaw0', header : '浅刮痕' }, { dataIndex :
+						 * 'flaw1', header : '深刮痕' }, { dataIndex : 'flaw2',
+						 * header : '铸膜不良' }
+						 */, {
 						dataIndex : 'abnormal',
 						header : '铸膜异常记录'
 					}, {
@@ -341,6 +357,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'abnormal'
 						}, {
 							name : 'productType'
+						}, {
+							name : 'loss'
 						}]
 			})
 		})
@@ -531,97 +549,37 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					fieldLabel : '理论投入数',
 					anchor : '95%',
 					colspan : 1
-				}, {
-					xtype : 'displayfield',
-					value : '<p style="color:red;">铸膜明细（米）</p>',
-					colspan : 2
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/lose0',
-					fieldLabel : '无纺布取样',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/lose1',
-					fieldLabel : '拼接固损',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'displayfield',
-					height : '5',
-					colspan : 2
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/lose2',
-					fieldLabel : '底膜取样',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/lose3',
-					fieldLabel : '工艺取样',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'displayfield',
-					height : '5',
-					colspan : 2
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/lose4',
-					fieldLabel : '无纺布来料不良',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/lose5',
-					fieldLabel : '设备故障报废',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'displayfield',
-					height : '5',
-					colspan : 2
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/lose6',
-					fieldLabel : '铸膜不良（已扯）',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/lose7',
-					fieldLabel : '扯掉（打折/开头末尾刮痕）',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'displayfield',
-					height : '5',
-					colspan : 2
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/flaw0',
-					fieldLabel : '浅刮痕',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/flaw1',
-					fieldLabel : '深刮痕',
-					anchor : '95%',
-					colspan : 1
-				}, {
-					xtype : 'displayfield',
-					height : '5',
-					colspan : 2
-				}, {
-					xtype : 'numberfield',
-					name : 'entity/flaw2',
-					fieldLabel : '铸膜不良',
-					anchor : '47%',
-					colspan : 2
-				}, {
+				}/*
+					 * , { xtype : 'displayfield', value : '<p style="color:red;">铸膜明细（米）</p>',
+					 * colspan : 2 }, { xtype : 'numberfield', name :
+					 * 'entity/lose0', fieldLabel : '无纺布取样', anchor : '95%',
+					 * colspan : 1 }, { xtype : 'numberfield', name :
+					 * 'entity/lose1', fieldLabel : '拼接固损', anchor : '95%',
+					 * colspan : 1 }, { xtype : 'displayfield', height : '5',
+					 * colspan : 2 }, { xtype : 'numberfield', name :
+					 * 'entity/lose2', fieldLabel : '底膜取样', anchor : '95%',
+					 * colspan : 1 }, { xtype : 'numberfield', name :
+					 * 'entity/lose3', fieldLabel : '工艺取样', anchor : '95%',
+					 * colspan : 1 }, { xtype : 'displayfield', height : '5',
+					 * colspan : 2 }, { xtype : 'numberfield', name :
+					 * 'entity/lose4', fieldLabel : '无纺布来料不良', anchor : '95%',
+					 * colspan : 1 }, { xtype : 'numberfield', name :
+					 * 'entity/lose5', fieldLabel : '设备故障报废', anchor : '95%',
+					 * colspan : 1 }, { xtype : 'displayfield', height : '5',
+					 * colspan : 2 }, { xtype : 'numberfield', name :
+					 * 'entity/lose6', fieldLabel : '铸膜不良（已扯）', anchor : '95%',
+					 * colspan : 1 }, { xtype : 'numberfield', name :
+					 * 'entity/lose7', fieldLabel : '扯掉（打折/开头末尾刮痕）', anchor :
+					 * '95%', colspan : 1 }, { xtype : 'displayfield', height :
+					 * '5', colspan : 2 }, { xtype : 'numberfield', name :
+					 * 'entity/flaw0', fieldLabel : '浅刮痕', anchor : '95%',
+					 * colspan : 1 }, { xtype : 'numberfield', name :
+					 * 'entity/flaw1', fieldLabel : '深刮痕', anchor : '95%',
+					 * colspan : 1 }, { xtype : 'displayfield', height : '5',
+					 * colspan : 2 }, { xtype : 'numberfield', name :
+					 * 'entity/flaw2', fieldLabel : '铸膜不良', anchor : '47%',
+					 * colspan : 2 }
+					 */, {
 					xtype : 'displayfield',
 					height : '5',
 					colspan : 2
@@ -812,7 +770,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							fieldLabel : '理论投入数',
 							anchor : '95%',
 							colspan : 1
-						}, {
+						}/*, {
 							xtype : 'displayfield',
 							value : '<p style="color:red;">铸膜明细（米）</p>',
 							colspan : 2
@@ -913,7 +871,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							fieldLabel : '铸膜不良',
 							anchor : '47%',
 							colspan : 2
-						}, {
+						}*/, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
@@ -982,7 +940,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 				});
 
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
-			title : '【铸膜混料记录列表】',
+			//title : '【铸膜混料记录列表】',
 			region : 'center',
 			hsPage : true,
 			selModel : selModel2,
@@ -1131,13 +1089,13 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 		})
 
 		this.queryPanel2 = this.queryPanel2 || new Ext.fn.QueryPanel({
-					height : 150,
+					height : 120,
 					columns : 2,
 					border : true,
 					region : 'north',
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【铸膜混料记录查询】',
+					//title : '【铸膜混料记录查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/batchNo2',

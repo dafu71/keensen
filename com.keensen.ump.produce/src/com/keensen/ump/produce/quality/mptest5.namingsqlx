@@ -23,11 +23,14 @@
        T1.STEP           AS "step",
        T1.WATERTYPE      AS "watertype",
        decode(T1.STATE,0,'处理中',1,'完结','报废') "stateName",
-       T1.STEP           AS "step",
+       T1.STEP           AS "step",t3.position "position",
        decode(T1.STEP,'first','分析','second','调整','third','配料','invalid','报废','生产使用') "stepName",
        t2.batch_no "relationBatchNo",t1.relation_Id "relationId"
   FROM KS_QUALITY_MP_TEST_WATER_HEAD T1
   left join KS_QUALITY_MP_TEST_WATER_HEAD T2 on t1.relation_id = t2.id
+  left join (select t.relation_id,max(t.position) position 
+	from KS_QUALITY_MP_TEST_WATER_LIST t
+	GROUP BY t.relation_id) t3 on t3.relation_id = t1.id
 		 where 1=1
 		  <isNotNull prepend="and" property="id"> 
 		       t1.ID = #id#
@@ -175,7 +178,7 @@
               '生产使用') "stepName",1 iorder
   FROM KS_QUALITY_MP_TEST_WATER_HEAD T
   left join KS_QUALITY_MP_TEST_WATER_HEAD t2 on t.relation_id=t2.id
- WHERE T.STEP IN ('first','second') 
+ WHERE T.STEP IN ('first') 
  union
  SELECT t.reserve1 "materName",t.create_time,
        '涂膜' || T.LINE || '线' "line",
@@ -188,9 +191,23 @@
               '调整',
               'third',
               '配料',
-              '生产使用') "stepName",1 iorder
+              '生产使用') "stepName",2 iorder
   FROM KS_QUALITY_MP_TEST_OIL_HEAD T
-  
+  WHERE T.STEP IN ('first') 
+  union
+ SELECT '铸膜液' "materName",t.create_time,
+       decode(t.machine,'A', '罗斯混料机A', 'B', '豪杰特混料机B', 'C', '豪杰特混料机C','') "line",
+       T.MPTYPE "mptype",
+       t.BATCH_NO "batchNo",
+       DECODE(T.STEP,
+              'first',
+              '分析',
+              'second',
+              '调整',
+              'third',
+              '配料',
+              '生产使用') "stepName",3 iorder
+  FROM KS_QUALITY_MP_TEST_ZMY_HEAD T  
  WHERE T.STEP IN ('first') 
  ORDER BY iorder,create_time
     
@@ -205,7 +222,7 @@
               'first',
               '分析',
               'second',
-              '调整',
+              '重新取样',
               'third',
               '配料',
               '生产使用') "stepName",1 iorder
@@ -224,9 +241,24 @@
               '调整',
               'third',
               '配料',
-              '生产使用') "stepName",1 iorder
+              '生产使用') "stepName",2 iorder
   FROM KS_QUALITY_MP_TEST_OIL_HEAD T
-  
+  WHERE T.STEP IN ('third')
+
+  union
+ SELECT '铸膜液' "materName",t.create_time,
+       decode(t.machine,'A', '罗斯混料机A', 'B', '豪杰特混料机B', 'C', '豪杰特混料机C','') "line",
+       T.MPTYPE "mptype",
+       t.BATCH_NO "batchNo",
+       DECODE(T.STEP,
+              'first',
+              '分析',
+              'second',
+              '重新取样',
+              'third',
+              '配料',
+              '生产使用') "stepName",3 iorder
+  FROM KS_QUALITY_MP_TEST_ZMY_HEAD T  
  WHERE T.STEP IN ('third') 
  ORDER BY iorder,create_time
     

@@ -419,4 +419,72 @@
     
 
 </select>
+
+<select id="queryC42Std" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+  select 
+    t1.ID as "id",
+	to_char(T1.CREATE_TIME,'yyyy-MM-dd')  as "createTime",
+	t1.CREATE_USER_ID as "createUserId",
+	t1.CREATE_NAME as "createName",
+	t1.UPDATE_TIME as "updateTime",
+	t1.UPDATE_USER_ID as "updateUserId",
+	t1.UPDATE_NAME as "updateName",
+	t1.RESERVE1 as "reserve1",
+	t1.RESERVE2 as "reserve2",
+	t1.RESERVE3 as "reserve3",
+	t1.RESERVE4 as "reserve4",
+	t1.RESERVE5 as "reserve5",
+	t1.ORG_ID as "orgId",
+	t1.STATUS as "status",
+	t1.A as "a",
+	t1.B as "b"
+	from KS_BASE_C42 t1
+	where 1=1
+	<isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+	order by id desc
+    
+
+</select>
+
+<select id="queryThickStand" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+	SELECT T1.ID              AS "id",
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       T1.SPEC_ID        AS "specId",
+       T1.SPEC_NAME      AS "specName",
+       T1.THICK_MIN      AS "thickMin",
+       T1.THICK_MAX      AS "thickMax",
+       T1.IS_WX          AS "isWx",
+       decode(T1.IS_WX,'Y','是','否') "isWxName",
+       'com.keensen.ump.produce.quality.KsProdDiaphragmThickStand' "entityName"
+       FROM KS_PROD_DIAPHRAGM_THICK_STAND T1
+       where 1=1
+       <isNotNull prepend="" property="id">
+	   AND T1.ID = #id#
+	</isNotNull>
+        <isNotNull prepend="" property="specName">
+	     AND  T1.SPEC_NAME like '%' || #specName# || '%'
+	 </isNotNull>
+       	order by T1.SPEC_NAME,T1.IS_WX
+    
+
+</select>
+
 	 </sqlMap>

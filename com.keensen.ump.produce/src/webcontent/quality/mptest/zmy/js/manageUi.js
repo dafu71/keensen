@@ -1,5 +1,7 @@
 com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 	this.initPanel = function() {
+		
+		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
@@ -16,6 +18,51 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 				});
 	}
 
+	// 初始化store
+	this.initStore = function() {
+		
+		this.concentrationStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['16%', '16%'], ['17%', '17%'], ['18%', '18%']]
+				});
+
+		this.machineStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['A', '罗斯混料机A'], ['B', '豪杰特混料机B'], ['C', '豪杰特混料机C']]
+				});
+
+		this.tankStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'],
+							['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'],
+							['9', '9'], ['A', 'A'], ['B', 'B'], ['C', 'C'],
+							['D', 'D'], ['E', 'E'], ['F', 'F']]
+				});
+
+		this.mptypeStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.quality.mpzmytest.queryZmyStd.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			totalProperty : '',
+			baseParams : {},
+			fields : [{
+						name : 'code'
+					}, {
+						name : 'mptype'
+					}, {
+						name : 'line'
+					}, {
+						name : 'c11'
+					}, {
+						name : 'c12'
+					}, {
+						name : 'c13'
+					}, {
+						name : 'c14'
+					}]
+		})
+	}
+	
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
@@ -24,29 +71,31 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【铸膜液浓度查询】',
+					//title : '【铸膜液浓度查询】',
 					fields : [{
-
-						xtype : 'combobox',
-						fieldLabel : '线别',
-						ref : '../line',
-						hiddenName : 'condition/line',
-						emptyText : '--请选择--',
-						allowBlank : true,
-						editable : false,
-						anchor : '85%',
-						store : [['A', 'A'], ['B', 'B'], ['C', 'C'],
-								['D', 'D'], ['E', 'E']],
-						listeners : {
-							scope : this,
-							'expand' : function(A) {
-								this.queryPanel.line.reset();
+							xtype : 'combobox',
+							forceSelection : true,
+							mode : 'local',
+							fieldLabel : '混料机',
+							ref : '../../machine',
+							hiddenName : 'condition/machine',
+							// allowBlank : false,
+							anchor : '85%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.machineStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
 							}
-						}
-					}, {
+						}, {
 
 						xtype : 'combobox',
-						fieldLabel : '膜片类型',
+						fieldLabel : '产品类型',
 						ref : '../mptype',
 						hiddenName : 'condition/mptype',
 						emptyText : '--请选择--',
@@ -78,7 +127,7 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 						allowBlank : true,
 						editable : false,
 						anchor : '85%',
-						store : [['first', '分析'], ['second', '调整'],
+						store : [['first', '分析'], ['second', '重新取样'],
 								['third', '配料'], ['produce', '生产使用']],
 						listeners : {
 							scope : this,
@@ -95,6 +144,19 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
+				
+		this.queryPanel.addButton({
+					text : "分析室测试任务看板",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onBoard
+				});
+		this.queryPanel.addButton({
+					text : "产线配料任务看板",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onBoard2
+				});
 
 	}
 
@@ -105,26 +167,31 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【铸膜液浓度列表】',
+			//title : '【铸膜液浓度列表】',
 			viewConfig : {
 				forceFit : true
 			},
 			hsPage : true,
-			tbar : [{
+			tbar : [/*{
 						text : '新增',
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
-					}, '-', {
+					}, '-',*/ {
 						text : '分析',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
-					}, '-', {
+					}/*, '-', {
 						text : '调整',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit2
+					}*/, '-', {
+						text : '重新取样',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onEdit5
 					}, '-', {
 						text : '配料',
 						scope : this,
@@ -142,11 +209,11 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 						dataIndex : 'createTime',
 						header : '日期'
 					}, {
-						dataIndex : 'line',
-						header : '线别'
+						dataIndex : 'machine',
+						header : '混料机'
 					}, {
 						dataIndex : 'mptype',
-						header : '膜片类型'
+						header : '产品类型'
 					}, {
 						dataIndex : 'batchNo',
 						header : '铸膜液批号'
@@ -207,6 +274,8 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							name : 'step'
 						}, {
 							name : 'stepName'
+						}, {
+							name : 'machine'
 						}]
 			})
 		})
@@ -264,7 +333,7 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 						}, {
 
 							xtype : 'combobox',
-							fieldLabel : '膜片类型',
+							fieldLabel : '产品类型',
 							ref : '../../mptype',
 							hiddenName : 'entity/mptype',
 							emptyText : '--请选择--',
@@ -333,7 +402,7 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 				xtype : 'editpanel',
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
-				columns : 1,
+				columns : 2,
 				loadUrl : 'com.keensen.ump.produce.quality.mptest.expandZmyList.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.mptest.modiZmyListByFirst.biz.ext',
 				fields : [{
@@ -348,19 +417,15 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 						}, {
 
 							xtype : 'displayfield',
-							fieldLabel : '线别',
-							ref : '../../line',
-							dataIndex : 'line',
+							fieldLabel : '混料机',
+							ref : '../../machine',
+							dataIndex : 'machine',
 							anchor : '85%',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
 
 							xtype : 'displayfield',
-							fieldLabel : '膜片类型',
+							fieldLabel : '产品类型',
 							ref : '../../mptype',
 							dataIndex : 'mptype',
 							anchor : '85%',
@@ -371,14 +436,14 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
-							dataIndex : 'dmfPlan',
-							fieldLabel : '计划添加DMF',
+							dataIndex : 'c11',
+							fieldLabel : 'C11重量(kg)',
 							anchor : '85%',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
-							dataIndex : 'polysulfonePlan',
-							fieldLabel : '计划添加聚砜',
+							dataIndex : 'c12',
+							fieldLabel : 'C12重量(kg)',
 							anchor : '85%',
 							colspan : 1
 						}, {
@@ -387,21 +452,34 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
-							dataIndex : 'dmfReality',
-							fieldLabel : '实际添加DMF',
+							dataIndex : 'c13',
+							fieldLabel : 'C13重量(kg)',
 							anchor : '85%',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
-							dataIndex : 'polysulfoneReality',
-							fieldLabel : '实际添加聚砜',
+							dataIndex : 'c14',
+							fieldLabel : 'C14重量(kg)',
 							anchor : '85%',
 							colspan : 1
 						}, {
-							xtype : 'textfield',
-							name : 'list/concentration',
-							allowBlank : false,
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							dataIndex : 'concentration',
 							fieldLabel : '聚砜浓度',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							dataIndex : 'std',
+							fieldLabel : '粘度标准',
 							anchor : '85%',
 							colspan : 1
 						}, {
@@ -416,16 +494,47 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							anchor : '85%',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
 							xtype : 'textfield',
 							name : 'list/temperature',
 							allowBlank : false,
 							fieldLabel : '测试温度',
 							anchor : '85%',
 							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+
+							xtype : 'combobox',
+							fieldLabel : '判定选择',
+							ref : '../../ifok',
+							hiddenName : 'entity/ifok',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							anchor : '85%',
+							store : [['1', '生产使用'], ['2', '调整'], ['3', '重新取样']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.editWindow.ifok.reset();
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'operatorrolecombobox',
+							currentRolecode : '10001323',
+							valueField : "operatorname",
+							allowBlank : false,
+							anchor : '85%',
+							colspan : 1,
+							ref : '../../appointFxy',
+							hiddenName : 'list/appointFxy',
+							fieldLabel : '分析员'
 						}, {
 							xtype : 'hidden',
 							name : 'list/id',
@@ -482,7 +591,7 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 						}, {
 
 							xtype : 'displayfield',
-							fieldLabel : '膜片类型',
+							fieldLabel : '产品类型',
 							ref : '../../mptype',
 							dataIndex : 'mptype',
 							anchor : '85%',
@@ -611,7 +720,7 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 				xtype : 'editpanel',
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
-				columns : 1,
+				columns : 2,
 				loadUrl : 'com.keensen.ump.produce.quality.mptest.expandZmyList.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.mptest.modiZmyListByThird.biz.ext',
 				fields : [{
@@ -626,19 +735,15 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 						}, {
 
 							xtype : 'displayfield',
-							fieldLabel : '线别',
-							ref : '../../line',
-							dataIndex : 'line',
+							fieldLabel : '混料机',
+							ref : '../../machine',
+							dataIndex : 'machine',
 							anchor : '85%',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
 
 							xtype : 'displayfield',
-							fieldLabel : '膜片类型',
+							fieldLabel : '产品类型',
 							ref : '../../mptype',
 							dataIndex : 'mptype',
 							anchor : '85%',
@@ -648,30 +753,17 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'dmfPlan',
-							fieldLabel : '计划添加DMF',
-							anchor : '85%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							fieldLabel : '计划添加聚砜',
-							dataIndex : 'polysulfonePlan',
-							anchor : '85%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'textfield',
-							name : 'list/dmfReality',
+							xtype : 'numberfield',
+							name : 'list/c11',
 							allowBlank : false,
-							fieldLabel : '实际添加DMF',
+							fieldLabel : 'C11重量(kg)',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'list/c12',
+							allowBlank : false,
+							fieldLabel : 'C12重量(kg)',
 							anchor : '85%',
 							colspan : 1
 						}, {
@@ -679,20 +771,35 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'textfield',
-							name : 'list/polysulfoneReality',
-							allowBlank : false,
-							fieldLabel : '实际添加聚砜',
+							xtype : 'numberfield',
+							name : 'list/c13',
+							fieldLabel : 'C13重量(kg)',
 							anchor : '85%',
 							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'list/c14',
+							fieldLabel : 'C14重量(kg)',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'operatorrolecombobox',
+							currentRolecode : '10001321',
+							valueField : "operatorname",
+							allowBlank : false,
+							anchor : '85%',
+							colspan : 1,
+							ref : '../../appointPly',
+							hiddenName : 'list/appointPly',
+							fieldLabel : '配料人'
 						}, {
 							xtype : 'hidden',
 							name : 'list/relationId',
 							dataIndex : 'relationId'
-						}, {
-							xtype : 'hidden',
-							name : 'list/id',
-							dataIndex : 'id'
 						}, {
 							xtype : 'hidden',
 							name : 'entity/step',
@@ -729,32 +836,29 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 						dataIndex : 'temperature',
 						header : '测试温度'
 					}, {
-						dataIndex : 'dmfPlan',
-						header : 'DMF计划添加量'
+						dataIndex : 'c11',
+						header : 'C11重量(kg)'
 					}, {
-						dataIndex : 'polysulfonePlan',
-						header : '聚砜计划添加量'
+						dataIndex : 'c12',
+						header : 'C12重量(kg)'
 					}, {
-						dataIndex : 'dmfReality',
-						header : 'DMF实际添加量'
+						dataIndex : 'c13',
+						header : 'C13重量(kg)'
 					}, {
-						dataIndex : 'polysulfoneReality',
-						header : '聚砜实际添加量'
+						dataIndex : 'c13',
+						header : 'C13重量(kg)'
 					}, {
-						dataIndex : 'firstName',
+						dataIndex : 'appointFxy',
 						header : '分析员'
 					}, {
-						dataIndex : 'secondName',
-						header : '工艺员'
-					}, {
-						dataIndex : 'thirdName',
+						dataIndex : 'appointPly',
 						header : '配料员'
 					}, {
 						dataIndex : 'firstDate',
 						header : '接样时间'
 					}, {
 						dataIndex : 'secondDate',
-						header : '工艺调整时间'
+						header : '重新取样时间'
 					}, {
 						dataIndex : 'thirdDate',
 						header : '配料时间'
@@ -839,6 +943,18 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							name : 'state'
 						}, {
 							name : 'mptype'
+						}, {
+							name : 'c11'
+						}, {
+							name : 'c12'
+						}, {
+							name : 'c13'
+						}, {
+							name : 'c14'
+						}, {
+							name : 'appointFxy'
+						}, {
+							name : 'appointPly'
 						}, {
 							name : 'step'
 						}]

@@ -1,6 +1,8 @@
 com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 	this.initPanel = function() {
 
+		this.initStore();
+		
 		this.mptypeArr = [['BW1-1', 'BW1-1'], ['BW2-1', 'BW2-1'],
 				['BW3-1', 'BW3-1'], ['ULP1-1', 'ULP1-1'], ['ULP2-1', 'ULP2-1'],
 				['ULP3-1', 'ULP3-1'], ['NF1-R', 'NF1-R'], ['SW1-1', 'SW1-1'],
@@ -34,6 +36,21 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 					renderTo : 'mptestoilmgr',
 					panels : [this.queryPanel, this.listPanel]
 				});
+	}
+
+	this.initStore = function() {
+		this.c42Store = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.quality.quality2.qaueryC42Std.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			baseParams : {},
+			fields : [{
+						name : 'a'
+					}, {
+						name : 'b'
+					}]
+		})
+
 	}
 
 	this.initQueryPanel = function() {
@@ -645,7 +662,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
 				columns : 2,
-				loadUrl : 'com.keensen.ump.produce.quality.mptest.expandOilList.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.quality.mptest.expandOilList4Fx.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.mptest.modiOilListByFirst.biz.ext',
 				fields : [{
 							dataIndex : 'batchNo',
@@ -757,7 +774,9 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							// name : 'list/concentration',
 							dataIndex : 'concentrationStd',
 							ref : '../../concentration2',
-							readOnly : true,
+							name : 'entity/concentration',
+							allowBlank : false,
+							//readOnly : true,
 							fieldLabel : '标准C42浓度(%)',
 							anchor : '85%',
 							colspan : 2
@@ -766,16 +785,55 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
+							xtype : 'numberfield',
+							decimalPrecision : 3,
+							name : 'list/light',
+							allowBlank : false,
+							dataIndex : 'light',
+							ref : '../../light',
+							fieldLabel : '标样吸光度',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							decimalPrecision : 3,
+							name : 'list/factor',
+							//dataIndex : 'factor',
+							ref : '../../factor',
+							readOnly : true,
+							fieldLabel : '标准系数',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/light2',
+							//dataIndex : 'light2',
+							ref : '../../light2',
+							fieldLabel : '样品吸光度',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 							xtype : 'trigger',
-							emptyText : '输入C42浓度，单击旁边按钮计算计划添加量',
+							emptyText : '输入吸光度，单击旁边按钮计算计划添加量',
 							name : 'list/concentration',
 							ref : '../../concentration',
 							allowBlank : false,
+							//readOnly : true,
 							allowDecimals : true,
 							fieldLabel : '新配C42浓度(%)',
 							anchor : '85%',
 							colspan : 2,
-							editable : true,
+							editable : false,
 							hideTrigger : false,
 							scope : this,
 							onTriggerClick : function() {

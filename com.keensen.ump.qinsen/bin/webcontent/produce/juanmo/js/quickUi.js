@@ -1,5 +1,6 @@
 com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 	this.initPanel = function() {
+		this.initStore();
 		this.initInputPanel();
 		return new Ext.fn.fnLayOut({
 					title : '快速录入',
@@ -9,59 +10,97 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 				});
 	}
 
+	this.initStore = function() {
+		this.jmdutyStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.component.workorder2.queryBatchNo4JmDuty.biz.ext',
+			root : 'data',
+			autoLoad : false,
+			baseParams : {},
+			fields : [{
+						name : 'cdmRecordId'
+					}, {
+						name : 'batchNo'
+					}, {
+						name : 'location'
+					}]
+		})
+	}
+
 	this.initInputPanel = function() {
 		var _this = this;
-		this.panel = this.panel || new Ext.Panel({});
+
+		/*
+		 * this.orderPanel = this.orderPanel || new Ext.fn.InputPanel({ //
+		 * baseCls : "x-plain", //width : '600', // height : '240', pgrid : '',
+		 * columns : 2, autoHide : false, border : true, saveUrl : '1.biz.ext',
+		 * fields : [{ xtype : 'displayfield', height : '20', colspan : 2 }, {
+		 * xtype : 'textfield', ref : '../orderNo', // style :
+		 * '{font-weight:bold;}', // allowBlank : false, fieldLabel : '订单号',
+		 * anchor : '80%', colspan : 1 }, { xtype : 'textfield', ref :
+		 * '../orderAmount', // style : '{font-weight:bold;}', // allowBlank :
+		 * false, fieldLabel : '订单数量', anchor : '80%', colspan : 1 }], buttons : [{
+		 * text : "领取任务", scope : this, iconCls : 'icon-page_save', handler :
+		 * this.onGetDuty }] })
+		 */
+
+		this.panel = this.panel || new Ext.Panel({
+				// title : '作业计划信息',
+				// layout : 'fit',
+				// items : [this.orderPanel]
+
+				});
 		this.panel2 = this.panel2 || new Ext.Panel({
+
 					height : '300',
 					baseCls : "x-plain"
 				});
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
 			// baseCls : "x-plain",
 
-			width : '600',
-			height : '500',
+			width : '640',
+			height : '520',
 			pgrid : '',
-			columns : 2,
+			columns : 24,
 			autoHide : false,
 			border : true,
 			saveUrl : 'com.keensen.ump.qinsen.juanmo.quickCreateRecords.biz.ext',
 			fields : [{
 						xtype : 'displayfield',
-						height : '50',
-						colspan : 2
+						fieldLabel : "<span style='color:red;font-size:16px;'>" + '作业计划信息'
+								+ "</span>",
+						colspan : 24,
+						labelSeparator : ''// 去掉冒号
 					}, {
 						xtype : 'textfield',
-						name : 'entity/cdmBatchNo',
-						style : '{font-weight:bold;}',
+						name : 'entity/orderNo',
+						readOnly : true,
 						allowBlank : false,
-						fieldLabel : '叠膜栈板号',
-						ref : '../cdmBatchNo',
-						anchor : '90%',
-						colspan : 2,
-						listeners : {
-							scope : this,
-							specialkey : function(C, D) {
-								if (D.getKey() == Ext.EventObject.ENTER) {
-									this.dealCdmBatchNo();
-
-								}
-
-							}
-						}
+						ref : '../orderNo',
+						anchor : '100%',
+						colspan : 12,
+						fieldLabel : '订单号'
+					}, {
+						xtype : 'textfield',
+						ref : '../orderAmount',
+						readOnly : true,
+						// allowBlank : false,
+						anchor : '100%',
+						fieldLabel : '订单数量(支)',
+						colspan : 12
 					}, {
 						xtype : 'displayfield',
-						fieldLabel : ' ',
-						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
-						labelSeparator : '',// 去掉冒号
-						colspan : 2
+						height : '5',
+						colspan : 24
 					}, {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'entity/prodSpecId',
 						ref : '../prodSpecId',
-						state:'Y',
-						anchor : '85%',
+						state : 'Y',
+						anchor : '100%',
+						colspan : 12,
 						fieldLabel : '元件型号 ',
+						emptyText : '',
+						readOnly : true,
 						typeAhead : true,
 						typeAheadDelay : 100,
 						minChars : 1,
@@ -75,18 +114,115 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 							}
 						}
 					}, {
+						xtype : 'textfield',
+						ref : '../jmAmount',
+						readOnly : true,
+						// allowBlank : false,
+						anchor : '100%',
+						fieldLabel : '计划卷膜数量(支)',
+						colspan : 12
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 24
+					}, {
+						xtype : 'textfield',
+						ref : '../realityAmount',
+						readOnly : true,
+						// allowBlank : false,
+						anchor : '100%',
+						fieldLabel : '实际卷膜数量(支)',
+						colspan : 12
+					}, {
+						xtype : 'textfield',
+						ref : '../location',
+						readOnly : true,
+						// allowBlank : false,
+						anchor : '100%',
+						fieldLabel : '膜页栈板储位',
+						colspan : 12
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : "<span style='color:red;font-size:16px;'>" + '卷膜信息'
+								+ "</span>",
+						colspan : 24,
+						labelSeparator : ''// 去掉冒号
+					}, {
+						xtype : 'combobox',
+						forceSelection : true,
+						// readOnly : true,
+						allowBlank : false,
+						mode : 'local',
+						fieldLabel : '叠膜栈板号',
+						ref : '../cdmBatchNo2',
+						anchor : '86%',
+						colspan : 12,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.jmdutyStore,
+						displayField : "batchNo",
+						valueField : "batchNo",
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							},
+							'select' : function(combo, record, index) {
+								if (index > -1) {
+									_this.inputPanel.location.setValue(record.get('location'));
+								}
+							}
+						}
+					}, {
+						xtype : 'textfield',
+						name : 'entity/cdmBatchNo',
+						style : '{font-weight:bold;}',
+						allowBlank : false,
+						fieldLabel : '栈板号验证',
+						ref : '../cdmBatchNo',
+						anchor : '90%',
+						colspan : 12,
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+									var cdmBatchNo2 = this.inputPanel.cdmBatchNo2
+											.getValue();
+									var cdmBatchNo = this.inputPanel.cdmBatchNo
+											.getValue();
+									this.inputPanel.buttons[1]
+											.setDisabled(cdmBatchNo2 != cdmBatchNo)
+									if (cdmBatchNo2 != cdmBatchNo) {
+										Ext.Msg.alert("系统提示", "栈板号验证不一致！",
+												function() {
+
+												})
+									} else {
+										this.dealCdmBatchNo();
+									}
+
+								}
+
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						colspan : 12
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						value : '<p style="color:red;">光标置于此框内后扫栈板号验证</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 12
+					}, {
 						ref : '../cnt',
 						fieldLabel : '元件支数',
 						xtype : 'numberfield',
 						name : 'entity/cnt',
 						allowBlank : false,
 						anchor : '85%',
+						colspan : 12,
 						minValue : 1,
 						decimalPrecision : 0
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 2
 					}, {
 						xtype : 'datetimefield',
 						format : "Y-m-d H:i:00",
@@ -95,8 +231,12 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						fieldLabel : '生产时间',
 						allowBlank : false,
 						anchor : '85%',
-						colspan : 1,
+						colspan : 12,
 						value : new Date()
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 24
 					}, {
 						xtype : 'linecombobox',
 						prodTacheId : 102,
@@ -104,11 +244,8 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						hiddenName : 'entity/lineId',
 						allowBlank : false,
 						anchor : '85%',
+						colspan : 12,
 						fieldLabel : '生产线 '
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 2
 					}, {
 
 						xtype : 'combobox',
@@ -118,6 +255,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						emptyText : '--请选择--',
 						allowBlank : false,
 						anchor : '85%',
+						colspan : 12,
 						store : [['N', '否'], ['Y', '是']],
 						listeners : {
 							scope : this,
@@ -126,29 +264,24 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 							}
 						}
 					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 24
+					}, {
 						xtype : 'textfield',
 						name : 'entity/juanMoBatchNo',
 						ref : '../juanMoBatchNo',
 						allowBlank : false,
 						anchor : '85%',
+						colspan : 12,
 						fieldLabel : '起始卷膜序号'
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 2
-					}, {
-						xtype : 'textfield',
-						name : 'entity/orderNo',
-						allowBlank : false,
-						ref : '../orderNo',
-						anchor : '85%',
-						fieldLabel : '订单号'
 					}, {
 						ref : '../outQuantity',
 						name : 'entity/outQuantity',
 						fieldLabel : '膜页数',
 						xtype : 'textfield',
 						readOnly : true,
+						colspan : 12,
 						anchor : '85%'
 					}, {
 						ref : '../inQuantity',
@@ -157,13 +290,18 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 24
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 24
 					}, {
 						ref : '../blankingSize',
 						name : 'entity/blankingSize',
 						fieldLabel : '下料尺寸',
 						xtype : 'textfield',
 						readOnly : true,
+						colspan : 12,
 						anchor : '85%'
 					}, {
 						ref : '../denseNet',
@@ -171,22 +309,24 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						fieldLabel : '浓网',
 						xtype : 'textfield',
 						readOnly : true,
+						colspan : 12,
 						anchor : '85%'
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 24
 					}, {
 						ref : '../pageWidth',
 						name : 'entity/pageWidth',
 						fieldLabel : '页宽',
 						xtype : 'textfield',
 						readOnly : true,
+						colspan : 12,
 						anchor : '85%'
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 24
 					}, {
 						xtype : 'tacheteamcombobox',
 						tacheCode : 'JM',
@@ -196,22 +336,23 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						ref : '../teamId',
 						allowBlank : false,
 						anchor : '85%',
-						colspan : 1
+						colspan : 12
 					}, {
 						ref : '../../workerName',
 						xtype : 'displayfield',
 						fieldLabel : '操作工',
 						anchor : '85%',
+						colspan : 12,
 						value : nowStaffName
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 24
 					}, {
 						name : 'entity/remark',
 						xtype : 'textarea',
 						fieldLabel : '备注',
-						colspan : 2,
+						colspan : 24,
 						anchor : '90%',
 						allowBlank : true
 					}, {
@@ -230,8 +371,22 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						name : 'entity/workerId',
 						xtype : 'hidden',
 						value : nowStaffId
+					}, {
+						name : 'entity/orderId',
+						xtype : 'hidden',
+						ref : '../orderId'
+					}, {
+						name : 'entity/planDate',
+						xtype : 'hidden',
+						ref : '../planDate'
 					}],
 			buttons : [{
+						text : "领取任务",
+						scope : this,
+						iconCls : 'icon-page_save',
+						handler : this.onGetDuty
+
+					}, {
 						text : "保存",
 						scope : this,
 						iconCls : 'icon-page_save',

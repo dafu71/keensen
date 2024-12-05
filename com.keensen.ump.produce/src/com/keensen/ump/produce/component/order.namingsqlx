@@ -4,7 +4,7 @@
    
 <select id="queryYxOrder" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	
-	SELECT T1.ID AS "id",
+	SELECT T1.ID AS "id",T1.base_ID AS "baseId",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -53,6 +53,9 @@
   left join (select sum(amount) arrange_amount,order_id from KS_COMPONENT_PLAN_WEEK_DAYS group by order_id) t3
     on t1.id = t3.order_id
 	where 1=1
+	<isNotNull prepend="and" property="orderNo2"> 
+		       T1.ORDER_NO like '%' || #orderNo2# || '%'
+	</isNotNull>
 	<isNotNull prepend="and" property="orderNo"> 
 		       T1.ORDER_NO = #orderNo#
 	</isNotNull>
@@ -126,7 +129,7 @@
        t5.num_per_wad "numPerWad",
        t5.blanking_size "blankingSize",
        t5.dense_net "denseNet",
-       t5.area "area"
+       t5.area "area",t5.page_width "pageWidth"
   FROM KS_COMPONENT_PLAN_WEEK T1
   left join KS_PROD_COMPONENT_YXORDER t2
   ON T1.relation_id = t2.id
@@ -151,7 +154,7 @@
 	</isNotNull>
 	
 	<isNotNull prepend="and" property="orderNo2"> 
-		       T2.ORDER_NO = #orderNo2#
+		       T2.ORDER_NO like '%' || #orderNo2# || '%'
 	</isNotNull>
 	
 	 <isNotNull prepend = "and"  property = "createTimeStart"> 
@@ -244,13 +247,21 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
    <select id="queryPlanDay" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	
    	 SELECT T1.ID AS "id",t1.confirm_Status "confirmStatus",T1.cdm_code "cdmCode"
-   	 ,T1.cdm_state "cdmState", decode(T1.cdm_state,0,'处理中',1,'完成',2,'异常','') "cdmStateName",
+   	 ,T1.cdm_state "cdmState", decode(nvl(T1.cdm_state,0),0,'处理中',1,'完成',2,'异常','') "cdmStateName",
    	 TO_CHAR(T1.duty_TIME, 'yyyy-MM-dd HH24:mi:ss') "dutyTime",
        T1.duty_USER_ID AS "dutyUserId",
        T1.duty_NAME AS "dutyName",
         TO_CHAR(T1.cdm_report_TIME, 'yyyy-MM-dd HH24:mi:ss') "cdmReportTime",
        T1.cdm_report_USER_ID AS "cdmReportUserId",
        T1.cdm_report_NAME AS "cdmReportName",
+       T1.jm_code "jmCode"
+   	 ,T1.jm_state "jmState", decode(nvl(T1.jm_state,0),0,'处理中',1,'完成',2,'异常','') "jmStateName",
+   	 TO_CHAR(T1.DUTY_JM_TIME, 'yyyy-MM-dd HH24:mi:ss') "dutyJmTime",
+       T1.duty_JM_USER_ID AS "dutyJmUserId",
+       T1.duty_JM_NAME AS "dutyJmName",
+        TO_CHAR(T1.jm_report_TIME, 'yyyy-MM-dd HH24:mi:ss') "jmReportTime",
+       T1.jm_report_USER_ID AS "jmReportUserId",
+       T1.jm_report_NAME AS "jmReportName",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -266,7 +277,7 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        T1.STATUS          AS "status",
        T1.RELATION_ID     AS "relationId",
        T1.ORDER_ID        AS "orderId",
-       T1.PLAN_DATE       AS "planDate",
+       T1.PLAN_DATE       AS "planDate",T1.arrange_DATE       AS "arrangeDate",
        T1.JM_AMOUNT       AS "jmAmount",
        T1.BATCH_NO        AS "batchNo",
        T1.METER_AMOUNT    AS "meterAmount",
@@ -299,13 +310,13 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        nvl(t1.storage_position, ' ') "storagePosition2" ,
        TO_CHAR(t1.confirm_date, 'yyyy-MM-dd') "confirmDate" ,
        t6.cnt "cnt" ,
-       decode(instr(T3.MATER_SPEC_NAME,'-8'),0,'4寸','8寸') "size"  ,
-       nvl(t8.residue,0) "residue",
+       decode(instr(T3.MATER_SPEC_NAME,'8040'),0,'4寸','8寸') "size"  ,
+       nvl(t8.residue,0) "residue",t8.IS_CUT_OVER "isCutOver",
        t66.yj_Gpd_Avg  "yjAvgGpd",cnt.cnt "cnt2"
   FROM KS_COMPONENT_PLAN_DAY T1 
   LEFT JOIN (select t.plan_date,t.batch_no,COUNT(1) cnt from KS_COMPONENT_PLAN_DAY t
   GROUP BY t.plan_date,t.batch_no ) cnt ON cnt.batch_no = t1.batch_no AND cnt.plan_date = t1.plan_date
-  LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue,t.spec_id from V_KS_TUMO_ORIGIN2 t) t8
+  LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue,t.spec_id,t.IS_CUT_OVER from V_KS_TUMO_ORIGIN2 t) t8
       ON t8.batch_no=t1.batch_no
   LEFT JOIN KS_COMPONENT_PLAN_WEEK T2
     ON T1.RELATION_ID = T2.ID 
@@ -323,6 +334,7 @@ LEFT JOIN KS_COMPONENT_MP_SELECT t55
 LEFT JOIN v_KS_COMPONENT_MP_SELECT t66
 ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID 
   where 1=1
+  
   <isNotNull prepend="and" property="batchNoStr"> 
   T1.BATCH_NO in($batchNoStr$)
   </isNotNull>
@@ -443,12 +455,18 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
           to_char(T1.PLAN_DATE,'yyyy-MM-dd')  &lt;=  #planDateEnd#
      </isNotNull>
      
+    
       <isNotNull prepend = "and"  property = "planDate"> 
           to_char(T1.PLAN_DATE,'yyyy-MM-dd')  =  #planDate#
      </isNotNull>
      
+   
+     <isNotNull prepend="and" property="orderId"> 
+     T1.ORDER_ID = #orderId#
+     </isNotNull>
+     
      <isNotNull prepend = "and"  property = "size"> 
-     decode(instr(T3.MATER_SPEC_NAME,'-8'),0,'4','8') = #size#
+     decode(instr(T3.MATER_SPEC_NAME,'8040'),0,'4','8') = #size#
       </isNotNull>
       
       <isNotNull prepend="and" property="machineCode"> 
@@ -564,8 +582,8 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        T1.ORDER_ID        AS "orderId",
        T1.PLAN_DATE      AS "planDate",
        nvl(T1.AMOUNT,0)         AS "amount", nvl(t3.selected,0) "selected",
-       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) "useAmount",
-       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) - nvl(t3.selected,0) "needAmount",
+       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) * nvl(T5.page_width,0) "useAmount",
+       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) * nvl(T5.page_width,0) - nvl(t3.selected,0) "needAmount",
        t1.PRODUCT_ORDER "productOrder",
        t1.ORDER_REMARK  "orderRemark",
        to_char(T1.PLAN_DATE,'D') AS "weekday",
@@ -609,7 +627,8 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        T1.ORDER_DATE        AS "orderDate",
        T1.HPMC              AS "hpmc",
        T1.DW                AS "dw",
-       T1.MATER_SPEC_NAME   AS "materSpecName",
+       T1.MATER_SPEC_NAME   AS "materSpecName",T1.MATER_SPEC_ID   AS "materSpecId",chk.apply_amount "applyAmount",
+        round(100 * nvl(chk.apply_amount,0)/T1.ORDER_AMOUNT,0)  "applyPercent",
        T1.CPGG              AS "cpgg",
        T1.DRY_WET           AS "dryWet",
        T1.ORDER_AMOUNT      AS "orderAmount",
@@ -641,6 +660,13 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
 		round(100*t4.amount/t1.order_amount,0) || '%' "qjFinish",
 		round(100*t5.amount/t1.order_amount,0) || '%' "rsFinish"
   FROM KS_PROD_COMPONENT_YXORDER T1
+  left join
+  (SELECT COUNT(1) apply_amount, order_no,prod_spec_name
+FROM(
+select t.batch_no,t2.order_no,t2.prod_spec_name from KS_COMPONENT_CHECK_LIST t
+LEFT JOIN KS_COMPONENT_CHECK_HEAD t2 ON t.relation_id=t2.id)
+GROUP BY order_no,prod_spec_name) chk on chk.order_no = t1.order_no 
+	and chk.PROD_SPEC_name = t1.MATER_SPEC_name2
   LEFT JOIN
 (SELECT t.order_no,t.prod_spec_id mater_spec_id,sum(floor(t.quantity/m.num_per_wad))  AS amount 
 from qinsen.inst_caidiemo t
@@ -848,4 +874,11 @@ GROUP BY t2.order_no,t2.prod_spec_id) t5 ON t5.order_no = t1.order_no AND t1.mat
    delete from KS_COMPONENT_MATER_RELATION 
    where MATER_SPEC_NAME2 = #materSpecName2# and mater_spec_id = #materSpecId#
    </delete>
+   
+   <update id="updatePlanDayJmAmount" parameterClass="java.util.HashMap" >
+   update KS_COMPONENT_PLAN_DAY t set t.jm_amount = #amount#
+	WHERE (t.order_id,to_char(t.plan_date,'yyyy-MM-dd'))
+	IN (select t.order_id,to_char(t.plan_date,'yyyy-MM-dd') from KS_COMPONENT_PLAN_WEEK_DAYS t
+	WHERE t.id = #id#)
+	</update>
 </sqlMap>

@@ -171,9 +171,15 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	var materSpecId = this.editPlanDayPanel.materSpecId.getValue();
 	var materSpecName = this.editPlanDayPanel.materSpecName.getValue();
 	var orderNo = this.editPlanDayPanel.orderNo.getValue();
+	
+	var numPerWad = this.editPlanDayPanel.numPerWad.getValue();
+	var blankingSize = this.editPlanDayPanel.blankingSize.getValue();
+	var denseNet = this.editPlanDayPanel.denseNet.getValue();
+	var area = this.editPlanDayPanel.area.getValue();
+	var pageWidth = this.editPlanDayPanel.pageWidth.getValue();
 
-	var records = this.listPanel.getSelectionModel().getSelections();
-	var r = records[0];
+	//var records = this.listPanel.getSelectionModel().getSelections();
+	//var r = records[0];
 
 	this.planDayWindow.planDate.store.load({
 				params : {
@@ -198,10 +204,11 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	this.planDayWindow.orderId.setValue(orderId);
 	this.planDayWindow.materSpecName.setValue(materSpecName);
 	this.planDayWindow.orderNo.setValue(orderNo);
-	this.planDayWindow.numPerWad.setValue(r.data.numPerWad);
-	this.planDayWindow.blankingSize.setValue(r.data.blankingSize);
-	this.planDayWindow.denseNet.setValue(r.data.denseNet);
-	this.planDayWindow.area.setValue(r.data.area);
+	this.planDayWindow.numPerWad.setValue(numPerWad);
+	this.planDayWindow.blankingSize.setValue(blankingSize);
+	this.planDayWindow.denseNet.setValue(denseNet);
+	this.planDayWindow.area.setValue(area);
+	this.planDayWindow.pageWidth.setValue(pageWidth);
 
 	this.planDayWindow.show();
 }
@@ -232,9 +239,15 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onEditPlan = function() 
 	var materSpecId = this.editPlanDayPanel.materSpecId.getValue();
 	var materSpecName = this.editPlanDayPanel.materSpecName.getValue();
 	var orderNo = this.editPlanDayPanel.orderNo.getValue();
+	
+	var numPerWad = this.editPlanDayPanel.numPerWad.getValue();
+	var blankingSize = this.editPlanDayPanel.blankingSize.getValue();
+	var denseNet = this.editPlanDayPanel.denseNet.getValue();
+	var area = this.editPlanDayPanel.area.getValue();
+	var pageWidth = this.editPlanDayPanel.pageWidth.getValue();
 
-	var records = this.listPanel.getSelectionModel().getSelections();
-	var r = records[0];
+	//var records = this.listPanel.getSelectionModel().getSelections();
+	//var r = records[0];
 
 	this.planDayWindow2.batchNoFrom.store.load({
 				params : {
@@ -256,11 +269,11 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onEditPlan = function() 
 					'condition/relationId' : relationId
 				}
 			});
-
-	this.planDayWindow2.numPerWad.setValue(r.data.numPerWad);
-	this.planDayWindow2.blankingSize.setValue(r.data.blankingSize);
-	this.planDayWindow2.denseNet.setValue(r.data.denseNet);
-	this.planDayWindow2.area.setValue(r.data.area);
+	this.planDayWindow2.pageWidth.setValue(pageWidth);
+	this.planDayWindow2.numPerWad.setValue(numPerWad);
+	this.planDayWindow2.blankingSize.setValue(blankingSize);
+	this.planDayWindow2.denseNet.setValue(denseNet);
+	this.planDayWindow2.area.setValue(area);
 	this.editPlanDayListPanel.onEdit();
 	this.planDayWindow2.materSpecName.setValue(materSpecName);
 	this.planDayWindow2.orderNo.setValue(orderNo);
