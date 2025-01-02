@@ -4,6 +4,8 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 		this.initListPanel();
 		this.initInputWindow();
 		this.initEditWindow();
+		
+		this.initChooseWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -38,7 +40,9 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 								store : new Ext.data.ArrayStore({
 											fields : ['mykey', 'myvalue'],
 											data : [['裁叠膜', '裁叠膜'],
-													['卷膜', '卷膜']]
+													['卷膜', '卷膜'],
+													['气检', '气检'],
+													['包装', '包装']]
 										}),
 								mode : "local",
 								editable : false,
@@ -78,6 +82,11 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '->',{
+						text : '关联机台',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onArrange
 					}],
 			hsPage : true,
 			viewConfig : {
@@ -97,6 +106,9 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 					}, {
 						dataIndex : 'ip',
 						header : 'IP'
+					}, {
+						dataIndex : 'relationCode',
+						header : '关联机台'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.base.workorder.queryMachineByPage.biz.ext',
@@ -114,6 +126,8 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 							name : 'type'
 						}, {
 							name : 'ip'
+						}, {
+							name : 'relationCode'
 						}]
 			})
 		})
@@ -155,7 +169,9 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 							triggerAction : "all",
 							store : new Ext.data.ArrayStore({
 										fields : ['mykey', 'myvalue'],
-										data : [['裁叠膜', '裁叠膜'], ['卷膜', '卷膜']]
+										data : [['裁叠膜', '裁叠膜'], ['卷膜', '卷膜'],
+													['气检', '气检'],
+													['包装', '包装']]
 									}),
 							mode : "local",
 							editable : false,
@@ -228,7 +244,9 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 							triggerAction : "all",
 							store : new Ext.data.ArrayStore({
 										fields : ['mykey', 'myvalue'],
-										data : [['裁叠膜', '裁叠膜'], ['卷膜', '卷膜']]
+										data : [['裁叠膜', '裁叠膜'], ['卷膜', '卷膜'],
+													['气检', '气检'],
+													['包装', '包装']]
 									}),
 							mode : "local",
 							editable : false,
@@ -264,5 +282,82 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 						}]
 			}]
 		});
+	}
+	
+	this.initChooseWindow = function() {
+		var _this = this;
+
+		var selModel2 = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					handleMouseDown : Ext.emptyFn
+				});
+
+		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
+			region : 'center',
+			viewConfig : {
+				forceFit : true
+			},
+			hsPage : false,
+			selModel : selModel2,
+			tbar : [{
+						text : '确定选择',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onSaveArrange
+					}, '-', {
+						text : '关闭',
+						scope : this,
+						handler : function() {
+							this.chooseWindow.hide();
+						}
+					}],
+			delUrl : '111.biz.ext',
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel2, {
+						dataIndex : 'code',
+						header : '机台编码'
+					}, {
+						dataIndex : 'name',
+						header : '机台名称'
+					}, {
+						dataIndex : 'ip',
+						header : 'IP'
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.base.workorder.queryMachine.biz.ext',
+				root : 'data',
+				autoLoad : true,
+				totalProperty : '',
+				baseParams : {
+					'condition/nottype' : '裁叠膜'
+				},
+				fields : [{
+							name : 'code'
+						}, {
+							name : 'name'
+						}, {
+							name : 'type'
+						}, {
+							name : 'ip'
+						}]
+			})
+		})
+
+		this.chooseWindow = this.chooseWindow || new Ext.Window({
+					title : '机台分配',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 600,
+					height : 480,
+					layout : 'border',
+					items : [this.listPanel2]
+
+				})
 	}
 }

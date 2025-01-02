@@ -148,6 +148,14 @@ table {
 	font-weight: bold;
 }
 
+.specName2 {
+	vertical-align: middle;
+	font-family: Microsoft YaHei;
+	font-size: 10pt;
+	font-color: #000000;
+	font-weight: bold;
+}
+
 .mytxt {
 	vertical-align: middle;
 	font-family: Microsoft YaHei;
@@ -219,6 +227,8 @@ function initPage() {
 	var dayCode = getDayCode();// 获取入库日期编码
 			<% 	for (int i = 0; i < list.length; i++) { %>
 					var batchNo = '<%=list[i].get("batchNo") %>';
+					var specName = '<%=specName %>';
+					var specNameLen = specName.length;
 	
 					var htmlArr = new Array();
 					if (i == <%=list.length-1 %>) {
@@ -234,7 +244,11 @@ function initPage() {
 					htmlArr.push('<tr>');
 					htmlArr.push('<td colspan=3 class="td_b">');
 					htmlArr.push('<span class="model">MODEL:</span>');
-					htmlArr.push('<span class="specName">' + '<%=specName %>' + '</span>');
+					if(specNameLen>13){
+						htmlArr.push('<span class="specName2">' + '<%=specName %>' + '</span>');
+					}else{
+						htmlArr.push('<span class="specName">' + '<%=specName %>' + '</span>');
+					}
 					htmlArr.push('</td>');
 					htmlArr.push('</tr>');
 					<% if(null != txt && !"".equals(txt) ){ %>

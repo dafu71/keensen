@@ -12,9 +12,13 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 		this.initQjChangeEditWindow();
 		this.initQiJianJudgeWindow();
-		
+
 		this.initRemindGyyWindow();
 		this.initRemindMonitorWindow();
+
+		this.initViewDutyWindow();
+
+		this.initEditWindow4Gyy();
 
 		this.opt = '';
 
@@ -270,6 +274,14 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
+
+		this.queryPanel.addButton({
+					text : "领取任务",
+					// rescode : '10002661',
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onDuty
+				});
 	}
 
 	this.initListPanel = function() {
@@ -362,6 +374,11 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						dataIndex : 'prodSpecName',
 						sortable : true
 					}, {
+						header : '车号',
+						sortable : true,
+						width : 120,
+						dataIndex : 'trailer'
+					}, {
 						header : '干湿膜',
 						width : 120,
 						dataIndex : 'dryWet',
@@ -404,6 +421,14 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					}, {
 						dataIndex : 'gyyRemark',
 						header : '工艺员备注',
+						sortable : true
+					}, {
+						dataIndex : 'gyyConclusion',
+						header : '工艺结论',
+						sortable : true
+					}, {
+						dataIndex : 'gyySpecName',
+						header : '处理型号',
 						sortable : true
 					}, {
 						dataIndex : 'gyyRemarkTime',
@@ -671,6 +696,14 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							name : 'monitorRemarkUserName2'
 						}, {
 							name : 'dryWet'
+						}, {
+							name : 'trailer'
+						}, {
+							name : 'gyyConclusion'
+						}, {
+							name : 'gyySpecId'
+						}, {
+							name : 'gyySpecName'
 						}]
 			})
 		})
@@ -1743,7 +1776,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					}]
 				})
 	}
-	
+
 	this.initRemindGyyWindow = function() {
 
 		var remindGyySelModel = new Ext.grid.CheckboxSelectionModel({
@@ -1751,48 +1784,49 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					header : ''
 				});
 
-		this.remindGyyListPanel = this.remindGyyListPanel || new Ext.fn.ListPanel({
-			region : 'center',
-			viewConfig : {
-				forceFit : true
-			},
-			hsPage : false,
-			selModel : remindGyySelModel,
-			delUrl : '111.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), remindGyySelModel, {
-						dataIndex : 'batchNo',
-						header : '元件序号'
-					}, {
-						dataIndex : 'waterRemark',
-						header : '水测员工意见'
-					}, {
-						dataIndex : 'waterRemarkTime',
-						header : '水测员工接收时间'
-					}, {
-						dataIndex : 'waterRemarkUserName',
-						header : '水测员工'
-					}],
-			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.qinsen.qijian.query4Gyy.biz.ext',
-				root : 'data',
-				autoLoad : false,
-				totalProperty : '',
-				baseParams : {
-					
-				},
-				fields : [{
-							name : 'batchNo'
-						}, {
-							name : 'waterRemark'
-						}, {
-							name : 'waterRemarkTime'
-						}, {
-							name : 'waterRemarkUserName'
-						}, {
-							name : 'recordId'
-						}]
-			})
-		})
+		this.remindGyyListPanel = this.remindGyyListPanel
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					selModel : remindGyySelModel,
+					delUrl : '111.biz.ext',
+					columns : [new Ext.grid.RowNumberer(), remindGyySelModel, {
+								dataIndex : 'batchNo',
+								header : '元件序号'
+							}, {
+								dataIndex : 'waterRemark',
+								header : '水测员工意见'
+							}, {
+								dataIndex : 'waterRemarkTime',
+								header : '水测员工接收时间'
+							}, {
+								dataIndex : 'waterRemarkUserName',
+								header : '水测员工'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.qijian.query4Gyy.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'batchNo'
+								}, {
+									name : 'waterRemark'
+								}, {
+									name : 'waterRemarkTime'
+								}, {
+									name : 'waterRemarkUserName'
+								}, {
+									name : 'recordId'
+								}]
+					})
+				})
 
 		this.remindGyyWindow = this.remindGyyWindow || new Ext.Window({
 					title : '水测提醒工艺员',
@@ -1810,7 +1844,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 				});
 	}
-	
+
 	this.initRemindMonitorWindow = function() {
 
 		var remindMonitorSelModel = new Ext.grid.CheckboxSelectionModel({
@@ -1818,48 +1852,50 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					header : ''
 				});
 
-		this.remindMonitorListPanel = this.remindMonitorListPanel || new Ext.fn.ListPanel({
-			region : 'center',
-			viewConfig : {
-				forceFit : true
-			},
-			hsPage : false,
-			selModel : remindMonitorSelModel,
-			delUrl : '111.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), remindMonitorSelModel, {
-						dataIndex : 'batchNo',
-						header : '元件序号'
-					}, {
-						dataIndex : 'gyyRemark',
-						header : '工艺员意见'
-					}, {
-						dataIndex : 'gyyRemarkTime',
-						header : '工艺员备注时间'
-					}, {
-						dataIndex : 'gyyRemarkUserName',
-						header : '工艺员'
-					}],
-			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.qinsen.qijian.query4Monitor.biz.ext',
-				root : 'data',
-				autoLoad : false,
-				totalProperty : '',
-				baseParams : {
-					
-				},
-				fields : [{
-							name : 'batchNo'
-						}, {
-							name : 'gyyRemark'
-						}, {
-							name : 'gyyRemarkTime'
-						}, {
-							name : 'gyyRemarkUserName'
-						}, {
-							name : 'recordId'
-						}]
-			})
-		})
+		this.remindMonitorListPanel = this.remindMonitorListPanel
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					selModel : remindMonitorSelModel,
+					delUrl : '111.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							remindMonitorSelModel, {
+								dataIndex : 'batchNo',
+								header : '元件序号'
+							}, {
+								dataIndex : 'gyyRemark',
+								header : '工艺员意见'
+							}, {
+								dataIndex : 'gyyRemarkTime',
+								header : '工艺员备注时间'
+							}, {
+								dataIndex : 'gyyRemarkUserName',
+								header : '工艺员'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.qijian.query4Monitor.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'batchNo'
+								}, {
+									name : 'gyyRemark'
+								}, {
+									name : 'gyyRemarkTime'
+								}, {
+									name : 'gyyRemarkUserName'
+								}, {
+									name : 'recordId'
+								}]
+					})
+				})
 
 		this.remindMonitorWindow = this.remindMonitorWindow || new Ext.Window({
 					title : '水测提醒班长',
@@ -1869,7 +1905,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					closeAction : "hide",
 					buttonAlign : "center",
 					autoScroll : false,
-					//animCollapse: true,
+					// animCollapse: true,
 					modal : true,
 					width : 600,
 					height : 480,
@@ -1877,5 +1913,445 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					items : [this.remindMonitorListPanel]
 
 				});
+	}
+
+	// 任务
+	this.initViewDutyWindow = function() {
+
+		var _this = this;
+
+		var viewDutySelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.viewDutyListPanel = this.viewDutyListPanel
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					autoScroll : false,
+					selModel : viewDutySelModel,
+					columns : [new Ext.grid.RowNumberer({
+										width : 30
+									}), viewDutySelModel, {
+								dataIndex : 'qjBatchNo',
+								header : '元件序号'
+							}, {
+								dataIndex : 'jmBatchNo',
+								header : '卷膜序号'
+							}, {
+								dataIndex : 'jmSpecName',
+								header : '生产规格型号'
+							}, {
+								dataIndex : 'checkResult',
+								header : '气检值(KPa)'
+							}, {
+								dataIndex : 'isQualifiedName',
+								header : '气检判定'
+							}, {
+								dataIndex : 'ngReasonName',
+								header : '不良类型'
+							}, {
+								dataIndex : 'trailer',
+								header : '车号'
+							}, {
+								dataIndex : 'position',
+								header : '烘房位置'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.workorder2.queryQjDutyList.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'jmBatchNo'
+								}, {
+									name : 'orderId'
+								}, {
+									name : 'pkid'
+								}, {
+									name : 'jmBatchId'
+								}, {
+									name : 'jmSpecId'
+								}, {
+									name : 'jmSpecName'
+								}, {
+									name : 'qjSpecId'
+								}, {
+									name : 'qjSpecName'
+								}, {
+									name : 'checkResult'
+								}, {
+									name : 'isQualified'
+								}, {
+									name : 'ngReasonId'
+								}, {
+									name : 'ngReasonName'
+								}, {
+									name : 'trailer'
+								}, {
+									name : 'qjBatchNo'
+								}, {
+									name : 'isQualifiedName'
+								}, {
+									name : 'position'
+								}]
+					})
+				})
+
+		this.viewDutyPanel = this.viewDutyPanel || new Ext.fn.EditPanel({
+			height : 350,
+			region : 'north',
+			baseCls : "x-panel",
+			autoHide : false,
+			autoScroll : false,
+			border : true,
+			columns : 3,
+			loadUrl : 'com.keensen.ump.produce.component.workorder2.getQjDuty.biz.ext',
+			saveUrl : '1.biz.ext',
+			fields : [{
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;font-size:16px;">作业信息</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '作业日期',
+						ref : '../arrangeDate',
+						readOnly : true,
+						dataIndex : 'arrangeDate',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '订单号',
+						ref : '../orderNo',
+						readOnly : true,
+						dataIndex : 'orderNo',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '订单类型',
+						ref : '../orderType',
+						readOnly : true,
+						dataIndex : 'orderType',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '订单下达型号',
+						ref : '../materSpecName2',
+						readOnly : true,
+						dataIndex : 'materSpecName2',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '订单数量',
+						ref : '../orderAmount',
+						readOnly : true,
+						dataIndex : 'orderAmount',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '生产规格型号',
+						ref : '../materSpecName',
+						readOnly : true,
+						dataIndex : 'materSpecName',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '待气检数量',
+						ref : '../waitAmount',
+						readOnly : true,
+						dataIndex : 'waitAmount',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '已气检数量',
+						ref : '../qjAmount',
+						readOnly : true,
+						dataIndex : 'qjAmount',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;font-size:16px;">贴标信息</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '卷膜胶带',
+						ref : '../tape',
+						readOnly : true,
+						dataIndex : 'tape',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '端盖',
+						ref : '../lid',
+						readOnly : true,
+						dataIndex : 'lid',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '序列号是否固定',
+						ref : '../snRegular',
+						readOnly : true,
+						dataIndex : 'snRegular',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '标签制作方式',
+						ref : '../makeLabel',
+						readOnly : true,
+						dataIndex : 'makeLabel',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '双标签',
+						ref : '../labelDouble',
+						readOnly : true,
+						dataIndex : 'labelDouble',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '标签图纸编号',
+						ref : '../labelDrawingCode',
+						readOnly : true,
+						dataIndex : 'labelDrawingCode',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;font-size:16px;">元件序号</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '前缀',
+						ref : '../prefix1',
+						name:'prefix1',
+						readOnly : true,
+						//dataIndex : 'prefix',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '起始编号',
+						ref : '../snStart1',
+						name:'snStart1',
+						readOnly : true,
+						//dataIndex : 'snStart',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '结束编号',
+						ref : '../snEnd1',
+						name:'snEnd1',
+						readOnly : true,
+						//dataIndex : 'snEnd',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '前缀',
+						ref : '../prefix2',
+						name:'prefix2',
+						readOnly : true,
+						//dataIndex : 'prefix2',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '起始编号',
+						ref : '../snStart2',
+						name:'snStart2',
+						readOnly : true,
+						//dataIndex : 'snStart2',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '结束编号',
+						ref : '../snEnd2',
+						name:'snEnd2',
+						readOnly : true,
+						//dataIndex : 'snEnd2',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '前缀',
+						ref : '../prefix3',
+						name:'prefix3',
+						readOnly : true,
+						//dataIndex : 'prefix3',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '起始编号',
+						ref : '../snStart3',
+						name:'snStart3',
+						readOnly : true,
+						//dataIndex : 'snStart3',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '结束编号',
+						ref : '../snEnd3',
+						name:'snEnd3',
+						readOnly : true,
+						//dataIndex : 'snEnd3',
+						anchor : '85%',
+						colspan : 1
+					}],
+			buttons : [{
+						text : "刷新任务",
+						scope : this,
+						handler : this.onDuty
+					}, {
+						text : "关闭",
+						scope : this,
+						handler : function() {
+							this.viewDutyWindow.hide();
+						}
+					}]
+
+		})
+
+		this.viewDutyWindow = this.viewDutyWindow || new Ext.Window({
+					title : '气检任务',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.viewDutyPanel, this.viewDutyListPanel]
+
+				});
+
+	}
+
+	this.initEditWindow4Gyy = function() {
+		// A、放行原订单；B、降级；C、改判其他无特殊要求的同型号产品；D、报废
+		this.gyyConclusionStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['A', '放行原订单'], ['B', '降级'],
+							['C', '改判其他无特殊要求的同型号产品'], ['D', '报废'], ['E', '送水测'], ['F', '染色解剖']]
+				});
+
+		this.editWindow4Gyy = this.editWindow4Gyy || new Ext.fn.FormWindow({
+			title : '工艺员意见',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.qinsen.qijian.saveGyyConclusions.biz.ext',
+						fields : [{
+									xtype : 'combobox',
+									forceSelection : true,
+									// allowBlank : false,
+									mode : 'local',
+									fieldLabel : '工艺结论',
+									ref : '../../gyyConclusion',
+									hiddenName : 'entity/gyyConclusion',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									store : this.gyyConclusionStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'prodspeccombobox',
+									hiddenName : 'entity/gyySpecId',
+									ref : '../../gyySpecId',
+									colspan : 1,
+									anchor : '95%',
+									fieldLabel : '处理型号'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									name : 'entity/gyyRemark',
+									allowBlank : false,
+									value : '-',
+									fieldLabel : '处理意见',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordIds',
+									name : 'entity/recordIds'
+								}]
+					}]
+		});
 	}
 }

@@ -218,7 +218,7 @@
   <l:notEqual targetValue="NF Membrane" property="data/productName" compareType="string">
    <tr  style="border: 1px solid black;">
     <td height="38"><div align="center" class="style1">2</div></td>
-    <td height="38"><div align="center" class="style1">Average Permeate Flow</div></td>
+    <td height="38"><div align="center" class="style1">Permeate Flow Rate GPD</div></td>
     <td colspan="2" height="38"> <div align="center" class="style1"><b:write property="data/water" /> </div></td>
     <td height="38"> <div align="center" class="style1"><b:write property="data/waterCheck" /></div></td>
     <td height="38"><div align="center" class="style1">Product standard test</div></td>
@@ -226,7 +226,7 @@
   </tr>
   <tr  style="border: 1px solid black;">
     <td height="38" ><div align="center" class="style1">3</div></td>
-    <td height="38" ><div align="center" class="style1">Average Salt Rejection</div></td>
+    <td height="38" ><div align="center" class="style1">Stablized Salt Rejection(%)</div></td>
     <td height="38" colspan="2"><div align="center" class="style1"> <b:write property="data/desalination" /> </div></td>
     <td height="38"><div align="center" class="style1"> <b:write property="data/desalinationCheck" /> </div></td>
     <td height="38"><div align="center" class="style1">Product standard test</div></td>

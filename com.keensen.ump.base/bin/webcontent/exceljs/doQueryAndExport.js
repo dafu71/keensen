@@ -43,7 +43,10 @@ function doQuerySqlAndExport(obj,queryPanel,listPanel,mytitle,nameSqlId,notexpor
 						
 						if (!Ext.isEmpty(cm.getColumnHeader(i))) {
 							var column = {};
-							column.header = cm.getColumnHeader(i);
+							
+							var columnHeader = cm.getColumnHeader(i);
+							columnHeader = removeTags(columnHeader);						
+							column.header = columnHeader;
 							column.key = cm.getDataIndex(i);							
 							columns.push(column);
 						}
@@ -52,7 +55,9 @@ function doQuerySqlAndExport(obj,queryPanel,listPanel,mytitle,nameSqlId,notexpor
 						
 						if (!Ext.isEmpty(cm.getColumnHeader(i))) {
 							var column = {};
-							column.header = cm.getColumnHeader(i);
+							var columnHeader = cm.getColumnHeader(i);
+							columnHeader = removeTags(columnHeader);						
+							column.header = columnHeader;
 							column.key = cm.getDataIndex(i);							
 							columns.push(column);
 						}
@@ -99,7 +104,9 @@ function doQueryAndExport(obj,queryPanel,listPanel,mytitle,bizname){
 				for (var i = 0; i < len; i++) {
 					if (!Ext.isEmpty(cm.getColumnHeader(i))) {
 						var column = {};
-						column.header = cm.getColumnHeader(i);
+						var columnHeader = cm.getColumnHeader(i);
+						columnHeader = removeTags(columnHeader);
+						column.header = columnHeader;
 						column.key = cm.getDataIndex(i);
 						columns.push(column);
 					}
@@ -114,6 +121,14 @@ function doQueryAndExport(obj,queryPanel,listPanel,mytitle,bizname){
 			_this.requestMask.hide()
 		}
 	})
+}
+
+function removeTags(myStr) {
+	if ((myStr === null) || (myStr === ''))
+		return false;
+	else
+		myStr = myStr.toString();
+	return myStr.replace(/(<([^>]+)>)/ig, '');
 }
 
 function doExprot(mytitle,data, columns) {

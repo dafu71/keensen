@@ -290,3 +290,46 @@ com.zoomlion.hjsrm.org.employeeMgr.prototype.onResetPassword = function() {
 		}
 	}, this);
 }
+
+com.zoomlion.hjsrm.org.employeeMgr.prototype.onLogout = function() {
+	var me = this;
+	var record = this.empGridPanel.selModel.getSelections();
+	var data = [];
+	if (record.length == 0) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!");
+		return;
+	}
+	if (record.length > 1) {
+		Ext.Msg.alert("系统提示", "请选择一行数据，暂不支持批量登出!");
+		return;
+	}
+
+	Ext.Msg.confirm("系统提示", "您确定要登出该员工吗?", function(btnText) {
+		if (btnText == "yes") {
+			me.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			me.requestMask.show();
+			Ext.Ajax.request({
+						
+						url : 'com.keensen.ump.base.organduser.logoutByUserId.biz.ext',
+						jsonData : {
+							userId : record[0].data.empcode
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								me.requestMask.hide();
+								Ext.Msg.alert('系统提示', '登出成功!', function() {
+											this.empGridPanel.refresh();
+										}, me);
+							} else {
+								me.requestMask.hide();
+								Ext.Msg.alert('系统提示', '登出失败!');
+							}
+						}
+					});
+		}
+	}, this);
+};

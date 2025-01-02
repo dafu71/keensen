@@ -369,8 +369,6 @@ com.zoomlion.hjsrm.techChange.Manage = function() {
 												text = text.toLowerCase();
 												return (text.indexOf(value) != -1);
 											});
-									combo.expand();
-									return false;
 								}
 							}
 						}

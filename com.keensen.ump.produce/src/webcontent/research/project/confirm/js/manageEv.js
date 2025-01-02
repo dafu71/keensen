@@ -89,6 +89,7 @@ com.keensen.ump.research.project.ProjectConfirmnMgr.prototype.doConfirm = functi
 	} else {
 		var records = A.getSelectionModel().getSelections();
 		var works = [];
+		var projectId = records[0].data['projectId']
 		Ext.each(records, function(r) {
 
 					var d = {
@@ -118,6 +119,7 @@ com.keensen.ump.research.project.ProjectConfirmnMgr.prototype.doConfirm = functi
 					if (ret.success) {
 						var vals = {};
 						vals['nameSqlId'] = _this.nameSqlId;
+						vals['condition/projectId'] = projectId;
 						_this.listPanel.store.baseParams = vals;
 						_this.listPanel.store.reload();
 					}
@@ -150,6 +152,7 @@ function confirm(projectId, userId, workDate, flag) {
 		success : function(response, action) {
 			var vals = {};
 			vals['nameSqlId'] = 'com.keensen.ump.produce.reseach.project.queryProjectWork';
+			vals['condition/projectId'] = projectId;
 			A.store.baseParams = vals;
 			A.store.reload();
 			/*

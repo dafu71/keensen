@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="saveProjectBase.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node2" name="注释2" displayName="注释" nodeType="note" type="note" content="com.keensen.ump.produce.reseach.project.insertOperatorRole" title="dafu&#x9;24-12-6 上午9:43">
+    <targetConnections>link16</targetConnections>
+    <location x="390" y="555"/>
+    <size height="100" width="511"/>
+  </nodes>
   <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="com.keensen.ump.produce.reseach.project.deleteProjectDuration&#xD;&#xA;&#xD;&#xA;com.keensen.ump.produce.reseach.project.insertProjectDuration" title="dafu&#x9;24-11-15 下午3:04">
-    <targetConnections>link12</targetConnections>
     <targetConnections>link13</targetConnections>
-    <location x="345" y="259"/>
+    <targetConnections>link12</targetConnections>
+    <location x="99" y="420"/>
     <size height="100" width="541"/>
   </nodes>
   <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="保存项目" title="dafu&#x9;24-11-15 下午3:04">
@@ -20,8 +25,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link7</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link7</targetConnections>
     <location x="840" y="152"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -120,7 +125,7 @@
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="executeNamedSql1" displayName="executeNamedSql" nodeType="common" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
     <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo1</sourceNode>
-      <targetNode>transactioncommit0</targetNode>
+      <targetNode>assign2</targetNode>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" lineType="note" type="exception">
       <sourceNode>invokePojo1</sourceNode>
@@ -193,7 +198,7 @@
       <sourceNode>transactioncommit0</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link4</targetConnections>
+    <targetConnections>link14</targetConnections>
     <location x="765" y="152"/>
     <size height="28" width="28"/>
     <nodeLabel>transactioncommit0label</nodeLabel>
@@ -220,12 +225,65 @@
     <figSize height="20" width="61"/>
     <node>transactionrollback0</node>
   </nodes>
+  <nodes xsi:type="process:tInvoke" description="" id="invokePojo2" name="executeNamedSql2" displayName="executeNamedSql1" collapsed="false" nodeType="common" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>transactioncommit0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" type="note">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>node2</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <location x="660" y="345"/>
+    <size height="28" width="22"/>
+    <nodeLabel>invokePojo2label</nodeLabel>
+    <process:pojo methodType="instance" synchronization="true" transactionType="join">
+      <process:partner type="literal">com.eos.foundation.database.DatabaseExt.executeNamedSql</process:partner>
+      <process:instance instanceName=""/>
+    </process:pojo>
+    <process:inputVariables>
+      <process:inputVariable id="0" name="dsName" type="literal" value="java.lang.String" valueType="Java" pattern="reference">default</process:inputVariable>
+      <process:inputVariable id="1" name="nameSqlId" type="literal" value="java.lang.String" valueType="Java" pattern="reference">com.keensen.ump.produce.reseach.project.insertOperatorRole</process:inputVariable>
+      <process:inputVariable id="2" name="parameterObject" type="query" value="java.lang.Object" valueType="Java" pattern="reference">param2</process:inputVariable>
+    </process:inputVariables>
+    <process:outputVariables/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="invokePojo2label" name="label" nodeType="label">
+    <location x="599" y="381"/>
+    <figSize height="20" width="144"/>
+    <node>invokePojo2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign2" name="赋值2" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="link15" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo2</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <location x="657" y="246"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">10001201</process:from>
+      <process:to type="query">param2/roleid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/headmanId</process:from>
+      <process:to type="query">param2/userId</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <location x="651" y="282"/>
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="dafu" createTime="2024-11-15 11:49:29" date="2024-11-15Z" description="" name="saveProjectBase" version="6.3"/>
   <process:variables>
     <process:variable description="" historyStateLocation="client" isArray="false" name="id" primitiveType="String"/>
     <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="param"/>
+    <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="param2"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input anyType="commonj.sdo.DataObject" description="" isArray="false" name="entity"/>

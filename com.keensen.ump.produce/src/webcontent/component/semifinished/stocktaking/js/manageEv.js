@@ -126,3 +126,50 @@ com.keensen.ump.produce.component.StocktakingMgr.prototype.exportExcel = functio
 	}
 
 }
+
+com.keensen.ump.produce.component.StocktakingMgr.prototype.onReport = function() {
+	var _this = this;
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+				url : "com.keensen.ump.base.common.query.biz.ext",
+				method : "post",
+				jsonData : {
+					nameSqlId : 'com.keensen.ump.produce.component.semifinished.queryStockTakingReport'
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						var data = ret.data;
+						var columns = [{
+									header : '元件型号',
+									key : 'prodSpecName'
+								}, {
+									header : '上月在库数(支)',
+									key : 'lastAmount'
+								}, {
+									header : '本月入库数(支)',
+									key : 'inAmount'
+								}, {
+									header : '本月出库数(支)',
+									key : 'outAmount'
+								}, {
+									header : '本月盘点数(支)',
+									key : 'takingAmount'
+								}, {
+									header : '盘点盈亏(支)',
+									key : 'amount'
+								}];
+
+						doExprot('盘存报表', data, columns);
+
+					}
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+}

@@ -174,6 +174,7 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.exportExcel = function() {
 							+ '<td align="center">卷膜序号</td>'
 							+ '<td align="center">卷膜型号</td>'
 							+ '<td align="center">元件序号</td>'
+							+ '<td align="center">工艺员备注</td>'
 							+ '<td align="center">测试型号</td>'
 							+ '<td align="center">拟入库型号</td>'
 							+ '<td align="center">拟贴标型号</td>'
@@ -219,9 +220,14 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.exportExcel = function() {
 										+ formatStr(r.juanmoBatchNo)
 										+ '</td><td align="center">'
 										+ formatStr(r.juanmoSpecName)
-										+ '</td><td align="center">'
+										+ '</td>'
+										+'<td align="center">'
 										+ formatStr(r.prodBatchNo)
-										+ '</td><td align="center">'
+										+ '</td>' 
+										+'<td align="center">'
+										+ formatStr(r.gyyRemark)
+										+ '</td>' 
+										+ '<td align="center">'
 										+ formatStr(r.testSpecName) + '</td>'
 										+ '<td align="center">'
 										+ formatStr(r.ifProdPpecName) + '</td>'

@@ -221,5 +221,42 @@
     </select>
     
     
+ 	<select id="queryPackage" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.batch_no            AS "batchNo",
+       T1.prod_batch_no          AS "prodBatchNo"
+  FROM ks_component_package T1
  
+  where 1=1
+ 
+  
+   <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
+   
+	<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_no like '%' || #batchNo# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodBatchNo"> 
+		       t1.prod_batch_no like '%' || #prodBatchNo# || '%'
+	</isNotNull>
+	
+	order by t1.create_time desc
+    </select>
 </sqlMap>

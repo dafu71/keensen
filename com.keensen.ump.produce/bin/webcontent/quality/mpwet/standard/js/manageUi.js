@@ -20,7 +20,7 @@ com.keensen.ump.produce.quality.mpwetstandMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【膜片湿含量质检标准查询】',
+					//title : '【膜片湿含量质检标准查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/materSpecCode',
@@ -39,7 +39,7 @@ com.keensen.ump.produce.quality.mpwetstandMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【膜片湿含量质检标准列表】',
+			//title : '【膜片湿含量质检标准列表】',
 			viewConfig : {
 				forceFit : true
 			},

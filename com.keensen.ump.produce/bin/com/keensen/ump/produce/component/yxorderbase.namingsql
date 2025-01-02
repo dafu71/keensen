@@ -4,6 +4,7 @@
     <select id="queryYxOrderBase" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
 	SELECT T1.ID AS "id",T1.DELIVERY_STATE "deliveryState",
+	T1.mp_spec_id "mpSpecId",pms.mater_spec_name "mpSpecName",
 	TO_CHAR(T1.CHANGE_TIME, 'yyyy-MM-dd') "changeTime",
        T1.CHANGE_USER_ID AS "changeUserId",
        T1.CHANGE_NAME AS "changeName",
@@ -130,6 +131,7 @@
 		t1.mark_Drawing_Code2 as "markDrawingCode2"
         
   FROM KS_COMPONENT_YXORDER_BASE T1
+  LEFT JOIN qinsen.para_mater_spec pms on pms.mater_spec_id=t1.mp_spec_id
   
 	where 1=1
 	<isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
@@ -365,6 +367,7 @@
         <isNotNull prepend="and" property="applyDateEnd">to_char(t1.apply_date,'yyyy-MM-dd')  &lt;=  #applyDateEnd#</isNotNull>
         <isNotNull prepend="and" property="demandDateStart">to_char(t1.demand_date,'yyyy-MM-dd')  &gt;=  #demandDateStart#</isNotNull>
         <isNotNull prepend="and" property="demandDateEnd">to_char(t1.demand_date,'yyyy-MM-dd')  &lt;=  #demandDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="goodsState">t1.goods_State = #goodsState#</isNotNull>
 	
  	ORDER BY t1.RELATION_ID,T1.ID
 

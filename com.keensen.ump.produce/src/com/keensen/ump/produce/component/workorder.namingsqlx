@@ -217,7 +217,7 @@
     t2.mater_spec_name2 "materSpecName2",
     t2.order_amount "orderAmount",
     
-    nvl(t3.jm_codes,m.machine_code) "jmCodes",
+    nvl(t3.jm_codes,m.jm_codes) "jmCodes",
   
   t3.PRODUCT_ORDER "productOrder",
   <!--nvl(t3.ARRANGE_DATE,t1.plan_date) "arrangeDate"-->
@@ -235,12 +235,22 @@
   from KS_COMPONENT_PLAN_DAY t
   GROUP BY t.order_id,plan_date) t1
   <!--LEFT JOIN KS_COMPONENT_DUTY_CDM cm
-  ON  t1.order_id = cm.order_id and t1.plan_date = cm.plan_date-->
+  ON  t1.order_id = cm.order_id and t1.plan_date = cm.plan_date
   left join (SELECT order_id,machine_code from V_KS_COMPONENT_DUTY_MACHINE
-	WHERE machine_type='J') m on m.order_id = t1.order_id
+	WHERE machine_type='J') m on m.order_id = t1.order_id-->
+	
+  left join (  SELECT tt.order_id,tt.PLAN_date,wm_concat(relation_code) jm_codes from 
+  (SELECT cm.*,mr.relation_code from 
+  (SELECT DISTINCT cdm_code,order_id,PLAN_date FROM
+  KS_COMPONENT_DUTY_CDM) cm 
+  LEFT JOIN KS_BASE_MACHINE_RELATION mr
+  ON cm.cdm_code = mr.code AND mr.relation_code LIKE 'J%') tt
+  GROUP BY tt.order_id,tt.PLAN_date) m on m.order_id = t1.order_id and t1.plan_date = m.plan_date
+	
+	
 	
   LEFT JOIN KS_PROD_COMPONENT_YXORDER t2 ON t1.order_id=t2.id
-  left join (select t.plan_date,t.order_id,wm_concat(t.jm_code) jm_codes,
+  left join (select t.plan_date,t.order_id,wm_concat(DISTINCT t.jm_code) jm_codes,
   max(t.PRODUCT_ORDER) PRODUCT_ORDER,max(ARRANGE_DATE) ARRANGE_DATE ,
   max(t.jm_state) jm_state
   from KS_COMPONENT_DUTY_JM t
@@ -464,4 +474,365 @@
 	AND t.order_id=#orderId#
 	AND t.batch_no=#batchNo#
 	</select>
+	
+	<select id="query4QjDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT T1.ID "id",T1.qj_code "qjCode",T1.ID "pkid",
+   	to_char(t1.ARRANGE_DATE,'yyyy-MM-dd') "arrangeDate",
+       T1.ORDER_ID "orderId",T1.product_Order "productOrder",
+       DECODE(SUBSTR(T2.ORDER_NO, 1, 2), 'SG', '1', '0') "testOrder",
+       T2.ORDER_NO "orderNo",
+       T2.MATER_SPEC_ID "materSpecId",
+       T2.MATER_SPEC_NAME "materSpecName",
+       T2.ORDER_TYPE "orderType",
+       T2.MATER_SPEC_NAME2 "materSpecName2",
+       T2.ORDER_AMOUNT "orderAmount",
+       nvl(t1.qj_state,0) "qjState",
+           t3.jm_amount "jmAmount",
+       nvl(t4.wait_amount,0) "waitAmount",
+       nvl(t5.qj_amount,0) "qjAmount",
+       <!--decode(t4.wait_amount,0,'完成','处理中') "qjStateName"-->
+       case when t3.jm_amount = nvl(t5.qj_amount,0) then '完成' else '处理中' end "qjStateName"
+        ,yb.tape "tape",yb.lid "lid",yb.sn_Regular "snRegular",yb.make_Label "makeLabel",
+       yb.label_Double "labelDouble",yb.label_Drawing_Code "labelDrawingCode",
+       sn.prefix "prefix", sn.sn_start "snStart",sn.sn_end "snEnd"
+  FROM KS_COMPONENT_DUTY_QJ T1
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER T2
+    ON T1.ORDER_ID = T2.ID
+  left join (SELECT wm_concat(sn.prefix) prefix,sn.order_id order_id,
+		wm_concat(sn_start) sn_start,
+		wm_concat(sn_end) sn_end from KS_COMPONENT_DUTY_SN sn
+		GROUP BY sn.order_id) sn
+    on sn.order_id = T2.ID
+  LEFT JOIN ks_component_yxorder_base yb
+    ON yb.id = t2.base_id
+  left join (select COUNT(DISTINCT t.jm_batch_id) jm_amount,t.order_id from V_KS_TM_CDM_JM_QJ t
+    where exists(select 1 from KS_COMPONENT_DUTY_QJ_list WHERE batch_no = t.jm_batch_no)
+  GROUP BY t.order_id) t3 ON T3.ORDER_ID = T2.ID
+  left join (select COUNT(DISTINCT t.jm_batch_id) wait_amount,t.order_id from V_KS_TM_CDM_JM_QJ t
+    WHERE t.qj_state = 0
+    and exists(select 1 from KS_COMPONENT_DUTY_QJ_list WHERE batch_no = t.jm_batch_no)
+  GROUP BY t.order_id) t4 ON T4.ORDER_ID = T2.ID
+  left join (select COUNT(DISTINCT t.jm_batch_id) qj_amount,t.order_id from V_KS_TM_CDM_JM_QJ t
+    WHERE t.qj_state = 1
+    and exists(select 1 from KS_COMPONENT_DUTY_QJ_list WHERE batch_no = t.jm_batch_no)
+  GROUP BY t.order_id) t5 ON T5.ORDER_ID = T2.ID
+    where 1=1
+      <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+		</isNotNull>
+     <isNotNull prepend="and" property="orderId"> 
+		       t2.id = #orderId#
+		</isNotNull>
+		<isNotNull prepend="and" property="orderNo2"> 
+		       t2.order_no like '%' || #orderNo2# || '%'
+		</isNotNull>
+		<isNotNull prepend="and" property="materSpecId"> 
+		       t2.mater_spec_id = #materSpecId#
+		</isNotNull>
+		<isNotNull prepend="and" property="arrangeDate"> 
+		       to_char(t1.ARRANGE_DATE,'yyyy-MM-dd') = #arrangeDate#
+		</isNotNull>
+		
+		<isNotNull prepend="" property="qjCode"> 
+           AND ',' || T1.QJ_CODE || ',' LIKE '%,' || #qjCode# || ',%'
+        </isNotNull>
+		
+		<!--领取任务-->
+		<isNotNull prepend="" property="getduty"> 
+		and t4.wait_amount > 0
+		</isNotNull>
+		
+		<isNull prepend="" property="getduty"> 	
+	ORDER BY t1.arrange_date desc,t1.order_id desc
+	</isNull>
+	<isNotNull prepend="" property="getduty"> 	
+	ORDER BY T1.product_Order
+	</isNotNull>
+    </select>
+    
+    <select id="queryTrailer" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ID             AS "id",
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.TRAILER       AS "trailer",
+       T1.POSITION       AS "position"
+  FROM KS_COMPONENT_DUTY_TRAILER T1
+  
+  where 1=1
+
+  
+   <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="trailer"> 
+		       t1.trailer like '%' || #trailer# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="position"> 
+		       t1.position like '%' || #position# || '%'
+	</isNotNull>
+	order by t1.id desc
+    </select>
+    
+     <select id="querySn" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ORDER_ID             AS "orderId",
+          T1.ORDER_ID             AS "oldOrderId",   
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.prefix       AS "prefix",
+       T1.sn_Start       AS "snStart",
+       T1.sn_End       AS "snEnd",
+        T2.ORDER_NO "orderNo",
+       T2.MATER_SPEC_ID "materSpecId",
+       T2.MATER_SPEC_NAME "materSpecName",T1.id "id"
+  FROM KS_COMPONENT_DUTY_SN T1
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER T2
+    ON T1.ORDER_ID = T2.ID
+  where 1=1
+
+   <isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+   <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
+    <isNotNull prepend="and" property="orderId"> 
+		       T1.ORDER_ID = #orderId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="materSpecId"> 
+		       T2.MATER_SPEC_ID = #materSpecId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prefix"> 
+		       t1.prefix like '%' || #prefix# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="orderNo"> 
+		       t2.order_No like '%' || #orderNo# || '%'
+	</isNotNull>
+	order by t2.order_no,t1.CREATE_TIME desc
+    </select>
+    
+    <delete id="deleteQjDutyList" parameterClass="java.util.HashMap" >
+   	DELETE FROM KS_COMPONENT_DUTY_QJ_LIST T
+   	where T.relation_id = #relationId#
+	</delete>
+	
+	<insert id="insertQjDutyList" parameterClass="java.util.HashMap" >
+   	INSERT INTO KS_COMPONENT_DUTY_QJ_LIST
+	(batch_no,relation_id)
+	SELECT DISTINCT t.jm_batch_no,#relationId# from V_KS_TM_CDM_JM_QJ t
+	WHERE t.order_id = #orderId#
+	and TRUNC((SYSDATE-t.jm_produce_dt)*24)>=6
+	AND t.qj_state = 0
+	</insert>
+	
+	<delete id="deleteQjDuty" parameterClass="java.util.HashMap" >
+   	DELETE FROM KS_COMPONENT_DUTY_QJ T
+   	where T.id = #relationId#
+	</delete>
+	
+	<select id="queryQjDutyList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		SELECT T1.BATCH_NO "jmBatchNo",qj.BATCH_NO "qjBatchNo",
+       T2.ORDER_ID "orderId",
+       T2.ID "pkid",
+       JM.RECORD_ID         "jmBatchId",
+       JM.PROD_SPEC_ID      "jmSpecId",
+       PMS.MATER_SPEC_NAME  "jmSpecName",
+       QJ.PROD_SPEC_ID      "qjSpecId",
+       PMS2.MATER_SPEC_NAME "qjSpecName",
+       QJ.CHECK_RESULT "checkResult",
+       QJ.IS_QUALIFIED "isQualified",
+       DECODE(QJ.IS_QUALIFIED, 'Y', '是', 'N', '否', '') "isQualifiedName",
+       QJ.NG_REASON_ID "ngReasonId",
+       CF.PROP_VALUE_NAME   "ngReasonName",
+       JM.TRAILER "trailer",tr.position "position"
+  FROM KS_COMPONENT_DUTY_QJ_LIST T1
+  LEFT JOIN KS_COMPONENT_DUTY_QJ T2
+    ON T1.RELATION_ID = T2.ID
+  LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+    ON JM.BATCH_NO = T1.BATCH_NO
+  LEFT JOIN ks_COMPONENT_DUTY_TRAILER tr
+    ON tr.trailer = jm.trailer
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID
+  LEFT JOIN QINSEN.INST_QIJIAN QJ
+    ON JM.RECORD_ID = QJ.JUANMO_BATCH_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS2
+    ON PMS2.MATER_SPEC_ID = QJ.PROD_SPEC_ID
+  LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION CF
+    ON CF.PROP_VALUE_ID = QJ.NG_REASON_ID
+    where 1=1
+    <isNotNull prepend="and" property="relationId"> 
+		       T1.RELATION_ID = #relationId#
+	</isNotNull>
+	order by JM.TRAILER ,tr.position
+	</select>
+	
+	<delete id="deleteRelationCode" parameterClass="java.util.HashMap" >
+   	DELETE FROM KS_BASE_MACHINE_RELATION T
+   	where T.code = #code#
+	</delete>
+	
+	<delete id="insertRelationCode" parameterClass="java.util.HashMap" >
+   	insert into KS_BASE_MACHINE_RELATION T
+   	(code,relation_code)
+   	select #code#,#relationCode# from dual
+	</delete>
+	
+	<delete id="deletePackDuty" parameterClass="java.util.HashMap" >
+   	DELETE FROM KS_COMPONENT_DUTY_PACK T
+   	where T.id = #relationId#
+	</delete>
+	
+	<delete id="deletePackDutyList" parameterClass="java.util.HashMap" >
+   	DELETE FROM KS_COMPONENT_DUTY_PACK_LIST T
+   	where T.relation_id = #relationId#
+	</delete>
+	
+	<insert id="insertPackDutyList" parameterClass="java.util.HashMap" >
+   	INSERT INTO KS_COMPONENT_DUTY_PACK_LIST
+	(batch_no,relation_id)
+	SELECT DISTINCT t.jm_batch_no,#relationId# from 
+	V_KS_RAOSI t
+	WHERE t.order_id = #orderId#
+	
+	</insert>
+	
+	<select id="queryPackDutyList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+		SELECT T1.BATCH_NO "jmBatchNo",qj.BATCH_NO "qjBatchNo",
+       T2.ORDER_ID "orderId",
+       T2.ID "pkid",
+       JM.RECORD_ID         "jmBatchId",
+       JM.PROD_SPEC_ID      "jmSpecId",
+       PMS.MATER_SPEC_NAME  "jmSpecName",
+       QJ.PROD_SPEC_ID      "qjSpecId",
+       PMS2.MATER_SPEC_NAME "qjSpecName",
+       QJ.CHECK_RESULT "checkResult",
+       QJ.IS_QUALIFIED "isQualified",
+       DECODE(QJ.IS_QUALIFIED, 'Y', '是', 'N', '否', '') "isQualifiedName",
+       QJ.NG_REASON_ID "ngReasonId",
+       CF.PROP_VALUE_NAME   "ngReasonName"
+  FROM KS_COMPONENT_DUTY_PACK_LIST T1
+  LEFT JOIN KS_COMPONENT_DUTY_PACK T2
+    ON T1.RELATION_ID = T2.ID
+  LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+    ON JM.BATCH_NO = T1.BATCH_NO
+  LEFT JOIN QINSEN.INST_QIJIAN QJ
+    ON JM.RECORD_ID = QJ.JUANMO_BATCH_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID  
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS2
+    ON PMS2.MATER_SPEC_ID = QJ.PROD_SPEC_ID
+  LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION CF
+    ON CF.PROP_VALUE_ID = QJ.NG_REASON_ID
+    where 1=1
+    <isNotNull prepend="and" property="relationId"> 
+		       T1.RELATION_ID = #relationId#
+	</isNotNull>
+	order by T1.BATCH_NO
+	</select>
+	
+	
+	<select id="query4PackDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ID "id",T1.PACK_code "packCode",T1.ID "pkid",
+     to_char(t1.ARRANGE_DATE,'yyyy-MM-dd') "arrangeDate",
+       T1.ORDER_ID "orderId",T1.product_Order "productOrder",
+       DECODE(SUBSTR(T2.ORDER_NO, 1, 2), 'SG', '1', '0') "testOrder",
+       T2.ORDER_NO "orderNo",
+       T2.MATER_SPEC_ID "materSpecId",
+       T2.MATER_SPEC_NAME "materSpecName",
+       T2.ORDER_TYPE "orderType",
+       T2.MATER_SPEC_NAME2 "materSpecName2",
+       T2.ORDER_AMOUNT "orderAmount",
+       nvl(t1.pack_state,0) "packState",
+           t3.jm_amount "jmAmount",
+       nvl(t3.jm_amount,0)-nvl(t5.pack_amount,0) "waitAmount",
+       nvl(t5.pack_amount,0) "packAmount",
+     
+       case when t3.jm_amount = nvl(t5.pack_amount,0) then '完成' else '处理中' end "packStateName"
+        ,yb.tape "tape",yb.lid "lid",yb.sn_Regular "snRegular",yb.make_Label "makeLabel",
+       yb.label_Double "labelDouble",yb.label_Drawing_Code "labelDrawingCode"
+  FROM KS_COMPONENT_DUTY_PACK T1
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER T2
+    ON T1.ORDER_ID = T2.ID
+  
+  LEFT JOIN ks_component_yxorder_base yb
+    ON yb.id = t2.base_id
+  left join (select COUNT(DISTINCT t.jm_batch_no) jm_amount,t.order_id from V_KS_RAOSI t
+    where exists(select 1 from KS_COMPONENT_DUTY_PACK_list WHERE batch_no = t.jm_batch_no)
+  GROUP BY t.order_id) t3 ON T3.ORDER_ID = T2.ID
+
+  left join (select COUNT(DISTINCT t.batch_no) pack_amount,v.order_id from KS_COMPONENT_PACKAGE t
+  LEFT JOIN V_KS_RAOSI v ON v.jm_batch_no = t.batch_no
+    WHERE exists(select 1 from KS_COMPONENT_DUTY_PACK_list WHERE batch_no = t.batch_no)
+  GROUP BY v.order_id) t5 ON T5.ORDER_ID = T2.ID
+    where 1=1
+      <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+		</isNotNull>
+     <isNotNull prepend="and" property="orderId"> 
+		       t2.id = #orderId#
+		</isNotNull>
+		<isNotNull prepend="and" property="orderNo2"> 
+		       t2.order_no like '%' || #orderNo2# || '%'
+		</isNotNull>
+		<isNotNull prepend="and" property="materSpecId"> 
+		       t2.mater_spec_id = #materSpecId#
+		</isNotNull>
+		<isNotNull prepend="and" property="arrangeDate"> 
+		       to_char(t1.ARRANGE_DATE,'yyyy-MM-dd') = #arrangeDate#
+		</isNotNull>
+		
+		<isNotNull prepend="" property="packCode"> 
+           AND ',' || T1.PACK_CODE || ',' LIKE '%,' || #packCode# || ',%'
+        </isNotNull>
+		
+		<!--领取任务-->
+		<isNotNull prepend="" property="getduty"> 
+		and (nvl(t3.jm_amount,0)-nvl(t5.pack_amount,0)) > 0
+		</isNotNull>
+		
+		<isNull prepend="" property="getduty"> 	
+	ORDER BY t1.arrange_date desc,t1.order_id desc
+	</isNull>
+	<isNotNull prepend="" property="getduty"> 	
+	ORDER BY T1.product_Order
+	</isNotNull>
+    </select>
 </sqlMap>

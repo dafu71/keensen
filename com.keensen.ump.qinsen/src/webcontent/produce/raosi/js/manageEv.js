@@ -2,13 +2,13 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.initEvent = function() {
 	var _this = this;
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
-		//var start = vals['condition/produceBeginDate'];
-		//var end = vals['condition/produceEndDate'];
-		//if (dayDiff(start, end) > 31) {
-			//Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
-			//return false;
+		// var start = vals['condition/produceBeginDate'];
+		// var end = vals['condition/produceEndDate'];
+		// if (dayDiff(start, end) > 31) {
+		// Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
+		// return false;
 
-		//}
+		// }
 		var store = this.listPanel.store;
 
 		store.baseParams = this.queryPanel.getForm().getValues();
@@ -53,13 +53,13 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.initEvent = function() {
 				recordId = recordId + '';
 
 				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能删除');
-					//return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能删除');
+					// return false;
 				}
 			})
 
-	this.raosiEditWindow.activeItem.mon(this.raosiEditWindow.activeItem, 'afterload',
-			function(win, data) {
+	this.raosiEditWindow.activeItem.mon(this.raosiEditWindow.activeItem,
+			'afterload', function(win, data) {
 				var regEx = new RegExp("\\-", "gi");
 				if (data.produceDt) {
 					data.produceDt = data.produceDt.split('.')[0];
@@ -68,16 +68,16 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.initEvent = function() {
 							.findField('entity/produceDt')
 							.setValue(new Date(date1));
 				}
-				
+
 			}, this);
-			
+
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 				var recordId = cell.data.recordId;
 				recordId = recordId + '';
 				if (recordId.substr(0, 1) != '2') {
-					//Ext.Msg.alert('系统提示', '一期数据不能修改');
-					//return false;
+					// Ext.Msg.alert('系统提示', '一期数据不能修改');
+					// return false;
 				}
 				this.raosiEditWindow.show();
 				this.raosiEditWindow.loadData(cell);
@@ -95,6 +95,71 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.onAdd = function() {
 
 com.keensen.ump.qinsen.produce.raosiMgr.prototype.saveRecInfo = function() {
 	this.raosiAddWindow.saveData();
+}
+
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.onScan = function() {
+	// 先加载订单信息
+	var _this = this;
+	var batchNo = _this.raosiAddWindow.batchNo.getValue();
+	if (!Ext.isEmpty(batchNo)) {
+		_this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		_this.requestMask.show();
+		Ext.Ajax.request({
+					url : "com.keensen.ump.qinsen.raosi.query4Workorder.biz.ext",
+					method : "post",
+					jsonData : {
+						'condition/batchNo' : batchNo
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							if (!Ext.isEmpty(ret.data)) {
+								var dd = ret.data[0];
+								_this.raosiAddWindow.orderNo
+										.setValue(dd.orderNo);
+								_this.raosiAddWindow.orderType
+										.setValue(dd.orderType);
+								_this.raosiAddWindow.materSpecName2
+										.setValue(dd.materSpecName2);
+								_this.raosiAddWindow.materSpecName
+										.setValue(dd.materSpecName);
+								_this.raosiAddWindow.orderAmount
+										.setValue(dd.orderAmount);
+								_this.raosiAddWindow.qjAmount
+										.setValue(dd.qjAmount);
+								_this.raosiAddWindow.tape.setValue(dd.tape);
+								_this.raosiAddWindow.lid.setValue(dd.lid);
+								_this.raosiAddWindow.snRegular
+										.setValue(dd.snRegular);
+								_this.raosiAddWindow.makeLabel
+										.setValue(dd.makeLabel);
+								_this.raosiAddWindow.labelDouble
+										.setValue(dd.labelDouble);
+								_this.raosiAddWindow.labelDrawingCode
+										.setValue(dd.labelDrawingCode);
+								_this.raosiAddWindow.saveData();
+							} else {
+								Ext.Msg.alert("系统提示", "该元件序号不存在，请检查！",
+										function() {
+											_this.raosiAddWindow.batchNo
+													.setValue('');
+											_this.raosiAddWindow.batchNo
+													.focus().defer(100);
+											return false;
+										})
+
+							}
+						}
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+	}
+	// this.raosiAddWindow.saveData();
 }
 
 com.keensen.ump.qinsen.produce.raosiMgr.prototype.onDel = function() {
@@ -166,9 +231,9 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.modiOrder = function() {
 	var arr = new Array();
 	for (var i = 0; i < records.length; i++) {
 
-		//var recordId = records[i].get('recordId');
+		// var recordId = records[i].get('recordId');
 		var recordId = records[i].get('qjBatchId');
-		
+
 		recordId = recordId + '';
 
 		if (recordId.substr(0, 1) != '2') {
@@ -177,7 +242,7 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.modiOrder = function() {
 		}
 		arr.push(recordId);
 	}
-	
+
 	Ext.Msg.confirm('提示', '共' + records.length + '个批次，您确定要修改这些产品的订单号？',
 			function(btn) {
 				if (btn === 'yes') {
@@ -192,7 +257,7 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.modiOrder = function() {
 								url : "com.keensen.ump.qinsen.raosi.modiOrder.biz.ext",
 								method : "post",
 								jsonData : {
-									orderNo : text,
+									orderNo : text.trim(),
 									recordIds : arr.join(',')
 								},
 								success : function(resp) {

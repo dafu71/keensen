@@ -32,6 +32,7 @@
 <ext:dict property="KS_YXORDER_PHOTO_ALL" dictTypeId="KS_YXORDER_PHOTO_ALL" />
 <ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
 <js:load scriptPath="pub/common/prodspecCombo.js" />
+<js:load scriptPath="pub/common/mpspecCombo.js" />
 <js:load scriptPath="produce/component/yxorder/js/manageUi.js"/>
 <js:load scriptPath="produce/component/yxorder/js/manageEv.js"/>
 <script type="text/javascript">

@@ -131,6 +131,10 @@
       <process:from type="query" pattern="reference">batchNo</process:from>
       <process:to type="query">juanmo/batchNo</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/trailer</process:from>
+      <process:to type="query">juanmo/trailer</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
     <figSize height="20" width="40"/>

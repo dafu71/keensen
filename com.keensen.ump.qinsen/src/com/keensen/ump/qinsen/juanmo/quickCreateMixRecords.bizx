@@ -18,10 +18,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link35</targetConnections>
-    <targetConnections>link1</targetConnections>
-    <targetConnections>link26</targetConnections>
     <targetConnections>link31</targetConnections>
+    <targetConnections>link26</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link35</targetConnections>
     <location x="780" y="135"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -109,8 +109,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link6</targetConnections>
     <targetConnections>link8</targetConnections>
+    <targetConnections>link6</targetConnections>
     <location x="561" y="303"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend0label</nodeLabel>
@@ -275,8 +275,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link37</targetConnections>
     <targetConnections>link19</targetConnections>
+    <targetConnections>link37</targetConnections>
     <location x="1476" y="588"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend1label</nodeLabel>
@@ -557,6 +557,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">juanmo/recordId</process:from>
       <process:to type="query">recordId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">info/trailer</process:from>
+      <process:to type="query">juanmo/trailer</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign7label" name="label" nodeType="label">

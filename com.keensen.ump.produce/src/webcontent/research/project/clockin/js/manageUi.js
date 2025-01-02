@@ -29,6 +29,10 @@ com.keensen.ump.research.project.ProjectClockinMgr = function() {
 						name : 'projectId'
 					}, {
 						name : 'headmanId'
+					}, {
+						name : 'projectStart'
+					}, {
+						name : 'projectEnd'
 					}]
 		})
 
@@ -221,6 +225,13 @@ com.keensen.ump.research.project.ProjectClockinMgr = function() {
 									var projectId = record.get('projectId');
 									var headmanId = record.get('headmanId');
 
+									var projectStart = record
+											.get('projectStart');
+									var projectEnd = record.get('projectEnd');
+									
+									_this.inputPanel.workDate.setMinValue(projectStart);
+									_this.inputPanel.workDate.setMaxValue(projectEnd);
+
 									// 当前人员是组长
 									if (uid == headmanId) {
 										_this.projectUserStore.load({
@@ -301,36 +312,34 @@ com.keensen.ump.research.project.ProjectClockinMgr = function() {
 
 						anchor : "80%",
 						colspan : 1,
-						xtype : 'combo',
-						mode : 'local',
+						xtype : 'datefield',
+						format : 'Y-m-d',
 						ref : '../workDate',
-						displayField : 'workDate',
-						valueField : 'workDate',
-						hiddenName : 'entity/workDate',
+						name : 'entity/workDate',
 						allowBlank : false,
 						fieldLabel : '作业日期',
-						store : _this.projectUserDurationStore,
 						listeners : {
-							'expand' : function(A) {
-								_this.inputPanel.workDate.reset();
-							},
-							'select' : function(combo, record, index) {
-								if (index > -1) {
-									var confirmHours = record
-											.get('confirmHours');
-									var fillingHours = record
-											.get('fillingHours');
+							'select' : function(o, v) {
+								var store = _this.projectUserDurationStore;
+								v2 = formatDate(v);
+								var i = store.find('workDate', v2);								
+								if (i > -1) {
+									var rec2 = store.getAt(i);
+									var confirmHours = rec2.get('confirmHours');
+									var fillingHours = rec2.get('fillingHours');
 									_this.inputPanel.fillingHours
 											.setValue(fillingHours);
 									_this.inputPanel.confirmHours
 											.setValue(confirmHours);
-									_this.inputPanel.fillingHours
-											.setReadOnly(!Ext
-													.isEmpty(confirmHours));
+								} else {
+									_this.inputPanel.confirmHours.setValue('');
 								}
+								var confirmHours = _this.inputPanel.confirmHours
+										.getValue();
+								_this.inputPanel.fillingHours.setReadOnly(!Ext
+										.isEmpty(confirmHours));
 							}
 						}
-
 					}, {
 						xtype : 'displayfield',
 						height : '10',
@@ -343,7 +352,8 @@ com.keensen.ump.research.project.ProjectClockinMgr = function() {
 						minValue : 0,
 						allowBlank : false,
 						anchor : '80%',
-						fieldLabel : '研发工时'
+						fieldLabel : '研发工时',
+						value : 8
 					}, {
 						xtype : 'displayfield',
 						height : '10',

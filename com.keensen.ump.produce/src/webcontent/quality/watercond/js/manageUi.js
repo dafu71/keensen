@@ -22,7 +22,7 @@ com.keensen.ump.produce.quality.watercondMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【水测标准测试条件查询】',
+					//title : '【水测标准测试条件查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/materClassCode',
@@ -42,7 +42,7 @@ com.keensen.ump.produce.quality.watercondMgr = function() {
 
 	this.initMaterClassStore = function() {
 		this.materClassStore = new Ext.data.JsonStore({
-			url : 'com.keensen.ump.produce.quality.quality2.queryMaterClass.biz.ext',
+			url : 'com.keensen.ump.produce.quality.quality2.queryMaterClass2.biz.ext',
 			root : 'data',
 			autoLoad : true,
 			totalProperty : '',
@@ -63,7 +63,7 @@ com.keensen.ump.produce.quality.watercondMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【水测标准测试条件列表】',
+			//title : '【水测标准测试条件列表】',
 			viewConfig : {
 				forceFit : true
 			},

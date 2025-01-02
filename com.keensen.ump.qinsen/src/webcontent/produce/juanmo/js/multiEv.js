@@ -266,10 +266,10 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.clearInfo = function() 
 	_this.mainPanel.produceDt.setValue(new Date());
 	
 	//重置自由卷
-	var	vals = {};
-	vals['nameSqlId'] = 'com.keensen.ump.produce.component.workorder.queryJmChooseCdm';
-	_this.chooseCdmStore.baseParams = vals;
-	_this.chooseCdmStore.load();
+	//var	vals = {};
+	//vals['nameSqlId'] = 'com.keensen.ump.produce.component.workorder.queryJmChooseCdm';
+	//_this.chooseCdmStore.baseParams = vals;
+	//_this.chooseCdmStore.load();
 }
 
 // 获取新数据
@@ -298,6 +298,8 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.getNewInfo = function()
 	newRec.orderId = _this.mainPanel.orderId.getValue();
 	newRec.planDate = _this.mainPanel.planDate.getValue();
 	newRec.cdmBatchNo = _this.mainPanel.cdmBatchNo.getValue();
+	
+	newRec.trailer = _this.mainPanel.trailer.getValue();
 
 	return newRec;
 }

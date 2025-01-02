@@ -13,8 +13,8 @@
 		 AND SUBSTR(T.BATCH_NO, 5, 4) = (SELECT ymd FROM v_ks_ymd)) "batchNo"
 		 FROM DUAL</select>
     <select id="queryWeight" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T.MPTYPE,t.line,t.c42 "c42std",
-       ROUND(T.C42 *#weight# * 10, 2) "c42",
-       ROUND((#weight# - ROUND(T.C42 *#weight# * 10/1000, 2)),2) "c41"
+       ROUND(T.C42 *#weight# * 10, 3) "c42",
+       ROUND((#weight# - ROUND(T.C42 *#weight# * 10/1000, 3)),3) "c41"
 	  FROM KS_BASE_OIL_FORMULA T
 	 WHERE T.MPTYPE = #mptype#
 	 and t.line = #line#</select>

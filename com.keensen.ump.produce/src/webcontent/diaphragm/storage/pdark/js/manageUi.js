@@ -14,7 +14,10 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 	this.initInputWindow = function() {
 		var _this = this;
 		this.panel = this.panel || new Ext.Panel({});
-		this.panel2 = this.panel2 || new Ext.Panel({height : '300',baseCls : "x-plain"});
+		this.panel2 = this.panel2 || new Ext.Panel({
+					height : '300',
+					baseCls : "x-plain"
+				});
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
 			// baseCls : "x-plain",
 
@@ -30,10 +33,20 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						xtype : 'displayfield',
 						height : '50',
 						colspan : 1
+					},  {
+						fieldLabel : '仓库不变',
+						xtype : 'checkbox',
+						checked : false,
+						ref : '../ifChange',
+						inputValue: '1'
+					}, {
+						xtype : 'displayfield',
+						height : '10',
+						colspan : 1
 					},{
 						xtype : 'textfield',
 						name : 'warehousing/batchNo',
-						style:'{font-weight:bold;}',
+						style : '{font-weight:bold;}',
 						allowBlank : false,
 						fieldLabel : '批号',
 						ref : '../batchNo',
@@ -55,7 +68,7 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
@@ -64,7 +77,7 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						name : 'warehousing/position',
 						allowBlank : false,
 						fieldLabel : '库位',
-						style:'{font-weight:bold;}',
+						style : '{font-weight:bold;}',
 						ref : '../position',
 						anchor : '80%',
 						colspan : 1,
@@ -91,21 +104,35 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
 					}, {
 						xtype : 'storagecombobox',
+						lazyRender : true,
+						// queryDelay : 200,// 查询延时，毫秒,
 						emptyText : "",
 						hiddenName : 'warehousing/storageId',
 						allowBlank : false,
 						anchor : '80%',
-						readOnly : true,
+						// readOnly : true,
+						ref : '../storageId',
 						name : 'warehousing/storageId',
 						fieldLabel : '仓库',
-						colspan : 1
-					},{
+						colspan : 1,
+						listeners : {
+							scope : this,
+							'expand' : function(combo) {
+								combo.store.filterBy(function(record) {
+											return record.get('id') == 1
+													|| record.get('id') == 2
+													|| record.get('id') == 3
+										});
+
+							}
+						}
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
@@ -117,7 +144,7 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						readOnly : true,
 						fieldLabel : '数量',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
@@ -134,7 +161,7 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						readOnly : true,
 						fieldLabel : '膜片型号',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
@@ -169,8 +196,6 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 						handler : this.onSave
 					}]
 		})
-
-		
 
 	}
 

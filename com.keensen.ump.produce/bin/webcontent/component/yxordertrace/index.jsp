@@ -20,14 +20,29 @@
 -->
 <head>
 <title>元件在产订单跟进</title>
+
+<!-- 导出Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.1/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="base/exceljs/doQueryAndExport.js"></script>
+
+<script type="text/javascript">
+    Ext.util.CSS.swapStyleSheet("","base/common/lockingGridView.css");
+</script>
+
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
 
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
+.myimg { width:10; height: auto; }
 </style>
 
+<js:load scriptPath="base/common/lockingGridView.js"/>
+
+<js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="produce/component/yxordertrace/js/manageUi.js"/>
 <js:load scriptPath="produce/component/yxordertrace/js/manageEv.js"/>
 <script type="text/javascript">

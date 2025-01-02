@@ -27,8 +27,16 @@ com.keensen.ump.produce.component.OutofstockMgr = function() {
 								xtype : 'textfield',
 								colspan : 1,
 								name : 'condition/batchNo',
-								anchor : '75%',
+								anchor : '85%',
 								fieldLabel : '卷膜序号'
+							}, {
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '85%',
+								nameArray : ['condition/createTimeStart',
+										'condition/createTimeEnd'],
+								fieldLabel : "出库日期",
+								format : "Y-m-d"
 							}]
 				});
 

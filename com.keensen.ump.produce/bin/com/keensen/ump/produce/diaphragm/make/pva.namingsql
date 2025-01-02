@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.diaphragm.make.pva">
+    <select id="queryPva" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID             AS "id",
+       to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mi')as "createTime",
+	t1.CREATE_USER_ID as "createUserId",
+	t1.CREATE_NAME as "createName",
+	to_char(t1.UPDATE_TIME,'yyyy-MM-dd hh24:mi')as "updateTime",
+	t1.UPDATE_USER_ID as "updateUserId",
+	t1.UPDATE_NAME as "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.BATCH_NO       AS "batchNo",
+       T1.TYPE           AS "type",
+       T1.WEIGHT         AS "weight",
+       T1.PVA            AS "pva",
+       T1.C51            AS "c51",
+       T1.C23A           AS "c23a",
+       T1.C14            AS "c14",
+       T1.RO             AS "ro",
+       T1.DENSITY        AS "density",
+       T1.OPERATOR_ID    AS "operatorId",
+       T1.OPERATOR_NAME  AS "operatorName",
+       t2.cnt as "cnt",nvl(t2.used,0) as "used",T1.WEIGHT-nvl(t2.used,0) "remain",
+       case when T1.WEIGHT-nvl(t2.used,0)&gt;0 then '处理中' else '完结' end "state"
+  FROM KS_DIAPHRAGM_MAKE_PVA T1
+  left join (select t.relation_id,COUNT(1) cnt,SUM(t.used) used from KS_DIAPHRAGM_MAKE_PVA_LIST t
+	GROUP BY t.relation_id) t2 on t2.relation_id = t1.id
+     where 1=1 and nvl(T1.STATUS,1) != 0
+     <isNotNull prepend="" property="batchNo">AND t1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo2">AND t1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="operatorName">AND t1.OPERATOR_NAME LIKE '%' || #operatorName# || '%'</isNotNull>
+        <isNotNull prepend="" property="id">AND t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="" property="type">AND t1.type = #type#</isNotNull>
+        <isNotNull prepend="" property="pva">AND t1.pva = #pva#</isNotNull>
+        <isNotNull prepend="" property="state">AND (case when T1.WEIGHT-nvl(t2.used,0)&gt;0 then '处理中' else '完结' end) = #state#</isNotNull>
+	 ORDER BY t1.id desc
+     </select>
+    <select id="queryPvaBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 'P' || 
+    DECODE(#type#,'SW', '10', 'BW', '20', 'ULP', '30',
+							'NF', '60','XX') || 
+      (SELECT ymd FROM v_ks_ymd) ||   
+    (SELECT chr(COUNT(1)+65) 
+      FROM KS_DIAPHRAGM_MAKE_PVA T
+     WHERE t.type = #type# and SUBSTR(T.BATCH_NO, 4, 4) = (SELECT ymd FROM v_ks_ymd)) "batchNo"
+     FROM DUAL</select>
+    <select id="queryPvaList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID            AS "id",
+        to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mi')as "createTime",
+	t1.CREATE_USER_ID as "createUserId",
+	t1.CREATE_NAME as "createName",
+	to_char(t1.UPDATE_TIME,'yyyy-MM-dd hh24:mi')as "updateTime",
+	t1.UPDATE_USER_ID as "updateUserId",
+	t1.UPDATE_NAME as "updateName",
+       T1.RESERVE1      AS "reserve1",
+       T1.RESERVE2      AS "reserve2",
+       T1.RESERVE3      AS "reserve3",
+       T1.RESERVE4      AS "reserve4",
+       T1.RESERVE5      AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS        AS "status",
+       T1.BATCH_NO      AS "batchNo",
+       T1.LINE          AS "line",
+       T1.MPTYPE        AS "mptype",
+       T1.WEIGHT        AS "weight",
+       T1.USED          AS "used",
+       T1.C90           AS "c90",
+       T1.C14           AS "c14",
+       T1.RO            AS "ro",
+       T1.OPERATOR_ID   AS "operatorId",
+       T1.OPERATOR_NAME AS "operatorName"
+  FROM KS_DIAPHRAGM_MAKE_PVA_LIST T1
+     where 1=1 and nvl(T1.STATUS,1) != 0
+     <isNotNull prepend="" property="batchNo">AND t1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo2">AND t1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="operatorName">AND t1.OPERATOR_NAME LIKE '%' || #operatorName# || '%'</isNotNull>
+        <isNotNull prepend="" property="id">AND t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="" property="mptype">AND t1.mptype = #mptype#</isNotNull>
+        <isNotNull prepend="" property="line">AND t1.line = #line#</isNotNull>
+        <isNotNull prepend="" property="relationId">AND t1.RELATION_ID = #relationId#</isNotNull>
+     
+     
+	 ORDER BY t1.id desc
+     </select>
+    <select id="queryPvaListBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 
+	(SELECT tt.batch_no from KS_DIAPHRAGM_MAKE_PVA tt WHERE tt.id=#relationId#)
+	 || (select COUNT(1)+1 from KS_DIAPHRAGM_MAKE_PVA_list t
+	WHERE t.relation_id = #relationId#) "batchNo"
+	FROM dual</select>
+</sqlMap>

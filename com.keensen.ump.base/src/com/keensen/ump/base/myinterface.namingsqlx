@@ -11,7 +11,8 @@
     
     <update id="updateDiameter" parameterClass="java.util.HashMap">
     UPDATE qinsen.INST_QIJIAN t
-	SET t.diameter = #diameter#,t.diameter_name = #diameterName#,t.diameter2 = #diameter2#
+	SET t.diameter = #diameter#,t.diameter_name = #diameterName#,t.diameter2 = #diameter2#,
+	t.diameter_dt = sysdate
 	WHERE t.record_id = (SELECT t.record_id from qinsen.inst_qijian t
 	LEFT JOIN qinsen.inst_juanmo_main jm ON t.juanmo_batch_id=jm.record_id
 	WHERE t.batch_no=#prodBatchNo# OR jm.batch_no =#prodBatchNo#)

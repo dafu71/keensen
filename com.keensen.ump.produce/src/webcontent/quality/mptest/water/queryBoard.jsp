@@ -52,24 +52,27 @@
 <div align="center" >
 <table border="1" width="100%" class="EOS_table">
 <tr>
-<td align='center' colspan=5 class="style6">
+<td align='center' colspan=6 class="style6">
           	<%=title %>
         </td>
 </tr>
  <tr>
-        <th width="20%" align="center" class="style5">
+        <th width="17%" align="center" class="style5">
           	物料名称
         </th> 
-        <th width="20%" align="center" class="style5">
+        <th width="17%" align="center" class="style5">
           生产线
         </th>        
-        <th  width="20%" align="center" class="style5">
+        <th  width="17%" align="center" class="style5">
           膜片型号
         </th>
-        <th width="20%" align="center" class="style5">
+        <th width="17%" align="center" class="style5">
           物料批号
         </th>
-        <th  width="20%" align="center" class="style5">
+         <th width="17%" align="center" class="style5">
+          流水号
+        </th>
+        <th  width="15%" align="center" class="style5">
            当前步骤
         </th>
         
@@ -99,6 +102,9 @@
         </td>
          <td align='center' class="<%=style5 %>">
         <%=list[i].getString("batchNo") %>
+        </td>
+         <td align='center' class="<%=style5 %>">
+        <%=list[i].getString("code") %>
         </td>
         <td align='center' class="<%=style5 %>">
         <%=list[i].getString("stepName") %>

@@ -287,6 +287,14 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				colspan : 12,
 				anchor : '85%'
 			}, {
+				ref : '../trailer',
+				name : 'entity/trailer',
+				fieldLabel : '车号',
+				xtype : 'textfield',
+				// readOnly : true,
+				colspan : 12,
+				anchor : '85%'
+			}, {
 				xtype : 'displayfield',
 				height : '5',
 				colspan : 24

@@ -131,6 +131,19 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
+				
+		this.queryPanel.addButton({
+					text : "分析室测试任务看板",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onBoard
+				});
+		this.queryPanel.addButton({
+					text : "产线配料任务看板",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onBoard2
+				});
 
 	}
 
@@ -384,6 +397,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							allowBlank : false,
 							// hidden : true,
 							fieldLabel : '计划添加C41(kg)',
+							decimalPrecision : 3,
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -393,6 +407,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							allowBlank : false,
 							// hidden : true,
 							fieldLabel : '计划添加C42(g)',
+							decimalPrecision : 3,
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -406,6 +421,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							ref : '../../c41Reality',
 							allowBlank : false,
 							fieldLabel : '实际添加C41(kg)',
+							decimalPrecision : 3,
 							anchor : '95%',
 							colspan : 1
 							/*
@@ -428,6 +444,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							ref : '../../c42Reality',
 							allowBlank : false,
 							fieldLabel : '实际添加C42(g)',
+							decimalPrecision : 3,
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -490,18 +507,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 			}]
 		});
 
-		this.queryPanel.addButton({
-					text : "分析室测试任务看板",
-					scope : this,
-					iconCls : 'icon-application_form_magnify',
-					handler : this.onBoard
-				});
-		this.queryPanel.addButton({
-					text : "产线配料任务看板",
-					scope : this,
-					iconCls : 'icon-application_form_magnify',
-					handler : this.onBoard2
-				});
+		
 	}
 
 	this.initInputWindow2 = function() {

@@ -104,4 +104,20 @@
 	 WHERE T.MPTYPE = #mptype# and t.line = #line# and t.watertype = decode(#watertype#,'水相循环液','水相液',#watertype#)
 	 
    </select>
+   
+    <select id="queryCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT  #line# || '-' || #watertype# || '-' || (to_number(to_char(SYSDATE,'yyyy')) - 2000) || '-' || CODE "code" from 
+(SELECT  '0001' CODE FROM dual
+  WHERE NOT EXISTS(
+  select t.code from KS_QUALITY_MP_TEST_WATER_HEAD t
+  WHERE SUBSTR(t.code,LENGTH(t.code) - 6,2) = to_number(to_char(SYSDATE,'yyyy'))-2000
+  AND t.line = #line# AND t.watertype = #watertype#
+  )
+  UNION
+ SELECT  trim(to_char(max(to_number(SUBSTR(t.code,LENGTH(t.code) - 3,4)))+1,'0000'))
+   CODE FROM KS_QUALITY_MP_TEST_WATER_HEAD t
+  WHERE SUBSTR(t.code,LENGTH(t.code) - 6,2) = to_number(to_char(SYSDATE,'yyyy'))-2000
+  AND t.line = #line# AND t.watertype = #watertype#)
+  WHERE CODE IS NOT NULL  
+    </select>
  </sqlMap>

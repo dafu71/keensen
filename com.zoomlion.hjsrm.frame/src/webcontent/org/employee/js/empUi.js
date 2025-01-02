@@ -188,6 +188,11 @@ com.zoomlion.hjsrm.org.employeeMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onResetPassword
+					}, '->', {
+						text : '登出系统',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onLogout
 					}],
 			sm : selModel,
 			viewConfig : {

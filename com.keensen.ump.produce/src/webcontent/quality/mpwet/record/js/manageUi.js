@@ -21,7 +21,7 @@ com.keensen.ump.produce.quality.mpwetrecordMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【膜片湿含量检测记录查询】',
+					//title : '【膜片湿含量检测记录查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/batchNo',
@@ -40,7 +40,7 @@ com.keensen.ump.produce.quality.mpwetrecordMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【膜片湿含量检测记录列表】',
+			//title : '【膜片湿含量检测记录列表】',
 			viewConfig : {
 				forceFit : true
 			},

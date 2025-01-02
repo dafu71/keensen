@@ -2387,6 +2387,18 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					scope : this
 				}, {
 					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
+					//name : 'entity/productRemark',
+					dataIndex : 'productRemark',
+					readOnly : true,
+					anchor : '100%',
+					colspan : 24,
+					xtype : 'textarea',
+					fieldLabel : '产品备注'
+				}, {
+					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">性能要求<br>测试条件</p>',
 					labelSeparator : '',// 去掉冒号
 					colspan : 24
@@ -2505,6 +2517,14 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					store : this.lidStore,
 					displayField : "name",
 					valueField : "code"
+				}, {
+					xtype : 'mpspeccombobox',
+					emptyText : '',
+					readOnly : true,
+					dataIndex : 'mpSpecId',
+					anchor : '100%',
+					colspan : 6,
+					fieldLabel : '膜片限定'
 				}, {
 					xtype : 'displayfield',
 					height : 5,

@@ -5,12 +5,12 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 	if (gyyFlag == 1) {
 		this.remindGyyInfo();
 	}
-	
+
 	// 班长提醒
 	if (monitorFlag == 1) {
 		this.remindMonitorInfo();
 	}
-	
+
 	this.remindGyyListPanel.store.on('load', function() {
 				var ret = _this.remindGyyListPanel.store.getRange();
 				if (Ext.isEmpty(ret) || ret.length == 0) {
@@ -20,7 +20,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 				}
 
 			})
-			
+
 	this.remindMonitorListPanel.store.on('load', function() {
 				var ret = _this.remindMonitorListPanel.store.getRange();
 				if (Ext.isEmpty(ret) || ret.length == 0) {
@@ -30,7 +30,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 				}
 
 			})
-			
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		// var start = vals['condition/produceDtStart'];
@@ -112,6 +112,10 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 					this.qiJianJudgeWindow.show();
 					this.qiJianJudgeWindow.loadData(cell);
 				}
+				if (this.opt == 'onDuty') {
+					this.viewDutyWindow.show();
+					this.viewDutyPanel.loadData(cell);
+				}
 
 			}, this);
 
@@ -157,6 +161,53 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 				if (recordId.substr(0, 1) != '2') {
 					// Ext.Msg.alert('系统提示', '一期数据不能修改');
 					// return false;
+				}
+
+			}, this);
+
+	this.viewDutyPanel.mon(this.viewDutyPanel, 'afterload',
+			function(win, data) {
+
+				var prefix = data.prefix;
+				var snStart = data.snStart;
+				var snEnd = data.snEnd;
+				if (!Ext.isEmpty(prefix) && !Ext.isEmpty(snStart)
+						&& !Ext.isEmpty(snEnd)) {
+					var prefixArr = prefix.split(',');
+					var snStartArr = snStart.split(',');
+					var snEndArr = snEnd.split(',');
+					var len = prefixArr.length;
+					len = len > 3 ? 3 : len;
+					for (var i = 0; i < len; i++) {
+						this.viewDutyPanel.form.findField("prefix" + (i + 1))
+								.setValue(prefixArr[i]);
+						this.viewDutyPanel.form.findField("snStart" + (i + 1))
+								.setValue(snStartArr[i]);
+						this.viewDutyPanel.form.findField("snEnd" + (i + 1))
+								.setValue(snEndArr[i]);
+					}
+
+				}
+
+				var relationId = data.pkid;
+				var store = this.viewDutyListPanel.store;
+				store.load({
+							params : {
+								'condition/relationId' : relationId
+							}
+						})
+			}, this);
+
+	this.editWindow4Gyy.activeItem.mon(this.editWindow4Gyy.activeItem,
+			'beforeSave', function() {
+				var gyyConclusion = this.editWindow4Gyy.gyyConclusion
+						.getValue();
+				var gyySpecId = this.editWindow4Gyy.gyySpecId.getValue();
+
+				if (Ext.isEmpty(gyySpecId)
+						&& (gyyConclusion == 'B' || gyyConclusion == 'C')) {
+					Ext.Msg.alert("系统提示", '处理型号必选');
+					return false;
 				}
 
 			}, this);
@@ -219,17 +270,17 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiOrder = function() {
 
 		var recordId = records[i].get('recordId');
 		var dryWet = records[i].get('dryWet');
-		
-		if(dryWet == '干' && modifyOrderNoFlag4Dry == 0){
+
+		if (dryWet == '干' && modifyOrderNoFlag4Dry == 0) {
 			Ext.Msg.alert('系统提示', '您无权修改干膜订单号');
 			return false;
 		}
-		
-		if(dryWet == '湿' && modifyOrderNoFlag4Wet == 0){
+
+		if (dryWet == '湿' && modifyOrderNoFlag4Wet == 0) {
 			Ext.Msg.alert('系统提示', '您无权修改湿膜订单号');
 			return false;
 		}
-		
+
 		recordId = recordId + '';
 		if (recordId.substr(0, 1) != '2') {
 			// Ext.Msg.alert('系统提示', '一期数据不能修改');
@@ -251,7 +302,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiOrder = function() {
 								url : "com.keensen.ump.qinsen.qijian.modiOrder.biz.ext",
 								method : "post",
 								jsonData : {
-									orderNo : text,
+									orderNo : text.trim(),
 									recordIds : arr.join(',')
 								},
 								success : function(resp) {
@@ -426,51 +477,21 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.exportExcel = function() {
 
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.onRemark = function() {
 	var _this = this;
+	var grid = this.listPanel;
 
-	var A = this.listPanel;
-	if (!A.getSelectionModel().getSelected()) {
-		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
-	} else {
-		var C = A.getSelectionModel().getSelections();
-		var recordIds = [];
-		Ext.each(C, function(r) {
-					recordIds.push(r.data['recordId']);
-				});
-		var gyyRemark = C[0].data.gyyRemark;
-		Ext.Msg.prompt('工艺员备注', '请输入', function(btn, text) {
-			if (btn == 'ok' && !Ext.isEmpty(text)) {
-				_this.requestMask = this.requestMask
-						|| new Ext.LoadMask(Ext.getBody(), {
-									msg : "后台正在操作,请稍候!"
-								});
-				_this.requestMask.show();
-				Ext.Ajax.request({
-					url : "com.keensen.ump.qinsen.qijian.saveGyyRemark.biz.ext",
-					method : "post",
-					jsonData : {
-						'gyyRemark' : text,
-						'recordIds' : recordIds.join(",")
-					},
-					success : function(resp) {
-						var ret = Ext.decode(resp.responseText);
-						if (ret.success) {
-							Ext.Msg.alert("系统提示", "操作成功！", function() {
-										_this.listPanel.store.load();
-
-									})
-						} else {
-							Ext.Msg.alert("系统提示", "备注失败！")
-
-						}
-
-					},
-					callback : function() {
-						_this.requestMask.hide()
-					}
-				})
-			}
-		}, this, true, gyyRemark);
+	var records = grid.getSelectionModel().getSelections();
+	if (records.length == 0) {
+		Ext.Msg.alert('系统提示', '请先选择数据');
+		return false;
 	}
+	var arr = new Array();
+	for (var i = 0; i < records.length; i++) {
+
+		var recordId = records[i].get('recordId');
+		arr.push(recordId);
+	}
+	this.editWindow4Gyy.recordIds.setValue(arr.join(','));
+	this.editWindow4Gyy.show();
 }
 
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.onMonitorRemark = function() {
@@ -681,4 +702,17 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.remindGyyInfo = function() {
 
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.remindMonitorInfo = function() {
 	this.remindMonitorListPanel.store.load();
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onDuty = function() {
+	var A = {};
+	A.data = {
+		id : 1
+	};
+	this.viewDutyPanel.form.reset();
+	if (!this.viewDutyWindow.isVisible()) {
+		this.viewDutyWindow.show();
+	}
+	this.viewDutyPanel.loadData(A);
+
 }

@@ -156,6 +156,14 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								 * this.queryPanel.planWeek.reset(); } } }
 								 */]
 				});
+
+		this.queryPanel.addButton({
+					text : "导出",
+					// disabled : allRight != '1',
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel
+				});
 	}
 
 	this.initListPanel = function() {
@@ -1174,24 +1182,24 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '混卷膜片批次',
-							//allowBlank : false,
+							// allowBlank : false,
 							// readOnly : true,
 							ref : '../../mixBatchNo',
-							//dataIndex : 'mixBatchNo',
+							// dataIndex : 'mixBatchNo',
 							name : 'entity/mixBatchNo',
-							//readOnly : true,
+							// readOnly : true,
 							minValue : 1,
 							anchor : '85%',
 							colspan : 3
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '混卷比例',
-							//allowBlank : false,
+							// allowBlank : false,
 							// readOnly : true,
 							ref : '../../mixProportion',
-							//dataIndex : 'mixProportion',
+							// dataIndex : 'mixProportion',
 							name : 'entity/mixProportion',
-							//readOnly : true,
+							// readOnly : true,
 							minValue : 1,
 							anchor : '85%',
 							colspan : 3
@@ -1658,24 +1666,24 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '混卷膜片批次',
-							//allowBlank : false,
+							// allowBlank : false,
 							// readOnly : true,
 							ref : '../../mixBatchNo',
 							dataIndex : 'mixBatchNo',
 							name : 'entity/mixBatchNo',
-							//readOnly : true,
+							// readOnly : true,
 							minValue : 1,
 							anchor : '85%',
 							colspan : 3
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '混卷比例',
-							//allowBlank : false,
+							// allowBlank : false,
 							// readOnly : true,
 							ref : '../../mixProportion',
 							dataIndex : 'mixProportion',
 							name : 'entity/mixProportion',
-							//readOnly : true,
+							// readOnly : true,
 							minValue : 1,
 							anchor : '85%',
 							colspan : 3

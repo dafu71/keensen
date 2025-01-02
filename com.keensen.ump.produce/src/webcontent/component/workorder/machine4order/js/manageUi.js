@@ -182,7 +182,7 @@ com.keensen.ump.produce.component.workorder.Machine4orderMgr = function() {
 						header : 'IP'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.base.workorder.queryMachineByPage.biz.ext',
+				url : 'com.keensen.ump.base.workorder.queryMachine.biz.ext',
 				root : 'data',
 				autoLoad : true,
 				totalProperty : 'totalCount',

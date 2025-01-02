@@ -19,37 +19,38 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.initEvent = function()
 					}
 				});
 	}, this);
-	
-	// 查询事件
-	this.queryChooseSingleUserPanel.mon(this.queryChooseSingleUserPanel, 'query', function(form, vals) {
-		var store = this.chooseSingleUserListPanel.store;
-		if (Ext.isEmpty(vals)) {
-			vals = {
 
-			};
-		}
-		vals['nameSqlId'] = 'com.keensen.ump.base.organduser.queryUser';
-		store.baseParams = vals;
-		store.load({
+	// 查询事件
+	this.queryChooseSingleUserPanel.mon(this.queryChooseSingleUserPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleUserListPanel.store;
+				if (Ext.isEmpty(vals)) {
+					vals = {
+
+					};
+				}
+				vals['nameSqlId'] = 'com.keensen.ump.base.organduser.queryUser';
+				store.baseParams = vals;
+				store.load({
 					params : {
 						"pageCond/begin" : 0,
 						"pageCond/length" : this.chooseSingleUserListPanel.pagingToolbar.pageSize
 					}
 				});
-	}, this);
-	
+			}, this);
+
 	// 查询事件
-	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel, 'query', function(form, vals) {
-		var store = this.chooseSingleOrderListPanel.store;
-		store.baseParams = vals;
-		store.load({
+	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleOrderListPanel.store;
+				store.baseParams = vals;
+				store.load({
 					params : {
 						"pageCond/begin" : 0,
 						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
 					}
 				});
-	}, this);
-	
+			}, this);
 
 	this.listPanel.selModel.on('rowselect', function(o, i, r) {
 				var _this = this;
@@ -104,6 +105,11 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.onScan = function() {
 
 com.keensen.ump.produce.component.OutofstockMgr.prototype.onSave = function() {
 	var _this = this;
+	var newOrderNo = this.inputPanel.newOrderNo.getValue();
+	newOrderNo = newOrderNo.trim();
+	var takeUserName = this.inputPanel.takeUserName.getValue();
+	var takeUserId = this.inputPanel.takeUserId.getValue();
+
 	if (this.inputPanel.form.isValid()) {
 		this.requestMask = this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
@@ -121,6 +127,13 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.onSave = function() {
 					Ext.MessageBox.alert("操作提示", "保存成功!", function() {
 								_this.listPanel.store.reload({});
 								_this.inputPanel.form.reset();
+								_this.inputPanel.newOrderNo
+										.setValue(newOrderNo);
+								_this.inputPanel.takeUserName
+										.setValue(takeUserName);
+								_this.inputPanel.takeUserId
+										.setValue(takeUserId);
+								_this.inputPanel.batchNo.focus().defer(100);
 							})
 				}
 			},
@@ -183,7 +196,7 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.onChooseSingleOrder = 
 		var orderNo = B[0].get('orderNo');
 
 		this.inputPanel.newOrderNo.setValue(orderNo);
-		
+
 		this.chooseSingleOrderWindow.hide();
 	}
 }

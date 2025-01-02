@@ -30,7 +30,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						fieldLabel : '生产时间',
 						colspan : 1,
 						anchor : '75%',
-						//allowBlank : false,
+						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
 						value : new Date().add(Date.DAY, -1)
@@ -43,7 +43,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						anchor : '75%',
 						editable : true,
 						format : 'Y-m-d H:i',
-						//allowBlank : false,
+						// allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
 					}, {
@@ -116,9 +116,10 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : false//,
-					//header : ''
-				});
+			singleSelect : false
+				// ,
+				// header : ''
+			});
 		this.listPanel = new Ext.fn.ListPanel({
 			hsPage : true,
 			viewConfig : {
@@ -255,7 +256,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 			items : [{
 				xtype : 'inputpanel',
 				pgrid : this.listPanel,
-				columns : 2,
+				columns : 6,
 				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord.biz.ext',
 				successFn : function(i, r) {
 					if (r.err != '0') {
@@ -277,7 +278,18 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						_this.raosiAddWindow.batchNo.reset();
 						_this.raosiAddWindow.produceDt.setValue(new Date());
 						_this.raosiAddWindow.remark.reset();
-						_this.raosiAddWindow.batchNo.focus();
+						_this.raosiAddWindow.orderType.setValue('');
+						_this.raosiAddWindow.materSpecName2.setValue('');
+						_this.raosiAddWindow.materSpecName.setValue('');
+						_this.raosiAddWindow.orderAmount.setValue('');
+						_this.raosiAddWindow.qjAmount.setValue('');
+						_this.raosiAddWindow.tape.setValue('');
+						_this.raosiAddWindow.lid.setValue('');
+						_this.raosiAddWindow.snRegular.setValue('');
+						_this.raosiAddWindow.makeLabel.setValue('');
+						_this.raosiAddWindow.labelDouble.setValue('');
+						_this.raosiAddWindow.labelDrawingCode.setValue('');
+						_this.raosiAddWindow.batchNo.focus().defer(100);
 						var loadMarsk = new Ext.LoadMask(
 								'produce-raosiaddwindow', {
 									msg : '已提交，为防止重复录入，10秒内不可操作',
@@ -299,7 +311,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 				fields : [{
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'textfield',
 							name : 'entity/batchNo',
@@ -307,13 +319,14 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							ref : '../../batchNo',
 							style : '{font-weight:bold;}',
 							allowBlank : false,
-							fieldLabel : '元件序号',
-							colspan : 2,
+							fieldLabel : '卷膜/元件序号',
+							colspan : 6,
 							listeners : {
 								scope : this,
 								specialkey : function(C, D) {
 									if (D.getKey() == Ext.EventObject.ENTER) {
-										this.saveRecInfo();
+										// this.saveRecInfo();
+										this.onScan();
 
 									}
 
@@ -324,7 +337,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							fieldLabel : ' ',
 							value : '<p style="color:red;">光标置于此框内后扫码或手工录入后按回车</p>',
 							labelSeparator : '',// 去掉冒号
-							colspan : 2
+							colspan : 6
 						}, {
 
 							xtype : 'combo',
@@ -332,7 +345,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							ref : '../../produceFlag',
 							hiddenName : 'entity/produceFlag',
 							emptyText : '--请选择--',
-							colspan : 1,
+							colspan : 3,
 							allowBlank : false,
 							anchor : '90%%',
 							store : [['W', '白膜'], ['R', '返修']],
@@ -344,11 +357,8 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							}
 						}, {
 							xtype : 'displayfield',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
 							height : '5',
-							colspan : 2
+							colspan : 6
 						}, {
 							xtype : 'datetimefield',
 							format : "Y-m-d H:i:00",
@@ -357,7 +367,8 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							name : 'entity/produceDt',
 							allowBlank : false,
 							fieldLabel : '生产时间',
-							value : new Date()
+							value : new Date(),
+							colspan : 3
 						}, {
 							xtype : 'linecombobox',
 							prodTacheId : 104,
@@ -366,15 +377,12 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							dataIndex : 'lineId',
 							allowBlank : false,
 							anchor : '90%',
-							fieldLabel : '生产线 '
+							fieldLabel : '生产线 ',
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
+							height : '10',
+							colspan : 6
 						}, {
 							xtype : 'tacheteamcombobox',
 							tacheCode : 'RS',
@@ -386,12 +394,13 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							ref : '../../teamId',
 							allowBlank : false,
 							anchor : '90%',
-							colspan : 1
+							colspan : 3
 						}, {
 							ref : '../../workerName',
 							xtype : 'displayfield',
 							fieldLabel : '操作工',
-							value : nowStaffName
+							value : nowStaffName,
+							colspan : 3
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -402,9 +411,125 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							xtype : 'textarea',
 							dataIndex : 'remark',
 							fieldLabel : '备注',
-							colspan : 2,
+							colspan : 6,
 							anchor : '95%',
 							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">作业信息</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '订单号',
+							ref : '../../orderNo',
+							readOnly : true,
+							dataIndex : 'orderNo',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '订单类型',
+							ref : '../../orderType',
+							readOnly : true,
+							dataIndex : 'orderType',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '订单下达型号',
+							ref : '../../materSpecName2',
+							readOnly : true,
+							dataIndex : 'materSpecName2',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '生产规格型号',
+							ref : '../../materSpecName',
+							readOnly : true,
+							dataIndex : 'materSpecName',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '订单数量',
+							ref : '../../orderAmount',
+							readOnly : true,
+							dataIndex : 'orderAmount',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '气检数量',
+							ref : '../../qjAmount',
+							readOnly : true,
+							dataIndex : 'qjAmount',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">贴标信息</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '卷膜胶带',
+							ref : '../../tape',
+							readOnly : true,
+							dataIndex : 'tape',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '端盖',
+							ref : '../../lid',
+							readOnly : true,
+							dataIndex : 'lid',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '序列号是否固定',
+							ref : '../../snRegular',
+							readOnly : true,
+							dataIndex : 'snRegular',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '标签制作方式',
+							ref : '../../makeLabel',
+							readOnly : true,
+							dataIndex : 'makeLabel',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '双标签',
+							ref : '../../labelDouble',
+							readOnly : true,
+							dataIndex : 'labelDouble',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '标签图纸编号',
+							ref : '../../labelDrawingCode',
+							readOnly : true,
+							dataIndex : 'labelDrawingCode',
+							anchor : '85%',
+							colspan : 2
 						}, {
 							name : 'entity/workerId',
 							value : nowStaffId,
@@ -498,7 +623,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 									}
 								}, {
 									xtype : 'textfield',
-									name : 'entity/batchNo',									
+									name : 'entity/batchNo',
 									dataIndex : 'batchNo',
 									anchor : '90%',
 									ref : '../../batchNo',

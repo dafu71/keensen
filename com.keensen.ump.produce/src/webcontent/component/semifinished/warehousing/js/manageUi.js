@@ -25,8 +25,16 @@ com.keensen.ump.produce.component.WarehousingMgr = function() {
 								xtype : 'textfield',
 								colspan : 1,
 								name : 'condition/batchNo',
-								anchor : '75%',
+								anchor : '85%',
 								fieldLabel : '卷膜序号'
+							}, {
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '85%',
+								nameArray : ['condition/createTimeStart',
+										'condition/createTimeEnd'],
+								fieldLabel : "入库日期",
+								format : "Y-m-d"
 							}]
 				});
 
@@ -39,7 +47,7 @@ com.keensen.ump.produce.component.WarehousingMgr = function() {
 			viewConfig : {
 				forceFit : true
 			},
-			//autoExpandColumn : '4',
+			// autoExpandColumn : '4',
 			delUrl : '1.biz.ext',
 			hsPage : true,
 			clicksToEdit : 1,
@@ -130,7 +138,7 @@ com.keensen.ump.produce.component.WarehousingMgr = function() {
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
 			// baseCls : "x-plain",
 			width : '480',
-			height : '300',
+			height : '350',
 			pgrid : '',
 			columns : 1,
 			autoHide : false,
@@ -198,6 +206,16 @@ com.keensen.ump.produce.component.WarehousingMgr = function() {
 						fieldLabel : '入库时外观',
 						ref : '../remark',
 						anchor : '80%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '10',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						ref : '../msg',
+						labelSeparator : '',// 去掉冒号
 						colspan : 1
 					}, {
 						xtype : 'hidden',

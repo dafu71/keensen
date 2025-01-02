@@ -64,6 +64,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								xtype : 'checkbox',
 								fieldLabel : '是否自由卷',
 								ref : '../ifFree',
+								hidden : true,
 								anchor : '100%',
 								colspan : 2
 							}, {
@@ -107,7 +108,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								xtype : 'textfield',
 								readOnly : true,
 								anchor : '100%',
-								colspan : 3
+								colspan : 4
 							}, {
 								xtype : 'textfield',
 								ref : '../location',
@@ -115,7 +116,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								// allowBlank : false,
 								anchor : '100%',
 								fieldLabel : '膜页栈板储位',
-								colspan : 3
+								colspan : 4
 							}, {
 								xtype : 'displayfield',
 								height : '5',
@@ -273,6 +274,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 							}, {
 								text : "查看自由卷裁叠膜",
 								scope : this,
+								hidden : true,
 								iconCls : 'icon-application_add',
 								handler : this.onChooseCdm
 
@@ -441,8 +443,16 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								height : 30,
 								fieldLabel : '备注',
 								anchor : '100%',
-								colspan : 12,
+								colspan : 8,
 								allowBlank : true
+							}, {
+								ref : '../trailer',
+								name : 'trailer',
+								fieldLabel : '车号',
+								xtype : 'textfield',
+								// readOnly : true,
+								colspan : 4,
+								anchor : '85%'
 							}, {
 								ref : '../cdmBatchId',
 								name : 'cdmBatchId',
@@ -566,7 +576,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 
 				})
 	}
-	
+
 	this.initChooseCdmWindow = function() {
 
 		var selModel4ChooseCdm = new Ext.grid.CheckboxSelectionModel({
@@ -574,59 +584,57 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 					header : ''
 				});
 
-		this.listPanel4ChooseCdm = this.listPanel4ChooseCdm || new Ext.fn.ListPanel({
-			region : 'center',
-			viewConfig : {
-				forceFit : true
-			},
-			/*tbar : [{
-						text : '新增',
-						scope : this,
-						iconCls : 'icon-application_add',
-						handler : this.onAdd4ChooseCdm
-					}, '-', {
-						text : '删除',
-						scope : this,
-						iconCls : 'icon-application_delete',
-						handler : this.onDel4ChooseCdm
-					}],*/
-			hsPage : true,
-			selModel : selModel4ChooseCdm,
-			delUrl : 'com.keensen.ump.produce.component.workorder2.deleteChooseCdm.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel4ChooseCdm, {
-						dataIndex : 'cdmBatchNo',
-						header : '裁叠膜栈板号'
-					}, {
-						dataIndex : 'orderNo',
-						header : '订单号'
-					}, {
-						dataIndex : 'prodSpecName',
-						header : '生产型号'
-					}],
-			store : this.chooseCdmStore
-		})
-
-		this.queryPanel4ChooseCdm = this.queryPanel4ChooseCdm || new Ext.fn.QueryPanel({
-					height : 80,
-					columns : 2,
-					border : true,
-					region : 'north',
-					// collapsible : true,
-					titleCollapse : false,
-					fields : [{
-								xtype : 'textfield',
-								name : 'condition/orderNo',
-								anchor : '85%',
-								fieldLabel : '订单号'
+		this.listPanel4ChooseCdm = this.listPanel4ChooseCdm
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					/*
+					 * tbar : [{ text : '新增', scope : this, iconCls :
+					 * 'icon-application_add', handler : this.onAdd4ChooseCdm },
+					 * '-', { text : '删除', scope : this, iconCls :
+					 * 'icon-application_delete', handler : this.onDel4ChooseCdm
+					 * }],
+					 */
+					hsPage : true,
+					selModel : selModel4ChooseCdm,
+					delUrl : 'com.keensen.ump.produce.component.workorder2.deleteChooseCdm.biz.ext',
+					columns : [new Ext.grid.RowNumberer(), selModel4ChooseCdm,
+							{
+								dataIndex : 'cdmBatchNo',
+								header : '裁叠膜栈板号'
 							}, {
-								xtype : 'textfield',
-								name : 'condition/cdmBatchNo',
-								anchor : '85%',
-								fieldLabel : '裁叠膜栈板号'
-							}]
-				});
+								dataIndex : 'orderNo',
+								header : '订单号'
+							}, {
+								dataIndex : 'prodSpecName',
+								header : '生产型号'
+							}],
+					store : this.chooseCdmStore
+				})
 
-	
+		this.queryPanel4ChooseCdm = this.queryPanel4ChooseCdm
+				|| new Ext.fn.QueryPanel({
+							height : 80,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/orderNo',
+										anchor : '85%',
+										fieldLabel : '订单号'
+									}, {
+										xtype : 'textfield',
+										name : 'condition/cdmBatchNo',
+										anchor : '85%',
+										fieldLabel : '裁叠膜栈板号'
+									}]
+						});
+
 		this.queryPanel4ChooseCdm.addButton({
 					text : "关闭",
 					scope : this,
@@ -635,23 +643,23 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 					}
 
 				});
-	
-		this.chooseCdmWindow = this.chooseCdmWindow
-				|| new Ext.Window({
-							title : '自由卷设置裁叠膜',
-							resizable : true,
-							minimizable : false,
-							maximizable : true,
-							closeAction : "hide",
-							buttonAlign : "center",
-							autoScroll : false,
-							modal : true,
-							width : 800,
-							height : 600,
-							layout : 'border',
-							items : [this.queryPanel4ChooseCdm, this.listPanel4ChooseCdm]
 
-						});
-		
+		this.chooseCdmWindow = this.chooseCdmWindow || new Ext.Window({
+					title : '自由卷设置裁叠膜',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4ChooseCdm,
+							this.listPanel4ChooseCdm]
+
+				});
+
 	}
 }

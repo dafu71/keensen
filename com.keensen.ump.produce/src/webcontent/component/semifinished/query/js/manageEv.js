@@ -34,8 +34,41 @@ com.keensen.ump.produce.component.QueryStockMgr.prototype.initEvent = function()
 				});
 	}, this);
 
+	// 查询事件
+	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleOrderListPanel.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
+	// 查询事件
+	this.queryChooseSingleUserPanel.mon(this.queryChooseSingleUserPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleUserListPanel.store;
+				if (Ext.isEmpty(vals)) {
+					vals = {};
+				}
+				vals['nameSqlId'] = 'com.keensen.ump.base.organduser.queryUser';
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseSingleUserListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
 	this.listPanel.store.on('load', function() {
-		var _me = _this;
+
+		var cnt = _this.listPanel.store.getCount();
+		if (cnt == 0)
+			return;
 		var batchNoStr = _this.queryPanel.form
 				.findField("condition/batchNoStr2").getValue();
 		var regEx = new RegExp("\\n", "gi");
@@ -83,7 +116,7 @@ com.keensen.ump.produce.component.QueryStockMgr.prototype.initEvent = function()
 				}
 			},
 			callback : function() {
-				_me.requestMask.hide()
+				_this.requestMask.hide()
 			}
 		})
 	})
@@ -101,6 +134,7 @@ com.keensen.ump.produce.component.QueryStockMgr.prototype.exportExcel = function
 
 com.keensen.ump.produce.component.QueryStockMgr.prototype.onOutofstock = function() {
 	var A = this.listPanel;
+
 	var _this = this;
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
@@ -108,11 +142,11 @@ com.keensen.ump.produce.component.QueryStockMgr.prototype.onOutofstock = functio
 	} else {
 		var records = A.getSelectionModel().getSelections();
 		var batchNos = [];
-		for(var i=0;i<records.length;i++){
+		for (var i = 0; i < records.length; i++) {
 			var r = records[i];
 			var deleted = r.get('deleted');
 			var batchNo = r.get('batchNo');
-			if(deleted == 'Y'){
+			if (deleted == 'Y') {
 				Ext.Msg.alert("系统提示", "请选择未出库的记录！");
 				return;
 			}
@@ -120,7 +154,7 @@ com.keensen.ump.produce.component.QueryStockMgr.prototype.onOutofstock = functio
 		}
 		this.inputWindow.show();
 		this.inputWindow.batchNos.setValue(batchNos.join(','));
-	} 
+	}
 
 }
 
@@ -157,7 +191,64 @@ com.keensen.ump.produce.component.QueryStockMgr.prototype.onChooseSingleOrder = 
 		var orderNo = B[0].get('orderNo');
 
 		this.inputWindow.newOrderNo.setValue(orderNo);
-		
+
 		this.chooseSingleOrderWindow.hide();
 	}
+}
+
+com.keensen.ump.produce.component.QueryStockMgr.prototype.onModifyPosition = function() {
+	var A = this.listPanel;
+
+	var _this = this;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var batchNos = [];
+		for (var i = 0; i < records.length; i++) {
+			var r = records[i];
+			var deleted = r.get('deleted');
+			var batchNo = r.get('batchNo');
+			if (deleted == 'Y') {
+				Ext.Msg.alert("系统提示", "请选择未出库的记录！");
+				return;
+			}
+			batchNos.push(batchNo);
+		}
+		Ext.Msg.prompt('修改库位', '请输入库位', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.component.semifinished.saveBatchPosition.biz.ext",
+					method : "post",
+					jsonData : {
+						'position' : text,
+						'batchNos' : batchNos.join(',')
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "修改成功！", function() {
+										_this.listPanel.store.load();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "修改失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, false);
+	}
+
 }

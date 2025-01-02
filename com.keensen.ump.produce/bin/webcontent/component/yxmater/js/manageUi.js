@@ -85,7 +85,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 120,
-					columns : 3,
+					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -100,16 +100,34 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 								fieldLabel : '下单型号'
 							}, {
 								xtype : 'textfield',
+								name : 'condition/specName',
+								fieldLabel : '规格型号'
+							}, {
+								xtype : 'textfield',
 								name : 'condition/materName',
 								fieldLabel : '物料名称'
 							}, {
 								xtype : 'displayfield',
 								height : '5',
-								colspan : 3
+								colspan : 4
 							}, {
-								xtype : 'textfield',
-								name : 'condition/specName',
-								fieldLabel : '规格型号'
+								xtype : 'combobox',
+								forceSelection : true,
+								mode : 'local',
+								fieldLabel : '到货状态',
+								ref : '../goodsState',
+								hiddenName : 'condition/goodsState',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.materGoodsStateStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
 							}, {
 								xtype : "dateregion",
 								colspan : 1,

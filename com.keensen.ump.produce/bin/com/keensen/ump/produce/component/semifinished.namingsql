@@ -84,28 +84,35 @@
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="inTimeStart">to_char(T1.IN_TIME,'yyyy-MM-dd')  &gt;=  #inTimeStart#</isNotNull>
         <isNotNull prepend="and" property="inTimeEnd">to_char(T1.IN_TIME,'yyyy-MM-dd')  &lt;=  #inTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="outTimeStart">to_char(T1.out_TIME,'yyyy-MM-dd')  &gt;=  #outTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="outTimeEnd">to_char(T1.out_TIME,'yyyy-MM-dd')  &lt;=  #outTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="batchNo">t1.BATCH_NO = #batchNo#</isNotNull>
         <isNotNull prepend="and" property="batchNo2">T1.ORDER_NO like '%' || #batchNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo">T1.BATCH_NO like '%' || #orderNo# || '%'</isNotNull>
         <isNotNull prepend="and" property="newOrderNo">T1.NEW_ORDER_NO like '%' || #newOrderNo# || '%'</isNotNull>
         <isNotNull prepend="and" property="deleted">t1.deleted = #deleted#</isNotNull>
         <isNotNull prepend="and" property="deleted2">t1.deleted = #deleted2#</isNotNull>
-        <isNotNull prepend="and" property="prodSpecName">PMS.MATER_SPEC_NAME like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">UPPER(PMS.MATER_SPEC_NAME) like '%' || UPPER(#prodSpecName#) || '%'</isNotNull>
         <isNotNull prepend="and" property="prodSpecId">T1.PROD_SPEC_ID = #prodSpecId#</isNotNull>
         <isNotNull prepend="and" property="batchNoStr">t1.BATCH_NO in ($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="position">T1.position like '%' || #position# || '%'</isNotNull>
 	
 	order by T1.CREATE_TIME desc
     </select>
     <select id="queryJuanmo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
   		SELECT jm.batch_no "batchNo",jm.prod_spec_id "prodSpecId",qj.record_id "qjBatchId",
-    jm.order_no "orderNo" ,PMS.MATER_SPEC_NAME AS "prodSpecName"
+    jm.order_no "orderNo" ,PMS.MATER_SPEC_NAME AS "prodSpecName",
+    CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END "dryWet"
     from qinsen.inst_qijian qj
     left join qinsen.inst_juanmo_main jm ON qj.juanmo_batch_id = jm.record_id
+     LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+  		ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID
     LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
         ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID
     where 1=1
     and not exists(select 1 from KS_COMPONENT_SEMI_STOCK where batch_no=jm.batch_no)
 		<isNotNull prepend="and" property="batchNo">jm.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="dryWet">(CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END) = #dryWet#</isNotNull>
     </select>
     <select id="queryOutofstock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT T1.ID             AS "id",T1.qj_batch_id "qjBatchId",
@@ -227,4 +234,56 @@
 	
 	order by t1.id desc
     </select>
+    <!-- 查询盘存报表 -->
+    <select id="queryStockTakingReport" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT PROD.PROD_SPEC_ID "prodSpecId",
+	       PMS.MATER_SPEC_NAME "prodSpecName",
+	       NVL(LASTSTOCK.AMOUNT, 0) "lastAmount",
+	       NVL(INSTOCK.AMOUNT, 0) "inAmount",
+	       NVL(OUTSTOCK.AMOUNT, 0) "outAmount",
+	       NVL(STOCKTAKING.AMOUNT, 0) "takingAmount",
+	       NVL(STOCKTAKING.AMOUNT, 0) -
+	       (NVL(LASTSTOCK.AMOUNT, 0) + NVL(INSTOCK.AMOUNT, 0) -
+	        NVL(STOCKTAKING.AMOUNT, 0)) "amount"
+	  FROM 
+	       (SELECT DISTINCT PROD_SPEC_ID
+	          FROM KS_COMPONENT_SEMI_STOCK T
+	         WHERE T.PROD_SPEC_ID IS NOT NULL) PROD
+	  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+	    ON PMS.MATER_SPEC_ID = PROD.PROD_SPEC_ID
+	  LEFT JOIN
+	
+	 (SELECT COUNT(1) AMOUNT, PROD_SPEC_ID
+	    FROM KS_COMPONENT_SEMI_STOCK T
+	   WHERE T.PROD_SPEC_ID IS NOT NULL
+	     AND T.DELETED = 'N'
+	     AND TO_CHAR(T.IN_TIME, 'yyyy-MM') != TO_CHAR(SYSDATE, 'yyyy-MM')
+	   GROUP BY T.PROD_SPEC_ID) LASTSTOCK
+	    ON PROD.PROD_SPEC_ID = LASTSTOCK.PROD_SPEC_ID
+	  LEFT JOIN
+	
+	 (SELECT COUNT(1) AMOUNT, PROD_SPEC_ID
+	    FROM KS_COMPONENT_SEMI_WAREHOUSING T
+	   WHERE T.PROD_SPEC_ID IS NOT NULL
+	     AND TO_CHAR(T.CREATE_TIME, 'yyyy-MM') = TO_CHAR(SYSDATE, 'yyyy-MM')
+	   GROUP BY T.PROD_SPEC_ID) INSTOCK
+	    ON PROD.PROD_SPEC_ID = INSTOCK.PROD_SPEC_ID
+	  LEFT JOIN
+	
+	 (SELECT COUNT(1) AMOUNT, PROD_SPEC_ID
+	    FROM KS_COMPONENT_SEMI_OUTOFSTOCK T
+	   WHERE T.PROD_SPEC_ID IS NOT NULL
+	     AND TO_CHAR(T.CREATE_TIME, 'yyyy-MM') = TO_CHAR(SYSDATE, 'yyyy-MM')
+	   GROUP BY T.PROD_SPEC_ID) OUTSTOCK
+	    ON PROD.PROD_SPEC_ID = OUTSTOCK.PROD_SPEC_ID
+	  LEFT JOIN
+	
+	 (SELECT COUNT(DISTINCT T.BATCH_NO) AMOUNT, STOCK.PROD_SPEC_ID
+	    FROM KS_COMPONENT_SEMI_STOCKTAKING T
+	    LEFT JOIN KS_COMPONENT_SEMI_STOCK STOCK
+	      ON STOCK.BATCH_NO = T.BATCH_NO
+	   WHERE STOCK.PROD_SPEC_ID IS NOT NULL
+	     AND TO_CHAR(T.CREATE_TIME, 'yyyy-MM') = TO_CHAR(SYSDATE, 'yyyy-MM')
+	   GROUP BY STOCK.PROD_SPEC_ID) STOCKTAKING
+	    ON PROD.PROD_SPEC_ID = STOCKTAKING.PROD_SPEC_ID
+    ORDER BY PROD.PROD_SPEC_ID</select>
 </sqlMap>

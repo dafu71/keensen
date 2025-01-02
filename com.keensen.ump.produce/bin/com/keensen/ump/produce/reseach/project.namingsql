@@ -156,4 +156,10 @@
         <isNotNull prepend="and" property="projectCode">T1.PROJECT_CODE like '%' || #projectCode# || '%'</isNotNull> 
 	 ORDER BY T1.ID, T2.USER_ID
 	</select>
+    <insert id="insertOperatorRole" parameterClass="java.util.HashMap">insert into T_AC_OPERATORROLE 
+	 (OPERATORID,ROLEID,DATAORGID)
+	 select t.operatorid,#roleid#,10000 from V_AC_OPERATOR_TRS t
+		WHERE t.userid=#userId#
+		AND t.operatorid NOT IN (select operatorid from T_AC_OPERATORROLE t
+		WHERE t.roleid=#roleid#)</insert>
 </sqlMap>

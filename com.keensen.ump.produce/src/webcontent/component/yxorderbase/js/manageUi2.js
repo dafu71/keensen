@@ -187,7 +187,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		// 订单类型
 		this.orderBrandStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['常规产品', '常规产品'], ['实验订单', '实验订单']]
+					data : [['常规产品', '常规产品'], ['展品', '展品'], ['样品', '样品']]
 				});
 
 		// 调整原因选项：插单、调单、改单、终止、暂停、其他
@@ -200,7 +200,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		// 是否接单
 		this.ifgetStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['需工艺确认', '需工艺确认'], ['是', '是'], ['否', '否']]
+					data : [['需工艺确认', '需工艺确认'], ['需品质确认', '需品质确认'], ['是', '是'],
+							['否', '否']]
 				});
 
 		this.gyyStore = new Ext.data.SimpleStore({
@@ -636,6 +637,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'stockAmount',
 						header : '发库存数量（支）',
+						sortable : true
+					}, {
+						dataIndex : 'mpSpecName',
+						header : '膜片限定',
 						sortable : true
 					}, {
 						dataIndex : 'label',
@@ -1169,6 +1174,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							name : 'sealAmount'
 						}, {
 							name : 'deliveryState'
+						}, {
+							name : 'mpSpecName'
+						}, {
+							name : 'mpSpecId'
 						}]
 			})
 		})
@@ -1263,7 +1272,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					// readOnly : true,
 					anchor : '100%',
 					colspan : 6,
-					fieldLabel : '销售订单编号 '
+					fieldLabel : '<a class="mya" title="订单编号编码说明" onclick="describeOrderNo();">销售订单编号</a>'
 				}, {
 					xtype : 'combobox',
 					forceSelection : true,
@@ -1594,6 +1603,18 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}
 				}, {
 					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
+					name : 'entity/productRemark',
+					dataIndex : 'productRemark',
+					// allowBlank : false,
+					anchor : '100%',
+					colspan : 24,
+					xtype : 'textarea',
+					fieldLabel : '产品备注'
+				}, {
+					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">性能要求<br>测试条件</p>',
 					labelSeparator : '',// 去掉冒号
 					colspan : 24
@@ -1732,6 +1753,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							this.reset()
 						}
 					}
+				}, {
+					xtype : 'mpspeccombobox',
+					hiddenName : 'entity/mpSpecId',
+					dataIndex : 'mpSpecId',
+					anchor : '100%',
+					colspan : 6,
+					fieldLabel : '膜片限定'
 				}, {
 					xtype : 'displayfield',
 					height : 5,
@@ -2592,14 +2620,6 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					xtype : 'textfield',
 					fieldLabel : '产品星级评定'
 				}, {
-					name : 'entity/productRemark',
-					dataIndex : 'productRemark',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textfield',
-					fieldLabel : '产品备注'
-				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">确认</p>',
 					labelSeparator : '',// 去掉冒号
@@ -2718,9 +2738,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'combobox',
 							forceSelection : true,
-							allowBlank : false,
+							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '订单类型',
+							value : '常规产品',
 							ref : '../../orderType',
 							hiddenName : 'entity/orderType',
 							anchor : '100%',
@@ -2738,9 +2759,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'combobox',
 							forceSelection : true,
-							allowBlank : false,
+							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '有生产规格书',
+							value : '是',
 							ref : '../../ifbook',
 							hiddenName : 'entity/ifbook',
 							anchor : '100%',
@@ -2789,9 +2811,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'combobox',
 							forceSelection : true,
-							allowBlank : false,
+							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '产能满足',
+							value : '是',
 							ref : '../../ifsatisfy',
 							hiddenName : 'entity/ifsatisfy',
 							anchor : '100%',
@@ -2813,11 +2836,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'combobox',
 							forceSelection : true,
-							allowBlank : false,
+							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '考虑非生产日',
 							ref : '../../ifconsider',
 							hiddenName : 'entity/ifconsider',
+							value : '是',
 							anchor : '100%',
 							colspan : 1,
 							emptyText : '--请选择--',
@@ -2833,11 +2857,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'combobox',
 							forceSelection : true,
-							allowBlank : false,
+							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '考虑保养日',
 							ref : '../../ifconsider2',
 							hiddenName : 'entity/ifconsider2',
+							value : '否',
 							anchor : '100%',
 							colspan : 1,
 							emptyText : '--请选择--',
@@ -2864,11 +2889,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'combobox',
 							forceSelection : true,
-							allowBlank : false,
+							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '符合固定入库期',
 							ref : '../../ifwarehousing',
 							hiddenName : 'entity/ifwarehousing',
+							value : '是',
 							anchor : '100%',
 							colspan : 1,
 							emptyText : '--请选择--',
@@ -3372,6 +3398,18 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					scope : this
 				}, {
 					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
+					//name : 'entity/productRemark',
+					dataIndex : 'productRemark',
+					readOnly : true,
+					anchor : '100%',
+					colspan : 24,
+					xtype : 'textarea',
+					fieldLabel : '产品备注'
+				}, {
+					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">性能要求<br>测试条件</p>',
 					labelSeparator : '',// 去掉冒号
 					colspan : 24
@@ -3490,6 +3528,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					store : this.lidStore,
 					displayField : "name",
 					valueField : "code"
+				}, {
+					xtype : 'mpspeccombobox',
+					emptyText : '',
+					readOnly : true,
+					dataIndex : 'mpSpecId',
+					anchor : '100%',
+					colspan : 6,
+					fieldLabel : '膜片限定'
 				}, {
 					xtype : 'displayfield',
 					height : 5,
@@ -4261,18 +4307,6 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					colspan : 6,
 					xtype : 'textfield',
 					fieldLabel : '产品星级评定'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/productRemark',
-					dataIndex : 'productRemark',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 24,
-					xtype : 'textarea',
-					fieldLabel : '产品备注'
 				}]
 			}]
 		});
@@ -6352,31 +6386,31 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 											colspan : 2
 										}, {
 											xtype : 'trigger',
-											//emptyText : '单击旁边按钮填充',
+											// emptyText : '单击旁边按钮填充',
 											ref : '../../bagDrawingCode',
 											dataIndex : 'bagDrawingCode',
 											editable : false,
 											hideTrigger : false,
-											readOnly:true,
+											readOnly : true,
 											fieldLabel : '包装袋图纸',
 											anchor : '95%',
 											colspan : 1,
 											onTriggerClick : function() {
-												//_this.onFill();
+												// _this.onFill();
 											}
 										}, {
 											xtype : 'trigger',
-											//emptyText : '单击旁边按钮填充',
+											// emptyText : '单击旁边按钮填充',
 											ref : '../../boxDrawingCode',
 											dataIndex : 'boxDrawingCode',
 											editable : false,
 											hideTrigger : false,
-											readOnly:true,
+											readOnly : true,
 											fieldLabel : '包装箱图纸',
 											anchor : '95%',
 											colspan : 1,
 											onTriggerClick : function() {
-												//_this.onFill2();
+												// _this.onFill2();
 											}
 										}, {
 											xtype : 'displayfield',

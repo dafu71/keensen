@@ -20,6 +20,11 @@
 -->
 <head>
 <title>机台管理</title>
+
+<style type="text/css">
+.x-grid3-cell-inner {-webkit-user-select:text;}
+</style>
+
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component.workorder');
 </script>

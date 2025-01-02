@@ -214,6 +214,9 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						dataIndex : 'line',
 						header : '线别'
 					}, {
+						dataIndex : 'code',
+						header : '流水号'
+					}, {
 						dataIndex : 'mptype',
 						header : '膜片型号'
 					}, {
@@ -306,6 +309,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'relationBatchNo'
 						}, {
 							name : 'position'
+						}, {
+							name : 'code'
 						}]
 			})
 		})

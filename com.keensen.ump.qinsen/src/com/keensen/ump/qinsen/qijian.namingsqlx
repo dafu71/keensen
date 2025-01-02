@@ -40,6 +40,11 @@
 		TO_CHAR(Z.GYY_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "gyyRemarkTime",
 		Z.GYY_REMARK_USER_ID as "gyyRemarkUserId",
 		Z.GYY_REMARK_USER_NAME as "gyyRemarkUserName",
+		
+		decode(z.gyy_conclusion,'A','放行原订单','B','降级','C','改判其他无特殊要求的同型号产品','D','报废','E','送水测','F','染色解剖','') "gyyConclusion",
+		z.gyy_SPEC_ID "gyySpecId",
+		z.gyy_SPEC_name "gyySpecName",
+		 
 		Z.MONITOR_REMARK as "monitorRemark",
 		TO_CHAR(Z.MONITOR_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "monitorRemarkTime",
 		Z.MONITOR_REMARK_USER_ID as "monitorRemarkUserId",
@@ -54,7 +59,7 @@
 		TO_CHAR(Z.WATER_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "waterRemarkTime",
 		Z.WATER_REMARK_USER_ID as "waterRemarkUserId",
 		Z.WATER_REMARK_USER_NAME as "waterRemarkUserName",
-		z.DRY_WET as "dryWet",
+		z.DRY_WET as "dryWet",Z.trailer "trailer",
 		
 		
 		
@@ -102,6 +107,7 @@
 	       A.JUDGE_FLAG, A.NG_ITEM, A.JUDGER_ID, A.JUDGE_DT,A.diameter,A.diameter2,
 	       
 	       A.GYY_REMARK_TIME,A.GYY_REMARK_USER_ID,A.GYY_REMARK_USER_NAME,
+	       A.gyy_conclusion,A.gyy_SPEC_ID,A.gyy_SPEC_name,
 			A.MONITOR_REMARK,A.MONITOR_REMARK_TIME,A.MONITOR_REMARK_USER_ID,
 			A.MONITOR_REMARK_USER_NAME,
 			A.MONITOR_REMARK2,A.MONITOR_REMARK_TIME2,A.MONITOR_REMARK_USER_ID2,
@@ -109,15 +115,17 @@
 	       A.WATER_REMARK ,
 			A.WATER_REMARK_TIME ,
 			A.WATER_REMARK_USER_ID ,
-			A.WATER_REMARK_USER_NAME ,A.DRY_WET,
+			A.WATER_REMARK_USER_NAME ,A.DRY_WET,J.trailer,
 		       
 	       
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
-	  FROM (SELECT QJ.*, 
+	  FROM (SELECT QJ.*, pms.MATER_SPEC_name gyy_SPEC_name,
 CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET
   FROM QINSEN.INST_QIJIAN QJ
+  left join  qinsen.PARA_MATER_SPEC pms
+  on QJ.gyy_SPEC_ID = PMS.MATER_SPEC_ID
   LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
   ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID) A, 
   qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
@@ -578,5 +586,6 @@ SELECT T.BATCH_NO "batchNo",
   AND EXTRACT(DAY FROM (SYSDATE - T.GYY_REMARK_TIME)) * 24 +
        EXTRACT(HOUR FROM (SYSDATE - T.GYY_REMARK_TIME))>=2
 </select>
+
 
 </sqlMap>

@@ -363,3 +363,10 @@ com.keensen.ump.produce.component.planweekMgr.prototype.destroy = function() {
 	this.planWeekDaysWindow.destroy();
 	this.addPlanWeekDaysWindow.destroy();
 }
+
+com.keensen.ump.produce.component.planweekMgr.prototype.exportExcel = function() {
+
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '生产主计划',
+			'com.keensen.ump.produce.component.order.queryPlanWeek','0,1');
+
+}

@@ -41,11 +41,21 @@
 <ext:dict property="KS_YXORDER_PHOTO_ALL" dictTypeId="KS_YXORDER_PHOTO_ALL" />
 
 <js:load scriptPath="pub/common/optColumnWin.js"/>
+<js:load scriptPath="pub/common/mpspecCombo.js" />
 <js:load scriptPath="produce/component/yxorderbase/js/manageUi2.js"/>
 <js:load scriptPath="produce/component/yxorderbase/js/manageEv.js"/>
 
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
+
+.mya {
+  color: blue; /* 设置链接颜色为蓝色 */
+  text-decoration: none; /* 去除下划线 */
+}
+
+.mya:hover {
+  color: red; /* 鼠标悬停时改变颜色 */
+}
 </style>
 
 <script type="text/javascript">

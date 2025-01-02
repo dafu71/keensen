@@ -181,6 +181,11 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						width : 120,
 						dataIndex : 'prodSpecName'
 					}, {
+						header : '车号',
+						sortable : true,
+						width : 50,
+						dataIndex : 'trailer'
+					}, {
 						header : '试卷',
 						width : 40,
 						dataIndex : 'isTrialName'
@@ -335,6 +340,8 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 							name : 'isAirQualifiedName'
 						}, {
 							name : 'applyJudgeResult'
+						}, {
+							name : 'trailer'
 						}]
 			})
 		})

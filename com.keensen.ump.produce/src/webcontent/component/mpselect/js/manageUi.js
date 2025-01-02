@@ -10,6 +10,8 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 		this.initStandWindow();
 		this.initAddStandWindow();
 
+		this.initFilterWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -161,12 +163,26 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel2
 				});
-				
+
+		this.queryPanel.addButton({
+					text : "导入即时库存",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.importExcel2
+				});
+
 		this.queryPanel.addButton({
 					text : "计算",
 					scope : this,
 					iconCls : 'icon-application_edit',
 					handler : this.calculate
+				});
+
+		this.queryPanel.addButton({
+					text : "筛选",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onFilter
 				});
 
 	}
@@ -205,12 +221,10 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onQuery2
-					}, '-', {
-						text : "导入即时库存",
-						scope : this,
-						iconCls : 'icon-application_excel',
-						handler : this.importExcel2
-					}, '-', {
+					}/*
+						 * , '-', { text : "导入即时库存", scope : this, iconCls :
+						 * 'icon-application_excel', handler : this.importExcel2 }
+						 */, '-', {
 						text : '即时库存模板下载',
 						scope : this,
 						iconCls : 'icon-application_excel',
@@ -365,8 +379,8 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 												 * condition2 =
 												 * r.get('condition2'); if
 												 * (condition2 == 'N') { return "<span
-												 * style='color:red'>" + v + "</span>";
-												 *  } else { return "<span
+												 * style='color:red'>" + v + "</span>"; }
+												 * else { return "<span
 												 * style='color:green'>" + v + "</span>"; } }
 												 */
 					}, {
@@ -513,8 +527,8 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 														 * if (condition == 'N') {
 														 * return "<span
 														 * style='color:red'>" +
-														 * v + "</span>";
-														 *  } else { return "<span
+														 * v + "</span>"; }
+														 * else { return "<span
 														 * style='color:green'>" +
 														 * v + "</span>"; } }
 														 */
@@ -530,8 +544,8 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 														 * if (condition == 'N') {
 														 * return "<span
 														 * style='color:red'>" +
-														 * v + "</span>";
-														 *  } else { return "<span
+														 * v + "</span>"; }
+														 * else { return "<span
 														 * style='color:green'>" +
 														 * v + "</span>"; } }
 														 */
@@ -1176,5 +1190,53 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 						}]
 			}]
 		});
+	}
+
+	this.initFilterWindow = function() {
+		var _this = this;
+		this.filterWindow = this.filterWindow || new Ext.fn.FormWindow({
+					title : '筛选',
+					height : 600,
+					width : 1024,
+					// itemCls:'required',
+					// style:'margin-top:10px',
+					modal : false,
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
+								xtype : 'inputpanel',
+								pgrid : this.listPanel,
+								columns : 12,
+								saveUrl : '1.biz.ext',
+								fields : [{
+											xtype : 'prodspeccombobox',
+											ref : '../../prodSpecId',
+											colspan : 3,
+											fieldLabel : '元件型号 '
+										}]
+							}]
+				});
+
+		this.filterWindow.buttons[0].hide();
+		this.filterWindow.buttons[1].hide();
+
+		this.filterWindow.addButton({
+					text : "查询",
+					// disabled : allRight != '1',
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQuery
+				});
+
+		this.filterWindow.addButton({
+					text : "关闭",
+					// disabled : allRight != '1',
+					scope : this,
+					handler : function() {
+						// this.form.reset();
+						this.filterWindow.hide()
+					}
+				});
 	}
 }

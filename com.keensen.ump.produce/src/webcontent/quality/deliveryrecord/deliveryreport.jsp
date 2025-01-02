@@ -462,7 +462,7 @@
 			<div align="center" class="style1">3</div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1">脱盐率</div>
+			<div align="center" class="style1">稳定<br>脱盐率</div>
 			</td>
 			<td height="38" colspan="2">
 			<div align="center" class="style1"><b:write

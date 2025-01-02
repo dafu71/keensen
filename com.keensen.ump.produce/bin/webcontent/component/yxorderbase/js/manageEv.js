@@ -89,7 +89,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 			}
 
 			if (state == '订单计划员确认') {
-				this.confirmWindow.show();
+				this.confirmWindow.show();				
 				this.confirmWindow.loadData(cell);
 			} else {
 				Ext.Msg.alert('系统提示', '请选择状态为订单计划员确认的记录');
@@ -254,7 +254,34 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 
 	this.addOrderWindow.activeItem.mon(this.addOrderWindow.activeItem,
 			'beforeSave', function() {
-				var _this = this;
+				
+				var orderNo = this.addOrderWindow.orderNo.getValue();
+				
+				if(Ext.isEmpty(orderNo)){
+					return false;
+				}
+				//建议订单编号规则如下!
+				//常规:20241225-14???,共计14位
+				//常规:20241225-14???-?,共计14位
+				//样品:样品-CRM??????，共计14位;
+				//展品:展品-CRM??????，共计14位;
+				//特规:CRM??????，共计9位。
+				var regex=/^\d{8}-\d{5}$/;
+				var convention = regex.test(orderNo);
+				var regex=/^\d{8}-\d{5}-\d{1}$/;
+				var convention2 = regex.test(orderNo);
+				var regex = /^\样品-CRM\d{6}$/;
+				var sample = regex.test(orderNo);
+				var regex = /^\展品-CRM\d{6}$/;
+				var exhibit = regex.test(orderNo);
+				var regex = /^\CRM\d{6}$/;
+				var special = regex.test(orderNo);
+				
+				if(!convention && !convention2 && !sample && !exhibit && !special ){
+					Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
+					return false;
+				}
+				
 				var itemArr = [];
 				var myCheckboxGroup = this.addOrderWindow.photoSingle;
 				for (var i = 0; i < myCheckboxGroup.items.length; i++) {
@@ -1233,4 +1260,14 @@ function getDayDiff(start, end) {
 	var datediff = (new Date(end)) - (new Date(start));
 	datediff = datediff / 24 / 60 / 60 / 1000;
 	return Math.round(datediff);;
+}
+
+function describeOrderNo(){
+	var s = '订单编号规则如下:<br>'
+	s += '常规: 20241225-14???,共14位<br>';
+	s += '常规2: 20241225-14???-?,共16位<br>';
+	s += '样品: 样品-CRM??????，共12位<br>';
+	s += '展品: 展品-CRM??????，共12位<br>';
+	s += '特规: CRM??????，共9位';
+	Ext.Msg.alert("订单编号规则", s);
 }

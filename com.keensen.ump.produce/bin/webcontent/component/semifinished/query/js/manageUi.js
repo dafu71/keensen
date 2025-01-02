@@ -36,7 +36,7 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 		var _this = this;
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-			height : 150,
+			height : 170,
 			columns : 4,
 			border : true,
 			region : "north",
@@ -45,7 +45,7 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 			fields : [{
 						xtype : 'prodspeccombobox',
 						hiddenName : 'condition/prodSpecId',
-						anchor : '95%',
+						anchor : '100%',
 						fieldLabel : '元件型号 ',
 						typeAhead : true,
 						typeAheadDelay : 100,
@@ -107,12 +107,13 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 						height : '5',
 						colspan : 4
 					}, {
-						xtype : 'textarea',
-						colspan : 2,
-						emptyText : '多个批次请用逗号分隔，或一行一个批次',
-						name : 'condition/batchNoStr2',
-						anchor : '100%',
-						fieldLabel : '卷膜序号'
+						xtype : "dateregion",
+						colspan : 1,
+						// anchor : '75%',
+						nameArray : ['condition/outTimeStart',
+								'condition/outTimeEnd'],
+						fieldLabel : "出库日期",
+						format : "Y-m-d"
 					}, {
 						xtype : 'dictcombobox',
 						name : 'condition/deleted2',
@@ -121,11 +122,34 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 						anchor : '100%',
 						dictData : KS_YESORNO
 					}, {
+						xtype : 'textfield',
+						colspan : 1,
+						name : 'condition/position',
+						anchor : '100%',
+						fieldLabel : '库位'
+					}, {
 						fieldLabel : '不展示已出库',
 						xtype : 'checkbox',
 						checked : true,
 						name : 'condition/deleted',
 						inputValue : 'N'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'textarea',
+						colspan : 2,
+						emptyText : '多个批次请用逗号分隔，或一行一个批次',
+						name : 'condition/batchNoStr2',
+						anchor : '100%',
+						fieldLabel : '卷膜序号'
+					}, {
+						xtype : 'textfield',
+						colspan : 1,
+						name : 'condition/prodSpecName',
+						anchor : '100%',
+						fieldLabel : '元件型号%-%'
 					}, {
 						xtype : 'hidden',
 						name : 'condition/batchNoStr'
@@ -147,10 +171,20 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 	}
 
 	this.initListPanel = function() {
-
+		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : false
-				});
+			singleSelect : false,
+			listeners : {
+				selectionchange : function() {
+					var cnt = _this.listPanel.getSelectionModel().getCount();
+					Ext
+							.getCmp('semifinishedchoosecount')
+							.setValue('&nbsp;&nbsp;已选择 <span style="color:red;font-weight: bold;">'
+									+ cnt + '</span> 只元件');
+
+				}
+			}
+		});
 		this.listPanel = new Ext.fn.ListPanel({
 			region : "center",
 			viewConfig : {
@@ -177,7 +211,16 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 						xtype : 'displayfield',
 						value : '',
 						id : 'semifinishedwarnamount2'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'semifinishedchoosecount'
 					}, '->', {
+						text : '修改库位',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onModifyPosition
+					}, '-', {
 						text : '批量出库',
 						scope : this,
 						iconCls : 'icon-application_edit',
@@ -191,31 +234,38 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'batchNo',
 						// width : 100,
-						header : '卷膜序号'
+						header : '卷膜序号',
+						sortable : true
 					}, {
 						dataIndex : 'prodSpecName',
 						// width : 150,
-						header : '元件型号'
+						header : '元件型号',
+						sortable : true
 					}, {
 						dataIndex : 'orderNo',
 						// width : 150,
-						header : '原订单号'
+						header : '原订单号',
+						sortable : true
 					}, {
 						dataIndex : 'newOrderNo',
 						// width : 150,
-						header : '改后订单号'
+						header : '改后订单号',
+						sortable : true
 					}, {
 						dataIndex : 'inTime',
 						// width : 150,
-						header : '入库日期'
+						header : '入库日期',
+						sortable : true
 					}, {
 						dataIndex : 'produceDt',
 						// width : 120,
-						header : '卷膜日期'
+						header : '卷膜日期',
+						sortable : true
 					}, {
 						dataIndex : 'ifDull',
 						// width : 120,
-						header : '是否呆滞'
+						header : '是否呆滞',
+						sortable : true
 					}, {
 						dataIndex : 'ifWarn',
 						// width : 60,
@@ -228,11 +278,18 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 										+ '.png" width="20" height="20">';
 
 							}
-						}
+						},
+						sortable : true
 					}, {
 						dataIndex : 'outTime',
 						// width : 150,
-						header : '出库日期'
+						header : '出库日期',
+						sortable : true
+					}, {
+						dataIndex : 'position',
+						// width : 120,
+						header : '库位',
+						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.base.common.queryByPage.biz.ext',
@@ -267,6 +324,8 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 									name : 'orderNo'
 								}, {
 									name : 'newOrderNo'
+								}, {
+									name : 'position'
 								}]
 					})
 		})

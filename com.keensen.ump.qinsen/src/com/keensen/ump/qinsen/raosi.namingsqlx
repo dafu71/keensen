@@ -161,4 +161,36 @@
 	WHERE RECORD_ID=#recordId#
    </insert>
 
+	  <!-- 查询绕丝工单 -->
+<select id="query4Workorder" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	
+	SELECT QJ.BATCH_NO           "batchNo",
+       T2.ORDER_NO           "orderNo",
+       T2.MATER_SPEC_ID      "materSpecId",
+       T2.MATER_SPEC_NAME    "materSpecName",
+       T2.ORDER_TYPE         "orderType",
+       T2.MATER_SPEC_NAME2   "materSpecName2",
+       T2.ORDER_AMOUNT       "orderAmount",
+       YB.TAPE               "tape",
+       YB.LID                "lid",
+       YB.SN_REGULAR         "snRegular",
+       YB.MAKE_LABEL         "makeLabel",
+       YB.LABEL_DOUBLE       "labelDouble",
+       YB.LABEL_DRAWING_CODE "labelDrawingCode",
+       T3.QJ_AMOUNT          "qjAmount"
+  FROM QINSEN.INST_QIJIAN QJ
+  LEFT JOIN qinsen.inst_juanmo_main jm
+    ON jm.record_id = qj.juanmo_batch_id
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER T2
+    ON QJ.ORDER_NO = T2.ORDER_NO
+   AND QJ.PROD_SPEC_ID = T2.MATER_SPEC_ID
+  LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+    ON YB.ID = T2.BASE_ID
+  LEFT JOIN (SELECT COUNT(1) QJ_AMOUNT, ORDER_NO, PROD_SPEC_ID
+               FROM QINSEN.INST_QIJIAN
+              GROUP BY ORDER_NO, PROD_SPEC_ID) T3
+    ON QJ.ORDER_NO = T3.ORDER_NO
+   AND QJ.PROD_SPEC_ID = T3.PROD_SPEC_ID
+ WHERE (QJ.BATCH_NO = #batchNo# OR jm.batch_no = #batchNo#)
+   </select>
 </sqlMap>

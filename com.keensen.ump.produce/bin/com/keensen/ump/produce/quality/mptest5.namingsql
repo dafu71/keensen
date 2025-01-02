@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.produce.quality.mptest5">
     <select id="queryWaterRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-     SELECT T1.ID             AS "id",
+     SELECT T1.ID             AS "id",T1.code "code",
       to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
 		t1.CREATE_USER_ID as "createUserId",
 		t1.CREATE_NAME as "createName",
@@ -127,7 +127,7 @@
   select to_char(to_number(max(t.BATCH_NO))+1) CODE from KS_QUALITY_MP_TEST_WATER_HEAD t
   WHERE SUBSTR(t.BATCH_NO,1,8) = to_char(SYSDATE,'yyyyMMdd'))
   WHERE BATCH_NO IS NOT NULL</select>
-    <select id="query4Board" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.watertype "materName",t.create_time,
+    <select id="query4Board" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.watertype "materName",t.create_time,nvl(T.code,' ') "code",
        '涂膜' || T.LINE || '线' "line",
        T.MPTYPE "mptype",
         decode(t.watertype,'水相循环液',T2.BATCH_NO,t.BATCH_NO) "batchNo",
@@ -143,7 +143,7 @@
   left join KS_QUALITY_MP_TEST_WATER_HEAD t2 on t.relation_id=t2.id
  WHERE T.STEP IN ('first') 
  union
- SELECT t.reserve1 "materName",t.create_time,
+ SELECT t.reserve1 "materName",t.create_time,' ' "code",
        '涂膜' || T.LINE || '线' "line",
        T.MPTYPE "mptype",
        t.BATCH_NO "batchNo",
@@ -158,7 +158,7 @@
   FROM KS_QUALITY_MP_TEST_OIL_HEAD T
   WHERE T.STEP IN ('first') 
   union
- SELECT '铸膜液' "materName",t.create_time,
+ SELECT '铸膜液' "materName",t.create_time,' ' "code",
        decode(t.machine,'A', '罗斯混料机A', 'B', '豪杰特混料机B', 'C', '豪杰特混料机C','') "line",
        T.MPTYPE "mptype",
        t.BATCH_NO "batchNo",
@@ -173,7 +173,7 @@
   FROM KS_QUALITY_MP_TEST_ZMY_HEAD T  
  WHERE T.STEP IN ('first') 
  ORDER BY iorder,create_time</select>
-    <select id="query4Board2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.watertype "materName",t.create_time,
+    <select id="query4Board2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.watertype "materName",t.create_time,nvl(T.code,' ') "code",
        '涂膜' || T.LINE || '线' "line",
        T.MPTYPE "mptype",
         decode(t.watertype,'水相循环液',T2.BATCH_NO,t.BATCH_NO) "batchNo",
@@ -189,7 +189,7 @@
   left join KS_QUALITY_MP_TEST_WATER_HEAD t2 on t.relation_id=t2.id
  WHERE T.STEP IN ('third')
  union
- SELECT t.reserve1 "materName",t.create_time,
+ SELECT t.reserve1 "materName",t.create_time,' ' "code",
        '涂膜' || T.LINE || '线' "line",
        T.MPTYPE "mptype",
        t.BATCH_NO "batchNo",
@@ -205,7 +205,7 @@
   WHERE T.STEP IN ('third')
 
   union
- SELECT '铸膜液' "materName",t.create_time,
+ SELECT '铸膜液' "materName",t.create_time,' ' "code",
        decode(t.machine,'A', '罗斯混料机A', 'B', '豪杰特混料机B', 'C', '豪杰特混料机C','') "line",
        T.MPTYPE "mptype",
        t.BATCH_NO "batchNo",
@@ -219,5 +219,13 @@
               '生产使用') "stepName",3 iorder
   FROM KS_QUALITY_MP_TEST_ZMY_HEAD T  
  WHERE T.STEP IN ('third') 
+ union
+ select 'PVA溶液配料' "materName", t.create_time,' ' "code", 
+'涂膜' || T.LINE || '线' "line",
+       T.MPTYPE "mptype",
+        t.BATCH_NO "batchNo",       
+              '配料' "stepName",4 iorder
+from KS_DIAPHRAGM_MAKE_PVA_LIST t 
+ 
  ORDER BY iorder,create_time</select>
 </sqlMap>

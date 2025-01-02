@@ -45,6 +45,14 @@ com.keensen.ump.produce.component.StocktakingMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
+				
+		this.queryPanel.addButton({
+					text : "盘存报表",
+					// disabled : allRight != '1',
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onReport
+				});
 
 		var selModel = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : true,

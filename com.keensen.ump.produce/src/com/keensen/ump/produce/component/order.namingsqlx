@@ -90,6 +90,26 @@
      <isNotNull prepend = "and"  property = "ifplan2">
       decode(nvl(t2.cnt,0),0,'N','Y') = #ifplan2#
       </isNotNull>
+      
+      <isNotNull prepend = "and"  property = "planDateStart"> 
+       exists(select 1 from KS_COMPONENT_PLAN_DAY pd
+       where t1.id = pd.order_id and 
+          to_char(pd.plan_date,'yyyy-MM-dd')  &gt;=  #planDateStart#)
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "planDateEnd"> 
+     exists(select 1 from KS_COMPONENT_PLAN_DAY pd
+       where t1.id = pd.order_id and 
+          to_char(pd.plan_date,'yyyy-MM-dd')  &lt;=  #planDateEnd#)
+     </isNotNull>
+     
+     <isEqual prepend="and" property="isJuanmo" compareValue="Y">
+	  exists( select 1 from KS_COMPONENT_DUTY_JM jm where jm.order_id = t1.id)
+	</isEqual>
+	
+	 <isEqual prepend="and" property="isRaosi" compareValue="Y">
+	  exists( select 1 from V_KS_RAOSI v where v.order_id = t1.id)
+	</isEqual>
+     
      order by t1.id desc
 	 </select>
 	 
@@ -626,12 +646,22 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        T1.ORDER_NO          AS "orderNo",
        T1.ORDER_DATE        AS "orderDate",
        T1.HPMC              AS "hpmc",
-       T1.DW                AS "dw",
+       T1.DW                AS "dw",T1.MATER_SPEC_NAME2   AS "materSpecName2",
        T1.MATER_SPEC_NAME   AS "materSpecName",T1.MATER_SPEC_ID   AS "materSpecId",chk.apply_amount "applyAmount",
-        round(100 * nvl(chk.apply_amount,0)/T1.ORDER_AMOUNT,0)  "applyPercent",
+        
+        case when nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)= 0 then 0
+        else round(100 * nvl(chk.apply_amount,0)/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)  
+        end 
+        "applyPercent",
+        
+        case when nvl(chk.apply_amount,0) >= nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) then '完成'
+        when nvl(t2.amount,0)=0 then '未投料'
+        else '进行中' end "applyState" ,
+        
+        
        T1.CPGG              AS "cpgg",
        T1.DRY_WET           AS "dryWet",
-       T1.ORDER_AMOUNT      AS "orderAmount",
+       T1.ORDER_AMOUNT      AS "orderAmount",nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT)      AS "prodAmount",
        T1.DFH               AS "dfh",
        T1.XSC               AS "xsc",
        T1.SBKCGM            AS "sbkcgm",
@@ -653,13 +683,45 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        T1.tray            AS "tray",
        t2.amount AS "cdmAmount",
        t3.amount "jmAmount",
-       t4.amount "qjAmount",
+       t4.amount "qjAmount",t4.qualified_amount "qualifiedAmount",
+       t6.amount "wetAmount",
+       <!--未贴标数=订单数量（本页面）-贴本订单的标签数（本页面）-->
+       nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)-(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0)) "notLabelAmount",
+       <!--贴本订单的标签数量（暂时）-->
+       <!--气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“主行”字眼的记录）-湿膜数量（湿膜订单不用减）-->
+       <!--气检合格的元件贴标数+工艺员“工艺结论”中A、放行原订单”的元件贴标数+原来“工艺员意见备注”当中有“放行”字眼元件贴标数（考虑旧意见存在）-->
+       <!--t4.label_amount "labelAmount",-->
+       <!--贴本订单的标签数量（张）取“气检工单”的显示界面当中“气检累计贴标数量”-->
+       <!--nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0) "labelAmount",-->
+       t4.amount "labelAmount",
+       
+       
+       <!--理论可贴标的元件数（支）理论可贴标的元件数（支）=气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“放行”字眼的记录）-->
+       nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0) "theoryAmount",
        t5.amount "rsAmount",
-		round(100*t2.amount/t1.order_amount,0) || '%' "cdmFinish",
-		round(100*t3.amount/t1.order_amount,0) || '%' "jmFinish",
-		round(100*t4.amount/t1.order_amount,0) || '%' "qjFinish",
-		round(100*t5.amount/t1.order_amount,0) || '%' "rsFinish"
+		round(100*t2.amount/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) || '%' "cdmFinish",
+		round(100*t3.amount/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) || '%' "jmFinish",
+		<!--完成比例=贴本订单的标签数量/气检生产数量*100%-->
+		<!--round(100*t4.label_amount/t4.amount,0) || '%' "qjFinish",-->
+		 round(100*(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0))/t4.amount,0) || '%' "qjFinish",
+		round(100*t5.amount/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) || '%' "rsFinish",
+		round(t1.demand_stock_date-SYSDATE,2) "diff",
+		round(SYSDATE - t1.demand_stock_date,2) "diff2",
+		
+		nvl(inamount.amount,0) "inAmount",
+		nvl(outamount.amount,0) "outAmount"
+		
   FROM KS_PROD_COMPONENT_YXORDER T1
+  
+  <!--改订单号进入元件数=“气检工序批量改订单号界面”新订单号为本订单号的元件数量+“白膜仓改订单号界面“改做订单号”的元件数量-->
+  left join (select t.qj_order_no order_no,t.qj_spec_id prod_spec_id,COUNT(1) amount from KS_JM_QJ_DIFF t
+GROUP BY t.qj_order_no,t.qj_spec_id) inamount 
+on t1.order_no=inamount.order_no AND t1.mater_spec_id=inamount.prod_spec_id
+  <!--改订单号移出元件数=“气检工序批量改订单号界面”勾选被改订单号的元件数量+“白膜仓改订单号界面“原做订单号”的元件数量-->
+   left join (select t.jm_order_no order_no,t.jm_spec_id prod_spec_id,COUNT(1) amount from KS_JM_QJ_DIFF t
+GROUP BY t.jm_order_no,t.jm_spec_id) outamount 
+on t1.order_no=outamount.order_no AND t1.mater_spec_id=outamount.prod_spec_id
+ 
   left join
   (SELECT COUNT(1) apply_amount, order_no,prod_spec_name
 FROM(
@@ -668,7 +730,7 @@ LEFT JOIN KS_COMPONENT_CHECK_HEAD t2 ON t.relation_id=t2.id)
 GROUP BY order_no,prod_spec_name) chk on chk.order_no = t1.order_no 
 	and chk.PROD_SPEC_name = t1.MATER_SPEC_name2
   LEFT JOIN
-(SELECT t.order_no,t.prod_spec_id mater_spec_id,sum(floor(t.quantity/m.num_per_wad))  AS amount 
+(SELECT t.order_no,t.prod_spec_id mater_spec_id,floor(sum(t.quantity)/min(m.num_per_wad))  AS amount 
 from qinsen.inst_caidiemo t
 LEFT JOIN qinsen.PARA_MATER_SPEC m ON m.mater_spec_id = t.prod_spec_id
 GROUP BY t.order_no,t.prod_spec_id) t2 ON t1.order_no=t2.order_no AND t1.mater_spec_id=t2.mater_spec_id
@@ -676,13 +738,39 @@ LEFT JOIN
 (SELECT t.order_no,t.prod_spec_id mater_spec_id, COUNT(1) amount from qinsen.inst_juanmo_main t
 GROUP BY t.order_no,t.prod_spec_id) t3 ON t3.order_no = t1.order_no AND t1.mater_spec_id=t3.mater_spec_id
 LEFT JOIN
-(SELECT t.order_no,t.prod_spec_id mater_spec_id, COUNT(1) amount  from qinsen.inst_qijian t
+
+      
+(SELECT t.order_no,t.prod_spec_id mater_spec_id, COUNT(1) amount，
+SUM(DECODE(t.judge_flag,'Y',1,0)) qualified_amount,  
+
+<!--贴本订单的标签数量（暂时）-->
+<!--气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“主行”字眼的记录）-湿膜数量（湿膜订单不用减）-->
+
+<!--SUM(CASE WHEN t.batch_no IS NOT NULL THEN 1 ELSE 0 END) label_amount-->
+<!--放行数量-->
+sum(decode(t.gyy_conclusion,'A',1,0)) release_amount
+
+ from qinsen.inst_qijian t
 GROUP BY t.order_no,t.prod_spec_id) t4 ON t4.order_no = t1.order_no AND t1.mater_spec_id=t4.mater_spec_id
 LEFT JOIN
+<!--绕丝生产数量（支）-->
+<!--只显示“贴本订单的标签数量”的元件绕丝数量，其他不能算在本订单的绕丝数量-->
+<!--气检合格或者工艺员给出“A、放行原订单”-->
 (SELECT t2.order_no,t2.prod_spec_id mater_spec_id, COUNT(1) amount  from  QINSEN.INST_RAOSI t
  LEFT JOIN qinsen.inst_qijian t2 
 ON t.batch_no=t2.batch_no
+where (t2.gyy_conclusion='A' or t2.judge_flag='Y')
 GROUP BY t2.order_no,t2.prod_spec_id) t5 ON t5.order_no = t1.order_no AND t1.mater_spec_id=t5.mater_spec_id
+
+left join 
+<!--湿膜数量-->
+(SELECT COUNT(1) amount,ttt.order_no,ttt.prod_spec_id
+FROM (select t.* from QINSEN.INST_QIJIAN t
+WHERE exists(SELECT 1 FROM qinsen.INST_WATER_TEST tt WHERE tt.juanmo_batch_id = t.juanmo_batch_id)
+) ttt
+GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.mater_spec_id=t6.prod_spec_id
+
+
 	where 1=1
 	<isNotNull prepend="and" property="orderNo"> 
 		       T1.ORDER_NO = #orderNo#
@@ -710,6 +798,40 @@ GROUP BY t2.order_no,t2.prod_spec_id) t5 ON t5.order_no = t1.order_no AND t1.mat
      <isNotNull prepend = "and"  property = "orderDateEnd"> 
           to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#
      </isNotNull>
+     
+     <isNotNull prepend="and" property="materSpecId">
+     T1.MATER_SPEC_ID
+     </isNotNull>
+     
+     <isNotNull prepend = "and"  property = "demandStockDateStart"> 
+          to_char(T1.DEMAND_STOCK_DATE,'yyyy-MM-dd')  &gt;=  #demandStockDateStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "demandStockDateEnd"> 
+          to_char(T1.DEMAND_STOCK_DATE,'yyyy-MM-dd')  &lt;=  #demandStockDateEnd#
+     </isNotNull>
+     <!--当贴本订单标签数量 < 订单数量时，且0≤入库日期-当前日期  ≤2  -->
+     <isNotNull prepend = "and"  property = "warn"> 
+      round(100 * nvl(chk.apply_amount,0)/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) &lt; 100
+     <isEqual prepend="and" property="warn" compareValue="风险警报">
+	round(t1.demand_stock_date-SYSDATE,2) > 0 
+	and round(t1.demand_stock_date-SYSDATE,2) &lt;= 2
+	and (nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0)) &lt; nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) 
+	</isEqual>
+	
+	<isEqual prepend="and" property="warn" compareValue="逾期警报">
+	round(SYSDATE - t1.demand_stock_date,2) >= 1
+	</isEqual>
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="orderNo2"> 
+		       T1.ORDER_NO like '%' || #orderNo2# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="applyState"> 
+	case when nvl(chk.apply_amount,0) >= nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) then '完成'
+        when nvl(t2.amount,0)=0 then '未投料'
+        else '进行中' end = #applyState#
+       </isNotNull> 
      order by t1.id desc
 	 </select>
 	 

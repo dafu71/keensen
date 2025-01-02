@@ -532,6 +532,11 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.calculate = function() {
 	} 
 }
 
+//筛选条件
+com.keensen.ump.produce.component.mpselectMgr.prototype.onFilter = function() {
+	this.filterWindow.show();
+}
+
 function dayDiff(start, end) {
 	var datediff = (new Date(end)) - (new Date(start));
 	datediff = datediff / 24 / 60 / 60 / 1000;

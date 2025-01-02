@@ -134,6 +134,7 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 									typeAheadDelay : 100,
 									triggerAction : "all",
 									lazyRender : true,
+									readOnly : true,
 									mode : 'local',
 									emptyText : '--请选择--',
 									lastQuery : '',

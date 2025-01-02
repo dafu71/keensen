@@ -1,11 +1,12 @@
 com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 	this.initPanel = function() {
-		
-		this.initStore();
-		
+		this.rec = {};
 		this.initQueryPanel();
 		this.initListPanel();
-		
+		this.initEditWindow();
+
+		this.initChoiceWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
