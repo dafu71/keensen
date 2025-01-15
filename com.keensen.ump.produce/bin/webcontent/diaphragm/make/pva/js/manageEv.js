@@ -1,5 +1,27 @@
 com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 
+	var _this = this;
+	this.formulas = {
+		'PVA-165' : {
+			pva : 1.56,
+			c51 : 1.56,
+			c23 : 0.175,
+			ro : 96.705
+		},
+		'PVA-205' : {
+			pva : 1,
+			c51 : 0,
+			c23 : 0,
+			ro : 99
+		},
+		'PVA-540' : {
+			pva : 2,
+			c51 : 1.5,
+			c23 : 0.5,
+			ro : 96
+		}
+	}
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -25,53 +47,64 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-		var state = cell.get('state');
-		var relationId = cell.get('id');
-		var batchNo = cell.get('batchNo');
-		var type = cell.get('type');
-		
-		if (opt == 'viewlist') {
-			var store = this.listPanel4Dilute.store;
-			store.load({
-						params : {
-							"condition/relationId" : relationId
-						}
-					});
-			this.queryPanel4Dilute.relationId.setValue(relationId);
-			this.queryPanel4Dilute.batchNo.setValue(batchNo);
-			this.queryPanel4Dilute.type.setValue(type);
-			
-			this.listWindow4Dilute.show();
+				var state = cell.get('state');
+				var relationId = cell.get('id');
+				var batchNo = cell.get('batchNo');
+				var type = cell.get('type');
 
-		}
+				if (opt == 'viewlist') {
+					var store = this.listPanel4Dilute.store;
+					store.load({
+								params : {
+									"condition/relationId" : relationId
+								}
+							});
+					this.queryPanel4Dilute.relationId.setValue(relationId);
+					this.queryPanel4Dilute.batchNo.setValue(batchNo);
+					this.queryPanel4Dilute.type.setValue(type);
 
-		if (opt == 'modify') {
-			if (state == '完结') {
-				Ext.Msg.alert('系统提示', '已完结记录不能修改');
-				return false;
-			} else {
-				this.editWindow.show();
-				this.editWindow.loadData(cell);
-			}
-		}
+					this.listWindow4Dilute.show();
 
-		if (opt == 'dilute') {
-			if (state == '完结') {
-				Ext.Msg.alert('系统提示', '已完结记录不能做稀释配料');
-				return false;
-			} else {
-				this.editWindow2.show();
-				this.editWindow2.loadData(cell);
-			}
+				}
 
-		}
-	}, this);
+				if (opt == 'modify') {
+					if (state == '完结') {
+						Ext.Msg.alert('系统提示', '已完结记录不能修改');
+						return false;
+					} else {
+						this.editWindow.show();
+						this.editWindow.loadData(cell);
+					}
+				}
+
+				if (opt == 'dilute') {
+					if (state == '完结') {
+						Ext.Msg.alert('系统提示', '已完结记录不能做稀释配料');
+						return false;
+					} else {
+						this.editWindow2.show();
+						this.editWindow2.loadData(cell);
+					}
+
+				}
+			}, this);
 
 	this.editWindow2.activeItem.mon(this.editWindow2.activeItem, 'afterload',
 			function(win, data) {
 				var remain = this.editWindow2.remain.getValue();
 				this.editWindow2.used.setMaxValue(remain);
 			}, this);
+
+	this.editWindow2.activeItem.mon(this.editWindow2.activeItem, 'beforeSave',
+			function(win, data) {
+				var operatorName = this.editWindow2.operatorId.getRawValue();
+				this.editWindow2.operatorName.setValue(operatorName);
+			}, this);
+			
+	this.listPanel4Dilute.mon(this.listPanel4Dilute, 'afterdel', function(gird, cell) {
+			_this.listPanel.store.reload();	
+
+			})
 
 }
 
@@ -99,16 +132,56 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onViewList = function() 
 	this.listPanel.onEdit();
 }
 
-com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.exportExcel = function() {			
+com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.exportExcel = function() {
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, 'PVA母液配料',
-			'com.keensen.ump.produce.diaphragm.make.pva.queryPva','0,1');
+			'com.keensen.ump.produce.diaphragm.make.pva.queryPva', '0,1');
 }
 
-com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onBoard2 = function() {
-	window.open('com.keensen.ump.produce.quality.queryBoard.flow?flag=2');
+/*
+ * com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onBoard2 = function() {
+ * window.open('com.keensen.ump.produce.quality.queryBoard.flow?flag=2'); }
+ */
+
+com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.exportExcel2 = function() {
+	doQuerySqlAndExport(this, this.queryPanel4Dilute, this.listPanel4Dilute,
+			'PVA稀释配料',
+			'com.keensen.ump.produce.diaphragm.make.pva.queryPvaList', '0,1');
 }
 
-com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.exportExcel2 = function() {			
-	doQuerySqlAndExport(this, this.queryPanel4Dilute, this.listPanel4Dilute, 'PVA稀释配料',
-			'com.keensen.ump.produce.diaphragm.make.pva.queryPvaList','0,1');
+com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onCalc = function() {
+	var type = this.inputWindow.pva.getValue();
+	if (Ext.isEmpty(type)) {
+		Ext.Msg.alert('系统提示', '请选择PVA种类');
+		return false;
+	}
+	var weight = this.inputWindow.weight.getValue();
+	if (Ext.isEmpty(weight)) {
+		Ext.Msg.alert('系统提示', '请输入总重量');
+		return false;
+	}
+
+	var formula = this.formulas[type];
+	var pva = formula.pva;
+	pvaWeight = parseFloat(pva) * parseFloat(weight) * 10;
+	this.inputWindow.pvaWeight.setValue(roundToDecimalPlace(pvaWeight, 3));
+	var c51 = formula.c51;
+	c51 = parseFloat(c51) * parseFloat(weight) * 10;
+	this.inputWindow.c51.setValue(roundToDecimalPlace(c51, 3));
+	var c23 = formula.c23;
+	c23 = parseFloat(c23) * parseFloat(weight) * 10;
+	this.inputWindow.c23a.setValue(roundToDecimalPlace(c23, 3));
+	var ro = formula.ro;
+	ro = parseFloat(ro) * parseFloat(weight) / 100;
+	this.inputWindow.ro.setValue(roundToDecimalPlace(ro, 3));
+
+}
+
+com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onDelList = function() {
+	this.listPanel4Dilute.onDel();
+}
+
+
+function roundToDecimalPlace(number, decimalPlaces) {
+	const factor = Math.pow(10, decimalPlaces);
+	return Math.round(number * factor) / factor;
 }

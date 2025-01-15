@@ -38,6 +38,37 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 	this.createMainPanel = function() {
 
 		var _this = this;
+		
+		
+		this.queryPanel = new Ext.fn.QueryPanel({
+					height : 60,
+					columns : 4,
+					region : 'center',
+					border : true,
+					fields : [{
+								xtype : 'textfield',
+								ref:'../materClassId',
+								name : 'condition/materClassId'
+							}]
+				});
+		
+		this.queryWindow = this.queryWindow
+				|| new Ext.Window({
+							title : '查询',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 300,
+							height : 240,
+							layout : 'border',
+							items : [this.queryPanel]
+
+						});
+		
 		var selModel = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : true,
 					header : ''
@@ -57,6 +88,11 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
+					}, '-', {
+						text : '导出',
+						scope : this,
+						iconCls : 'icon-application_excel',
+						handler : this.onExport
 					}],
 			selModel : selModel,
 			delUrl : '123.biz.ext',

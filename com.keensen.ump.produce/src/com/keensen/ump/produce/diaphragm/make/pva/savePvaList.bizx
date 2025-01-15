@@ -115,14 +115,6 @@
       <process:from type="query" pattern="reference">entity/relationId</process:from>
       <process:to type="query">condition/relationId</process:to>
     </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
-      <process:to type="query">entity/operatorId</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
-      <process:to type="query">entity/operatorName</process:to>
-    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="268" y="188"/>
@@ -134,8 +126,8 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link5</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link5</targetConnections>
     <location x="388" y="153"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo1label</nodeLabel>

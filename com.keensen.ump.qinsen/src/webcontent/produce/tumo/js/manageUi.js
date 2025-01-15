@@ -19,18 +19,21 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
 					dutyTacheCode : 'TM',
-					recTacheCode : 'TM'
+					recTacheCode : 'TM',
+					relationListId : 'produce-tumo-list'
 				});
 		this.defectZmWin = new com.keensen.ump.defectWindow({
 					id : defectZmWinId,
 					dutyTacheCode : 'ZM',
-					recTacheCode : 'TM'
+					recTacheCode : 'TM',
+					relationListId : 'produce-tumo-list'
 				});
 
 		this.defectFhWin = new com.keensen.ump.defectWindow({
 					id : defectFhWinId,
 					dutyTacheCode : 'FH',
-					recTacheCode : 'FH'
+					recTacheCode : 'FH',
+					relationListId : 'produce-tumo-list'
 				});
 
 		this.defectViewWindow = new com.keensen.ump.defectViewWindow({
@@ -503,7 +506,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 90,
 						dataIndex : 'rSaltRejection'
 					}, {
-						header : '性能等级',
+						dataIndex : 'perfIsQualifiedName',
+						header : '性能判定'
+					}, {
+						header : '综合批次等级',
 						width : 70,
 						dataIndex : 'perfFlagName'
 					}, {
@@ -763,6 +769,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'thickMinFlag'
 								}, {
 									name : 'thickMaxFlag'
+								}, {
+									name : 'perfIsQualifiedName'
 								}]
 					})
 		})

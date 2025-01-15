@@ -87,7 +87,8 @@
        T1.is_replace_trough as "isReplaceTrough",T1.replace_trough_id "replaceTroughId",T1.water_batch_no "waterBatchNo",
        T1.sumOutLength "sumOutLength",
        nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) - nvl(T1.CAIMO_LOSS,0) "remainLength",
-       nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength"
+       nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength",
+       decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName"
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,A.water_batch_no,
                A.PLAN_NO,
                A.DIMO_BATCH_NO,
@@ -176,7 +177,7 @@
                T8.MAC_NAME R_MAC_NAME,
                T8.GFD_AVG R_GFD_AVG,
                T8.SALT_REJECTION R_SALT_REJECTION,
-               t33.reserve4,t33.trend,
+               t33.reserve4,t33.trend,t33.perf_is_qualified,
                vkrc.sumOutLength
           FROM QINSEN.INST_TUMO A
           left join KS_DIAPHRAGM_DIAMETER kdd on kdd.batch_no = A.batch_no 

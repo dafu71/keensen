@@ -125,6 +125,24 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 
 	});
 
+	// 查询事件
+	this.queryPanel4RemainLength.mon(this.queryPanel4RemainLength, 'query',
+			function(form, vals) {
+
+				if (!this.queryPanel4RemainLength.form.isValid()) {
+					return;
+				}
+				var store = this.listPanel4RemainLength.store;
+				store.baseParams = this.queryPanel4RemainLength.getForm()
+						.getValues();
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4RemainLength.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
 }
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onEdit = function() {
@@ -281,6 +299,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 	this.inputWindow.tumoBatchNo.setDisabled(false);
 
 	this.onPlan();
+	
+	this.inputWindow.orderNo.setReadOnly(true);
 	this.inputWindow.show();
 }
 
@@ -289,10 +309,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function(
 	var batchNo = '';
 	if (this.inputWindow.tumoBatchNo.hidden) {
 		batchNo = this.inputWindow.tumoBatchNo2.getValue();
-	}else{
+	} else {
 		batchNo = this.inputWindow.tumoBatchNo.getValue();
 	}
-	
+
 	if (batchNo.length != 11 && batchNo.length != 12) {
 		Ext.Msg.alert("系统提示", "膜片批次长度应为11或12位，请检查！");
 		return false;
@@ -475,7 +495,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.checkTumoBatchNo = function
 
 		}
 		this.inputWindow.buttons[0].setDisabled(tumoBatchNo != tumoBatchNo2)
-	}else{
+	} else {
 		this.dealTumoBatchNo();
 	}
 }
@@ -519,6 +539,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	this.inputWindow.tumoBatchNo.setVisible(false);
 	this.inputWindow.tumoBatchNo.setDisabled(true);
 
+	this.inputWindow.orderNo.setReadOnly(false);
 	this.inputWindow.show();
 }
 
@@ -531,4 +552,14 @@ function defectView(tumoBatchNo) {
 	store.load();
 	Ext.getCmp('cdm-defectviewwindow').show();
 
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onWarn = function() {
+	this.remainLengthWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportRemainLength = function() {
+	doQuerySqlAndExport(this, this.queryPanel4RemainLength,
+			this.listPanel4RemainLength, '剩余可用长度',
+			'com.keensen.ump.qinsen.compquery.queryRemainLength', '0,1');
 }

@@ -7,6 +7,12 @@
        t1.AMOUNT     as "amount",
        t1.REMARK     as "remark",
        
+        CASE WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'red'
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;15) THEN 'yellow'
+          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) THEN 'red'
+       WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'yellow'
+       END "ifWarn",
+       
        t1.if_Choice   as "ifChoice",
        t1.client_Name   as "clientName",
        t1.choice_Dt   as "choiceDt",
@@ -85,6 +91,11 @@
         <isNotNull prepend="and" property="planNo">upper(vkt.plan_No) '%' || upper(#planNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="batchNoStr">t1.batch_no in($batchNoStr$)</isNotNull>
         <isNotNull prepend="and" property="ifChoice">t1.if_Choice = #ifChoice#</isNotNull>
+        <isNotNull prepend="and" property="ifWarn">(CASE WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'red'
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;15) THEN 'yellow'
+          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) THEN 'red'
+       WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'yellow'
+       END) = #ifWarn#</isNotNull>
 	
 	order by t1.STORAGE_ID
      </select>

@@ -1382,6 +1382,108 @@
             <edit name="choiceDt" type="date"/>
         </field>
     </viewModel>
+    <viewModel author="dafu" displayName="KsDiaphragmMakePvaList" entityName="com.keensen.ump.produce.diaphragm.KsDiaphragmMakePvaList" id="KsDiaphragmMakePvaList">
+        <field dataType="Long" dict="false" id="id" label="主键">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createTime" label="创建时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createUserId" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createName" label="创建人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="updateTime" label="修改时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="updateUserId" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="updateName" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve1" label="备用字段1">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve2" label="备用字段2">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve3" label="备用字段3">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve4" label="备用字段4">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve5" label="备用字段5">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgId" label="所属单位ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="status" label="是否有效：0无效，1有效">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="relationId" label="关联id">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="batchNo" label="稀释料液批号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="line" label="线别">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="mptype" label="膜片型号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="weight" label="稀释配料重量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="used" label="母液重量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="c90" label="C90重量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="c14" label="C14重量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ro" label="RO水重量（KG)">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="operatorId" label="配料人id">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="operatorName" label="配料人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
     <viewModel author="dafu" displayName="KsDiaphragmMakePva" entityName="com.keensen.ump.produce.diaphragm.KsDiaphragmMakePva" id="KsDiaphragmMakePva">
         <field dataType="Long" dict="false" id="id" label="主键">
             <view type="write"/>
@@ -1483,8 +1585,12 @@
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
+        <field dataType="String" dict="false" id="pvaWeight" label="PVA重量">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
     </viewModel>
-    <viewModel author="dafu" displayName="KsDiaphragmMakePvaList" entityName="com.keensen.ump.produce.diaphragm.KsDiaphragmMakePvaList" id="KsDiaphragmMakePvaList">
+    <viewModel author="dafu" displayName="KsDiaphragmStorageSafestd" entityName="com.keensen.ump.produce.diaphragm.KsDiaphragmStorageSafestd" id="KsDiaphragmStorageSafestd">
         <field dataType="Long" dict="false" id="id" label="主键">
             <view type="write"/>
             <edit name="" type="text"/>
@@ -1541,47 +1647,171 @@
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="Long" dict="false" id="relationId" label="关联id">
+        <field dataType="String" dict="false" id="materSpecName" label="内部型号">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="batchNo" label="稀释料液批号">
+        <field dataType="Long" dict="false" id="materSpecId" label="内部型号id">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="line" label="线别">
+        <field dataType="String" dict="false" id="amount" label="自用膜片安全库存">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="mptype" label="膜片型号">
+        <field dataType="String" dict="false" id="amount2" label="发货膜片安全库存">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="weight" label="稀释配料重量">
+    </viewModel>
+    <viewModel author="dafu" displayName="KsDiaphragmStorageSelf" entityName="com.keensen.ump.produce.diaphragm.KsDiaphragmStorageSelf" id="KsDiaphragmStorageSelf">
+        <field dataType="Date" dict="false" id="createTime" label="创建时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createUserId" label="创建人ID">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="used" label="母液重量">
+        <field dataType="String" dict="false" id="createName" label="创建人">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="c90" label="C90重量">
+        <field dataType="Date" dict="false" id="updateTime" label="修改时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="updateUserId" label="修改人ID">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="c14" label="C14重量">
+        <field dataType="String" dict="false" id="updateName" label="修改人">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="ro" label="RO水重量（KG)">
+        <field dataType="String" dict="false" id="reserve1" label="备用字段1">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="operatorId" label="配料人id">
+        <field dataType="String" dict="false" id="reserve2" label="备用字段2">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="operatorName" label="配料人">
+        <field dataType="String" dict="false" id="reserve3" label="备用字段3">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve4" label="备用字段4">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve5" label="备用字段5">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgId" label="所属单位ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="status" label="是否有效：0无效，1有效">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="materSpecName" label="内部型号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="materSpecId" label="内部型号id">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="amount" label="有元件订单对应膜片（米）">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="amount2" label="呆滞且不能直接使用的膜片数量（库龄超过3个月的数量）">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="countermeasure" label="对策">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="KsDiaphragmStorageDelivery" entityName="com.keensen.ump.produce.diaphragm.KsDiaphragmStorageDelivery" id="KsDiaphragmStorageDelivery">
+        <field dataType="Date" dict="false" id="createTime" label="创建时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createUserId" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createName" label="创建人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="updateTime" label="修改时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="updateUserId" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="updateName" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve1" label="备用字段1">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve2" label="备用字段2">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve3" label="备用字段3">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve4" label="备用字段4">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve5" label="备用字段5">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgId" label="所属单位ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="status" label="是否有效：0无效，1有效">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="materSpecName" label="内部型号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="materSpecId" label="内部型号id">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="amount" label="有发货订单对应膜片（米）">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="amount2" label="生产计划安排参考（米）">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="amount3" label="经济批量安排（米）">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="countermeasure" label="对策">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>

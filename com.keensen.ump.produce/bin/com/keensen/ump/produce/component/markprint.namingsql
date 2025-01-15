@@ -110,7 +110,7 @@
        then '是' else '否' end "ifPrint"
   FROM (
         
-        SELECT T1.JUANMO_BATCH_ID,
+        SELECT T1.JUANMO_BATCH_ID, 
                 T1.BATCH_NO         PROD_BATCH_NO,
                 T1.PROD_SPEC_ID,
                 T4.ORDER_NO,
@@ -127,6 +127,7 @@
                 T7.CNT              PRINT_CNT,
                 t7.max_print_date
           FROM QINSEN.INST_QIJIAN T1
+          
           LEFT JOIN QINSEN.INST_WATER_TEST T6
             ON T6.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
           LEFT JOIN QINSEN.INST_JUANMO_MAIN T2

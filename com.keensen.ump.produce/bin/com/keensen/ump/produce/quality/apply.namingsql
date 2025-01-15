@@ -14,7 +14,7 @@
  
 		    select t1.ID as "id",
 		    t1.code || t1.types || '请检单' "title",
-		to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		to_char(t1.CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') as "createTime",
 		t1.CREATE_USER_ID as "createUserId",
 		t1.CREATE_NAME as "createName",
 		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",

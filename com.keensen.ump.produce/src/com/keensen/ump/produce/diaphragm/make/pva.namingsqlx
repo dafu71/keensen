@@ -19,7 +19,7 @@
        T1.BATCH_NO       AS "batchNo",
        T1.TYPE           AS "type",
        T1.WEIGHT         AS "weight",
-       T1.PVA            AS "pva",
+       T1.PVA            AS "pva",T1.PVA_weight            AS "pvaWeight",
        T1.C51            AS "c51",
        T1.C23A           AS "c23a",
        T1.C14            AS "c14",
@@ -69,7 +69,7 @@
      
  	<select id="queryPvaBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
 		SELECT 'P' || 
-    DECODE(#type#,'SW', '10', 'BW', '20', 'ULP', '30',
+    DECODE(#type#,'SW', '10', 'BW/HW', '20', 'ULP', '30',
 							'NF', '60','XX') || 
       (SELECT ymd FROM v_ks_ymd) ||   
     (SELECT chr(COUNT(1)+65) 
@@ -145,7 +145,7 @@
      <select id="queryPvaListBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
 		SELECT 
 	(SELECT tt.batch_no from KS_DIAPHRAGM_MAKE_PVA tt WHERE tt.id=#relationId#)
-	 || (select COUNT(1)+1 from KS_DIAPHRAGM_MAKE_PVA_list t
+	 || (select nvl(to_number(SUBSTR(max(t.batch_no),9,10)),0)+1 from KS_DIAPHRAGM_MAKE_PVA_list t
 	WHERE t.relation_id = #relationId#) "batchNo"
 	FROM dual
 	     

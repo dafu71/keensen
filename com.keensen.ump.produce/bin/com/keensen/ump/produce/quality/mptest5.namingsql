@@ -173,7 +173,8 @@
   FROM KS_QUALITY_MP_TEST_ZMY_HEAD T  
  WHERE T.STEP IN ('first') 
  ORDER BY iorder,create_time</select>
-    <select id="query4Board2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.watertype "materName",t.create_time,nvl(T.code,' ') "code",
+    <select id="query4Board2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT t.watertype "materName",t.create_time,nvl(T.code,' ') "code",
        '涂膜' || T.LINE || '线' "line",
        T.MPTYPE "mptype",
         decode(t.watertype,'水相循环液',T2.BATCH_NO,t.BATCH_NO) "batchNo",
@@ -219,6 +220,7 @@
               '生产使用') "stepName",3 iorder
   FROM KS_QUALITY_MP_TEST_ZMY_HEAD T  
  WHERE T.STEP IN ('third') 
+ <!--
  union
  select 'PVA溶液配料' "materName", t.create_time,' ' "code", 
 '涂膜' || T.LINE || '线' "line",
@@ -226,6 +228,9 @@
         t.BATCH_NO "batchNo",       
               '配料' "stepName",4 iorder
 from KS_DIAPHRAGM_MAKE_PVA_LIST t 
+-->
  
- ORDER BY iorder,create_time</select>
+ ORDER BY iorder,create_time
+    
+    </select>
 </sqlMap>

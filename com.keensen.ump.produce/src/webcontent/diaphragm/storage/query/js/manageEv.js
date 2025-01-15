@@ -50,6 +50,60 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 				this.queryPanel.form.findField('condition/storageIds')
 						.setValue(this.storagecombo.myvalue);
 			}, this);
+
+	this.listPanel.store.on('load', function() {
+		var cnt = _this.listPanel.store.getCount();
+		if (cnt == 0)
+			return;
+
+		_this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		_this.requestMask.show();
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.diaphragm.storage.safestorage.queryStockCount.biz.ext",
+			method : "post",
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					if (!Ext.isEmpty(ret.data)) {
+						var data = ret.data[0];
+						Ext.getCmp('selfYellowCount').setValue('自用仓超预警卷数:'
+								+ data.selfYellowCount);
+						Ext.getCmp('selfRedCount').setValue('超标卷数:'
+								+ data.selfRedCount);
+						Ext.getCmp('selfYellowAmount').setValue('自用仓超预警米数:'
+								+ data.selfYellowAmount);
+						Ext.getCmp('selfRedAmount').setValue('超标米数:'
+								+ data.selfRedAmount);
+						Ext.getCmp('deliveryYellowCount').setValue('发货仓超预警卷数:'
+								+ data.deliveryYellowCount);
+						Ext.getCmp('deliveryRedCount').setValue('超标卷数:'
+								+ data.deliveryRedCount);
+						Ext.getCmp('deliveryYellowAmount').setValue('发货仓超预警米数:'
+								+ data.deliveryYellowAmount);
+						Ext.getCmp('deliveryRedAmount').setValue('超标米数:'
+								+ data.deliveryRedAmount);
+
+					} else {
+						Ext.getCmp('selfYellowCount').setValue('');
+						Ext.getCmp('selfRedCount').setValue('');
+						Ext.getCmp('selfYellowAmount').setValue('');
+						Ext.getCmp('selfRedAmount').setValue('');
+						Ext.getCmp('deliveryYellowCount').setValue('');
+						Ext.getCmp('deliveryRedCount').setValue('');
+						Ext.getCmp('deliveryYellowAmount').setValue('');
+						Ext.getCmp('deliveryRedAmount').setValue('');
+
+					}
+				}
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+	})
 }
 
 com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.onEdit = function() {

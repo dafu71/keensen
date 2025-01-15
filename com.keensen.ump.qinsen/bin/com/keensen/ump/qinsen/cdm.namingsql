@@ -35,7 +35,7 @@
        T1.LINE_CODE       AS "lineCode",
        T1.TOTAL_LOSS      AS "totalLoss",
        T1.UNUSED_QUANTITY AS "unusedQuantity",T1.LOCATION       AS "location",
-       t1.is_cut_over "isCutOver",t1.IS_CUT_OVER_NAME "isCutOverName"
+       t1.is_cut_over "isCutOver",t1.IS_CUT_OVER_NAME "isCutOverName",t1.remain_Length "remainLength"
   FROM (SELECT A.RECORD_ID,A.LOCATION,
                A.BATCH_NO,
                A.LINE_ID,
@@ -57,6 +57,9 @@
                A.IS_TO_MIX,
                A.PAGE_WIDTH,
                TM.BATCH_NO TUMO_BATCH_NO,tm.is_cut_over,
+               
+               nvl(TM.OUT_LENGTH,0) - nvl(T2.CAIMO_LENGTH,0) - nvl(T3.CAIMO_LOSS,0) remain_Length,
+               
                DECODE(tm.IS_CUT_OVER, 'Y', '是', 'N', '否', '') IS_CUT_OVER_NAME,
                MST.MATER_SPEC_CODE MP_SPEC_CODE,
                MST.MATER_SPEC_NAME MP_SPEC_NAME,
@@ -76,8 +79,18 @@
                (SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
                   FROM QINSEN.INST_JUANMO_DETAIL JD
                  WHERE JD.CDM_BATCH_ID = A.RECORD_ID) UNUSED_QUANTITY
-          FROM QINSEN.INST_CAIDIEMO   A,
-               QINSEN.INST_TUMO       TM,
+          FROM QINSEN.INST_CAIDIEMO    A ,
+               QINSEN.INST_TUMO       TM LEFT JOIN (SELECT SUM(D.LOSS) CAIMO_LOSS, D.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT D
+                     GROUP BY D.TUMO_BATCH_ID) T3
+            ON T3.TUMO_BATCH_ID = TM.RECORD_ID
+            LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,
+                           C.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
+                     WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
+                     GROUP BY C.TUMO_BATCH_ID) T2
+            ON T2.TUMO_BATCH_ID = TM.RECORD_ID
+            ,
                QINSEN.PARA_MATER_SPEC MST,
                QINSEN.PARA_MATER_SPEC MSC
          WHERE A.TUMO_BATCH_ID = TM.RECORD_ID
@@ -106,6 +119,7 @@
 	           AND D.MAIN_BATCH_ID = #juanmoBatchId#)</isNotNull> 
 	ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO
         ) T1
+        
 		
 	</select>
     <!-- 查询是否有唯一键冲突记录 -->

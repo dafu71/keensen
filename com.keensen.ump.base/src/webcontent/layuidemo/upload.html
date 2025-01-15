@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文件上传与图片预览</title>
+
+</head>
+<body>
+<!-- 文件上传表单 -->
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <!-- 文件选择控件，用户可以通过这个控件选择要上传的文件 -->
+    <input type="file" name="myfile" id="fileInput">
+    <!-- 提交按钮，用于提交表单 -->
+    <button type="submit">上传</button>
+</form>
+<!-- 用于显示图片预览的容器 -->
+<div id="preview" style='margin-top: 10px; max-width: 300px; max-height: 300px; border: 1px solid #ddd;overflow-y: auto;,overflow-y: auto;'></div>
+
+<script>
+
+    // 获取文件输入控件的引用
+    document.getElementById('fileInput').addEventListener('change',function(event){
+        // 获取用户选择的文件
+        const file = event.target.files[0];
+        if(file){
+            // 创建一个FileReader对象，用于读取文件内容
+            const reader =new FileReader();
+            // 当文件读取完成后，触发此事件
+                reader.onload=function(e){
+                // 创建一个img元素
+                const img =document.createElement('img');
+                // 设置img元素的src属性为读取到的文件内容（Base64编码的URL）
+                    img.src= e.target.result;
+                    img.alt='预览图';// 设置图片的alt属性
+                // 清空预览容器中的内容
+                var preview = document.getElementById('preview')
+                preview.innerHTML='';
+        
+  				// 将img元素添加到预览容器中
+                preview.appendChild(img);
+            };
+            // 读取文件内容为Base64编码的URL
+                reader.readAsDataURL(file);
+        }
+    });
+</script>
+</body>
+</html>

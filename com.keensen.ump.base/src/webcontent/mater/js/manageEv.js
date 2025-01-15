@@ -5,6 +5,9 @@ com.keensen.ump.base.materClassSpecMgr.prototype.initEvent = function() {
 				// alert('node.text=' + node.text + ',node.id=' + node.id)
 				var store = this.listPanel.store;
 				this.materClassId = node.id;
+
+				this.queryPanel.materClassId.setValue(this.materClassId);
+
 				store.load({
 							params : {
 								"condition/materClassId" : node.id
@@ -216,6 +219,17 @@ com.keensen.ump.base.materClassSpecMgr.prototype.onAdd = function() {
 
 com.keensen.ump.base.materClassSpecMgr.prototype.onEdit = function() {
 	this.listPanel.onEdit();
+}
+
+com.keensen.ump.base.materClassSpecMgr.prototype.onExport = function() {
+	var materClassId = this.queryPanel.materClassId.getValue();
+	if (!Ext.isEmpty(materClassId)) {
+		this.queryWindow.show();
+		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '常规物料',
+				'com.keensen.ump.base.mater.queryMaterSpecList', '0,1');
+		this.queryWindow.hide();
+	}
+
 }
 
 com.keensen.ump.base.materClassSpecMgr.prototype.destroy = function() {

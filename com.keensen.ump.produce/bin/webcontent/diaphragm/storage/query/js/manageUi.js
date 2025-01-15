@@ -18,6 +18,12 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 
+		// 黄灯预警，红灯超期
+		var warnStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['yellow', '黄灯预警'], ['red', '红灯超期']]
+				});
+
 		var store = new Ext.data.SimpleStore({
 					fields : ['id', 'name'],
 					data : [['1', '膜片AB仓'], ['2', '膜片C仓'], ['3', '膜片发货仓'],
@@ -142,6 +148,28 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								inputValue : 'Y',
 								anchor : '75%'
 							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '报警',
+								ref : '../ifWarn',
+								hiddenName : 'condition/ifWarn',
+								anchor : '75%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : warnStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.ifWarn.reset()
+									}
+								}
+							}, {
 								xtype : 'hidden',
 								name : 'condition/storageIds'
 							}, {
@@ -186,6 +214,62 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						iconCls : 'icon-application_edit',
 						// hidden : modifyFlag != 1,
 						handler : this.onChoice
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'selfYellowCount'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'selfRedCount'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'selfYellowAmount'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'selfRedAmount'
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'deliveryYellowCount'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'deliveryRedCount'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'deliveryYellowAmount'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'deliveryRedAmount'
 					}],
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
@@ -236,6 +320,19 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					}, {
 						dataIndex : 'outLength',
 						header : '长度(米)'
+					}, {
+						dataIndex : 'ifWarn',
+						// width : 60,
+						header : '报警',
+						renderer : function(v, m, r, i) {
+							var ifWarn = r.get('ifWarn');
+							if (!Ext.isEmpty(ifWarn)) {
+								return '<img src="produce/component/semifinished/img/'
+										+ ifWarn
+										+ '.png" width="20" height="20">';
+
+							}
+						}
 					}, {
 						dataIndex : 'usefulLength',
 						header : '可用长度(米)'
@@ -370,6 +467,8 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 							name : 'clientName'
 						}, {
 							name : 'choiceDt'
+						}, {
+							name : 'ifWarn'
 						}]
 			})
 		})

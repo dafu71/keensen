@@ -6,13 +6,14 @@
 function doQuerySqlAndExport(obj,queryPanel,listPanel,mytitle,nameSqlId,notexport){
 	
 	var _this = obj;
-	var params = queryPanel.getForm().getValues();
 	var condition = {};
-
-	for (var key in params) {
-		var k =key.substring(key.indexOf('/')+1,100);
-		condition[k]=params[key]
-	}
+	if(!Ext.isEmpty(queryPanel)){
+		var params = queryPanel.getForm().getValues();
+		for (var key in params) {
+			var k =key.substring(key.indexOf('/')+1,100);
+			condition[k]=params[key]
+		}
+	}	
 
 	_this.requestMask = _this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
@@ -81,7 +82,15 @@ function doQuerySqlAndExport(obj,queryPanel,listPanel,mytitle,nameSqlId,notexpor
  */
 function doQueryAndExport(obj,queryPanel,listPanel,mytitle,bizname){
 	var _this = obj;
-	var condition = queryPanel.getForm().getValues();
+	
+	var condition = {};
+	if(!Ext.isEmpty(queryPanel)){
+		var params = queryPanel.getForm().getValues();
+		for (var key in params) {
+			var k =key.substring(key.indexOf('/')+1,100);
+			condition[k]=params[key]
+		}
+	}	
 
 	_this.requestMask = _this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"

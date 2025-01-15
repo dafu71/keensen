@@ -366,6 +366,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddTmDefect = function() {
 		var tumoRecordId = r.data.recordId;
 		this.defectTmWin.inputPanel.tumoBatchNo.setValue(tumoBatchNo);
 		this.defectTmWin.inputPanel.tumoRecordId.setValue(tumoRecordId);
+		this.defectTmWin.inputPanel.produceDt.setValue(new Date());
+		this.defectTmWin.inputPanel.produceDt.setReadOnly(true);
 		this.defectTmWin.show();
 	}
 };
@@ -606,42 +608,56 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModiTech = function() {
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.exportExcel = function() {
-	var _this = this;
-	var daochu = _this.queryPanel.getForm().getValues();
+	var vals = this.queryPanel.form.getValues();
+	var start = vals['condition/produceDtStart'];
+	var end = vals['condition/produceDtEnd'];
 
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlLimited.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			'map/limited' : '5000',
-			namingsql : 'com.keensen.ump.qinsen.tumo.queryRecords',
-			templateFilename : 'ks_inst_tumo'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
+	var start2 = vals['condition/lastCaimoDateStart'];
+	var end2 = vals['condition/lastCaimoDateEnd'];
 
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
-				}
+	if (Ext.isEmpty(vals['condition/orderNoStr'])
+			&& Ext.isEmpty(vals['condition/planNo'])
+			&& Ext.isEmpty(vals['condition/dimoBatchNo'])
+			&& Ext.isEmpty(vals['condition/batchNoStr'])
+			&& Ext.isEmpty(vals['condition/outBatchNo'])
+			&& (Ext.isEmpty(vals['condition/lastCaimoDateStart']) || Ext
+					.isEmpty(vals['condition/lastCaimoDateEnd']))) {
 
-			}
+		if (Ext.isEmpty(vals['condition/produceDtStart'])
+				|| Ext.isEmpty(vals['condition/produceDtEnd'])) {
+			Ext.Msg.alert("系统提示", "请选择查询日期！");
+			return false;
 
-		},
-		callback : function() {
-			_this.requestMask.hide()
 		}
-	})
+
+		if (dayDiff(start, end) > 93) {
+			Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+			return false;
+
+		}
+
+	}
+
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '涂膜记录',
+			'com.keensen.ump.qinsen.tumo.queryRecords', '0,1');
+	/*
+	 * var _this = this; var daochu = _this.queryPanel.getForm().getValues();
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlLimited.biz.ext",
+	 * method : "post", jsonData : { 'map' : daochu, 'map/limited' : '5000',
+	 * namingsql : 'com.keensen.ump.qinsen.tumo.queryRecords', templateFilename :
+	 * 'ks_inst_tumo' }, success : function(resp) { var ret =
+	 * Ext.decode(resp.responseText); if (ret.success) {
+	 * 
+	 * var fname = ret.fname; if (Ext.isIE) {
+	 * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); }
+	 * else { window.location.href =
+	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; }
+	 *  }
+	 *  }, callback : function() { _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSendCheck = function() {

@@ -23,7 +23,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 
 		this.typeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['SW', 'SW'], ['BW', 'BW'], ['ULP', 'ULP'],
+					data : [['SW', 'SW'], ['BW/HW', 'BW/HW'], ['ULP', 'ULP'],
 							['NF', 'NF']]
 				});
 
@@ -135,12 +135,10 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					handler : this.exportExcel
 				});
 
-		this.queryPanel.addButton({
-					text : "产线配料任务看板",
-					scope : this,
-					iconCls : 'icon-application_form_magnify',
-					handler : this.onBoard2
-				});
+		/*
+		 * this.queryPanel.addButton({ text : "产线配料任务看板", scope : this, iconCls :
+		 * 'icon-application_form_magnify', handler : this.onBoard2 });
+		 */
 	}
 
 	this.initListPanel = function() {
@@ -205,16 +203,19 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						header : 'PVA种类'
 					}, {
 						dataIndex : 'c51',
-						header : 'C51重量（KG)'
+						header : 'C51重量(g)'
 					}, {
 						dataIndex : 'c23a',
-						header : 'C23-A重量（KG)'
+						header : 'C23-A重量(g)'
 					}, {
 						dataIndex : 'c14',
-						header : 'C14重量（KG)'
+						header : 'C14重量(g)'
 					}, {
 						dataIndex : 'ro',
 						header : 'RO水重量（KG)'
+					}, {
+						dataIndex : 'pvaWeight',
+						header : 'PVA重量(g)'
 					}, {
 						dataIndex : 'density',
 						header : '浓度（%）'
@@ -291,6 +292,8 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							name : 'remain'
 						}, {
 							name : 'state'
+						}, {
+							name : 'pvaWeight'
 						}]
 			})
 		})
@@ -373,7 +376,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'trigger',
-							// emptyText : '输入完毕单击旁边按钮计算',
+							emptyText : '输入完毕单击旁边按钮计算',
 							ref : '../../weight',
 							name : 'entity/weight',
 							allowBlank : false,
@@ -382,10 +385,10 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							anchor : '95%',
 							colspan : 1,
 							editable : true,
-							hideTrigger : true,
+							// hideTrigger : true,
 							scope : this,
 							onTriggerClick : function() {
-								// _this.onCalc();
+								_this.onCalc();
 							},
 							regex : /^\d+(\.\d+)?$/,
 							regexText : "不合法的数据格式"
@@ -396,7 +399,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							decimalPrecision : 2,
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : 'C51重量(KG)',
+							fieldLabel : 'C51重量(g)',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -411,7 +414,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							decimalPrecision : 2,
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : 'C23-A重量(KG)',
+							fieldLabel : 'C23-A重量(g)',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -421,7 +424,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							decimalPrecision : 2,
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : 'C14重量(KG)',
+							fieldLabel : 'C14重量(g)',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -439,6 +442,21 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							fieldLabel : 'RO水重量(KG)',
 							anchor : '95%',
 							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../pvaWeight',
+							name : 'entity/pvaWeight',
+							decimalPrecision : 2,
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : 'PVA重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield300',
+							height : '5',
+							colspan : 2
 						}, {
 							xtype : 'numberfield',
 							ref : '../../density',
@@ -559,7 +577,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							decimalPrecision : 2,
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : 'C51重量(KG)',
+							fieldLabel : 'C51重量(g)',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -575,7 +593,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							decimalPrecision : 2,
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : 'C23-A重量(KG)',
+							fieldLabel : 'C23-A重量(g)',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -586,7 +604,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							decimalPrecision : 2,
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : 'C14重量(KG)',
+							fieldLabel : 'C14重量(g)',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -605,6 +623,22 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							fieldLabel : 'RO水重量(KG)',
 							anchor : '95%',
 							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../pvaWeight',
+							name : 'entity/pvaWeight',
+							dataIndex : 'pvaWeight',
+							decimalPrecision : 2,
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : 'PVA重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield300',
+							height : '5',
+							colspan : 2
 						}, {
 							xtype : 'numberfield',
 							ref : '../../density',
@@ -736,7 +770,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							decimalPrecision : 2,
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : 'C90重量(KG)',
+							fieldLabel : 'C90重量(g)',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -746,7 +780,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							decimalPrecision : 2,
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : 'C14重量(KG)',
+							fieldLabel : 'C14重量(g)',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -765,6 +799,21 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							anchor : '95%',
 							colspan : 1
 						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield300',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'operatorrolecombobox',
+							currentRolecode : '10001321',
+							// valueField : "operatorId",
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							ref : '../../operatorId',
+							hiddenName : 'entity/operatorId',
+							fieldLabel : '配料人'
+						}, {
 							xtype : 'hidden',
 							dataIndex : 'id',
 							name : 'entity/relationId'
@@ -772,6 +821,10 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							xtype : 'hidden',
 							dataIndex : 'remain',
 							ref : '../../remain'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/operatorName',
+							ref : '../../operatorName'
 						}]
 			}]
 		});
@@ -788,21 +841,21 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					titleCollapse : false,
 					fields : [{
 								xtype : 'textfield',
-								readOnly:true,
+								readOnly : true,
 								fieldLabel : '母液批号',
-								ref:'../batchNo'
-							},{
+								ref : '../batchNo'
+							}, {
 								xtype : 'textfield',
-								readOnly:true,
+								readOnly : true,
 								fieldLabel : '料液类型',
-								ref:'../type'
-							},{
+								ref : '../type'
+							}, {
 								xtype : 'hidden',
-								ref:'../relationId',
+								ref : '../relationId',
 								name : 'condition/relationId'
 							}]
 				});
-				
+
 		this.queryPanel4Dilute.buttons[0].hide();
 		this.queryPanel4Dilute.buttons[1].hide();
 
@@ -813,8 +866,17 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 		this.listPanel4Dilute = this.listPanel4Dilute || new Ext.fn.ListPanel({
 			region : 'center',
 			viewConfig : {
-				forceFit : false
+				forceFit : true
 			},
+			delUrl : 'com.keensen.ump.produce.diaphragm.make.pva.deletePvaList.biz.ext',
+			
+			tbar : [{
+						text : '删除',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDelList
+					}],
+
 			hsPage : false,
 			autoScroll : true,
 			selModel : selModel4Dilute,
@@ -835,10 +897,10 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						header : '母液重量(KG)'
 					}, {
 						dataIndex : 'c90',
-						header : 'C90重量(KG)'
+						header : 'C90重量(g)'
 					}, {
 						dataIndex : 'c14',
-						header : 'C14重量(KG)'
+						header : 'C14重量(g)'
 					}, {
 						dataIndex : 'ro',
 						header : 'RO水重量(KG)'
@@ -921,7 +983,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					width : 1024,
 					height : 600,
 					layout : 'border',
-					items : [this.queryPanel4Dilute,this.listPanel4Dilute],
+					items : [this.queryPanel4Dilute, this.listPanel4Dilute],
 					buttons : [{
 								text : "导出",
 								scope : this,

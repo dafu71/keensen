@@ -47,8 +47,9 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.destroy = function() {
 }
 
 com.keensen.ump.produce.component.YxmaterMgr.prototype.exportExcel = function() {
-	doQueryAndExport(this, this.queryPanel, this.listPanel, '订单物料',
-			'com.keensen.ump.produce.component.yxorderbase.queryOrderMC.biz.ext')
+
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '订单物料',
+			'com.keensen.ump.produce.component.yxorderbase.queryYxOrderMCConfirm', '0,1');
 
 }
 

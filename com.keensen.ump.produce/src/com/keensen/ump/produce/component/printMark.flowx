@@ -20,14 +20,15 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link14</targetConnections>
-    <targetConnections>link8</targetConnections>
-    <targetConnections>link1</targetConnections>
-    <targetConnections>link6</targetConnections>
-    <targetConnections>link10</targetConnections>
-    <targetConnections>link12</targetConnections>
-    <targetConnections>link16</targetConnections>
     <targetConnections>link18</targetConnections>
+    <targetConnections>link16</targetConnections>
+    <targetConnections>link12</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link14</targetConnections>
+    <targetConnections>link20</targetConnections>
     <location x="570" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -175,6 +176,16 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link19" name="link19" displayName="连接线" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>view8</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">code</process:leftOperand>
+          <process:rightOperand type="literal">8</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link3</targetConnections>
     <location x="247" y="258"/>
     <size height="28" width="28"/>
@@ -289,6 +300,21 @@
     <location x="363" y="438"/>
     <figSize height="20" width="107"/>
     <node>view7</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view8" name="printMark8.jsp" displayName="printMark8.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMark8.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link20" name="link20" lineType="reference" isDefault="true" type="action" actionName="action9">
+      <sourceNode>view8</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link19</targetConnections>
+    <location x="406" y="488"/>
+    <size height="28" width="22"/>
+    <nodeLabel>view8label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view8label" name="label" nodeType="label">
+    <location x="364" y="524"/>
+    <figSize height="20" width="107"/>
+    <node>view8</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

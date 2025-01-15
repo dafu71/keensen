@@ -686,7 +686,8 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        t4.amount "qjAmount",t4.qualified_amount "qualifiedAmount",
        t6.amount "wetAmount",
        <!--未贴标数=订单数量（本页面）-贴本订单的标签数（本页面）-->
-       nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)-(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0)) "notLabelAmount",
+       <!--nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)-(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0)) "notLabelAmount",-->
+       nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) - nvl(t4.amount,0) "notLabelAmount",
        <!--贴本订单的标签数量（暂时）-->
        <!--气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“主行”字眼的记录）-湿膜数量（湿膜订单不用减）-->
        <!--气检合格的元件贴标数+工艺员“工艺结论”中A、放行原订单”的元件贴标数+原来“工艺员意见备注”当中有“放行”字眼元件贴标数（考虑旧意见存在）-->

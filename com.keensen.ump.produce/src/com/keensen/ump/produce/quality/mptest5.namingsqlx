@@ -260,6 +260,7 @@
               '生产使用') "stepName",3 iorder
   FROM KS_QUALITY_MP_TEST_ZMY_HEAD T  
  WHERE T.STEP IN ('third') 
+ <!--
  union
  select 'PVA溶液配料' "materName", t.create_time,' ' "code", 
 '涂膜' || T.LINE || '线' "line",
@@ -267,6 +268,7 @@
         t.BATCH_NO "batchNo",       
               '配料' "stepName",4 iorder
 from KS_DIAPHRAGM_MAKE_PVA_LIST t 
+-->
  
  ORDER BY iorder,create_time
     

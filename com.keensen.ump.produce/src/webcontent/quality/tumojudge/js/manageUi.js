@@ -252,11 +252,14 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'produceRemark',
 						header : '生产备注'
 					}, {
+						dataIndex : 'perfIsQualifiedName',
+						header : '性能判定'
+					}, {
 						dataIndex : 'batchPerfFlagName',
-						header : '批次性能等级'
+						header : '综合批次等级'
 					}, {
 						dataIndex : 'isBatchQualifiedName',
-						header : '批次合格'
+						header : '综合批次合格'
 					}, {
 						dataIndex : 'reduce',
 						header : '降级原因'
@@ -332,6 +335,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							name : 'reduce'
 						}, {
 							name : 'reduceDt'
+						}, {
+							name : 'perfIsQualifiedName'
 						}]
 			})
 		})

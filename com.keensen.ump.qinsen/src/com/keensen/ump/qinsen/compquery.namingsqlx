@@ -278,4 +278,55 @@
                          ) T) Z) T1
 
 </select>  
+
+<select id="queryRemainLength" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	SELECT T1.RECORD_ID "recordId",
+		   to_char(t1.produce_dt,'yyyy-MM-dd') "produceDt",
+	       T1.BATCH_NO "batchNo",
+	       T1.OUT_LENGTH,
+	       T2.CAIMO_LENGTH,
+	       T3.CAIMO_LOSS,
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) "remainLength"
+	  FROM QINSEN.INST_TUMO T1
+	  LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,
+	                    C.TUMO_BATCH_ID
+	               FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
+	              WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
+	              GROUP BY C.TUMO_BATCH_ID) T2
+	    ON T2.TUMO_BATCH_ID = T1.RECORD_ID
+	  LEFT JOIN (SELECT SUM(D.LOSS) CAIMO_LOSS, D.TUMO_BATCH_ID
+	               FROM QINSEN.INST_CDM_DEFECT D
+	              GROUP BY D.TUMO_BATCH_ID) T3
+	    ON T3.TUMO_BATCH_ID = T1.RECORD_ID
+	    where 1=1
+	    <isEqual prepend = ""  property = "condition" compareValue="1">
+		  AND ((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0))>= 50
+	       or 
+	       (NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0))&lt;= -50
+	       )
+	       
+		</isEqual>
+		
+		 <isEqual prepend = ""  property = "condition" compareValue="2">
+		  AND (((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0))>= 3 
+	      and 
+	       (NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0))&lt;= 50)
+	       or 
+	       ((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0))>= -50
+	       and 
+	       (NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0))&lt;= -3))
+	       
+		</isEqual>
+	    order by NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) desc
+	    
+
+</select> 
 </sqlMap>

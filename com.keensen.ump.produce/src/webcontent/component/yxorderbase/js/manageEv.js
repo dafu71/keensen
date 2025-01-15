@@ -266,6 +266,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				//样品:样品-CRM??????，共计14位;
 				//展品:展品-CRM??????，共计14位;
 				//特规:CRM??????，共计9位。
+				//B202？？？？？-？？？
 				var regex=/^\d{8}-\d{5}$/;
 				var convention = regex.test(orderNo);
 				var regex=/^\d{8}-\d{5}-\d{1}$/;
@@ -276,12 +277,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var exhibit = regex.test(orderNo);
 				var regex = /^\CRM\d{6}$/;
 				var special = regex.test(orderNo);
+				var regex=/^B\d{8}-\d{3}$/;
+				var special2 = regex.test(orderNo);
 				
-				if(!convention && !convention2 && !sample && !exhibit && !special ){
+				if(!convention && !convention2 && !sample && !exhibit && !special && !special2 ){
 					Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 					return false;
 				}
 				
+			
 				var itemArr = [];
 				var myCheckboxGroup = this.addOrderWindow.photoSingle;
 				for (var i = 0; i < myCheckboxGroup.items.length; i++) {
@@ -785,9 +789,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onDel = function() {
 		var records = A.getSelectionModel().getSelections();
 		var state = records[0].get('state');
 		var id = records[0].get('id');
+		var prodAmount = records[0].get('prodAmount');
+		var delUrl = "com.keensen.ump.produce.component.yxorderbase.deleteYxOrderBase.biz.ext";
 		if (state != '制定中') {
-			Ext.Msg.alert('系统提示', '请选择状态为制定中的记录');
-			return false;
+			if(parseFloat(prodAmount)>0){
+				Ext.Msg.alert('系统提示', '请选择状态为制定中的记录');
+				return false;
+			}else if(state == '正式发布'){
+				delUrl = "com.keensen.ump.produce.component.yxorderbase.deleteYxOrderBase2.biz.ext";
+			}
 		}
 		Ext.Msg.confirm("操作确认", "您确实要删除这条记录吗?", function(A) {
 			if (A == "yes") {
@@ -797,7 +807,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onDel = function() {
 								});
 				this.requestMask.show();
 				Ext.Ajax.request({
-					url : "com.keensen.ump.produce.component.yxorderbase.deleteYxOrderBase.biz.ext",
+					url : delUrl,
 					method : "post",
 					jsonData : {
 						'id' : id
@@ -1268,6 +1278,7 @@ function describeOrderNo(){
 	s += '常规2: 20241225-14???-?,共16位<br>';
 	s += '样品: 样品-CRM??????，共12位<br>';
 	s += '展品: 展品-CRM??????，共12位<br>';
-	s += '特规: CRM??????，共9位';
+	s += '特规: CRM??????，共9位<br>';
+	s += '特规2: B202?????-???，共13位'
 	Ext.Msg.alert("订单编号规则", s);
 }

@@ -2,8 +2,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 	this.initPanel = function() {
 
-		//var defectTmWinId = Ext.id();
-		//var defectZmWinId = Ext.id();
+		// var defectTmWinId = Ext.id();
+		// var defectZmWinId = Ext.id();
 
 		this.initStore();
 		this.initQueryPanel();
@@ -13,13 +13,15 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 		this.initUpdateLocationWindow();
 
+		this.initRemainLengthWindow();
+
 		this.defectTmWin = new com.keensen.ump.defectWindow({
-					//id : defectTmWinId,
+					// id : defectTmWinId,
 					dutyTacheCode : 'TM',
 					recTacheCode : 'CM'
 				});
 		this.defectZmWin = new com.keensen.ump.defectWindow({
-					//id : defectZmWinId,
+					// id : defectZmWinId,
 					dutyTacheCode : 'ZM',
 					recTacheCode : 'CM'
 				});
@@ -175,6 +177,14 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					handler : this.exportExcel
 				});
 
+		this.queryPanel.addButton({
+					text : "剩余可用长度提醒",
+					scope : this,
+					rescode : '10002661',
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onWarn
+				});
+
 	}
 
 	this.initListPanel = function() {
@@ -218,12 +228,11 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								scope : this,
 								iconCls : 'icon-application_delete',
 								handler : this.onDel
-							}/*, '->', {
-								text : '录入铸膜不良',
-								scope : this,
-								iconCls : 'icon-application_add',
-								handler : this.onaddZmDefect
-							}*/, '->', {
+							}/*
+								 * , '->', { text : '录入铸膜不良', scope : this,
+								 * iconCls : 'icon-application_add', handler :
+								 * this.onaddZmDefect }
+								 */, '->', {
 								text : '录入涂膜不良',
 								scope : this,
 								iconCls : 'icon-application_add',
@@ -320,6 +329,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								return str;
 							}
 						}
+					}, {
+						header : '剩余可用长度',
+						width : 80,
+						dataIndex : 'remainLength'
 					}, {
 						header : '单/混卷',
 						width : 70,
@@ -439,6 +452,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									name : 'isCutOverName'
 								}, {
 									name : 'location'
+								}, {
+									name : 'remainLength'
 								}]
 					})
 		})
@@ -1196,6 +1211,116 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									dataIndex : 'recordId'
 								}]
 					}]
+				});
+	}
+
+	this.initRemainLengthWindow = function() {		
+
+		var selModel4RemainLength = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4RemainLength = this.listPanel4RemainLength
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : true,
+					selModel : selModel4RemainLength,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4RemainLength, {
+								dataIndex : 'batchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'produceDt',
+								header : '生产时间'
+							}, {
+								dataIndex : 'remainLength',
+								header : '剩余可用长度'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.compquery.queryRemainLengthByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'batchNo'
+								}, {
+									name : 'produceDt'
+								}, {
+									name : 'remainLength'
+								}]
+					})
+				})
+
+				
+				
+		this.queryPanel4RemainLength = this.queryPanel4RemainLength
+				|| new Ext.fn.QueryPanel({
+					height : 80,
+					columns : 1,
+					border : true,
+					region : 'north',
+					// collapsible : true,
+					titleCollapse : false,
+					fields : [{
+								xtype : 'radiogroup',
+								colspan : 1,
+								columns : 2,
+								name : 'condition',
+								ref : '../reserve1',
+								allowBlank : false,
+								fieldLabel : '',
+								anchor : '100%',
+								items : [{
+											boxLabel : '数量X>=50m或者数量X<=-50m',
+											name : 'condition/condition',
+											inputValue : '1',
+											checked : true
+										}, {
+											boxLabel : '数量3m<=X<=50m或者数量-50m<=X<=-3',
+											name : 'condition/condition',
+											inputValue : '2'
+										}]
+							}]
+				});
+				
+		this.queryPanel4RemainLength.addButton({
+					text : "导出",
+					scope : this,
+					//rescode : '10002661',
+					iconCls : 'icon-application_excel',
+					handler : this.exportRemainLength
+				});
+
+		this.queryPanel4RemainLength.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.remainLengthWindow.hide();
+					}
+
+				});
+
+		this.remainLengthWindow = this.remainLengthWindow || new Ext.Window({
+					title : '剩余可用长度提醒',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4RemainLength,
+							this.listPanel4RemainLength]
+
 				});
 	}
 }

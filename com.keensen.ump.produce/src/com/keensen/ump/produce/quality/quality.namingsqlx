@@ -617,6 +617,9 @@
        T1.THICK_AVG AS "thickAvg",
        T1.PRODUCE_REMARK AS "produceRemark",
        T2.PERF_FLAG_ID AS "batchPerfFlagId",t2.judger_Id "judgerId",
+       
+       decode(t2.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
+       
        T4.PERF_FLAG_NAME AS "batchPerfFlagName",
        T2.IS_QUALIFIED AS "isBatchQualified",
        DECODE(T2.IS_QUALIFIED, 'Y', '合格', 'P', '放行', 'N', '不合格', '') "isBatchQualifiedName",
@@ -650,7 +653,11 @@
                T.THICK_AVG,
                T.REMARK PRODUCE_REMARK,T.is_keep
                
-          FROM (select * from QINSEN.INST_TUMO tm where exists(select 1 from QINSEN.INST_TUMO_CHECK tmc where tmc.batch_id=tm.record_id) ) T
+          FROM 
+          <!--去掉有无质检性能分析判断
+          (select * from QINSEN.INST_TUMO tm where exists(select 1 from QINSEN.INST_TUMO_CHECK tmc where tmc.batch_id=tm.record_id) ) T
+          -->
+          QINSEN.INST_TUMO T
           LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
                       FROM QINSEN.INST_CDM_DEFECT D,
                            QINSEN.PARA_CDM_DEFECT P

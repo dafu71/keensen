@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.diaphragm.storage.safestorage">
+    <select id="querySafestd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    
+	select t1.ID             as "id",
+        to_char(t1.CREATE_TIME,'yyyy-MM-dd')    as "createTime",
+       t1.CREATE_USER_ID as "createUserId",
+       t1.CREATE_NAME    as "createName",
+       t1.UPDATE_TIME    as "updateTime",
+       t1.UPDATE_USER_ID as "updateUserId",
+       t1.UPDATE_NAME    as "updateName",
+       t1.RESERVE1       as "reserve1",
+       t1.RESERVE2       as "reserve2",
+       t1.RESERVE3       as "reserve3",
+       t1.RESERVE4       as "reserve4",
+       t1.RESERVE5       as "reserve5",
+       t1.ORG_ID         as "orgId",
+       t1.STATUS         as "status",
+       t1.AMOUNT2         as "amount2",
+       t1.AMOUNT         as "amount",
+       t1.mater_spec_name           as "materSpecName",
+        t1.mater_spec_id           as "materSpecId"
+  from KS_DIAPHRAGM_STORAGE_SAFESTD t1
+  where 1=1
+  	
+  	<isNotNull prepend="and" property="materSpecId">t1.mater_spec_id = #materSpecId#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+   
+	order by t1.id 
+     </select>
+    <select id="querySafestdCount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+      select SUM(amount) "amount",SUM(amount2) "amount2",SUM(amount) + SUM(amount2) "total"
+  from KS_DIAPHRAGM_STORAGE_SAFESTD t1
+  where 1=1
+  	
+  	<isNotNull prepend="and" property="materSpecId">t1.mater_spec_id = #materSpecId#</isNotNull>
+    </select>
+    <select id="queryStockCount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 
+	nvl(sum(CASE WHEN t.STORAGE_ID = 3 AND t.diff&gt;15 AND t.diff &lt;=30 THEN 1 END),0) "deliveryYellowCount",
+	nvl(sum(CASE WHEN t.STORAGE_ID = 3 AND t.diff&gt;30 THEN 1 END),0) "deliveryRedCount",
+	nvl(sum(CASE WHEN (t.STORAGE_ID = 1 OR t.STORAGE_ID = 2) AND t.diff&gt;30 AND t.diff &lt;=60 THEN 1 END),0) "selfYellowCount",
+	nvl(SUM(CASE WHEN (t.STORAGE_ID = 1 OR t.STORAGE_ID = 2) AND t.diff&gt;60 THEN 1 END),0) "selfRedCount",
+	nvl(sum(CASE WHEN t.STORAGE_ID = 3 AND t.diff&gt;15 AND t.diff&lt;=30 THEN t.amount END),0) "deliveryYellowAmount",
+	nvl(sum(CASE WHEN t.STORAGE_ID = 3 AND t.diff&gt;30 THEN t.amount END),0) "deliveryRedAmount",
+	nvl(sum(CASE WHEN (t.STORAGE_ID = 1 OR t.STORAGE_ID = 2) AND t.diff&gt;30 AND t.diff &lt;=60 THEN t.amount END),0) "selfYellowAmount",
+	nvl(SUM(CASE WHEN (t.STORAGE_ID = 1 OR t.STORAGE_ID = 2) AND t.diff&gt;60 THEN t.amount END),0) "selfRedAmount"
+	 from V_KS_DIAPHRAGM_STOCK_WARN t</select>
+    <select id="queryStockSelfCount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  
+	 select t.mater_spec_id "materSpecId",t.mater_spec_name "materSpecName",
+	 t.amount "amountStd",nvl(t2.amount,0) "amountStock",
+	NVL(t3.amount,0) "amountOrder",NVL(t3.amount2,0) "amountDull",
+	nvl(t2.amount,0) - NVL(t3.amount,0) - NVL(t3.amount2,0) "amountSafe",
+	nvl(t2.amount,0) - NVL(t3.amount,0) - NVL(t3.amount2,0) - t.amount "amountDiff",
+	t3.countermeasure "countermeasure"
+	 from (select * from KS_DIAPHRAGM_STORAGE_SAFESTD where amount&gt;0)t
+	 LEFT JOIN (select SUM(t.amount) amount,t.mater_spec_name
+	 from V_KS_DIAPHRAGM_STOCK_WARN t
+	WHERE t.STORAGE_ID IN (1,2)
+	GROUP BY t.mater_spec_name) t2
+	ON t.mater_spec_name = t2.mater_spec_name
+	LEFT JOIN KS_DIAPHRAGM_STORAGE_SELF t3
+	ON t.mater_spec_name = t3.mater_spec_name
+	where 1=1
+	<isNotNull prepend="and" property="materSpecId">t.mater_spec_id = #materSpecId#</isNotNull>
+	ORDER BY t.mater_spec_name
+ </select>
+    <select id="queryStockDeliveryCount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  
+	select t.mater_spec_id "materSpecId" ,
+	t.mater_spec_name "materSpecName",t.amount2 "amountStd",
+	nvl(t2.amount,0) "amountStock",
+	NVL(t3.amount,0) "amountOrder",
+	nvl(t2.amount,0) - NVL(t3.amount,0) "amountSafe",
+	nvl(t2.amount,0) - NVL(t3.amount,0) - t.amount "amountDiff",
+	t3.countermeasure "countermeasure",nvl(T3.AMOUNT2,0) "amountPlan",
+	nvl(T3.AMOUNT3,0) "amountBatch"
+	 from (select * from KS_DIAPHRAGM_STORAGE_SAFESTD where amount2&gt;0)t
+	 LEFT JOIN (select SUM(t.amount) amount,t.mater_spec_name
+	 from V_KS_DIAPHRAGM_STOCK_WARN t
+	WHERE t.STORAGE_ID =3
+	GROUP BY t.mater_spec_name) t2
+	ON t.mater_spec_name = t2.mater_spec_name
+	LEFT JOIN KS_DIAPHRAGM_STORAGE_DELIVERY t3
+	ON t.mater_spec_name = t3.mater_spec_name
+
+	where 1=1
+	<isNotNull prepend="and" property="materSpecId">t.mater_spec_id = #materSpecId#</isNotNull>
+	ORDER BY t.mater_spec_name
+ </select>
+</sqlMap>
