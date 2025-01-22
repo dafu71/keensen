@@ -123,6 +123,20 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				colspan : 12
 			}, {
 				xtype : 'displayfield',
+				ref : '../displayfield1',
+				height : 5,
+				colspan : 24
+			}, {
+				xtype : 'textfield',
+				ref : '../prodRemark',
+				// name : 'entity/jmAmount',
+				// allowBlank : false,
+				readOnly : true,
+				anchor : '95%',
+				fieldLabel : '订单生产备注',
+				colspan : 24
+			}, {
+				xtype : 'displayfield',
 				fieldLabel : "<span style='color:red;font-size:16px;'>"
 						+ '卷膜信息' + "</span>",
 				colspan : 24,

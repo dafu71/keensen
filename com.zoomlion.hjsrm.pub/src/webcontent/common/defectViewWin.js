@@ -10,7 +10,7 @@ com.keensen.ump.defectViewWindow = Ext.extend(Ext.Window, {
 	title : "不良记录",
 	resizable : false,
 	modal : true,
-	maximizable : false,
+	maximizable : true,
 	closeAction : "close",
 	buttonAlign : "center",
 	autoScroll : false,
@@ -72,6 +72,9 @@ com.keensen.ump.defectViewWindow = Ext.extend(Ext.Window, {
 						header : '不良产生时间',
 						dataIndex : 'produceDate'
 					}, {
+						header : '录入',
+						dataIndex : 'createName'
+					}, {
 						header : '备注',
 						dataIndex : 'remark'
 					}],
@@ -125,6 +128,8 @@ com.keensen.ump.defectViewWindow = Ext.extend(Ext.Window, {
 							name : 'mpSpecName'
 						}, {
 							name : 'produceDate'
+						}, {
+							name : 'createName'
 						}],
 				baseParams : {
 					'condition/tumoBatchNo' : Ext.isEmpty(tumoBatchNo)?"0":tumoBatchNo

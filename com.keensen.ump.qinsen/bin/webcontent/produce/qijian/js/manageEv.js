@@ -1,6 +1,19 @@
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 	var _this = this;
 
+	// 查询事件
+	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleOrderListPanel.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
 	// 工艺员提醒
 	if (gyyFlag == 1) {
 		this.remindGyyInfo();
@@ -167,7 +180,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 
 	this.viewDutyPanel.mon(this.viewDutyPanel, 'afterload',
 			function(win, data) {
-
+				if(Ext.isEmpty(data)) return false;
 				var prefix = data.prefix;
 				var snStart = data.snStart;
 				var snEnd = data.snEnd;
@@ -256,7 +269,36 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.makeupTag = function() {
 	this.makeupTagWindow.show();
 }
 
-com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiOrder = function() {
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onModiOrder = function() {
+	var _this = this;
+	var grid = this.listPanel;
+
+	var records = grid.getSelectionModel().getSelections();
+	if (records.length == 0) {
+		Ext.Msg.alert('系统提示', '请先选择数据');
+		return false;
+	}
+
+	for (var i = 0; i < records.length; i++) {
+
+		var recordId = records[i].get('recordId');
+		var dryWet = records[i].get('dryWet');
+
+		if (dryWet == '干' && modifyOrderNoFlag4Dry == 0) {
+			Ext.Msg.alert('系统提示', '您无权修改干膜订单号');
+			return false;
+		}
+
+		if (dryWet == '湿' && modifyOrderNoFlag4Wet == 0) {
+			Ext.Msg.alert('系统提示', '您无权修改湿膜订单号');
+			return false;
+		}
+
+	}
+	this.chooseSingleOrderWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onChooseSingleOrder = function() {
 	var _this = this;
 	var grid = this.listPanel;
 
@@ -288,46 +330,59 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.modiOrder = function() {
 		}
 		arr.push(recordId);
 	}
+
+	var orderNo = '';
+	var prodSpecId = '';
+	var orderNo = '';
+	var B = this.chooseSingleOrderListPanel.getSelectionModel().getSelections();
+	if (B && B.length == 1) {
+		orderNo = B[0].get('orderNo');
+		prodSpecId = B[0].get('materSpecId');
+
+	}
+	
+	if (Ext.isEmpty(orderNo)) {
+		Ext.Msg.alert('系统提示', '请选择订单号');
+		return false;
+	}
+
 	Ext.Msg.confirm('提示', '共' + records.length + '个批次，您确定要修改这些产品的订单号？',
 			function(btn) {
 				if (btn === 'yes') {
-					Ext.Msg.prompt('批量改订单', '请输入新订单号', function(btn, text) {
-						if (btn == 'ok') {
-							_this.requestMask = this.requestMask
-									|| new Ext.LoadMask(Ext.getBody(), {
-												msg : "后台正在操作,请稍候!"
-											});
-							_this.requestMask.show();
-							Ext.Ajax.request({
-								url : "com.keensen.ump.qinsen.qijian.modiOrder.biz.ext",
-								method : "post",
-								jsonData : {
-									orderNo : text.trim(),
-									recordIds : arr.join(',')
-								},
-								success : function(resp) {
-									var ret = Ext.decode(resp.responseText);
-									if (ret.success) {
-										Ext.Msg.alert("系统提示", "操作成功！",
-												function() {
-													_this.listPanel.store
-															.load();
+					_this.requestMask = this.requestMask
+							|| new Ext.LoadMask(Ext.getBody(), {
+										msg : "后台正在操作,请稍候!"
+									});
+					_this.requestMask.show();
+					Ext.Ajax.request({
+						url : "com.keensen.ump.qinsen.qijian.modiOrderAndProdSpecId.biz.ext",
+						method : "post",
+						jsonData : {
+							orderNo : orderNo,
+							prodSpecId : prodSpecId,
+							recordIds : arr.join(',')
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								Ext.Msg.alert("系统提示", "操作成功！", function() {
+											_this.listPanel.store.load();
+											_this.chooseSingleOrderWindow.hide();
 
-												})
-									} else {
-										Ext.Msg.alert("系统提示", "修改订单号失败！")
+										})
+							} else {
+								Ext.Msg.alert("系统提示", "修改订单号失败！")
 
-									}
+							}
 
-								},
-								callback : function() {
-									_this.requestMask.hide()
-								}
-							})
+						},
+						callback : function() {
+							_this.requestMask.hide()
 						}
-					});
+					})
 				}
 			});
+
 }
 
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.dealJuanMoBatchNo = function() {

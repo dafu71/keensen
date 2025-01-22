@@ -54,7 +54,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 		var _this = this;
 
 		this.cdmPanel = this.cdmPanel || new Ext.fn.ColumnFormPanel({
-					height : 170,
+					height : 190,
 					width : 800,
 					title : '叠膜信息',
 					columns : 12,
@@ -243,6 +243,22 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								anchor : '100%',
 								colspan : 3
 							}, {
+								xtype : 'displayfield',
+								ref : '../displayfield1',
+								height : 5,
+								colspan : 24
+							}, {
+								xtype : 'textfield',
+								ref : '../prodRemark',
+								// name : 'entity/jmAmount',
+								// allowBlank : false,
+								readOnly : true,
+								anchor : '95%',
+								fieldLabel : '订单生产备注',
+								colspan : 12
+							}
+
+							, {
 								ref : '../cdmBatchId',
 								name : 'cdmBatchId',
 								xtype : 'hidden'

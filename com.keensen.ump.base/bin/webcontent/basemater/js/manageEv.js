@@ -41,7 +41,7 @@ com.keensen.ump.base.BaseMaterMgr.prototype.onView = function() {
 	}
 }
 
-com.keensen.ump.base.BaseMaterMgr.prototype.exportExcel = function() {
+/*com.keensen.ump.base.BaseMaterMgr.prototype.exportExcel = function() {
 	var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
@@ -73,7 +73,7 @@ com.keensen.ump.base.BaseMaterMgr.prototype.exportExcel = function() {
 			_this.requestMask.hide()
 		}
 	})
-}
+}*/
 
 com.keensen.ump.base.BaseMaterMgr.prototype.onAdd = function() {
 	this.inputWindow.show();

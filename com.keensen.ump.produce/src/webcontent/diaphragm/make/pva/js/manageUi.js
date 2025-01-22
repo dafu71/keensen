@@ -30,7 +30,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 		this.pvaStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['PVA-165', 'PVA-165'], ['PVA-205', 'PVA-205'],
-							['PVA-540', 'PVA-540']]
+							['PVA540-S', 'PVA540-S'], ['PVA540-U', 'PVA540-U']]
 				});
 
 		this.stateStore = new Ext.data.SimpleStore({
@@ -869,7 +869,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 				forceFit : true
 			},
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.pva.deletePvaList.biz.ext',
-			
+
 			tbar : [{
 						text : '删除',
 						scope : this,

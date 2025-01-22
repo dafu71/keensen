@@ -22,6 +22,8 @@
         <isNotNull prepend="" property="dutyTacheId">AND CD.DUTY_TACHE_ID = #dutyTacheId#</isNotNull>
         <isNotNull prepend="" property="dutyTacheCode">AND PT1.TACHE_CODE = #dutyTacheCode#</isNotNull>
         <isNotNull prepend="" property="state">AND CD.STATE = #state#</isNotNull>
+        <isNotNull prepend="" property="recordIds">AND CD.RECORD_ID in ($recordIds$)</isNotNull>
+	
 	 ORDER BY PT1.DISP_ORDER, CD.DISP_ORDER
 </select>
     <select id="queryTmRecordIdByBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.record_id "recordId" from QINSEN.INST_tumo t

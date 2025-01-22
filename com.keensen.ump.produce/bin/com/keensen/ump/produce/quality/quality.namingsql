@@ -354,7 +354,10 @@
         <isNotNull prepend="" property="isWx">AND lower(t.IS_WX) = #isWx#</isNotNull>
         <isNotNull prepend="" property="macName">AND t.mac_name = #macName#</isNotNull>
         <isNotNull prepend="" property="levelId">AND t.level_id = #levelId#</isNotNull>
-        <isNotNull prepend="" property="lineId">AND t.mac_name = decode(#lineId#,'10020',1,'10003',1,3)</isNotNull>
+        <!--
+		<isNotNull prepend = ""  property = "lineId">
+		   AND t.mac_name = decode(#lineId#,'10020',1,'10003',1,3)
+		</isNotNull>-->
 		    ORDER BY t.spec_id,t.level_id
      </select>
     <select id="queryMpCheckResult" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT V.BATCH_ID,V.RECORD_ID,v.recheck_flag "recheckFlag",
@@ -672,4 +675,8 @@ SET
     <delete id="deleteInstTumoCheck" parameterClass="java.util.HashMap">delete from  qinsen.INST_TUMO_CHECK
 	WHERE
 	  record_id = #recordId#</delete>
+    <select id="queryTumo4Judge" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select * from KS_PROD_DIAPHRAGM_TUMO t
+	WHERE t.batch_no=#batchNo# 
+	AND t.update_time IS NOT NULL 
+	AND t.perf_flag_id IS NOT NULL</select>
 </sqlMap>

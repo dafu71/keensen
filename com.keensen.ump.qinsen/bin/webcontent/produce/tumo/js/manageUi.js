@@ -15,9 +15,15 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.initReplaceTroughWindow();
 
 		this.initChooseWindow();
+		this.initDefectSampleWindow();
+		this.initAddDefectSampleWindow();
+
+		this.initModifyRecordListWindow();
+		this.initModifyRecordWindow();
 
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
+					batchNoControl : true,
 					dutyTacheCode : 'TM',
 					recTacheCode : 'TM',
 					relationListId : 'produce-tumo-list'
@@ -253,12 +259,19 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								iconCls : 'icon-application_edit',
 								hidden : gyyFlag != 1,
 								handler : this.onRemark
-							}, '->', {
+							}, '-', {
+								text : '工艺员修改',
+								scope : this,
+								hidden : gyyFlag != 1,
+								iconCls : 'icon-application_edit',
+								hidden : gyyFlag != 1,
+								handler : this.onModify
+							}, '->', '-', {
 								text : '删除涂膜记录',
 								scope : this,
 								iconCls : 'icon-application_delete',
 								handler : this.onDel
-							}, '->', {
+							}, '->', '-', {
 								text : '录入发货不良',
 								scope : this,
 								iconCls : 'icon-application_add',
@@ -267,21 +280,27 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								 * , '->', { text : '录入铸膜不良', scope : this,
 								 * iconCls : 'icon-application_add', handler :
 								 * this.onaddZmDefect }
-								 */, '->', {
+								 */, '->', '-', {
 								text : '录入涂膜不良',
 								scope : this,
 								iconCls : 'icon-application_add',
 								handler : this.onaddTmDefect
-							}, '->', {
+							}, '->', '-', {
 								text : 'C21浓度',
 								scope : this,
 								iconCls : 'icon-application_edit',
 								handler : this.onModiTech
-							}, '->', {
+							}, '->', '-', {
 								text : '送检',
 								scope : this,
 								iconCls : 'icon-application_add',
 								handler : this.onSendCheck
+							}, '->', '-', {
+								text : '膜片取样',
+								scope : this,
+								// hidden : gyyFlag != 1,
+								iconCls : 'icon-application_edit',
+								handler : this.onTakeSample
 							}]
 				});
 
@@ -540,6 +559,22 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 100,
 						dataIndex : 'outBatchNo'
 					}, {
+						header : '原批次号',
+						width : 100,
+						dataIndex : 'batchNoOriginal'
+					}, {
+						header : '原膜片型号',
+						width : 100,
+						dataIndex : 'specNameOriginal'
+					}, {
+						header : '更改时间',
+						width : 100,
+						dataIndex : 'modifyTime'
+					}, {
+						header : '更改人',
+						width : 100,
+						dataIndex : 'modifyName'
+					}, {
 						header : '订单号',
 						width : 130,
 						dataIndex : 'orderNo'
@@ -560,7 +595,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 70,
 						dataIndex : 'teamName'
 					}, {
-						header : '时段',
+						header : '班次',
 						width : 50,
 						dataIndex : 'teamSeg'
 					}, {
@@ -595,6 +630,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						baseParams : {},
 						fields : [{
 									name : 'recordId'
+								}, {
+									name : 'specNameOriginal'
 								}, {
 									name : 'planNo'
 								}, {
@@ -771,6 +808,18 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'thickMaxFlag'
 								}, {
 									name : 'perfIsQualifiedName'
+								}, {
+									name : 'ifModifyDefect'
+								}, {
+									name : 'batchNoOriginal'
+								}, {
+									name : 'specIdOriginal'
+								}, {
+									name : 'modifyTime'
+								}, {
+									name : 'modifyUserId'
+								}, {
+									name : 'modifyName'
 								}]
 					})
 		})
@@ -1021,7 +1070,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'entity/teamSeg',
 									ref : '../../teamSeg',
 									hiddenName : 'entity/teamSeg',
-									fieldLabel : '时段',
+									fieldLabel : '班次',
 									emptyText : '--请选择--',
 									allowBlank : false,
 									anchor : '75%',
@@ -1267,6 +1316,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									dataIndex : 'specId',
 									ref : '../../specId',
 									allowBlank : false,
+									readOnly : true,
 									anchor : '75%',
 									fieldLabel : '膜片型号 '
 								}, {
@@ -1276,6 +1326,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									ref : '../../batchNo',
 									fieldLabel : '膜片批次',
 									allowBlank : false,
+									readOnly : true,
 									anchor : '75%',
 									colspan : 1
 								}, {
@@ -1423,7 +1474,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									dataIndex : 'teamSeg',
 									ref : '../../teamSeg',
 									hiddenName : 'entity/teamSeg',
-									fieldLabel : '时段',
+									fieldLabel : '班次',
 									emptyText : '--请选择--',
 									allowBlank : false,
 									anchor : '75%',
@@ -2114,5 +2165,427 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					items : [this.queryPanel3, this.listPanel3]
 
 				})
+	}
+
+	this.initDefectSampleWindow = function() {
+
+		var selModel4defectSample = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4defectSample = this.listPanel4defectSample
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : [{
+								text : '新增',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onAddSample
+							}, '-', {
+								text : '删除',
+								scope : this,
+								iconCls : 'icon-application_delete',
+								handler : this.onDelSample
+							}],
+					hsPage : true,
+					selModel : selModel4defectSample,
+					delUrl : 'com.keensen.ump.qinsen.quality.deleteDefect.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4defectSample, {
+								dataIndex : 'tumoBatchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'defectName',
+								header : '取样类别'
+							}, {
+								dataIndex : 'loss',
+								header : '取样长度(m)'
+							}, {
+								dataIndex : 'produceDate',
+								header : '取样时间'
+							}, {
+								dataIndex : 'createName',
+								header : '取样人'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.quality.queryDefectByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'recordId'
+								}, {
+									name : 'tumoBatchId'
+								}, {
+									name : 'defectItemId'
+								}, {
+									name : 'loss'
+								}, {
+									name : 'workerId'
+								}, {
+									name : 'produceDt'
+								}, {
+									name : 'createDt'
+								}, {
+									name : 'changeDt'
+								}, {
+									name : 'creatorId'
+								}, {
+									name : 'changerId'
+								}, {
+									name : 'remark'
+								}, {
+									name : 'dutyTacheId'
+								}, {
+									name : 'recTacheId'
+								}, {
+									name : 'defectName'
+								}, {
+									name : 'dutyTacheCode'
+								}, {
+									name : 'dutyTacheName'
+								}, {
+									name : 'recTacheCode'
+								}, {
+									name : 'recTacheName'
+								}, {
+									name : 'tumoBatchNo'
+								}, {
+									name : 'mpSpecId'
+								}, {
+									name : 'mpSpecCode'
+								}, {
+									name : 'mpSpecName'
+								}, {
+									name : 'produceDate'
+								}, {
+									name : 'dimoBatchNo'
+								}, {
+									name : 'flag'
+								}, {
+									name : 'productType'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'position'
+								}, {
+									name : 'labelNum'
+								}, {
+									name : 'recorder'
+								}, {
+									name : 'ifTear'
+								}, {
+									name : 'ifModifyDefect'
+								}, {
+									name : 'ifModifyDefectName'
+								}]
+					})
+				})
+
+		this.defectSampleWindow = this.defectSampleWindow || new Ext.Window({
+					title : '膜片取样',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4defectSample]
+
+				});
+		this.defectSampleWindow.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.defectSampleWindow.hide();
+					}
+
+				});
+	}
+
+	this.initAddDefectSampleWindow = function() {
+
+		var defectSampleStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.qinsen.inst.queryCdmDefectItemList.biz.ext',
+					root : 'data',
+					autoLoad : true,
+					baseParams : {
+						'condition/recordIds' : '-100000020,100000031'
+					},
+					fields : [{
+								name : 'recordId'
+							}, {
+								name : 'defectName'
+							}]
+				})
+
+		this.addDefectSampleWindow = this.addDefectSampleWindow
+				|| new Ext.fn.FormWindow({
+					title : '新增膜片取样',
+					height : 600,
+					width : 800,
+					// itemCls:'required',
+					// style:'margin-top:10px',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
+						xtype : 'inputpanel',
+						pgrid : this.listPanel4defectSample,
+						columns : 1,
+						saveUrl : 'com.keensen.ump.qinsen.quality.addCdmDefect.biz.ext',
+						fields : [{
+									xtype : 'textfield',
+									fieldLabel : '膜片批次',
+									anchor : '95%',
+									allowBlank : false,
+									ref : '../../tumoBatchNo'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'combobox',
+									hiddenName : 'entity/defectItemId',
+									allowBlank : false,
+									store : defectSampleStore,
+									ref : '../../defectItemId',
+									anchor : '95%',
+									colspan : 1,
+									mode : "local",
+									fieldLabel : '取样类别',
+									valueField : 'recordId',
+									displayField : 'defectName',
+									editable : false,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '取样长度(m)',
+									anchor : '95%',
+									name : 'entity/loss',
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									allowDecimals : true,
+									minValue : 0,
+									maxValue : 999.9,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'datetimefield',
+									anchor : '95%',
+									ref : '../produceDt',
+									name : 'entity/produceDt',
+									allowBlank : false,
+									fieldLabel : '取样时间',
+									format : "Y-m-d H:i:00",
+									value : new Date(),
+									maxValue : new Date() + 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '取样人',
+									anchor : '95%',
+									allowBlank : false,
+									ref : '../../recorder',
+									name : 'entity/recorder'
+								}, {
+									xtype : 'hidden',
+									ref : '../../tumoBatchId',
+									name : 'entity/tumoBatchId'
+								}]
+					}]
+				});
+
+	}
+
+	this.initModifyRecordListWindow = function() {
+
+		var selModel4ModifyRecord = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4ModifyRecord = this.listPanel4ModifyRecord
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : true,
+					selModel : selModel4ModifyRecord,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4ModifyRecord, {
+								dataIndex : 'batchNo',
+								header : '当前膜片批次'
+							}, {
+								dataIndex : 'batchNoOriginal',
+								header : '原始膜片批次'
+							}, {
+								dataIndex : 'itemName',
+								header : '修改项'
+							}, {
+								dataIndex : 'valueBefore',
+								header : '修改前值'
+							}, {
+								dataIndex : 'valueAfter',
+								header : '修改后值'
+							}, {
+								dataIndex : 'createTime',
+								header : '修改时间'
+							}, {
+								dataIndex : 'createName',
+								header : '修改人'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.queryModifyRecordByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'createUserId'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'updateTime'
+								}, {
+									name : 'updateUserId'
+								}, {
+									name : 'updateName'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'reserve2'
+								}, {
+									name : 'reserve3'
+								}, {
+									name : 'reserve4'
+								}, {
+									name : 'reserve5'
+								}, {
+									name : 'orgId'
+								}, {
+									name : 'status'
+								}, {
+									name : 'relationId'
+								}, {
+									name : 'itemName'
+								}, {
+									name : 'valueBefore'
+								}, {
+									name : 'valueAfter'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'batchNoOriginal'
+								}]
+					})
+				})
+
+		this.modifyRecordListWindow = this.modifyRecordListWindow
+				|| new Ext.Window({
+							title : '膜片修改记录',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 800,
+							height : 600,
+							layout : 'border',
+							items : [this.listPanel4ModifyRecord]
+
+						});
+		this.modifyRecordListWindow.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.modifyRecordListWindow.hide();
+					}
+
+				});
+	}
+
+	this.initModifyRecordWindow = function() {
+
+		this.modifyRecordWindow = this.modifyRecordWindow
+				|| new Ext.fn.FormWindow({
+					title : '修改膜片批号及型号',
+					height : 600,
+					width : 800,
+					// itemCls:'required',
+					// style:'margin-top:10px',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
+						xtype : 'inputpanel',
+						pgrid : this.listPanel4ModifyRecord,
+						columns : 1,
+						saveUrl : 'com.keensen.ump.qinsen.tumo.modifyRecord.biz.ext',
+						fields : [{
+									xtype : 'textfield',
+									fieldLabel : '膜片批次',
+									anchor : '95%',
+									allowBlank : false,
+									name : 'entity/batchNo',
+									ref : '../../batchNo'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'mpspeccombobox',
+									hiddenName : 'entity/specId',
+									anchor : '95%',
+									fieldLabel : '膜片型号 ',
+									ref : '../../specId'
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordId',
+									name : 'entity/relationId'
+								}]
+					}]
+				});
+
 	}
 }

@@ -14,7 +14,7 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 120,
 					columns : 3,
 					border : true,
 					// collapsible : true,

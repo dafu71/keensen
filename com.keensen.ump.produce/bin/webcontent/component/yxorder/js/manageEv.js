@@ -99,6 +99,11 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 					this.orderViewWindow.show();
 					this.orderViewWindow.loadData(cell);
 				}
+				
+				if (this.opt == 'updateprodremark') {
+					this.updateProdRemarkWindow.show();
+					this.updateProdRemarkWindow.loadData(cell);
+				}
 			}, this);
 
 	// 增加修改事件
@@ -355,5 +360,10 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onAddOrder2 = function() 
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onOrderView = function() {
 	this.opt = 'orderview';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateProdRemark = function() {
+	this.opt = 'updateprodremark';
 	this.listPanel.onEdit();
 }

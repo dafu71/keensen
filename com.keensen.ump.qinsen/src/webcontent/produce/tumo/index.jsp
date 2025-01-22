@@ -8,7 +8,10 @@
   
   	String dataorgid=(String)userObject.getAttributes().get("dataorgid");
   	Long operatorid=(Long)userObject.getAttributes().get("operatorid");
-  	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
+  	//String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
+  	String operatorname = (String) userObject.getAttributes().get(
+			"operatorname");
+	//System.out.println(operatorname);
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
   	boolean workerflag = roleId.indexOf("10001161")>-1;
     String uid = userObject.getUserId();
@@ -17,6 +20,8 @@
     int gyyFlag = roleId.indexOf("10001322")>-1?1:0;
     //10001441 更换漂洗槽提醒
     int replaceTroughFlag = roleId.indexOf("10001441")>-1?1:0;
+    //10001701 膜片不良记录修改
+    int modifyFlag = roleId.indexOf("10001701")>-1?1:0;
 %>
 <html>
 <!-- 
@@ -76,6 +81,8 @@
 </style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  var uname = "<%=operatorname %>";
+  var modifyFlag = <%=modifyFlag %>;
    <% if(workerflag){ %>
   var teamId = "<%=userOrgId %>";
   <% }else{ %>

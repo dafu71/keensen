@@ -41,6 +41,11 @@
 	<isNotNull prepend = ""  property = "state">
 	   AND CD.STATE = #state#
 	</isNotNull>
+	
+	<isNotNull prepend = ""  property = "recordIds">
+	   AND CD.RECORD_ID in ($recordIds$)
+	</isNotNull>
+	
 	 ORDER BY PT1.DISP_ORDER, CD.DISP_ORDER
 </select>
 

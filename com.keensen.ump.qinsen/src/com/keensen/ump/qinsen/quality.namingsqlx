@@ -16,7 +16,7 @@
        T1.REMARK          AS "remark",
        T1.DUTY_TACHE_ID   AS "dutyTacheId",
        T1.REC_TACHE_ID    AS "recTacheId",
-       T1.DEFECT_NAME     AS "defectName",
+       T1.DEFECT_NAME     AS "defectName",t1.DEFECT_ITEM_ID "defectItemId",
        T1.DUTY_TACHE_CODE AS "dutyTacheCode",
        T1.DUTY_TACHE_NAME AS "dutyTacheName",
        T1.REC_TACHE_CODE  AS "recTacheCode",
@@ -27,7 +27,11 @@
        T1.MP_SPEC_NAME    AS "mpSpecName",
        T1.PRODUCE_DATE    AS "produceDate",
        T1.DISP_ORDER     AS "dispOrder",T1.Dimo_Batch_No "dimoBatchNo",
-       T2.product_type "productType"
+       T2.product_type "productType",
+       nvl(t1.recorder,t1.operatorname) "createName",
+       t1.position "position",t1.label_num "labelNum",
+       t1.recorder "recorder",t1.if_tear "ifTear",t1.if_Modify_Defect "ifModifyDefect",
+       decode(t1.if_Modify_Defect,'1','可编辑','不可编辑') "ifModifyDefectName"
   FROM (SELECT A.RECORD_ID,'TM' flag,
                A.TUMO_BATCH_ID,
                A.DEFECT_ITEM_ID,
@@ -50,8 +54,12 @@
                IT.SPEC_ID MP_SPEC_ID,IT.BATCH_NO,
                MS.MATER_SPEC_CODE MP_SPEC_CODE,
                MS.MATER_SPEC_NAME MP_SPEC_NAME,
-               TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE
+               TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
+               v.operatorname,
+               to_char(A.position) position,to_char(A.label_num) label_num,to_char(A.recorder) recorder,
+               to_char(A.if_tear) if_tear,to_char(it.if_Modify_Defect) if_Modify_Defect 
           FROM QINSEN.INST_CDM_DEFECT A
+          LEFT JOIN v_ac_operator_trs v ON A.creator_id = v.operatorid
           LEFT JOIN QINSEN.PARA_CDM_DEFECT P
             ON A.DEFECT_ITEM_ID = P.RECORD_ID
           LEFT JOIN QINSEN.BASE_PRODUCE_TACHE B
@@ -87,8 +95,11 @@
                0,'',
                '',
                it.dimo_type,
-               TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE
+               TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
+               v.operatorname,
+               '','','','','1'
           FROM QINSEN.INST_CDM_DEFECT2 A
+          LEFT JOIN v_ac_operator_trs v ON A.creator_id = v.operatorid
           LEFT JOIN QINSEN.PARA_CDM_DEFECT P
             ON A.DEFECT_ITEM_ID = P.RECORD_ID
           LEFT JOIN QINSEN.BASE_PRODUCE_TACHE B
@@ -146,6 +157,9 @@
 	   AND UPPER(t1.Dimo_Batch_No) LIKE '%' || UPPER(#dimoBatchNo#) || '%'
 	</isNotNull>
 	
+	<isNotNull prepend = ""  property = "defectItemId">
+	AND t1.DEFECT_ID in($defectItemId$)
+	</isNotNull>
 	 ORDER BY t1.PRODUCE_DT DESC, t1.TUMO_BATCH_NO, t1.DISP_ORDER
 </select>
 

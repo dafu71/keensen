@@ -280,7 +280,9 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onGetDuty = function() 
 					var jmAmount = ret.data[0].jmAmount;
 					var orderAmount = ret.data[0].orderAmount;
 					var materSpecId = ret.data[0].materSpecId;
-					var realityAmount = ret.data[0].realityAmount;
+					var realityAmount = ret.data[0].realityAmount;					
+					var prodRemark = ret.data[0].weekRemark;
+					
 					_this.inputPanel.orderNo.setValue(orderNo);
 					_this.inputPanel.orderAmount.setValue(orderAmount);
 					_this.inputPanel.planDate.setValue(planDate);
@@ -288,8 +290,8 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onGetDuty = function() 
 					_this.inputPanel.prodSpecId.setValue(materSpecId);
 					_this.inputPanel.orderId.setValue(orderId);
 					_this.inputPanel.orderAmount.setValue(orderAmount);
-					_this.inputPanel.realityAmount.setValue(realityAmount);
-					
+					_this.inputPanel.realityAmount.setValue(realityAmount);					
+					_this.inputPanel.prodRemark.setValue(prodRemark);
 					
 					var store = _this.jmdutyStore;
 					store.load({

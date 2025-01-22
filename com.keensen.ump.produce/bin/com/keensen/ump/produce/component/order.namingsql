@@ -10,7 +10,7 @@
        TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
        T1.UPDATE_USER_ID AS "updateUserId",
        T1.UPDATE_NAME AS "updateName",	
-		T1.SCFS              AS "scfs",T1.reserve1 "reserve1",
+		T1.SCFS              AS "scfs",T1.reserve1 "reserve1",T1.reserve2 "reserve2",
        T1.BM                AS "bm",T1.template_Name                AS "templateName",
        T1.SFFH              AS "sffh",
        T1.ORDER_TYPE        AS "orderType",
@@ -22,7 +22,7 @@
        T1.ORDER_DATE        AS "orderDate",
        T1.HPMC              AS "hpmc",
        T1.DW                AS "dw",
-       T1.MATER_SPEC_NAME   AS "materSpecName",
+       T1.MATER_SPEC_NAME   AS "materSpecName",T1.MATER_SPEC_Id   AS "materSpecId",
        T1.MATER_SPEC_NAME2   AS "materSpecName2",
        T1.CPGG              AS "cpgg",
        T1.DRY_WET           AS "dryWet",
@@ -525,19 +525,20 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        t4.amount "qjAmount",t4.qualified_amount "qualifiedAmount",
        t6.amount "wetAmount",
        <!--未贴标数=订单数量（本页面）-贴本订单的标签数（本页面）--><!--nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)-(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0)) "notLabelAmount",-->
-       nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) - nvl(t4.amount,0) "notLabelAmount",
-       <!--贴本订单的标签数量（暂时）--><!--气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“主行”字眼的记录）-湿膜数量（湿膜订单不用减）--><!--气检合格的元件贴标数+工艺员“工艺结论”中A、放行原订单”的元件贴标数+原来“工艺员意见备注”当中有“放行”字眼元件贴标数（考虑旧意见存在）--><!--t4.label_amount "labelAmount",--><!--贴本订单的标签数量（张）取“气检工单”的显示界面当中“气检累计贴标数量”--><!--nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0) "labelAmount",-->
-       t4.amount "labelAmount",
-       
+       nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) - nvl(t7.amount,0) "notLabelAmount",
+       <!--贴本订单的标签数量（暂时）--><!--气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“主行”字眼的记录）-湿膜数量（湿膜订单不用减）--><!--气检合格的元件贴标数+工艺员“工艺结论”中A、放行原订单”的元件贴标数+原来“工艺员意见备注”当中有“放行”字眼元件贴标数（考虑旧意见存在）--><!--t4.label_amount "labelAmount",--><!--贴本订单的标签数量（张）取“气检工单”的显示界面当中“气检累计贴标数量”--><!--nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0) "labelAmount",--><!--t4.amount "labelAmount",--><!--贴本订单的标签数量（张）-->
+       nvl(t7.amount,0) "labelAmount",
        
        <!--理论可贴标的元件数（支）理论可贴标的元件数（支）=气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“放行”字眼的记录）-->
        nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0) "theoryAmount",
        t5.amount "rsAmount",
-		round(100*t2.amount/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) || '%' "cdmFinish",
-		round(100*t3.amount/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) || '%' "jmFinish",
-		<!--完成比例=贴本订单的标签数量/气检生产数量*100%--><!--round(100*t4.label_amount/t4.amount,0) || '%' "qjFinish",-->
-		 round(100*(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0))/t4.amount,0) || '%' "qjFinish",
-		round(100*t5.amount/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) || '%' "rsFinish",
+		round(100*t2.amount/nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),10000000000000),0) || '%' "cdmFinish",
+		round(100*t3.amount/nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),10000000000000),0) || '%' "jmFinish",
+		<!--完成比例=贴本订单的标签数量/气检生产数量*100%--><!--round(100*t4.label_amount/t4.amount,0) || '%' "qjFinish",--><!-- round(100*(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0))/t4.amount,0) || '%' "qjFinish",--><!--贴本订单的标签数量/气检生产数量*100%--><!--round(100*t4.label_amount/t4.amount,0) || '%' "qjFinish",--><!--贴本订单的标签数量（张）-->
+		  decode(NVL(T7.AMOUNT, 0),0,0 ,round(100* nvl(t7.amount,0)/nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),10000000000000),0)) || '%' "qjFinish",
+		 
+		 
+		round(100*t5.amount/nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),10000000000000),0) || '%' "rsFinish",
 		round(t1.demand_stock_date-SYSDATE,2) "diff",
 		round(SYSDATE - t1.demand_stock_date,2) "diff2",
 		
@@ -545,6 +546,11 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
 		nvl(outamount.amount,0) "outAmount"
 		
   FROM KS_PROD_COMPONENT_YXORDER T1
+  left join (SELECT SUM(1) amount,order_no,prod_spec_id from (
+select qj.batch_no,t.order_no,t.prod_spec_id FROM qinsen.inst_qijian qj 
+LEFT JOIN V_KS_COMPONENT_DUTY_SN t ON qj.batch_no&gt;=t.sn_start AND qj.batch_no &lt;=t.sn_end 
+WHERE t.order_no IS NOT NULL) GROUP BY order_no,prod_spec_id) t7
+ON t7.order_no = t1.order_no AND t1.mater_spec_id=t7.prod_spec_id
   
   <!--改订单号进入元件数=“气检工序批量改订单号界面”新订单号为本订单号的元件数量+“白膜仓改订单号界面“改做订单号”的元件数量-->
   left join (select t.qj_order_no order_no,t.qj_spec_id prod_spec_id,COUNT(1) amount from KS_JM_QJ_DIFF t
@@ -576,7 +582,9 @@ LEFT JOIN
 (SELECT t.order_no,t.prod_spec_id mater_spec_id, COUNT(1) amount，
 SUM(DECODE(t.judge_flag,'Y',1,0)) qualified_amount,  
 
-<!--贴本订单的标签数量（暂时）--><!--气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“主行”字眼的记录）-湿膜数量（湿膜订单不用减）--><!--SUM(CASE WHEN t.batch_no IS NOT NULL THEN 1 ELSE 0 END) label_amount--><!--放行数量-->
+<!--贴本订单的标签数量（暂时）--><!--气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“主行”字眼的记录）-湿膜数量（湿膜订单不用减）--><!--有元件号的-->
+SUM(CASE WHEN t.batch_no IS NOT NULL THEN 1 ELSE 0 END) label_amount,
+<!--放行数量-->
 sum(decode(t.gyy_conclusion,'A',1,0)) release_amount
 
  from qinsen.inst_qijian t

@@ -30,6 +30,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 		this.initStore();
 		this.initOrderViewWindow();
+		
+		this.initUpdateProdRemarkWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -347,6 +349,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAddOrder2
+					}, '-', {
+						text : '订单生产备注',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onUpdateProdRemark
 					}, '->', {
 						text : '订单详情',
 						scope : this,
@@ -411,6 +418,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						dataIndex : 'arrangeAmount',
 						header : '已排产数量',
 						sortable : true
+					}, {
+						dataIndex : 'reserve2',
+						header : '订单生产备注',
+						sortable : false
 					}, {
 						dataIndex : 'scfs',
 						header : '生产方式',
@@ -1108,6 +1119,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						}, {
 							name : 'entity/remark',
 							xtype : 'textarea',
+							dataIndex:'reserve2',
 							fieldLabel : '备注',
 							colspan : 2,
 							anchor : '87%',
@@ -3309,5 +3321,51 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		});
 
 		this.orderViewWindow.buttons[0].hide();
+	}
+	
+	this.initUpdateProdRemarkWindow = function() {
+		var _this = this;
+		this.updateProdRemarkWindow = this.updateProdRemarkWindow
+				|| new Ext.fn.FormWindow({
+					title : '订单生产备注',
+					height : 320,
+					width : 480,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+							_this.updateProdRemarkWindow.items.items[0].form
+									.reset();
+							_this.updateProdRemarkWindow.hide();
+							_this.listPanel.refresh();
+						},
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandYxOrder.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.neworder.saveEntity.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textarea',
+									name : 'entity/reserve2',
+									dataIndex : 'reserve2',
+									fieldLabel : '订单生产备注',
+									ref : '../../reserve2',
+									allowBlank : false,
+									anchor : '100%',
+									colspan : 2
+
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
+								}]
+					}]
+				});
 	}
 }

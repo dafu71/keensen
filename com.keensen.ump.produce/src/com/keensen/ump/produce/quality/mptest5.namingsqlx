@@ -175,7 +175,7 @@
               '调整',
               'third',
               '配料',
-              '生产使用') "stepName",1 iorder
+              '生产使用') "stepName",1 iorder,decode(t.reserve2,'加急','red','black') "color"
   FROM KS_QUALITY_MP_TEST_WATER_HEAD T
   left join KS_QUALITY_MP_TEST_WATER_HEAD t2 on t.relation_id=t2.id
  WHERE T.STEP IN ('first') 
@@ -191,7 +191,7 @@
               '调整',
               'third',
               '配料',
-              '生产使用') "stepName",2 iorder
+              '生产使用') "stepName",2 iorder,'black' "color"
   FROM KS_QUALITY_MP_TEST_OIL_HEAD T
   WHERE T.STEP IN ('first') 
   union
@@ -206,7 +206,7 @@
               '调整',
               'third',
               '配料',
-              '生产使用') "stepName",3 iorder
+              '生产使用') "stepName",3 iorder,'black' "color"
   FROM KS_QUALITY_MP_TEST_ZMY_HEAD T  
  WHERE T.STEP IN ('first') 
  ORDER BY iorder,create_time
@@ -225,7 +225,7 @@
               '重新取样',
               'third',
               '配料',
-              '生产使用') "stepName",1 iorder
+              '生产使用') "stepName",1 iorder,decode(t.reserve2,'加急','red','black') "color"
   FROM KS_QUALITY_MP_TEST_WATER_HEAD T
   left join KS_QUALITY_MP_TEST_WATER_HEAD t2 on t.relation_id=t2.id
  WHERE T.STEP IN ('third')
@@ -241,7 +241,7 @@
               '调整',
               'third',
               '配料',
-              '生产使用') "stepName",2 iorder
+              '生产使用') "stepName",2 iorder,'black' "color"
   FROM KS_QUALITY_MP_TEST_OIL_HEAD T
   WHERE T.STEP IN ('third')
 
@@ -257,7 +257,7 @@
               '重新取样',
               'third',
               '配料',
-              '生产使用') "stepName",3 iorder
+              '生产使用') "stepName",3 iorder,'black' "color"
   FROM KS_QUALITY_MP_TEST_ZMY_HEAD T  
  WHERE T.STEP IN ('third') 
  <!--

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <!-- 膜片生产线查询 -->
+     <select id="queryMpLine" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t.line_id,t.line_code "code",t.line_name ,
+	t.line_id "id",t.line_name || '(' || t.line_code || ')' "name"
+	from qinsen.BASE_PROD_LINE t
+	where t.line_code in('C','D','E','F')
+	ORDER BY t.line_code
+     </select>
+     
+     <select id="queryHandover" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.BOARD_DATE as "boardDate",
+		t1.CLASSES as "classes",
+		t1.LINE_ID as "lineId",
+		t1.ITEM as "item",t2.LINE_NAME as "lineName"
+		from KS_REPORT_BOARD_HANDOVER t1
+		left join qinsen.BASE_PROD_LINE t2
+		on t1.LINE_ID = t2.LINE_ID
+		where 1=1
+		 <isNotNull prepend = "and"  property = "boardDateStart"> 
+          t1.BOARD_DATE  &gt;=  #boardDateStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "boardDateEnd"> 
+          t1.BOARD_DATE  &lt;=  #boardDateEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="classes"> 
+		       t1.classes = #classes#
+	</isNotNull>
+	 <isNotNull prepend="and" property="lineId"> 
+		       t1.LINE_ID = #lineId#
+	</isNotNull>
+	order by t1.BOARD_DATE desc,t1.LINE_ID,t1.CLASSES
+      </select> 
+     
+     <select id="queryHandoverBoard" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT '测试标准' "classes",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30140 AND t.classes='测试标准') "C",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30220 AND t.classes='测试标准') "D",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30223 AND t.classes='测试标准') "E",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30240 AND t.classes='测试标准') "F",
+	1 myorder
+	FROM dual
+	UNION ALL
+	SELECT '早班交接事项' "classes",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30140 AND t.classes='早') "C",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30220 AND t.classes='早') "D",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30223 AND t.classes='早') "E",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30240 AND t.classes='早') "F",
+	2 myorder
+	FROM dual
+	UNION ALL
+	SELECT '中班交接事项' "classes",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30140 AND t.classes='中') "C",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30220 AND t.classes='中') "D",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30223 AND t.classes='中') "E",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30240 AND t.classes='中') "F",
+	3 myorder
+	FROM dual
+	UNION ALL
+	SELECT '晚班交接事项' "classes",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30140 AND t.classes='晚') "C",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30220 AND t.classes='晚') "D",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30223 AND t.classes='晚') "E",
+	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
+	AND t.line_id=30240 AND t.classes='晚') "F",
+	4 myorder
+	FROM dual
+	ORDER BY myorder
+</select> 
+</sqlMap>

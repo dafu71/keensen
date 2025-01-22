@@ -55,7 +55,18 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 		var cnt = _this.listPanel.store.getCount();
 		if (cnt == 0)
 			return;
-
+		
+		/*var records = _this.listPanel.store.getRange();
+		var storageStockAmount = 0;
+		for(var i=0;i<cnt;i++){
+			var r = records[i];
+			var amount = parseFloat(r.data.amount);
+			storageStockAmount +=amount;
+		}*/
+		
+		Ext.getCmp('storageStockAmount').setValue('库存数量:'
+								+ storageStockAmount);
+		
 		_this.requestMask = this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
 							msg : "后台正在操作,请稍候!"
@@ -64,6 +75,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 		Ext.Ajax.request({
 			url : "com.keensen.ump.produce.diaphragm.storage.safestorage.queryStockCount.biz.ext",
 			method : "post",
+			jsonData:_this.queryPanel.getForm().getValues(),
 			success : function(resp) {
 				var ret = Ext.decode(resp.responseText);
 				if (ret.success) {
@@ -85,6 +97,9 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 								+ data.deliveryYellowAmount);
 						Ext.getCmp('deliveryRedAmount').setValue('超标米数:'
 								+ data.deliveryRedAmount);
+						
+						Ext.getCmp('storageStockAmount').setValue('库存数量:'
+								+ data.stockAmount);
 
 					} else {
 						Ext.getCmp('selfYellowCount').setValue('');
@@ -95,6 +110,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 						Ext.getCmp('deliveryRedCount').setValue('');
 						Ext.getCmp('deliveryYellowAmount').setValue('');
 						Ext.getCmp('deliveryRedAmount').setValue('');
+						Ext.getCmp('storageStockAmount').setValue('');
 
 					}
 				}

@@ -63,8 +63,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 		this.initListPanel();
 		this.initEditWindow();
 		this.initEditWindow2();
-		
-		
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -202,7 +201,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 			tbar : [{
 						text : '涂膜录入涂膜不良',
 						scope : this,
-						iconCls : 'icon-application_add',
+						iconCls : 'icon-application_edit',
 						handler : this.onAddTm
 					}, '-', {
 						text : '涂膜录入铸膜不良',
@@ -254,11 +253,26 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						header : '不良项目',
 						dataIndex : 'defectName'
 					}, {
-						header : '损失(m)',
+						header : '不良长度(m)',
 						dataIndex : 'loss'
+					}, {
+						header : '不良收卷位置(m)',
+						dataIndex : 'position'
+					}, {
+						header : '标签数',
+						dataIndex : 'labelNum'
+					}, {
+						header : '是否已扯',
+						dataIndex : 'ifTear'
 					}, {
 						header : '不良产生时间',
 						dataIndex : 'produceDate'
+					}, {
+						header : '录入',
+						dataIndex : 'createName'
+					}, {
+						header : '不良编辑状态',
+						dataIndex : 'ifModifyDefectName'
 					}, {
 						header : '备注',
 						dataIndex : 'remark'
@@ -323,6 +337,20 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 							name : 'flag'
 						}, {
 							name : 'productType'
+						}, {
+							name : 'createName'
+						}, {
+							name : 'position'
+						}, {
+							name : 'labelNum'
+						}, {
+							name : 'recorder'
+						}, {
+							name : 'ifTear'
+						}, {
+							name : 'ifModifyDefect'
+						}, {
+							name : 'ifModifyDefectName'
 						}]
 			})
 		})
@@ -404,7 +432,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						}, {
 							xtype : 'numberfield',
 							name : 'entity/loss',
-							fieldLabel : '不良损失',
+							fieldLabel : '不良损失(m)',
 							dataIndex : 'loss',
 							allowNegative : false,
 							allowDecimals : true,
@@ -412,6 +440,95 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 							allowBlank : true,
 							anchor : '75%',
 							colspan : 2,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/position',
+							fieldLabel : '收卷位置(m)',
+							dataIndex : 'position',
+							allowNegative : false,
+							allowDecimals : true,
+							minValue : 0,
+							allowBlank : true,
+							anchor : '75%',
+							colspan : 2,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/labelNum',
+							fieldLabel : '标签数',
+							dataIndex : 'labelNum',
+							allowNegative : false,
+							allowDecimals : true,
+							minValue : 0,
+							allowBlank : true,
+							anchor : '75%',
+							colspan : 2,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combo',
+							fieldLabel : '是否已扯',
+							dataIndex : 'ifTear',
+							allowBlank : true,
+							typeAhead : true,
+							typeAheadDelay : 100,
+							triggerAction : "all",
+							lazyRender : true,
+							minChars : 1,
+							mode : 'local',
+							lastQuery : '',
+							allowBlank : false,
+							// mode : 'local',
+							emptyText : '--请选择--',
+							// lastQuery : '',
+							store : new Ext.data.SimpleStore({
+										fields : ["ifTear", "ifTear"],
+										data : [['是', '是'], ['否', '否']]
+									}),
+
+							hiddenName : 'entity/ifTear',
+							valueField : 'ifTear',
+							displayField : 'ifTear',
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '记录人',
+							name : 'entity/recorder',
+							dataIndex : 'createName',
+							allowBlank : true,
+							scope : this,
 							listeners : {
 								'specialkey' : function() {
 									return false;

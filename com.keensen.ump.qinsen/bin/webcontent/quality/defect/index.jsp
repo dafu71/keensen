@@ -13,13 +13,20 @@
 			"dataorgid");
 	Long operatorid = (Long) userObject.getAttributes().get(
 			"operatorid");
-	String operatorname = URLEncoder.encode((String) userObject
-			.getAttributes().get("operatorname"), "UTF-8");
+	//String operatorname = URLEncoder.encode((String) userObject
+	//		.getAttributes().get("operatorname"), "UTF-8");
+			
+	String operatorname = (String) userObject.getAttributes().get(
+			"operatorname");
+	//System.out.println(operatorname);
 	String roleId = (String) userObject.getAttributes().get(
 			"roles_rolecode_str");
 	String uid = userObject.getUserId();
 
 	String tumoBatchNo = request.getParameter("tumoBatchNo");
+	
+	//10001701 膜片不良记录修改
+    int modifyFlag = roleId.indexOf("10001701")>-1?1:0;
 %>
 <html>
 <!-- 
@@ -54,6 +61,8 @@
 
 <script type="text/javascript">
   var uid = "<%=uid %>";
+
+  var modifyFlag = <%=modifyFlag %>;
   var tumoBatchNo4Search = "<%=tumoBatchNo  %>";
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.quality.DefectMgr

@@ -168,6 +168,9 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 						dataIndex : 'orderRemark',
 						header : '订单备注'
 					}, {
+						dataIndex : 'weekRemark',
+						header : '主计划备注'
+					}, {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
 					}, {

@@ -157,6 +157,9 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 					}, {
 						dataIndex : 'jmStateName',
 						header : '计划作业状态'
+					}, {
+						dataIndex : 'weekRemark',
+						header : '订单生产备注'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.workorder2.query4JmDutyByPage.biz.ext',
@@ -192,6 +195,8 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 							name : 'jmAmount'
 						}, {
 							name : 'realityAmount'
+						}, {
+							name : 'weekRemark'
 						}]
 			})
 		})

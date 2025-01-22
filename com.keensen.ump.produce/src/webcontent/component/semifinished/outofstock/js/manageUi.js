@@ -537,6 +537,8 @@ com.keensen.ump.produce.component.OutofstockMgr = function() {
 									name : 'templateName'
 								}, {
 									name : 'baseId'
+								}, {
+									name : 'materSpecId'
 								}]
 					})
 				})

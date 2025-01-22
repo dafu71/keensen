@@ -3,10 +3,10 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 	var _this = this;
 	this.formulas = {
 		'PVA-165' : {
-			pva : 1.56,
-			c51 : 1.56,
-			c23 : 0.175,
-			ro : 96.705
+			pva : 1,
+			c51 : 1,
+			c23 : 0.12,
+			ro : 97.88
 		},
 		'PVA-205' : {
 			pva : 1,
@@ -14,11 +14,17 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 			c23 : 0,
 			ro : 99
 		},
-		'PVA-540' : {
+		'PVA540-S' : {
 			pva : 2,
 			c51 : 1.5,
 			c23 : 0.5,
 			ro : 96
+		},
+		'PVA540-U' : {
+			pva : 0.5,
+			c51 : 0.625,
+			c23 : 0.125,
+			ro : 98.75
 		}
 	}
 
@@ -100,9 +106,10 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 				var operatorName = this.editWindow2.operatorId.getRawValue();
 				this.editWindow2.operatorName.setValue(operatorName);
 			}, this);
-			
-	this.listPanel4Dilute.mon(this.listPanel4Dilute, 'afterdel', function(gird, cell) {
-			_this.listPanel.store.reload();	
+
+	this.listPanel4Dilute.mon(this.listPanel4Dilute, 'afterdel', function(gird,
+					cell) {
+				_this.listPanel.store.reload();
 
 			})
 
@@ -179,7 +186,6 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onCalc = function() {
 com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onDelList = function() {
 	this.listPanel4Dilute.onDel();
 }
-
 
 function roundToDecimalPlace(number, decimalPlaces) {
 	const factor = Math.pow(10, decimalPlaces);

@@ -16,7 +16,7 @@
     String uname = userObject.getUserName();
     int modifyOrderNoFlag = 0;
     //焦朝凤、李雅淇
-    if(uid.equals("KS00610")||uid.equals("KS01295")){
+    if(uid.equals("KS00610")||uid.equals("KS01295")||uid.equals("XXB")){
     		modifyOrderNoFlag = 1;
     }
 %>

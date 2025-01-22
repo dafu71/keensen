@@ -149,6 +149,9 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr = function() {
 						dataIndex : 'cdmStateName',
 						header : '计划作业状态'
 					}, {
+						dataIndex : 'weekRemark',
+						header : '订单生产备注'
+					}, {
 						dataIndex : 'orderId',
 						header : '订单ID'
 					}],
@@ -186,6 +189,8 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr = function() {
 							name : 'jmAmount'
 						}, {
 							name : 'realityAmount'
+						}, {
+							name : 'weekRemark'
 						}]
 			})
 		})

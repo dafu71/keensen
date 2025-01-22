@@ -353,6 +353,20 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 
 			}, this);
 
+	this.addDefectSampleWindow.activeItem.mon(
+			this.addDefectSampleWindow.activeItem, 'afterSave', function(gird,
+					cell) {
+				var _vals = _this.queryPanel.getForm().getValues();
+				_this.queryPanel.fireEvent("query", _this.queryPanel, _vals);
+			}, this);
+			
+	this.modifyRecordWindow.activeItem.mon(
+			this.modifyRecordWindow.activeItem, 'afterSave', function(gird,
+					cell) {
+				var _vals = _this.queryPanel.getForm().getValues();
+				_this.queryPanel.fireEvent("query", _this.queryPanel, _vals);
+			}, this);
+
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddTmDefect = function() {
@@ -364,6 +378,11 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddTmDefect = function() {
 		var r = C[0];
 		var tumoBatchNo = r.data.batchNo;
 		var tumoRecordId = r.data.recordId;
+		var ifModifyDefect = r.data.ifModifyDefect;
+		if (ifModifyDefect != '1' && modifyFlag != 1) {
+			Ext.Msg.alert("系统提示", "该涂膜批次不能编辑涂膜不良！");
+			return;
+		}
 		this.defectTmWin.inputPanel.tumoBatchNo.setValue(tumoBatchNo);
 		this.defectTmWin.inputPanel.tumoRecordId.setValue(tumoRecordId);
 		this.defectTmWin.inputPanel.produceDt.setValue(new Date());
@@ -654,9 +673,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.exportExcel = function() {
 	 * var fname = ret.fname; if (Ext.isIE) {
 	 * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); }
 	 * else { window.location.href =
-	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; }
-	 *  }
-	 *  }, callback : function() { _this.requestMask.hide() } })
+	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; } } },
+	 * callback : function() { _this.requestMask.hide() } })
 	 */
 }
 
@@ -893,3 +911,77 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onQueryByBatchNos = function() 
 		}
 	}, this, true);
 }
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onTakeSample = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var tumoBatchNo = r.data.batchNo;
+		var tumoBatchId = r.data.recordId;
+		var store = this.listPanel4defectSample.store;
+		store.baseParams = {
+			'condition/tumoBatchNo' : tumoBatchNo,
+			'condition/defectItemId' : '-100000020,100000031'
+		};
+		store.load({
+			params : {
+				"pageCond/begin" : 0,
+				"pageCond/length" : this.listPanel4defectSample.pagingToolbar.pageSize
+			}
+		});
+		this.defectSampleWindow.show();
+		this.addDefectSampleWindow.show();
+		this.addDefectSampleWindow.tumoBatchNo.setValue(tumoBatchNo);
+		this.addDefectSampleWindow.tumoBatchId.setValue(tumoBatchId);
+		this.addDefectSampleWindow.recorder.setValue(uname);
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddSample = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var tumoBatchNo = r.data.batchNo;
+		var tumoBatchId = r.data.recordId;
+
+		this.addDefectSampleWindow.show();
+		this.addDefectSampleWindow.tumoBatchNo.setValue(tumoBatchNo);
+		this.addDefectSampleWindow.tumoBatchId.setValue(tumoBatchId);
+		this.addDefectSampleWindow.recorder.setValue(uname);
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModify = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var tumoBatchNo = r.data.batchNo;
+		var tumoBatchId = r.data.recordId;
+		var specId = r.data.specId;
+		var store = this.listPanel4ModifyRecord.store;
+		store.baseParams = {
+			'condition/recordId' : tumoBatchId
+		};
+		store.load({
+			params : {
+				"pageCond/begin" : 0,
+				"pageCond/length" : this.listPanel4ModifyRecord.pagingToolbar.pageSize
+			}
+		});
+		this.modifyRecordListWindow.show();
+		this.modifyRecordWindow.show();
+		this.modifyRecordWindow.recordId.setValue(tumoBatchId);
+		this.modifyRecordWindow.batchNo.setValue(tumoBatchNo);
+		this.modifyRecordWindow.specId.setValue(specId);
+	}
+}
+

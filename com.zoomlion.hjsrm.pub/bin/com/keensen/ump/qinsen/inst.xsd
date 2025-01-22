@@ -290,61 +290,6 @@
             <xs:element minOccurs="0" name="macName" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="InstTumo">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="lineId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="specId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="wfSupId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="prodFlagId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="teamId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="teamSeg" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="outLength" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="perfFlagId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="isQualified" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="judgerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="judgeDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="judgeRemark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="dimoBatchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="planNo" nillable="true" type="xs:string"/>
-            <xs:element default="N" minOccurs="0" name="isValid" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="validTm" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="verifierId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="wfBatchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="thickAvg" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="thickMin" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="thickMax" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="tagNum" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="tagLength" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="inboundRemark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="isWx" nillable="true" type="xs:string"/>
-            <xs:element default="N" minOccurs="0" name="isCutOver" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="outBatchNo" nillable="true" type="xs:string"/>
-            <xs:element default="N" minOccurs="0" name="isKeep" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="mpd" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="orderNoBak" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="orderNoBakDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="dmUseLength" nillable="true" type="xs:decimal"/>
-            <xs:element default="N" minOccurs="0" name="isReplaceTrough" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="replaceTroughId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="waterBatchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="absorbance" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="ro" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="fxy" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="a" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="b" nillable="true" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="InstCaidiemo">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -369,23 +314,6 @@
             <xs:element minOccurs="0" name="isToMix" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="pageWidth" nillable="true" type="xs:decimal"/>
             <xs:element minOccurs="0" name="location" nillable="true" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="InstCdmDefect">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="tumoBatchId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="defectItemId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="loss" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="InstCdmDefect2">
@@ -480,6 +408,88 @@
             <xs:element minOccurs="0" name="monitorRemarkUserName2" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="gyyConclusion" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="gyySpecId" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstCdmDefect">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="tumoBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="defectItemId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="loss" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="position" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="labelNum" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="recorder" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ifTear" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstTumo">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lineId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="specId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="wfSupId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="prodFlagId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="teamId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="teamSeg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="outLength" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="perfFlagId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="isQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="judgerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="judgeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="judgeRemark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dimoBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="planNo" nillable="true" type="xs:string"/>
+            <xs:element default="N" minOccurs="0" name="isValid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="validTm" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="verifierId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="wfBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="thickAvg" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="thickMin" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="thickMax" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="tagNum" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="tagLength" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="inboundRemark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isWx" nillable="true" type="xs:string"/>
+            <xs:element default="N" minOccurs="0" name="isCutOver" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="outBatchNo" nillable="true" type="xs:string"/>
+            <xs:element default="N" minOccurs="0" name="isKeep" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mpd" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="orderNoBak" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orderNoBakDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dmUseLength" nillable="true" type="xs:decimal"/>
+            <xs:element default="N" minOccurs="0" name="isReplaceTrough" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="replaceTroughId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="waterBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="absorbance" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ro" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fxy" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="a" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="b" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="ifModifyDefect" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="batchNoOriginal" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="specIdOriginal" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="modifyTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyName" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

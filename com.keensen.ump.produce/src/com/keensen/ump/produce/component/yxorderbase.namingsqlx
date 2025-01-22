@@ -8,7 +8,7 @@
 	TO_CHAR(T1.CHANGE_TIME, 'yyyy-MM-dd') "changeTime",
        T1.CHANGE_USER_ID AS "changeUserId",
        T1.CHANGE_NAME AS "changeName",
-       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
        TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",

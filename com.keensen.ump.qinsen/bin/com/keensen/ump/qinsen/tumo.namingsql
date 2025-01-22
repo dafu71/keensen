@@ -3,7 +3,7 @@
 <sqlMap namespace="com.keensen.ump.qinsen.tumo">
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    		SELECT T1.RECORD_ID         AS "recordId", T1.dm_Use_Length as "dmUseLength",
-       T1.PLAN_NO           AS "planNo",
+       T1.PLAN_NO           AS "planNo",t1.if_modify_defect "ifModifyDefect",
        T1.DIMO_BATCH_NO     AS "dimoBatchNo",
        T1.BATCH_NO          AS "batchNo",
        T1.LINE_ID           AS "lineId",
@@ -36,6 +36,12 @@
        T1.THICK_AVG_flag         AS "thickAvgFlag",
        T1.THICK_MIN_flag         AS "thickMinFlag",
        T1.THICK_MAX_flag         AS "thickMaxFlag",
+       
+       T1.batch_no_original "batchNoOriginal",
+       T1.spec_id_original "specIdOriginal",T1.SPEC_NAME_ORIGINAL "specNameOriginal",
+       to_char(T1.modify_time,'yyyy-MM-dd HH24:mi:ss') "modifyTime",
+       T1.modify_user_id "modifyUserId",
+       T1.modify_name "modifyName",
        
        T1.TAG_NUM           AS "tagNum",
        T1.TAG_LENGTH        AS "tagLength",
@@ -90,7 +96,7 @@
        nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength",
        decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName"
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,A.water_batch_no,
-               A.PLAN_NO,
+               A.PLAN_NO,A.if_modify_defect,
                A.DIMO_BATCH_NO,
                A.BATCH_NO,
                A.LINE_ID,
@@ -116,6 +122,13 @@
                A.VALID_TM,
                A.VERIFIER_ID,
                A.WF_BATCH_NO,
+               
+               A.batch_no_original,
+               A.spec_id_original,
+               A.modify_time,
+               A.modify_user_id,
+               A.modify_name,
+               
                nvl(kdd.diameter_avg,A.THICK_AVG) THICK_AVG,
                nvl(kdd.diameter_min,A.THICK_MIN) THICK_MIN,
                nvl(kdd.diameter_max,A.THICK_MAX) THICK_MAX,
@@ -136,7 +149,7 @@
                L.LINE_CODE,
                L.LINE_NAME,
                S.MATER_SPEC_CODE,
-               S.MATER_SPEC_NAME,
+               S.MATER_SPEC_NAME,S2.MATER_SPEC_NAME SPEC_NAME_ORIGINAL,
                S.MP_BATCH_CODE,
                S.QT_JUDGE_FLAG,
                S.MATER_CLASS_ID,
@@ -186,6 +199,10 @@
   		  	
           LEFT JOIN QINSEN.BASE_PROD_LINE L
             ON A.LINE_ID = L.LINE_ID
+            
+          LEFT JOIN QINSEN.PARA_MATER_SPEC S2
+            ON A.SPEC_ID_ORIGINAL = S2.MATER_SPEC_ID
+            
           LEFT JOIN QINSEN.PARA_MATER_SPEC S
             ON A.SPEC_ID = S.MATER_SPEC_ID
           LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION O1
@@ -424,4 +441,44 @@
     
        AND (t2.max_mpd &gt;= #maxMpd# 	
 	   or T2.SUM_OUT_LENGTH &gt;=  DECODE(T2.MATER_CLASS_CODE,'BW',15000,'ULP',30000,1000000000) )</select>
+    <select id="queryModifyRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id",
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.RELATION_ID as "relationId",
+		t1.ITEM_NAME as "itemName",
+		decode(t1.ITEM_NAME,'膜片型号',s.mater_spec_name, t1.VALUE_BEFORE) as "valueBefore",
+		decode(t1.ITEM_NAME,'膜片型号',s2.mater_spec_name, t1.VALUE_AFTER) as "valueAfter",
+		tm.batch_no as "batchNo",tm.batch_no_original as "batchNoOriginal"
+     from KS_INST_TUMO_MODIFY_RECORD t1
+     left join qinsen.inst_tumo tm
+     on t1.RELATION_ID = tm.record_id
+     left join QINSEN.PARA_MATER_SPEC S
+            ON to_char(t1.VALUE_BEFORE) = to_char(S.MATER_SPEC_ID) and t1.item_name = '膜片型号'
+     left join QINSEN.PARA_MATER_SPEC S2
+            ON to_char(t1.VALUE_AFTER) = to_char(S2.MATER_SPEC_ID) and t1.item_name = '膜片型号'
+     WHERE 1 = 1
+       <isNotNull prepend="" property="recordId">AND t1.RELATION_ID = #recordId#</isNotNull>
+	order by t1.id desc
+      </select>
+    <update id="modifyRecord" parameterClass="java.util.HashMap">UPDATE qinsen.inst_tumo t SET t.batch_No = #batchNo#,
+	t.spec_id = #specId#,
+	t.change_dt = sysdate,
+	t.modify_time = sysdate,
+	t.modify_user_id = #modifyUserId#,
+	t.modify_name = #modifyName#
+	WHERE t.record_id = #recordId#
+	and not exists(select 1 from qinsen.inst_tumo tm where tm.batch_No = #batchNo#
+	and tm.record_id != #recordId#)</update>
 </sqlMap>

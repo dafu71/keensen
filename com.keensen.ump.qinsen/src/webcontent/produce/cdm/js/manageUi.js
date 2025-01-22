@@ -15,6 +15,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 		this.initRemainLengthWindow();
 
+		this.initUpdateIsCutOverWindow();
+
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					// id : defectTmWinId,
 					dutyTacheCode : 'TM',
@@ -631,6 +633,20 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					colspan : 12
 				}, {
 					xtype : 'displayfield',
+					ref : '../../displayfield1',
+					height : 5,
+					colspan : 24
+				}, {
+					xtype : 'textfield',
+					ref : '../../prodRemark',
+					// name : 'entity/jmAmount',
+					// allowBlank : false,
+					readOnly : true,
+					anchor : '95%',
+					fieldLabel : '订单生产备注',
+					colspan : 24
+				}, {
+					xtype : 'displayfield',
 					fieldLabel : "<span style='color:red'>" + '裁叠膜信息'
 							+ "</span>",
 					colspan : 24,
@@ -1054,7 +1070,26 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								'expand' : function(A) {
 									this.editWindow.isToMix.reset();
 								}
-							}
+							},
+							colspan : 1
+						}, {
+							ref : '../../isCutOver',
+							xtype : 'combo',
+							name : 'entity/isCutOver',
+							hiddenName : 'entity/isCutOver',
+							dataIndex : 'isCutOver',
+							anchor : '75%',
+							fieldLabel : '已裁完',
+							allowBlank : false,
+							store : [['Y', '是'], ['N', '否']],
+							emptyText : '--请选择--',
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.editWindow.isCutOver.reset();
+								}
+							},
+							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -1150,6 +1185,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							name : 'entity/recordId',
 							xtype : 'hidden',
 							dataIndex : 'recordId'
+						}, {
+							name : 'entity/tumoBatchId',
+							xtype : 'hidden',
+							dataIndex : 'tumoBatchId'
 						}]
 			}]
 		});
@@ -1214,7 +1253,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 				});
 	}
 
-	this.initRemainLengthWindow = function() {		
+	this.initRemainLengthWindow = function() {
 
 		var selModel4RemainLength = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : false,
@@ -1257,8 +1296,6 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					})
 				})
 
-				
-				
 		this.queryPanel4RemainLength = this.queryPanel4RemainLength
 				|| new Ext.fn.QueryPanel({
 					height : 80,
@@ -1288,11 +1325,11 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 										}]
 							}]
 				});
-				
+
 		this.queryPanel4RemainLength.addButton({
 					text : "导出",
 					scope : this,
-					//rescode : '10002661',
+					// rescode : '10002661',
 					iconCls : 'icon-application_excel',
 					handler : this.exportRemainLength
 				});
@@ -1321,6 +1358,75 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					items : [this.queryPanel4RemainLength,
 							this.listPanel4RemainLength]
 
+				});
+	}
+
+	this.initUpdateIsCutOverWindow = function() {
+		var _this = this;
+		this.updateIsCutOverWindow = this.updateIsCutOverWindow
+				|| new Ext.fn.FormWindow({
+					title : '膜片裁完确认',
+					height : 320,
+					width : 480,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'inputpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+
+							_this.updateIsCutOverWindow.hide();
+							var _vals = _this.queryPanel.getForm().getValues();
+							_this.queryPanel.fireEvent("query",
+									_this.queryPanel, _vals);
+
+						},
+						columns : 2,
+						saveUrl : 'com.keensen.ump.qinsen.tumo.saveTumoIsCutOver.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '膜片批次',
+									anchor : '90%',
+									colspan : 2,
+									allowBlank : false,
+									readOnly : true,
+									name : 'tumo/batchNo',
+									ref : '../../batchNo'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'radiogroup',
+									columns : 2,
+									name : 'isCutOver',
+									ref : '../../isCutOver',
+									allowBlank : false,
+									fieldLabel : '是否已裁完<span style="color:red">*</span>',
+									anchor : '90%',
+									items : [{
+												boxLabel : '已裁完',
+												name : 'tumo/isCutOver',
+												inputValue : 'Y',
+												checked : true
+											}, {
+												boxLabel : '未裁完',
+												name : 'tumo/isCutOver',
+												inputValue : 'N'
+											}],
+									colspan : 2
+								}, {
+									name : 'tumo/recordId',
+									ref : '../../recordId',
+									xtype : 'hidden'
+								}]
+					}]
 				});
 	}
 }

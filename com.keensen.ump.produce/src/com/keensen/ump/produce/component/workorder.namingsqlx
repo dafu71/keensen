@@ -64,7 +64,7 @@
   t2.order_no "orderNo",t2.mater_spec_id "materSpecId",t2.mater_spec_name "materSpecName",
   t2.order_type "orderType",
     t2.mater_spec_name2 "materSpecName2",
-    t2.order_amount "orderAmount",
+    t2.order_amount "orderAmount", t1.week_remark "weekRemark",
     
     
   nvl(t3.cdm_codes,m.machine_code) "cdmCodes",
@@ -79,8 +79,10 @@
   decode(nvl(t3.cdm_state,0),0,'处理中',1,'完成',2,'异常','') "cdmStateName",
   nvl(v.reality_Amount,0) "realityAmount"
    from 
-  (select t.plan_date,sum(t.meter_amount) meter_amount,t.order_id ,min(t.jm_amount) jm_amount
+  (select t.plan_date,sum(t.meter_amount) meter_amount,t.order_id ,min(t.jm_amount) jm_amount,
+  max(w.remark) week_remark
   from KS_COMPONENT_PLAN_DAY t
+  left join KS_COMPONENT_PLAN_WEEK w on w.id = t.relation_id
    WHERE t.plan_date IS NOT NULL
   GROUP BY t.order_id,plan_date) t1
   
@@ -215,7 +217,7 @@
   t2.order_no "orderNo",t2.mater_spec_id "materSpecId",t2.mater_spec_name "materSpecName",
   t2.order_type "orderType",
     t2.mater_spec_name2 "materSpecName2",
-    t2.order_amount "orderAmount",
+    t2.order_amount "orderAmount",t1.week_remark "weekRemark",
     
     nvl(t3.jm_codes,m.jm_codes) "jmCodes",
   
@@ -231,8 +233,10 @@
   <!--, cm.product_order "cmProductOrder"
   , cm.ARRANGE_DATE "cmArrangeDate"-->
    from 
-  (select t.plan_date,sum(t.meter_amount) meter_amount,t.order_id ,min(t.jm_amount) jm_amount
+  (select t.plan_date,sum(t.meter_amount) meter_amount,t.order_id ,min(t.jm_amount) jm_amount,
+  max(w.remark) week_Remark
   from KS_COMPONENT_PLAN_DAY t
+  left join KS_COMPONENT_PLAN_WEEK w on w.id = t.relation_id
   GROUP BY t.order_id,plan_date) t1
   <!--LEFT JOIN KS_COMPONENT_DUTY_CDM cm
   ON  t1.order_id = cm.order_id and t1.plan_date = cm.plan_date
@@ -480,7 +484,7 @@
    	to_char(t1.ARRANGE_DATE,'yyyy-MM-dd') "arrangeDate",
        T1.ORDER_ID "orderId",T1.product_Order "productOrder",
        DECODE(SUBSTR(T2.ORDER_NO, 1, 2), 'SG', '1', '0') "testOrder",
-       T2.ORDER_NO "orderNo",
+       T2.ORDER_NO "orderNo",T2.reserve2 "prodRemark",
        T2.MATER_SPEC_ID "materSpecId",
        T2.MATER_SPEC_NAME "materSpecName",
        T2.ORDER_TYPE "orderType",
@@ -778,7 +782,7 @@
        T2.MATER_SPEC_ID "materSpecId",
        T2.MATER_SPEC_NAME "materSpecName",
        T2.ORDER_TYPE "orderType",
-       T2.MATER_SPEC_NAME2 "materSpecName2",
+       T2.MATER_SPEC_NAME2 "materSpecName2",T2.reserve2 "prodRemark",
        T2.ORDER_AMOUNT "orderAmount",
        nvl(t1.pack_state,0) "packState",
            t3.jm_amount "jmAmount",

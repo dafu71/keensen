@@ -957,7 +957,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'createTime',
-						header : '导入日期',
+						header : '导入时间',
 						sortable : true
 					}, {
 						dataIndex : 'id',

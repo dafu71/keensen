@@ -380,4 +380,74 @@
             <edit name="" type="text"/>
         </field>
     </viewModel>
+    <viewModel author="dafu" displayName="KsReportBoardHandover" entityName="com.keensen.ump.produce.report.KsReportBoardHandover" id="KsReportBoardHandover">
+        <field dataType="Date" dict="false" entityField="createTime" id="createTime" label="创建时间">
+            <view type="write"/>
+            <edit name="createTime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="createUserId" id="createUserId" label="创建人ID">
+            <view type="write"/>
+            <edit name="createUserId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="createName" id="createName" label="创建人">
+            <view type="write"/>
+            <edit name="createName" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="updateTime" id="updateTime" label="修改时间">
+            <view type="write"/>
+            <edit name="updateTime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="updateUserId" id="updateUserId" label="修改人ID">
+            <view type="write"/>
+            <edit name="updateUserId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="updateName" id="updateName" label="修改人">
+            <view type="write"/>
+            <edit name="updateName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="reserve1" id="reserve1" label="备用字段1">
+            <view type="write"/>
+            <edit name="reserve1" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="reserve2" id="reserve2" label="备用字段2">
+            <view type="write"/>
+            <edit name="reserve2" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="reserve3" id="reserve3" label="备用字段3">
+            <view type="write"/>
+            <edit name="reserve3" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="reserve4" id="reserve4" label="备用字段4">
+            <view type="write"/>
+            <edit name="reserve4" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="reserve5" id="reserve5" label="备用字段5">
+            <view type="write"/>
+            <edit name="reserve5" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="orgId" id="orgId" label="所属单位ID">
+            <view type="write"/>
+            <edit name="orgId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="status" id="status" label="是否有效：0无效，1有效">
+            <view type="write"/>
+            <edit name="status" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="boardDate" id="boardDate" label="看板日期">
+            <view type="write"/>
+            <edit name="boardDate" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="classes" id="classes" label="班次（早、中、晚）">
+            <view type="write"/>
+            <edit name="classes" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="lineId" id="lineId" label="生产线ID">
+            <view type="write"/>
+            <edit name="lineId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="item" id="item" label="事项">
+            <view type="write"/>
+            <edit name="item" type="text"/>
+        </field>
+    </viewModel>
 </viewModelSet>

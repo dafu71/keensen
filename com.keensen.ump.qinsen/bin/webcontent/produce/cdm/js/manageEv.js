@@ -143,6 +143,24 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 				});
 			}, this);
 
+	this.defectTmWin.mon(this.defectTmWin, 'beforehide', function() {
+
+		var A = this.listPanel;
+		if (!A.getSelectionModel().getSelected()) {
+			return;
+		} else {
+			var C = A.getSelectionModel().getSelections();
+			var rec = C[0];
+			var tumoBatchId = rec.data.tumoBatchId;
+			var tumoBatchNo = rec.data.tumoBatchNo;
+			var isCutOver = rec.data.isCutOver;
+			this.updateIsCutOverWindow.show();
+			this.updateIsCutOverWindow.recordId.setValue(tumoBatchId);
+			this.updateIsCutOverWindow.batchNo.setValue(tumoBatchNo);
+			this.updateIsCutOverWindow.isCutOver.setValue(isCutOver);
+		}	
+	}, this);
+
 }
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onEdit = function() {
@@ -294,12 +312,13 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 	this.inputWindow.displayfield3.setVisible(true);
 	this.inputWindow.jmAmount.setVisible(true);
 	this.inputWindow.realityAmount.setVisible(true);
+	this.inputWindow.prodRemark.setVisible(true);
 
 	this.inputWindow.tumoBatchNo.setVisible(true);
 	this.inputWindow.tumoBatchNo.setDisabled(false);
 
 	this.onPlan();
-	
+
 	this.inputWindow.orderNo.setReadOnly(true);
 	this.inputWindow.show();
 }
@@ -406,6 +425,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPlan = function() {
 					var jmAmount = ret.data[0].jmAmount;
 					var materSpecId = ret.data[0].materSpecId;
 					var realityAmount = ret.data[0].realityAmount;
+					var prodRemark = ret.data[0].weekRemark;
+
 					_this.inputWindow.orderNo.setValue(orderNo);
 					_this.inputWindow.tumoBatchNo.setValue(tumoBatchNo);
 					_this.inputWindow.orderType.setValue(orderType);
@@ -416,6 +437,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPlan = function() {
 					_this.inputWindow.prodSpecId.setValue(materSpecId);
 					_this.inputWindow.orderId.setValue(orderId);
 					_this.inputWindow.realityAmount.setValue(realityAmount);
+
+					_this.inputWindow.prodRemark.setValue(prodRemark);
 
 					var i = _this.inputWindow.prodSpecId.store.find('id',
 							materSpecId);
@@ -535,6 +558,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	this.inputWindow.displayfield3.setVisible(false);
 	this.inputWindow.jmAmount.setVisible(false);
 	this.inputWindow.realityAmount.setVisible(false);
+	this.inputWindow.prodRemark.setVisible(false);
 
 	this.inputWindow.tumoBatchNo.setVisible(false);
 	this.inputWindow.tumoBatchNo.setDisabled(true);

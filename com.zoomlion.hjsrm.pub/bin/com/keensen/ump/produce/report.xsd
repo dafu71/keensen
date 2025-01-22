@@ -113,4 +113,26 @@
             <xs:element minOccurs="0" name="class" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="KsReportBoardHandover">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="boardDate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="classes" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lineId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="item" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

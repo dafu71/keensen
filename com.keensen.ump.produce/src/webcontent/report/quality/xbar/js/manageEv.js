@@ -23,7 +23,7 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = functi
 					var mpStandStore = this.mpStandStore;
 					mpStandStore.baseParams = ({
 						'condition/specId' : specId,
-						'condition/isWx' : 'n',
+						'condition/isWx' : '否',
 						'condition/lineId' : lineId,
 						'condition/levelId' : 300029
 					});
@@ -42,6 +42,7 @@ com.keensen.ump.produce.report.quality.xbar.XbarMgr.prototype.initEvent = functi
 					return;
 				} else {
 					var records2 = _this.mpStandStore.getRange();
+		
 					var gfdLow = records2[0].data.gfdLow;
 					var gfdUp = records2[0].data.gfdUp;
 					var gfdAverage = records2[0].data.gfdAvg;

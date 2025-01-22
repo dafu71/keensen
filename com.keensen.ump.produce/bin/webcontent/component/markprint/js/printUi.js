@@ -459,6 +459,19 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						anchor : '85%',
 						colspan : 1
 					}, {
+							xtype : 'displayfield',
+							ref : '../displayfield1',
+							height : 5,
+							colspan : 3
+						}, {
+							xtype : 'displayfield',
+							ref : '../prodRemark',
+							dataIndex : 'prodRemark',
+							readOnly : true,
+							anchor : '95%',
+							fieldLabel : '订单生产备注',
+							colspan : 4
+						}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">贴标信息</p>',
 						labelSeparator : '',// 去掉冒号

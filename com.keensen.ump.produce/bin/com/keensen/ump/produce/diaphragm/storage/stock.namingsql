@@ -97,7 +97,7 @@
        WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'yellow'
        END) = #ifWarn#</isNotNull>
 	
-	order by t1.STORAGE_ID
+	order by vkt.PRODUCE_DT desc nulls last
      </select>
     <select id="queryWarehousing" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
      select t1.ID             as "id",
@@ -344,4 +344,49 @@
      t.choice_dt = to_date(#choiceDt#,'yyyy-MM-dd'),t.update_time = sysdate,
      t.update_user_id = #updateUserId#,t.update_name = #updateName#
      where t.id in($ids$)</update>
+    <select id="queryStockAmount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select sum(t1.amount) "stockAmount"
+  from KS_PROD_DIAPHRAGM_STOCK t1
+  left join ks_base_storage t2 on t1.storage_id=t2.id
+  left join V_KS_TUMO vkt on t1.batch_no = vkt.batch_no
+   LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'N'
+                     GROUP BY C.BATCH_ID) T7
+            ON T7.BATCH_ID = vkt.RECORD_ID
+          LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+                           MAX(C.GFD_AVG) GFD_AVG,
+                           C.BATCH_ID,
+                           MAX(C.SALT_REJECTION) SALT_REJECTION
+                      FROM QINSEN.INST_TUMO_CHECK C
+                     WHERE C.RECHECK_FLAG = 'Y'
+                     GROUP BY C.BATCH_ID) T8
+            ON T8.BATCH_ID = vkt.RECORD_ID
+  where 1=1
+   <isEqual compareValue="Y" prepend="and" property="notZero">t1.AMOUNT &gt; 0</isEqual>
+        <isNotNull prepend="and" property="ids">t1.id in($ids$)</isNotNull>
+        <isNotNull prepend="and" property="position">t1.position = #position#</isNotNull>
+        <isNotNull prepend="and" property="perfFlagId">vkt.PERF_FLAG_ID = #perfFlagId#</isNotNull>
+        <isNotNull prepend="and" property="lineId">vkt.line_id = #lineId#</isNotNull>
+        <isNotNull prepend="and" property="specId">vkt.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="supId">vkt.SUP_ID = #supId#</isNotNull>
+        <isNotNull prepend="and" property="isWx">vkt.is_wx = #isWx#</isNotNull>
+        <isNotNull prepend="and" property="storageName">t2.name like '%'||#storageName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="storageId">t1.storage_id = #storageId#</isNotNull>
+        <isNotNull prepend="and" property="storageIds">t1.storage_id in($storageIds$)</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">upper(vkt.order_No) like '%' || upper(#orderNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="planNo">upper(vkt.plan_No) '%' || upper(#planNo#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">t1.batch_no in($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="ifChoice">t1.if_Choice = #ifChoice#</isNotNull>
+        <isNotNull prepend="and" property="ifWarn">(CASE WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'red'
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;15) THEN 'yellow'
+          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) THEN 'red'
+       WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'yellow'
+       END) = #ifWarn#</isNotNull>
+    </select>
 </sqlMap>

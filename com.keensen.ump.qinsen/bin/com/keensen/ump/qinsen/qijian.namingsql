@@ -43,6 +43,9 @@
 		decode(z.gyy_conclusion,'A','放行原订单','B','降级','C','改判其他无特殊要求的同型号产品','D','报废','E','送水测','F','染色解剖','') "gyyConclusion",
 		z.gyy_SPEC_ID "gyySpecId",
 		z.gyy_SPEC_name "gyySpecName",
+		
+		z.diff "diff",
+		case when z.diff&gt;5 then '是' else '否' end "packageModify",
 		 
 		Z.MONITOR_REMARK as "monitorRemark",
 		TO_CHAR(Z.MONITOR_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "monitorRemarkTime",
@@ -60,7 +63,12 @@
 		Z.WATER_REMARK_USER_NAME as "waterRemarkUserName",
 		z.DRY_WET as "dryWet",Z.trailer "trailer",
 		
-		
+		to_char(z.modify_order_no_time,'yyyy-MM-dd HH24:mi:ss') "modifyOrderNoTime",
+		z.modify_order_no_name "modifyOrderNoName",
+		z.modify_order_no_user_id "modifyOrderNoUserId",
+		z.order_no_original "orderNoOriginal",
+	    z.prod_spec_id_original "prodSpecIdOriginal", 
+	    z.prod_SPEC_name_original "prodSpecNameOriginal", 
 		
        DECODE(Z.IS_QUALIFIED, 'Y', '是', 'N', '否', '') "isQualifiedName",
        DECODE(Z.IS_FIRST, 'Y', '首检', 'N', '复检', '') "isFirstName",
@@ -105,6 +113,8 @@
 	       A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID, A.CHANGER_ID, A.REMARK,
 	       A.JUDGE_FLAG, A.NG_ITEM, A.JUDGER_ID, A.JUDGE_DT,A.diameter,A.diameter2,
 	       
+	       A.modify_order_no_time ,A.modify_order_no_name,A.modify_order_no_user_id,A.order_no_original,A.prod_spec_id_original,
+	       A.prod_SPEC_name_original,
 	       A.GYY_REMARK_TIME,A.GYY_REMARK_USER_ID,A.GYY_REMARK_USER_NAME,
 	       A.gyy_conclusion,A.gyy_SPEC_ID,A.gyy_SPEC_name,
 			A.MONITOR_REMARK,A.MONITOR_REMARK_TIME,A.MONITOR_REMARK_USER_ID,
@@ -116,13 +126,30 @@
 			A.WATER_REMARK_USER_ID ,
 			A.WATER_REMARK_USER_NAME ,A.DRY_WET,J.trailer,
 		       
-	       
+	       A.diff,
+	        
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
-	  FROM (SELECT QJ.*, pms.MATER_SPEC_name gyy_SPEC_name,
-CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET
+	  FROM (SELECT QJ.*, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
+CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET,
+
+TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
+                                     SYSDATE - 10000),
+                                 'yyyy-mm-dd hh24:mi:ss'),
+                         'yyyy-mm-dd hh24:mi:ss') -
+                 TO_DATE(TO_CHAR(RS.PRODUCE_DT, 'yyyy-mm-dd hh24:mi:ss'),
+                         'yyyy-mm-dd hh24:mi:ss')) diff
+
+
   FROM QINSEN.INST_QIJIAN QJ
+  
+  left join  qinsen.PARA_MATER_SPEC pms2
+  on QJ.prod_SPEC_ID_original = PMS2.MATER_SPEC_ID
+  
+  LEFT JOIN (SELECT max(PRODUCE_DT) PRODUCE_DT,BATCH_NO FROM QINSEN.INST_RAOSI 
+  GROUP BY BATCH_NO) RS
+    ON RS.BATCH_NO = QJ.BATCH_NO
   left join  qinsen.PARA_MATER_SPEC pms
   on QJ.gyy_SPEC_ID = PMS.MATER_SPEC_ID
   LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
@@ -338,9 +365,18 @@ CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET
     <select id="qryNgItemOption" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT distinct A.NG_ITEM "ngItem" FROM qinsen.INST_QIJIAN A 
 		WHERE A.NG_ITEM IS NOT NULL ORDER BY 1</select>
     <!-- 批量改订单 -->
-    <update id="modiOrder" parameterClass="java.util.HashMap">UPDATE qinsen.INST_QIJIAN t  SET t.order_no = #orderNo#,
-	t.change_dt = SYSDATE,t.changer_id = #changerId#
-	WHERE t.record_id IN($recordIds$)</update>
+    <update id="modiOrder" parameterClass="java.util.HashMap">
+	UPDATE qinsen.INST_QIJIAN t  SET t.order_no = #orderNo#,
+	
+	<isNotNull prepend="" property="prodSpecId">t.prod_spec_id = #prodSpecId#,</isNotNull>
+	
+	t.order_no_original = t.order_no,t.prod_spec_id_original = t.prod_spec_id,
+	t.change_dt = SYSDATE,t.changer_id = #changerId#,
+	t.modify_order_no_time = sysdate,
+	t.modify_order_no_name = #userName#,
+	t.modify_order_no_user_id = #userId#	
+	WHERE t.record_id IN($recordIds$)
+	</update>
     <!-- 查询是否有唯一键冲突记录 -->
     <select id="queryDuplicateQjStd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	SELECT *

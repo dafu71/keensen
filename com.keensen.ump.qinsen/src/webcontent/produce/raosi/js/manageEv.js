@@ -1,5 +1,19 @@
 com.keensen.ump.qinsen.produce.raosiMgr.prototype.initEvent = function() {
 	var _this = this;
+
+	// 查询事件
+	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleOrderListPanel.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		// var start = vals['condition/produceBeginDate'];
@@ -140,6 +154,9 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.onScan = function() {
 										.setValue(dd.labelDouble);
 								_this.raosiAddWindow.labelDrawingCode
 										.setValue(dd.labelDrawingCode);
+										
+								_this.raosiAddWindow.prodRemark
+										.setValue(dd.prodRemark);
 								_this.raosiAddWindow.saveData();
 							} else {
 								Ext.Msg.alert("系统提示", "该元件序号不存在，请检查！",
@@ -219,7 +236,20 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.exportExcel = function() {
 	})
 }
 
-com.keensen.ump.qinsen.produce.raosiMgr.prototype.modiOrder = function() {
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.onModiOrder = function() {
+
+	var _this = this;
+	var grid = this.listPanel;
+
+	var records = grid.getSelectionModel().getSelections();
+	if (records.length == 0) {
+		Ext.Msg.alert('系统提示', '请先选择数据');
+		return false;
+	}
+	this.chooseSingleOrderWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.onChooseSingleOrder = function() {
 	var _this = this;
 	var grid = this.listPanel;
 
@@ -243,21 +273,36 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.modiOrder = function() {
 		arr.push(recordId);
 	}
 
+	var orderNo = '';
+	var prodSpecId = '';
+	var orderNo = '';
+	var B = this.chooseSingleOrderListPanel.getSelectionModel().getSelections();
+	if (B && B.length == 1) {
+		orderNo = B[0].get('orderNo');
+		prodSpecId = B[0].get('materSpecId');
+
+	}
+	
+	if (Ext.isEmpty(orderNo)) {
+		Ext.Msg.alert('系统提示', '请选择订单号');
+		return false;
+	}
+	
 	Ext.Msg.confirm('提示', '共' + records.length + '个批次，您确定要修改这些产品的订单号？',
 			function(btn) {
 				if (btn === 'yes') {
-					Ext.Msg.prompt('批量改订单', '请输入新订单号', function(btn, text) {
-						if (btn == 'ok') {
-							_this.requestMask = this.requestMask
-									|| new Ext.LoadMask(Ext.getBody(), {
-												msg : "后台正在操作,请稍候!"
-											});
-							_this.requestMask.show();
-							Ext.Ajax.request({
-								url : "com.keensen.ump.qinsen.raosi.modiOrder.biz.ext",
+
+					_this.requestMask = this.requestMask
+							|| new Ext.LoadMask(Ext.getBody(), {
+										msg : "后台正在操作,请稍候!"
+									});
+					_this.requestMask.show();
+					Ext.Ajax.request({
+								url : "com.keensen.ump.qinsen.raosi.modiOrderAndProdSpecId.biz.ext",
 								method : "post",
 								jsonData : {
-									orderNo : text.trim(),
+									orderNo : orderNo,
+									prodSpecId : prodSpecId,
 									recordIds : arr.join(',')
 								},
 								success : function(resp) {
@@ -267,6 +312,7 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.modiOrder = function() {
 												function() {
 													_this.listPanel.store
 															.load();
+													_this.chooseSingleOrderWindow.hide();
 
 												})
 									} else {
@@ -279,8 +325,7 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.modiOrder = function() {
 									_this.requestMask.hide()
 								}
 							})
-						}
-					});
 				}
 			});
+
 }

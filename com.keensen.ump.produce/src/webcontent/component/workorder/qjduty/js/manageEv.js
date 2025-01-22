@@ -52,6 +52,7 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr.prototype.initEvent = func
 
 com.keensen.ump.produce.component.workorder.QjdutyMgr.prototype.onArrange = function() {
 	this.window4Arrange.show();
+	this.listPanel4Arrange.store.removeAll();
 }
 
 com.keensen.ump.produce.component.workorder.QjdutyMgr.prototype.onAddArrange = function() {

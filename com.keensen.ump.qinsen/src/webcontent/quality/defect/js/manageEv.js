@@ -1,6 +1,7 @@
 com.keensen.ump.qinsen.quality.DefectMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	this.opt = '';
 
 	if (!Ext.isEmpty(tumoBatchNo4Search) && 'null' != tumoBatchNo4Search) {
 		// alert(tumoBatchNo4Search);
@@ -22,13 +23,13 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.initEvent = function() {
 
 	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
 
-				//var C = gird.getSelectionModel().getSelections();
-				//var r = C[0];
-				//var recordId = r.data.recordId;
-				//var flag = r.data.flag;
-				//if (flag == 'DM') {
-				//	return false;
-				//}
+				// var C = gird.getSelectionModel().getSelections();
+				// var r = C[0];
+				// var recordId = r.data.recordId;
+				// var flag = r.data.flag;
+				// if (flag == 'DM') {
+				// return false;
+				// }
 
 			})
 	// 查询事件
@@ -47,9 +48,34 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.initEvent = function() {
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 
 				var flag = cell.get('flag');
+				var ifModifyDefect = cell.get('ifModifyDefect');
+				var tumoBatchNo = cell.get('tumoBatchNo');
+				var tumoBatchId = cell.get('tumoBatchId');
+
+				if (this.opt == 'defectTm') {
+					if (ifModifyDefect != '1' && modifyFlag != 1) {
+						Ext.Msg.alert("系统提示", "该涂膜批次不能编辑涂膜不良！");
+						return;
+					}
+					this.defectTmWin.inputPanel.tumoBatchNo
+							.setValue(tumoBatchNo);
+					this.defectTmWin.inputPanel.tumoRecordId
+							.setValue(tumoBatchId);
+					this.defectTmWin.inputPanel.produceDt.setValue(new Date());
+					this.defectTmWin.inputPanel.produceDt.setReadOnly(true);
+					this.defectTmWin.show();
+					return;
+				}
+
 				if (flag == 'TM') {
-					this.editWindow.show();
-					this.editWindow.loadData(cell);
+					// 膜片不良记录修改
+					if (ifModifyDefect == '1' || modifyFlag == 1) {
+						this.editWindow.show();
+						this.editWindow.loadData(cell);
+					}else{
+						Ext.Msg.alert("系统提示", "该涂膜批次不能编辑涂膜不良！");
+						return;
+					}
 				} else {
 					this.editWindow2.show();
 					this.editWindow2.loadData(cell);
@@ -90,40 +116,21 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.onDel = function() {
 };
 
 com.keensen.ump.qinsen.quality.DefectMgr.prototype.exportExcel = function() {
-	
+
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '膜片不良记录',
 			'com.keensen.ump.qinsen.quality.queryDefect');
-	/*var _this = this;
-	var daochu = _this.queryPanel.getForm().getValues();
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.keensen.ump.qinsen.quality.exportDefect.biz.ext",
-		method : "post",
-		jsonData : daochu,
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-				if (ret.success) {
-					var fname = ret.fname;
-					if (Ext.isIE) {
-						window
-								.open('/default/deliverynote/seek/down4IE.jsp?fname='
-										+ fname);
-					} else {
-						window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-								+ fname;
-					}
-				}
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})*/
+	/*
+	 * var _this = this; var daochu = _this.queryPanel.getForm().getValues();
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.keensen.ump.qinsen.quality.exportDefect.biz.ext", method : "post",
+	 * jsonData : daochu, success : function(resp) { var ret =
+	 * Ext.decode(resp.responseText); if (ret.success) { if (ret.success) { var
+	 * fname = ret.fname; if (Ext.isIE) { window
+	 * .open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); } else {
+	 * window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" +
+	 * fname; } } } }, callback : function() { _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.qinsen.quality.DefectMgr.prototype.onAdd = function() {
@@ -144,7 +151,9 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.onEdit = function() {
 
 // 涂膜录入涂膜不良
 com.keensen.ump.qinsen.quality.DefectMgr.prototype.onAddTm = function() {
-	this.defectTmWin.show();
+	this.opt = 'defectTm';
+	this.listPanel.onEdit();
+	// this.defectTmWin.show();
 };
 
 // 涂膜录入铸膜不良
@@ -160,4 +169,9 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.onAddTm2 = function() {
 // 裁膜录入铸膜不良
 com.keensen.ump.qinsen.quality.DefectMgr.prototype.onAddZm2 = function() {
 	this.defectZmWin2.show();
+};
+
+//膜片取样
+com.keensen.ump.qinsen.quality.DefectMgr.prototype.onTakeSample = function() {
+	
 };

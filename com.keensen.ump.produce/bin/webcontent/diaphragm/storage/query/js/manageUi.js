@@ -270,6 +270,13 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						xtype : 'displayfield',
 						value : '',
 						id : 'deliveryRedAmount'
+					},'->', {
+						xtype : 'displayfield',
+						value : '',
+						id : 'storageStockAmount'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}],
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {

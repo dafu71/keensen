@@ -97,6 +97,8 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.onScan = function() {
 				_this.inputPanel.orderNo.setValue(data[0].orderNo);
 				_this.inputPanel.prodSpecId.setValue(data[0].prodSpecId);
 				_this.inputPanel.qjBatchId.setValue(data[0].qjBatchId);
+				_this.inputPanel.prodSpecId.setValue(data[0].prodSpecId);
+				
 
 			}
 		}
@@ -107,6 +109,8 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.onSave = function() {
 	var _this = this;
 	var newOrderNo = this.inputPanel.newOrderNo.getValue();
 	newOrderNo = newOrderNo.trim();
+	var prodSpecId = this.inputPanel.prodSpecId.getValue();
+	prodSpecId = prodSpecId.trim();
 	var takeUserName = this.inputPanel.takeUserName.getValue();
 	var takeUserId = this.inputPanel.takeUserId.getValue();
 
@@ -129,6 +133,8 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.onSave = function() {
 								_this.inputPanel.form.reset();
 								_this.inputPanel.newOrderNo
 										.setValue(newOrderNo);
+								_this.inputPanel.prodSpecId
+										.setValue(prodSpecId);
 								_this.inputPanel.takeUserName
 										.setValue(takeUserName);
 								_this.inputPanel.takeUserId
@@ -194,8 +200,10 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.onChooseSingleOrder = 
 	var B = this.chooseSingleOrderListPanel.getSelectionModel().getSelections();
 	if (B && B.length == 1) {
 		var orderNo = B[0].get('orderNo');
+		var prodSpecId = B[0].get('materSpecId');
 
 		this.inputPanel.newOrderNo.setValue(orderNo);
+		this.inputPanel.prodSpecId.setValue(prodSpecId);
 
 		this.chooseSingleOrderWindow.hide();
 	}

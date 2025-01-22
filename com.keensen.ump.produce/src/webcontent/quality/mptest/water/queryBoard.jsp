@@ -90,23 +90,23 @@
   <tr class="">
   <% } %>
   
-    	<td align='center' class="<%=style5 %>">
-    	<%=list[i].getString("materName") %>
+    	<td align='center' class="<%=style5 %>" style="color:<%=list[i].getString("color") %>">
+   <%=list[i].getString("materName") %>
           
         </td>
-        <td align='center' class="<%=style5 %>">
+        <td align='center' class="<%=style5 %>" style="color:<%=list[i].getString("color") %>">
         <%=list[i].getString("line") %>
         </td>
-        <td align='center' class="<%=style5 %>">
+        <td align='center' class="<%=style5 %>" style="color:<%=list[i].getString("color") %>">
         <%=list[i].getString("mptype") %>
         </td>
-         <td align='center' class="<%=style5 %>">
+         <td align='center' class="<%=style5 %>" style="color:<%=list[i].getString("color") %>">
         <%=list[i].getString("batchNo") %>
         </td>
-         <td align='center' class="<%=style5 %>">
+         <td align='center' class="<%=style5 %>"  style="color:<%=list[i].getString("color") %>">
         <%=list[i].getString("code") %>
         </td>
-        <td align='center' class="<%=style5 %>">
+        <td align='center' class="<%=style5 %>"  style="color:<%=list[i].getString("color") %>"zzzzzzzzzzzzzzzzz>
         <%=list[i].getString("stepName") %>
         </td>
 

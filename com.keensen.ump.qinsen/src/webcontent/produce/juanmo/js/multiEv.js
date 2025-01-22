@@ -457,11 +457,13 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onGetDuty = function() 
 						var orderAmount = ret.data[0].orderAmount;
 						var materSpecId = ret.data[0].materSpecId;
 						var realityAmount = ret.data[0].realityAmount;
+						var prodRemark = ret.data[0].weekRemark;
 						
 						_this.mainPanel.orderNo.setValue(orderNo);
 						_this.mainPanel.prodSpecId.setValue(materSpecId);
 						_this.mainPanel.planDate.setValue(planDate);
 						_this.mainPanel.orderId.setValue(orderId);
+						_this.cdmPanel.prodRemark.setValue(prodRemark);
 
 						var store = _this.jmdutyStore;
 						store.load({

@@ -369,6 +369,29 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}, {
 
 							xtype : 'combobox',
+							fieldLabel : '配料进度',
+							ref : '../../reserve2',
+							hiddenName : 'entity/reserve2',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							anchor : '95%',
+							colspan : 2,
+							store : [['加急', '加急'], ['正常', '正常']],
+							value:'正常',
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.reserve2.reset();
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+
+							xtype : 'combobox',
 							fieldLabel : '线别',
 							ref : '../../line',
 							hiddenName : 'entity/line',
