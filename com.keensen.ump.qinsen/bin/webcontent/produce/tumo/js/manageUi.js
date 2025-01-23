@@ -260,12 +260,23 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								hidden : gyyFlag != 1,
 								handler : this.onRemark
 							}, '-', {
-								text : '工艺员修改',
-								scope : this,
-								hidden : gyyFlag != 1,
+								xtype : 'splitbutton',
+								text : '膜片批号/型号修改',
+								
 								iconCls : 'icon-application_edit',
-								hidden : gyyFlag != 1,
-								handler : this.onModify
+								arrowAlign : 'bottom',
+								menu : [{
+											text : '修改',
+											disabled : gyyFlag != 1,
+											scope : this,
+											iconCls : 'icon-application_edit',
+											handler : this.onModify
+										}, {
+											text : '查看修改记录',
+											scope : this,
+											iconCls : 'icon-application_form_magnify',
+											handler : this.onViewModify
+										}]
 							}, '->', '-', {
 								text : '删除涂膜记录',
 								scope : this,
@@ -298,7 +309,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							}, '->', '-', {
 								text : '膜片取样',
 								scope : this,
-								// hidden : gyyFlag != 1,
+								hidden : gyyFlag != 1,
 								iconCls : 'icon-application_edit',
 								handler : this.onTakeSample
 							}]

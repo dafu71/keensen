@@ -8,6 +8,8 @@ com.keensen.ump.produce.report.board.HanoverMgr = function() {
 		this.initEditWindow();
 		this.initViewWindow();
 
+		this.initTestStdWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -19,8 +21,7 @@ com.keensen.ump.produce.report.board.HanoverMgr = function() {
 	this.initStore = function() {
 		this.classesStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['测试标准', '测试标准'], ['早', '早'], ['中', '中'],
-							['晚', '晚']]
+					data : [['早', '早'], ['中', '中'], ['晚', '晚']]
 				});
 
 		this.lineStore = new Ext.data.JsonStore({
@@ -98,6 +99,13 @@ com.keensen.ump.produce.report.board.HanoverMgr = function() {
 					handler : this.exportExcel
 				});
 
+		this.queryPanel.addButton({
+					text : "分析室交接班看板",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onBoard
+				});
+
 	}
 
 	this.initListPanel = function() {
@@ -132,6 +140,11 @@ com.keensen.ump.produce.report.board.HanoverMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onView
 					}, '->', {
+						text : '测试标准',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onStand
+					}, '-', {
 						text : '看板查看',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
@@ -150,6 +163,7 @@ com.keensen.ump.produce.report.board.HanoverMgr = function() {
 						header : '生产线'
 					}, {
 						dataIndex : 'item',
+						width : 300,
 						header : '事项'
 					}, {
 						dataIndex : 'updateTime',
@@ -295,7 +309,7 @@ com.keensen.ump.produce.report.board.HanoverMgr = function() {
 	}
 
 	this.initEditWindow = function() {
-		
+
 		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '修改',
@@ -305,83 +319,83 @@ com.keensen.ump.produce.report.board.HanoverMgr = function() {
 			minimizable : false,
 			maximizable : false,
 			items : [{
-						xtype : 'editpanel',
-						baseCls : "x-plain",
-						pgrid : this.listPanel,
-						columns : 1,
-						loadUrl : 'com.keensen.ump.produce.report.board.expandHandover.biz.ext',
-						saveUrl : 'com.keensen.ump.produce.report.board.saveHandover.biz.ext',
-						fields : [{
-									xtype : 'datefield',
-									format : "Y-m-d",
-									name : 'entity/boardDate',
-									dataIndex : 'boardDate',
-									ref : '../../boardDate',
-									allowBlank : false,
-									minValue : new Date(),
-									// readOnly : true,
-									fieldLabel : '看板日期',
-									// readOnly : true,
-									anchor : '95%',
-									colspan : 1
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'combobox',
-									mode : 'local',
-									fieldLabel : '班次',
-									ref : '../../classes',
-									hiddenName : 'entity/classes',
-									dataIndex : 'classes',
-									anchor : '95%',
-									colspan : 1,
-									emptyText : '--请选择--',
-									allowBlank : false,
-									editable : false,
-									store : _this.classesStore,
-									displayField : "name",
-									valueField : "code",
-									listeners : {
-										"expand" : function(A) {
-											_this.inputWindow.classes.reset()
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'combobox',
-									forceSelection : true,
-									allowBlank : false,
-									mode : 'local',
-									fieldLabel : '生产线',
-									ref : '../../line',
-									hiddenName : 'entity/lineId',
-									dataIndex : 'lineId',
-									anchor : '95%',
-									colspan : 1,
-									emptyText : '',
-									editable : false,
-									store : _this.lineStore,
-									displayField : "name",
-									valueField : "id"
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'textarea',
-									allowBlank : false,
-									name : 'entity/item',
-									dataIndex : 'item',
-									fieldLabel : '事项',
-									anchor : '95%',
-									colspan : 1
-								}]
-					}]
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 1,
+				loadUrl : 'com.keensen.ump.produce.report.board.expandHandover.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.report.board.saveHandover.biz.ext',
+				fields : [{
+							xtype : 'datefield',
+							format : "Y-m-d",
+							name : 'entity/boardDate',
+							dataIndex : 'boardDate',
+							ref : '../../boardDate',
+							allowBlank : false,
+							minValue : new Date(),
+							// readOnly : true,
+							fieldLabel : '看板日期',
+							// readOnly : true,
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '班次',
+							ref : '../../classes',
+							hiddenName : 'entity/classes',
+							dataIndex : 'classes',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							store : _this.classesStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.classes.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '生产线',
+							ref : '../../line',
+							hiddenName : 'entity/lineId',
+							dataIndex : 'lineId',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '',
+							editable : false,
+							store : _this.lineStore,
+							displayField : "name",
+							valueField : "id"
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'textarea',
+							allowBlank : false,
+							name : 'entity/item',
+							dataIndex : 'item',
+							fieldLabel : '事项',
+							anchor : '95%',
+							colspan : 1
+						}]
+			}]
 		});
 	}
 
@@ -399,83 +413,171 @@ com.keensen.ump.produce.report.board.HanoverMgr = function() {
 				autoScroll : true
 			},
 			items : [{
-						xtype : 'viewpanel',
-						baseCls : "x-plain",
-						columns : 1,
-						loadUrl : 'com.keensen.ump.produce.report.board.expandHandover.biz.ext',
-						fields : [{
-									xtype : 'datefield',
-									format : "Y-m-d",
-									name : 'entity/boardDate',
-									dataIndex : 'boardDate',
-									ref : '../../boardDate',
-									allowBlank : false,
-									minValue : new Date(),
-									readOnly : true,
-									fieldLabel : '看板日期',
-									// readOnly : true,
-									anchor : '95%',
-									colspan : 1
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'combobox',
-									mode : 'local',
-									fieldLabel : '班次',
-									ref : '../../classes',
-									hiddenName : 'entity/classes',
-									dataIndex : 'classes',
-									anchor : '95%',
-									colspan : 1,
-									emptyText : '--请选择--',
-									allowBlank : false,
-									readOnly : true,
-									store : _this.classesStore,
-									displayField : "name",
-									valueField : "code",
-									listeners : {
-										"expand" : function(A) {
-											_this.inputWindow.classes.reset()
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'combobox',
-									forceSelection : true,
-									allowBlank : false,
-									mode : 'local',
-									fieldLabel : '生产线',
-									ref : '../../line',
-									hiddenName : 'entity/lineId',
-									dataIndex : 'lineId',
-									anchor : '95%',
-									colspan : 1,
-									emptyText : '',
-									readOnly : true,
-									store : _this.lineStore,
-									displayField : "name",
-									valueField : "id"
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'textarea',
-									allowBlank : false,
-									readOnly : true,
-									name : 'entity/item',
-									dataIndex : 'item',
-									fieldLabel : '事项',
-									anchor : '95%',
-									colspan : 1
-								}]
-					}]
+				xtype : 'viewpanel',
+				baseCls : "x-plain",
+				columns : 1,
+				loadUrl : 'com.keensen.ump.produce.report.board.expandHandover.biz.ext',
+				fields : [{
+							xtype : 'datefield',
+							format : "Y-m-d",
+							name : 'entity/boardDate',
+							dataIndex : 'boardDate',
+							ref : '../../boardDate',
+							allowBlank : false,
+							minValue : new Date(),
+							readOnly : true,
+							fieldLabel : '看板日期',
+							// readOnly : true,
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '班次',
+							ref : '../../classes',
+							hiddenName : 'entity/classes',
+							dataIndex : 'classes',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							allowBlank : false,
+							readOnly : true,
+							store : _this.classesStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.classes.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '生产线',
+							ref : '../../line',
+							hiddenName : 'entity/lineId',
+							dataIndex : 'lineId',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '',
+							readOnly : true,
+							store : _this.lineStore,
+							displayField : "name",
+							valueField : "id"
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'textarea',
+							allowBlank : false,
+							readOnly : true,
+							name : 'entity/item',
+							dataIndex : 'item',
+							fieldLabel : '事项',
+							anchor : '95%',
+							colspan : 1
+						}]
+			}]
 		});
 	}
 
+	this.initTestStdWindow = function() {
+		var _this = this;
+
+		var selModel4TestStd = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.listPanel4TestStd = this.listPanel4TestStd
+				|| new Ext.fn.EditListPanel({
+
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					hsPage : false,
+					autoScroll : true,
+					clicksToEdit : 1,
+					selModel : selModel4TestStd,
+					columns : [new Ext.grid.RowNumberer(), selModel4TestStd, {
+								dataIndex : 'lineName',
+								sortable : true,
+								width : 140,
+								header : '生产线'
+							}, {
+
+								dataIndex : 'item',
+								sortable : true,
+								width : 500,
+								header : '测试标准',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextArea(
+										{
+											allowBlank : true,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.report.board.queryTestStd.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'lineName'
+								}, {
+									name : 'id'
+								}, {
+									name : 'lineId'
+								}, {
+									name : 'item'
+								}]
+					})
+				})
+
+		this.testStdWindow = this.testStdWindow || new Ext.Window({
+					title : '测试标准',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4TestStd],
+					buttons : [{
+								text : "保存",
+								scope : this,
+								handler : this.onSaveStd
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.testStdWindow.hide();
+								}
+							}]
+
+				});
+	}
 }

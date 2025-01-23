@@ -111,7 +111,9 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onSubmit = function() {
 	var prodSpecId = this.inputPanel.prodSpecId.getValue();
 	var testAmount = this.inputPanel.testAmount.getValue();
 	var testLength = this.inputPanel.testLength.getValue();
-
+	if (!this.inputPanel.form.isValid()) {
+		return;
+	}
 	if (Ext.isEmpty(batchNo) || Ext.isEmpty(prodSpecName)) {
 		Ext.Msg.alert("系统提示", "请输入完整信息");
 		return;

@@ -37,14 +37,10 @@
 	order by t1.BOARD_DATE desc,t1.LINE_ID,t1.CLASSES
       </select>
     <select id="queryHandoverBoard" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT '测试标准' "classes",
-	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
-	AND t.line_id=30140 AND t.classes='测试标准') "C",
-	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
-	AND t.line_id=30220 AND t.classes='测试标准') "D",
-	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
-	AND t.line_id=30223 AND t.classes='测试标准') "E",
-	(SELECT t.item from KS_REPORT_BOARD_HANDOVER t WHERE t.board_date = #boardDate# 
-	AND t.line_id=30240 AND t.classes='测试标准') "F",
+	(SELECT t.item from KS_REPORT_BOARD_TEST_STD t WHERE t.line_id=30140) "C",
+	(SELECT t.item from KS_REPORT_BOARD_TEST_STD t WHERE t.line_id=30220) "D",
+	(SELECT t.item from KS_REPORT_BOARD_TEST_STD t WHERE t.line_id=30223) "E",
+	(SELECT t.item from KS_REPORT_BOARD_TEST_STD t WHERE t.line_id=30240) "F",
 	1 myorder
 	FROM dual
 	UNION ALL
@@ -84,4 +80,11 @@
 	4 myorder
 	FROM dual
 	ORDER BY myorder</select>
+    <select id="queryTestStd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t1.id "id",t1.line_id "lineId",t1.item "item",t2.line_name "lineName"
+	from KS_REPORT_BOARD_TEST_STD t1
+	left join qinsen.BASE_PROD_LINE t2
+		on t1.LINE_ID = t2.LINE_ID
+	ORDER BY t2.line_code</select>
+    <select id="queryMaxBoatdDate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select nvl(max(t.board_Date),to_char(sysdate,'yyyy-MM-dd')) "boardDate"
+		from KS_REPORT_BOARD_HANDOVER t</select>
 </sqlMap>

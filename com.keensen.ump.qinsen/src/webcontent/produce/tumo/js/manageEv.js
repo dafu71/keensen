@@ -794,7 +794,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onRemark = function() {
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.replaceTroughInfo = function() {
 	this.listPanel5.store.load();
-	// this.replaceTroughWindow.show();
+	//this.replaceTroughWindow.show();
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onWaterBatchNo = function() {
@@ -967,6 +967,24 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModify = function() {
 		var tumoBatchNo = r.data.batchNo;
 		var tumoBatchId = r.data.recordId;
 		var specId = r.data.specId;
+		
+		this.modifyRecordWindow.show();
+		this.modifyRecordWindow.recordId.setValue(tumoBatchId);
+		this.modifyRecordWindow.batchNo.setValue(tumoBatchNo);
+		this.modifyRecordWindow.specId.setValue(specId);
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onViewModify = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var tumoBatchNo = r.data.batchNo;
+		var tumoBatchId = r.data.recordId;
+		var specId = r.data.specId;
 		var store = this.listPanel4ModifyRecord.store;
 		store.baseParams = {
 			'condition/recordId' : tumoBatchId
@@ -978,10 +996,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModify = function() {
 			}
 		});
 		this.modifyRecordListWindow.show();
-		this.modifyRecordWindow.show();
-		this.modifyRecordWindow.recordId.setValue(tumoBatchId);
-		this.modifyRecordWindow.batchNo.setValue(tumoBatchNo);
-		this.modifyRecordWindow.specId.setValue(specId);
+		
 	}
+	
 }
-

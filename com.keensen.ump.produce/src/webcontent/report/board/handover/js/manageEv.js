@@ -82,3 +82,50 @@ com.keensen.ump.produce.report.board.HanoverMgr.prototype.onBoard = function() {
 	}
 
 }
+
+com.keensen.ump.produce.report.board.HanoverMgr.prototype.onStand = function() {
+	this.testStdWindow.show();
+	var store = this.listPanel4TestStd.store;
+	store.load();
+};
+
+com.keensen.ump.produce.report.board.HanoverMgr.prototype.onSaveStd = function() {
+	var _this = this;
+
+	var records = this.listPanel4TestStd.store.getRange();	
+		
+	
+	var entities = [];
+
+	Ext.each(records, function(r) {
+				var dt = {
+					'id' : r.data['id'],
+					'item' : r.data['item']
+				};
+				entities.push(dt);			
+
+			});
+	var mk = new Ext.LoadMask(document.body, {
+				msg : '正在保存数据，请稍候！',
+				removeMask : true
+			});
+	mk.show();
+	Ext.Ajax.request({
+		method : "post",
+		scope : this,
+		url : 'com.keensen.ump.produce.report.board.saveTestStds.biz.ext',
+		jsonData : {
+			entities : entities
+		},
+		success : function(response, action) {
+			mk.hide();
+			// 返回值处理
+			var result = Ext.decode(response.responseText);
+			if (result.success) {
+				Ext.Msg.alert("系统提示", "保存成功", function() {
+							_this.testStdWindow.hide();
+						});
+			}
+		}
+	});
+}

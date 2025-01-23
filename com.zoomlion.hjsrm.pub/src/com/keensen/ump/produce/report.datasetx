@@ -3208,6 +3208,474 @@
       </viewField>
     </columnProperty>
   </nodes>
+  <nodes xsi:type="model:PEntityNode" id="node5" name="KsReportBoardTestStd" nodeType="table" displayName="KsReportBoardTestStd" author="dafu" table="KS_REPORT_BOARD_TEST_STD" genStrategy="assigned">
+    <location x="610" y="585"/>
+    <size height="322" width="150"/>
+    <figSize height="20" width="150"/>
+    <comment>分析室测试标准</comment>
+    <columnProperty id="property110" name="id" displayName="主键" columnName="ID" nullAble="false" PK="true" columnType="NUMBER" eosDataType="Long" length="22" dasType="long" overWriteDefaultColumnType="false" showType="Long" update="true" insert="true">
+      <comment>主键</comment>
+      <viewField dict="false" displayName="主键" id="id" label="主键" name="id" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property111" name="createTime" displayName="创建时间" columnName="CREATE_TIME" nullAble="true" columnType="TIMESTAMP" eosDataType="Date" dasType="timestamp" overWriteDefaultColumnType="false" showType="TimeStamp" update="true" insert="true">
+      <comment>创建时间</comment>
+      <viewField dict="false" displayName="创建时间" id="createTime" label="创建时间" name="createTime" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="date"/>
+          <attr name="format"/>
+          <attr name="srcFormat"/>
+          <attr name="submitFormat"/>
+          <attr attrValue="" defaultValue="" name="allowInput"/>
+          <attr name="maxValue"/>
+          <attr name="minValue"/>
+          <attr name="defaultNull"/>
+          <attr name="allowNull"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readOnly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr name="width"/>
+          <attr name="style"/>
+          <attr name="styleClass"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property112" name="createUserId" displayName="创建人ID" columnName="CREATE_USER_ID" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="24" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>创建人ID</comment>
+      <viewField dict="false" displayName="创建人ID" id="createUserId" label="创建人ID" name="createUserId" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property113" name="createName" displayName="创建人" columnName="CREATE_NAME" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="24" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>创建人</comment>
+      <viewField dict="false" displayName="创建人" id="createName" label="创建人" name="createName" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property114" name="updateTime" displayName="修改时间" columnName="UPDATE_TIME" nullAble="true" columnType="TIMESTAMP" eosDataType="Date" dasType="timestamp" overWriteDefaultColumnType="false" showType="TimeStamp" update="true" insert="true">
+      <comment>修改时间</comment>
+      <viewField dict="false" displayName="修改时间" id="updateTime" label="修改时间" name="updateTime" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="date"/>
+          <attr name="format"/>
+          <attr name="srcFormat"/>
+          <attr name="submitFormat"/>
+          <attr attrValue="" defaultValue="" name="allowInput"/>
+          <attr name="maxValue"/>
+          <attr name="minValue"/>
+          <attr name="defaultNull"/>
+          <attr name="allowNull"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readOnly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr name="width"/>
+          <attr name="style"/>
+          <attr name="styleClass"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property115" name="updateUserId" displayName="修改人ID" columnName="UPDATE_USER_ID" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="24" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>修改人ID</comment>
+      <viewField dict="false" displayName="修改人ID" id="updateUserId" label="修改人ID" name="updateUserId" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property116" name="updateName" displayName="修改人" columnName="UPDATE_NAME" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="24" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>修改人</comment>
+      <viewField dict="false" displayName="修改人" id="updateName" label="修改人" name="updateName" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property117" name="reserve1" displayName="备用字段1" columnName="RESERVE1" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="1500" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>备用字段1</comment>
+      <viewField dict="false" displayName="备用字段1" id="reserve1" label="备用字段1" name="reserve1" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property118" name="reserve2" displayName="备用字段2" columnName="RESERVE2" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="1500" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>备用字段2</comment>
+      <viewField dict="false" displayName="备用字段2" id="reserve2" label="备用字段2" name="reserve2" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property119" name="reserve3" displayName="备用字段3" columnName="RESERVE3" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="1500" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>备用字段3</comment>
+      <viewField dict="false" displayName="备用字段3" id="reserve3" label="备用字段3" name="reserve3" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property120" name="reserve4" displayName="备用字段4" columnName="RESERVE4" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="1500" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>备用字段4</comment>
+      <viewField dict="false" displayName="备用字段4" id="reserve4" label="备用字段4" name="reserve4" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property121" name="reserve5" displayName="备用字段5" columnName="RESERVE5" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="1500" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>备用字段5</comment>
+      <viewField dict="false" displayName="备用字段5" id="reserve5" label="备用字段5" name="reserve5" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property122" name="orgId" displayName="所属单位ID" columnName="ORG_ID" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="90" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>所属单位ID</comment>
+      <viewField dict="false" displayName="所属单位ID" id="orgId" label="所属单位ID" name="orgId" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property123" name="status" displayName="是否有效：0无效，1有效" columnName="STATUS" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="24" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>是否有效：0无效，1有效</comment>
+      <viewField dict="false" displayName="是否有效：0无效，1有效" id="status" label="是否有效：0无效，1有效" name="status" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property124" name="lineId" displayName="生产线ID" columnName="LINE_ID" nullAble="true" columnType="NUMBER" eosDataType="Int" length="9" dasType="int" overWriteDefaultColumnType="false" showType="Int" update="true" insert="true">
+      <comment>生产线ID</comment>
+      <viewField dict="false" displayName="生产线ID" id="lineId" label="生产线ID" name="lineId" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property125" name="item" displayName="事项" columnName="ITEM" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="1500" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>事项</comment>
+      <viewField dict="false" displayName="事项" id="item" label="事项" name="item" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+  </nodes>
   <topRuler/>
   <leftRuler/>
 </model:DataSetDiagram>
