@@ -103,10 +103,28 @@
        to_char(T1.FIRST_DATE,'yyyy-MM-dd HH24:mi:ss')     AS "firstDate",
        to_char(T1.SECOND_DATE,'yyyy-MM-dd HH24:mi:ss')    AS "secondDate",
        to_char(T1.THIRD_DATE ,'yyyy-MM-dd HH24:mi:ss')    AS "thirdDate",
-       T1.RELATION_ID    AS "relationId"
+       T1.RELATION_ID    AS "relationId",
+       
+       bf.C21 as "c21",
+		bf.C22 as "c22",
+		bf.C23 as "c23",
+		bf.C24 as "c24",
+		bf.C27 as "c27",
+		bf.C28 as "c28",
+		bf.C30 as "c30",
+		bf.DIFF21 as "diff21",
+		bf.DIFF22 as "diff22",
+		bf.DIFF23 as "diff23",
+		bf.DIFF24 as "diff24",
+		bf.DIFF27 as "diff27",
+		bf.DIFF28 as "diff28",
+		bf.DIFF30 as "diff30"
+       
   FROM KS_QUALITY_MP_TEST_WATER_LIST T1
   LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD T2
     ON T1.RELATION_ID = T2.ID
+  left join KS_BASE_FORMULA bf 
+  on bf.watertype = decode(t2.watertype,'水相循环液','水相液',t2.watertype) and bf.line = t2.line and bf.mptype = t2.mptype
   LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD T3
   on t2.relation_id = t3.id
   left join V_AC_OPERATOR_TRS v on v.userid = t1.appoint_id

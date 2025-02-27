@@ -14,12 +14,12 @@ com.keensen.ump.produce.quality.concessionListMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 80,
 					columns : 3,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【让步放行查询】',
+					//title : '【让步放行查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/orderNo',
@@ -49,7 +49,7 @@ com.keensen.ump.produce.quality.concessionListMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【让步放行列表】',
+			//title : '【让步放行列表】',
 			id : 'concession-list',
 			viewConfig : {
 				forceFit : true

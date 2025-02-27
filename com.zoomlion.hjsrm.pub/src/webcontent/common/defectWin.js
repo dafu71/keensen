@@ -54,8 +54,13 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 				var A = this.listPanel;
 				var records = A.store.getRange();
 				var details = [];
+
+				var validFlag = true;
 				Ext.each(records, function(r) {
 							if (!Ext.isEmpty(r.data['loss'])) {
+								var ifTear = r.data['ifTear'];
+								if (Ext.isEmpty(ifTear))
+									validFlag = false;
 								var d = {
 									'defectItemId' : r.data['recordId'],
 									'loss' : r.data['loss'],
@@ -68,6 +73,10 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 							}
 
 						});
+				if (!validFlag) {
+					Ext.Msg.alert("系统提示", "请选择是否已扯");
+					return;
+				}
 
 				if (details.length == 0) {
 					Ext.Msg.alert("系统提示", "没有填写任何不良损失，请检查");
@@ -152,14 +161,18 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 				}
 			}
 		}, {
-			text : "保存",			
+			text : "保存",
 			scope : this,
 			handler : function() {
 				var A = this.listPanel;
 				var records = A.store.getRange();
 				var details = [];
+				var validFlag = true;
 				Ext.each(records, function(r) {
 							if (!Ext.isEmpty(r.data['loss'])) {
+								var ifTear = r.data['ifTear'];
+								if (Ext.isEmpty(ifTear))
+									validFlag = false;
 								var d = {
 									'defectItemId' : r.data['recordId'],
 									'loss' : r.data['loss'],
@@ -173,6 +186,11 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 
 						});
 
+				if (!validFlag && this.batchNoControl) {
+					Ext.Msg.alert("系统提示", "请选择是否已扯");
+					return;
+				}
+				
 				if (details.length == 0) {
 					Ext.Msg.alert("系统提示", "没有填写任何不良损失，请检查");
 					return;
@@ -314,17 +332,18 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 					}, {
 						dataIndex : 'position',
 						header : '收卷位置(m)',
+						hidden : !this.batchNoControl,
 						width : 100,
 						sortable : true,
 						css : 'background:#c7c7c7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : true,
 									scope : this,
-									allowNegative : false,
-									allowDecimals : true,
-									minValue : 0,
-									maxValue : 999.9,
+									// allowNegative : false,
+									// allowDecimals : true,
+									// minValue : 0,
+									// maxValue : 999.9,
 									listeners : {
 										'specialkey' : function() {
 											return false;
@@ -334,6 +353,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 					}, {
 						dataIndex : 'labelNum',
 						header : '标签数',
+						hidden : !this.batchNoControl,
 						width : 100,
 						sortable : true,
 						css : 'background:#c7c7c7;',
@@ -354,6 +374,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 						dataIndex : 'ifTear',
 						width : 70,
 						header : '是否已扯',
+						hidden : !this.batchNoControl,
 						css : 'background:#c7c7c7;',
 						editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
 								{
@@ -385,6 +406,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 								}))
 					}, {
 						dataIndex : 'recorder',
+						hidden : !this.batchNoControl,
 						header : '记录人',
 						css : 'background:#c7c7c7;',
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
@@ -499,6 +521,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 				ref : '../produceDt',
 				name : 'produceDt',
 				allowBlank : false,
+				readOnly : true,
 				fieldLabel : '不良产生时间',
 				format : "Y-m-d H:i:00",
 				value : new Date(),

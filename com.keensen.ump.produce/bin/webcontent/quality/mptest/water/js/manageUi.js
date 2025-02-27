@@ -1,5 +1,8 @@
 com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 	this.initPanel = function() {
+
+		this.rec = {};
+
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
@@ -9,6 +12,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 		this.initEditWindow3();
 		this.initViewWindow();
 		this.initEditWindow4();
+
+		this.initBaseFormulaWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -21,7 +26,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-			height : 120,
+			height : 100,
 			columns : 5,
 			border : true,
 			// collapsible : true,
@@ -111,6 +116,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,
 					handler : this.exportExcel
 				});
 
@@ -192,6 +198,12 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 				iconCls : 'icon-application_form_magnify',
 				disabled : (ply != '1') && (fxy != '1') && (gyy != '1'),
 				handler : this.onView
+			}, '-', {
+				text : '水相液配方',
+				scope : this,
+				iconCls : 'icon-application_form_magnify',
+				hidden : gymanage != '1',
+				handler : this.onBaseFormula
 			}, '->', {
 				text : '报废',
 				scope : this,
@@ -378,7 +390,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							anchor : '95%',
 							colspan : 2,
 							store : [['加急', '加急'], ['正常', '正常']],
-							value:'正常',
+							value : '正常',
 							listeners : {
 								scope : this,
 								'expand' : function(A) {
@@ -463,7 +475,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c21Plan',
 							fieldLabel : '计划添加C21(g)',
-							//readOnly : true,
+							// readOnly : true,
 							name : 'list/c21Plan',
 							allowBlank : false,
 							anchor : '95%',
@@ -474,7 +486,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c22Plan',
 							fieldLabel : '计划添加C22(g)',
-							//readOnly : true,
+							// readOnly : true,
 							name : 'list/c22Plan',
 							allowBlank : false,
 							anchor : '95%',
@@ -489,7 +501,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c23Plan',
 							fieldLabel : '计划添加C23(g)',
-							//readOnly : true,
+							// readOnly : true,
 							name : 'list/c23Plan',
 							allowBlank : false,
 							anchor : '95%',
@@ -500,7 +512,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c27Plan',
 							fieldLabel : '计划添加C27(g)',
-							//readOnly : true,
+							// readOnly : true,
 							allowBlank : false,
 							name : 'list/c27Plan',
 							anchor : '95%',
@@ -515,7 +527,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c28Plan',
 							fieldLabel : '计划添加C28(g)',
-							//readOnly : true,
+							// readOnly : true,
 							allowBlank : false,
 							name : 'list/c28Plan',
 							anchor : '95%',
@@ -526,7 +538,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c30Plan',
 							fieldLabel : '计划添加C30(g)',
-							//readOnly : true,
+							// readOnly : true,
 							allowBlank : false,
 							name : 'list/c30Plan',
 							anchor : '95%',
@@ -541,7 +553,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c24Plan',
 							fieldLabel : '计划添加C24(g)',
-							//readOnly : true,
+							// readOnly : true,
 							allowBlank : false,
 							name : 'list/c24Plan',
 							anchor : '95%',
@@ -552,7 +564,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../c29Plan',
 							fieldLabel : '计划添加C29(g)',
-							//readOnly : true,
+							// readOnly : true,
 							allowBlank : false,
 							name : 'list/c29Plan',
 							anchor : '95%',
@@ -567,7 +579,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'textfield',
 							ref : '../../roPlan',
 							fieldLabel : '计划添加RO水(kg)',
-							//readOnly : true,
+							// readOnly : true,
 							allowBlank : false,
 							name : 'list/roPlan',
 							anchor : '95%',
@@ -586,7 +598,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							colspan : 1,
 							ref : '../../appointId',
 							hiddenName : 'list/appointId',
-							fieldLabel : '工艺员'
+							fieldLabel : '下单员'
 						}]
 			}]
 		});
@@ -734,6 +746,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 	}
 
 	this.initEditWindow = function() {
+		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '分析',
 			height : 600,
@@ -868,15 +881,25 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'list/c21Test',
 							allowBlank : false,
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (Ext.isEmpty(newValue))
+										return false;
+									var c21 = _this.editWindow.c21.getValue();
+									var diff21 = _this.editWindow.diff21
+											.getValue();
+									var c21Test = parseFloat(newValue);
+									_this.onJudge(c21,diff21,c21Test,_this.editWindow.c21Info);
+								}
+							}
 						}, {
-							xtype : 'numberfield',
-							ref : '../../c22Test',
-							fieldLabel : '测试浓度C22',
-							decimalPrecision : 3,
-							name : 'list/c22Test',
-							allowBlank : false,
-							anchor : '95%',
+							xtype : 'displayfield',
+							ref : '../../c21Info',
+							// height : '5',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -890,37 +913,24 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'list/c23Test',
 							allowBlank : false,
 							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'numberfield',
-							ref : '../../c27Test',
-							fieldLabel : '测试浓度C27',
-							decimalPrecision : 3,
-							allowBlank : false,
-							name : 'list/c27Test',
-							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (Ext.isEmpty(newValue))
+										return false;
+									var c23 = _this.editWindow.c23.getValue();
+									var diff23 = _this.editWindow.diff23
+											.getValue();
+									var c23Test = parseFloat(newValue);
+									_this.onJudge(c23,diff23,c23Test,_this.editWindow.c23Info);
+								}
+							}
 						}, {
 							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							ref : '../../c28Test',
-							fieldLabel : '测试浓度C28',
-							decimalPrecision : 3,
-							allowBlank : false,
-							name : 'list/c28Test',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'numberfield',
-							ref : '../../c30Test',
-							fieldLabel : '测试浓度C30',
-							decimalPrecision : 3,
-							allowBlank : false,
-							name : 'list/c30Test',
-							anchor : '95%',
+							ref : '../../c23Info',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -934,7 +944,122 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							allowBlank : false,
 							name : 'list/c24Test',
 							anchor : '95%',
+							colspan : 1,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (Ext.isEmpty(newValue))
+										return false;
+									var c24 = _this.editWindow.c24.getValue();
+									var diff24 = _this.editWindow.diff24
+											.getValue();
+									var c24Test = parseFloat(newValue);
+									_this.onJudge(c24,diff24,c24Test,_this.editWindow.c24Info);
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							ref : '../../c24Info',
 							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c27Test',
+							fieldLabel : '测试浓度C27',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c27Test',
+							anchor : '95%',
+							colspan : 1,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (Ext.isEmpty(newValue))
+										return false;
+									var c27 = _this.editWindow.c27.getValue();
+									var diff27 = _this.editWindow.diff27
+											.getValue();
+									var c27Test = parseFloat(newValue);
+									_this.onJudge(c27,diff27,c27Test,_this.editWindow.c27Info);
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							ref : '../../c27Info',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c28Test',
+							fieldLabel : '测试浓度C28',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c28Test',
+							anchor : '95%',
+							colspan : 1,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (Ext.isEmpty(newValue))
+										return false;
+									var c28 = _this.editWindow.c28.getValue();
+									var diff28 = _this.editWindow.diff28
+											.getValue();
+									var c28Test = parseFloat(newValue);
+									_this.onJudge(c28,diff28,c28Test,_this.editWindow.c28Info);
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							ref : '../../c28Info',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c30Test',
+							fieldLabel : '测试浓度C30',
+							decimalPrecision : 3,
+							allowBlank : false,
+							name : 'list/c30Test',
+							anchor : '95%',
+							colspan : 1,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (Ext.isEmpty(newValue))
+										return false;
+									var c30 = _this.editWindow.c30.getValue();
+									var diff30 = _this.editWindow.diff30
+											.getValue();
+									var c30Test = parseFloat(newValue);
+									_this.onJudge(c30,diff30,c30Test,_this.editWindow.c30Info);
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							ref : '../../c30Info',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
 						}, {
 							xtype : 'numberfield',
 							ref : '../../c29Test',
@@ -943,6 +1068,10 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							allowBlank : false,
 							name : 'list/c29Test',
 							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -956,6 +1085,10 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							// allowBlank : false,
 							name : 'list/position',
 							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
@@ -994,6 +1127,64 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'hidden',
 							name : 'entity/watertype',
 							dataIndex : 'watertype2'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'c21',
+							ref : '../../c21'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'diff21',
+							ref : '../../diff21'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'c23',
+							ref : '../../c23'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'diff23',
+							ref : '../../diff23'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'c24',
+							ref : '../../c24'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'diff24',
+							ref : '../../diff24'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'c27',
+							ref : '../../c27'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'diff27',
+							ref : '../../diff27'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'c28',
+							ref : '../../c28'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'diff28',
+							ref : '../../diff28'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'c30',
+							ref : '../../c30'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'diff30',
+							ref : '../../diff30'
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c22Test',
+							fieldLabel : '测试浓度C22',
+							decimalPrecision : 3,
+							name : 'list/c22Test',
+							hidden : true,
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1
 						}]
 			}]
 		});
@@ -1297,7 +1488,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							colspan : 3,
 							ref : '../../appointId',
 							hiddenName : 'list/appointId',
-							fieldLabel : '工艺员'
+							fieldLabel : '下单员'
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -1461,7 +1652,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							xtype : 'trigger',
 							emptyText : '输入完毕单击旁边按钮计算',
 							ref : '../../weightPlan',
-							//readOnly : true,
+							// readOnly : true,
 							fieldLabel : '计划总重量(kg)',
 							name : 'list/weightPlan',
 							anchor : '95%',
@@ -1983,7 +2174,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						header : '分析员'
 					}, {
 						dataIndex : 'appointName',
-						header : '工艺员'
+						header : '下单员'
 					}, {
 						dataIndex : 'appointName2',
 						header : '配料员'
@@ -2156,7 +2347,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 				});
 
 	}
-	
+
 	this.initEditWindow4 = function() {
 		this.editWindow4 = this.editWindow4 || new Ext.fn.FormWindow({
 			title : '修改测试浓度',
@@ -2386,5 +2577,573 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}]
 			}]
 		});
+	}
+
+	this.initBaseFormulaWindow = function() {
+		var _this = this;
+
+		var selModel4BaseFormula = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.listPanel4BaseFormula = this.listPanel4BaseFormula
+				|| new Ext.fn.EditListPanel({
+
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					hsPage : false,
+					autoScroll : true,
+					clicksToEdit : 1,
+					selModel : selModel4BaseFormula,
+					
+					tbar : [{
+						xtype : 'displayfield',
+						ref:'../info',
+						value : '&nbsp;'
+					}],
+					
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4BaseFormula, {
+								dataIndex : 'watertype',
+								sortable : true,
+								width : 140,
+								header : '水相液类型'
+							}, {
+								dataIndex : 'code',
+								sortable : true,
+								width : 100,
+								header : '产品种类代码'
+							}, {
+								dataIndex : 'mptype',
+								sortable : true,
+								width : 100,
+								header : '膜片类型'
+							}, {
+								dataIndex : 'line',
+								sortable : true,
+								width : 100,
+								header : '涂膜线'
+							}, {
+
+								dataIndex : 'c21',
+								sortable : true,
+								width : 100,
+								header : 'C21浓度',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'c21', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'diff21',
+								sortable : true,
+								width : 100,
+								header : 'C21浓度公差',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'diff21', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'c22',
+								sortable : true,
+								width : 100,
+								header : 'C22浓度',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'c22', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'diff22',
+								sortable : true,
+								width : 100,
+								header : 'C22浓度公差',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'diff22', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'c23',
+								sortable : true,
+								width : 100,
+								header : 'C23浓度',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'c23', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'diff23',
+								sortable : true,
+								width : 100,
+								header : 'C23浓度公差',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'diff23', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'c24',
+								sortable : true,
+								width : 100,
+								header : 'C24浓度',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'c24', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'diff24',
+								sortable : true,
+								width : 100,
+								header : 'C24浓度公差',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'diff24', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'c27',
+								sortable : true,
+								width : 100,
+								header : 'C27浓度',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'c27', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'diff27',
+								sortable : true,
+								width : 100,
+								header : 'C27浓度公差',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'diff27', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'c28',
+								sortable : true,
+								width : 100,
+								header : 'C28浓度',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'c28', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'diff28',
+								sortable : true,
+								width : 100,
+								header : 'C28浓度公差',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'diff28', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'c30',
+								sortable : true,
+								width : 100,
+								header : 'C30浓度',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'c30', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'diff30',
+								sortable : true,
+								width : 100,
+								header : 'C30浓度公差',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'diff30', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.mpwatertest.queryBaseFormula.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'createUserId'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'updateTime'
+								}, {
+									name : 'updateUserId'
+								}, {
+									name : 'updateName'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'reserve2'
+								}, {
+									name : 'reserve3'
+								}, {
+									name : 'reserve4'
+								}, {
+									name : 'reserve5'
+								}, {
+									name : 'orgId'
+								}, {
+									name : 'status'
+								}, {
+									name : 'code'
+								}, {
+									name : 'mptype'
+								}, {
+									name : 'line'
+								}, {
+									name : 'c21'
+								}, {
+									name : 'c22'
+								}, {
+									name : 'c23'
+								}, {
+									name : 'c24'
+								}, {
+									name : 'c27'
+								}, {
+									name : 'c28'
+								}, {
+									name : 'c30'
+								}, {
+									name : 'diff21'
+								}, {
+									name : 'diff22'
+								}, {
+									name : 'diff23'
+								}, {
+									name : 'diff24'
+								}, {
+									name : 'diff27'
+								}, {
+									name : 'diff28'
+								}, {
+									name : 'diff30'
+								}, {
+									name : 'watertype'
+								}]
+					})
+				})
+
+		this.baseFormulaWindow = this.baseFormulaWindow || new Ext.Window({
+					title : '水相液配方',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4BaseFormula],
+					buttons : [{
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.baseFormulaWindow.hide();
+								}
+							}]
+
+				});
+
 	}
 }

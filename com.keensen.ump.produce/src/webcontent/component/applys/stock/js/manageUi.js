@@ -107,6 +107,7 @@ com.keensen.ump.produce.component.applys.stockMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,
 					handler : this.exportExcel
 				});
 

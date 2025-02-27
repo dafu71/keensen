@@ -103,4 +103,33 @@
             <xs:element minOccurs="0" name="unit" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="KsBaseLabelDrawing">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="drawingName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="usedDate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="drawingCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="specName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="businessman" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="labelSize" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="url" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

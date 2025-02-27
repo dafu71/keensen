@@ -130,6 +130,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					rescode : '10002661',
+					//hidden:true,
 					handler : this.exportExcel
 				});
 	}

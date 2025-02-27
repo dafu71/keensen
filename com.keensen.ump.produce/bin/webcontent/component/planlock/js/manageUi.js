@@ -94,6 +94,7 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					rescode:'10003669',
 					handler : this.exportExcel
 				});
 

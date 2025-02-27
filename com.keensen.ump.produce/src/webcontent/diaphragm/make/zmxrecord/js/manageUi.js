@@ -27,12 +27,12 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【铸膜线生产记录查询】',
+					//title : '【铸膜线生产记录查询】',
 					fields : [{
 								xtype : 'dictcombobox',
 								name : 'condition/dimoType',
@@ -127,6 +127,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					rescode : '10002661',
 					handler : this.exportExcel
 				});
 	}
@@ -138,7 +139,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【铸膜线生产记录列表】',
+			//title : '【铸膜线生产记录列表】',
 			viewConfig : {
 				forceFit : false
 			},

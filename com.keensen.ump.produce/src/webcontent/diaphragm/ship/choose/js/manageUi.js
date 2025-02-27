@@ -130,6 +130,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					rescode : '10003663',
+					hidden:true,
 					handler : this.exportExcel
 				});
 

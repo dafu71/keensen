@@ -587,11 +587,19 @@
             ON T.LEVEL_ID = T3.ID
          WHERE T.STATE = 'Y') TT
   LEFT JOIN (SELECT record_id,BATCH_ID, SPEC_ID, IS_WX, MAC_NAME, BATCH_NO,gfd_Avg,salt_Rejection,recheck_flag
-               FROM V_KS_TUMO_CHECK_FIRST) V
+               FROM V_KS_TUMO_CHECK_FIRST
+               <!--性能自动判定只看初测值-->
+               where recheck_flag = 'N'
+               
+               ) V
     ON V.IS_WX = TT.IS_WX
    AND V.SPEC_ID = TT.SPEC_ID
    AND V.MAC_NAME = TT.MAC_NAME
- WHERE v.record_ID = #recordId#
+ WHERE v.record_ID = #recordId# 
+ 
+ 
+ 
+ 
  ORDER BY TT.SPEC_ID, TT.LEVEL_NAME
  </select>
  
@@ -611,12 +619,14 @@
        T1.IS_WX_NAME AS "isWxName",
        T1.USEFUL_LENGTH AS "usefulLength",
        T1.QUALIFID_LENGTH AS "qualifidLength",
-       T1.TAG_NUM AS "tagNum",
-       T1.TAG_LENGTH AS "tagLength",
+       
+       nvl(cd.tag_num,T1.TAG_NUM)           AS "tagNum",
+       nvl(cd.tag_length,T1.TAG_LENGTH)        AS "tagLength",
+       
        T1.THICK_MAX AS "thickMax",
        T1.THICK_MIN AS "thickMin",
        T1.THICK_AVG AS "thickAvg",
-       T1.PRODUCE_REMARK AS "produceRemark",
+       T1.PRODUCE_REMARK || ';' || cd.remark AS "produceRemark",
        T2.PERF_FLAG_ID AS "batchPerfFlagId",t2.judger_Id "judgerId",
        
        decode(t2.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
@@ -678,6 +688,15 @@
             ON S2.MATER_CLASS_ID = S.MATER_CLASS_ID
           ) T1
   LEFT JOIN KS_PROD_DIAPHRAGM_TUMO T2
+  
+  left join (SELECT tumo_batch_id, SUM(label_num) tag_Num, SUM(label_num)*1.5 tag_Length,
+       LISTAGG(remark, ';') WITHIN GROUP (ORDER BY record_id) AS remark 
+	FROM (SELECT t.record_id,t.label_num,t.tumo_batch_id,'位置' || t.position || ',不良长度' || t.loss || ',标签数' || t.label_num remark
+	 from qinsen.inst_cdm_defect t
+	WHERE t.if_tear &lt;> '是') 
+	GROUP BY tumo_batch_id) cd 
+	on cd.tumo_batch_id = T2.RECORD_ID
+  
     ON T1.RECORD_ID = T2.RECORD_ID
   LEFT JOIN (SELECT T.PROP_VALUE_ID   PERF_FLAG_ID,
                     T.PROP_VALUE_CODE PERF_FLAG_CODE,
@@ -802,11 +821,19 @@
    SELECT tt.batch_id
 	FROM(
 	select COUNT(*) cnt ,sum(DECODE(t.perf_flag_id,300029,1,0)) cnt2,t.batch_id
-	 from (SELECT t1.* ,t3.record_id batch_id FROM KS_PROD_DIAPHRAGM_TUMO_CHECK t1
-	 LEFT JOIN qinsen.inst_tumo_check t2 ON t2.record_id=t1.record_id
+	 from (SELECT t1.* ,t3.record_id batch_id, t2.recheck_flag FROM KS_PROD_DIAPHRAGM_TUMO_CHECK t1
+	 LEFT JOIN 	 
+	 qinsen.inst_tumo_check t2 ON t2.record_id=t1.record_id
 	 LEFT JOIN qinsen.inst_tumo t3 ON t3.record_id =t2.batch_id) t
+	 
+	 <!--性能自动判定只看初测值-->
+	 where t.recheck_flag = 'N'
+	 
 	 GROUP BY t.batch_id) tt
 	 WHERE tt.cnt=tt.cnt2
+	 
+	 
+	 
 	  <isNotNull prepend = ""  property = "batchId">
 	   AND tt.batch_id = #batchId#
 	</isNotNull>

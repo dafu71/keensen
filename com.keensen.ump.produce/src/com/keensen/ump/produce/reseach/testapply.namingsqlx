@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+ <select id="queryHead" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       t1.PROJECT_CODE as "projectCode",
+		t1.K3_CODE as "k3Code",
+		t1.CONTENT as "content",
+		TO_CHAR(t1.TM_DATE, 'YYYY-MM-DD') as "tmDate",
+		TO_CHAR(t1.JM_DATE, 'YYYY-MM-DD') as "jmDate",
+		TO_CHAR(t1.QJ_DATE, 'YYYY-MM-DD') as "qjDate",
+		TO_CHAR(t1.WT_DATE, 'YYYY-MM-DD') as "wtDate",
+		t1.CRAFT as "craft",
+		t1.PAGE as "page",
+		t1.THICK_NET as "thickNet",
+		t1.THIN_NET as "thinNet",
+		t1.OTHER as "other",
+		t1.MSIZE as "msize",
+		t1.STATE as "state",
+		t1.CODE as "code",
+		t1.PURPOSE as "purpose",
+		t1.MANAGER as "manager",
+		TO_CHAR(T1.APPLY_DATE, 'YYYY-MM-DD')  as "applyDate",
+		t1.KIND as "kind",t1.LINE as "line"
+
+  FROM KS_RESEARCH_TEST_APPLY_HEAD T1
+      where 1=1
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	  <isNotNull prepend = "and"  property = "applyDateStart"> 
+          TO_CHAR(Tt1.APPLY_DATE, 'YYYY-MM-DD')  &gt;=  #applyDateStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "applyDateEnd"> 
+          TO_CHAR(Tt1.APPLY_DATE, 'YYYY-MM-DD')  &lt;=  #applyDateEnd#
+     </isNotNull>
+     
+     <isNotNull prepend="and" property="state"> 
+		       t1.state like '%' || #state# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="kind"> 
+		       t1.kind = #kind#
+	</isNotNull>
+	
+	order by t1.ID desc
+    </select>
+    
+   <select id="queryList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T.ID          "id",
+       T.BATCH_NO    "batchNo",
+       T.SPEC_NAME   "specName",T.SPEC_ID   "specId",
+       T.AMOUNT      "amount",
+       T.RELATION_ID "relationId"
+  FROM KS_RESEARCH_TEST_APPLY_LIST T
+    where 1=1
+    <isNotNull prepend="and" property="id"> 
+		       t.id = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="relationId"> 
+		       t.relation_Id = #relationId#
+	</isNotNull>
+    </select>
+    
+    <delete id="deleteListBatch" parameterClass="java.util.HashMap" >
+     delete from KS_RESEARCH_TEST_APPLY_LIST t
+     WHERE 1=1 and t.relation_id= #relationId#
+    
+	</delete>
+	
+	<select id="queryApprove" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   
+	select 'approve-' || t.id "pkid",to_char(t.create_time,'YYYY-MM-DD HH24:MI:SS') "createTime",
+	t.create_user_id "createUserId",t.create_name "createName",
+	t.advise "advise",t.describe "describe",t.step "step",t.relation_id  "relationId",t.relation_id
+	from KS_RESEARCH_TEST_APPLY_approve t
+	WHERE relation_id =#relationId#
+	UNION ALL
+	select 'check-' || t.id ,to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss'),t.create_user_id,t.create_name,
+	t.advise ,'','研发中心审核',t.relation_id,t.relation_id  from KS_RESEARCH_TEST_APPLY_check t
+	WHERE relation_id =#relationId#
+	ORDER BY 2
+	</select>
+	
+	 <delete id="deleteHead" parameterClass="java.util.HashMap" >
+     delete from KS_RESEARCH_TEST_APPLY_HEAD t
+     WHERE 1=1 and t.id= #relationId# and t.state not like '%完成%'
+    
+	</delete>
+	
+	<delete id="deleteList" parameterClass="java.util.HashMap" >
+     delete from KS_RESEARCH_TEST_APPLY_LIST t
+     WHERE 1=1 and t.relation_id= #relationId#
+     and t.relation_id not in(select id from KS_RESEARCH_TEST_APPLY_HEAD t
+     WHERE 1=1 and t.id= #relationId# and t.state not like '%完成%')
+    
+	</delete>
+	
+	<delete id="deleteCheck" parameterClass="java.util.HashMap" >
+     delete from KS_RESEARCH_TEST_APPLY_CHECK t
+     WHERE 1=1 and t.relation_id= #relationId#
+     and t.relation_id not in(select id from KS_RESEARCH_TEST_APPLY_HEAD t
+     WHERE 1=1 and t.id= #relationId# and t.state not like '%完成%')
+    
+	</delete>
+	
+	<delete id="deleteApprove" parameterClass="java.util.HashMap" >
+     delete from KS_RESEARCH_TEST_APPLY_APPROVE t
+     WHERE 1=1 and t.relation_id= #relationId#
+     and t.relation_id not in(select id from KS_RESEARCH_TEST_APPLY_HEAD t
+     WHERE 1=1 and t.id= #relationId# and t.state not like '%完成%')
+    
+	</delete>
+	
+    </sqlMap>

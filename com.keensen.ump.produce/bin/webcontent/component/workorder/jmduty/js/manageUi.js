@@ -93,6 +93,23 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 				fieldLabel : '排班日期',
 				format : "Y-m-d",
 				colspan : 1
+			},{
+
+				xtype : 'combobox',
+				fieldLabel : '计划作业状态',
+				ref : '../jmState',
+				hiddenName : 'condition/jmState',
+				emptyText : '--请选择--',
+				allowBlank : true,
+				editable : false,
+				//anchor : '95%',
+				store : [['0', '处理中'], ['1', '完成'], ['2', '异常']],
+				listeners : {
+					scope : this,
+					'expand' : function(A) {
+						this.queryPanel.jmState.reset();
+					}
+				}
 			}]
 		});
 		this.queryPanel.addButton({

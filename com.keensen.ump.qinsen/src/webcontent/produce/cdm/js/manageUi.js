@@ -19,11 +19,13 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					// id : defectTmWinId,
+					relationListId : 'produce-caidiemo-list',
 					dutyTacheCode : 'TM',
 					recTacheCode : 'CM'
 				});
 		this.defectZmWin = new com.keensen.ump.defectWindow({
 					// id : defectZmWinId,
+					relationListId : 'produce-caidiemo-list',
 					dutyTacheCode : 'ZM',
 					recTacheCode : 'CM'
 				});
@@ -182,7 +184,6 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 		this.queryPanel.addButton({
 					text : "剩余可用长度提醒",
 					scope : this,
-					rescode : '10002661',
 					iconCls : 'icon-application_form_magnify',
 					handler : this.onWarn
 				});

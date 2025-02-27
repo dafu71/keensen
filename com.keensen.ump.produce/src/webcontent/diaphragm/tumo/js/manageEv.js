@@ -456,7 +456,10 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.exportExcel2 = function
 	})
 }
 
-com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.exportExcel = function() {
+/*com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.exportExcel = function() {
+	
+	
+				
 	var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
@@ -492,7 +495,7 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.exportExcel = function(
 			_this.requestMask.hide()
 		}
 	})
-}
+}*/
 
 com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.onUploadWindowShow = function(
 		o) {
@@ -716,7 +719,15 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.exportExcel = function(
 
 	}
 
-	var daochu = _this.queryPanel.getForm().getValues();
+	doQuerySqlAndExport(
+				this,
+				this.queryPanel,
+				this.listPanel,
+				'涂膜记录查询',
+				'com.keensen.ump.produce.diaphragm.ship.ship.queryTumoOrigin',
+				'0,1');
+				
+	/*var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
@@ -750,5 +761,5 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr.prototype.exportExcel = function(
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }

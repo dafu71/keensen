@@ -13,12 +13,12 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 80,
 					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【底膜库存查询】',
+					//title : '【底膜库存查询】',
 					fields : [{
 								xtype : 'dictcombobox',
 								name : 'condition/dimoType',
@@ -52,6 +52,7 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,
 					handler : this.exportExcel
 				});
 		this.queryPanel.addButton({
@@ -81,7 +82,7 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【底膜库存列表】',
+			//title : '【底膜库存列表】',
 			viewConfig : {
 				forceFit : true
 			},

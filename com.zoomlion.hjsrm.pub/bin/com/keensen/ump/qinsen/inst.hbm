@@ -907,197 +907,6 @@
             <column length="20" name="TRAILER"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstQijian" table="INST_QIJIAN">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="recordId" type="int">
-            <column length="9" name="RECORD_ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="juanmoBatchId" type="int">
-            <column length="9" name="JUANMO_BATCH_ID" not-null="true"/>
-        </property>
-        <property name="batchNo" type="string">
-            <column length="50" name="BATCH_NO"/>
-        </property>
-        <property name="lineId" type="int">
-            <column length="9" name="LINE_ID" not-null="true"/>
-        </property>
-        <property name="prodSpecId" type="int">
-            <column length="9" name="PROD_SPEC_ID" not-null="true"/>
-        </property>
-        <property name="orderNo" type="string">
-            <column length="20" name="ORDER_NO" not-null="true"/>
-        </property>
-        <property name="produceDt" type="timestamp">
-            <column name="PRODUCE_DT" not-null="true"/>
-        </property>
-        <property name="presure" type="big_decimal">
-            <column length="6" name="PRESURE" precision="6" scale="2"/>
-        </property>
-        <property name="checkResult" type="big_decimal">
-            <column length="6" name="CHECK_RESULT" not-null="true" precision="6" scale="2"/>
-        </property>
-        <property name="isQualified" type="string">
-            <column length="1" name="IS_QUALIFIED" not-null="true"/>
-        </property>
-        <property name="isFirst" type="string">
-            <column length="1" name="IS_FIRST" not-null="true"/>
-        </property>
-        <property name="stdStr" type="string">
-            <column length="20" name="STD_STR"/>
-        </property>
-        <property name="teamId" type="int">
-            <column length="9" name="TEAM_ID"/>
-        </property>
-        <property name="workerId" type="int">
-            <column length="9" name="WORKER_ID"/>
-        </property>
-        <property name="createDt" type="timestamp">
-            <column name="CREATE_DT"/>
-        </property>
-        <property name="changeDt" type="timestamp">
-            <column name="CHANGE_DT"/>
-        </property>
-        <property name="creatorId" type="int">
-            <column length="9" name="CREATOR_ID"/>
-        </property>
-        <property name="changerId" type="int">
-            <column length="9" name="CHANGER_ID"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="ngReasonId" type="int">
-            <column length="9" name="NG_REASON_ID"/>
-        </property>
-        <property name="judgeFlag" type="string">
-            <column length="1" name="JUDGE_FLAG"/>
-        </property>
-        <property name="ngItem" type="string">
-            <column length="50" name="NG_ITEM"/>
-        </property>
-        <property name="judgerId" type="int">
-            <column length="9" name="JUDGER_ID"/>
-        </property>
-        <property name="judgeDt" type="timestamp">
-            <column name="JUDGE_DT"/>
-        </property>
-        <property name="diameter" type="string">
-            <column length="50" name="DIAMETER"/>
-        </property>
-        <property name="diameterName" type="string">
-            <column length="50" name="DIAMETER_NAME"/>
-        </property>
-        <property name="gyyRemark" type="string">
-            <column length="500" name="GYY_REMARK"/>
-        </property>
-        <property name="diameter2" type="string">
-            <column length="50" name="DIAMETER2"/>
-        </property>
-        <property name="gyyRemarkTime" type="timestamp">
-            <column name="GYY_REMARK_TIME"/>
-        </property>
-        <property name="gyyRemarkUserId" type="string">
-            <column length="20" name="GYY_REMARK_USER_ID"/>
-        </property>
-        <property name="gyyRemarkUserName" type="string">
-            <column length="50" name="GYY_REMARK_USER_NAME"/>
-        </property>
-        <property name="monitorRemark" type="string">
-            <column length="500" name="MONITOR_REMARK"/>
-        </property>
-        <property name="monitorRemarkTime" type="timestamp">
-            <column name="MONITOR_REMARK_TIME"/>
-        </property>
-        <property name="monitorRemarkUserId" type="string">
-            <column length="20" name="MONITOR_REMARK_USER_ID"/>
-        </property>
-        <property name="monitorRemarkUserName" type="string">
-            <column length="50" name="MONITOR_REMARK_USER_NAME"/>
-        </property>
-        <property name="waterRemark" type="string">
-            <column length="500" name="WATER_REMARK"/>
-        </property>
-        <property name="waterRemarkTime" type="timestamp">
-            <column name="WATER_REMARK_TIME"/>
-        </property>
-        <property name="waterRemarkUserId" type="string">
-            <column length="20" name="WATER_REMARK_USER_ID"/>
-        </property>
-        <property name="waterRemarkUserName" type="string">
-            <column length="50" name="WATER_REMARK_USER_NAME"/>
-        </property>
-        <property name="monitorRemark2" type="string">
-            <column length="20" name="MONITOR_REMARK2"/>
-        </property>
-        <property name="monitorRemarkTime2" type="timestamp">
-            <column name="MONITOR_REMARK_TIME2"/>
-        </property>
-        <property name="monitorRemarkUserId2" type="string">
-            <column length="20" name="MONITOR_REMARK_USER_ID2"/>
-        </property>
-        <property name="monitorRemarkUserName2" type="string">
-            <column length="20" name="MONITOR_REMARK_USER_NAME2"/>
-        </property>
-        <property name="gyyConclusion" type="string">
-            <column length="20" name="GYY_CONCLUSION"/>
-        </property>
-        <property name="gyySpecId" type="int">
-            <column length="9" name="GYY_SPEC_ID"/>
-        </property>
-    </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstCdmDefect" table="INST_CDM_DEFECT">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="recordId" type="int">
-            <column length="9" name="RECORD_ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="tumoBatchId" type="int">
-            <column length="9" name="TUMO_BATCH_ID" not-null="true"/>
-        </property>
-        <property name="defectItemId" type="int">
-            <column length="9" name="DEFECT_ITEM_ID" not-null="true"/>
-        </property>
-        <property name="loss" type="big_decimal">
-            <column length="4" name="LOSS" not-null="true" precision="4" scale="1"/>
-        </property>
-        <property name="workerId" type="int">
-            <column length="9" name="WORKER_ID"/>
-        </property>
-        <property name="produceDt" type="timestamp">
-            <column name="PRODUCE_DT" not-null="true"/>
-        </property>
-        <property name="createDt" type="date">
-            <column name="CREATE_DT"/>
-        </property>
-        <property name="changeDt" type="date">
-            <column name="CHANGE_DT"/>
-        </property>
-        <property name="creatorId" type="int">
-            <column length="9" name="CREATOR_ID"/>
-        </property>
-        <property name="changerId" type="int">
-            <column length="9" name="CHANGER_ID"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="pageNum" type="int">
-            <column length="3" name="PAGE_NUM"/>
-        </property>
-        <property name="position" type="big_decimal">
-            <column length="4" name="POSITION" precision="4" scale="1"/>
-        </property>
-        <property name="labelNum" type="int">
-            <column length="5" name="LABEL_NUM"/>
-        </property>
-        <property name="recorder" type="string">
-            <column length="50" name="RECORDER"/>
-        </property>
-        <property name="ifTear" type="string">
-            <column length="10" name="IF_TEAR"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstTumo" table="INST_TUMO">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="recordId" type="int">
@@ -1268,6 +1077,227 @@
         </property>
         <property name="modifyName" type="string">
             <column length="50" name="MODIFY_NAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstQijian" table="INST_QIJIAN">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="juanmoBatchId" type="int">
+            <column length="9" name="JUANMO_BATCH_ID" not-null="true"/>
+        </property>
+        <property name="batchNo" type="string">
+            <column length="50" name="BATCH_NO"/>
+        </property>
+        <property name="lineId" type="int">
+            <column length="9" name="LINE_ID" not-null="true"/>
+        </property>
+        <property name="prodSpecId" type="int">
+            <column length="9" name="PROD_SPEC_ID" not-null="true"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="50" name="ORDER_NO" not-null="true"/>
+        </property>
+        <property name="produceDt" type="timestamp">
+            <column name="PRODUCE_DT" not-null="true"/>
+        </property>
+        <property name="presure" type="big_decimal">
+            <column length="6" name="PRESURE" precision="6" scale="2"/>
+        </property>
+        <property name="checkResult" type="big_decimal">
+            <column length="6" name="CHECK_RESULT" not-null="true" precision="6" scale="2"/>
+        </property>
+        <property name="isQualified" type="string">
+            <column length="1" name="IS_QUALIFIED" not-null="true"/>
+        </property>
+        <property name="isFirst" type="string">
+            <column length="1" name="IS_FIRST" not-null="true"/>
+        </property>
+        <property name="stdStr" type="string">
+            <column length="20" name="STD_STR"/>
+        </property>
+        <property name="teamId" type="int">
+            <column length="9" name="TEAM_ID"/>
+        </property>
+        <property name="workerId" type="int">
+            <column length="9" name="WORKER_ID"/>
+        </property>
+        <property name="createDt" type="timestamp">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="timestamp">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="ngReasonId" type="int">
+            <column length="9" name="NG_REASON_ID"/>
+        </property>
+        <property name="judgeFlag" type="string">
+            <column length="1" name="JUDGE_FLAG"/>
+        </property>
+        <property name="ngItem" type="string">
+            <column length="50" name="NG_ITEM"/>
+        </property>
+        <property name="judgerId" type="int">
+            <column length="9" name="JUDGER_ID"/>
+        </property>
+        <property name="judgeDt" type="timestamp">
+            <column name="JUDGE_DT"/>
+        </property>
+        <property name="diameter" type="string">
+            <column length="50" name="DIAMETER"/>
+        </property>
+        <property name="diameterName" type="string">
+            <column length="50" name="DIAMETER_NAME"/>
+        </property>
+        <property name="gyyRemark" type="string">
+            <column length="500" name="GYY_REMARK"/>
+        </property>
+        <property name="diameter2" type="string">
+            <column length="50" name="DIAMETER2"/>
+        </property>
+        <property name="gyyRemarkTime" type="timestamp">
+            <column name="GYY_REMARK_TIME"/>
+        </property>
+        <property name="gyyRemarkUserId" type="string">
+            <column length="20" name="GYY_REMARK_USER_ID"/>
+        </property>
+        <property name="gyyRemarkUserName" type="string">
+            <column length="50" name="GYY_REMARK_USER_NAME"/>
+        </property>
+        <property name="monitorRemark" type="string">
+            <column length="500" name="MONITOR_REMARK"/>
+        </property>
+        <property name="monitorRemarkTime" type="timestamp">
+            <column name="MONITOR_REMARK_TIME"/>
+        </property>
+        <property name="monitorRemarkUserId" type="string">
+            <column length="20" name="MONITOR_REMARK_USER_ID"/>
+        </property>
+        <property name="monitorRemarkUserName" type="string">
+            <column length="50" name="MONITOR_REMARK_USER_NAME"/>
+        </property>
+        <property name="waterRemark" type="string">
+            <column length="500" name="WATER_REMARK"/>
+        </property>
+        <property name="waterRemarkTime" type="timestamp">
+            <column name="WATER_REMARK_TIME"/>
+        </property>
+        <property name="waterRemarkUserId" type="string">
+            <column length="20" name="WATER_REMARK_USER_ID"/>
+        </property>
+        <property name="waterRemarkUserName" type="string">
+            <column length="50" name="WATER_REMARK_USER_NAME"/>
+        </property>
+        <property name="monitorRemark2" type="string">
+            <column length="20" name="MONITOR_REMARK2"/>
+        </property>
+        <property name="monitorRemarkTime2" type="timestamp">
+            <column name="MONITOR_REMARK_TIME2"/>
+        </property>
+        <property name="monitorRemarkUserId2" type="string">
+            <column length="20" name="MONITOR_REMARK_USER_ID2"/>
+        </property>
+        <property name="monitorRemarkUserName2" type="string">
+            <column length="20" name="MONITOR_REMARK_USER_NAME2"/>
+        </property>
+        <property name="gyyConclusion" type="string">
+            <column length="20" name="GYY_CONCLUSION"/>
+        </property>
+        <property name="gyySpecId" type="int">
+            <column length="9" name="GYY_SPEC_ID"/>
+        </property>
+        <property name="diameterDt" type="timestamp">
+            <column name="DIAMETER_DT"/>
+        </property>
+        <property name="modifyOrderNoTime" type="timestamp">
+            <column name="MODIFY_ORDER_NO_TIME"/>
+        </property>
+        <property name="modifyOrderNoName" type="string">
+            <column length="50" name="MODIFY_ORDER_NO_NAME"/>
+        </property>
+        <property name="modifyOrderNoUserId" type="string">
+            <column length="20" name="MODIFY_ORDER_NO_USER_ID"/>
+        </property>
+        <property name="orderNoOriginal" type="string">
+            <column length="50" name="ORDER_NO_ORIGINAL"/>
+        </property>
+        <property name="prodSpecIdOriginal" type="int">
+            <column length="9" name="PROD_SPEC_ID_ORIGINAL"/>
+        </property>
+        <property name="pgRemark" type="string">
+            <column length="500" name="PG_REMARK"/>
+        </property>
+        <property name="pgRemarkTime" type="timestamp">
+            <column name="PG_REMARK_TIME"/>
+        </property>
+        <property name="pgRemarkUserId" type="string">
+            <column length="20" name="PG_REMARK_USER_ID"/>
+        </property>
+        <property name="pgRemarkUserName" type="string">
+            <column length="50" name="PG_REMARK_USER_NAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstCdmDefect" table="INST_CDM_DEFECT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="tumoBatchId" type="int">
+            <column length="9" name="TUMO_BATCH_ID" not-null="true"/>
+        </property>
+        <property name="defectItemId" type="int">
+            <column length="9" name="DEFECT_ITEM_ID" not-null="true"/>
+        </property>
+        <property name="loss" type="big_decimal">
+            <column length="4" name="LOSS" not-null="true" precision="4" scale="1"/>
+        </property>
+        <property name="workerId" type="int">
+            <column length="9" name="WORKER_ID"/>
+        </property>
+        <property name="produceDt" type="timestamp">
+            <column name="PRODUCE_DT" not-null="true"/>
+        </property>
+        <property name="createDt" type="date">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="date">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="pageNum" type="int">
+            <column length="3" name="PAGE_NUM"/>
+        </property>
+        <property name="position" type="string">
+            <column length="200" name="POSITION"/>
+        </property>
+        <property name="labelNum" type="int">
+            <column length="5" name="LABEL_NUM"/>
+        </property>
+        <property name="recorder" type="string">
+            <column length="50" name="RECORDER"/>
+        </property>
+        <property name="ifTear" type="string">
+            <column length="10" name="IF_TEAR"/>
         </property>
     </class>
 </hibernate-mapping>

@@ -129,6 +129,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,
 					handler : this.exportExcel
 				});
 				

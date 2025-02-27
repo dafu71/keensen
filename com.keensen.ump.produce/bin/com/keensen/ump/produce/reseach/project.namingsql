@@ -100,7 +100,9 @@
         <isNotNull prepend="and" property="userId">T1.USER_ID = #userId#</isNotNull>
         <isNotNull prepend="and" property="userName">v.operatorname like '%'||#userName#||'%'</isNotNull>
         <isNotNull prepend="and" property="projectName">T2.PROJECT_NAME like '%' || #projectName# || '%'</isNotNull>
-        <isNotNull prepend="and" property="projectCode">T2.PROJECT_CODE like '%' || #projectCode# || '%'</isNotNull> 
+        <isNotNull prepend="and" property="projectCode">T2.PROJECT_CODE like '%' || #projectCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="workDateStart">TO_CHAR(T1.work_DATE, 'YYYY-MM-DD')  &gt;=  #workDateStart#</isNotNull>
+        <isNotNull prepend="and" property="workDateEnd">TO_CHAR(T1.work_DATE, 'YYYY-MM-DD')  &lt;=  #workDateEnd#</isNotNull>
 	
 		order by T1.PROJECT_ID,T1.USER_ID,to_char(T1.WORK_DATE,'yyyy-MM-dd') 
    </select>

@@ -27,6 +27,11 @@
   	if(roleId.toString().indexOf("10001461")!=-1 || uid.equals("sysadmin")){
 		invalid="1";
   	}	
+  	String gymanage = "0";//工艺主管
+  	//30367
+  	if(roleId.toString().indexOf("30367")!=-1 || uid.equals("sysadmin")){
+		gymanage="1";
+  	}
 %>
 <html>
 <!-- 
@@ -57,6 +62,8 @@
   var fxy = "<%=fxy %>";
   var ply = "<%=ply %>";
   var invalid = "<%=invalid %>";
+  
+  var gymanage = "<%=gymanage %>";
   
   var uid = "<%=uid %>";
   

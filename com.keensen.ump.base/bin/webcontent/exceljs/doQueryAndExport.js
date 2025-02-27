@@ -1,6 +1,74 @@
 
 /*
  * 查询导出excel 入参： obj:调用者，一般为this queryPanel：查询form listPanel：列表
+ * mytitle：标签的sheetname nameSqlId：命名sql exportfields:需导出的列表字段 出参： 文件：download.xlsx
+ */
+function doQuerySqlAndExportExt(obj,queryPanel,listPanel,mytitle,nameSqlId,exportfields){
+	
+	var _this = obj;
+	var condition = {};
+	if(!Ext.isEmpty(queryPanel)){
+		var params = queryPanel.getForm().getValues();
+		for (var key in params) {
+			var k =key.substring(key.indexOf('/')+1,100);
+			condition[k]=params[key]
+		}
+	}	
+
+	_this.requestMask = _this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	
+	var opt = mytitle.indexOf('导出')==-1?mytitle+'导出':mytitle;
+	condition['business'] = '数据导出';
+	condition['opt'] = opt;
+
+	Ext.Ajax.request({
+		url : 'com.keensen.ump.base.common.export.biz.ext',
+		method : "post",
+		jsonData : {'condition' : condition,'nameSqlId':nameSqlId},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+
+				var data = ret.data;
+				var cm = listPanel.getColumnModel();
+				var len = cm.getColumnCount();
+				var columns = [];
+							
+				for (var i = 0; i < len; i++) {
+
+					if(!Ext.isEmpty(exportfields)){
+						
+						if (!Ext.isEmpty(cm.getColumnHeader(i))) {
+							var column = {};							
+							var columnHeader = cm.getColumnHeader(i);
+							columnHeader = removeTags(columnHeader);	
+							if(findElement(exportfields, columnHeader)!=-1){
+								column.header = columnHeader;
+								column.key = cm.getDataIndex(i);							
+								columns.push(column);
+							}
+							
+						}
+					}
+					
+				}
+				
+				doExprot(mytitle,data, columns);
+
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+/*
+ * 查询导出excel 入参： obj:调用者，一般为this queryPanel：查询form listPanel：列表
  * mytitle：标签的sheetname nameSqlId：命名sql notexport:无需导出的列表索引 出参： 文件：download.xlsx
  */
 function doQuerySqlAndExport(obj,queryPanel,listPanel,mytitle,nameSqlId,notexport){
@@ -19,9 +87,13 @@ function doQuerySqlAndExport(obj,queryPanel,listPanel,mytitle,nameSqlId,notexpor
 				msg : "后台正在操作,请稍候!"
 			});
 	_this.requestMask.show();
+	
+	var opt = mytitle.indexOf('导出')==-1?mytitle+'导出':mytitle;
+	condition['business'] = '数据导出';
+	condition['opt'] = opt;
 
 	Ext.Ajax.request({
-		url : 'com.keensen.ump.base.common.query.biz.ext',
+		url : 'com.keensen.ump.base.common.export.biz.ext',
 		method : "post",
 		jsonData : {'condition' : condition,'nameSqlId':nameSqlId},
 		success : function(resp) {

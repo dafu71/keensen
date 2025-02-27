@@ -104,8 +104,10 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onSubmit = function() {
 	// var testType = this.inputPanel.testType.getValue();
 
 	var obj = this.inputPanel.testType.getValue();
+
 	var arr = ['换产试卷', '正常试卷', '发货试卷', '生管试卷', '返厂试卷', '实验试卷'];
 	var testType = arr[obj.getRawValue()];
+
 
 	var prodSpecName = this.inputPanel.prodSpecName.getValue();
 	var prodSpecId = this.inputPanel.prodSpecId.getValue();

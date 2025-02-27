@@ -360,77 +360,6 @@
             <xs:element minOccurs="0" name="trailer" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="InstQijian">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="juanmoBatchId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="lineId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="prodSpecId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="presure" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="checkResult" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="isQualified" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="isFirst" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="stdStr" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="teamId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="ngReasonId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="judgeFlag" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="ngItem" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="judgerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="judgeDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="diameter" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="diameterName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="gyyRemark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="diameter2" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="gyyRemarkTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="gyyRemarkUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="gyyRemarkUserName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="monitorRemark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="monitorRemarkTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="monitorRemarkUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="monitorRemarkUserName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="waterRemark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="waterRemarkTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="waterRemarkUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="waterRemarkUserName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="monitorRemark2" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="monitorRemarkTime2" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="monitorRemarkUserId2" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="monitorRemarkUserName2" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="gyyConclusion" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="gyySpecId" nillable="true" type="xs:int"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="InstCdmDefect">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="tumoBatchId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="defectItemId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="loss" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="position" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="labelNum" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="recorder" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="ifTear" nillable="true" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="InstTumo">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -490,6 +419,87 @@
             <xs:element minOccurs="0" name="modifyTime" nillable="true" type="xs:dateTime"/>
             <xs:element minOccurs="0" name="modifyUserId" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="modifyName" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstQijian">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="juanmoBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lineId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="prodSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="presure" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="checkResult" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="isQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="isFirst" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stdStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="teamId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ngReasonId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="judgeFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ngItem" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="judgerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="judgeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="diameter" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="diameterName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gyyRemark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="diameter2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gyyRemarkTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="gyyRemarkUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gyyRemarkUserName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="monitorRemark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="monitorRemarkTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="monitorRemarkUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="monitorRemarkUserName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="waterRemark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="waterRemarkTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="waterRemarkUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="waterRemarkUserName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="monitorRemark2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="monitorRemarkTime2" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="monitorRemarkUserId2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="monitorRemarkUserName2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gyyConclusion" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="gyySpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="diameterDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyOrderNoTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="modifyOrderNoName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyOrderNoUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orderNoOriginal" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="prodSpecIdOriginal" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="pgRemark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pgRemarkTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="pgRemarkUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pgRemarkUserName" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstCdmDefect">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="tumoBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="defectItemId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="loss" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="position" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="labelNum" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="recorder" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ifTear" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

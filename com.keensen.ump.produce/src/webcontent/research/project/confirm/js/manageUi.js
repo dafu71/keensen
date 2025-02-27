@@ -49,7 +49,7 @@ com.keensen.ump.research.project.ProjectConfirmnMgr = function() {
 
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
-					columns : 3,
+					columns : 4,
 					border : true,
 					region : "north",
 					// collapsible : true,
@@ -86,6 +86,14 @@ com.keensen.ump.research.project.ProjectConfirmnMgr = function() {
 								name : 'condition/userName',
 								anchor : '100%',
 								fieldLabel : '人员名称'
+							}, {
+								xtype : "dateregion",
+								colspan : 1,
+								// anchor : '75%',
+								nameArray : ['condition/workDateStart',
+										'condition/workDateEnd'],
+								fieldLabel : "作业日期",
+								format : "Y-m-d"
 							}]
 				});
 

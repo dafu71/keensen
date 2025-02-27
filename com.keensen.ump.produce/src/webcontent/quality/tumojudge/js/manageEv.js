@@ -19,24 +19,22 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 	}, this);
 
 	this.listPanel2.store.on('load', function(o) {
-				var isBatchQualified = _this.editPanel.form
-						.findField('isBatchQualified2').getValue();
-				var isBatchQualified2 = _this.editPanel.form
-						.findField('entity/isQualified').getValue();
-				if (Ext.isEmpty(isBatchQualified)) {
-					_this.editPanel.form.findField('isBatchQualified2')
-							.setValue(isBatchQualified2);
-				}
-				/*var store = _this.listPanel2.store;
-				var records = store.getRange();
-				Ext.each(records, function(r) {
-							var perfIsQualified = r.data['perfIsQualified'];
-							if (perfIsQualified == 'N') {
-								_this.editPanel.perfIsQualified.setValue('N');
-							}
-						})*/
+		var isBatchQualified = _this.editPanel.form
+				.findField('isBatchQualified2').getValue();
+		var isBatchQualified2 = _this.editPanel.form
+				.findField('entity/isQualified').getValue();
+		if (Ext.isEmpty(isBatchQualified)) {
+			_this.editPanel.form.findField('isBatchQualified2')
+					.setValue(isBatchQualified2);
+		}
+			/*
+			 * var store = _this.listPanel2.store; var records =
+			 * store.getRange(); Ext.each(records, function(r) { var
+			 * perfIsQualified = r.data['perfIsQualified']; if (perfIsQualified ==
+			 * 'N') { _this.editPanel.perfIsQualified.setValue('N'); } })
+			 */
 
-			})
+		})
 
 	this.inputWindow.items.items[0].mon(this.inputWindow.items.items[0],
 			'aftersave', function() {
@@ -59,10 +57,10 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 				var produceRemark = _this.editPanel.produceRemark.getValue();
 				var tagNum = _this.editPanel.tagNum.getValue();
 				var tagLength = _this.editPanel.tagLength.getValue();
-				
-				//c21
+
+				// c21
 				var mpd = _this.editPanel.mpd.getValue();
-				if(!Ext.isEmpty(mpd) && parseFloat(mpd)>=10)
+				if (!Ext.isEmpty(mpd) && parseFloat(mpd) >= 10)
 					_this.editPanel.mpdIsQualified.setValue('N')
 				else
 					_this.editPanel.mpdIsQualified.setValue('Y')
@@ -70,14 +68,10 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 				if (Ext.isEmpty(trendText)) {
 					_this.editPanel.trend.setValue(trend(perfFlagId,
 							isBatchQualified, isKeep, isWx, qualifidLength,
-							produceRemark, tagNum, tagLength,mpdIsQualified));
-					
-					
+							produceRemark, tagNum, tagLength, mpdIsQualified));
+
 				}
-				
-				
-				
-				
+
 				_this.listPanel2.store.load({
 							params : {
 								"condition/batchId" : recordId
@@ -218,25 +212,46 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onJudge = function() {
 }
 
 function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
-		produceRemark, tagNum, tagLength,mpdIsQualified) {
-	 //alert(perfFlagId + '---' + isBatchQualified + '---' + isKeep + '---' +
-	 //isWx);
+		produceRemark, tagNum, tagLength, mpdIsQualified) {
+	// alert(perfFlagId + '---' + isBatchQualified + '---' + isKeep + '---' +
+	// isWx);
 	// 发货膜片
 	// A等品 合格 走向仓库发货仓
 	// alert(perfFlagId);
-	
-	
-			
-	if(mpdIsQualified=='N'){
+
+	// 发货膜片 isWx == 'Y'
+	// A等品 perfFlagId == 300029
+	// 合格 isBatchQualified == 'Y'
+	// c21 pdIsQualified=='Y'
+	// 2025-02-26
+	// 走向只有两个仓，发货仓和ab仓
+	// 发货膜片除合格长度200m以下或标签数大于10个或C21大于10入AB仓，其他的全部入膜片发货仓。
+
+	ret = '仓库AB仓';
+	if (isWx == 'N') {		
+		return ret;
+	}
+
+	if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified == 'Y') {
+		ret = '仓库发货仓';
+	}
+
+	if (tagNum > 10) {
+		ret = '仓库AB仓';
+	}
+
+	return ret;
+
+	/*if (mpdIsQualified == 'N') {
 		perfFlagId = 300032;
 		isBatchQualified = 'N'
 	}
-			
+
 	var ret = '';
 	if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified == 'Y') {
 		ret = '仓库发货仓';
 	}
-	
+
 	// C等品 不合格 走向待二次判定
 	if (isWx == 'Y' && perfFlagId == 300032 && isBatchQualified == 'N') {
 		ret = '待二次判定';
@@ -273,7 +288,7 @@ function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
 	if (tagNum > 10 && tagLength > 30) {
 		ret = '仓库AB仓';
 	}
-	return ret;
+	return ret;*/
 
 }
 

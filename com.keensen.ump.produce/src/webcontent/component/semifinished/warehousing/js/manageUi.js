@@ -3,7 +3,7 @@ com.keensen.ump.produce.component.WarehousingMgr = function() {
 	this.initPanel = function() {
 		this.rec = {};
 		this.initInputWindow();
-
+	
 		return new Ext.fn.fnLayOut({
 					layout : 'new',
 					border : false,

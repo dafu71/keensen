@@ -1,5 +1,18 @@
 com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function() {
 	var _this = this;
+
+	this.listPanel4BaseFormula.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					_this.rec = r;
+					var watertype = r.data.watertype;
+					var code = r.data.code;
+					var mptype = r.data.mptype;
+					var line = r.data.line;
+					_this.listPanel4BaseFormula.info.setValue('水相液类型:<font color="red">' + watertype + '</font>产品种类代码:<font color="red">' + code + '</font>膜片类型:<font color="red">' + mptype + '</font>涂膜线:<font color="red">' + line + '</font>');
+				}).defer(100);
+			}, this);
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -417,14 +430,17 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc = function() {
 					_this.inputWindow.c27Plan.setValue(data.c27);
 					_this.inputWindow.c28Plan.setValue(data.c28);
 					_this.inputWindow.c30Plan.setValue(data.c30);
+					
+					_this.inputWindow.c24Plan.setValue(data.c24);
+					
 					_this.inputWindow.roPlan.setValue(data.ro);
-					//_this.inputWindow.c21Plan.setReadOnly(true);
-					//_this.inputWindow.c22Plan.setReadOnly(true);
-					//_this.inputWindow.c23Plan.setReadOnly(true);
-					//_this.inputWindow.c27Plan.setReadOnly(true);
-					//_this.inputWindow.c28Plan.setReadOnly(true);
-					//_this.inputWindow.c30Plan.setReadOnly(true);
-					//_this.inputWindow.roPlan.setReadOnly(true);
+					// _this.inputWindow.c21Plan.setReadOnly(true);
+					// _this.inputWindow.c22Plan.setReadOnly(true);
+					// _this.inputWindow.c23Plan.setReadOnly(true);
+					// _this.inputWindow.c27Plan.setReadOnly(true);
+					// _this.inputWindow.c28Plan.setReadOnly(true);
+					// _this.inputWindow.c30Plan.setReadOnly(true);
+					// _this.inputWindow.roPlan.setReadOnly(true);
 				} else {
 					Ext.Msg.alert("系统提示", "系统没有计算标准，请手动输入!");
 					_this.inputWindow.c21Plan.setValue('');
@@ -433,14 +449,17 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc = function() {
 					_this.inputWindow.c27Plan.setValue('');
 					_this.inputWindow.c28Plan.setValue('');
 					_this.inputWindow.c30Plan.setValue('');
+					
+					_this.inputWindow.c24Plan.setValue('');
+					
 					_this.inputWindow.roPlan.setValue('');
-					//_this.inputWindow.c21Plan.setReadOnly(false);
-					//_this.inputWindow.c22Plan.setReadOnly(false);
-					//_this.inputWindow.c23Plan.setReadOnly(false);
-					//_this.inputWindow.c27Plan.setReadOnly(false);
-					//_this.inputWindow.c28Plan.setReadOnly(false);
-					//_this.inputWindow.c30Plan.setReadOnly(false);
-					//_this.inputWindow.roPlan.setReadOnly(false);
+					// _this.inputWindow.c21Plan.setReadOnly(false);
+					// _this.inputWindow.c22Plan.setReadOnly(false);
+					// _this.inputWindow.c23Plan.setReadOnly(false);
+					// _this.inputWindow.c27Plan.setReadOnly(false);
+					// _this.inputWindow.c28Plan.setReadOnly(false);
+					// _this.inputWindow.c30Plan.setReadOnly(false);
+					// _this.inputWindow.roPlan.setReadOnly(false);
 				}
 			}
 
@@ -474,7 +493,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc4pl = function()
 				+ parseFloat(c28Reality) + parseFloat(c30Reality)
 				+ parseFloat(c24Reality) + parseFloat(c29Reality);
 		weightReality = returnFloat(parseFloat(roReality) + weightReality
-				/ 1000);
+				/ 1000,2);
 		this.editWindow3.weightReality.setValue(weightReality);
 
 	}
@@ -502,7 +521,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc4tz = function()
 				+ parseFloat(c23Plan) + parseFloat(c27Plan)
 				+ parseFloat(c28Plan) + parseFloat(c30Plan)
 				+ parseFloat(c24Plan) + parseFloat(c29Plan);
-		weightPlan = returnFloat(parseFloat(roPlan) + weightPlan / 1000);
+		weightPlan = returnFloat(parseFloat(roPlan) + weightPlan / 1000,2);
 		this.editWindow2.weightPlan.setValue(weightPlan);
 
 	}
@@ -625,7 +644,58 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onInvalid = function()
 	}
 }
 
-function returnFloat(value) {
-	var value = Math.round(parseFloat(value) * 100) / 100;
-	return value;
+com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onBaseFormula = function() {
+	this.baseFormulaWindow.show();
+}
+
+com.keensen.ump.produce.quality.mptest.waterMgr.prototype.saveBaseFormula = function(
+		pkid, field, newValue, oldValue) {
+	var _this = this;
+	if (Ext.isEmpty(newValue))
+		return;
+
+	var obj = {};
+	obj['entity/id'] = pkid;
+	obj['entity/' + field] = newValue
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "正在保存,请稍候!"
+			});
+	this.requestMask.show();
+
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.quality.mpwatertest.saveBaseFormula.biz.ext",
+		method : "post",
+		jsonData : obj,
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				// _this.listPanel.store.reload();
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+
+}
+
+// 判断是否合格
+// c 浓度标准 diff浓度公差 test测试浓度 infoObj 提示控件
+com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onJudge = function(c,
+		diff, test, infoObj) {
+	
+	var minValue = parseFloat(c) - parseFloat(diff);
+	var maxValue = parseFloat(c) + parseFloat(diff);
+
+	if (returnFloat(test,3) >= returnFloat(minValue,3) && returnFloat(test,3) <= returnFloat(maxValue,3)) {
+		infoObj.setValue("<span style='color:green'>合格</span>")
+	} else {
+		infoObj.setValue("<span style='color:red'>不合格</span>")
+	}
+}
+
+function returnFloat(v,n) {
+	return Math.round(parseFloat(v) * Math.pow(10,n)) / Math.pow(10,n);
 }

@@ -19,7 +19,7 @@ com.keensen.ump.produce.diaphragm.make.report.wasteMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【固废查询】',
+					//title : '【固废查询】',
 					fields : [{
 						xtype : "dateregion",
 						anchor : '100%',
@@ -35,6 +35,7 @@ com.keensen.ump.produce.diaphragm.make.report.wasteMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,
 					handler : this.exportExcel
 				});
 
@@ -47,7 +48,7 @@ com.keensen.ump.produce.diaphragm.make.report.wasteMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【固废列表】',
+			//title : '【固废列表】',
 			viewConfig : {
 				forceFit : true
 			},

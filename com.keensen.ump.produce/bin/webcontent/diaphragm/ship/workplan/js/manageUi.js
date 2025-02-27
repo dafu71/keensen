@@ -85,6 +85,7 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 					scope : this,
 					rescode : '10002661',
 					iconCls : 'icon-application_excel',
+					hidden:true,
 					handler : this.exportExcel
 				});
 		this.queryPanel.addButton({

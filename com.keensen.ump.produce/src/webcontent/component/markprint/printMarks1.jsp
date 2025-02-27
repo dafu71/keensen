@@ -290,7 +290,7 @@ class="main_table" border=0>
    	  String fontSize = prodSpecName2.length() >= 16 ? "20px"
 					: prodSpecName2.length() > 9 ? "24px" : "30px";
     %>
-   <td colspan=5  valign="middle" align="left" style="font-size: <%=fontSize %>;">&nbsp;&nbsp;&nbsp;<%=list[i].get("prodSpecName2") %></td>
+   <td colspan=5  valign="top" align="left" style="font-size: <%=fontSize %>;">&nbsp;&nbsp;&nbsp;<%=list[i].get("prodSpecName2") %><br></td>
      
    </tr>
    

@@ -23,7 +23,7 @@
        T1.CHANGE_DT         AS "changeDt",
        T1.CREATOR_ID        AS "creatorId",
        T1.CHANGER_ID        AS "changerId",
-       T1.REMARK            AS "remark",
+       T1.REMARK || ';' || cd.remark           AS "remark",
        T1.JUDGE_REMARK      AS "judgeRemark",
        T1.IS_VALID          AS "isValid",
        T1.VALID_TM          AS "validTm",
@@ -43,8 +43,8 @@
        T1.modify_user_id "modifyUserId",
        T1.modify_name "modifyName",
        
-       T1.TAG_NUM           AS "tagNum",
-       T1.TAG_LENGTH        AS "tagLength",
+       nvl(cd.tag_num,T1.TAG_NUM)           AS "tagNum",
+       nvl(cd.tag_length,T1.TAG_LENGTH)        AS "tagLength",
        T1.INBOUND_REMARK    AS "inboundRemark",
        T1.ORDER_NO          AS "orderNo",
        T1.IS_WX             AS "isWx",
@@ -180,9 +180,19 @@
                BD.DEPT_NAME TEAM_NAME,
                PMC.MATER_CLASS_CODE MATER_CLASS_CODE,
                T2.CAIMO_LENGTH,
-               T3.CAIMO_LOSS,
+               
+               
+               case when to_char(A.Produce_Dt,'yyyy-MM-dd')>='2025-02-10' then
+               T3b.CAIMO_LOSS 
+               ELSE T3.CAIMO_LOSS END CAIMO_LOSS,
+               
                T4.LAST_CAIMO_DATE,
-               A.OUT_LENGTH - nvl(T5.LOSS,0) USEFUL_LENGTH, 
+               
+               case when to_char(A.Produce_Dt,'yyyy-MM-dd')>='2025-02-10' then
+               A.OUT_LENGTH - nvl(T55.LOSS,0)
+               else 
+               A.OUT_LENGTH - nvl(T5.LOSS,0) end
+               USEFUL_LENGTH, 
                A.OUT_LENGTH - DECODE(A.IS_WX, 'Y', NVL(A.TAG_LENGTH, 0), 0) - nvl(T6.LOSS,0) QUALIFID_LENGTH,
                T7.MAC_NAME F_MAC_NAME,
                T7.GFD_AVG F_GFD_AVG,
@@ -236,6 +246,16 @@
                       FROM QINSEN.INST_CDM_DEFECT D
                      GROUP BY D.TUMO_BATCH_ID) T3
             ON T3.TUMO_BATCH_ID = A.RECORD_ID
+            
+            
+           LEFT JOIN (SELECT SUM(DD.LOSS) CAIMO_LOSS, DD.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT DD ,                      
+                           QINSEN.PARA_CDM_DEFECT P
+                     WHERE DD.DEFECT_ITEM_ID = P.RECORD_ID
+                       AND P.REC_TACHE_ID  &lt;> 101
+                     GROUP BY DD.TUMO_BATCH_ID) T3b
+            ON T3b.TUMO_BATCH_ID = A.RECORD_ID  
+              
           LEFT JOIN (SELECT TO_CHAR(MAX(C.PRODUCE_DT), 'YYYY-MM-DD HH24:MI') LAST_CAIMO_DATE,
                            C.TUMO_BATCH_ID
                       FROM QINSEN.INST_CAIDIEMO C
@@ -246,8 +266,19 @@
                            QINSEN.PARA_CDM_DEFECT P
                      WHERE D.DEFECT_ITEM_ID = P.RECORD_ID
                        AND P.REC_TACHE_ID = 100
+                       
                      GROUP BY D.TUMO_BATCH_ID) T5
             ON T5.TUMO_BATCH_ID = A.RECORD_ID
+            
+          LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT D,
+                           QINSEN.PARA_CDM_DEFECT P
+                     WHERE D.DEFECT_ITEM_ID = P.RECORD_ID
+                       AND P.REC_TACHE_ID = 100
+                       AND d.if_tear = '是'
+                     GROUP BY D.TUMO_BATCH_ID) T55
+            ON T55.TUMO_BATCH_ID = A.RECORD_ID
+            
           LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
                       FROM QINSEN.INST_CDM_DEFECT D,
                            QINSEN.PARA_CDM_DEFECT P
@@ -282,6 +313,13 @@
 	   	</isNotNull>
             
             ) T1
+            left join (SELECT tumo_batch_id, SUM(label_num) tag_Num, SUM(label_num)*1.5 tag_Length,
+       LISTAGG(remark, ';') WITHIN GROUP (ORDER BY record_id) AS remark 
+	FROM (SELECT t.record_id,t.label_num,t.tumo_batch_id,'位置' || t.position || ',不良长度' || t.loss || ',标签数' || t.label_num remark
+	 from qinsen.inst_cdm_defect t
+	WHERE t.if_tear &lt;> '是') 
+	GROUP BY tumo_batch_id) cd 
+	on cd.tumo_batch_id = T1.RECORD_ID
        where 1=1
        	<isNotNull prepend = ""  property = "produceDtStart"> 
 	   	AND T1.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')

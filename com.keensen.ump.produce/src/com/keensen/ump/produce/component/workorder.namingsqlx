@@ -333,7 +333,7 @@
        CM.RECORD_ID "cdmRecordId",
        cm.batch_no "batchNo",
        cm.location "location",
-       t1.mix_batch_no  "mixBatchNo"
+       t1.mix_batch_no  "mixBatchNo",t1.order_id
   FROM (SELECT T.*
           FROM KS_COMPONENT_PLAN_DAY T
          WHERE 1 = 1
@@ -345,10 +345,13 @@
            ) T1
   LEFT JOIN QINSEN.INST_TUMO TM
     ON TM.BATCH_NO = T1.BATCH_NO
-  LEFT JOIN (SELECT * FROM QINSEN.INST_CAIDIEMO c
+  LEFT JOIN (SELECT c.*,od.id order_id FROM QINSEN.INST_CAIDIEMO c  
+  LEFT JOIN ks_prod_component_yxorder od 
+ ON od.order_no = c.Order_No AND c.prod_spec_id = od.mater_spec_id
   WHERE EXISTS(select 1 from V_KS_CDM_AMOUNT tt WHERE tt.UNUSED_QUANTITY >0
      	AND tt.record_id = C.RECORD_ID)) CM
-    ON CM.TUMO_BATCH_ID = TM.RECORD_ID
+    ON CM.TUMO_BATCH_ID = TM.RECORD_ID AND t1.order_id = cm.order_id
+    WHERE nvl(CM.RECORD_ID,0) &lt;> 0
        ORDER BY CM.RECORD_ID
 	</select>
 	

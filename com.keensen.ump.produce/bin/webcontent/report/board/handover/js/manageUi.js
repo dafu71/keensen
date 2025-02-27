@@ -96,6 +96,7 @@ com.keensen.ump.produce.report.board.HanoverMgr = function() {
 					// disabled : allRight != '1',
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,
 					handler : this.exportExcel
 				});
 

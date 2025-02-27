@@ -494,7 +494,10 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.exportExcel = function() {
 		return false;
 
 	}
-	var daochu = _this.queryPanel.getForm().getValues();
+	
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '气检记录',
+			'com.keensen.ump.qinsen.qijian.queryRecords','0,1');
+	/*var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
@@ -527,7 +530,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.exportExcel = function() {
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.onRemark = function() {

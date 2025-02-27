@@ -67,6 +67,7 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:uid != 'KS00307',
 					handler : this.exportExcel
 				});
 

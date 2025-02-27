@@ -2622,4 +2622,104 @@
             <column length="30" name="CODE"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.quality.KsBaseFormula" table="KS_BASE_FORMULA">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="int">
+            <column length="9" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="code" type="string">
+            <column length="20" name="CODE"/>
+        </property>
+        <property name="mptype" type="string">
+            <column length="50" name="MPTYPE"/>
+        </property>
+        <property name="line" type="string">
+            <column length="50" name="LINE"/>
+        </property>
+        <property name="c21" type="string">
+            <column length="50" name="C21"/>
+        </property>
+        <property name="c22" type="string">
+            <column length="50" name="C22"/>
+        </property>
+        <property name="c23" type="string">
+            <column length="50" name="C23"/>
+        </property>
+        <property name="c27" type="string">
+            <column length="50" name="C27"/>
+        </property>
+        <property name="c28" type="string">
+            <column length="50" name="C28"/>
+        </property>
+        <property name="c30" type="string">
+            <column length="50" name="C30"/>
+        </property>
+        <property name="diff21" type="string">
+            <column length="50" name="DIFF21"/>
+        </property>
+        <property name="diff22" type="string">
+            <column length="50" name="DIFF22"/>
+        </property>
+        <property name="diff23" type="string">
+            <column length="50" name="DIFF23"/>
+        </property>
+        <property name="diff27" type="string">
+            <column length="50" name="DIFF27"/>
+        </property>
+        <property name="diff28" type="string">
+            <column length="50" name="DIFF28"/>
+        </property>
+        <property name="diff30" type="string">
+            <column length="50" name="DIFF30"/>
+        </property>
+        <property name="watertype" type="string">
+            <column length="50" name="WATERTYPE"/>
+        </property>
+        <property name="c24" type="string">
+            <column length="50" name="C24"/>
+        </property>
+        <property name="diff24" type="string">
+            <column length="50" name="DIFF24"/>
+        </property>
+    </class>
 </hibernate-mapping>

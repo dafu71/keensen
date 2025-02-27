@@ -46,7 +46,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					id : 'tm-defectviewwindow'
 				});
 		return new Ext.fn.fnLayOut({
-					layout : 'collapse',
+					layout : 'ns',
 					border : false,
 					renderTo : 'producetumomgr',
 					panels : [this.queryPanel, this.listPanel]
@@ -56,10 +56,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 200,
+					height : 180,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					// collapsible : true,
 					titleCollapse : false,
 					// title : '【涂膜记录查询】',
 					fields : [{
@@ -214,6 +214,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					rescode : '10002661',
+
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
@@ -262,7 +263,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							}, '-', {
 								xtype : 'splitbutton',
 								text : '膜片批号/型号修改',
-								
+
 								iconCls : 'icon-application_edit',
 								arrowAlign : 'bottom',
 								menu : [{
@@ -546,6 +547,25 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : 'C21浓度',
 						width : 70,
 						dataIndex : 'mpd'
+					}, {
+						header : 'C21浓度<br>是否合格',
+						width : 100,
+						renderer : function(v, m, r, i) {
+
+							var mpd = r.get('mpd');
+
+							if (mpd <= 10) {
+								return "<span style='color:green'>" + '合格'
+										+ "</span>";
+							}
+							if (mpd > 15) {
+								return "<span style='color:red'>" + '不合格'
+										+ "</span>";
+							}
+							return "<span style='color:yellow'>" + '更换漂洗槽'
+									+ "</span>";
+
+						}
 					}, {
 						header : '是否合格',
 						width : 70,

@@ -127,7 +127,7 @@ com.keensen.ump.produce.component.QueryStockMgr.prototype.exportExcel = function
 
 	if (this.queryPanel.form.isValid()) {
 		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '白膜库存',
-				this.nameSqlId, '1,7');
+				this.nameSqlId, '1,9');
 	}
 
 }

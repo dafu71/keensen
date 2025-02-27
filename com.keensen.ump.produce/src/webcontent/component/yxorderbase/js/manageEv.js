@@ -1,8 +1,8 @@
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function() {
 	var me = this;
-	
+
 	this.addMaterWindow.materCode.setDisabled(true);
-	
+
 	this.yxorderStockAmountStore.on('load', function() {
 				me.addMaterWindow.materCode.setDisabled(false);
 			})
@@ -89,7 +89,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 			}
 
 			if (state == '订单计划员确认') {
-				this.confirmWindow.show();				
+				this.confirmWindow.show();
 				this.confirmWindow.loadData(cell);
 			} else {
 				Ext.Msg.alert('系统提示', '请选择状态为订单计划员确认的记录');
@@ -114,7 +114,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 						.get('newMakeLabel'));
 				this.mcconfirmInputPanel.newMakeMark.setValue(cell
 						.get('newMakeMark'));
-						
+
 				this.mcconfirmInputPanel.demandStockDate.setValue(cell
 						.get('demandStockDate'));
 				this.mcconfirmInputPanel.relationId.setValue(cell.get('id'));
@@ -254,22 +254,22 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 
 	this.addOrderWindow.activeItem.mon(this.addOrderWindow.activeItem,
 			'beforeSave', function() {
-				
+
 				var orderNo = this.addOrderWindow.orderNo.getValue();
-				
-				if(Ext.isEmpty(orderNo)){
+
+				if (Ext.isEmpty(orderNo)) {
 					return false;
 				}
-				//建议订单编号规则如下!
-				//常规:20241225-14???,共计14位
-				//常规:20241225-14???-?,共计14位
-				//样品:样品-CRM??????，共计14位;
-				//展品:展品-CRM??????，共计14位;
-				//特规:CRM??????，共计9位。
-				//B202？？？？？-？？？
-				var regex=/^\d{8}-\d{5}$/;
+				// 建议订单编号规则如下!
+				// 常规:20241225-14???,共计14位
+				// 常规:20241225-14???-?,共计14位
+				// 样品:样品-CRM??????，共计14位;
+				// 展品:展品-CRM??????，共计14位;
+				// 特规:CRM??????，共计9位。
+				// B202？？？？？-？？？
+				var regex = /^\d{8}-\d{5}$/;
 				var convention = regex.test(orderNo);
-				var regex=/^\d{8}-\d{5}-\d{1}$/;
+				var regex = /^\d{8}-\d{5}-\d{1}$/;
 				var convention2 = regex.test(orderNo);
 				var regex = /^\样品-CRM\d{6}$/;
 				var sample = regex.test(orderNo);
@@ -277,15 +277,20 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var exhibit = regex.test(orderNo);
 				var regex = /^\CRM\d{6}$/;
 				var special = regex.test(orderNo);
-				var regex=/^B\d{8}-\d{3}$/;
+				var regex = /^B\d{8}-\d{3}$/;
 				var special2 = regex.test(orderNo);
-				
-				if(!convention && !convention2 && !sample && !exhibit && !special && !special2 ){
+
+				var regex = /^\展品-CRM\d{6}-\d{1}$/;
+				var exhibit2 = regex.test(orderNo);
+				var regex = /^\展品-CRM\d{6}-\d{2}$/;
+				var exhibit3 = regex.test(orderNo);
+
+				if (!convention && !convention2 && !sample && !exhibit
+						&& !exhibit2 && !exhibit3 && !special && !special2) {
 					Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 					return false;
 				}
-				
-			
+
 				var itemArr = [];
 				var myCheckboxGroup = this.addOrderWindow.photoSingle;
 				for (var i = 0; i < myCheckboxGroup.items.length; i++) {
@@ -664,43 +669,51 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onMCConfirm = functio
 	}
 }
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = function() {
-	var _this = this;
+	// KS00307 KS01147
+	if (uid == 'KS00307' || uid == 'KS01147') {
+		doQuerySqlAndExport(
+				this,
+				this.queryPanel,
+				this.listPanel,
+				'营销订单',
+				'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
+				'0,1');
+	} else {
+		var arr = ['订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号', '货品名称',
+				'干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）', '标签',
+				'标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱', '包装箱内部图纸编号',
+				'是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注', '导入操作员', '订单类型']
 
-	var daochu = _this.queryPanel.getForm().getValues();
+		doQuerySqlAndExportExt(
+				this,
+				this.queryPanel,
+				this.listPanel,
+				'营销订单',
+				'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
+				arr);
+	}
 
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlLimited.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			'map/limited' : '10000',
-			namingsql : 'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
-			templateFilename : 'ks_component_yxorderbase_export'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
-				}
-
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})
+	/*
+	 * var _this = this;
+	 * 
+	 * var daochu = _this.queryPanel.getForm().getValues();
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlLimited.biz.ext",
+	 * method : "post", jsonData : { 'map' : daochu, 'map/limited' : '10000',
+	 * namingsql :
+	 * 'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
+	 * templateFilename : 'ks_component_yxorderbase_export' }, success :
+	 * function(resp) { var ret = Ext.decode(resp.responseText); if
+	 * (ret.success) {
+	 * 
+	 * var fname = ret.fname; if (Ext.isIE) {
+	 * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); }
+	 * else { window.location.href =
+	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; } } },
+	 * callback : function() { _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onOrderMaterSpec = function() {
@@ -792,41 +805,41 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onDel = function() {
 		var prodAmount = records[0].get('prodAmount');
 		var delUrl = "com.keensen.ump.produce.component.yxorderbase.deleteYxOrderBase.biz.ext";
 		if (state != '制定中') {
-			if(parseFloat(prodAmount)>0){
+			if (parseFloat(prodAmount) > 0) {
 				Ext.Msg.alert('系统提示', '请选择状态为制定中的记录');
 				return false;
-			}else if(state == '正式发布'){
+			} else if (state == '正式发布') {
 				delUrl = "com.keensen.ump.produce.component.yxorderbase.deleteYxOrderBase2.biz.ext";
 			}
 		}
 		Ext.Msg.confirm("操作确认", "您确实要删除这条记录吗?", function(A) {
-			if (A == "yes") {
-				this.requestMask = this.requestMask
-						|| new Ext.LoadMask(Ext.getBody(), {
-									msg : "后台正在操作,请稍候!"
-								});
-				this.requestMask.show();
-				Ext.Ajax.request({
-					url : delUrl,
-					method : "post",
-					jsonData : {
-						'id' : id
-					},
-					success : function(resp) {
-						var ret = Ext.decode(resp.responseText);
-						if (ret.success) {
-							if (ret.success) {
-								_this.listPanel.store.reload();
-							}
-						}
+					if (A == "yes") {
+						this.requestMask = this.requestMask
+								|| new Ext.LoadMask(Ext.getBody(), {
+											msg : "后台正在操作,请稍候!"
+										});
+						this.requestMask.show();
+						Ext.Ajax.request({
+									url : delUrl,
+									method : "post",
+									jsonData : {
+										'id' : id
+									},
+									success : function(resp) {
+										var ret = Ext.decode(resp.responseText);
+										if (ret.success) {
+											if (ret.success) {
+												_this.listPanel.store.reload();
+											}
+										}
 
-					},
-					callback : function() {
-						_this.requestMask.hide()
+									},
+									callback : function() {
+										_this.requestMask.hide()
+									}
+								})
 					}
 				})
-			}
-		})
 	}
 }
 
@@ -1195,8 +1208,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onFill = function() {
 	var C = this.listPanel.getSelectionModel().getSelections();
 	var r = C[0];
 	var label = r.data.label;
-	var mark = r.data.mark; 
-	
+	var mark = r.data.mark;
+
 	var labelDrawingCode = this.addMaterWindow.labelDrawingCode.getValue();
 	if (Ext.isEmpty(labelDrawingCode)) {
 		Ext.Msg.alert("系统提示", "标签图号为空，无法填充!");
@@ -1225,8 +1238,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onFill2 = function() 
 	var C = this.listPanel.getSelectionModel().getSelections();
 	var r = C[0];
 	var label = r.data.label;
-	var mark = r.data.mark; 
-	
+	var mark = r.data.mark;
+
 	var markDrawingCode = this.addMaterWindow.markDrawingCode.getValue();
 	if (Ext.isEmpty(markDrawingCode)) {
 		Ext.Msg.alert("系统提示", "唛头图号为空，无法填充!");
@@ -1272,12 +1285,14 @@ function getDayDiff(start, end) {
 	return Math.round(datediff);;
 }
 
-function describeOrderNo(){
+function describeOrderNo() {
 	var s = '订单编号规则如下:<br>'
 	s += '常规: 20241225-14???,共14位<br>';
 	s += '常规2: 20241225-14???-?,共16位<br>';
 	s += '样品: 样品-CRM??????，共12位<br>';
 	s += '展品: 展品-CRM??????，共12位<br>';
+	s += '展品: 展品-CRM??????-?，共14位<br>';
+	s += '展品: 展品-CRM??????-??，共15位<br>';
 	s += '特规: CRM??????，共9位<br>';
 	s += '特规2: B202?????-???，共13位'
 	Ext.Msg.alert("订单编号规则", s);

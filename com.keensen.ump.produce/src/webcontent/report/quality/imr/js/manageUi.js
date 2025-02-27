@@ -28,7 +28,7 @@ com.keensen.ump.produce.report.quality.imr.imrMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/orderNo',
 								anchor : '90%',
-								allowBlank : false,
+								//allowBlank : false,
 								fieldLabel : '订单号'
 							}, {
 								xtype : 'prodspeccombobox',

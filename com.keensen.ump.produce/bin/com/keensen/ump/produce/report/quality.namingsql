@@ -343,7 +343,10 @@ SELECT 2 MYORDER,
 	to_char(T.PRODUCE_DT,'yyyy-MM-dd') "produceDt"
 	 from qinsen.inst_qijian t
 	LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id =  t.prod_spec_id
-	WHERE t.order_no=#orderNo#  AND t.prod_spec_id=#prodSpecId#
+	WHERE 
+	1=1
+	<isNotNull prepend="and" property="orderNo">t.order_no=#orderNo#</isNotNull>
+	AND t.prod_spec_id=#prodSpecId#
 	<isNotNull prepend="" property="produceDtStart">AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#</isNotNull>
 	ORDER BY t.record_id	
@@ -353,7 +356,12 @@ SELECT 2 MYORDER,
 	SELECT t.order_no "orderNo",t.prod_spec_id "prodSpecId",
 	round(AVG(t.check_result),2) "avgResult",COUNT(1) "cnt" 
 	from qinsen.inst_qijian t
-	WHERE t.order_no=#orderNo#  AND t.prod_spec_id=#prodSpecId#
+	WHERE 
+	
+	1=1
+	<isNotNull prepend="and" property="orderNo">t.order_no=#orderNo#</isNotNull>
+	
+	AND t.prod_spec_id=#prodSpecId#
 	<isNotNull prepend="" property="produceDtStart">AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#</isNotNull>
 	GROUP BY t.order_no,t.prod_spec_id	

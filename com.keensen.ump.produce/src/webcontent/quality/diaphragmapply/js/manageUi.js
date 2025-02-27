@@ -78,7 +78,7 @@ com.keensen.ump.produce.quality.diaphragmApplyMgr = function() {
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			// title : '【请检单列表】',
-			id : 'concession-list',
+			//id : 'concession-list',
 			viewConfig : {
 				forceFit : true
 			},

@@ -41,6 +41,15 @@
 		});
 
  </script>
+ 
+ <script type="text/javascript">
+	function dayDiff(start,end){
+		var datediff = (new Date(end)) - (new Date(start));
+		datediff = datediff / 24 / 60 / 60 / 1000;
+		return datediff;
+		
+	}
+</script>
 </head>
 <body>
 <div id="imrmgr"></div>

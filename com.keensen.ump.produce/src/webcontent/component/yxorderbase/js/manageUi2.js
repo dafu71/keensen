@@ -130,7 +130,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					data : [['印刷双层', '印刷双层'], ['印刷三层', '印刷三层'], ['网纹', '网纹'],
 							['公司标准', '公司标准'], ['蓝胶带', '蓝胶带'], ['绿胶带', '绿胶带'],
 							['白胶带', '白胶带'], ['黄胶带', '黄胶带'], ['灰胶带', '灰胶带'],
-							['水光蓝胶带', '水光蓝胶带']]
+							['水光蓝胶带', '水光蓝胶带'],['黑色亮光胶带', '黑色亮光胶带']]
 				});
 
 		// 制作方式下拉选项：印刷、打印
@@ -456,6 +456,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					// disabled : allRight != '1',
+					rescode:'10003669',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
@@ -829,10 +830,6 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'orderType',
 						header : '订单类型',
-						sortable : true
-					}, {
-						dataIndex : 'materSpecName2',
-						header : '订单下达型号',
 						sortable : true
 					}, {
 						dataIndex : 'style',
@@ -5663,6 +5660,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										width : 30
 									}), selModel4ChooseLable, {
 								dataIndex : 'drawingName',
+								hidden:true,
 								header : '图纸名称'
 							}, {
 								dataIndex : 'drawingCode',
@@ -5672,12 +5670,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								header : '物料号'
 							}, {
 								dataIndex : 'logo',
+								hidden:true,
 								header : '标签LOGO'
 							}, {
 								dataIndex : 'specName',
 								header : '贴牌型号'
 							}, {
 								dataIndex : 'labelSize',
+								hidden:true,
 								header : '标签尺寸'
 							}],
 					store : new Ext.data.JsonStore({
@@ -5706,13 +5706,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 		this.queryPanel4ChooseLable = this.queryPanel4ChooseLable
 				|| new Ext.fn.QueryPanel({
-							height : 110,
+							height : 80,
 							columns : 2,
 							border : true,
 							region : 'north',
 							// collapsible : true,
 							titleCollapse : false,
-							fields : [{
+							fields : [/*{
 										xtype : 'combobox',
 										forceSelection : true,
 										mode : 'local',
@@ -5726,7 +5726,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										store : this.labelDrawingLogoStore,
 										displayField : "logo",
 										valueField : "logo"
-									}, {
+									},*/ {
 										xtype : 'combobox',
 										forceSelection : true,
 										mode : 'local',
@@ -5740,7 +5740,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										store : this.labelDrawingSpecNameStore,
 										displayField : "specName",
 										valueField : "specName"
-									}, {
+									}/*, {
 										xtype : 'displayfield',
 										height : '5',
 										colspan : 2
@@ -5752,7 +5752,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										name : 'condition/logo2',
 										anchor : '100%',
 										colspan : 1
-									}, {
+									}*/, {
 										xtype : 'textfield',
 										mode : 'local',
 										fieldLabel : '%-贴牌型号-%',

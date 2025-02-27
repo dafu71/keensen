@@ -23,7 +23,7 @@
      </select>
      
      <select id="queryLabelDrawing" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-     SELECT T1.DRAWING_NAME AS "drawingName",
+     SELECT T1.DRAWING_NAME AS "drawingName",T1.id "id",
        T1.USED_DATE    AS "usedDate",
        T1.DRAWING_CODE AS "drawingCode",
        T1.MATER_CODE   AS "materCode",
@@ -31,7 +31,7 @@
        T1.SPEC_NAME    AS "specName",
        T1.LABEL_SIZE   AS "labelSize",
        T1.BUSINESSMAN  AS "businessman",
-       T1.REMARK       AS "remark"
+       T1.REMARK       AS "remark",T1.url "url"
   FROM KS_BASE_LABEL_DRAWING T1 
     where 1=1
     
@@ -47,6 +47,14 @@
 	</isNotNull>
 	<isNotNull prepend="and" property="specName2"> 
 		       T1.SPEC_NAME like '%' || #specName2# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="drawingCode"> 
+		       T1.DRAWING_CODE like '%' || #drawingCode# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="drawingName"> 
+		       T1.DRAWING_NAME like '%' || #drawingName# || '%'
 	</isNotNull>
 	
 	ORDER BY T1.LOGO,T1.SPEC_NAME

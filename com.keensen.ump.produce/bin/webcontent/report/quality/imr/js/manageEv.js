@@ -12,6 +12,25 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
+
+				if (Ext.isEmpty(vals['condition/orderNo'])) {
+
+					if (Ext.isEmpty(vals['condition/produceDtStart'])
+							|| Ext.isEmpty(vals['condition/produceDtEnd'])) {
+						Ext.Msg.alert("系统提示", "请选择查询日期！");
+						return false;
+
+					}
+					var start = vals['condition/produceDtStart'];
+					var end = vals['condition/produceDtEnd'];
+					if (dayDiff(start, end) > 31) {
+						Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
+						return false;
+
+					}
+
+				}
+
 				var store = this.listPanel.store;
 				store.baseParams = vals;
 				store.load({});
@@ -27,10 +46,10 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 					return;
 				} else {
 					var records = _this.listPanel.store.getRange();
-					
+
 					var mr = 0
 					var checkResult0 = 0
-					//计算mr
+					// 计算mr
 					for (var i = 0; i < cnt; i++) {
 						var checkResult = records[i].data.checkResult;
 						var diff = Math.abs(checkResult - checkResult0);
@@ -38,29 +57,28 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 						checkResult0 = checkResult;
 					}
 					mr = mr - records[0].data.checkResult;
-					mr = returnFloat(mr/cnt);
-					//中心线
-					var x = records[0].data.x;					
-					var uclx = returnFloat(x + 2.66 * mr);					
+					mr = returnFloat(mr / cnt);
+					// 中心线
+					var x = records[0].data.x;
+					var uclx = returnFloat(x + 2.66 * mr);
 					var lclx = returnFloat(x - 2.66 * mr);
-					
-					var uclr = returnFloat(3.268 * mr);	
+
+					var uclr = returnFloat(3.268 * mr);
 					var lclr = 0;
-		
+
 					var xArray = [];
 					var yArray = [];
 					var yArray2 = [];
 					var minValue = lclx;
 					var maxValue = uclx;
-					
+
 					var minValue2 = lclr;
 					var maxValue2 = uclr;
-					
-					var first=0;
-					var second=0;
-					var r =0;
-					
-					
+
+					var first = 0;
+					var second = 0;
+					var r = 0;
+
 					for (var i = 0; i < cnt; i++) {
 						var rn = records[i].data.rn;
 						var batchNo = records[i].data.batchNo;
@@ -72,15 +90,23 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 						r = Math.abs(second - first);
 						first = second;
 						yArray2.push(r);
-						minValue = returnFloat(minValue) > returnFloat(checkResult) ? returnFloat(checkResult) : returnFloat(minValue);
-						maxValue = returnFloat(maxValue) < returnFloat(checkResult) ? returnFloat(checkResult) : returnFloat(maxValue);
-						
-						minValue2 = returnFloat(minValue2) > returnFloat(r) ? returnFloat(r) : returnFloat(minValue2);
-						maxValue2 = returnFloat(maxValue2) < returnFloat(r) ? returnFloat(r) : returnFloat(maxValue2);
+						minValue = returnFloat(minValue) > returnFloat(checkResult)
+								? returnFloat(checkResult)
+								: returnFloat(minValue);
+						maxValue = returnFloat(maxValue) < returnFloat(checkResult)
+								? returnFloat(checkResult)
+								: returnFloat(maxValue);
+
+						minValue2 = returnFloat(minValue2) > returnFloat(r)
+								? returnFloat(r)
+								: returnFloat(minValue2);
+						maxValue2 = returnFloat(maxValue2) < returnFloat(r)
+								? returnFloat(r)
+								: returnFloat(maxValue2);
 					}
-					maxValue = returnFloat(Number(maxValue) + 1)  ;
-					minValue = 0 ;
-					
+					maxValue = returnFloat(Number(maxValue) + 1);
+					minValue = 0;
+
 					maxValue2 = returnFloat(Number(maxValue2) + 1);
 
 					var option;
@@ -102,35 +128,15 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 							type : 'value',
 							min : minValue,
 							max : maxValue
-						}/*,
-						visualMap : {
-							top : 50,
-							right : 10,
-							pieces : [{
-										gt : 0,
-										lte : 0.2,
-										color : '#93CE07'
-									}, {
-										gt : 0.2,
-										lte : 0.4,
-										color : '#FBDB0F'
-									}, {
-										gt : 0.4,
-										lte : 0.6,
-										color : '#FC7D02'
-									}, {
-										gt : 0.6,
-										lte : 0.8,
-										color : '#FD0100'
-									}, {
-										gt : 0.8,
-										lte : 1,
-										color : '#AA069F'
-									}],
-							outOfRange : {
-								color : '#999'
-							}
-						}*/,
+						}/*
+							 * , visualMap : { top : 50, right : 10, pieces : [{
+							 * gt : 0, lte : 0.2, color : '#93CE07' }, { gt :
+							 * 0.2, lte : 0.4, color : '#FBDB0F' }, { gt : 0.4,
+							 * lte : 0.6, color : '#FC7D02' }, { gt : 0.6, lte :
+							 * 0.8, color : '#FD0100' }, { gt : 0.8, lte : 1,
+							 * color : '#AA069F' }], outOfRange : { color :
+							 * '#999' } }
+							 */,
 						series : [{
 									data : yArray,
 									type : 'line',
@@ -141,7 +147,7 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 											color : '#333'
 										},
 										data : [{
-													yAxis : lclx<0?0:lclx
+													yAxis : lclx < 0 ? 0 : lclx
 												}, {
 													yAxis : x
 												}, {
@@ -152,7 +158,7 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 					};
 
 					option && myChart.setOption(option);
-					
+
 					var option2;
 
 					option2 = {
@@ -172,35 +178,14 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 							type : 'value',
 							min : minValue2,
 							max : maxValue2
-						}/*,
-						visualMap : {
-							top : 50,
-							right : 10,
-							pieces : [{
-										gt : 0,
-										lte : 2,
-										color : '#93CE07'
-									}, {
-										gt : 2,
-										lte : 4,
-										color : '#FBDB0F'
-									}, {
-										gt : 4,
-										lte : 6,
-										color : '#FC7D02'
-									}, {
-										gt : 6,
-										lte : 8,
-										color : '#FD0100'
-									}, {
-										gt : 8,
-										lte : 10,
-										color : '#AA069F'
-									}],
-							outOfRange : {
-								color : '#999'
-							}
-						}*/,
+						}/*
+							 * , visualMap : { top : 50, right : 10, pieces : [{
+							 * gt : 0, lte : 2, color : '#93CE07' }, { gt : 2,
+							 * lte : 4, color : '#FBDB0F' }, { gt : 4, lte : 6,
+							 * color : '#FC7D02' }, { gt : 6, lte : 8, color :
+							 * '#FD0100' }, { gt : 8, lte : 10, color :
+							 * '#AA069F' }], outOfRange : { color : '#999' } }
+							 */,
 						series : [{
 									data : yArray2,
 									type : 'line',
@@ -276,6 +261,6 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.destroy = function() {
 }
 
 function returnFloat(value) {
-  var value = Math.round(parseFloat(value) * 100) / 100;
-  return value;
+	var value = Math.round(parseFloat(value) * 100) / 100;
+	return value;
 }

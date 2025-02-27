@@ -26,10 +26,14 @@
        ROUND(T.C27 * #weight# * 10, 0) "c27",
        ROUND(T.C28 * #weight# * 10, 0) "c28",
        ROUND(T.C30 * #weight# * 10, 0) "c30",
+       
+       ROUND(T.C24 * #weight# * 10, 0) "c24",
+       
        ROUND(#weight# -
              (ROUND(T.C21 * #weight# * 10, 0) + ROUND(T.C22 * #weight# * 10, 0) +
              ROUND(T.C23 * #weight# * 10, 0) + ROUND(T.C27 * #weight# * 10, 0) +
-             ROUND(T.C28 * #weight# * 10, 0) + ROUND(T.C30 * #weight# * 10, 0)) / 1000,
+             ROUND(T.C28 * #weight# * 10, 0) + ROUND(T.C30 * #weight# * 10, 0)
+             + ROUND(T.C24 * #weight# * 10, 0)) / 1000,
              2) "ro"
 	  FROM KS_BASE_FORMULA T
 	 WHERE T.MPTYPE = #mptype#
@@ -120,4 +124,42 @@
   AND t.line = #line# AND t.watertype = #watertype#)
   WHERE CODE IS NOT NULL  
     </select>
+    
+    
+     <select id="queryBaseFormula" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ID             AS "id",
+       to_char(t1.CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+		t1.UPDATE_USER_ID as "updateUserId",
+		t1.UPDATE_NAME as "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.CODE           AS "code",
+       T1.MPTYPE         AS "mptype",
+       T1.LINE           AS "line",
+       T1.C21            AS "c21",
+       T1.C22            AS "c22",
+       T1.C23            AS "c23",
+       T1.C24            AS "c24",
+       T1.C27            AS "c27",
+       T1.C28            AS "c28",
+       T1.C30            AS "c30",
+       T1.DIFF21         AS "diff21",
+       T1.DIFF22         AS "diff22",
+       T1.DIFF23         AS "diff23",
+       T1.DIFF24         AS "diff24",
+       T1.DIFF27         AS "diff27",
+       T1.DIFF28         AS "diff28",
+       T1.DIFF30         AS "diff30",
+       T1.WATERTYPE      AS "watertype"
+  FROM KS_BASE_FORMULA T1
+  ORDER BY t1.mptype,t1.watertype DESC
+   </select>
  </sqlMap>

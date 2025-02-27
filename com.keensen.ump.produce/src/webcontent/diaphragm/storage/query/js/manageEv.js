@@ -1,6 +1,20 @@
 com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
+	//导出白名单
+	//李梦超
+	var white = ['KS01242'];
+	
+	
+	
+	if(white.indexOf(uid) > -1 ){
+		var today = new Date();
+		var dayOfWeek = today.getDay();
+		
+		if(dayOfWeek==2)
+			this.queryPanel.buttons[2].setVisible(true);
+	}
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var batchNoStr = this.queryPanel.form

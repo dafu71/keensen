@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据可视化大屏</title>
+    <style>
+        /* 基础布局 - 参考 */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #030b1b;
+            color: #fff;
+            font-family: Arial;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 20px;
+            padding: 20px;
+            height: 100vh;
+        }
+
+        .chart-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+        }
+
+        /* 响应式设计 - 参考 */
+        @media (max-width: 1600px) {
+            .dashboard { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="chart-box" id="chart1" style="height:400px"></div>
+        <div class="chart-box" id="chart2" style="height:400px"></div>
+        <div class="chart-box" id="chart3" style="height:400px"></div>
+    </div>
+
+    <script>
+        // 初始化图表 - 基于
+        function initCharts() {
+            // 实时折线图
+            const chart1 = echarts.init(document.getElementById('chart1'));
+            chart1.setOption({
+                title: { text: '实时访问量', left: 'center' },
+                tooltip: { trigger: 'axis' },
+                xAxis: { type: 'time' },
+                yAxis: { type: 'value' },
+                series: [{
+                    name: '访问量',
+                    type: 'line',
+                    smooth: true,
+                    data: []
+                }]
+            });
+
+            // 柱状图 - 参考
+            const chart2 = echarts.init(document.getElementById('chart2'));
+            chart2.setOption({
+                title: { text: '地区销售分布', left: 'center' },
+                tooltip: { trigger: 'axis' },
+                xAxis: { 
+                    type: 'category',
+                    data: ['华东', '华北', '华南', '华中', '西北']
+                },
+                yAxis: { type: 'value' },
+                series: [{
+                    type: 'bar',
+                    data: [320, 280, 410, 220, 150],
+                    itemStyle: { color: '#37a2da' }
+                }]
+            });
+
+            // 饼图 - 参考
+            const chart3 = echarts.init(document.getElementById('chart3'));
+            chart3.setOption({
+                title: { text: '用户类型占比', left: 'center' },
+                tooltip: { trigger: 'item' },
+                series: [{
+                    type: 'pie',
+                    radius: '60%',
+                    data: [
+                        { value: 1048, name: '普通用户' },
+                        { value: 735, name: 'VIP用户' },
+                        { value: 580, name: '企业用户' }
+                    ]
+                }]
+            });
+
+            // 模拟实时数据更新 - 参考
+            setInterval(() => {
+                const newData = {
+                    value: [
+                        [new Date(), Math.random() * 1000]
+                    ]
+                };
+                chart1.setOption({
+                    series: [{
+                        data: [...chart1.getOption().series[0].data, ...newData.value]
+                    }]
+                });
+            }, 2000);
+        }
+
+        // 窗口自适应
+        window.onresize = function() {
+            echarts.init(document.getElementById('chart1')).resize();
+            echarts.init(document.getElementById('chart2')).resize();
+            echarts.init(document.getElementById('chart3')).resize();
+        };
+
+        window.onload = initCharts;
+    </script>
+</body>
+</html>

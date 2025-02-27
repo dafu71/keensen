@@ -243,4 +243,281 @@
             <column length="50" name="HEADMAN_NAME"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.research.KsResearchTestApplyCheck" table="KS_RESEARCH_TEST_APPLY_CHECK">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="relationId" type="long">
+            <column length="22" name="RELATION_ID"/>
+        </property>
+        <property name="advise" type="string">
+            <column length="1500" name="ADVISE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.research.KsResearchTestApplyApprove" table="KS_RESEARCH_TEST_APPLY_APPROVE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="relationId" type="long">
+            <column length="22" name="RELATION_ID"/>
+        </property>
+        <property name="advise" type="string">
+            <column length="20" name="ADVISE"/>
+        </property>
+        <property name="describe" type="string">
+            <column length="2000" name="DESCRIBE"/>
+        </property>
+        <property name="step" type="string">
+            <column length="20" name="STEP"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.research.KsResearchTestApplyHead" table="KS_RESEARCH_TEST_APPLY_HEAD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="projectCode" type="string">
+            <column length="50" name="PROJECT_CODE"/>
+        </property>
+        <property name="k3Code" type="string">
+            <column length="50" name="K3_CODE"/>
+        </property>
+        <property name="content" type="string">
+            <column length="2000" name="CONTENT"/>
+        </property>
+        <property name="tmDate" type="date">
+            <column name="TM_DATE"/>
+        </property>
+        <property name="jmDate" type="date">
+            <column name="JM_DATE"/>
+        </property>
+        <property name="qjDate" type="date">
+            <column name="QJ_DATE"/>
+        </property>
+        <property name="wtDate" type="date">
+            <column name="WT_DATE"/>
+        </property>
+        <property name="craft" type="string">
+            <column length="50" name="CRAFT"/>
+        </property>
+        <property name="page" type="string">
+            <column length="50" name="PAGE" not-null="true"/>
+        </property>
+        <property name="thickNet" type="string">
+            <column length="50" name="THICK_NET"/>
+        </property>
+        <property name="thinNet" type="string">
+            <column length="50" name="THIN_NET"/>
+        </property>
+        <property name="other" type="string">
+            <column length="500" name="OTHER"/>
+        </property>
+        <property name="msize" type="string">
+            <column length="50" name="MSIZE"/>
+        </property>
+        <property name="state" type="string">
+            <column length="200" name="STATE"/>
+        </property>
+        <property name="code" type="string">
+            <column length="50" name="CODE"/>
+        </property>
+        <property name="purpose" type="string">
+            <column length="1000" name="PURPOSE"/>
+        </property>
+        <property name="manager" type="string">
+            <column length="50" name="MANAGER"/>
+        </property>
+        <property name="applyDate" type="date">
+            <column name="APPLY_DATE"/>
+        </property>
+        <property name="kind" type="string">
+            <column length="50" name="KIND"/>
+        </property>
+        <property name="line" type="string">
+            <column length="10" name="LINE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.research.KsResearchTestApplyList" table="KS_RESEARCH_TEST_APPLY_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="specName" type="string">
+            <column length="24" name="SPEC_NAME"/>
+        </property>
+        <property name="amount" type="long">
+            <column length="22" name="AMOUNT"/>
+        </property>
+        <property name="relationId" type="long">
+            <column length="22" name="RELATION_ID"/>
+        </property>
+        <property name="batchNo" type="string">
+            <column length="24" name="BATCH_NO"/>
+        </property>
+        <property name="specId" type="long">
+            <column length="22" name="SPEC_ID"/>
+        </property>
+    </class>
 </hibernate-mapping>

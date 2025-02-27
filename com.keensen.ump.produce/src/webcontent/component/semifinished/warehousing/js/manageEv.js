@@ -2,6 +2,11 @@ com.keensen.ump.produce.component.WarehousingMgr.prototype.initEvent = function(
 
 	var _this = this;
 
+	if (!Ext.isEmpty(jmBatchNo)) {
+		this.inputPanel.batchNo.setValue(jmBatchNo);
+		this.onScan();
+	}
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -55,7 +60,8 @@ com.keensen.ump.produce.component.WarehousingMgr.prototype.onScan = function() {
 			var data = result.data;
 
 			if (Ext.isEmpty(data)) {
-				_this.inputPanel.msg.setValue('<p style="color:red;font-size:16px;">卷膜序号不存在或已在白膜仓</p>');
+				_this.inputPanel.msg
+						.setValue('<p style="color:red;font-size:16px;">卷膜序号不存在或已在白膜仓</p>');
 				_this.inputPanel.batchNo.setValue('');
 				/*
 				 * Ext.Msg.alert("系统提示", "卷膜序号不存在或已在白膜仓，请检查", function() {
@@ -64,7 +70,8 @@ com.keensen.ump.produce.component.WarehousingMgr.prototype.onScan = function() {
 			} else {
 				var dryWet = data[0].dryWet;
 				if (dryWet == '湿') {
-					_this.inputPanel.msg.setValue('<p style="color:red;font-size:16px;">湿膜不能入库</p>');
+					_this.inputPanel.msg
+							.setValue('<p style="color:red;font-size:16px;">湿膜不能入库</p>');
 					_this.inputPanel.batchNo.setValue('');
 					/*
 					 * Ext.Msg.alert("系统提示", "湿膜不能入库，请检查", function() {
@@ -77,8 +84,11 @@ com.keensen.ump.produce.component.WarehousingMgr.prototype.onScan = function() {
 					_this.inputPanel.prodSpecId.setValue(data[0].prodSpecId);
 					_this.inputPanel.orderNo.setValue(data[0].orderNo);
 					_this.inputPanel.qjBatchId.setValue(data[0].qjBatchId);
+
+					if (Ext.isEmpty(jmBatchNo)) {
+						_this.onSave();
+					}
 					
-					_this.onSave();
 				}
 
 			}
@@ -106,13 +116,15 @@ com.keensen.ump.produce.component.WarehousingMgr.prototype.onSave = function() {
 					_this.listPanel.store.reload({});
 					_this.inputPanel.form.reset();
 					_this.inputPanel.position.setValue(position);
-					_this.inputPanel.msg.setValue('<p style="color:red;font-size:16px;">保存成功!</p>');
+					_this.inputPanel.msg
+							.setValue('<p style="color:red;font-size:16px;">保存成功!</p>');
 					_this.inputPanel.batchNo.focus().defer(100);
-					/*Ext.MessageBox.alert("操作提示", "保存成功!", function() {
-								_this.listPanel.store.reload({});
-								_this.inputPanel.form.reset();
-								_this.inputPanel.position.setValue(position);
-							})*/
+					/*
+					 * Ext.MessageBox.alert("操作提示", "保存成功!", function() {
+					 * _this.listPanel.store.reload({});
+					 * _this.inputPanel.form.reset();
+					 * _this.inputPanel.position.setValue(position); })
+					 */
 				}
 			},
 			failure : function(C, B) {

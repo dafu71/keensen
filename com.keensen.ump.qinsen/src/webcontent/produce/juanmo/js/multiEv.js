@@ -257,6 +257,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.addDetail = function() 
 com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.clearInfo = function() {
 	var _this = this;
 	var teamId = _this.mainPanel.teamId.getValue();
+	var trailer = _this.mainPanel.trailer.getValue();
 	_this.cdmInfo = '';
 	_this.cdmPanel.form.reset();
 	_this.mainPanel.form.reset();
@@ -264,6 +265,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.clearInfo = function() 
 	_this.cdmPanel.cdmBatchNo.focus();
 	_this.mainPanel.teamId.setValue(teamId);// 班组维持不变
 	_this.mainPanel.produceDt.setValue(new Date());
+	_this.mainPanel.trailer.setValue(trailer);
 	
 	//重置自由卷
 	//var	vals = {};
@@ -372,6 +374,8 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 		}
 
 		var newRec = _this.getNewInfo();
+		
+		
 		_this.requestMask = this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
 							msg : "后台正在操作,请稍候!"
@@ -390,6 +394,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 					if (ret.err == '0') {
 						var recordIdStr = ret.recordIdStr;
 						_this.mainPanel.produceDt.setValue(new Date());
+						
 						Ext.Msg.alert("系统提示", '操作成功！', function() {
 							_this.clearInfo();
 							Ext.Msg.confirm('提示', '是否立即打印产品标签？', function(btn) {

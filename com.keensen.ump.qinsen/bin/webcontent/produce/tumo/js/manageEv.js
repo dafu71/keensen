@@ -1,6 +1,14 @@
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
+	//导出白名单
+	
+	var white = ['KS00420']
+	if(white.indexOf(uid) > -1 ){
+		this.queryPanel.buttons[2].setDisabled(false);
+	}
+	
 
 	// 查询事件
 	this.queryPanel3.mon(this.queryPanel3, 'query', function(form, vals) {
@@ -574,14 +582,15 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.spellBatchNoPrefix2 = function(
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.dealBatchNo2 = function() {
-	var me = this;
+	return;
+	/*var me = this;
 	var prefix = me.spellBatchNoPrefix2();
 	var oldStr = this.editWindow.batchNo.getValue();
 	if (oldStr && oldStr.length > 9) {
 		this.editWindow.batchNo.setValue(prefix + oldStr.substr(9));
 	} else {
 		this.editWindow.batchNo.setValue(prefix);
-	}
+	}*/
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.dealBatchNo = function() {
@@ -603,6 +612,11 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.destroy = function() {
 	this.defectZmWin.destroy();
 	Ext.getCmp('tm-defectviewwindow').destroy();
 	Ext.getCmp('produce-tumo-list').destroy();
+	
+	this.modifyRecordWindow.destroy();
+	this.modifyRecordListWindow.destroy();
+	this.addDefectSampleWindow.destroy();
+	this.defectSampleWindow.destroy();
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModiTech = function() {

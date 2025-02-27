@@ -124,6 +124,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					rescode : '10003668',
+					hidden:true,
 					handler : this.exportExcel
 				});
 

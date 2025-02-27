@@ -10,6 +10,8 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 		this.initEditWindow2();
 		this.initListWindow4Dilute();
 
+		this.initMixWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -30,7 +32,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 		this.pvaStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['PVA-165', 'PVA-165'], ['PVA-205', 'PVA-205'],
-							['PVA540-S', 'PVA540-S'], ['PVA540-U', 'PVA540-U']]
+							['PVA540', 'PVA540']]
 				});
 
 		this.stateStore = new Ext.data.SimpleStore({
@@ -132,6 +134,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,					
 					handler : this.exportExcel
 				});
 
@@ -149,7 +152,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			tbar : [{
@@ -157,6 +160,11 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
+					}, '-', {
+						text : '配料',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onMix
 					}, '-', {
 						text : '修改母液配料',
 						scope : this,
@@ -182,49 +190,92 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.pva.deletePvaEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'state',
+						width : 100,
 						header : '状态'
 					}, {
 						dataIndex : 'batchNo',
+						width : 100,
 						header : '料液批号'
 					}, {
 						dataIndex : 'type',
+						width : 100,
 						header : '料液类型'
 					}, {
 						dataIndex : 'weight',
+						width : 100,
 						header : '总重量'
 					}, {
 						dataIndex : 'used',
+						width : 100,
 						header : '已使用重量'
 					}, {
 						dataIndex : 'remain',
+						width : 100,
 						header : '剩余重量'
 					}, {
 						dataIndex : 'pva',
+						width : 100,
 						header : 'PVA种类'
 					}, {
 						dataIndex : 'c51',
+						width : 100,
 						header : 'C51重量(g)'
 					}, {
 						dataIndex : 'c23a',
+						width : 100,
 						header : 'C23-A重量(g)'
 					}, {
 						dataIndex : 'c14',
+						width : 100,
 						header : 'C14重量(g)'
 					}, {
 						dataIndex : 'ro',
+						width : 100,
 						header : 'RO水重量（KG)'
 					}, {
 						dataIndex : 'pvaWeight',
+						width : 100,
 						header : 'PVA重量(g)'
 					}, {
 						dataIndex : 'density',
+						width : 100,
 						header : '浓度（%）'
 					}, {
 						dataIndex : 'operatorName',
+						width : 100,
 						header : '配料人'
 					}, {
 						dataIndex : 'createTime',
+						width : 100,
 						header : '配料时间'
+					}, {
+						dataIndex : 'weightReal',
+						width : 100,
+						header : '实际总重量'
+					}, {
+						dataIndex : 'c51Real',
+						width : 100,
+						header : '实际C51重量(g)'
+					}, {
+						dataIndex : 'c23aReal',
+						width : 100,
+						header : '实际C23-A重量(g)'
+					}, {
+						dataIndex : 'c14Real',
+						width : 100,
+						header : '实际C14重量(g)'
+					}, {
+						dataIndex : 'roReal',
+						width : 100,
+						header : '实际RO水重量（KG)'
+					}, {
+						dataIndex : 'pvaWeightReal',
+						width : 100,
+						header : '实际PVA重量(g)'
+					}, {
+						dataIndex : 'densityReal',
+						width : 100,
+						header : '实际浓度（%）'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.make.pva.queryPvaByPage.biz.ext',
@@ -294,6 +345,20 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							name : 'state'
 						}, {
 							name : 'pvaWeight'
+						}, {
+							name : 'weightReal'
+						}, {
+							name : 'pvaWeightReal'
+						}, {
+							name : 'c51Real'
+						}, {
+							name : 'c23aReal'
+						}, {
+							name : 'c14Real'
+						}, {
+							name : 'roReal'
+						}, {
+							name : 'densityReal'
 						}]
 			})
 		})
@@ -790,6 +855,16 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'numberfield',
+							ref : '../../c51',
+							name : 'entity/c51',
+							decimalPrecision : 2,
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : 'C51重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
 							ref : '../../ro',
 							name : 'entity/ro',
 							decimalPrecision : 2,
@@ -902,6 +977,9 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						dataIndex : 'c14',
 						header : 'C14重量(g)'
 					}, {
+						dataIndex : 'c51',
+						header : 'C51重量(g)'
+					}, {
 						dataIndex : 'ro',
 						header : 'RO水重量(KG)'
 					}, {
@@ -967,6 +1045,8 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							name : 'operatorId'
 						}, {
 							name : 'operatorName'
+						}, {
+							name : 'c51'
 						}]
 			})
 		})
@@ -1001,4 +1081,311 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 
 	}
 
+	this.initMixWindow = function() {
+		var _this = this;
+		this.mixWindow = this.mixWindow || new Ext.fn.FormWindow({
+			title : '配料',
+			height : 600,
+			width : 800,
+			// itemCls:'required',
+			// style:'margin-top:10px',
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+				xtype : 'editpanel',
+				pgrid : this.listPanel,
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.diaphragm.make.pva.expandPva.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.diaphragm.make.pva.savePva.biz.ext',
+				fields : [{
+							ref : '../../batchNo',
+							dataIndex : 'batchNo',
+							anchor : '95%',
+							xtype : 'textfield',
+							fieldLabel : '料液批号',
+							readOnly : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							mode : 'local',
+							fieldLabel : '料液类型',
+							ref : '../../type',
+							// hiddenName : 'entity/type',
+							dataIndex : 'type',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							//allowBlank : false,
+							readOnly : true,
+							editable : false,
+							store : this.typeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : 'PVA种类',
+							ref : '../../pva',
+							// hiddenName : 'entity/pva',
+							dataIndex : 'pva',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							//allowBlank : false,
+							editable : false,
+							editable : false,
+							store : this.pvaStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield200',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'trigger',
+							// emptyText : '输入完毕单击旁边按钮计算',
+							ref : '../../weight',
+							// name : 'entity/weight',
+							dataIndex : 'weight',
+							//allowBlank : false,
+							readOnly : true,
+							// hidden : true,
+							fieldLabel : '总重量(kg)',
+							anchor : '95%',
+							colspan : 1,
+							editable : true,
+							hideTrigger : true,
+							scope : this,
+							onTriggerClick : function() {
+								// _this.onCalc();
+							},
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c51',
+							// name : 'entity/c51',
+							dataIndex : 'c51',
+							decimalPrecision : 2,
+							//allowBlank : false,
+							readOnly : true,
+							// hidden : true,
+							fieldLabel : 'C51重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield100',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c23a',
+							// name : 'entity/c23a',
+							dataIndex : 'c23a',
+							decimalPrecision : 2,
+							//allowBlank : false,
+							readOnly : true,
+							// hidden : true,
+							fieldLabel : 'C23-A重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c14',
+							// name : 'entity/c14',
+							dataIndex : 'c14',
+							decimalPrecision : 2,
+							//allowBlank : false,
+							readOnly : true,
+							// hidden : true,
+							fieldLabel : 'C14重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield300',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../ro',
+							// name : 'entity/ro',
+							dataIndex : 'ro',
+							decimalPrecision : 2,
+							//allowBlank : false,
+							readOnly : true,
+							// hidden : true,
+							fieldLabel : 'RO水重量(KG)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../pvaWeight',
+							// name : 'entity/pvaWeight',
+							dataIndex : 'pvaWeight',
+							decimalPrecision : 2,
+							//allowBlank : false,
+							readOnly : true,
+							// hidden : true,
+							fieldLabel : 'PVA重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield300',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../density',
+							// name : 'entity/density',
+							dataIndex : 'density',
+							decimalPrecision : 2,
+							//allowBlank : false,
+							readOnly : true,
+							// hidden : true,
+							fieldLabel : '浓度(%)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield200',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'trigger',
+							// emptyText : '输入完毕单击旁边按钮计算',
+							ref : '../../weightReal',
+							name : 'entity/weightReal',
+							dataIndex : 'weightReal',
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : '实际总重量(kg)',
+							anchor : '95%',
+							colspan : 1,
+							editable : true,
+							hideTrigger : true,
+							scope : this,
+							onTriggerClick : function() {
+								// _this.onCalc();
+							},
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c51Real',
+							name : 'entity/c51Real',
+							dataIndex : 'c51Real',
+							decimalPrecision : 2,
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : '实际C51重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield100',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c23aReal',
+							name : 'entity/c23aReal',
+							dataIndex : 'c23aReal',
+							decimalPrecision : 2,
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : '实际C23-A重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../c14Real',
+							name : 'entity/c14Real',
+							dataIndex : 'c14Real',
+							decimalPrecision : 2,
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : '实际C14重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield300',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../roReal',
+							name : 'entity/roReal',
+							dataIndex : 'roReal',
+							decimalPrecision : 2,
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : '实际RO水重量(KG)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							ref : '../../pvaWeightReal',
+							name : 'entity/pvaWeightReal',
+							dataIndex : 'pvaWeightReal',
+							decimalPrecision : 2,
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : '实际PVA重量(g)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							ref : '../../displayfield300',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							ref : '../../densityReal',
+							name : 'entity/densityReal',
+							dataIndex : 'densityReal',
+							decimalPrecision : 2,
+							allowBlank : false,
+							// hidden : true,
+							fieldLabel : '实际浓度(%)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'id',
+							name : 'entity/id'
+						}]
+			}]
+		});
+		
+		this.mixWindow.addButton({
+					text : "计算",
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.onMixCalc
+				});
+	}
 }

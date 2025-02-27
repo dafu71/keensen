@@ -144,7 +144,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 		dimoBatchNo = 'F';
 		line = line == '铸膜A线' ? 'A' : line == '铸膜B线' ? 'B' : 'C';
 		dimoBatchNo += line;
-		if (dimoType == 'ULP底膜') {
+		dimoBatchNo += dimoType;
+		/*if (dimoType == 'ULP底膜') {
 			dimoBatchNo += '30';
 		} else if (dimoType == 'BW底膜') {
 			dimoBatchNo += '20';
@@ -152,7 +153,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 			dimoBatchNo += '10';
 		} else if (dimoType == 'NF底膜') {
 			dimoBatchNo += '60';
-		}
+		}*/
 		dimoBatchNo += psf;
 		var arr = productDt.split('-');
 		var y = arr[0] - 2020;

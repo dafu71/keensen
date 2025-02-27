@@ -6,6 +6,8 @@
 <%
 	com.eos.data.datacontext.IUserObject userObject = (com.eos.data.datacontext.IUserObject) request.getSession().getAttribute(com.eos.data.datacontext.IUserObject.KEY_IN_CONTEXT);
   
+  	String jmBatchNo = null != request.getParameter("jmBatchNo")?request.getParameter("jmBatchNo"):"";
+  
   	String dataorgid=(String)userObject.getAttributes().get("dataorgid");
   	Long operatorid=(Long)userObject.getAttributes().get("operatorid");
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
@@ -34,7 +36,9 @@
 </style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
-  var listid = Ext.id();
+  
+  var jmBatchNo = "<%=jmBatchNo %>";
+  //var listid = Ext.id();
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.WarehousingMgr
 		});

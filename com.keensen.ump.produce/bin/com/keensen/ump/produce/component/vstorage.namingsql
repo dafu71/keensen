@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.vstorage">
+    <select id="queryVstorage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT 
+   		t1.jm_batch_no "jmBatchNo"
+   	,PMS.MATER_SPEC_NAME AS "prodSpecName",jm.record_id "jmBatchId",
+   	qj.record_id "qjBatchId",
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.exception_type	as "exceptionType",
+       t1.remark	as "remark",
+       decode(qj.gyy_conclusion,'A','放行原订单','B','降级','C','改判其他无特殊要求的同型号产品','D','报废','E','送水测','F','染色解剖','') "gyyConclusion",
+		TO_CHAR(qj.GYY_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "gyyRemarkTime",
+		qj.GYY_REMARK_USER_ID as "gyyRemarkUserId",
+		qj.GYY_REMARK_USER_NAME as "gyyRemarkUserName",
+		PMS2.mater_SPEC_name "gyySpecName",
+		TO_CHAR(qj.pg_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "pgRemarkTime",
+		qj.pg_REMARK_USER_ID as "pgRemarkUserId",
+		qj.pg_REMARK_USER_NAME as "pgRemarkUserName",
+		qj.pg_REMARK as "pgRemark",
+		TO_CHAR(qj.modify_order_no_time, 'YYYY-MM-DD HH24:MI') as "modifyOrderNoTime",
+		decode(semi.jm_batch_no,null,'否','是') "semiStock",
+		CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END "dryWet",
+		    CASE WHEN t1.exception_type = '超计划生产' 
+    AND (SYSDATE - CAST(t1.create_time AS DATE)) * 24&gt;4
+     AND semi.jm_batch_no IS NULL
+     AND  qj.modify_order_no_time IS NULL 
+     THEN '1' 
+     WHEN t1.exception_type = '需要工艺给意见' 
+    AND (SYSDATE - CAST(t1.create_time AS DATE)) * 24&gt;4  
+      AND qj.GYY_REMARK_TIME IS NULL THEN '1' 
+       WHEN t1.exception_type = '需要品管给意见' 
+    AND (SYSDATE - CAST(t1.create_time AS DATE)) * 24&gt;4  
+      AND qj.PG_REMARK_TIME IS NULL THEN '1' 
+      ELSE '0'
+       END "overTime",
+    
+    (SYSDATE - CAST(t1.create_time AS DATE)) * 24 "diff"
+       from KS_COMPONENT_VSTOCK t1
+       left join (select DISTINCT t.batch_no jm_batch_no from KS_COMPONENT_SEMI_STOCK t) semi
+       on semi.jm_batch_no = t1.jm_batch_no
+       left join qinsen.inst_juanmo_main jm ON t1.jm_batch_no = jm.batch_no
+       left join qinsen.inst_qijian qj 
+       ON qj.juanmo_batch_id = jm.record_id
+       LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+  		ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID
+       LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+        ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID
+       LEFT JOIN QINSEN.PARA_MATER_SPEC PMS2
+        ON PMS2.MATER_SPEC_ID = qj.gyy_SPEC_ID
+		where 1=1
+		 <isNotNull prepend="and" property="createTimeStart">t1.create_Time  &gt;=  TO_DATE(#createTimeStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">t1.create_Time  &lt;=  TO_DATE(#createTimeEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="and" property="exceptionType">t1.exception_type = #exceptionType#</isNotNull>
+        <isNotNull prepend="and" property="jmBatchNo">t1.jm_batch_no = #jmBatchNo#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t1.PMS.MATER_SPEC_ID = #prodSpecId#</isNotNull>
+	order by t1.CREATE_TIME desc
+      </select>
+    <select id="queryJuanmo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  		SELECT jm.batch_no "batchNo",jm.prod_spec_id "prodSpecId",qj.record_id "qjBatchId",
+    jm.order_no "orderNo" ,PMS.MATER_SPEC_NAME AS "prodSpecName",
+    CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END "dryWet"
+    from qinsen.inst_qijian qj
+    left join qinsen.inst_juanmo_main jm ON qj.juanmo_batch_id = jm.record_id
+     LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+  		ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID
+    LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+        ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID
+    where 1=1
+    and not exists(select 1 from KS_COMPONENT_VSTOCK where jm_batch_no=jm.batch_no)
+		<isNotNull prepend="and" property="batchNo">jm.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="dryWet">(CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END) = #dryWet#</isNotNull>
+    </select>
+</sqlMap>

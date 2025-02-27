@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="mpdJudge.bizx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node4" name="注释4" nodeType="note" type="note" title="dafu&#x9;25-2-26 上午11:02"/>
   <nodes xsi:type="model:Note" id="node3" name="注释3" nodeType="note" type="note" title="dafu&#x9;24-7-19 下午1:48">
     <targetConnections>link4</targetConnections>
   </nodes>
@@ -61,13 +62,13 @@
     <node>switch0</node>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
-    <sourceConnections xsi:type="process:tLink" id="link12" name="超过10不合格" isDefault="false" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="超过15不合格" isDefault="false" type="transition">
       <sourceNode>assign0</sourceNode>
       <targetNode>assign1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="GE">
           <process:leftOperand type="query">mpd2</process:leftOperand>
-          <process:rightOperand type="literal">10</process:rightOperand>
+          <process:rightOperand type="literal">15</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>

@@ -10,22 +10,20 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 		},
 		'PVA-205' : {
 			pva : 1,
-			c51 : 0,
-			c23 : 0,
-			ro : 99
+			c51 : 2.0,
+			c23 : 0.5,
+			ro : 96.5
 		},
-		'PVA540-S' : {
+		'PVA540' : {
 			pva : 2,
 			c51 : 1.5,
 			c23 : 0.5,
 			ro : 96
-		},
-		'PVA540-U' : {
-			pva : 0.5,
-			c51 : 0.625,
-			c23 : 0.125,
-			ro : 98.75
 		}
+		/*
+		 * 'PVA540-S' : { pva : 2, c51 : 1.5, c23 : 0.5, ro : 96 }, 'PVA540-U' : {
+		 * pva : 0.5, c51 : 0.625, c23 : 0.125, ro : 98.75 }
+		 */
 	}
 
 	// 查询事件
@@ -83,6 +81,15 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 					}
 				}
 
+				if (opt == 'mix') {
+					if (state == '完结') {
+						Ext.Msg.alert('系统提示', '已完结记录不能修改');
+						return false;
+					} else {
+						this.mixWindow.show();
+						this.mixWindow.loadData(cell);
+					}
+				}
 				if (opt == 'dilute') {
 					if (state == '完结') {
 						Ext.Msg.alert('系统提示', '已完结记录不能做稀释配料');
@@ -117,6 +124,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 
 com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onAdd = function() {
 	this.inputWindow.items.items[0].form.reset();
+	this.inputWindow.weight.setValue(300);
 	this.inputWindow.show();
 }
 
@@ -126,6 +134,11 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onDel = function() {
 
 com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onEdit = function() {
 	opt = 'modify';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onMix = function() {
+	opt = 'mix';
 	this.listPanel.onEdit();
 }
 
@@ -180,7 +193,27 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onCalc = function() {
 	var ro = formula.ro;
 	ro = parseFloat(ro) * parseFloat(weight) / 100;
 	this.inputWindow.ro.setValue(roundToDecimalPlace(ro, 3));
+	var density = (parseFloat(pva) * parseFloat(weight) * 10)
+			/ (parseFloat(weight)) / 10;
+	this.inputWindow.density.setValue(roundToDecimalPlace(density, 3));
+}
 
+com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onMixCalc = function() {
+	var c51Real = this.mixWindow.c51Real.getValue();
+	var c23aReal = this.mixWindow.c23aReal.getValue();
+	var c14Real = this.mixWindow.c14Real.getValue();
+	var roReal = this.mixWindow.roReal.getValue();
+	var pvaWeightReal = this.mixWindow.pvaWeightReal.getValue();
+	if (Ext.isEmpty(c51Real) || Ext.isEmpty(c23aReal) || Ext.isEmpty(c14Real)
+			|| Ext.isEmpty(roReal) || Ext.isEmpty(pvaWeightReal)) {
+		Ext.Msg.alert('系统提示', '请输入完整数据');
+		return false;
+	} else {
+		var weightReal = (parseFloat(c51Real) + parseFloat(c23aReal) + parseFloat(c14Real) + parseFloat(pvaWeightReal))/1000 + parseFloat(roReal);
+		this.mixWindow.weightReal.setValue(roundToDecimalPlace(weightReal, 3));
+		var densityReal = pvaWeightReal / weightReal / 10;
+		this.mixWindow.densityReal.setValue(roundToDecimalPlace(densityReal, 3));
+	}
 }
 
 com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onDelList = function() {

@@ -160,6 +160,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					// disabled : allRight != '1',
+					rescode:'10003669',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel

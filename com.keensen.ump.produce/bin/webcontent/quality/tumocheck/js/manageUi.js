@@ -94,6 +94,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,
 					handler : this.exportExcel
 				});
 

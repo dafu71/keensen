@@ -164,6 +164,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,
 					handler : this.exportExcel
 				});
 
@@ -345,7 +346,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 	this.initEditWindow = function() {
 		var _this = this;
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
-			title : '【样块性能列表】',
+			//title : '【样块性能列表】',
 			region : 'center',
 			viewConfig : {
 				forceFit : true
@@ -457,7 +458,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 		})
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 480,
+			height : 500,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -500,14 +501,18 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						fieldLabel : '异常备注',
 						anchor : '95%',
 						height : 30,
-						colspan : 2
+						colspan : 4
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
 					}, {
 						xtype : 'combobox',
 						allowBlank : false,
 						dataIndex : 'appearanceIsQualified',
 						anchor : '95%',
 						colspan : 2,
-						fieldLabel : '外观是否合格',
+						fieldLabel : '外观是否能发货',
 						triggerAction : "all",
 						store : this.validStore,
 						valueField : 'mykey',

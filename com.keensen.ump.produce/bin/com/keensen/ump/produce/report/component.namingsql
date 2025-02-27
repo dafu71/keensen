@@ -1,11 +1,287 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.produce.report.component">
-    <parameterMap class="commonj.sdo.DataObject" id="parameterMap">
-        <parameter javaType="date" jdbcType="DATE" property="dateType"/>
-    </parameterMap>
-    <resultMap class="commonj.sdo.DataObject" id="resultMap">
-        <result column="TYPEID" javaType="string" property="typeId"/>
-    </resultMap>
-    <select id="select_id" parameterMap="parameterMap" resultMap="resultMap"><![CDATA[sql statement]]></select>
+    <select id="queryProduction" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     WITH CM AS
+ (SELECT 
+ <isEqual compareValue="day" prepend="" property="type">TO_CHAR(CM.PRODUCE_DT, 'YYYY-MM-DD') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(CM.PRODUCE_DT, 'YYYY-MM') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(CM.PRODUCE_DT, 'YYYY') PRODUCE_DT,</isEqual> 
+ 
+         SUM(CASE
+               WHEN CM.LINE_ID = 30200 THEN
+                1
+               ELSE
+                0
+             END) CMAMOUNTJY,
+         SUM(CASE
+               WHEN CM.LINE_ID = 30181 OR CM.LINE_ID = 30046 THEN
+                1
+               ELSE
+                0
+             END) CMAMOUNTGY
+    FROM QINSEN.INST_CAIDIEMO CM
+   WHERE 
+   
+  <isEqual compareValue="day" prepend="" property="type">TO_CHAR(CM.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#  
+     AND TO_CHAR(CM.PRODUCE_DT, 'YYYY-MM-DD') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(CM.PRODUCE_DT, 'YYYY-MM-DD'))</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(CM.PRODUCE_DT, 'YYYY-MM') &gt;= #productDtStart#  
+     AND TO_CHAR(CM.PRODUCE_DT, 'YYYY-MM') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(CM.PRODUCE_DT, 'YYYY-MM'))</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(CM.PRODUCE_DT, 'YYYY') &gt;= #productDtStart#  
+     AND TO_CHAR(CM.PRODUCE_DT, 'YYYY') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(CM.PRODUCE_DT, 'YYYY'))</isEqual>  
+   ,
+JM AS
+ (SELECT 
+ <isEqual compareValue="day" prepend="" property="type">TO_CHAR(JM.PRODUCE_DT, 'YYYY-MM-DD') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(JM.PRODUCE_DT, 'YYYY-MM') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(JM.PRODUCE_DT, 'YYYY') PRODUCE_DT,</isEqual> 
+ 
+ 
+         SUM(CASE
+               WHEN JM.LINE_ID = 30061 OR JM.LINE_ID = 30221 OR
+                    JM.LINE_ID = 30242 THEN
+                1
+               ELSE
+                0
+             END) JMAMOUNT4,
+         SUM(CASE
+               WHEN JM.LINE_ID = 30062 OR JM.LINE_ID = 30120 OR
+                    JM.LINE_ID = 30180 OR JM.LINE_ID = 30222 THEN
+                1
+               ELSE
+                0
+             END) JMAMOUNT8
+    FROM QINSEN.INST_JUANMO_MAIN JM
+    
+    WHERE 
+      <isEqual compareValue="day" prepend="" property="type">TO_CHAR(JM.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+     AND TO_CHAR(JM.PRODUCE_DT, 'YYYY-MM-DD') &lt;=  #productDtEnd#
+   GROUP BY TO_CHAR(JM.PRODUCE_DT, 'YYYY-MM-DD'))</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(JM.PRODUCE_DT, 'YYYY-MM') &gt;= #productDtStart#  
+     AND TO_CHAR(JM.PRODUCE_DT, 'YYYY-MM') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(JM.PRODUCE_DT, 'YYYY-MM'))</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(JM.PRODUCE_DT, 'YYYY') &gt;= #productDtStart#  
+     AND TO_CHAR(JM.PRODUCE_DT, 'YYYY') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(JM.PRODUCE_DT, 'YYYY'))</isEqual>  
+  
+    ,
+QJ AS
+ (SELECT 
+ 
+ <isEqual compareValue="day" prepend="" property="type">TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM-DD') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(QJ.PRODUCE_DT, 'YYYY') PRODUCE_DT,</isEqual> 
+         
+         
+         SUM(CASE
+               WHEN JM.LINE_ID = 30061 OR JM.LINE_ID = 30221 OR
+                    JM.LINE_ID = 30242 THEN
+                1
+               ELSE
+                0
+             END) QJAMOUNT4,
+         SUM(CASE
+               WHEN JM.LINE_ID = 30062 OR JM.LINE_ID = 30120 OR
+                    JM.LINE_ID = 30180 OR JM.LINE_ID = 30222 THEN
+                1
+               ELSE
+                0
+             END) QJAMOUNT8
+    FROM QINSEN.INST_QIJIAN QJ
+    LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+      ON JM.RECORD_ID = QJ.JUANMO_BATCH_ID
+   WHERE 
+   
+    <isEqual compareValue="day" prepend="" property="type">TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+     AND TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM-DD') &lt;=  #productDtEnd#
+   GROUP BY TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM-DD'))</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM') &gt;= #productDtStart#  
+     AND TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM'))</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(QJ.PRODUCE_DT, 'YYYY') &gt;= #productDtStart#  
+     AND TO_CHAR(QJ.PRODUCE_DT, 'YYYY') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(QJ.PRODUCE_DT, 'YYYY'))</isEqual>  ,
+RS AS
+ (SELECT 
+ 
+ <isEqual compareValue="day" prepend="" property="type">TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM-DD') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(RS.PRODUCE_DT, 'YYYY') PRODUCE_DT,</isEqual> 
+ 
+         SUM(CASE
+               WHEN JM.LINE_ID = 30061 OR JM.LINE_ID = 30221 OR
+                    JM.LINE_ID = 30242 THEN
+                1
+               ELSE
+                0
+             END) RSAMOUNT4,
+         SUM(CASE
+               WHEN JM.LINE_ID = 30062 OR JM.LINE_ID = 30120 OR
+                    JM.LINE_ID = 30180 OR JM.LINE_ID = 30222 THEN
+                1
+               ELSE
+                0
+             END) RSAMOUNT8
+    FROM QINSEN.INST_RAOSI RS
+    LEFT JOIN QINSEN.INST_QIJIAN QJ
+      ON QJ.BATCH_NO = RS.BATCH_NO
+    LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+      ON JM.RECORD_ID = QJ.JUANMO_BATCH_ID
+   WHERE 
+   <isEqual compareValue="day" prepend="" property="type">TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+     AND TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM-DD') &lt;=  #productDtEnd#
+   GROUP BY TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM-DD'))</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM') &gt;= #productDtStart#  
+     AND TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM'))</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(RS.PRODUCE_DT, 'YYYY') &gt;= #productDtStart#  
+     AND TO_CHAR(RS.PRODUCE_DT, 'YYYY') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(RS.PRODUCE_DT, 'YYYY'))</isEqual> ,
+BZ AS
+ (SELECT 
+ 
+ <isEqual compareValue="day" prepend="" property="type">TO_CHAR(BZ.CREATE_TIME, 'YYYY-MM-DD') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(BZ.CREATE_TIME, 'YYYY-MM') PRODUCE_DT,</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(BZ.CREATE_TIME, 'YYYY') PRODUCE_DT,</isEqual> 
+      
+        
+         SUM(CASE
+               WHEN JM.LINE_ID = 30061 OR JM.LINE_ID = 30221 OR
+                    JM.LINE_ID = 30242 THEN
+                1
+               ELSE
+                0
+             END) BZAMOUNT4,
+         SUM(CASE
+               WHEN JM.LINE_ID = 30062 OR JM.LINE_ID = 30120 OR
+                    JM.LINE_ID = 30180 OR JM.LINE_ID = 30222 THEN
+                1
+               ELSE
+                0
+             END) BZAMOUNT8
+    FROM KS_COMPONENT_PACKAGE BZ
+    LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+      ON JM.BATCH_NO = BZ.BATCH_NO
+   WHERE <isEqual compareValue="day" prepend="" property="type">TO_CHAR(BZ.create_time, 'YYYY-MM-DD') &gt;= #productDtStart#
+     AND TO_CHAR(BZ.create_time, 'YYYY-MM-DD') &lt;=  #productDtEnd#
+   GROUP BY TO_CHAR(BZ.create_time, 'YYYY-MM-DD'))</isEqual>
+        <isEqual compareValue="month" prepend="" property="type">TO_CHAR(BZ.create_time, 'YYYY-MM') &gt;= #productDtStart#  
+     AND TO_CHAR(BZ.create_time, 'YYYY-MM') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(BZ.create_time, 'YYYY-MM'))</isEqual>
+        <isEqual compareValue="year" prepend="" property="type">TO_CHAR(BZ.create_time, 'YYYY') &gt;= #productDtStart#  
+     AND TO_CHAR(BZ.create_time, 'YYYY') &lt;=  #productDtEnd#     
+   GROUP BY TO_CHAR(BZ.create_time, 'YYYY'))</isEqual> 
+
+SELECT CM.PRODUCE_DT "produceDt",
+       CM.CMAMOUNTJY "cmAmountJy",
+       CM.CMAMOUNTGY "cmAmountGy",
+       JM.JMAMOUNT4  "jmAmount4",
+       JM.JMAMOUNT8  "jmAmount8",
+       QJ.QJAMOUNT4  "qjAmount4",
+       QJ.QJAMOUNT8  "qjAmount8",
+       RS.RSAMOUNT4  "rsAmount4",
+       RS.RSAMOUNT8  "rsAmount8",
+       BZ.BZAMOUNT4  "bzAmount4",
+       BZ.BZAMOUNT8  "bzAmount8"
+  FROM CM
+  LEFT JOIN JM
+    ON CM.PRODUCE_DT = JM.PRODUCE_DT
+  LEFT JOIN QJ
+    ON CM.PRODUCE_DT = QJ.PRODUCE_DT
+  LEFT JOIN RS
+    ON CM.PRODUCE_DT = RS.PRODUCE_DT
+  LEFT JOIN BZ
+    ON CM.PRODUCE_DT = BZ.PRODUCE_DT
+ ORDER BY CM.PRODUCE_DT;
+
+
+    </select>
+    <select id="queryQjChange" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT PRODUCE_DT "produceDt",
+       BAMOUNT4   "bAmount4",
+       BAMOUNT8   "bAmount8",
+       HAMOUNT4   "hAmount4",
+       HAMOUNT8   "hAmount8"
+  FROM (SELECT '0' MYORDER,
+               '合计' PRODUCE_DT,
+               SUM(CASE
+                     WHEN (JM.LINE_ID = 30061 OR JM.LINE_ID = 30221 OR
+                          JM.LINE_ID = 30242) AND T.OLD_BATCH_NO IS NULL THEN
+                      1
+                     ELSE
+                      0
+                   END) BAMOUNT4,
+               SUM(CASE
+                     WHEN (JM.LINE_ID = 30062 OR JM.LINE_ID = 30120 OR
+                          JM.LINE_ID = 30180 OR JM.LINE_ID = 30222) AND
+                          T.OLD_BATCH_NO IS NULL THEN
+                      1
+                     ELSE
+                      0
+                   END) BAMOUNT8,
+               SUM(CASE
+                     WHEN (JM.LINE_ID = 30061 OR JM.LINE_ID = 30221 OR
+                          JM.LINE_ID = 30242) AND T.OLD_BATCH_NO IS NOT NULL THEN
+                      1
+                     ELSE
+                      0
+                   END) HAMOUNT4,
+               SUM(CASE
+                     WHEN (JM.LINE_ID = 30062 OR JM.LINE_ID = 30120 OR
+                          JM.LINE_ID = 30180 OR JM.LINE_ID = 30222) AND
+                          T.OLD_BATCH_NO IS NOT NULL THEN
+                      1
+                     ELSE
+                      0
+                   END) HAMOUNT8
+        
+          FROM QINSEN.INST_QIJIAN_CHANGE T
+          LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+            ON JM.RECORD_ID = T.JUANMO_BATCH_ID
+         WHERE TO_CHAR(T.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+           AND TO_CHAR(T.PRODUCE_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+        UNION ALL
+        
+        SELECT '1' MYORDER,
+               TO_CHAR(T.PRODUCE_DT, 'YYYY-MM-DD') PRODUCE_DT,
+               SUM(CASE
+                     WHEN (JM.LINE_ID = 30061 OR JM.LINE_ID = 30221 OR
+                          JM.LINE_ID = 30242) AND T.OLD_BATCH_NO IS NULL THEN
+                      1
+                     ELSE
+                      0
+                   END) BAMOUNT4,
+               SUM(CASE
+                     WHEN (JM.LINE_ID = 30062 OR JM.LINE_ID = 30120 OR
+                          JM.LINE_ID = 30180 OR JM.LINE_ID = 30222) AND
+                          T.OLD_BATCH_NO IS NULL THEN
+                      1
+                     ELSE
+                      0
+                   END) BAMOUNT8,
+               SUM(CASE
+                     WHEN (JM.LINE_ID = 30061 OR JM.LINE_ID = 30221 OR
+                          JM.LINE_ID = 30242) AND T.OLD_BATCH_NO IS NOT NULL THEN
+                      1
+                     ELSE
+                      0
+                   END) HAMOUNT4,
+               SUM(CASE
+                     WHEN (JM.LINE_ID = 30062 OR JM.LINE_ID = 30120 OR
+                          JM.LINE_ID = 30180 OR JM.LINE_ID = 30222) AND
+                          T.OLD_BATCH_NO IS NOT NULL THEN
+                      1
+                     ELSE
+                      0
+                   END) HAMOUNT8
+        
+          FROM QINSEN.INST_QIJIAN_CHANGE T
+          LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+            ON JM.RECORD_ID = T.JUANMO_BATCH_ID
+         WHERE TO_CHAR(T.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+           AND TO_CHAR(T.PRODUCE_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+         GROUP BY TO_CHAR(T.PRODUCE_DT, 'YYYY-MM-DD'))
+ ORDER BY MYORDER, PRODUCE_DT</select>
 </sqlMap>
