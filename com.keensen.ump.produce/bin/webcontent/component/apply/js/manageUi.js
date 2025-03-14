@@ -40,6 +40,54 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}]
 		})
 
+		this.prodSpecStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.base.base.queryProdspec.biz.ext',
+					root : 'data',
+					autoLoad : true,
+					baseParams : {
+						'condition/state' : 'Y'
+					},
+					fields : [{
+								name : "id"
+							}, {
+								name : "name"
+							}, {
+								name : "blankingSize"
+							}, {
+								name : "denseNet"
+							}, {
+								name : "pageWidth"
+							}, {
+								name : "numPerWad"
+							}, {
+								name : 'mpSize'
+							}, {
+								name : 'mpWidth'
+							}, {
+								name : 'denseNetType'
+							}, {
+								name : 'denseNetWidth'
+							}, {
+								name : 'denseNetCdm'
+							}, {
+								name : 'lightNetType'
+							}, {
+								name : 'lightNetLongPage'
+							}, {
+								name : 'lightNetShortPage'
+							}, {
+								name : 'juanmo'
+							}, {
+								name : 'cut'
+							}, {
+								name : 'raosi'
+							}, {
+								name : 'package'
+							}, {
+								name : 'pipe'
+							}]
+				})
+
 	}
 
 	this.initQueryPanel = function() {
@@ -496,7 +544,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
-					height : 380,
+					height : 400,
 					region : 'north',
 					// baseCls : "x-panel",
 					autoHide : false,
@@ -571,15 +619,21 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'combo',
 						mode : 'local',
 						ref : '../prodSpecName',
-						displayField : 'prodSpecName',
-						valueField : 'prodSpecName',
+						displayField : 'name',
+						valueField : 'name',
 						hiddenName : 'prodSpecName',
 						allowBlank : false,
 						fieldLabel : '元件型号',
-						store : _this.prodSpecNameStore,
+						store : _this.prodSpecStore,
 						listeners : {
 							'expand' : function(A) {
 								_this.inputPanel.prodSpecName.reset();
+							},
+							'select' : function(combo, record, index) {
+								if (index > -1) {
+									var package2 = record.get('package');
+									_this.inputPanel.package2.setValue(package2);
+								}
 							}
 						}
 
@@ -726,6 +780,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						name : 'abnormalExplain',
 						fieldLabel : '外观异常说明',
 						// allowBlank : false,
+						height:50,
 						anchor : '95%',
 						colspan : 6
 					}, {
@@ -733,9 +788,23 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						name : 'abnormalOther',
 						fieldLabel : '其他异常备注',
 						// allowBlank : false,
+						height:50,
 						anchor : '95%',
 						colspan : 6
 					}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 12
+				}, {
+					//name : 'entity/remark',
+					ref : '../package2',
+					height : 30,
+					xtype : 'textarea',
+					readOnly : true,
+					fieldLabel : '包装特殊要求',
+					colspan : 12,
+					anchor : '95%'
+				}, {
 						xtype : 'hidden',
 						ref : '../abnormal',
 						name : 'abnormal'
@@ -774,7 +843,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 	}
 
 	this.initChooseWindow = function() {
-	
+
 		var _this = this;
 		var prodStore = new Ext.data.JsonStore({
 					url : 'com.keensen.ump.produce.component.apply.queryProd.biz.ext',

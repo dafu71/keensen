@@ -71,7 +71,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 							}, {
 								xtype : 'displayfield',
 								ref : '../label0',
-								value : '膜片型号:'
+								value : '发货膜片型号:'
 							}, {
 								xtype : 'textfield',
 								itemId : 'param0',
@@ -417,6 +417,9 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 						dataIndex : 'materSpecCode',
 						header : '膜片型号'
 					}, {
+						dataIndex : 'printName',
+						header : '发货膜片型号'
+					}, {
 						dataIndex : 'materCode',
 						header : '物料号'
 					}, {
@@ -447,6 +450,8 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 			}	,
 				fields : [{
 							name : 'batchNo'
+						}, {
+							name : 'printName'
 						}, {
 							name : 'usefulLength'
 						}, {

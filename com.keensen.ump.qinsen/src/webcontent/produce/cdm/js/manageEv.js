@@ -442,11 +442,21 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPlan = function() {
 
 					var i = _this.inputWindow.prodSpecId.store.find('id',
 							materSpecId);
+					if(i==-1) return;
 					var rec = _this.inputWindow.prodSpecId.store.getAt(i);
 					_this.inputWindow.blankingSize
 							.setValue(rec.data.blankingSize);
 					_this.inputWindow.pageWidth.setValue(rec.data.pageWidth);
-					_this.inputWindow.denseNet.setValue(rec.data.denseNet);
+					//_this.inputWindow.denseNet.setValue(rec.data.denseNet);
+					
+					_this.inputWindow.denseNetType.setValue(rec.data.denseNetType);
+					_this.inputWindow.denseNetWidth.setValue(rec.data.denseNetWidth);
+					_this.inputWindow.lightNetType.setValue(rec.data.lightNetType);
+					_this.inputWindow.lightNetShortPage.setValue(rec.data.lightNetShortPage);
+					_this.inputWindow.denseNetCdm.setValue(rec.data.denseNetCdm);
+					
+					
+					
 
 					var store = _this.cdmdutyStore;
 					store.load({

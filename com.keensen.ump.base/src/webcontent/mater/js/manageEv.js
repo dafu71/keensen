@@ -240,3 +240,25 @@ com.keensen.ump.base.materClassSpecMgr.prototype.destroy = function() {
 	this.editWindow3.destroy();
 	this.inputWindow3.destroy();
 }
+
+com.keensen.ump.base.materClassSpecMgr.prototype.onQuery = function() {
+	var _this = this;
+	if (Ext.isEmpty(_this.materClassId))
+		return;
+	var materSpecName = Ext.getCmp(materqueryspec).getValue();
+	var materSpecState = Ext.getCmp(materquerystate).getValue();
+
+	var store = this.listPanel.store;
+	store.load({
+				params : {
+					"condition/materClassId" : _this.materClassId,
+					"condition/materSpecName" : materSpecName,
+					"condition/state" : materSpecState
+				}
+			});
+}
+
+com.keensen.ump.base.materClassSpecMgr.prototype.onQueryReset = function() {
+	Ext.getCmp(materqueryspec).setValue('');
+	Ext.getCmp(materquerystate).setValue('Y');
+}

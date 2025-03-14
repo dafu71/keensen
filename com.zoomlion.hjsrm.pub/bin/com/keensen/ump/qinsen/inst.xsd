@@ -316,23 +316,6 @@
             <xs:element minOccurs="0" name="location" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="InstCdmDefect2">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="dmBatchId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="defectItemId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="loss" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:int"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="InstJuanmoMain">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -500,6 +483,26 @@
             <xs:element minOccurs="0" name="labelNum" nillable="true" type="xs:int"/>
             <xs:element minOccurs="0" name="recorder" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="ifTear" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InstCdmDefect2">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="dmBatchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="defectItemId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="loss" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="produceDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="recorder" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ifTear" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="position" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

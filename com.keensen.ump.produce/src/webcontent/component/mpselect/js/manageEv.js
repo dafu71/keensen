@@ -1,4 +1,6 @@
 com.keensen.ump.produce.component.mpselectMgr.prototype.initEvent = function() {
+
+	var _this = this;
 	this.modifyStockTime();
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -117,6 +119,27 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.initEvent = function() {
 					}
 				});
 	}, this);
+
+	this.listPanel.store.on('load', function() {
+				if (_this.filterWindow.isVisible()) {
+					var title = '筛选' + '&nbsp;&nbsp;膜片共'
+							+ _this.listPanel.store.getTotalCount() + '只';
+					_this.filterWindow.setTitle(title);
+				}
+			})
+
+	// 查询事件
+	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleOrderListPanel.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
 }
 
 // 模板文件下载
@@ -229,16 +252,15 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.onQuery2 = function() {
 com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel2 = function() {
 	var _this = this;
 	var tumoBatchNo2 = this.queryPanel.getForm()
-			.findField('condition/tumoBatchNo2').getValue();			
-			
+			.findField('condition/tumoBatchNo2').getValue();
+
 	if (!Ext.isEmpty(tumoBatchNo2)) {
-		
+
 		var regEx = new RegExp("\\n", "gi");
 		tumoBatchNo2 = tumoBatchNo2.replace(regEx, ",");
 		tumoBatchNo2 = tumoBatchNo2.replaceAll('，', ',');
-		tumoBatchNo2 = tumoBatchNo2.replaceAll(' ', '');	
-		
-		
+		tumoBatchNo2 = tumoBatchNo2.replaceAll(' ', '');
+
 		var arr = [];
 		arr = tumoBatchNo2.split(',');
 		var arr2 = [];
@@ -294,41 +316,37 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel2 = function(
 com.keensen.ump.produce.component.mpselectMgr.prototype.exportExcel = function() {
 	var _this = this;
 
-	/*var tumoBatchNo2 = this.queryPanel3.getForm()
-			.findField('condition/tumoBatchNo2').getValue();
-	if (!Ext.isEmpty(tumoBatchNo2)) {
+	/*
+	 * var tumoBatchNo2 = this.queryPanel3.getForm()
+	 * .findField('condition/tumoBatchNo2').getValue(); if
+	 * (!Ext.isEmpty(tumoBatchNo2)) { var arr = []; arr =
+	 * tumoBatchNo2.split(','); var arr2 = []; for (var i = 0; i < arr.length;
+	 * i++) { arr2.push("'" + arr[i] + "'"); }
+	 * this.queryPanel3.getForm().findField('condition/tumoBatchNo')
+	 * .setValue(arr2.join(",") == "''" ? null : arr2.join(",")); }
+	 */
+
+	var batchNoStr = this.queryPanel3.form.findField("condition/tumoBatchNo2")
+			.getValue();
+	if (!Ext.isEmpty(batchNoStr)) {
+		var regEx = new RegExp("\\n", "gi");
+		batchNoStr = batchNoStr.replace(regEx, ",");
+		batchNoStr = batchNoStr.replaceAll('，', ',');
+		batchNoStr = batchNoStr.replaceAll(' ', '');
 		var arr = [];
-		arr = tumoBatchNo2.split(',');
+		arr = batchNoStr.split(',');
+		if (arr.length > 999) {
+			// Ext.Msg.alert("系统提示", "批号数量不能超过999条，否则无法挑选！");
+			// return false;
+		}
+
 		var arr2 = [];
 		for (var i = 0; i < arr.length; i++) {
 			arr2.push("'" + arr[i] + "'");
 		}
 		this.queryPanel3.getForm().findField('condition/tumoBatchNo')
 				.setValue(arr2.join(",") == "''" ? null : arr2.join(","));
-
-	}*/
-	
-	var batchNoStr = this.queryPanel3.form
-				.findField("condition/tumoBatchNo2").getValue();
-		if (!Ext.isEmpty(batchNoStr)) {
-			var regEx = new RegExp("\\n", "gi");
-			batchNoStr = batchNoStr.replace(regEx, ",");
-			batchNoStr = batchNoStr.replaceAll('，', ',');
-			batchNoStr = batchNoStr.replaceAll(' ', '');
-			var arr = [];
-			arr = batchNoStr.split(',');
-			if (arr.length > 999) {
-				// Ext.Msg.alert("系统提示", "批号数量不能超过999条，否则无法挑选！");
-				// return false;
-			}
-
-			var arr2 = [];
-			for (var i = 0; i < arr.length; i++) {
-				arr2.push("'" + arr[i] + "'");
-			}
-			this.queryPanel3.getForm().findField('condition/tumoBatchNo')
-					.setValue(arr2.join(",") == "''" ? null : arr2.join(","));
-		}
+	}
 
 	var daochu = _this.queryPanel3.getForm().getValues();
 
@@ -529,12 +547,39 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.calculate = function() {
 			}
 		})
 
-	} 
+	}
 }
 
-//筛选条件
+com.keensen.ump.produce.component.mpselectMgr.prototype.onChooseOrder = function() {
+	this.chooseSingleOrderWindow.show();
+}
+
+com.keensen.ump.produce.component.mpselectMgr.prototype.onChooseSingleOrder = function() {
+	var B = this.chooseSingleOrderListPanel.getSelectionModel().getSelections();
+	if (B && B.length == 1) {
+		var orderNo = B[0].get('orderNo');
+		var prodSpecId = B[0].get('materSpecId');
+		this.filterPanel.orderNo.setValue(orderNo);
+		this.filterPanel.prodSpecId.setValue(prodSpecId);
+		this.chooseSingleOrderWindow.hide();
+
+	}
+}
+
+// 筛选条件
 com.keensen.ump.produce.component.mpselectMgr.prototype.onFilter = function() {
 	this.filterWindow.show();
+}
+
+com.keensen.ump.produce.component.mpselectMgr.prototype.onDoFilter = function() {
+	var store = this.listPanel3.store;
+	store.baseParams = this.filterPanel.getForm().getValues();
+	store.load({
+				params : {
+					"pageCond/begin" : 0,
+					"pageCond/length" : this.listPanel3.pagingToolbar.pageSize
+				}
+			});
 }
 
 function dayDiff(start, end) {

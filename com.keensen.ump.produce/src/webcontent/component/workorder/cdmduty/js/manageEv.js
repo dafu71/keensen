@@ -125,11 +125,13 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr.prototype.onSelectCode = 
 		}
 
 		var idx = this.rec.data['idx'];
-		var i = this.listPanel3.store.find('idx', idx);
+		idx = '' + idx;
+		var i = this.listPanel3.store.find('idx', idx,0,false);
 		var rec2 = this.listPanel3.store.getAt(i);
 		this.listPanel2.getSelectionModel().clearSelections();
 		this.chooseWindow.hide();
 		rec2.set('cdmCodes', arr.join(','));
+		
 		rec2.commit();
 		this.listPanel2.refresh();
 

@@ -49,7 +49,7 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr.prototype.onScan = f
 			var data = result.data;
 
 			if (Ext.isEmpty(data)) {
-				_this.inputPanel.msg.setValue('<p style="color:red;font-size:16px;">卷膜序号不存在或已在虚拟仓</p>');
+				_this.inputPanel.msg.setValue('<p style="color:red;font-size:16px;">卷膜序号不存在或已在虚拟仓或已请检</p>');
 				_this.inputPanel.batchNo.setValue('');
 				
 			} else {

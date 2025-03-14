@@ -42,6 +42,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.initEvent = function() 
 
 // 校验叠膜栈板号，加载相关信息
 com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.dealCdmBatchNo = function() {
+	
 	var _this = this;
 	var cdmBatchNo = _this.inputPanel.cdmBatchNo.getValue();
 	if (cdmBatchNo) {
@@ -69,6 +70,12 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.dealCdmBatchNo = functi
 						_this.inputPanel.denseNet.setValue(dd.denseNet);
 						_this.inputPanel.pageWidth.setValue(dd.pageWidth);
 						_this.inputPanel.cdmBatchId.setValue(dd.recordId);// 裁叠膜批号ID
+						
+						
+						_this.inputPanel.juanmo.setValue(dd.juanmo);
+						_this.inputPanel.lightNetType.setValue(dd.lightNetType);
+						_this.inputPanel.lightNetShortPage.setValue(dd.lightNetShortPage);
+						
 						_this.genBatchNo();
 					} else {
 						Ext.Msg.alert("系统提示", "该栈板号不存在，请检查！", function() {

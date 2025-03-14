@@ -84,7 +84,12 @@ table {
 	font-weight: bold;
 }
 
-
+.star {
+	align: center;
+	text-align: center;
+	vertical-align: middle;
+	width: 13mm;
+}
 </style>
 
 <style media="print" type="text/css">
@@ -313,7 +318,11 @@ class="main_table" border=0>
    <td width="47px"></td>
    <td colspan=5 align="center" valign="top"><svg id="barcode_<%=list[i].get("prodBatchNo") %>" style="width:50mm"></svg></td>
    
-   <td colspan=2 align="center" valign="bottom"><span class="span_day;">
+   <td colspan=2 align="center" valign="bottom">
+   
+   <img src="<%=rootUrl %>/qinsen/produce/pack/print/image/mark_star.png" class="star">
+   
+   <span class="span_day;">
     <script type="text/javascript">
     var dayCode = getDayCode();// 获取入库日期编码
     document.write(dayCode);

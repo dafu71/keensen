@@ -1,5 +1,7 @@
 com.keensen.ump.produce.component.mpselectMgr = function() {
 	this.initPanel = function() {
+
+		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
 
@@ -10,6 +12,7 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 		this.initStandWindow();
 		this.initAddStandWindow();
 
+		this.initChooseSingleOrderWindow();
 		this.initFilterWindow();
 
 		return new Ext.fn.fnLayOut({
@@ -20,6 +23,37 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 				});
 	}
 
+	this.initStore = function() {
+		this.standStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.component.select.queryStand.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			baseParams : {},
+			fields : [{
+						name : 'mpSpecName'
+					}, {
+						name : 'prodSpecName'
+					}, {
+						name : 'aGpdLowLimit'
+					}, {
+						name : 'aGpdUpLimit'
+					}, {
+						name : 'aGpdCenter'
+					}, {
+						name : 'aSaltLowLimit'
+					}, {
+						name : 'area'
+					}, {
+						name : 'denseNet'
+					}, {
+						name : 'mpSpecId'
+					}, {
+						name : 'prodSpecId'
+					}, {
+						name : 'recordId'
+					}]
+		})
+	}
 	// 导入excel面板
 	this.buildExcelUploadWin = function() {
 		this.excelUploadWin = new Ext.Window({
@@ -178,12 +212,7 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 					handler : this.calculate
 				});
 
-		this.queryPanel.addButton({
-					text : "筛选",
-					scope : this,
-					iconCls : 'icon-application_form_magnify',
-					handler : this.onFilter
-				});
+		
 
 	}
 
@@ -198,7 +227,7 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 				forceFit : false
 			},
 			tbar : [{
-						text : '单卷膜片可卷型号查询',
+						text : '膜片可卷型号查询',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onQuery
@@ -715,6 +744,13 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
+				
+		this.queryPanel3.addButton({
+					text : "筛选",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onFilter
+				});
 
 		this.queryPanel3.addButton({
 					text : "关闭",
@@ -729,7 +765,7 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 				});
 
 		this.chooseWindow = this.chooseWindow || new Ext.Window({
-					title : '单卷膜片可卷型号查询',
+					title : '膜片可卷型号查询',
 					resizable : true,
 					minimizable : false,
 					maximizable : true,
@@ -1194,42 +1230,178 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 
 	this.initFilterWindow = function() {
 		var _this = this;
-		this.filterWindow = this.filterWindow || new Ext.fn.FormWindow({
+
+		var storageStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['膜片AB仓', '膜片AB仓'], ['膜片C仓', '膜片C仓'],
+							['膜片发货仓', '膜片发货仓'], ['半成品仓', '半成品仓'],
+							['试卷合格仓', '试卷合格仓']]
+				});
+
+		this.filterPanel = this.filterPanel || new Ext.fn.QueryPanel({
+			// height : 120,
+			columns : 12,
+			border : true,
+			region : 'center',
+			// collapsible : true,
+			titleCollapse : false,
+			fields : [{
+						xtype : 'trigger',
+						emptyText : '单击旁边按钮选择订单',
+						ref : '../orderNo',
+						fieldLabel : '生产订单号',
+						anchor : '100%',
+						colspan : 3,
+						editable : false,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onChooseOrder();
+						}
+
+					}, {
+						xtype : 'prodspeccombobox',
+						hiddenName : 'condition/prodSpecIdFilter',
+						ref : '../prodSpecId',
+						colspan : 3,
+						fieldLabel : '生产元件型号'
+					}, {
+						xtype : 'mpspeccombobox',
+						hiddenName : 'condition/mpSpecIdFilter',
+						ref : '../mpSpecId',
+						colspan : 3,
+						fieldLabel : '膜片型号 ',
+						listeners : {
+							"select" : function(combo, record, index) {
+								var prodSpecId = _this.filterPanel.prodSpecId
+										.getValue();
+								var mpSpecId = combo.getValue();
+
+								var store = _this.standStore;
+								var i = store.findBy(function(record, id) {
+									// console.dir(mpSpecId + '=====' +
+									// record.get('mpSpecId') + '=====' +
+									// prodSpecId + '=====' +
+									// record.get('prodSpecId'));
+									return record.get('mpSpecId') == mpSpecId
+											&& record.get('prodSpecId') == prodSpecId;
+								});
+
+								if (i != -1) {
+									var rec = store.getAt(i);
+									_this.filterPanel.mpSaltLowLimit
+											.setValue(rec.get('aSaltLowLimit'));
+									_this.filterPanel.mpSaltLowLimit2
+											.setValue(rec.get('aSaltLowLimit'));
+									_this.filterPanel.aGpdLowLimit.setValue(rec
+											.get('aGpdLowLimit'));
+
+								} else {
+									_this.filterPanel.mpSaltLowLimit
+											.setValue('');
+									_this.filterPanel.mpSaltLowLimit2
+											.setValue('');
+								    _this.filterPanel.aGpdLowLimit.setValue('');
+								}
+
+							}
+						}
+					}, {
+						xtype : 'combobox',
+						forceSelection : true,
+						// allowBlank : false,
+						mode : 'local',
+						fieldLabel : '仓库名称',
+						ref : '../storageName',
+						hiddenName : 'condition/storageNameFilter',
+						colspan : 3,
+						emptyText : '--请选择--',
+						editable : false,
+						store : storageStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'numberfield',
+						name : 'condition/mpSaltLowLimitFilter',
+						ref : '../mpSaltLowLimit',
+						readOnly : true,
+						colspan : 3,
+						fieldLabel : '膜片脱盐率<br>下限标准'
+					}, {
+						xtype : 'numberfield',
+						name : 'condition/mpSaltLowLimitFilter2',
+						ref : '../mpSaltLowLimit2',
+						colspan : 3,
+						fieldLabel : '膜片脱盐率<br>下限挑选值'
+					}, {
+						xtype : 'numberfield',
+						name : 'condition/testYjSaltLowLimitDownFilter',
+						value : 0,
+						ref : '../testYjSaltLowLimitDownFilter',
+						colspan : 3,
+						fieldLabel : '试卷元件脱盐率<br>下限标准下调值'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'numberfield',
+						name : 'condition/aGpdLowLimitFilter',
+						ref : '../aGpdLowLimit',
+						readOnly : true,
+						colspan : 3,
+						fieldLabel : '产水量下限标准'
+					}, {
+						xtype : 'numberfield',
+						name : 'condition/aGpdLowLimitFilter2',
+						ref : '../aGpdLowLimit2',
+						colspan : 3,
+						fieldLabel : '产水量下限标准<br>放宽值'
+					}, {
+						xtype : 'hidden',
+						name : 'condition/isStorage',
+						value : 'Y'
+					}]
+		});
+
+		this.filterWindow = this.filterWindow || new Ext.Window({
 					title : '筛选',
 					height : 600,
 					width : 1024,
+					layout : 'border',
 					// itemCls:'required',
 					// style:'margin-top:10px',
+					closeAction : 'hide',
 					modal : false,
 					resizable : true,
 					minimizable : false,
 					maximizable : true,
-					items : [{
-								xtype : 'inputpanel',
-								pgrid : this.listPanel,
-								columns : 12,
-								saveUrl : '1.biz.ext',
-								fields : [{
-											xtype : 'prodspeccombobox',
-											ref : '../../prodSpecId',
-											colspan : 3,
-											fieldLabel : '元件型号 '
-										}]
-							}]
+					items : [this.filterPanel]
 				});
 
-		this.filterWindow.buttons[0].hide();
-		this.filterWindow.buttons[1].hide();
+		// this.filterWindow.buttons[0].hide();
+		// this.filterWindow.buttons[1].hide();
+		this.filterPanel.buttons[0].hide();
+		this.filterPanel.buttons[1].hide();
 
-		this.filterWindow.addButton({
+		this.filterPanel.addButton({
 					text : "查询",
 					// disabled : allRight != '1',
 					scope : this,
 					iconCls : 'icon-application_form_magnify',
-					handler : this.onQuery
+					handler : this.onDoFilter
 				});
 
-		this.filterWindow.addButton({
+		this.filterPanel.addButton({
 					text : "关闭",
 					// disabled : allRight != '1',
 					scope : this,
@@ -1238,5 +1410,236 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 						this.filterWindow.hide()
 					}
 				});
+	}
+
+	this.initChooseSingleOrderWindow = function() {
+
+		var chooseSingleOrderSelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.chooseSingleOrderListPanel = this.chooseSingleOrderListPanel
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : [{
+								text : '确定选择',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onChooseSingleOrder
+							}],
+					hsPage : true,
+					selModel : chooseSingleOrderSelModel,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							chooseSingleOrderSelModel, {
+								dataIndex : 'orderType',
+								header : '订单类型',
+								sortable : true
+							}, {
+								dataIndex : 'orderNo',
+								header : '订单编号',
+								sortable : true
+							}, {
+								dataIndex : 'templateName',
+								header : '唛头图纸编号',
+								sortable : true
+							}, {
+								dataIndex : 'materSpecName2',
+								header : '订单下达型号',
+								sortable : true
+							}, {
+								dataIndex : 'materSpecName',
+								header : '对应生产规格',
+								sortable : true
+							}, {
+								dataIndex : 'orderAmount',
+								header : '订单数量',
+								sortable : true
+							}, {
+								dataIndex : 'orderDate',
+								header : '订单日期',
+								sortable : true
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.neworder.queryYxOrderByPage.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'lidTape'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'createUserId'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'updateTime'
+								}, {
+									name : 'updateUserId'
+								}, {
+									name : 'updateName'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'reserve2'
+								}, {
+									name : 'reserve3'
+								}, {
+									name : 'reserve4'
+								}, {
+									name : 'reserve5'
+								}, {
+									name : 'orgId'
+								}, {
+									name : 'status'
+								}, {
+									name : 'scfs'
+								}, {
+									name : 'bm'
+								}, {
+									name : 'sffh'
+								}, {
+									name : 'orderType'
+								}, {
+									name : 'type'
+								}, {
+									name : 'khxj'
+								}, {
+									name : 'cpxj'
+								}, {
+									name : 'ddxj'
+								}, {
+									name : 'orderNo'
+								}, {
+									name : 'orderDate'
+								}, {
+									name : 'hpmc'
+								}, {
+									name : 'dw'
+								}, {
+									name : 'materSpecName'
+								}, {
+									name : 'cpgg'
+								}, {
+									name : 'dryWet'
+								}, {
+									name : 'orderAmount'
+								}, {
+									name : 'dfh'
+								}, {
+									name : 'xsc'
+								}, {
+									name : 'sbkcgm'
+								}, {
+									name : 'sbkcsm'
+								}, {
+									name : 'bq'
+								}, {
+									name : 'bag'
+								}, {
+									name : 'box'
+								}, {
+									name : 'mark'
+								}, {
+									name : 'pack'
+								}, {
+									name : 'performance'
+								}, {
+									name : 'remark'
+								}, {
+									name : 'demandStockDate'
+								}, {
+									name : 'rksl'
+								}, {
+									name : 'jhwcsj'
+								}, {
+									name : 'scwcrq'
+								}, {
+									name : 'cnt'
+								}, {
+									name : 'arrangeAmount'
+								}, {
+									name : 'ifplan'
+								}, {
+									name : 'materSpecName2'
+								}, {
+									name : 'templateName'
+								}, {
+									name : 'baseId'
+								}, {
+									name : 'materSpecId'
+								}]
+					})
+				})
+
+		this.queryChooseSingleOrderPanel = this.queryChooseSingleOrderPanel
+				|| new Ext.fn.QueryPanel({
+							height : 120,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/orderNo2',
+										// anchor : '75%',
+										fieldLabel : '订单号'
+									}, {
+										xtype : 'textfield',
+										name : 'condition/materSpecName',
+										// anchor : '75%',
+										fieldLabel : '规格型号 '
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 2
+									}, {
+										xtype : "dateregion",
+										colspan : 1,
+										// anchor : '75%',
+										nameArray : [
+												'condition/orderDateStart',
+												'condition/orderDateEnd'],
+										fieldLabel : "订单日期",
+										format : "Y-m-d"
+									}]
+						});
+
+		this.queryChooseSingleOrderPanel.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.chooseSingleOrderWindow.hide();
+					}
+
+				});
+
+		this.chooseSingleOrderWindow = this.chooseSingleOrderWindow
+				|| new Ext.Window({
+							title : '订单查询',
+							projectId : '',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 800,
+							height : 600,
+							layout : 'border',
+							items : [this.queryChooseSingleOrderPanel,
+									this.chooseSingleOrderListPanel]
+
+						});
 	}
 }

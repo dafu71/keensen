@@ -80,7 +80,7 @@ com.keensen.ump.produce.report.component.YearMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					//hidden : true,
 					handler : this.exportExcel
 				});
 

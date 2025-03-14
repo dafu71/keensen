@@ -308,7 +308,9 @@
     ON T1.BATCH_ID = T2.RECORD_ID
     where 1=1
     
-    <isNotNull prepend="" property="ifPerFlag">AND decode(t3.record_id,null,'n','y') = #ifPerFlag#</isNotNull>
+    
+    <isEqual compareValue="1" prepend="" property="notRecheck">AND t1.RECHECK_NAME = '初检'</isEqual>
+        <isNotNull prepend="" property="ifPerFlag">AND decode(t3.record_id,null,'n','y') = #ifPerFlag#</isNotNull>
         <isNotNull prepend="" property="recordIds">AND T1.record_id in ($recordIds$)</isNotNull>
         <isNotNull prepend="" property="recordId">AND T1.record_id = #recordId#</isNotNull>
         <isNotNull prepend="" property="batchId">AND T1.BATCH_ID = #batchId#</isNotNull>
@@ -468,7 +470,7 @@
        t2.judge_remark "judgeRemark",T2.trend "trend",T2.reduce "reduce",
        to_char(T2.reduce_dt,'yyyy-MM-dd') "reduceDt",T2.reduce_user_name "reduceUserName",
        t2.appearance_is_qualified "appearanceIsQualified",
-       DECODE(NVL(t2.appearance_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "appearanceIsQualifiedName",
+       DECODE(NVL(t2.appearance_is_qualified, 'Y'), 'Y', '合格', 'N', '不合格', '') "appearanceIsQualifiedName",
        t2.thick_is_qualified "thickIsQualified",
        DECODE(NVL(t2.thick_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "thickIsQualifiedName"
   FROM (SELECT T.RECORD_ID,T.PRODUCE_DT,T.PROD_FLAG_ID,T.order_no,T.out_length,
@@ -484,8 +486,8 @@
                T.OUT_LENGTH - NVL(T100.LOSS, 0) USEFUL_LENGTH,
                DECODE(NVL(T.IS_WX, 'N'),
                       'N',
-                      T.OUT_LENGTH - NVL(T2.LOSS, 0),
-                      T.OUT_LENGTH - NVL(T2.LOSS, 0) - NVL(T.TAG_LENGTH, 0)) QUALIFID_LENGTH,
+                      T.OUT_LENGTH - NVL(T22.LOSS, 0),
+                      T.OUT_LENGTH - NVL(T22.LOSS, 0) - NVL(T.TAG_LENGTH, 0)) QUALIFID_LENGTH,
                T.TAG_NUM,
                T.TAG_LENGTH,
                T.THICK_MAX,
@@ -507,8 +509,8 @@
             ON T100.TUMO_BATCH_ID = T.RECORD_ID
           LEFT JOIN (SELECT SUM(T.LOSS) LOSS, T.TUMO_BATCH_ID
                       FROM QINSEN.INST_CDM_DEFECT T
-                     GROUP BY T.TUMO_BATCH_ID) T2
-            ON T.RECORD_ID = T2.TUMO_BATCH_ID
+                     GROUP BY T.TUMO_BATCH_ID) T22
+            ON T.RECORD_ID = T22.TUMO_BATCH_ID
           LEFT JOIN QINSEN.BASE_PROD_LINE L
             ON L.LINE_ID = T.LINE_ID
           LEFT JOIN QINSEN.PARA_MATER_SPEC S
@@ -517,7 +519,7 @@
             ON S2.MATER_CLASS_ID = S.MATER_CLASS_ID
           ) T1
   LEFT JOIN KS_PROD_DIAPHRAGM_TUMO T2
-  
+  ON T1.RECORD_ID = T2.RECORD_ID
   left join (SELECT tumo_batch_id, SUM(label_num) tag_Num, SUM(label_num)*1.5 tag_Length,
        LISTAGG(remark, ';') WITHIN GROUP (ORDER BY record_id) AS remark 
 	FROM (SELECT t.record_id,t.label_num,t.tumo_batch_id,'位置' || t.position || ',不良长度' || t.loss || ',标签数' || t.label_num remark
@@ -526,7 +528,7 @@
 	GROUP BY tumo_batch_id) cd 
 	on cd.tumo_batch_id = T2.RECORD_ID
   
-    ON T1.RECORD_ID = T2.RECORD_ID
+    
   LEFT JOIN (SELECT T.PROP_VALUE_ID   PERF_FLAG_ID,
                     T.PROP_VALUE_CODE PERF_FLAG_CODE,
                     T.PROP_VALUE_NAME PERF_FLAG_NAME

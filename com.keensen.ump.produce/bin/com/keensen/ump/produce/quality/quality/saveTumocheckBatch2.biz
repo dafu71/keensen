@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="saveTumocheckBatch2" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node2" name="注释2" nodeType="note" type="note" title="dafu&#x9;25-3-5 上午11:08">
+    <targetConnections>link18</targetConnections>
+  </nodes>
   <nodes xsi:type="model:Note" id="node1" name="注释1" nodeType="note" type="note" title="dafu&#x9;23-12-20 上午9:31"/>
   <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="dafu&#x9;23-12-15 下午5:27"/>
   <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
@@ -95,7 +98,7 @@
   <nodes xsi:type="process:tLoopEnd" id="loopend0" name="循环结束" grouped="true" type="loopend" matchedName="loopstart0">
     <sourceConnections xsi:type="process:tLink" id="link8" name="link8" isDefault="true" type="transition">
       <sourceNode>loopend0</sourceNode>
-      <targetNode>invokePojo1</targetNode>
+      <targetNode>assign2</targetNode>
     </sourceConnections>
     <targetConnections>link10</targetConnections>
     <nodeLabel>loopend0label</nodeLabel>
@@ -203,7 +206,11 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>loopstart1</targetNode>
     </sourceConnections>
-    <targetConnections>link8</targetConnections>
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" type="note">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>node2</targetNode>
+    </sourceConnections>
+    <targetConnections>link19</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseExt.queryByNamedSql</process:partner>
@@ -306,6 +313,22 @@
   <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
     <figSize height="20" width="55"/>
     <node>switch1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign2" name="赋值2" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link8</targetConnections>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">map/notRecheck</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

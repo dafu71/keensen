@@ -15,9 +15,11 @@
     </sourceConnections>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
-  <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link5</targetConnections>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end" contextPath="" method="forward" uri="/produce/diaphragm/make/stock/queryStock4View.jsp">
+    <targetConnections>link4</targetConnections>
     <nodeLabel>end0label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>
@@ -91,7 +93,7 @@
   <nodes xsi:type="process:tSubprocess" id="subprocess1" name="queryStock4View1" collapsed="false" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link4" name="link4" isDefault="true" type="transition">
       <sourceNode>subprocess1</sourceNode>
-      <targetNode>view0</targetNode>
+      <targetNode>end0</targetNode>
     </sourceConnections>
     <targetConnections>link2</targetConnections>
     <nodeLabel>subprocess1label</nodeLabel>
@@ -108,18 +110,6 @@
   <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
     <figSize height="20" width="137"/>
     <node>subprocess1</node>
-  </nodes>
-  <nodes xsi:type="process:tView" id="view0" name="queryStock4View.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/diaphragm/make/stock/queryStock4View.jsp">
-    <sourceConnections xsi:type="process:tActionLink" id="link5" name="link5" lineType="reference" isDefault="true" type="action" actionName="action1">
-      <sourceNode>view0</sourceNode>
-      <targetNode>end0</targetNode>
-    </sourceConnections>
-    <targetConnections>link4</targetConnections>
-    <nodeLabel>view0label</nodeLabel>
-  </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
-    <figSize height="20" width="153"/>
-    <node>view0</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

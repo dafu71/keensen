@@ -184,7 +184,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 		this.listPanel = new Ext.fn.EditListPanel({
 			// title : '【膜片质检判定列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			tbar : [/*
@@ -528,7 +528,9 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 								// this.reset()
 							},
 							"select" : function(combo, record) {
-								var isBatchQualified = _this.editPanel.form
+								
+								return;
+								/*var isBatchQualified = _this.editPanel.form
 										.findField('isBatchQualified2')
 										.getValue();
 								var appearanceIsQualified = combo.getValue();
@@ -567,7 +569,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 												.findField('entity/perfFlagId')
 												.fireEvent('change');
 									}
-								}
+								}*/
 							}
 						},
 						emptyText : '--请选择--'

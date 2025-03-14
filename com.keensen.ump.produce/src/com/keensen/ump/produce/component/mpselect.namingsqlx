@@ -192,6 +192,7 @@
     </isNotNull>
 	</delete>
 	
+	<!--查询膜片挑选记录-->
 	<select id="query" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	   SELECT T1.MP_MATER_CODE             AS "mpMaterCode",
        T1.MP_SPEC_CODE              AS "mpSpecCode",
@@ -262,6 +263,43 @@
   
   where 1=1
   
+  <!--膜片筛选开始-->
+  <isNotNull prepend="" property="prodSpecIdFilter">
+           AND T1.MP_SPEC_CODE in (
+           select pms.mater_spec_name from KS_PROD_WATER_STD std
+           left join qinsen.para_mater_spec pms ON pms.mater_spec_id=std.mp_spec_id
+           where std.prod_spec_id = #prodSpecIdFilter#)          
+  </isNotNull>
+  
+  <isNotNull prepend="" property="storageNameFilter">
+           AND T1.STORAGE_NAME = #storageNameFilter#          
+  </isNotNull>
+  
+  <isNotNull prepend="" property="mpSpecIdFilter">
+           AND T1.mp_spec_ID = #mpSpecIdFilter#          
+  </isNotNull>
+  
+  <isNull prepend="" property="mpSaltLowLimitFilter2">
+  <isNotNull prepend="" property="mpSaltLowLimitFilter">
+           AND T1.MP_MIN_SALT_REJECTION >= #mpSaltLowLimitFilter#  
+           and T1.MP_SALT_LOW_LIMIT is not null        
+  </isNotNull>
+  </isNull>
+  <isNotNull prepend="" property="mpSaltLowLimitFilter2">
+           AND T1.MP_MIN_SALT_REJECTION >= #mpSaltLowLimitFilter2#  
+           and T1.MP_SALT_LOW_LIMIT is not null        
+  </isNotNull>
+  
+  <isNotNull prepend="" property="testYjSaltLowLimitDownFilter">
+  <isNotEqual prepend="" property="testYjSaltLowLimitDownFilter" compareValue="0">
+           AND T1.TEST_YJ_SALT + #testYjSaltLowLimitDownFilter# >= T1.TEST_YJ_SALT_LOW_LIMIT  
+           and T1.TEST_YJ_SALT_LOW_LIMIT is not null
+           and T1.TEST_YJ_SALT is not null 
+  </isNotEqual>       
+  </isNotNull>
+  
+  <!--膜片筛选结束-->
+  
   		<isEqual prepend="and" property="isStorage" compareValue="Y">
  			   T1.MP_BATCH_NO in (select batch_no from  KS_PROD_COMPONENT_STOCK) 
         </isEqual>
@@ -322,6 +360,53 @@
        
   FROM V_KS_COMPONENT_MP_SELECT T1
   where 1=1
+  
+  
+   <!--膜片筛选开始-->
+   
+   <isEqual prepend="and" property="isStorage" compareValue="Y">
+ 			   exists (select 1 from  KS_PROD_COMPONENT_STOCK
+ 			   where  batch_no = T1.MP_BATCH_NO
+ 			   ) 
+   </isEqual>
+        
+  <isNotNull prepend="" property="prodSpecIdFilter">
+           AND T1.MP_SPEC_CODE in (
+           select pms.mater_spec_name from KS_PROD_WATER_STD std
+           left join qinsen.para_mater_spec pms ON pms.mater_spec_id=std.mp_spec_id
+           where std.prod_spec_id = #prodSpecIdFilter#)          
+  </isNotNull>
+  
+  <isNotNull prepend="" property="storageNameFilter">
+           AND T1.STORAGE_NAME = #storageNameFilter#          
+  </isNotNull>
+  
+  <isNotNull prepend="" property="mpSpecIdFilter">
+           AND T1.mp_spec_ID = #mpSpecIdFilter#          
+  </isNotNull>
+  
+  <isNull prepend="" property="mpSaltLowLimitFilter2">
+  <isNotNull prepend="" property="mpSaltLowLimitFilter">
+           AND T1.MP_MIN_SALT_REJECTION >= #mpSaltLowLimitFilter#  
+           and T1.MP_SALT_LOW_LIMIT is not null        
+  </isNotNull>
+  </isNull>
+  <isNotNull prepend="" property="mpSaltLowLimitFilter2">
+           AND T1.MP_MIN_SALT_REJECTION >= #mpSaltLowLimitFilter2#  
+           and T1.MP_SALT_LOW_LIMIT is not null        
+  </isNotNull>
+  
+  <isNotNull prepend="" property="testYjSaltLowLimitDownFilter">
+  <isNotEqual prepend="" property="testYjSaltLowLimitDownFilter" compareValue="0">
+           AND T1.TEST_YJ_SALT + #testYjSaltLowLimitDownFilter# >= T1.TEST_YJ_SALT_LOW_LIMIT  
+           and T1.TEST_YJ_SALT_LOW_LIMIT is not null
+           and T1.TEST_YJ_SALT is not null 
+  </isNotEqual>       
+  </isNotNull>
+  
+  <!--膜片筛选结束-->
+  
+  
  		 <isNotNull prepend="" property="tumoBatchNo3">
            AND T1.MP_BATCH_NO like '%' || #tumoBatchNo3# || '%'
           </isNotNull>

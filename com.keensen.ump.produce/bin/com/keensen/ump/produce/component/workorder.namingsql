@@ -73,7 +73,7 @@
   <!--nvl(t3.ARRANGE_DATE,t1.plan_date) "arrangeDate"-->
   t3.ARRANGE_DATE "arrangeDate"
   <!--,t1.order_id || '-' || t2.mater_spec_id || to_char(t1.plan_date,'yyyyMMdd') "idx",-->
-  ,rownum "idx",
+  ,'idx' || rownum || 'idx' "idx",
   nvl(t3.cdm_state,0) "cdmState",
   decode(nvl(t3.cdm_state,0),0,'处理中',1,'完成',2,'异常','') "cdmStateName",
   nvl(v.reality_Amount,0) "realityAmount"
@@ -210,9 +210,20 @@
   GROUP BY t.plan_date,t.order_id) t3 
   on t1.order_id = t3.order_id and t1.plan_date = t3.plan_date
   left join V_KS_JM_REALITY_AMOUNT v 
-  on v.order_id=t1.order_id 
+  on v.order_id=t1.order_id   
   AND to_char(v.plan_date,'yyyy-MM-dd') = to_char(t1.plan_date ,'yyyy-MM-dd')
   AND v.prod_spec_id=t2.mater_spec_id
+  
+   left join (SELECT t.produce_dt,t.prod_spec_id,t.order_no,t.reality_Amount,od.id order_id from 
+(SELECT COUNT(1) reality_Amount,to_char(jm.produce_dt,'YYYY-MM-DD') produce_dt,jm.prod_spec_id,jm.order_no
+FROM qinsen.inst_juanmo_main jm
+GROUP BY to_char(jm.produce_dt,'YYYY-MM-DD'),jm.prod_spec_id,jm.order_no) t
+LEFT JOIN ks_prod_component_yxorder od
+ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
+
+  on v2.order_id=t1.order_id
+  AND v2.produce_dt = to_char(t3.ARRANGE_DATE ,'yyyy-MM-dd')
+  AND v2.prod_spec_id=t2.mater_spec_id
   
   where 1=1
 	
@@ -371,7 +382,9 @@
        case when t3.jm_amount = nvl(t5.qj_amount,0) then '完成' else '处理中' end "qjStateName"
         ,yb.tape "tape",yb.lid "lid",yb.sn_Regular "snRegular",yb.make_Label "makeLabel",
        yb.label_Double "labelDouble",yb.label_Drawing_Code "labelDrawingCode",
-       sn.prefix "prefix", sn.sn_start "snStart",sn.sn_end "snEnd"
+       sn.prefix "prefix", sn.sn_start "snStart",sn.sn_end "snEnd",
+       lb.url "labelUrl",
+       pms.juanmo "juanmo",pms.cut "cut",pms.raosi "raosi"
   FROM KS_COMPONENT_DUTY_QJ T1
   LEFT JOIN KS_PROD_COMPONENT_YXORDER T2
     ON T1.ORDER_ID = T2.ID
@@ -382,6 +395,8 @@
     on sn.order_id = T2.ID
   LEFT JOIN ks_component_yxorder_base yb
     ON yb.id = t2.base_id
+  left join KS_BASE_LABEL_DRAWING lb
+    on lb.drawing_code = yb.label_drawing_code
   left join (select COUNT(DISTINCT t.jm_batch_id) jm_amount,t.order_id from V_KS_TM_CDM_JM_QJ t
     where exists(select 1 from KS_COMPONENT_DUTY_QJ_list WHERE batch_no = t.jm_batch_no)
   GROUP BY t.order_id) t3 ON T3.ORDER_ID = T2.ID
@@ -393,6 +408,10 @@
     WHERE t.qj_state = 1
     and exists(select 1 from KS_COMPONENT_DUTY_QJ_list WHERE batch_no = t.jm_batch_no)
   GROUP BY t.order_id) t5 ON T5.ORDER_ID = T2.ID
+  
+  LEFT JOIN qinsen.para_mater_spec pms
+  ON T2.MATER_SPEC_ID=pms.mater_spec_id
+  
     where 1=1
       <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
         <isNotNull prepend="and" property="orderId">t2.id = #orderId#</isNotNull>
@@ -577,13 +596,17 @@
      
        case when t3.jm_amount = nvl(t5.pack_amount,0) then '完成' else '处理中' end "packStateName"
         ,yb.tape "tape",yb.lid "lid",yb.sn_Regular "snRegular",yb.make_Label "makeLabel",
-       yb.label_Double "labelDouble",yb.label_Drawing_Code "labelDrawingCode"
+       yb.label_Double "labelDouble",yb.label_Drawing_Code "labelDrawingCode",lb.url "labelUrl"
   FROM KS_COMPONENT_DUTY_PACK T1
   LEFT JOIN KS_PROD_COMPONENT_YXORDER T2
     ON T1.ORDER_ID = T2.ID
   
   LEFT JOIN ks_component_yxorder_base yb
     ON yb.id = t2.base_id
+    
+  left join KS_BASE_LABEL_DRAWING lb
+    on lb.drawing_code = yb.label_drawing_code
+    
   left join (select COUNT(DISTINCT t.jm_batch_no) jm_amount,t.order_id from V_KS_RAOSI t
     where exists(select 1 from KS_COMPONENT_DUTY_PACK_list WHERE batch_no = t.jm_batch_no)
   GROUP BY t.order_id) t3 ON T3.ORDER_ID = T2.ID

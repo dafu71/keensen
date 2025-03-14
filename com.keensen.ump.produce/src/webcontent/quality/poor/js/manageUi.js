@@ -168,7 +168,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,
+					hidden:uid != 'XXB' && uid != 'KS00307' ,
 					handler : this.exportExcel
 				});
 

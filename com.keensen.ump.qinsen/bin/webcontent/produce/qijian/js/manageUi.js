@@ -1,5 +1,8 @@
 com.keensen.ump.qinsen.produce.qijianMgr = function() {
 	this.initPanel = function() {
+
+		this.queryFlag = false;
+
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initDetailPanel();
@@ -74,8 +77,13 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							}]
 				})
 
+		this.prodTypeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['8寸', '8寸'], ['4寸', '4寸'], ['家用', '家用']]
+				});
+
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 165,
+					height : 195,
 					columns : 16,
 					border : true,
 					collapsible : false,
@@ -257,6 +265,30 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 								this.queryPanel.dryWet.reset();
 							}
 						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 16
+					}, {
+						xtype : 'combobox',
+						forceSelection : true,
+						// allowBlank : false,
+						mode : 'local',
+						fieldLabel : '元件类型',
+						ref : '../prodType',
+						hiddenName : 'condition/prodType',
+						anchor : '75%',
+						colspan : 4,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.prodTypeStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
 					}/*
 						 * , {
 						 * 
@@ -337,6 +369,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						hidden : monitorFlag != 1,
 						handler : this.onMonitorRemark2
 					}, '->', {
+						xtype : 'displayfield',
+						value : '',
+						id : 'qijianamountinfo'
+					}, {
 						text : '换标',
 						scope : this,
 						iconCls : 'icon-application_edit',
@@ -2047,20 +2083,20 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 				})
 
 		this.viewDutyPanel = this.viewDutyPanel || new Ext.fn.EditPanel({
-			height : 360,
+			height : 430,
 			region : 'north',
 			baseCls : "x-panel",
 			autoHide : false,
 			autoScroll : false,
 			border : true,
-			columns : 3,
+			columns : 6,
 			loadUrl : 'com.keensen.ump.produce.component.workorder2.getQjDuty.biz.ext',
 			saveUrl : '1.biz.ext',
 			fields : [{
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">作业信息</p>',
 						labelSeparator : '',// 去掉冒号
-						colspan : 3
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '作业日期',
@@ -2068,7 +2104,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'arrangeDate',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '订单号',
@@ -2076,7 +2112,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'orderNo',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '订单类型',
@@ -2084,12 +2120,12 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'orderType',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : 5,
 						labelSeparator : '',// 去掉冒号
-						colspan : 3
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '订单下达型号',
@@ -2097,7 +2133,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'materSpecName2',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '订单数量',
@@ -2105,7 +2141,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'orderAmount',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '生产规格型号',
@@ -2113,12 +2149,12 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'materSpecName',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : 5,
 						labelSeparator : '',// 去掉冒号
-						colspan : 3
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '待气检数量',
@@ -2126,7 +2162,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'waitAmount',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '已气检数量',
@@ -2134,12 +2170,12 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'qjAmount',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						ref : '../displayfield1',
 						height : 5,
-						colspan : 3
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						ref : '../prodRemark',
@@ -2147,12 +2183,12 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						anchor : '95%',
 						fieldLabel : '订单生产备注',
-						colspan : 3
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">贴标信息</p>',
 						labelSeparator : '',// 去掉冒号
-						colspan : 3
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '卷膜胶带',
@@ -2160,7 +2196,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'tape',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '端盖',
@@ -2168,7 +2204,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'lid',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '序列号是否固定',
@@ -2176,12 +2212,12 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'snRegular',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : 5,
 						labelSeparator : '',// 去掉冒号
-						colspan : 3
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '标签制作方式',
@@ -2189,7 +2225,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'makeLabel',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '双标签',
@@ -2197,20 +2233,21 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						readOnly : true,
 						dataIndex : 'labelDouble',
 						anchor : '85%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
-						fieldLabel : '标签图纸编号',
-						ref : '../labelDrawingCode',
-						readOnly : true,
-						dataIndex : 'labelDrawingCode',
-						anchor : '85%',
-						colspan : 1
+						fieldLabel : '标签图纸',
+						ref : '../picturePanel',
+						// readOnly : true,
+						// dataIndex : 'labelDrawingCode',
+						height : '60',
+						anchor : '100%',
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">元件序号</p>',
 						labelSeparator : '',// 去掉冒号
-						colspan : 3
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '前缀',
@@ -2238,11 +2275,6 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						// dataIndex : 'snEnd',
 						anchor : '85%',
 						colspan : 1
-					}, {
-						xtype : 'displayfield',
-						height : 5,
-						labelSeparator : '',// 去掉冒号
-						colspan : 3
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '前缀',
@@ -2274,7 +2306,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						xtype : 'displayfield',
 						height : 5,
 						labelSeparator : '',// 去掉冒号
-						colspan : 3
+						colspan : 6
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '前缀',
@@ -2302,6 +2334,40 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						// dataIndex : 'snEnd3',
 						anchor : '85%',
 						colspan : 1
+					},{
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;font-size:16px;">工艺要求</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 6
+					}, {
+						xtype : 'textfield',
+						fieldLabel : '卷膜工艺',
+						ref : '../juanmo',
+						dataIndex : 'juanmo',
+						readOnly : true,
+						anchor : '85%',
+						colspan : 2
+					}, {
+						xtype : 'textfield',
+						fieldLabel : '切边尺寸',
+						ref : '../cut',
+						dataIndex : 'cut',
+						readOnly : true,
+						anchor : '85%',
+						colspan : 2
+					}, {
+						xtype : 'textfield',
+						fieldLabel : '绕丝要求',
+						ref : '../raosi',
+						dataIndex : 'raosi',
+						readOnly : true,
+						anchor : '85%',
+						colspan : 2
+					}, {
+						xtype : 'hidden',
+						name : 'labelUrl',
+						dataIndex : 'labelUrl'
+
 					}],
 			buttons : [{
 						text : "刷新任务",

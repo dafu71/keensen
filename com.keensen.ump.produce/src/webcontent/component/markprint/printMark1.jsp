@@ -18,6 +18,8 @@
 	String prodBatchNo = request.getParameter("prodBatchNo").toString();
 	String dryWet = request.getParameter("dryWet").toString();
 	String url = request.getParameter("url").toString();
+	String isStar = null == request.getParameter("isStar") ? ""
+			: request.getParameter("isStar").toString();
 	String prodSpecName = request.getParameter("prodSpecName")
 			.toString();
 	String prodSpecName2 = request.getParameter("prodSpecName2")
@@ -97,7 +99,12 @@
         } 
     }     
 
-
+.star {
+	align: center;
+	text-align: center;
+	vertical-align: middle;
+	width: 13mm;
+}
 
 </style>
 
@@ -338,8 +345,15 @@ function getDayCode() {
 		<td colspan=5 align="center" valign="bottom"><svg
 			id="barcode_<%=prodBatchNo %>" style="width:50mm"></svg></td>
 
-		<td colspan=2 align="center" valign="bottom"><span
-			class="span_day;"> <script type="text/javascript">
+		<td colspan=2 align="center" valign="bottom">
+		
+	<% if("Y".equals(isStar)){ %>
+		<img
+			src="<%=rootUrl %>/qinsen/produce/pack/print/image/mark_star.png"
+			class="star"> 
+	<% } %>		
+			<span class="span_day;"> <script
+			type="text/javascript">
     var dayCode = getDayCode();// 获取入库日期编码
     document.write(dayCode);
     

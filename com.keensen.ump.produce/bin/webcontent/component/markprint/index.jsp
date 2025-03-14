@@ -31,6 +31,7 @@
 <js:load scriptPath="produce/component/markprint/js/manageEv.js"/>
 <script type="text/javascript">
   var markRootUrl = "<%=rootUrl %>";
+  var labelRootUrl = "<%=rootUrl %>";
   var uid = "<%=uid %>";
   var listid = Ext.id();
   

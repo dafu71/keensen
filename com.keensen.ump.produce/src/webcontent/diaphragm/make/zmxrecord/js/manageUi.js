@@ -9,6 +9,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 		this.defectZmWin = new com.keensen.ump.defectWindow({
 					dutyTacheCode : 'ZM',
 					recTacheCode : 'ZM',
+					batchNoControl : true,
 					relationListId : 'diaphragm_zmx_list'
 				});
 
@@ -220,6 +221,9 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						dataIndex : 'dimoAmount',
 						header : '底膜实际长度'
 					}, {
+						dataIndex : 'dimoAmountQualified',
+						header : '底膜合格长度'
+					}, {
 						header : '不良米数',
 						width : 80,
 						dataIndex : 'loss',
@@ -360,6 +364,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'productType'
 						}, {
 							name : 'loss'
+						}, {
+							name : 'dimoAmountQualified'
 						}]
 			})
 		})
@@ -928,6 +934,10 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							xtype : 'hidden',
 							name : 'entity/dimoBatchNo2',
 							dataIndex : 'dimoBatchNo2'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/psf',
+							dataIndex : 'psf'
 						}]
 			}]
 		});

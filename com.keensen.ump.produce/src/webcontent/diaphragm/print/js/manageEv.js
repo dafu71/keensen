@@ -41,6 +41,14 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.initEvent = funct
 					}
 				});
 	}, this);
+	
+	// 查询列表选择
+	this.listPanel.selModel.on('rowselect', function(o, i, r) {
+
+				var printName = r.get('printName');
+				_this.bar.getComponent('param0').setValue(printName);
+
+			}, this);
 
 }
 

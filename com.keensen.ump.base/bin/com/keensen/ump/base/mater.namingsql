@@ -68,7 +68,21 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
        T1.CREATE_DATE           AS "createDate",
        T1.CHANGE_DATE           AS "changeDate",
        T1.CREATOR               AS "creator",
-       T1.CHANGER               AS "changer"
+       T1.CHANGER               AS "changer",
+       t1.mp_Size as "mpSize",
+		t1.mp_Width as "mpWidth",
+		t1.dense_Net_Type as "denseNetType",
+		t1.dense_Net_Width as "denseNetWidth",
+		t1.dense_Net_Cdm as "denseNetCdm",
+		t1.light_Net_Type as "lightNetType",
+		t1.light_Net_Long_Page as "lightNetLongPage",
+		t1.light_Net_Short_Page as "lightNetShortPage",
+		t1.juanmo as "juanmo",
+		t1.cut as "cut",
+		t1.raosi as "raosi",
+		t1.package as "package",
+		t1.pipe as "pipe"
+       
   FROM (SELECT S.MATER_SPEC_ID,
                S.MATER_SPEC_CODE,
                S.MATER_SPEC_NAME,
@@ -96,6 +110,21 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
                S.DENSE_NET,
                S.AREA,
                S.PAGE_WIDTH,
+               
+               s.mp_Size ,
+				s.mp_Width ,
+				s.dense_Net_Type ,
+				s.dense_Net_Width ,
+				s.dense_Net_Cdm ,
+				s.light_Net_Type ,
+				s.light_Net_Long_Page ,
+				s.light_Net_Short_Page ,
+				s.juanmo ,
+				s.cut ,
+				s.raosi ,
+				s.package ,
+				s.pipe,
+
                C.MATER_CLASS_CODE,
                C.MATER_CLASS_NAME,
                DECODE(S.STATE, 'Y', '在用', 'N', '停用', '') STATE_NAME,
@@ -143,18 +172,38 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 	   MATER_CLASS_ID, MEASUREMENT_UNIT, PLANNED_UNIT_PRICE,
 	   STATE, DISP_ORDER, REMARK, THICKNESS, WIDTH, LENGTH, SUPPLIER_ID,
 	   MP_BATCH_CODE, QT_JUDGE_FLAG, NUM_PER_WAD, BLANKING_SIZE, DENSE_NET, AREA, PAGE_WIDTH,
-	   CREATE_DT, CHANGE_DT, CREATOR_ID, CHANGER_ID)
+	   CREATE_DT, CHANGE_DT, CREATOR_ID, CHANGER_ID,
+	   mp_Size,mp_Width,dense_Net_Type,dense_Net_Width,
+	   dense_Net_Cdm,light_Net_Type,light_Net_Long_Page,
+	   light_Net_Short_Page,juanmo,cut,raosi,package,pipe)
 	VALUES
 	  (#materSpecId#, UPPER(#materSpecCode#), #materSpecName#, 
 	   #materClassId#, #measurementUnit#, #plannedUnitPrice#, 
 	   'Y', #dispOrder#, #remark#, #thickness#, #width#, #length#, #supplierId#,
 	   #mpBatchCode#, #qtJudgeFlag#, #numPerWad#, #blankingSize#, #denseNet#, #area#, #pageWidth#,
-	   sysdate, sysdate, #operatorId#, #operatorId#)</insert>
+	   sysdate, sysdate, #operatorId#, #operatorId#,
+	   #mpSize#,#mpWidth#,#denseNetType#,#denseNetWidth#,
+	   #denseNetCdm#,#lightNetType#,#lightNetLongPage#,
+	   #lightNetShortPage#,#juanmo#,#cut#,#raosi#,#package#,#pipe#)</insert>
     <!-- 修改物料规格 -->
     <update id="updateMaterSpecById" parameterClass="java.util.HashMap">
 	UPDATE qinsen.PARA_MATER_SPEC A
 	   SET A.CHANGE_DT = SYSDATE, 
-	 <isNotNull prepend="" property="materSpecCode">A.MATER_SPEC_CODE = UPPER(#materSpecCode#),</isNotNull>
+	   
+	   <isNotNull prepend="" property="mpSize">A.mp_Size= #mpSize#,</isNotNull>
+        <isNotNull prepend="" property="mpWidth">A.mp_Width= #mpWidth#,</isNotNull>
+        <isNotNull prepend="" property="denseNetType">A.dense_Net_Type= #denseNetType#,</isNotNull>
+        <isNotNull prepend="" property="denseNetWidth">A.dense_Net_Width= #denseNetWidth#,</isNotNull>
+        <isNotNull prepend="" property="denseNetCdm">A.dense_Net_Cdm= #denseNetCdm#,</isNotNull>
+        <isNotNull prepend="" property="lightNetType">A.light_Net_Type= #lightNetType#,</isNotNull>
+        <isNotNull prepend="" property="lightNetLongPage">A.light_Net_Long_Page= #lightNetLongPage#,</isNotNull>
+        <isNotNull prepend="" property="lightNetShortPage">A.light_Net_Short_Page= #lightNetShortPage#,</isNotNull>
+        <isNotNull prepend="" property="juanmo">A.juanmo= #juanmo#,</isNotNull>
+        <isNotNull prepend="" property="cut">A.cut= #cut#,</isNotNull>
+        <isNotNull prepend="" property="raosi">A.raosi= #raosi#,</isNotNull>
+        <isNotNull prepend="" property="package">A.package= #package#,</isNotNull>
+        <isNotNull prepend="" property="pipe">A.pipe= #pipe#,</isNotNull>
+        <isNotNull prepend="" property="materSpecCode">A.MATER_SPEC_CODE = UPPER(#materSpecCode#),</isNotNull>
         <isNotNull prepend="" property="materSpecName">A.MATER_SPEC_NAME = #materSpecName#,</isNotNull>
         <isNotNull prepend="" property="supplierId">A.SUPPLIER_ID = #supplierId#,</isNotNull>
         <isNotNull prepend="" property="measurementUnit">A.MEASUREMENT_UNIT = #measurementUnit#,</isNotNull>

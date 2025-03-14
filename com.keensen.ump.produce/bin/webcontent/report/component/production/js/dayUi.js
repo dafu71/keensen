@@ -19,14 +19,27 @@ com.keensen.ump.produce.report.component.DayMgr = function() {
 					// collapsible : true,
 					titleCollapse : false,
 					fields : [{
-						xtype : "dateregion",
-						anchor : '100%',
-						allowBlank : false,
+						xtype : 'datetimefield',
+						name : 'condition/productDtStart',
+						fieldLabel : '生产时间',
 						colspan : 1,
-						nameArray : ['condition/productDtStart',
-								'condition/productDtEnd'],
-						fieldLabel : "生产日期",
-						format : "Y-m-d"
+						anchor : '100%',
+						// allowBlank : false,
+						editable : true,
+						format : 'Y-m-d H:i',
+						value : new Date().add(Date.DAY, -3)
+								.format('Y-m-d 00:00')
+					}, {
+						xtype : 'datetimefield',
+						name : 'condition/productDtEnd',
+						fieldLabel : '至',
+						colspan : 1,
+						anchor : '100%',
+						editable : true,
+						format : 'Y-m-d H:i',
+						// allowBlank : false,
+						value : new Date().add(Date.DAY, 1)
+								.format('Y-m-d 00:00')
 					}, {
 						xtype : 'hidden',
 						name : 'condition/type',
@@ -37,7 +50,7 @@ com.keensen.ump.produce.report.component.DayMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					//hidden : true,
 					handler : this.exportExcel
 				});
 

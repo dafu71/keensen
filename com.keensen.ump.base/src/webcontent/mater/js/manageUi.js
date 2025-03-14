@@ -38,8 +38,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 	this.createMainPanel = function() {
 
 		var _this = this;
-		
-		
+
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 60,
 					columns : 4,
@@ -47,28 +46,27 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 					border : true,
 					fields : [{
 								xtype : 'textfield',
-								ref:'../materClassId',
+								ref : '../materClassId',
 								name : 'condition/materClassId'
 							}]
 				});
-		
-		this.queryWindow = this.queryWindow
-				|| new Ext.Window({
-							title : '查询',
-							resizable : true,
-							minimizable : false,
-							maximizable : true,
-							closeAction : "hide",
-							buttonAlign : "center",
-							autoScroll : false,
-							modal : true,
-							width : 300,
-							height : 240,
-							layout : 'border',
-							items : [this.queryPanel]
 
-						});
-		
+		this.queryWindow = this.queryWindow || new Ext.Window({
+					title : '查询',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 300,
+					height : 240,
+					layout : 'border',
+					items : [this.queryPanel]
+
+				});
+
 		var selModel = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : true,
 					header : ''
@@ -92,8 +90,34 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						text : '导出',
 						scope : this,
 						iconCls : 'icon-application_excel',
-						hidden:true,
+						hidden : uid != 'KS00307',
 						handler : this.onExport
+					}, '->', {
+						xtype : 'displayfield',
+						value : '物料名称:'
+					}, {
+						xtype : 'textfield',
+						width : 100,
+						id : materqueryspec
+					}, {
+						xtype : 'displayfield',
+						value : '状态:'
+					}, {
+						xtype : 'dictcombobox',
+						width : 100,
+						id : materquerystate,
+						dictData : PARA_MATER_SPEC_STATE,
+						value : 'Y'
+					}, '-', {
+						text : '查询',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onQuery
+					}, '-', {
+						text : '重置',
+						scope : this,
+						iconCls : 'icon-application_reset',
+						handler : this.onQueryReset
 					}],
 			selModel : selModel,
 			delUrl : '123.biz.ext',
@@ -191,6 +215,45 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						dataIndex : 'plannedUnitPrice',
 						sortable : true
 					}, {
+						dataIndex : 'pipe',
+						header : '中心管'
+					}, {
+						dataIndex : 'mpSize',
+						header : '膜片下料裁切尺寸'
+					}, {
+						dataIndex : 'mpWidth',
+						header : '膜片下料裁切页宽'
+					}, {
+						dataIndex : 'denseNetType',
+						header : '浓网下料型号'
+					}, {
+						dataIndex : 'denseNetWidth',
+						header : '浓网下料裁切尺寸'
+					}, {
+						dataIndex : 'denseNetCdm',
+						header : '浓网下料叠膜要求'
+					}, {
+						dataIndex : 'lightNetType',
+						header : '淡网下料型号'
+					}, {
+						dataIndex : 'lightNetLongPage',
+						header : '淡网下料长页'
+					}, {
+						dataIndex : 'lightNetShortPage',
+						header : '淡网下料短页'
+					}, {
+						dataIndex : 'juanmo',
+						header : '卷膜工艺'
+					}, {
+						dataIndex : 'cut',
+						header : '切边尺寸'
+					}, {
+						dataIndex : 'raosi',
+						header : '绕丝工艺'
+					}, {
+						dataIndex : 'package',
+						header : '包装工艺'
+					}, {
 						header : '显示排序',
 						width : 80,
 						dataIndex : 'dispOrder',
@@ -281,6 +344,32 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									name : 'creator'
 								}, {
 									name : 'changer'
+								}, {
+									name : 'mpSize'
+								}, {
+									name : 'mpWidth'
+								}, {
+									name : 'denseNetType'
+								}, {
+									name : 'denseNetWidth'
+								}, {
+									name : 'denseNetCdm'
+								}, {
+									name : 'lightNetType'
+								}, {
+									name : 'lightNetLongPage'
+								}, {
+									name : 'lightNetShortPage'
+								}, {
+									name : 'juanmo'
+								}, {
+									name : 'cut'
+								}, {
+									name : 'raosi'
+								}, {
+									name : 'package'
+								}, {
+									name : 'pipe'
 								}]
 					})
 		})
@@ -765,7 +854,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						xtype : 'inputpanel',
 						pgrid : this.listPanel,
 						autoHide : true,
-						columns : 2,
+						columns : 6,
 						saveUrl : 'com.keensen.ump.base.mater.saveMaterSpec.biz.ext',
 						fields : [{
 									xtype : 'textfield',
@@ -773,19 +862,36 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									ref : '../../materSpecCode',
 									fieldLabel : '编码',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									allowBlank : false
 								}, {
 									xtype : 'textfield',
 									name : 'entity/materSpecName',
 									fieldLabel : '名称',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									allowBlank : false
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
+								}, {
+									name : 'entity/pipe',
+									anchor : '95%',
+									colspan : 2,
+									xtype : 'textfield',
+									fieldLabel : '中心管',
+									minValue : 0,
+									allowBlank : true
+								}, {
+									name : 'entity/numPerWad',
+									anchor : '95%',
+									colspan : 2,
+									xtype : 'numberfield',
+									fieldLabel : '页数',
+									minValue : 0,
+									decimalPrecision : 1,
+									allowBlank : false
 								}, {
 									xtype : 'dictcombobox',
 									name : 'entity/state',
@@ -794,26 +900,17 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									dictData : PARA_MATER_SPEC_STATE,
 									readOnly : true,
 									anchor : '95%',
-									colspan : 1,
+									colspan : 2,
 									value : 'Y',
-									allowBlank : false
-								}, {
-									name : 'entity/numPerWad',
-									anchor : '95%',
-									colspan : 1,
-									xtype : 'numberfield',
-									fieldLabel : '膜页数',
-									minValue : 0,
-									decimalPrecision : 1,
 									allowBlank : false
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									name : 'entity/blankingSize',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									xtype : 'numberfield',
 									fieldLabel : '下料尺寸(m)',
 									decimalPrecision : 3,
@@ -822,7 +919,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 								}, {
 									name : 'entity/denseNet',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									xtype : 'numberfield',
 									fieldLabel : '浓网',
 									minValue : 0,
@@ -831,11 +928,11 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									name : 'entity/area',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									xtype : 'numberfield',
 									fieldLabel : '膜面积',
 									minValue : 0,
@@ -844,7 +941,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 								}, {
 									name : 'entity/pageWidth',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									xtype : 'numberfield',
 									fieldLabel : '页宽(m)',
 									minValue : 0,
@@ -853,17 +950,16 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									xtype : 'measurementunitcombo',
 									hiddenName : 'entity/measurementUnit',
 									dataIndex : 'measurementUnit',
 									anchor : '95%',
-									colspan : 8,
+									colspan : 3,
 									ref : '../../measurementUnit',
 									allowBlank : true,
 									anchor : '95%',
-									colspan : 1,
 									fieldLabel : '计量单位'
 								}, {
 									xtype : 'numberfield',
@@ -871,31 +967,143 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									dataIndex : 'plannedUnitPrice',
 									fieldLabel : '计划单价(元)',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									allowBlank : true
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/dispOrder',
 									dataIndex : 'dispOrder',
 									fieldLabel : '显示排序',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									allowBlank : true
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									xtype : 'textarea',
 									name : 'entity/remark',
 									dataIndex : 'remark',
 									fieldLabel : '说明',
 									anchor : '95%',
-									colspan : 2
+									colspan : 6
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 6
+								}, {
+									xtype : 'textfield',
+									name : 'entity/mpSize',
+									dataIndex : 'mpSize',
+									fieldLabel : '膜片下料<br>裁切尺寸(m)',
+									anchor : '95%',
+									colspan : 3,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/mpWidth',
+									dataIndex : 'mpWidth',
+									fieldLabel : '膜片下料<br>页宽(m)',
+									anchor : '95%',
+									colspan : 3,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/denseNetType',
+									dataIndex : 'denseNetType',
+									fieldLabel : '浓网下料<br>型号',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/denseNetWidth',
+									dataIndex : 'denseNetWidth',
+									fieldLabel : '浓网下料<br>裁切尺寸(mm)',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/denseNetCdm',
+									dataIndex : 'denseNetCdm',
+									fieldLabel : '浓网下料<br>叠膜要求',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/lightNetType',
+									dataIndex : 'lightNetType',
+									fieldLabel : '淡网下料<br>型号',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/lightNetLongPage',
+									dataIndex : 'lightNetLongPage',
+									fieldLabel : '淡网下料<br>长页(mm)',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/lightNetShortPage',
+									dataIndex : 'lightNetShortPage',
+									fieldLabel : '淡网下料<br>短页(mm)',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/juanmo',
+									dataIndex : 'juanmo',
+									fieldLabel : '卷膜工艺',
+									anchor : '95%',
+									colspan : 6,
+									allowBlank : true
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 6
+								}, {
+									xtype : 'textfield',
+									name : 'entity/cut',
+									dataIndex : 'cut',
+									fieldLabel : '切边尺寸',
+									anchor : '95%',
+									colspan : 6,
+									allowBlank : true
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 6
+								}, {
+									xtype : 'textfield',
+									name : 'entity/raosi',
+									dataIndex : 'raosi',
+									fieldLabel : '绕丝工艺',
+									anchor : '95%',
+									colspan : 6,
+									allowBlank : true
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 6
+								}, {
+									xtype : 'textfield',
+									name : 'entity/package',
+									dataIndex : 'package',
+									fieldLabel : '包装工艺',
+									anchor : '95%',
+									colspan : 6,
+									allowBlank : true
 								}, {
 									xtype : 'hidden',
 									name : 'entity/materClassId',
@@ -920,7 +1128,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						xtype : 'editpanel',
 						pgrid : this.listPanel,
 						autoHide : true,
-						columns : 2,
+						columns : 6,
 						loadUrl : 'com.keensen.ump.base.mater.expandMaterSpec.biz.ext',
 						saveUrl : 'com.keensen.ump.base.mater.saveMaterSpec.biz.ext',
 						fields : [{
@@ -930,7 +1138,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									dataIndex : 'materSpecCode',
 									fieldLabel : '编码',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									allowBlank : false
 								}, {
 									xtype : 'textfield',
@@ -938,12 +1146,31 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									dataIndex : 'materSpecName',
 									fieldLabel : '名称',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									allowBlank : false
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
+								}, {
+									name : 'entity/pipe',
+									dataIndex : 'pipe',
+									anchor : '95%',
+									colspan : 2,
+									xtype : 'textfield',
+									fieldLabel : '中心管',
+									minValue : 0,
+									allowBlank : true
+								}, {
+									name : 'entity/numPerWad',
+									dataIndex : 'numPerWad',
+									anchor : '95%',
+									colspan : 2,
+									xtype : 'numberfield',
+									fieldLabel : '页数',
+									minValue : 0,
+									decimalPrecision : 1,
+									allowBlank : false
 								}, {
 									xtype : 'dictcombobox',
 									name : 'entity/state',
@@ -952,29 +1179,19 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									dictData : PARA_MATER_SPEC_STATE,
 									dataIndex : 'state',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 2,
 									value : 'Y',
-									
-									allowBlank : false
-								}, {
-									name : 'entity/numPerWad',
-									dataIndex : 'numPerWad',
-									anchor : '95%',
-									colspan : 1,
-									xtype : 'numberfield',
-									fieldLabel : '膜页数',
-									minValue : 0,
-									decimalPrecision : 1,
+
 									allowBlank : false
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									name : 'entity/blankingSize',
 									dataIndex : 'blankingSize',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									xtype : 'numberfield',
 									fieldLabel : '下料尺寸(m)',
 									decimalPrecision : 3,
@@ -984,7 +1201,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									name : 'entity/denseNet',
 									dataIndex : 'denseNet',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									xtype : 'numberfield',
 									fieldLabel : '浓网',
 									minValue : 0,
@@ -993,12 +1210,12 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									name : 'entity/area',
 									dataIndex : 'area',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									xtype : 'numberfield',
 									fieldLabel : '膜面积',
 									minValue : 0,
@@ -1008,7 +1225,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									name : 'entity/pageWidth',
 									dataIndex : 'pageWidth',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									xtype : 'numberfield',
 									fieldLabel : '页宽(m)',
 									minValue : 0,
@@ -1017,7 +1234,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									xtype : 'measurementunitcombo',
 									hiddenName : 'entity/measurementUnit',
@@ -1027,7 +1244,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									ref : '../../measurementUnit',
 									allowBlank : true,
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									fieldLabel : '计量单位'
 								}, {
 									xtype : 'numberfield',
@@ -1035,31 +1252,143 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									dataIndex : 'plannedUnitPrice',
 									fieldLabel : '计划单价(元)',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									allowBlank : true
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/dispOrder',
 									dataIndex : 'dispOrder',
 									fieldLabel : '显示排序',
 									anchor : '95%',
-									colspan : 1,
+									colspan : 3,
 									allowBlank : true
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 2
+									colspan : 6
 								}, {
 									xtype : 'textarea',
 									name : 'entity/remark',
 									dataIndex : 'remark',
 									fieldLabel : '说明',
 									anchor : '95%',
-									colspan : 2
+									colspan : 6
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 6
+								}, {
+									xtype : 'textfield',
+									name : 'entity/mpSize',
+									dataIndex : 'mpSize',
+									fieldLabel : '膜片下料<br>裁切尺寸(m)',
+									anchor : '95%',
+									colspan : 3,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/mpWidth',
+									dataIndex : 'mpWidth',
+									fieldLabel : '膜片下料<br>页宽(m)',
+									anchor : '95%',
+									colspan : 3,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/denseNetType',
+									dataIndex : 'denseNetType',
+									fieldLabel : '浓网下料<br>型号',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/denseNetWidth',
+									dataIndex : 'denseNetWidth',
+									fieldLabel : '浓网下料<br>裁切尺寸(mm)',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/denseNetCdm',
+									dataIndex : 'denseNetCdm',
+									fieldLabel : '浓网下料<br>叠膜要求',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/lightNetType',
+									dataIndex : 'lightNetType',
+									fieldLabel : '淡网下料<br>型号',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/lightNetLongPage',
+									dataIndex : 'lightNetLongPage',
+									fieldLabel : '淡网下料<br>长页(mm)',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/lightNetShortPage',
+									dataIndex : 'lightNetShortPage',
+									fieldLabel : '淡网下料<br>短页(mm)',
+									anchor : '100%',
+									colspan : 2,
+									allowBlank : true
+								}, {
+									xtype : 'textfield',
+									name : 'entity/juanmo',
+									dataIndex : 'juanmo',
+									fieldLabel : '卷膜工艺',
+									anchor : '95%',
+									colspan : 6,
+									allowBlank : true
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 6
+								}, {
+									xtype : 'textfield',
+									name : 'entity/cut',
+									dataIndex : 'cut',
+									fieldLabel : '切边尺寸',
+									anchor : '95%',
+									colspan : 6,
+									allowBlank : true
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 6
+								}, {
+									xtype : 'textfield',
+									name : 'entity/raosi',
+									dataIndex : 'raosi',
+									fieldLabel : '绕丝工艺',
+									anchor : '95%',
+									colspan : 6,
+									allowBlank : true
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 6
+								}, {
+									xtype : 'textfield',
+									name : 'entity/package',
+									dataIndex : 'package',
+									fieldLabel : '包装工艺',
+									anchor : '95%',
+									colspan : 6,
+									allowBlank : true
 								}, {
 									xtype : 'hidden',
 									name : 'entity/materClassId',

@@ -31,7 +31,8 @@
     		modifyOrderNoFlag4Dry = 1;
     	}
     }
-    
+    String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("/qinsen/produce/qijian/index.jsp","");
 %>
 <html>
 <!-- 
@@ -74,6 +75,9 @@
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
 <script type="text/javascript">
+
+	var labelRootUrl = "<%=rootUrl %>";
+
   var uid = "<%=uid %>";
   var gyyFlag = <%=gyyFlag %>;
   var monitorFlag = <%=monitorFlag %>;

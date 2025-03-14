@@ -43,6 +43,10 @@
 <js:load scriptPath="produce/report/component/production/js/yearEv.js"/>
 <js:load scriptPath="produce/report/component/production/js/repairUi.js"/>
 <js:load scriptPath="produce/report/component/production/js/repairEv.js"/>
+
+<js:load scriptPath="produce/report/component/production/js/periodUi.js"/>
+<js:load scriptPath="produce/report/component/production/js/periodEv.js"/>
+
 <js:load scriptPath="produce/report/component/production/js/manageUi.js"/>
 <js:load scriptPath="produce/report/component/production/js/manageEv.js"/>
 
@@ -60,6 +64,12 @@ function getCurrentDate(t) {
 	var month = today.getMonth() + 1;
 	month = month < 10 ? '0' + month : month;;
 	return t == 'y' ? year : year + '-' + month
+}
+
+function roundToDecimalPlace(number, decimalPlaces) {
+	if(Ext.isEmpty(number) || Number.isNaN(number)) number = 0;
+	const factor = Math.pow(10, decimalPlaces);
+	return Math.round(number * factor) / factor;
 }
 
   var uid = "<%=uid %>";

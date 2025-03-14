@@ -3,6 +3,42 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.initEvent = function() {
 	var _this = this;
 	this.opt = '';
 
+	this.listPanel.store.on('load', function() {
+
+		if (_this.queryFlag) {
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			var vals = _this.queryPanel.getForm().getValues();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.qinsen.quality.queryDefectLossSum.biz.ext",
+				method : "post",
+				jsonData : vals,
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						if (!Ext.isEmpty(ret.data)) {
+							var data = ret.data[0];
+							Ext.getCmp('defectlossinfo').setValue('不良长度:'
+									+ roundToDecimalPlace(data.loss, 2)
+									+ '米');
+
+						} else {
+							Ext.getCmp('defectlossinfo').setValue('');
+						}
+					}
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+
+		}
+		this.queryFlag = false;
+	})
+
 	if (!Ext.isEmpty(tumoBatchNo4Search) && 'null' != tumoBatchNo4Search) {
 		// alert(tumoBatchNo4Search);
 		this.queryPanel.tumoBatchNoStr.setValue(tumoBatchNo4Search);
@@ -35,6 +71,7 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.initEvent = function() {
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
+		this.queryFlag = true;
 		store.baseParams = vals;
 		store.load({
 					params : {
@@ -72,7 +109,7 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.initEvent = function() {
 					if (ifModifyDefect == '1' || modifyFlag == 1) {
 						this.editWindow.show();
 						this.editWindow.loadData(cell);
-					}else{
+					} else {
 						Ext.Msg.alert("系统提示", "该涂膜批次不能编辑涂膜不良！");
 						return;
 					}
@@ -171,7 +208,12 @@ com.keensen.ump.qinsen.quality.DefectMgr.prototype.onAddZm2 = function() {
 	this.defectZmWin2.show();
 };
 
-//膜片取样
+// 膜片取样
 com.keensen.ump.qinsen.quality.DefectMgr.prototype.onTakeSample = function() {
-	
+
 };
+
+function roundToDecimalPlace(number, decimalPlaces) {
+	const factor = Math.pow(10, decimalPlaces);
+	return Math.round(number * factor) / factor;
+}

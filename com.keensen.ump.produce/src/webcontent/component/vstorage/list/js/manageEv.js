@@ -1,4 +1,6 @@
 com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.initEvent = function() {
+
+	var me = this;
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -10,6 +12,9 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.initEvent =
 					}
 				});
 	}, this);
+
+	me.onMsg();
+
 }
 
 com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.exportExcel = function() {
@@ -175,7 +180,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onChooseSin
 		prodSpecId = B[0].get('materSpecId');
 
 	}
-	
+
 	if (Ext.isEmpty(orderNo)) {
 		Ext.Msg.alert('系统提示', '请选择订单号');
 		return false;
@@ -202,7 +207,8 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onChooseSin
 							if (ret.success) {
 								Ext.Msg.alert("系统提示", "操作成功！", function() {
 											_this.listPanel.store.load();
-											_this.chooseSingleOrderWindow.hide();
+											_this.chooseSingleOrderWindow
+													.hide();
 
 										})
 							} else {
@@ -218,4 +224,238 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onChooseSin
 				}
 			});
 
+}
+
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMsg = function() {
+	var _this = this;
+
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.vstorage.queryVstorage2Msg.biz.ext",
+		method : "post",
+		jsonData : {
+			'condition/exceptionType' : ''
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+
+			if (ret.success) {
+				var datas = ret.data;
+				if (Ext.isEmpty(datas))
+					return;
+				var msg = '';
+				for (var i = 0; i < datas.length; i++) {
+					msg += datas[i].exceptionType + '共';
+					msg += datas[i].amount + "条;<br>";
+
+				}
+				showNotification(msg);
+			} else {
+
+			}
+
+		},
+		callback : function() {
+
+		}
+	})
+}
+
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.importVStorage = function() {
+	var _this = this;
+
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.vstorage.importVStorage.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+
+			if (ret.success) {
+
+				var dryAmount = ret.dryAmount;
+				var wetAmount = ret.wetAmount;
+				var msg = '导入干膜:' + dryAmount + '条<br>'
+				msg += '导入湿膜:' + wetAmount + '条<br>'
+				Ext.Msg.alert("系统提示", msg, function() {
+							_this.listPanel.store.reload();
+							_this.onMsg();
+						});
+			} else {
+				Ext.Msg.alert("系统提示", '导入失败')
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.removeVstorage = function() {
+	var _this = this;
+
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.vstorage.removeVstorage.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+
+			if (ret.success) {
+
+				Ext.Msg.alert("系统提示", '操作成功', function() {
+							_this.listPanel.store.reload();
+							_this.onMsg();
+
+						});
+			} else {
+				Ext.Msg.alert("系统提示", '导入失败')
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMonitorRemark = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			var ngReasonName = r.data['ngReasonName'];
+			var exceptionType = r.data['exceptionType'];
+			if (Ext.isEmpty(ngReasonName)) {
+				Ext.Msg.alert("系统提示", "请选择质检不合格的记录！");
+				return;
+
+			} else if (exceptionType != '需班长处理') {
+				Ext.Msg.alert("系统提示", "请选择需班长处理的记录！");
+				return;
+			} else {
+				recordIds.push(r.data['recordId']);
+			}
+		}
+
+		var monitorRemark = '本次元件已送水测';
+		Ext.Msg.prompt('班长挑水测', '请输入', function(btn, text) {
+			if (btn == 'ok') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.component.vstorage.saveMonitorRemark.biz.ext",
+					method : "post",
+					jsonData : {
+						'monitorRemark' : text,
+						'recordIds' : recordIds.join(",")
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.reload();
+										_this.onMsg();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "备注失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, true, monitorRemark);
+	}
+}
+
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMonitorDeal = function() {
+	var _this = this;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			var exceptionType = r.data['exceptionType'];
+			if (exceptionType != '需班长处理') {
+				Ext.Msg.alert("系统提示", "请选择需班长处理的记录！");
+				return;
+			} else {
+				recordIds.push(r.data['recordId']);
+			}
+		}
+		this.monitorDealWindow.items.items[0].form.reset();
+		this.monitorDealWindow.recordIds.setValue(recordIds.join(","));			
+		this.monitorDealWindow.show();
+	}
+}
+
+function showNotification(message) {
+
+	const divs = document.getElementsByClassName('notification');;
+
+	for (var i = 0; i < divs.length; i++) {
+		divs[i].remove()
+	}
+
+	// 创建通知元素
+	const notification = document.createElement('div');
+	notification.className = 'notification';
+
+	// 添加内容
+	notification.innerHTML = '<div class="notification-content">' + message
+			+ '</div><button class="notification-close">&times;</button>';
+
+	// 添加到页面
+	document.body.appendChild(notification);
+
+	// 添加关闭事件
+	notification.querySelector('.notification-close').addEventListener('click',
+			function() {
+				hideNotification(notification);
+			});
+
+	// 显示通知
+	setTimeout(function() {
+				notification.classList.add('show');
+			}, 100);
+
+	// 10秒后自动关闭
+	// setTimeout(function() {
+	// hideNotification(notification);
+	// }, 10000);
+}
+
+function hideNotification(notification) {
+	notification.classList.remove('show');
+	setTimeout(function() {
+				notification.remove();
+			}, 500);
 }

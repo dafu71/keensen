@@ -286,6 +286,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 		com.keensen.ump.defectWindow.superclass.initComponent.call(this);
 	},
 	buildListPanel : function() {
+
 		var title = this.dutyTacheCode == 'TM'
 				? '【 涂膜不良列表 】'
 				: this.dutyTacheCode == 'ZM' ? '【 铸膜不良列表 】' : '【 发货不良列表 】';
@@ -353,7 +354,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 					}, {
 						dataIndex : 'labelNum',
 						header : '标签数',
-						hidden : !this.batchNoControl,
+						hidden : !this.batchNoControl || this.dutyTacheCode == 'ZM',
 						width : 100,
 						sortable : true,
 						css : 'background:#c7c7c7;',

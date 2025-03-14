@@ -20,6 +20,7 @@
 	String uid = userObject.getUserId();
 	
 	int modifyOrderNoFlag = roleId.indexOf("10001561")>-1?1:0;
+	int monitorFlag = roleId.indexOf("30431")>-1?1:0;
 
 	//修改干湿膜订单号权限
 	int modifyOrderNoFlag4Wet = 0;
@@ -46,6 +47,47 @@
 <head>
 <title>查询与处理</title>
 
+<style>
+        .notification {
+            position: fixed;
+            bottom: -100px;
+            right: 20px;
+            width: 300px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: bottom 0.5s ease-in-out;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            bottom: 20px;
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-weight: bold;
+        }
+
+        .notification-close:hover {
+            background: #cc0000;
+        }
+
+        .notification-content {
+            margin-right: 30px;
+        }
+    </style>
+
 <!-- 导出Excel -->
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.js"></script>
@@ -67,9 +109,13 @@
 </style>
 
 <script type="text/javascript">
+
+
+
   var uid = "<%=uid %>";
   
    var modifyOrderNoFlag = <%=modifyOrderNoFlag %>;
+   var monitorFlag = <%=monitorFlag %>;
   
   var modifyOrderNoFlag4Wet = <%=modifyOrderNoFlag4Wet %>;
   var modifyOrderNoFlag4Dry = <%=modifyOrderNoFlag4Dry %>;

@@ -797,46 +797,6 @@
             <column length="50" name="LOCATION"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstCdmDefect2" table="INST_CDM_DEFECT2">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="recordId" type="int">
-            <column length="9" name="RECORD_ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="dmBatchId" type="int">
-            <column length="9" name="DM_BATCH_ID" not-null="true"/>
-        </property>
-        <property name="defectItemId" type="int">
-            <column length="9" name="DEFECT_ITEM_ID" not-null="true"/>
-        </property>
-        <property name="loss" type="big_decimal">
-            <column length="4" name="LOSS" not-null="true" precision="4" scale="1"/>
-        </property>
-        <property name="workerId" type="int">
-            <column length="9" name="WORKER_ID"/>
-        </property>
-        <property name="produceDt" type="timestamp">
-            <column name="PRODUCE_DT" not-null="true"/>
-        </property>
-        <property name="createDt" type="date">
-            <column name="CREATE_DT"/>
-        </property>
-        <property name="changeDt" type="date">
-            <column name="CHANGE_DT"/>
-        </property>
-        <property name="creatorId" type="int">
-            <column length="9" name="CREATOR_ID"/>
-        </property>
-        <property name="changerId" type="int">
-            <column length="9" name="CHANGER_ID"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="pageNum" type="int">
-            <column length="3" name="PAGE_NUM"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstJuanmoMain" table="INST_JUANMO_MAIN">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="recordId" type="int">
@@ -1298,6 +1258,55 @@
         </property>
         <property name="ifTear" type="string">
             <column length="10" name="IF_TEAR"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstCdmDefect2" table="INST_CDM_DEFECT2">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="dmBatchId" type="int">
+            <column length="9" name="DM_BATCH_ID" not-null="true"/>
+        </property>
+        <property name="defectItemId" type="int">
+            <column length="9" name="DEFECT_ITEM_ID" not-null="true"/>
+        </property>
+        <property name="loss" type="big_decimal">
+            <column length="4" name="LOSS" not-null="true" precision="4" scale="1"/>
+        </property>
+        <property name="workerId" type="int">
+            <column length="9" name="WORKER_ID"/>
+        </property>
+        <property name="produceDt" type="timestamp">
+            <column name="PRODUCE_DT" not-null="true"/>
+        </property>
+        <property name="createDt" type="date">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="date">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="pageNum" type="int">
+            <column length="3" name="PAGE_NUM"/>
+        </property>
+        <property name="recorder" type="string">
+            <column length="50" name="RECORDER"/>
+        </property>
+        <property name="ifTear" type="string">
+            <column length="10" name="IF_TEAR"/>
+        </property>
+        <property name="position" type="string">
+            <column length="200" name="POSITION"/>
         </property>
     </class>
 </hibernate-mapping>

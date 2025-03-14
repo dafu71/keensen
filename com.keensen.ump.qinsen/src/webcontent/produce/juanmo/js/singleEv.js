@@ -70,6 +70,11 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr.prototype.dealCdmBatchNo = funct
 						_this.inputPanel.denseNet.setValue(dd.denseNet);
 						_this.inputPanel.pageWidth.setValue(dd.pageWidth);
 						_this.inputPanel.cdmBatchId.setValue(dd.recordId);// 裁叠膜批号ID
+						
+						_this.inputPanel.juanmo.setValue(dd.juanmo);
+						_this.inputPanel.lightNetType.setValue(dd.lightNetType);
+						_this.inputPanel.lightNetShortPage.setValue(dd.lightNetShortPage);
+						
 						_this.genBatchNo();
 					} else {
 						Ext.Msg.alert("系统提示", "该栈板号不存在，请检查！", function() {

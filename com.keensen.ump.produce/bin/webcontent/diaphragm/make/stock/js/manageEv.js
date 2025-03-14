@@ -15,7 +15,10 @@ com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.initEvent = function()
 }
 
 com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.exportExcel = function() {
-	var _this = this;
+	
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '底膜库存管理',
+			'com.keensen.ump.produce.diaphragm.make.make.queryStock', '0,1');
+	/*var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
@@ -49,7 +52,7 @@ com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.exportExcel = function
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.onChange = function() {

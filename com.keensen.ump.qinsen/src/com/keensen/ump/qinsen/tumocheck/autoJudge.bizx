@@ -24,10 +24,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link6</targetConnections>
-    <targetConnections>link7</targetConnections>
-    <targetConnections>link29</targetConnections>
     <targetConnections>link43</targetConnections>
+    <targetConnections>link29</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link6</targetConnections>
     <location x="630" y="270"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -268,7 +268,7 @@
     <figSize height="20" width="257"/>
     <node>assign4</node>
   </nodes>
-  <nodes xsi:type="process:tAssign" description="" id="assign5" name="C等品 不合格 走向待二次判定" displayName="赋值" type="assign">
+  <nodes xsi:type="process:tAssign" description="" id="assign5" name="C等品 不合格 走向仓库AB仓" displayName="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>assign5</sourceNode>
       <targetNode>switch1</targetNode>
@@ -284,13 +284,13 @@
     <size height="28" width="28"/>
     <nodeLabel>assign5label</nodeLabel>
     <process:copy>
-      <process:from type="literal" pattern="reference">待二次判定</process:from>
+      <process:from type="literal" pattern="reference">仓库AB仓</process:from>
       <process:to type="query">ret</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
-    <location x="285" y="85"/>
-    <figSize height="20" width="199"/>
+    <location x="290" y="85"/>
+    <figSize height="20" width="189"/>
     <node>assign5</node>
   </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign6" name="保留品 不合格 走向仓库C仓" displayName="赋值" type="assign">
@@ -346,9 +346,9 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link27</targetConnections>
-    <targetConnections>link35</targetConnections>
     <targetConnections>link36</targetConnections>
+    <targetConnections>link35</targetConnections>
+    <targetConnections>link27</targetConnections>
     <location x="605" y="173"/>
     <size height="28" width="28"/>
     <nodeLabel>assign8label</nodeLabel>

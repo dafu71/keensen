@@ -69,6 +69,15 @@ com.keensen.ump.defectZmViewWindow = Ext.extend(Ext.Window, {
 						header : '损失(m)',
 						dataIndex : 'loss'
 					}, {
+						header : '收卷位置',
+						dataIndex : 'position'
+					}, {
+						header : '是否已扯',
+						dataIndex : 'ifTear'
+					}, {
+						header : '记录人',
+						dataIndex : 'recorder'
+					}, {
 						header : '不良产生时间',
 						dataIndex : 'produceDate'
 					}, {
@@ -121,6 +130,12 @@ com.keensen.ump.defectZmViewWindow = Ext.extend(Ext.Window, {
 							name : 'dimoType'
 						}, {
 							name : 'produceDate'
+						}, {
+							name : 'ifTear'
+						}, {
+							name : 'recorder'
+						}, {
+							name : 'position'
 						}],
 				baseParams : {
 					'condition/dmBatchNo' : Ext.isEmpty(dmBatchNo)?"0":dmBatchNo

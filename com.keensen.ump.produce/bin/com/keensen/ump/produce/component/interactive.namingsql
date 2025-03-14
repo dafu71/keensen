@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.interactive">
+    <select id="querySelect" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT T1.MP_BATCH_NO            AS "mpBatchNo",
+       T1.MP_SPEC_CODE           AS "mpSpecCode",
+       T1.MATER_SPEC_NAME        AS "materSpecName",
+       T1.AREA                   AS "area",
+       T1.DENSE_NET              AS "denseNet",
+       T1.YJ_GPD_LOW             AS "yjGpdLow",
+       T1.YJ_GPD_UP              AS "yjGpdUp",
+       T1.YJ_GPD_AVG             AS "yjGpdAvg",
+       T1.YJ_GPD_LOW_LIMIT       AS "yjGpdLowLimit",
+       T1.YJ_GPD_UP_LIMIT        AS "yjGpdUpLimit",
+       T1.YJ_SALT_LOW_LIMIT      AS "yjSaltLowLimit",
+       T1.MP_MIN_SALT_REJECTION  AS "mpMinSaltRejection",
+       T1.MP_SALT_LOW_LIMIT      AS "mpSaltLowLimit",
+       T1.TEST_YJ_SALT           AS "testYjSalt",
+       T1.TEST_YJ_SALT_LOW_LIMIT AS "testYjSaltLowLimit",
+       T1.CONDITION1             AS "condition1",
+       T1.CONDITION2             AS "condition2",
+       T1.CONDITION3             AS "condition3",
+       T1.CONDITION4             AS "condition4",
+       T1.PROD_SPEC_ID           AS "prodSpecId",
+       T1.YJ_GPD_LOW_LIMIT_TRS   AS "yjGpdLowLimitTrs",
+       T1.YJ_GPD_UP_LIMIT_TRS    AS "yjGpdUpLimitTrs",
+       T1.YJ_GPD_AVG_TRS         AS "yjGpdAvgTrs",
+       T1.TEST_YJ_AREA           AS "testYjArea",
+       <!--(case when T1.CONDITION1='Y' and T1.CONDITION2='Y' and T1.CONDITION3='Y'
+       and T1.CONDITION4='Y' then '是' else '否' end) "condition"-->
+       (case when T1.CONDITION1='Y' and T1.CONDITION2='Y' and T1.CONDITION5='Y' then '是' else '否' end) "condition",
+       T1.CONDITION5             AS "condition5",
+       
+       
+       T100.MP_MATER_CODE             AS "mpMaterCode",
+       <!--T100.MP_SPEC_CODE              AS "mpSpecCode",--><!--T100.MP_BATCH_NO               AS "mpBatchNo",-->
+       T100.STORAGE_NAME              AS "storageName",
+       T100.STORAGE_POSITION          AS "storagePosition",
+       T100.AMOUNT                    AS "amount",
+       T100.IS_KEEP                   AS "isKeep",
+       T100.MP_POINT_SALT_REJECTION   AS "mpPointSaltRejection",
+       <!--T100.MP_MIN_SALT_REJECTION     AS "mpMinSaltRejection",--><!--T100.MP_SALT_LOW_LIMIT         AS "mpSaltLowLimit",-->
+       T100.R_MP_POINT_SALT_REJECTION AS "rMpPointSaltRejection",
+       T100.MP_POINT_GFD              AS "mpPointGfd",
+       T100.MP_MIN_GFD                AS "mpMinGfd",
+       T100.MP_MAX_GFD                AS "mpMaxGfd",
+       T100.MP_AVG_GFD                AS "mpAvgGfd",
+       T100.R_MP_POINT_GFD            AS "rMpPointGfd",
+       <!--T100.YJ_GPD_LOW_LIMIT          AS "yjGpdLowLimit",--><!--T100.YJ_GPD_UP_LIMIT           AS "yjGpdUpLimit",--><!--T100.YJ_GPD_AVG                AS "yjGpdAvg",-->
+       T100.TEST_MP_BATCH_NO          AS "testMpBatchNo",
+       T100.TEST_YJ_SPEC_NAME         AS "testYjSpecName",
+       <!--T100.TEST_YJ_AREA              AS "testYjArea",-->
+       T100.TEST_YJ_DENSE_NET         AS "testYjDenseNet",
+       
+             
+       <!--试卷膜批次的第2位是“D”第3-4位是“22和24”第6-9位在“4401-4731区间“
+		试卷元件产水量=实际值x1.15，试卷元件脱盐率=实际值-0.05--><!--case when SUBSTR(T100.TEST_MP_BATCH_NO,2,3) IN( 'D22','D24')
+		AND (SUBSTR(T100.TEST_MP_BATCH_NO,6,4) BETWEEN '4401' AND '4731')
+		then round(nvl(T100.TEST_YJ_GPD,0) * 1.15,2)
+		else		
+        T100.TEST_YJ_GPD 
+        end              AS "testYjGpd",
+        case when SUBSTR(T100.TEST_MP_BATCH_NO,2,3) IN( 'D22','D24')
+		AND (SUBSTR(T100.TEST_MP_BATCH_NO,6,4) BETWEEN '4401' AND '4731')
+		then round(nvl(T100.TEST_YJ_SALT,0) - 0.05 ,2)
+		else
+        T100.TEST_YJ_SALT 
+        end      AS "testYjSalt",-->
+       
+       T100.TEST_YJ_GPD_LOW_LIMIT     AS "testYjGpdLowLimit",
+       T100.TEST_YJ_GPD_UP_LIMIT      AS "testYjGpdUpLimit",
+       <!--T100.TEST_YJ_SALT_LOW_LIMIT    AS "testYjSaltLowLimit",-->
+       to_char(T100.mp_produce_dt,'yyyy-MM-dd HH24:mi:ss')             AS "mpProduceDt",
+       T100.REMARK                    AS "remark",
+       T100.mp_record_ID              AS "mpRecordId",
+       T100.mp_spec_ID               AS "mpSpecId",
+       t2.mp_salt_avg  "mpSaltAvg",
+       decode(upper(substr(T100.MP_SPEC_CODE ,1,3)), 'ULP','1','0') "isUlp",
+       case when upper(substr(T100.MP_SPEC_CODE ,1,3)) = 'ULP' then
+       (CASE WHEN t2.mp_salt_avg &gt;=T100.MP_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END)
+       else
+       (CASE WHEN T100.MP_MIN_SALT_REJECTION &gt;=T100.MP_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) end "condition1b",
+       (CASE WHEN 
+       (case when SUBSTR(T100.TEST_MP_BATCH_NO,2,3) IN( 'D22','D24')
+		AND (SUBSTR(T100.TEST_MP_BATCH_NO,6,4) BETWEEN '4401' AND '4731')
+		then round(nvl(T100.TEST_YJ_SALT,0) - 0.05 ,2)
+		else
+        T100.TEST_YJ_SALT 
+        end ) &gt;=T100.TEST_YJ_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) "condition2b"
+       
+  FROM V_KS_COMPONENT_MP_SELECT T1
+  left join 
+  	KS_COMPONENT_MP_SELECT T100
+  on T1.mp_record_ID = T100.mp_record_ID
+  left join (SELECT t.batch_id mp_record_ID,round(avg(t.salt_rejection) ,2) mp_salt_avg
+	from qinsen.inst_tumo_check t
+	GROUP BY t.batch_id) t2 on T100.mp_record_ID = t2.mp_record_ID
+  where 1=1
+  
+  
+   <!--膜片筛选开始--><isEqual compareValue="Y" prepend="and" property="isStorage">exists (select 1 from  KS_PROD_COMPONENT_STOCK
+ 			   where  batch_no = T1.MP_BATCH_NO
+ 			   )</isEqual>
+        <isNotNull prepend="" property="prodSpecIdFilter">AND T1.MP_SPEC_CODE in (
+           select pms.mater_spec_name from KS_PROD_WATER_STD std
+           left join qinsen.para_mater_spec pms ON pms.mater_spec_id=std.mp_spec_id
+           where std.prod_spec_id = #prodSpecIdFilter#)</isNotNull>
+        <isNotNull prepend="" property="storageNameFilter">AND T1.STORAGE_NAME = #storageNameFilter#</isNotNull>
+        <isNotNull prepend="" property="mpSpecIdFilter">AND T1.mp_spec_ID = #mpSpecIdFilter#</isNotNull>
+        <isNull prepend="" property="mpSaltLowLimitFilter2">
+            <isNotNull prepend="" property="mpSaltLowLimitFilter">AND T1.MP_MIN_SALT_REJECTION &gt;= #mpSaltLowLimitFilter#  
+           and T1.MP_SALT_LOW_LIMIT is not null</isNotNull>
+        </isNull>
+        <isNotNull prepend="" property="mpSaltLowLimitFilter2">AND T1.MP_MIN_SALT_REJECTION &gt;= #mpSaltLowLimitFilter2#  
+           and T1.MP_SALT_LOW_LIMIT is not null</isNotNull>
+        <isNotNull prepend="" property="testYjSaltLowLimitDownFilter">
+            <isNotEqual compareValue="0" prepend="" property="testYjSaltLowLimitDownFilter">AND T1.TEST_YJ_SALT + #testYjSaltLowLimitDownFilter# &gt;= T1.TEST_YJ_SALT_LOW_LIMIT  
+           and T1.TEST_YJ_SALT_LOW_LIMIT is not null
+           and T1.TEST_YJ_SALT is not null</isNotEqual>
+        </isNotNull>
+        <!--膜片筛选结束-->
+        <isNotNull prepend="" property="tumoBatchNo3">AND T1.MP_BATCH_NO like '%' || #tumoBatchNo3# || '%'</isNotNull>
+        <isNotNull prepend="and" property="mpSpecCode">upper(T1.MP_SPEC_CODE) like '%' || upper(#mpSpecCode#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">upper(T1.MATER_SPEC_NAME) like '%' || upper(#prodSpecName#) || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="mpSpecId">t1.MP_SPEC_ID = #mpSpecId#</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND T1.MP_BATCH_NO in ($tumoBatchNo$)</isNotNull>
+          order by T1.MP_BATCH_NO
+  </select>
+</sqlMap>

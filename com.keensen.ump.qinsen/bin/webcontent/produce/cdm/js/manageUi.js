@@ -822,19 +822,31 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 				}, {
 					ref : '../../blankingSize',
 					name : 'entity/blankingSize',
-					fieldLabel : '下料尺寸',
+					fieldLabel : '膜片下料尺寸',
 					xtype : 'textfield',
 					readOnly : true,
 					anchor : '86%',
 					colspan : 12
+				}/*
+					 * , { ref : '../../denseNet', name : 'entity/denseNet',
+					 * fieldLabel : '浓网', xtype : 'textfield', readOnly : true,
+					 * anchor : '86%', colspan : 12 }
+					 */, {
+					ref : '../../denseNetType',
+					name : 'entity/denseNetType',
+					fieldLabel : '浓网型号',
+					xtype : 'textfield',
+					readOnly : true,
+					anchor : '100%',
+					colspan : 6
 				}, {
-					ref : '../../denseNet',
-					name : 'entity/denseNet',
-					fieldLabel : '浓网',
+					ref : '../../denseNetWidth',
+					name : 'entity/denseNetWidth',
+					fieldLabel : '浓网尺寸',
 					xtype : 'textfield',
 					readOnly : true,
-					anchor : '86%',
-					colspan : 12
+					anchor : '100%',
+					colspan : 6
 				}, {
 					xtype : 'displayfield',
 					height : '5',
@@ -847,6 +859,22 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					readOnly : true,
 					anchor : '86%',
 					colspan : 12
+				}, {
+					ref : '../../lightNetType',
+					name : 'entity/lightNetType',
+					fieldLabel : '淡网型号',
+					xtype : 'textfield',
+					readOnly : true,
+					anchor : '100%',
+					colspan : 6
+				}, {
+					ref : '../../lightNetShortPage',
+					name : 'entity/lightNetShortPage',
+					fieldLabel : '淡网短页',
+					xtype : 'textfield',
+					readOnly : true,
+					anchor : '100%',
+					colspan : 6
 				}, {
 					xtype : 'displayfield',
 					height : '5',
@@ -897,7 +925,21 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					height : '5',
 					colspan : 24
 				}, {
+					//name : 'entity/remark',
+					ref : '../../denseNetCdm',
+					height : 30,
+					xtype : 'textarea',
+					readOnly : true,
+					fieldLabel : '叠膜要求',
+					colspan : 24,
+					anchor : '86%'
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 24
+				}, {
 					name : 'entity/remark',
+					height : 30,
 					xtype : 'textarea',
 					fieldLabel : '备注',
 					colspan : 24,

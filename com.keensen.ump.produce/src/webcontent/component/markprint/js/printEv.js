@@ -15,11 +15,30 @@ com.keensen.ump.produce.component.markprintMgr.prototype.initEvent = function() 
 	}, this);
 
 	this.viewDutyPanel.mon(this.viewDutyPanel, 'afterload',
-			function(win, data) {				
-				
+			function(win, data) {
+
 				if (Ext.isEmpty(data)) {
 					this.viewDutyListPanel.store.removeAll();
 				} else {
+
+					this.viewDutyPanel.picturePanel.update('');
+					if (!Ext.isEmpty(data.labelUrl)) {
+						var labelUrl = labelRootUrl;
+						labelUrl += data.labelUrl;
+
+						labelUrl = '<img title="单击查看完整图片" src="'
+								+ labelUrl
+								+ '?ver='
+								+ data.orderNo
+								+ '" onclick= "javascript:window.open('
+								+ "'"
+								+ labelUrl
+								+ "'"
+								+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
+
+						this.viewDutyPanel.picturePanel.update(labelUrl);
+					}
+
 					var relationId = data.pkid;
 					var store = this.viewDutyListPanel.store;
 					store.load({
@@ -38,6 +57,8 @@ com.keensen.ump.produce.component.markprintMgr.prototype.onScan = function() {
 	var obj = this.inputPanel.juanmoBatchNo;
 
 	var isRecord = this.inputPanel.isRecord.getValue();
+	
+	var isStar = this.inputPanel.isStar.getValue();
 
 	var juanmoBatchNo = obj.getValue();
 	if (Ext.isEmpty(juanmoBatchNo)) {
@@ -104,6 +125,7 @@ com.keensen.ump.produce.component.markprintMgr.prototype.onScan = function() {
 					f.prodSpecName.value = data.prodSpecName;
 					f.prodSpecName2.value = data.prodSpecName2;
 					f.code.value = data.code;
+					f.isStar.value = isStar;  
 					var actionUrl = 'com.keensen.ump.produce.component.printMark.flow?time='
 							+ Math.random() + '&token=' + Date.now();
 

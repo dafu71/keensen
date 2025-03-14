@@ -45,6 +45,9 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var materClassId = '';
+  
+  var materqueryspec = Ext.id();
+  var materquerystate = Ext.id();
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.base.materClassSpecMgr
 		});

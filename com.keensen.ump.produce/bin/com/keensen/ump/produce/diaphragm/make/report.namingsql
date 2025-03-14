@@ -43,8 +43,8 @@
                SUM(T.FLAW2) FLAW2
           FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T
          WHERE T.TEAM_ID IN (SELECT DEPT_ID FROM QINSEN.BASE_DEPARTMENT)
-           <isNotNull prepend="and" property="productDtStart">to_char(T.PRODUCT_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
-        <isNotNull prepend="and" property="productDtEnd">to_char(T.PRODUCT_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull>           
+           <isNotNull prepend="and" property="productDtStart">to_char(T.PRODUCT_DT,'YYYY-MM-DD')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(T.PRODUCT_DT,'YYYY-MM-DD')  &lt;=  #productDtEnd#</isNotNull>           
          GROUP BY T.TEAM_ID) T1
   LEFT JOIN QINSEN.BASE_DEPARTMENT BD
     ON BD.DEPT_ID = T1.TEAM_ID
@@ -172,8 +172,8 @@ SELECT P.TEAM_ID         AS "teamId",
                             ON T.TUMO_BATCH_ID = T2.RECORD_ID
                          WHERE V.DUTY_TACHE_CODE = 'TM'
                               
-           <isNotNull prepend="and" property="productDtStart">to_char(T2.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
-        <isNotNull prepend="and" property="productDtEnd">to_char(T2.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull> 
+           <isNotNull prepend="and" property="productDtStart">to_char(T2.PRODUCE_DT,'YYYY-MM-DD')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(T2.PRODUCE_DT,'YYYY-MM-DD')  &lt;=  #productDtEnd#</isNotNull> 
                           
                         
                         ) TT) TTT
@@ -184,8 +184,8 @@ SELECT P.TEAM_ID         AS "teamId",
                     TEAM_ID
                FROM V_KS_TUMO_ORIGIN2 V
               WHERE 1 = 1
-              <isNotNull prepend="and" property="productDtStart">to_char(v.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
-        <isNotNull prepend="and" property="productDtEnd">to_char(v.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull> 
+              <isNotNull prepend="and" property="productDtStart">to_char(v.PRODUCE_DT,'YYYY-MM-DD')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(v.PRODUCE_DT,'YYYY-MM-DD')  &lt;=  #productDtEnd#</isNotNull> 
                 
               GROUP BY TEAM_ID) L
     ON P.TEAM_ID = L.TEAM_ID
@@ -208,8 +208,8 @@ SELECT P.TEAM_ID         AS "teamId",
   FROM (SELECT DISTINCT T2.TEAM_ID
           FROM QINSEN.INST_TUMO T2
          WHERE 1 = 1
-              <isNotNull prepend="and" property="productDtStart">to_char(T2.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
-        <isNotNull prepend="and" property="productDtEnd">to_char(T2.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull>  ) T
+              <isNotNull prepend="and" property="productDtStart">to_char(T2.PRODUCE_DT,'YYYY-MM-DD')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(T2.PRODUCE_DT,'YYYY-MM-DD')  &lt;=  #productDtEnd#</isNotNull>  ) T
   LEFT JOIN (SELECT SUM(DECODE(TT.DEFECT_ITEM_ID, 100000027, TT.LOSS，0)) C3,
                     SUM(DECODE(TT.DEFECT_ITEM_ID, 100000022, TT.LOSS，0)) C9,
                     SUM(DECODE(TT.DEFECT_ITEM_ID, 100000023, TT.LOSS，0)) C10,
@@ -227,8 +227,8 @@ SELECT P.TEAM_ID         AS "teamId",
                                FROM QINSEN.INST_TUMO T2
                               WHERE 1 = 1
                               AND substr(t2.batch_no,1,1) !='E'
-              <isNotNull prepend="and" property="productDtStart">to_char(T2.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
-        <isNotNull prepend="and" property="productDtEnd">to_char(T2.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull> )
+              <isNotNull prepend="and" property="productDtStart">to_char(T2.PRODUCE_DT,'YYYY-MM-DD')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(T2.PRODUCE_DT,'YYYY-MM-DD')  &lt;=  #productDtEnd#</isNotNull> )
                         AND T.DEFECT_ITEM_ID IN
                             (SELECT T3.RECORD_ID
                                FROM QINSEN.PARA_CDM_DEFECT T3
@@ -246,8 +246,8 @@ SELECT P.TEAM_ID         AS "teamId",
                       WHERE 1 = 1
                       AND substr(t6.batch_no,1,1) !='E'
               
-       <isNotNull prepend="and" property="productDtStart">to_char(T6.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
-        <isNotNull prepend="and" property="productDtEnd">to_char(T6.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull>) t7
+       <isNotNull prepend="and" property="productDtStart">to_char(T6.PRODUCE_DT,'YYYY-MM-DD')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(T6.PRODUCE_DT,'YYYY-MM-DD')  &lt;=  #productDtEnd#</isNotNull>) t7
               GROUP BY T7.TEAM_ID) TT
     ON TT.TEAM_ID = T.TEAM_ID
   LEFT JOIN QINSEN.BASE_DEPARTMENT BD
@@ -256,5 +256,76 @@ SELECT P.TEAM_ID         AS "teamId",
      
      
      
+     </select>
+    <select id="queryPassrate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   select t.TEAM_NAME "teamName",
+	round(SUM(t.out_length),1) "outLength" ,
+	round(SUM(decode(t.PERF_FLAG_CODE,'C',t.out_length,0)),1) "cOutLength",
+	round(SUM(decode(t.PERF_FLAG_CODE,'A',t.out_length,0)),1) "aOutLength",
+	SUM(decode(t.PERF_FLAG_CODE,'A',t.QUALIFID_LENGTH,0)) "aUsefulLength",
+	round(SUM(decode(t.PERF_FLAG_CODE,'A',t.QUALIFID_LENGTH,0))/SUM(t.out_length) *100,2) || '%' "passful",
+	round(SUM(CASE WHEN t.mpd&gt;10 THEN t.out_length ELSE 0 END),1) "c21OutLength",
+	round(SUM(t.CAIMO_LOSS),1) "caimoLoss",
+	round(SUM(t.Qualified_not_length),1) "qualifiedNotLength"
+	 from V_KS_TUMO_PASSREATE t
+	WHERE 1=1
+	and SUBSTR(t.batch_no,1,1) &lt;&gt; 'E' 
+	<isNotNull prepend="" property="productDtStart">AND to_char(t.produce_dt,'YYYY-MM-DD HH24:mi:ss')&gt;= #productDtStart#</isNotNull>
+        <isNotNull prepend="" property="productDtEnd">AND to_char(t.produce_dt,'YYYY-MM-DD HH24:mi:ss') &lt;=#productDtEnd#</isNotNull>
+        <isNotNull prepend="" property="lineId">AND t.line_Id= #lineId#</isNotNull>
+        <isNotNull prepend="" property="materClassCode">AND t.MATER_CLASS_CODE= #materClassCode#</isNotNull>
+        <isNotNull prepend="" property="specId">AND t.spec_id= #specId#</isNotNull>
+	
+	GROUP BY t.TEAM_NAME
+	order by t.TEAM_NAME
+     </select>
+    <select id="queryPassrate4Zm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	  
+	  SELECT TEAM_ID "teamId",
+       BD.DEPT_NAME "teamName",
+       nvl(THEORY_AMOUNT,0) "theoryAmount",
+       nvl(AMOUNT_QUALIFIED,0) "amountQuality",
+       ROUND(AMOUNT_QUALIFIED / THEORY_AMOUNT * 100, 2) || '%' "passful",
+       nvl(LOSS_TOTAL,0) "lossTotal",
+       nvl(LOSS_TEAR,0) "lossTear",
+       nvl(LOSS_NOT_TEAR,0) "lossNotTear"
+  FROM (SELECT TT.TEAM_ID,
+               SUM(THEORY_AMOUNT) THEORY_AMOUNT,
+               SUM(AMOUNT_QUALIFIED) AMOUNT_QUALIFIED,
+               SUM(LOSS_TOTAL) LOSS_TOTAL,
+               SUM(LOSS_TEAR) LOSS_TEAR,
+               SUM(LOSS_NOT_TEAR) LOSS_NOT_TEAR
+          FROM (SELECT T1.TEAM_ID,
+                       T1.LINE,
+                       T1.DIMO_TYPE,
+                       T1.PRODUCT_DT,
+                       T1.THEORY_AMOUNT,
+                       NVL(T1.THEORY_AMOUNT, 0) - NVL(DEFECT.LOSS, 0) AMOUNT_QUALIFIED,
+                       DEFECT.LOSS LOSS_TOTAL,
+                       DEFECT2.LOSS LOSS_TEAR,
+                       DEFECT.LOSS - DEFECT2.LOSS LOSS_NOT_TEAR
+                  FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+                  LEFT JOIN (SELECT SUM(T.LOSS) LOSS, T.DM_BATCH_ID
+                              FROM QINSEN.INST_CDM_DEFECT2 T
+                             GROUP BY T.DM_BATCH_ID) DEFECT
+                    ON DEFECT.DM_BATCH_ID = T1.ID
+                  LEFT JOIN (SELECT SUM(T.LOSS) LOSS, T.DM_BATCH_ID
+                              FROM QINSEN.INST_CDM_DEFECT2 T
+                             WHERE NVL(IF_TEAR, '是') = '是'
+                             GROUP BY T.DM_BATCH_ID) DEFECT2
+                    ON DEFECT2.DM_BATCH_ID = T1.ID) TT
+         WHERE 1 = 1
+         
+         <isNotNull prepend="" property="productDtStart">AND TO_CHAR(TT.PRODUCT_DT, 'YYYY-MM-DD') &gt;= #productDtStart#</isNotNull>
+        <isNotNull prepend="" property="productDtEnd">AND TO_CHAR(TT.PRODUCT_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#</isNotNull>
+        <isNotNull prepend="" property="line">AND TT.LINE = #line#</isNotNull>
+        <isNotNull prepend="" property="dimoType">AND TT.DIMO_TYPE = #dimoType#</isNotNull>           
+		 GROUP BY TT.TEAM_ID) TTT
+
+  LEFT JOIN QINSEN.BASE_DEPARTMENT BD
+    ON BD.DEPT_ID = TTT.TEAM_ID
+	  ORDER BY team_id
+	  
+	  
      </select>
 </sqlMap>

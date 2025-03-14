@@ -676,9 +676,11 @@
        case when t7.SALT_REJECTION-0.05 &gt; 99.79 or t7.SALT_REJECTION-0.05 &lt; 99.65 
        then round(DBMS_RANDOM.VALUE(99.65, 99.79),2) else t7.SALT_REJECTION-0.05 end "fSaltRejection2",
        m.mater_code "materCode",
-       nvl(T22.CAIMO_LENGTH,0) "caimoLength"
+       nvl(T22.CAIMO_LENGTH,0) "caimoLength",
+       prnt.print_name "printName"
   from v_ks_tumo4 t1
-  
+  left join KS_DIAPHRAGM_SPEC_PRINT prnt
+  on  t1.mater_spec_code = prnt.spec_name
    LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,
                            C.TUMO_BATCH_ID
                       FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS

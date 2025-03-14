@@ -1,9 +1,47 @@
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 	var _this = this;
 
+	// this.queryFlag = false;
+	this.listPanel.store.on('load', function() {
+
+		if (_this.queryFlag) {
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			var vals = _this.queryPanel.getForm().getValues();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.qinsen.qijian.queryJuanmoLengthSum.biz.ext",
+				method : "post",
+				jsonData : vals,
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						if (!Ext.isEmpty(ret.data)) {
+							var data = ret.data[0];
+							Ext.getCmp('qijianamountinfo').setValue('膜片长度:'
+									+ roundToDecimalPlace(data.juanmoLength, 2)
+									+ '米');
+
+						} else {
+							Ext.getCmp('qijianamountinfo').setValue('');
+						}
+					}
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+
+		}
+		this.queryFlag = false;
+	})
+
 	// 查询事件
 	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
 			'query', function(form, vals) {
+
 				var store = this.chooseSingleOrderListPanel.store;
 				store.baseParams = vals;
 				store.load({
@@ -12,6 +50,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
 					}
 				});
+
 			}, this);
 
 	// 工艺员提醒
@@ -54,7 +93,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 
 		// }
 		var store = this.listPanel.store;
-
+		this.queryFlag = true;
 		store.baseParams = this.queryPanel.getForm().getValues();
 		store.load({
 					params : {
@@ -180,7 +219,22 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 
 	this.viewDutyPanel.mon(this.viewDutyPanel, 'afterload',
 			function(win, data) {
-				if(Ext.isEmpty(data)) return false;
+				if (Ext.isEmpty(data))
+					return false;
+				this.viewDutyPanel.picturePanel.update('');
+				if (!Ext.isEmpty(data.labelUrl)) {
+					var labelUrl = labelRootUrl;
+					labelUrl += data.labelUrl;
+
+					labelUrl = '<img title="单击查看完整图片" src="'
+							+ labelUrl
+							+ '?ver='
+							+ data.orderNo
+							+ '" onclick= "javascript:window.open(' + "'" + labelUrl + "'" + ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
+					
+					this.viewDutyPanel.picturePanel.update(labelUrl);
+				}
+
 				var prefix = data.prefix;
 				var snStart = data.snStart;
 				var snEnd = data.snEnd;
@@ -340,7 +394,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onChooseSingleOrder = functio
 		prodSpecId = B[0].get('materSpecId');
 
 	}
-	
+
 	if (Ext.isEmpty(orderNo)) {
 		Ext.Msg.alert('系统提示', '请选择订单号');
 		return false;
@@ -367,7 +421,8 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onChooseSingleOrder = functio
 							if (ret.success) {
 								Ext.Msg.alert("系统提示", "操作成功！", function() {
 											_this.listPanel.store.load();
-											_this.chooseSingleOrderWindow.hide();
+											_this.chooseSingleOrderWindow
+													.hide();
 
 										})
 							} else {
@@ -494,43 +549,26 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.exportExcel = function() {
 		return false;
 
 	}
-	
+
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '气检记录',
-			'com.keensen.ump.qinsen.qijian.queryRecords','0,1');
-	/*var daochu = _this.queryPanel.getForm().getValues();
-
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			namingsql : 'com.keensen.ump.qinsen.qijian.queryRecords',
-			templateFilename : 'ks_inst_qijian'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
-				}
-
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})*/
+			'com.keensen.ump.qinsen.qijian.queryRecords', '0,1');
+	/*
+	 * var daochu = _this.queryPanel.getForm().getValues();
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+	 * method : "post", jsonData : { 'map' : daochu, namingsql :
+	 * 'com.keensen.ump.qinsen.qijian.queryRecords', templateFilename :
+	 * 'ks_inst_qijian' }, success : function(resp) { var ret =
+	 * Ext.decode(resp.responseText); if (ret.success) {
+	 * 
+	 * var fname = ret.fname; if (Ext.isIE) {
+	 * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); }
+	 * else { window.location.href =
+	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; } } },
+	 * callback : function() { _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.onRemark = function() {
@@ -773,4 +811,9 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onDuty = function() {
 	}
 	this.viewDutyPanel.loadData(A);
 
+}
+
+function roundToDecimalPlace(number, decimalPlaces) {
+	const factor = Math.pow(10, decimalPlaces);
+	return Math.round(number * factor) / factor;
 }

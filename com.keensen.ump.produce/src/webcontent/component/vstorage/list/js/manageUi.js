@@ -1,14 +1,16 @@
 com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 	this.initPanel = function() {
-		
+
 		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
-		
+
 		this.initEditWindow4Gyy();
 		this.initEditWindow4Pg();
 		this.initChooseSingleOrderWindow();
-		
+
+		this.initMonitorDealWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -16,78 +18,79 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 					panels : [this.queryPanel, this.listPanel]
 				});
 	}
-	
+
 	this.initStore = function() {
 
 		// 超计划生产、需要给工艺意见、需要品管给意见、超期停留
 		this.exceptionTypeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['超计划生产', '超计划生产'], ['需要工艺给意见', '需要工艺给意见'],
-							['需要品管给意见', '需要品管给意见'], ['超期停留', '超期停留']]
+							['需要品管给意见', '需要品管给意见'], ['超期停留', '超期停留'],
+							['需班长处理', '需班长处理']]
 				});
 
 	}
-	
+
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 120,
 					columns : 4,
 					border : true,
-					//collapsible : true,
+					// collapsible : true,
 					titleCollapse : false,
-					//title : '【物料规格查询】',
-					fields : [  {
+					// title : '【物料规格查询】',
+					fields : [{
 
-						xtype : 'textfield',
-						name : 'condition/jmBatchNo',
-						anchor : '80%',
-						fieldLabel : '卷膜序号'
-					}, {
-						xtype : 'prodspeccombobox',
-						hiddenName : 'condition/prodSpecId',
-						anchor : '80%',
-						fieldLabel : '元件型号 '
-					},{
-						xtype : 'datetimefield',
-						name : 'condition/createTimeStart',
-						fieldLabel : '入仓时间',
-						colspan : 1,
-						anchor : '80%',
-						// allowBlank : false,
-						editable : true,
-						format : 'Y-m-d H:i'
-					}, {
-						xtype : 'datetimefield',
-						name : 'condition/createTimeEnd',
-						fieldLabel : '至',
-						colspan : 1,
-						anchor : '80%',
-						editable : true,
-						format : 'Y-m-d H:i'
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, {
-						xtype : 'combobox',
-						mode : 'local',
-						fieldLabel : '异常停留分类',
-						ref : '../exceptionType',
-						hiddenName : 'condition/exceptionType',
-						anchor : '80%',
-						colspan : 1,
-						emptyText : '--请选择--',
-						editable : false,
-						store : this.exceptionTypeStore,
-						displayField : "name",
-						valueField : "code",
-						listeners : {
-							"expand" : function(A) {
-								_this.queryPanel.exceptionType.reset()
-							}
-						}
-					}]
+								xtype : 'textfield',
+								name : 'condition/jmBatchNo',
+								anchor : '80%',
+								fieldLabel : '卷膜序号'
+							}, {
+								xtype : 'prodspeccombobox',
+								hiddenName : 'condition/prodSpecId',
+								anchor : '80%',
+								fieldLabel : '元件型号 '
+							}, {
+								xtype : 'datetimefield',
+								name : 'condition/createTimeStart',
+								fieldLabel : '入仓时间',
+								colspan : 1,
+								anchor : '80%',
+								// allowBlank : false,
+								editable : true,
+								format : 'Y-m-d H:i'
+							}, {
+								xtype : 'datetimefield',
+								name : 'condition/createTimeEnd',
+								fieldLabel : '至',
+								colspan : 1,
+								anchor : '80%',
+								editable : true,
+								format : 'Y-m-d H:i'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '异常停留分类',
+								ref : '../exceptionType',
+								hiddenName : 'condition/exceptionType',
+								anchor : '80%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.exceptionTypeStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.exceptionType.reset()
+									}
+								}
+							}]
 				});
 		this.queryPanel.addButton({
 					text : "导出",
@@ -95,57 +98,83 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
+
+		this.queryPanel.addButton({
+					text : "移除已请检",
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.removeVstorage
+				});
+
+		this.queryPanel.addButton({
+					text : "导入卷膜",
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.importVStorage
+				});
 	}
-	
+
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【物料规格列表】',
+			// title : '【物料规格列表】',
 			hsPage : true,
 			selModel : selModel,
 			tbar : [{
+						text : '班长处理',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						// hidden : gyyFlag != 1,
+						handler : this.onMonitorDeal
+					}, '-', {
+						text : '班长挑水测',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						// hidden : monitorFlag != 1,
+						handler : this.onMonitorRemark
+					}, '-', {
 						text : '工艺员意见',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						//hidden : gyyFlag != 1,
+						// hidden : gyyFlag != 1,
 						handler : this.onGyyRemark
-					}, '-',{
+					}, '-', {
 						text : '品管意见',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						//hidden : gyyFlag != 1,
+						// hidden : gyyFlag != 1,
 						handler : this.onPgRemark
 					}, '-', {
 						text : '入白膜仓',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						//hidden : modifyOrderNoFlag != 1,
+						// hidden : modifyOrderNoFlag != 1,
 						handler : this.onWarehousing
 					}, '-', {
 						text : '批量改订单',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						//hidden : modifyOrderNoFlag != 1,
+						// hidden : modifyOrderNoFlag != 1,
 						handler : this.onModiOrder
-					},'->', {
+					}, '->', {
 						xtype : 'displayfield',
 						value : "<span style='color:red'>超过4小时未处理，卷膜序号标红</span>"
 					}],
-			columns : [new Ext.grid.RowNumberer(), selModel,{
+			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'jmBatchNo',
 						width : 100,
 						header : '卷膜序号',
 						renderer : function(v, m, r, i) {
 							var overTime = r.get('overTime');
-							if (overTime=='1') {
+							if (overTime == '1') {
 								return "<span style='color:red'>" + v
 										+ "</span>";
 							} else {
 								return v;
 							}
 						}
-					},{
+					}, {
 						dataIndex : 'dryWet',
 						width : 100,
 						header : '干/湿膜'
@@ -153,6 +182,10 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						dataIndex : 'prodSpecName',
 						width : 120,
 						header : '元件型号'
+					}, {
+						dataIndex : 'ngReasonName',
+						width : 120,
+						header : '气检NG'
 					}, {
 						dataIndex : 'createTime',
 						width : 120,
@@ -169,6 +202,14 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						dataIndex : 'remark',
 						width : 160,
 						header : '备注'
+					}, {
+						dataIndex : 'monitorRemark',
+						width : 160,
+						header : '班长挑水测'
+					}, {
+						dataIndex : 'monitorRemarkTime',
+						header : '班长安排<br>水测时间',
+						width : 120
 					}, {
 						dataIndex : 'gyyConclusion',
 						width : 160,
@@ -204,7 +245,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 				autoLoad : true,
 				totalProperty : 'totalCount',
 				baseParams : {
-					//'condition/werks' : 3000
+			// 'condition/werks' : 3000
 				},
 				fields : [{
 							name : 'gyyConclusion'
@@ -216,13 +257,13 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 							name : 'gyyRemarkTime'
 						}, {
 							name : 'gyySpecName'
-						},{
+						}, {
 							name : 'pgRemark'
 						}, {
 							name : 'pgRemarkTime'
 						}, {
 							name : 'pgRemarkUserName'
-						},{
+						}, {
 							name : 'jmBatchNo'
 						}, {
 							name : 'createTime'
@@ -266,13 +307,20 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 							name : 'diff'
 						}, {
 							name : 'overTime'
+						}, {
+							name : 'ngReasonName'
+						}, {
+							name : 'monitorRemark'
+						}, {
+							name : 'monitorRemarkTime'
+						}, {
+							name : 'recordId'
 						}]
 			})
 		})
 	}
-	
+
 	this.initEditWindow4Pg = function() {
-		
 
 		this.editWindow4Pg = this.editWindow4Pg || new Ext.fn.FormWindow({
 			title : '品管意见',
@@ -282,33 +330,33 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 			minimizable : false,
 			maximizable : false,
 			items : [{
-				xtype : 'editpanel',
-				baseCls : "x-plain",
-				pgrid : this.listPanel,
-				columns : 1,
-				loadUrl : '1.biz.ext',
-				saveUrl : 'com.keensen.ump.qinsen.qijian.savePgRemark.biz.ext',
-				fields : [{
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'textarea',
-							name : 'entity/pgRemark',
-							allowBlank : false,
-							value : '-',
-							fieldLabel : '品管结论',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'hidden',
-							ref : '../../recordIds',
-							name : 'entity/recordIds'
-						}]
-			}]
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.qinsen.qijian.savePgRemark.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									name : 'entity/pgRemark',
+									allowBlank : false,
+									value : '-',
+									fieldLabel : '品管结论',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordIds',
+									name : 'entity/recordIds'
+								}]
+					}]
 		});
 	}
-	
+
 	this.initEditWindow4Gyy = function() {
 		// A、放行原订单；B、降级；C、改判其他无特殊要求的同型号产品；D、报废
 		this.gyyConclusionStore = new Ext.data.SimpleStore({
@@ -383,7 +431,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 			}]
 		});
 	}
-	
+
 	this.initChooseSingleOrderWindow = function() {
 
 		var chooseSingleOrderSelModel = new Ext.grid.CheckboxSelectionModel({
@@ -613,5 +661,74 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 									this.chooseSingleOrderListPanel]
 
 						});
+	}
+
+	this.initMonitorDealWindow = function() {
+		var _this = this;
+		this.monitorDealWindow = this.monitorDealWindow
+				|| new Ext.fn.FormWindow({
+					title : '班长处理',
+					height : 240,
+					width : 300,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'inputpanel',
+						// baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+
+											}
+										})
+							} else {
+								_this.monitorDealWindow.items.items[0].form
+										.reset();
+								_this.monitorDealWindow.hide();
+								_this.listPanel.store.reload();
+								_this.onMsg();
+							}
+						},
+						columns : 2,
+						saveUrl : 'com.keensen.ump.produce.component.vstorage.updateVstorageExceptionType.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'combobox',
+									mode : 'local',
+									fieldLabel : '异常停留分类',
+									ref : '../../exceptionType',
+									hiddenName : 'param/exceptionType',
+									anchor : '90%',
+									colspan : 2,
+									emptyText : '--请选择--',
+									editable : false,
+									allowBlank : false,
+									store : this.exceptionTypeStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											_this.monitorDealWindow.exceptionType
+													.reset()
+										}
+									}
+								}, {
+									name : 'param/recordIds',
+									xtype : 'hidden',
+									ref : '../../recordIds'
+								}]
+					}]
+				});
 	}
 }

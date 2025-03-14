@@ -59,12 +59,14 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 				var tagLength = _this.editPanel.tagLength.getValue();
 
 				// c21
+				
 				var mpd = _this.editPanel.mpd.getValue();
 				if (!Ext.isEmpty(mpd) && parseFloat(mpd) >= 10)
 					_this.editPanel.mpdIsQualified.setValue('N')
 				else
 					_this.editPanel.mpdIsQualified.setValue('Y')
 				var mpdIsQualified = _this.editPanel.mpdIsQualified.getValue();
+				
 				if (Ext.isEmpty(trendText)) {
 					_this.editPanel.trend.setValue(trend(perfFlagId,
 							isBatchQualified, isKeep, isWx, qualifidLength,
@@ -222,23 +224,26 @@ function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
 	// 发货膜片 isWx == 'Y'
 	// A等品 perfFlagId == 300029
 	// 合格 isBatchQualified == 'Y'
-	// c21 pdIsQualified=='Y'
+	// c21 mpdIsQualified=='Y'
 	// 2025-02-26
 	// 走向只有两个仓，发货仓和ab仓
 	// 发货膜片除合格长度200m以下或标签数大于10个或C21大于10入AB仓，其他的全部入膜片发货仓。
 
-	ret = '仓库AB仓';
-	if (isWx == 'N') {		
+			
+	var ret = '仓库AB仓';
+	if (isWx == 'N') {//自用		
 		return ret;
 	}
 
-	if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified == 'Y') {
+	if (tagNum > 10 || mpdIsQualified=='N' || parseFloat(qualifidLength)<=200) {
+		ret = '仓库AB仓';
+	}else{
 		ret = '仓库发货仓';
 	}
-
-	if (tagNum > 10) {
-		ret = '仓库AB仓';
-	}
+	
+	/*if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified == 'Y') {
+		ret = '仓库发货仓';
+	}*/
 
 	return ret;
 

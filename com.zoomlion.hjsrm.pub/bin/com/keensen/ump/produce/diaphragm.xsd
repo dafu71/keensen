@@ -126,53 +126,6 @@
             <xs:element minOccurs="0" name="stockAmount" nillable="true" type="xs:decimal"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="KsProdDiaphragmZmxRecord">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
-            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="dimoType" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="line" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="productDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="dimoBatchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="supName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="supId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="wfBatchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="zmyBatchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="theoryAmount" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="lose0" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="lose1" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="lose2" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="lose3" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="lose4" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="lose5" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="lose6" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="lose7" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="flaw0" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="flaw1" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="flaw2" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="teamId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="teamName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="beforeAmount" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="curAmount" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="abnormal" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="pumpSpeed" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="base" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="productType" nillable="true" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="KsProdDiaphragmWorkplan">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -541,6 +494,54 @@
             <xs:element minOccurs="0" name="operatorId" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="operatorName" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="c51" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsProdDiaphragmZmxRecord">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dimoType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="line" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="productDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dimoBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="supName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="supId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="wfBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="zmyBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="theoryAmount" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="lose0" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="lose1" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="lose2" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="lose3" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="lose4" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="lose5" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="lose6" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="lose7" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="flaw0" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="flaw1" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="flaw2" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="teamId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="teamName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="beforeAmount" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="curAmount" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="abnormal" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pumpSpeed" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="base" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="productType" nillable="true" type="xs:string"/>
+            <xs:element default="1" minOccurs="0" name="ifModifyDefect" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

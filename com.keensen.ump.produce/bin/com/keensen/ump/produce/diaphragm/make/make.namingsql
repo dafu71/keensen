@@ -96,7 +96,8 @@
        (NVL(T1.LOSE0, 0) + NVL(T1.LOSE1, 0) + NVL(T1.LOSE2, 0) +
         NVL(T1.LOSE3, 0) + NVL(T1.LOSE4, 0) + NVL(T1.LOSE5, 0) +
         NVL(T1.LOSE6, 0) + NVL(T1.LOSE7, 0)) "dimoAmount",-->
-        NVL(T1.THEORY_AMOUNT, 0) - nvl(defect.loss,0) "dimoAmount",
+        NVL(T1.THEORY_AMOUNT, 0) - nvl(defect2.loss,0) "dimoAmount",
+        NVL(T1.THEORY_AMOUNT, 0) - nvl(defect.loss,0) "dimoAmountQualified",
        T1.FLAW0 AS "flaw0",
        T1.FLAW1 AS "flaw1",
        T1.FLAW2 AS "flaw2",
@@ -110,6 +111,10 @@
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
   left join (select sum(t.loss) loss ,t.dm_batch_id from QINSEN.Inst_Cdm_Defect2 t
 	GROUP BY t.dm_batch_id) defect on defect.dm_batch_id = t1.id
+	
+left join (select sum(t.loss) loss ,t.dm_batch_id from QINSEN.Inst_Cdm_Defect2 t
+where nvl(if_tear,'是') = '是'
+	GROUP BY t.dm_batch_id) defect2 on defect2.dm_batch_id = t1.id	
   left join qinsen.CONF_PROP_VALUE_OPTION t2
  	on t2.prop_id = 30021 and t2.prop_value_id = t1.SUP_ID
   left join qinsen.BASE_DEPARTMENT t3
@@ -144,24 +149,25 @@
        T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue",t3.sup_name "supName",nvl(t3.pump_speed,'无') "pumpSpeed"
   FROM (SELECT T.DIMO_BATCH_NO,
                '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
+               
                DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
                       'A',
-                      10,
+                      '10',
                       'B',
-                      11,
+                      '11',
                       'C',
-                      12,
-                      SUBSTR(T.DIMO_BATCH_NO, 7, 1)) M,
+                      '12',
+                      '0' || SUBSTR(T.DIMO_BATCH_NO, 7, 1)) M,
                SUBSTR(T.DIMO_BATCH_NO, 8, 2) D,
                '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) || '-' ||
                DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
                       'A',
-                      10,
+                      '10',
                       'B',
-                      11,
+                      '11',
                       'C',
-                      12,
-                      SUBSTR(T.DIMO_BATCH_NO, 7, 1)) || '-' ||
+                      '12',
+                      '0' || SUBSTR(T.DIMO_BATCH_NO, 7, 1)) || '-' ||
                SUBSTR(T.DIMO_BATCH_NO, 8, 2) PRODUCT_DT,
                MAX(T.LINE) LINE,
                MAX(T.DIMO_TYPE) DIMO_TYPE,
@@ -183,8 +189,8 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
   <isNotNull prepend="" property="base">AND t3.base = #base#</isNotNull>
         <isNotNull prepend="" property="dimoType">AND t1.dimo_Type = #dimoType#</isNotNull>
         <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
-        <isNotNull prepend="and" property="productDtStart">T1.PRODUCT_DT  &gt;=  #productDtStart#</isNotNull>
-        <isNotNull prepend="and" property="productDtEnd">T1.PRODUCT_DT  &lt;=  #productDtEnd#</isNotNull>
+        <isNotNull prepend="and" property="productDtStart">T1.PRODUCT_DT &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">T1.PRODUCT_DT &lt;=   #productDtEnd#</isNotNull>
         <isNotNull prepend="" property="dimoBatchNo">AND T1.DIMO_BATCH_NO = #dimoBatchNo#</isNotNull>
         <isNotNull prepend="" property="dimoBatchNo2">AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'</isNotNull>
      order by t1.y desc,t1.m DESC,t1.d DESC

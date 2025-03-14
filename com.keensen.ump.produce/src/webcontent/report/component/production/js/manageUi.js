@@ -14,7 +14,8 @@ com.keensen.ump.produce.report.component.ProductonMgr = function() {
 		this.tabPanel = new Ext.fn.TabPanel({
 					activeTab : 0,
 					items : [this.createDayPanel(), this.createMonthPanel(),
-							this.createYearPanel(), this.createRepairPanel()]
+							this.createYearPanel(), this.createPeriodPanel(),
+							this.createRepairPanel()]
 				});
 		return this.tabPanel;
 	};
@@ -47,4 +48,10 @@ com.keensen.ump.produce.report.component.ProductonMgr = function() {
 		return this.repairPanel;
 	};
 
+	this.createPeriodPanel = function() {
+		this.periodMgr = new com.keensen.ump.produce.report.component.PeriodMgr(this.lay);
+		this.periodPanel = this.periodMgr.initPanel();
+		this.periodMgr.initEvent();
+		return this.periodPanel;
+	};
 }

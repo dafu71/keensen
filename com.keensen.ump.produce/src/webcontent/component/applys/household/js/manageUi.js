@@ -170,6 +170,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						sortable : true,
 						header : '栈板号'
 					}, {
+						dataIndex : 'reserve1',
+						sortable : true,
+						header : '订单号'
+					}, {
 						dataIndex : 'ifcstock',
 						sortable : true,
 						header : '已确认入C仓'
@@ -394,6 +398,13 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						anchor : '95%',
 						colspan : 6
 					}, {
+						xtype : 'textfield',
+						name : 'reserve1',
+						fieldLabel : '订单号',
+						//allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 12
@@ -417,7 +428,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									fields : ['mykey', 'myvalue'],
 									data : [['蓝色', '蓝色'], ['绿色', '绿色'],
 											['白色', '白色'], ['黄色', '黄色'],
-											['灰色', '灰色']]
+											['灰色', '灰色'], ['水光蓝', '水光蓝']]
 								}),
 						mode : "local",
 						editable : false,
@@ -942,6 +953,15 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						anchor : '95%',
 						colspan : 6
 					}, {
+						xtype : 'textfield',
+						dataIndex : 'reserve1',
+						name : 'reserve1',
+						fieldLabel : '订单号',
+						readOnly:true,
+						//allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 12
@@ -969,7 +989,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									fields : ['mykey', 'myvalue'],
 									data : [['蓝色', '蓝色'], ['绿色', '绿色'],
 											['白色', '白色'], ['黄色', '黄色'],
-											['灰色', '灰色']]
+											['灰色', '灰色'], ['水光蓝', '水光蓝']]
 								}),
 						mode : "local",
 						editable : false,
@@ -1787,6 +1807,14 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						anchor : '95%',
 						colspan : 6
 					}, {
+						xtype : 'textfield',
+						dataIndex : 'reserve1',
+						name : 'reserve1',
+						fieldLabel : '订单号',
+						readOnly : true,
+						anchor : '95%',
+						colspan : 6
+					}, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 12
@@ -1814,7 +1842,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									fields : ['mykey', 'myvalue'],
 									data : [['蓝色', '蓝色'], ['绿色', '绿色'],
 											['白色', '白色'], ['黄色', '黄色'],
-											['灰色', '灰色']]
+											['灰色', '灰色'], ['水光蓝', '水光蓝']]
 								}),
 						mode : "local",
 						editable : false,
@@ -2174,6 +2202,14 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						anchor : '95%',
 						colspan : 6
 					}, {
+						xtype : 'textfield',
+						dataIndex : 'reserve1',
+						name : 'reserve1',
+						fieldLabel : '订单号',
+						//allowBlank : false,
+						anchor : '95%',
+						colspan : 6
+					}, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 12
@@ -2199,7 +2235,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									fields : ['mykey', 'myvalue'],
 									data : [['蓝色', '蓝色'], ['绿色', '绿色'],
 											['白色', '白色'], ['黄色', '黄色'],
-											['灰色', '灰色']]
+											['灰色', '灰色'], ['水光蓝', '水光蓝']]
 								}),
 						mode : "local",
 						editable : false,
@@ -2527,6 +2563,14 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						anchor : '95%',
 						colspan : 6
 					}, {
+						xtype : 'textfield',
+						dataIndex : 'reserve1',
+						name : 'reserve1',
+						fieldLabel : '订单号',
+						readOnly : true,
+						anchor : '95%',
+						colspan : 6
+					}, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 12
@@ -2554,7 +2598,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									fields : ['mykey', 'myvalue'],
 									data : [['蓝色', '蓝色'], ['绿色', '绿色'],
 											['白色', '白色'], ['黄色', '黄色'],
-											['灰色', '灰色']]
+											['灰色', '灰色'], ['水光蓝', '水光蓝']]
 								}),
 						mode : "local",
 						editable : false,
@@ -2883,6 +2927,14 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						anchor : '95%',
 						colspan : 6
 					}, {
+						xtype : 'textfield',
+						dataIndex : 'reserve1',
+						name : 'reserve1',
+						fieldLabel : '订单号',
+						readOnly : true,
+						anchor : '95%',
+						colspan : 6
+					}, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 12
@@ -2910,7 +2962,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									fields : ['mykey', 'myvalue'],
 									data : [['蓝色', '蓝色'], ['绿色', '绿色'],
 											['白色', '白色'], ['黄色', '黄色'],
-											['灰色', '灰色']]
+											['灰色', '灰色'], ['水光蓝', '水光蓝']]
 								}),
 						mode : "local",
 						editable : false,

@@ -139,14 +139,14 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 			height : '500',
 
 			pgrid : '',
-			columns : 1,
+			columns : 2,
 			autoHide : false,
 			border : true,
 			saveUrl : '1.biz.ext',
 			fields : [{
 						xtype : 'displayfield',
 						height : '50',
-						colspan : 1
+						colspan : 2
 					}, {
 						fieldLabel : '只作包装记录',
 						xtype : 'checkbox',
@@ -155,9 +155,16 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						inputValue : 'Y',
 						anchor : '80%'
 					}, {
+						fieldLabel : '打印五星',
+						xtype : 'checkbox',
+						checked : false,
+						ref : '../isStar',
+						inputValue : 'Y',
+						anchor : '80%'
+					}, {
 						xtype : 'displayfield',
 						height : '10',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						// name : 'condition/juanmoBatchNo',
@@ -166,7 +173,7 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						fieldLabel : '卷膜序号',
 						ref : '../juanmoBatchNo',
 						anchor : '80%',
-						colspan : 1,
+						colspan : 2,
 						keys : {
 							key : Ext.EventObject.ENTER,
 							fn : function(btn, e) {
@@ -188,11 +195,11 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						fieldLabel : ' ',
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 						labelSeparator : '',// 去掉冒号
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '10',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
@@ -200,11 +207,11 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						anchor : '80%',
 						ref : '../prodBatchNo',
 						fieldLabel : '元件序号',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '10',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						// name : 'warehousing/position',
@@ -214,11 +221,11 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						style : '{font-weight:bold;}',
 						ref : '../orderNo',
 						anchor : '80%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '10',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
@@ -226,11 +233,11 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						anchor : '80%',
 						ref : '../prodSpecName2',
 						fieldLabel : '订单生产型号',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '10',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
@@ -238,15 +245,15 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						anchor : '80%',
 						ref : '../prodSpecName',
 						fieldLabel : '实际生产型号',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '10',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'combobox',
 						anchor : '80%',
-						colspan : 1,
+						colspan : 2,
 						allowBlank : false,
 						readOnly : true,
 						name : 'entity/c',
@@ -267,7 +274,7 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						height : '10',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
@@ -275,18 +282,18 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						anchor : '80%',
 						ref : '../dryWet2',
 						fieldLabel : '生产干/湿膜',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '10',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textarea',
 						readOnly : true,
 						ref : '../remark',
 						fieldLabel : '提示',
 						anchor : '80%',
-						colspan : 1,
+						colspan : 2,
 						dataIndex : 'remark'
 					}],
 			buttons : [{
@@ -370,7 +377,7 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 				})
 
 		this.viewDutyPanel = this.viewDutyPanel || new Ext.fn.EditPanel({
-			height : 280,
+			height : 300,
 			region : 'north',
 			baseCls : "x-panel",
 			autoHide : false,
@@ -523,12 +530,16 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						colspan : 1
 					}, {
 						xtype : 'displayfield',
-						fieldLabel : '标签图纸编号',
-						ref : '../labelDrawingCode',
-						readOnly : true,
-						dataIndex : 'labelDrawingCode',
-						anchor : '85%',
+						fieldLabel : '标签图纸',
+						ref : '../picturePanel',
+						height : '60',
+						anchor : '100%',
 						colspan : 1
+					}, {
+						xtype : 'hidden',
+						name : 'labelUrl',
+						dataIndex : 'labelUrl'
+
 					}],
 			buttons : [{
 						text : "刷新任务",

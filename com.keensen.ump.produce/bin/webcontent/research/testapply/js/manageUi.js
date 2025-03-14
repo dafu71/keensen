@@ -154,7 +154,6 @@ com.keensen.ump.research.TestapplyMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					// title : '【仓库配置查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/code',

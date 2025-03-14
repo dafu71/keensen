@@ -234,7 +234,7 @@
     <figSize height="20" width="257"/>
     <node>assign4</node>
   </nodes>
-  <nodes xsi:type="process:tAssign" id="assign5" name="C等品 不合格 走向待二次判定" type="assign">
+  <nodes xsi:type="process:tAssign" id="assign5" name="C等品 不合格 走向仓库AB仓" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link12" name="link12" isDefault="true" type="transition">
       <sourceNode>assign5</sourceNode>
       <targetNode>switch1</targetNode>
@@ -248,12 +248,12 @@
     <targetConnections>link11</targetConnections>
     <nodeLabel>assign5label</nodeLabel>
     <process:copy>
-      <process:from type="literal" pattern="reference">待二次判定</process:from>
+      <process:from type="literal" pattern="reference">仓库AB仓</process:from>
       <process:to type="query">ret</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
-    <figSize height="20" width="199"/>
+    <figSize height="20" width="189"/>
     <node>assign5</node>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign6" name="保留品 不合格 走向仓库C仓" type="assign">

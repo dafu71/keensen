@@ -130,7 +130,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					data : [['印刷双层', '印刷双层'], ['印刷三层', '印刷三层'], ['网纹', '网纹'],
 							['公司标准', '公司标准'], ['蓝胶带', '蓝胶带'], ['绿胶带', '绿胶带'],
 							['白胶带', '白胶带'], ['黄胶带', '黄胶带'], ['灰胶带', '灰胶带'],
-							['水光蓝胶带', '水光蓝胶带'],['黑色亮光胶带', '黑色亮光胶带']]
+							['水光蓝胶带', '水光蓝胶带'], ['黑色亮光胶带', '黑色亮光胶带']]
 				});
 
 		// 制作方式下拉选项：印刷、打印
@@ -203,6 +203,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					data : [['需工艺确认', '需工艺确认'], ['需品质确认', '需品质确认'], ['是', '是'],
 							['否', '否']]
 				});
+				
+		
 
 		this.gyyStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -456,7 +458,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					// disabled : allRight != '1',
-					rescode:'10003669',
+					rescode : '10003669',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
@@ -3050,6 +3052,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						dataIndex : 'reason',
 						header : '不能接单时反馈原因'
 					}, {
+						dataIndex : 'mReason',
+						header : '物控不能接单反馈原因'
+					}, {
 						dataIndex : 'adviseDate',
 						header : '建议调整入库日期'
 					}, {
@@ -3398,7 +3403,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					height : 5,
 					colspan : 24
 				}, {
-					//name : 'entity/productRemark',
+					// name : 'entity/productRemark',
 					dataIndex : 'productRemark',
 					readOnly : true,
 					anchor : '100%',
@@ -5660,7 +5665,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										width : 30
 									}), selModel4ChooseLable, {
 								dataIndex : 'drawingName',
-								hidden:true,
+								hidden : true,
 								header : '图纸名称'
 							}, {
 								dataIndex : 'drawingCode',
@@ -5670,14 +5675,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								header : '物料号'
 							}, {
 								dataIndex : 'logo',
-								hidden:true,
+								hidden : true,
 								header : '标签LOGO'
 							}, {
 								dataIndex : 'specName',
 								header : '贴牌型号'
 							}, {
 								dataIndex : 'labelSize',
-								hidden:true,
+								hidden : true,
 								header : '标签尺寸'
 							}],
 					store : new Ext.data.JsonStore({
@@ -5712,21 +5717,17 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							region : 'north',
 							// collapsible : true,
 							titleCollapse : false,
-							fields : [/*{
-										xtype : 'combobox',
-										forceSelection : true,
-										mode : 'local',
-										fieldLabel : '标签LOGO',
-										// ref : '../../logoLabel',
-										hiddenName : 'condition/logo',
-										anchor : '100%',
-										colspan : 1,
-										emptyText : '',
-										editable : false,
-										store : this.labelDrawingLogoStore,
-										displayField : "logo",
-										valueField : "logo"
-									},*/ {
+							fields : [/*
+										 * { xtype : 'combobox', forceSelection :
+										 * true, mode : 'local', fieldLabel :
+										 * '标签LOGO', // ref : '../../logoLabel',
+										 * hiddenName : 'condition/logo', anchor :
+										 * '100%', colspan : 1, emptyText : '',
+										 * editable : false, store :
+										 * this.labelDrawingLogoStore,
+										 * displayField : "logo", valueField :
+										 * "logo" },
+										 */{
 										xtype : 'combobox',
 										forceSelection : true,
 										mode : 'local',
@@ -5740,19 +5741,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										store : this.labelDrawingSpecNameStore,
 										displayField : "specName",
 										valueField : "specName"
-									}/*, {
-										xtype : 'displayfield',
-										height : '5',
-										colspan : 2
-									}, {
-										xtype : 'textfield',
-										mode : 'local',
-										fieldLabel : '%-标签LOGO-%',
-										// ref : '../../logoLabel',
-										name : 'condition/logo2',
-										anchor : '100%',
-										colspan : 1
-									}*/, {
+									}/*
+										 * , { xtype : 'displayfield', height :
+										 * '5', colspan : 2 }, { xtype :
+										 * 'textfield', mode : 'local',
+										 * fieldLabel : '%-标签LOGO-%', // ref :
+										 * '../../logoLabel', name :
+										 * 'condition/logo2', anchor : '100%',
+										 * colspan : 1 }
+										 */, {
 										xtype : 'textfield',
 										mode : 'local',
 										fieldLabel : '%-贴牌型号-%',
@@ -6234,6 +6231,26 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								format : "Y-m-d",
 								anchor : '85%',
 								colspan : 3
+							}, {
+								xtype : 'combobox',
+								forceSelection : true,
+								allowBlank : false,
+								mode : 'local',
+								fieldLabel : '能否接单',
+								ref : '../ifget',
+								hiddenName : 'ifget',
+								anchor : '85%',
+								colspan : 3,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
 							}, {
 								name : 'relationId',
 								ref : '../relationId',

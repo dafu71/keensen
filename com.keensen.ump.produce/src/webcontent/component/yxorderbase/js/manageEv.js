@@ -1056,7 +1056,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSaveMCConfirm = fun
 		var store = this.mcconfirmListPanel.store;
 		var records = store.getRange();
 		var ifall = this.mcconfirmInputPanel.ifall.getValue();
-		if (ifall == '否' && records.length == 0) {
+		
+		var ifget = this.mcconfirmInputPanel.ifget.getValue();
+		
+		
+		if (ifget=='是' && ifall == '否' && records.length == 0) {
 			Ext.Msg.alert("系统提示", "至少需要有一条物料计划！")
 			return false;
 		} else {

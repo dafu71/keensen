@@ -406,6 +406,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							}
 						}
 					}, {
+						header : '空头数',
+						width : 80,
+						dataIndex : 'ktAmount'
+					}, {
 						header : '剩余可用长度',
 						width : 80,
 						dataIndex : 'remainLength'
@@ -562,7 +566,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								return "<span style='color:red'>" + '不合格'
 										+ "</span>";
 							}
-							return "<span style='color:yellow'>" + '更换漂洗槽'
+							return "<span style='color:blue'>" + '更换漂洗槽'
 									+ "</span>";
 
 						}
@@ -851,6 +855,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'modifyUserId'
 								}, {
 									name : 'modifyName'
+								}, {
+									name : 'ktAmount'
 								}]
 					})
 		})
@@ -2375,7 +2381,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'inputpanel',
 						pgrid : this.listPanel4defectSample,
 						columns : 1,
-						saveUrl : 'com.keensen.ump.qinsen.quality.addCdmDefect.biz.ext',
+						saveUrl : 'com.keensen.ump.qinsen.quality.addCdmDefect2.biz.ext',
 						fields : [{
 									xtype : 'textfield',
 									fieldLabel : '膜片批次',

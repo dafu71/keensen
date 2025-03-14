@@ -1012,56 +1012,6 @@
             <edit name="" type="text"/>
         </field>
     </viewModel>
-    <viewModel author="dafu" displayName="InstCdmDefect2" entityName="com.keensen.ump.qinsen.inst.InstCdmDefect2" id="InstCdmDefect2">
-        <field dataType="Int" dict="false" id="recordId" label="主键ID，取自SEQ_INST_CDM_DEFECT2">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" id="dmBatchId" label="底膜批号ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" id="defectItemId" label="不良项目ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Decimal" dict="false" id="loss" label="损失量(m)">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" id="workerId" label="操作工ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Date" dict="false" id="produceDt" label="生产日期">
-            <view type="write"/>
-            <edit name="" type="date"/>
-        </field>
-        <field dataType="Date" dict="false" id="createDt" label="创建日期">
-            <view type="write"/>
-            <edit name="" type="date"/>
-        </field>
-        <field dataType="Date" dict="false" id="changeDt" label="修改日期">
-            <view type="write"/>
-            <edit name="" type="date"/>
-        </field>
-        <field dataType="Int" dict="false" id="creatorId" label="创建人ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" id="changerId" label="修改人ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="remark" label="说明">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" id="pageNum" label="损失页数，裁膜录入时使用">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-    </viewModel>
     <viewModel author="dafu" displayName="InstJuanmoMain" entityName="com.keensen.ump.qinsen.inst.InstJuanmoMain" id="InstJuanmoMain">
         <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="主键ID，取自SEQ_INST_JUANMO_MAIN">
             <view type="write"/>
@@ -1664,6 +1614,68 @@
         <field dataType="String" dict="false" entityField="ifTear" id="ifTear" label="是否已扯">
             <view type="write"/>
             <edit name="ifTear" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="InstCdmDefect2" entityName="com.keensen.ump.qinsen.inst.InstCdmDefect2" id="InstCdmDefect2">
+        <field dataType="Int" dict="false" id="recordId" label="主键ID，取自SEQ_INST_CDM_DEFECT2">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="dmBatchId" label="底膜批号ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="defectItemId" label="不良项目ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="loss" label="损失量(m)">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="workerId" label="操作工ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="produceDt" label="生产日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="pageNum" label="损失页数，裁膜录入时使用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="recorder" label="记录人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ifTear" label="是否已扯">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="position" label="收卷位置">
+            <view type="write"/>
+            <edit name="" type="text"/>
         </field>
     </viewModel>
 </viewModelSet>

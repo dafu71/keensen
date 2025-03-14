@@ -1,6 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.qinsen.qijian">
+    <select id="queryJuanmoLengthSum" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+SELECT SUM(juanmo_Length) "juanmoLength"
+FROM
+(
+	SELECT 
+       (SELECT SUM(D.OUT_QUANTITY) * Z.BLANKING_SIZE * Z.PAGE_WIDTH
+           FROM qinsen.INST_JUANMO_DETAIL D
+          WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) juanmo_Length 
+	  FROM (SELECT  T.* 
+	          FROM (
+
+	SELECT A.RECORD_ID, A.JUANMO_BATCH_ID, A.BATCH_NO, A.LINE_ID,A.gyy_remark,
+	       A.PROD_SPEC_ID, A.ORDER_NO, A.PRODUCE_DT, A.PRESURE, A.CHECK_RESULT,
+	       A.IS_QUALIFIED, A.IS_FIRST, A.STD_STR, A.TEAM_ID, A.WORKER_ID, A.NG_REASON_ID, 
+	       A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID, A.CHANGER_ID, A.REMARK,
+	       A.JUDGE_FLAG, A.NG_ITEM, A.JUDGER_ID, A.JUDGE_DT,A.diameter,A.diameter2,
+	       
+	       A.modify_order_no_time ,A.modify_order_no_name,A.modify_order_no_user_id,A.order_no_original,A.prod_spec_id_original,
+	       A.prod_SPEC_name_original,
+	       A.GYY_REMARK_TIME,A.GYY_REMARK_USER_ID,A.GYY_REMARK_USER_NAME,
+	       A.gyy_conclusion,A.gyy_SPEC_ID,A.gyy_SPEC_name,
+			A.MONITOR_REMARK,A.MONITOR_REMARK_TIME,A.MONITOR_REMARK_USER_ID,
+			A.MONITOR_REMARK_USER_NAME,
+			A.MONITOR_REMARK2,A.MONITOR_REMARK_TIME2,A.MONITOR_REMARK_USER_ID2,
+			A.MONITOR_REMARK_USER_NAME2,
+	       A.WATER_REMARK ,
+			A.WATER_REMARK_TIME ,
+			A.WATER_REMARK_USER_ID ,
+			A.WATER_REMARK_USER_NAME ,A.DRY_WET,J.trailer,
+		       
+	       A.diff,
+	        
+	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
+	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
+	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
+	  FROM (SELECT QJ.*, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
+CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET,
+
+TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
+                                     SYSDATE - 10000),
+                                 'yyyy-mm-dd hh24:mi:ss'),
+                         'yyyy-mm-dd hh24:mi:ss') -
+                 TO_DATE(TO_CHAR(RS.PRODUCE_DT, 'yyyy-mm-dd hh24:mi:ss'),
+                         'yyyy-mm-dd hh24:mi:ss')) diff
+
+
+  FROM QINSEN.INST_QIJIAN QJ
+  
+  left join  qinsen.PARA_MATER_SPEC pms2
+  on QJ.prod_SPEC_ID_original = PMS2.MATER_SPEC_ID
+  
+  LEFT JOIN (SELECT max(PRODUCE_DT) PRODUCE_DT,BATCH_NO FROM QINSEN.INST_RAOSI 
+  GROUP BY BATCH_NO) RS
+    ON RS.BATCH_NO = QJ.BATCH_NO
+  left join  qinsen.PARA_MATER_SPEC pms
+  on QJ.gyy_SPEC_ID = PMS.MATER_SPEC_ID
+  LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+  ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID) A, 
+  qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
+	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
+	   AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
+	   
+	<isEqual compareValue="4寸" prepend="" property="prodType">AND A.team_id in (100516,100070) and (J.LINE_ID = 30061 OR J.LINE_ID = 30221 OR
+                    J.LINE_ID = 30242)</isEqual>
+        <isEqual compareValue="8寸" prepend="" property="prodType">AND A.team_id in (100516,100070) and (J.LINE_ID = 30062 OR J.LINE_ID = 30120 OR
+                    J.LINE_ID = 30180 OR J.LINE_ID = 30222)</isEqual>
+        <!--暂无家用 -->
+        <isEqual compareValue="家用" prepend="" property="prodType">AND A.team_id in (0)</isEqual>
+        <isNotNull prepend="" property="dryWet">AND A.DRY_WET = #dryWet#</isNotNull>
+        <isNotNull prepend="" property="batchNoList">AND A.BATCH_NO in($batchNoList$)</isNotNull>
+        <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = UPPER(#batchNo#)</isNotNull>
+        <isNotNull prepend="" property="batchNoMin">AND A.BATCH_NO &gt;= UPPER(#batchNoMin#)</isNotNull>
+        <isNotNull prepend="" property="batchNoMax">AND A.BATCH_NO &lt;= UPPER(#batchNoMax#)</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
+        <isNotNull prepend="" property="lineId">AND A.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="prodSpecId">AND A.PROD_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="teamId">AND A.TEAM_ID = #teamId#</isNotNull>
+        <isNotNull prepend="" property="workerId">AND A.WORKER_ID = #workerId#</isNotNull>
+        <isNotNull prepend="" property="isQualified">AND A.IS_QUALIFIED = #isQualified#</isNotNull>
+        <isNotNull prepend="" property="judgeFlag">AND A.JUDGE_FLAG = #judgeFlag#</isNotNull>
+        <isNotNull prepend="" property="ngReasonId">AND A.NG_REASON_ID = #ngReasonId#</isNotNull>
+        <isNotNull prepend="" property="produceDtStart">AND A.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="produceDtEnd">AND A.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchId">AND J.RECORD_ID = #juanMoBatchId#</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchNo">AND J.BATCH_NO = UPPER(#juanMoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="juanmoBatchNo">AND J.BATCH_NO = UPPER(#juanmoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchNoMin">AND J.BATCH_NO &gt;= UPPER(#juanMoBatchNoMin#)</isNotNull>
+        <isNotNull prepend="" property="juanMoBatchNoMax">AND J.BATCH_NO &lt;= UPPER(#juanMoBatchNoMax#)</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.DIMO_BATCH_NO = #dimoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchId">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = #tumoBatchId#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNo">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO = #tumoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="tumoBatchNoStr">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO LIKE '%' || UPPER(#tumoBatchNoStr#) || '%')</isNotNull>
+        <isNotNull prepend="" property="cdmBatchId">AND EXISTS (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = #cdmBatchId#)</isNotNull>
+        <isNotNull prepend="" property="cdmBatchNo">AND EXISTS (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.BATCH_NO = #cdmBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="mpSpecId">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE J.RECORD_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.SPEC_ID = #mpSpecId#)</isNotNull>
+        <isNotNull prepend="" property="batchIdList">AND A.RECORD_ID IN ($batchIdList$)</isNotNull>
+        <isNotNull prepend="" property="lastTagWorkerId">AND EXISTS
+            (SELECT 1 FROM qinsen.INST_QIJIAN_CHANGE X
+              WHERE X.JUANMO_BATCH_ID = A.JUANMO_BATCH_ID)
+	   AND qinsen.PG_GET_INFO.GET_LAST_TAG_WORKER(A.JUANMO_BATCH_ID) =	#lastTagWorkerId#</isNotNull>
+		
+		) T) Z)	
+			
+</select>
     <!-- 查询气检记录列表 -->
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	
@@ -158,7 +301,13 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
 	   AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
 	   
-	  <isNotNull prepend="" property="dryWet">AND A.DRY_WET = #dryWet#</isNotNull>
+	<isEqual compareValue="4寸" prepend="" property="prodType">AND A.team_id in (100516,100070) and (J.LINE_ID = 30061 OR J.LINE_ID = 30221 OR
+                    J.LINE_ID = 30242)</isEqual>
+        <isEqual compareValue="8寸" prepend="" property="prodType">AND A.team_id in (100516,100070) and (J.LINE_ID = 30062 OR J.LINE_ID = 30120 OR
+                    J.LINE_ID = 30180 OR J.LINE_ID = 30222)</isEqual>
+        <!--暂无家用 -->
+        <isEqual compareValue="家用" prepend="" property="prodType">AND A.team_id in (0)</isEqual>
+        <isNotNull prepend="" property="dryWet">AND A.DRY_WET = #dryWet#</isNotNull>
         <isNotNull prepend="" property="batchNoList">AND A.BATCH_NO in($batchNoList$)</isNotNull>
         <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
         <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>

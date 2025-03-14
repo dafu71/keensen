@@ -52,6 +52,7 @@
 			<input type="hidden" name="prodSpecName"/>
 			<input type="hidden" name="prodSpecName2"/>
 			<input type="hidden" name="code"/>
+			<input type="hidden" name="isStar"/>
 		</form>
 	</div>
 </body>

@@ -373,6 +373,7 @@ com.keensen.ump.produce.quality.watertrialstdMgr = function() {
 							dataIndex : 'trialSpecId',
 							ref : '../../trialSpecId',
 							readOnly : true,
+							disabled : true,
 							allowBlank : false,
 							anchor : '75%',
 							fieldLabel : '试卷元件型号 '

@@ -162,6 +162,17 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 				colspan : 24,
 				labelSeparator : ''// 去掉冒号
 			}, {
+				ref : '../juanmo',
+				xtype : 'textfield',
+				fieldLabel : '卷膜工艺要求',
+				colspan : 24,
+				anchor : '90%',
+				readOnly : true
+			}, {
+				xtype : 'displayfield',
+				height : '5',
+				colspan : 24
+			}, {
 				xtype : 'combobox',
 				forceSelection : true,
 				// readOnly : true,
@@ -312,7 +323,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 			}, {
 				ref : '../blankingSize',
 				name : 'entity/blankingSize',
-				fieldLabel : '下料尺寸',
+				fieldLabel : '膜片下料尺寸',
 				xtype : 'textfield',
 				readOnly : true,
 				colspan : 12,
@@ -371,8 +382,29 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 				height : '5',
 				colspan : 24
 			}, {
+				ref : '../lightNetType',
+				// name : 'entity/lightNetType',
+				fieldLabel : '淡网型号',
+				xtype : 'textfield',
+				readOnly : true,
+				anchor : '85%',
+				colspan : 12
+			}, {
+				ref : '../lightNetShortPage',
+				// name : 'entity/lightNetShortPage',
+				fieldLabel : '淡网短页',
+				xtype : 'textfield',
+				readOnly : true,
+				anchor : '85%',
+				colspan : 12
+			}, {
+				xtype : 'displayfield',
+				height : '5',
+				colspan : 24
+			}, {
 				name : 'entity/remark',
 				xtype : 'textarea',
+				height : 30,
 				fieldLabel : '备注',
 				colspan : 24,
 				anchor : '90%',

@@ -94,7 +94,8 @@
        T1.sumOutLength "sumOutLength",
        nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) - nvl(T1.CAIMO_LOSS,0) "remainLength",
        nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength",
-       decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName"
+       decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
+       t1.kt_amount "ktAmount"
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,A.water_batch_no,
                A.PLAN_NO,A.if_modify_defect,
                A.DIMO_BATCH_NO,
@@ -201,7 +202,10 @@
                T8.GFD_AVG R_GFD_AVG,
                T8.SALT_REJECTION R_SALT_REJECTION,
                t33.reserve4,t33.trend,t33.perf_is_qualified,
-               vkrc.sumOutLength
+               vkrc.sumOutLength,
+               
+               DECODE(A.IS_CUT_OVER, 'Y', to_char(A.OUT_LENGTH - nvl(kt.CAIMO_LOSS,0) - nvl(T2.CAIMO_LENGTH,0),'FM9999999990.99') , '') kt_amount
+               
           FROM QINSEN.INST_TUMO A
           left join KS_DIAPHRAGM_DIAMETER kdd on kdd.batch_no = A.batch_no 
           left join KS_PROD_DIAPHRAGM_TUMO t33
@@ -254,7 +258,15 @@
                      WHERE DD.DEFECT_ITEM_ID = P.RECORD_ID
                        AND P.REC_TACHE_ID  &lt;> 101
                      GROUP BY DD.TUMO_BATCH_ID) T3b
-            ON T3b.TUMO_BATCH_ID = A.RECORD_ID  
+            ON T3b.TUMO_BATCH_ID = A.RECORD_ID 
+            
+           LEFT JOIN (SELECT SUM(DD.LOSS) CAIMO_LOSS, DD.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT DD ,                      
+                           QINSEN.PARA_CDM_DEFECT P
+                     WHERE DD.DEFECT_ITEM_ID = P.RECORD_ID
+                       AND nvl(DD.If_Tear,'是')='是'
+                     GROUP BY DD.TUMO_BATCH_ID) kt
+            ON kt.TUMO_BATCH_ID = A.RECORD_ID 
               
           LEFT JOIN (SELECT TO_CHAR(MAX(C.PRODUCE_DT), 'YYYY-MM-DD HH24:MI') LAST_CAIMO_DATE,
                            C.TUMO_BATCH_ID
@@ -551,7 +563,12 @@
 	WHERE RECORD_ID=#recordId#
    </insert>
    	
-   	<!-- 查询更换漂洗槽 -->
+   	<!-- 查询更换漂洗槽 
+   	
+   	1、批次对应的mpd为空
+	2、批次小于等于修改的批次号
+	3、更换漂洗槽的编号一致
+	-->
 	<select id="queryRelaceTrough4Tumo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	select t.line_id "lineId",MAX(ID) "maxId" from KS_DIAPHRAGM_REPLACE_TROUGH t
    	WHERE t.line_id= #lineId#

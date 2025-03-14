@@ -1,6 +1,8 @@
 com.keensen.ump.qinsen.quality.DefectMgr = function() {
 	this.initPanel = function() {
 
+		this.queryFlag = false;
+		
 		var defectTmWinId = Ext.id();
 		var defectZmWinId = Ext.id();
 		var defectTmWinId2 = Ext.id();
@@ -74,8 +76,14 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 
 	this.initQueryPanel = function() {
 		var _this = this;
+		
+		this.productTypeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['量产', '量产'], ['试量产', '试量产'], ['实验', '实验']]
+				});
+				
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 140,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -174,6 +182,30 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						xtype : 'textfield',
 						fieldLabel : '底膜批次%-%',
 						name : 'condition/dimoBatchNo'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						forceSelection : true,
+						// allowBlank : false,
+						mode : 'local',
+						fieldLabel : '生产类型',
+						ref : '../productType',
+						hiddenName : 'condition/productType',
+						anchor : '95%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.productTypeStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
 					}]
 				});
 		this.queryPanel.addButton({
@@ -228,6 +260,13 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'defectlossinfo'
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.quality.deleteDefect.biz.ext',

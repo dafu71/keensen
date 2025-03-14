@@ -81,7 +81,20 @@
 	t.mater_spec_id "id",t.mater_spec_name "name",
 	 t.blanking_size "blankingSize", t.mater_spec_id "materSpecId",
 	       t.dense_net "denseNet", t.area "area", t.page_width "pageWidth",t.NUM_PER_WAD "numPerWad",
-	  t.blanking_size * t.NUM_PER_WAD "pageSize"    
+	  t.blanking_size * t.NUM_PER_WAD "pageSize" ,
+	  t.mp_Size as "mpSize",
+		t.mp_Width as "mpWidth",
+		t.dense_Net_Type as "denseNetType",
+		t.dense_Net_Width as "denseNetWidth",
+		t.dense_Net_Cdm as "denseNetCdm",
+		t.light_Net_Type as "lightNetType",
+		t.light_Net_Long_Page as "lightNetLongPage",
+		t.light_Net_Short_Page as "lightNetShortPage",
+		t.juanmo as "juanmo",
+		t.cut as "cut",
+		t.raosi as "raosi",
+		t.package as "package",
+		t.pipe as "pipe"   
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030027)
 	<isNotNull prepend="and" property="materSpecName">upper(t.MATER_SPEC_NAME) = upper(#materSpecName#)</isNotNull>
@@ -108,6 +121,7 @@ t.mater_spec_name2 "materSpecName2"
     <!-- 班组查询 -->
     <select id="queryTeam" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.*,t.dept_id "id",t.dept_name "name" from qinsen.BASE_DEPARTMENT t
 		WHERE t.dept_type_id='110'
+		AND t.dept_id IN(100334,100335,100417)
 		ORDER BY t.up_dept_id,t.dept_id</select>
     <!-- 元件生产车间查询 -->
     <select id="queryComponentTeam" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.orgid "id",t.orgname "name" from V_DEPT t

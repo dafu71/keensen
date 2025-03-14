@@ -36,7 +36,13 @@
        T1.LINE_CODE       AS "lineCode",
        T1.TOTAL_LOSS      AS "totalLoss",
        T1.UNUSED_QUANTITY AS "unusedQuantity",T1.LOCATION       AS "location",
-       t1.is_cut_over "isCutOver",t1.IS_CUT_OVER_NAME "isCutOverName",t1.remain_Length "remainLength"
+       t1.is_cut_over "isCutOver",t1.IS_CUT_OVER_NAME "isCutOverName",t1.remain_Length "remainLength",
+       
+       t1.Juanmo "juanmo",
+       t1.light_Net_Short_Page as "lightNetShortPage",
+       t1.light_Net_Type as "lightNetType"
+       
+       
   FROM (SELECT A.RECORD_ID,A.LOCATION,
                A.BATCH_NO,
                A.LINE_ID,
@@ -66,6 +72,9 @@
                MST.MATER_SPEC_NAME MP_SPEC_NAME,
                MSC.MATER_SPEC_CODE CDM_SPEC_CODE,
                MSC.MATER_SPEC_NAME CDM_SPEC_NAME,
+               
+                MSC.Juanmo ,MSC.light_Net_Type ,MSC.light_Net_Short_Page ,
+                
                A.QUANTITY * A.BLANKING_SIZE * A.PAGE_WIDTH OUT_LENGTH,
                DECODE(A.IS_TO_MIX, 'Y', '混卷', 'N', '单卷', '') IS_TO_MIX_STR,
                TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
