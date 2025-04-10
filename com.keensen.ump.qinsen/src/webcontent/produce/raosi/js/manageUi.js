@@ -259,7 +259,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 				xtype : 'inputpanel',
 				pgrid : this.listPanel,
 				columns : 6,
-				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord.biz.ext',
+				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord2.biz.ext',
 				successFn : function(i, r) {
 					if (r.err != '0') {
 						Ext.Msg.show({

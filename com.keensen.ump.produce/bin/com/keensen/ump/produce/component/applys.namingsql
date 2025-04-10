@@ -123,6 +123,7 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
         <isNotNull prepend="and" property="ifConfirm">decode(T1.Confirm_date,null,'N','Y') = #ifConfirm#</isNotNull>
         <isNotNull prepend="and" property="code">T1.CODE like '%' || #code# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo">T1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="reserve1">T1.RESERVE1 like '%' || #reserve1# || '%'</isNotNull>
         <isNotNull prepend="and" property="batchNo">T1.id in (select relation_id from KS_COMPONENT_CHECK_LIST where batch_No = #batchNo#)</isNotNull>
         <isNotNull prepend="and" property="storage">T1.storage = #storage#</isNotNull>
 	

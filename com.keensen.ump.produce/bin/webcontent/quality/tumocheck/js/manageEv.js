@@ -1,6 +1,8 @@
 com.keensen.ump.produce.quality.tumocheckMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	this.exportFields = '';
+	this.getRight();
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -33,7 +35,22 @@ com.keensen.ump.produce.quality.tumocheckMgr.prototype.initEvent = function() {
 }
 
 com.keensen.ump.produce.quality.tumocheckMgr.prototype.exportExcel = function() {
-	var _this = this;
+	
+	if (Ext.isEmpty(this.exportFields)) {
+		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '膜片分析记录',
+				'com.keensen.ump.produce.quality.quality.queryTumoCheck', '0,1');
+	} else {
+		var arr = this.exportFields.split(',');
+		doQuerySqlAndExportExt(
+				this,
+				this.queryPanel,
+				this.listPanel,
+				'膜片分析记录',
+				'com.keensen.ump.produce.quality.quality.queryTumoCheck',
+				arr);
+	}
+	
+	/*var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
@@ -67,7 +84,7 @@ com.keensen.ump.produce.quality.tumocheckMgr.prototype.exportExcel = function() 
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 /*
@@ -161,3 +178,28 @@ com.keensen.ump.produce.quality.tumocheckMgr.prototype.onDel = function() {
 	}
 
 };
+
+// 获取权限
+com.keensen.ump.produce.quality.tumocheckMgr.prototype.getRight = function() {
+	var _this = this;
+	Ext.Ajax.request({
+				url : "qinsen/produce/right.json",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					var data = ret.data;
+					var tumocheck = data[0].tumocheck;
+					var exportLimitUsers = tumocheck.exportLimitUsers;
+					var exportUsers = tumocheck.exportUsers;
+					Ext.getCmp(tumocheckExportButton).setVisible(exportLimitUsers
+							.indexOf(uid) != -1
+							|| exportUsers.indexOf(uid) != -1);
+					if (exportLimitUsers.indexOf(uid) != -1) {
+						_this.exportFields = tumocheck.exportLimitFields;
+					}
+					
+				},
+				callback : function() {
+				}
+			})
+}

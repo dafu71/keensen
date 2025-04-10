@@ -7,12 +7,19 @@
 	       T1.URL           AS "url",T1.URL2           AS "url2",
 	       T1.REMARK        AS "remark",
 	       T1.CODE          AS "code",
-	       T2.remark        as "codeRemark"
+	       T2.remark        as "codeRemark",
+	       t3.spec_name "specName"
 	  FROM KS_COMPONENT_MARK_TEMPLATE T1
 	  left join KS_COMPONENT_MARK_CODE t2
 	  on t1.code = t2.code
+	  left join KS_BASE_MARK_DRAWING t3
+	  on t3.drawing_code = T1.TEMPLATE_NAME
 	
 	 WHERE 1 = 1  
+     
+     <isNotNull prepend="and" property="specName"> 
+		       t3.spec_name like '%' || #specName# || '%'
+	</isNotNull>
        
     <isNotNull prepend="and" property="id"> 
 		       t1.id = #id#
@@ -121,7 +128,34 @@
        T1.CODE AS "code",
        nvl(T1.PRINT_CNT,0) AS "printCnt",to_char(t1.max_print_date,'yyyy-MM-dd HH24:mi:ss') "maxPrintDate",
        case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
-       then '是' else '否' end "ifPrint"
+       then '是' else '否' end "ifPrint",
+       
+       t1.IF_PRINT_BATCH_NO as "ifPrintBatchNo",
+		t1.Y_BATCH_NO as "yBatchNo",
+		t1.X_BATCH_NO as "xBatchNo",
+		t1.IF_PRINT_SPEC_NAME as "ifPrintSpecName",
+		t1.Y_BATCH_SPEC_NAME as "yBatchSpecName",
+		t1.X_BATCH_SPEC_NAME as "xBatchSpecName",
+		t1.IF_PRINT_DRY_WET as "ifPrintDryWet",
+		t1.Y_DRY_IMG as "yDryImg",
+		t1.X_DRY_IMG as "xDryImg",
+		t1.Y_DRY_SPAN as "yDrySpan",
+		t1.X_DRY_SPAN as "xDrySpan",
+		t1.Y_WET_IMG as "yWetImg",
+		t1.X_WET_IMG as "xWetImg",
+		t1.Y_WET_SPAN as "yWetSpan",
+		t1.X_WET_SPAN as "xWetSpan",
+		t1.Y_STAR_IMG as "yStarImg",
+		t1.X_STAR_IMG as "xStarImg",
+		t1.IF_PRINT_DAY_CODE as "ifPrintDayCode",
+		t1.Y_DAY_CODE_SPAN as "yDayCodeSpan",
+		t1.X_DAY_CODE_SPAN as "xDayCodeSpan",
+		t1.PRINT_DELAY_TIME as "printDelayTime"
+       
+       
+       
+       
+       
   FROM (
         
         SELECT T1.JUANMO_BATCH_ID, 
@@ -133,6 +167,17 @@
                 T4.TEMPLATE_NAME,
                 T5.URL,
                 T5.ID               TEMPLATE_ID,
+                t5.IF_PRINT_BATCH_NO,
+                t5.Y_BATCH_NO,t5.X_BATCH_NO,
+                t5.IF_PRINT_SPEC_NAME,t5.Y_BATCH_SPEC_NAME,
+                t5.X_BATCH_SPEC_NAME,t5.IF_PRINT_DRY_WET,
+                t5.Y_DRY_IMG,t5.X_DRY_IMG,t5.Y_DRY_SPAN,
+                t5.X_DRY_SPAN,t5.Y_WET_IMG,t5.X_WET_IMG,
+                t5.Y_WET_SPAN,t5.X_WET_SPAN,t5.Y_STAR_IMG,
+                t5.X_STAR_IMG,t5.IF_PRINT_DAY_CODE,
+                t5.Y_DAY_CODE_SPAN,t5.X_DAY_CODE_SPAN,
+                t5.PRINT_DELAY_TIME,               
+                
                 T4.DRY_WET,
                 T4.MARK,
                 T4.MATER_SPEC_NAME2,
@@ -260,4 +305,40 @@
 	
 	order by t1.create_time desc
     </select>
+    
+    <insert id="insertMarkDrawing" parameterClass="java.util.HashMap">
+    insert into KS_BASE_MARK_DRAWING
+    (id,drawing_name,drawing_code,mater_code,logo,spec_name,label_size,
+    create_time,create_user_id,create_name)
+    select #id#,#drawingName#,#drawingCode#,#materCode#,#logo#,
+    #specName#,#labelSize#,sysdate,#userId#,#userName# from dual
+    where not Exists(select 1 from KS_BASE_MARK_DRAWING where drawing_code = #drawingCode#)
+    
+    </insert>
+    
+    <update id="updateMarkDrawing" parameterClass="java.util.HashMap">
+    update KS_BASE_MARK_DRAWING
+    set create_time = sysdate,
+    <isNotNull prepend="" property="drawingName"> 
+		       drawing_name = #drawingName# ,
+	</isNotNull>
+	<isNotNull prepend="" property="drawingCode"> 
+		       drawing_code = #drawingCode# ,
+	</isNotNull>
+	<isNotNull prepend="" property="materCode"> 
+		       mater_code = #materCode# ,
+	</isNotNull>
+	<isNotNull prepend="" property="logo"> 
+		       logo = #logo# ,
+	</isNotNull>
+	<isNotNull prepend="" property="specName"> 
+		       spec_name = #specName# ,
+	</isNotNull>
+	<isNotNull prepend="" property="labelSize"> 
+		       label_size = #labelSize# ,
+	</isNotNull>
+	update_user_id = #userId#,update_name = #userName#
+    where id = #id#
+    
+    </update>
 </sqlMap>

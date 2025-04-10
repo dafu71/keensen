@@ -67,7 +67,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onUploadWindowS
 	this.uploadForm.reset();
 	this.uploadWin.show();
 	// Ext.getCmp('uploadMarkTemplate').onClick();
-	$('#marktemplateupload').click();
+	$(marktemplateupload).click();
 
 };
 
@@ -164,7 +164,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onSave = functi
 		Ext.Ajax.request({
 			method : "post",
 			scope : this,
-			url : 'com.keensen.ump.produce.component.makprint.saveMarkPrint.biz.ext',
+			url : 'com.keensen.ump.produce.component.makprint.saveMarkPrint2.biz.ext',
 			jsonData : forms,
 			success : function(response, action) {
 				mk.hide();
@@ -207,7 +207,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onSave2 = funct
 		Ext.Ajax.request({
 			method : "post",
 			scope : this,
-			url : 'com.keensen.ump.produce.component.makprint.saveMarkPrint.biz.ext',
+			url : 'com.keensen.ump.produce.component.makprint.saveMarkPrint2.biz.ext',
 			jsonData : forms,
 			success : function(response, action) {
 				mk.hide();

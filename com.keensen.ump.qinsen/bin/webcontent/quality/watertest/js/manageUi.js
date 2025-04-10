@@ -36,6 +36,14 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 	this.initQueryPanel = function() {
 
 		var _this = this;
+
+		this.hpmcStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['8寸', '8寸'], ['4寸', '4寸'], ['类4寸', '类4寸'],
+							['常规通量(家用)', '常规通量(家用)'], ['大通量(家用)', '大通量(家用)'],
+							['其他', '其他'], ['膜片', '膜片']]
+				});
+
 		this.queryPanel = new Ext.fn.QueryPanel({
 			height : 150,
 			columns : 4,
@@ -189,12 +197,35 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						xtype : 'textfield',
 						fieldLabel : '测试型号%-%',
 						anchor : '85%'
+					}, {
+						xtype : 'combobox',
+						forceSelection : true,
+						// allowBlank : false,
+						mode : 'local',
+						fieldLabel : '元件类型',
+						ref : '../../hpmc',
+						hiddenName : 'condition/hpmc',
+						dataIndex : 'hpmc',
+						anchor : '85%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.hpmcStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
 					}]
 		});
 
 		this.queryPanel.addButton({
 					text : "导出",
-					rescode : '10002661',
+					// rescode : '10002661',
+					hidden : true,
+					id : watertestExportButton,
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
@@ -214,12 +245,10 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 			},
 			hsPage : true,
 			id : 'watertestmgrlist',
-			tbar : [/*{
-						text : '试卷初检',
-						scope : this,
-						iconCls : 'icon-application_add',
-						handler : this.firstTest
-					}, '-',*/ {
+			tbar : [/*
+					 * { text : '试卷初检', scope : this, iconCls :
+					 * 'icon-application_add', handler : this.firstTest }, '-',
+					 */{
 						text : '初检',
 						scope : this,
 						iconCls : 'icon-application_add',
@@ -290,6 +319,10 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				width : 120,
 				dataIndex : 'prodBatchNo'
 			}, {
+				header : '元件类型',
+				width : 120,
+				dataIndex : 'hpmc'
+			}, {
 				header : '工艺员备注 ',
 				width : 120,
 				dataIndex : 'gyyRemark'
@@ -297,15 +330,11 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				header : '测试型号',
 				width : 80,
 				dataIndex : 'testSpecName'
-			}/*, {
-				header : '拟入库型号',
-				width : 120,
-				dataIndex : 'ifProdSpecName'
-			}, {
-				header : '拟贴标型号',
-				width : 120,
-				dataIndex : 'markSpecName'
-			}*/, {
+			}/*
+				 * , { header : '拟入库型号', width : 120, dataIndex :
+				 * 'ifProdSpecName' }, { header : '拟贴标型号', width : 120,
+				 * dataIndex : 'markSpecName' }
+				 */, {
 				header : '膜片批次',
 				width : 190,
 				dataIndex : 'tumoBatchStr'
@@ -538,6 +567,8 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 							name : 'jmBatchNo'
 						}, {
 							name : 'gyyRemark'
+						}, {
+							name : 'hpmc'
 						}]
 			})
 		})

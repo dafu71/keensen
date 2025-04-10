@@ -12,7 +12,7 @@
        T1.QUANTITY        AS "quantity",
        T1.NUM_PER_WAD     AS "numPerWad",
        T1.BLANKING_SIZE   AS "blankingSize",
-       T1.DENSE_NET       AS "denseNet",
+       nvl(T1.DENSE_NET, t1.dense_net2)      AS "denseNet",
        T1.PRODUCE_DT      AS "produceDt",
        T1.TEAM_ID         AS "teamId",
        T1.WORKER_ID       AS "workerId",
@@ -70,7 +70,7 @@
                DECODE(tm.IS_CUT_OVER, 'Y', '是', 'N', '否', '') IS_CUT_OVER_NAME,
                MST.MATER_SPEC_CODE MP_SPEC_CODE,
                MST.MATER_SPEC_NAME MP_SPEC_NAME,
-               MSC.MATER_SPEC_CODE CDM_SPEC_CODE,
+               MSC.MATER_SPEC_CODE CDM_SPEC_CODE,msc.dense_net dense_net2,
                MSC.MATER_SPEC_NAME CDM_SPEC_NAME,
                
                 MSC.Juanmo ,MSC.light_Net_Type ,MSC.light_Net_Short_Page ,

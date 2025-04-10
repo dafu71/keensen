@@ -107,6 +107,14 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 					rescode:'10003669',
 					handler : this.exportExcel
 				});
+				
+		this.queryPanel.addButton({
+					text : "更新元件序列",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					//rescode:'10003669',
+					handler : this.modifySn
+				});
 
 	}
 
@@ -324,7 +332,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 		var store = new Ext.data.JsonStore({
 			url : 'com.keensen.ump.produce.component.neworder.queryYxOrderTraceByPage.biz.ext',
 			root : 'data',
-			autoLoad : true,
+			autoLoad : false,
 			totalProperty : 'totalCount',
 			baseParams : {
 

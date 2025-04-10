@@ -516,6 +516,8 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 
 	this.initChooseWindow = function() {
 
+		var _this = this;
+		
 		var selModel3 = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : false,
 					header : ''
@@ -701,6 +703,11 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 			})
 		})
 
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
+				
 		this.queryPanel3 = this.queryPanel3 || new Ext.fn.QueryPanel({
 					height : 120,
 					columns : 4,
@@ -714,6 +721,7 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 								emptyText : '多个批次请用逗号分隔，或一行一个批次',
 								ref : '../tumoBatchNo2',
 								colspan : 1,
+								rowspan:2,
 								// allowBlank : false,
 								anchor : '100%',
 								fieldLabel : '膜片批次'
@@ -735,6 +743,24 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 							}, {
 								xtype : 'hidden',
 								name : 'condition/tumoBatchNo'
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '可卷制判定结果',
+								ref : '../condition',
+								hiddenName : 'condition/condition',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel3.condition.reset()
+									}
+								}
 							}]
 				});
 

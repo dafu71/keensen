@@ -10,6 +10,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 		this.initEditWindow2();
 
 		this.buildExcelUploadWin();
+		this.initGoodsStateChangeWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -144,6 +145,10 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 										'condition/demandDateEnd'],
 								fieldLabel : "需求日期",
 								format : "Y-m-d"
+							}, {
+								xtype : 'textfield',
+								name : 'condition/materCode',
+								fieldLabel : '物料长代码'
 							}]
 				});
 
@@ -151,6 +156,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 					text : "即时库存模板",
 					// disabled : allRight != '1',
 					scope : this,
+					hidden : uid != 'KS01147',
 					iconCls : 'icon-application_excel',
 					handler : this.onDown
 				});
@@ -159,6 +165,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 					text : "导入即时库存",
 					// disabled : allRight != '1',
 					scope : this,
+					hidden : uid != 'KS01147',
 					iconCls : 'icon-application_excel',
 					handler : this.importExcel
 				});
@@ -166,7 +173,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					// disabled : allRight != '1',
-					rescode:'10003669',
+					rescode : '10003669',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
@@ -177,9 +184,9 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
-				});
+			singleSelect : false
+				// header : ''
+			});
 		this.listPanel = new Ext.fn.ListPanel({
 
 			viewConfig : {
@@ -190,17 +197,25 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						text : '新增',
 						scope : this,
 						iconCls : 'icon-application_add',
+						hidden : uid != 'KS01147',
 						handler : this.onAdd
 					}, '-', {
 						text : '修改',
 						scope : this,
 						iconCls : 'icon-application_edit',
+						hidden : uid != 'KS01147',
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
+						hidden : uid != 'KS01147',
 						handler : this.onDel
+					}, '-', {
+						text : '变更到货状态',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onGoodsStateChange
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.yxorderbase.deleteMConfirm.biz.ext',
@@ -226,23 +241,33 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 					}, {
 						dataIndex : 'prodName',
 						width : 120,
-						header : '下单型号'
+						header : '下单型号',
+						sortable : true
 					}, {
 						dataIndex : 'orderAmount',
 						width : 120,
-						header : '订单数量'
+						header : '订单数量',
+						sortable : true
 					}, {
 						dataIndex : 'materCode',
 						width : 120,
-						header : '物料长代码'
+						header : '物料长代码',
+						sortable : true
+					}, {
+						dataIndex : 'goodsState',
+						width : 120,
+						header : '到货状态',
+						sortable : true
 					}, {
 						dataIndex : 'materName',
 						width : 150,
-						header : '物料名称'
+						header : '物料名称',
+						sortable : true
 					}, {
 						dataIndex : 'specName',
 						width : 120,
-						header : '规格型号'
+						header : '规格型号',
+						sortable : true
 					}, {
 						dataIndex : 'unit',
 						width : 100,
@@ -250,15 +275,18 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 					}, {
 						dataIndex : 'amount',
 						width : 120,
-						header : '采购数量'
+						header : '采购数量',
+						sortable : true
 					}, {
 						dataIndex : 'k3',
 						width : 120,
-						header : 'K3库存'
+						header : 'K3库存',
+						sortable : true
 					}, {
 						dataIndex : 'demandDate',
 						width : 120,
-						header : '需求日期'
+						header : '需求日期',
+						sortable : true
 					}, {
 						dataIndex : 'remark',
 						width : 200,
@@ -278,15 +306,13 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 					}, {
 						dataIndex : 'materType',
 						width : 150,
-						header : '物料类型'
+						header : '物料类型',
+						sortable : true
 					}, {
 						dataIndex : 'planState',
 						width : 120,
-						header : '计划状态'
-					}, {
-						dataIndex : 'goodsState',
-						width : 120,
-						header : '到货状态'
+						header : '计划状态',
+						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.yxorderbase.queryOrderMCByPage.biz.ext',
@@ -1295,5 +1321,64 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						}
 					}]
 		});
+	}
+
+	this.initGoodsStateChangeWindow = function() {
+		var me = this;
+		this.goodsStateChangeWindow = this.goodsStateChangeWindow
+				|| new Ext.fn.FormWindow({
+					title : '变更到货状态',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : me.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.yxorderbase.updateBatchGoodsState.biz.ext',
+						fields : [{
+									xtype : 'textarea',
+									ref : '../../materCodes',
+									name : 'param/materCodes',
+									readOnly : true,
+									fieldLabel : '物料长代码',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									xtype : 'combobox',
+									forceSelection : true,
+									// allowBlank : false,
+									mode : 'local',
+									fieldLabel : '到货状态',
+									ref : '../../goodsState',
+									hiddenName : 'param/goodsState',
+									dataIndex : 'goodsState',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									allowBlank : false,
+									store : this.materGoodsStateStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											me.goodsStateChangeWindow.goodsState
+													.reset()
+										}
+									}
+								}, {
+									xtype : 'hidden',
+									name : 'param/ids'
+								}]
+					}]
+				});
 	}
 }

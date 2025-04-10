@@ -114,6 +114,15 @@
 
   var uid = "<%=uid %>";
   
+  var monitorDealId = Ext.id();
+  var monitorRemarkId = Ext.id();
+  var gyyRemarkId = Ext.id();
+  var pgRemarkId = Ext.id();
+  var warehousingId = Ext.id();
+  var modiOrderId = Ext.id();
+  var importVStorageId = Ext.id();
+  var checkOverTimeId = Ext.id();
+  
    var modifyOrderNoFlag = <%=modifyOrderNoFlag %>;
    var monitorFlag = <%=monitorFlag %>;
   

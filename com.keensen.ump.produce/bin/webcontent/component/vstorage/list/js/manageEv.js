@@ -1,6 +1,8 @@
 com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.initEvent = function() {
 
 	var me = this;
+	
+	this.getRight();
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -15,6 +17,49 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.initEvent =
 
 	me.onMsg();
 
+	this.editWindow4Gyy.activeItem.mon(this.editWindow4Gyy.activeItem,
+			'afterSave', function(gird, cell) {
+				me.onMsg();
+			}, this);
+
+	this.editWindow4Pg.activeItem.mon(this.editWindow4Pg.activeItem,
+			'afterSave', function(gird, cell) {
+				me.onMsg();
+			}, this);
+
+}
+
+// 获取权限
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.getRight = function() {
+	var _this = this;
+	Ext.Ajax.request({
+		url : "produce/component/vstorage/list/js/right.json",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			var data = ret.data;
+			var monitor = data[0].monitor;
+			var gyy = data[0].gyy;
+			var pg = data[0].pg;
+			var jhy = data[0].jhy;
+			var manager = data[0].manager;
+			
+			Ext.getCmp(monitorDealId).setVisible(monitor.indexOf(uid) != -1);
+			Ext.getCmp(monitorRemarkId).setVisible(monitor.indexOf(uid) != -1);
+			Ext.getCmp(gyyRemarkId).setVisible(gyy.indexOf(uid) != -1);
+			Ext.getCmp(pgRemarkId).setVisible(pg.indexOf(uid) != -1);
+			Ext.getCmp(warehousingId).setVisible(jhy.indexOf(uid) != -1);
+			Ext.getCmp(modiOrderId).setVisible(jhy.indexOf(uid) != -1);
+			Ext.getCmp(importVStorageId).setVisible(manager.indexOf(uid) != -1);
+			Ext.getCmp(checkOverTimeId).setVisible(manager.indexOf(uid) != -1);
+			//var firstButton = panel.tbar.items.get(0); 
+			//alert(firstButton.text);
+			
+
+		},
+		callback : function() {
+		}
+	})
 }
 
 com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.exportExcel = function() {
@@ -81,8 +126,8 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onWarehousi
 	}
 
 	var exceptionType = records[0].get('exceptionType');
-	if (exceptionType != '超计划生产') {
-		Ext.Msg.alert('系统提示', '请选择超计划生产的数据');
+	if (exceptionType != '需要计划员处理') {
+		Ext.Msg.alert('系统提示', '请选择需要计划员处理的数据');
 		return false;
 	}
 
@@ -195,7 +240,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onChooseSin
 									});
 					_this.requestMask.show();
 					Ext.Ajax.request({
-						url : "com.keensen.ump.qinsen.qijian.modiOrderAndProdSpecId.biz.ext",
+						url : "com.keensen.ump.produce.component.vstorage.modiOrderAndProdSpecId.biz.ext",
 						method : "post",
 						jsonData : {
 							orderNo : orderNo,
@@ -209,6 +254,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onChooseSin
 											_this.listPanel.store.load();
 											_this.chooseSingleOrderWindow
 													.hide();
+											_this.onMsg();
 
 										})
 							} else {
@@ -412,9 +458,42 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMonitorDe
 			}
 		}
 		this.monitorDealWindow.items.items[0].form.reset();
-		this.monitorDealWindow.recordIds.setValue(recordIds.join(","));			
+		this.monitorDealWindow.recordIds.setValue(recordIds.join(","));
 		this.monitorDealWindow.show();
 	}
+}
+
+// 干膜元件7天、湿膜元件15天未请检即为超期停留(卷膜时间与当前时间的差)
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.checkOverTime = function() {
+	var _this = this;
+
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.vstorage.checkOverTime5.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+
+			if (ret.success) {
+
+				Ext.Msg.alert("系统提示", '操作成功', function() {
+							_this.listPanel.store.reload();
+							_this.onMsg();
+
+						});
+			} else {
+				Ext.Msg.alert("系统提示", '操作失败')
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
 }
 
 function showNotification(message) {

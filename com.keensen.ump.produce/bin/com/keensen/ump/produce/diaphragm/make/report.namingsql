@@ -328,4 +328,94 @@ SELECT P.TEAM_ID         AS "teamId",
 	  
 	  
      </select>
+    <select id="queryUsedRate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT E_LENGTH "eLength",
+       T_LENGTH "tLength",
+       USEFUL_LENGTH "usefulLength",
+       ROUND(NVL(USEFUL_LENGTH, 0) / NVL(T_LENGTH, 1), 2) * 100 || '%' "passRate",
+       TEAR_LENGTH "teaeLength",
+       ROUND(NVL(TEAR_LENGTH, 0) / NVL(T_LENGTH, 1), 2) * 100 || '%' "defectRate",
+       STOCK_AMOUNT "stockAmount"， ROUND(NVL(STOCK_AMOUNT, 0) / NVL(T_LENGTH, 1), 2) * 100 || '%' "stockRate",
+       NVL(FH_AMOUNT, 0) "fhAmount",
+       ROUND(NVL(FH_AMOUNT, 0) / NVL(T_LENGTH, 1), 2) * 100 || '%' "fhRate",
+       ZJ_AMOUNT "zjAmount",
+       ROUND(NVL(ZJ_AMOUNT, 0) / NVL(T_LENGTH, 1), 2) * 100 || '%' "zjRate",
+       ROUND((NVL(ZJ_AMOUNT, 0) + NVL(FH_AMOUNT, 0)) / NVL(T_LENGTH, 1), 2) * 100 || '%' "usedRate"
+  FROM (SELECT SUM(CASE
+                     WHEN SUBSTR(TM.BATCH_NO, 1, 1) = 'E' THEN
+                      TM.OUT_LENGTH
+                     ELSE
+                      0
+                   END) E_LENGTH,
+               SUM(CASE
+                     WHEN SUBSTR(TM.BATCH_NO, 1, 1) = 'T' THEN
+                      TM.OUT_LENGTH
+                     ELSE
+                      0
+                   END) T_LENGTH,
+               SUM(CASE
+                     WHEN SUBSTR(TM.BATCH_NO, 1, 1) = 'T' THEN
+                      CASE
+                        WHEN TO_CHAR(TM.PRODUCE_DT, 'yyyy-MM-dd') &gt;= '2025-02-10' THEN
+                         NVL(T55.LOSS, 0)
+                        ELSE
+                         NVL(T5.LOSS, 0)
+                      END
+                     ELSE
+                      0
+                   END) TEAR_LENGTH,
+               SUM(CASE
+                     WHEN SUBSTR(TM.BATCH_NO, 1, 1) = 'T' THEN
+                      CASE
+                        WHEN TO_CHAR(TM.PRODUCE_DT, 'yyyy-MM-dd') &gt;= '2025-02-10' THEN
+                         TM.OUT_LENGTH - NVL(T55.LOSS, 0)
+                        ELSE
+                         TM.OUT_LENGTH - NVL(T5.LOSS, 0)
+                      END
+                     ELSE
+                      0
+                   END) USEFUL_LENGTH,
+               SUM(ST.AMOUNT) STOCK_AMOUNT,
+               SUM(FH.AMOUNT) FH_AMOUNT,
+               SUM(ZJ.AMOUNT) ZJ_AMOUNT
+          FROM (SELECT *
+                  FROM QINSEN.INST_TUMO TM
+                  LEFT JOIN QINSEN.PARA_MATER_SPEC S
+                    ON TM.SPEC_ID = S.MATER_SPEC_ID
+                  LEFT JOIN QINSEN.PARA_MATER_CLASS PMC
+                    ON PMC.MATER_CLASS_ID = S.MATER_CLASS_ID
+                 WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+                   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+                   <isNotNull prepend="" property="lineId">AND tm.line_id = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND tm.spec_id =#specId#</isNotNull>
+        <isNotNull prepend="" property="materClassCode">AND pmc.mater_class_code = #materClassCode#</isNotNull>
+                   ) TM
+          LEFT JOIN KS_PROD_DIAPHRAGM_STOCK ST
+            ON ST.BATCH_NO = TM.BATCH_NO
+          LEFT JOIN (SELECT T.BATCH_NO, T.AMOUNT
+                      FROM KS_PROD_DIAPHRAGM_OUTOFSTOCK T
+                     WHERE T.TYPE = '发货出库') FH
+            ON FH.BATCH_NO = TM.BATCH_NO
+          LEFT JOIN (SELECT T.BATCH_NO, T.AMOUNT
+                      FROM KS_PROD_DIAPHRAGM_OUTOFSTOCK T
+                     WHERE T.TYPE = '非发货出库') ZJ
+            ON ZJ.BATCH_NO = TM.BATCH_NO
+          LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT D,
+                           QINSEN.PARA_CDM_DEFECT P
+                     WHERE D.DEFECT_ITEM_ID = P.RECORD_ID
+                       AND P.REC_TACHE_ID = 100
+                     GROUP BY D.TUMO_BATCH_ID) T5
+            ON T5.TUMO_BATCH_ID = TM.RECORD_ID
+          LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
+                      FROM QINSEN.INST_CDM_DEFECT D,
+                           QINSEN.PARA_CDM_DEFECT P
+                     WHERE D.DEFECT_ITEM_ID = P.RECORD_ID
+                       AND P.REC_TACHE_ID = 100
+                       AND D.IF_TEAR = '是'
+                     GROUP BY D.TUMO_BATCH_ID) T55
+            ON T55.TUMO_BATCH_ID = TM.RECORD_ID);
+     
+     
+     </select>
 </sqlMap>

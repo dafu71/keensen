@@ -141,6 +141,12 @@ com.keensen.ump.qinsen.produce.markprintMgr = function() {
 						iconCls : 'icon-printer',
 						handler : this.dealBatches
 
+					}, {
+						text : "检查是否已打印",
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.checkBatches
+
 					}]
 		})
 

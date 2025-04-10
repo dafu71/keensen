@@ -64,7 +64,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		this.colorStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['红', '红'], ['橙', '橙'], ['黄', '黄'], ['绿', '绿'],
-							['青', '青'], ['蓝', '蓝'], ['紫', '紫']]
+							['青', '青'], ['蓝', '蓝'], ['紫', '紫'], ['灰', '灰']]
 				});
 
 		this.orderTypeStore = new Ext.data.SimpleStore({
@@ -3275,7 +3275,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					store : this.goodsWithReportStore,
 					displayField : "name",
 					valueField : "code"
-				}, {
+				}/*, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -3287,7 +3287,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					colspan : 12,
 					xtype : 'textfield',
 					fieldLabel : '打包标识要求'
-				}, {
+				}*/, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
 					labelSeparator : '',// 去掉冒号

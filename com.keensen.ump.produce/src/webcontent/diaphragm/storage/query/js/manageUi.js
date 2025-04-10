@@ -6,6 +6,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 		this.initEditWindow();
 
 		this.initChoiceWindow();
+		this.initEditWindow2();// 发货备注
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -215,6 +216,13 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						iconCls : 'icon-application_edit',
 						// hidden : modifyFlag != 1,
 						handler : this.onChoice
+					}, '-', {
+						text : '发货备注',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden:uid != 'KS01327' && uid != 'KS01147',
+						// hidden : modifyFlag != 1,
+						handler : this.onFhremark
 					},{
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
@@ -393,6 +401,9 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						dataIndex : 'perfFlagName',
 						header : '等级'
 					}, {
+						dataIndex : 'fhRemark',
+						header : '发货备注'
+					}, {
 						dataIndex : 'updateTime',
 						header : '更新日期'
 					}, {
@@ -477,6 +488,8 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 							name : 'choiceDt'
 						}, {
 							name : 'ifWarn'
+						}, {
+							name : 'fhRemark'
 						}]
 			})
 		})
@@ -619,5 +632,43 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					}
 				});
 
+	}
+	
+	this.initEditWindow2 = function() {
+		var me = this;
+		this.editWindow2 = this.editWindow2 || new Ext.fn.FormWindow({
+			title : '发货备注',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : me.listPanel,
+				columns : 1,
+				loadUrl : 'com.keensen.ump.produce.diaphragm.storage.query.expandEntity.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.diaphragm.storage.query.updateBatchFhRemark.biz.ext',
+				fields : [{
+							xtype : 'textarea',
+							name : 'param/batchNOs',
+							readOnly : true,
+							fieldLabel : '批号',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5'
+						}, {
+							xtype : 'textarea',
+							name : 'param/reserve1',
+							allowBlank : false,
+							fieldLabel : '发货备注'
+						}, {
+							xtype : 'hidden',
+							name : 'param/ids'
+						}]
+			}]
+		});
 	}
 }

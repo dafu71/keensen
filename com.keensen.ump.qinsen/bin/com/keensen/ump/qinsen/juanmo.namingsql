@@ -54,7 +54,7 @@
 	<isNotNull prepend="" property="batchIdStr">AND T1.RECORD_ID in ($batchIdStr$)</isNotNull>
     </select>
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-   SELECT Z.RECORD_ID AS "recordId",Z.trailer "trailer",
+   SELECT Z.RECORD_ID AS "recordId",Z.trailer "trailer",z.cut "cut",z.raosi "raosi",
        Z.BATCH_NO AS "batchNo",
        Z.LINE_ID AS "lineId",
        Z.IS_TRIAL AS "isTrial",
@@ -146,7 +146,7 @@
                         A.ORDER_NO,
                         A.PROD_SPEC_ID,
                         A.BLANKING_SIZE,
-                        A.DENSE_NET,
+                        nvl(A.DENSE_NET,ms.dense_net) dense_net,
                         A.PAGE_WIDTH,
                         A.PRODUCE_DT,
                         A.TEAM_ID,
@@ -157,7 +157,8 @@
                         A.CHANGER_ID,
                         A.REMARK,
                         MS.MATER_SPEC_CODE PROD_SPEC_CODE,
-                        MS.MATER_SPEC_NAME PROD_SPEC_NAME
+                        MS.MATER_SPEC_NAME PROD_SPEC_NAME,
+                        ms.cut,ms.raosi
                   FROM QINSEN.INST_JUANMO_MAIN A, QINSEN.PARA_MATER_SPEC MS
                  WHERE A.PROD_SPEC_ID = MS.MATER_SPEC_ID
                  

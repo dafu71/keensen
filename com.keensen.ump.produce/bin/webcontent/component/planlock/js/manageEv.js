@@ -252,7 +252,7 @@ com.keensen.ump.produce.component.planlockMgr.prototype.exportExcel = function()
 										+ '</td><td align="center">'
 										+ r.jmAmount
 										+ '</td><td align="center">'
-										+ formatStr(r.orderDate)
+										+ formatStr(r.demandStockDate)
 										+ '</td><td align="center">'
 										+ formatStr(r.orderRemark) + '</td>' 										
 										+ '<td align="center">'

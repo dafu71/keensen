@@ -28,6 +28,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 	this.initStore = function() {
 
+		this.yseOrNoStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['Y', '是'], ['N', '否']]
+				});
+
 		this.prodSpecNameStore = new Ext.data.JsonStore({
 			url : 'com.keensen.ump.base.common.query.biz.ext',
 			root : 'data',
@@ -493,6 +498,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
+						dataIndex : 'diameter',
+						header : '上端直径'
+					}, {
+						dataIndex : 'diameter',
+						header : '下端直径'
+					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
 					}, {
@@ -539,6 +550,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'tumoBatchStr'
 						}, {
 							name : 'checkResult'
+						}, {
+							name : 'diameter'
+						}, {
+							name : 'diameter2'
 						}]
 			})
 		})
@@ -632,7 +647,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							'select' : function(combo, record, index) {
 								if (index > -1) {
 									var package2 = record.get('package');
-									_this.inputPanel.package2.setValue(package2);
+									_this.inputPanel.package2
+											.setValue(package2);
 								}
 							}
 						}
@@ -780,7 +796,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						name : 'abnormalExplain',
 						fieldLabel : '外观异常说明',
 						// allowBlank : false,
-						height:50,
+						height : 50,
 						anchor : '95%',
 						colspan : 6
 					}, {
@@ -788,23 +804,23 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						name : 'abnormalOther',
 						fieldLabel : '其他异常备注',
 						// allowBlank : false,
-						height:50,
+						height : 50,
 						anchor : '95%',
 						colspan : 6
 					}, {
-					xtype : 'displayfield',
-					height : '5',
-					colspan : 12
-				}, {
-					//name : 'entity/remark',
-					ref : '../package2',
-					height : 30,
-					xtype : 'textarea',
-					readOnly : true,
-					fieldLabel : '包装特殊要求',
-					colspan : 12,
-					anchor : '95%'
-				}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						// name : 'entity/remark',
+						ref : '../package2',
+						height : 30,
+						xtype : 'textarea',
+						readOnly : true,
+						fieldLabel : '包装特殊要求',
+						colspan : 12,
+						anchor : '95%'
+					}, {
 						xtype : 'hidden',
 						ref : '../abnormal',
 						name : 'abnormal'
@@ -945,6 +961,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
+						dataIndex : 'diameter',
+						header : '上端直径'
+					}, {
+						dataIndex : 'diameter',
+						header : '下端直径'
+					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
 					}, {
@@ -995,6 +1017,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'tumoBatchStr'
 						}, {
 							name : 'checkResult'
+						}, {
+							name : 'diameter'
+						}, {
+							name : 'diameter2'
 						}]
 			})
 		})
@@ -1107,6 +1133,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
+						dataIndex : 'diameter',
+						header : '上端直径'
+					}, {
+						dataIndex : 'diameter',
+						header : '下端直径'
+					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
 					}, {
@@ -1155,12 +1187,16 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'tumoBatchStr'
 						}, {
 							name : 'checkResult'
+						}, {
+							name : 'diameter'
+						}, {
+							name : 'diameter2'
 						}]
 			})
 		})
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 450,
+			height : 470,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -1482,6 +1518,32 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						anchor : '100%%',
 						colspan : 4
 					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'combo',
+						mode : 'local',
+						fieldLabel : '直径是否放行',
+						hidden : false,
+						disabled : true,
+						allowBlank : false,
+						ref : '../diameterCheckResult',
+						hiddenName : 'entity/diameterCheckResult',
+						dataIndex : 'diameterCheckResult',
+						anchor : '100%',
+						colspan : 4,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.yseOrNoStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.diameterCheckResult.reset()
+							}
+						}
+					}, {
 						xtype : 'hidden',
 						name : 'entity/id',
 						ref : '../pkid',
@@ -1567,6 +1629,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
+						dataIndex : 'diameter',
+						header : '上端直径'
+					}, {
+						dataIndex : 'diameter',
+						header : '下端直径'
+					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
 					}, {
@@ -1615,12 +1683,16 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'tumoBatchStr'
 						}, {
 							name : 'checkResult'
+						}, {
+							name : 'diameter'
+						}, {
+							name : 'diameter2'
 						}]
 			})
 		})
 
 		this.editPanel2 = this.editPanel2 || new Ext.fn.EditPanel({
-			height : 450,
+			height : 470,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -1940,6 +2012,29 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						anchor : '100%%',
 						colspan : 4
 					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'combo',
+						mode : 'local',
+						fieldLabel : '直径是否放行',
+						ref : '../diameterCheckResult',
+						hiddenName : 'entity/diameterCheckResult',
+						dataIndex : 'diameterCheckResult',
+						anchor : '100%',
+						colspan : 4,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.yseOrNoStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.diameterCheckResult.reset()
+							}
+						}
+					}, {
 						xtype : 'hidden',
 						name : 'entity/id',
 						ref : '../pkid',
@@ -2029,6 +2124,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
+						dataIndex : 'diameter',
+						header : '上端直径'
+					}, {
+						dataIndex : 'diameter',
+						header : '下端直径'
+					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
 					}, {
@@ -2077,12 +2178,16 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'tumoBatchStr'
 						}, {
 							name : 'checkResult'
+						}, {
+							name : 'diameter'
+						}, {
+							name : 'diameter2'
 						}]
 			})
 		})
 
 		this.editPanel3 = this.editPanel3 || new Ext.fn.EditPanel({
-			height : 450,
+			height : 470,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -2403,6 +2508,29 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '待处理建议<br>元件型号',
 						anchor : '100%%',
 						colspan : 4
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'combo',
+						mode : 'local',
+						fieldLabel : '直径是否放行',
+						ref : '../diameterCheckResult',
+						dataIndex : 'diameterCheckResult',
+						anchor : '100%',
+						colspan : 4,
+						emptyText : '',
+						editable : false,
+						readOnly : true,
+						store : this.yseOrNoStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel3.diameterCheckResult.reset()
+							}
+						}
 					}],
 			buttons : [{
 						text : "关闭",
@@ -2490,6 +2618,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
+						dataIndex : 'diameter',
+						header : '上端直径'
+					}, {
+						dataIndex : 'diameter',
+						header : '下端直径'
+					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
 					}, {
@@ -2538,6 +2672,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'tumoBatchStr'
 						}, {
 							name : 'checkResult'
+						}, {
+							name : 'diameter'
+						}, {
+							name : 'diameter2'
 						}]
 			})
 		})
@@ -2883,6 +3021,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
+						dataIndex : 'diameter',
+						header : '上端直径'
+					}, {
+						dataIndex : 'diameter',
+						header : '下端直径'
+					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
 					}, {
@@ -2931,6 +3075,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'tumoBatchStr'
 						}, {
 							name : 'checkResult'
+						}, {
+							name : 'diameter'
+						}, {
+							name : 'diameter2'
 						}]
 			})
 		})
@@ -3243,6 +3391,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'state',
 						header : '状态'
 					}, {
+						dataIndex : 'diameter',
+						header : '上端直径'
+					}, {
+						dataIndex : 'diameter',
+						header : '下端直径'
+					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
 					}, {
@@ -3291,6 +3445,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'tumoBatchStr'
 						}, {
 							name : 'checkResult'
+						}, {
+							name : 'diameter'
+						}, {
+							name : 'diameter2'
 						}]
 			})
 		})

@@ -115,3 +115,43 @@ com.keensen.ump.qinsen.produce.markprintMgr.prototype.destroy = function() {
 	this.logoQueryWindow.destroy();
 	
 }
+
+com.keensen.ump.qinsen.produce.markprintMgr.prototype.checkBatches = function() {
+	var _this = this;
+	var batchNoStr = this.inputPanel.batchNoStr2.getValue();
+	var regEx = new RegExp("\\n", "gi");
+	batchNoStr = batchNoStr.replace(regEx, ",");
+	batchNoStr = batchNoStr.replaceAll('，', ',');
+	//batchNoStr = batchNoStr.replaceAll(' ', '');
+	var arr = [];
+	arr = batchNoStr.split(',');
+		
+	// 校验批次是否有打印记录
+	batchNoStr = arr.join(",");
+	_this.requestMask = _this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.qinsen.pack.checkBatches.biz.ext",
+		method : "post",
+		jsonData : {
+			'batchNoStr' : batchNoStr
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				if (Ext.isEmpty(ret.batchNoStr2)) {
+					Ext.Msg.alert("系统提示", "均未打印");
+					return;
+				} else {
+					Ext.Msg.alert("系统提示", ret.batchNoStr2 + "已打印");
+				}
+			}
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+	
+}

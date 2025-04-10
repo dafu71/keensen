@@ -160,7 +160,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					// disabled : allRight != '1',
-					rescode:'10003669',
+					rescode : '10003669',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
@@ -2196,6 +2196,20 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 			viewConfig : {
 				forceFit : true
 			},
+
+			tbar : ['->', {
+						xtype : 'displayfield',
+						value : '默认数量:'
+					}, {
+						xtype : 'numberfield',
+						width : 100,
+						id : defaultValueId
+					}, '-', {
+						text : '设置',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.setDefaultValue
+					}],
 			hsPage : false,
 			autoScroll : true,
 			clicksToEdit : 1,

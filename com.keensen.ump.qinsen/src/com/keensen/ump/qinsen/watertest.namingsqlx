@@ -63,7 +63,8 @@
        T1.CDM_BATCH_STR           AS "cdmBatchStr",
        T1.TUMO_BATCH_STR          AS "tumoBatchStr",
        T1.DIMO_BATCH_STR          AS "dimoBatchStr",
-       T1.JM_BATCH_NO             AS "jmBatchNo"
+       T1.JM_BATCH_NO             AS "jmBatchNo",
+       T1.hpmc "hpmc"
   FROM (SELECT A.RECORD_ID,A.gyy_remark,
                A.JUANMO_BATCH_ID,
                A.TEST_TYPE_ID,
@@ -151,10 +152,14 @@
                  WHERE D.CDM_BATCH_ID = C.RECORD_ID
                    AND C.TUMO_BATCH_ID = M.RECORD_ID
                    AND D.MAIN_BATCH_ID = J.RECORD_ID) DIMO_BATCH_STR,
-               J.BATCH_NO JM_BATCH_NO
+               J.BATCH_NO JM_BATCH_NO,J.hpmc
           FROM QINSEN.INST_WATER_TEST  A,
                QINSEN.INST_QIJIAN      Q,
-               QINSEN.INST_JUANMO_MAIN J
+               (select jm.*,bs.hpmc from QINSEN.INST_JUANMO_MAIN jm
+				LEFT JOIN (select * from ks_prod_component_yxorder where order_no not in('研发实验')) od
+				ON jm.order_no=od.order_no AND jm.prod_spec_id=od.mater_spec_id
+				LEFT JOIN ks_component_yxorder_base bs
+				ON bs.id=od.base_id) J
          WHERE A.JUANMO_BATCH_ID = Q.JUANMO_BATCH_ID
            AND A.JUANMO_BATCH_ID = J.RECORD_ID
            <isNotNull prepend="" property="recordId">
@@ -214,6 +219,12 @@
 	<isNotNull prepend="" property="juanMoSpecId">
 	   AND J.PROD_SPEC_ID = #juanMoSpecId#
 	</isNotNull>
+	
+	<isNotNull prepend="" property="hpmc">
+	   AND J.hpmc = #hpmc#
+	</isNotNull>
+	
+	
 	<isNotNull prepend="" property="dimoBatchNo">
 	   AND EXISTS
 		 (SELECT 1

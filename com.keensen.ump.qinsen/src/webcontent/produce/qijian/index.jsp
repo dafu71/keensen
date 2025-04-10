@@ -95,6 +95,10 @@
   var teamId = '';
   <% } %>
   var listid = 'produce-qijianmgr-list';
+  
+  
+  var qijianExportButton = Ext.id();
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.qijianMgr
 		});

@@ -17,10 +17,10 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr = function() {
 
 	this.initStore = function() {
 
-		// 超计划生产、需要给工艺意见、需要品管给意见、超期停留
+		// 需要计划员处理、需要给工艺意见、需要品管给意见、超期停留
 		this.exceptionTypeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['超计划生产', '超计划生产'], ['需要工艺给意见', '需要工艺给意见'],
+					data : [['需要计划员处理', '需要计划员处理'], ['需要工艺给意见', '需要工艺给意见'],
 							['需要品管给意见', '需要品管给意见'], ['超期停留', '超期停留']
 							, ['需班长处理', '需班长处理']]
 				});

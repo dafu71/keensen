@@ -189,9 +189,25 @@ BZ AS
      AND TO_CHAR(BZ.create_time, 'YYYY') &lt;=  #productDtEnd#     
    GROUP BY TO_CHAR(BZ.create_time, 'YYYY'))</isEqual>
         <isEqual compareValue="period" prepend="" property="type">AND TO_CHAR(BZ.create_time, 'YYYY-MM-DD HH24:mi:ss') &gt;= #productDtStart#
-     AND TO_CHAR(BZ.create_time, 'YYYY-MM-DD HH24:mi:ss') &lt;=  #productDtEnd#)</isEqual> 
+     AND TO_CHAR(BZ.create_time, 'YYYY-MM-DD HH24:mi:ss') &lt;=  #productDtEnd#)</isEqual>
+        <isEqual compareValue="day" prepend="" property="type">,
+  dt as 
+  (
+  SELECT
+  TO_CHAR(start_date + LEVEL - 1, 'YYYY-MM-DD') AS formatted_date
+FROM
+  (SELECT TO_DATE(SUBSTR(#productDtStart#,1,10), 'YYYY-MM-DD') AS start_date,
+          TO_DATE(SUBSTR(#productDtEnd#,1,10), 'YYYY-MM-DD') AS end_date   
+   FROM DUAL)
+CONNECT BY
+  LEVEL &lt;= end_date - start_date + 1
+  
+  )</isEqual>
 
-SELECT CM.PRODUCE_DT "produceDt",
+SELECT 
+<isEqual compareValue="day" prepend="" property="type">dt.formatted_date "produceDt",</isEqual>
+        <isNotEqual compareValue="day" prepend="" property="type">CM.PRODUCE_DT "produceDt",</isNotEqual>
+
        nvl(CM.CMAMOUNTJY,0) "cmAmountJy",
        nvl(CM.CMAMOUNTGY,0) "cmAmountGy",
        nvl(JM.JMAMOUNT4,0)  "jmAmount4",
@@ -202,7 +218,19 @@ SELECT CM.PRODUCE_DT "produceDt",
        nvl(RS.RSAMOUNT8,0)  "rsAmount8",
        nvl(BZ.BZAMOUNT4,0)  "bzAmount4",
        nvl(BZ.BZAMOUNT8,0)  "bzAmount8"
-  FROM CM
+  FROM 
+  <isEqual compareValue="day" prepend="" property="type">dt 
+	left join CM 
+	on dt.formatted_date = CM.PRODUCE_DT
+  LEFT JOIN JM
+    ON dt.formatted_date = JM.PRODUCE_DT
+  LEFT JOIN QJ
+    ON dt.formatted_date = QJ.PRODUCE_DT
+  LEFT JOIN RS
+    ON dt.formatted_date = RS.PRODUCE_DT
+  LEFT JOIN BZ
+    ON dt.formatted_date = BZ.PRODUCE_DT</isEqual>
+        <isNotEqual compareValue="day" prepend="" property="type">CM
   LEFT JOIN JM
     ON CM.PRODUCE_DT = JM.PRODUCE_DT
   LEFT JOIN QJ
@@ -210,8 +238,11 @@ SELECT CM.PRODUCE_DT "produceDt",
   LEFT JOIN RS
     ON CM.PRODUCE_DT = RS.PRODUCE_DT
   LEFT JOIN BZ
-    ON CM.PRODUCE_DT = BZ.PRODUCE_DT
-<isNotEqual compareValue="period" prepend="" property="type">ORDER BY CM.PRODUCE_DT</isNotEqual>
+    ON CM.PRODUCE_DT = BZ.PRODUCE_DT</isNotEqual>
+        <isNotEqual compareValue="period" prepend="" property="type">
+            <isEqual compareValue="day" prepend="" property="type">ORDER BY dt.formatted_date</isEqual>
+            <isNotEqual compareValue="day" prepend="" property="type">ORDER BY CM.PRODUCE_DT</isNotEqual>
+        </isNotEqual>
     </select>
     <select id="queryQjChange" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT PRODUCE_DT "produceDt",
        BAMOUNT4   "bAmount4",

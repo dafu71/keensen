@@ -370,3 +370,15 @@ com.keensen.ump.produce.component.planweekMgr.prototype.exportExcel = function()
 			'com.keensen.ump.produce.component.order.queryPlanWeek','0,1');
 
 }
+
+com.keensen.ump.produce.component.planweekMgr.prototype.setDefaultValue = function() {
+	var store = this.listPanel3.store;
+	var amount = Ext.getCmp(defaultValueId).getValue();
+	if(Ext.isEmpty(amount)) return;
+	var records = store.getRange();
+	for (var i = 0; i < records.length; i++) {
+		var rec = records[i];
+		rec.set('amount',amount);
+	}
+	
+}

@@ -43,3 +43,31 @@ com.keensen.ump.produce.component.yxordertraceMgr.prototype.exportExcel = functi
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '在产订单跟进',
 			'com.keensen.ump.produce.component.order.queryYxOrderTrace','0,1');
 }
+
+com.keensen.ump.produce.component.yxordertraceMgr.prototype.modifySn = function() {
+	var _this = this;
+
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.order.modifySn.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+
+			if (ret.success) {
+				Ext.Msg.alert("系统提示", '更新成功')
+				
+			} else {
+				Ext.Msg.alert("系统提示", '更新失败')
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}

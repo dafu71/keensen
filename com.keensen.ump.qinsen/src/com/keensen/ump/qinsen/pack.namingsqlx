@@ -140,4 +140,10 @@
 		
 		
 </select>
+
+	<select id="queryPrintCount" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+
+		SELECT 1 from qinsen.inst_mark_print t
+	WHERE ',' || t.batch_no_str || ',' LIKE '%' || #batchNo# || '%'
+		</select>
 </sqlMap>

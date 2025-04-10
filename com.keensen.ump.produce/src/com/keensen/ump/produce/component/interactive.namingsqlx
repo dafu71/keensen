@@ -4,7 +4,7 @@
  <select id="querySelect" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	SELECT T1.MP_BATCH_NO            AS "mpBatchNo",
        T1.MP_SPEC_CODE           AS "mpSpecCode",
-       T1.MATER_SPEC_NAME        AS "materSpecName",
+       T1.MATER_SPEC_NAME        AS "materSpecName",T1.MATER_SPEC_ID        AS "materSpecId",
        T1.AREA                   AS "area",
        T1.DENSE_NET              AS "denseNet",
        T1.YJ_GPD_LOW             AS "yjGpdLow",
@@ -106,6 +106,50 @@
   
    <!--膜片筛选开始-->
    
+   
+   
+   <isNull prepend="" property="saltLowLimitChooseFilter">
+   <isNotNull prepend="" property="saltLowLimitStdFilter">
+           AND nvl(T1.TEST_YJ_SALT,0) >= #saltLowLimitStdFilter#          
+  </isNotNull>
+  </isNull>
+  
+  <isNotNull prepend="" property="saltLowLimitChooseFilter">
+           AND nvl(T1.TEST_YJ_SALT,0) >= #saltLowLimitChooseFilter#          
+  </isNotNull>
+  
+  
+  <isNull prepend="" property="gpdLowLimitChooseFilter">
+   <isNotNull prepend="" property="gpdLowLimitStdFilter">
+           AND nvl(T1.YJ_GPD_AVG,0) >= #gpdLowLimitStdFilter#          
+  </isNotNull>
+  </isNull>
+  
+  <isNotNull prepend="" property="gpdLowLimitChooseFilter">
+           AND nvl(T1.YJ_GPD_AVG,0) >= #gpdLowLimitChooseFilter#          
+  </isNotNull>
+  
+  <isNull prepend="" property="gpdUpLimitChooseFilter">
+   <isNotNull prepend="" property="gpdUpLimitStdFilter">
+           AND nvl(T1.YJ_GPD_AVG,0) &lt;= #gpdUpLimitStdFilter#          
+  </isNotNull>
+  </isNull>
+  
+  <isNotNull prepend="" property="gpdUpLimitChooseFilter">
+           AND nvl(T1.YJ_GPD_AVG,0) &lt;= #gpdUpLimitChooseFilter#          
+  </isNotNull>
+  
+   <isNull prepend="" property="mpSaltLowLimitChooseFilter">
+   <isNotNull prepend="" property="mpSaltLowLimitStdFilter">
+           AND nvl(T1.MP_MIN_SALT_REJECTION,0) >= #mpSaltLowLimitStdFilter#          
+  </isNotNull>
+  </isNull>
+  
+  <isNotNull prepend="" property="mpSaltLowLimitChooseFilter">
+           AND nvl(T1.MP_MIN_SALT_REJECTION,0) >= #mpSaltLowLimitChooseFilter#          
+  </isNotNull>
+  
+   
    <isEqual prepend="and" property="isStorage" compareValue="Y">
  			   exists (select 1 from  KS_PROD_COMPONENT_STOCK
  			   where  batch_no = T1.MP_BATCH_NO
@@ -113,14 +157,27 @@
    </isEqual>
         
   <isNotNull prepend="" property="prodSpecIdFilter">
-           AND T1.MP_SPEC_CODE in (
+  
+  and T1.MATER_SPEC_ID = #prodSpecIdFilter#
+       <!--    AND T1.MP_SPEC_CODE in (
            select pms.mater_spec_name from KS_PROD_WATER_STD std
            left join qinsen.para_mater_spec pms ON pms.mater_spec_id=std.mp_spec_id
-           where std.prod_spec_id = #prodSpecIdFilter#)          
+           where std.prod_spec_id = #prodSpecIdFilter#) -->         
   </isNotNull>
   
-  <isNotNull prepend="" property="storageNameFilter">
-           AND T1.STORAGE_NAME = #storageNameFilter#          
+  <isNotNull prepend="" property="storageIdFilter">
+     AND T1.STORAGE_NAME in  (
+           SELECT STORAGE_NAME from 
+		(SELECT '1'STORAGE_ID , '膜片AB仓' STORAGE_NAME FROM dual
+		UNION ALL
+		SELECT '2', '膜片C仓' FROM dual
+		UNION ALL
+		SELECT '3', '膜片发货仓'FROM dual
+		UNION ALL
+		SELECT '4', '半成品仓' FROM dual
+		UNION ALL
+		SELECT '5', '试卷合格仓' FROM dual)
+		WHERE storage_id IN($storageIdFilter$))         
   </isNotNull>
   
   <isNotNull prepend="" property="mpSpecIdFilter">
@@ -145,6 +202,10 @@
            and T1.TEST_YJ_SALT is not null 
   </isNotEqual>       
   </isNotNull>
+  
+  <!--膜片必须可用长度大于0-->
+  and exists(select 1 from V_KS_TUMO_LENGTH t
+   WHERE t.useful_Length>0 and T1.MP_BATCH_NO=t.batch_no)
   
   <!--膜片筛选结束-->
   
@@ -173,4 +234,45 @@
           order by T1.MP_BATCH_NO
   </select>
   
+  <select id="queryDate4PlanWeek" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ 	SELECT to_date(to_char(SYSDATE+30,'yyyy-MM-dd'),'yyyy-MM-dd') AS "endDate",
+  to_date(to_char(SYSDATE,'yyyy-MM-dd'),'yyyy-MM-dd') AS "startDate",
+  to_char(SYSDATE,'yyyy') AS "planYear",
+  to_date(to_char(SYSDATE,'yyyy-MM-dd'),'yyyy-MM-dd') AS "planDate"
+   FROM DUAL
+    </select>
+    
+    <select id="queryTumo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ 	 SELECT tm.batch_no "batchNo",tm.record_id "recordId",TM.OUT_LENGTH "outLength",
+       tm.useful_length "usefulLength",
+       tm.use_length "useLength",tm.used_length "usedLength",
+       tm.used_times "usedTimes",
+       tm.storage_name "storageName",tm.storage_position "storagePosition"
+  FROM V_KS_TUMO_LENGTH tm
+    where 1=1 
+    <isNotNull prepend="" property="tumoBatchNo">
+           AND TM.BATCH_NO in ($tumoBatchNo$)
+    </isNotNull>
+  </select>
+  
+   <insert id="insertPlanWeekDays" parameterClass="java.util.HashMap" >
+     INSERT INTO KS_COMPONENT_PLAN_WEEK_DAYS
+  (ID,
+   PLAN_DATE,
+   CREATE_TIME,
+   CREATE_USER_ID,
+   CREATE_NAME,
+   relation_id,
+   order_id,amount)
+  SELECT SEQ_COMPONENT_PLAN_DAY.NEXTVAL,
+         TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD') + LEVEL - 1),
+         SYSDATE,
+         #createUserId#,
+         #createName#,
+         #relationId#,
+         #orderId#,#amount#
+    FROM DUAL
+  CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) -
+             TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) + 1
+   </insert>
   </sqlMap>

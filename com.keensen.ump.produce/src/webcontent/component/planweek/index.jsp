@@ -42,6 +42,7 @@
 
 function getCurrentWeekNumber() {
   var now = new Date();
+  
   var startOfYear = new Date(now.getFullYear(), 0, 1);
   var startOfWeek = new Date(startOfYear.setDate(startOfYear.getDate() - startOfYear.getDay() + 1));
   var daysSinceStartOfWeek = Math.ceil((now - startOfWeek + 1) / (24 * 60 * 60 * 1000));
@@ -49,6 +50,7 @@ function getCurrentWeekNumber() {
   return currentWeekNumber;
 }
 
+  var defaultValueId = Ext.id();
   var mylistid = Ext.id();
   var uid = "<%=uid %>";
   var dataorgid = "<%=dataorgid%>";

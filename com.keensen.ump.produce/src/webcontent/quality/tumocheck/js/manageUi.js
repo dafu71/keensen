@@ -31,17 +31,17 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					}, {
 						xtype : 'mplinecombobox',
 						hiddenName : 'condition/lineId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '生产线 '
 					}, {
 						xtype : 'mpspeccombobox',
 						hiddenName : 'condition/specId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '膜片型号 '
 					}, {
 						xtype : 'textfield',
 						name : 'condition/batchNoStr',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '膜片批次'
 					}, {
 						xtype : 'displayfield',
@@ -50,12 +50,12 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					}, {
 						xtype : 'prodflagselcombobox',
 						hiddenName : 'condition/prodFlagId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '生产类型'
 					}, {
 						xtype : 'mpperfcombobox',
 						hiddenName : 'condition/perfFlagId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '样块性能'
 					}/*
 						 * , { xtype : 'combobox', anchor : '75%', fieldLabel :
@@ -78,14 +78,14 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						name : 'condition/isWx',
 						hiddenName : 'condition/isWx',
 						fieldLabel : '是否外销',
-						anchor : '75%',
+						anchor : '95%',
 						dictData : ABF_YESORNO
 					}, {
 						xtype : 'dictcombobox',
 						name : 'condition/ifPerFlag',
 						hiddenName : 'condition/ifPerFlag',
 						fieldLabel : '是否已样块<br>性能判定',
-						anchor : '75%',
+						anchor : '95%',
 						dictData : ABF_YESORNO
 					}]
 				});
@@ -94,7 +94,9 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:uid != 'KS00307' && uid != 'XXB',
+					//hidden:uid != 'KS00307' && uid != 'XXB',
+					hidden:true,
+					id : tumocheckExportButton,
 					handler : this.exportExcel
 				});
 

@@ -53,7 +53,20 @@
       ELSE '0'
        END "overTime",
     
-    (SYSDATE - CAST(t1.create_time AS DATE)) * 24 "diff"
+    (SYSDATE - CAST(t1.create_time AS DATE)) * 24 "diff",
+    
+    wt.f_gpd "fGpd"
+    ,wt.f_salt "fSalt",
+     wt.r_gpd "rGpd"
+    ,wt.r_salt "rSalt",
+    qj.order_no "orderNo",
+    qj.batch_no "qjBatchNo",
+    jm.tumo_batch_str "tumoBatchStr",
+    jm.dimo_batch_str "dimoBatchStr",
+    
+    TO_CHAR(jm.produce_dt, 'YYYY-MM-DD HH24:MI') as "jmProduceDt",
+    TO_CHAR(WT.create_dt, 'YYYY-MM-DD HH24:MI') as "wtCreateDt"
+     
        from 
        KS_COMPONENT_VSTOCK  t1
        
@@ -62,7 +75,8 @@
        left join qinsen.inst_juanmo_main jm ON t1.jm_batch_no = jm.batch_no
        left join qinsen.inst_qijian qj 
        ON qj.juanmo_batch_id = jm.record_id
-       LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+     
+       LEFT JOIN QINSEN.INST_WATER_TEST  WT 
   		ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID
        LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
         ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID
@@ -75,6 +89,12 @@
         <isNotNull prepend="and" property="exceptionType">t1.exception_type = #exceptionType#</isNotNull>
         <isNotNull prepend="and" property="jmBatchNo">t1.jm_batch_no = #jmBatchNo#</isNotNull>
         <isNotNull prepend="and" property="prodSpecId">t1.PMS.MATER_SPEC_ID = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="dryWet">CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END = #dryWet#</isNotNull>
+        <isNotNull prepend="and" property="gyyConclusion">qj.gyy_conclusion = #gyyConclusion#</isNotNull>
+        <isNotNull prepend="and" property="orderNo">qj.order_no like '%' ||  #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="tumoBatchStr">jm.tumo_batch_str like '%' ||  #tumoBatchStr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dimoBatchStr">jm.dimo_batch_str like '%' ||  #dimoBatchStr# || '%'</isNotNull>
+	
 	order by t1.CREATE_TIME desc
       </select>
     <select id="queryJuanmo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
@@ -118,7 +138,14 @@
 	    select jm.batch_no from KS_COMPONENT_CHECK_LIST t
 	    LEFT JOIN qinsen.inst_qijian qj ON t.batch_no=qj.batch_no
 	    LEFT JOIN qinsen.inst_juanmo_main jm ON jm.record_id=qj.juanmo_batch_id
-			WHERE jm.batch_no IS NOT NULL     )</delete>
+			WHERE jm.batch_no IS NOT NULL     )
+			
+			or
+		 t.jm_batch_no in (	
+			SELECT jm.batch_no from QINSEN.inst_qijian qj
+LEFT JOIN qinsen.inst_juanmo_main jm
+ON jm.record_id=qj.juanmo_batch_id
+WHERE qj.ng_reason_id=300061)</delete>
     <!--干膜,卷膜时间+4*24小时元件未请检-->
     <select id="queryVstorage4Dry" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 1
 	 from QINSEN.INST_qijian qj
@@ -129,7 +156,11 @@
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
 	 AND ROUND((SYSDATE - jm.produce_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
-	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)</select>
+	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
+	  and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
+		LEFT JOIN qinsen.inst_juanmo_main jm2
+		ON jm2.record_id=qj.juanmo_batch_id
+		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)</select>
     <insert id="insertVstorage4Dry" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_VSTOCK 
 	(jm_batch_no,exception_type,create_time,create_user_id,create_name)
 	SELECT jm.batch_no,decode(NVL(qj.ng_reason_id,0),0,'需班长处理','需要工艺给意见'),SYSDATE,#createUserId#,#createName#
@@ -141,7 +172,11 @@
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
 	 AND ROUND((SYSDATE - jm.produce_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
-	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)</insert>
+	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
+	  and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
+		LEFT JOIN qinsen.inst_juanmo_main jm2
+		ON jm2.record_id=qj.juanmo_batch_id
+		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)</insert>
     <!--湿膜测试时间+4*24小时元件元件未请检-->
     <select id="queryVstorage4Wet" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 1
 	 from qinsen.inst_water_test wt
@@ -152,7 +187,11 @@
 	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2024-12-01'
 	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
-	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)</select>
+	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
+	 and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
+		LEFT JOIN qinsen.inst_juanmo_main jm2
+		ON jm2.record_id=qj.juanmo_batch_id
+		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)</select>
     <insert id="insertVstorage4Wet" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_VSTOCK 
 	(jm_batch_no,exception_type,create_time,create_user_id,create_name)
 	SELECT jm.batch_no,
@@ -166,7 +205,11 @@
 	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2024-12-01'
 	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
-	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)</insert>
+	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
+	 and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
+		LEFT JOIN qinsen.inst_juanmo_main jm2
+		ON jm2.record_id=qj.juanmo_batch_id
+		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)</insert>
     <update id="updateVstorageExceptionType" parameterClass="java.util.HashMap">
    	update KS_COMPONENT_VSTOCK t
    	set t.Exception_Type = #exceptionType#,
@@ -176,5 +219,43 @@
 	    select jm.batch_no from qinsen.inst_qijian qj 
 	    LEFT JOIN qinsen.inst_juanmo_main jm ON jm.record_id=qj.juanmo_batch_id
 			WHERE qj.record_Id in($recordIds$) )</isNotNull>
+        <isEqual compareValue="dry" prepend="and" property="checkOverTime">t.jm_batch_no in (
+	select t.jm_batch_no 
+	from KS_COMPONENT_VSTOCK t
+	left join qinsen.inst_juanmo_main jm ON t.jm_batch_no = jm.batch_no
+	LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+	  		ON WT.JUANMO_BATCH_ID = jm.record_ID
+	WHERE jm.batch_no not in (
+	    select jm.batch_no from KS_COMPONENT_CHECK_LIST t
+			LEFT JOIN qinsen.inst_qijian qj ON t.batch_no=qj.batch_no
+			LEFT JOIN qinsen.inst_juanmo_main jm ON jm.record_id=qj.juanmo_batch_id
+			WHERE jm.batch_no IS NOT NULL 
+	    )
+    AND ROUND((SYSDATE - jm.create_dt)*24,1)&gt; 168
+    AND CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END = '干')</isEqual>
+        <isEqual compareValue="wet" prepend="and" property="checkOverTime">t.jm_batch_no in (
+	select t.jm_batch_no 
+	from KS_COMPONENT_VSTOCK t
+	left join qinsen.inst_juanmo_main jm ON t.jm_batch_no = jm.batch_no
+	LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+	  		ON WT.JUANMO_BATCH_ID = jm.record_ID
+	WHERE jm.batch_no not in (
+	    select jm.batch_no from KS_COMPONENT_CHECK_LIST t
+			LEFT JOIN qinsen.inst_qijian qj ON t.batch_no=qj.batch_no
+			LEFT JOIN qinsen.inst_juanmo_main jm ON jm.record_id=qj.juanmo_batch_id
+			WHERE jm.batch_no IS NOT NULL 
+	    )
+    AND ROUND((SYSDATE - jm.create_dt)*24,1)&gt; 360
+    AND CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END = '湿')</isEqual>
     </update>
+    <update id="updateGyyConclusion" parameterClass="java.util.HashMap">UPDATE qinsen.inst_qijian t
+	SET t.change_dt = SYSDATE,
+	t.gyy_remark_time  = SYSDATE,
+	t.changer_id = #changerId#,
+	t.gyy_remark = #gyyRemark#,
+	t.gyy_remark_user_id =#gyyRemarkUserId#,
+	t.gyy_remark_user_name = #gyyRemarkUserName#,
+	t.gyy_conclusion = #gyyConclusion#,
+	t.gyy_spec_id = #gyySpecId#
+	WHERE t.record_id = #recordId#</update>
 </sqlMap>

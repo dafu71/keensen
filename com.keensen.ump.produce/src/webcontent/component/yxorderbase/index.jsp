@@ -23,6 +23,8 @@
     if(roleId.toString().indexOf("10001481")!=-1 || uid.equals("sysadmin")){
 		mConfirm="1";
   	}
+  	String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("produce/component/yxorderbase/index.jsp","");
   	
 %>
 <html>
@@ -63,9 +65,15 @@
 .mya:hover {
   color: red; /* 鼠标悬停时改变颜色 */
 }
+
+.custom-row-height .x-grid3-row {
+    height: 50px; /* 设置行高 */
+    line-height: 50px; /* 设置行内文本的垂直居中 */
+}
 </style>
 
 <script type="text/javascript">
+var markRootUrl = "<%=rootUrl %>";
   var uid = "<%=uid %>";
   var mConfirm = "<%=mConfirm %>";
   var userName = "<%=userName %>";

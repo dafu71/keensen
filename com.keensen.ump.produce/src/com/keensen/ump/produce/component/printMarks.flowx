@@ -214,7 +214,7 @@
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
           <process:leftOperand type="query">list[1]/code</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
+          <process:rightOperand type="literal">11</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
@@ -288,6 +288,16 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link24" name="link24" displayName="连接线" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link12</targetConnections>
     <targetConnections>link13</targetConnections>
     <location x="290" y="233"/>
@@ -320,12 +330,12 @@
       <targetNode>end0</targetNode>
     </sourceConnections>
     <targetConnections>link16</targetConnections>
-    <location x="470" y="228"/>
+    <location x="470" y="233"/>
     <size height="28" width="22"/>
     <nodeLabel>view5label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="view5label" name="label" nodeType="label">
-    <location x="424" y="264"/>
+    <location x="424" y="269"/>
     <figSize height="20" width="114"/>
     <node>view5</node>
   </nodes>
@@ -335,12 +345,12 @@
       <targetNode>end0</targetNode>
     </sourceConnections>
     <targetConnections>link18</targetConnections>
-    <location x="472" y="268"/>
+    <location x="470" y="288"/>
     <size height="28" width="22"/>
     <nodeLabel>view6label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="view6label" name="label" nodeType="label">
-    <location x="426" y="304"/>
+    <location x="424" y="324"/>
     <figSize height="20" width="114"/>
     <node>view6</node>
   </nodes>
@@ -373,6 +383,19 @@
     <location x="431" y="461"/>
     <figSize height="20" width="114"/>
     <node>view8</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" description="" id="end1" name="结束1" displayName="结束" type="end" contextPath="" method="forward" uri="/produce/component/markprint/printProdMarks.jsp">
+    <targetConnections>link24</targetConnections>
+    <location x="147" y="443"/>
+    <size height="28" width="28"/>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <location x="141" y="479"/>
+    <figSize height="20" width="40"/>
+    <node>end1</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

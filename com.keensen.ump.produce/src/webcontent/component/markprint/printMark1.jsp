@@ -26,6 +26,7 @@
 			.toString();
 	rootUrl = rootUrl.replace(
 			"/produce/component/markprint/printMark1.jsp", "");
+			System.out.print("111111111111" + isStar);
 %>
 
 <html>
@@ -306,7 +307,7 @@ function getDayCode() {
 					: prodSpecName.length() > 9 ? "24px" : "30px";
 		%>
 		<td colspan=5 valign="middle" align="left"
-			style="font-size: <%=fontSize %>;">&nbsp;&nbsp;<%=prodSpecName%></td>
+			style="font-size: <%=fontSize %>;">&nbsp;&nbsp;<%=prodSpecName%><br><br></td>
 
 	</tr>
 
@@ -318,19 +319,19 @@ function getDayCode() {
 		%>
 		<td colspan=2 align="center" valign="middle"><img
 			src="<%=rootUrl %>/qinsen/produce/pack/print/image/round.png"
-			class="symbol_dry" /><span class="span_a">DRY</span></td>
+			class="symbol_dry" /><span class="span_a">DRY</span><br><br></td>
 		<td colspan=2 align="center" valign="middle"><img
 			src="<%=rootUrl %>/qinsen/produce/pack/print/image/ring.png"
-			class="symbol_wet" /><span class="span_a">WET</span></td>
+			class="symbol_wet" /><span class="span_a">WET</span><br><br></td>
 		<%
 		} else {
 		%>
 		<td colspan=2 align="center" valign="middle"><img
 			src="<%=rootUrl %>/qinsen/produce/pack/print/image/ring.png"
-			class="symbol_dry" /><span class="span_a">DRY</span></td>
+			class="symbol_dry" /><span class="span_a">DRY</span><br><br></td>
 		<td colspan=2 align="center" valign="middle"><img
 			src="<%=rootUrl %>/qinsen/produce/pack/print/image/round.png"
-			class="symbol_wet" /><span class="span_a">WET</span></td>
+			class="symbol_wet" /><span class="span_a">WET</span><br><br></td>
 
 		<%
 		}
@@ -343,7 +344,7 @@ function getDayCode() {
 	<tr height="62px">
 		<td width="47px"></td>
 		<td colspan=5 align="center" valign="bottom"><svg
-			id="barcode_<%=prodBatchNo %>" style="width:50mm"></svg></td>
+			id="barcode_<%=prodBatchNo %>" style="width:50mm"></svg><br><br></td>
 
 		<td colspan=2 align="center" valign="bottom">
 		

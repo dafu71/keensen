@@ -42,7 +42,9 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 											data : [['裁叠膜', '裁叠膜'],
 													['卷膜', '卷膜'],
 													['气检', '气检'],
-													['包装', '包装']]
+													['包装', '包装'],
+													['焊管焊网', '焊管焊网'],
+													['裁网', '裁网']]
 										}),
 								mode : "local",
 								editable : false,
@@ -171,7 +173,9 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 										fields : ['mykey', 'myvalue'],
 										data : [['裁叠膜', '裁叠膜'], ['卷膜', '卷膜'],
 													['气检', '气检'],
-													['包装', '包装']]
+													['包装', '包装'],
+													['焊管焊网', '焊管焊网'],
+													['裁网', '裁网']]
 									}),
 							mode : "local",
 							editable : false,
@@ -246,7 +250,9 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 										fields : ['mykey', 'myvalue'],
 										data : [['裁叠膜', '裁叠膜'], ['卷膜', '卷膜'],
 													['气检', '气检'],
-													['包装', '包装']]
+													['包装', '包装'],
+													['焊管焊网', '焊管焊网'],
+													['裁网', '裁网']]
 									}),
 							mode : "local",
 							editable : false,

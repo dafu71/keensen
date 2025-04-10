@@ -28,6 +28,7 @@
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
 <ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
+
 <js:load scriptPath="pub/common/mpspecCombo.js" />
 <js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="produce/component/interactive/js/manageUi.js"/>
@@ -44,6 +45,11 @@ function getCurrentWeekNumber() {
 }
 
   var mylistid = Ext.id();
+  
+  var orderAmountId = Ext.id();
+  var useLengthSumId = Ext.id();
+  var arrangeLengthId = Ext.id();
+  
   var uid = "<%=uid %>";
   var dataorgid = "<%=dataorgid%>";
 var operatorid = "<%=operatorid%>";

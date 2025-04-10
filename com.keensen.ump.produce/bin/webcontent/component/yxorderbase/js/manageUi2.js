@@ -37,6 +37,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 		this.initMCConfirmWindow2();
 
+		this.initPGConfirmWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -54,7 +56,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							['订单计划员确认', '订单计划员确认'], ['正式发布', '正式发布'],
 							['不能接单', '不能接单'], ['调整申请', '调整申请'],
 							['计划员确认', '计划员确认'], ['制造中心确认', '制造中心确认'],
-							['工艺员确认', '工艺员确认']]
+							['工艺员确认', '工艺员确认'], ['品管确认', '品管确认']]
 				});
 
 		this.ynStore = new Ext.data.SimpleStore({
@@ -76,7 +78,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.colorStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['红', '红'], ['橙', '橙'], ['黄', '黄'], ['绿', '绿'],
-							['青', '青'], ['蓝', '蓝'], ['紫', '紫']]
+							['青', '青'], ['蓝', '蓝'], ['紫', '紫'], ['灰', '灰']]
 				});
 
 		this.orderTypeStore = new Ext.data.SimpleStore({
@@ -200,11 +202,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		// 是否接单
 		this.ifgetStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['需工艺确认', '需工艺确认'], ['需品质确认', '需品质确认'], ['是', '是'],
+					data : [['需工艺确认', '需工艺确认'], ['需品管确认', '需品管确认'], ['是', '是'],
 							['否', '否']]
 				});
-				
-		
 
 		this.gyyStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -513,8 +513,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						iconCls : 'icon-application_edit',
 						handler : this.onConfirm
 					}, '-', {
-						text : '查看接单记录',
-						disabled : allRight != '1',
+						text : '接单记录',
+						disabled : allRight != '1' && uid != 'KS00524' ,
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onConfirmList
@@ -524,6 +524,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onTConfirm
+					}, '-', {
+						text : '品管确认',
+						disabled : allRight != '1',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onPGConfirm
 					}, '-', {
 						text : '订单下达型号',
 						disabled : allRight != '1',
@@ -894,11 +900,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						dataIndex : 'packingLayer',
 						header : '打包层数',
 						sortable : true
-					}, {
-						dataIndex : 'packingTxt',
-						header : '打包标识要求',
-						sortable : true
-					}, {
+					}/*
+						 * , { dataIndex : 'packingTxt', header : '打包标识要求',
+						 * sortable : true }
+						 */, {
 						dataIndex : 'goodsWithReport',
 						header : '出货报告是否随货',
 						sortable : true
@@ -1560,7 +1565,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					fieldLabel : '生产计划日期',
 					// readOnly : true,
 					anchor : '100%',
-					colspan : 6
+					colspan : 6,
+					listeners : {
+						scope : this,
+						"change" : function(o, newvalue, oldvalue) {
+							_this.onCalcPeriod();
+						}
+					}
 				}, {
 					xtype : 'textfield',
 					name : 'entity/deliveryDate',
@@ -1571,7 +1582,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					fieldLabel : '交货日期',
 					// readOnly : true,
 					anchor : '100%',
-					colspan : 6
+					colspan : 6,
+					listeners : {
+						scope : this,
+						"change" : function(o, newvalue, oldvalue) {
+
+						}
+					}
 				}, {
 					xtype : 'datefield',
 					format : "Y-m-d",
@@ -1582,7 +1599,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					fieldLabel : '入库日期',
 					// readOnly : true,
 					anchor : '100%',
-					colspan : 6
+					colspan : 6,
+					listeners : {
+						scope : this,
+						"change" : function(o, newvalue, oldvalue) {
+							_this.onCalcPeriod();
+						}
+					}
 				}, {
 					xtype : 'trigger',
 					name : 'entity/period',
@@ -1590,7 +1613,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					dataIndex : 'period',
 					ref : '../../period',
 					allowBlank : false,
-					editable : true,
+					// readOnly:true,
+					editable : false,
 					fieldLabel : '生产周期(天)',
 					// readOnly : true,
 					anchor : '100%',
@@ -1609,6 +1633,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					dataIndex : 'productRemark',
 					// allowBlank : false,
 					anchor : '100%',
+					height : 100,
 					colspan : 24,
 					xtype : 'textarea',
 					fieldLabel : '产品备注'
@@ -1854,13 +1879,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					ref : '../../labelDrawingCode',
 					dataIndex : 'labelDrawingCode',
 					allowBlank : false,
+					editable : false,
 					anchor : '100%',
 					colspan : 6,
-					xtype : 'textfield',
 					fieldLabel : '图纸编号',
 					xtype : 'trigger',
 					emptyText : '单击旁边按钮选择图纸编号',
-					editable : true,
 					hideTrigger : false,
 					scope : this,
 					onTriggerClick : function() {
@@ -2132,7 +2156,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					fieldLabel : '唛头编号',
 					xtype : 'trigger',
 					emptyText : '单击旁边按钮选择图纸编号',
-					editable : true,
+					editable : false,
 					hideTrigger : false,
 					scope : this,
 					onTriggerClick : function() {
@@ -2585,19 +2609,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							this.reset()
 						}
 					}
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/packingTxt',
-					dataIndex : 'packingTxt',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textfield',
-					fieldLabel : '打包标识要求'
-				}, {
+				}/*
+					 * , { xtype : 'displayfield', height : 5, colspan : 24 }, {
+					 * name : 'entity/packingTxt', dataIndex : 'packingTxt', //
+					 * allowBlank : false, anchor : '100%', colspan : 12, xtype :
+					 * 'textfield', fieldLabel : '打包标识要求' }
+					 */, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
 					labelSeparator : '',// 去掉冒号
@@ -3015,6 +3032,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 		this.confirmListPanel = this.confirmListPanel || new Ext.fn.ListPanel({
 			region : 'center',
+			cls : 'custom-row-height', // 应用自定义的CSS类
 			viewConfig : {
 				forceFit : false
 			},
@@ -3024,6 +3042,28 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 			columns : [new Ext.grid.RowNumberer(), selModel2, {
 						dataIndex : 'orderNo',
 						header : '订单号'
+					}, {
+						dataIndex : 'ifget',
+						header : '能否接单'
+					}, {
+						dataIndex : 'createName',
+						header : '确认人'
+					}, {
+						dataIndex : 'createTime',
+						width : 150,
+						header : '确认时间'
+					}, {
+						dataIndex : 'reason',
+						width : 400,
+						header : '不能接单时反馈原因'
+					}, {
+						dataIndex : 'mReason',
+						width : 400,
+						header : '物控不能接单反馈原因'
+					}, {
+						dataIndex : 'adviseDate',
+						width : 150,
+						header : '建议调整入库日期'
 					}, {
 						dataIndex : 'ifbook',
 						header : '生产规格书'
@@ -3045,24 +3085,6 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'ifwarehousing',
 						header : '符合固定入库期'
-					}, {
-						dataIndex : 'ifget',
-						header : '能否接单'
-					}, {
-						dataIndex : 'reason',
-						header : '不能接单时反馈原因'
-					}, {
-						dataIndex : 'mReason',
-						header : '物控不能接单反馈原因'
-					}, {
-						dataIndex : 'adviseDate',
-						header : '建议调整入库日期'
-					}, {
-						dataIndex : 'createTime',
-						header : '确认时间'
-					}, {
-						dataIndex : 'createName',
-						header : '确认人'
 					}, {
 						dataIndex : 'tAdvise',
 						header : '工艺意见'
@@ -3119,6 +3141,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							name : 'tTime'
 						}, {
 							name : 'tAdvise'
+						}, {
+							name : 'mReason'
 						}]
 			})
 		})
@@ -3132,7 +3156,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					buttonAlign : "center",
 					autoScroll : false,
 					modal : true,
-					width : 800,
+					width : 1024,
 					height : 600,
 					layout : 'border',
 					items : [this.confirmListPanel],
@@ -3408,6 +3432,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					readOnly : true,
 					anchor : '100%',
 					colspan : 24,
+					height : 100,
 					xtype : 'textarea',
 					fieldLabel : '产品备注'
 				}, {
@@ -5684,6 +5709,22 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								dataIndex : 'labelSize',
 								hidden : true,
 								header : '标签尺寸'
+							}, {
+								dataIndex : 'url',
+								header : '标签背景图',
+								renderer : function(value, metaData, rec,
+										rowIndex, colIndex, store, view) {
+									if (!Ext.isEmpty(value)) {
+
+										return '<img src="'
+												+ markRootUrl
+												+ value
+												+ '?ver='
+												+ rec.data.id
+												+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+
+									}
+								}
 							}],
 					store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.base.paramaterspec.queryLabelDrawingByPage.biz.ext',
@@ -5705,13 +5746,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									name : 'materCode'
 								}, {
 									name : 'labelSize'
+								}, {
+									name : 'url'
 								}]
 					})
 				})
 
 		this.queryPanel4ChooseLable = this.queryPanel4ChooseLable
 				|| new Ext.fn.QueryPanel({
-							height : 80,
+							height : 110,
 							columns : 2,
 							border : true,
 							region : 'north',
@@ -5757,6 +5800,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										name : 'condition/specName2',
 										anchor : '100%',
 										colspan : 1
+									}, {
+										xtype : 'displayfield',
+										height : 5,
+										colspan : 4
+									}, {
+										xtype : 'textfield',
+										name : 'condition/drawingCode',
+										anchor : '100%',
+										fieldLabel : '图纸编号'
 									}]
 						})
 
@@ -5821,14 +5873,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								dataIndex : 'drawingCode',
 								header : '图纸编号'
-							}, {
-								dataIndex : 'drawingCode',
-								header : '干/湿',
-								renderer : function(v, m, r, i) {
-									var idx = v.indexOf('-G');
-									return idx > -1 ? "干" : "湿";
-								}
-							}, {
+							}/*
+								 * , { dataIndex : 'drawingCode', header :
+								 * '干/湿', renderer : function(v, m, r, i) { var
+								 * idx = v.indexOf('-G'); return idx > -1 ? "干" :
+								 * "湿"; } }
+								 */, {
 								dataIndex : 'materCode',
 								header : '物料号'
 							}, {
@@ -5840,6 +5890,38 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								dataIndex : 'labelSize',
 								header : '标签尺寸'
+							}, {
+								dataIndex : 'url',
+								header : '标签背景图',
+								renderer : function(value, metaData, rec,
+										rowIndex, colIndex, store, view) {
+									if (!Ext.isEmpty(value)) {
+
+										return '<img src="'
+												+ markRootUrl
+												+ value
+												+ '?ver='
+												+ rec.data.id
+												+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+
+									}
+								}
+							}, {
+								dataIndex : 'url2',
+								header : '唛头示例图纸',
+								renderer : function(value, metaData, rec,
+										rowIndex, colIndex, store, view) {
+									if (!Ext.isEmpty(value)) {
+
+										return '<img src="'
+												+ markRootUrl
+												+ value
+												+ '?ver='
+												+ rec.data.id
+												+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+
+									}
+								}
 							}],
 					store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.base.paramaterspec.queryMarkDrawingByPage.biz.ext',
@@ -5861,13 +5943,17 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									name : 'materCode'
 								}, {
 									name : 'labelSize'
+								}, {
+									name : 'url'
+								}, {
+									name : 'url2'
 								}]
 					})
 				})
 
 		this.queryPanel4ChooseMark = this.queryPanel4ChooseMark
 				|| new Ext.fn.QueryPanel({
-							height : 110,
+							height : 140,
 							columns : 2,
 							border : true,
 							region : 'north',
@@ -5919,6 +6005,18 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										fieldLabel : '%-贴牌型号-%',
 										ref : '../specNameLabel',
 										name : 'condition/specName2',
+										anchor : '100%',
+										colspan : 1
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 2
+									}, {
+										xtype : 'textfield',
+										mode : 'local',
+										fieldLabel : '%-图纸编号-%',
+										// ref : '../../drawingCode',
+										name : 'condition/drawingCode',
 										anchor : '100%',
 										colspan : 1
 									}]
@@ -6092,7 +6190,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 				})
 
 		this.mcconfirmInputPanel = this.mcconfirmInputPanel
-				|| new Ext.fn.InputPanel({
+				|| new Ext.fn.EditPanel({
 					height : 320,
 					region : 'north',
 					baseCls : "x-panel",
@@ -6100,7 +6198,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					autoScroll : false,
 					border : true,
 					columns : 6,
-					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm.biz.ext',
+					loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandConfirm.biz.ext',
+					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm2.biz.ext',
 					fields : [{
 								xtype : 'displayfield',
 								fieldLabel : '订单号',
@@ -6132,6 +6231,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								allowBlank : false,
 								mode : 'local',
 								fieldLabel : '材料齐套',
+								dataIndex : 'ifall',
 								ref : '../ifall',
 								hiddenName : 'ifall',
 								anchor : '85%',
@@ -6149,7 +6249,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								xtype : 'combobox',
 								forceSelection : true,
-								allowBlank : false,
+								dataIndex : 'ifdelivery',
+								// allowBlank : false,
 								mode : 'local',
 								fieldLabel : '材料到货&nbsp;<br>满足交期',
 								ref : '../ifdelivery',
@@ -6173,11 +6274,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								xtype : 'combobox',
 								forceSelection : true,
-								allowBlank : false,
+								// allowBlank : false,
 								mode : 'local',
 								fieldLabel : '标签是否&nbsp;<br>需要采购',
 								ref : '../ifSaleLabel',
 								hiddenName : 'ifSaleLabel',
+								dataIndex : 'ifSaleLabel',
 								anchor : '85%',
 								colspan : 3,
 								emptyText : '--请选择--',
@@ -6215,6 +6317,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								xtype : 'textarea',
 								fieldLabel : '反馈内容',
+								dataIndex : 'mReason',
 								ref : '../mReason',
 								name : 'mReason',
 								anchor : '90%',
@@ -6228,6 +6331,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								fieldLabel : '建议调整<br>入库日期',
 								ref : '../adviseDate',
 								name : 'adviseDate',
+								dataIndex : 'adviseDate',
 								format : "Y-m-d",
 								anchor : '85%',
 								colspan : 3
@@ -6237,6 +6341,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								allowBlank : false,
 								mode : 'local',
 								fieldLabel : '能否接单',
+								dataIndex : 'ifget',
 								ref : '../ifget',
 								hiddenName : 'ifget',
 								anchor : '85%',
@@ -7026,7 +7131,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					border : true,
 					columns : 6,
 					loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandConfirm.biz.ext',
-					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm.biz.ext',
+					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm2.biz.ext',
 					fields : [{
 								xtype : 'displayfield',
 								fieldLabel : '订单号',
@@ -7160,6 +7265,26 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								anchor : '85%',
 								colspan : 3
 							}, {
+								xtype : 'combobox',
+								forceSelection : true,
+								allowBlank : false,
+								mode : 'local',
+								fieldLabel : '能否接单',
+								ref : '../ifget',
+								hiddenName : 'ifget',
+								anchor : '85%',
+								colspan : 3,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
+							}, {
 								name : 'id',
 								ref : '../pkid',
 								dataIndex : 'id',
@@ -7201,6 +7326,368 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 				});
 
+	}
+
+	this.initPGConfirmWindow = function() {
+
+		var _this = this;
+
+		this.pgconfirmWindow = this.pgconfirmWindow || new Ext.fn.FormWindow({
+			title : '品管确认',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				successFn : function(i, r) {
+					if (r.err != '0') {
+						Ext.Msg.show({
+									width : 400,
+									title : "操作提示",
+									msg : r.msg,
+									icon : Ext.Msg.WARNING,
+									buttons : Ext.Msg.OK,
+									fn : function() {
+
+									}
+								})
+					} else {
+						_this.listPanel.store.reload();
+						_this.pgconfirmWindow.items.items[0].form.reset();
+						_this.pgconfirmWindow.hide();
+					}
+				},
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandConfirm.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveTConfirm.biz.ext',
+				fields : [{
+							xtype : 'displayfield',
+							fieldLabel : '订单号',
+							ref : '../../orderNo',
+							dataIndex : 'orderNo',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '需生产或入库数量(只)',
+							ref : '../../orderAmount',
+							dataIndex : 'orderAmount',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '订单类型',
+							ref : '../../orderType',
+							dataIndex : 'orderType',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.orderBrandStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '有生产规格书',
+							ref : '../../ifbook',
+							dataIndex : 'ifbook',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '材料齐套',
+							ref : '../../ifall',
+							dataIndex : 'ifall',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '材料到货满足交期',
+							ref : '../../ifdelivery',
+							dataIndex : 'ifdelivery',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '标签新制版',
+							ref : '../../newMakeLabel',
+							dataIndex : 'newMakeLabel',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '唛头新制版',
+							ref : '../../newMakeMark',
+							dataIndex : 'newMakeMark',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '产能满足',
+							ref : '../../ifsatisfy',
+							dataIndex : 'ifsatisfy',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '考虑非生产日',
+							ref : '../../ifconsider',
+							dataIndex : 'ifconsider',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '考虑保养日',
+							ref : '../../ifconsider2',
+							dataIndex : 'ifconsider2',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '生产周期',
+							ref : '../../period',
+							dataIndex : 'period',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '符合固定入库期',
+							ref : '../../ifwarehousing',
+							dataIndex : 'ifwarehousing',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '能否接单',
+							ref : '../../ifget',
+							dataIndex : 'ifget',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ifgetStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							eadOnly : true,
+							fieldLabel : '确认人员',
+							dataIndex : 'createName',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							readOnly : true,
+							fieldLabel : '反馈内容',
+							ref : '../../reason',
+							dataIndex : 'reason',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							readOnly : true,
+							fieldLabel : '建议调整入库日期',
+							ref : '../../adviseDate',
+							dataIndex : 'adviseDate',
+							format : "Y-m-d",
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;">品管意见</p>',
+							labelSeparator : '',// 去掉冒号
+							ref : '../../pconfirm',
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							allowBlank : false,
+							fieldLabel : '意见',
+							ref : '../../tAdvise',
+							name : 'entity/tAdvise',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '能否接单',
+							ref : '../../tRoute',
+							dataIndex : 'tRoute',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.gyyStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							name : 'entity/id',
+							xtype : 'hidden',
+							dataIndex : 'id'
+						}, {
+							name : 'entity/relationId',
+							xtype : 'hidden',
+							dataIndex : 'relationId'
+						}]
+			}]
+		});
 	}
 
 }

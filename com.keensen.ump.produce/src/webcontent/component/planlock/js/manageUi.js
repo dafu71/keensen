@@ -163,7 +163,7 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 						dataIndex : 'jmAmount',
 						header : '卷膜数量'
 					}, {
-						dataIndex : 'orderDate',
+						dataIndex : 'demandStockDate',
 						header : '订单交期'
 					}, {
 						dataIndex : 'orderRemark',
@@ -352,6 +352,8 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 							name : 'materSpecCode'
 						}, {
 							name : 'isCutOver'
+						}, {
+							name : 'demandStockDate'
 						}]
 			})
 		})

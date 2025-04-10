@@ -406,6 +406,10 @@
   
   <!--膜片筛选结束-->
   
+  <isNotNull prepend="" property="condition">
+  AND (case when T1.CONDITION1='Y' and T1.CONDITION2='Y' and T1.CONDITION5='Y' then '是' else '否' end)=#condition#
+  </isNotNull> 
+  
   
  		 <isNotNull prepend="" property="tumoBatchNo3">
            AND T1.MP_BATCH_NO like '%' || #tumoBatchNo3# || '%'

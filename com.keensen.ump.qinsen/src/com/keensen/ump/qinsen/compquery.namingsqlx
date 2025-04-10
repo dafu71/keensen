@@ -126,7 +126,11 @@
                   WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) IS_MIX_STR,
                 (SELECT WM_CONCAT(D.OUT_QUANTITY)
                    FROM QINSEN.INST_JUANMO_DETAIL D
-                  WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) PAGE_CNT_STR,
+                  WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) PAGE_CNT_STR                 
+                  
+                 
+                  
+                 <!-- 
                 DECODE((SELECT COUNT(1)
                          FROM QINSEN.INST_PROD_APPLY_JUDGE  AJ,
                               QINSEN.INST_PROD_APPLY_DETAIL AD
@@ -141,7 +145,7 @@
                         QINSEN.INST_PROD_APPLY_DETAIL AD
                   WHERE Z.BATCH_NO = AD.BATCH_NO
                     AND AD.APPLY_ID = AJ.APPLY_ID
-                    AND AJ.IS_QUALIFIED = 'Y') APPLY_TIME
+                    AND AJ.IS_QUALIFIED = 'Y') APPLY_TIME-->
           FROM (SELECT T.*
                    FROM (
                          
@@ -180,11 +184,22 @@
                                  J.TEAM_ID          JUANMO_TEAM_ID,
                                  J.WORKER_ID        JUANMO_WORKER_ID,
                                  J.REMARK           JUANMO_REMARK
+                                 
+                                 ,CHK.create_time APPLY_TIME, 
+                                 CASE WHEN CHK.STORAGE IS NOT NULL THEN '合格入库' ELSE '' END APPLY_JUDGE_RESULT
+                                 
                            FROM QINSEN.INST_QIJIAN      A,
                                  QINSEN.INST_JUANMO_MAIN J,
-                                 QINSEN.PARA_MATER_SPEC  MS
+                                 QINSEN.PARA_MATER_SPEC  MS,
+                                 
+                                 ( SELECT batch_no, MAX(create_time) create_time,MAX(STORAGE) STORAGE from (
+								select t.batch_no,to_char(h.create_time,'YYYY-MM-DD HH24:MI:SS') create_time,H.STORAGE from KS_COMPONENT_CHECK_LIST t
+								LEFT JOIN KS_COMPONENT_CHECK_HEAD h
+								ON t.relation_id = h.id)
+								GROUP BY batch_no) CHK
                           WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
                             AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
+                            AND A.BATCH_NO = CHK.BATCH_NO
                             <isNotNull prepend = ""  property = "orderNo">
 							   AND A.ORDER_NO = #orderNo#
 							</isNotNull>

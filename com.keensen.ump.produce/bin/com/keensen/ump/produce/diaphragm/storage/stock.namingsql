@@ -5,7 +5,7 @@
      select t1.STORAGE_ID as "storageId", t1.id "id", t1.position "position",
        t1.batch_no   as "batchNo",
        t1.AMOUNT     as "amount",
-       t1.REMARK     as "remark",
+       t1.REMARK     as "remark", t1.reserve1 "fhRemark",
        
         CASE WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'red'
          WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;15) THEN 'yellow'
@@ -389,4 +389,8 @@
        WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'yellow'
        END) = #ifWarn#</isNotNull>
     </select>
+    <update id="updateBatchFhRemark" parameterClass="java.util.HashMap">update KS_PROD_DIAPHRAGM_STOCK t
+     set t.reserve1= #reserve1#,t.update_time = sysdate,
+     t.update_user_id = #updateUserId#,t.update_name = #updateName#
+     where t.id in($ids$)</update>
 </sqlMap>

@@ -156,7 +156,7 @@
     <select id="queryYxOrderConfirm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	SELECT 
    		 T1.ID AS "id",
-       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:MI:SS') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
        T1.ORDER_BRAND    AS "orderBrand",
@@ -368,6 +368,7 @@
         <isNotNull prepend="and" property="demandDateStart">to_char(t1.demand_date,'yyyy-MM-dd')  &gt;=  #demandDateStart#</isNotNull>
         <isNotNull prepend="and" property="demandDateEnd">to_char(t1.demand_date,'yyyy-MM-dd')  &lt;=  #demandDateEnd#</isNotNull>
         <isNotNull prepend="and" property="goodsState">t1.goods_State = #goodsState#</isNotNull>
+        <isNotNull prepend="and" property="materCode">t1.MATER_code like '%' || #materCode# || '%'</isNotNull>
 	
  	ORDER BY t1.RELATION_ID,T1.ID
 
@@ -398,4 +399,14 @@
     <select id="queryYxorderStockAmount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.MATER_CODE "materCode",SUM(T1.AMOUNT) "amount"
   FROM KS_COMPONENT_YXORDER_STOCK T1
   GROUP BY t1.mater_code</select>
+    <update id="updateBatchGoodsState" parameterClass="java.util.HashMap">update KS_COMPONENT_YXORDER_MCONFIRM t
+     set t.goods_state= #goodsState#,t.update_time = sysdate,
+     t.update_user_id = #updateUserId#,t.update_name = #updateName#
+     where t.id in($ids$)</update>
+    <select id="queryConfirm4Mc" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.id "confirmId",t.ifall "ifall",t.ifdelivery "ifdelivery", t.ifsatisfy "ifsatisfy",
+	t.if_sale_label "ifSaleLabel",t.advise_date "adviseDate" from KS_COMPONENT_YXORDER_CONFIRM t
+	WHERE t.id in
+	(select MAX(ID) "confirmId"from KS_COMPONENT_YXORDER_CONFIRM t
+	GROUP BY t.relation_id) 
+	AND t.relation_id=#baseId#</select>
 </sqlMap>

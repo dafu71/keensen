@@ -1224,6 +1224,8 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						}]
 			}]
 		});
+		
+		this.viewWindow.buttons[0].hide();
 	}
 
 	// 作业计划

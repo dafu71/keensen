@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="saveEntity" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
-    <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
-      <targetNode>invokePojo0</targetNode>
+      <targetNode>switch2</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link1" name="修改" displayName="连接线" type="transition">
-      <sourceNode>start0</sourceNode>
-      <targetNode>switch0</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="NOTNULLANDEMPTY">
-          <process:leftOperand type="query">entity/id</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
-    </sourceConnections>
-    <location x="100" y="150"/>
+    <location x="45" y="45"/>
     <size height="28" width="28"/>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
@@ -29,7 +19,7 @@
     </process:returns>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" displayName="label" nodeType="label">
-    <location x="99" y="186"/>
+    <location x="44" y="81"/>
     <figSize height="20" width="31"/>
     <node>start0</node>
   </nodes>
@@ -142,9 +132,9 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link11</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <targetConnections>link15</targetConnections>
     <targetConnections>link3</targetConnections>
     <targetConnections>link5</targetConnections>
     <location x="388" y="153"/>
@@ -350,12 +340,45 @@
     <figSize height="20" width="40"/>
     <node>assign5</node>
   </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch2" name="空操作2" displayName="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" description="" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch2</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link1" name="修改" displayName="连接线" isDefault="false" type="transition">
+      <sourceNode>switch2</sourceNode>
+      <targetNode>switch0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">entity/id</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="146" y="45"/>
+    <size height="28" width="28"/>
+    <nodeLabel>switch2label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch2label" name="label" nodeType="label">
+    <location x="133" y="81"/>
+    <figSize height="20" width="55"/>
+    <node>switch2</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="dafu" createTime="2023-09-19 21:20:44" date="2023-09-19Z" description="" name="saveEntity" version="6.3"/>
   <process:variables>
     <process:variable description="" historyStateLocation="client" isArray="false" name="prodAmount" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="prodAmount2" primitiveType="Float"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="labelDrawingCode" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="markDrawingCode" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.keensen.ump.produce.component.KsComponentYxorderBase" name="entity"/>

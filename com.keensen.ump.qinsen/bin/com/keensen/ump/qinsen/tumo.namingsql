@@ -82,7 +82,9 @@
        T1.CAIMO_LOSS        AS "caimoLoss",
        T1.LAST_CAIMO_DATE   AS "lastCaimoDate",
        T1.USEFUL_LENGTH     AS "usefulLength",
-       T1.QUALIFID_LENGTH   AS "qualifidLength",
+       <!--T1.QUALIFID_LENGTH   AS "qualifidLength",--><!--合格长度=长度-涂膜不良总数(包括已扯和未扯不良)--><!-- nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LOSS,0) AS "qualifidLength",-->
+       t1.QUALIFID_LENGTH "qualifidLength",
+       
        T1.F_MAC_NAME        AS "fMacName",
        T1.F_GFD_AVG         AS "fGfdAvg",
        T1.F_SALT_REJECTION  AS "fSaltRejection",
@@ -295,8 +297,8 @@
                       FROM QINSEN.INST_CDM_DEFECT D,
                            QINSEN.PARA_CDM_DEFECT P
                      WHERE D.DEFECT_ITEM_ID = P.RECORD_ID
-                     <!--不良排除发货不良-->
-                     AND p.duty_tache_id &lt;&gt;106
+                     <!--不良排除发货不良,并且记录工序不为裁膜-->
+                     AND p.duty_tache_id &lt;&gt;106 and p.rec_tache_id &lt;&gt;101
                      GROUP BY D.TUMO_BATCH_ID) T6
             ON T6.TUMO_BATCH_ID = A.RECORD_ID
           LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,

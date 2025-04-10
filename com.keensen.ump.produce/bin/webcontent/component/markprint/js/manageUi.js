@@ -42,14 +42,14 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
-					columns : 3,
+					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/templateName',
-								anchor : '75%',
+								anchor : '100%',
 								fieldLabel : '唛头图纸编号'
 							}, {
 
@@ -61,7 +61,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 								mode : "local",
 								hiddenName : 'condition/code',
 								emptyText : '--请选择--',
-								anchor : '75%',
+								anchor : '100%',
 								colspan : 1,
 								store : this.codeStore,
 								listeners : {
@@ -72,8 +72,13 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 								}
 							}, {
 								xtype : 'textfield',
+								name : 'condition/specName',
+								anchor : '100%',
+								fieldLabel : '贴牌型号'
+							}, {
+								xtype : 'textfield',
 								name : 'condition/remark',
-								anchor : '75%',
+								anchor : '100%',
 								fieldLabel : '备注说明'
 							}]
 				});
@@ -172,6 +177,9 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							return '模板' + v + '-' + codeRemark;
 						}
 					}, {
+						dataIndex : 'specName',
+						header : '贴牌型号'
+					}, {
 						dataIndex : 'remark',
 						header : '备注说明'
 					}],
@@ -195,6 +203,8 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							name : 'code'
 						}, {
 							name : 'codeRemark'
+						}, {
+							name : 'specName'
 						}]
 			})
 		})
@@ -222,7 +232,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							name : 'uploadFile',
 							fieldLabel : '选择文件',
 							allowBlank : false,
-							id : 'marktemplateupload',
+							id : marktemplateupload,
 							inputType : 'file'
 						}]
 			}],
@@ -252,7 +262,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 			autoScroll : false,
 			border : true,
 			columns : 2,
-			saveUrl : 'com.keensen.ump.produce.component.makprint.saveMarkPrint.biz.ext',
+			saveUrl : 'com.keensen.ump.produce.component.makprint.saveMarkPrint2.biz.ext',
 			fields : [{
 						xtype : 'textfield',
 						name : 'entity/templateName',
@@ -332,6 +342,45 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						anchor : '95%',
 						colspan : 2
 					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;font-size:16px;">台账</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 2
+					}/*
+						 * { xtype : 'textfield', name : 'entity/drawingName',
+						 * allowBlank : false, fieldLabel : '图纸名称', anchor :
+						 * '95%', colspan : 1 }
+						 */, {
+						xtype : 'textfield',
+						name : 'entity/materCode',
+						fieldLabel : '物料号（外购必填）',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						name : 'entity/logo',
+						allowBlank : false,
+						fieldLabel : '唛头LOGO',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'textfield',
+						name : 'entity/specName',
+						allowBlank : false,
+						fieldLabel : '贴牌型号',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						name : 'entity/labelSize',
+						fieldLabel : '图纸尺寸',
+						anchor : '95%',
+						colspan : 1
+					}, {
 						xtype : 'hidden',
 						dataIndex : 'url',
 						name : 'entity/url'
@@ -385,7 +434,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 			autoScroll : false,
 			border : true,
 			columns : 2,
-			saveUrl : 'com.keensen.ump.produce.component.makprint.saveMarkPrint.biz.ext',
+			saveUrl : 'com.keensen.ump.produce.component.makprint.saveMarkPrint2.biz.ext',
 			loadUrl : 'com.keensen.ump.produce.component.makprint.expandTemplate.biz.ext',
 			fields : [{
 						xtype : 'textfield',
@@ -467,6 +516,53 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						fieldLabel : '备注说明',
 						anchor : '95%',
 						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;font-size:16px;">台账</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 2
+					}/*
+						 * ,{ xtype : 'textfield', name : 'entity/drawingName',
+						 * dataIndex : 'drawingName', allowBlank : false,
+						 * fieldLabel : '图纸名称', anchor : '95%', colspan : 1 }
+						 */, {
+						xtype : 'textfield',
+						name : 'entity/materCode',
+						dataIndex : 'materCode',
+						fieldLabel : '物料号（外购必填）',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						name : 'entity/logo',
+						dataIndex : 'logo',
+						allowBlank : false,
+						fieldLabel : '唛头LOGO',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'textfield',
+						name : 'entity/specName',
+						dataIndex : 'specName',
+						allowBlank : false,
+						fieldLabel : '贴牌型号',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'labelSize',
+						name : 'entity/labelSize',
+						fieldLabel : '标签尺寸',
+						anchor : '95%',
+						colspan : 1
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'baseId',
+						name : 'entity/baseId'
 					}, {
 						xtype : 'hidden',
 						dataIndex : 'url',
@@ -622,7 +718,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							}, {
 								dataIndex : 'logo',
 								header : '标签LOGO',
-								hidden : true,
+								// hidden : true,
 								css : 'background:#c7c7c7;',
 								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 										{
@@ -668,7 +764,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							}, {
 								dataIndex : 'labelSize',
 								header : '标签尺寸',
-								hidden : true,
+								// hidden : true,
 								css : 'background:#c7c7c7;',
 								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 										{
@@ -696,14 +792,14 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 										rowIndex, colIndex, store, view) {
 									if (!Ext.isEmpty(value)) {
 
-									return '<img src="'
-											+ markRootUrl
-											+ value
-											+ '?ver='
-											+ rec.data.id
-											+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+										return '<img src="'
+												+ markRootUrl
+												+ value
+												+ '?ver='
+												+ rec.data.id
+												+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
 
-									 }
+									}
 								}
 							}],
 					store : new Ext.data.JsonStore({
@@ -860,7 +956,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					items : [{
 						xtype : 'inputpanel',
 						baseCls : "x-plain",
-						//pgrid : _this.listPanel4ChooseLable,
+						// pgrid : _this.listPanel4ChooseLable,
 						columns : 1,
 						saveUrl : 'com.keensen.ump.base.paramaterspec.saveLabelDrawing.biz.ext',
 						fields : [{
@@ -936,14 +1032,31 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 								}, {
 									xtype : 'hidden',
 									name : 'entity/url'
-								}/*
-									 * , { xtype : 'displayfield', height : '5',
-									 * colspan : 1 }, { xtype : 'textfield', ref :
-									 * '../../labelSize', name :
-									 * 'entity/labelSize', allowBlank : false,
-									 * fieldLabel : '标签尺寸', anchor : '95%',
-									 * colspan : 1 }
-									 */]
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									ref : '../../logo',
+									name : 'entity/logo',
+									allowBlank : false,
+									fieldLabel : '标签LOGO',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									ref : '../../labelSize',
+									name : 'entity/labelSize',
+									allowBlank : false,
+									fieldLabel : '标签尺寸',
+									anchor : '95%',
+									colspan : 1
+								}]
 					}]
 				});
 	}
@@ -970,7 +1083,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							name : 'uploadFile',
 							fieldLabel : '选择文件',
 							allowBlank : false,
-							//id : 'marktemplateupload4ChooseLable',
+							// id : 'marktemplateupload4ChooseLable',
 							inputType : 'file'
 						}]
 			}],

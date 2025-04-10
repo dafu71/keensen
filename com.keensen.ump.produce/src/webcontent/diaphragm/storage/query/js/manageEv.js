@@ -246,3 +246,23 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.onCreateChoi
 	}
 
 }
+
+com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.onFhremark = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var arr = [];
+		var arr2 = []
+		Ext.each(C, function(r) {
+					arr.push(r.data.id);
+					arr2.push(r.data.batchNo);
+				})
+		this.editWindow2.form.findField('param/ids').setValue(arr.join(','));
+		this.editWindow2.form.findField('param/batchNOs').setValue(arr2.join(','));
+		this.editWindow2.show();
+	}
+
+	// this.listPanel.onEdit();
+};

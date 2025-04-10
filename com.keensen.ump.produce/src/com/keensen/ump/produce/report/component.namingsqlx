@@ -274,8 +274,32 @@ BZ AS
    AND TO_CHAR(BZ.create_time, 'YYYY-MM-DD HH24:mi:ss') >= #productDtStart#
      AND TO_CHAR(BZ.create_time, 'YYYY-MM-DD HH24:mi:ss') &lt;=  #productDtEnd#)
   </isEqual> 
+  
+  <isEqual prepend="" property="type" compareValue="day"> 
+  ,
+  dt as 
+  (
+  SELECT
+  TO_CHAR(start_date + LEVEL - 1, 'YYYY-MM-DD') AS formatted_date
+FROM
+  (SELECT TO_DATE(SUBSTR(#productDtStart#,1,10), 'YYYY-MM-DD') AS start_date,
+          TO_DATE(SUBSTR(#productDtEnd#,1,10), 'YYYY-MM-DD') AS end_date   
+   FROM DUAL)
+CONNECT BY
+  LEVEL &lt;= end_date - start_date + 1
+  
+  )
+  </isEqual>
 
-SELECT CM.PRODUCE_DT "produceDt",
+SELECT 
+<isEqual prepend="" property="type" compareValue="day"> 
+	dt.formatted_date "produceDt",
+ </isEqual>
+ 
+ <isNotEqual prepend="" property="type" compareValue="day"> 
+ CM.PRODUCE_DT "produceDt",
+  </isNotEqual>
+
        nvl(CM.CMAMOUNTJY,0) "cmAmountJy",
        nvl(CM.CMAMOUNTGY,0) "cmAmountGy",
        nvl(JM.JMAMOUNT4,0)  "jmAmount4",
@@ -286,7 +310,23 @@ SELECT CM.PRODUCE_DT "produceDt",
        nvl(RS.RSAMOUNT8,0)  "rsAmount8",
        nvl(BZ.BZAMOUNT4,0)  "bzAmount4",
        nvl(BZ.BZAMOUNT8,0)  "bzAmount8"
-  FROM CM
+  FROM 
+  <isEqual prepend="" property="type" compareValue="day"> 
+	dt 
+	left join CM 
+	on dt.formatted_date = CM.PRODUCE_DT
+  LEFT JOIN JM
+    ON dt.formatted_date = JM.PRODUCE_DT
+  LEFT JOIN QJ
+    ON dt.formatted_date = QJ.PRODUCE_DT
+  LEFT JOIN RS
+    ON dt.formatted_date = RS.PRODUCE_DT
+  LEFT JOIN BZ
+    ON dt.formatted_date = BZ.PRODUCE_DT
+ </isEqual>
+  
+   <isNotEqual prepend="" property="type" compareValue="day"> 
+  CM
   LEFT JOIN JM
     ON CM.PRODUCE_DT = JM.PRODUCE_DT
   LEFT JOIN QJ
@@ -295,9 +335,18 @@ SELECT CM.PRODUCE_DT "produceDt",
     ON CM.PRODUCE_DT = RS.PRODUCE_DT
   LEFT JOIN BZ
     ON CM.PRODUCE_DT = BZ.PRODUCE_DT
+  </isNotEqual>  
+    
 <isNotEqual prepend="" property="type" compareValue="period"> 
+<isEqual prepend="" property="type" compareValue="day"> 
+ ORDER BY dt.formatted_date
+</isEqual> 
+<isNotEqual prepend="" property="type" compareValue="day"> 
  ORDER BY CM.PRODUCE_DT
 </isNotEqual> 
+ 
+</isNotEqual>
+
     </select>
     
     <select id="queryQjChange" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >

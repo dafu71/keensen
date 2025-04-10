@@ -35,7 +35,7 @@
   <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link5" name="link5" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
-      <targetNode>assign3</targetNode>
+      <targetNode>switch0</targetNode>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link9" name="确认" type="transition">
       <sourceNode>assign0</sourceNode>
@@ -212,7 +212,8 @@
       <sourceNode>assign3</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
-    <targetConnections>link5</targetConnections>
+    <targetConnections>link14</targetConnections>
+    <targetConnections>link16</targetConnections>
     <nodeLabel>assign3label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">m:userObject/userId</process:from>
@@ -282,6 +283,52 @@
   <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
     <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign3</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link15" name="直径放行" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>assign6</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">entity/diameterCheckResult</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <nodeLabel>switch0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">
+    <figSize height="20" width="46"/>
+    <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign6" name="赋值6" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" isDefault="true" type="transition">
+      <sourceNode>assign6</sourceNode>
+      <targetNode>assign3</targetNode>
+    </sourceConnections>
+    <targetConnections>link15</targetConnections>
+    <nodeLabel>assign6label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">entity/diameterCheckTime</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/diameterCheckUserId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/diameterCheckUserName</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign6label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign6</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

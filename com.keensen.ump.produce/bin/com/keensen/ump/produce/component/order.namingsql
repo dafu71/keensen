@@ -45,14 +45,25 @@
        T1.lid_tape            AS "lidTape",
        t2.cnt "cnt",
        decode(nvl(t2.cnt,0),0,'未制定','已制定') "ifplan",
-       t3.arrange_amount   as "arrangeAmount"
+       t3.arrange_amount   as "arrangeAmount",
+       STD.A_GPD_LOW_LIMIT "gpdLowLimitStd",
+       STD.A_GPD_UP_LIMIT "gpdUpLimitStd",
+       STD.A_GPD_CENTER "gpdCenterStd",
+       STD.A_SALT_LOW_LIMIT "saltLowLimitStd"
   FROM KS_PROD_COMPONENT_YXORDER T1
+  left join QINSEN.INST_PROD_WATER_STD std 
+  on T1.MATER_SPEC_Id = std.prod_spec_id
   left join (select relation_id ,count(*) cnt from KS_COMPONENT_PLAN_WEEK group by relation_id) t2 
 	on t2.relation_id = t1.id
   left join (select sum(amount) arrange_amount,order_id from KS_COMPONENT_PLAN_WEEK_DAYS group by order_id) t3
     on t1.id = t3.order_id
 	where 1=1
-	<isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
+	
+	<isNotNull prepend="and" property="prodSpecId">T1.MATER_SPEC_Id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="orderSpecName">T1.MATER_SPEC_NAME2 = #orderSpecName#</isNotNull>
+        <isEqual compareValue="Y" prepend="and" property="prodSpecIdNull">&gt;
+			  T1.MATER_SPEC_Id is null</isEqual>
+        <isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
@@ -367,7 +378,7 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
         <isNotNull prepend="and" property="orderId">T1.ORDER_ID = #orderId#</isNotNull>
         <isNotNull prepend="and" property="size">decode(instr(T3.MATER_SPEC_NAME,'8040'),0,'4','8') = #size#</isNotNull>
         <isNotNull prepend="and" property="machineCode">T1.cdm_code = #machineCode#</isNotNull>
-        <isNull prepend="" property="orderby">order by t3.id desc,t2.id,t1.id</isNull>
+        <isNull prepend="" property="orderby">order by T1.PLAN_DATE , t3.id desc,t2.id,t1.id</isNull>
         <isNotNull prepend="" property="orderby">order by T1.PLAN_DATE desc,t1.cdm_Code,t1.product_Order</isNotNull>
     </select>
     <select id="queryPlanRoll" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
@@ -463,7 +474,7 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
 	
 	<isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
 	
-     order by T1.RELATION_ID,t1.id
+     order by T1.RELATION_ID,t1.id desc
 	 </select>
     <select id="queryYxOrderTrace" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
@@ -548,7 +559,7 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
   FROM KS_PROD_COMPONENT_YXORDER T1
   left join (SELECT SUM(1) amount,order_no,prod_spec_id from (
 select qj.batch_no,t.order_no,t.prod_spec_id FROM qinsen.inst_qijian qj 
-LEFT JOIN V_KS_COMPONENT_DUTY_SN t ON qj.batch_no&gt;=t.sn_start AND qj.batch_no &lt;=t.sn_end 
+LEFT JOIN KS_COMPONENT_DUTY_SN_QUERY t ON qj.batch_no&gt;=t.sn_start AND qj.batch_no &lt;=t.sn_end 
 WHERE t.order_no IS NOT NULL) GROUP BY order_no,prod_spec_id) t7
 ON t7.order_no = t1.order_no AND t1.mater_spec_id=t7.prod_spec_id
   
@@ -737,11 +748,19 @@ GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.
     <select id="queryOrderMaterSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT T1.MATER_SPEC_NAME  AS "materSpecName",
        T1.MATER_SPEC_NAME2 AS "materSpecName2",
-       T1.MATER_SPEC_ID    AS "materSpecId"
+       T1.MATER_SPEC_ID    AS "materSpecId",
+       pms.num_per_wad "numPerWad",
+       pms.blanking_size "blankingSize",
+       pms.page_width "pageWidth",
+       pms.num_per_wad*pms.blanking_size*pms.page_width "mpSize"
   FROM KS_COMPONENT_MATER_RELATION T1
+  LEFT JOIN qinsen.para_mater_spec pms 
+  ON t1.mater_spec_id = pms.mater_spec_id
   where 1=1
    <isNotNull prepend="and" property="materSpecName2">T1.MATER_SPEC_NAME2 like '%' || #materSpecName2# || '%'</isNotNull>
         <isNotNull prepend="and" property="materSpecName">T1.MATER_SPEC_NAME like '%' || #materSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="materSpecName22">T1.MATER_SPEC_NAME2 = #materSpecName22#</isNotNull>
+	
 	order by T1.MATER_SPEC_NAME2,T1.MATER_SPEC_NAME
    </select>
     <insert id="insertOrderMaterSpec" parameterClass="java.util.HashMap">insert into KS_COMPONENT_MATER_RELATION
@@ -757,4 +776,9 @@ GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.
 	WHERE (t.order_id,to_char(t.plan_date,'yyyy-MM-dd'))
 	IN (select t.order_id,to_char(t.plan_date,'yyyy-MM-dd') from KS_COMPONENT_PLAN_WEEK_DAYS t
 	WHERE t.id = #id#)</update>
+    <delete id="deleteSnQuery" parameterClass="java.util.HashMap">delete from KS_COMPONENT_DUTY_SN_QUERY</delete>
+    <insert id="insertSnQuery" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_DUTY_SN_QUERY
+	(ORDER_ID,ORDER_NO,PROD_SPEC_NAME,PREFIX,SN_START,SN_END,PROD_SPEC_ID)
+	SELECT ORDER_ID,ORDER_NO,PROD_SPEC_NAME,PREFIX,SN_START,SN_END,PROD_SPEC_ID
+	FROM V_KS_COMPONENT_DUTY_SN</insert>
 </sqlMap>

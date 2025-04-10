@@ -382,7 +382,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 90,
 						dataIndex : 'usefulLength'
 					}, {
-						header : '合格长度(m)',
+						header : '合格长度(m)',//合格长度=长度-涂膜不良总数(包括已扯和未扯不良)
 						width : 90,
 						dataIndex : 'qualifidLength'
 					}, {

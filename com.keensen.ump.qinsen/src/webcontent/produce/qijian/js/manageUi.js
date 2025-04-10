@@ -303,9 +303,11 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 		this.queryPanel.addButton({
 					text : "导出",
-					rescode : '10002661',
+					//rescode : '10002661',
 					scope : this,
 					iconCls : 'icon-application_excel',
+					hidden:true,
+					id : qijianExportButton,
 					handler : this.exportExcel
 				});
 
@@ -1161,6 +1163,28 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							colspan : 2,
 							anchor : '95%',
 							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '切边尺寸',
+							ref : '../../cut',
+							readOnly : true,
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '绕丝要求',
+							ref : '../../raosi',
+							readOnly : true,
+							anchor : '95%',
+							colspan : 2
 						}, {
 							name : 'entity/workerId',
 							value : nowStaffId,
@@ -2334,7 +2358,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						// dataIndex : 'snEnd3',
 						anchor : '85%',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">工艺要求</p>',
 						labelSeparator : '',// 去掉冒号
@@ -2423,7 +2447,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 				pgrid : this.listPanel,
 				columns : 1,
 				loadUrl : '1.biz.ext',
-				saveUrl : 'com.keensen.ump.qinsen.qijian.saveGyyConclusions.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.vstorage.saveGyyConclusions2.biz.ext',
 				fields : [{
 							xtype : 'combobox',
 							forceSelection : true,

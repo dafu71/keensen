@@ -4,7 +4,6 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
-
 		this.initEditWindow4Gyy();
 		this.initEditWindow4Pg();
 		this.initChooseSingleOrderWindow();
@@ -21,12 +20,19 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 
 	this.initStore = function() {
 
-		// 超计划生产、需要给工艺意见、需要品管给意见、超期停留
+		// 需要计划员处理、需要给工艺意见、需要品管给意见、超期停留
 		this.exceptionTypeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['超计划生产', '超计划生产'], ['需要工艺给意见', '需要工艺给意见'],
+					data : [['需要计划员处理', '需要计划员处理'], ['需要工艺给意见', '需要工艺给意见'],
 							['需要品管给意见', '需要品管给意见'], ['超期停留', '超期停留'],
 							['需班长处理', '需班长处理']]
+				});
+
+		this.gyyConclusionStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['A', '放行原订单'], ['B', '降级'],
+							['C', '改判其他无特殊要求的同型号产品'], ['D', '报废'],
+							['E', '送水测'], ['F', '染色解剖']]
 				});
 
 	}
@@ -34,7 +40,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -44,19 +50,19 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 
 								xtype : 'textfield',
 								name : 'condition/jmBatchNo',
-								anchor : '80%',
+								anchor : '85%',
 								fieldLabel : '卷膜序号'
 							}, {
 								xtype : 'prodspeccombobox',
 								hiddenName : 'condition/prodSpecId',
-								anchor : '80%',
+								anchor : '85%',
 								fieldLabel : '元件型号 '
 							}, {
 								xtype : 'datetimefield',
 								name : 'condition/createTimeStart',
 								fieldLabel : '入仓时间',
 								colspan : 1,
-								anchor : '80%',
+								anchor : '85%',
 								// allowBlank : false,
 								editable : true,
 								format : 'Y-m-d H:i'
@@ -65,7 +71,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 								name : 'condition/createTimeEnd',
 								fieldLabel : '至',
 								colspan : 1,
-								anchor : '80%',
+								anchor : '85%',
 								editable : true,
 								format : 'Y-m-d H:i'
 							}, {
@@ -78,7 +84,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 								fieldLabel : '异常停留分类',
 								ref : '../exceptionType',
 								hiddenName : 'condition/exceptionType',
-								anchor : '80%',
+								anchor : '85%',
 								colspan : 1,
 								emptyText : '--请选择--',
 								editable : false,
@@ -90,6 +96,67 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 										_this.queryPanel.exceptionType.reset()
 									}
 								}
+							}, {
+
+								xtype : 'combo',
+								fieldLabel : '干湿膜',
+								ref : '../dryWet',
+								hiddenName : 'condition/dryWet',
+								emptyText : '--请选择--',
+								anchor : '85%',
+								colspan : 1,
+								store : [[null, '全部'], ['干', '干'], ['湿', '湿']],
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										this.queryPanel.dryWet.reset();
+									}
+								}
+							}, {
+								xtype : 'combo',
+								forceSelection : true,
+								// allowBlank : false,
+								mode : 'local',
+								fieldLabel : '工艺结论',
+								ref : '../gyyConclusion',
+								hiddenName : 'condition/gyyConclusion',
+								anchor : '85%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.gyyConclusionStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
+							},
+							{
+
+								xtype : 'textfield',
+								name : 'condition/orderNo',
+								anchor : '85%',
+								fieldLabel : '订单号'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							},
+							{
+
+								xtype : 'textfield',
+								name : 'condition/dimoBatchStr',
+								anchor : '85%',
+								fieldLabel : '底膜批次%-%'
+							},
+							{
+
+								xtype : 'textfield',
+								name : 'condition/tumoBatchStr',
+								anchor : '85%',
+								fieldLabel : '膜片批次%-%'
 							}]
 				});
 		this.queryPanel.addButton({
@@ -102,15 +169,25 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 		this.queryPanel.addButton({
 					text : "移除已请检",
 					scope : this,
+					hidden : true,
 					iconCls : 'icon-application_edit',
 					handler : this.removeVstorage
 				});
 
 		this.queryPanel.addButton({
 					text : "导入卷膜",
+					id:importVStorageId,
 					scope : this,
 					iconCls : 'icon-application_edit',
 					handler : this.importVStorage
+				});
+				
+		this.queryPanel.addButton({
+					text : "检查超期停留",
+					id:checkOverTimeId,
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.checkOverTime
 				});
 	}
 
@@ -125,34 +202,40 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						text : '班长处理',
 						scope : this,
 						iconCls : 'icon-application_edit',
+						id:monitorDealId,
 						// hidden : gyyFlag != 1,
 						handler : this.onMonitorDeal
 					}, '-', {
 						text : '班长挑水测',
+						id:monitorRemarkId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : monitorFlag != 1,
 						handler : this.onMonitorRemark
 					}, '-', {
 						text : '工艺员意见',
+						id:gyyRemarkId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : gyyFlag != 1,
 						handler : this.onGyyRemark
 					}, '-', {
 						text : '品管意见',
+						id:pgRemarkId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : gyyFlag != 1,
 						handler : this.onPgRemark
 					}, '-', {
 						text : '入白膜仓',
+						id:warehousingId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : modifyOrderNoFlag != 1,
 						handler : this.onWarehousing
 					}, '-', {
 						text : '批量改订单',
+						id:modiOrderId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : modifyOrderNoFlag != 1,
@@ -175,6 +258,30 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 							}
 						}
 					}, {
+						dataIndex : 'qjBatchNo',
+						width : 150,
+						header : '元件序号'
+					}, {
+						dataIndex : 'jmProduceDt',
+						width : 150,
+						header : '卷膜生产时间'
+					}, {
+						dataIndex : 'wtCreateDt',
+						width : 150,
+						header : '水测时间'
+					}, {
+						dataIndex : 'tumoBatchStr',
+						width : 200,
+						header : '膜片批次'
+					}, {
+						dataIndex : 'dimoBatchStr',
+						width : 200,
+						header : '底膜批次'
+					}, {
+						dataIndex : 'orderNo',
+						width : 150,
+						header : '订单号'
+					}, {
 						dataIndex : 'dryWet',
 						width : 100,
 						header : '干/湿膜'
@@ -186,6 +293,22 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						dataIndex : 'ngReasonName',
 						width : 120,
 						header : '气检NG'
+					}, {
+						dataIndex : 'fGpd',
+						width : 120,
+						header : '初检产水量'
+					}, {
+						dataIndex : 'fSalt',
+						width : 120,
+						header : '初检脱盐率%'
+					}, {
+						dataIndex : 'rGpd',
+						width : 120,
+						header : '复检产水量'
+					}, {
+						dataIndex : 'rSalt',
+						width : 120,
+						header : '复检脱盐率%'
 					}, {
 						dataIndex : 'createTime',
 						width : 120,
@@ -315,6 +438,28 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 							name : 'monitorRemarkTime'
 						}, {
 							name : 'recordId'
+						}, {
+							name : 'fGpd'
+						}, {
+							name : 'fSalt'
+						}, {
+							name : 'orderNo'
+						}, {
+							name : 'rGpd'
+						}, {
+							name : 'rSalt'
+						}, {
+							name : 'rSalt'
+						}, {
+							name : 'qjBatchNo'
+						}, {
+							name : 'tumoBatchStr'
+						}, {
+							name : 'dimoBatchStr'
+						}, {
+							name : 'jmProduceDt'
+						}, {
+							name : 'wtCreateDt'
 						}]
 			})
 		})
@@ -379,7 +524,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 				pgrid : this.listPanel,
 				columns : 1,
 				loadUrl : '1.biz.ext',
-				saveUrl : 'com.keensen.ump.qinsen.qijian.saveGyyConclusions.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.vstorage.saveGyyConclusions2.biz.ext',
 				fields : [{
 							xtype : 'combobox',
 							forceSelection : true,

@@ -34,6 +34,7 @@
   var labelRootUrl = "<%=rootUrl %>";
   var uid = "<%=uid %>";
   var listid = Ext.id();
+  var marktemplateupload = Ext.id();
   
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.markprinttemplateMgr

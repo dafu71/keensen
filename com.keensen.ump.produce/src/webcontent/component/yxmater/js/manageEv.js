@@ -37,7 +37,16 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.onEdit = function() {
 };
 
 com.keensen.ump.produce.component.YxmaterMgr.prototype.onDel = function() {
-	this.listPanel.onDel();
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	}
+	var C = A.getSelectionModel().getSelections();
+	if (C.length > 1) {
+		Ext.Msg.alert("系统提示", "不能批量删除！")
+	} else {
+		this.listPanel.onDel();
+	}
 };
 
 com.keensen.ump.produce.component.YxmaterMgr.prototype.destroy = function() {
@@ -48,8 +57,13 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.destroy = function() {
 
 com.keensen.ump.produce.component.YxmaterMgr.prototype.exportExcel = function() {
 
-	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '订单物料',
-			'com.keensen.ump.produce.component.yxorderbase.queryYxOrderMCConfirm', '0,1');
+	doQuerySqlAndExport(
+			this,
+			this.queryPanel,
+			this.listPanel,
+			'订单物料',
+			'com.keensen.ump.produce.component.yxorderbase.queryYxOrderMCConfirm',
+			'0,1');
 
 }
 
@@ -206,4 +220,24 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.doUpload = function() {
 				});
 	}
 
+}
+
+com.keensen.ump.produce.component.YxmaterMgr.prototype.onGoodsStateChange = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var arr = [];
+		var arr2 = []
+		Ext.each(C, function(r) {
+					arr.push(r.data.id);
+					arr2.push(r.data.materCode);
+				})
+		this.goodsStateChangeWindow.form.findField('param/ids').setValue(arr
+				.join(','));
+		this.goodsStateChangeWindow.form.findField('param/materCodes')
+				.setValue(arr2.join(','));
+		this.goodsStateChangeWindow.show();
+	}
 }

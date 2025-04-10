@@ -1,6 +1,9 @@
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 	var _this = this;
 
+	this.exportFields = '';
+	this.getRight();
+
 	// this.queryFlag = false;
 	this.listPanel.store.on('load', function() {
 
@@ -230,8 +233,12 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 							+ labelUrl
 							+ '?ver='
 							+ data.orderNo
-							+ '" onclick= "javascript:window.open(' + "'" + labelUrl + "'" + ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
-					
+							+ '" onclick= "javascript:window.open('
+							+ "'"
+							+ labelUrl
+							+ "'"
+							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
+
 					this.viewDutyPanel.picturePanel.update(labelUrl);
 				}
 
@@ -472,6 +479,9 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.dealJuanMoBatchNo = function(
 									.setValue(dd.prodSpecId);
 							_this.qijianAddWindow.stdStr.setValue(dd.stdStr);
 
+							_this.qijianAddWindow.cut.setValue(dd.cut);
+							_this.qijianAddWindow.raosi.setValue(dd.raosi);
+
 							if (!Ext.isEmpty(dd.qjRecordId)) {
 								Ext.Msg.confirm('确认', '该卷膜产品已有气检记录，请确认是否复检？',
 										function(btn) {
@@ -550,8 +560,21 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.exportExcel = function() {
 
 	}
 
-	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '气检记录',
-			'com.keensen.ump.qinsen.qijian.queryRecords', '0,1');
+	
+	if (Ext.isEmpty(this.exportFields)) {
+		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '气检记录',
+				'com.keensen.ump.qinsen.qijian.queryRecords', '0,1');
+	} else {
+		var arr = this.exportFields.split(',');
+		
+		doQuerySqlAndExportExt(
+				this,
+				this.queryPanel,
+				this.listPanel,
+				'气检记录',
+				'com.keensen.ump.qinsen.qijian.queryRecords',
+				arr);
+	}
 	/*
 	 * var daochu = _this.queryPanel.getForm().getValues();
 	 * 
@@ -811,6 +834,32 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onDuty = function() {
 	}
 	this.viewDutyPanel.loadData(A);
 
+}
+
+// 获取权限
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.getRight = function() {
+	var _this = this;
+	Ext.Ajax.request({
+				url : "qinsen/produce/right.json",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					var data = ret.data;
+					var qijian = data[0].qijian;
+					var exportLimitUsers = qijian.exportLimitUsers;
+					var exportUsers = qijian.exportUsers;
+					Ext.getCmp(qijianExportButton).setVisible(exportLimitUsers
+							.indexOf(uid) != -1
+							|| exportUsers.indexOf(uid) != -1);
+					
+					if (exportLimitUsers.indexOf(uid) != -1) {
+						_this.exportFields = qijian.exportLimitFields;
+					}
+					
+				},
+				callback : function() {
+				}
+			})
 }
 
 function roundToDecimalPlace(number, decimalPlaces) {

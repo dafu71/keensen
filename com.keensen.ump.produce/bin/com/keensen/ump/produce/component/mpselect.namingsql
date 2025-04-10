@@ -333,6 +333,7 @@
            and T1.TEST_YJ_SALT is not null</isNotEqual>
         </isNotNull>
         <!--膜片筛选结束-->
+        <isNotNull prepend="" property="condition">AND (case when T1.CONDITION1='Y' and T1.CONDITION2='Y' and T1.CONDITION5='Y' then '是' else '否' end)=#condition#</isNotNull>
         <isNotNull prepend="" property="tumoBatchNo3">AND T1.MP_BATCH_NO like '%' || #tumoBatchNo3# || '%'</isNotNull>
         <isNotNull prepend="and" property="mpSpecCode">upper(T1.MP_SPEC_CODE) like '%' || upper(#mpSpecCode#) || '%'</isNotNull>
         <isNotNull prepend="and" property="prodSpecName">upper(T1.MATER_SPEC_NAME) like '%' || upper(#prodSpecName#) || '%'</isNotNull>

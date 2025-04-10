@@ -276,7 +276,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 									}
 								})
 					} else {
-						Ext.getCmp(mylistid).store.load();
+						Ext.getCmp(mylistid).store.reload();
 					}
 				},
 				columns : 2,
@@ -468,7 +468,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 								})
 					} else {
 						_this.editWindow.hide();
-						Ext.getCmp(mylistid).store.load();
+						Ext.getCmp(mylistid).store.reload();
 					}
 				},
 				columns : 2,

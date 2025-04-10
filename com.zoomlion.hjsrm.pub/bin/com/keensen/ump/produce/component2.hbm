@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component2.KsComponentWelded" table="KS_COMPONENT_WELDED">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="pipeType" type="string">
+            <column length="50" name="PIPE_TYPE"/>
+        </property>
+        <property name="pipeData" type="string">
+            <column length="50" name="PIPE_DATA"/>
+        </property>
+        <property name="batchNo" type="string">
+            <column length="50" name="BATCH_NO"/>
+        </property>
+        <property name="pipeSize" type="string">
+            <column length="20" name="PIPE_SIZE"/>
+        </property>
+        <property name="lightNetBatchNo" type="string">
+            <column length="20" name="LIGHT_NET_BATCH_NO"/>
+        </property>
+        <property name="lightNetType" type="string">
+            <column length="20" name="LIGHT_NET_TYPE"/>
+        </property>
+        <property name="longPage" type="string">
+            <column length="20" name="LONG_PAGE"/>
+        </property>
+        <property name="shortPage" type="string">
+            <column length="20" name="SHORT_PAGE"/>
+        </property>
+        <property name="pageNum" type="string">
+            <column length="20" name="PAGE_NUM"/>
+        </property>
+        <property name="produceType" type="string">
+            <column length="20" name="PRODUCE_TYPE"/>
+        </property>
+        <property name="perNum" type="string">
+            <column length="20" name="PER_NUM"/>
+        </property>
+        <property name="produceNum" type="string">
+            <column length="20" name="PRODUCE_NUM"/>
+        </property>
+        <property name="machineCode" type="string">
+            <column length="20" name="MACHINE_CODE"/>
+        </property>
+        <property name="pipeCode" type="string">
+            <column length="20" name="PIPE_CODE"/>
+        </property>
+        <property name="operateUserId" type="string">
+            <column length="20" name="OPERATE_USER_ID"/>
+        </property>
+        <property name="operateUserName" type="string">
+            <column length="50" name="OPERATE_USER_NAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component2.KsComponentCut" table="KS_COMPONENT_CUT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="lightNetBatchNo" type="string">
+            <column length="50" name="LIGHT_NET_BATCH_NO"/>
+        </property>
+        <property name="lightNetType" type="string">
+            <column length="20" name="LIGHT_NET_TYPE"/>
+        </property>
+        <property name="pipeType" type="string">
+            <column length="20" name="PIPE_TYPE"/>
+        </property>
+        <property name="pageNum" type="string">
+            <column length="20" name="PAGE_NUM"/>
+        </property>
+        <property name="cutSize" type="string">
+            <column length="20" name="CUT_SIZE"/>
+        </property>
+        <property name="produceType" type="string">
+            <column length="20" name="PRODUCE_TYPE"/>
+        </property>
+        <property name="perNum" type="string">
+            <column length="20" name="PER_NUM"/>
+        </property>
+        <property name="produceNum" type="string">
+            <column length="20" name="PRODUCE_NUM"/>
+        </property>
+        <property name="machineCode" type="string">
+            <column length="20" name="MACHINE_CODE"/>
+        </property>
+        <property name="netCode" type="string">
+            <column length="20" name="NET_CODE"/>
+        </property>
+        <property name="operateUserId" type="string">
+            <column length="20" name="OPERATE_USER_ID"/>
+        </property>
+        <property name="operateUserName" type="string">
+            <column length="50" name="OPERATE_USER_NAME"/>
+        </property>
+        <property name="longPage" type="string">
+            <column length="20" name="LONG_PAGE"/>
+        </property>
+        <property name="shortPage" type="string">
+            <column length="20" name="SHORT_PAGE"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -833,7 +833,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					 * anchor : '86%', colspan : 12 }
 					 */, {
 					ref : '../../denseNetType',
-					name : 'entity/denseNetType',
+					name : 'entity/denseNet',
 					fieldLabel : '浓网型号',
 					xtype : 'textfield',
 					readOnly : true,

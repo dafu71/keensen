@@ -119,6 +119,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 						.get('demandStockDate'));
 				this.mcconfirmInputPanel.relationId.setValue(cell.get('id'));
 
+				this.mcconfirmListPanel.store.baseParams = {
+					'map/baseId' : cell.get('id')
+				};
+				this.mcconfirmListPanel.store.load();
+
 			} else {
 				Ext.Msg.alert('系统提示', '请选择状态为物控计划员确认或不能接单的记录');
 				return false;
@@ -131,7 +136,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				return;
 			}
 
-			if (state == '订单计划员确认') {
+			if (state == '订单计划员确认' || state == '不能接单') {
 				this.mcconfirmInputPanel2.pkid.setValue('');
 				this.mcconfirmInputPanel2.loadData(cell);
 
@@ -246,6 +251,21 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.tconfirmWindow.loadData(cell);
 			} else {
 				Ext.Msg.alert('系统提示', '请选择状态为待工艺员确认的记录');
+				return false;
+			}
+
+		}
+
+		if (this.opt == 'pgconfirm') {
+			if (hpmc == '其它' || hpmc == '其他') {
+				return;
+			}
+
+			if (state == '品管确认') {
+				this.pgconfirmWindow.show();
+				this.pgconfirmWindow.loadData(cell);
+			} else {
+				Ext.Msg.alert('系统提示', '请选择状态为待品管确认的记录');
 				return false;
 			}
 
@@ -503,6 +523,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = functi
 }
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function() {
+	var _this = this;
+
+	var prodAmount = _this.addOrderWindow.prodAmount.getValue();
+
+	// 1、生产周期由系统自动计算得出，只要修改了“下单日期”或“入库日期”则生产周期必须强制重新计算。
+	// 2、生产周期必须>6天，才能下单。
+	var period = this.addOrderWindow.period.getValue();
+
 	var snRegular = this.addOrderWindow.snRegular.getValue();
 	var snStart = this.addOrderWindow.snStart.getValue();
 	var snEnd = this.addOrderWindow.snEnd.getValue();
@@ -512,6 +540,24 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 		return false;
 	}
 
+	// 标签图纸
+	var labelDrawingCode = this.addOrderWindow.labelDrawingCode.getValue();
+	// 唛头图纸
+	var markDrawingCode = this.addOrderWindow.markDrawingCode.getValue();
+
+	if (parseFloat(prodAmount) > 0) {
+
+		if (Ext.isEmpty(labelDrawingCode) || labelDrawingCode.trim() == '无'
+				|| labelDrawingCode.length < 10) {
+			Ext.Msg.alert('系统提示', '请选择标签图纸');
+			return false;
+		}
+		if (Ext.isEmpty(markDrawingCode) || markDrawingCode.trim() == '无'
+				|| markDrawingCode.length < 10) {
+			Ext.Msg.alert('系统提示', '请选择唛头图纸');
+			return false;
+		}
+	}
 	var markRegular = this.addOrderWindow.markRegular.getValue();
 	var markStart = this.addOrderWindow.markStart.getValue();
 	var markEnd = this.addOrderWindow.markEnd.getValue();
@@ -520,22 +566,6 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 		Ext.Msg.alert('系统提示', '请输入唛头序号');
 		return false;
 	}
-
-	/*
-	 * var label = this.addOrderWindow.label.getValue(); var logoLabel =
-	 * this.addOrderWindow.logoLabel.getValue(); var specNameLabel =
-	 * this.addOrderWindow.specNameLabel.getValue(); if (!Ext.isEmpty(label) &&
-	 * label.trim() == '公司标准' && (Ext.isEmpty(logoLabel) ||
-	 * Ext.isEmpty(specNameLabel))) { Ext.Msg.alert('系统提示', '请完整输入标签信息'); return
-	 * false; }
-	 * 
-	 * var mark = this.addOrderWindow.mark.getValue(); var logoMark =
-	 * this.addOrderWindow.logoMark.getValue(); var specNameMark =
-	 * this.addOrderWindow.specNameMark.getValue(); if (!Ext.isEmpty(mark) &&
-	 * mark.trim() == '公司标准' && (Ext.isEmpty(logoMark) ||
-	 * Ext.isEmpty(specNameMark))) { Ext.Msg.alert('系统提示', '请完整输入唛头信息'); return
-	 * false; }
-	 */
 
 	var labelDouble = this.addOrderWindow.labelDouble.getValue();
 	if (labelDouble == '是') {
@@ -562,7 +592,39 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 		}
 	}
 
-	this.addOrderWindow.saveData();
+	if (parseFloat(period) < 6 && parseFloat(prodAmount) > 0) {
+		// Ext.Msg.alert('系统提示', '生产周期必须>=6天，才能下单。');
+		// return false;
+
+		Ext.Msg.confirm("操作确认", "生产周期要求必须>=6天，才能下单,您确实要下单吗?", function(A) {
+					if (A == "yes") {
+
+						/*
+						 * var label = this.addOrderWindow.label.getValue(); var
+						 * logoLabel = this.addOrderWindow.logoLabel.getValue();
+						 * var specNameLabel =
+						 * this.addOrderWindow.specNameLabel.getValue(); if
+						 * (!Ext.isEmpty(label) && label.trim() == '公司标准' &&
+						 * (Ext.isEmpty(logoLabel) ||
+						 * Ext.isEmpty(specNameLabel))) { Ext.Msg.alert('系统提示',
+						 * '请完整输入标签信息'); return false; }
+						 * 
+						 * var mark = this.addOrderWindow.mark.getValue(); var
+						 * logoMark = this.addOrderWindow.logoMark.getValue();
+						 * var specNameMark =
+						 * this.addOrderWindow.specNameMark.getValue(); if
+						 * (!Ext.isEmpty(mark) && mark.trim() == '公司标准' &&
+						 * (Ext.isEmpty(logoMark) || Ext.isEmpty(specNameMark))) {
+						 * Ext.Msg.alert('系统提示', '请完整输入唛头信息'); return false; }
+						 */
+
+						_this.addOrderWindow.saveData();
+					}
+				})
+	} else {
+		_this.addOrderWindow.saveData();
+	}
+
 }
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onConfirm = function() {
@@ -1056,11 +1118,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSaveMCConfirm = fun
 		var store = this.mcconfirmListPanel.store;
 		var records = store.getRange();
 		var ifall = this.mcconfirmInputPanel.ifall.getValue();
-		
+
 		var ifget = this.mcconfirmInputPanel.ifget.getValue();
-		
-		
-		if (ifget=='是' && ifall == '否' && records.length == 0) {
+
+		if (ifget == '是' && ifall == '否' && records.length == 0) {
 			Ext.Msg.alert("系统提示", "至少需要有一条物料计划！")
 			return false;
 		} else {
@@ -1121,8 +1182,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSaveMCConfirm2 = fu
 	if (this.mcconfirmInputPanel2.form.isValid()) {
 		var store = this.mcconfirmListPanel2.store;
 		var records = store.getRange();
+
 		var ifall = this.mcconfirmInputPanel2.ifall.getValue();
-		if (ifall == '否' && records.length == 0) {
+
+		var ifget = this.mcconfirmInputPanel2.ifget.getValue();
+
+		if (ifget == '是' && ifall == '否' && records.length == 0) {
 			Ext.Msg.alert("系统提示", "至少需要有一条物料计划！")
 			return false;
 		} else {
@@ -1282,6 +1347,18 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onFill3 = function() 
 	var amount = rec2.get('amount');
 	this.addMaterWindow.k3.setValue(amount);
 }
+
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onPGConfirm = function() {
+
+	if (this.onSingleSelect()) {
+		this.opt = 'pgconfirm';
+		this.listPanel.onEdit();
+	} else {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return false;
+	}
+}
+
 // 日期相差天数
 function getDayDiff(start, end) {
 	var datediff = (new Date(end)) - (new Date(start));

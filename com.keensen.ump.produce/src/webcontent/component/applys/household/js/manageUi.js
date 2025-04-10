@@ -28,7 +28,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -87,6 +87,15 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								fieldLabel : '已确认入C仓',
 								anchor : '100%',
 								dictData : KS_YESORNO
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'textfield',
+								name : 'condition/reserve1',
+								anchor : '100%',
+								fieldLabel : '订单号 '
 							}]
 				});
 

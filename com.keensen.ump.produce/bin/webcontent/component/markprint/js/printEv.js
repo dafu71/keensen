@@ -125,7 +125,9 @@ com.keensen.ump.produce.component.markprintMgr.prototype.onScan = function() {
 					f.prodSpecName.value = data.prodSpecName;
 					f.prodSpecName2.value = data.prodSpecName2;
 					f.code.value = data.code;
-					f.isStar.value = isStar;  
+					f.isStar.value = isStar == true?"Y":"N"; 
+					f.templateName.value = data.templateName;
+					
 					var actionUrl = 'com.keensen.ump.produce.component.printMark.flow?time='
 							+ Math.random() + '&token=' + Date.now();
 

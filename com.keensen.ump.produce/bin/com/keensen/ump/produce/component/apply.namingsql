@@ -86,7 +86,8 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
        DECODE(T3.JUANMO_BATCH_ID,NULL,'干','湿') "state",
        h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
        replace(t1.tumo_batch_str,',','&lt;br&gt;') "tumoBatchStr2",
-       h.code "code",T2.CHECK_RESULT "checkResult"
+       h.code "code",T2.CHECK_RESULT "checkResult",
+       T2.diameter "diameter",T2.diameter2 "diameter2"
   FROM KS_COMPONENT_CHECK_LIST T1
   LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
   LEFT JOIN QINSEN.INST_QIJIAN T2
@@ -114,7 +115,8 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
        DECODE(T3.JUANMO_BATCH_ID, NULL, '干', '湿') AS "state",
        to_char(T1.PRODUCE_DT,'yyyy-MM-dd') "produceDt",
        m.mater_spec_name "prodSpecName",
-       j.tumo_batch_str "tumoBatchStr"
+       j.tumo_batch_str "tumoBatchStr",
+       T1.diameter "diameter",T1.diameter2 "diameter2"
   FROM QINSEN.INST_QIJIAN T1
   LEFT JOIN (select wm_concat(distinct m.batch_no) tumo_batch_str,dd.main_batch_id record_id
           from qinsen.inst_juanmo_detail dd,
@@ -162,7 +164,8 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
       h.code "code",t4.BLANKING_SIZE "blankingSize",t2.CHECK_RESULT "checkResult",
        h.prod_spec_name "orderProdSpecName",h.mark_Spec_Code "markSpecCode",t2.juanmo_batch_id,
        t4.batch_no "jmBatchNo",TO_CHAR(T4.produce_dt, 'yyyy-MM-dd HH24:mi:ss') "jmProduceDt",
-       TO_CHAR(h.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "applyTime"
+       TO_CHAR(h.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "applyTime",
+       T2.diameter "diameter",T2.diameter2 "diameter2"
   FROM KS_COMPONENT_CHECK_LIST T1
   LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
   LEFT JOIN QINSEN.INST_QIJIAN T2

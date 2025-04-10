@@ -1,5 +1,8 @@
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 	var _this = this;
+	
+	this.exportFields = '';
+	this.getRight();
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -114,6 +117,7 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 					 * if (testTypeId == '300040') { this.reTestWindow.show();
 					 * this.reTestWindow.loadData(cell); } else {
 					 */
+					this.reTestWindow2.rCheckTm.setValue(new Date());
 					this.reTestWindow2.show();
 					this.reTestWindow2.loadData(cell);
 					// }
@@ -140,14 +144,29 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.exportExcel = function() {
 	var _this = this;
-	var vals = this.queryPanel.form.getValues();
+	
+	if (Ext.isEmpty(this.exportFields)) {
+		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '水测记录',
+				'com.keensen.ump.qinsen.watertest.queryRecords', '0,1');
+	} else {
+		var arr = this.exportFields.split(',');
+		
+		doQuerySqlAndExportExt(
+				this,
+				this.queryPanel,
+				this.listPanel,
+				'水测记录',
+				'com.keensen.ump.qinsen.watertest.queryRecords',
+				arr);
+	}
+	/*var vals = this.queryPanel.form.getValues();
 	// var start = vals['condition/orderDateStart'];
 	// var end = vals['condition/orderDateEnd'];
-	/*
+	
 	 * if (Ext.isEmpty(start) || Ext.isEmpty(end)) { Ext.Msg.alert("系统提示",
 	 * "请选择订单日期时间段！"); return false; } if (dayDiff(start, end) > 31) {
 	 * Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！"); return false; }
-	 */
+	 
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
@@ -309,7 +328,7 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.exportExcel = function() {
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.firstTest = function() {
@@ -635,6 +654,7 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.loadProdStd = function() {
 }
 
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.otherFirstTest = function() {
+	this.firstTestWindow2.fCheckTm.setValue(new Date());
 	this.firstTestWindow2.show();
 }
 
@@ -923,6 +943,32 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.onRemark = function() {
 			}
 		}, this, true, gyyRemark);
 	}
+}
+
+// 获取权限
+com.keensen.ump.qinsen.quality.watertestMgr.prototype.getRight = function() {
+	var _this = this;
+	Ext.Ajax.request({
+				url : "qinsen/produce/right.json",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					var data = ret.data;
+					var watertest = data[0].watertest;
+					var exportLimitUsers = watertest.exportLimitUsers;
+					var exportUsers = watertest.exportUsers;
+					Ext.getCmp(watertestExportButton).setVisible(exportLimitUsers
+							.indexOf(uid) != -1
+							|| exportUsers.indexOf(uid) != -1);
+					
+					if (exportLimitUsers.indexOf(uid) != -1) {
+						_this.exportFields = watertest.exportLimitFields;
+					}
+					
+				},
+				callback : function() {
+				}
+			})
 }
 
 function formatDate(date) {

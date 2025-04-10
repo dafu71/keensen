@@ -57,11 +57,15 @@
 		       T1.DRAWING_NAME like '%' || #drawingName# || '%'
 	</isNotNull>
 	
+	<isNotNull prepend="and" property="drawingCode2"> 
+		       T1.DRAWING_CODE = #drawingCode2# 
+	</isNotNull>
+	
 	ORDER BY T1.LOGO,T1.SPEC_NAME
      </select>
      
      <select id="queryMarkDrawing" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-     SELECT T1.DRAWING_NAME AS "drawingName",
+     SELECT T1.DRAWING_NAME AS "drawingName",t1.id "id",
        T1.USED_DATE    AS "usedDate",
        T1.DRAWING_CODE AS "drawingCode",
        T1.MATER_CODE   AS "materCode",
@@ -69,8 +73,59 @@
        T1.SPEC_NAME    AS "specName",
        T1.LABEL_SIZE   AS "labelSize",
        T1.BUSINESSMAN  AS "businessman",
-       T1.REMARK       AS "remark"
+       T1.REMARK       AS "remark",
+       tmp.url "url",
+       tmp.url2 "url2",
+       
+tmp.IF_PRINT_BATCH_NO as "ifPrintBatchNo",
+tmp.Y_BATCH_NO as "yBatchNo",
+tmp.X_BATCH_NO as "xBatchNo",
+tmp.IF_PRINT_SPEC_NAME as "ifPrintSpecName",
+tmp.Y_BATCH_SPEC_NAME as "yBatchSpecName",
+tmp.X_BATCH_SPEC_NAME as "xBatchSpecName",
+tmp.IF_PRINT_DRY_WET as "ifPrintDryWet",
+tmp.Y_DRY_IMG as "yDryImg",
+tmp.X_DRY_IMG as "xDryImg",
+tmp.Y_DRY_SPAN as "yDrySpan",
+tmp.X_DRY_SPAN as "xDrySpan",
+tmp.Y_WET_IMG as "yWetImg",
+tmp.X_WET_IMG as "xWetImg",
+tmp.Y_WET_SPAN as "yWetSpan",
+tmp.X_WET_SPAN as "xWetSpan",
+tmp.Y_STAR_IMG as "yStarImg",
+tmp.X_STAR_IMG as "xStarImg",
+tmp.IF_PRINT_DAY_CODE as "ifPrintDayCode",
+tmp.Y_DAY_CODE_SPAN as "yDayCodeSpan",
+tmp.X_DAY_CODE_SPAN as "xDayCodeSpan",
+tmp.PRINT_DELAY_TIME as "printDelayTime"
+       
   FROM KS_BASE_MARK_DRAWING T1 
+  LEFT JOIN (select t.template_name,max(t.url) URL,max(t.url2) url2,
+  max(IF_PRINT_BATCH_NO) as IF_PRINT_BATCH_NO,
+max(Y_BATCH_NO) as Y_BATCH_NO,
+max(X_BATCH_NO) as X_BATCH_NO,
+max(IF_PRINT_SPEC_NAME) as IF_PRINT_SPEC_NAME,
+max(Y_BATCH_SPEC_NAME) as Y_BATCH_SPEC_NAME,
+max(X_BATCH_SPEC_NAME) as X_BATCH_SPEC_NAME,
+max(IF_PRINT_DRY_WET) as IF_PRINT_DRY_WET,
+max(Y_DRY_IMG) as Y_DRY_IMG,
+max(X_DRY_IMG) as X_DRY_IMG,
+max(Y_DRY_SPAN) as Y_DRY_SPAN,
+max(X_DRY_SPAN) as X_DRY_SPAN,
+max(Y_WET_IMG) as Y_WET_IMG,
+max(X_WET_IMG) as X_WET_IMG,
+max(Y_WET_SPAN) as Y_WET_SPAN,
+max(X_WET_SPAN) as X_WET_SPAN,
+max(Y_STAR_IMG) as Y_STAR_IMG,
+max(X_STAR_IMG) as X_STAR_IMG,
+max(IF_PRINT_DAY_CODE) as IF_PRINT_DAY_CODE,
+max(Y_DAY_CODE_SPAN) as Y_DAY_CODE_SPAN,
+max(X_DAY_CODE_SPAN) as X_DAY_CODE_SPAN,
+max(PRINT_DELAY_TIME) as PRINT_DELAY_TIME
+
+  
+   from KS_COMPONENT_MARK_TEMPLATE t
+GROUP BY t.template_name) tmp ON tmp.template_name = t1.DRAWING_CODE
     where 1=1
     
 	<isNotNull prepend="and" property="logo"> 
@@ -85,6 +140,14 @@
 	</isNotNull>
 	<isNotNull prepend="and" property="specName2"> 
 		       T1.SPEC_NAME like '%' || #specName2# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="drawingCode"> 
+		       T1.DRAWING_CODE like '%' || #drawingCode# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="drawingCode2"> 
+		       T1.DRAWING_CODE = #drawingCode2# 
 	</isNotNull>
 	
 	ORDER BY T1.LOGO,T1.SPEC_NAME

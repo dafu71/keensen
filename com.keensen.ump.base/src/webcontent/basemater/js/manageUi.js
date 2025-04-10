@@ -90,19 +90,24 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 			delUrl : 'com.keensen.ump.base.mater.deleteBaseMater.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'drawingCode',
-						header : '图纸编号'
+						header : '图纸编号',
+						sortable : true
 					}, {
 						dataIndex : 'materCode',
-						header : '物料号'
+						header : '物料号',
+						sortable : true
 					}, {
 						dataIndex : 'materName',
-						header : '名称'
+						header : '名称',
+						sortable : true
 					}, {
 						dataIndex : 'specName',
-						header : '规格型号'
+						header : '规格型号',
+						sortable : true
 					}, {
 						dataIndex : 'unit',
-						header : '单位'
+						header : '单位',
+						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.base.mater.queryBaseMaterByPage.biz.ext',

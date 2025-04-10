@@ -67,12 +67,12 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 					_this.editPanel.mpdIsQualified.setValue('Y')
 				var mpdIsQualified = _this.editPanel.mpdIsQualified.getValue();
 				
-				if (Ext.isEmpty(trendText)) {
+				//if (Ext.isEmpty(trendText)) {
 					_this.editPanel.trend.setValue(trend(perfFlagId,
 							isBatchQualified, isKeep, isWx, qualifidLength,
 							produceRemark, tagNum, tagLength, mpdIsQualified));
 
-				}
+				//}
 
 				_this.listPanel2.store.load({
 							params : {
@@ -232,12 +232,15 @@ function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
 			
 	var ret = '仓库AB仓';
 	if (isWx == 'N') {//自用		
+		
 		return ret;
 	}
 
 	if (tagNum > 10 || mpdIsQualified=='N' || parseFloat(qualifidLength)<=200) {
+		
 		ret = '仓库AB仓';
 	}else{
+		
 		ret = '仓库发货仓';
 	}
 	

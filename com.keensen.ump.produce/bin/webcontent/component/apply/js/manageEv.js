@@ -170,6 +170,29 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 				}
 			}, this);
 
+	this.listPanel4.store.on('load', function() {
+				// 直径校验
+				var records = _this.listPanel4.store.getRange();
+				var flag = false;
+				for (var i = 0; i < records.length; i++) {
+					var r = records[i];
+					var diameter = r.get('diameter');
+					var diameter2 = r.get('diameter2');
+					if(parseFloat(diameter)>201 || parseFloat(diameter2)>201){
+						flag = true
+						break;
+					}
+				}
+				if(flag){
+					_this.editPanel.diameterCheckResult.setVisible(true);
+					_this.editPanel.diameterCheckResult.setDisabled(false);
+				}else{
+					_this.editPanel.diameterCheckResult.setVisible(false);
+					_this.editPanel.diameterCheckResult.setDisabled(true);
+				}
+
+			});
+
 }
 
 com.keensen.ump.produce.component.applyMgr.prototype.onDeleteOrder = function() {
@@ -752,13 +775,11 @@ com.keensen.ump.produce.component.applyMgr.prototype.exportExcelBatch = function
 										+ '</td><td align="center">'
 										+ String(r.batchNo)
 										+ '</td><td align="center">'
-										+ String(r.jmBatchNo)
-										+ '</td>' 
-										+'<td align="center">'
-										+ String(r.jmProduceDt)
-										+ '</td>'
-										
-										+'<td align="center">'
+										+ String(r.jmBatchNo) + '</td>'
+										+ '<td align="center">'
+										+ String(r.jmProduceDt) + '</td>'
+
+										+ '<td align="center">'
 										+ r.tumoBatchStr + '</td></tr>';
 							})
 					str += '</table>';

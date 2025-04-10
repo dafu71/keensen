@@ -31,7 +31,7 @@
      </select>
      
       <select id="queryMachineCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-      select decode(#type#,'裁叠膜','C','卷膜','J','气检','Q','包装','B','X') || (nvl(max(SUBSTR(t.code,2,10)),0) +1)  "code"
+      select decode(#type#,'裁叠膜','C','卷膜','J','气检','Q','包装','B','焊管焊网','H','裁网','X','E') || (nvl(max(SUBSTR(t.code,2,10)),0) +1)  "code"
  		from KS_BASE_MACHINE t
  		where 1=1 		
 		and t.type = #type#
