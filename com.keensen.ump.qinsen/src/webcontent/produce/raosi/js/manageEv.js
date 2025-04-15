@@ -164,7 +164,7 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.onScan = function() {
 											_this.raosiAddWindow.batchNo
 													.setValue('');
 											_this.raosiAddWindow.batchNo
-													.focus().defer(100);
+													.focus();
 											return false;
 										})
 
@@ -200,7 +200,13 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.exportExcel = function() {
 		return false;
 
 	}
-	var daochu = _this.queryPanel.getForm().getValues();
+	
+	
+	doQuerySqlAndExport(this, this.queryPanel,
+			this.listPanel, '绕丝记录',
+			'com.keensen.ump.qinsen.raosi.queryRecords', '0,1');
+			
+	/*var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
@@ -233,7 +239,7 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.exportExcel = function() {
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 com.keensen.ump.qinsen.produce.raosiMgr.prototype.onModiOrder = function() {

@@ -386,8 +386,12 @@
     REMARK,RELATION_ID,BASE_ID 
     from KS_COMPONENT_YXORDER_MCONFIRM
     where id = #id#</insert>
-    <delete id="deleteMCConfirm" parameterClass="java.util.HashMap">delete from KS_COMPONENT_YXORDER_MCONFIRM
-    where relation_id = #relationId#</delete>
+    <delete id="deleteMCConfirm" parameterClass="java.util.HashMap">
+    delete from KS_COMPONENT_YXORDER_MCONFIRM
+    where 1=1
+    <isNotNull prepend="and" property="relationId">relation_id = #relationId#</isNotNull>
+        <isNotNull prepend="and" property="baseId">base_id = #baseId#</isNotNull>
+    </delete>
     <delete id="deleteYxorderStock" parameterClass="java.util.HashMap">delete from KS_COMPONENT_YXORDER_STOCK</delete>
     <select id="queryYxorderStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.MATER_CODE AS "materCode",
        T1.MATER_NAME AS "materName",

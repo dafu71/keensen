@@ -13,6 +13,12 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 
 	this.initQueryPanel = function() {
 		var _this = this;
+		
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
+				
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 150,
 					columns : 4,
@@ -71,6 +77,13 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 										this.queryPanel.size.reset();
 									}
 								}
+							}, {
+								xtype : 'dictcombobox',
+								name : 'condition/isCutOver',
+								hiddenName : 'condition/isCutOver',
+								fieldLabel : '是否已裁完',
+								anchor : '95%',
+								dictData : KS_YESORNO
 							}, {
 								xtype : 'hidden',
 								name : 'condition/batchNoStr'

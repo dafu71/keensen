@@ -36,6 +36,7 @@
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
+<ext:dict property="KS_YESORNO" dictTypeId="KS_YESORNO" />
 
 <js:load scriptPath="produce/component/planlock/js/manageUi.js"/>
 <js:load scriptPath="produce/component/planlock/js/manageEv.js"/>

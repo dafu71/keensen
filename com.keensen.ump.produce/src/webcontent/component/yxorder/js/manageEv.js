@@ -1,5 +1,18 @@
 com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 	var _this = this;
+	
+	// 查询事件
+	this.queryPanel4ChooseMark.mon(this.queryPanel4ChooseMark, 'query',
+			function(form, vals) {
+				var store = this.listPanel4ChooseMark.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4ChooseMark.pagingToolbar.pageSize
+					}
+				});
+			}, this);
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -366,4 +379,46 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onOrderView = function() 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateProdRemark = function() {
 	this.opt = 'updateprodremark';
 	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onChoose4Mark = function(
+		opt) {
+	this.chooseMarkWindow.opt = opt;
+	this.queryPanel4ChooseMark.form.reset();
+
+	var materSpecName2 = this.addOrderWindow2.materSpecId.getRawValue();
+	var store = this.listPanel4ChooseMark.store;
+	store.baseParams = {
+		'condition/specName2' : materSpecName2
+	};
+	store.load({
+		params : {
+			"pageCond/begin" : 0,
+			"pageCond/length" : this.listPanel4ChooseMark.pagingToolbar.pageSize
+		}
+	});
+	this.chooseMarkWindow.show();
+	this.queryPanel4ChooseMark.specNameLabel.setValue(materSpecName2);
+
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onSelect4ChooseMark = function() {
+	var A = this.listPanel4ChooseMark;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var logo = records[0].data.logo;
+		var specName = records[0].data.specName;
+		var drawingCode = records[0].data.drawingCode;
+		var opt = this.chooseMarkWindow.opt
+		if (opt == '1') {
+			
+			this.addOrderWindow2.markDrawingCode.setValue(drawingCode);
+		}else{
+			this.updateTemplateNameWindow.markDrawingCode.setValue(drawingCode);
+		}
+		
+		this.chooseMarkWindow.hide();
+	}
 }

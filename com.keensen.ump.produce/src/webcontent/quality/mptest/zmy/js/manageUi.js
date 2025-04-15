@@ -1,6 +1,6 @@
 com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 	this.initPanel = function() {
-		
+
 		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
@@ -20,24 +20,6 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 
 	// 初始化store
 	this.initStore = function() {
-		
-		this.concentrationStore = new Ext.data.SimpleStore({
-					fields : ['code', 'name'],
-					data : [['16%', '16%'], ['17%', '17%'], ['18%', '18%']]
-				});
-
-		this.machineStore = new Ext.data.SimpleStore({
-					fields : ['code', 'name'],
-					data : [['A', '罗斯混料机A'], ['B', '豪杰特混料机B'], ['C', '豪杰特混料机C']]
-				});
-
-		this.tankStore = new Ext.data.SimpleStore({
-					fields : ['code', 'name'],
-					data : [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'],
-							['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'],
-							['9', '9'], ['A', 'A'], ['B', 'B'], ['C', 'C'],
-							['D', 'D'], ['E', 'E'], ['F', 'F']]
-				});
 
 		this.mptypeStore = new Ext.data.JsonStore({
 			url : 'com.keensen.ump.produce.quality.mpzmytest.queryZmyStd.biz.ext',
@@ -61,8 +43,29 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 						name : 'c14'
 					}]
 		})
+
+		
+		this.concentrationStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['16%', '16%'], ['17%', '17%'], ['18%', '18%']]
+				});
+
+		this.machineStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['A', '罗斯混料机A'], ['B', '豪杰特混料机B'], ['C', '豪杰特混料机C']]
+				});
+
+		this.tankStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'],
+							['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'],
+							['9', '9'], ['A', 'A'], ['B', 'B'], ['C', 'C'],
+							['D', 'D'], ['E', 'E'], ['F', 'F']]
+				});
+
+		
 	}
-	
+
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
@@ -71,81 +74,95 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					//title : '【铸膜液浓度查询】',
+					// title : '【铸膜液浓度查询】',
 					fields : [{
-							xtype : 'combobox',
-							forceSelection : true,
-							mode : 'local',
-							fieldLabel : '混料机',
-							ref : '../../machine',
-							hiddenName : 'condition/machine',
-							// allowBlank : false,
-							anchor : '85%',
-							colspan : 1,
-							emptyText : '--请选择--',
-							editable : false,
-							store : this.machineStore,
-							displayField : "name",
-							valueField : "code",
-							listeners : {
-								"expand" : function(A) {
-									this.reset()
+								xtype : 'combobox',
+								forceSelection : true,
+								mode : 'local',
+								fieldLabel : '混料机',
+								ref : '../../machine',
+								hiddenName : 'condition/machine',
+								// allowBlank : false,
+								anchor : '85%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.machineStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
 								}
-							}
-						}, {
+							}, {
+								xtype : 'combobox',
+								forceSelection : true,
+								// allowBlank : false,
+								mode : 'local',
+								fieldLabel : '产品类型',
+								ref : '../mptype',
+								hiddenName : 'condition/mptype',
+								// allowBlank : false,
+								anchor : '95%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.mptypeStore,
+								displayField : "mptype",
+								valueField : "mptype",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
+							}/*
+								 * {
+								 * 
+								 * xtype : 'combobox', fieldLabel : '产品类型', ref :
+								 * '../mptype', hiddenName : 'condition/mptype',
+								 * emptyText : '--请选择--', allowBlank : true,
+								 * editable : false, anchor : '85%', store :
+								 * [['BW', 'BW'], ['ULP', 'ULP'], ['SW', 'SW'],
+								 * ['NF', 'NF']], listeners : { scope : this,
+								 * 'expand' : function(A) {
+								 * this.queryPanel.mptype.reset(); } } }
+								 */, {
+								ref : '../batchNo',
+								name : 'condition/batchNo',
+								anchor : '85%',
+								xtype : 'textfield',
+								fieldLabel : '铸膜液批号',
+								allowBlank : true
+							}, {
 
-						xtype : 'combobox',
-						fieldLabel : '产品类型',
-						ref : '../mptype',
-						hiddenName : 'condition/mptype',
-						emptyText : '--请选择--',
-						allowBlank : true,
-						editable : false,
-						anchor : '85%',
-						store : [['BW', 'BW'], ['ULP', 'ULP'], ['SW', 'SW'],
-								['NF', 'NF']],
-						listeners : {
-							scope : this,
-							'expand' : function(A) {
-								this.queryPanel.mptype.reset();
-							}
-						}
-					}, {
-						ref : '../batchNo',
-						name : 'condition/batchNo',
-						anchor : '85%',
-						xtype : 'textfield',
-						fieldLabel : '铸膜液批号',
-						allowBlank : true
-					}, {
-
-						xtype : 'combobox',
-						fieldLabel : '当前步骤',
-						ref : '../step',
-						hiddenName : 'condition/step',
-						emptyText : '--请选择--',
-						allowBlank : true,
-						editable : false,
-						anchor : '85%',
-						store : [['first', '分析'], ['second', '重新取样'],
-								['third', '配料'], ['produce', '生产使用']],
-						listeners : {
-							scope : this,
-							'expand' : function(A) {
-								this.queryPanel.step.reset();
-							}
-						}
-					}]
+								xtype : 'combobox',
+								fieldLabel : '当前步骤',
+								ref : '../step',
+								hiddenName : 'condition/step',
+								emptyText : '--请选择--',
+								allowBlank : true,
+								editable : false,
+								anchor : '85%',
+								store : [['first', '分析'], ['second', '重新取样'],
+										['third', '配料'], ['produce', '生产使用']],
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										this.queryPanel.step.reset();
+									}
+								}
+							}]
 				});
 
 		this.queryPanel.addButton({
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,
+					hidden : true,
 					handler : this.exportExcel
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "分析室测试任务看板",
 					scope : this,
@@ -168,27 +185,23 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【铸膜液浓度列表】',
+			// title : '【铸膜液浓度列表】',
 			viewConfig : {
 				forceFit : true
 			},
 			hsPage : true,
-			tbar : [/*{
-						text : '新增',
-						scope : this,
-						iconCls : 'icon-application_add',
-						handler : this.onAdd
-					}, '-',*/ {
+			tbar : [/*
+					 * { text : '新增', scope : this, iconCls :
+					 * 'icon-application_add', handler : this.onAdd }, '-',
+					 */{
 						text : '分析',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
-					}/*, '-', {
-						text : '调整',
-						scope : this,
-						iconCls : 'icon-application_edit',
-						handler : this.onEdit2
-					}*/, '-', {
+					}/*
+						 * , '-', { text : '调整', scope : this, iconCls :
+						 * 'icon-application_edit', handler : this.onEdit2 }
+						 */, '-', {
 						text : '重新取样',
 						scope : this,
 						iconCls : 'icon-application_edit',
@@ -392,6 +405,8 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 	}
 
 	this.initEditWindow = function() {
+
+		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '分析',
 			height : 600,
@@ -481,6 +496,7 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							xtype : 'displayfield',
 							dataIndex : 'std',
 							fieldLabel : '粘度标准',
+							ref : '../../std',
 							anchor : '85%',
 							colspan : 1
 						}, {
@@ -488,12 +504,85 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'textfield',
+							xtype : 'numberfield',
+							name : 'list/reserve5',
+							ref : '../../reserve5',
+							value : 1,
+							allowBlank : false,
+							fieldLabel : '送样次数',
+							anchor : '85%',
+							colspan : 1,
+							listeners : {
+								'blur' : function(o) {
+									var cnt = o.getValue();
+									var cps = _this.editWindow.cps.getValue();
+									var std = _this.editWindow.std.getValue();
+									if (Ext.isEmpty(cps) || Ext.isEmpty(std)
+											|| Ext.isEmpty(cnt))
+										return;
+									var arr = std.split('-');
+									if (Ext.isEmpty(arr) || arr.length != 2)
+										return;
+									var minValue = arr[0];
+									var maxValue = arr[1];
+									if (Ext.isEmpty(minValue)
+											|| Ext.isEmpty(maxValue))
+										return;
+									if (parseFloat(cps) >= parseFloat(minValue)
+											&& parseFloat(cps) <= parseFloat(maxValue)) {
+										_this.editWindow.ifok.setValue(1);
+									} else {
+										if (parseFloat(cnt) > 1) {
+											_this.editWindow.ifok.setValue(2);
+										} else {
+											_this.editWindow.ifok.setValue(3);
+										}
+									}
+
+								}
+							}
+						}, {
+							xtype : 'numberfield',
 							name : 'list/cps',
+							ref : '../../cps',
 							allowBlank : false,
 							fieldLabel : '铸膜液粘度',
 							anchor : '85%',
-							colspan : 1
+							colspan : 1,
+							listeners : {
+								'blur' : function(o) {
+									var cps = o.getValue();
+									var cnt = _this.editWindow.reserve5
+											.getValue();
+									var std = _this.editWindow.std.getValue();
+									if (Ext.isEmpty(cps) || Ext.isEmpty(std)
+											|| Ext.isEmpty(cnt))
+										return;
+									var arr = std.split('-');
+									if (Ext.isEmpty(arr) || arr.length != 2)
+										return;
+									var minValue = arr[0];
+									var maxValue = arr[1];
+									if (Ext.isEmpty(minValue)
+											|| Ext.isEmpty(maxValue))
+										return;
+									if (parseFloat(cps) >= parseFloat(minValue)
+											&& parseFloat(cps) <= parseFloat(maxValue)) {
+										_this.editWindow.ifok.setValue(1);
+									} else {
+										if (parseFloat(cnt) > 1) {
+											_this.editWindow.ifok.setValue(2);
+										} else {
+											_this.editWindow.ifok.setValue(3);
+										}
+									}
+
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
 						}, {
 							xtype : 'textfield',
 							name : 'list/temperature',
@@ -501,10 +590,6 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 							fieldLabel : '测试温度',
 							anchor : '85%',
 							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
 						}, {
 
 							xtype : 'combobox',

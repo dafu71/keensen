@@ -30,8 +30,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 		this.initStore();
 		this.initOrderViewWindow();
-		
+
 		this.initUpdateProdRemarkWindow();
+
+		this.initChooseMarkWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -59,7 +61,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					fields : ['code', 'name'],
 					data : [['是', '是'], ['否', '否'], ['电子版检测报告', '电子版检测报告']]
 				});
-				
+
 		// 下拉选项：红、橙、黄、绿、青、蓝、紫
 		this.colorStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -74,7 +76,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		// 工业、商用、家用
 		this.typeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['工业膜', '工业膜'], ['家用膜', '家用膜'], ['商用膜', '商用膜'], ['膜片', '膜片'], ['其他', '其他']]
+					data : [['工业膜', '工业膜'], ['家用膜', '家用膜'], ['商用膜', '商用膜'],
+							['膜片', '膜片'], ['其他', '其他']]
 				});
 
 		// 8寸、4寸、类4寸、常规通量(家用)、大通量(家用)
@@ -115,12 +118,9 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		this.tapeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['印刷双层', '印刷双层'], ['印刷三层', '印刷三层'], ['网纹', '网纹'],
-							['公司标准', '公司标准'],
-							['蓝胶带', '蓝胶带'],
-							['绿胶带', '绿胶带'],
-							['白胶带', '白胶带'],
-							['黄胶带', '黄胶带'],
-							['灰胶带', '灰胶带'], ['水光蓝胶带', '水光蓝胶带']]
+							['公司标准', '公司标准'], ['蓝胶带', '蓝胶带'], ['绿胶带', '绿胶带'],
+							['白胶带', '白胶带'], ['黄胶带', '黄胶带'], ['灰胶带', '灰胶带'],
+							['水光蓝胶带', '水光蓝胶带']]
 				});
 
 		// 制作方式下拉选项：印刷、打印
@@ -179,7 +179,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					fields : ['code', 'name'],
 					data : [['常规产品', '常规产品'], ['实验订单', '实验订单']]
 				});
-				
+
 		this.labelDrawingLogoStore = new Ext.data.JsonStore({
 			url : 'com.keensen.ump.base.paramaterspec.queryLabelDrawingLogo.biz.ext',
 			root : 'data',
@@ -281,14 +281,14 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		this.queryPanel.addButton({
 					text : "模板下载",
 					scope : this,
-					hidden:true,
+					hidden : true,
 					iconCls : 'icon-application_excel',
 					handler : this.onDown
 				});
 		this.queryPanel.addButton({
 					text : "订单导入",
 					scope : this,
-					hidden:true,
+					hidden : true,
 					iconCls : 'icon-application_excel',
 					handler : this.importExcel
 				});
@@ -1119,7 +1119,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						}, {
 							name : 'entity/remark',
 							xtype : 'textarea',
-							dataIndex:'reserve2',
+							dataIndex : 'reserve2',
 							fieldLabel : '备注',
 							colspan : 2,
 							anchor : '87%',
@@ -1888,8 +1888,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		this.updateTemplateNameWindow = this.updateTemplateNameWindow
 				|| new Ext.fn.FormWindow({
 					title : '修改唛头图纸编号',
-					height : 240,
-					width : 300,
+					height : 360,
+					width : 480,
 					resizable : false,
 					minimizable : false,
 					maximizable : false,
@@ -1911,81 +1911,63 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									height : '5',
 									colspan : 2
 								}, {
-									xtype : 'combobox',
-									dataIndex : 'templateName',
-									typeAhead : true,
-									typeAheadDelay : 100,
-									triggerAction : "all",
-									lazyRender : true,
-									forceSelection : true,
-									mode : 'local',
-									fieldLabel : '唛头图纸编号',
-									ref : '../../templateName',
-									hiddenName : 'entity/templateName',
-									// allowBlank : false,
+									name : 'entity/templateName',
+									ref : '../../markDrawingCode',
+									allowBlank : false,
 									anchor : '95%',
 									colspan : 2,
-									emptyText : '--请选择--',
-									editable : true,
-									store : this.templateNameStore,
-									displayField : "templateName",
-									valueField : "templateName",
-									queryDelay : 200,// 查询延时，毫秒,
-									listeners : {
-										'focus' : {
-											fn : function(e) {
-												e.expand();
-												this.doQuery(this.allQuery,
-														true);
-											},
-											buffer : 200
-										},
-										"expand" : function(A) {
-											// this.reset()
-										},
-										'beforequery' : function(e) {
-											var combo = _this.updateTemplateNameWindow.templateName, size = 15, idx = 1;
-
-											if (e.query === ''
-													|| e.query == null) {// 当输入框删除内容后，清除过滤器，
-												// 显示原本store数据,使其能够再次检索
-												combo.store.clearFilter();
-												combo.expand();
-
-											} else {
-												if (!e.forceAll) {
-
-													combo.store.clearFilter();// 使每次输入都能进行检索，不用担心输入过慢
-													var input = e.query;
-													// 检索的正则
-													var regExp = new RegExp(".*"
-															+ input + ".*");
-													// 执行检索
-													combo.store
-															.filterBy(
-																	function(
-																			record,
-																			id) {
-																		if (idx > size) {
-																			return false;
-																		}
-																		var text = record
-																				.get(combo.displayField);
-																		var flag = regExp
-																				.test(text);
-																		if (flag) {
-																			idx++;
-																		}
-																		return flag;
-																	});
-													combo.expand();
-													return false;
-												}
-											}
-										}
+									fieldLabel : '唛头图纸编号',
+									xtype : 'trigger',
+									emptyText : '单击旁边按钮选择图纸编号',
+									editable : false,
+									hideTrigger : false,
+									scope : this,
+									onTriggerClick : function() {
+										_this.onChoose4Mark(2);
 									}
+									/*
+									 * { xtype : 'combobox', dataIndex :
+									 * 'templateName', typeAhead : true,
+									 * typeAheadDelay : 100, triggerAction :
+									 * "all", lazyRender : true, forceSelection :
+									 * true, mode : 'local', fieldLabel :
+									 * '唛头图纸编号', ref : '../../templateName',
+									 * hiddenName : 'entity/templateName', //
+									 * allowBlank : false, anchor : '95%',
+									 * colspan : 2, emptyText : '--请选择--',
+									 * editable : true, store :
+									 * this.templateNameStore, displayField :
+									 * "templateName", valueField :
+									 * "templateName", queryDelay : 200,//
+									 * 查询延时，毫秒, listeners : { 'focus' : { fn :
+									 * function(e) { e.expand();
+									 * this.doQuery(this.allQuery, true); },
+									 * buffer : 200 }, "expand" : function(A) { //
+									 * this.reset() }, 'beforequery' :
+									 * function(e) { var combo =
+									 * _this.updateTemplateNameWindow.templateName,
+									 * size = 15, idx = 1;
+									 * 
+									 * if (e.query === '' || e.query == null)
+									 * {// 当输入框删除内容后，清除过滤器， //
+									 * 显示原本store数据,使其能够再次检索
+									 * combo.store.clearFilter();
+									 * combo.expand();
+									 *  } else { if (!e.forceAll) {
+									 * 
+									 * combo.store.clearFilter();//
+									 * 使每次输入都能进行检索，不用担心输入过慢 var input = e.query; //
+									 * 检索的正则 var regExp = new RegExp(".*" +
+									 * input + ".*"); // 执行检索 combo.store
+									 * .filterBy( function( record, id) { if
+									 * (idx > size) { return false; } var text =
+									 * record .get(combo.displayField); var flag =
+									 * regExp .test(text); if (flag) { idx++; }
+									 * return flag; }); combo.expand(); return
+									 * false; } } } }
+									 */
 
-								}, {
+							}	, {
 									name : 'entity/id',
 									xtype : 'hidden',
 									dataIndex : 'id'
@@ -2134,6 +2116,25 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							anchor : '80%',
 							colspan : 2
 
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							name : 'entity/templateName',
+							ref : '../../markDrawingCode',
+							allowBlank : false,
+							anchor : '80%',
+							colspan : 2,
+							fieldLabel : '唛头编号',
+							xtype : 'trigger',
+							emptyText : '单击旁边按钮选择图纸编号',
+							editable : false,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onChoose4Mark(1);
+							}
 						}, {
 							name : 'entity/materSpecName2',
 							ref : '../../materSpecName2',
@@ -2402,7 +2403,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					height : 5,
 					colspan : 24
 				}, {
-					//name : 'entity/productRemark',
+					// name : 'entity/productRemark',
 					dataIndex : 'productRemark',
 					readOnly : true,
 					anchor : '100%',
@@ -3275,19 +3276,12 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					store : this.goodsWithReportStore,
 					displayField : "name",
 					valueField : "code"
-				}/*, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/packingTxt',
-					dataIndex : 'packingTxt',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textfield',
-					fieldLabel : '打包标识要求'
-				}*/, {
+				}/*
+					 * , { xtype : 'displayfield', height : 5, colspan : 24 }, {
+					 * name : 'entity/packingTxt', dataIndex : 'packingTxt',
+					 * readOnly : true, anchor : '100%', colspan : 12, xtype :
+					 * 'textfield', fieldLabel : '打包标识要求' }
+					 */, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
 					labelSeparator : '',// 去掉冒号
@@ -3322,7 +3316,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 		this.orderViewWindow.buttons[0].hide();
 	}
-	
+
 	this.initUpdateProdRemarkWindow = function() {
 		var _this = this;
 		this.updateProdRemarkWindow = this.updateProdRemarkWindow
@@ -3367,5 +3361,215 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 								}]
 					}]
 				});
+	}
+
+	// ChooseMark
+	this.initChooseMarkWindow = function() {
+		var _this = this;
+
+		var selModel4ChooseMark = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4ChooseMark = this.listPanel4ChooseMark
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : true,
+					selModel : selModel4ChooseMark,
+					tbar : [{
+								text : '确定选择',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onSelect4ChooseMark
+							}],
+					delUrl : '111.biz.ext',
+					columns : [new Ext.grid.RowNumberer({
+										width : 30
+									}), selModel4ChooseMark, {
+								dataIndex : 'drawingName',
+								header : '图纸名称'
+							}, {
+								dataIndex : 'drawingCode',
+								header : '图纸编号'
+							}/*
+								 * , { dataIndex : 'drawingCode', header :
+								 * '干/湿', renderer : function(v, m, r, i) { var
+								 * idx = v.indexOf('-G'); return idx > -1 ? "干" :
+								 * "湿"; } }
+								 */, {
+								dataIndex : 'materCode',
+								header : '物料号'
+							}, {
+								dataIndex : 'logo',
+								header : '标签LOGO'
+							}, {
+								dataIndex : 'specName',
+								header : '贴牌型号'
+							}, {
+								dataIndex : 'labelSize',
+								header : '标签尺寸'
+							}, {
+								dataIndex : 'url',
+								header : '标签背景图',
+								renderer : function(value, metaData, rec,
+										rowIndex, colIndex, store, view) {
+									if (!Ext.isEmpty(value)) {
+
+										return '<img src="'
+												+ markRootUrl
+												+ value
+												+ '?ver='
+												+ rec.data.id
+												+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+
+									}
+								}
+							}, {
+								dataIndex : 'url2',
+								header : '唛头示例图纸',
+								renderer : function(value, metaData, rec,
+										rowIndex, colIndex, store, view) {
+									if (!Ext.isEmpty(value)) {
+
+										return '<img src="'
+												+ markRootUrl
+												+ value
+												+ '?ver='
+												+ rec.data.id
+												+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+
+									}
+								}
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.base.paramaterspec.queryMarkDrawingByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'drawingCode'
+								}, {
+									name : 'logo'
+								}, {
+									name : 'specName'
+								}, {
+									name : 'drawingName'
+								}, {
+									name : 'materCode'
+								}, {
+									name : 'labelSize'
+								}, {
+									name : 'url'
+								}, {
+									name : 'url2'
+								}]
+					})
+				})
+
+		this.queryPanel4ChooseMark = this.queryPanel4ChooseMark
+				|| new Ext.fn.QueryPanel({
+							height : 140,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'combobox',
+										forceSelection : true,
+										mode : 'local',
+										fieldLabel : '标签LOGO',
+										// ref : '../../logoLabel',
+										hiddenName : 'condition/logo',
+										anchor : '100%',
+										colspan : 1,
+										emptyText : '',
+										editable : false,
+										store : this.labelDrawingLogoStore,
+										displayField : "logo",
+										valueField : "logo"
+									}, {
+										xtype : 'combobox',
+										forceSelection : true,
+										mode : 'local',
+										fieldLabel : '贴牌型号',
+										// ref : '../../specNameLabel',
+										hiddenName : 'condition/specName',
+										anchor : '100%',
+										colspan : 1,
+										emptyText : '',
+										editable : false,
+										store : this.labelDrawingSpecNameStore,
+										displayField : "specName",
+										valueField : "specName"
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 2
+									}, {
+										xtype : 'textfield',
+										mode : 'local',
+										fieldLabel : '%-标签LOGO-%',
+										// ref : '../../logoLabel',
+										name : 'condition/logo2',
+										anchor : '100%',
+										colspan : 1
+									}, {
+										xtype : 'textfield',
+										mode : 'local',
+										fieldLabel : '%-贴牌型号-%',
+										ref : '../specNameLabel',
+										name : 'condition/specName2',
+										anchor : '100%',
+										colspan : 1
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 2
+									}, {
+										xtype : 'textfield',
+										mode : 'local',
+										fieldLabel : '%-图纸编号-%',
+										// ref : '../../drawingCode',
+										name : 'condition/drawingCode',
+										anchor : '100%',
+										colspan : 1
+									}]
+						})
+
+		this.queryPanel4ChooseMark.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.chooseMarkWindow.hide();
+					}
+
+				});
+
+		this.chooseMarkWindow = this.chooseMarkWindow || new Ext.Window({
+					title : '唛头图纸编号查询',
+					// 自定义属性
+					opt : '',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 900,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4ChooseMark,
+							this.listPanel4ChooseMark]
+
+				})
 	}
 }

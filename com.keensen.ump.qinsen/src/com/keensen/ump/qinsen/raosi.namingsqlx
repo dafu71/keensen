@@ -95,6 +95,12 @@
 	<isNotNull prepend = ""  property = "juanMoBatchNo">
 	   AND J.BATCH_NO = UPPER(#juanMoBatchNo#)
 	</isNotNull>
+	
+	
+	<isNotNull prepend = ""  property = "scanNo">
+	   AND (A.BATCH_NO = UPPER(#scanNo#) or J.BATCH_NO = UPPER(#scanNo#))
+	</isNotNull>
+	
 	<isNotNull prepend = ""  property = "tumoBatchId">
 	   AND EXISTS
 		 (SELECT 1

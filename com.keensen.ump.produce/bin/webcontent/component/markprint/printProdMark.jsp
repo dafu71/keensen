@@ -367,7 +367,7 @@ function getDayCode() {
 							textMargin : 0,
 							height : 50,
 							margin : 0,
-							width : 2
+							width : 1
 							};
 						
 						JsBarcode(barcodeElement, batchNo, options);
@@ -382,8 +382,8 @@ function getDayCode() {
 		            prodSpecNameElement.textContent = '<%=prodSpecName %>';
 		            
 		            <%
-					String fontSize = prodSpecName.length() >= 18 ? "20px"
-					: prodSpecName.length() > 9 ? "24px" : "30px";
+					String fontSize = prodSpecName.length() >= 18 ? "16px"
+					: prodSpecName.length() > 9 ? "20px" : "26px";
 					%>
 		            
 		            const fontSize = '<%=fontSize %>';

@@ -34,6 +34,11 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var jmcodeId = Ext.id();
+  
+  var jmCountId = Ext.id();
+  var realityCountId = Ext.id();
+  var rateId = Ext.id();
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.workorder.jmdutyMgr
 		});

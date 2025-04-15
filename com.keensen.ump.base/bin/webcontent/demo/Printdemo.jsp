@@ -46,7 +46,7 @@
 </head>
 <body>
 <div class="image-container" id="image-container">
-        <img src="<%=rootUrl %>/base/demo/standard_nsf.jpg" id="preview-image">
+        <img src="<%=rootUrl %>/base/demo/standard_nsf2.jpg" id="preview-image">
     </div>
 
     <div class="controls">

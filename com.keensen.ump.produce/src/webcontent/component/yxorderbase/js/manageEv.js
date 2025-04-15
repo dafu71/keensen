@@ -107,6 +107,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.mcconfirmListPanel.store.removeAll();
 				this.mcconfirmInputPanel.form.reset();
 				this.mcconfirmWindow.show();
+				this.mcconfirmInputPanel.loadData(cell);
 				this.mcconfirmInputPanel.orderNo.setValue(cell.get('orderNo'));
 				this.mcconfirmInputPanel.orderAmount.setValue(cell
 						.get('orderAmount'));
@@ -118,6 +119,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.mcconfirmInputPanel.demandStockDate.setValue(cell
 						.get('demandStockDate'));
 				this.mcconfirmInputPanel.relationId.setValue(cell.get('id'));
+				
+				//this.mcconfirmInputPanel.mReason.setValue(cell.get('mReason'));
 
 				this.mcconfirmListPanel.store.baseParams = {
 					'map/baseId' : cell.get('id')
@@ -1152,7 +1155,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSaveMCConfirm = fun
 							});
 			this.requestMask.show();
 			Ext.Ajax.request({
-				url : "com.keensen.ump.produce.component.yxorderbase.saveMCConfirm.biz.ext",
+				url : "com.keensen.ump.produce.component.yxorderbase.saveMCConfirm3.biz.ext",
 				method : "post",
 				jsonData : {
 					'entity' : this.mcconfirmInputPanel.form.getValues(),

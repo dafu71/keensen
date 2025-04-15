@@ -103,6 +103,10 @@
   
   where 1=1
 	
+	<isNotNull prepend = "and"  property = "size"> 
+     decode(instr(T2.MATER_SPEC_NAME,'8040'),0,'4','8') = #size#
+      </isNotNull>
+      
 	<isNotNull prepend="and" property="cdmState"> 
 		       nvl(t3.cdm_state,0) = #cdmState#
 	</isNotNull>
@@ -277,6 +281,10 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
   AND v2.prod_spec_id=t2.mater_spec_id
   
   where 1=1
+  
+  <isNotNull prepend = "and"  property = "size"> 
+     decode(instr(T2.MATER_SPEC_NAME,'8040'),0,'4','8') = #size#
+      </isNotNull>
 	
 	<isNotNull prepend="and" property="jmState"> 
 		       nvl(t3.jm_state,0) = #jmState#
@@ -865,4 +873,199 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
 	ORDER BY T1.product_Order
 	</isNotNull>
     </select>
+    
+    <!--需要把正常试卷的数据排除，系统可以按条件识别排除此类订单号:“SG”开头且不带“_”的。-->
+    <select id="count4CdmDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')>0
+    then nvl(t1.jm_amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(t1.jm_amount,0) else 0 end) "jmCount",
+    sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')>0
+    then nvl(v.reality_Amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(v.reality_Amount,0) else 0 end) "realityCount",
+   round(100* sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')>0
+    then nvl(v.reality_Amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(v.reality_Amount,0) else 0 end)/
+    sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')>0
+    then nvl(t1.jm_amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(t1.jm_amount,0) else 0 end),2) || '%' "rate"
+   from 
+  (select t.plan_date,sum(t.meter_amount) meter_amount,t.order_id ,min(t.jm_amount) jm_amount,
+  max(w.remark) week_remark
+  from KS_COMPONENT_PLAN_DAY t
+  left join KS_COMPONENT_PLAN_WEEK w on w.id = t.relation_id
+   WHERE t.plan_date IS NOT NULL
+  GROUP BY t.order_id,plan_date) t1
+  
+  left join (SELECT order_id,machine_code from V_KS_COMPONENT_DUTY_MACHINE
+	WHERE machine_type='C') m on m.order_id = t1.order_id
+  
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER t2 ON t1.order_id=t2.id
+  left join (select t.plan_date,t.order_id,wm_concat(t.cdm_code) cdm_codes,
+  max(t.PRODUCT_ORDER) PRODUCT_ORDER,max(ARRANGE_DATE) ARRANGE_DATE ,
+  max(t.cdm_state) cdm_state
+  from KS_COMPONENT_DUTY_CDM t
+  GROUP BY t.plan_date,t.order_id) t3 
+  on t1.order_id = t3.order_id and t1.plan_date = t3.plan_date
+  left join v_ks_cdm_reality_Amount v 
+  on v.order_id=t1.order_id 
+  AND to_char(v.plan_date,'yyyy-MM-dd') = to_char(t1.plan_date ,'yyyy-MM-dd')
+  AND v.prod_spec_id=t2.mater_spec_id
+  
+  where 1=1
+	
+	<isNotNull prepend = "and"  property = "size"> 
+     decode(instr(T2.MATER_SPEC_NAME,'8040'),0,'4','8') = #size#
+      </isNotNull>
+      
+	<isNotNull prepend="and" property="cdmState"> 
+		       nvl(t3.cdm_state,0) = #cdmState#
+	</isNotNull>
+	<isNotNull prepend="and" property="planDate"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') = #planDate#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="planDateStart"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') >= #planDateStart#
+	</isNotNull>
+	<isNotNull prepend="and" property="planDateEnd"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') &lt;= #planDateEnd#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="arrangeDate"> 
+		       to_char(t3.ARRANGE_DATE,'yyyy-MM-dd') = #arrangeDate#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="orderNo"> 
+		       t2.order_no = #orderNo#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderId"> 
+		       t1.order_id = #orderId#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderNo2"> 
+		       t2.order_no like '%' || #orderNo2# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="materSpecId"> 
+		       t2.mater_spec_id = #materSpecId#
+	</isNotNull>
+	<isNotNull prepend="and" property="cdmCode2"> 
+		       t3.cdm_codes like '%' || #cdmCode2# || '%'
+	</isNotNull>	
+	
+	<isNotEqual prepend="" property="getduty" compareValue="y">	
+	ORDER BY t1.plan_date DESC,t1.order_id desc
+	</isNotEqual>
+	<isEqual prepend="" property="getduty" compareValue="y">	
+	ORDER BY t3.product_order
+	</isEqual>
+	</select>
+	
+	
+	
+	<select id="count4JmDuty" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')>0
+    then nvl(t1.jm_amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(t1.jm_amount,0) else 0 end) "jmCount",
+    sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')>0
+    then nvl(v.reality_Amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(v.reality_Amount,0) else 0 end) "realityCount",
+   round(100* sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')>0
+    then nvl(v.reality_Amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(v.reality_Amount,0) else 0 end)/
+    sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')>0
+    then nvl(t1.jm_amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(t1.jm_amount,0) else 0 end),2) || '%' "rate"
+  <!--, cm.product_order "cmProductOrder"
+  , cm.ARRANGE_DATE "cmArrangeDate"-->
+   from 
+  (select t.plan_date,sum(t.meter_amount) meter_amount,t.order_id ,min(t.jm_amount) jm_amount,
+  max(w.remark) week_Remark
+  from KS_COMPONENT_PLAN_DAY t
+  left join KS_COMPONENT_PLAN_WEEK w on w.id = t.relation_id
+  GROUP BY t.order_id,plan_date) t1
+  <!--LEFT JOIN KS_COMPONENT_DUTY_CDM cm
+  ON  t1.order_id = cm.order_id and t1.plan_date = cm.plan_date
+  left join (SELECT order_id,machine_code from V_KS_COMPONENT_DUTY_MACHINE
+	WHERE machine_type='J') m on m.order_id = t1.order_id-->
+	
+  left join (  SELECT tt.order_id,tt.PLAN_date,wm_concat(relation_code) jm_codes from 
+  (SELECT cm.*,mr.relation_code from 
+  (SELECT DISTINCT cdm_code,order_id,PLAN_date FROM
+  KS_COMPONENT_DUTY_CDM) cm 
+  LEFT JOIN KS_BASE_MACHINE_RELATION mr
+  ON cm.cdm_code = mr.code AND mr.relation_code LIKE 'J%') tt
+  GROUP BY tt.order_id,tt.PLAN_date) m on m.order_id = t1.order_id and t1.plan_date = m.plan_date
+	
+	
+	
+  LEFT JOIN KS_PROD_COMPONENT_YXORDER t2 ON t1.order_id=t2.id
+  left join (select t.plan_date,t.order_id,wm_concat(DISTINCT t.jm_code) jm_codes,
+  max(t.PRODUCT_ORDER) PRODUCT_ORDER,max(ARRANGE_DATE) ARRANGE_DATE ,
+  max(t.jm_state) jm_state
+  from KS_COMPONENT_DUTY_JM t
+  GROUP BY t.plan_date,t.order_id) t3 
+  on t1.order_id = t3.order_id and t1.plan_date = t3.plan_date
+  left join V_KS_JM_REALITY_AMOUNT v 
+  on v.order_id=t1.order_id   
+  AND to_char(v.plan_date,'yyyy-MM-dd') = to_char(t1.plan_date ,'yyyy-MM-dd')
+  AND v.prod_spec_id=t2.mater_spec_id
+  
+   left join (SELECT t.produce_dt,t.prod_spec_id,t.order_no,t.reality_Amount,od.id order_id from 
+(SELECT COUNT(1) reality_Amount,to_char(jm.produce_dt,'YYYY-MM-DD') produce_dt,jm.prod_spec_id,jm.order_no
+FROM qinsen.inst_juanmo_main jm
+GROUP BY to_char(jm.produce_dt,'YYYY-MM-DD'),jm.prod_spec_id,jm.order_no) t
+LEFT JOIN ks_prod_component_yxorder od
+ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
+
+  on v2.order_id=t1.order_id
+  AND v2.produce_dt = to_char(t3.ARRANGE_DATE ,'yyyy-MM-dd')
+  AND v2.prod_spec_id=t2.mater_spec_id
+  
+  where 1=1
+  
+  <isNotNull prepend = "and"  property = "size"> 
+     decode(instr(T2.MATER_SPEC_NAME,'8040'),0,'4','8') = #size#
+      </isNotNull>
+	
+	<isNotNull prepend="and" property="jmState"> 
+		       nvl(t3.jm_state,0) = #jmState#
+	</isNotNull>
+	<isNotNull prepend="and" property="planDate"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') = #planDate#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="planDateStart"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') >= #planDateStart#
+	</isNotNull>
+	<isNotNull prepend="and" property="planDateEnd"> 
+		       to_char(t1.plan_date,'yyyy-MM-dd') &lt;= #planDateEnd#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="arrangeDate"> 
+		       (to_char(t3.ARRANGE_DATE,'yyyy-MM-dd') = #arrangeDate#)
+		       
+		    <!--   <isNotNull prepend="or" property="getduty"> 	
+		         to_char(t3.ARRANGE_DATE,'yyyy-MM-dd')=(SELECT to_char(MAX(t.arrange_date),'yyyy-MM-dd') from KS_COMPONENT_DUTY_JM t
+				WHERE to_char(t.ARRANGE_DATE,'yyyy-MM-dd') &lt;> #arrangeDate# and t.jm_code = #jmCode2#)
+				)
+		       </isNotNull>
+		       
+		       <isNull prepend="" property="getduty"> 	
+		       	)
+		       </isNull>-->
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="orderNo"> 
+		       t2.order_no = #orderNo#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderId"> 
+		       t1.order_id = #orderId#
+	</isNotNull>
+	<isNotNull prepend="and" property="orderNo2"> 
+		       t2.order_no like '%' || #orderNo2# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="materSpecId"> 
+		       t2.mater_spec_id = #materSpecId#
+	</isNotNull>
+	<isNotNull prepend="and" property="jmCode2"> 
+		       ',' || t3.jm_codes || ',' like '%,' ||  #jmCode2# || ',%'
+	</isNotNull>	
+	<isNull prepend="" property="getduty"> 	
+	ORDER BY t1.plan_date desc,t1.order_id desc,t3.ARRANGE_DATE desc
+	</isNull>
+	<isNotNull prepend="" property="getduty"> 	
+	ORDER BY t3.ARRANGE_DATE,t3.product_order
+	</isNotNull>
+	</select>
 </sqlMap>

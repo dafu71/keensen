@@ -565,14 +565,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
-					}, '-', {
+					}/*, '-', {
 						text : '列表字段设置',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : function() {
 							this.optColumnWin.show();
 						}
-					}],
+					}*/],
 			hsPage : true,
 			selModel : selModel,
 			delUrl : '1.biz.ext',
@@ -6199,7 +6199,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					border : true,
 					columns : 6,
 					loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandConfirm.biz.ext',
-					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm2.biz.ext',
+					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm3.biz.ext',
 					fields : [{
 								xtype : 'displayfield',
 								fieldLabel : '订单号',
@@ -7131,7 +7131,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					border : true,
 					columns : 6,
 					loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandConfirm.biz.ext',
-					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm2.biz.ext',
+					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm3.biz.ext',
 					fields : [{
 								xtype : 'displayfield',
 								fieldLabel : '订单号',

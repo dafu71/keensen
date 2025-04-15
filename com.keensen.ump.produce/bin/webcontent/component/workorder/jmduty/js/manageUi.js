@@ -110,7 +110,22 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 						this.queryPanel.jmState.reset();
 					}
 				}
-			}]
+			}, {
+								xtype : 'combo',
+								fieldLabel : '元件类型',
+								ref : '../size',
+								hiddenName : 'condition/size',
+								emptyText : '--请选择--',
+								//anchor : '95%',
+								colspan : 1,
+								store : [['8', '8寸'], ['4', '4寸']],
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										this.queryPanel.size.reset();
+									}
+								}
+							}]
 		});
 		this.queryPanel.addButton({
 					text : "任务安排",
@@ -134,6 +149,27 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onDutyView
 
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : jmCountId
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : realityCountId
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : rateId
 					}, '->', {
 						text : '自由卷设置裁叠膜',
 						scope : this,
@@ -158,7 +194,7 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 						header : '生产型号'
 					}, {
 						dataIndex : 'jmAmount',
-						header : '卷膜数量'
+						header : '计划卷膜数量'
 					}, {
 						dataIndex : 'realityAmount',
 						header : '实际卷膜数量'
@@ -214,6 +250,12 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 							name : 'realityAmount'
 						}, {
 							name : 'weekRemark'
+						}, {
+							name : 'realityCount'
+						}, {
+							name : 'jmCount'
+						}, {
+							name : 'rate'
 						}]
 			})
 		})

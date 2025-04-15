@@ -45,6 +45,19 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr.prototype.initEvent = fun
 	 * this.chooseWindow.hide(); } }); } }, this);
 	 */
 
+	this.listPanel.store.on('load', function() {
+				var records = _this.listPanel.store.getRange();
+				var r = records[0];
+				var jmCount = r.get('jmCount');
+				var realityCount = r.get('realityCount');
+				var rate = r.get('rate');
+				Ext.getCmp(jmCountId).setValue('计划裁膜合计:'
+								+ jmCount);
+				Ext.getCmp(realityCountId).setValue('实际裁膜合计:'
+								+ realityCount);
+				Ext.getCmp(rateId).setValue('计划完成率:'
+								+ rate);
+			})
 }
 
 com.keensen.ump.produce.component.workorder.cdmdutyMgr.prototype.saveBatchNoCdm = function(
@@ -126,12 +139,12 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr.prototype.onSelectCode = 
 
 		var idx = this.rec.data['idx'];
 		idx = '' + idx;
-		var i = this.listPanel3.store.find('idx', idx,0,false);
+		var i = this.listPanel3.store.find('idx', idx, 0, false);
 		var rec2 = this.listPanel3.store.getAt(i);
 		this.listPanel2.getSelectionModel().clearSelections();
 		this.chooseWindow.hide();
 		rec2.set('cdmCodes', arr.join(','));
-		
+
 		rec2.commit();
 		this.listPanel2.refresh();
 
@@ -158,15 +171,15 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr.prototype.onSelectCode = 
 com.keensen.ump.produce.component.workorder.cdmdutyMgr.prototype.onSaveArrange = function() {
 	var _this = this;
 
-	//var records = this.listPanel3.store.getRange();
-	
+	// var records = this.listPanel3.store.getRange();
+
 	var records = this.listPanel3.getSelectionModel().getSelections();
-	
+
 	if (records.length == 0) {
-			Ext.Msg.alert('提示', '请选择待保存记录！')
-			return false
+		Ext.Msg.alert('提示', '请选择待保存记录！')
+		return false
 	}
-		
+
 	for (var i = 0; i < records.length; i++) {
 		var j = i + 1;
 		if (Ext.isEmpty(records[i].data.arrangeDate)) {
@@ -290,7 +303,8 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr.prototype.onDutyState2Dea
 							var result = Ext.decode(response.responseText);
 							if (result.success) {
 								Ext.Msg.alert("系统提示", "保存成功", function() {
-											_this.planDayListPanel.store.reload();
+											_this.planDayListPanel.store
+													.reload();
 											_this.listPanel.store.reload();
 										});
 							}
@@ -341,7 +355,8 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr.prototype.onDutyState2Fin
 							var result = Ext.decode(response.responseText);
 							if (result.success) {
 								Ext.Msg.alert("系统提示", "保存成功", function() {
-											_this.planDayListPanel.store.reload();
+											_this.planDayListPanel.store
+													.reload();
 											_this.listPanel.store.reload();
 										});
 							}

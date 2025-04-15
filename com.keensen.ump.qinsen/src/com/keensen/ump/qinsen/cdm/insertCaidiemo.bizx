@@ -32,11 +32,11 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link34</targetConnections>
-    <targetConnections>link32</targetConnections>
-    <targetConnections>link9</targetConnections>
-    <targetConnections>link24</targetConnections>
     <targetConnections>link36</targetConnections>
+    <targetConnections>link24</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link32</targetConnections>
+    <targetConnections>link34</targetConnections>
     <location x="510" y="147"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -151,6 +151,7 @@
       <targetNode>loopstart0</targetNode>
     </sourceConnections>
     <targetConnections>link1</targetConnections>
+    <targetConnections>link35</targetConnections>
     <location x="23" y="289"/>
     <size height="28" width="28"/>
     <nodeLabel>transactionbegin0label</nodeLabel>
@@ -229,8 +230,8 @@
       <sourceNode>transactionrollback0</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link7</targetConnections>
     <targetConnections>link20</targetConnections>
+    <targetConnections>link7</targetConnections>
     <location x="394" y="156"/>
     <size height="28" width="28"/>
     <nodeLabel>transactionrollback0label</nodeLabel>
@@ -244,6 +245,16 @@
     <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
       <targetNode>transactionbegin0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link30" name="已裁完" displayName="连接线" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>assign10</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">tumo/isCutOver</process:leftOperand>
+          <process:rightOperand type="literal">Y</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link25</targetConnections>
     <location x="315" y="150"/>
@@ -705,8 +716,8 @@
       <sourceNode>assign9</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link31</targetConnections>
     <targetConnections>link37</targetConnections>
+    <targetConnections>link31</targetConnections>
     <location x="795" y="45"/>
     <size height="28" width="28"/>
     <nodeLabel>assign9label</nodeLabel>
@@ -756,6 +767,52 @@
     <figSize height="20" width="186"/>
     <node>subprocess4</node>
   </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="saveBusinessOpt" displayName="saveBusinessOpt" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link35" name="link35" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>transactionbegin0</targetNode>
+    </sourceConnections>
+    <targetConnections>link40</targetConnections>
+    <location x="253" y="289"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.qinsen.inst.saveBusinessOpt</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="business" type="query" value="String" valueType="Primitive" pattern="reference">business</process:inputVariable>
+        <process:inputVariable id="1" name="opt" type="query" value="String" valueType="Primitive" pattern="reference">opt</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="205" y="324"/>
+    <figSize height="20" width="122"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign10" name="赋值10" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link40" name="link40" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign10</sourceNode>
+      <targetNode>subprocess3</targetNode>
+    </sourceConnections>
+    <targetConnections>link30</targetConnections>
+    <location x="252" y="218"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign10label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">裁膜已裁完记录</process:from>
+      <process:to type="query">business</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">tumo/recordId</process:from>
+      <process:to type="query">opt</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign10label" name="label" nodeType="label">
+    <location x="242" y="254"/>
+    <figSize height="20" width="49"/>
+    <node>assign10</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="dafu" createTime="2024-02-02 15:53:41" date="2024-02-02Z" description="" name="saveCaidemo" version="6.3"/>
@@ -779,6 +836,8 @@
     <process:variable description="" historyStateLocation="client" isArray="false" name="planDate" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.component.KsComponentPlanDay" name="planDay"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="pkid" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="business" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="opt" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.keensen.ump.qinsen.inst.InstCaidiemo" name="entity"/>

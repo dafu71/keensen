@@ -286,7 +286,9 @@ LEFT JOIN v_KS_COMPONENT_MP_SELECT t66
 ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID 
   where 1=1
   
-  <isNotNull prepend="and" property="batchNoStr">T1.BATCH_NO in($batchNoStr$)</isNotNull>
+  
+   <isNotNull prepend="and" property="isCutOver">t8.IS_CUT_OVER = #isCutOver#</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">T1.BATCH_NO in($batchNoStr$)</isNotNull>
         <!--
 	SELECT T1.ID AS "id",t1.confirm_Status "confirmStatus",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",

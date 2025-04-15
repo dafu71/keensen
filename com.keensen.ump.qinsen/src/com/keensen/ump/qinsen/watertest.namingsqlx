@@ -156,7 +156,7 @@
           FROM QINSEN.INST_WATER_TEST  A,
                QINSEN.INST_QIJIAN      Q,
                (select jm.*,bs.hpmc from QINSEN.INST_JUANMO_MAIN jm
-				LEFT JOIN (select * from ks_prod_component_yxorder where order_no not in('研发实验')) od
+				LEFT JOIN (select * from ks_prod_component_yxorder where order_no not in('研发实验','生管试卷')) od
 				ON jm.order_no=od.order_no AND jm.prod_spec_id=od.mater_spec_id
 				LEFT JOIN ks_component_yxorder_base bs
 				ON bs.id=od.base_id) J

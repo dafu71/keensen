@@ -501,7 +501,13 @@
     
     <delete id="deleteMCConfirm" parameterClass="java.util.HashMap" >
     delete from KS_COMPONENT_YXORDER_MCONFIRM
-    where relation_id = #relationId# 
+    where 1=1
+    <isNotNull prepend="and" property="relationId">
+    relation_id = #relationId# 
+    </isNotNull>
+    <isNotNull prepend="and" property="baseId">
+    base_id = #baseId# 
+    </isNotNull>
     </delete>
     
     <delete id="deleteYxorderStock" parameterClass="java.util.HashMap" >

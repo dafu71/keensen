@@ -69,6 +69,20 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr.prototype.initEvent = func
 				// Ext.getCmp('jmCodeComb')
 				// .setValue(this.jmcombo.myvalue);
 			}, this);
+			
+	this.listPanel.store.on('load', function() {
+				var records = _this.listPanel.store.getRange();
+				var r = records[0];
+				var jmCount = r.get('jmCount');
+				var realityCount = r.get('realityCount');
+				var rate = r.get('rate');
+				Ext.getCmp(jmCountId).setValue('计划卷膜合计:'
+								+ jmCount);
+				Ext.getCmp(realityCountId).setValue('实际卷膜合计:'
+								+ realityCount);
+				Ext.getCmp(rateId).setValue('计划完成率:'
+								+ rate);
+			})
 }
 
 com.keensen.ump.produce.component.workorder.jmdutyMgr.prototype.saveBatchNoJm = function(

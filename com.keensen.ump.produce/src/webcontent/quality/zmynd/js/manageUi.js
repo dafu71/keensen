@@ -1,5 +1,7 @@
 com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 	this.initPanel = function() {
+
+		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
@@ -13,21 +15,39 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 				});
 	}
 
+	this.initStore = function() {
+		this.psfStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['30', '30'], ['40', '40']]
+				});
+	}
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 80,
 					columns : 1,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【铸膜液粘度质检标准查询】',
+					// title : '【铸膜液粘度质检标准查询】',
 					fields : [{
-								xtype : 'textfield',
-								name : 'condition/psf',
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '产品类型',
+								ref : '../psf',
+								hiddenName : 'condition/psf',
 								anchor : '50%',
-								fieldLabel : '泵速PSF'
-
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.psfStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.psf.reset()
+									}
+								}
 							}]
 				});
 
@@ -40,7 +60,7 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【铸膜液粘度质检标准列表】',
+			// title : '【铸膜液粘度质检标准列表】',
 			viewConfig : {
 				forceFit : true
 			},
@@ -65,10 +85,10 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 			delUrl : 'com.keensen.ump.produce.quality.quality2.deleteZmyViscosityStand.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'psf',
-						header : '泵速PSF'
+						header : '产品类型'
 					}, {
 						dataIndex : 'stand',
-						header : '标准cp'
+						header : '粘度标准范围'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality2.queryZmyViscosityStand.biz.ext',
@@ -88,8 +108,9 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 			})
 		})
 	}
-	
+
 	this.initInputWindow = function() {
+		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增铸膜液粘度质检标准',
 			height : 600,
@@ -104,13 +125,31 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 				columns : 1,
 				saveUrl : 'com.keensen.ump.produce.quality.quality2.saveZmyViscosityStand.biz.ext',
 				fields : [{
-							xtype : 'textfield',
-							fieldLabel : '泵速PSF',
-							name : 'entity/psf',
-							allowBlank : false,
-							readOnly : false,
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '产品类型',
+							ref : '../../psf',
+							hiddenName : 'entity/psf',
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							store : this.psfStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.psf.reset()
+								},
+								"select" : function(combo, record, index) {
+									var psf = combo.getValue();
+									var stand = psf == '30'
+											? '380-500'
+											: '500-600'
+									_this.inputWindow.stand.setValue(stand);
+								}
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -118,7 +157,8 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 						}, {
 							xtype : 'textfield',
 							name : 'entity/stand',
-							fieldLabel : '标准cp',
+							ref : '../../stand',
+							fieldLabel : '粘度标准范围',
 							allowBlank : false,
 							anchor : '95%',
 							colspan : 1
@@ -128,6 +168,8 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 	}
 
 	this.initEditWindow = function() {
+
+		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '修改铸膜液粘度质检标准',
 			height : 600,
@@ -143,14 +185,32 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 				loadUrl : 'com.keensen.ump.produce.quality.quality2.expandZmyViscosityStand.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.quality2.saveZmyViscosityStand.biz.ext',
 				fields : [{
-							xtype : 'textfield',
-							fieldLabel : '泵速PSF',
-							name : 'entity/psf',
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '产品类型',
+							ref : '../../psf',
+							hiddenName : 'entity/psf',
 							dataIndex : 'psf',
-							allowBlank : false,
-							readOnly : false,
 							anchor : '95%',
-							colspan : 1
+							colspan : 1,
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							store : this.psfStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.editWindow.psf.reset()
+								},
+								"select" : function(combo, record, index) {
+									var psf = combo.getValue();
+									var stand = psf == '30'
+											? '380-500'
+											: '500-600'
+									_this.editWindow.stand.setValue(stand);
+								}
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -158,8 +218,9 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 						}, {
 							xtype : 'textfield',
 							name : 'entity/stand',
+							ref : '../../stand',
 							dataIndex : 'stand',
-							fieldLabel : '标准cp',
+							fieldLabel : '粘度标准范围',
 							allowBlank : false,
 							anchor : '95%',
 							colspan : 1

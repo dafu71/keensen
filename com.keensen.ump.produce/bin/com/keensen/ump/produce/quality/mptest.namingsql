@@ -165,12 +165,15 @@
        T2.STATE          AS "state",
        T2.mptype          AS "mptype",
        T2.STEP           AS "step",t2.machine "machine",t2.concentration "concentration",
-       case when T2.mptype = 'SW' or T2.mptype = 'BW' or T2.mptype = 'ULP' then '380~500cp'
+       <!--case when T2.mptype = 'SW' or T2.mptype = 'BW' or T2.mptype = 'ULP' then '380~500cp'
        	when T2.mptype = 'ULP5-1' then '500~600cp'
-       	else '' end "std"
+       	else '' end "std"<-->
+       	std.stand "std"
   FROM KS_QUALITY_MP_TEST_ZMY_LIST T1
-  LEFT JOIN KS_QUALITY_MP_TEST_ZMY_HEAD T2
+  LEFT JOIN KS_QUALITY_MP_TEST_ZMY_HEAD T2  
     ON T1.RELATION_ID = T2.ID
+  left join KS_QUALITY_ZMY_VISCOSITY_STAND std
+    on std.psf = T2.mptype
 		 where 1=1
 		  <isNotNull prepend="and" property="id">t1.ID = #id#</isNotNull>
         <isNotNull prepend="and" property="relationId">t2.ID = #relationId#</isNotNull>

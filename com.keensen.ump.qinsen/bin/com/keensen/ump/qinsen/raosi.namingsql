@@ -69,6 +69,7 @@
         <isNotNull prepend="" property="prodSpecId">AND Q.PROD_SPEC_ID = #prodSpecId#</isNotNull>
         <isNotNull prepend="" property="juanMoBatchId">AND J.RECORD_ID = #juanMoBatchId#</isNotNull>
         <isNotNull prepend="" property="juanMoBatchNo">AND J.BATCH_NO = UPPER(#juanMoBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="scanNo">AND (A.BATCH_NO = UPPER(#scanNo#) or J.BATCH_NO = UPPER(#scanNo#))</isNotNull>
         <isNotNull prepend="" property="tumoBatchId">AND EXISTS
 		 (SELECT 1
 	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C

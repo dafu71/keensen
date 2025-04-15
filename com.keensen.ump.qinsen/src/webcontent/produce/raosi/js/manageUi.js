@@ -247,6 +247,10 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 
 	this.initRaosiAddWindow = function() {
 		var _this = this;
+		
+		var audio; // 预定义音频对象
+		var audio2; // 预定义音频对象
+		
 		this.raosiAddWindow = this.raosiAddWindow || new Ext.fn.FormWindow({
 			title : '绕丝记录-录入',
 			height : 600,
@@ -259,7 +263,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 				xtype : 'inputpanel',
 				pgrid : this.listPanel,
 				columns : 6,
-				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord2.biz.ext',
+				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord3.biz.ext',
 				successFn : function(i, r) {
 					if (r.err != '0') {
 						Ext.Msg.show({
@@ -269,6 +273,13 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 									icon : Ext.Msg.WARNING,
 									buttons : Ext.Msg.OK,
 									fn : function() {
+										_this.raosiAddWindow.batchNo.setValue('');
+										_this.raosiAddWindow.batchNo.focus();
+										if (!audio) {
+                							audio = new Audio('qinsen/produce/raosi/fail.mp3');
+            							}
+										
+						 				audio.play().catch(error => console.log('播放失败:', error));
 										// _this.qijianAddWindow.hide();
 									}
 								})
@@ -276,8 +287,12 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						_this.listPanel.store.baseParams = _this.queryPanel
 								.getForm().getValues();
 						_this.listPanel.store.load();
+						if (!audio2) {
+							audio2 = new Audio('qinsen/produce/raosi/success.mp3');
+            			}
+						 audio2.play().catch(error => console.log('播放失败:', error));
 						// _this.raosiAddWindow.hide();
-						_this.raosiAddWindow.batchNo.reset();
+						_this.raosiAddWindow.batchNo.setValue('');
 						_this.raosiAddWindow.produceDt.setValue(new Date());
 						_this.raosiAddWindow.remark.reset();
 						_this.raosiAddWindow.orderType.setValue('');
@@ -291,7 +306,8 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						_this.raosiAddWindow.makeLabel.setValue('');
 						_this.raosiAddWindow.labelDouble.setValue('');
 						_this.raosiAddWindow.labelDrawingCode.setValue('');
-						_this.raosiAddWindow.batchNo.focus().defer(100);
+						_this.raosiAddWindow.batchNo.setValue('');
+						_this.raosiAddWindow.batchNo.focus();
 						var loadMarsk = new Ext.LoadMask(
 								'produce-raosiaddwindow', {
 									msg : '已提交，为防止重复录入，10秒内不可操作',

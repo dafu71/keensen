@@ -35,9 +35,9 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 					height : 80,
 					columns : 4,
 					border : true,
-					//collapsible : true,
+					// collapsible : true,
 					titleCollapse : false,
-					//title : '【膜片出库查询】',
+					// title : '【膜片出库查询】',
 					fields : [{
 								xtype : 'storagecombobox',
 								hiddenName : 'condition/storageId',
@@ -78,7 +78,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【膜片出库列表】',
+			// title : '【膜片出库列表】',
 			id : 'outofstock-list',
 			viewConfig : {
 				forceFit : true
@@ -89,12 +89,10 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
-					}, '-', {
-						text : '发货出库',
-						scope : this,
-						iconCls : 'icon-application_add',
-						handler : this.onAdd2
-					}],
+					}/*
+						 * , '-', { text : '发货出库', scope : this, iconCls :
+						 * 'icon-application_add', handler : this.onAdd2 }
+						 */],
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'storageName',
@@ -147,8 +145,8 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 	this.initInputWindow = function() {
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '出库',
-			height : 280,
-			width : 800,
+			height : 500,
+			width : 480,
 			// itemCls:'required',
 			// style:'margin-top:10px',
 			resizable : true,
@@ -168,25 +166,38 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 									buttons : Ext.Msg.OK,
 									fn : function() {
 										currentWindow = 'inputWindow';
-										Ext.getCmp('outofstock-list').store.reload();
+										Ext.getCmp('outofstock-list').store
+												.reload();
 									}
 								})
 					} else {
 						currentWindow = 'inputWindow';
 						Ext.getCmp('outofstock-list').store.reload();
-				
+
 					}
 				},
 				columns : 2,
-				//saveUrl : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock.biz.ext',
+				// saveUrl :
+				// 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.diaphragm.storage.outofstock.outofstock4part.biz.ext',
 				fields : [{
+							xtype : 'dictcombobox',
+							hiddenName : 'outofstock/type',
+							allowBlank : false,
+							fieldLabel : '出库类型',
+							colspan : 2,
+							dictData : OUTOFSTOCK_TYPE
+						}, {
+							xtype : 'displayfield',
+							colspan : 2,
+							height : '5'
+						}, {
 							xtype : 'textfield',
 							name : 'outofstock/batchNo',
 							allowBlank : false,
 							fieldLabel : '批号',
 							ref : '../batchNo',
-							colspan : 1,
+							colspan : 2,
 							listeners : {
 								scope : this,
 								specialkey : function(C, D) {
@@ -198,21 +209,22 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 								}
 							}
 						}, {
-							xtype : 'numberfield',
-							name : 'outofstock/stockAmount',
-							//allowBlank : false,
-							fieldLabel : '库存数量',
-							readOnly : true,
-							colspan : 1
-						}, {
 							xtype : 'displayfield',
 							fieldLabel : ' ',
 							value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 							labelSeparator : '',// 去掉冒号
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
-							colspan : 1
+							colspan : 2,
+							height : '5'
+						}, {
+							xtype : 'numberfield',
+							name : 'outofstock/stockAmount',
+							// allowBlank : false,
+							fieldLabel : '库存数量',
+							readOnly : true,
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							colspan : 2,
@@ -220,18 +232,23 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 						}, {
 							xtype : 'storagecombobox',
 							hiddenName : 'outofstock/storageId',
-							//allowBlank : false,
+							// allowBlank : false,
 							name : 'outofstock/storageId',
 							emptyText : '',
+							colspan : 2,
 							readOnly : true,
 							fieldLabel : '仓库'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
 						}, {
 							xtype : 'numberfield',
 							name : 'outofstock/amount',
 							allowBlank : false,
 							fieldLabel : '出库数量',
 							readOnly : false,
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -239,10 +256,14 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 						}, {
 							xtype : 'textfield',
 							name : 'outofstock/model',
-							///allowBlank : true,
+							// /allowBlank : true,
 							readOnly : true,
 							fieldLabel : '膜片型号',
-							colspan : 1
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
 						}, {
 							xtype : 'combobox',
 							readOnly : true,
@@ -261,7 +282,8 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 							displayField : "myvalue",
 							valueField : "mykey",
 							forceSelection : true,
-							emptyText : ""
+							emptyText : "",
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							colspan : 2,
@@ -273,10 +295,6 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 							allowBlank : true,
 							fieldLabel : '备注',
 							colspan : 2
-						}, {
-							xtype : 'hidden',
-							name : 'outofstock/type',
-							value : '非发货出库'
 						}, {
 							xtype : 'hidden',
 							name : 'outofstock/position'
@@ -309,7 +327,8 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 									buttons : Ext.Msg.OK,
 									fn : function() {
 										currentWindow = 'inputWindow2';
-										Ext.getCmp('outofstock-list').store.reload();
+										Ext.getCmp('outofstock-list').store
+												.reload();
 									}
 								})
 					} else {
