@@ -4,6 +4,7 @@
     <select id="queryYxOrderBase" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
 	SELECT T1.ID AS "id",T1.DELIVERY_STATE "deliveryState",
+	t1.back "back",t1.material "material",
 	T1.mp_spec_id "mpSpecId",pms.mater_spec_name "mpSpecName",
 	TO_CHAR(T1.CHANGE_TIME, 'yyyy-MM-dd') "changeTime",
        T1.CHANGE_USER_ID AS "changeUserId",
@@ -95,7 +96,7 @@
 		t1.TRAY as "tray",
 		t1.TRAY_size as "traySize",t1.seal_position as "sealPosition",t1.seal_amount as "sealAmount",
 		t1.packing_layer as "packingLayer",
-		t1.packing_txt as "packingTxt",t1.hpmc "hpmc",
+		t1.packing_txt as "packingTxt",t1.hpmc "hpmc",t1.pallet as "pallet",
 		t1.goods_with_report as "goodsWithReport",
 		REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(T1.PHOTO_SINGLE,
                                                        '0',
@@ -318,7 +319,7 @@
     where base_id = #baseId#</insert>
     <update id="saveDeliveryStateBatch" parameterClass="java.util.HashMap">update KS_COMPONENT_YXORDER_BASE t
     	set t.delivery_state = decode(nvl(t.delivery_state,'否'),'是','否','是'),
-    	t.change_time = sysdate,t.change_name = #changeName#,t.change_user_id=#changeUserId#
+    	t.change_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
     	where t.id in ($ids$)</update>
     <select id="queryYxOrderMCConfirm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
@@ -413,4 +414,8 @@
 	(select MAX(ID) "confirmId"from KS_COMPONENT_YXORDER_CONFIRM t
 	GROUP BY t.relation_id) 
 	AND t.relation_id=#baseId#</select>
+    <update id="saveCancelStateBatch" parameterClass="java.util.HashMap">update KS_COMPONENT_YXORDER_BASE t
+    	set t.state = '取消订单',
+    	t.update_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
 </sqlMap>

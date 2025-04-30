@@ -79,7 +79,7 @@
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030024,100030025,100030023,100030022)
 	AND t.mater_spec_name IN('ULP1-1','ULP2-1','ULP3-1','ULP4-1','ULP5-1',
-  'ULP6-1','BW1-1','BW2-1','BW3-1','HW1-1','SW1-1','SW2-1','SW3-1','NF1','NF2','NF1-R','ULP1-2'
+  'ULP6-1','BW1-1','BW2-1','BW3-1','HW1-1','HW1-2','SW1-1','SW2-1','SW3-1','NF1','NF2','NF1-R','ULP1-2'
   ,'ULP2-2','SW4-1','ULP3-2','NF2-1','NF1-1','ULP1-2','HW3-1','HW4-1','HW2-1')
    ORDER BY t.mater_spec_name
      </select>
@@ -100,6 +100,7 @@
 		t.prop_value_id "id",t.prop_value_name "name"
 		 from qinsen.CONF_PROP_VALUE_OPTION t
 		    where t.prop_id = 30023
+		    and t.prop_value_id != 300030
      </select>
      
       <!-- 元件型号查询 -->

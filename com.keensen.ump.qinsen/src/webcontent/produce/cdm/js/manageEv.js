@@ -316,6 +316,9 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 
 	this.inputWindow.tumoBatchNo.setVisible(true);
 	this.inputWindow.tumoBatchNo.setDisabled(false);
+	
+	this.inputWindow.pageType.setVisible(false);
+	this.inputWindow.pageType.setDisabled(true);
 
 	this.onPlan();
 
@@ -574,6 +577,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	this.inputWindow.tumoBatchNo.setDisabled(true);
 
 	this.inputWindow.orderNo.setReadOnly(false);
+	
+	this.inputWindow.pageType.setVisible(true);
+	this.inputWindow.pageType.setDisabled(false);
+	
 	this.inputWindow.show();
 }
 

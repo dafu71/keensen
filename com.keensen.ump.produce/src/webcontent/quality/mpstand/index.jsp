@@ -25,6 +25,8 @@
 </script>
  <ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
   <ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
+  
+  <js:load scriptPath="pub/common/lineCombo.js" />
 <js:load scriptPath="pub/common/mpspecCombo.js" />
 <js:load scriptPath="pub/common/mpperfCombo.js" />
 <js:load scriptPath="produce/quality/mpstand/js/manageUi.js"/>

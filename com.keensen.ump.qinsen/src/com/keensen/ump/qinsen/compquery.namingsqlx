@@ -301,10 +301,50 @@
 	       T1.OUT_LENGTH,
 	       T2.CAIMO_LENGTH,
 	       T3.CAIMO_LOSS,
+	       	       
 	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
 	       NVL(T3.CAIMO_LOSS, 0) "remainLength"
-	  FROM QINSEN.INST_TUMO T1
-	  LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,
+	  
+	       <!--1.已裁完选择“是”
+				2.膜片不良记录有裁叠膜录入不良记录-->
+	  FROM (SELECT * from QINSEN.INST_TUMO tm
+			WHERE tm.is_cut_over='Y'
+			
+			 <isNotNull prepend = ""  property = "produceDtStart">
+			 and to_char(tm.produce_dt,'yyyy-MM-dd HH24:mi') >= #produceDtStart#
+			 </isNotNull>
+			 
+			  <isNotNull prepend = ""  property = "produceDtEnd">
+			 and to_char(tm.produce_dt,'yyyy-MM-dd HH24:mi') &lt;= #produceDtEnd#
+			 </isNotNull>
+			
+			
+			 <isEqual prepend = ""  property = "flag" compareValue="1">
+			 <isNotNull prepend = ""  property = "tmProduceDt">
+			 and to_char(tm.produce_dt,'yyyy-MM-dd') >= to_char(to_date(#tmProduceDt#,'yyyy-MM-dd')-30,'yyyy-MM-dd')
+			 and to_char(tm.produce_dt,'yyyy-MM-dd') &lt;= #tmProduceDt#
+			 </isNotNull>
+			 
+			  <isNull prepend = ""  property = "tmProduceDt">
+			 and to_char(tm.produce_dt,'yyyy-MM-dd') >= to_char(sysdate-30,'yyyy-MM-dd')
+			 </isNull>
+			</isEqual>
+			
+			<isEqual prepend = ""  property = "flag" compareValue="2">
+			 
+			 and to_char(tm.produce_dt,'yyyy-MM-dd') >= '2025-04-01'
+			
+			</isEqual>
+			
+			<isEqual prepend = ""  property = "flag" compareValue="3">
+			 
+			 and to_char(tm.produce_dt,'yyyy-MM-dd') >= '2025-04-01'
+			 
+			</isEqual>
+			AND EXISTS (SELECT dd.tumo_batch_id from QINSEN.INST_CDM_DEFECT dd
+			LEFT JOIN qinsen.para_cdm_defect pd ON dd.defect_item_id=pd.record_id
+			WHERE pd.rec_tache_id=101 AND tm.record_id=dd.tumo_batch_id)) T1
+	  LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
 	                    C.TUMO_BATCH_ID
 	               FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
 	              WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
@@ -315,6 +355,49 @@
 	              GROUP BY D.TUMO_BATCH_ID) T3
 	    ON T3.TUMO_BATCH_ID = T1.RECORD_ID
 	    where 1=1
+	    
+	    <isEqual prepend = ""  property = "flag" compareValue="1">
+		   AND (
+         (   
+             NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) &lt;= -10
+          ) 
+          OR 
+         (  NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) >= 10 
+         )
+       )
+	       
+		</isEqual>
+		
+		<isEqual prepend = ""  property = "flag" compareValue="2">
+		   AND (
+		 		NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)>= 50
+	       		 
+	       		or
+	       		 
+	       	  	NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)&lt;= -50
+	       		 
+			)
+	       
+		</isEqual>
+		
+		<isEqual prepend = ""  property = "flag" compareValue="3">
+		    AND (
+		 		NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)>= 100
+	       		 
+	       		or
+	       		 
+	       	  	NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)&lt;= -100
+	       		 
+			)
+	       
+		</isEqual>
+		
+		<isEqual prepend = ""  property = "flag" compareValue="0">
+		    AND 1=2
+	       
+		</isEqual>
+	    
+	    
 	    <isEqual prepend = ""  property = "condition" compareValue="1">
 		  AND ((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
 	       NVL(T3.CAIMO_LOSS, 0))>= 50
@@ -339,9 +422,34 @@
 	       NVL(T3.CAIMO_LOSS, 0))&lt;= -3))
 	       
 		</isEqual>
-	    order by NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+		
+		
+	    order by produce_dt desc, NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
 	       NVL(T3.CAIMO_LOSS, 0) desc
 	    
 
 </select> 
+
+<!--一级 -50<x<=-10  or 0<x<50  '王正娥','蒋滔','李长林','李雅琪','周波','何选鹏','张博宁'-->
+<!--二级 x>=50 or x<=-50 '王金铁'，'唐学军','李卓','梁彪','罗啸'-->
+ <!--三级 x>=100 or x<=-100 '焦朝凤','罗海鹰'-->
+<select id="queryRemainLengthLimit" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	select #userId# "userId",case when #userId# in('KS00420','KS00141','KS00388','KS00866','KS00867','XXB','KS00500','KS01295')
+ 		then '1'	 
+	  	when #userId# in('KS00880','KS00017','KS01374','KS00524','KS00517')
+ 		then '2'
+  		when #userId# in('LHY','KS00610')
+ 		then '3'
+ 		else '0'
+ 		end "flag"
+ 	from dual
+</select> 
+
+<select id="queryRemainLengthUser" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+
+	select v.operatorname "userName",v.userid "userId" from T_AC_OPERATORROLE t
+	LEFT JOIN v_ac_operator_trs v
+	ON t.operatorid=v.operatorid
+	WHERE t.roleid=10001381
+</select>
 </sqlMap>

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="printMarks4PreView" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3" state="stateless">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tActionLink" id="link0" name="link0" lineType="reference" isDefault="true" type="action" actionName="action0" dataConvertClass="">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+      <process:validateRules errorPage="" onError="default"/>
+      <process:inputParameters>
+        <process:parameter anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="list"/>
+        <process:parameter anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="condition"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="drawingCode" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="code" primitiveType="String"/>
+      </process:inputParameters>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
+    <targetConnections>link23</targetConnections>
+    <targetConnections>link19</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link17</targetConnections>
+    <targetConnections>link21</targetConnections>
+    <nodeLabel>end0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view0" name="printMarks.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link1" name="link1" lineType="reference" isDefault="true" type="action" actionName="action1">
+      <sourceNode>view0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link4</targetConnections>
+    <nodeLabel>view0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view0label" name="label" nodeType="label">
+    <figSize height="20" width="105"/>
+    <node>view0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>subprocess1</targetNode>
+    </sourceConnections>
+    <targetConnections>link0</targetConnections>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">drawingCode</process:from>
+      <process:to type="query">condition/drawingCode2</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view1" name="printMarks2.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks2.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link6" name="link6" lineType="reference" isDefault="true" type="action" actionName="action2">
+      <sourceNode>view1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link5</targetConnections>
+    <nodeLabel>view1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view1label" name="label" nodeType="label">
+    <figSize height="20" width="114"/>
+    <node>view1</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view2" name="printMarks1.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks1.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link8" name="link8" lineType="reference" isDefault="true" type="action" actionName="action3">
+      <sourceNode>view2</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <nodeLabel>view2label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view2label" name="label" nodeType="label">
+    <figSize height="20" width="114"/>
+    <node>view2</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view3" name="printMarks3.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks3.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link10" name="link10" lineType="reference" isDefault="true" type="action" actionName="action4">
+      <sourceNode>view3</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <nodeLabel>view3label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view3label" name="label" nodeType="label">
+    <figSize height="20" width="114"/>
+    <node>view3</node>
+  </nodes>
+  <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" type="switch">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" isDefault="true" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"/>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" isDefault="false" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view2</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">11</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link5" name="link5" isDefault="false" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">2</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" isDefault="false" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">3</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link14" name="link14" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">4</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view5</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">5</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view6</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">6</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link20" name="link20" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view7</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">7</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link22" name="link22" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>view8</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">8</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link24" name="link24" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">999</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link25</targetConnections>
+    <nodeLabel>switch1label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
+    <figSize height="20" width="55"/>
+    <node>switch1</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view4" name="printMarks4.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks4.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link15" name="link15" lineType="reference" isDefault="true" type="action" actionName="action5">
+      <sourceNode>view4</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link14</targetConnections>
+    <nodeLabel>view4label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view4label" name="label" nodeType="label">
+    <figSize height="20" width="114"/>
+    <node>view4</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view5" name="printMarks5.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks5.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link17" name="link17" lineType="reference" isDefault="true" type="action" actionName="action6">
+      <sourceNode>view5</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <nodeLabel>view5label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view5label" name="label" nodeType="label">
+    <figSize height="20" width="114"/>
+    <node>view5</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view6" name="printMarks6.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks6.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link19" name="link19" lineType="reference" isDefault="true" type="action" actionName="action7">
+      <sourceNode>view6</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link18</targetConnections>
+    <nodeLabel>view6label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view6label" name="label" nodeType="label">
+    <figSize height="20" width="114"/>
+    <node>view6</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view7" name="printMarks7.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks7.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link21" name="link21" lineType="reference" isDefault="true" type="action" actionName="action8">
+      <sourceNode>view7</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link20</targetConnections>
+    <nodeLabel>view7label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view7label" name="label" nodeType="label">
+    <figSize height="20" width="114"/>
+    <node>view7</node>
+  </nodes>
+  <nodes xsi:type="process:tView" id="view8" name="printMarks8.jsp" type="view" contributionName="com.keensen.ump.produce" uri="/produce/component/markprint/printMarks8.jsp">
+    <sourceConnections xsi:type="process:tActionLink" id="link23" name="link23" lineType="reference" isDefault="true" type="action" actionName="action9">
+      <sourceNode>view8</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link22</targetConnections>
+    <nodeLabel>view8label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="view8label" name="label" nodeType="label">
+    <figSize height="20" width="114"/>
+    <node>view8</node>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end1" name="结束1" type="end" contextPath="" method="forward" uri="/produce/component/markprint/printProdMarks4PreView.jsp">
+    <targetConnections>link24</targetConnections>
+    <targetConnections>link11</targetConnections>
+    <nodeLabel>end1label</nodeLabel>
+    <process:inputVariables/>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end1label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>end1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign1" name="赋值1" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>switch1</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">K1234567890</process:from>
+      <process:to type="query">list[1]/prodBatchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">干</process:from>
+      <process:to type="query">list[1]/dryWet</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">LEDI-XLP-8040</process:from>
+      <process:to type="query">list[1]/prodSpecName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">list[1]/code</process:from>
+      <process:to type="query">code</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess1" name="queryMarkDrawing" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link3" name="link3" isDefault="true" type="transition">
+      <sourceNode>subprocess1</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>subprocess1label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.base.paramaterspec.queryMarkDrawing</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="condition" type="query" value="java.util.Map" valueType="Java" pattern="reference">condition</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="data" type="query" value="commonj.sdo.DataObject[]" valueType="Java">list</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess1label" name="label" nodeType="label">
+    <figSize height="20" width="140"/>
+    <node>subprocess1</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="6.3"/>
+</process:tPageFlow>

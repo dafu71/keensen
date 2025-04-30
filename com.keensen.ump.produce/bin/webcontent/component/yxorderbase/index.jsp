@@ -78,6 +78,8 @@ var markRootUrl = "<%=rootUrl %>";
   var mConfirm = "<%=mConfirm %>";
   var userName = "<%=userName %>";
   var allRight = "<%=allRight %>";
+  
+  var exportButton = Ext.id();
  
   var opt = '';
   FunctionMgr.load({ 

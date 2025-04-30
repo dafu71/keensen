@@ -18,15 +18,15 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link21</targetConnections>
-    <targetConnections>link17</targetConnections>
-    <targetConnections>link6</targetConnections>
-    <targetConnections>link1</targetConnections>
-    <targetConnections>link8</targetConnections>
-    <targetConnections>link10</targetConnections>
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link19</targetConnections>
     <targetConnections>link23</targetConnections>
+    <targetConnections>link19</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link17</targetConnections>
+    <targetConnections>link21</targetConnections>
     <location x="600" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -298,6 +298,16 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link25" name="link25" displayName="连接线" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">999</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link12</targetConnections>
     <targetConnections>link13</targetConnections>
     <location x="290" y="233"/>
@@ -386,6 +396,7 @@
   </nodes>
   <nodes xsi:type="process:tEnd" description="" id="end1" name="结束1" displayName="结束" type="end" contextPath="" method="forward" uri="/produce/component/markprint/printProdMarks.jsp">
     <targetConnections>link24</targetConnections>
+    <targetConnections>link25</targetConnections>
     <location x="147" y="443"/>
     <size height="28" width="28"/>
     <nodeLabel>end1label</nodeLabel>
@@ -400,4 +411,5 @@
   <topRuler/>
   <leftRuler/>
   <process:info author="dafu" createTime="2024-06-28 14:43:54" date="2024-06-28Z" description="" name="printMarks" version="6.3"/>
+  <process:variables/>
 </process:tPageFlow>

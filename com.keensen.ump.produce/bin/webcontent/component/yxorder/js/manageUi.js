@@ -1952,8 +1952,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									 * {// 当输入框删除内容后，清除过滤器， //
 									 * 显示原本store数据,使其能够再次检索
 									 * combo.store.clearFilter();
-									 * combo.expand();
-									 *  } else { if (!e.forceAll) {
+									 * combo.expand(); } else { if (!e.forceAll) {
 									 * 
 									 * combo.store.clearFilter();//
 									 * 使每次输入都能进行检索，不用担心输入过慢 var input = e.query; //
@@ -2135,6 +2134,20 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							onTriggerClick : function() {
 								_this.onChoose4Mark(1);
 							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/dryWet',
+							ref : '../../dryWet',
+							dataIndex : 'dryWet',
+							fieldLabel : '干/湿',
+							allowBlank : false,
+							value : '干',
+							anchor : '80%',
+							colspan : 2
 						}, {
 							name : 'entity/materSpecName2',
 							ref : '../../materSpecName2',

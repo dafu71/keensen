@@ -25,8 +25,110 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 				});
 		this.isWxStore = new Ext.data.ArrayStore({
 					fields : ['id', 'name'],
-					data : [['Y', '是'], ['N', '否']]
+					data : [['Y', '是'], ['N', '否'], ['A', '全部']]
 				});
+
+		this.macNameStore = new Ext.data.ArrayStore({
+					fields : ['id', 'name'],
+					data : [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'],
+							['5', '5'], ['6', '6'], ['7', '7']]
+				});
+
+		this.lineStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.base.base.qryLineOption.biz.ext',
+					root : 'data',
+					autoLoad : true,
+					baseParams : {
+						'condition/prodTacheId' : 100
+					},
+					fields : [{
+								name : "id"
+							}, {
+								name : "name"
+							}, {
+								name : "code"
+							}]
+				});
+		var _this = this;
+		
+		this.linecombo = new Ext.form.ComboBox({
+			store : this.lineStore,
+			allowBlank : false,
+			anchor : '95%',
+			colspan : 2,
+			fieldLabel : '生产线',
+			displayField : 'name',
+			valueField : 'id',
+			myvalue : '',
+			typeAhead : true,
+			mode : 'local',
+			// name : 'condition/storageIds',
+			// hiddenName: 'entity/lineIds',
+			tpl : '<tpl for="."><div class="x-combo-list-item"><span><input id="lineItem{[values.id]}" type="checkbox" {[values.check?"checked":""]} value="{[values.id]}" /></span><span >{name}</span></div></tpl>',
+			
+			triggerAction : 'all',
+			emptyText : '--请选择--',
+			selectOnFocus : true,
+
+			onSelect : function(record, index) {
+				if (_this.linecombo.fireEvent('beforeselect', _this.linecombo,
+						record, index) !== false) {
+					record.set('check', !record.get('check'));
+					var str = [];// 页面显示的值
+					var strvalue = [];// 传入后台的值
+					_this.linecombo.store.each(function(rc) {
+								if (rc.get('check')) {
+									str.push(rc.get('name'));
+									strvalue.push(rc.get('id'));
+								}
+							});
+					_this.linecombo.setValue(str.join());
+					_this.linecombo.myvalue = strvalue.join();
+					_this.linecombo.fireEvent('select', _this.linecombo,
+							record, index);
+				}
+			}
+		});
+
+		
+
+		this.macnamecombo = new Ext.form.ComboBox({
+			store : this.macNameStore,
+			allowBlank : false,
+			anchor : '95%',
+			colspan : 1,
+			fieldLabel : '测试台',
+			displayField : 'name',
+			valueField : 'id',
+			myvalue : '',
+			typeAhead : true,
+			mode : 'local',
+			// name : 'condition/storageIds',
+			hiddenName : 'entity/macNames',
+			tpl : '<tpl for="."><div class="x-combo-list-item"><span><input type="checkbox" id="macItem{[values.id]}" {[values.check?"checked":""]} value="{[values.id]}" /></span><span >{name}</span></div></tpl>',
+			triggerAction : 'all',
+			emptyText : '--请选择--',
+			selectOnFocus : true,
+
+			onSelect : function(record, index) {
+				if (_this.macnamecombo.fireEvent('beforeselect',
+						_this.macnamecombo, record, index) !== false) {
+					record.set('check', !record.get('check'));
+					var str = [];// 页面显示的值
+					var strvalue = [];// 传入后台的值
+					_this.macnamecombo.store.each(function(rc) {
+								if (rc.get('check')) {
+									str.push(rc.get('name'));
+									strvalue.push(rc.get('id'));
+								}
+							});
+					_this.macnamecombo.setValue(str.join());
+					_this.macnamecombo.myvalue = strvalue.join();
+					_this.macnamecombo.fireEvent('select', _this.macnamecombo,
+							record, index);
+				}
+			}
+		});
 
 		this.initInputWindow();
 		this.initEditWindow();
@@ -84,8 +186,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			// title : '【膜片质检标准列表】',
@@ -115,7 +216,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 						handler : this.onThickStand
 					}],
 			selModel : selModel,
-			delUrl : 'com.keensen.ump.produce.quality.quality.deleteMpStand.biz.ext',
+			delUrl : 'com.keensen.ump.produce.quality.quality.deleteBatchMpStand.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'specName',
 						header : '膜片型号'
@@ -131,6 +232,9 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 					}, {
 						dataIndex : 'macName',
 						header : '测试台'
+					}, {
+						dataIndex : 'lineName',
+						header : '生产线'
 					}, {
 						dataIndex : 'method',
 						header : '首/复检'
@@ -178,6 +282,10 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 							name : 'testSolid'
 						}, {
 							name : 'isWxName'
+						}, {
+							name : 'lineId'
+						}, {
+							name : 'lineName'
 						}]
 			})
 		})
@@ -197,7 +305,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 				xtype : 'inputpanel',
 				pgrid : this.listPanel,
 				columns : 2,
-				saveUrl : 'com.keensen.ump.produce.quality.quality.saveMpStand.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.quality.saveMpStands.biz.ext',
 				fields : [{
 							xtype : 'mpspeccombobox',
 							allowBlank : false,
@@ -374,23 +482,13 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'textfield',
-							name : 'entity/macName',
-							allowBlank : false,
-							fieldLabel : '测试台',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'textfield',
+							ref : '../../testSolid',
 							value : 'NaCL溶液',
 							name : 'entity/testSolid',
 							allowBlank : false,
 							fieldLabel : '测试溶液',
 							anchor : '95%',
 							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
 						}, {
 							xtype : 'combobox',
 							name : 'entity/method',
@@ -414,28 +512,6 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 								}
 							}
 						}, {
-							xtype : 'combobox',
-							name : 'entity/isWx',
-							hiddenName : 'entity/isWx',
-							// allowBlank : false,
-							fieldLabel : '是否外销',
-							typeAhead : true,
-							triggerAction : 'all',
-							lazyRender : true,
-							mode : 'local',
-							editable : false,
-							store : this.isWxStore,
-							valueField : 'id',
-							displayField : 'name',
-							anchor : '95%',
-							colspan : 1,
-							emptyText : '--请选择--',
-							listeners : {
-								"expand" : function(A) {
-									this.reset()
-								}
-							}
-						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
@@ -443,6 +519,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 							xtype : 'combobox',
 							name : 'entity/state',
 							hiddenName : 'entity/state',
+							ref : '../../state',
 							allowBlank : false,
 							value : 'Y',
 							fieldLabel : '状态',
@@ -473,6 +550,40 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 							fieldLabel : '备注',
 							anchor : '95%',
 							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>批量选择</span>",
+							colspan : 2
+						}, this.macnamecombo, {
+							xtype : 'combobox',
+							name : 'entity/isWxs',
+							hiddenName : 'entity/isWxs',
+							allowBlank : false,
+							fieldLabel : '是否外销',
+							typeAhead : true,
+							triggerAction : 'all',
+							lazyRender : true,
+							mode : 'local',
+							editable : false,
+							store : this.isWxStore,
+							valueField : 'id',
+							displayField : 'name',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, this.linecombo, {
+							name : 'entity/lineIds',
+							xtype : 'hidden',
+							ref : '../../lineIds'
 						}]
 			}]
 		});
@@ -750,6 +861,14 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
+							xtype : 'linecombobox',
+							prodTacheId : '100',
+							hiddenName : 'entity/lineId',
+							dataIndex : 'lineId',
+							anchor : '95%',
+							colspan : 1,
+							fieldLabel : '生产线 '
+						}, {
 							xtype : 'combobox',
 							name : 'entity/state',
 							hiddenName : 'entity/state',
@@ -764,8 +883,8 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 							store : this.stateStore,
 							valueField : 'id',
 							displayField : 'name',
-							anchor : '48%',
-							colspan : 2,
+							anchor : '95%',
+							colspan : 1,
 							emptyText : '--请选择--',
 							listeners : {
 								"expand" : function(A) {

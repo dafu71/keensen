@@ -109,85 +109,6 @@
             <column length="500" name="RELATION_ID"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.quality.KsProdDiaphragmStand" table="KS_PROD_DIAPHRAGM_STAND">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="recordId" type="int">
-            <column length="9" name="RECORD_ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="specId" type="int">
-            <column length="9" name="SPEC_ID"/>
-        </property>
-        <property name="state" type="string">
-            <column default="'Y'" length="1" name="STATE"/>
-        </property>
-        <property name="levelId" type="int">
-            <column length="9" name="LEVEL_ID"/>
-        </property>
-        <property name="gfdLowSymbol" type="string">
-            <column length="20" name="GFD_LOW_SYMBOL"/>
-        </property>
-        <property name="gfdLowLimit" type="string">
-            <column length="20" name="GFD_LOW_LIMIT"/>
-        </property>
-        <property name="gfdUpSymbol" type="string">
-            <column length="20" name="GFD_UP_SYMBOL"/>
-        </property>
-        <property name="gfdUpLimit" type="string">
-            <column length="20" name="GFD_UP_LIMIT"/>
-        </property>
-        <property name="saltLowSymbol" type="string">
-            <column length="20" name="SALT_LOW_SYMBOL"/>
-        </property>
-        <property name="saltLowLimit" type="string">
-            <column length="20" name="SALT_LOW_LIMIT"/>
-        </property>
-        <property name="saltUpSymbol" type="string">
-            <column length="20" name="SALT_UP_SYMBOL"/>
-        </property>
-        <property name="saltUpLimit" type="string">
-            <column length="20" name="SALT_UP_LIMIT"/>
-        </property>
-        <property name="createDt" type="date">
-            <column name="CREATE_DT"/>
-        </property>
-        <property name="changeDt" type="date">
-            <column name="CHANGE_DT"/>
-        </property>
-        <property name="creatorId" type="string">
-            <column length="20" name="CREATOR_ID"/>
-        </property>
-        <property name="changerId" type="string">
-            <column length="20" name="CHANGER_ID"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="specName2" type="string">
-            <column length="50" name="SPEC_NAME2"/>
-        </property>
-        <property name="specName" type="string">
-            <column length="50" name="SPEC_NAME"/>
-        </property>
-        <property name="levelName" type="string">
-            <column length="50" name="LEVEL_NAME"/>
-        </property>
-        <property name="macName" type="string">
-            <column length="20" name="MAC_NAME"/>
-        </property>
-        <property name="testSolid" type="string">
-            <column length="20" name="TEST_SOLID"/>
-        </property>
-        <property name="isWx" type="string">
-            <column length="20" name="IS_WX"/>
-        </property>
-        <property name="method" type="string">
-            <column length="20" name="METHOD"/>
-        </property>
-        <property name="specId2" type="int">
-            <column length="9" name="SPEC_ID2"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.quality.KsProdDiaphragmTumoCheck" table="KS_PROD_DIAPHRAGM_TUMO_CHECK">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="recordId" type="int">
@@ -2720,6 +2641,149 @@
         </property>
         <property name="diff24" type="string">
             <column length="50" name="DIFF24"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.quality.KsBaseC21Range" table="KS_BASE_C21_RANGE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="materClassCode" type="string">
+            <column length="20" name="MATER_CLASS_CODE"/>
+        </property>
+        <property name="isWx" type="string">
+            <column default="'Y'" length="1" name="IS_WX"/>
+        </property>
+        <property name="qualified" type="big_decimal">
+            <column length="10" name="QUALIFIED" precision="10" scale="2"/>
+        </property>
+        <property name="feedback" type="big_decimal">
+            <column length="10" name="FEEDBACK" precision="10" scale="2"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.quality.KsProdDiaphragmStand" table="KS_PROD_DIAPHRAGM_STAND">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="specId" type="int">
+            <column length="9" name="SPEC_ID"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'Y'" length="1" name="STATE"/>
+        </property>
+        <property name="levelId" type="int">
+            <column length="9" name="LEVEL_ID"/>
+        </property>
+        <property name="gfdLowSymbol" type="string">
+            <column length="20" name="GFD_LOW_SYMBOL"/>
+        </property>
+        <property name="gfdLowLimit" type="string">
+            <column length="20" name="GFD_LOW_LIMIT"/>
+        </property>
+        <property name="gfdUpSymbol" type="string">
+            <column length="20" name="GFD_UP_SYMBOL"/>
+        </property>
+        <property name="gfdUpLimit" type="string">
+            <column length="20" name="GFD_UP_LIMIT"/>
+        </property>
+        <property name="saltLowSymbol" type="string">
+            <column length="20" name="SALT_LOW_SYMBOL"/>
+        </property>
+        <property name="saltLowLimit" type="string">
+            <column length="20" name="SALT_LOW_LIMIT"/>
+        </property>
+        <property name="saltUpSymbol" type="string">
+            <column length="20" name="SALT_UP_SYMBOL"/>
+        </property>
+        <property name="saltUpLimit" type="string">
+            <column length="20" name="SALT_UP_LIMIT"/>
+        </property>
+        <property name="createDt" type="date">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="date">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="string">
+            <column length="20" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="string">
+            <column length="20" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="specName2" type="string">
+            <column length="50" name="SPEC_NAME2"/>
+        </property>
+        <property name="specName" type="string">
+            <column length="50" name="SPEC_NAME"/>
+        </property>
+        <property name="levelName" type="string">
+            <column length="50" name="LEVEL_NAME"/>
+        </property>
+        <property name="macName" type="string">
+            <column length="20" name="MAC_NAME"/>
+        </property>
+        <property name="testSolid" type="string">
+            <column length="20" name="TEST_SOLID"/>
+        </property>
+        <property name="isWx" type="string">
+            <column length="20" name="IS_WX"/>
+        </property>
+        <property name="method" type="string">
+            <column length="20" name="METHOD"/>
+        </property>
+        <property name="specId2" type="int">
+            <column length="9" name="SPEC_ID2"/>
+        </property>
+        <property name="lineId" type="long">
+            <column length="22" name="LINE_ID"/>
         </property>
     </class>
 </hibernate-mapping>

@@ -13,7 +13,7 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 120,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -35,7 +35,7 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 								dictData : KS_ZM_LINE
 							}, {
 								xtype : "dateregion",
-								anchor : '100%',
+								anchor : '90%',
 								colspan : 1,
 								nameArray : ['condition/productDtStart',
 										'condition/productDtEnd'],
@@ -46,6 +46,17 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 								anchor : '90%',
 								name : 'condition/dimoBatchNo2',
 								fieldLabel : '底膜批号'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								fieldLabel : '不展示结存<br>小于100',
+								xtype : 'checkbox',
+								checked : true,
+								name : 'condition/notLessthan100',
+								inputValue : 'Y',
+								anchor : '90%'
 							}]
 				});
 		this.queryPanel.addButton({
@@ -130,8 +141,8 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 				autoLoad : true,
 				totalProperty : 'totalCount',
 				baseParams : {
-
-			}	,
+					'condition/notLessthan100' : 'Y'
+				},
 				fields : [{
 							name : 'dimoType'
 						}, {

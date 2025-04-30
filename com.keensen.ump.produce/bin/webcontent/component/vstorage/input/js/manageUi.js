@@ -5,6 +5,7 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr = function() {
 
 		this.initStore();
 		this.initInputWindow();
+		this.initEditWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'new',
@@ -21,8 +22,8 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr = function() {
 		this.exceptionTypeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['需要计划员处理', '需要计划员处理'], ['需要工艺给意见', '需要工艺给意见'],
-							['需要品管给意见', '需要品管给意见'], ['超期停留', '超期停留']
-							, ['需班长处理', '需班长处理']]
+							['需要品管给意见', '需要品管给意见'], ['超期停留', '超期停留'],
+							['需班长处理', '需班长处理']]
 				});
 
 	}
@@ -65,31 +66,36 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr = function() {
 			// autoExpandColumn : '4',
 			delUrl : '1.biz.ext',
 			hsPage : true,
-			
+			tbar : [{
+						text : '修改',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onEdit
+					}],
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'jmBatchNo',
-						//width : 100,
+						// width : 100,
 						header : '卷膜序号'
 					}, {
 						dataIndex : 'prodSpecName',
-						//width : 120,
+						// width : 120,
 						header : '元件型号'
 					}, {
 						dataIndex : 'createTime',
-						//width : 120,
+						// width : 120,
 						header : '入仓时间'
 					}, {
 						dataIndex : 'createName',
-						//width : 120,
+						// width : 120,
 						header : '入仓操作员'
 					}, {
 						dataIndex : 'exceptionType',
-						//width : 150,
+						// width : 150,
 						header : '异常停留分类'
 					}, {
 						dataIndex : 'remark',
-						//width : 160,
+						// width : 160,
 						header : '备注'
 					}],
 			store : new Ext.data.JsonStore({
@@ -247,4 +253,60 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr = function() {
 
 	}
 
+	this.initEditWindow = function() {
+		var _this = this;
+		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
+			title : '修改异常停留分类',
+			height : 240,
+			width : 300,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.component.vstorage.expandVStorage.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.vstorage.saveVstorage.biz.ext',
+				fields : [{
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							name : 'entity/jmBatchNo',
+							fieldLabel : '卷膜序号',
+							xtype : 'textfield',
+							anchor : '100%',
+							colspan : 2,
+							readOnly:true,
+							dataIndex : 'jmBatchNo'
+						},{
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '异常停留分类',
+							allowBlank : false,
+							ref : '../../exceptionType',
+							dataIndex : 'exceptionType',
+							hiddenName : 'entity/exceptionType',
+							anchor : '100%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.exceptionTypeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.editWindow.exceptionType.reset()
+								}
+							}
+						}]
+			}]
+		});
+	}
 }

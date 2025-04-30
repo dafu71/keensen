@@ -266,7 +266,16 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord3.biz.ext',
 				successFn : function(i, r) {
 					if (r.err != '0') {
-						Ext.Msg.show({
+						
+						_this.raosiAddWindow.batchNo.setValue('');
+						_this.raosiAddWindow.batchNo.focus();
+						if (!audio) {
+                			audio = new Audio('qinsen/produce/raosi/fail.mp3');
+            			}
+										
+						audio.play().catch(error => console.log('播放失败:', error));
+						 				
+						/*Ext.Msg.show({
 									width : 400,
 									title : "操作提示",
 									msg : r.msg,
@@ -282,7 +291,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						 				audio.play().catch(error => console.log('播放失败:', error));
 										// _this.qijianAddWindow.hide();
 									}
-								})
+								})*/
 					} else {
 						_this.listPanel.store.baseParams = _this.queryPanel
 								.getForm().getValues();

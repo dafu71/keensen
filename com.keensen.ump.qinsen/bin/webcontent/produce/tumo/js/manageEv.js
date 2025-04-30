@@ -375,6 +375,13 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				_this.queryPanel.fireEvent("query", _this.queryPanel, _vals);
 			}, this);
 
+	this.editMpdWindow.activeItem.mon(this.editMpdWindow.activeItem, 'afterload',
+			function(win, data) {
+				
+				this.judgeC21();
+
+			}, this);		
+			
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddTmDefect = function() {
@@ -873,7 +880,32 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.calculateC21 = function() {
 				* parseFloat(ro) / 10;
 		mpd = Math.round(mpd * 100) / 100
 		this.editMpdWindow.mpd.setValue(mpd);
+		this.judgeC21();
 	}
+	
+	
+}
+
+//判定结果
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.judgeC21 = function() {
+	var mpd = this.editMpdWindow.mpd.getValue();
+	var qualified = this.editMpdWindow.qualified.getValue();
+	var feedback = this.editMpdWindow.feedback.getValue();
+	var c21Result = '';
+	if (!Ext.isEmpty(mpd) && !Ext.isEmpty(qualified) && !Ext.isEmpty(feedback)) {
+		
+		if(parseFloat(mpd)<=parseFloat(feedback)){
+			c21Result = '合格,生产使用';
+		}
+		if(parseFloat(mpd)> parseFloat(feedback) && parseFloat(mpd)<= parseFloat(qualified)){
+			c21Result = '合格,反馈班长';
+		}
+		if(parseFloat(mpd)> parseFloat(qualified)){
+			c21Result = '不合格,反馈班长';
+		}
+
+		this.editMpdWindow.c21Result.setValue(c21Result);
+	}	
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddFhDefect = function() {

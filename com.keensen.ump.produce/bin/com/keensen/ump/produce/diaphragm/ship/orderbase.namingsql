@@ -3,6 +3,7 @@
 <sqlMap namespace="com.keensen.ump.produce.diaphragm.ship.orderbase">
     <select id="queryOrderBase" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT T1.ID                AS "id",
+   
       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",

@@ -253,6 +253,11 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
 	<isNotNull prepend="" property="dimoBatchNo2"> 
 		       AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'
 	</isNotNull>
+	
+	<isEqual prepend="" property="notLessthan100" compareValue="Y"> 
+		       AND T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)>100
+	</isEqual>
+	
      order by t1.y desc,t1.m DESC,t1.d DESC
      </select>
      

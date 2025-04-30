@@ -177,9 +177,13 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr.prototype.judgeLevel = function
 			}
 		}
 		if (!judged) {
-			this.masterPanel.perfFlagId.setValue('');
+			//this.masterPanel.perfFlagId.setValue('');
+			//300032
+			this.masterPanel.perfFlagId.setValue('300032');
 			this.masterPanel.judgeInfo
-					.setValue('<span style="color:red;">数据未匹配到任何标准，请人工判定</span>');
+					.setValue('<span style="color:red;">数据未匹配到任何标准，自动匹配C等品</span>');
+			//this.masterPanel.judgeInfo
+			//		.setValue('<span style="color:red;">数据未匹配到任何标准，请人工判定</span>');
 		}
 	}
 }

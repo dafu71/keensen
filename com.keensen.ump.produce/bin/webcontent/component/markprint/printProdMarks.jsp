@@ -40,10 +40,17 @@
 <style>
 
 .image-container {
+			width: 386px;
+			height: 265px;
             position: relative;
             display: inline-block;
             border: 0px solid #ccc;
         }
+        
+ image-container img {
+    max-width: 100%; /* 图片最大宽度不超过容器宽度 */
+    height: auto; /* 保持图片的宽高比 */
+}
         
  .text-overlay {
             position: absolute;
@@ -58,11 +65,11 @@
  }
 
 .main_table {
-	width: 376px;
+	width: 386px;
 	height: 265px;
 	text-align: center;
 	vertical-align: middle;
-	margin: auto;
+	margin: 0 0;
 	/* margin-top: 2mm; */
 	font-size: 10pt;
 	/* 	border:1px solid #000000; */
@@ -95,7 +102,7 @@
 	text-align: left;
 	vertical-align: middle;
 	font-family: Arial;
-	font-size: 9pt;
+	font-size: 11pt;
 	font-color: #000000;
 	font-weight: bold;
 }
@@ -274,14 +281,14 @@ function getDayCode() {
 
 </script>
 
-<div id="printContent" align="center">
+<div id="printContent" align="left">
 
 <% 	for (int i = 0; i < list.length; i++) { %>
 
 <table style="background-size: cover;page-break-after:always;"
 	class="main_table" border=0>
 	<tr hight="260px">
-		<td>
+		<td align="left">
 		<div class="image-container" id="image-container">
 		<img src="<%=rootUrl %><%=list[i].get("url") %>" id="preview-image<%=i %>">
 		</div>
@@ -301,6 +308,7 @@ function getDayCode() {
  
 	// 要延迟执行的函数
 	function printFunction() {
+
     	window.print();
     	delayFunction(closeFunction, 5000); // 延迟5秒执行关闭当前窗口
 	}
@@ -324,8 +332,8 @@ function getDayCode() {
 						int xBatchNo = Integer.parseInt(list[i].get("xBatchNo").toString());
 						int yBatchSpecName = Integer.parseInt(list[i].get("yBatchSpecName").toString());
 						int xBatchSpecName = Integer.parseInt(list[i].get("xBatchSpecName").toString());
-						String prodSpecName = list[i].get("prodSpecName").toString();
-						String fontSize = prodSpecName.length() >= 18 ? "16px" : prodSpecName.length() > 9 ? "20px" : "26px";
+						String prodSpecName = list[i].get("prodSpecName2").toString();
+						String fontSize = prodSpecName.length() >= 18 ? "22px" : prodSpecName.length() > 9 ? "26px" : "30px";
 						int yDryImg = Integer.parseInt(list[i].get("yDryImg").toString());
 						int xDryImg = Integer.parseInt(list[i].get("xDryImg").toString());
 						int yDrySpan = Integer.parseInt(list[i].get("yDrySpan").toString());
@@ -362,7 +370,7 @@ function getDayCode() {
 							textMargin : 0,
 							height : 50,
 							margin : 0,
-							width : 1
+							width : 1.5
 							};
 						
 						JsBarcode(barcodeElement, batchNo, options);
@@ -388,6 +396,7 @@ function getDayCode() {
 		            prodSpecNameElement.style.left = '<%=xBatchSpecName %>px';
 		            prodSpecNameElement.style.top = '<%=yBatchSpecName + tableHeight*i %>px';
 		            prodSpecNameElement.style.fontSize = fontSize;
+		            prodSpecNameElement.style.fontWeight = 'bold';
 		            prodSpecNameElement.style.color = color;
 		            
 		            container.appendChild(prodSpecNameElement);

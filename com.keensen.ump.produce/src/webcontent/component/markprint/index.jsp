@@ -54,6 +54,10 @@
 			<input type="hidden" name="code"/>
 			<input type="hidden" name="testView" value="1"/>
 		</form>
+		
+		<form name="printPreViewForm" id="componentmarktemplatepreviewForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+			<input type="hidden" name="drawingCode"/>
+		</form>
 	</div>
 	
 </body>

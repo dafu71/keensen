@@ -1108,67 +1108,6 @@
             <column length="22" name="PROD_SPEC_ID"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentMarkTemplate" table="KS_COMPONENT_MARK_TEMPLATE">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="id" type="int">
-            <column length="9" name="ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="createTime" type="timestamp">
-            <column name="CREATE_TIME"/>
-        </property>
-        <property name="createUserId" type="string">
-            <column length="24" name="CREATE_USER_ID"/>
-        </property>
-        <property name="createName" type="string">
-            <column length="24" name="CREATE_NAME"/>
-        </property>
-        <property name="updateTime" type="timestamp">
-            <column name="UPDATE_TIME"/>
-        </property>
-        <property name="updateUserId" type="string">
-            <column length="24" name="UPDATE_USER_ID"/>
-        </property>
-        <property name="updateName" type="string">
-            <column length="24" name="UPDATE_NAME"/>
-        </property>
-        <property name="reserve1" type="string">
-            <column length="1500" name="RESERVE1"/>
-        </property>
-        <property name="reserve2" type="string">
-            <column length="1500" name="RESERVE2"/>
-        </property>
-        <property name="reserve3" type="string">
-            <column length="1500" name="RESERVE3"/>
-        </property>
-        <property name="reserve4" type="string">
-            <column length="1500" name="RESERVE4"/>
-        </property>
-        <property name="reserve5" type="string">
-            <column length="1500" name="RESERVE5"/>
-        </property>
-        <property name="orgId" type="string">
-            <column length="90" name="ORG_ID"/>
-        </property>
-        <property name="status" type="string">
-            <column length="24" name="STATUS"/>
-        </property>
-        <property name="templateName" type="string">
-            <column length="200" name="TEMPLATE_NAME"/>
-        </property>
-        <property name="url" type="string">
-            <column length="200" name="URL"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="code" type="string">
-            <column length="2000" name="CODE"/>
-        </property>
-        <property name="url2" type="string">
-            <column length="200" name="URL2"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentMarkPrintRecord" table="KS_COMPONENT_MARK_PRINT_RECORD">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="int">
@@ -3131,358 +3070,6 @@
             <column length="20" name="POSITION"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentYxorderBase" table="KS_COMPONENT_YXORDER_BASE">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="id" type="long">
-            <column length="22" name="ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="createTime" type="timestamp">
-            <column name="CREATE_TIME"/>
-        </property>
-        <property name="createUserId" type="string">
-            <column length="24" name="CREATE_USER_ID"/>
-        </property>
-        <property name="createName" type="string">
-            <column length="24" name="CREATE_NAME"/>
-        </property>
-        <property name="updateTime" type="timestamp">
-            <column name="UPDATE_TIME"/>
-        </property>
-        <property name="updateUserId" type="string">
-            <column length="24" name="UPDATE_USER_ID"/>
-        </property>
-        <property name="updateName" type="string">
-            <column length="24" name="UPDATE_NAME"/>
-        </property>
-        <property name="reserve1" type="string">
-            <column length="1500" name="RESERVE1"/>
-        </property>
-        <property name="reserve2" type="string">
-            <column length="1500" name="RESERVE2"/>
-        </property>
-        <property name="reserve3" type="string">
-            <column length="1500" name="RESERVE3"/>
-        </property>
-        <property name="reserve4" type="string">
-            <column length="1500" name="RESERVE4"/>
-        </property>
-        <property name="reserve5" type="string">
-            <column length="1500" name="RESERVE5"/>
-        </property>
-        <property name="orgId" type="string">
-            <column length="90" name="ORG_ID"/>
-        </property>
-        <property name="status" type="string">
-            <column length="24" name="STATUS"/>
-        </property>
-        <property name="dept" type="string">
-            <column length="50" name="DEPT"/>
-        </property>
-        <property name="khxj" type="string">
-            <column length="50" name="KHXJ"/>
-        </property>
-        <property name="cpxj" type="string">
-            <column length="50" name="CPXJ"/>
-        </property>
-        <property name="cplb" type="string">
-            <column length="50" name="CPLB"/>
-        </property>
-        <property name="orderNo" type="string">
-            <column length="50" name="ORDER_NO"/>
-        </property>
-        <property name="director" type="string">
-            <column length="50" name="DIRECTOR"/>
-        </property>
-        <property name="client" type="string">
-            <column length="200" name="CLIENT"/>
-        </property>
-        <property name="nation" type="string">
-            <column length="50" name="NATION"/>
-        </property>
-        <property name="province" type="string">
-            <column length="50" name="PROVINCE"/>
-        </property>
-        <property name="city" type="string">
-            <column length="50" name="CITY"/>
-        </property>
-        <property name="district" type="string">
-            <column length="50" name="DISTRICT"/>
-        </property>
-        <property name="orderDate" type="string">
-            <column length="50" name="ORDER_DATE"/>
-        </property>
-        <property name="prodName" type="string">
-            <column length="50" name="PROD_NAME"/>
-        </property>
-        <property name="dryWet" type="string">
-            <column length="50" name="DRY_WET"/>
-        </property>
-        <property name="orderAmount" type="string">
-            <column length="50" name="ORDER_AMOUNT"/>
-        </property>
-        <property name="label" type="string">
-            <column length="200" name="LABEL"/>
-        </property>
-        <property name="labelDrawingCode" type="string">
-            <column length="50" name="LABEL_DRAWING_CODE"/>
-        </property>
-        <property name="bag" type="string">
-            <column length="20" name="BAG"/>
-        </property>
-        <property name="bagDrawingCode" type="string">
-            <column length="50" name="BAG_DRAWING_CODE"/>
-        </property>
-        <property name="box" type="string">
-            <column length="50" name="BOX"/>
-        </property>
-        <property name="boxDrawingCode" type="string">
-            <column length="50" name="BOX_DRAWING_CODE"/>
-        </property>
-        <property name="mark" type="string">
-            <column length="200" name="MARK"/>
-        </property>
-        <property name="markDrawingCode" type="string">
-            <column length="50" name="MARK_DRAWING_CODE"/>
-        </property>
-        <property name="productRemark" type="string">
-            <column length="2000" name="PRODUCT_REMARK"/>
-        </property>
-        <property name="deliveryDate" type="string">
-            <column length="50" name="DELIVERY_DATE"/>
-        </property>
-        <property name="state" type="string">
-            <column default="'制定中'" length="20" name="STATE"/>
-        </property>
-        <property name="orderType" type="string">
-            <column length="20" name="ORDER_TYPE"/>
-        </property>
-        <property name="materSpecName2" type="string">
-            <column length="50" name="MATER_SPEC_NAME2"/>
-        </property>
-        <property name="type" type="string">
-            <column length="20" name="TYPE"/>
-        </property>
-        <property name="style" type="string">
-            <column default="'普通款'" length="20" name="STYLE"/>
-        </property>
-        <property name="wetPercent" type="string">
-            <column length="20" name="WET_PERCENT"/>
-        </property>
-        <property name="dryAmount" type="string">
-            <column length="20" name="DRY_AMOUNT"/>
-        </property>
-        <property name="wetAmount" type="string">
-            <column length="20" name="WET_AMOUNT"/>
-        </property>
-        <property name="stockAmount" type="string">
-            <column length="20" name="STOCK_AMOUNT"/>
-        </property>
-        <property name="prodAmount" type="string">
-            <column length="20" name="PROD_AMOUNT"/>
-        </property>
-        <property name="demandStockDate" type="string">
-            <column length="20" name="DEMAND_STOCK_DATE"/>
-        </property>
-        <property name="period" type="string">
-            <column length="20" name="PERIOD"/>
-        </property>
-        <property name="saltLow" type="string">
-            <column default="'公司标准'" length="20" name="SALT_LOW"/>
-        </property>
-        <property name="gpdLow" type="string">
-            <column default="'公司标准'" length="20" name="GPD_LOW"/>
-        </property>
-        <property name="gpdUp" type="string">
-            <column default="'公司标准'" length="20" name="GPD_UP"/>
-        </property>
-        <property name="testStand" type="string">
-            <column default="'公司标准'" length="20" name="TEST_STAND"/>
-        </property>
-        <property name="pressure" type="string">
-            <column default="'公司标准'" length="20" name="PRESSURE"/>
-        </property>
-        <property name="temperature" type="string">
-            <column default="'公司标准'" length="20" name="TEMPERATURE"/>
-        </property>
-        <property name="concentration" type="string">
-            <column default="'公司标准'" length="200" name="CONCENTRATION"/>
-        </property>
-        <property name="recyclePercent" type="string">
-            <column default="'公司标准'" length="20" name="RECYCLE_PERCENT"/>
-        </property>
-        <property name="ph" type="string">
-            <column default="'公司标准'" length="20" name="PH"/>
-        </property>
-        <property name="denseNet" type="string">
-            <column default="'公司标准'" length="200" name="DENSE_NET"/>
-        </property>
-        <property name="lid" type="string">
-            <column default="'公司标准'" length="20" name="LID"/>
-        </property>
-        <property name="tape" type="string">
-            <column default="'公司标准'" length="20" name="TAPE"/>
-        </property>
-        <property name="aar" type="string">
-            <column default="'否'" length="20" name="AAR"/>
-        </property>
-        <property name="color" type="string">
-            <column length="20" name="COLOR"/>
-        </property>
-        <property name="colorCode" type="string">
-            <column length="20" name="COLOR_CODE"/>
-        </property>
-        <property name="makeLabel" type="string">
-            <column length="20" name="MAKE_LABEL"/>
-        </property>
-        <property name="newMakeLabel" type="string">
-            <column default="'否'" length="20" name="NEW_MAKE_LABEL"/>
-        </property>
-        <property name="waterArrow" type="string">
-            <column default="'是'" length="20" name="WATER_ARROW"/>
-        </property>
-        <property name="snRegular" type="string">
-            <column default="'否'" length="20" name="SN_REGULAR"/>
-        </property>
-        <property name="labelNsf" type="string">
-            <column default="'是'" length="20" name="LABEL_NSF"/>
-        </property>
-        <property name="snStart" type="string">
-            <column length="20" name="SN_START"/>
-        </property>
-        <property name="snEnd" type="string">
-            <column length="20" name="SN_END"/>
-        </property>
-        <property name="labelDouble" type="string">
-            <column default="'否'" length="20" name="LABEL_DOUBLE"/>
-        </property>
-        <property name="labelRuleDouble" type="string">
-            <column length="20" name="LABEL_RULE_DOUBLE"/>
-        </property>
-        <property name="positionLabel" type="string">
-            <column length="20" name="POSITION_LABEL"/>
-        </property>
-        <property name="makeMark" type="string">
-            <column length="20" name="MAKE_MARK"/>
-        </property>
-        <property name="newMakeMark" type="string">
-            <column default="'否'" length="20" name="NEW_MAKE_MARK"/>
-        </property>
-        <property name="markNsf" type="string">
-            <column default="'是'" length="20" name="MARK_NSF"/>
-        </property>
-        <property name="markRegular" type="string">
-            <column default="'否'" length="20" name="MARK_REGULAR"/>
-        </property>
-        <property name="markStart" type="string">
-            <column length="20" name="MARK_START"/>
-        </property>
-        <property name="markEnd" type="string">
-            <column length="20" name="MARK_END"/>
-        </property>
-        <property name="ifkeep" type="string">
-            <column default="'是'" length="20" name="IFKEEP"/>
-        </property>
-        <property name="markDouble" type="string">
-            <column default="'否'" length="20" name="MARK_DOUBLE"/>
-        </property>
-        <property name="markRuleDouble" type="string">
-            <column length="20" name="MARK_RULE_DOUBLE"/>
-        </property>
-        <property name="positionMark" type="string">
-            <column length="20" name="POSITION_MARK"/>
-        </property>
-        <property name="ifphoto" type="string">
-            <column default="'否'" length="20" name="IFPHOTO"/>
-        </property>
-        <property name="ifanyone" type="string">
-            <column default="'否'" length="20" name="IFANYONE"/>
-        </property>
-        <property name="photoSingle" type="string">
-            <column length="20" name="PHOTO_SINGLE"/>
-        </property>
-        <property name="photoAll" type="string">
-            <column length="20" name="PHOTO_ALL"/>
-        </property>
-        <property name="packingNum" type="string">
-            <column default="'公司标准'" length="50" name="PACKING_NUM"/>
-        </property>
-        <property name="ifpolish" type="string">
-            <column default="'否'" length="20" name="IFPOLISH"/>
-        </property>
-        <property name="tray" type="string">
-            <column default="'公司标准'" length="20" name="TRAY"/>
-        </property>
-        <property name="traySize" type="string">
-            <column default="'公司标准'" length="20" name="TRAY_SIZE"/>
-        </property>
-        <property name="packingLayer" type="string">
-            <column default="'公司标准'" length="20" name="PACKING_LAYER"/>
-        </property>
-        <property name="packingTxt" type="string">
-            <column default="'公司标准'" length="200" name="PACKING_TXT"/>
-        </property>
-        <property name="goodsWithReport" type="string">
-            <column default="'否'" length="50" name="GOODS_WITH_REPORT"/>
-        </property>
-        <property name="hpmc" type="string">
-            <column length="200" name="HPMC"/>
-        </property>
-        <property name="ddxj" type="string">
-            <column length="20" name="DDXJ"/>
-        </property>
-        <property name="sealPosition" type="string">
-            <column default="'公司标准'" length="50" name="SEAL_POSITION"/>
-        </property>
-        <property name="sealAmount" type="string">
-            <column default="'公司标准'" length="50" name="SEAL_AMOUNT"/>
-        </property>
-        <property name="deliveryState" type="string">
-            <column default="'否'" length="20" name="DELIVERY_STATE"/>
-        </property>
-        <property name="changeTime" type="timestamp">
-            <column name="CHANGE_TIME"/>
-        </property>
-        <property name="changeUserId" type="string">
-            <column length="20" name="CHANGE_USER_ID"/>
-        </property>
-        <property name="changeName" type="string">
-            <column length="50" name="CHANGE_NAME"/>
-        </property>
-        <property name="logoLabel" type="string">
-            <column length="50" name="LOGO_LABEL"/>
-        </property>
-        <property name="logoLabel2" type="string">
-            <column length="50" name="LOGO_LABEL2"/>
-        </property>
-        <property name="specNameLabel" type="string">
-            <column length="50" name="SPEC_NAME_LABEL"/>
-        </property>
-        <property name="specNameLabel2" type="string">
-            <column length="50" name="SPEC_NAME_LABEL2"/>
-        </property>
-        <property name="logoMark" type="string">
-            <column length="50" name="LOGO_MARK"/>
-        </property>
-        <property name="logoMark2" type="string">
-            <column length="50" name="LOGO_MARK2"/>
-        </property>
-        <property name="specNameMark" type="string">
-            <column length="50" name="SPEC_NAME_MARK"/>
-        </property>
-        <property name="specNameMark2" type="string">
-            <column length="50" name="SPEC_NAME_MARK2"/>
-        </property>
-        <property name="labelDrawingCode2" type="string">
-            <column length="50" name="LABEL_DRAWING_CODE2"/>
-        </property>
-        <property name="markDrawingCode2" type="string">
-            <column length="50" name="MARK_DRAWING_CODE2"/>
-        </property>
-        <property name="mpSpecId" type="long">
-            <column length="22" name="MP_SPEC_ID"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentDutyTrailer" table="KS_COMPONENT_DUTY_TRAILER">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="long">
@@ -4120,6 +3707,491 @@
         </property>
         <property name="diameterCheckTime" type="timestamp">
             <column name="DIAMETER_CHECK_TIME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentMarkTemplate" table="KS_COMPONENT_MARK_TEMPLATE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="int">
+            <column length="9" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="templateName" type="string">
+            <column length="200" name="TEMPLATE_NAME"/>
+        </property>
+        <property name="url" type="string">
+            <column length="200" name="URL"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="code" type="string">
+            <column length="2000" name="CODE"/>
+        </property>
+        <property name="url2" type="string">
+            <column length="200" name="URL2"/>
+        </property>
+        <property name="ifPrintBatchNo" type="string">
+            <column default="'Y'" length="1" name="IF_PRINT_BATCH_NO"/>
+        </property>
+        <property name="yBatchNo" type="string">
+            <column length="20" name="Y_BATCH_NO"/>
+        </property>
+        <property name="xBatchNo" type="string">
+            <column length="20" name="X_BATCH_NO"/>
+        </property>
+        <property name="ifPrintSpecName" type="string">
+            <column default="'Y'" length="1" name="IF_PRINT_SPEC_NAME"/>
+        </property>
+        <property name="yBatchSpecName" type="string">
+            <column length="20" name="Y_BATCH_SPEC_NAME"/>
+        </property>
+        <property name="xBatchSpecName" type="string">
+            <column length="20" name="X_BATCH_SPEC_NAME"/>
+        </property>
+        <property name="ifPrintDryWet" type="string">
+            <column default="'Y'" length="1" name="IF_PRINT_DRY_WET"/>
+        </property>
+        <property name="yDryImg" type="string">
+            <column length="20" name="Y_DRY_IMG"/>
+        </property>
+        <property name="xDryImg" type="string">
+            <column length="20" name="X_DRY_IMG"/>
+        </property>
+        <property name="yDrySpan" type="string">
+            <column length="20" name="Y_DRY_SPAN"/>
+        </property>
+        <property name="xDrySpan" type="string">
+            <column length="20" name="X_DRY_SPAN"/>
+        </property>
+        <property name="yWetImg" type="string">
+            <column length="20" name="Y_WET_IMG"/>
+        </property>
+        <property name="xWetImg" type="string">
+            <column length="20" name="X_WET_IMG"/>
+        </property>
+        <property name="yWetSpan" type="string">
+            <column length="20" name="Y_WET_SPAN"/>
+        </property>
+        <property name="xWetSpan" type="string">
+            <column length="20" name="X_WET_SPAN"/>
+        </property>
+        <property name="yStarImg" type="string">
+            <column length="20" name="Y_STAR_IMG"/>
+        </property>
+        <property name="xStarImg" type="string">
+            <column length="20" name="X_STAR_IMG"/>
+        </property>
+        <property name="ifPrintDayCode" type="string">
+            <column default="'Y'" length="1" name="IF_PRINT_DAY_CODE"/>
+        </property>
+        <property name="yDayCodeSpan" type="string">
+            <column length="20" name="Y_DAY_CODE_SPAN"/>
+        </property>
+        <property name="xDayCodeSpan" type="string">
+            <column length="20" name="X_DAY_CODE_SPAN"/>
+        </property>
+        <property name="printDelayTime" type="string">
+            <column length="20" name="PRINT_DELAY_TIME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentYxorderBase" table="KS_COMPONENT_YXORDER_BASE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="dept" type="string">
+            <column length="50" name="DEPT"/>
+        </property>
+        <property name="khxj" type="string">
+            <column length="50" name="KHXJ"/>
+        </property>
+        <property name="cpxj" type="string">
+            <column length="50" name="CPXJ"/>
+        </property>
+        <property name="cplb" type="string">
+            <column length="50" name="CPLB"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="50" name="ORDER_NO"/>
+        </property>
+        <property name="director" type="string">
+            <column length="50" name="DIRECTOR"/>
+        </property>
+        <property name="client" type="string">
+            <column length="200" name="CLIENT"/>
+        </property>
+        <property name="nation" type="string">
+            <column length="50" name="NATION"/>
+        </property>
+        <property name="province" type="string">
+            <column length="50" name="PROVINCE"/>
+        </property>
+        <property name="city" type="string">
+            <column length="50" name="CITY"/>
+        </property>
+        <property name="district" type="string">
+            <column length="50" name="DISTRICT"/>
+        </property>
+        <property name="orderDate" type="string">
+            <column length="50" name="ORDER_DATE"/>
+        </property>
+        <property name="prodName" type="string">
+            <column length="50" name="PROD_NAME"/>
+        </property>
+        <property name="dryWet" type="string">
+            <column length="50" name="DRY_WET"/>
+        </property>
+        <property name="orderAmount" type="string">
+            <column length="50" name="ORDER_AMOUNT"/>
+        </property>
+        <property name="label" type="string">
+            <column length="200" name="LABEL"/>
+        </property>
+        <property name="labelDrawingCode" type="string">
+            <column length="50" name="LABEL_DRAWING_CODE"/>
+        </property>
+        <property name="bag" type="string">
+            <column length="50" name="BAG"/>
+        </property>
+        <property name="bagDrawingCode" type="string">
+            <column length="50" name="BAG_DRAWING_CODE"/>
+        </property>
+        <property name="box" type="string">
+            <column length="100" name="BOX"/>
+        </property>
+        <property name="boxDrawingCode" type="string">
+            <column length="50" name="BOX_DRAWING_CODE"/>
+        </property>
+        <property name="mark" type="string">
+            <column length="200" name="MARK"/>
+        </property>
+        <property name="markDrawingCode" type="string">
+            <column length="50" name="MARK_DRAWING_CODE"/>
+        </property>
+        <property name="productRemark" type="string">
+            <column length="2000" name="PRODUCT_REMARK"/>
+        </property>
+        <property name="deliveryDate" type="string">
+            <column length="50" name="DELIVERY_DATE"/>
+        </property>
+        <property name="state" type="string">
+            <column default="'制定中'" length="20" name="STATE"/>
+        </property>
+        <property name="orderType" type="string">
+            <column length="20" name="ORDER_TYPE"/>
+        </property>
+        <property name="materSpecName2" type="string">
+            <column length="50" name="MATER_SPEC_NAME2"/>
+        </property>
+        <property name="type" type="string">
+            <column length="20" name="TYPE"/>
+        </property>
+        <property name="style" type="string">
+            <column default="'普通款'" length="20" name="STYLE"/>
+        </property>
+        <property name="wetPercent" type="string">
+            <column length="20" name="WET_PERCENT"/>
+        </property>
+        <property name="dryAmount" type="string">
+            <column length="20" name="DRY_AMOUNT"/>
+        </property>
+        <property name="wetAmount" type="string">
+            <column length="20" name="WET_AMOUNT"/>
+        </property>
+        <property name="stockAmount" type="string">
+            <column length="20" name="STOCK_AMOUNT"/>
+        </property>
+        <property name="prodAmount" type="string">
+            <column length="20" name="PROD_AMOUNT"/>
+        </property>
+        <property name="demandStockDate" type="string">
+            <column length="20" name="DEMAND_STOCK_DATE"/>
+        </property>
+        <property name="period" type="string">
+            <column length="20" name="PERIOD"/>
+        </property>
+        <property name="saltLow" type="string">
+            <column default="'公司标准'" length="20" name="SALT_LOW"/>
+        </property>
+        <property name="gpdLow" type="string">
+            <column default="'公司标准'" length="20" name="GPD_LOW"/>
+        </property>
+        <property name="gpdUp" type="string">
+            <column default="'公司标准'" length="20" name="GPD_UP"/>
+        </property>
+        <property name="testStand" type="string">
+            <column default="'公司标准'" length="20" name="TEST_STAND"/>
+        </property>
+        <property name="pressure" type="string">
+            <column default="'公司标准'" length="20" name="PRESSURE"/>
+        </property>
+        <property name="temperature" type="string">
+            <column default="'公司标准'" length="20" name="TEMPERATURE"/>
+        </property>
+        <property name="concentration" type="string">
+            <column default="'公司标准'" length="200" name="CONCENTRATION"/>
+        </property>
+        <property name="recyclePercent" type="string">
+            <column default="'公司标准'" length="20" name="RECYCLE_PERCENT"/>
+        </property>
+        <property name="ph" type="string">
+            <column default="'公司标准'" length="20" name="PH"/>
+        </property>
+        <property name="denseNet" type="string">
+            <column default="'公司标准'" length="200" name="DENSE_NET"/>
+        </property>
+        <property name="lid" type="string">
+            <column default="'公司标准'" length="20" name="LID"/>
+        </property>
+        <property name="tape" type="string">
+            <column default="'公司标准'" length="20" name="TAPE"/>
+        </property>
+        <property name="aar" type="string">
+            <column default="'否'" length="20" name="AAR"/>
+        </property>
+        <property name="color" type="string">
+            <column length="20" name="COLOR"/>
+        </property>
+        <property name="colorCode" type="string">
+            <column length="20" name="COLOR_CODE"/>
+        </property>
+        <property name="makeLabel" type="string">
+            <column length="20" name="MAKE_LABEL"/>
+        </property>
+        <property name="newMakeLabel" type="string">
+            <column default="'否'" length="20" name="NEW_MAKE_LABEL"/>
+        </property>
+        <property name="waterArrow" type="string">
+            <column default="'是'" length="20" name="WATER_ARROW"/>
+        </property>
+        <property name="snRegular" type="string">
+            <column default="'否'" length="20" name="SN_REGULAR"/>
+        </property>
+        <property name="labelNsf" type="string">
+            <column default="'是'" length="20" name="LABEL_NSF"/>
+        </property>
+        <property name="snStart" type="string">
+            <column length="20" name="SN_START"/>
+        </property>
+        <property name="snEnd" type="string">
+            <column length="20" name="SN_END"/>
+        </property>
+        <property name="labelDouble" type="string">
+            <column default="'否'" length="20" name="LABEL_DOUBLE"/>
+        </property>
+        <property name="labelRuleDouble" type="string">
+            <column length="50" name="LABEL_RULE_DOUBLE"/>
+        </property>
+        <property name="positionLabel" type="string">
+            <column length="20" name="POSITION_LABEL"/>
+        </property>
+        <property name="makeMark" type="string">
+            <column length="20" name="MAKE_MARK"/>
+        </property>
+        <property name="newMakeMark" type="string">
+            <column default="'否'" length="20" name="NEW_MAKE_MARK"/>
+        </property>
+        <property name="markNsf" type="string">
+            <column default="'是'" length="20" name="MARK_NSF"/>
+        </property>
+        <property name="markRegular" type="string">
+            <column default="'否'" length="20" name="MARK_REGULAR"/>
+        </property>
+        <property name="markStart" type="string">
+            <column length="20" name="MARK_START"/>
+        </property>
+        <property name="markEnd" type="string">
+            <column length="20" name="MARK_END"/>
+        </property>
+        <property name="ifkeep" type="string">
+            <column default="'是'" length="20" name="IFKEEP"/>
+        </property>
+        <property name="markDouble" type="string">
+            <column default="'否'" length="20" name="MARK_DOUBLE"/>
+        </property>
+        <property name="markRuleDouble" type="string">
+            <column length="20" name="MARK_RULE_DOUBLE"/>
+        </property>
+        <property name="positionMark" type="string">
+            <column length="20" name="POSITION_MARK"/>
+        </property>
+        <property name="ifphoto" type="string">
+            <column default="'否'" length="20" name="IFPHOTO"/>
+        </property>
+        <property name="ifanyone" type="string">
+            <column default="'否'" length="20" name="IFANYONE"/>
+        </property>
+        <property name="photoSingle" type="string">
+            <column length="20" name="PHOTO_SINGLE"/>
+        </property>
+        <property name="photoAll" type="string">
+            <column length="20" name="PHOTO_ALL"/>
+        </property>
+        <property name="packingNum" type="string">
+            <column default="'公司标准'" length="50" name="PACKING_NUM"/>
+        </property>
+        <property name="ifpolish" type="string">
+            <column default="'否'" length="20" name="IFPOLISH"/>
+        </property>
+        <property name="tray" type="string">
+            <column default="'公司标准'" length="20" name="TRAY"/>
+        </property>
+        <property name="traySize" type="string">
+            <column default="'公司标准'" length="20" name="TRAY_SIZE"/>
+        </property>
+        <property name="packingLayer" type="string">
+            <column default="'公司标准'" length="20" name="PACKING_LAYER"/>
+        </property>
+        <property name="packingTxt" type="string">
+            <column default="'公司标准'" length="200" name="PACKING_TXT"/>
+        </property>
+        <property name="goodsWithReport" type="string">
+            <column default="'否'" length="50" name="GOODS_WITH_REPORT"/>
+        </property>
+        <property name="hpmc" type="string">
+            <column length="200" name="HPMC"/>
+        </property>
+        <property name="ddxj" type="string">
+            <column length="20" name="DDXJ"/>
+        </property>
+        <property name="sealPosition" type="string">
+            <column default="'公司标准'" length="50" name="SEAL_POSITION"/>
+        </property>
+        <property name="sealAmount" type="string">
+            <column default="'公司标准'" length="50" name="SEAL_AMOUNT"/>
+        </property>
+        <property name="deliveryState" type="string">
+            <column default="'否'" length="20" name="DELIVERY_STATE"/>
+        </property>
+        <property name="changeTime" type="timestamp">
+            <column name="CHANGE_TIME"/>
+        </property>
+        <property name="changeUserId" type="string">
+            <column length="20" name="CHANGE_USER_ID"/>
+        </property>
+        <property name="changeName" type="string">
+            <column length="50" name="CHANGE_NAME"/>
+        </property>
+        <property name="logoLabel" type="string">
+            <column length="50" name="LOGO_LABEL"/>
+        </property>
+        <property name="logoLabel2" type="string">
+            <column length="50" name="LOGO_LABEL2"/>
+        </property>
+        <property name="specNameLabel" type="string">
+            <column length="50" name="SPEC_NAME_LABEL"/>
+        </property>
+        <property name="specNameLabel2" type="string">
+            <column length="50" name="SPEC_NAME_LABEL2"/>
+        </property>
+        <property name="logoMark" type="string">
+            <column length="50" name="LOGO_MARK"/>
+        </property>
+        <property name="logoMark2" type="string">
+            <column length="50" name="LOGO_MARK2"/>
+        </property>
+        <property name="specNameMark" type="string">
+            <column length="50" name="SPEC_NAME_MARK"/>
+        </property>
+        <property name="specNameMark2" type="string">
+            <column length="50" name="SPEC_NAME_MARK2"/>
+        </property>
+        <property name="labelDrawingCode2" type="string">
+            <column length="50" name="LABEL_DRAWING_CODE2"/>
+        </property>
+        <property name="markDrawingCode2" type="string">
+            <column length="50" name="MARK_DRAWING_CODE2"/>
+        </property>
+        <property name="mpSpecId" type="long">
+            <column length="22" name="MP_SPEC_ID"/>
+        </property>
+        <property name="material" type="string">
+            <column length="20" name="MATERIAL"/>
+        </property>
+        <property name="back" type="string">
+            <column length="20" name="BACK"/>
+        </property>
+        <property name="pallet" type="string">
+            <column length="500" name="PALLET"/>
         </property>
     </class>
 </hibernate-mapping>

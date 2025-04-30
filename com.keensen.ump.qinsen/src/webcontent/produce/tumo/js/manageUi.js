@@ -382,7 +382,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 90,
 						dataIndex : 'usefulLength'
 					}, {
-						header : '合格长度(m)',//合格长度=长度-涂膜不良总数(包括已扯和未扯不良)
+						header : '合格长度(m)',// 合格长度=长度-涂膜不良总数(包括已扯和未扯不良)
 						width : 90,
 						dataIndex : 'qualifidLength'
 					}, {
@@ -551,6 +551,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : 'C21浓度',
 						width : 70,
 						dataIndex : 'mpd'
+					}, {
+						header : 'C21判定结果',
+						width : 150,
+						width : 70,
+						dataIndex : 'c21Result'
 					}, {
 						header : 'C21浓度<br>是否合格',
 						width : 100,
@@ -857,6 +862,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'modifyName'
 								}, {
 									name : 'ktAmount'
+								}, {
+									name : 'c21Result'
 								}]
 					})
 		})
@@ -1829,6 +1836,70 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									ref : '../../fxy',
 									hiddenName : 'entity/fxy',
 									fieldLabel : '分析员'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									dataIndex : 'materClassCode',
+									fieldLabel : '膜片系列',
+									readOnly : true,
+									anchor : '95%',
+									colspan : 2
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+
+									xtype : 'combo',
+									fieldLabel : '是否外销',
+									dataIndex : 'isWx',
+									readOnly : true,
+									anchor : '95%',
+									store : [['Y', '是'], ['N', '否']],
+									colspan : 2
+								}
+
+								, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'numberfield',
+									// name : 'entity/qualified',
+									ref : '../../qualified',
+									dataIndex : 'qualified',
+									fieldLabel : '合格浓度',
+									readOnly : true,
+									anchor : '95%',
+									colspan : 2
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'numberfield',
+									// name : 'entity/feedback',
+									ref : '../../feedback',
+									dataIndex : 'feedback',
+									readOnly : true,
+									fieldLabel : '反馈标准',
+									anchor : '95%',
+									colspan : 2
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/c21Result',
+									ref : '../../c21Result',
+									readOnly : true,
+									fieldLabel : '判定结果',
+									anchor : '95%',
+									colspan : 2
 								}, {
 									name : 'entity/recordId',
 									dataIndex : 'recordId',

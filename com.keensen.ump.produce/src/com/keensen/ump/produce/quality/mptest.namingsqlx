@@ -283,6 +283,12 @@
 	    WHERE state = '物控计划员确认' 
 	    HAVING COUNT(1)>0
 	    </isEqual>
+	    
+	    <isEqual prepend="" property="opt2" compareValue="remainLength">
+	    UNION ALL
+	    SELECT '空头提醒' , '空头提醒','remainLength'
+	    FROM dual
+	    </isEqual>
      
     </select> 
     

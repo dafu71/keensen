@@ -50,8 +50,11 @@
        STD.A_GPD_LOW_LIMIT "gpdLowLimitStd",
        STD.A_GPD_UP_LIMIT "gpdUpLimitStd",
        STD.A_GPD_CENTER "gpdCenterStd",
-       STD.A_SALT_LOW_LIMIT "saltLowLimitStd"
+       STD.A_SALT_LOW_LIMIT "saltLowLimitStd",
+       pms.blanking_size "blankingSize"
   FROM KS_PROD_COMPONENT_YXORDER T1
+  left join qinsen.PARA_MATER_SPEC pms
+  on T1.MATER_SPEC_Id = pms.mater_spec_id
   left join QINSEN.INST_PROD_WATER_STD std 
   on T1.MATER_SPEC_Id = std.prod_spec_id
   left join (select relation_id ,count(*) cnt from KS_COMPONENT_PLAN_WEEK group by relation_id) t2 

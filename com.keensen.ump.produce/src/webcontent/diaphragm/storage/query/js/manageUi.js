@@ -183,7 +183,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,
+					hidden : true,
 					handler : this.exportExcel
 				});
 
@@ -220,10 +220,10 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						text : '发货备注',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						hidden:uid != 'KS01327' && uid != 'KS01147',
+						hidden : uid != 'KS01327' && uid != 'KS01147',
 						// hidden : modifyFlag != 1,
 						handler : this.onFhremark
-					},{
+					}, {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
@@ -251,7 +251,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						xtype : 'displayfield',
 						value : '',
 						id : 'selfRedAmount'
-					},{
+					}, {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
@@ -279,13 +279,25 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						xtype : 'displayfield',
 						value : '',
 						id : 'deliveryRedAmount'
-					},'->', {
+					}, '->', {
 						xtype : 'displayfield',
 						value : '',
 						id : 'storageStockAmount'
 					}, {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, '-', {
+						text : '预警超期说明',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : function() {
+							var s = '预警超期说明:<br>'
+							s += '自用膜片超期标准：ULP与BW（含HW）膜片为90个自然日，SW与NF膜片为180个自然日;<br>';
+							s += '发货膜片超期标准：60个自然日;<br>';
+							s += '自用膜片预期标准：ULP与BW（含HW）为70个自然日，SW与NF合理时长为160个自然日;<br>';
+							s += '发货膜片预期标准：30个自然日。<br>';
+							Ext.Msg.alert("订单编号规则", s);
+						}
 					}],
 			selModel : selModel,
 			columns : [new Ext.grid.RowNumberer(), selModel, {
@@ -633,7 +645,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 				});
 
 	}
-	
+
 	this.initEditWindow2 = function() {
 		var me = this;
 		this.editWindow2 = this.editWindow2 || new Ext.fn.FormWindow({

@@ -383,7 +383,7 @@ SELECT P.TEAM_ID         AS "teamId",
        T_LENGTH "tLength",
        USEFUL_LENGTH "usefulLength",
        ROUND(NVL(USEFUL_LENGTH, 0) / NVL(T_LENGTH, 1), 2) * 100 || '%' "passRate",
-       TEAR_LENGTH "teaeLength",
+       TEAR_LENGTH "tearLength",
        ROUND(NVL(TEAR_LENGTH, 0) / NVL(T_LENGTH, 1), 2) * 100 || '%' "defectRate",
        STOCK_AMOUNT "stockAmount"， ROUND(NVL(STOCK_AMOUNT, 0) / NVL(T_LENGTH, 1), 2) * 100 || '%' "stockRate",
        NVL(FH_AMOUNT, 0) "fhAmount",
@@ -434,8 +434,8 @@ SELECT P.TEAM_ID         AS "teamId",
                     ON TM.SPEC_ID = S.MATER_SPEC_ID
                   LEFT JOIN QINSEN.PARA_MATER_CLASS PMC
                     ON PMC.MATER_CLASS_ID = S.MATER_CLASS_ID
-                 WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') >= #productDtStart#
-                   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+                 WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:mi') >= #productDtStart#
+                   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:mi') &lt;= #productDtEnd#
                    <isNotNull prepend="" property="lineId"> 
 		       		AND tm.line_id = #lineId#
 		 			</isNotNull>
@@ -470,7 +470,7 @@ SELECT P.TEAM_ID         AS "teamId",
                        AND P.REC_TACHE_ID = 100
                        AND D.IF_TEAR = '是'
                      GROUP BY D.TUMO_BATCH_ID) T55
-            ON T55.TUMO_BATCH_ID = TM.RECORD_ID);
+            ON T55.TUMO_BATCH_ID = TM.RECORD_ID)
      
      
      </select>

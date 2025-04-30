@@ -76,10 +76,17 @@
 <style>
 
 .image-container {
+			width: 386px;
+			height: 265px;
             position: relative;
             display: inline-block;
             border: 0px solid #ccc;
         }
+        
+ image-container img {
+    max-width: 100%; /* 图片最大宽度不超过容器宽度 */
+    height: auto; /* 保持图片的宽高比 */
+}
         
  .text-overlay {
             position: absolute;
@@ -94,11 +101,11 @@
  }
 
 .main_table {
-	width: 376px;
+	width: 386px;
 	height: 265px;
 	text-align: center;
 	vertical-align: middle;
-	margin: auto;
+	margin: 0 0;
 	/* margin-top: 2mm; */
 	font-size: 10pt;
 	/* 	border:1px solid #000000; */
@@ -131,7 +138,7 @@
 	text-align: left;
 	vertical-align: middle;
 	font-family: Arial;
-	font-size: 9pt;
+	font-size: 11pt;
 	font-color: #000000;
 	font-weight: bold;
 }
@@ -310,11 +317,11 @@ function getDayCode() {
 
 </script>
 
-<div id="printContent" align="center">
+<div id="printContent" align="left">
 <table style="background-size: cover;page-break-after:always;"
 	class="main_table" border=0>
 	<tr hight="260px">
-		<td>
+		<td align="left">
 		<div class="image-container" id="image-container">
 		<img src="<%=rootUrl %><%=url %>" id="preview-image">
 		</div>
@@ -367,7 +374,7 @@ function getDayCode() {
 							textMargin : 0,
 							height : 50,
 							margin : 0,
-							width : 1
+							width : 1.5
 							};
 						
 						JsBarcode(barcodeElement, batchNo, options);
@@ -379,11 +386,11 @@ function getDayCode() {
 					// 创建型号元素
 		            const prodSpecNameElement = document.createElement('div');
 		            prodSpecNameElement.className = 'text-overlay';
-		            prodSpecNameElement.textContent = '<%=prodSpecName %>';
+		            prodSpecNameElement.textContent = '<%=prodSpecName2 %>';
 		            
 		            <%
-					String fontSize = prodSpecName.length() >= 18 ? "16px"
-					: prodSpecName.length() > 9 ? "20px" : "26px";
+					String fontSize = prodSpecName.length() >= 18 ? "22px"
+					: prodSpecName.length() > 9 ? "26px" : "30px";
 					%>
 		            
 		            const fontSize = '<%=fontSize %>';
@@ -393,6 +400,7 @@ function getDayCode() {
 		            prodSpecNameElement.style.left = '<%=xBatchSpecName %>px';
 		            prodSpecNameElement.style.top = '<%=yBatchSpecName %>px';
 		            prodSpecNameElement.style.fontSize = fontSize;
+		            prodSpecNameElement.style.fontWeight = 'bold';
 		            prodSpecNameElement.style.color = color;
 		            
 		            container.appendChild(prodSpecNameElement);

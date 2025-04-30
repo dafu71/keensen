@@ -8,7 +8,7 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 
 		this.optPanel = this.optPanel || new Ext.Panel({
 					layout : 'border',
-					height : '400',
+					height : '420',
 					collapsible : false,
 					titleCollapse : false,
 					items : [this.masterPanel, this.stdGrid]
@@ -30,7 +30,7 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 		this.masterPanel = this.masterPanel || new Ext.fn.InputPanel({
 			// title:'检测录入',
 			width : '700',
-			height : '400',
+			height : '420',
 			region : 'west',
 			pgrid : '',
 			columns : 6,
@@ -277,7 +277,7 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 						height : '5',
 						colspan : 6
 					}, {
-						xtype : 'textarea',
+						xtype : 'textfield',
 						name : 'entity/remark',
 						fieldLabel : '备注',
 						anchor : '90%',
@@ -312,9 +312,10 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 	}
 
 	this.initStdGrid = function() {
+	
 		this.stdGrid = new Ext.fn.ListPanel({
 			title : '【膜片质检标准列表】',
-			height : '400',
+			height : '420',
 			region : 'center',
 			viewConfig : {
 				forceFit : true

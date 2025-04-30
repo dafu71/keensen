@@ -16,15 +16,15 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link21</targetConnections>
-    <targetConnections>link17</targetConnections>
-    <targetConnections>link6</targetConnections>
-    <targetConnections>link1</targetConnections>
-    <targetConnections>link8</targetConnections>
-    <targetConnections>link10</targetConnections>
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link19</targetConnections>
     <targetConnections>link23</targetConnections>
+    <targetConnections>link19</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link17</targetConnections>
+    <targetConnections>link21</targetConnections>
     <nodeLabel>end0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
@@ -268,6 +268,16 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link25" name="link25" type="transition">
+      <sourceNode>switch1</sourceNode>
+      <targetNode>end1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">list[1]/code</process:leftOperand>
+          <process:rightOperand type="literal">999</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link12</targetConnections>
     <targetConnections>link13</targetConnections>
     <nodeLabel>switch1label</nodeLabel>
@@ -338,6 +348,7 @@
   </nodes>
   <nodes xsi:type="process:tEnd" id="end1" name="结束1" type="end" contextPath="" method="forward" uri="/produce/component/markprint/printProdMarks.jsp">
     <targetConnections>link24</targetConnections>
+    <targetConnections>link25</targetConnections>
     <nodeLabel>end1label</nodeLabel>
     <process:inputVariables/>
     <process:returns/>
@@ -349,4 +360,5 @@
   <topRuler/>
   <leftRuler/>
   <process:info version="6.3"/>
+  <process:variables/>
 </process:tPageFlow>

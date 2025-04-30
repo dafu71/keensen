@@ -3,6 +3,7 @@
 <sqlMap>
     <select id="queryOrderBase" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    SELECT T1.ID                AS "id",
+   
       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",

@@ -48,16 +48,82 @@
   
   <select id="queryStockCount" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
   
-  SELECT 
-	nvl(sum(CASE WHEN t.STORAGE_ID = 3 AND t.diff>15 AND t.diff &lt;=30 THEN 1 END),0) "deliveryYellowCount",
-	nvl(sum(CASE WHEN t.STORAGE_ID = 3 AND t.diff>30 THEN 1 END),0) "deliveryRedCount",
-	nvl(sum(CASE WHEN (t.STORAGE_ID = 1 OR t.STORAGE_ID = 2) AND t.diff>30 AND t.diff &lt;=60 THEN 1 END),0) "selfYellowCount",
-	nvl(SUM(CASE WHEN (t.STORAGE_ID = 1 OR t.STORAGE_ID = 2) AND t.diff>60 THEN 1 END),0) "selfRedCount",
-	nvl(sum(CASE WHEN t.STORAGE_ID = 3 AND t.diff>15 AND t.diff&lt;=30 THEN t.amount END),0) "deliveryYellowAmount",
-	nvl(sum(CASE WHEN t.STORAGE_ID = 3 AND t.diff>30 THEN t.amount END),0) "deliveryRedAmount",
-	nvl(sum(CASE WHEN (t.STORAGE_ID = 1 OR t.STORAGE_ID = 2) AND t.diff>30 AND t.diff &lt;=60 THEN t.amount END),0) "selfYellowAmount",
-	nvl(SUM(CASE WHEN (t.STORAGE_ID = 1 OR t.STORAGE_ID = 2) AND t.diff>60 THEN t.amount END),0) "selfRedAmount"
-	 from V_KS_DIAPHRAGM_STOCK_WARN t
+  SELECT
+<!--发货膜片预期标准：30个自然日。-->
+ NVL(SUM(CASE
+           WHEN T.STORAGE_ID = 3 AND T.DIFF > 30 AND T.DIFF &lt;= 60 THEN
+            1
+         END),
+     0) "deliveryYellowCount",
+ <!--发货膜片超期标准：60个自然日。-->
+ NVL(SUM(CASE
+           WHEN T.STORAGE_ID = 3 AND T.DIFF > 60 THEN
+            1
+         END),
+     0) "deliveryRedCount",
+ 
+ <!--自用膜片预期标准：ULP与BW（含HW）为70个自然日，SW与NF合理时长为160个自然日-->
+ NVL(SUM(CASE
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 70 AND
+                T.DIFF &lt;= 90 AND
+                (T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
+                T.MATER_CLASS_CODE = 'HW') THEN
+            1
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 160 AND
+                T.DIFF &lt;= 180 AND
+                (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
+            1
+         END),
+     0) "selfYellowCount",
+ <!--自用膜片超期标准：ULP与BW（含HW）膜片为90个自然日，SW与NF膜片为180个自然日-->
+ NVL(SUM(CASE
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 90 AND
+                (T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
+                T.MATER_CLASS_CODE = 'HW') THEN
+            1
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 180 AND
+                (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
+            1
+         END),
+     0) "selfRedCount",
+ <!--发货膜片预期标准：30个自然日。-->
+ NVL(SUM(CASE
+           WHEN T.STORAGE_ID = 3 AND T.DIFF > 30 AND T.DIFF &lt;= 60 THEN
+            T.AMOUNT
+         END),
+     0) "deliveryYellowAmount",
+ <!--发货膜片超期标准：60个自然日。-->
+ NVL(SUM(CASE
+           WHEN T.STORAGE_ID = 3 AND T.DIFF > 60 THEN
+            T.AMOUNT
+         END),
+     0) "deliveryRedAmount",
+ 
+ <!--自用膜片预期标准：ULP与BW（含HW）为70个自然日，SW与NF合理时长为160个自然日-->
+ NVL(SUM(CASE
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 70 AND
+                T.DIFF &lt;= 90 AND
+                (T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
+                T.MATER_CLASS_CODE = 'HW') THEN
+            T.AMOUNT
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 160 AND
+                T.DIFF &lt;= 180 AND
+                (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
+            T.AMOUNT
+         END),
+     0) "selfYellowAmount",
+ <!--自用膜片超期标准：ULP与BW（含HW）膜片为90个自然日，SW与NF膜片为180个自然日-->
+ NVL(SUM(CASE
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 90 AND
+                (T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
+                T.MATER_CLASS_CODE = 'HW') THEN
+            T.AMOUNT
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 180 AND
+                (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
+            T.AMOUNT
+         END),
+     0) "selfRedAmount"
+  FROM V_KS_DIAPHRAGM_STOCK_WARN T
  </select>
  
  <select id="queryStockSelfCount" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >

@@ -44,6 +44,12 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 	}
 
 	this.initStore = function() {
+
+		this.pageTypeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['长页', '长页'], ['短页', '短页']]
+				});
+
 		this.cdmdutyStore = new Ext.data.JsonStore({
 			url : 'com.keensen.ump.produce.component.workorder2.queryBatchNo4CdmDuty.biz.ext',
 			root : 'data',
@@ -182,7 +188,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 				});
 
 		this.queryPanel.addButton({
-					text : "剩余可用长度提醒",
+					text : "剩余可用长度提醒(空头)",
 					scope : this,
 					iconCls : 'icon-application_form_magnify',
 					handler : this.onWarn
@@ -357,6 +363,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						width : 60,
 						dataIndex : 'pageWidth'
 					}, {
+						header : '长/短页',
+						width : 60,
+						dataIndex : 'pageType'
+					}, {
 						header : '膜页栈板储位',
 						width : 120,
 						dataIndex : 'location'
@@ -457,6 +467,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									name : 'location'
 								}, {
 									name : 'remainLength'
+								}, {
+									name : 'pageType'
 								}]
 					})
 		})
@@ -464,9 +476,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 	this.initInputWindow = function() {
 		var _this = this;
+
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增裁叠膜记录',
-			height : 550,
+			height : 600,
 			width : 800,
 			// itemCls:'required',
 			// style:'margin-top:10px',
@@ -925,7 +938,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					height : '5',
 					colspan : 24
 				}, {
-					//name : 'entity/remark',
+					// name : 'entity/remark',
 					ref : '../../denseNetCdm',
 					height : 30,
 					xtype : 'textarea',
@@ -945,6 +958,31 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					colspan : 24,
 					anchor : '86%',
 					allowBlank : true
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 24
+				}, {
+					xtype : 'combo',
+					fieldLabel : '长页/短页',
+					ref : '../../pageType',
+					allowBlank : false,
+					mode : 'local',
+					anchor : '86%',
+					colspan : 12,
+					emptyText : '--请选择--',
+					editable : false,
+					store : _this.pageTypeStore,
+					dataIndex : 'pageType',
+					hiddenName : 'entity/pageType',
+					displayField : "name",
+					valueField : "code",
+					scope : this,
+					listeners : {
+						"expand" : function(A) {
+							this.reset()
+						}
+					}
 				}, {
 					name : 'entity/workerId',
 					xtype : 'hidden',
@@ -1225,6 +1263,31 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							allowBlank : true,
 							dataIndex : 'remark'
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 24
+						}, {
+							xtype : 'combo',
+							fieldLabel : '长页/短页',
+							ref : '../../pageType',
+							// allowBlank : false,
+							mode : 'local',
+							anchor : '75%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : _this.pageTypeStore,
+							dataIndex : 'pageType',
+							hiddenName : 'entity/pageType',
+							displayField : "name",
+							valueField : "code",
+							scope : this,
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
 							name : 'entity/recordId',
 							xtype : 'hidden',
 							dataIndex : 'recordId'
@@ -1341,15 +1404,15 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 		this.queryPanel4RemainLength = this.queryPanel4RemainLength
 				|| new Ext.fn.QueryPanel({
-					height : 80,
-					columns : 1,
+					height : 110,
+					columns : 2,
 					border : true,
 					region : 'north',
 					// collapsible : true,
 					titleCollapse : false,
 					fields : [{
 								xtype : 'radiogroup',
-								colspan : 1,
+								colspan : 2,
 								columns : 2,
 								name : 'condition',
 								ref : '../reserve1',
@@ -1366,6 +1429,34 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 											name : 'condition/condition',
 											inputValue : '2'
 										}]
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 2
+							},
+
+							{
+								xtype : 'datetimefield',
+								name : 'condition/produceDtStart',
+								fieldLabel : '生产时间',
+								colspan : 1,
+								anchor : '90%',
+								// allowBlank : false,
+								editable : true,
+								format : 'Y-m-d H:i',
+								value : new Date().add(Date.DAY, -1)
+										.format('Y-m-d 00:00')
+							}, {
+								xtype : 'datetimefield',
+								name : 'condition/produceDtEnd',
+								fieldLabel : '至',
+								colspan : 1,
+								anchor : '90%',
+								editable : true,
+								format : 'Y-m-d H:i',
+								// allowBlank : false,
+								value : new Date().add(Date.DAY, 1)
+										.format('Y-m-d 00:00')
 							}]
 				});
 

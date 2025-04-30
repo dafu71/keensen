@@ -11,6 +11,9 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    
+    String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("produce/component/yxorder/index.jsp","");
 %>
 <html>
 <!-- 
@@ -36,6 +39,9 @@
 <js:load scriptPath="produce/component/yxorder/js/manageUi.js"/>
 <js:load scriptPath="produce/component/yxorder/js/manageEv.js"/>
 <script type="text/javascript">
+
+
+var markRootUrl = "<%=rootUrl %>";
 
 function getCurrentWeekNumber() {
   var now = new Date();

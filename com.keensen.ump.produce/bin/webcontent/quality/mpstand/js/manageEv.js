@@ -49,11 +49,38 @@ com.keensen.ump.produce.quality.mpstandMgr.prototype.initEvent = function() {
 				this.editThickStandWindow.loadData(cell);
 
 			}, this);
+
+	this.linecombo.mon(this.linecombo, 'select', function(record, index) {
+
+				this.inputWindow.lineIds.setValue(this.linecombo.myvalue);
+			}, this);
+
+	this.macnamecombo.mon(this.macnamecombo, 'select', function(record, index) {
+
+			}, this);
 }
 
-
-
 com.keensen.ump.produce.quality.mpstandMgr.prototype.onAdd = function() {
+	this.inputWindow.form.reset();
+	this.inputWindow.testSolid.setValue('NaCL溶液');
+	this.inputWindow.state.setValue('Y');
+
+	this.lineStore.each(function(rc) {
+				var lineItem = "lineItem" + rc.get("id");
+				var obj = document.getElementById(lineItem)
+				if (!Ext.isEmpty(obj)) {
+					obj.checked = false;
+				}
+			})
+
+	this.macNameStore.each(function(rc) {
+				var macItem = "macItem" + rc.get("id");
+				var obj = document.getElementById(macItem)
+				if (!Ext.isEmpty(obj)) {
+					obj.checked = false;
+				}
+			})
+
 	this.inputWindow.show();
 
 }
@@ -72,7 +99,13 @@ com.keensen.ump.produce.quality.mpstandMgr.prototype.destroy = function() {
 }
 
 com.keensen.ump.produce.quality.mpstandMgr.prototype.onEdit = function() {
-	this.listPanel.onEdit();
+	if (this.onSingleSelect()) {
+		this.listPanel.onEdit();
+	} else {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return false;
+	}
+
 }
 
 com.keensen.ump.produce.quality.mpstandMgr.prototype.onThickStand = function() {
@@ -89,4 +122,13 @@ com.keensen.ump.produce.quality.mpstandMgr.prototype.onDelStand = function() {
 
 com.keensen.ump.produce.quality.mpstandMgr.prototype.onEditStand = function() {
 	this.listPanel4ThickStand.onEdit();
+}
+
+com.keensen.ump.produce.quality.mpstandMgr.prototype.onSingleSelect = function() {
+	var C = this.listPanel.getSelectionModel().getSelections();
+	if (C.length > 1) {
+		return false;
+	} else {
+		return true;
+	}
 }

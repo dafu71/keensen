@@ -54,9 +54,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					fields : ['code', 'name'],
 					data : [['制定中', '制定中'], ['物控计划员确认', '物控计划员确认'],
 							['订单计划员确认', '订单计划员确认'], ['正式发布', '正式发布'],
-							['不能接单', '不能接单'], ['调整申请', '调整申请'],
-							['计划员确认', '计划员确认'], ['制造中心确认', '制造中心确认'],
-							['工艺员确认', '工艺员确认'], ['品管确认', '品管确认']]
+							['不能接单', '不能接单'], ['取消订单', '取消订单'],
+							['调整申请', '调整申请'], ['计划员确认', '计划员确认'],
+							['制造中心确认', '制造中心确认'], ['工艺员确认', '工艺员确认'],
+							['品管确认', '品管确认']]
 				});
 
 		this.ynStore = new Ext.data.SimpleStore({
@@ -138,7 +139,20 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		// 制作方式下拉选项：印刷、打印
 		this.makeLabelStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['印刷', '印刷'], ['打印', '打印']]
+					data : [['印刷', '印刷'], ['打印', '打印'], ['UV打印', 'UV打印'],
+							['客供', '客供']]
+				});
+
+		// 材质：打印纸/PET不干胶
+		this.materialStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['打印纸', '打印纸'], ['PET不干胶', 'PET不干胶']]
+				});
+
+		// 材质：白色/透明
+		this.backStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['白色', '白色'], ['透明', '透明'], ['客户定制', '客户定制']]
 				});
 
 		// 第二标签贴的位置下拉选项：产品上、真空袋上、其他
@@ -458,7 +472,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					// disabled : allRight != '1',
-					rescode : '10003669',
+					id : exportButton,
+					// rescode : '10003669',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
@@ -514,7 +529,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						handler : this.onConfirm
 					}, '-', {
 						text : '接单记录',
-						disabled : allRight != '1' && uid != 'KS00524' ,
+						disabled : allRight != '1' && uid != 'KS00524',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onConfirmList
@@ -542,6 +557,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onChange
+					}, '-', {
+						text : '取消订单',
+						disabled : allRight != '1',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onCancel
 					}, '->', {
 						text : '调整申请',
 						disabled : allRight != '1',
@@ -565,14 +586,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
-					}/*, '-', {
-						text : '列表字段设置',
-						scope : this,
-						iconCls : 'icon-application_form_magnify',
-						handler : function() {
-							this.optColumnWin.show();
-						}
-					}*/],
+					}/*
+						 * , '-', { text : '列表字段设置', scope : this, iconCls :
+						 * 'icon-application_form_magnify', handler : function() {
+						 * this.optColumnWin.show(); } }
+						 */],
 			hsPage : true,
 			selModel : selModel,
 			delUrl : '1.biz.ext',
@@ -658,6 +676,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'makeLabel',
 						header : '标签制作方式',
+						sortable : true
+					}, {
+						dataIndex : 'material',
+						header : '材质',
+						sortable : true
+					}, {
+						dataIndex : 'back',
+						header : '底色',
 						sortable : true
 					}, {
 						dataIndex : 'labelDrawingCode',
@@ -900,10 +926,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						dataIndex : 'packingLayer',
 						header : '打包层数',
 						sortable : true
-					}/*
-						 * , { dataIndex : 'packingTxt', header : '打包标识要求',
-						 * sortable : true }
-						 */, {
+					}, {
+						dataIndex : 'pallet',
+						header : '打托要求',
+						sortable : true
+					}, {
 						dataIndex : 'goodsWithReport',
 						header : '出货报告是否随货',
 						sortable : true
@@ -1182,6 +1209,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							name : 'mpSpecName'
 						}, {
 							name : 'mpSpecId'
+						}, {
+							name : 'back'
+						}, {
+							name : 'material'
+						}, {
+							name : 'pallet'
 						}]
 			})
 		})
@@ -1896,27 +1929,6 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					forceSelection : true,
 					allowBlank : false,
 					mode : 'local',
-					fieldLabel : '制作方式',
-					ref : '../../makeLabel',
-					hiddenName : 'entity/makeLabel',
-					dataIndex : 'makeLabel',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.makeLabelStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
 					fieldLabel : '新制版',
 					ref : '../../newMakeLabel',
 					hiddenName : 'entity/newMakeLabel',
@@ -1934,6 +1946,89 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}
 					}
 				}, {
+					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
+					xtype : 'combobox',
+					forceSelection : true,
+					allowBlank : false,
+					mode : 'local',
+					fieldLabel : '制作方式',
+					ref : '../../makeLabel',
+					hiddenName : 'entity/makeLabel',
+					dataIndex : 'makeLabel',
+					anchor : '100%',
+					colspan : 6,
+					emptyText : '--请选择--',
+					editable : false,
+					store : this.makeLabelStore,
+					displayField : "name",
+					valueField : "code",
+					listeners : {
+						"expand" : function(A) {
+							this.reset()
+						},
+						"select" : function(combo, record, index) {
+							var makeLabel = combo.getValue();
+							// 制作方式为打印，默认为打印纸/制作方式为印刷与UV打印，默认为PET不干胶
+							// 制作方式为打印，默认为白色/制作方式为印刷与UV打印，默认为透明
+							if (makeLabel == '打印') {
+								_this.addOrderWindow.material.setValue('打印纸');
+								_this.addOrderWindow.back.setValue('白色');
+							}
+							if (makeLabel == '印刷' || makeLabel == 'UV打印') {
+								_this.addOrderWindow.material
+										.setValue('PET不干胶');
+								_this.addOrderWindow.back.setValue('透明');
+							}
+						}
+					}
+				}, {
+					xtype : 'combobox',
+					forceSelection : true,
+					allowBlank : false,
+					mode : 'local',
+					fieldLabel : '材质',
+					ref : '../../material',
+					hiddenName : 'entity/material',
+					dataIndex : 'material',
+					anchor : '100%',
+					colspan : 6,
+					emptyText : '--请选择--',
+					editable : false,
+					store : this.materialStore,
+					displayField : "name",
+					valueField : "code",
+					listeners : {
+						"expand" : function(A) {
+							this.reset()
+						}
+					}
+				}, {
+					xtype : 'combobox',
+					forceSelection : true,
+					allowBlank : false,
+					mode : 'local',
+					fieldLabel : '底色',
+					ref : '../../back',
+					hiddenName : 'entity/back',
+					dataIndex : 'back',
+					anchor : '100%',
+					colspan : 6,
+					emptyText : '--请选择--',
+					editable : false,
+					store : this.backStore,
+					displayField : "name",
+					valueField : "code",
+					listeners : {
+						"expand" : function(A) {
+							this.reset()
+						}
+					}
+				}
+
+				, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -2609,12 +2704,19 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							this.reset()
 						}
 					}
-				}/*
-					 * , { xtype : 'displayfield', height : 5, colspan : 24 }, {
-					 * name : 'entity/packingTxt', dataIndex : 'packingTxt', //
-					 * allowBlank : false, anchor : '100%', colspan : 12, xtype :
-					 * 'textfield', fieldLabel : '打包标识要求' }
-					 */, {
+				}, {
+					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
+					name : 'entity/pallet',
+					dataIndex : 'pallet', //
+					// allowBlank : false,
+					anchor : '100%',
+					colspan : 24,
+					xtype : 'textfield',
+					fieldLabel : '打托要求'
+				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
 					labelSeparator : '',// 去掉冒号
@@ -3650,6 +3752,29 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					forceSelection : true,
 					readOnly : true,
 					mode : 'local',
+					fieldLabel : '新制版',
+					ref : '../../newMakeLabel',
+					dataIndex : 'newMakeLabel',
+					anchor : '100%',
+					colspan : 6,
+					emptyText : '',
+					editable : false,
+					store : this.ynStore,
+					displayField : "name",
+					valueField : "code"
+				}, {
+					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
+					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
+					xtype : 'combobox',
+					forceSelection : true,
+					readOnly : true,
+					mode : 'local',
 					fieldLabel : '制作方式',
 					ref : '../../makeLabel',
 					dataIndex : 'makeLabel',
@@ -3665,28 +3790,46 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					forceSelection : true,
 					readOnly : true,
 					mode : 'local',
-					fieldLabel : '新制版',
-					ref : '../../newMakeLabel',
-					dataIndex : 'newMakeLabel',
+					fieldLabel : '材质',
+					ref : '../../material',
+					dataIndex : 'material',
 					anchor : '100%',
 					colspan : 6,
 					emptyText : '',
 					editable : false,
-					store : this.ynStore,
+					store : this.materialStore,
+					displayField : "name",
+					valueField : "code"
+				}, {
+					xtype : 'combobox',
+					forceSelection : true,
+					readOnly : true,
+					mode : 'local',
+					fieldLabel : '底色',
+					ref : '../../back',
+					dataIndex : 'back',
+					anchor : '100%',
+					colspan : 6,
+					emptyText : '',
+					editable : false,
+					store : this.backStore,
 					displayField : "name",
 					valueField : "code"
 				}, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, hidden :
-					 * true, // allowBlank : false, mode : 'local', fieldLabel :
-					 * '水流箭头', ref : '../../waterArrow', readOnly : true,
-					 * dataIndex : 'waterArrow', anchor : '100%', colspan : 6,
-					 * emptyText : '', editable : false, store : this.ynStore,
-					 * displayField : "name", valueField : "code" }
-					 */, {
+				}
+
+						/*
+						 * , { xtype : 'combobox', forceSelection : true, hidden :
+						 * true, // allowBlank : false, mode : 'local',
+						 * fieldLabel : '水流箭头', ref : '../../waterArrow',
+						 * readOnly : true, dataIndex : 'waterArrow', anchor :
+						 * '100%', colspan : 6, emptyText : '', editable :
+						 * false, store : this.ynStore, displayField : "name",
+						 * valueField : "code" }
+						 */, {
 					xtype : 'combobox',
 					forceSelection : true,
 					readOnly : true,
@@ -4313,6 +4456,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					colspan : 12,
 					xtype : 'textfield',
 					fieldLabel : '打包标识要求'
+				}, {
+					name : 'entity/pallet',
+					dataIndex : 'pallet',
+					readOnly : true,
+					anchor : '100%',
+					colspan : 12,
+					xtype : 'textfield',
+					fieldLabel : '打托要求'
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
@@ -6199,7 +6350,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					border : true,
 					columns : 6,
 					loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandConfirm.biz.ext',
-					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm3.biz.ext',
+					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm5.biz.ext',
 					fields : [{
 								xtype : 'displayfield',
 								fieldLabel : '订单号',
@@ -7131,7 +7282,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					border : true,
 					columns : 6,
 					loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandConfirm.biz.ext',
-					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm3.biz.ext',
+					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm5.biz.ext',
 					fields : [{
 								xtype : 'displayfield',
 								fieldLabel : '订单号',

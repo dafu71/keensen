@@ -230,6 +230,9 @@
 	    FROM KS_COMPONENT_YXORDER_BASE 
 	    WHERE state = '物控计划员确认' 
 	    HAVING COUNT(1)&gt;0</isEqual>
+        <isEqual compareValue="remainLength" prepend="" property="opt2">UNION ALL
+	    SELECT '空头提醒' , '空头提醒','remainLength'
+	    FROM dual</isEqual>
     </select>
     <select id="queryLight" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.light "light",h.mptype,t.first_date from KS_QUALITY_MP_TEST_OIL_LIST t
 LEFT JOIN KS_QUALITY_MP_TEST_OIL_HEAD h 

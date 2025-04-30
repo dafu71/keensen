@@ -135,4 +135,148 @@ and nvl(t1.status,1) != 0
   AND SUBSTR(t.net_CODE,1,LENGTH(t.net_CODE)-12)=#machineCode#
   ) tt
   WHERE tt.net_CODE IS NOT NULL</select>
+    <select id="queryHousehold" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	   SELECT T1.ID AS "id",
+	       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:MI:SS') AS "createTime",
+	       T1.CREATE_USER_ID AS "createUserId",
+	       T1.CREATE_NAME AS "createName",
+	       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:MI:SS') AS "updateTime",
+	       T1.UPDATE_USER_ID AS "updateUserId",
+	       T1.UPDATE_NAME AS "updateName",
+	       T1.RESERVE1 AS "reserve1",
+	       T1.RESERVE2 AS "reserve2",
+	       T1.RESERVE3 AS "reserve3",
+	       T1.RESERVE4 AS "reserve4",
+	       T1.RESERVE5 AS "reserve5",
+	       T1.ORG_ID AS "orgId",
+	       T1.STATUS AS "status",
+	       T1.BATCH_NO AS "batchNo",
+	       T1.ORDER_NO AS "orderNo",
+	       T1.PROD_SPEC_ID AS "prodSpecId",
+	       PMS.MATER_SPEC_NAME "prodSpecName",
+	       T1.LENGTH AS "length",
+	       T1.BLANKING_SIZE AS "blankingSize",
+	       T1.CUT_AMOUNT AS "cutAmount",
+	       T1.PAGE_TYPE AS "pageType",
+	       T1.IF_CUT_FULL AS "ifCutFull",
+	       TO_CHAR(T1.PLAN_DATE, 'yyyy-MM-dd') AS "planDate",
+	       T1.PLAN_AMOUNT AS "planAmount",
+	       NVL(T1.CUT_AMOUNT, 0) * NVL(T1.PLAN_AMOUNT, 0) "validAmount",
+	       T2.CAIMO_LENGTH "caimoLength",
+	       pms2.MATER_SPEC_NAME "TmSpecName",
+	       OD.ORDER_AMOUNT "orderAmount",
+	       JM.JM_AMOUNT "jmAmount",
+	       JM_START_DT "jmStartDt",
+	       JM_OVER_DT "jmOverDt"
+	  FROM KS_COMPONENT_HOUSEHOLD_STOCK T1
+	  LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
+	    ON T1.ORDER_NO = OD.ORDER_NO
+	   AND T1.PROD_SPEC_ID = OD.MATER_SPEC_ID
+	  LEFT JOIN QINSEN.INST_TUMO TM
+	    ON TM.BATCH_NO = T1.BATCH_NO
+	  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS2
+	    ON PMS2.MATER_SPEC_ID = TM.SPEC_ID
+	  LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH *
+	                        DECODE(NVL(C.PAGE_TYPE, '长页'), '长页', 1, 0.5)) CAIMO_LENGTH,
+	                    C.TUMO_BATCH_ID
+	               FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
+	              WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
+	              GROUP BY C.TUMO_BATCH_ID) T2
+	    ON T2.TUMO_BATCH_ID = TM.RECORD_ID
+	  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+	    ON PMS.MATER_SPEC_ID = T1.PROD_SPEC_ID
+	
+	  LEFT JOIN (SELECT COUNT(1) JM_AMOUNT,
+	                    MIN(JM.CREATE_DT) JM_START_DT,
+	                    MAX(JM.CREATE_DT) JM_OVER_DT,
+	                    TM_BATCH_ID
+	               FROM (SELECT T.MAIN_BATCH_ID,
+	                            T.CREATE_DT,
+	                            T.CDM_BATCH_ID,
+	                            T3.RECORD_ID    TM_BATCH_ID,
+	                            T3.BATCH_NO     TM_BATCH_NO
+	                       FROM QINSEN.INST_JUANMO_DETAIL T
+	                       LEFT JOIN QINSEN.INST_CAIDIEMO T2
+	                         ON T.CDM_BATCH_ID = T2.RECORD_ID
+	                       LEFT JOIN QINSEN.INST_TUMO T3
+	                         ON T2.TUMO_BATCH_ID = T3.RECORD_ID) JM
+	              GROUP BY JM.TM_BATCH_ID) JM
+	    ON JM.TM_BATCH_ID = TM.RECORD_ID
+	
+	  where 1=1
+  
+   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="ids">t1.id in ($ids$)</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">T1.batch_no like '%' || #batchNoStr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNoStr">T1.order_no like '%' || #orderNoStr# || '%'</isNotNull>
+		
+	order by t1.id desc
+    </select>
+    <select id="queryHousehold4Create" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT ROWNUM AS "idx",
+       '' AS "batchNo",
+       '' AS "orderNo",
+       '' AS "prodSpecId",'' AS "prodSpecName",
+       '' AS "length",
+       '' AS "blankingSize",
+       '' AS "cutAmount",
+       '' AS "pageType",
+       '' AS "ifCutFull",
+       '' AS "planDate",
+       '' AS "planAmount"
+	  FROM DUAL T1
+	CONNECT BY LEVEL &lt;= 20</select>
+    <select id="queryHouseholdJm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+    SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:MI:SS') AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:MI:SS') AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.CM_BATCH_NO AS "cmBatchNo",T1.order_no "orderNo",
+       T1.HJ_BATCH_NO AS "hjBatchNo",
+       T1.AMOUNT AS "amount",
+       T1.PROD_SPEC_ID AS "prodSpecId",
+       T1.MACHINE_CODE AS "machineCode",
+       T1.WORKER_ID AS "workerId",
+       V.OPERATORNAME AS "userName",
+       V.USERID AS "userId",
+       PMS.MATER_SPEC_NAME AS "prodSpecName"
+  FROM KS_COMPONENT_HOUSEHOLD_JM T1
+  LEFT JOIN V_AC_OPERATOR_TRS V
+    ON V.OPERATORID = T1.WORKER_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = T1.PROD_SPEC_ID
+    where 1=1
+    <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="ids">t1.id in ($ids$)</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">T1.CM_BATCH_NO like '%' || #batchNoStr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNoStr">T1.order_no like '%' || #orderNoStr# || '%'</isNotNull>
+		
+	order by t1.id desc
+    
+    </select>
+    <select id="queryCm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+    SELECT T.BATCH_NO          "batchNo",
+       T.RECORD_ID         "recordId",
+       T.ORDER_NO          "orderNo",
+       T.PROD_SPEC_ID      "prodSpecId",
+       PMS.MATER_SPEC_NAME "prodSpecName"
+	  FROM QINSEN.INST_CAIDIEMO T
+	  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+	    ON PMS.MATER_SPEC_ID = T.PROD_SPEC_ID
+	 WHERE 1=1
+	 <isNotNull prepend="and" property="cmBatchNo">T.BATCH_NO = #cmBatchNo#</isNotNull>
+    </select>
 </sqlMap>

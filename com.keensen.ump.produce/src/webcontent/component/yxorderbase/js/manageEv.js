@@ -1,6 +1,9 @@
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function() {
 	var me = this;
 
+	this.exportFields = '';
+	this.getRight();
+
 	this.addMaterWindow.materCode.setDisabled(true);
 
 	this.yxorderStockAmountStore.on('load', function() {
@@ -119,8 +122,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.mcconfirmInputPanel.demandStockDate.setValue(cell
 						.get('demandStockDate'));
 				this.mcconfirmInputPanel.relationId.setValue(cell.get('id'));
-				
-				//this.mcconfirmInputPanel.mReason.setValue(cell.get('mReason'));
+
+				// this.mcconfirmInputPanel.mReason.setValue(cell.get('mReason'));
 
 				this.mcconfirmListPanel.store.baseParams = {
 					'map/baseId' : cell.get('id')
@@ -550,15 +553,19 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 
 	if (parseFloat(prodAmount) > 0) {
 
-		if (Ext.isEmpty(labelDrawingCode) || labelDrawingCode.trim() == '无'
-				|| labelDrawingCode.length < 10) {
-			Ext.Msg.alert('系统提示', '请选择标签图纸');
-			return false;
+		if (labelDrawingCode != 'KG') {
+			if (Ext.isEmpty(labelDrawingCode) || labelDrawingCode.trim() == '无'
+					|| labelDrawingCode.length < 10) {
+				Ext.Msg.alert('系统提示', '请选择标签图纸');
+				return false;
+			}
 		}
-		if (Ext.isEmpty(markDrawingCode) || markDrawingCode.trim() == '无'
-				|| markDrawingCode.length < 10) {
-			Ext.Msg.alert('系统提示', '请选择唛头图纸');
-			return false;
+		if (markDrawingCode != 'KG') {
+			if (Ext.isEmpty(markDrawingCode) || markDrawingCode.trim() == '无'
+					|| markDrawingCode.length < 10) {
+				Ext.Msg.alert('系统提示', '请选择唛头图纸');
+				return false;
+			}
 		}
 	}
 	var markRegular = this.addOrderWindow.markRegular.getValue();
@@ -938,6 +945,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSelect4ChooseLable 
 			this.addOrderWindow.logoLabel.setValue(logo);
 			this.addOrderWindow.specNameLabel.setValue(specName);
 			this.addOrderWindow.labelDrawingCode.setValue(drawingCode);
+			if (drawingCode == 'KG') {
+				this.addOrderWindow.label.setValue('客供标签');
+				this.addOrderWindow.makeLabel.setValue('客供');
+				this.addOrderWindow.material.setValue('客户订制');
+				this.addOrderWindow.back.setValue('客户订制');
+			}
 		}
 		if (opt == '2') {
 			this.addOrderWindow.logoLabel2.setValue(logo);
@@ -983,6 +996,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSelect4ChooseMark =
 			this.addOrderWindow.logoMark.setValue(logo);
 			this.addOrderWindow.specNameMark.setValue(specName);
 			this.addOrderWindow.markDrawingCode.setValue(drawingCode);
+
+			if (drawingCode == 'KG') {
+				this.addOrderWindow.mark.setValue('客供唛头');
+				this.addOrderWindow.makeMark.setValue('客供');
+
+			}
+
 		}
 		if (opt == '2') {
 			this.addOrderWindow.logoMark2.setValue(logo);
@@ -1014,6 +1034,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddMC = function() 
 	this.addMaterWindow.markDrawingCode.setValue(r.data.markDrawingCode);
 	this.addMaterWindow.snStart.setValue(r.data.snStart);
 	this.addMaterWindow.snEnd.setValue(r.data.snEnd);
+
+	var arr = [r.data.label, r.data.makeLabel, r.data.material, r.data.back]
+	var remark = arr.join('|');
+	this.addMaterWindow.remark.setValue(remark)
+
 	this.addMaterWindow.show();
 }
 
@@ -1155,7 +1180,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSaveMCConfirm = fun
 							});
 			this.requestMask.show();
 			Ext.Ajax.request({
-				url : "com.keensen.ump.produce.component.yxorderbase.saveMCConfirm3.biz.ext",
+				url : "com.keensen.ump.produce.component.yxorderbase.saveMCConfirm5.biz.ext",
 				method : "post",
 				jsonData : {
 					'entity' : this.mcconfirmInputPanel.form.getValues(),
@@ -1301,7 +1326,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onFill = function() {
 	this.addMaterWindow.materName.setValue(materName);
 	this.addMaterWindow.materCode.setValue(materCode);
 	this.addMaterWindow.materType.setValue('标签');
-	this.addMaterWindow.remark.setValue(label);
+	// this.addMaterWindow.remark.setValue(label);
 	this.addMaterWindow.unit.setValue(unit);
 	this.addMaterWindow.specName.setValue(specName);
 }
@@ -1380,4 +1405,94 @@ function describeOrderNo() {
 	s += '特规: CRM??????，共9位<br>';
 	s += '特规2: B202?????-???，共13位'
 	Ext.Msg.alert("订单编号规则", s);
+}
+
+// 获取权限
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.getRight = function() {
+	var _this = this;
+	Ext.Ajax.request({
+				url : "qinsen/produce/right.json",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					var data = ret.data;
+					var item = data[0].yxorderbase;
+					var exportLimitUsers = item.exportLimitUsers;
+					var exportUsers = item.exportUsers;
+					Ext.getCmp(exportButton).setVisible(exportLimitUsers
+							.indexOf(uid) != -1
+							|| exportUsers.indexOf(uid) != -1);
+					if (exportLimitUsers.indexOf(uid) != -1) {
+						_this.exportFields = item.exportLimitFields;
+					}
+
+				},
+				callback : function() {
+				}
+			})
+}
+
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCancel = function() {
+	var A = this.listPanel;
+	var _this = this;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+
+		Ext.Msg.confirm("操作确认", "您确实要取消订单吗?", function(btn) {
+			if (btn == "yes") {
+
+				var records = A.getSelectionModel().getSelections();
+
+				for (var i = 0; i < records.length; i++) {
+					var r = records[i];
+					var state = r.data.state;
+					if (state != '不能接单') {
+						Ext.Msg.alert('系统提示', '请选择状态为不能接单的记录');
+						return;
+					}
+				}
+
+				var ids = []
+				Ext.each(records, function(r) {
+							var id = r.data.id;
+							ids.push(id);
+						})
+
+				// var id = records[0].get('id');
+				// var deliveryState = records[0].get('deliveryState') == '是' ?
+				// '否' :
+				// '是';
+				this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				this.requestMask.show();
+				Ext.Ajax.request({
+					// url :
+					// "com.keensen.ump.produce.component.yxorderbase.saveDeliveryState.biz.ext",
+					url : "com.keensen.ump.produce.component.yxorderbase.saveCancelStateBatch.biz.ext",
+					method : "post",
+					jsonData : {
+						ids : ids.join(',')
+						// 'entity/id' : id,
+						// 'entity/deliveryState' : deliveryState
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							if (ret.success) {
+								_this.listPanel.store.reload();
+							}
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		})
+	}
 }

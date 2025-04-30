@@ -7,11 +7,43 @@
        t1.AMOUNT     as "amount",
        t1.REMARK     as "remark", t1.reserve1 "fhRemark",
        
-        CASE WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'red'
-         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;15) THEN 'yellow'
-          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) THEN 'red'
-       WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'yellow'
-       END "ifWarn",
+       (CASE 
+		 <!--
+		 
+		 自用膜片超期标准：ULP与BW（含HW）膜片为90个自然日，SW与NF膜片为180个自然日；
+			发货膜片超期标准：60个自然日。
+			自用膜片预期标准：ULP与BW（含HW）为70个自然日，SW与NF合理时长为160个自然日
+			发货膜片预期标准：30个自然日。
+		--><!--发货-->
+		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) THEN 'red'
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) THEN 'yellow'
+        <!--自用膜片--> 
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;90) 
+         AND (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW')
+         THEN 'red'
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;180) 
+         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF')
+         THEN 'red'
+         
+          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;70) 
+          AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=90)
+         AND (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW')
+         THEN 'yellow'
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;160) 
+          AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=180)
+         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF')
+         THEN 'yellow'
+         
+         
+       END) 
+       
+       <!-- CASE WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>30) THEN 'red'
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>15) THEN 'yellow'
+          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>60) THEN 'red'
+       WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>30) THEN 'yellow'
+       END -->
+       
+       "ifWarn",
        
        t1.if_Choice   as "ifChoice",
        t1.client_Name   as "clientName",
@@ -91,11 +123,37 @@
         <isNotNull prepend="and" property="planNo">upper(vkt.plan_No) '%' || upper(#planNo#) || '%'</isNotNull>
         <isNotNull prepend="and" property="batchNoStr">t1.batch_no in($batchNoStr$)</isNotNull>
         <isNotNull prepend="and" property="ifChoice">t1.if_Choice = #ifChoice#</isNotNull>
-        <isNotNull prepend="and" property="ifWarn">(CASE WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'red'
-         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;15) THEN 'yellow'
-          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) THEN 'red'
-       WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) THEN 'yellow'
-       END) = #ifWarn#</isNotNull>
+        <isNotNull prepend="and" property="ifWarn"> 
+		 (CASE 
+		 <!--
+		 
+		 自用膜片超期标准：ULP与BW（含HW）膜片为90个自然日，SW与NF膜片为180个自然日；
+			发货膜片超期标准：60个自然日。
+			自用膜片预期标准：ULP与BW（含HW）为70个自然日，SW与NF合理时长为160个自然日
+			发货膜片预期标准：30个自然日。
+		--><!--发货-->
+		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) THEN 'red'
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) THEN 'yellow'
+        <!--自用膜片--> 
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;90) 
+         AND (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW')
+         THEN 'red'
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;180) 
+         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF')
+         THEN 'red'
+         
+          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;70) 
+          AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=90)
+         AND (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW')
+         THEN 'yellow'
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;160) 
+          AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=180)
+         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF')
+         THEN 'yellow'
+         
+         
+       END) = #ifWarn#
+	</isNotNull>
 	
 	order by vkt.PRODUCE_DT desc nulls last
      </select>

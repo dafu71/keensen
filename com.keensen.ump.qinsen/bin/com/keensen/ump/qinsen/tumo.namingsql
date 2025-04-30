@@ -4,7 +4,7 @@
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    		SELECT T1.RECORD_ID         AS "recordId", T1.dm_Use_Length as "dmUseLength",
        T1.PLAN_NO           AS "planNo",t1.if_modify_defect "ifModifyDefect",
-       T1.DIMO_BATCH_NO     AS "dimoBatchNo",
+       T1.DIMO_BATCH_NO     AS "dimoBatchNo",t1.c21_result "c21Result",
        T1.BATCH_NO          AS "batchNo",
        T1.LINE_ID           AS "lineId",
        T1.SPEC_ID           AS "specId",
@@ -99,7 +99,7 @@
        decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
        t1.kt_amount "ktAmount"
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,A.water_batch_no,
-               A.PLAN_NO,A.if_modify_defect,
+               A.PLAN_NO,A.if_modify_defect,A.c21_result ,
                A.DIMO_BATCH_NO,
                A.BATCH_NO,
                A.LINE_ID,
@@ -242,7 +242,7 @@
   		    on vkrc.replace_trough_id = a.replace_trough_id 
   		    and vkrc.MATER_CLASS_CODE = PMC.MATER_CLASS_CODE 
             
-          LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,
+          LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
                            C.TUMO_BATCH_ID
                       FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
                      WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID

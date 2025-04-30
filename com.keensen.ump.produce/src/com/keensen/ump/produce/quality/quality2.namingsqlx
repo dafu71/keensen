@@ -487,4 +487,51 @@
 
 </select>
 
+
+ <select id="queryC21Range" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+	SELECT T1.ID              AS "id",
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+      t1.MATER_CLASS_CODE as "materClassCode",
+		t1.is_wx as "isWx",
+		t1.qualified as "qualified",
+		t1.feedback as "feedback",
+		t1.remark as "remark"
+
+  FROM  KS_BASE_C21_RANGE t1
+	where 1=1
+	
+	<isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="materClassCode"> 
+		       T1.MATER_CLASS_CODE = #materClassCode#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="isWx"> 
+		       t1.is_wx = #isWx#
+	</isNotNull>
+	
+	<isNotNull prepend="" property="tmRecordId"> 
+		       AND (t1.MATER_CLASS_CODE,t1.is_wx) IN  (SELECT pmc.mater_class_code,tm.is_wx FROM qinsen.inst_tumo tm
+		  LEFT JOIN qinsen.para_mater_spec pms ON tm.spec_id=pms.mater_spec_id
+		  LEFT JOIN qinsen.para_mater_class pmc ON pms.mater_class_id = pmc.mater_class_id
+		  WHERE tm.record_id=#tmRecordId#)
+	</isNotNull>
+	
+	 </select>
+
 	 </sqlMap>

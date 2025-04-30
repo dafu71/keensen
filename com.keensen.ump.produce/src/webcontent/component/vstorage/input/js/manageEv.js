@@ -20,11 +20,22 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr.prototype.initEvent 
 					_this.rec = r;
 				}).defer(100);
 			}, this);
+			
+	// 增加修改事件
+	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+				this.editWindow.show();
+				this.editWindow.loadData(cell);
+
+			}, this);
 
 }
 
 com.keensen.ump.produce.component.vstorage.VstorageInputMgr.prototype.destroy = function() {
 
+}
+
+com.keensen.ump.produce.component.vstorage.VstorageInputMgr.prototype.onEdit = function() {
+	this.listPanel.onEdit();
 }
 
 com.keensen.ump.produce.component.vstorage.VstorageInputMgr.prototype.onScan = function() {
@@ -56,7 +67,7 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr.prototype.onScan = f
 				_this.inputPanel.msg.setValue('');
 				_this.inputPanel.prodSpecName.setValue(data[0].prodSpecName);
 				
-				//_this.onSave();
+				_this.onSave();
 
 			}
 		}
@@ -67,6 +78,8 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr.prototype.onSave = f
 	var _this = this;
 	
 	if (this.inputPanel.form.isValid()) {
+		
+		var exceptionType = _this.inputPanel.exceptionType.getValue();
 		this.requestMask = this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
 							msg : "后台正在操作,请稍候!"
@@ -83,6 +96,7 @@ com.keensen.ump.produce.component.vstorage.VstorageInputMgr.prototype.onSave = f
 					Ext.MessageBox.alert("操作提示", "保存成功!", function() {
 								_this.listPanel.store.reload({});
 								_this.inputPanel.form.reset();
+								_this.inputPanel.exceptionType.setValue(exceptionType);
 								_this.inputPanel.batchNo.focus().defer(100);
 							})
 				}

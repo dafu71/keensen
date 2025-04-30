@@ -22,7 +22,7 @@
        T1.CHANGER_ID      AS "changerId",
        T1.REMARK          AS "remark",
        T1.IS_TO_MIX       AS "isToMix",
-       T1.PAGE_WIDTH      AS "pageWidth",
+       T1.PAGE_WIDTH      AS "pageWidth",T1.PAGE_TYPE      AS "pageType",
        T1.TUMO_BATCH_NO   AS "tumoBatchNo",
        T1.MP_SPEC_CODE    AS "mpSpecCode",
        T1.MP_SPEC_NAME    AS "mpSpecName",
@@ -62,7 +62,7 @@
                A.CHANGER_ID,
                A.REMARK,
                A.IS_TO_MIX,
-               A.PAGE_WIDTH,
+               A.PAGE_WIDTH,A.PAGE_TYPE,
                TM.BATCH_NO TUMO_BATCH_NO,tm.is_cut_over,
                
                nvl(TM.OUT_LENGTH,0) - nvl(T2.CAIMO_LENGTH,0) - nvl(T3.CAIMO_LOSS,0) remain_Length,
@@ -94,7 +94,8 @@
                       FROM QINSEN.INST_CDM_DEFECT D
                      GROUP BY D.TUMO_BATCH_ID) T3
             ON T3.TUMO_BATCH_ID = TM.RECORD_ID
-            LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,
+            <!--裁叠膜增加长页、短页-->
+            LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
                            C.TUMO_BATCH_ID
                       FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
                      WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID

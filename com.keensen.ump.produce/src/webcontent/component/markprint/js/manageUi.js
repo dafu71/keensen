@@ -35,6 +35,11 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						name : 'text'
 					}]
 		})
+
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['Y', '是'], ['N', '否']]
+				});
 	}
 
 	this.initQueryPanel = function() {
@@ -123,8 +128,22 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						// disabled : (uid != 'KS00610') && (uid != 'KS01313')
 						// && (uid != 'KS00524'),
+						handler : this.onPreView
+					}, '-', {
+						text : '打印测试',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						// disabled : (uid != 'KS00610') && (uid != 'KS01313')
+						// && (uid != 'KS00524'),
 						handler : this.onView
 					}, '->', {
+						text : '测试照片上传',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						// disabled : (uid != 'KS00610') && (uid != 'KS01313')
+						// && (uid != 'KS00524'),
+						handler : this.onUploadTestPicture
+					}, '-', {
 						text : '标签图纸编号管理',
 						scope : this,
 						iconCls : 'icon-application_edit',
@@ -180,6 +199,22 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						dataIndex : 'specName',
 						header : '贴牌型号'
 					}, {
+						dataIndex : 'reserve5',
+						header : '测试照片',
+						renderer : function(value, metaData, rec, rowIndex,
+								colIndex, store, view) {
+							if (!!value) {
+
+								return '<img src="'
+										+ markRootUrl
+										+ value
+										+ '?ver='
+										+ rec.data.id
+										+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+
+							}
+						}
+					}, {
 						dataIndex : 'remark',
 						header : '备注说明'
 					}],
@@ -205,6 +240,8 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							name : 'codeRemark'
 						}, {
 							name : 'specName'
+						}, {
+							name : 'reserve5'
 						}]
 			})
 		})
@@ -212,6 +249,8 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 
 	// 上传面板
 	this.buildUploadWin = function() {
+
+		var _this = this;
 		this.uploadWin = new Ext.Window({
 			title : '上传文件',
 			collapsible : false,
@@ -233,7 +272,23 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							fieldLabel : '选择文件',
 							allowBlank : false,
 							id : marktemplateupload,
-							inputType : 'file'
+							inputType : 'file',
+							listeners : {
+								'render' : function(e) {
+									const fileId = e.autoEl.id
+									var f = document.getElementById(fileId);
+									f.addEventListener('change',
+											function(event) {
+												// const file =
+												// event.target.files[0];
+												// alert(file)
+												_this.pretreatment(event,
+														fileId);
+
+											});
+
+								}
+							}
 						}]
 			}],
 			buttons : [{
@@ -426,14 +481,14 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 		var _this = this;
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 280,
+			height : 650,
 			region : 'center',
 			// baseCls : "x-panel",
 			pgrid : this.listPanel,
 			autoHide : false,
 			autoScroll : false,
 			border : true,
-			columns : 2,
+			columns : 4,
 			saveUrl : 'com.keensen.ump.produce.component.makprint.saveMarkPrint2.biz.ext',
 			loadUrl : 'com.keensen.ump.produce.component.makprint.expandTemplate.biz.ext',
 			fields : [{
@@ -443,17 +498,17 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						allowBlank : false,
 						fieldLabel : '唛头图纸编号',
 						anchor : '95%',
-						colspan : 2
+						colspan : 4
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 4
 					}, {
 						xtype : 'trigger',
 						name : 'localurl',
 						fieldLabel : '新标签背景图',
 						allowBlank : true,
-						colspan : 2,
+						colspan : 4,
 						anchor : '95%',
 						editable : false,
 						hideTrigger : false,
@@ -464,13 +519,13 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 4
 					}, {
 						xtype : 'trigger',
 						name : 'localurl2',
 						fieldLabel : '新唛头图纸',
 						allowBlank : true,
-						colspan : 2,
+						colspan : 4,
 						anchor : '95%',
 						editable : false,
 						hideTrigger : false,
@@ -481,7 +536,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 4
 					}, {
 
 						xtype : 'combo',
@@ -496,7 +551,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hiddenName : 'entity/code',
 						emptyText : '--请选择--',
 						anchor : '95%',
-						colspan : 2,
+						colspan : 4,
 						store : this.codeStore,
 						listeners : {
 							// scope : this,
@@ -507,20 +562,20 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 4
 					}, {
-						xtype : 'textarea',
+						xtype : 'textfield',
 						name : 'entity/remark',
 						dataIndex : 'remark',
 						allowBlank : true,
 						fieldLabel : '备注说明',
 						anchor : '95%',
-						colspan : 2
+						colspan : 4
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">台账</p>',
 						labelSeparator : '',// 去掉冒号
-						colspan : 2
+						colspan : 4
 					}/*
 						 * ,{ xtype : 'textfield', name : 'entity/drawingName',
 						 * dataIndex : 'drawingName', allowBlank : false,
@@ -531,7 +586,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						dataIndex : 'materCode',
 						fieldLabel : '物料号（外购必填）',
 						anchor : '95%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						name : 'entity/logo',
@@ -539,11 +594,11 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						allowBlank : false,
 						fieldLabel : '唛头LOGO',
 						anchor : '95%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 2
+						colspan : 4
 					}, {
 						xtype : 'textfield',
 						name : 'entity/specName',
@@ -551,13 +606,226 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						allowBlank : false,
 						fieldLabel : '贴牌型号',
 						anchor : '95%',
-						colspan : 1
+						colspan : 2
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'labelSize',
 						name : 'entity/labelSize',
 						fieldLabel : '标签尺寸',
 						anchor : '95%',
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '<p style="color:red;font-size:16px;">模板参数</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否打印<br>元件批次',
+						dataIndex : 'ifPrintBatchNo',
+						ref : '../ifPrintBatchNo',
+						hiddenName : 'entity/ifPrintBatchNo',
+						anchor : '100%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.ifPrintBatchNo.reset()
+							}
+						}
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'yBatchNo',
+						name : 'entity/yBatchNo',
+						fieldLabel : '元件批次<br>纵坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'xBatchNo',
+						name : 'entity/xBatchNo',
+						fieldLabel : '元件批次<br>横坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否打印<br>元件型号',
+						dataIndex : 'ifPrintSpecName',
+						ref : '../ifPrintSpecName',
+						hiddenName : 'entity/ifPrintSpecName',
+						anchor : '100%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.ifPrintSpecName.reset()
+							}
+						}
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'yBatchSpecName',
+						name : 'entity/yBatchSpecName',
+						fieldLabel : '元件型号<br>纵坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'xBatchSpecName',
+						name : 'entity/xBatchSpecName',
+						fieldLabel : '元件型号<br>横坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否打印<br>干湿膜',
+						dataIndex : 'ifPrintDryWet',
+						ref : '../ifPrintDryWet',
+						hiddenName : 'entity/ifPrintDryWet',
+						anchor : '100%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.ifPrintDryWet.reset()
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						colspan : 4
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'yDryImg',
+						name : 'entity/yDryImg',
+						fieldLabel : '干膜图片<br>纵坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'xDryImg',
+						name : 'entity/xDryImg',
+						fieldLabel : '干膜图片<br>横坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'yDrySpan',
+						name : 'entity/yDrySpan',
+						fieldLabel : '干膜文字<br>纵坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'xDrySpan',
+						name : 'entity/xDrySpan',
+						fieldLabel : '干膜文字<br>横坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						colspan : 4
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'yWetImg',
+						name : 'entity/yWetImg',
+						fieldLabel : '湿膜图片<br>纵坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'xWetImg',
+						name : 'entity/xWetImg',
+						fieldLabel : '湿膜图片<br>横坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'yWetSpan',
+						name : 'entity/yWetSpan',
+						fieldLabel : '湿膜文字<br>纵坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'xWetSpan',
+						name : 'entity/xWetSpan',
+						fieldLabel : '湿膜文字<br>横坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						colspan : 4
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'yStarImg',
+						name : 'entity/yStarImg',
+						fieldLabel : '星标图片<br>纵坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'xStarImg',
+						name : 'entity/xStarImg',
+						fieldLabel : '星标图片<br>横坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否打印<br>日期码',
+						dataIndex : 'ifPrintDayCode',
+						ref : '../ifPrintDayCode',
+						hiddenName : 'entity/ifPrintDayCode',
+						anchor : '100%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.ifPrintDayCode.reset()
+							}
+						}
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'yDayCodeSpan',
+						name : 'entity/yDayCodeSpan',
+						fieldLabel : '日期码<br>纵坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'xDayCodeSpan',
+						name : 'entity/xDayCodeSpan',
+						fieldLabel : '日期码<br>横坐标',
+						anchor : '100%',
 						colspan : 1
 					}, {
 						xtype : 'hidden',
@@ -601,7 +869,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					autoScroll : false,
 					modal : true,
 					width : 800,
-					height : 600,
+					height : 650,
 					layout : 'border',
 					items : [this.editPanel]
 

@@ -503,7 +503,10 @@
 		t.mac_name "macName",t.test_solid "testSolid",t.method "method",
 		decode(t.is_wx,'Y','是','否') "isWxName",
     nvl(trim(t.gfd_low_limit),0) "gfdLow",nvl(trim(t.gfd_up_limit),0) "gfdUp"
-     ,(nvl(trim(t.gfd_low_limit),0) + nvl(trim(t.gfd_up_limit),0))/2 "gfdAvg"
+     ,(nvl(trim(t.gfd_low_limit),0) + nvl(trim(t.gfd_up_limit),0))/2 "gfdAvg",
+     
+     l.line_name || '(' || l.line_code || ')' "lineName"
+     
 		  FROM KS_PROD_DIAPHRAGM_STAND T
 		  LEFT JOIN (SELECT T.MATER_SPEC_ID ID, T.MATER_SPEC_CODE NAME
 		               FROM QINSEN.PARA_MATER_SPEC T
@@ -514,6 +517,8 @@
 		               FROM QINSEN.CONF_PROP_VALUE_OPTION T
 		              WHERE T.PROP_ID = 30023) T3
 		    ON T.LEVEL_ID = T3.ID
+		  left join QINSEN.BASE_PROD_LINE  L
+		  on t.line_id = l.line_id
 		    where 1=1
 		<isNotNull prepend = ""  property = "specId">
 		   AND t.SPEC_ID = #specId#
@@ -873,7 +878,7 @@
 	SELECT T1.ID           "id", rownum "rn",
        T1.RELATION_ID  "relationId",
        nvl(T1.WATER,'')        "water",
-       nvl(T1.DESALINATION,'') "desalination",
+       to_char(nvl(T1.DESALINATION,''),'fm999.00') "desalination",
        T1.BATCH_NO     "batchNo"
   FROM KS_QUALITY_DELIVERYRECORD_LIST T1
   WHERE 1=1

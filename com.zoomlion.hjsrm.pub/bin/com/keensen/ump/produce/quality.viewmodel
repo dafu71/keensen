@@ -136,108 +136,6 @@
             <edit name="" type="text"/>
         </field>
     </viewModel>
-    <viewModel author="dafu" displayName="KsProdDiaphragmStand" entityName="com.keensen.ump.produce.quality.KsProdDiaphragmStand" id="KsProdDiaphragmStand">
-        <field dataType="Int" dict="false" id="recordId" label="主键">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" id="specId" label="膜片型号ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="state" label="状态,Y=在用，N=失效">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" id="levelId" label="等级ID，值义见字典表">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="gfdLowSymbol" label="膜通量下限比较符">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="gfdLowLimit" label="膜通量下限">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="gfdUpSymbol" label="膜通量上限比较符">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="gfdUpLimit" label="膜通量上限">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="saltLowSymbol" label="脱盐率下限比较符">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="saltLowLimit" label="脱盐率下限">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="saltUpSymbol" label="脱盐率上限比较符">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="saltUpLimit" label="脱盐率上限">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Date" dict="false" id="createDt" label="创建日期">
-            <view type="write"/>
-            <edit name="" type="date"/>
-        </field>
-        <field dataType="Date" dict="false" id="changeDt" label="修改日期">
-            <view type="write"/>
-            <edit name="" type="date"/>
-        </field>
-        <field dataType="String" dict="false" id="creatorId" label="创建人ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="changerId" label="修改人ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="remark" label="说明">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="specName2" label="specName2">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="specName" label="specName">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="levelName" label="levelName">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="macName" label="测试台">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="testSolid" label="测试溶液">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="isWx" label="是否外销">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="method" label="初复测">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" id="specId2" label="对外膜片型号ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-    </viewModel>
     <viewModel author="dafu" displayName="KsProdDiaphragmTumoCheck" entityName="com.keensen.ump.produce.quality.KsProdDiaphragmTumoCheck" id="KsProdDiaphragmTumoCheck">
         <field dataType="Int" dict="false" id="recordId" label="主键">
             <view type="write"/>
@@ -3506,6 +3404,190 @@
             <edit name="" type="text"/>
         </field>
         <field dataType="String" dict="false" id="diff24" label="diff24">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="KsBaseC21Range" entityName="com.keensen.ump.produce.quality.KsBaseC21Range" id="KsBaseC21Range">
+        <field dataType="Long" dict="false" id="id" label="主键">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createTime" label="创建时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createUserId" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createName" label="创建人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="updateTime" label="修改时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="updateUserId" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="updateName" label="修改人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve1" label="备用字段1">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve2" label="备用字段2">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve3" label="备用字段3">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve4" label="备用字段4">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve5" label="备用字段5">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgId" label="所属单位ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="status" label="是否有效：0无效，1有效">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="materClassCode" label="膜片系列">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isWx" label="是否外销">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="qualified" label="合格标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="feedback" label="反馈标准">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="备注">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="KsProdDiaphragmStand" entityName="com.keensen.ump.produce.quality.KsProdDiaphragmStand" id="KsProdDiaphragmStand">
+        <field dataType="Int" dict="false" id="recordId" label="主键">
+            <view type="write"/>
+            <edit name="recordId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="specId" label="膜片型号ID">
+            <view type="write"/>
+            <edit name="specId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="state" label="状态,Y=在用，N=失效">
+            <view type="write"/>
+            <edit name="state" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="levelId" label="等级ID，值义见字典表">
+            <view type="write"/>
+            <edit name="levelId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="gfdLowSymbol" label="膜通量下限比较符">
+            <view type="write"/>
+            <edit name="gfdLowSymbol" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="gfdLowLimit" label="膜通量下限">
+            <view type="write"/>
+            <edit name="gfdLowLimit" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="gfdUpSymbol" label="膜通量上限比较符">
+            <view type="write"/>
+            <edit name="gfdUpSymbol" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="gfdUpLimit" label="膜通量上限">
+            <view type="write"/>
+            <edit name="gfdUpLimit" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="saltLowSymbol" label="脱盐率下限比较符">
+            <view type="write"/>
+            <edit name="saltLowSymbol" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="saltLowLimit" label="脱盐率下限">
+            <view type="write"/>
+            <edit name="saltLowLimit" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="saltUpSymbol" label="脱盐率上限比较符">
+            <view type="write"/>
+            <edit name="saltUpSymbol" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="saltUpLimit" label="脱盐率上限">
+            <view type="write"/>
+            <edit name="saltUpLimit" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="createDt" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="changeDt" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="creatorId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="changerId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="specName2" label="specName2">
+            <view type="write"/>
+            <edit name="specName2" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="specName" label="specName">
+            <view type="write"/>
+            <edit name="specName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="levelName" label="levelName">
+            <view type="write"/>
+            <edit name="levelName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="macName" label="测试台">
+            <view type="write"/>
+            <edit name="macName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="testSolid" label="测试溶液">
+            <view type="write"/>
+            <edit name="testSolid" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="isWx" label="是否外销">
+            <view type="write"/>
+            <edit name="isWx" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="method" label="初复测">
+            <view type="write"/>
+            <edit name="method" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="specId2" label="对外膜片型号ID">
+            <view type="write"/>
+            <edit name="specId2" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="lineId" label="生产线id">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>

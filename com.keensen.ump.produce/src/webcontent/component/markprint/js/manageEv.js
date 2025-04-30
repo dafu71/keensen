@@ -60,6 +60,21 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onEdit = functi
 	this.listPanel.onEdit();
 };
 
+com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onUploadTestPicture = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	}
+	this.uploadWin.myflag = 5;
+	this.uploadForm = this.uploadWin.getComponent('uploadForm').getForm();
+	this.uploadForm.reset();
+	this.uploadWin.show();
+	// Ext.getCmp('uploadMarkTemplate').onClick();
+	$(marktemplateupload).click();
+
+}
+
 com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onUploadWindowShow = function(
 		o) {
 	this.uploadWin.myflag = o;
@@ -70,6 +85,76 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onUploadWindowS
 	$(marktemplateupload).click();
 
 };
+
+com.keensen.ump.produce.component.markprinttemplateMgr.prototype.pretreatment = function(
+		e, fileId) {
+	var _this = this;
+
+	var myflag = _this.uploadWin.myflag;
+
+	this.uploadInputPanel = this.uploadWin.getComponent('uploadForm');
+	// 校验
+	this.fileUploadObj = this.uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	this.filePath = this.fileUploadObj.getValue();
+	// 文件后缀
+	this.sfileName = this.filePath.split(".");
+
+	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
+			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
+			'raw', 'wmf', 'webp', 'avif', 'apng'];
+	var extname = this.sfileName[1].toLowerCase();
+	if (extname == null || array.indexOf(extname) == -1) {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为图片文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+
+	if (myflag == '1' || myflag == '3') {// 背景图片
+
+		const file = e.target.files[0];
+		const img = new Image();
+		const tempUrl = window.URL.createObjectURL(file);
+
+		// 成功加载图片
+		img.onload = function() {
+			// 获取原始尺寸
+			const width = this.naturalWidth;
+			const height = this.naturalHeight;
+
+			// 立即释放临时 URL
+			window.URL.revokeObjectURL(tempUrl);
+			if (width > 386 || width < 380) {
+				Ext.Msg.alert("系统提示", "图片宽度太大或太小，请选择像素（宽*高）接近386*266的图片！",
+						function() {
+							document.getElementById(fileId).value = '';
+							return;
+						})
+
+			}
+			if (height > 266 || height < 260) {
+				Ext.Msg.alert("系统提示", "图片高度太大或太小，请选择像素（宽*高）接近386*266的图片！",
+						function() {
+							document.getElementById(fileId).value = '';
+							return;
+						})
+			}
+
+		};
+
+		// 错误处理
+		img.onerror = function() {
+			alert('图片加载失败，请检查文件格式');
+			window.URL.revokeObjectURL(tempUrl);
+		};
+
+		img.src = tempUrl;
+	}
+}
 
 // 文件上传
 com.keensen.ump.produce.component.markprinttemplateMgr.prototype.doUpload = function() {
@@ -98,51 +183,83 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.doUpload = func
 	if (this.uploadInputPanel.form.isValid()) {
 		var url = 'com.keensen.ump.produce.component.uploadMarkTemplate.flow';
 		this.uploadInputPanel.form.submit({
-					method : "POST",
-					timeout : 1200,
-					url : url,
-					waitTitle : "操作提示",
-					waitMsg : "上传数据中...",
-					success : function(form, action) {
-						var result = action.result;
-						var fname = result.msg;
-						fname = '/myupload/markprint/' + fname;
-						if (result.success) {
-							_this.uploadWin.hide();
-							var myflag = _this.uploadWin.myflag;
-							if (myflag == '1') {
-								_this.inputPanel.form.findField('url')
-										.setValue(_this.filePath);
-								_this.inputPanel.form.findField('entity/url')
-										.setValue(fname);
-							} else if (myflag == '2') {
-								_this.inputPanel.form.findField('url2')
-										.setValue(_this.filePath);
-								_this.inputPanel.form.findField('entity/url2')
-										.setValue(fname);
-							} else if (myflag == '3') {
-								_this.editPanel.form.findField('localurl')
-										.setValue(_this.filePath);
-								_this.editPanel.form.findField('entity/url')
-										.setValue(fname);
-							} else if (myflag == '4') {
-								_this.editPanel.form.findField('localurl2')
-										.setValue(_this.filePath);
-								_this.editPanel.form.findField('entity/url2')
-										.setValue(fname);
-							}
-
+			method : "POST",
+			timeout : 1200,
+			url : url,
+			waitTitle : "操作提示",
+			waitMsg : "上传数据中...",
+			success : function(form, action) {
+				var result = action.result;
+				var fname = result.msg;
+				fname = '/myupload/markprint/' + fname;
+				if (result.success) {
+					_this.uploadWin.hide();
+					var myflag = _this.uploadWin.myflag;
+					if (myflag == '1') {
+						_this.inputPanel.form.findField('url')
+								.setValue(_this.filePath);
+						_this.inputPanel.form.findField('entity/url')
+								.setValue(fname);
+					} else if (myflag == '2') {
+						_this.inputPanel.form.findField('url2')
+								.setValue(_this.filePath);
+						_this.inputPanel.form.findField('entity/url2')
+								.setValue(fname);
+					} else if (myflag == '3') {
+						_this.editPanel.form.findField('localurl')
+								.setValue(_this.filePath);
+						_this.editPanel.form.findField('entity/url')
+								.setValue(fname);
+					} else if (myflag == '4') {
+						_this.editPanel.form.findField('localurl2')
+								.setValue(_this.filePath);
+						_this.editPanel.form.findField('entity/url2')
+								.setValue(fname);
+					} else if (myflag == '5') {
+						var A = _this.listPanel;
+						if (!A.getSelectionModel().getSelected()) {
+							Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+							return;
 						}
-					},
-					failure : function(form, action) {
-						Ext.MessageBox.show({
-									title : '操作提示',
-									buttons : Ext.MessageBox.OK,
-									msg : "导入失败，请检查文件格式或网络是否正常",
-									icon : Ext.MessageBox.ERROR
+						var records = A.getSelectionModel().getSelections();
+						var pkid = records[0].data.id;
+
+						var mk = new Ext.LoadMask(Ext.getBody(), {
+									msg : '正在保存，请稍候!',
+									removeMask : true
 								});
+						mk.show();
+
+						Ext.Ajax.request({
+							method : "post",
+							scope : this,
+							url : 'com.keensen.ump.produce.component.makprint.saveMarkPrint2.biz.ext',
+							jsonData : {
+								'entity/id' : pkid,
+								'entity/reserve5' : fname
+							},
+							success : function(response, action) {
+								mk.hide();
+								// 返回值处理
+								_this.listPanel.store.reload();
+							},
+							failure : function(resp, opts) {
+								mk.hide();
+							}
+						});
 					}
-				});
+
+				}
+			},
+			failure : function(form, action) {
+				Ext.MessageBox.show({
+							title : '操作提示',
+							buttons : Ext.MessageBox.OK,
+							msg : "导入失败，请检查文件格式或网络是否正常",
+							icon : Ext.MessageBox.ERROR
+						});
+			}
+		});
 	}
 
 }
@@ -237,7 +354,8 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onView = functi
 	}
 	var records = A.getSelectionModel().getSelections();
 	var templateName = records[0].data.templateName;
-
+	
+	
 	var mk = new Ext.LoadMask(Ext.getBody(), {
 				msg : '正在保存，请稍候!',
 				removeMask : true
@@ -356,9 +474,9 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onDelLable = fu
 						var result = Ext.decode(response.responseText);
 						if (result.success) {
 							Ext.Msg.alert("系统提示", "删除成功！", function() {
-								A.store.reload({});
+										A.store.reload({});
 
-							})
+									})
 
 						}
 
@@ -477,6 +595,33 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.doUpload4Choose
 			}
 		});
 	}
+
+}
+
+com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onPreView = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	}
+	var records = A.getSelectionModel().getSelections();
+	var templateName = records[0].data.templateName;
+	
+	var code = records[0].data.code;
+
+	
+	if (code !='1' && code!='999') {
+		Ext.Msg.alert("系统提示", "请选择司标或自定义模板预览！");
+		return;
+	}
+	
+	var f = document.getElementById('componentmarktemplatepreviewForm');
+	f.drawingCode.value = templateName;
+	var actionUrl = 'com.keensen.ump.produce.component.printMarks4PreView.flow?time='
+			+ Math.random() + '&token=' + Date.now();
+
+	f.action = actionUrl;
+	f.submit();
 
 }
 

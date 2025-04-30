@@ -694,4 +694,17 @@ WHERE SUBSTR(T.CODE, 2, 8) = TO_CHAR(SYSDATE, 'yyyyMMdd'))
 	AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_STOCK WHERE batch_no = t.batch_no)    
     </insert>
     -->
+    
+    <insert id="insertHHList" parameterClass="java.util.HashMap" >
+    INSERT INTO KS_COMPONENT_HH_CHECK_LIST
+	(ID,batch_no,relation_id,state,tumo_batch_str)
+	SELECT SEQ_HH_CHECK_LIST.NEXTVAL,
+	REPLACE(#prodSpecName#,'-','') || to_char(SYSDATE,'MMdd') || trim(to_char(t1.batch_No+t2.rn,'0000')),
+	#relationId#,#state#,#tumoBatchStr#
+	 from 
+	(SELECT nvl(MAX(to_number(SUBSTR(t.batch_no,-4))),0) batch_No,MAX(ID) pkid
+	  from KS_COMPONENT_HH_CHECK_LIST t
+	  WHERE SUBSTR(t.batch_no,-8,4) = to_char(SYSDATE,'MMdd')) t1,
+	(select ROWNUM rn from dual connect by level &lt;= #num#) t2
+    </insert>
 </sqlMap>

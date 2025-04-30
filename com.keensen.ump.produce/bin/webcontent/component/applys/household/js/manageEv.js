@@ -32,7 +32,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 					this.editWindow.show();
 					this.editPanel.loadData(cell);
 					var relationId = cell.get('id');
-					
+
 					this.editWindow.storage.setValue('3');
 
 					var store = this.listPanel4.store;
@@ -179,7 +179,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onDeleteOrder = func
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onAdd = function() {
 	this.inputPanel.form.reset();
-	//this.listPanel2.store.removeAll();
+	// this.listPanel2.store.removeAll();
 	this.inputWindow.show();
 }
 
@@ -276,37 +276,32 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSave = function() 
 	}
 
 	this.inputPanel.abnormal.setValue(itemArr.join(','));
+	
+	if (this.inputPanel.form.isValid()) {
 
-	if (this.inputPanel.form.isValid()) {		
-
-		var mk = new Ext.LoadMask(this.inputWindow.id, {
-					msg : '正在保存，请稍候!',
-					removeMask : true
-				});
-		mk.show();
+		_this.requestMask = _this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		_this.requestMask.show();
 		Ext.Ajax.request({
-					method : "post",
-					scope : this,
-					url : 'com.keensen.ump.produce.component.applys.addHHApply.biz.ext',
-					jsonData : {
-						'entity' : this.inputPanel.form.getValues()
-					},
-					success : function(response, action) {
-						mk.hide();
-						// 返回值处理
-						var result = Ext.decode(response.responseText);
-						if (result.success) {
-							// _this.listPanel.store.load();
-							_this.listPanel.refresh();
-							_this.inputWindow.hide();
-						} else {
-							mk.hide();
-						}
-					},
-					failure : function(resp, opts) {
-						mk.hide();
-					}
-				});
+			url : "com.keensen.ump.produce.component.applys.addBatchHHApply.biz.ext",
+			method : "post",
+			jsonData : {
+				'entity' : this.inputPanel.form.getValues()
+			},
+			success : function(resp) {
+					// 返回值处理
+
+				_this.listPanel.refresh();
+				_this.inputWindow.hide();
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+
 	}
 
 }
@@ -322,26 +317,26 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveCheck = functi
 				});
 		mk.show();
 		Ext.Ajax.request({
-					method : "post",
-					scope : this,
-					url : 'com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext',
-					jsonData : this.editPanel.form.getValues(),
-					success : function(response, action) {
-						mk.hide();
-						// 返回值处理
-						var result = Ext.decode(response.responseText);
-						if (result.success) {
-							// _this.listPanel.store.load();
-							_this.listPanel.refresh();
-							_this.editWindow.hide();
-						} else {
-							mk.hide();
-						}
-					},
-					failure : function(resp, opts) {
-						mk.hide();
-					}
-				});
+			method : "post",
+			scope : this,
+			url : 'com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext',
+			jsonData : this.editPanel.form.getValues(),
+			success : function(response, action) {
+				mk.hide();
+				// 返回值处理
+				var result = Ext.decode(response.responseText);
+				if (result.success) {
+					// _this.listPanel.store.load();
+					_this.listPanel.refresh();
+					_this.editWindow.hide();
+				} else {
+					mk.hide();
+				}
+			},
+			failure : function(resp, opts) {
+				mk.hide();
+			}
+		});
 	}
 
 }
@@ -383,12 +378,10 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveConfirm = func
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveModify = function() {
 	var _this = this;
-	/*var A = this.listPanel7;
-	var records = A.store.getRange();
-	if (records.length == 0) {
-		Ext.Msg.alert("系统提示", "请选择元件！");
-		return false;
-	}*/
+	/*
+	 * var A = this.listPanel7; var records = A.store.getRange(); if
+	 * (records.length == 0) { Ext.Msg.alert("系统提示", "请选择元件！"); return false; }
+	 */
 
 	var itemArr = [];
 	var myCheckboxGroup = this.modifyPanel.myabnormal;
@@ -402,42 +395,44 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveModify = funct
 
 	if (this.modifyPanel.form.isValid()) {
 
-		/*var datas = [];
-		Ext.each(records, function(r) {
-					datas.push(r.data);
-				});*/
+		/*
+		 * var datas = []; Ext.each(records, function(r) { datas.push(r.data);
+		 * });
+		 */
 		var mk = new Ext.LoadMask(this.modifyWindow.id, {
 					msg : '正在保存，请稍候!',
 					removeMask : true
 				});
 		mk.show();
 		Ext.Ajax.request({
-					method : "post",
-					scope : this,
-					// url :
-					// 'com.keensen.ump.produce.component.apply.saveHead.biz.ext',
-					// jsonData : this.modifyPanel.form.getValues(),
-					url : 'com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext',
-					jsonData : {
-						'entity' : this.modifyPanel.form.getValues()/*,
-						"list" : datas*/
-					},
-					success : function(response, action) {
-						mk.hide();
-						// 返回值处理
-						var result = Ext.decode(response.responseText);
-						if (result.success) {
-							// _this.listPanel.store.load();
-							_this.listPanel.refresh();
-							_this.modifyWindow.hide();
-						} else {
-							mk.hide();
-						}
-					},
-					failure : function(resp, opts) {
-						mk.hide();
-					}
-				});
+			method : "post",
+			scope : this,
+			// url :
+			// 'com.keensen.ump.produce.component.apply.saveHead.biz.ext',
+			// jsonData : this.modifyPanel.form.getValues(),
+			url : 'com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext',
+			jsonData : {
+				'entity' : this.modifyPanel.form.getValues()
+				/*
+				 * , "list" : datas
+				 */
+			},
+			success : function(response, action) {
+				mk.hide();
+				// 返回值处理
+				var result = Ext.decode(response.responseText);
+				if (result.success) {
+					// _this.listPanel.store.load();
+					_this.listPanel.refresh();
+					_this.modifyWindow.hide();
+				} else {
+					mk.hide();
+				}
+			},
+			failure : function(resp, opts) {
+				mk.hide();
+			}
+		});
 	}
 
 }
@@ -453,26 +448,26 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveExamine = func
 				});
 		mk.show();
 		Ext.Ajax.request({
-					method : "post",
-					scope : this,
-					url : 'com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext',
-					jsonData : this.examinePanel.form.getValues(),
-					success : function(response, action) {
-						mk.hide();
-						// 返回值处理
-						var result = Ext.decode(response.responseText);
-						if (result.success) {
-							// _this.listPanel.store.load();
-							_this.listPanel.refresh();
-							_this.examineWindow.hide();
-						} else {
-							mk.hide();
-						}
-					},
-					failure : function(resp, opts) {
-						mk.hide();
-					}
-				});
+			method : "post",
+			scope : this,
+			url : 'com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext',
+			jsonData : this.examinePanel.form.getValues(),
+			success : function(response, action) {
+				mk.hide();
+				// 返回值处理
+				var result = Ext.decode(response.responseText);
+				if (result.success) {
+					// _this.listPanel.store.load();
+					_this.listPanel.refresh();
+					_this.examineWindow.hide();
+				} else {
+					mk.hide();
+				}
+			},
+			failure : function(resp, opts) {
+				mk.hide();
+			}
+		});
 	}
 
 }
@@ -759,11 +754,10 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onCStock = function(
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveCStcok = function() {
 	var _this = this;
 	var pkid = _this.editPanel8.pkid.getValue();
-	
+
 	Ext.Msg.confirm("操作确认", "您确实要入C仓吗?", function(A) {
 
 		if (A == "yes") {
-			
 
 			var mk = new Ext.LoadMask(_this.cstockWindow.id, {
 						msg : '正在保存，请稍候!',

@@ -184,4 +184,147 @@
             <column length="20" name="SHORT_PAGE"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component2.KsComponentHouseholdStock" table="KS_COMPONENT_HOUSEHOLD_STOCK">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="batchNo" type="string">
+            <column length="20" name="BATCH_NO"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="20" name="ORDER_NO"/>
+        </property>
+        <property name="prodSpecId" type="long">
+            <column length="22" name="PROD_SPEC_ID"/>
+        </property>
+        <property name="length" type="string">
+            <column length="20" name="LENGTH"/>
+        </property>
+        <property name="blankingSize" type="string">
+            <column length="20" name="BLANKING_SIZE"/>
+        </property>
+        <property name="cutAmount" type="big_decimal">
+            <column length="10" name="CUT_AMOUNT" precision="10" scale="2"/>
+        </property>
+        <property name="pageType" type="string">
+            <column length="20" name="PAGE_TYPE"/>
+        </property>
+        <property name="ifCutFull" type="string">
+            <column default="'N'" length="1" name="IF_CUT_FULL"/>
+        </property>
+        <property name="planDate" type="timestamp">
+            <column name="PLAN_DATE"/>
+        </property>
+        <property name="planAmount" type="big_decimal">
+            <column length="10" name="PLAN_AMOUNT" precision="10" scale="2"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component2.KsComponentHouseholdJm" table="KS_COMPONENT_HOUSEHOLD_JM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="cmBatchNo" type="string">
+            <column length="20" name="CM_BATCH_NO"/>
+        </property>
+        <property name="amount" type="long">
+            <column length="22" name="AMOUNT"/>
+        </property>
+        <property name="prodSpecId" type="long">
+            <column length="22" name="PROD_SPEC_ID"/>
+        </property>
+        <property name="machineCode" type="string">
+            <column length="20" name="MACHINE_CODE"/>
+        </property>
+        <property name="workerId" type="long">
+            <column length="22" name="WORKER_ID"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="50" name="ORDER_NO"/>
+        </property>
+        <property name="hjBatchNo" type="string">
+            <column length="20" name="HJ_BATCH_NO"/>
+        </property>
+    </class>
 </hibernate-mapping>
