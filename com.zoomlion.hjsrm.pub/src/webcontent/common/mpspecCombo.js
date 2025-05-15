@@ -92,6 +92,8 @@ com.keensen.ump.MpspecComboBox = Ext.extend(Ext.form.ComboBox, {
 										name : "code"
 									}, {
 										name : "mpBatchCode"
+									}, {
+										name : "newBatchCode"
 									}],
 							listeners : {
 								scope : this,

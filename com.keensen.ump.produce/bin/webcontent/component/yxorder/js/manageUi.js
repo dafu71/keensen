@@ -2,6 +2,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 	this.initPanel = function() {
 		this.rec = {};
 
+		this.initStore();
+
 		this.initTemplateNameStore();
 		this.initPlanYear();
 		this.initWeekArr();
@@ -28,7 +30,6 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 		this.initAddOrderWindow2();
 
-		this.initStore();
 		this.initOrderViewWindow();
 
 		this.initUpdateProdRemarkWindow();
@@ -161,6 +162,20 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 				});
 
 		this.orderMaterSpecStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.component.yxorderbase.queryOrderMaterSpec.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			baseParams : {},
+			fields : [{
+						name : 'materSpecName'
+					}, {
+						name : 'materSpecName2'
+					}, {
+						name : 'materSpecId'
+					}]
+		})
+
+		this.orderMaterSpecStore2 = new Ext.data.JsonStore({
 			url : 'com.keensen.ump.produce.component.yxorderbase.queryOrderMaterSpec.biz.ext',
 			root : 'data',
 			autoLoad : true,
@@ -1504,7 +1519,55 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 2
-								}, {
+								}
+
+								, {
+									xtype : 'combo',
+									fieldLabel : '生产型号',
+									dataIndex : 'materSpecId',
+									forceSelection : true,
+									mode : 'local',
+									anchor : '100%',
+									colspan : 2,
+									emptyText : '--请选择--',
+									editable : false,
+									store : _this.orderMaterSpecStore2,
+									ref : '../../materSpecId',
+									hiddenName : 'entity/materSpecId',
+									displayField : "materSpecName",
+									valueField : "materSpecId",
+									listeners : {
+										"focus":function(combo){
+											var materSpecName = combo.getRawValue();
+											//如果为整数		
+											if(!isNaN(materSpecName) && !isNaN(parseInt(materSpecName))){
+												//combo.store.clearFilter();
+												//combo.expand();
+												this.reset()
+											}
+											
+										},
+										"expand" : function(A) {
+											
+											// this.reset()
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var materSpecName = _this.updatematerialWindow.materSpecId
+													.getRawValue();
+											_this.updatematerialWindow.materSpecName
+													.setValue(materSpecName);
+										}
+											 
+											 
+									}
+								}
+
+								/*, 
+									
+										{
 									xtype : 'prodspeccombobox',
 									dataIndex : 'materSpecId',
 									hiddenName : 'entity/materSpecId',
@@ -1533,7 +1596,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 													.setValue(materSpecName);
 										}
 									}
-								}, {
+								}*/, {
 									name : 'entity/id',
 									xtype : 'hidden',
 									dataIndex : 'id'
@@ -1775,7 +1838,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					titleCollapse : false,
 					fields : [{
 								xtype : 'textfield',
-								name : 'condition/materSpecName2',
+								name : 'condition/materSpecName22',
 								anchor : '85%',
 								fieldLabel : '订单元件型号'
 							}, {
@@ -1837,7 +1900,9 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						successFn : function(i, r) {
 							_this.addOrderMaterSpecWindow.items.items[0].form
 									.reset();
-							_this.addOrderMaterSpecWindow.hide();
+							_this.addOrderMaterSpecWindow.hide();	
+							_this.orderMaterSpecStore.load();
+							_this.orderMaterSpecStore2.load();
 							_this.listPanel3.refresh();
 						},
 						columns : 2,

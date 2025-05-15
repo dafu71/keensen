@@ -239,6 +239,7 @@
 	<isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
         <isNotNull prepend="and" property="materSpecId">T1.MATER_SPEC_ID = #materSpecId#</isNotNull>
         <isNotNull prepend="and" property="code">t1.code like '%' || #code# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">t1.ORDER_NO like '%' || #orderNo# || '%'</isNotNull>
         <isNotNull prepend="and" property="labelingModel">t1.LABELING_MODEL like '%' || #labelingModel# || '%'</isNotNull>
         <isNotNull prepend="and" property="reportDtStart">TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd')  &gt;=  #reportDtStart#</isNotNull>
         <isNotNull prepend="and" property="reportDtEnd">TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd')  &lt;=  #reportDtEnd#</isNotNull>
@@ -361,6 +362,7 @@
         <isNotNull prepend="" property="isWx">AND lower(t.IS_WX) = #isWx#</isNotNull>
         <isNotNull prepend="" property="macName">AND t.mac_name = #macName#</isNotNull>
         <isNotNull prepend="" property="levelId">AND t.level_id = #levelId#</isNotNull>
+        <isNotNull prepend="" property="lineId">AND t.line_id = #lineId#</isNotNull>
         <!--
 		<isNotNull prepend = ""  property = "lineId">
 		   AND t.mac_name = decode(#lineId#,'10020',1,'10003',1,3)

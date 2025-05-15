@@ -31,6 +31,11 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateMgr.prototype.initEvent = 
 				var c21OutLengthSum = 0;
 				var caimoLossSum = 0;
 				var qualifiedNotLengthSum = 0;
+				
+				var actualLengthSum = 0;
+				var noTearLengthSum = 0;
+				var scratchLengthSum = 0;
+				
 				Ext.each(records, function(r) {							
 							var outLength = r.data.outLength;
 							var cOutLength = r.data.cOutLength;
@@ -39,6 +44,11 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateMgr.prototype.initEvent = 
 							var c21OutLength = r.data.c21OutLength;
 							var caimoLoss = r.data.caimoLoss;
 							var qualifiedNotLength = r.data.qualifiedNotLength;
+							
+							var actualLength = r.data.actualLength;
+							var noTearLength = r.data.noTearLength;
+							var scratchLength = r.data.scratchLength;
+				
 							outLengthSum += parseFloat(outLength);
 							cOutLengthSum += parseFloat(cOutLength);
 							aOutLengthSum += parseFloat(aOutLength);
@@ -46,12 +56,23 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateMgr.prototype.initEvent = 
 							c21OutLengthSum += parseFloat(c21OutLength);
 							caimoLossSum += parseFloat(caimoLoss);
 							qualifiedNotLengthSum += parseFloat(qualifiedNotLength);
+							
+							actualLengthSum += parseFloat(actualLength);
+							noTearLengthSum += parseFloat(noTearLength);
+							scratchLengthSum += parseFloat(scratchLength);
 						})
 						
-				var passful = aUsefulLengthSum / outLengthSum * 100; 
+				//var passful = aUsefulLengthSum / outLengthSum * 100;
+				var passful = aUsefulLengthSum / actualLengthSum * 100;
+				
 				passful = roundToDecimalPlace(passful,2);
 				var r = new Ext.data.Record({
 							teamName : '膜片整体',
+							
+							actualLength : roundToDecimalPlace(actualLengthSum,2),
+							noTearLength : roundToDecimalPlace(noTearLengthSum,2),
+							scratchLength : roundToDecimalPlace(scratchLengthSum,2),
+							
 							outLength : roundToDecimalPlace(outLengthSum,2),
 							cOutLength : roundToDecimalPlace(cOutLengthSum,2),
 							aOutLength : roundToDecimalPlace(aOutLengthSum,2),

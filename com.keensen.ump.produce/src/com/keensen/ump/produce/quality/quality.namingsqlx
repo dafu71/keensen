@@ -344,6 +344,10 @@
 	<isNotNull prepend="and" property="code"> 
 		       t1.code like '%' || #code# || '%'
 	</isNotNull>
+	
+	<isNotNull prepend="and" property="orderNo"> 
+		       t1.ORDER_NO like '%' || #orderNo# || '%'
+	</isNotNull>
 	<isNotNull prepend="and" property="labelingModel"> 
 		       t1.LABELING_MODEL like '%' || #labelingModel# || '%'
 	</isNotNull>
@@ -532,6 +536,11 @@
 		<isNotNull prepend = ""  property = "levelId">
 		   AND t.level_id = #levelId#
 		</isNotNull>
+		
+		<isNotNull prepend = ""  property = "lineId">
+		   AND t.line_id = #lineId#
+		</isNotNull>
+		
 		<!--
 		<isNotNull prepend = ""  property = "lineId">
 		   AND t.mac_name = decode(#lineId#,'10020',1,'10003',1,3)

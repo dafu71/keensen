@@ -50,7 +50,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 							}]
 				});
 		var _this = this;
-		
+
 		this.linecombo = new Ext.form.ComboBox({
 			store : this.lineStore,
 			allowBlank : false,
@@ -65,7 +65,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 			// name : 'condition/storageIds',
 			// hiddenName: 'entity/lineIds',
 			tpl : '<tpl for="."><div class="x-combo-list-item"><span><input id="lineItem{[values.id]}" type="checkbox" {[values.check?"checked":""]} value="{[values.id]}" /></span><span >{name}</span></div></tpl>',
-			
+
 			triggerAction : 'all',
 			emptyText : '--请选择--',
 			selectOnFocus : true,
@@ -89,8 +89,6 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 				}
 			}
 		});
-
-		
 
 		this.macnamecombo = new Ext.form.ComboBox({
 			store : this.macNameStore,
@@ -144,8 +142,8 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
-					columns : 3,
+					height : 80,
+					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -153,7 +151,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 					fields : [{
 								xtype : 'mpspeccombobox',
 								hiddenName : 'condition/specId',
-								anchor : '75%',
+								anchor : '100%',
 								fieldLabel : '膜片型号 ',
 								typeAhead : true,
 								typeAheadDelay : 100,
@@ -171,13 +169,20 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 								name : 'condition/isWx',
 								hiddenName : 'condition/isWx',
 								fieldLabel : '是否外销',
-								anchor : '75%',
+								anchor : '100%',
 								dictData : ABF_YESORNO
 							}, {
 								xtype : 'textfield',
 								name : 'condition/macName',
 								fieldLabel : '测试台',
-								anchor : '75%'
+								anchor : '100%'
+							}, {
+								xtype : 'linecombobox',
+								prodTacheId : '100',
+								hiddenName : 'condition/lineId',
+								anchor : '100%',
+								colspan : 1,
+								fieldLabel : '生产线 '
 							}]
 				});
 

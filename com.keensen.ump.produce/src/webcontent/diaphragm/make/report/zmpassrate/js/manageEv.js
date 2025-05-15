@@ -29,6 +29,7 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateZmMgr.prototype.initEvent 
 				var lossTotalSum = 0;
 				var lossTearSum = 0;
 				var lossNotTearSum = 0;
+				var lossNotZmSum = 0;
 				
 				Ext.each(records, function(r) {							
 							var theoryAmount = r.data.theoryAmount;
@@ -36,12 +37,15 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateZmMgr.prototype.initEvent 
 							var lossTotal = r.data.lossTotal;
 							var lossTear = r.data.lossTear;
 							var lossNotTear = r.data.lossNotTear;
+							var lossNotZm = r.data.lossNotZm;
 							
 							theoryAmountSum += parseFloat(theoryAmount);
 							amountQualitySum += parseFloat(amountQuality);
 							lossTotalSum += parseFloat(lossTotal);
 							lossTearSum += parseFloat(lossTear);
 							lossNotTearSum += parseFloat(lossNotTear);
+							
+							lossNotZmSum += parseFloat(lossNotZm);
 						})
 						
 				var passful = amountQualitySum / theoryAmountSum * 100; 
@@ -53,7 +57,9 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateZmMgr.prototype.initEvent 
 							lossTotal : roundToDecimalPlace(lossTotalSum,2),
 							lossTear : roundToDecimalPlace(lossTearSum,2),
 							lossNotTear : roundToDecimalPlace(lossNotTearSum,2),
-							passful : roundToDecimalPlace(passful,2) + '%'
+							passful : roundToDecimalPlace(passful,2) + '%',
+							
+							lossNotZm : roundToDecimalPlace(lossNotZmSum,2)
 						})
 				_this.listPanel.store.add(r);
 			})

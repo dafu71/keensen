@@ -237,11 +237,12 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								scope : this,
 								iconCls : 'icon-application_delete',
 								handler : this.onDel
-							}/*
-								 * , '->', { text : '录入铸膜不良', scope : this,
-								 * iconCls : 'icon-application_add', handler :
-								 * this.onaddZmDefect }
-								 */, '->', {
+							}, '->', {
+								text : '录入铸膜不良',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onaddZmDefect
+							}, '->', {
 								text : '录入涂膜不良',
 								scope : this,
 								iconCls : 'icon-application_add',
@@ -469,6 +470,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									name : 'remainLength'
 								}, {
 									name : 'pageType'
+								}, {
+									name : 'dmBatchId'
+								}, {
+									name : 'dimoBatchNo'
 								}]
 					})
 		})

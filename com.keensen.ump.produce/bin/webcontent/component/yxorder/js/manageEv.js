@@ -1,6 +1,12 @@
 com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 	var _this = this;
-	
+
+	this.updatematerialWindow.activeItem.mon(
+			this.updatematerialWindow.activeItem, 'beforeload', function(win,
+					data) {
+
+			}, this);
+
 	// 查询事件
 	this.queryPanel4ChooseMark.mon(this.queryPanel4ChooseMark, 'query',
 			function(form, vals) {
@@ -102,17 +108,17 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 						this.planWeekWindow.loadData(cell);
 					}
 				}
-				
+
 				if (this.opt == 'orderview') {
 					var baseId = cell.get('baseId');
-					if(Ext.isEmpty(baseId)){
+					if (Ext.isEmpty(baseId)) {
 						Ext.Msg.alert('系统提示', '不是营销导入数据，没有详情查看');
 						return false;
 					}
 					this.orderViewWindow.show();
 					this.orderViewWindow.loadData(cell);
 				}
-				
+
 				if (this.opt == 'updateprodremark') {
 					this.updateProdRemarkWindow.show();
 					this.updateProdRemarkWindow.loadData(cell);
@@ -141,6 +147,21 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 }
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateMaterial = function() {
+	var combo = this.updatematerialWindow.materSpecId;
+	combo.store.clearFilter();// 使每次输入都能进行检索，不用担心输入过慢
+	var materSpecName2 = this.rec.data['materSpecName2'];
+	combo.store.filterBy(function(record) {
+				var text = '' + record.get('materSpecName2');
+				//return (text.indexOf(materSpecName2) != -1);
+				return (text == materSpecName2);
+
+			});
+	combo.expand();
+
+	if (combo.store.getCount() == 0) {
+		combo.store.clearFilter();
+		combo.expand();
+	}
 	this.opt = 'updateMaterial';
 	this.listPanel.onEdit();
 }
@@ -413,12 +434,12 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onSelect4ChooseMark = fun
 		var drawingCode = records[0].data.drawingCode;
 		var opt = this.chooseMarkWindow.opt
 		if (opt == '1') {
-			
+
 			this.addOrderWindow2.markDrawingCode.setValue(drawingCode);
-		}else{
+		} else {
 			this.updateTemplateNameWindow.markDrawingCode.setValue(drawingCode);
 		}
-		
+
 		this.chooseMarkWindow.hide();
 	}
 }

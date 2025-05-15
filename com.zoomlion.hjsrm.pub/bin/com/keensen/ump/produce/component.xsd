@@ -817,23 +817,6 @@
             <xs:element minOccurs="0" name="productOrder" nillable="true" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="KsComponentDutyJm">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="planDate" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="orderId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="jmCode" nillable="true" type="xs:string"/>
-            <xs:element default="0" minOccurs="0" name="jmState" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="dutyTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="dutyUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="dutyName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="jmReportTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="jmReportUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="jmReportName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="arrangeDate" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="productOrder" nillable="true" type="xs:int"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="KsComponentPlanDay">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -1455,6 +1438,23 @@
             <xs:element minOccurs="0" name="printDelayTime" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="KsComponentDutyJm">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="planDate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="orderId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="jmCode" nillable="true" type="xs:string"/>
+            <xs:element default="0" minOccurs="0" name="jmState" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dutyTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="dutyUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dutyName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jmReportTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="jmReportUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jmReportName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="arrangeDate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="productOrder" nillable="true" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
     <xs:complexType name="KsComponentYxorderBase">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -1577,6 +1577,8 @@
             <xs:element minOccurs="0" name="material" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="back" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="pallet" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="makeMark2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="makeLabel2" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

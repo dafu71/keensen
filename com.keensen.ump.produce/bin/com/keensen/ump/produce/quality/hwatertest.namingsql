@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.quality.hwatertest">
+    <select id="queryWaterTest" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID             AS "id",
+       to_char(t1.CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+		t1.UPDATE_USER_ID as "updateUserId",
+		t1.UPDATE_NAME as "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       t1.batch_no as "batchNo",
+		t1.is_Batch_Qualified as "isBatchQualified",
+		t1.is_Prod_Qualified as "isProdQualified",
+		t1.juanmo_Batch_No as "juanmoBatchNo",
+		t1.TEST_SPEC_ID as "testSpecId",
+		t1.prod_Batch_No as "prodBatchNo",
+		t1.test_pos as "testPos",
+		to_char(t1.test_time,'yyyy-MM-dd') as "testTime",
+		t1.test_Liquid as "testLiquid",
+		t1.density as "density",
+		t1.pressure as "pressure",
+		t1.tempreture as "tempreture",
+		t1.ph as "ph",
+		t1.recovery as "recovery",
+		t1.gpd as "gpd",
+		t1.salt as "salt",
+		t1.prod_Gpd_Std as "prodGpdStd",
+		t1.prod_Salt_Std as "prodSaltStd",
+		t1.test_Type_Id as "testTypeId",
+		t1.vacuum_value as "vacuumValue",
+		t1.sn as "sn",
+		t1.wet_spec_name as "wetSpecName",
+		t1.wet_batch_no as "wetBatchNo",
+		t1.remark as "remark",
+		t1.j_name as "jName",
+		t1.conductivity as "conductivity",
+		t1.conductivity2 as "conductivity2",
+		t1.flow as "flow",
+		t1.flow2 as "flow2",
+		pms.mater_spec_name "testSpecName",
+		test.prop_value_name "testTypeName"
+  FROM KS_QUALITY_HH_WATER_TEST T1
+  LEFT JOIN qinsen.para_mater_spec pms
+ON pms.mater_spec_id = t1.test_spec_id
+  left join (select t.prop_value_id,t.prop_value_name from QINSEN.CONF_PROP_VALUE_OPTION t
+ WHERE t.prop_id=30041) test
+ on test.prop_value_id = t1.test_Type_Id
+  where 1=1
+  <isNotNull prepend="and" property="testTimeStart">to_char(t1.test_time,'yyyy-MM-dd')  &gt;=  #testTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="testTimeEnd">to_char(t1.test_time,'yyyy-MM-dd')  &lt;=  #testTimeEnd#</isNotNull>
+        <isNotNull prepend="" property="testTypeId">AND t1.TEST_TYPE_ID = #testTypeId#</isNotNull>
+        <isNotNull prepend="" property="testSpecId">AND t1.TEST_SPEC_ID = #testSpecId#</isNotNull>
+        <isNotNull prepend="" property="isBatchQualified">AND t1.IS_BATCH_QUALIFIED = #isBatchQualified#</isNotNull>
+        <isNotNull prepend="" property="isProdQualified">AND t1.IS_PROD_QUALIFIED = #isProdQualified#</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND t1.batch_no like '%' || #batchNo# || '%'</isNotNull>
+	
+  ORDER BY t1.id DESC
+   </select>
+</sqlMap>

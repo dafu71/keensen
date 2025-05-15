@@ -266,8 +266,38 @@ SELECT P.TEAM_ID         AS "teamId",
 	round(SUM(decode(t.PERF_FLAG_CODE,'A',t.QUALIFID_LENGTH,0))/SUM(t.out_length) *100,2) || '%' "passful",
 	round(SUM(CASE WHEN t.mpd&gt;10 THEN t.out_length ELSE 0 END),1) "c21OutLength",
 	round(SUM(t.CAIMO_LOSS),1) "caimoLoss",
-	round(SUM(t.Qualified_not_length),1) "qualifiedNotLength"
+	round(SUM(t.Qualified_not_length),1) "qualifiedNotLength",
+	round(SUM(nvl(notear.loss,0)),0) "noTearLength" ,
+	round(SUM(nvl(scratch.loss,0)),0) "scratchLength" ,
+	round(SUM(nvl(t.out_length,0)),0) - round(SUM(nvl(notear.loss,0)),0) + round(SUM(nvl(scratch.loss,0)),0) "actualLength"
 	 from V_KS_TUMO_PASSREATE t
+	 left join 
+		 (SELECT DDD.LOSS,
+	       T.TM_BATCH_ID,
+	       T.ZM_BATCH_ID,
+	       T.TM_BATCH_NO,
+	       T.DIMO_BATCH_NO
+	  FROM V_KS_TM_DM T
+	  LEFT JOIN (SELECT SUM(LOSS) LOSS, DD.DM_BATCH_ID
+	               FROM QINSEN.INST_CDM_DEFECT2 DD
+	              WHERE DD.IF_TEAR = '否'
+	              GROUP BY DD.DM_BATCH_ID) DDD
+	    ON DDD.DM_BATCH_ID = T.ZM_BATCH_ID) notear
+	    on notear.TM_BATCH_ID = t.record_id	 
+	 left join 
+		 (SELECT DDD.LOSS,
+	       T.TM_BATCH_ID,
+	       T.ZM_BATCH_ID,
+	       T.TM_BATCH_NO,
+	       T.DIMO_BATCH_NO
+	  FROM V_KS_TM_DM T
+	  LEFT JOIN (SELECT SUM(LOSS) LOSS, DD.DM_BATCH_ID
+	               FROM QINSEN.INST_CDM_DEFECT2 DD
+	              WHERE DD.DEFECT_ITEM_ID = '-102'
+	              GROUP BY DD.DM_BATCH_ID) DDD
+	    ON DDD.DM_BATCH_ID = T.ZM_BATCH_ID) scratch
+	    on scratch.TM_BATCH_ID = t.record_id   
+	    
 	WHERE 1=1
 	and SUBSTR(t.batch_no,1,1) &lt;&gt; 'E' 
 	<isNotNull prepend="" property="productDtStart">AND to_char(t.produce_dt,'YYYY-MM-DD HH24:mi:ss')&gt;= #productDtStart#</isNotNull>
@@ -288,13 +318,15 @@ SELECT P.TEAM_ID         AS "teamId",
        ROUND(AMOUNT_QUALIFIED / THEORY_AMOUNT * 100, 2) || '%' "passful",
        nvl(LOSS_TOTAL,0) "lossTotal",
        nvl(LOSS_TEAR,0) "lossTear",
-       nvl(LOSS_NOT_TEAR,0) "lossNotTear"
+       nvl(LOSS_NOT_TEAR,0) "lossNotTear",
+       loss_not_zm "lossNotZm"
   FROM (SELECT TT.TEAM_ID,
                SUM(THEORY_AMOUNT) THEORY_AMOUNT,
                SUM(AMOUNT_QUALIFIED) AMOUNT_QUALIFIED,
                SUM(LOSS_TOTAL) LOSS_TOTAL,
                SUM(LOSS_TEAR) LOSS_TEAR,
-               SUM(LOSS_NOT_TEAR) LOSS_NOT_TEAR
+               SUM(LOSS_NOT_TEAR) LOSS_NOT_TEAR,
+               sum(loss_not_zm) loss_not_zm
           FROM (SELECT T1.TEAM_ID,
                        T1.LINE,
                        T1.DIMO_TYPE,
@@ -303,8 +335,25 @@ SELECT P.TEAM_ID         AS "teamId",
                        NVL(T1.THEORY_AMOUNT, 0) - NVL(DEFECT.LOSS, 0) AMOUNT_QUALIFIED,
                        DEFECT.LOSS LOSS_TOTAL,
                        DEFECT2.LOSS LOSS_TEAR,
-                       DEFECT.LOSS - DEFECT2.LOSS LOSS_NOT_TEAR
-                  FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+                       DEFECT.LOSS - DEFECT2.LOSS LOSS_NOT_TEAR,
+                       nvl(DEFECT3.loss,0) loss_not_zm 
+                  FROM (SELECT t.* from KS_PROD_DIAPHRAGM_ZMX_RECORD t
+					WHERE t.product_type !='实验') T1
+                  
+                  left join (SELECT DIMO_BATCH_NO, SUM(LOSS) LOSS
+					  FROM (SELECT CD.LOSS, TM.DIMO_BATCH_NO
+					          FROM QINSEN.INST_TUMO TM
+					          LEFT JOIN (SELECT SUM(T.LOSS) LOSS, T.TUMO_BATCH_ID
+					                      FROM QINSEN.INST_CDM_DEFECT T
+					                     WHERE T.DEFECT_ITEM_ID IN
+					                           (SELECT PCD.RECORD_ID
+					                              FROM QINSEN.PARA_CDM_DEFECT PCD
+					                             WHERE PCD.DUTY_TACHE_ID = '99')
+					                     GROUP BY T.TUMO_BATCH_ID) CD
+					            ON TM.RECORD_ID = CD.TUMO_BATCH_ID) DM
+					 GROUP BY DIMO_BATCH_NO) DEFECT3
+                  on t1.dimo_batch_no = DEFECT3.dimo_batch_no
+                  
                   LEFT JOIN (SELECT SUM(T.LOSS) LOSS, T.DM_BATCH_ID
                               FROM QINSEN.INST_CDM_DEFECT2 T
                              GROUP BY T.DM_BATCH_ID) DEFECT

@@ -140,19 +140,20 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.makeLabelStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['印刷', '印刷'], ['打印', '打印'], ['UV打印', 'UV打印'],
-							['客供', '客供']]
+							['客供', '客供'], ['无需制作', '无需制作']]
 				});
 
 		// 材质：打印纸/PET不干胶
 		this.materialStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['打印纸', '打印纸'], ['PET不干胶', 'PET不干胶']]
+					data : [['打印纸', '打印纸'], ['PET不干胶', 'PET不干胶'], ['无', '无']]
 				});
 
 		// 材质：白色/透明
 		this.backStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['白色', '白色'], ['透明', '透明'], ['客户定制', '客户定制']]
+					data : [['白色', '白色'], ['透明', '透明'], ['客户定制', '客户定制'],
+							['无', '无']]
 				});
 
 		// 第二标签贴的位置下拉选项：产品上、真空袋上、其他
@@ -1373,6 +1374,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					listeners : {
 						"expand" : function(A) {
 							this.reset()
+						},
+						"select" : function(combo, record, index) {
+							var type = combo.getValue();
+							var back = type == '工业膜' ? '透明' : '白色';
+							_this.addOrderWindow.back.setValue(back);
 						}
 					}
 				}, {
@@ -2207,6 +2213,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 6
 				}, {
+					xtype : 'textfield',
+					fieldLabel : '第二标签制作方式',
+					ref : '../../makeLabel2',
+					dataIndex : 'makeLabel2',
+					name : 'entity/makeLabel2',
+					anchor : '100%',
+					colspan : 6
+				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">密封圈</p>',
 					labelSeparator : '',// 去掉冒号
@@ -2483,6 +2497,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					ref : '../../specNameMark2',
 					dataIndex : 'specNameMark2',
 					name : 'entity/specNameMark2',
+					anchor : '100%',
+					colspan : 6
+				}, {
+					xtype : 'textfield',
+					fieldLabel : '第二唛头制作方式',
+					ref : '../../makeMark2',
+					dataIndex : 'makeMark2',
+					name : 'entity/makeMark2',
 					anchor : '100%',
 					colspan : 6
 				}, {
@@ -3997,6 +4019,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					displayField : "specName",
 					valueField : "specName"
 				}, {
+					xtype : 'textfield',
+					fieldLabel : '第二标签制作方式',
+					readOnly : true,
+					ref : '../../makeLabel2',
+					dataIndex : 'makeLabel2',
+					anchor : '100%',
+					colspan : 6
+				}
+				, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">密封圈</p>',
 					labelSeparator : '',// 去掉冒号
@@ -4255,6 +4286,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					store : this.markDrawingSpecNameStore,
 					displayField : "specName",
 					valueField : "specName"
+				}, {
+					xtype : 'textfield',
+					fieldLabel : '第二唛头制作方式',
+					ref : '../../makeMark2',
+					dataIndex : 'makeMark2',
+					readOnly : true,
+					anchor : '100%',
+					colspan : 6
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">拍照</p>',

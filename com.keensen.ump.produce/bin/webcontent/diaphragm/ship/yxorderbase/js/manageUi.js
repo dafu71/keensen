@@ -12,7 +12,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 
 		this.initPlanConfirmWindow();
 		this.initStorageConfirmWindow();
-		
+
 		this.initUpdateAmountWindow();
 
 		return new Ext.fn.fnLayOut({
@@ -123,6 +123,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 					text : "订单导入",
 					scope : this,
 					iconCls : 'icon-application_excel',
+					id : importExcelBtnId,
 					handler : this.importExcel
 				});
 
@@ -146,26 +147,36 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						text : '生产计划录入',
 						scope : this,
 						iconCls : 'icon-application_add',
+						hidden : true,
+						ref : '../addOrderBtn',
 						handler : this.onAddOrder
 					}, '-', {
 						text : '计划员确认',
 						scope : this,
+						hidden : true,
 						iconCls : 'icon-application_edit',
+						ref : '../confirmBtn',
 						handler : this.onPlanConfirm
 					}, '-', {
 						text : '库存确认',
 						scope : this,
+						hidden : true,
 						iconCls : 'icon-application_edit',
+						ref : '../storageConfirmBtn',
 						handler : this.onStorageConfirm
 					}, '-', {
 						text : '修改生产/入库数量',
 						scope : this,
+						hidden : true,
 						iconCls : 'icon-application_edit',
+						ref : '../updateAmountBtn',
 						handler : this.onUpdateAmount
 					}, '->', {
 						text : '删除',
 						scope : this,
+						hidden : true,
 						iconCls : 'icon-application_delete',
+						ref : '../delBtn',
 						handler : this.onDel
 					}, '-', {
 						text : '查看',
@@ -188,6 +199,10 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							}
 						},
 						sortable : true
+					}, {
+						dataIndex : 'customerCode',
+						width : 120,
+						header : '客户'
 					}, {
 						dataIndex : 'ext1',
 						width : 120,
@@ -1348,7 +1363,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 					}]
 				});
 	}
-	
+
 	this.initUpdateAmountWindow = function() {
 		var _this = this;
 		this.updateAmountWindow = this.updateAmountWindow
@@ -1391,7 +1406,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									xtype : 'hidden',
 									dataIndex : 'id'
 								}, {
-									ref:'../../amount',
+									ref : '../../amount',
 									xtype : 'hidden',
 									dataIndex : 'amount'
 								}]

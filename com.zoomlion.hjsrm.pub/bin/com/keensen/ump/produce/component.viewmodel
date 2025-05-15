@@ -2818,56 +2818,6 @@
             <edit name="" type="text"/>
         </field>
     </viewModel>
-    <viewModel author="dafu" displayName="KsComponentDutyJm" entityName="com.keensen.ump.produce.component.KsComponentDutyJm" id="KsComponentDutyJm">
-        <field dataType="Date" dict="false" id="planDate" label="计划日期">
-            <view type="write"/>
-            <edit name="" type="date"/>
-        </field>
-        <field dataType="Int" dict="false" id="orderId" label="订单ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="jmCode" label="卷膜机台编码">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="jmState" label="卷膜状态,0:处理中，1:完成,2:异常">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Date" dict="false" id="dutyTime" label="任务安排时间">
-            <view type="write"/>
-            <edit name="" type="date"/>
-        </field>
-        <field dataType="String" dict="false" id="dutyUserId" label="任务安排人ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="dutyName" label="任务安排人">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Date" dict="false" id="jmReportTime" label="卷膜报告时间">
-            <view type="write"/>
-            <edit name="" type="date"/>
-        </field>
-        <field dataType="String" dict="false" id="jmReportUserId" label="卷膜报告人ID">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="jmReportName" label="卷膜报告人">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-        <field dataType="Date" dict="false" id="arrangeDate" label="排产日期">
-            <view type="write"/>
-            <edit name="" type="date"/>
-        </field>
-        <field dataType="Int" dict="false" id="productOrder" label="生产顺序">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-    </viewModel>
     <viewModel author="dafu" displayName="KsComponentPlanDay" entityName="com.keensen.ump.produce.component.KsComponentPlanDay" id="KsComponentPlanDay">
         <field dataType="Int" dict="false" id="id" label="主键">
             <view type="write"/>
@@ -4938,6 +4888,56 @@
             <edit name="" type="text"/>
         </field>
     </viewModel>
+    <viewModel author="dafu" displayName="KsComponentDutyJm" entityName="com.keensen.ump.produce.component.KsComponentDutyJm" id="KsComponentDutyJm">
+        <field dataType="Date" dict="false" id="planDate" label="计划日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="orderId" label="订单ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="jmCode" label="卷膜机台编码">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="jmState" label="卷膜状态,0:处理中，1:完成,2:异常">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="dutyTime" label="任务安排时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="dutyUserId" label="任务安排人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="dutyName" label="任务安排人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="jmReportTime" label="卷膜报告时间">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="jmReportUserId" label="卷膜报告人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="jmReportName" label="卷膜报告人">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="arrangeDate" label="排产日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="productOrder" label="生产顺序">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
     <viewModel author="dafu" displayName="KsComponentYxorderBase" entityName="com.keensen.ump.produce.component.KsComponentYxorderBase" id="KsComponentYxorderBase">
         <field dataType="Long" dict="false" entityField="id" id="id" label="主键">
             <view type="write"/>
@@ -5412,6 +5412,14 @@
             <edit name="" type="text"/>
         </field>
         <field dataType="String" dict="false" id="pallet" label="打托要求">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="makeMark2" label="第二唛头制作方式">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="makeLabel2" label="第二标签制作方式">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>

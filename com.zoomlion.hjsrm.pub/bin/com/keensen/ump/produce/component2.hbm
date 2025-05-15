@@ -260,6 +260,88 @@
             <column length="10" name="PLAN_AMOUNT" precision="10" scale="2"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component2.KsProdWaterStd" table="KS_PROD_WATER_STD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="mpSpecId" type="int">
+            <column length="9" name="MP_SPEC_ID"/>
+        </property>
+        <property name="prodSpecId" type="int">
+            <column length="9" name="PROD_SPEC_ID"/>
+        </property>
+        <property name="aGpdLowLimit" type="int">
+            <column length="6" name="A_GPD_LOW_LIMIT" not-null="true"/>
+        </property>
+        <property name="aGpdUpLimit" type="int">
+            <column length="6" name="A_GPD_UP_LIMIT"/>
+        </property>
+        <property name="aGpdCenter" type="int">
+            <column length="6" name="A_GPD_CENTER"/>
+        </property>
+        <property name="aSaltLowLimit" type="big_decimal">
+            <column length="6" name="A_SALT_LOW_LIMIT" not-null="true" precision="6" scale="2"/>
+        </property>
+        <property name="aSaltUpLimit" type="big_decimal">
+            <column length="6" name="A_SALT_UP_LIMIT" precision="6" scale="2"/>
+        </property>
+        <property name="aFactorBLowLimit" type="big_decimal">
+            <column length="6" name="A_FACTOR_B_LOW_LIMIT" precision="6" scale="4"/>
+        </property>
+        <property name="aFactorBUpLimit" type="big_decimal">
+            <column length="6" name="A_FACTOR_B_UP_LIMIT" precision="6" scale="4"/>
+        </property>
+        <property name="bSpecId" type="int">
+            <column length="9" name="B_SPEC_ID"/>
+        </property>
+        <property name="bGpdLowLimit" type="int">
+            <column length="6" name="B_GPD_LOW_LIMIT"/>
+        </property>
+        <property name="bGpdUpLimit" type="int">
+            <column length="6" name="B_GPD_UP_LIMIT"/>
+        </property>
+        <property name="bGpdCenter" type="int">
+            <column length="6" name="B_GPD_CENTER"/>
+        </property>
+        <property name="bSaltLowLimit" type="big_decimal">
+            <column length="6" name="B_SALT_LOW_LIMIT" precision="6" scale="2"/>
+        </property>
+        <property name="bSaltUpLimit" type="big_decimal">
+            <column length="6" name="B_SALT_UP_LIMIT" precision="6" scale="2"/>
+        </property>
+        <property name="bFactorBLowLimit" type="big_decimal">
+            <column length="6" name="B_FACTOR_B_LOW_LIMIT" precision="6" scale="4"/>
+        </property>
+        <property name="bFactorBUpLimit" type="big_decimal">
+            <column length="6" name="B_FACTOR_B_UP_LIMIT" precision="6" scale="4"/>
+        </property>
+        <property name="createDt" type="date">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="date">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="macName" type="string">
+            <column length="50" name="MAC_NAME"/>
+        </property>
+        <property name="mpSpecName" type="string">
+            <column length="50" name="MP_SPEC_NAME"/>
+        </property>
+        <property name="prodSpecName" type="string">
+            <column length="50" name="PROD_SPEC_NAME"/>
+        </property>
+    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component2.KsComponentHouseholdJm" table="KS_COMPONENT_HOUSEHOLD_JM">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="long">
@@ -324,7 +406,10 @@
             <column length="50" name="ORDER_NO"/>
         </property>
         <property name="hjBatchNo" type="string">
-            <column length="20" name="HJ_BATCH_NO"/>
+            <column length="500" name="HJ_BATCH_NO"/>
+        </property>
+        <property name="orderDate" type="timestamp">
+            <column name="ORDER_DATE"/>
         </property>
     </class>
 </hibernate-mapping>

@@ -637,8 +637,16 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
     then nvl(v.reality_Amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(v.reality_Amount,0) else 0 end) "realityCount",
    round(100* sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')&gt;0
     then nvl(v.reality_Amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(v.reality_Amount,0) else 0 end)/
-    sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')&gt;0
-    then nvl(t1.jm_amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(t1.jm_amount,0) else 0 end),2) || '%' "rate"
+    DECODE(sum(case when SUBSTR(t2.order_no,1,2)='SG' AND INSTR(t2.order_no,'-')&gt;0
+    then nvl(t1.jm_amount,0) when SUBSTR(t2.order_no,1,2)!='SG' then nvl(t1.jm_amount,0) else 0 end),0,1,SUM(CASE
+                                    WHEN SUBSTR(T2.ORDER_NO, 1, 2) = 'SG' AND
+                                         INSTR(T2.ORDER_NO, '-') &gt; 0 THEN
+                                     NVL(T1.JM_AMOUNT, 0)
+                                    WHEN SUBSTR(T2.ORDER_NO, 1, 2) != 'SG' THEN
+                                     NVL(T1.JM_AMOUNT, 0)
+                                    ELSE
+                                     0
+                                  END)),2) || '%' "rate"
    from 
   (select t.plan_date,sum(t.meter_amount) meter_amount,t.order_id ,min(t.jm_amount) jm_amount,
   max(w.remark) week_remark

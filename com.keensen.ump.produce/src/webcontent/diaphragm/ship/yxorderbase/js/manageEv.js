@@ -1,6 +1,8 @@
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
+	this.getRight();
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -230,4 +232,30 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onStorageConfirm
 		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
 		return false;
 	}
+}
+
+// 获取权限
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.getRight = function() {
+	var _this = this;
+	Ext.Ajax.request({
+		url : "produce/diaphragm/ship/yxorderbase/js/right.json",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			var data = ret.data;
+			var yx = data[0].yx;			
+			var jhy = data[0].jhy;
+			var kc = data[0].kc;
+			
+			_this.listPanel.addOrderBtn.setVisible(yx.indexOf(uid) != -1);
+			_this.listPanel.updateAmountBtn.setVisible(yx.indexOf(uid) != -1);
+			_this.listPanel.confirmBtn.setVisible(jhy.indexOf(uid) != -1);
+			_this.listPanel.storageConfirmBtn.setVisible(jhy.indexOf(uid) != -1 || kc.indexOf(uid) != -1);
+			_this.listPanel.delBtn.setVisible(jhy.indexOf(uid) != -1);
+			
+			Ext.getCmp(importExcelBtnId).setVisible(jhy.indexOf(uid) != -1 || yx.indexOf(uid) != -1);
+		},
+		callback : function() {
+		}
+	})
 }

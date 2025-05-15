@@ -56,7 +56,7 @@
     <!-- 膜片型号查询 -->
     <select id="queryMpSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
 	t.mater_spec_id "id",t.mater_spec_name "name",t.mater_spec_code "code"
-	,t.mp_batch_code "mpBatchCode"
+	,t.mp_batch_code "mpBatchCode",t.new_batch_code "newBatchCode"
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030024,100030025,100030023,100030022)
 	AND t.mater_spec_name IN('ULP1-1','ULP2-1','ULP3-1','ULP4-1','ULP5-1',

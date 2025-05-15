@@ -33,6 +33,10 @@
 </style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  
+  var importExcelBtnId = Ext.id();
+  importExcelBtnId = 'YxOrderBaseMgr-' + importExcelBtnId;
+  
   var listid = Ext.id();
 
   var opt = '';

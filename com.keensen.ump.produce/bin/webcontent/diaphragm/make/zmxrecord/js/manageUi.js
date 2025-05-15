@@ -33,7 +33,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					//title : '【铸膜线生产记录查询】',
+					// title : '【铸膜线生产记录查询】',
 					fields : [{
 								xtype : 'dictcombobox',
 								name : 'condition/dimoType',
@@ -140,11 +140,11 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【铸膜线生产记录列表】',
+			// title : '【铸膜线生产记录列表】',
 			viewConfig : {
 				forceFit : false
 			},
-			id:'diaphragm_zmx_list',
+			id : 'diaphragm_zmx_list',
 			hsPage : true,
 			tbar : [{
 						text : '新增',
@@ -262,6 +262,9 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					}, {
 						dataIndex : 'curAmount',
 						header : '本班数量'
+					}, {
+						dataIndex : 'reserve5',
+						header : '记录人'
 					}/*
 						 * , { dataIndex : 'totalAmount', header : '当班总计生产数量' }
 						 */, {
@@ -629,6 +632,17 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					fieldLabel : '本班数量',
 					anchor : '95%',
 					colspan : 1
+				}, {
+					xtype : 'displayfield',
+					height : '5',
+					colspan : 2
+				}, {
+					xtype : 'textfield',
+					name : 'entity/reserve5',
+					allowBlank : false,
+					fieldLabel : '记录人',
+					anchor : '95%',
+					colspan : 1
 				}]
 			}]
 		});
@@ -777,108 +791,43 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							fieldLabel : '理论投入数',
 							anchor : '95%',
 							colspan : 1
-						}/*, {
-							xtype : 'displayfield',
-							value : '<p style="color:red;">铸膜明细（米）</p>',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/lose0',
-							dataIndex : 'lose0',
-							fieldLabel : '无纺布取样',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/lose1',
-							dataIndex : 'lose1',
-							fieldLabel : '拼接固损',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/lose2',
-							dataIndex : 'lose2',
-							fieldLabel : '底膜取样',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/lose3',
-							dataIndex : 'lose3',
-							fieldLabel : '工艺取样',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/lose4',
-							dataIndex : 'lose4',
-							fieldLabel : '无纺布来料不良',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/lose5',
-							dataIndex : 'lose5',
-							fieldLabel : '设备故障报废',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/lose6',
-							dataIndex : 'lose6',
-							fieldLabel : '铸膜不良（已扯）',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/lose7',
-							dataIndex : 'lose7',
-							fieldLabel : '扯掉（打折/开头末尾刮痕）',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/flaw0',
-							dataIndex : 'flaw0',
-							fieldLabel : '浅刮痕',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/flaw1',
-							dataIndex : 'flaw1',
-							fieldLabel : '深刮痕',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 2
-						}, {
-							xtype : 'numberfield',
-							name : 'entity/flaw2',
-							dataIndex : 'flaw2',
-							fieldLabel : '铸膜不良',
-							anchor : '47%',
-							colspan : 2
-						}*/, {
+						}/*
+							 * , { xtype : 'displayfield', value : '<p style="color:red;">铸膜明细（米）</p>',
+							 * colspan : 2 }, { xtype : 'numberfield', name :
+							 * 'entity/lose0', dataIndex : 'lose0', fieldLabel :
+							 * '无纺布取样', anchor : '95%', colspan : 1 }, { xtype :
+							 * 'numberfield', name : 'entity/lose1', dataIndex :
+							 * 'lose1', fieldLabel : '拼接固损', anchor : '95%',
+							 * colspan : 1 }, { xtype : 'displayfield', height :
+							 * '5', colspan : 2 }, { xtype : 'numberfield', name :
+							 * 'entity/lose2', dataIndex : 'lose2', fieldLabel :
+							 * '底膜取样', anchor : '95%', colspan : 1 }, { xtype :
+							 * 'numberfield', name : 'entity/lose3', dataIndex :
+							 * 'lose3', fieldLabel : '工艺取样', anchor : '95%',
+							 * colspan : 1 }, { xtype : 'displayfield', height :
+							 * '5', colspan : 2 }, { xtype : 'numberfield', name :
+							 * 'entity/lose4', dataIndex : 'lose4', fieldLabel :
+							 * '无纺布来料不良', anchor : '95%', colspan : 1 }, { xtype :
+							 * 'numberfield', name : 'entity/lose5', dataIndex :
+							 * 'lose5', fieldLabel : '设备故障报废', anchor : '95%',
+							 * colspan : 1 }, { xtype : 'displayfield', height :
+							 * '5', colspan : 2 }, { xtype : 'numberfield', name :
+							 * 'entity/lose6', dataIndex : 'lose6', fieldLabel :
+							 * '铸膜不良（已扯）', anchor : '95%', colspan : 1 }, {
+							 * xtype : 'numberfield', name : 'entity/lose7',
+							 * dataIndex : 'lose7', fieldLabel :
+							 * '扯掉（打折/开头末尾刮痕）', anchor : '95%', colspan : 1 }, {
+							 * xtype : 'displayfield', height : '5', colspan : 2 }, {
+							 * xtype : 'numberfield', name : 'entity/flaw0',
+							 * dataIndex : 'flaw0', fieldLabel : '浅刮痕', anchor :
+							 * '95%', colspan : 1 }, { xtype : 'numberfield',
+							 * name : 'entity/flaw1', dataIndex : 'flaw1',
+							 * fieldLabel : '深刮痕', anchor : '95%', colspan : 1 }, {
+							 * xtype : 'displayfield', height : '5', colspan : 2 }, {
+							 * xtype : 'numberfield', name : 'entity/flaw2',
+							 * dataIndex : 'flaw2', fieldLabel : '铸膜不良', anchor :
+							 * '47%', colspan : 2 }
+							 */, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
@@ -927,6 +876,18 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							anchor : '95%',
 							colspan : 1
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/reserve5',
+							dataIndex : 'reserve5',
+							allowBlank : false,
+							fieldLabel : '记录人',
+							anchor : '95%',
+							colspan : 1
+						}, {
 							xtype : 'hidden',
 							name : 'entity/id',
 							dataIndex : 'id'
@@ -951,7 +912,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 				});
 
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
-			//title : '【铸膜混料记录列表】',
+			// title : '【铸膜混料记录列表】',
 			region : 'center',
 			hsPage : true,
 			selModel : selModel2,
@@ -1106,7 +1067,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					region : 'north',
 					// collapsible : true,
 					titleCollapse : false,
-					//title : '【铸膜混料记录查询】',
+					// title : '【铸膜混料记录查询】',
 					fields : [{
 								xtype : 'textfield',
 								name : 'condition/batchNo2',

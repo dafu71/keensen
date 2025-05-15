@@ -65,8 +65,11 @@
 	  from qinsen.inst_tumo_check itc
 	  WHERE itc.recheck_flag ='Y'
 	  GROUP BY itc.batch_id) itc2 ON itc2.batch_id = it.RECORD_ID
-	LEFT JOIN V_TUMO_CHECK_MP_STAND ms 
-	ON ms.is_wx = 'N' AND ms.level_id = 300029 AND ms.mac_name=itc.mac_name AND ms.spec_id=it.SPEC_ID
+	LEFT JOIN (SELECT spec_id,is_wx,level_id,min(SALT_LOW_LIMIT) SALT_LOW_LIMIT 
+  FROM V_TUMO_CHECK_MP_STAND GROUP BY spec_id,is_wx,level_id) ms 
+	ON ms.is_wx = 'N' AND ms.level_id = 300029 
+	<!--AND ms.mac_name=itc.mac_name -->
+	AND ms.spec_id=it.SPEC_ID
 	LEFT JOIN V_TUMO_CHECK_WATER_TEST2 wt ON wt.prefix = substr(t.batch_no,1,10)
 	LEFT JOIN KS_PROD_WATER_STD pws ON pws.mp_spec_id=it.SPEC_ID AND pws.prod_spec_id = wt.TEST_SPEC_ID
 	
@@ -156,8 +159,11 @@
 	  from qinsen.inst_tumo_check itc
 	  WHERE itc.recheck_flag ='Y'
 	  GROUP BY itc.batch_id) itc2 ON itc2.batch_id = it.RECORD_ID
-	LEFT JOIN V_TUMO_CHECK_MP_STAND ms 
-	ON ms.is_wx = 'N' AND ms.level_id = 300029 AND ms.mac_name=itc.mac_name AND ms.spec_id=it.SPEC_ID
+	LEFT JOIN (SELECT spec_id,is_wx,level_id,min(SALT_LOW_LIMIT) SALT_LOW_LIMIT 
+  FROM V_TUMO_CHECK_MP_STAND GROUP BY spec_id,is_wx,level_id) ms 
+	ON ms.is_wx = 'N' AND ms.level_id = 300029 
+	<!--AND ms.mac_name=itc.mac_name -->
+	AND ms.spec_id=it.SPEC_ID
 	LEFT JOIN V_TUMO_CHECK_WATER_TEST2 wt ON wt.prefix = substr(t.batch_no,1,10)
 	LEFT JOIN V_TUMO_CHECK_WATER_TEST4 wt2 ON wt2.prefix = substr(t.batch_no,1,4) || substr(t.batch_no,6,4)
 	LEFT JOIN KS_PROD_WATER_STD pws ON pws.mp_spec_id=it.SPEC_ID AND pws.prod_spec_id = wt.TEST_SPEC_ID

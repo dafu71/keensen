@@ -1,6 +1,8 @@
 com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
+	this.getRight();
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -18,7 +20,13 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 }
 
 com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onAdd = function() {
+
 	this.addWindow.show();
+	if (Ext.isEmpty(this.addWindow.workerId.getValue())) {
+		this.addWindow.workerId.setValue(operatorid);
+	}
+	this.addWindow.machineCode.setValue(this.currentMachineCode);
+	
 }
 
 com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onDel = function() {
@@ -82,4 +90,25 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onScan = func
 					}
 				}
 			});
+}
+
+// 获取权限
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.getRight = function() {
+	var _this = this;
+	Ext.Ajax.request({
+		url : "produce/component/produce/householdjm/right.json",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			var data = ret.data;
+			var exportExcel = data[0].exportExcel;
+			
+			
+			Ext.getCmp(exportExcelBtn).setVisible(exportExcel.indexOf(uid) != -1);
+			
+
+		},
+		callback : function() {
+		}
+	})
 }

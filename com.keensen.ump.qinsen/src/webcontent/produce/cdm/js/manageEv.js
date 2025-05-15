@@ -2,6 +2,16 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 
 	var _this = this;
 
+	this.defectZmWin.listPanel.store.on('load', function() {
+				var defectZmArr = ['B3-底膜针孔',
+                         'B4-底膜刮痕'];
+				_this.defectZmWin.listPanel.store.filterBy(function(record) {
+							var text = '' + record.get('defectName');
+							return (defectZmArr.includes(text));
+
+						});
+			})
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 
@@ -235,10 +245,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onaddZmDefect = function() 
 	} else {
 		var C = A.getSelectionModel().getSelections();
 		var r = C[0];
-		var tumoBatchNo = r.data.tumoBatchNo;
-		var tumoRecordId = r.data.tumoBatchId;
-		this.defectZmWin.inputPanel.tumoBatchNo.setValue(tumoBatchNo);
-		this.defectZmWin.inputPanel.tumoRecordId.setValue(tumoRecordId);
+		var dmBatchId = r.data.dmBatchId;
+		var dimoBatchNo = r.data.dimoBatchNo;
+		this.defectZmWin.inputPanel.tumoBatchNo.setValue(dimoBatchNo);
+		this.defectZmWin.inputPanel.tumoRecordId.setValue(dmBatchId);
 		this.defectZmWin.show();
 	}
 };

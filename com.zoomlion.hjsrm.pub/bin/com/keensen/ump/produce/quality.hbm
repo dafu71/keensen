@@ -2786,4 +2786,137 @@
             <column length="22" name="LINE_ID"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.quality.KsQualityHhWaterTest" table="KS_QUALITY_HH_WATER_TEST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="batchNo" type="string">
+            <column length="20" name="BATCH_NO"/>
+        </property>
+        <property name="isBatchQualified" type="string">
+            <column length="20" name="IS_BATCH_QUALIFIED"/>
+        </property>
+        <property name="isProdQualified" type="string">
+            <column length="20" name="IS_PROD_QUALIFIED"/>
+        </property>
+        <property name="juanmoBatchNo" type="string">
+            <column length="20" name="JUANMO_BATCH_NO"/>
+        </property>
+        <property name="testSpecId" type="string">
+            <column length="20" name="TEST_SPEC_ID"/>
+        </property>
+        <property name="prodBatchNo" type="string">
+            <column length="20" name="PROD_BATCH_NO"/>
+        </property>
+        <property name="testPos" type="string">
+            <column length="20" name="TEST_POS"/>
+        </property>
+        <property name="testTime" type="timestamp">
+            <column name="TEST_TIME"/>
+        </property>
+        <property name="testLiquid" type="string">
+            <column length="20" name="TEST_LIQUID"/>
+        </property>
+        <property name="density" type="string">
+            <column length="20" name="DENSITY"/>
+        </property>
+        <property name="pressure" type="string">
+            <column length="20" name="PRESSURE"/>
+        </property>
+        <property name="tempreture" type="string">
+            <column length="20" name="TEMPRETURE"/>
+        </property>
+        <property name="ph" type="string">
+            <column length="20" name="PH"/>
+        </property>
+        <property name="recovery" type="string">
+            <column length="20" name="RECOVERY"/>
+        </property>
+        <property name="gpd" type="string">
+            <column length="20" name="GPD"/>
+        </property>
+        <property name="salt" type="string">
+            <column length="20" name="SALT"/>
+        </property>
+        <property name="prodGpdStd" type="string">
+            <column length="20" name="PROD_GPD_STD"/>
+        </property>
+        <property name="prodSaltStd" type="string">
+            <column length="20" name="PROD_SALT_STD"/>
+        </property>
+        <property name="testTypeId" type="string">
+            <column length="20" name="TEST_TYPE_ID"/>
+        </property>
+        <property name="vacuumValue" type="string">
+            <column length="20" name="VACUUM_VALUE"/>
+        </property>
+        <property name="sn" type="string">
+            <column length="20" name="SN"/>
+        </property>
+        <property name="wetSpecName" type="string">
+            <column length="20" name="WET_SPEC_NAME"/>
+        </property>
+        <property name="wetBatchNo" type="string">
+            <column length="20" name="WET_BATCH_NO"/>
+        </property>
+        <property name="jName" type="string">
+            <column length="20" name="J_NAME"/>
+        </property>
+        <property name="conductivity" type="string">
+            <column length="20" name="CONDUCTIVITY"/>
+        </property>
+        <property name="conductivity2" type="string">
+            <column length="20" name="CONDUCTIVITY2"/>
+        </property>
+        <property name="flow" type="string">
+            <column length="20" name="FLOW"/>
+        </property>
+        <property name="flow2" type="string">
+            <column length="20" name="FLOW2"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+    </class>
 </hibernate-mapping>

@@ -1,14 +1,23 @@
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 
 	var _this = this;
-	
-	//导出白名单
-	
+
+	this.defectZmWin.listPanel.store.on('load', function() {
+				var defectZmArr = ['A1-底膜折痕', 'A9-铸膜设备不良', 'A10-铸膜液断流',
+						'A11-铸膜深刮痕', 'A12-无纺布来料不良', 'A13-铸膜浅刮痕', 'A14-工艺异常报废'];
+				_this.defectZmWin.listPanel.store.filterBy(function(record) {
+							var text = '' + record.get('defectName');
+							return (defectZmArr.includes(text));
+
+						});
+			})
+
+	// 导出白名单
+
 	var white = ['KS00420']
-	if(white.indexOf(uid) > -1 ){
+	if (white.indexOf(uid) > -1) {
 		this.queryPanel.buttons[2].setDisabled(false);
 	}
-	
 
 	// 查询事件
 	this.queryPanel3.mon(this.queryPanel3, 'query', function(form, vals) {
@@ -315,10 +324,12 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				}
 				var batchNoPrefix = this.spellBatchNoPrefix();
 				if (batchNo.indexOf(batchNoPrefix) != 0) {
-					var c = confirm('膜片批次与选择的信息不符，确认批次填写无误？');
-					if (!c) {
-						return false;
-					}
+					Ext.Msg.alert('膜片批次与选择的信息不符，确认批次填写无误？');
+					return false;
+					// var c = confirm('膜片批次与选择的信息不符，确认批次填写无误？');
+					// if (!c) {
+					// return false;
+					// }
 				}
 			}, this);
 
@@ -341,10 +352,12 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				}
 				var batchNoPrefix = this.spellBatchNoPrefix2();
 				if (batchNo.indexOf(batchNoPrefix) != 0) {
-					var c = confirm('膜片批次与选择的信息不符，确认批次填写无误？');
-					if (!c) {
-						return false;
-					}
+					Ext.Msg.alert("系统提示", "膜片批次与选择的信息不符，确认批次填写无误？");
+					return false;
+					// var c = confirm('膜片批次与选择的信息不符，确认批次填写无误？');
+					// if (!c) {
+					// return false;
+					// }
 				}
 			}, this);
 
@@ -367,21 +380,20 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				var _vals = _this.queryPanel.getForm().getValues();
 				_this.queryPanel.fireEvent("query", _this.queryPanel, _vals);
 			}, this);
-			
-	this.modifyRecordWindow.activeItem.mon(
-			this.modifyRecordWindow.activeItem, 'afterSave', function(gird,
-					cell) {
+
+	this.modifyRecordWindow.activeItem.mon(this.modifyRecordWindow.activeItem,
+			'afterSave', function(gird, cell) {
 				var _vals = _this.queryPanel.getForm().getValues();
 				_this.queryPanel.fireEvent("query", _this.queryPanel, _vals);
 			}, this);
 
-	this.editMpdWindow.activeItem.mon(this.editMpdWindow.activeItem, 'afterload',
-			function(win, data) {
-				
+	this.editMpdWindow.activeItem.mon(this.editMpdWindow.activeItem,
+			'afterload', function(win, data) {
+
 				this.judgeC21();
 
-			}, this);		
-			
+			}, this);
+
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddTmDefect = function() {
@@ -415,8 +427,12 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddZmDefect = function() {
 		var r = C[0];
 		var tumoBatchNo = r.data.batchNo;
 		var tumoRecordId = r.data.recordId;
-		this.defectZmWin.inputPanel.tumoBatchNo.setValue(tumoBatchNo);
-		this.defectZmWin.inputPanel.tumoRecordId.setValue(tumoRecordId);
+
+		var dmBatchId = r.data.dmBatchId;
+		var dimoBatchNo = r.data.dimoBatchNo;
+
+		this.defectZmWin.inputPanel.tumoBatchNo.setValue(dimoBatchNo);
+		this.defectZmWin.inputPanel.tumoRecordId.setValue(dmBatchId);
 		this.defectZmWin.show();
 	}
 };
@@ -590,14 +606,12 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.spellBatchNoPrefix2 = function(
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.dealBatchNo2 = function() {
 	return;
-	/*var me = this;
-	var prefix = me.spellBatchNoPrefix2();
-	var oldStr = this.editWindow.batchNo.getValue();
-	if (oldStr && oldStr.length > 9) {
-		this.editWindow.batchNo.setValue(prefix + oldStr.substr(9));
-	} else {
-		this.editWindow.batchNo.setValue(prefix);
-	}*/
+	/*
+	 * var me = this; var prefix = me.spellBatchNoPrefix2(); var oldStr =
+	 * this.editWindow.batchNo.getValue(); if (oldStr && oldStr.length > 9) {
+	 * this.editWindow.batchNo.setValue(prefix + oldStr.substr(9)); } else {
+	 * this.editWindow.batchNo.setValue(prefix); }
+	 */
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.dealBatchNo = function() {
@@ -619,7 +633,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.destroy = function() {
 	this.defectZmWin.destroy();
 	Ext.getCmp('tm-defectviewwindow').destroy();
 	Ext.getCmp('produce-tumo-list').destroy();
-	
+
 	this.modifyRecordWindow.destroy();
 	this.modifyRecordListWindow.destroy();
 	this.addDefectSampleWindow.destroy();
@@ -815,7 +829,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onRemark = function() {
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.replaceTroughInfo = function() {
 	this.listPanel5.store.load();
-	//this.replaceTroughWindow.show();
+	// this.replaceTroughWindow.show();
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onWaterBatchNo = function() {
@@ -882,30 +896,30 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.calculateC21 = function() {
 		this.editMpdWindow.mpd.setValue(mpd);
 		this.judgeC21();
 	}
-	
-	
+
 }
 
-//判定结果
+// 判定结果
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.judgeC21 = function() {
 	var mpd = this.editMpdWindow.mpd.getValue();
 	var qualified = this.editMpdWindow.qualified.getValue();
 	var feedback = this.editMpdWindow.feedback.getValue();
 	var c21Result = '';
 	if (!Ext.isEmpty(mpd) && !Ext.isEmpty(qualified) && !Ext.isEmpty(feedback)) {
-		
-		if(parseFloat(mpd)<=parseFloat(feedback)){
+
+		if (parseFloat(mpd) <= parseFloat(feedback)) {
 			c21Result = '合格,生产使用';
 		}
-		if(parseFloat(mpd)> parseFloat(feedback) && parseFloat(mpd)<= parseFloat(qualified)){
+		if (parseFloat(mpd) > parseFloat(feedback)
+				&& parseFloat(mpd) <= parseFloat(qualified)) {
 			c21Result = '合格,反馈班长';
 		}
-		if(parseFloat(mpd)> parseFloat(qualified)){
+		if (parseFloat(mpd) > parseFloat(qualified)) {
 			c21Result = '不合格,反馈班长';
 		}
 
 		this.editMpdWindow.c21Result.setValue(c21Result);
-	}	
+	}
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddFhDefect = function() {
@@ -1013,7 +1027,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onModify = function() {
 		var tumoBatchNo = r.data.batchNo;
 		var tumoBatchId = r.data.recordId;
 		var specId = r.data.specId;
-		
+
 		this.modifyRecordWindow.show();
 		this.modifyRecordWindow.recordId.setValue(tumoBatchId);
 		this.modifyRecordWindow.batchNo.setValue(tumoBatchNo);
@@ -1042,7 +1056,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onViewModify = function() {
 			}
 		});
 		this.modifyRecordListWindow.show();
-		
+
 	}
-	
+
 }

@@ -117,6 +117,9 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateMgr = function() {
 						dataIndex : 'outLength',
 						header : '收卷长度'
 					}, {
+						dataIndex : 'actualLength',
+						header : '长度'
+					}, {
 						dataIndex : 'cOutLength',
 						header : 'C等品长度'
 					}, {
@@ -137,6 +140,12 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateMgr = function() {
 					}, {
 						dataIndex : 'qualifiedNotLength',
 						header : '性能不合格数'
+					}, {
+						dataIndex : 'noTearLength',
+						header : '铸膜未扯不良数'
+					}, {
+						dataIndex : 'scratchLength',
+						header : '铸膜浅刮痕不良数'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.make.report.queryPassrate.biz.ext',
@@ -147,6 +156,12 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'actualLength'
+						},{
+							name : 'noTearLength'
+						}, {
+							name : 'scratchLength'
+						},{
 							name : 'qualifiedNotLength'
 						}, {
 							name : 'caimoLoss'

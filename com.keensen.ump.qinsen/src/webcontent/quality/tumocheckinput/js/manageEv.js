@@ -112,13 +112,15 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr.prototype.batchNoChange = funct
 						if (!Ext.isEmpty(ret.data)) {
 							var tm = ret.data[0];
 							var specName = tm.specName;
+							var lineId = tm.lineId;
 							var specId = tm.specId;
 							var batchId = tm.recordId;
 							_this.masterPanel.specName.setValue(specName);
 							_this.masterPanel.batchId.setValue(batchId);
 							_this.stdGrid.store.load({
 										params : {
-											'condition/specId' : specId
+											'condition/specId' : specId,
+											'condition/lineId' : lineId
 										}
 									});
 							// 获取已检信息

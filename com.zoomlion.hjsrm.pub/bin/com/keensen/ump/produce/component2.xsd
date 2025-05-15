@@ -97,6 +97,37 @@
             <xs:element minOccurs="0" name="planAmount" nillable="true" type="xs:decimal"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="KsProdWaterStd">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="mpSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="prodSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="aGpdLowLimit" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="aGpdUpLimit" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="aGpdCenter" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="aSaltLowLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="aSaltUpLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="aFactorBLowLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="aFactorBUpLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="bSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="bGpdLowLimit" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="bGpdUpLimit" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="bGpdCenter" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="bSaltLowLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="bSaltUpLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="bFactorBLowLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="bFactorBUpLimit" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="macName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mpSpecName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="prodSpecName" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
     <xs:complexType name="KsComponentHouseholdJm">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -121,6 +152,7 @@
             <xs:element minOccurs="0" name="workerId" nillable="true" type="xs:long"/>
             <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="hjBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orderDate" nillable="true" type="xs:dateTime"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

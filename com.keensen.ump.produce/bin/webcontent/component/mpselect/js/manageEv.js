@@ -140,6 +140,13 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.initEvent = function() {
 					}
 				});
 			}, this);
+			
+	this.listPanel6.mon(this.listPanel6, 'update', function(gird, cell) {
+		
+				this.editStandWindow.show();
+				this.editStandWindow.loadData(cell);
+				
+			}, this);
 }
 
 // 模板文件下载
@@ -182,7 +189,8 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.doUpload = function() {
 	}
 	if (this.uploadInputPanel.form.isValid()) {
 		// var url = this.uploadInputPanel.saveUrl;
-		var url = 'com.keensen.ump.produce.component.importStock4Select.flow';
+		
+		var url = 'com.keensen.ump.produce.component.importStock4Select2.flow';
 		this.uploadInputPanel.form.submit({
 					method : "POST",
 					timeout : 1200,
@@ -564,6 +572,10 @@ com.keensen.ump.produce.component.mpselectMgr.prototype.onChooseSingleOrder = fu
 		this.chooseSingleOrderWindow.hide();
 
 	}
+}
+
+com.keensen.ump.produce.component.mpselectMgr.prototype.onEditStand = function() {
+	this.listPanel6.onEdit();
 }
 
 // 筛选条件

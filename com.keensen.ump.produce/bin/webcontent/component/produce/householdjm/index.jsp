@@ -59,6 +59,7 @@ function formatStr(str){
   var mylistid = Ext.id();
   
   var uid = "<%=uid %>";
+  var exportExcelBtn = Ext.id();
   var dataorgid = "<%=dataorgid%>";
 var operatorid = "<%=operatorid%>";
 var operatorname = "<%=operatorname%>";

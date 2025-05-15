@@ -110,7 +110,8 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 
 					var saveUrl = 'com.keensen.ump.qinsen.quality.saveCdmDefect.biz.ext';
 
-					if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
+					if (this.dutyTacheCode == 'ZM') {
+					//if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
 						saveUrl = 'com.keensen.ump.qinsen.quality.saveZmDefect.biz.ext';
 					}
 					Ext.Ajax.request({
@@ -222,8 +223,8 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 					mk.show();
 
 					var saveUrl = 'com.keensen.ump.qinsen.quality.saveCdmDefect.biz.ext';
-
-					if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
+					if (this.dutyTacheCode == 'ZM') {
+					//if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
 						saveUrl = 'com.keensen.ump.qinsen.quality.saveZmDefect.biz.ext';
 					}
 					Ext.Ajax.request({
@@ -451,7 +452,8 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 
 		var fieldLabel = '膜片批次';
 
-		if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
+		if (this.dutyTacheCode == 'ZM') {
+		//if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
 			fieldLabel = '底膜批次';
 		}
 

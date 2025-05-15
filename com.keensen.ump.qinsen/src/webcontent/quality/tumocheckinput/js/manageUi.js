@@ -326,6 +326,12 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 						dataIndex : 'materSpecName',
 						header : '膜片型号'
 					}, {
+						dataIndex : 'lineName',
+						header : '生产线'
+					}, {
+						dataIndex : 'macName',
+						header : '测试台'
+					}, {
 						dataIndex : 'levelCode',
 						header : '等级'
 					}, {
@@ -393,6 +399,12 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 							name : 'levelCode'
 						}, {
 							name : 'stateName'
+						}, {
+							name : 'lineName'
+						}, {
+							name : 'lineID'
+						}, {
+							name : 'macName'
 						}]
 			})
 		})

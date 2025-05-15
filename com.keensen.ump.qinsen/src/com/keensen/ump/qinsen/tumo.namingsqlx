@@ -99,7 +99,8 @@
        nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) - nvl(T1.CAIMO_LOSS,0) "remainLength",
        nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength",
        decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
-       t1.kt_amount "ktAmount"
+       t1.kt_amount "ktAmount",
+       t1.dm_batch_id "dmBatchId"
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,A.water_batch_no,
                A.PLAN_NO,A.if_modify_defect,A.c21_result ,
                A.DIMO_BATCH_NO,
@@ -209,8 +210,10 @@
                vkrc.sumOutLength,
                
                DECODE(A.IS_CUT_OVER, 'Y', to_char(A.OUT_LENGTH - nvl(kt.CAIMO_LOSS,0) - nvl(T2.CAIMO_LENGTH,0),'FM9999999990.99') , '') kt_amount
-               
+               ,dm.id dm_batch_id
           FROM QINSEN.INST_TUMO A
+          LEFT JOIN ks_prod_diaphragm_zmx_record dm
+			ON dm.dimo_batch_no = a.dimo_batch_no
           left join KS_DIAPHRAGM_DIAMETER kdd on kdd.batch_no = A.batch_no 
           left join KS_PROD_DIAPHRAGM_TUMO t33
   				on A.record_id = t33.record_id

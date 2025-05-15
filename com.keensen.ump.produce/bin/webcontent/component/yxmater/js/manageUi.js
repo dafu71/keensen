@@ -197,13 +197,13 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						text : '新增',
 						scope : this,
 						iconCls : 'icon-application_add',
-						hidden : uid != 'KS01147',
+						hidden : uid != 'KS01147' && uid != 'XXB',
 						handler : this.onAdd
 					}, '-', {
 						text : '修改',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						hidden : uid != 'KS01147',
+						hidden : uid != 'KS01147' && uid != 'XXB',
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',

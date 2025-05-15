@@ -2179,47 +2179,6 @@
             <column length="3" name="PRODUCT_ORDER"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentDutyJm" table="KS_COMPONENT_DUTY_JM">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <composite-id>
-            <key-property name="planDate" type="date">
-                <column name="PLAN_DATE"/>
-            </key-property>
-            <key-property name="orderId" type="int">
-                <column length="9" name="ORDER_ID"/>
-            </key-property>
-            <key-property name="jmCode" type="string">
-                <column length="20" name="JM_CODE"/>
-            </key-property>
-        </composite-id>
-        <property name="jmState" type="string">
-            <column default="'0'" length="20" name="JM_STATE"/>
-        </property>
-        <property name="dutyTime" type="timestamp">
-            <column name="DUTY_TIME"/>
-        </property>
-        <property name="dutyUserId" type="string">
-            <column length="20" name="DUTY_USER_ID"/>
-        </property>
-        <property name="dutyName" type="string">
-            <column length="50" name="DUTY_NAME"/>
-        </property>
-        <property name="jmReportTime" type="timestamp">
-            <column name="JM_REPORT_TIME"/>
-        </property>
-        <property name="jmReportUserId" type="string">
-            <column length="20" name="JM_REPORT_USER_ID"/>
-        </property>
-        <property name="jmReportName" type="string">
-            <column length="50" name="JM_REPORT_NAME"/>
-        </property>
-        <property name="arrangeDate" type="date">
-            <column name="ARRANGE_DATE"/>
-        </property>
-        <property name="productOrder" type="int">
-            <column length="3" name="PRODUCT_ORDER"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentPlanDay" table="KS_COMPONENT_PLAN_DAY">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="int">
@@ -3833,6 +3792,47 @@
             <column length="20" name="PRINT_DELAY_TIME"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentDutyJm" table="KS_COMPONENT_DUTY_JM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="planDate" type="date">
+                <column name="PLAN_DATE"/>
+            </key-property>
+            <key-property name="orderId" type="int">
+                <column length="9" name="ORDER_ID"/>
+            </key-property>
+            <key-property name="jmCode" type="string">
+                <column length="20" name="JM_CODE"/>
+            </key-property>
+        </composite-id>
+        <property name="jmState" type="string">
+            <column default="'0'" length="20" name="JM_STATE"/>
+        </property>
+        <property name="dutyTime" type="timestamp">
+            <column name="DUTY_TIME"/>
+        </property>
+        <property name="dutyUserId" type="string">
+            <column length="20" name="DUTY_USER_ID"/>
+        </property>
+        <property name="dutyName" type="string">
+            <column length="50" name="DUTY_NAME"/>
+        </property>
+        <property name="jmReportTime" type="timestamp">
+            <column name="JM_REPORT_TIME"/>
+        </property>
+        <property name="jmReportUserId" type="string">
+            <column length="20" name="JM_REPORT_USER_ID"/>
+        </property>
+        <property name="jmReportName" type="string">
+            <column length="50" name="JM_REPORT_NAME"/>
+        </property>
+        <property name="arrangeDate" type="date">
+            <column name="ARRANGE_DATE"/>
+        </property>
+        <property name="productOrder" type="int">
+            <column length="3" name="PRODUCT_ORDER"/>
+        </property>
+    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentYxorderBase" table="KS_COMPONENT_YXORDER_BASE">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="long">
@@ -4192,6 +4192,12 @@
         </property>
         <property name="pallet" type="string">
             <column length="500" name="PALLET"/>
+        </property>
+        <property name="makeMark2" type="string">
+            <column length="20" name="MAKE_MARK2"/>
+        </property>
+        <property name="makeLabel2" type="string">
+            <column length="20" name="MAKE_LABEL2"/>
         </property>
     </class>
 </hibernate-mapping>

@@ -189,11 +189,12 @@ where nvl(if_tear,'是') = '是'
        T1.LINE AS "line",T3.base "base",t3.id "id",
        T1.DIMO_TYPE AS "dimoType",
        T1.THEORY_AMOUNT AS "theoryAmount",
-       T1.LOSE AS "lose",
-       T1.THEORY_AMOUNT - T1.LOSE "dimoAmount",
+       nvl(T5.LOSE,0) AS "lose",
+       T1.THEORY_AMOUNT - nvl(T5.LOSE,0) "dimoAmount",
        T2.PROD_LENGTH "prodLength",
-       T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue",t3.sup_name "supName",nvl(t3.pump_speed,'无') "pumpSpeed"
-  FROM (SELECT T.DIMO_BATCH_NO,
+       T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) "residue",
+       t3.sup_name "supName",nvl(t3.pump_speed,'无') "pumpSpeed"
+       FROM (SELECT T.DIMO_BATCH_NO,
                '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
                
                DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
@@ -224,6 +225,20 @@ where nvl(if_tear,'是') = '是'
                SUM(NVL(T.LOSE6, 0)) + SUM(NVL(T.LOSE7, 0)) LOSE
           FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T
          GROUP BY T.DIMO_BATCH_NO) T1
+         
+  left join (SELECT SUM(LOSS) LOSE, DIMO_BATCH_NO
+  FROM (SELECT ZM.DIMO_BATCH_NO,
+               T.DM_BATCH_ID,
+               T.DEFECT_ITEM_ID,
+               T.IF_TEAR,
+               T.LOSS
+          FROM QINSEN.INST_CDM_DEFECT2 T
+          LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD ZM
+            ON T.DM_BATCH_ID = ZM.ID
+        )
+ GROUP BY DIMO_BATCH_NO)  t5
+ on t5.DIMO_BATCH_NO =  T1.DIMO_BATCH_NO    
+         
   LEFT JOIN (SELECT T.DIMO_BATCH_NO, SUM(T.OUT_LENGTH) PROD_LENGTH
                FROM V_KS_TUMO_ALL T
               GROUP BY T.DIMO_BATCH_NO) T2

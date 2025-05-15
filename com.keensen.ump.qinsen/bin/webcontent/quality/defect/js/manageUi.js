@@ -143,7 +143,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						hiddenName : 'condition/recTacheId',
 						emptyText : '--请选择--',
 						anchor : '95%',
-						store : [[null, '全部'], [100, '涂膜'], [101, '裁叠膜']],
+						store : [[null, '全部'], [100, '涂膜'], [101, '裁叠膜'], [99, '铸膜'], [106, '发货']],
 						listeners : {
 							scope : this,
 							'expand' : function(A) {

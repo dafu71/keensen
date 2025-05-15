@@ -189,6 +189,8 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 		
 		z.diff "diff",
 		case when z.diff&gt;5 then '是' else '否' end "packageModify",
+		
+		z.if_semi_stock "ifSemiStock",
 		 
 		Z.MONITOR_REMARK as "monitorRemark",
 		TO_CHAR(Z.MONITOR_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "monitorRemarkTime",
@@ -271,6 +273,8 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 		       
 	       A.diff,
 	        
+	        DECODE(ss.Batch_No,NULL,'否','是') if_semi_stock,
+	        
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
@@ -296,8 +300,14 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
   left join  qinsen.PARA_MATER_SPEC pms
   on QJ.gyy_SPEC_ID = PMS.MATER_SPEC_ID
   LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
-  ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID) A, 
-  qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
+  ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID) A 
+  , 
+  qinsen.INST_JUANMO_MAIN J
+  left join (SELECT batch_no from KS_COMPONENT_SEMI_STOCK t
+  WHERE t.deleted = 'N') ss
+  on ss.batch_no = J.batch_no
+  
+  , qinsen.PARA_MATER_SPEC MS
 	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
 	   AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
 	   

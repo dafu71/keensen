@@ -90,6 +90,9 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateZmMgr = function() {
 					}, {
 						dataIndex : 'lossNotTear',
 						header : '未扯不良数'
+					}, {
+						dataIndex : 'lossNotZm',
+						header : '非铸膜工序录入不良数'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.make.report.queryPassrate4Zm.biz.ext',
@@ -113,6 +116,8 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateZmMgr = function() {
 							name : 'lossTear'
 						}, {
 							name : 'lossNotTear'
+						}, {
+							name : 'lossNotZm'
 						}
 
 				]

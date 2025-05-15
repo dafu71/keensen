@@ -42,6 +42,8 @@
        t1.light_Net_Short_Page as "lightNetShortPage",
        t1.light_Net_Type as "lightNetType"
        
+       ,t1.dm_batch_id "dmBatchId"
+       ,t1.dimo_batch_no "dimoBatchNo"
        
   FROM (SELECT A.RECORD_ID,A.LOCATION,
                A.BATCH_NO,
@@ -75,7 +77,7 @@
                
                 MSC.Juanmo ,MSC.light_Net_Type ,MSC.light_Net_Short_Page ,
                 
-               A.QUANTITY * A.BLANKING_SIZE * A.PAGE_WIDTH OUT_LENGTH,
+               A.QUANTITY * A.BLANKING_SIZE * A.PAGE_WIDTH * decode(nvl(a.page_type,'长页'),'长页',1,0.5) OUT_LENGTH,
                DECODE(A.IS_TO_MIX, 'Y', '混卷', 'N', '单卷', '') IS_TO_MIX_STR,
                TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
                QINSEN.PG_GET_INFO.GET_DEPT_NAME_BY_ID(A.TEAM_ID) TEAM_NAME,
@@ -89,11 +91,17 @@
                (SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
                   FROM QINSEN.INST_JUANMO_DETAIL JD
                  WHERE JD.CDM_BATCH_ID = A.RECORD_ID) UNUSED_QUANTITY
+                 ,tm.dimo_batch_no 
+                 ,dm.id dm_batch_id
           FROM QINSEN.INST_CAIDIEMO    A ,
                QINSEN.INST_TUMO       TM LEFT JOIN (SELECT SUM(D.LOSS) CAIMO_LOSS, D.TUMO_BATCH_ID
                       FROM QINSEN.INST_CDM_DEFECT D
                      GROUP BY D.TUMO_BATCH_ID) T3
             ON T3.TUMO_BATCH_ID = TM.RECORD_ID
+            LEFT JOIN ks_prod_diaphragm_zmx_record dm
+			ON dm.dimo_batch_no = tm.dimo_batch_no
+            
+            
             <!--裁叠膜增加长页、短页-->
             LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
                            C.TUMO_BATCH_ID
@@ -186,7 +194,7 @@
 
 <select id="countRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
 SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
-    SUM(A.QUANTITY * A.BLANKING_SIZE * A.PAGE_WIDTH) as "totalLength",
+    SUM(A.QUANTITY * A.BLANKING_SIZE * A.PAGE_WIDTH * decode(nvl(a.page_type,'长页'),'长页',1,0.5)) as "totalLength",
        SUM((SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
               FROM qinsen.INST_JUANMO_DETAIL JD
              WHERE JD.CDM_BATCH_ID = A.RECORD_ID)) as "totalUnusedQuantity"

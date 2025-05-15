@@ -54,7 +54,9 @@
        T1.DISP_ORDER      AS "dispOrder",
        T1.JUDGE_PRIORITY  AS "judgePriority",
        T1.LEVEL_CODE      AS "levelCode",
-       T1.STATE_NAME      AS "stateName"
+       T1.STATE_NAME      AS "stateName",
+       T1.mac_name "macName",
+       t1.line_id "lineId",t1.line_name "lineName"
   FROM (SELECT A.RECORD_ID,
                A.SPEC_ID,
                A.STATE,
@@ -81,19 +83,29 @@
                S.DISP_ORDER,
                O.DISP_ORDER JUDGE_PRIORITY,
                QINSEN.PG_GET_INFO.GET_PROP_VALUE_CODE_BY_ID(A.LEVEL_ID) LEVEL_CODE,
-               DECODE(A.STATE, 'Y', '在用', 'N', '失效', '') STATE_NAME
-          FROM QINSEN.INST_MOPIAN_STD        A,
+               DECODE(A.STATE, 'Y', '在用', 'N', '失效', '') STATE_NAME,
+               A.mac_name,
+               a.line_id,bpl.line_name
+               
+          FROM 
+          KS_PROD_DIAPHRAGM_STAND A,
+          qinsen.base_prod_line bpl,
+          <!--QINSEN.INST_MOPIAN_STD        A,-->
                QINSEN.PARA_MATER_SPEC        S,
                QINSEN.CONF_PROP_VALUE_OPTION O
          WHERE A.SPEC_ID = S.MATER_SPEC_ID
            AND A.LEVEL_ID = O.PROP_VALUE_ID
-           
+           AND a.line_id = bpl.line_id
            	<isNotNull prepend = ""  property = "specId">
 	   		AND A.SPEC_ID = #specId#
 			</isNotNull>
            	<isNotNull prepend = ""  property = "state">
 	   		AND A.STATE = #state#
-			</isNotNull>           
+			</isNotNull>  
+			
+			<isNotNull prepend = ""  property = "lineId">
+	   		AND A.line_ID = #lineId#
+			</isNotNull>         
            ) T1
  	ORDER BY T1.DISP_ORDER, T1.DISP_ORDER
 
@@ -101,9 +113,10 @@
 	
 	  <!-- 涂膜记录查询 -->
 	<select id="querytumo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-	SELECT t.batch_no "batchNo",t.record_id "recordId",
-	t.spec_id "specId",pms.mater_spec_name "specName" from qinsen.inst_tumo t
-	LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id=t.spec_id
+	SELECT t.batch_no "batchNo",t.record_id "recordId",t.line_id "lineId",bpl.line_name "lineName",
+  t.spec_id "specId",pms.mater_spec_name "specName" from qinsen.inst_tumo t
+  LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id=t.spec_id
+  LEFT JOIN qinsen.base_prod_line bpl ON bpl.line_id = t.line_id
 	where 1=1
 	<isNotNull prepend = ""  property = "batchNo">
 	   		AND t.batch_no = #batchNo#

@@ -29,7 +29,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 			height : 80,
-			columns : 3,
+			columns : 4,
 			border : true,
 			// collapsible : true,
 			titleCollapse : false,
@@ -37,19 +37,24 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 			fields : [{
 				xtype : "dateregion",
 				colspan : 1,
-				anchor : '75%',
+				anchor : '95%',
 				nameArray : ['condition/reportDtStart', 'condition/reportDtEnd'],
 				fieldLabel : "报告日期",
 				format : "Y-m-d"
 			}, {
 				xtype : 'textfield',
+				name : 'condition/orderNo',
+				anchor : '95%',
+				fieldLabel : '订单号'
+			}, {
+				xtype : 'textfield',
 				name : 'condition/labelingModel',
-				anchor : '75%',
+				anchor : '95%',
 				fieldLabel : '贴标型号'
 			}, {
 				xtype : 'prodspeccombobox',
 				hiddenName : 'condition/materSpecId',
-				anchor : '75%',
+				anchor : '95%',
 				fieldLabel : '元件型号 ',
 				typeAhead : true,
 				typeAheadDelay : 100,

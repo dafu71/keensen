@@ -288,11 +288,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								scope : this,
 								iconCls : 'icon-application_add',
 								handler : this.onaddFhDefect
-							}/*
-								 * , '->', { text : '录入铸膜不良', scope : this,
-								 * iconCls : 'icon-application_add', handler :
-								 * this.onaddZmDefect }
-								 */, '->', '-', {
+							}, '->', {
+								text : '录入铸膜不良',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onaddZmDefect
+							}, '->', '-', {
 								text : '录入涂膜不良',
 								scope : this,
 								iconCls : 'icon-application_add',
@@ -864,6 +865,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'ktAmount'
 								}, {
 									name : 'c21Result'
+								}, {
+									name : 'dmBatchId'
 								}]
 					})
 		})

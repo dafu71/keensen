@@ -11,6 +11,8 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 		this.initViewWindow();
 		this.initStandWindow();
 		this.initAddStandWindow();
+		
+		this.initEditStandWindow();
 
 		this.initChooseSingleOrderWindow();
 		this.initFilterWindow();
@@ -993,6 +995,11 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 						iconCls : 'icon-application_add',
 						handler : this.onAddStand
 					}, '-', {
+						text : '修改',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onEditStand
+					}, '-', {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
@@ -1667,5 +1674,156 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 									this.chooseSingleOrderListPanel]
 
 						});
+	}
+	
+	this.initEditStandWindow = function() {
+		var _this = this;
+		this.editStandWindow = this.editStandWindow || new Ext.fn.FormWindow({
+			title : '修改元件性能标准',
+			height : 480,
+			width : 360,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel6,
+				columns : 2,
+				saveUrl : 'com.keensen.ump.produce.component.mpselect.saveStand.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.component.mpselect.expandStand.biz.ext',
+				fields : [{
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'mpspeccombobox',
+							hiddenName : 'entity/mpSpecId',
+							dataIndex:'mpSpecId',
+							ref : '../../mpSpecId',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 2,
+							fieldLabel : '膜片型号 ',
+							typeAhead : true,
+							typeAheadDelay : 100,
+							minChars : 1,
+							queryMode : 'local',
+							lastQuery : '',
+							editable : true,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									var mpSpecName = _this.editStandWindow.mpSpecId
+											.getRawValue();
+									_this.editStandWindow.mpSpecName
+											.setValue(mpSpecName);
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'prodspeccombobox',
+							hiddenName : 'entity/prodSpecId',
+							dataIndex:'prodSpecId',
+							ref : '../../prodSpecId',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 2,
+							fieldLabel : '元件型号 ',
+							typeAhead : true,
+							typeAheadDelay : 100,
+							minChars : 1,
+							queryMode : 'local',
+							lastQuery : '',
+							editable : true,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									var prodSpecName = _this.editStandWindow.prodSpecId
+											.getRawValue();
+									_this.editStandWindow.prodSpecName
+											.setValue(prodSpecName);
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/aGpdLowLimit',
+							dataIndex:'aGpdLowLimit',
+							ref : '../../aGpdLowLimit',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 2,
+							fieldLabel : '产水量下限 '
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/aGpdUpLimit',
+							dataIndex:'aGpdUpLimit',
+							ref : '../../aGpdUpLimit',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 2,
+							fieldLabel : '产水量上限 '
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/aGpdCenter',
+							ref : '../../aGpdCenter',
+							dataIndex:'aGpdCenter',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 2,
+							fieldLabel : '产水量中心线 '
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/aSaltLowLimit',
+							ref : '../../aSaltLowLimit',
+							dataIndex:'aSaltLowLimit',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 2,
+							fieldLabel : '脱盐率下限% '
+						}, {
+							xtype : 'hidden',
+							name : 'entity/mpSpecName',
+							dataIndex:'mpSpecName',
+							ref : '../../mpSpecName'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/prodSpecName',
+							dataIndex:'prodSpecName',
+							ref : '../../prodSpecName'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/recordId',
+							dataIndex:'recordId'
+						}]
+			}]
+		});
 	}
 }

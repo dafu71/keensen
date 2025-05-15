@@ -951,6 +951,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSelect4ChooseLable 
 				this.addOrderWindow.material.setValue('客户订制');
 				this.addOrderWindow.back.setValue('客户订制');
 			}
+			
+			if (drawingCode == 'TP-17-0000-A') {
+				this.addOrderWindow.label.setValue('无');
+				this.addOrderWindow.makeLabel.setValue('无需制作');
+				this.addOrderWindow.material.setValue('无');
+				this.addOrderWindow.back.setValue('无');
+			}
 		}
 		if (opt == '2') {
 			this.addOrderWindow.logoLabel2.setValue(logo);
@@ -1035,7 +1042,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddMC = function() 
 	this.addMaterWindow.snStart.setValue(r.data.snStart);
 	this.addMaterWindow.snEnd.setValue(r.data.snEnd);
 
-	var arr = [r.data.label, r.data.makeLabel, r.data.material, r.data.back]
+	//备注底色和材质这两项取消不带出来
+	//var arr = [r.data.label, r.data.makeLabel, r.data.material, r.data.back]
+	var arr = [r.data.label, r.data.makeLabel];
 	var remark = arr.join('|');
 	this.addMaterWindow.remark.setValue(remark)
 

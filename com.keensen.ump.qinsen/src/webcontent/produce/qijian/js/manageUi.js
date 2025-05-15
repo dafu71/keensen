@@ -303,10 +303,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 		this.queryPanel.addButton({
 					text : "导出",
-					//rescode : '10002661',
+					// rescode : '10002661',
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,
+					hidden : true,
 					id : qijianExportButton,
 					handler : this.exportExcel
 				});
@@ -408,6 +408,17 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						sortable : true,
 						width : 120,
 						dataIndex : 'juanmoBatchNo'
+					}, {
+						header : '是否在<br>白膜仓',
+						sortable : true,
+						width : 120,
+						dataIndex : 'ifSemiStock',
+						renderer : function(v, m, r, i) {
+							var str = v == '是'
+									? "<span style='color:red;text-decoration:none'>是</span>"
+									: '否';
+							return str;
+						}
 					}, {
 						header : '元件型号',
 						width : 120,
@@ -782,6 +793,8 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							name : 'packageModify'
 						}, {
 							name : 'prodSpecNameOriginal'
+						}, {
+							name : 'ifSemiStock'
 						}]
 			})
 		})

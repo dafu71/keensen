@@ -1,6 +1,7 @@
 com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 	this.initPanel = function() {
 
+		this.currentMachineCode = '';
 		this.initStore();
 
 		this.initQueryPanel();
@@ -18,6 +19,18 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 	}
 
 	this.initStore = function() {
+
+		this.jmWorkerStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.component.produce.queryJmWorker.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			baseParams : {
+
+		}	,
+			fields : [{
+						name : 'userName'
+					}]
+		})
 
 		this.machineCodeStore = new Ext.data.JsonStore({
 					url : 'com.keensen.ump.base.workorder.queryMachine.biz.ext',
@@ -42,34 +55,29 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 90,
-					columns : 4,
+					height : 110,
+					columns : 3,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
 					// title : '【BOM查询】',
 					fields : [{
 								xtype : 'datetimefield',
-								name : 'condition/createTimeStart',
-								fieldLabel : '计划裁膜日期',
+								name : 'condition/orderDateStart',
+								fieldLabel : '卷膜日期',
 								colspan : 1,
 								anchor : '90%',
 								// allowBlank : false,
 								editable : true,
-								format : 'Y-m-d H:i',
-								value : new Date().add(Date.DAY, -1)
-										.format('Y-m-d')
+								format : 'Y-m-d H:i:00'
 							}, {
 								xtype : 'datetimefield',
-								name : 'condition/createTimeEnd',
+								name : 'condition/orderDateEnd',
 								fieldLabel : '至',
 								colspan : 1,
 								anchor : '90%',
 								editable : true,
-								format : 'Y-m-d H:i',
-								// allowBlank : false,
-								value : new Date().add(Date.DAY, 1)
-										.format('Y-m-d')
+								format : 'Y-m-d H:i:00'
 							}, {
 
 								xtype : 'textfield',
@@ -77,11 +85,43 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 								anchor : '90%',
 								fieldLabel : '裁膜栈板号%-%'
 							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 3
+							}, {
 
 								xtype : 'textfield',
 								name : 'condition/orderNoStr',
 								anchor : '90%',
 								fieldLabel : '元件订单号%-%'
+							}, {
+
+								xtype : 'textfield',
+								name : 'condition/tmBatchNo',
+								anchor : '90%',
+								fieldLabel : '膜片批次%-%'
+							}, {
+								xtype : 'combo',
+								fieldLabel : '操作工%-%',
+								mode : 'local',
+								anchor : '90%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : true,
+								store : _this.jmWorkerStore,
+								ref : '../userName',
+								hiddenName : 'condition/userName',
+								displayField : "userName",
+								valueField : "userName",
+								scope : this,
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									},
+									'specialkey' : function() {
+										return false;
+									}
+								}
 							}]
 				});
 
@@ -91,6 +131,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 					scope : this,
 					iconCls : 'icon-application_excel',
 					hidden : true,
+					id : exportExcelBtn,
 					handler : this.exportExcel
 				});
 
@@ -130,6 +171,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						dataIndex : 'cmBatchNo',
 						header : '裁叠膜栈板号'
 					}, {
+						dataIndex : 'tmBatchNo',
+						header : '膜片批次'
+					}, {
 						dataIndex : 'hjBatchNo',
 						header : '混卷栈板号'
 					}, {
@@ -139,11 +183,14 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
-						dataIndex : 'prodSpecId',
+						dataIndex : 'prodSpecName',
 						header : '卷制型号'
 					}, {
-						dataIndex : 'machineCode',
+						dataIndex : 'machineName',
 						header : '操作机台'
+					}, {
+						dataIndex : 'orderDate',
+						header : '卷膜日期 '
 					}, {
 						dataIndex : 'userName',
 						header : '操作工 '
@@ -202,12 +249,21 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							name : 'orderNo'
 						}, {
 							name : 'hjBatchNo'
+						}, {
+							name : 'orderDate'
+						}, {
+							name : 'prodSpecName'
+						}, {
+							name : 'machineName'
+						}, {
+							name : 'tmBatchNo'
 						}]
 			})
 		})
 	}
 
 	this.initAddWindow = function() {
+
 		var _this = this;
 		this.addWindow = this.addWindow || new Ext.fn.FormWindow({
 			title : '新增',
@@ -221,12 +277,14 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
 				successFn : function(i, r) {
-					//_this.addWindow.items.items[0].form.reset();
+					// _this.addWindow.items.items[0].form.reset();
 					_this.addWindow.cmBatchNo.setValue('');
 					_this.addWindow.orderNo.setValue('');
 					_this.addWindow.prodSpecId.setValue('');
 					_this.addWindow.amount.setValue('');
-					
+					_this.currentMachineCode = _this.addWindow.machineCode
+							.getValue();
+
 					_this.listPanel.refresh();
 
 				},
@@ -255,12 +313,12 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
-						},{
+						}, {
 							xtype : 'textfield',
 							ref : '../../hjBatchNo',
-							emptyText : '光标置于此框内后扫码，或手工录入',
+							// blankText : '光标置于此框内后扫码，或手工录入',
 							name : 'entity/hjBatchNo',
-							//allowBlank : false,
+							// allowBlank : false,
 							fieldLabel : '混卷栈板号',
 							anchor : '95%',
 							colspan : 2
@@ -317,6 +375,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							emptyText : '--请选择--',
 							editable : false,
 							store : _this.machineCodeStore,
+							ref : '../../machineCode',
 							hiddenName : 'entity/machineCode',
 							displayField : "name",
 							valueField : "code",
@@ -345,7 +404,22 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							height : 5,
 							colspan : 2
 						}, {
+							xtype : 'datetimefield',
+							format : "Y-m-d H:i:00",
+							name : 'entity/orderDate',
+							ref : '../../orderDate',
+							fieldLabel : '卷膜日期',
+							allowBlank : false,
+							value : new Date(),
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 2
+						}, {
 							xtype : 'componentworkercombobox',
+							ref : '../../workerId',
 							allowBlank : false,
 							hiddenName : 'entity/workerId',
 							anchor : '95%',
@@ -384,7 +458,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
-						},{
+						}, {
 							xtype : 'displayfield',
 							fieldLabel : '混卷栈板号',
 							dataIndex : 'hjBatchNo',
@@ -462,6 +536,19 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							readOnly : true,
 							anchor : '95%',
 							decimalPrecision : 0,
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							format : "Y-m-d",
+							dataIndex : 'orderDate',
+							ref : '../../orderDate',
+							fieldLabel : '卷膜日期',
+							readOnly : true,
+							anchor : '95%',
 							colspan : 2
 						}, {
 							xtype : 'displayfield',

@@ -334,90 +334,200 @@
             <edit name="" type="text"/>
         </field>
     </viewModel>
+    <viewModel author="dafu" displayName="KsProdWaterStd" entityName="com.keensen.ump.produce.component2.KsProdWaterStd" id="KsProdWaterStd">
+        <field dataType="Int" dict="false" id="recordId" label="主键ID，取自SEQ_INST_PROD_WATER_STD">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="mpSpecId" label="膜片规格ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="prodSpecId" label="元件型号ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="aGpdLowLimit" label="标准1：产水量下限">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="aGpdUpLimit" label="标准1：产水量上限">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="aGpdCenter" label="标准1：产水量中心线">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="aSaltLowLimit" label="标准1：脱盐率下限，百分比">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="aSaltUpLimit" label="标准1：脱盐率上限，百分比，暂未启用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="aFactorBLowLimit" label="标准1：透盐系数下限，暂未启用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="aFactorBUpLimit" label="标准1：透盐系数上限">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="bSpecId" label="标准2元件型号ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="bGpdLowLimit" label="标准2：产水量下限">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="bGpdUpLimit" label="标准2：产水量上限，暂未启用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="bGpdCenter" label="标准2：产水量中心线，暂未启用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="bSaltLowLimit" label="标准2：脱盐率下限，百分比">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="bSaltUpLimit" label="标准2：脱盐率上限，百分比，暂未启用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="bFactorBLowLimit" label="标准2：透盐系数下限，暂未启用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" id="bFactorBUpLimit" label="标准2：透盐系数上限，暂未启用">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="macName" label="测试台">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="mpSpecName" label="膜片规格">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="prodSpecName" label="元件型号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
     <viewModel author="dafu" displayName="KsComponentHouseholdJm" entityName="com.keensen.ump.produce.component2.KsComponentHouseholdJm" id="KsComponentHouseholdJm">
-        <field dataType="Long" dict="false" id="id" label="主键">
+        <field dataType="Long" dict="false" entityField="id" id="id" label="主键">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="id" type="text"/>
         </field>
-        <field dataType="Date" dict="false" id="createTime" label="创建时间">
+        <field dataType="Date" dict="false" entityField="createTime" id="createTime" label="创建时间">
             <view type="write"/>
-            <edit name="" type="date"/>
+            <edit name="createTime" type="date"/>
         </field>
-        <field dataType="String" dict="false" id="createUserId" label="创建人ID">
+        <field dataType="String" dict="false" entityField="createUserId" id="createUserId" label="创建人ID">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="createUserId" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="createName" label="创建人">
+        <field dataType="String" dict="false" entityField="createName" id="createName" label="创建人">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="createName" type="text"/>
         </field>
-        <field dataType="Date" dict="false" id="updateTime" label="修改时间">
+        <field dataType="Date" dict="false" entityField="updateTime" id="updateTime" label="修改时间">
             <view type="write"/>
-            <edit name="" type="date"/>
+            <edit name="updateTime" type="date"/>
         </field>
-        <field dataType="String" dict="false" id="updateUserId" label="修改人ID">
+        <field dataType="String" dict="false" entityField="updateUserId" id="updateUserId" label="修改人ID">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="updateUserId" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="updateName" label="修改人">
+        <field dataType="String" dict="false" entityField="updateName" id="updateName" label="修改人">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="updateName" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="reserve1" label="备用字段1">
+        <field dataType="String" dict="false" entityField="reserve1" id="reserve1" label="备用字段1">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="reserve1" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="reserve2" label="备用字段2">
+        <field dataType="String" dict="false" entityField="reserve2" id="reserve2" label="备用字段2">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="reserve2" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="reserve3" label="备用字段3">
+        <field dataType="String" dict="false" entityField="reserve3" id="reserve3" label="备用字段3">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="reserve3" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="reserve4" label="备用字段4">
+        <field dataType="String" dict="false" entityField="reserve4" id="reserve4" label="备用字段4">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="reserve4" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="reserve5" label="备用字段5">
+        <field dataType="String" dict="false" entityField="reserve5" id="reserve5" label="备用字段5">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="reserve5" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="orgId" label="所属单位ID">
+        <field dataType="String" dict="false" entityField="orgId" id="orgId" label="所属单位ID">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="orgId" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="status" label="是否有效：0无效，1有效">
+        <field dataType="String" dict="false" entityField="status" id="status" label="是否有效：0无效，1有效">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="status" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="cmBatchNo" label="裁叠膜栈板号">
+        <field dataType="String" dict="false" entityField="cmBatchNo" id="cmBatchNo" label="裁叠膜栈板号">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="cmBatchNo" type="text"/>
         </field>
-        <field dataType="Long" dict="false" id="amount" label="卷制数量">
+        <field dataType="Long" dict="false" entityField="amount" id="amount" label="卷制数量">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="amount" type="text"/>
         </field>
-        <field dataType="Long" dict="false" id="prodSpecId" label="卷制型号">
+        <field dataType="Long" dict="false" entityField="prodSpecId" id="prodSpecId" label="卷制型号">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="prodSpecId" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="machineCode" label="操作机台">
+        <field dataType="String" dict="false" entityField="machineCode" id="machineCode" label="操作机台">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="machineCode" type="text"/>
         </field>
-        <field dataType="Long" dict="false" id="workerId" label="操作工 ">
+        <field dataType="Long" dict="false" entityField="workerId" id="workerId" label="操作工 ">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="workerId" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="orderNo" label="订单号">
+        <field dataType="String" dict="false" entityField="orderNo" id="orderNo" label="订单号">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="orderNo" type="text"/>
         </field>
-        <field dataType="String" dict="false" id="hjBatchNo" label="混卷栈板号">
+        <field dataType="String" dict="false" entityField="hjBatchNo" id="hjBatchNo" label="混卷栈板号">
             <view type="write"/>
-            <edit name="" type="text"/>
+            <edit name="hjBatchNo" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="orderDate" id="orderDate" label="工单日期">
+            <view type="write"/>
+            <edit name="orderDate" type="date"/>
         </field>
     </viewModel>
 </viewModelSet>
