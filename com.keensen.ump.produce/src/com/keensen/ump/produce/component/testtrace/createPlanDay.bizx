@@ -33,8 +33,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link25</targetConnections>
     <targetConnections>link32</targetConnections>
+    <targetConnections>link25</targetConnections>
     <location x="917" y="155"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -213,6 +213,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">prodSpecId</process:from>
       <process:to type="query">order/materSpecId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">干</process:from>
+      <process:to type="query">order/dryWet</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">

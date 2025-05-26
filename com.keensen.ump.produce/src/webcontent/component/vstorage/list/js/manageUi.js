@@ -294,6 +294,11 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						width : 120,
 						header : '气检NG'
 					}, {
+						header : '泄压值',
+						sortable : true,
+						width : 60,
+						dataIndex : 'checkResult'
+					}, {
 						dataIndex : 'fGpd',
 						width : 120,
 						header : '初检产水量'
@@ -460,6 +465,8 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 							name : 'jmProduceDt'
 						}, {
 							name : 'wtCreateDt'
+						}, {
+							name : 'checkResult'
 						}]
 			})
 		})

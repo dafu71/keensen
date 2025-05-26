@@ -171,6 +171,20 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						scope : this,
 						iconCls : 'icon-printer',
 						handler : this.onPrint
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'zmxtotaltheoryamount'
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'zmxtotalloss'
 					}, '->', {
 						text : '录入铸膜不良',
 						scope : this,
@@ -369,6 +383,10 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'loss'
 						}, {
 							name : 'dimoAmountQualified'
+						}, {
+							name : 'totalLoss'
+						}, {
+							name : 'totalTheoryAmount'
 						}]
 			})
 		})

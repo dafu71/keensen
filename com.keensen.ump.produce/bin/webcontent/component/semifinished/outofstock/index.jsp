@@ -20,6 +20,12 @@
 -->
 <head>
 <title>PDA白膜出库</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.1/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="base/exceljs/doQueryAndExport.js"></script>
+
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
 	
@@ -35,6 +41,7 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var listid = Ext.id();
+  var exportExcelBtn = Ext.id();
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.OutofstockMgr
 		});

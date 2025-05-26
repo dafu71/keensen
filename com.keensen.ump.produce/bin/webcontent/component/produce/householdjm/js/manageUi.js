@@ -8,6 +8,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 		this.initListPanel();
 
 		this.initAddWindow();
+		this.initEditWindow();
 		this.initViewWindow();
 
 		return new Ext.fn.fnLayOut({
@@ -55,7 +56,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 110,
+					height : 150,
 					columns : 3,
 					border : true,
 					// collapsible : true,
@@ -122,7 +123,27 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 										return false;
 									}
 								}
-							}]
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 3
+							}, {
+						xtype : 'prodspeccombobox',
+						hiddenName : 'condition/prodSpecId',
+						anchor : '90%',
+						fieldLabel : '卷制型号 ',
+						typeAhead : true,
+						typeAheadDelay : 100,
+						minChars : 1,
+						queryMode : 'local',
+						lastQuery : '',
+						editable : true,
+						listeners : {
+							'specialkey' : function() {
+								return false;
+							}
+						}
+					}]
 				});
 
 		this.queryPanel.addButton({
@@ -155,6 +176,11 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
 					}, '-', {
+						text : '修改',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onEdit
+					}, '-', {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
@@ -164,6 +190,13 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onView
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'householdjmamount'
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.produce.deleteHouseholdJm.biz.ext',
@@ -182,6 +215,12 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 					}, {
 						dataIndex : 'orderNo',
 						header : '订单号'
+					}, {
+						dataIndex : 'numPerWad',
+						header : '膜页数'
+					}, {
+						dataIndex : 'denseNet',
+						header : '浓网mil'
 					}, {
 						dataIndex : 'prodSpecName',
 						header : '卷制型号'
@@ -257,6 +296,12 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							name : 'machineName'
 						}, {
 							name : 'tmBatchNo'
+						}, {
+							name : 'numPerWad'
+						}, {
+							name : 'denseNet'
+						}, {
+							name : 'totalAmount'
 						}]
 			})
 		})
@@ -568,4 +613,178 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 		});
 	}
 
+	this.initEditWindow = function() {
+
+		var _this = this;
+		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
+			title : '修改',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				successFn : function(i, r) {
+					// _this.addWindow.items.items[0].form.reset();
+					_this.editWindow.hide();
+
+					_this.listPanel.refresh();
+
+				},
+				columns : 2,
+				loadUrl:'com.keensen.ump.produce.component.produce.expandHouseholdJm.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.produce.saveHouseholdJm.biz.ext',
+				fields : [{
+							xtype : 'textfield',
+							ref : '../../cmBatchNo',
+							emptyText : '光标置于此框内后扫码，或手工录入后按回车键',
+							name : 'entity/cmBatchNo',
+							dataIndex:'cmBatchNo',
+							allowBlank : false,
+							fieldLabel : '裁叠膜栈板号',
+							anchor : '95%',
+							colspan : 2,
+							listeners : {
+								scope : this,
+								specialkey : function(C, D) {
+									if (D.getKey() == Ext.EventObject.ENTER) {
+										_this.onScan();
+
+									}
+
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							ref : '../../hjBatchNo',
+							// blankText : '光标置于此框内后扫码，或手工录入',
+							name : 'entity/hjBatchNo',
+							// allowBlank : false,
+							fieldLabel : '混卷栈板号',
+							dataIndex:'hjBatchNo',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							ref : '../../orderNo',
+							fieldLabel : '订单号',
+							xtype : 'textfield',
+							name : 'entity/orderNo',
+							dataIndex:'orderNo',
+							readOnly : true,
+							allowBlank : false,
+							anchor : '95%',
+							decimalPrecision : 0,
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'prodspeccombobox',
+							ref : '../../prodSpecId',
+							hiddenName : 'entity/prodSpecId',
+							emptyText : '',
+							dataIndex : 'prodSpecId',
+							anchor : '95%',
+							colspan : 2,
+							fieldLabel : '卷制型号 ',
+							dataIndex:'prodSpecId',
+							typeAhead : true,
+							typeAheadDelay : 100,
+							minChars : 1,
+							queryMode : 'local',
+							lastQuery : '',
+							readOnly : true,
+							editable : false,
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combo',
+							fieldLabel : '操作机台',
+							allowBlank : false,
+							dataIndex:'machineCode',
+							mode : 'local',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							store : _this.machineCodeStore,
+							ref : '../../machineCode',
+							hiddenName : 'entity/machineCode',
+							displayField : "name",
+							valueField : "code",
+							scope : this,
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 2
+						}, {
+							ref : '../../amount',
+							fieldLabel : '卷制数量',
+							xtype : 'numberfield',
+							name : 'entity/amount',
+							dataIndex : 'amount',
+							dataIndex:'amount',
+							allowBlank : false,
+							anchor : '95%',
+							decimalPrecision : 0,
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 2
+						}, {
+							xtype : 'datetimefield',
+							format : "Y-m-d H:i:00",
+							name : 'entity/orderDate',
+							ref : '../../orderDate',
+							dataIndex:'orderDate',
+							fieldLabel : '卷膜日期',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 2
+						}, {
+							xtype : 'componentworkercombobox',
+							ref : '../../workerId',
+							dataIndex:'workerId',
+							allowBlank : false,
+							hiddenName : 'entity/workerId',
+							anchor : '95%',
+							fieldLabel : '操作工',
+							colspan : 2
+						}, {
+							xtype : 'hidden',
+							name : 'entity/id',
+							dataIndex:'id'
+						}]
+			}]
+		});
+	}
 }

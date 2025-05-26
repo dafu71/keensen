@@ -25,7 +25,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 				});
 
 		this.waterStdStore = new Ext.data.JsonStore({
-			url : 'com.keensen.ump.produce.quality.quality2.qaueryWaterStd.biz.ext',
+			url : 'com.keensen.ump.produce.quality.quality2.qaueryWaterStd2.biz.ext',
 			root : 'data',
 			autoLoad : true,
 			baseParams : {},
@@ -138,6 +138,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 					}, {
 						xtype : 'testtypecombo',
 						hiddenName : 'condition/testTypeId',
+						propCode : 'H_WATER_TEST_TYPE',
 						anchor : '85%',
 						fieldLabel : '检测类型',
 
@@ -284,6 +285,9 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'testTime',
 						header : '测试时间 '
+					}, {
+						dataIndex : 'cmBatchNo',
+						header : '叠膜栈板号 '
 					}, {
 						dataIndex : 'testSpecName',
 						header : '元件型号'
@@ -444,6 +448,8 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 							name : 'flow2'
 						}, {
 							name : 'remark'
+						}, {
+							name : 'cmBatchNo'
 						}]
 			})
 		})
@@ -468,6 +474,30 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 				fields : [{
 							xtype : 'displayfield',
 							fieldLabel : "<span style='color:red;'>检测信息</span>",
+							colspan : 24
+						}, {
+							xtype : 'textfield',
+							name : 'entity/cdmBatchNo',
+							style : '{font-weight:bold;}',
+							emptyText : '光标置于此框内后扫栈板号',
+							allowBlank : false,
+							fieldLabel : '叠膜栈板号',
+							ref : '../../cmBatchNo',
+							name : 'entity/cmBatchNo',
+							anchor : '95%',
+							colspan : 24,
+							listeners : {
+								scope : this,
+								specialkey : function(C, D) {
+									if (D.getKey() == Ext.EventObject.ENTER) {
+										_this.dealCdmBatchNo();
+									}
+
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
 							colspan : 24
 						}, {
 							xtype : 'datefield',
@@ -508,9 +538,9 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 												.setValue(bGpdLowLimit);
 										_this.addWindow.prodSaltStd
 												.setValue(bSaltLowLimit);
-										//_this.getGpd();
-										//_this.getSalt();
-										//_this.onCalc();
+										// _this.getGpd();
+										// _this.getSalt();
+										// _this.onCalc();
 									}
 								}
 							}
@@ -522,6 +552,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 							xtype : 'testtypecombo',
 							hiddenName : 'entity/testTypeId',
 							ref : '../../testTypeId',
+							propCode : 'H_WATER_TEST_TYPE',
 							anchor : '95%',
 							colspan : 12,
 							allowBlank : false,
@@ -801,9 +832,34 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 							fieldLabel : "<span style='color:red;'>检测信息</span>",
 							colspan : 24
 						}, {
+							xtype : 'textfield',
+							name : 'entity/cdmBatchNo',
+							style : '{font-weight:bold;}',
+							emptyText : '光标置于此框内后扫栈板号',
+							allowBlank : false,
+							fieldLabel : '叠膜栈板号',
+							ref : '../../cmBatchNo',
+							name : 'entity/cmBatchNo',
+							dataIndex : 'cmBatchNo',
+							anchor : '95%',
+							colspan : 24,
+							listeners : {
+								scope : this,
+								specialkey : function(C, D) {
+									if (D.getKey() == Ext.EventObject.ENTER) {
+										_this.dealCdmBatchNo();
+									}
+
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
 							xtype : 'datefield',
 							format : "Y-m-d",
-							//value : new Date(),
+							// value : new Date(),
 							name : 'entity/testTime',
 							dataIndex : 'testTime',
 							ref : '../../testTime',
@@ -856,6 +912,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 							hiddenName : 'entity/testTypeId',
 							dataIndex : 'testTypeId',
 							ref : '../../testTypeId',
+							propCode : 'H_WATER_TEST_TYPE',
 							anchor : '95%',
 							colspan : 12,
 							allowBlank : false,

@@ -27,6 +27,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					// id : defectZmWinId,
 					relationListId : 'produce-caidiemo-list',
 					dutyTacheCode : 'ZM',
+					batchNoControl : true,
 					recTacheCode : 'CM'
 				});
 
@@ -241,6 +242,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								text : '录入铸膜不良',
 								scope : this,
 								iconCls : 'icon-application_add',
+								hidden:true,
 								handler : this.onaddZmDefect
 							}, '->', {
 								text : '录入涂膜不良',

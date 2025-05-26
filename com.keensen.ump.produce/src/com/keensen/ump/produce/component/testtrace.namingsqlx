@@ -397,13 +397,80 @@
           10
          ELSE
           40.25
-       END "length"
+       END "length",
+       nvl(bss.sample_length,0) "sampleLength",
+       bss.sample_times "sampleTimes",
+       nvl(bss.amount,0) "sampleAmount"
   FROM KS_BASE_DIAPHRAGM_TEST T1
+  LEFT JOIN  KS_BASE_SAMPLE_STANDARD bss
+  ON bss.prod_spec_id = t1.prod_spec_id
+  AND bss.mater_spec_id = t1.mater_spec_id
 	</select>
 	
 	<update id="updateCdmState" parameterClass="java.util.HashMap" >
 	UPDATE KS_COMPONENT_DUTY_CDM t 
 	SET t.cdm_state=0
 	WHERE to_char(t.plan_date,'yyyy-MM-dd')=#planDate# AND t.order_id=#orderId#
+    </update>
+    
+    <!--试卷元件送样卷制标准-->
+     <select id="querySampleStandard" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	 SELECT T1.ID                AS "id",
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       pms.MATER_SPEC_NAME as "materSpecName",
+    t1.MATER_SPEC_ID as "materSpecId",
+    pms.MATER_SPEC_CODE as "materCode",
+    pms2.mater_SPEC_NAME as "prodSpecName",
+    t1.PROD_SPEC_ID as "prodSpecId",
+    t1.sample_length as "sampleLength",
+    t1.sample_times as "sampleTimes",
+    t1.amount as "amount"       
+  FROM KS_base_sample_standard T1
+  left join qinsen.PARA_MATER_SPEC pms
+  on pms.MATER_SPEC_ID = t1.MATER_SPEC_ID
+  left join qinsen.PARA_MATER_SPEC pms2
+  on pms2.MATER_SPEC_ID = t1.PROD_SPEC_ID
+  where 1=1
+   <isNotNull prepend="and" property="materSpecId"> 
+		       t1.MATER_SPEC_ID = #materSpecId#
+	    </isNotNull>
+	    
+	    <isNotNull prepend="and" property="prodSpecId">
+	    	t1.PROD_SPEC_ID = #prodSpecId#
+	    </isNotNull>
+	     order by pms2.mater_SPEC_NAME
+	</select>
+   
+   <!--更新生管订单干湿膜-->
+    <update id="updateSGOrderDryWet" parameterClass="java.util.HashMap" >
+	UPDATE KS_PROD_COMPONENT_YXORDER t
+	SET t.dry_wet='干'
+	WHERE t.order_no=#orderNo#
+	and substr(t.order_no,1,2)='SG'
+	AND t.dry_wet IS NULL 
+    </update>
+    
+    <!--更新生管订单唛头-->
+    <update id="updateSGOrderMark" parameterClass="java.util.HashMap" >
+	UPDATE KS_PROD_COMPONENT_YXORDER t 
+	SET t.template_name = (SELECT template_name FROM V_KS_SG_MARK_DRAWING v
+	WHERE v.spec_name = t.mater_spec_name2)
+	WHERE t.order_no=#orderNo#
+	and substr(t.order_no,1,2)='SG'
+	AND t.template_name IS NULL
+	AND EXISTS(SELECT template_name FROM V_KS_SG_MARK_DRAWING v
+	WHERE v.spec_name = t.mater_spec_name2)
     </update>
 </sqlMap>

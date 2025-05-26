@@ -12,6 +12,7 @@ com.keensen.ump.TestTypeCombo = Ext.extend(Ext.form.ComboBox, {
 	mode : "local",
 	valueField : "propValueId",
 	displayField : "propValueName",
+	propCode : 'WATER_TEST_TYPE',
 	defaultValue : '',
 	// resizable : false,
 	forceSelection : true,
@@ -29,7 +30,7 @@ com.keensen.ump.TestTypeCombo = Ext.extend(Ext.form.ComboBox, {
 					autoLoad : true,
 					baseParams : {
 						'condition/sysCode' : 'PQMS',
-						'condition/propCode' : 'WATER_TEST_TYPE'
+						'condition/propCode' : this.propCode
 					},
 					fields : [{
 								name : "propValueId"

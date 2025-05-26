@@ -119,6 +119,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
+						hidden : (uid != 'KS00307') && (uid != 'XXB'),
 						// disabled : (uid != 'KS00610') && (uid != 'KS01313')
 						// && (uid != 'KS00524'),
 						handler : this.onDelete
@@ -496,6 +497,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						name : 'entity/templateName',
 						dataIndex : 'templateName',
 						allowBlank : false,
+						readOnly : true,
 						fieldLabel : '唛头图纸编号',
 						anchor : '95%',
 						colspan : 4

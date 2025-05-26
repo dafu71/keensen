@@ -601,7 +601,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						hideTrigger : false,
 						scope : this,
 						onTriggerClick : function() {
-							_this.onChoose();
+							// _this.onChoose();
+							_this.onChoose2();
 						}
 					}, {
 						xtype : 'displayfield',
@@ -872,42 +873,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								name : 'name'
 							}]
 				})
-		this.prodcombo = new Ext.form.ComboBox({
-			store : prodStore,
-			anchor : '100%',
-			fieldLabel : '元件型号',
-			displayField : 'name',
-			valueField : 'id',
-			myvalue : '',
-			typeAhead : true,
-			mode : 'local',
-			// name : 'condition/storageIds',
-			// hiddenName: 'condition/storageIds',
-			tpl : '<tpl for="."><div class="x-combo-list-item"><span><input type="checkbox" {[values.check?"checked":""]} value="{[values.id]}" /></span><span >{name}</span></div></tpl>',
-			triggerAction : 'all',
-			emptyText : '--请选择--',
-			selectOnFocus : true,
-
-			onSelect : function(record, index) {
-				if (_this.prodcombo.fireEvent('beforeselect', _this.prodcombo,
-						record, index) !== false) {
-					record.set('check', !record.get('check'));
-					var str = [];// 页面显示的值
-					var strvalue = [];// 传入后台的值
-					_this.prodcombo.store.each(function(rc) {
-								if (rc.get('check')) {
-									str.push(rc.get('name'));
-									strvalue.push(rc.get('id'));
-								}
-							});
-					_this.prodcombo.setValue(str.join());
-					_this.prodcombo.myvalue = strvalue.join();
-					_this.prodcombo.fireEvent('select', _this.prodcombo,
-							record, index);
-				}
-			}
-		});
-
+		
 		var selModel3 = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : false,
 					handleMouseDown : Ext.emptyFn
@@ -1039,7 +1005,27 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								readOnly : true,
 								// anchor : '85%',
 								fieldLabel : '订单号'
-							}, this.prodcombo, {
+							}, {
+
+								xtype : 'combo',
+								fieldLabel : '元件型号',
+								displayField : 'name',
+								valueField : 'id',
+								triggerAction : "all",
+								mode : "local",
+								hiddenName : 'condition/storageIds',
+								ref : '../prodcombo',
+								emptyText : '--请选择--',
+								anchor : '100%',
+								colspan : 1,
+								store : prodStore,
+								listeners : {
+									// scope : this,
+									'expand' : function(A) {
+										this.reset();
+									}
+								}
+							}, {
 								xtype : "dateregion",
 								// anchor : '100%',
 								colspan : 1,

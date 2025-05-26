@@ -73,57 +73,95 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-				if (this.opt == 'updateMaterial') {
-					this.updatematerialWindow.show();
-					this.updatematerialWindow.loadData(cell);
-				}
 
-				if (this.opt == 'updateMaterial2') {
-					this.updatematerialWindow2.show();
-					this.updatematerialWindow2.loadData(cell);
-				}
+		if (this.opt == 'updatesgorder') {
+			var orderNo = cell.get('orderNo');
+			if (orderNo.substr(0, 2) == 'SG') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.component.testtrace.updateSGOrder.biz.ext",
+					method : "post",
+					jsonData : {
+						'orderNo' : orderNo
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.refresh();
 
-				if (this.opt == 'updateAmount') {
-					this.updateAmountWindow.show();
-					this.updateAmountWindow.loadData(cell);
-				}
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "修改失败！")
 
-				if (this.opt == 'addOrder') {
-					this.addOrderWindow.show();
-					this.addOrderWindow.loadData(cell);
-				}
+						}
 
-				if (this.opt == 'updateTemplateName') {
-					this.updateTemplateNameWindow.show();
-					this.updateTemplateNameWindow.loadData(cell);
-				}
-
-				if (this.opt == 'addplanweek') {
-					var cnt = cell.get('cnt');
-					if (cnt > 0) {
-						Ext.Msg.alert('系统提示', ' 已经制定计划，不能新增');
-						return false;
-					} else {
-						this.planWeekWindow.show();
-						this.planWeekWindow.loadData(cell);
+					},
+					callback : function() {
+						_this.requestMask.hide()
 					}
-				}
+				})
+			} else {
+				Ext.Msg.alert('系统提示', '请选择生管订单');
+				return false;
+			}
+		}
 
-				if (this.opt == 'orderview') {
-					var baseId = cell.get('baseId');
-					if (Ext.isEmpty(baseId)) {
-						Ext.Msg.alert('系统提示', '不是营销导入数据，没有详情查看');
-						return false;
-					}
-					this.orderViewWindow.show();
-					this.orderViewWindow.loadData(cell);
-				}
+		if (this.opt == 'updateMaterial') {
+			this.updatematerialWindow.show();
+			this.updatematerialWindow.loadData(cell);
+		}
 
-				if (this.opt == 'updateprodremark') {
-					this.updateProdRemarkWindow.show();
-					this.updateProdRemarkWindow.loadData(cell);
-				}
-			}, this);
+		if (this.opt == 'updateMaterial2') {
+			this.updatematerialWindow2.show();
+			this.updatematerialWindow2.loadData(cell);
+		}
+
+		if (this.opt == 'updateAmount') {
+			this.updateAmountWindow.show();
+			this.updateAmountWindow.loadData(cell);
+		}
+
+		if (this.opt == 'addOrder') {
+			this.addOrderWindow.show();
+			this.addOrderWindow.loadData(cell);
+		}
+
+		if (this.opt == 'updateTemplateName') {
+			this.updateTemplateNameWindow.show();
+			this.updateTemplateNameWindow.loadData(cell);
+		}
+
+		if (this.opt == 'addplanweek') {
+			var cnt = cell.get('cnt');
+			if (cnt > 0) {
+				Ext.Msg.alert('系统提示', ' 已经制定计划，不能新增');
+				return false;
+			} else {
+				this.planWeekWindow.show();
+				this.planWeekWindow.loadData(cell);
+			}
+		}
+
+		if (this.opt == 'orderview') {
+			var baseId = cell.get('baseId');
+			if (Ext.isEmpty(baseId)) {
+				Ext.Msg.alert('系统提示', '不是营销导入数据，没有详情查看');
+				return false;
+			}
+			this.orderViewWindow.show();
+			this.orderViewWindow.loadData(cell);
+		}
+
+		if (this.opt == 'updateprodremark') {
+			this.updateProdRemarkWindow.show();
+			this.updateProdRemarkWindow.loadData(cell);
+		}
+	}, this);
 
 	// 增加修改事件
 	this.listPanel2.mon(this.listPanel2, 'update', function(gird, cell) {
@@ -152,7 +190,7 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateMaterial = functi
 	var materSpecName2 = this.rec.data['materSpecName2'];
 	combo.store.filterBy(function(record) {
 				var text = '' + record.get('materSpecName2');
-				//return (text.indexOf(materSpecName2) != -1);
+				// return (text.indexOf(materSpecName2) != -1);
 				return (text == materSpecName2);
 
 			});
@@ -442,4 +480,9 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onSelect4ChooseMark = fun
 
 		this.chooseMarkWindow.hide();
 	}
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateSGOrder = function() {
+	this.opt = 'updatesgorder';
+	this.listPanel.onEdit();
 }

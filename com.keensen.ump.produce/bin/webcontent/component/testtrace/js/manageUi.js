@@ -29,7 +29,7 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 		})
 
 		this.diaphragmTestStore = new Ext.data.JsonStore({
-			url : 'com.keensen.ump.produce.component.testtrace.queryDiaphragmTest.biz.ext',
+			url : 'com.keensen.ump.produce.component.testtrace.queryDiaphragmTest2.biz.ext',
 			root : 'data',
 			autoLoad : true,
 			totalProperty : '',
@@ -46,6 +46,10 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 						name : 'prodSpecId'
 					}, {
 						name : 'length'
+					}, {
+						name : 'sampleLength'
+					}, {
+						name : 'sampleAmount'
 					}]
 		})
 	}
@@ -415,6 +419,9 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 						xtype : 'hidden',
 						name : 'entity/reserve4',
 						ref : '../prodSpecId'
+					}, {
+						xtype : 'hidden',
+						ref : '../sampleLength'
 					}],
 			buttons : [{
 						text : "确定",

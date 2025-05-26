@@ -46,12 +46,13 @@
 		t1.flow as "flow",
 		t1.flow2 as "flow2",
 		pms.mater_spec_name "testSpecName",
-		test.prop_value_name "testTypeName"
+		test.prop_value_name "testTypeName",
+		t1.CM_BATCH_NO      "cmBatchNo"
   FROM KS_QUALITY_HH_WATER_TEST T1
   LEFT JOIN qinsen.para_mater_spec pms
 ON pms.mater_spec_id = t1.test_spec_id
   left join (select t.prop_value_id,t.prop_value_name from QINSEN.CONF_PROP_VALUE_OPTION t
- WHERE t.prop_id=30041) test
+ WHERE t.prop_id=30042) test
  on test.prop_value_id = t1.test_Type_Id
   where 1=1
   <isNotNull prepend = "and"  property = "testTimeStart"> 
@@ -81,4 +82,42 @@ ON pms.mater_spec_id = t1.test_spec_id
 	</isNotNull>
 	
   ORDER BY t1.id DESC
-   </select></sqlMap>
+   </select>
+   
+   
+  <select id="queryJm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  <!--  
+   SELECT T.CDM_BATCH_ID,
+       T.MAIN_BATCH_ID,
+       JM.WORKER_ID,
+       CM.TUMO_BATCH_ID,
+       CM.BATCH_NO      CM_BATCH_NO,
+       TM.BATCH_NO      "batchNo",
+       U.OPERATORNAME   "jName"
+  FROM QINSEN.INST_JUANMO_DETAIL T
+  LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+    ON JM.RECORD_ID = T.MAIN_BATCH_ID
+  LEFT JOIN QINSEN.INST_CAIDIEMO CM
+    ON CM.RECORD_ID = T.CDM_BATCH_ID
+  LEFT JOIN QINSEN.INST_TUMO TM
+    ON TM.RECORD_ID = CM.TUMO_BATCH_ID
+  LEFT JOIN V_AC_OPERATOR_TRS U
+    ON U.OPERATORID = JM.WORKER_ID
+    !-->
+    SELECT U.OPERATORNAME "jName",
+       T.CM_BATCH_NO  "cmBatchNo",
+       TM.TM_BATCH_NO "batchNo"
+  FROM KS_COMPONENT_HOUSEHOLD_JM T
+  LEFT JOIN (SELECT CM.BATCH_NO CM_BATCH_NO, TM.BATCH_NO TM_BATCH_NO
+               FROM QINSEN.INST_CAIDIEMO CM
+               LEFT JOIN QINSEN.INST_TUMO TM
+                 ON CM.TUMO_BATCH_ID = TM.RECORD_ID) TM
+    ON TM.CM_BATCH_NO = T.CM_BATCH_NO
+  LEFT JOIN V_AC_OPERATOR_TRS U
+    ON U.OPERATORID = T.WORKER_ID
+   where 1=1
+   <isNotNull prepend="" property="cmBatchNo">
+	   AND T.CM_BATCH_NO = #cmBatchNo# 
+	</isNotNull>
+   </select>
+   </sqlMap>

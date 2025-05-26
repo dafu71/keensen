@@ -369,6 +369,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onUpdateProdRemark
+					}, '-', {
+						text : '更新生管订单',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onUpdateSGOrder
 					}, '->', {
 						text : '订单详情',
 						scope : this,
@@ -440,6 +445,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, {
 						dataIndex : 'scfs',
 						header : '生产方式',
+						sortable : true
+					}, {
+						dataIndex : 'dryWet',
+						header : '干湿膜',
 						sortable : true
 					}, {
 						dataIndex : 'bm',

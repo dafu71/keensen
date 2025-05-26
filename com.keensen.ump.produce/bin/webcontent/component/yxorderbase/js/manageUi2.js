@@ -153,7 +153,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.backStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['白色', '白色'], ['透明', '透明'], ['客户定制', '客户定制'],
-							['无', '无']]
+							['无', '无'],['参考PANTONE369C','参考PANTONE369C']]
 				});
 
 		// 第二标签贴的位置下拉选项：产品上、真空袋上、其他
@@ -172,8 +172,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.trayStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['普通木质', '普通木质'], ['出口熏蒸木质', '出口熏蒸木质'],
-							['出口免熏蒸木质', '出口免熏蒸木质'], ['塑料', '塑料'],
-							['公司标准', '公司标准']]
+							['出口免熏蒸木质', '出口免熏蒸木质'], ['塑料', '塑料']]
 				});
 
 		// 托盘尺寸
@@ -2658,7 +2657,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 				}, {
 					xtype : 'combobox',
 					forceSelection : true,
-					// allowBlank : false,
+					allowBlank : false,
 					mode : 'local',
 					fieldLabel : '托盘材质',
 					ref : '../../tray',

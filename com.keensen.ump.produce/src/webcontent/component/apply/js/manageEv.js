@@ -149,16 +149,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 				}
 			})
 
-	this.prodcombo.mon(this.prodcombo, 'select', function(record, index) {
-				var prodSpecName = this.prodcombo.getValue();
-				arr = prodSpecName.split(',');
-				var arr2 = [];
-				for (var i = 0; i < arr.length; i++) {
-					arr2.push("'" + arr[i] + "'");
-				}
-				this.queryPanel3.form.findField('condition/prodSpecName')
-						.setValue(arr2.join(","));
-			}, this);
+	
 
 	this.listPanel3.mon(this.listPanel3, 'rowclick', function(grid, rowIndex) {
 				var sm = grid.getSelectionModel();
@@ -866,4 +857,49 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSaveCStcok = function() {
 			});
 		}
 	})
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.onChoose2 = function() {
+
+	if (!this.inputWindow.hidden) {
+		var orderNo = this.inputPanel.orderNo.getValue();
+	} else {
+		var orderNo = this.modifyPanel.orderNo.getValue();
+	}
+	// var prodSpecId = this.inputPanel.prodSpecId.getValue();
+	if (Ext.isEmpty(orderNo)) {
+		Ext.Msg.alert("系统提示", "请输入订单号！");
+		return;
+	}
+	// if (Ext.isEmpty(prodSpecId)) {
+	// Ext.Msg.alert("系统提示", "请选择订单元件型号！");
+	// return;
+	// }
+
+	this.queryPanel3.orderNo.setValue(orderNo);
+	// this.queryPanel3.prodSpecId.setValue(prodSpecId);
+	this.queryPanel3.prodcombo.reset();
+	this.queryPanel3.prodcombo.getStore().baseParams = {
+		'condition/orderNo' : orderNo
+		// ,
+		// 'condition/prodSpecId' : prodSpecId
+	};
+	this.queryPanel3.prodcombo.getStore().load();
+
+	//var store = this.listPanel3.store;
+	//store.baseParams = {
+	//	'condition/orderNo' : orderNo
+		// ,
+		// 'condition/prodSpecId' : prodSpecId
+	//};
+	//store.load();
+
+	var prodSpecNameStore = this.prodSpecNameStore;
+	prodSpecNameStore.baseParams = {
+		'condition/orderNo' : orderNo,
+		nameSqlId : 'com.keensen.ump.produce.component.apply.queryOrderSpecName'
+	};
+	prodSpecNameStore.load();
+
+	this.chooseWindow.show();
 }

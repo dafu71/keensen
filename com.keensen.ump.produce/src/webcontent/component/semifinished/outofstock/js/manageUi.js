@@ -39,6 +39,15 @@ com.keensen.ump.produce.component.OutofstockMgr = function() {
 								format : "Y-m-d"
 							}]
 				});
+				
+		this.queryPanel.addButton({
+					text : "导出",
+					// disabled : allRight != '1',
+					scope : this,
+					id : exportExcelBtn,
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel
+				});
 
 		var selModel = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : true,

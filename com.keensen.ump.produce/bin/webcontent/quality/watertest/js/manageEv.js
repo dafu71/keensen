@@ -110,6 +110,53 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.onCalc = function() {
 	}
 }
 
+// 校验叠膜栈板号，加载相关信息
+com.keensen.ump.produce.quality.WaterTestMgr.prototype.dealCdmBatchNo = function() {
+	
+	var _this = this;
+	var obj = this.addWindow.isVisible()?this.addWindow:this.editWindow;
+	var cmBatchNo = obj.cmBatchNo.getValue();
+	if (cmBatchNo) {
+		_this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		_this.requestMask.show();
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.quality.hwatertest.queryJm.biz.ext",
+			method : "post",
+			jsonData : {
+				'condition/cmBatchNo' : cmBatchNo
+			},
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					if (!Ext.isEmpty(ret.data)) {
+						var dd = ret.data;
+						
+						obj.batchNo.setValue(dd.batchNo);
+						obj.jName.setValue(dd.jName);
+						
+						
+						
+						
+					} else {
+						Ext.Msg.alert("系统提示", "该栈板号不存在，请检查！", function() {
+									obj.cmBatchNo.setValue('');
+									return false;
+								})
+
+					}
+				}
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+	}
+
+}
+
 function roundToDecimalPlace(number, decimalPlaces) {
 	const factor = Math.pow(10, decimalPlaces);
 	return Math.round(number * factor) / factor;

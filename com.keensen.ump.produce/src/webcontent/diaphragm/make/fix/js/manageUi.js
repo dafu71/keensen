@@ -169,6 +169,20 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						iconCls : 'icon-application_edit',
 						hidden : modifyFlag != 1,
 						handler : this.onEdit3
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'fixtotalc11'
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'fixtotalc12'
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.make.deleteFixEntity.biz.ext',
@@ -343,6 +357,10 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							name : 'concentration'
 						}, {
 							name : 'used'
+						}, {
+							name : 'totalC11'
+						}, {
+							name : 'totalC12'
 						}]
 			})
 		})

@@ -54,8 +54,10 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onScan = function() {
 	var rec2 = this.diaphragmTestStore.getAt(i);
 	var prodSpecName = rec2.get('prodSpecName');
 	var prodSpecId = rec2.get('prodSpecId');
+	var sampleLength = rec2.get('sampleLength');
 	this.inputPanel.prodSpecName.setValue(prodSpecName);
 	this.inputPanel.prodSpecId.setValue(prodSpecId);
+	this.inputPanel.sampleLength.setValue(sampleLength);
 }
 
 com.keensen.ump.produce.component.testtraceMgr.prototype.onCalc = function() {
@@ -108,7 +110,6 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onSubmit = function() {
 	var arr = ['换产试卷', '正常试卷', '发货试卷', '生管试卷', '返厂试卷', '实验试卷'];
 	var testType = arr[obj.getRawValue()];
 
-
 	var prodSpecName = this.inputPanel.prodSpecName.getValue();
 	var prodSpecId = this.inputPanel.prodSpecId.getValue();
 	var testAmount = this.inputPanel.testAmount.getValue();
@@ -120,6 +121,15 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onSubmit = function() {
 		Ext.Msg.alert("系统提示", "请输入完整信息");
 		return;
 	}
+
+	var sampleLength = this.inputPanel.sampleLength.getValue();
+	if (parseFloat(sampleLength) != 0
+			&& parseFloat(testLength) > parseFloat(sampleLength)) {
+		Ext.Msg.alert("系统提示", "送样长度不能大于" + sampleLength + "米!");
+		return;
+	}
+	
+
 	Ext.Ajax.request({
 				method : "post",
 				scope : this,
@@ -144,10 +154,8 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onSubmit = function() {
 									_this.inputPanel.batchNo.setValue('');
 									_this.inputPanel.testAmount.setValue('');
 									_this.inputPanel.testLength.setValue('');
-									_this.inputPanel.prodSpecName
-											.setValue('');
-									_this.inputPanel.prodSpecId
-											.setValue('');
+									_this.inputPanel.prodSpecName.setValue('');
+									_this.inputPanel.prodSpecId.setValue('');
 								});
 
 					}

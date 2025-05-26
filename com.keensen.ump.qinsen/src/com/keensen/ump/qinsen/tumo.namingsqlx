@@ -406,8 +406,9 @@
    	<select id="countRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	SELECT nvl(COUNT(1),0) "cnt", nvl(SUM(T.OUT_LENGTH),0) "totalLength",
        nvl(SUM(T.USEFUL_LENGTH),0) "totalUsefulLength",
-       nvl(SUM(T.CAIMO_LENGTH),0) "totalCdmLength", nvl(SUM(T.CAIMO_LOSS),0) "totalLoss"
-  FROM (SELECT A.RECORD_ID, A.OUT_LENGTH,
+       nvl(SUM(T.CAIMO_LENGTH),0) "totalCdmLength", nvl(SUM(T.CAIMO_LOSS),0) "totalLoss",
+       sum(nvl(tag_num,0)) "totalTagNum"
+  FROM (SELECT A.RECORD_ID, A.OUT_LENGTH, nvl(a.tag_num2,a.tag_num) tag_num,
                 (SELECT nvl(A.OUT_LENGTH - NVL(SUM(D.LOSS), 0),0)
                     FROM qinsen.INST_CDM_DEFECT D, qinsen.PARA_CDM_DEFECT P
                    WHERE D.TUMO_BATCH_ID = A.RECORD_ID
@@ -420,7 +421,13 @@
                 (SELECT nvl(SUM(D.LOSS),0)
                     FROM qinsen.INST_CDM_DEFECT D
                    WHERE D.TUMO_BATCH_ID = A.RECORD_ID) CAIMO_LOSS
-           FROM qinsen.INST_TUMO A, qinsen.BASE_PROD_LINE L, qinsen.PARA_MATER_SPEC S,
+           FROM (SELECT * FROM qinsen.INST_TUMO tm
+           left join (SELECT tumo_batch_id,sum(t.label_num) tag_num2
+       from qinsen.inst_cdm_defect t
+      WHERE t.if_tear!= '是'
+      GROUP BY tumo_batch_id) cd
+      ON tm.record_id  = cd.tumo_batch_id   
+          ) A, qinsen.BASE_PROD_LINE L, qinsen.PARA_MATER_SPEC S,
                 qinsen.CONF_PROP_VALUE_OPTION O1, qinsen.CONF_PROP_VALUE_OPTION O2
    WHERE A.LINE_ID = L.LINE_ID
      AND A.SPEC_ID = S.MATER_SPEC_ID

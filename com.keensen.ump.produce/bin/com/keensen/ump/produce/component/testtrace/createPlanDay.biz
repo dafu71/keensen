@@ -23,8 +23,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link25</targetConnections>
     <targetConnections>link32</targetConnections>
+    <targetConnections>link25</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="Int" name="ret" type="query" valueType="Primitive">ret</process:return>
@@ -182,6 +182,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">prodSpecId</process:from>
       <process:to type="query">order/materSpecId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">干</process:from>
+      <process:to type="query">order/dryWet</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">

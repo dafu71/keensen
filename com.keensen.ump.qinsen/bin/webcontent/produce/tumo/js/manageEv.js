@@ -189,6 +189,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 								+ data.totalCdmLength);
 						Ext.getCmp('totalLossTxt').setValue('合计不良(m):'
 								+ data.totalLoss);
+						Ext.getCmp('totalTagNumTxt').setValue('合计标签数:'
+								+ data.totalTagNum);
 
 					} else {
 						Ext.getCmp('totalLengthTxt').setValue('合计长度(m):');
@@ -196,6 +198,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 								.setValue('合计可用长度(m):');
 						Ext.getCmp('totalCdmLengthTxt').setValue('合计裁膜产出(m):');
 						Ext.getCmp('totalLossTxt').setValue('合计不良(m):');
+						Ext.getCmp('totalTagNumTxt').setValue('合计标签数:');
 					}
 				}
 			},

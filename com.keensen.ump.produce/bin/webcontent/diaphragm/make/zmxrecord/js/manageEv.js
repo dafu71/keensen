@@ -1,4 +1,7 @@
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
+	
+	var _this = this;
+	
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -57,6 +60,21 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterSave',
 			function(gird, cell) {
 			}, this);
+			
+	this.listPanel.store.on('load', function() {
+		
+				var records = _this.listPanel.store.getRange();
+				if (records.length == 0) {
+					Ext.getCmp('zmxtotaltheoryamount').setValue('');
+					Ext.getCmp('zmxtotalloss').setValue('');
+					return
+				}
+
+				var totalTheoryAmount = records[0].data.totalTheoryAmount;
+				var totalLoss = records[0].data.totalLoss;
+				Ext.getCmp('zmxtotaltheoryamount').setValue('理论投入数合计:' + totalTheoryAmount);
+				Ext.getCmp('zmxtotalloss').setValue('不良米数合计:' + totalLoss);
+			})
 }
 
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onDel = function() {

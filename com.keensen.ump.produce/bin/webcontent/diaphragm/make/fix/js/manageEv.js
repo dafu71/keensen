@@ -1,5 +1,6 @@
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 
+	var _this = this;
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -236,6 +237,21 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				}
 
 			}, this);
+			
+	this.listPanel.store.on('load', function() {
+		
+				var records = _this.listPanel.store.getRange();
+				if (records.length == 0) {
+					Ext.getCmp('fixtotalc11').setValue('');
+					Ext.getCmp('fixtotalc12').setValue('');
+					return
+				}
+
+				var totalC11 = records[0].data.totalC11;
+				var totalC12 = records[0].data.totalC12;
+				Ext.getCmp('fixtotalc11').setValue('C11重量合计(kg):' + totalC11);
+				Ext.getCmp('fixtotalc12').setValue('C12重量合计(kg):' + totalC12);
+			})
 }
 
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onAdd = function() {
@@ -352,6 +368,6 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onCalc2 = function() {
 }
 
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel = function() {
-	doQueryAndExport(this,this.queryPanel,this.listPanel,'铸膜混料','com.keensen.ump.produce.diaphragm.make.make.queryFix.biz.ext')
+	doQuerySqlAndExport(this,this.queryPanel,this.listPanel,'铸膜混料','com.keensen.ump.produce.diaphragm.make.make.queryFix')
 
 }

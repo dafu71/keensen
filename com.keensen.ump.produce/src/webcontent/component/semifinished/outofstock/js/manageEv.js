@@ -1,6 +1,8 @@
 com.keensen.ump.produce.component.OutofstockMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
+	this.getRight();
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -207,4 +209,33 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.onChooseSingleOrder = 
 
 		this.chooseSingleOrderWindow.hide();
 	}
+}
+
+com.keensen.ump.produce.component.OutofstockMgr.prototype.exportExcel = function() {
+
+		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, 'PDA白膜出库',
+				'com.keensen.ump.produce.component.semifinished.queryOutofstock', '0,1');
+	
+
+}
+
+// 获取权限
+com.keensen.ump.produce.component.OutofstockMgr.prototype.getRight = function() {
+	var _this = this;
+	Ext.Ajax.request({
+		url : "produce/component/semifinished/outofstock/right.json",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			var data = ret.data;
+			var exportExcel = data[0].exportExcel;
+			
+			
+			Ext.getCmp(exportExcelBtn).setVisible(exportExcel.indexOf(uid) != -1);
+			
+
+		},
+		callback : function() {
+		}
+	})
 }

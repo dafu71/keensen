@@ -268,4 +268,61 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
  ORDER BY T1.LINE,T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) desc
      
      </select>
+    <select id="countFix" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select 
+   sum(t1.C11) as "c11",
+	sum(t1.C12) as "c12",
+	sum(t1.C13) as "c13",
+	sum(t1.C14) as "c14"
+	from KS_PROD_DIAPHRAGM_MAKE_FIX t1
+	left join EOS_DICT_ENTRY t2 on t2.dictid=t1.psf and t2.dicttypeid='KS_PSF'
+    left join (select distinct t.zmy_batch_no from KS_PROD_DIAPHRAGM_ZMX_RECORD t) zmx 
+    on zmx.zmy_batch_no = t1.BATCH_NO
+     where 1=1
+     <isNotNull prepend="" property="batchNo">AND t1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="" property="batchNo2">AND t1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="fixUsername">AND t1.FIX_USERNAME LIKE '%' || #fixUsername# || '%'</isNotNull>
+        <isNotNull prepend="" property="hitUsername">AND t1.HIT_USERNAME LIKE '%' || #hitUsername# || '%'</isNotNull>
+        <isNotNull prepend="" property="id">AND t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="" property="machine">AND t1.machine = #machine#</isNotNull>
+     
+     
+	 ORDER BY t1.CREATE_TIME desc
+     </select>
+    <select id="countZmx" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT 
+       nvl(sum(T1.THEORY_AMOUNT),0) AS "theoryAmount",
+     
+       nvl(sum(defect.loss),0) "loss"
+  FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+  left join (select sum(t.loss) loss ,t.dm_batch_id from QINSEN.Inst_Cdm_Defect2 t
+	GROUP BY t.dm_batch_id) defect on defect.dm_batch_id = t1.id
+	
+left join (select sum(t.loss) loss ,t.dm_batch_id from QINSEN.Inst_Cdm_Defect2 t
+where nvl(if_tear,'是') = '是'
+	GROUP BY t.dm_batch_id) defect2 on defect2.dm_batch_id = t1.id	
+  left join qinsen.CONF_PROP_VALUE_OPTION t2
+ 	on t2.prop_id = 30021 and t2.prop_value_id = t1.SUP_ID
+  left join qinsen.BASE_DEPARTMENT t3
+	on t3.dept_type_id='110' and t3.dept_id = T1.TEAM_ID
+  left join (select count(1) cnt ,DIMO_BATCH_NO from KS_PROD_DIAPHRAGM_ZMX_RECORD
+      group by DIMO_BATCH_NO) t4 on t4.DIMO_BATCH_NO=t1.DIMO_BATCH_NO
+     where 1=1
+     <isNotNull prepend="" property="id">AND t1.id = #id#</isNotNull>
+        <isNotNull prepend="" property="dimoType">AND t1.dimo_Type = #dimoType#</isNotNull>
+        <isNotNull prepend="" property="teamId">AND T1.TEAM_ID = #teamId#</isNotNull>
+        <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
+        <isNotNull prepend="" property="productType">AND T1.product_Type = #productType#</isNotNull>
+        <isNotNull prepend="and" property="productDtStart">to_char(T1.PRODUCT_DT,'yyyy-MM-dd')  &gt;=  #productDtStart#</isNotNull>
+        <isNotNull prepend="and" property="productDtEnd">to_char(T1.PRODUCT_DT,'yyyy-MM-dd')  &lt;=  #productDtEnd#</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo">AND T1.DIMO_BATCH_NO = #dimoBatchNo#</isNotNull>
+        <isNotNull prepend="" property="dimoBatchNo2">AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="supId">t1.SUP_ID = #supId#</isNotNull>
+        <isNotNull prepend="" property="zmyBatchNo2">AND T1.ZMY_BATCH_NO like '%' || #zmyBatchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="wfBatchNo2">AND T1.WF_BATCH_NO like '%' || #wfBatchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="createName">AND t1.CREATE_NAME like '%' || #createName# || '%'</isNotNull>
+	ORDER BY t1.CREATE_TIME desc
+     </select>
 </sqlMap>

@@ -349,7 +349,16 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.adjustWindow.ifdelivery.setVisible(!Ext.isEmpty(ifget));
 				this.adjustWindow.ifget.setVisible(!Ext.isEmpty(ifget));
 				this.adjustWindow.reserve1.setVisible(!Ext.isEmpty(ifget));
-				reserve1
+
+			}, this);
+			
+	this.addOrderWindow.activeItem.mon(this.addOrderWindow.activeItem, 'afterload',
+			function(win, data) {
+
+				var tray = data.tray;
+				if(tray == '公司标准') {
+					this.addOrderWindow.tray.setValue('');
+				}
 
 			}, this);
 
@@ -1043,8 +1052,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddMC = function() 
 	this.addMaterWindow.snEnd.setValue(r.data.snEnd);
 
 	//备注底色和材质这两项取消不带出来
-	//var arr = [r.data.label, r.data.makeLabel, r.data.material, r.data.back]
-	var arr = [r.data.label, r.data.makeLabel];
+	var arr = [r.data.label, r.data.makeLabel, r.data.material, r.data.back]
+	//var arr = [r.data.label, r.data.makeLabel];
 	var remark = arr.join('|');
 	this.addMaterWindow.remark.setValue(remark)
 

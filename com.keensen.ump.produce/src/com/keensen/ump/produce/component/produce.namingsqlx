@@ -327,6 +327,7 @@ and nvl(t1.status,1) != 0
        V.OPERATORNAME AS "userName",
        V.USERID AS "userId",
        PMS.MATER_SPEC_NAME AS "prodSpecName",
+       PMS.Num_Per_Wad "numPerWad",pms.dense_net "denseNet",
        m.name "machineName",
        tm.tm_batch_no "tmBatchNo"
   FROM KS_COMPONENT_HOUSEHOLD_JM T1
@@ -341,6 +342,10 @@ and nvl(t1.status,1) != 0
   left join KS_BASE_MACHINE m
     on m.code = T1.MACHINE_CODE
     where 1=1
+    
+     <isNotNull prepend="and" property="prodSpecId"> 
+		       T1.PROD_SPEC_ID = #prodSpecId#
+	</isNotNull>
     
     <isNotNull prepend = "and"  property = "orderDateStart"> 
           TO_CHAR(T1.order_date, 'yyyy-MM-dd HH24:MI:SS')  &gt;=  #orderDateStart#
@@ -374,6 +379,60 @@ and nvl(t1.status,1) != 0
 	</isNotNull>
 		
 	order by t1.id desc
+    
+    </select>
+    
+    
+    <select id="countHouseholdJm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+    SELECT sum(T1.AMOUNT) AS "amount"     
+  FROM KS_COMPONENT_HOUSEHOLD_JM T1
+  left join (SELECT cm.batch_no cm_batch_no,tm.batch_no tm_batch_no from qinsen.inst_caidiemo cm
+	LEFT JOIN qinsen.inst_tumo tm
+	on cm.tumo_batch_id=tm.record_id) tm
+	on tm.cm_batch_no = t1.CM_BATCH_NO
+  LEFT JOIN V_AC_OPERATOR_TRS V
+    ON V.OPERATORID = T1.WORKER_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = T1.PROD_SPEC_ID
+  left join KS_BASE_MACHINE m
+    on m.code = T1.MACHINE_CODE
+    where 1=1
+    
+     <isNotNull prepend="and" property="prodSpecId"> 
+		       T1.PROD_SPEC_ID = #prodSpecId#
+	</isNotNull>
+    
+    <isNotNull prepend = "and"  property = "orderDateStart"> 
+          TO_CHAR(T1.order_date, 'yyyy-MM-dd HH24:MI:SS')  &gt;=  #orderDateStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "orderDateEnd"> 
+          TO_CHAR(T1.order_date, 'yyyy-MM-dd HH24:MI:SS')  &lt;=  #orderDateEnd#
+     </isNotNull>
+     
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	
+	 <isNotNull prepend="and" property="ids"> 
+		       t1.id in ($ids$)
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="batchNoStr"> 
+		       T1.CM_BATCH_NO like '%' || #batchNoStr# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="orderNoStr"> 
+		       T1.order_no like '%' || #orderNoStr# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tmBatchNo"> 
+		       tm.tm_batch_no like '%' || #tmBatchNo# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="userName"> 
+		       V.OPERATORNAME like '%' || #userName# || '%'
+	</isNotNull>
     
     </select>
     

@@ -31,6 +31,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.defectZmWin = new com.keensen.ump.defectWindow({
 					id : defectZmWinId,
 					dutyTacheCode : 'ZM',
+					batchNoControl : true,
 					recTacheCode : 'TM',
 					relationListId : 'produce-tumo-list'
 				});
@@ -292,6 +293,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								text : '录入铸膜不良',
 								scope : this,
 								iconCls : 'icon-application_add',
+								hidden:true,
 								handler : this.onaddZmDefect
 							}, '->', '-', {
 								text : '录入涂膜不良',
@@ -359,6 +361,13 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'displayfield',
 						value : '合计不良(m)',
 						id : 'totalLossTxt'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '合计标签数',
+						id : 'totalTagNumTxt'
 					}],
 			hsPage : true,
 			id : 'produce-tumo-list',
