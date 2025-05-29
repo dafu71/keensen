@@ -344,6 +344,13 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onModiOrder = function() {
 
 		var recordId = records[i].get('recordId');
 		var dryWet = records[i].get('dryWet');
+		
+		var ifCheckStock = records[i].get('ifCheckStock');
+		
+		if (ifCheckStock == '是') {
+			Ext.Msg.alert('系统提示', '已请检入库的元件不能修改');
+			return false;
+		}
 
 		if (dryWet == '干' && modifyOrderNoFlag4Dry == 0) {
 			Ext.Msg.alert('系统提示', '您无权修改干膜订单号');
@@ -354,6 +361,8 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onModiOrder = function() {
 			Ext.Msg.alert('系统提示', '您无权修改湿膜订单号');
 			return false;
 		}
+		
+		
 
 	}
 	this.chooseSingleOrderWindow.show();

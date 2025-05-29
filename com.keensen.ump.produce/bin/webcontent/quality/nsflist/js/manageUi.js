@@ -107,6 +107,9 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 					}, {
 						dataIndex : 'prodSpecName',
 						header : '对应我司元件型号'
+					}, {
+						dataIndex : 'reserve1',
+						header : '认证标准'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality3.queryNsfListByPage.biz.ext',
@@ -128,6 +131,8 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 							name : 'prodSpecName'
 						}, {
 							name : 'id'
+						}, {
+							name : 'reserve1'
 						}]
 			})
 		})
@@ -203,6 +208,18 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 							allowBlank : true,
 							ref : '../../prodSpecName',
 							fieldLabel : '我司元件型号',
+							anchor : '75%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/reserve1',
+							allowBlank : true,
+							ref : '../../reserve1',
+							fieldLabel : '认证标准',
 							anchor : '75%',
 							colspan : 2
 						}]
@@ -287,6 +304,19 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 							allowBlank : true,
 							ref : '../../prodSpecName',
 							fieldLabel : '我司元件型号',
+							anchor : '75%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/reserve1',
+							dataIndex : 'reserve1',
+							allowBlank : true,
+							ref : '../../reserve1',
+							fieldLabel : '认证标准',
 							anchor : '75%',
 							colspan : 2
 						}, {

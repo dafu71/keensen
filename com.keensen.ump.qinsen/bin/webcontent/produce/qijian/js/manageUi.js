@@ -409,6 +409,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						width : 120,
 						dataIndex : 'juanmoBatchNo'
 					}, {
+						dataIndex : 'ifCheckStock',
+						sortable : true,
+						header : '是否已<br>请检入库'
+					}, {
 						header : '是否在<br>白膜仓',
 						sortable : true,
 						width : 120,
@@ -795,6 +799,8 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							name : 'prodSpecNameOriginal'
 						}, {
 							name : 'ifSemiStock'
+						}, {
+							name : 'ifCheckStock'
 						}]
 			})
 		})

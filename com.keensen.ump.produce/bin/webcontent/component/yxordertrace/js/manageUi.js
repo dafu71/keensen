@@ -231,6 +231,9 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 					dataIndex : 'theoryAmount',
 					header : '理论可贴标<br>元件数（支）'
 				}, {
+					dataIndex : 'prodLabelAmount',
+					header : '贴标签数量（张）'
+				}, {
 					dataIndex : 'labelAmount',
 					header : '贴本订单<br>标签数量（张）'
 				}, {
@@ -469,6 +472,8 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 						name : 'applyState'
 					}, {
 						name : 'theoryAmount'
+					}, {
+						name : 'prodLabelAmount'
 					}]
 		});
 

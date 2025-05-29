@@ -345,8 +345,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function(
 		batchNo = this.inputWindow.tumoBatchNo.getValue();
 	}
 
-	if (batchNo.length != 11 && batchNo.length != 12) {
-		Ext.Msg.alert("系统提示", "膜片批次长度应为11或12位，请检查！");
+	if (batchNo.length != 11 && batchNo.length != 12 && batchNo.length != 13) {
+		Ext.Msg.alert("系统提示", "膜片批次长度应为11或12位或13位，请检查！");
 		return false;
 	} else {
 		_this.requestMask = this.requestMask

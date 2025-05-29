@@ -49,8 +49,21 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onScan = function() {
 	if (Ext.isEmpty(batchNo) && batchNo.length < 11) {
 		return;
 	}
+	
 	var materCode = batchNo.substr(2, 2);
-	var i = this.diaphragmTestStore.find('materCode', materCode);
+	//型号改为3位，批次改为13位
+	if(batchNo.length == 13){
+		materCode = batchNo.substr(2, 3);
+	}
+
+	var i = -1;
+	if(batchNo.length == 13){
+		i = this.diaphragmTestStore.find('newBatchCode', materCode);
+	}else{
+		i = this.diaphragmTestStore.find('materCode', materCode);
+	}
+	//var i = this.diaphragmTestStore.find('materCode', materCode);
+
 	var rec2 = this.diaphragmTestStore.getAt(i);
 	var prodSpecName = rec2.get('prodSpecName');
 	var prodSpecId = rec2.get('prodSpecId');

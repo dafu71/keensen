@@ -50,6 +50,8 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 						name : 'sampleLength'
 					}, {
 						name : 'sampleAmount'
+					}, {
+						name : 'newBatchCode'
 					}]
 		})
 	}

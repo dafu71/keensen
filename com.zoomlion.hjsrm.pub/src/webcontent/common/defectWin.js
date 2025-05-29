@@ -111,7 +111,8 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 					var saveUrl = 'com.keensen.ump.qinsen.quality.saveCdmDefect.biz.ext';
 
 					if (this.dutyTacheCode == 'ZM') {
-					//if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
+						// if (this.dutyTacheCode == 'ZM' && this.recTacheCode
+						// == 'ZM') {
 						saveUrl = 'com.keensen.ump.qinsen.quality.saveZmDefect.biz.ext';
 					}
 					Ext.Ajax.request({
@@ -191,7 +192,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 					Ext.Msg.alert("系统提示", "请选择是否已扯");
 					return;
 				}
-				
+
 				if (details.length == 0) {
 					Ext.Msg.alert("系统提示", "没有填写任何不良损失，请检查");
 					return;
@@ -224,7 +225,8 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 
 					var saveUrl = 'com.keensen.ump.qinsen.quality.saveCdmDefect.biz.ext';
 					if (this.dutyTacheCode == 'ZM') {
-					//if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
+						// if (this.dutyTacheCode == 'ZM' && this.recTacheCode
+						// == 'ZM') {
 						saveUrl = 'com.keensen.ump.qinsen.quality.saveZmDefect.biz.ext';
 					}
 					Ext.Ajax.request({
@@ -309,7 +311,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 			},
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'defectName',
-						width : 150,
+						width : 200,
 						header : '不良项目'
 					}, {
 						dataIndex : 'loss',
@@ -324,7 +326,8 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 									allowNegative : false,
 									allowDecimals : true,
 									minValue : 0,
-									maxValue : 999.9,
+									maxValue : 999.999,
+									decimalPrecision : 3,
 									listeners : {
 										'specialkey' : function() {
 											return false;
@@ -355,7 +358,8 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 					}, {
 						dataIndex : 'labelNum',
 						header : '标签数',
-						hidden : !this.batchNoControl || this.dutyTacheCode == 'ZM',
+						hidden : !this.batchNoControl
+								|| this.dutyTacheCode == 'ZM',
 						width : 100,
 						sortable : true,
 						css : 'background:#c7c7c7;',
@@ -453,7 +457,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 		var fieldLabel = '膜片批次';
 
 		if (this.dutyTacheCode == 'ZM') {
-		//if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
+			// if (this.dutyTacheCode == 'ZM' && this.recTacheCode == 'ZM') {
 			fieldLabel = '底膜批次';
 		}
 

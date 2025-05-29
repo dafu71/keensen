@@ -711,7 +711,7 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        t2.amount AS "cdmAmount",
        t3.amount "jmAmount",
        t4.amount "qjAmount",t4.qualified_amount "qualifiedAmount",
-       t6.amount "wetAmount",
+       t6.amount "wetAmount",t4.label_amount "prodLabelAmount",
        <!--未贴标数=订单数量（本页面）-贴本订单的标签数（本页面）-->
        <!--nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)-(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0)) "notLabelAmount",-->
        nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) - nvl(t7.amount,0) "notLabelAmount",
@@ -843,7 +843,7 @@ GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.
      </isNotNull>
      
      <isNotNull prepend="and" property="materSpecId">
-     T1.MATER_SPEC_ID
+     T1.MATER_SPEC_ID = #materSpecId#
      </isNotNull>
      
      <isNotNull prepend = "and"  property = "demandStockDateStart"> 

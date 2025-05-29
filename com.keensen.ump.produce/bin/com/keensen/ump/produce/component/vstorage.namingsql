@@ -109,6 +109,12 @@
         ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID
     where 1=1
     
+    <!--排除黑名单-->
+    and jm.batch_no not in(
+    	select t.jm_batch_no from KS_COMPONENT_VSTOCK_BLACK t
+    )
+    
+    
     and jm.batch_no not in (
     select jm.batch_no from KS_COMPONENT_CHECK_LIST t
 		LEFT JOIN qinsen.inst_qijian qj ON t.batch_no=qj.batch_no
@@ -133,7 +139,8 @@
 			-->
 	 GROUP BY t.exception_type
  </select>
-    <delete id="removeVstorage" parameterClass="java.util.HashMap">delete from  KS_COMPONENT_VSTOCK t
+    <delete id="removeVstorage" parameterClass="java.util.HashMap">
+   	delete from  KS_COMPONENT_VSTOCK t
    	WHERE t.jm_batch_no in (
 	    select jm.batch_no from KS_COMPONENT_CHECK_LIST t
 	    LEFT JOIN qinsen.inst_qijian qj ON t.batch_no=qj.batch_no
@@ -145,7 +152,21 @@
 			SELECT jm.batch_no from QINSEN.inst_qijian qj
 LEFT JOIN qinsen.inst_juanmo_main jm
 ON jm.record_id=qj.juanmo_batch_id
-WHERE qj.ng_reason_id=300061)</delete>
+WHERE qj.ng_reason_id=300061)
+
+ <!--排除不在黑名单并且在4月30日16:00之前卷的膜元件-->
+    or ( t.jm_batch_no not in(
+    	select t.jm_batch_no from KS_COMPONENT_VSTOCK_BLACK t)
+    	
+    	and 
+    	t.jm_batch_no in(
+    	select batch_no from qinsen.inst_juanmo_main jm
+    	where to_char(jm.produce_dt,'YYYY-MM-DD HH24:MI')&gt;='2025-04-30 16:00'
+    	)
+    )
+    
+    
+	</delete>
     <!--干膜,卷膜时间+4*24小时元件未请检-->
     <select id="queryVstorage4Dry" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 1
 	 from QINSEN.INST_qijian qj

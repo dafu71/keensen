@@ -153,7 +153,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.backStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['白色', '白色'], ['透明', '透明'], ['客户定制', '客户定制'],
-							['无', '无'],['参考PANTONE369C','参考PANTONE369C']]
+							['无', '无'], ['参考PANTONE369C', '参考PANTONE369C']]
 				});
 
 		// 第二标签贴的位置下拉选项：产品上、真空袋上、其他
@@ -171,8 +171,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		// 托盘材质 "下拉选项：普通木质、出口熏蒸木质、出口免熏蒸木质、塑料，默认“公司标准”"
 		this.trayStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['普通木质', '普通木质'], ['出口熏蒸木质', '出口熏蒸木质'],
-							['出口免熏蒸木质', '出口免熏蒸木质'], ['塑料', '塑料']]
+					data : [['普通木质', '普通木质'],
+							['出口免熏蒸木质', '出口免熏蒸木质'], ['塑料', '塑料'],
+							['不打托', '不打托']]
 				});
 
 		// 托盘尺寸
@@ -520,6 +521,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									scope : this,
 									iconCls : 'icon-application_edit',
 									handler : this.onMCConfirm2
+								}, {
+									text : '列表字段设置',
+									scope : this,
+									iconCls : 'icon-application_form_magnify',
+									handler : function() {
+										this.optColumnWin.show();
+									}
 								}]
 					}, '-', {
 						text : '订单计划员接单',
@@ -4025,8 +4033,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					dataIndex : 'makeLabel2',
 					anchor : '100%',
 					colspan : 6
-				}
-				, {
+				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">密封圈</p>',
 					labelSeparator : '',// 去掉冒号

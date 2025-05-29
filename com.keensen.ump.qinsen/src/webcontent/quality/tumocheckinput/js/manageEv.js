@@ -91,7 +91,8 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr.prototype.dealCodeInfo = functi
 com.keensen.ump.qinsen.quality.tumocheckinputMgr.prototype.batchNoChange = function() {
 	var _this = this;
 	var batchNo = this.masterPanel.batchNo.getValue()
-	if (batchNo.length != 12) {
+	//型号改为3位，批次改为13位,兼容12位
+	if (batchNo.length != 12 && batchNo.length != 13) {
 		return;
 	}
 	// 刷新时间

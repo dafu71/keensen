@@ -331,7 +331,7 @@
              TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) + 1</insert>
     <select id="queryDiaphragmTest" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.MATER_SPEC_NAME AS "materSpecName",
        T1.MATER_SPEC_ID AS "materSpecId",
-       T1.MATER_CODE AS "materCode",
+       T1.MATER_CODE AS "materCode",pms.new_batch_code "newBatchCode",
        T1.PROD_SPEC_NAME AS "prodSpecName", T1.PROD_SPEC_ID AS "prodSpecId",
        CASE
          WHEN INSTR(T1.PROD_SPEC_NAME, '-4') &gt; 0 THEN
@@ -343,6 +343,8 @@
        bss.sample_times "sampleTimes",
        nvl(bss.amount,0) "sampleAmount"
   FROM KS_BASE_DIAPHRAGM_TEST T1
+  LEFT JOIN qinsen.para_mater_spec pms
+	ON pms.mater_spec_id = t1.mater_spec_id
   LEFT JOIN  KS_BASE_SAMPLE_STANDARD bss
   ON bss.prod_spec_id = t1.prod_spec_id
   AND bss.mater_spec_id = t1.mater_spec_id</select>

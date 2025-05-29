@@ -191,6 +191,8 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 		case when z.diff&gt;5 then '是' else '否' end "packageModify",
 		
 		z.if_semi_stock "ifSemiStock",
+		
+		z.if_check_stock "ifCheckStock",
 		 
 		Z.MONITOR_REMARK as "monitorRemark",
 		TO_CHAR(Z.MONITOR_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "monitorRemarkTime",
@@ -275,10 +277,12 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	        
 	        DECODE(ss.Batch_No,NULL,'否','是') if_semi_stock,
 	        
+	        DECODE(A.check_Batch_No,NULL,'否','是') if_check_stock,
+	        
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
-	  FROM (SELECT QJ.*, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
+	  FROM (SELECT QJ.*,chk.batch_no check_batch_no, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
 CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET,
 
 TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
@@ -291,6 +295,13 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 
   FROM QINSEN.INST_QIJIAN QJ
   
+   <!--是否请检入库-->
+  left join (select DISTINCT T.BATCH_NO from KS_COMPONENT_CHECK_LIST t
+	LEFT JOIN KS_COMPONENT_CHECK_head h
+	ON t.relation_id = h.id
+	WHERE h.storage IS NOT NULL) chk
+	on chk.batch_no = qj.batch_no
+	
   left join  qinsen.PARA_MATER_SPEC pms2
   on QJ.prod_SPEC_ID_original = PMS2.MATER_SPEC_ID
   
@@ -306,6 +317,7 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
   left join (SELECT batch_no from KS_COMPONENT_SEMI_STOCK t
   WHERE t.deleted = 'N') ss
   on ss.batch_no = J.batch_no
+ 
   
   , qinsen.PARA_MATER_SPEC MS
 	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID

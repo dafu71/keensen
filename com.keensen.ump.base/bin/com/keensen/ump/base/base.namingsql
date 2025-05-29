@@ -351,6 +351,7 @@ t.mater_spec_name2 "materSpecName2"
         <isNotNull prepend="and" property="prodSpecName2">t.prod_spec_name like '%' || #prodSpecName2# || '%'</isNotNull>
     </select>
     <select id="queryUserOptColumn" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+        <!--
      SELECT T.USER_ID   "userId",
        T.USER_NAME "userName",
        T.MODULE    "module",
@@ -360,10 +361,49 @@ t.mater_spec_name2 "materSpecName2"
        T.SORT_NO   "sortNo"
 	  FROM KS_USER_OPT_COLUMN T
 	  where 1=1
-	  <isNotNull prepend="and" property="userId">T.USER_ID = #userId#</isNotNull>
-        <isNotNull prepend="and" property="module">T.MODULE = #module#</isNotNull>
-        <isNotNull prepend="and" property="field">T.FIELD = #field#</isNotNull>
-        <isNotNull prepend="and" property="checked">T.CHECKED = #checked#</isNotNull>
+	  <isNotNull prepend="and" property="userId"> 
+		       T.USER_ID = #userId#
+      </isNotNull>
+      <isNotNull prepend="and" property="module"> 
+		       T.MODULE = #module#
+      </isNotNull>
+      <isNotNull prepend="and" property="field"> 
+		       T.FIELD = #field#
+      </isNotNull>
+      <isNotNull prepend="and" property="checked"> 
+		       T.CHECKED = #checked#
+      </isNotNull>
       order by T.USER_ID,T.MODULE,T.SORT_NO
+      -->
+       SELECT T.USER_ID   "userId",
+       T.USER_NAME "userName",
+       T.MODULE    "module",
+       T.FIELD     "field",
+       T.FIELD_NAME     "fieldName",
+       T.CHECKED   "checked",
+       T.SORT_NO   "sortNo"
+    FROM KS_USER_OPT_COLUMN T
+    where 1=1
+    AND T.USER_ID = #userId#
+    AND t.module=#module#
+    AND t.checked ='N'
+    UNION ALL
+     SELECT T.USER_ID   "userId",
+       T.USER_NAME "userName",
+       T.MODULE    "module",
+       T.FIELD     "field",
+       T.FIELD_NAME     "fieldName",
+       'Y'   "checked",
+       T.SORT_NO   "sortNo"
+    FROM KS_USER_OPT_COLUMN T
+    where 1=1
+    AND T.USER_ID = 'sysadmin'
+    AND t.module=#module#   
+    AND (T.FIELD,T.MODULE)
+    NOT IN(
+    SELECT T.FIELD,T.MODULE FROM KS_USER_OPT_COLUMN t
+    WHERE t.module=#module# AND T.USER_ID = #userId# AND t.checked ='N')
+    
+   order by  "userId","module","sortNo"
      </select>
 </sqlMap>

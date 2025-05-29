@@ -145,7 +145,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		// 托盘材质 "下拉选项：普通木质、出口熏蒸木质、出口免熏蒸木质、塑料，默认“公司标准”"
 		this.trayStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['普通木质', '普通木质'], ['出口熏蒸木质', '出口熏蒸木质'],
+					data : [['普通木质', '普通木质'], 
 							['出口免熏蒸木质', '出口免熏蒸木质'], ['塑料', '塑料'],
 							['公司标准', '公司标准']]
 				});

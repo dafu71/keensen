@@ -1,54 +1,13 @@
 com.keensen.ump.produce.quality.mpstandMgr = function() {
 	this.initPanel = function() {
+
+		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initThickStandWindow();
 		this.initAddThickStandWindow();
 		this.initEditThickStandWindow();
 
-		this.lowSymbolStore = new Ext.data.ArrayStore({
-					fields : ['id', 'name'],
-					data : [['>=', '>='], ['>', '>']]
-				});
-		this.upSymbolStore = new Ext.data.ArrayStore({
-					fields : ['id', 'name'],
-					data : [['<=', '<='], ['<', '<']]
-				});
-		this.methodStore = new Ext.data.ArrayStore({
-					fields : ['id', 'name'],
-					data : [['初测', '初测'], ['复测', '复测']]
-				});
-
-		this.stateStore = new Ext.data.ArrayStore({
-					fields : ['id', 'name'],
-					data : [['Y', '在用'], ['N', '失效']]
-				});
-		this.isWxStore = new Ext.data.ArrayStore({
-					fields : ['id', 'name'],
-					data : [['Y', '是'], ['N', '否'], ['A', '全部']]
-				});
-
-		this.macNameStore = new Ext.data.ArrayStore({
-					fields : ['id', 'name'],
-					data : [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'],
-							['5', '5'], ['6', '6'], ['7', '7']]
-				});
-
-		this.lineStore = new Ext.data.JsonStore({
-					url : 'com.keensen.ump.base.base.qryLineOption.biz.ext',
-					root : 'data',
-					autoLoad : true,
-					baseParams : {
-						'condition/prodTacheId' : 100
-					},
-					fields : [{
-								name : "id"
-							}, {
-								name : "name"
-							}, {
-								name : "code"
-							}]
-				});
 		var _this = this;
 
 		this.linecombo = new Ext.form.ComboBox({
@@ -137,6 +96,53 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 					renderTo : 'mpstandmgr',
 					panels : [this.queryPanel, this.listPanel]
 				});
+	}
+
+	this.initStore = function() {
+		this.lowSymbolStore = new Ext.data.ArrayStore({
+					fields : ['id', 'name'],
+					data : [['>=', '>='], ['>', '>']]
+				});
+		this.upSymbolStore = new Ext.data.ArrayStore({
+					fields : ['id', 'name'],
+					data : [['<=', '<='], ['<', '<']]
+				});
+		this.methodStore = new Ext.data.ArrayStore({
+					fields : ['id', 'name'],
+					data : [['初测', '初测'], ['复测', '复测']]
+				});
+
+		this.stateStore = new Ext.data.ArrayStore({
+					fields : ['id', 'name'],
+					data : [['Y', '在用'], ['N', '失效']]
+				});
+		this.isWxStore = new Ext.data.ArrayStore({
+					fields : ['id', 'name'],
+					data : [['Y', '是'], ['N', '否'], ['A', '全部']]
+				});
+
+		this.macNameStore = new Ext.data.ArrayStore({
+					fields : ['id', 'name'],
+					data : [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'],
+							['5', '5'], ['6', '6'], ['7', '7']]
+				});
+
+		this.lineStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.base.base.qryLineOption.biz.ext',
+					root : 'data',
+					autoLoad : true,
+					baseParams : {
+						'condition/prodTacheId' : 100
+					},
+					fields : [{
+								name : "id"
+							}, {
+								name : "name"
+							}, {
+								name : "code"
+							}]
+				});
+
 	}
 
 	this.initQueryPanel = function() {
@@ -920,9 +926,10 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 	this.initThickStandWindow = function() {
 
 		var selModel4ThickStand = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
-				});
+			singleSelect : false
+				// singleSelect : true,
+				// header : ''
+			});
 
 		this.listPanel4ThickStand = this.listPanel4ThickStand
 				|| new Ext.fn.ListPanel({
@@ -948,7 +955,9 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 							}],
 					hsPage : true,
 					selModel : selModel4ThickStand,
-					delUrl : 'com.keensen.ump.base.common.deleteEntity.biz.ext',
+					// delUrl :
+					// 'com.keensen.ump.base.common.deleteEntity.biz.ext',
+					delUrl : 'com.keensen.ump.produce.quality.quality.deleteBatchThickStand.biz.ext',
 					columns : [new Ext.grid.RowNumberer(), selModel4ThickStand,
 							{
 								dataIndex : 'specName',
@@ -1088,7 +1097,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 							_this.listPanel4ThickStand.refresh();
 						},
 						columns : 2,
-						saveUrl : 'com.keensen.ump.base.common.saveEntity.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.quality.quality.saveThickStand.biz.ext',
 						fields : [{
 									xtype : 'displayfield',
 									height : '5',
@@ -1127,14 +1136,27 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 									height : '5',
 									colspan : 2
 								}, {
-									xtype : 'dictcombobox',
-									name : 'entity/isWx',
-									hiddenName : 'entity/isWx',
+									xtype : 'combobox',
+									name : 'entity/isWxs',
+									hiddenName : 'entity/isWxs',
 									allowBlank : false,
 									fieldLabel : '是否外销',
-									anchor : '75%',
-									dictData : KS_YESORNO,
-									colspan : 2
+									typeAhead : true,
+									triggerAction : 'all',
+									lazyRender : true,
+									mode : 'local',
+									editable : false,
+									store : _this.isWxStore,
+									valueField : 'id',
+									displayField : 'name',
+									anchor : '95%',
+									colspan : 2,
+									emptyText : '--请选择--',
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
 								}, {
 									xtype : 'displayfield',
 									height : 5,
@@ -1273,6 +1295,7 @@ com.keensen.ump.produce.quality.mpstandMgr = function() {
 									colspan : 2
 								}, {
 									xtype : 'hidden',
+									dataIndex : 'specName',
 									name : 'entity/specName',
 									ref : '../../specName'
 								}, {

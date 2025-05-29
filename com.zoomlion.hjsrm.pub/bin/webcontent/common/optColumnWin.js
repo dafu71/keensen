@@ -11,7 +11,7 @@ com.keensen.ump.optColumnWindow = Ext.extend(Ext.Window, {
 	resizable : false,
 	modal : true,
 	maximizable : false,
-	closeAction : "close",
+	closeAction : "hide",
 	buttonAlign : "center",
 	autoScroll : true,
 	width : 800,

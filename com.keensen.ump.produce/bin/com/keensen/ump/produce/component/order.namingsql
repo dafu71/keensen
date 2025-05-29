@@ -539,7 +539,7 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        t2.amount AS "cdmAmount",
        t3.amount "jmAmount",
        t4.amount "qjAmount",t4.qualified_amount "qualifiedAmount",
-       t6.amount "wetAmount",
+       t6.amount "wetAmount",t4.label_amount "prodLabelAmount",
        <!--未贴标数=订单数量（本页面）-贴本订单的标签数（本页面）--><!--nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)-(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0)) "notLabelAmount",-->
        nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) - nvl(t7.amount,0) "notLabelAmount",
        <!--贴本订单的标签数量（暂时）--><!--气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“主行”字眼的记录）-湿膜数量（湿膜订单不用减）--><!--气检合格的元件贴标数+工艺员“工艺结论”中A、放行原订单”的元件贴标数+原来“工艺员意见备注”当中有“放行”字眼元件贴标数（考虑旧意见存在）--><!--t4.label_amount "labelAmount",--><!--贴本订单的标签数量（张）取“气检工单”的显示界面当中“气检累计贴标数量”--><!--nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0) "labelAmount",--><!--t4.amount "labelAmount",--><!--贴本订单的标签数量（张）-->
@@ -631,7 +631,7 @@ GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.
         <isNotNull prepend="and" property="materSpecName2">upper(t1.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
         <isNotNull prepend="and" property="orderDateStart">to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
         <isNotNull prepend="and" property="orderDateEnd">to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
-        <isNotNull prepend="and" property="materSpecId">T1.MATER_SPEC_ID</isNotNull>
+        <isNotNull prepend="and" property="materSpecId">T1.MATER_SPEC_ID = #materSpecId#</isNotNull>
         <isNotNull prepend="and" property="demandStockDateStart">to_char(T1.DEMAND_STOCK_DATE,'yyyy-MM-dd')  &gt;=  #demandStockDateStart#</isNotNull>
         <isNotNull prepend="and" property="demandStockDateEnd">to_char(T1.DEMAND_STOCK_DATE,'yyyy-MM-dd')  &lt;=  #demandStockDateEnd#</isNotNull>
         <!--当贴本订单标签数量 < 订单数量时，且0≤入库日期-当前日期  ≤2  -->

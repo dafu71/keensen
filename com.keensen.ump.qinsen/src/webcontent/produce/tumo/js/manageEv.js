@@ -320,9 +320,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 					Ext.Msg.alert("系统提示", "底膜批次长度应为12位，请检查！");
 					return false;
 				}
-
-				if (batchNo.length != 12) {
-					Ext.Msg.alert("系统提示", "膜片批次长度应为12位，请检查！");
+				//型号改为3位，批次改为13位
+				if (batchNo.length != 13) {
+					Ext.Msg.alert("系统提示", "膜片批次长度应为13位，请检查！");
 					return false;
 				}
 				var batchNoPrefix = this.spellBatchNoPrefix();
@@ -348,9 +348,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 					Ext.Msg.alert("系统提示", "底膜批次长度应为12位，请检查！");
 					return false;
 				}
-
-				if (batchNo.length != 12) {
-					Ext.Msg.alert("系统提示", "膜片批次长度应为12位，请检查！");
+				//型号改为3位，批次改为13位
+				if (batchNo.length != 13) {
+					Ext.Msg.alert("系统提示", "膜片批次长度应为13位，请检查！");
 					return false;
 				}
 				var batchNoPrefix = this.spellBatchNoPrefix2();
@@ -514,7 +514,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.spellBatchNoPrefix = function()
 	if (this.inputWindow.specId.isValid()) {
 		var myid = this.inputWindow.specId.getValue();
 		var index = this.inputWindow.specId.getStore().find('id', myid);
-		specCode = this.inputWindow.specId.getStore().getAt(index).data.mpBatchCode;
+		//型号改为3位，批次改为13位
+		//specCode = this.inputWindow.specId.getStore().getAt(index).data.mpBatchCode;
+		specCode = this.inputWindow.specId.getStore().getAt(index).data.newBatchCode;
 	}
 
 	if (this.inputWindow.wfSupId.isValid()) {
@@ -573,7 +575,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.spellBatchNoPrefix2 = function(
 	if (this.editWindow.specId.isValid()) {
 		var myid = this.editWindow.specId.getValue();
 		var index = this.editWindow.specId.getStore().find('id', myid);
-		specCode = this.editWindow.specId.getStore().getAt(index).data.mpBatchCode;
+		//型号改为3位，批次改为13位
+		//specCode = this.editWindow.specId.getStore().getAt(index).data.mpBatchCode;
+		specCode = this.editWindow.specId.getStore().getAt(index).data.newBatchCode;
 	}
 
 	if (this.editWindow.wfSupId.isValid()) {

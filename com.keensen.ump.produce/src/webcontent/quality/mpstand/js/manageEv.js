@@ -121,7 +121,14 @@ com.keensen.ump.produce.quality.mpstandMgr.prototype.onDelStand = function() {
 }
 
 com.keensen.ump.produce.quality.mpstandMgr.prototype.onEditStand = function() {
-	this.listPanel4ThickStand.onEdit();
+	var C = this.listPanel4ThickStand.getSelectionModel().getSelections();
+	if (C.length > 1) {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return false;
+	} else {
+		this.listPanel4ThickStand.onEdit();
+	}
+
 }
 
 com.keensen.ump.produce.quality.mpstandMgr.prototype.onSingleSelect = function() {

@@ -136,6 +136,12 @@
         ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID
     where 1=1
     
+    <!--排除黑名单-->
+    and jm.batch_no not in(
+    	select t.jm_batch_no from KS_COMPONENT_VSTOCK_BLACK t
+    )
+    
+    
     and jm.batch_no not in (
     select jm.batch_no from KS_COMPONENT_CHECK_LIST t
 		LEFT JOIN qinsen.inst_qijian qj ON t.batch_no=qj.batch_no
@@ -182,6 +188,19 @@
 LEFT JOIN qinsen.inst_juanmo_main jm
 ON jm.record_id=qj.juanmo_batch_id
 WHERE qj.ng_reason_id=300061)
+
+ <!--排除不在黑名单并且在4月30日16:00之前卷的膜元件-->
+    or ( t.jm_batch_no not in(
+    	select t.jm_batch_no from KS_COMPONENT_VSTOCK_BLACK t)
+    	
+    	and 
+    	t.jm_batch_no in(
+    	select batch_no from qinsen.inst_juanmo_main jm
+    	where to_char(jm.produce_dt,'YYYY-MM-DD HH24:MI')>='2025-04-30 16:00'
+    	)
+    )
+    
+    
 	</delete>
 	
 	<!--干膜,卷膜时间+4*24小时元件未请检-->
@@ -220,6 +239,8 @@ WHERE qj.ng_reason_id=300061)
 		LEFT JOIN qinsen.inst_juanmo_main jm2
 		ON jm2.record_id=qj.juanmo_batch_id
 		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)
+		
+	
 	</insert>
 	
 	
