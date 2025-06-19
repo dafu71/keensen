@@ -116,7 +116,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,
+					hidden:uid != 'XXB',
 					handler : this.exportExcel
 				});
 
@@ -452,7 +452,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'list/weightPlan',
 							ref : '../../weightPlan',
 							allowBlank : false,
-							fieldLabel : '配料总重量(kg)',
+							fieldLabel : '配料总重量(KG)',
 							anchor : '95%',
 							colspan : 2,
 							editable : true,
@@ -578,7 +578,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}, {
 							xtype : 'textfield',
 							ref : '../../roPlan',
-							fieldLabel : '计划添加RO水(kg)',
+							fieldLabel : '计划添加RO水(KG)',
 							// readOnly : true,
 							allowBlank : false,
 							name : 'list/roPlan',
@@ -1314,7 +1314,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							ref : '../../displayfield12',
-							fieldLabel : '原计划添加RO水(kg)',
+							fieldLabel : '原计划添加RO水(KG)',
 							dataIndex : 'roPlan',
 							anchor : '95%',
 							colspan : 2
@@ -1631,7 +1631,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}, {
 							xtype : 'textfield',
 							ref : '../../roPlan',
-							fieldLabel : '计划添加RO水(kg)',
+							fieldLabel : '计划添加RO水(KG)',
 							name : 'list/roPlan',
 							anchor : '95%',
 							colspan : 2,
@@ -1653,7 +1653,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							emptyText : '输入完毕单击旁边按钮计算',
 							ref : '../../weightPlan',
 							// readOnly : true,
-							fieldLabel : '计划总重量(kg)',
+							fieldLabel : '计划总重量(KG)',
 							name : 'list/weightPlan',
 							anchor : '95%',
 							colspan : 3,
@@ -1980,7 +1980,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : '计划添加RO水(kg)',
+							fieldLabel : '计划添加RO水(KG)',
 							dataIndex : 'roPlan',
 							anchor : '95%',
 							colspan : 1
@@ -1989,7 +1989,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'list/roReality',
 							allowBlank : false,
 							ref : '../../roReality',
-							fieldLabel : '实际添加RO水(kg)',
+							fieldLabel : '实际添加RO水(KG)',
 							anchor : '95%',
 							colspan : 1,
 							listeners : {
@@ -2007,7 +2007,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : '配料计划总重量(kg)',
+							fieldLabel : '配料计划总重量(KG)',
 							dataIndex : 'weightPlan',
 							anchor : '95%',
 							colspan : 1
@@ -2018,7 +2018,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'list/weightReality',
 							allowBlank : false,
 							editable : false,
-							fieldLabel : '配料实际总重量(kg)',
+							fieldLabel : '配料实际总重量(KG)',
 							anchor : '95%',
 							colspan : 1,
 							hideTrigger : false,
@@ -2114,58 +2114,58 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						header : 'c30测试浓度'
 					}, {
 						dataIndex : 'c21Plan',
-						header : 'c21计划添加量'
+						header : 'c21计划添加量(g)'
 					}, {
 						dataIndex : 'c22Plan',
-						header : 'c22计划添加量'
+						header : 'c22计划添加量(g)'
 					}, {
 						dataIndex : 'c23Plan',
-						header : 'c23计划添加量'
+						header : 'c23计划添加量(g)'
 					}, {
 						dataIndex : 'c24Plan',
-						header : 'c24计划添加量'
+						header : 'c24计划添加量(g)'
 					}, {
 						dataIndex : 'c27Plan',
-						header : 'c27计划添加量'
+						header : 'c27计划添加量(g)'
 					}, {
 						dataIndex : 'c28Plan',
-						header : 'c28计划添加量'
+						header : 'c28计划添加量(g)'
 					}, {
 						dataIndex : 'c29Plan',
-						header : 'c29计划添加量'
+						header : 'c29计划添加量(g)'
 					}, {
 						dataIndex : 'c30Plan',
-						header : 'c30计划添加量'
+						header : 'c30计划添加量(g)'
 					}, {
 						dataIndex : 'roPlan',
-						header : 'RO水计划添加量'
+						header : 'RO水计划添加量(KG)'
 					}, {
 						dataIndex : 'c21Reality',
-						header : 'c21实际添加量'
+						header : 'c21实际添加量(g)'
 					}, {
 						dataIndex : 'c22Reality',
-						header : 'c22实际添加量'
+						header : 'c22实际添加量(g)'
 					}, {
 						dataIndex : 'c23Reality',
-						header : 'c23实际添加量'
+						header : 'c23实际添加量(g)'
 					}, {
 						dataIndex : 'c24Reality',
-						header : 'c24实际添加量'
+						header : 'c24实际添加量(g)'
 					}, {
 						dataIndex : 'c27Reality',
-						header : 'c27实际添加量'
+						header : 'c27实际添加量(g)'
 					}, {
 						dataIndex : 'c28Reality',
-						header : 'c28实际添加量'
+						header : 'c28实际添加量(g)'
 					}, {
 						dataIndex : 'c29Reality',
-						header : 'c29实际添加量'
+						header : 'c29实际添加量(g)'
 					}, {
 						dataIndex : 'c30Reality',
-						header : 'c30实际添加量'
+						header : 'c30实际添加量(g)'
 					}, {
 						dataIndex : 'roReality',
-						header : 'RO水实际添加量'
+						header : 'RO水实际添加量(KG)'
 					}, {
 						dataIndex : 'createName',
 						header : '发起人'

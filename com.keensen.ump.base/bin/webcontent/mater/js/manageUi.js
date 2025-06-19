@@ -1,11 +1,16 @@
 com.keensen.ump.base.materClassSpecMgr = function() {
 	this.initPanel = function() {
+
+		this.opt = '';
 		this.initInputWindow();
 		this.initEditWindow();
 		this.initInputWindow2();
 		this.initEditWindow2();
 		this.initInputWindow3();
 		this.initEditWindow3();
+
+		this.initEditSpecWindow();
+
 		this.lay = new Ext.fn.fnLayOut({
 					layout : 'we',
 					border : false,
@@ -90,8 +95,15 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						text : '导出',
 						scope : this,
 						iconCls : 'icon-application_excel',
-						hidden : uid != 'KS00307',
+						hidden : uid != 'KS00307' && uid != 'XXB',
 						handler : this.onExport
+					}, '-', {
+						text : '产品规格/内控标准',
+						id : 'materclassspeceditspec',
+						hidden : true,
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onEditSpec
 					}, '->', {
 						xtype : 'displayfield',
 						value : '物料名称:'
@@ -226,10 +238,9 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 					}, {
 						dataIndex : 'denseNetType',
 						header : '浓网下料型号'
-					}, {
-						dataIndex : 'denseNetWidth',
-						header : '浓网下料裁切尺寸'
-					}, {
+					}/*
+						 * , { dataIndex : 'denseNetWidth', header : '浓网下料裁切尺寸' }
+						 */, {
 						dataIndex : 'denseNetCdm',
 						header : '浓网下料叠膜要求'
 					}, {
@@ -263,6 +274,94 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						width : 320,
 						dataIndex : 'remark',
 						sortable : true
+					}, {
+						dataIndex : 'bookCode',
+						// hidden : true,
+						header : '管理编号'
+					}, {
+						dataIndex : 'bookVersion',
+						// hidden : true,
+						header : '版本'
+					}, {
+						dataIndex : 'preparationTime',
+						// hidden : true,
+						header : '编制时间'
+					}, {
+						dataIndex : 'prodType',
+						// hidden : true,
+						header : '产品类型'
+					}, {
+						dataIndex : 'lid',
+						// hidden : true,
+						header : '端盖'
+					}, {
+						dataIndex : 'denseNetWidth',
+						// hidden : true,
+						header : '浓网页宽mm'
+					}, {
+						dataIndex : 'denseNetAmount',
+						// hidden : true,
+						header : '浓网页数'
+					}, {
+						dataIndex : 'drawNetLongWidth',
+						// hidden : true,
+						header : '淡网长页页宽mm'
+					}, {
+						dataIndex : 'drawNetLongAmount',
+						// hidden : true,
+						header : '淡网长页页数'
+					}, {
+						dataIndex : 'drawNetShortWidth',
+						// hidden : true,
+						header : '淡网短页页宽mm'
+					}, {
+						dataIndex : 'drawNetShortAmount',
+						// hidden : true,
+						header : '淡网短页页数'
+					}, {
+						dataIndex : 'testPressure',
+						// hidden : true,
+						header : '检测压力值/kPa'
+					}, {
+						dataIndex : 'keepPressureTime',
+						// hidden : true,
+						header : '保压时间/s'
+					}, {
+						dataIndex : 'pressureArange',
+						// hidden : true,
+						header : '泄压值范围/kPa'
+					}, {
+						dataIndex : 'testLiquid',
+						// hidden : true,
+						header : '测试液'
+					}, {
+						dataIndex : 'testLiquidDensity',
+						// hidden : true,
+						header : '浓度/ppm'
+					}, {
+						dataIndex : 'testLiquidPressure',
+						// hidden : true,
+						header : '压力/psi'
+					}, {
+						dataIndex : 'testLiquidTemp',
+						// hidden : true,
+						header : '温度/°C'
+					}, {
+						dataIndex : 'testLiquidPh',
+						// hidden : true,
+						header : 'PH'
+					}, {
+						dataIndex : 'testLiquidRecovery',
+						// hidden : true,
+						header : '回收率/%'
+					}, {
+						dataIndex : 'testLiquidGpd',
+						// hidden : true,
+						header : '产水量/GPD'
+					}, {
+						dataIndex : 'testLiquidSalt',
+						// hidden : true,
+						header : '脱盐率/%'
 					}],
 			store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.base.mater.queryMaterSpecList.biz.ext',
@@ -370,6 +469,92 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									name : 'package'
 								}, {
 									name : 'pipe'
+								}, {
+									name : 'bookCode'
+								}, {
+									name : 'bookVersion'
+								}, {
+									name : 'preparationTime'
+								}, {
+									name : 'prodType'
+								}, {
+									name : 'lid'
+								}, {
+									name : 'denseNetAmount'
+								}, {
+									name : 'drawNetLongWidth'
+								}, {
+									name : 'drawNetLongAmount'
+								}, {
+									name : 'drawNetShortWidth'
+								}, {
+									name : 'drawNetShortAmount'
+								}, {
+									name : 'testPressure'
+								}, {
+									name : 'keepPressureTime'
+								}, {
+									name : 'pressureArange'
+								}, {
+									name : 'testLiquid'
+								}, {
+									name : 'testLiquidDensity'
+								}, {
+									name : 'testLiquidPressure'
+								}, {
+									name : 'testLiquidTemp'
+								}, {
+									name : 'testLiquidPh'
+								}, {
+									name : 'testLiquidRecovery'
+								}, {
+									name : 'testLiquidGpd'
+								}, {
+									name : 'testLiquidSalt'
+								}, {
+									name : 'bookCode'
+								}, {
+									name : 'bookVersion'
+								}, {
+									name : 'preparationTime'
+								}, {
+									name : 'prodType'
+								}, {
+									name : 'lid'
+								}, {
+									name : 'denseNetWidth'
+								}, {
+									name : 'denseNetAmount'
+								}, {
+									name : 'drawNetLongWidth'
+								}, {
+									name : 'drawNetLongAmount'
+								}, {
+									name : 'drawNetShortWidth'
+								}, {
+									name : 'drawNetShortAmount'
+								}, {
+									name : 'testPressure'
+								}, {
+									name : 'keepPressureTime'
+								}, {
+									name : 'pressureArange'
+								}, {
+									name : 'testLiquid'
+								}, {
+									name : 'testLiquidDensity'
+								}, {
+									name : 'testLiquidPressure'
+								}, {
+									name : 'testLiquidTemp'
+								}, {
+									name : 'testLiquidPh'
+								}, {
+									name : 'testLiquidRecovery'
+								}, {
+									name : 'testLiquidGpd'
+								}, {
+									name : 'testLiquidSalt'
 								}]
 					})
 		})
@@ -1401,6 +1586,264 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									ref : '../../materSpecId'
 								}]
 					}]
+		});
+	}
+
+	this.initEditSpecWindow = function() {
+		this.editSpecWindow = this.editSpecWindow || new Ext.fn.FormWindow({
+			title : '产品规格/内控标准',
+			height : 600,
+			width : 800,
+			// itemCls:'required',
+			// style:'margin-top:10px',
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+				xtype : 'editpanel',
+				pgrid : this.listPanel,
+				autoHide : true,
+				columns : 6,
+				loadUrl : 'com.keensen.ump.base.mater.expandMaterSpec.biz.ext',
+				saveUrl : 'com.keensen.ump.base.mater.saveMaterSpec.biz.ext',
+				fields : [{
+							xtype : 'textfield',
+							name : 'entity/materSpecCode',
+							ref : '../../materSpecCode',
+							dataIndex : 'materSpecCode',
+							fieldLabel : '产品代码',
+							anchor : '95%',
+							colspan : 3,
+							allowBlank : false
+						}, {
+							xtype : 'textfield',
+							name : 'entity/materSpecName',
+							dataIndex : 'materSpecName',
+							fieldLabel : '卷制型号',
+							anchor : '95%',
+							colspan : 3,
+							allowBlank : false
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							name : 'entity/bookCode',
+							dataIndex : 'bookCode',
+							fieldLabel : '管理编号',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/bookVersion',
+							dataIndex : 'bookVersion',
+							fieldLabel : '版本',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/preparationTime',
+							dataIndex : 'preparationTime',
+							fieldLabel : '编制时间',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							name : 'entity/prodType',
+							dataIndex : 'prodType',
+							fieldLabel : '产品类型',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/lid',
+							dataIndex : 'lid',
+							fieldLabel : '端盖',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							name : 'entity/denseNetWidth',
+							dataIndex : 'denseNetWidth',
+							fieldLabel : '浓网页宽mm',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/denseNetAmount',
+							dataIndex : 'denseNetAmount',
+							fieldLabel : '浓网页数',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							name : 'entity/drawNetLongWidth',
+							dataIndex : 'drawNetLongWidth',
+							fieldLabel : '淡网长页页宽mm',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/drawNetLongAmount',
+							dataIndex : 'drawNetLongAmount',
+							fieldLabel : '淡网长页页数',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							name : 'entity/drawNetShortWidth',
+							dataIndex : 'drawNetShortWidth',
+							fieldLabel : '淡网短页页宽mm',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/drawNetShortAmount',
+							dataIndex : 'drawNetShortAmount',
+							fieldLabel : '淡网短页页数',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>气检标准</span>",
+							labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testPressure',
+							dataIndex : 'testPressure',
+							fieldLabel : '检测压力值/kPa',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/keepPressureTime',
+							dataIndex : 'keepPressureTime',
+							fieldLabel : '保压时间/s',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/pressureArange',
+							dataIndex : 'pressureArange',
+							fieldLabel : '泄压值范围/kPa',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>性能标准</span>",
+							labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquid',
+							dataIndex : 'testLiquid',
+							fieldLabel : '测试液',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquidDensity',
+							dataIndex : 'testLiquidDensity',
+							fieldLabel : '浓度/ppm',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquidPressure',
+							dataIndex : 'testLiquidPressure',
+							fieldLabel : '压力/psi',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquidTemp',
+							dataIndex : 'testLiquidTemp',
+							fieldLabel : '温度/°C',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquidPh',
+							dataIndex : 'testLiquidPh',
+							fieldLabel : 'PH',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquidRecovery',
+							dataIndex : 'testLiquidRecovery',
+							fieldLabel : '回收率/%',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquidGpd',
+							dataIndex : 'testLiquidGpd',
+							fieldLabel : '产水量/GPD',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'textfield',
+							name : 'entity/testLiquidSalt',
+							dataIndex : 'testLiquidSalt',
+							fieldLabel : '脱盐率/%',
+							anchor : '95%',
+							colspan : 2,
+							allowBlank : true
+						}, {
+							xtype : 'hidden',
+							name : 'entity/materSpecId',
+							dataIndex : 'materSpecId',
+							ref : '../../materSpecId'
+						}]
+			}]
 		});
 	}
 }

@@ -320,7 +320,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 					Ext.Msg.alert("系统提示", "底膜批次长度应为12位，请检查！");
 					return false;
 				}
-				//型号改为3位，批次改为13位
+				// 型号改为3位，批次改为13位
 				if (batchNo.length != 13) {
 					Ext.Msg.alert("系统提示", "膜片批次长度应为13位，请检查！");
 					return false;
@@ -348,19 +348,22 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 					Ext.Msg.alert("系统提示", "底膜批次长度应为12位，请检查！");
 					return false;
 				}
-				//型号改为3位，批次改为13位
-				if (batchNo.length != 13) {
-					Ext.Msg.alert("系统提示", "膜片批次长度应为13位，请检查！");
+				// 型号改为3位，批次改为13位
+				if (batchNo.length != 13 && batchNo.length != 12) {
+					Ext.Msg.alert("系统提示", "膜片批次长度应为12或13位，请检查！");
 					return false;
 				}
-				var batchNoPrefix = this.spellBatchNoPrefix2();
-				if (batchNo.indexOf(batchNoPrefix) != 0) {
-					Ext.Msg.alert("系统提示", "膜片批次与选择的信息不符，确认批次填写无误？");
-					return false;
-					// var c = confirm('膜片批次与选择的信息不符，确认批次填写无误？');
-					// if (!c) {
-					// return false;
-					// }
+
+				if (batchNo.length == 13) {
+					var batchNoPrefix = this.spellBatchNoPrefix2();
+					if (batchNo.indexOf(batchNoPrefix) != 0) {
+						Ext.Msg.alert("系统提示", "膜片批次与选择的信息不符，确认批次填写无误？");
+						return false;
+						// var c = confirm('膜片批次与选择的信息不符，确认批次填写无误？');
+						// if (!c) {
+						// return false;
+						// }
+					}
 				}
 			}, this);
 
@@ -514,8 +517,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.spellBatchNoPrefix = function()
 	if (this.inputWindow.specId.isValid()) {
 		var myid = this.inputWindow.specId.getValue();
 		var index = this.inputWindow.specId.getStore().find('id', myid);
-		//型号改为3位，批次改为13位
-		//specCode = this.inputWindow.specId.getStore().getAt(index).data.mpBatchCode;
+		// 型号改为3位，批次改为13位
+		// specCode =
+		// this.inputWindow.specId.getStore().getAt(index).data.mpBatchCode;
 		specCode = this.inputWindow.specId.getStore().getAt(index).data.newBatchCode;
 	}
 
@@ -575,8 +579,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.spellBatchNoPrefix2 = function(
 	if (this.editWindow.specId.isValid()) {
 		var myid = this.editWindow.specId.getValue();
 		var index = this.editWindow.specId.getStore().find('id', myid);
-		//型号改为3位，批次改为13位
-		//specCode = this.editWindow.specId.getStore().getAt(index).data.mpBatchCode;
+		// 型号改为3位，批次改为13位
+		// specCode =
+		// this.editWindow.specId.getStore().getAt(index).data.mpBatchCode;
 		specCode = this.editWindow.specId.getStore().getAt(index).data.newBatchCode;
 	}
 
@@ -625,8 +630,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.dealBatchNo = function() {
 	var me = this;
 	var prefix = me.spellBatchNoPrefix();
 	var oldStr = this.inputWindow.batchNo.getValue();
-	if (oldStr && oldStr.length > 9) {
-		this.inputWindow.batchNo.setValue(prefix + oldStr.substr(9));
+	if (oldStr && oldStr.length > 10) {
+		this.inputWindow.batchNo.setValue(prefix + oldStr.substr(10));
 	} else {
 		this.inputWindow.batchNo.setValue(prefix);
 	}

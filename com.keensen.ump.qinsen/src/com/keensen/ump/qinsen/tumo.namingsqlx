@@ -340,6 +340,11 @@
 	GROUP BY tumo_batch_id) cd 
 	on cd.tumo_batch_id = T1.RECORD_ID
        where 1=1
+       
+       	<isNotNull prepend = ""  property = "isCutOver"> 
+	   	AND T1.is_Cut_Over = #isCutOver#
+		</isNotNull>
+		
        	<isNotNull prepend = ""  property = "produceDtStart"> 
 	   	AND T1.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')
 		</isNotNull>	

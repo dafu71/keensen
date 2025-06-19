@@ -346,6 +346,7 @@ function getDayCode() {
 						
 						int  xStarImg = Integer.parseInt(list[i].get("xStarImg").toString());
 						int  yStarImg = Integer.parseInt(list[i].get("yStarImg").toString());
+						int batchNoFontSize = null == list[i].get("reserve1")?15:Integer.parseInt(list[i].get("reserve1").toString());
 						
 						String dryWet = list[i].get("dryWet").toString();
 						
@@ -354,7 +355,8 @@ function getDayCode() {
 						<%if("Y".equals(ifPrintBatchNo)){					
 						
 						 %>
-												
+						
+						<% if(batchNoFontSize>0){%>						
 						var barcodeElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 						barcodeElement.setAttribute("id", 'barcode_' + batchNo);
 						barcodeElement.setAttribute("width", '200');
@@ -367,18 +369,27 @@ function getDayCode() {
 						const options = {
 							format : "CODE128",
 							displayValue : true,
-							fontSize : 15,
+							fontSize : <%=batchNoFontSize %>,
 							font : 'msyhbd',
 							fontOptions : 'bold',
 							textMargin : 0,
-							height : 50,
+							height : <% if(batchNoFontSize==15){ %>50 <%} %><% else { %>25<%} %>,
 							margin : 0,
-							width : 1.5
+							width : <% if(batchNoFontSize==15){ %>1.5 <%} %><% else { %>1<%} %>
 							};
 						
 						JsBarcode(barcodeElement, batchNo, options);
+						<% }else{ %>
+						// 创建批次元素
+			            var barcodeElement = document.createElement('div');
+			            barcodeElement.className = 'text-overlay';
+			            barcodeElement.textContent = batchNo;
+			            barcodeElement.style.position = "absolute"; // 绝对定位
+					    barcodeElement.style.top = "<%=yBatchNo + tableHeight*i %>px";          
+					    barcodeElement.style.left = "<%=xBatchNo %>px"; 
+						container.appendChild(barcodeElement);
 						<% } %>
-            			
+            			<% } %>
 						
 					
 					<%if("Y".equals(ifPrintSpecName)){

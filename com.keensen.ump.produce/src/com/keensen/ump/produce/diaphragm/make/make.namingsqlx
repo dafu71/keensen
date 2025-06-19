@@ -43,10 +43,22 @@
 	CEIL((TO_DATE(TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24-mi-ss'), 'yyyy-mm-dd hh24-mi-ss') -
             TO_DATE(TO_CHAR(t1.create_time, 'yyyy-mm-dd hh24-mi-ss'), 'yyyy-mm-dd hh24-mi-ss')) * 24) "diff"
 	,nvl(t1.used,nvl2(zmx.zmy_batch_no,'是','否')) "used"
+	, test.cps "cps"
 	from KS_PROD_DIAPHRAGM_MAKE_FIX t1
 	left join EOS_DICT_ENTRY t2 on t2.dictid=t1.psf and t2.dicttypeid='KS_PSF'
     left join (select distinct t.zmy_batch_no from KS_PROD_DIAPHRAGM_ZMX_RECORD t) zmx 
     on zmx.zmy_batch_no = t1.BATCH_NO
+    
+    left join (SELECT t.relation_id,t.cps,h.batch_no from KS_QUALITY_MP_TEST_ZMY_LIST t
+	LEFT JOIN KS_QUALITY_MP_TEST_ZMY_head h
+	ON h.id = t.relation_id
+	WHERE t.id IN(
+	select MAX(ID) list_id from KS_QUALITY_MP_TEST_ZMY_LIST t
+	WHERE t.cps IS NOT NULL
+	GROUP BY t.relation_id)) test
+	on test.batch_no = t1.BATCH_NO
+    
+    
      where 1=1
      <isNotNull prepend="" property="batchNo"> 
 		       AND t1.BATCH_NO = #batchNo#

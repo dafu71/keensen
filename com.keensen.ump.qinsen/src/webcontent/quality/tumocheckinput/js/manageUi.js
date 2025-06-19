@@ -177,21 +177,21 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 						allowBlank : false,
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '膜通量1'
+						fieldLabel : '膜通量左(GFD)'
 					}, {
 						xtype : 'numberfield',
 						ref : '../gfd2',
 						allowBlank : false,
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '膜通量2'
+						fieldLabel : '膜通量中(GFD)'
 					}, {
 						xtype : 'numberfield',
 						ref : '../gfd3',
 						allowBlank : false,
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '膜通量3'
+						fieldLabel : '膜通量右(GFD)'
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -202,21 +202,21 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 						allowBlank : false,
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '产水电导1'
+						fieldLabel : '产水电导左(μS/cm)'
 					}, {
 						xtype : 'numberfield',
 						allowBlank : false,
 						ref : '../cdtOut2',
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '产水电导2'
+						fieldLabel : '产水电导中(μS/cm)'
 					}, {
 						xtype : 'numberfield',
 						allowBlank : false,
 						ref : '../cdtOut3',
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '产水电导3'
+						fieldLabel : '产水电导右(μS/cm)'
 					}, {
 						xtype : 'displayfield',
 						value : '<p style="color:red;">检测结果</p>',

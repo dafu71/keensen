@@ -57,7 +57,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 210,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -209,6 +209,31 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						anchor : '90%',
 						editable : true,
 						format : 'Y-m-d'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+
+						xtype : 'combo',
+						fieldLabel : '已裁完',
+						ref : '../isCutOver',
+						name : 'condition/isCutOver',
+						hiddenName : 'condition/isCutOver',
+						// value : 'N',
+						emptyText : '--请选择--',
+						// readOnly : true,
+						allowBlank : true,
+						// value : 'N',
+						anchor : '90%',
+						colspan : 1,
+						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.isCutOver.reset();
+							}
+						}
 					}]
 				});
 
@@ -490,10 +515,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 80,
 						dataIndex : 'thickAvg',
 						renderer : function(v, m, r, i) {
-							var thickAvgFlag = r.get('thickAvgFlag');
+							/*var thickAvgFlag = r.get('thickAvgFlag');
 							if (thickAvgFlag == 1) {
 								return '<font color=red>' + v + '</font>'
-							} else
+							} else*/
 								return v;
 						}
 					}, {
@@ -501,10 +526,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 80,
 						dataIndex : 'thickMin',
 						renderer : function(v, m, r, i) {
-							var thickMinFlag = r.get('thickMinFlag');
+							/*var thickMinFlag = r.get('thickMinFlag');
 							if (thickMinFlag == 1) {
 								return '<font color=red>' + v + '</font>'
-							} else
+							} else*/
 								return v;
 						}
 					}, {
@@ -512,10 +537,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 80,
 						dataIndex : 'thickMax',
 						renderer : function(v, m, r, i) {
-							var thickMaxFlag = r.get('thickMaxFlag');
+							/*var thickMaxFlag = r.get('thickMaxFlag');
 							if (thickMaxFlag == 1) {
 								return '<font color=red>' + v + '</font>'
-							} else
+							} else*/
 								return v;
 						}
 					}, {

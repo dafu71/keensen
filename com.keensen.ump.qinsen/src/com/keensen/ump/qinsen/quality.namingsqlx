@@ -100,7 +100,9 @@ from(
             
   WHERE 1 = 1
   
-  
+  <isNotNull prepend = ""  property = "ifTear">
+	   AND nvl(t1.if_tear,'是') = #ifTear# 
+	</isNotNull>
   <isNotNull prepend = ""  property = "productType">
 	   AND t1.product_Type = #productType# 
 	</isNotNull>
@@ -284,6 +286,9 @@ from(
             
   WHERE 1 = 1
   
+  <isNotNull prepend = ""  property = "ifTear">
+	   AND nvl(t1.if_tear,'是') = #ifTear# 
+	</isNotNull>
   
   <isNotNull prepend = ""  property = "productType">
 	   AND t1.product_Type = #productType# 

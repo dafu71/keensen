@@ -77,6 +77,11 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
+		
 		this.productTypeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['量产', '量产'], ['试量产', '试量产'], ['实验', '实验']]
@@ -206,7 +211,25 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 								this.reset()
 							}
 						}
-					}]
+					}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '是否已扯',
+								ref : '../ifTear',
+								hiddenName : 'condition/ifTear',
+								anchor : '95%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.ifTear.reset()
+									}
+								}
+							}]
 				});
 		this.queryPanel.addButton({
 					text : "导出",

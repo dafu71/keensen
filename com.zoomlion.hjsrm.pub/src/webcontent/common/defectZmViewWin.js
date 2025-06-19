@@ -85,7 +85,7 @@ com.keensen.ump.defectZmViewWindow = Ext.extend(Ext.Window, {
 						dataIndex : 'remark'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.qinsen.quality.queryZmDefectByPage.biz.ext',
+				url : 'com.keensen.ump.qinsen.quality.queryZmDefect.biz.ext',
 				root : 'data',
 				autoLoad : false,
 				fields : [{

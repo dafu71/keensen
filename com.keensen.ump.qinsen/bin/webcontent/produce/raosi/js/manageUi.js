@@ -1,6 +1,8 @@
 com.keensen.ump.qinsen.produce.raosiMgr = function() {
 	this.initPanel = function() {
 
+		this.lineId = null;
+		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
 
@@ -8,6 +10,8 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 		this.initRaosiEditWindow();
 
 		this.initChooseSingleOrderWindow();
+		
+		this.initProduceCountWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -17,6 +21,16 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 				});
 	}
 
+	this.initStore = function() {
+		this.prodTypeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['绕丝8寸', '绕丝8寸'], ['绕丝4寸', '绕丝4寸'], 
+					['绕丝4042', '绕丝4042'], ['绕丝SW-8寸', '绕丝SW-8寸'],
+					['绕丝SW-4寸', '绕丝SW-4寸'],['绕丝2521', '绕丝2521'],['绕丝4021', '绕丝4021']]
+				});
+	
+	}
+	
 	this.initQueryPanel = function() {
 		var _this = this;
 
@@ -31,7 +45,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						name : 'condition/produceBeginDate',
 						fieldLabel : '生产时间',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
@@ -42,7 +56,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						name : 'condition/produceEndDate',
 						fieldLabel : '至',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						editable : true,
 						format : 'Y-m-d H:i',
 						// allowBlank : false,
@@ -52,12 +66,12 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						xtype : 'linecombobox',
 						prodTacheId : '104',
 						hiddenName : 'condition/lineId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '生产线 '
 					}, {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'condition/prodSpecId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '元件型号 '
 					}, {
 						xtype : 'displayfield',
@@ -70,7 +84,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						ref : '../produceFlag',
 						hiddenName : 'condition/produceFlag',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '95%',
 						store : [[null, '全部'], ['W', '白膜'], ['Y', '返修']],
 						listeners : {
 							scope : this,
@@ -81,18 +95,18 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 					}, {
 						xtype : 'componentworkercombobox',
 						hiddenName : 'condition/workerId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '操作工'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/orderNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '订单号'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/tumoBatchNoStr',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '膜片批次%-%'
 					}, {
 						xtype : 'displayfield',
@@ -101,7 +115,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/batchNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '元件序号'
 					}]
 				});
@@ -143,6 +157,12 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '-', {
+						text : '产量统计',
+						scope : this,
+						hidden:true,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onQueryProduceCount
 					}, '->', {
 						text : '批量改订单',
 						scope : this,
@@ -158,6 +178,9 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 					}, {
 						header : '生产标志',
 						dataIndex : 'produceFlagName'
+					}, {
+						header : '生产类型',
+						dataIndex : 'prodType'
 					}, {
 						header : '生产线',
 						dataIndex : 'lineCode'
@@ -240,6 +263,8 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							name : 'tumoBatchStr'
 						}, {
 							name : 'qjBatchId'
+						}, {
+							name : 'prodType'
 						}]
 			})
 		})
@@ -263,7 +288,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 				xtype : 'inputpanel',
 				pgrid : this.listPanel,
 				columns : 6,
-				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord3.biz.ext',
+				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord4.biz.ext',
 				successFn : function(i, r) {
 					if (r.err != '0') {
 						
@@ -275,23 +300,17 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 										
 						audio.play().catch(error => console.log('播放失败:', error));
 						 				
-						/*Ext.Msg.show({
-									width : 400,
-									title : "操作提示",
-									msg : r.msg,
-									icon : Ext.Msg.WARNING,
-									buttons : Ext.Msg.OK,
-									fn : function() {
-										_this.raosiAddWindow.batchNo.setValue('');
-										_this.raosiAddWindow.batchNo.focus();
-										if (!audio) {
-                							audio = new Audio('qinsen/produce/raosi/fail.mp3');
-            							}
-										
-						 				audio.play().catch(error => console.log('播放失败:', error));
-										// _this.qijianAddWindow.hide();
-									}
-								})*/
+						/*
+						 * Ext.Msg.show({ width : 400, title : "操作提示", msg :
+						 * r.msg, icon : Ext.Msg.WARNING, buttons : Ext.Msg.OK,
+						 * fn : function() {
+						 * _this.raosiAddWindow.batchNo.setValue('');
+						 * _this.raosiAddWindow.batchNo.focus(); if (!audio) {
+						 * audio = new Audio('qinsen/produce/raosi/fail.mp3'); }
+						 * 
+						 * audio.play().catch(error => console.log('播放失败:',
+						 * error)); // _this.qijianAddWindow.hide(); } })
+						 */
 					} else {
 						_this.listPanel.store.baseParams = _this.queryPanel
 								.getForm().getValues();
@@ -383,6 +402,26 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 								}
 							}
 						}, {
+
+							xtype : 'combo',
+							mode : 'local',
+							fieldLabel : '生产类型',
+							ref : '../../prodType',
+							hiddenName : 'entity/prodType',
+							emptyText : '--请选择--',
+							colspan : 3,
+							allowBlank : false,
+							anchor : '90%%',
+							store : _this.prodTypeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.raosiAddWindow.prodType.reset();
+								}
+							}
+						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 6
@@ -402,6 +441,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							ref : '../../lineId',
 							hiddenName : 'entity/lineId',
 							dataIndex : 'lineId',
+							readOnly:true,
 							allowBlank : false,
 							anchor : '90%',
 							fieldLabel : '生产线 ',
@@ -657,11 +697,32 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 									listeners : {
 										scope : this,
 										'expand' : function(A) {
-											this.raosiAddWindow.produceFlag
+											this.raosiEditWindow.produceFlag
 													.reset();
 										}
 									}
 								}, {
+
+							xtype : 'combo',
+							mode : 'local',
+							fieldLabel : '生产类型',
+							ref : '../../prodType',
+							dataIndex : 'prodType',
+							hiddenName : 'entity/prodType',
+							emptyText : '--请选择--',
+							colspan : 3,
+							allowBlank : false,
+							anchor : '90%%',
+							store : _this.prodTypeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.raosiEditWindow.prodType.reset();
+								}
+							}
+						}, {
 									xtype : 'textfield',
 									name : 'entity/batchNo',
 									dataIndex : 'batchNo',
@@ -903,12 +964,12 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							fields : [{
 										xtype : 'textfield',
 										name : 'condition/orderNo2',
-										// anchor : '75%',
+										// anchor : '95%',
 										fieldLabel : '订单号'
 									}, {
 										xtype : 'textfield',
 										name : 'condition/materSpecName',
-										// anchor : '75%',
+										// anchor : '95%',
 										fieldLabel : '规格型号 '
 									}, {
 										xtype : 'displayfield',
@@ -917,7 +978,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 									}, {
 										xtype : "dateregion",
 										colspan : 1,
-										// anchor : '75%',
+										// anchor : '95%',
 										nameArray : [
 												'condition/orderDateStart',
 												'condition/orderDateEnd'],
@@ -951,6 +1012,121 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							layout : 'border',
 							items : [this.queryChooseSingleOrderPanel,
 									this.chooseSingleOrderListPanel]
+
+						});
+	}
+	
+	this.initProduceCountWindow = function() {
+
+		var selModel4ProduceCount = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4ProduceCount = this.listPanel4ProduceCount || new Ext.fn.ListPanel({
+			region : 'center',
+			viewConfig : {
+				forceFit : true
+			},			
+			hsPage : true,
+			selModel : selModel4ProduceCount,
+			delUrl : '1.biz.ext',
+			columns : [new Ext.grid.RowNumberer(), selModel4ProduceCount, {
+						dataIndex : 'workerName',
+						header : '操作工'
+					}, {
+						dataIndex : 'prodType',
+						header : '生产类型'
+					}, {
+						dataIndex : 'amount',
+						header : '生产数量'
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.produce.component.producecount.queryRaosiCountByPage.biz.ext',
+				root : 'data',
+				autoLoad : true,
+				totalProperty : 'totalCount',
+				baseParams : {},
+				fields : [{
+							name : 'workerName'
+						}, {
+							name : 'prodType'
+						}, {
+							name : 'amount'
+						}]
+			})
+		})
+
+		this.queryPanel4ProduceCount = this.queryPanel4ProduceCount || new Ext.fn.QueryPanel({
+					height : 80,
+					columns : 3,
+					border : true,
+					region : 'north',
+					// collapsible : true,
+					titleCollapse : false,
+					fields : [{
+						xtype : 'datetimefield',
+						name : 'condition/produceBeginDate',
+						fieldLabel : '生产时间',
+						colspan : 1,
+						anchor : '95%',
+						// allowBlank : false,
+						editable : true,
+						allowBlank:false,
+						format : 'Y-m-d H:i',
+						value : new Date().add(Date.DAY, -1)
+								.format('Y-m-d 00:00')
+					}, {
+						xtype : 'datetimefield',
+						name : 'condition/produceEndDate',
+						fieldLabel : '至',
+						colspan : 1,
+						anchor : '95%',
+						allowBlank:false,
+						editable : true,
+						format : 'Y-m-d H:i',
+						// allowBlank : false,
+						value : new Date().add(Date.DAY, 1)
+								.format('Y-m-d 00:00')
+					}, {
+						xtype : 'componentworkercombobox',
+						hiddenName : 'condition/workerId',
+						// allowBlank:false,
+						anchor : '95%',
+						fieldLabel : '操作工'
+					}]
+				});
+
+		 this.queryPanel4ProduceCount.addButton({
+			 text : "导出",
+			 scope : this,
+			 iconCls : 'icon-application_excel',
+			 handler : this.exportProduceCountExcel
+		 });
+
+		this.queryPanel4ProduceCount.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.produceCountWindow.hide();
+					}
+
+				});
+
+		this.produceCountWindow = this.produceCountWindow
+				|| new Ext.Window({
+							title : '产量统计',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 1024,
+							height : 600,
+							layout : 'border',
+							items : [this.queryPanel4ProduceCount, this.listPanel4ProduceCount]
 
 						});
 	}

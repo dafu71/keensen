@@ -28,10 +28,11 @@
 		t1.WORKER_NAME as "workerName",
 		t1.LINE_CODE as "lineCode",
 		t1.CDM_BATCH_STR as "cdmBatchStr",
-		t1.TUMO_BATCH_STR as "tumoBatchStr",t1.qj_batch_id "qjBatchId"
+		t1.TUMO_BATCH_STR as "tumoBatchStr",t1.qj_batch_id "qjBatchId",
+		t1.prod_type "prodType"
 	from(
 	
-	SELECT A.RECORD_ID, A.BATCH_NO, A.LINE_ID, A.PRODUCE_DT,
+	SELECT A.RECORD_ID, A.BATCH_NO, A.LINE_ID, A.PRODUCE_DT,A.prod_type,
 	       A.TEAM_ID, A.WORKER_ID, A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID,
 	       A.CHANGER_ID, A.REMARK, A.PROD_SPEC_ID, A.PRODUCE_FLAG,
 	       Q.ORDER_NO, Q.JUANMO_BATCH_ID, 
@@ -99,6 +100,16 @@
 	
 	<isNotNull prepend = ""  property = "scanNo">
 	   AND (A.BATCH_NO = UPPER(#scanNo#) or J.BATCH_NO = UPPER(#scanNo#))
+	   and exists(
+	   	SELECT tt.batch_no FROM(
+		SELECT qj.batch_no from qinsen.inst_qijian qj
+		UNION ALL
+		SELECT jm.batch_no from qinsen.inst_qijian qj
+		LEFT JOIN qinsen.inst_juanmo_main jm
+		ON qj.juanmo_batch_id=jm.record_id) tt
+		WHERE tt.batch_no=#scanNo#
+	   
+	   )
 	</isNotNull>
 	
 	<isNotNull prepend = ""  property = "tumoBatchId">

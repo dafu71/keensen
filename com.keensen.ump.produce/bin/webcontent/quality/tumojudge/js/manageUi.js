@@ -267,6 +267,10 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						dataIndex : 'reduceDt',
 						header : '降级时间'
+					}, {
+						dataIndex : 'judgerName',
+						//hidden:true,
+						header : '判定人'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality.queryTumoJudgeByPage.biz.ext',
@@ -338,6 +342,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							name : 'reduceDt'
 						}, {
 							name : 'perfIsQualifiedName'
+						}, {
+							name : 'judgerName'
 						}]
 			})
 		})
@@ -466,7 +472,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 			border : true,
 			columns : 4,
 			loadUrl : 'com.keensen.ump.produce.quality.quality.expandTumoJudge.biz.ext',
-			saveUrl : 'com.keensen.ump.produce.quality.quality.saveTumoCheck.biz.ext',
+			saveUrl : 'com.keensen.ump.produce.quality.quality.saveTumoCheck3.biz.ext',
 			fields : [{
 						xtype : 'displayfield',
 						fieldLabel : "<span style='color:red;'>外观判定</span>",

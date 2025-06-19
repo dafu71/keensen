@@ -1092,6 +1092,7 @@ Frame.ui.NavigatePanel = Ext.extend(Ext.Panel, {
 		D.fireEvent("afterMenuLoad")
 	},
 	buildBbar : function() {
+		
 		var B = new Ext.form.ComboBox({
 			xtype : "combo",
 			typeAhead : true,
@@ -1148,7 +1149,9 @@ Frame.ui.NavigatePanel = Ext.extend(Ext.Panel, {
 				}
 			}
 		});
-		this.tbar = [B, "-", {
+		this.tbar = [
+		//B, 
+		"->", {
 					iconCls : "icon-expand-all",
 					tooltip : "展开所有",
 					scope : this,

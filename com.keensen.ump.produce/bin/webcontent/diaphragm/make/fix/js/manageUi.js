@@ -220,6 +220,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						dataIndex : 'concentration',
 						header : '聚砜浓度'
 					}, {
+						dataIndex : 'cps',
+						header : '铸膜液粘度'
+					}, {
 						dataIndex : 'fixStarttime',
 						header : '混料开始时间'
 					}, {
@@ -361,6 +364,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							name : 'totalC11'
 						}, {
 							name : 'totalC12'
+						}, {
+							name : 'cps'
 						}]
 			})
 		})

@@ -3,7 +3,8 @@
 <sqlMap namespace="com.keensen.ump.base.workorder">
     <!-- 机台查询 -->
     <select id="queryMachine" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-      select t.code "code",t.name "name",t.ip "ip",t.type "type",t2.relation_code "relationCode"
+      select t.code "code",t.name "name",t.ip "ip",t.type "type",t2.relation_code "relationCode",
+      t.remark "remark"
  		from KS_BASE_MACHINE t
  		left join (select t.code,wm_concat(t.relation_code) relation_code 
  		from KS_BASE_MACHINE_RELATION t
@@ -17,7 +18,7 @@
 		
 		order by t.code
      </select>
-    <select id="queryMachineCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select decode(#type#,'裁叠膜','C','卷膜','J','气检','Q','包装','B','焊管焊网','H','裁网','X','E') || (nvl(max(SUBSTR(t.code,2,10)),0) +1)  "code"
+    <select id="queryMachineCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select decode(#type#,'裁叠膜','C','卷膜','J','气检','Q','包装','B','焊管焊网','H','裁网','X','绕丝','R','E') || (nvl(max(SUBSTR(t.code,2,10)),0) +1)  "code"
  		from KS_BASE_MACHINE t
  		where 1=1 		
 		and t.type = #type#</select>

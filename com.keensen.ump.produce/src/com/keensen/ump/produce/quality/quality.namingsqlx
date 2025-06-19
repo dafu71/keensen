@@ -406,8 +406,21 @@
        T1.JUDGER_NAME AS "judgerName",T1.JUDGER_ID AS "judgerId",
        T1.IS_BATCH_QUALIFIED_NAME AS "isBatchQualifiedName",T1.IS_BATCH_QUALIFIED AS "isBatchQualified",
        T1.GFD_STR AS "gfdStr",
+       
+       REGEXP_SUBSTR(T1.GFD_STR, '[^,]+', 1, 1) AS "gfdStr1",
+       REGEXP_SUBSTR(T1.GFD_STR, '[^,]+', 1, 2) AS "gfdStr2",
+       REGEXP_SUBSTR(T1.GFD_STR, '[^,]+', 1, 3) AS "gfdStr3",
+       
+       
+       
        T1.CONDUCTIVITY_IN AS "conductivityIn",
        T1.CONDUCTIVITY_STR AS "conductivityStr",
+       
+       REGEXP_SUBSTR(T1.CONDUCTIVITY_STR, '[^,]+', 1, 1) AS "conductivityStr1",
+       REGEXP_SUBSTR(T1.CONDUCTIVITY_STR, '[^,]+', 1, 2) AS "conductivityStr2",
+       REGEXP_SUBSTR(T1.CONDUCTIVITY_STR, '[^,]+', 1, 3) AS "conductivityStr3",
+       
+       
        T1.IS_VALID_NAME AS "isValidName",
        T1.CHECKER_NAME AS "checkerName",
        T1.CHECK_TIME AS "checkTime",
@@ -528,7 +541,7 @@
 		   AND t.SPEC_ID = #specId#
 		</isNotNull>  
 		<isNotNull prepend = ""  property = "isWx">
-		   AND lower(t.IS_WX) = #isWx#
+		   AND (lower(t.IS_WX) = #isWx# or decode(t.is_wx,'Y','是','否') = #isWx#)
 		</isNotNull>
 		<isNotNull prepend = ""  property = "macName">
 		   AND t.mac_name = #macName#
@@ -549,7 +562,7 @@
      </select>
      
      <select id="queryMpCheckResult" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-     SELECT V.BATCH_ID,V.RECORD_ID,v.recheck_flag "recheckFlag",
+     SELECT V.BATCH_ID,V.RECORD_ID,v.recheck_flag "recheckFlag",v.line_id,tt.line_id,
        V.BATCH_NO "batchNo",tt.GFD "gfd",tt.SALT "salt",
        TT.IS_WX,
        gfd_Avg "gfdAvg",
@@ -570,7 +583,7 @@
        'select ' || LEVEL_ID || ' as "levelId" ,''' || LEVEL_NAME || ''' as "levelName" from dual where ' || gfd_Avg || TT.GFD_LOW_SYMBOL || TT.GFD_LOW_LIMIT || ' and ' || gfd_Avg || TT.GFD_UP_SYMBOL || TT.GFD_UP_LIMIT ||
        ' and ' || salt_Rejection || TT.SALT_LOW_SYMBOL || TT.SALT_LOW_LIMIT || ' and ' || 
         salt_Rejection || TT.SALT_UP_SYMBOL || TT.SALT_UP_LIMIT "sqlstr"
-  FROM (SELECT T.RECORD_ID,
+  FROM (SELECT T.RECORD_ID,t.line_id,
                T.SPEC_ID,
                T2.NAME SPEC_NAME,
                T.LEVEL_ID,
@@ -605,7 +618,8 @@
                      WHERE T.PROP_ID = 30023) T3
             ON T.LEVEL_ID = T3.ID
          WHERE T.STATE = 'Y') TT
-  LEFT JOIN (SELECT record_id,BATCH_ID, SPEC_ID, IS_WX, MAC_NAME, BATCH_NO,gfd_Avg,salt_Rejection,recheck_flag
+  LEFT JOIN (SELECT record_id,BATCH_ID, SPEC_ID, IS_WX, MAC_NAME, BATCH_NO,gfd_Avg,salt_Rejection,recheck_flag,line_id
+               ,tm_record_id
                FROM V_KS_TUMO_CHECK_FIRST
                <!--性能自动判定只看初测值-->
                where recheck_flag = 'N'
@@ -614,6 +628,8 @@
     ON V.IS_WX = TT.IS_WX
    AND V.SPEC_ID = TT.SPEC_ID
    AND V.MAC_NAME = TT.MAC_NAME
+   <!--生产线-->
+   AND v.line_id = tt.line_id
  WHERE v.record_ID = #recordId# 
  
  
@@ -647,6 +663,7 @@
        T1.THICK_AVG AS "thickAvg",
        T1.PRODUCE_REMARK || ';' || cd.remark AS "produceRemark",
        T2.PERF_FLAG_ID AS "batchPerfFlagId",t2.judger_Id "judgerId",
+       T2.judger_Name "judgerName",
        
        decode(t2.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
        

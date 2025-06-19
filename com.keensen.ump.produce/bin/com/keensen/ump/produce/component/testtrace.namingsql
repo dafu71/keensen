@@ -400,4 +400,11 @@
 	AND t.template_name IS NULL
 	AND EXISTS(SELECT template_name FROM V_KS_SG_MARK_DRAWING v
 	WHERE v.spec_name = t.mater_spec_name2)</update>
+    <!--唛头图纸查询-->
+    <select id="queryDrawingCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.drawing_code "templateName",t.spec_name,pms.mater_spec_id 
+	from KS_BASE_MARK_DRAWING t
+	LEFT JOIN qinsen.para_mater_spec pms
+	ON pms.mater_spec_name=t.spec_name
+	WHERE t.drawing_code LIKE 'KS-%'
+	and pms.mater_spec_id = #prodSpecId#</select>
 </sqlMap>

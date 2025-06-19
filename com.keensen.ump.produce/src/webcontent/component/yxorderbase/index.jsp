@@ -89,5 +89,12 @@ var markRootUrl = "<%=rootUrl %>";
 </head>
 <body>
 <div id="yxorderbasemgr"></div>
+
+<div style="display: none">
+				
+		<form name="printPreViewForm2" id="componentmarktemplatepreviewForm2" action="" target="_blank" method="post" accept-charset="UTF-8">
+			<input type="hidden" name="drawingCode"/>
+		</form>
+	</div>
 </body>
 </html>

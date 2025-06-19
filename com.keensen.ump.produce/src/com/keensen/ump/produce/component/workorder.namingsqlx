@@ -516,6 +516,7 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
            t3.jm_amount "jmAmount",
        nvl(t4.wait_amount,0) "waitAmount",
        nvl(t5.qj_amount,0) "qjAmount",
+       NVL(t6.label_amount,0) "labelAmount",
        <!--decode(t4.wait_amount,0,'完成','处理中') "qjStateName"-->
        case when t3.jm_amount = nvl(t5.qj_amount,0) then '完成' else '处理中' end "qjStateName"
         ,yb.tape "tape",yb.lid "lid",yb.sn_Regular "snRegular",yb.make_Label "makeLabel",
@@ -547,10 +548,22 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
     and exists(select 1 from KS_COMPONENT_DUTY_QJ_list WHERE batch_no = t.jm_batch_no)
   GROUP BY t.order_id) t5 ON T5.ORDER_ID = T2.ID
   
+  left join (select t.order_id, 
+  sum(case when t.prod_batch_no is null then 0 else 1 end) label_amount from 
+  (SELECT DISTINCT jm_batch_no,jm_batch_id,prod_batch_no,order_id FROM V_KS_TM_CDM_JM_QJ WHERE qj_state = 1) t
+    WHERE 1 = 1
+    and exists(select 1 from KS_COMPONENT_DUTY_QJ_list WHERE batch_no = t.jm_batch_no)
+  GROUP BY t.order_id) t6 ON T6.ORDER_ID = T2.ID
+  
   LEFT JOIN qinsen.para_mater_spec pms
   ON T2.MATER_SPEC_ID=pms.mater_spec_id
   
     where 1=1
+    
+     <isNotNull prepend="and" property="ids"> 
+		       t1.id in ($ids$)
+		</isNotNull>
+		
       <isNotNull prepend="and" property="id"> 
 		       t1.id = #id#
 		</isNotNull>

@@ -203,15 +203,15 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					}, {
 						dataIndex : 'weight',
 						width : 100,
-						header : '总重量'
+						header : '总重量(KG)'
 					}, {
 						dataIndex : 'used',
 						width : 100,
-						header : '已使用重量'
+						header : '已使用重量(KG)'
 					}, {
 						dataIndex : 'remain',
 						width : 100,
-						header : '剩余重量'
+						header : '剩余重量(KG)'
 					}, {
 						dataIndex : 'pva',
 						width : 100,
@@ -231,7 +231,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					}, {
 						dataIndex : 'ro',
 						width : 100,
-						header : 'RO水重量（KG)'
+						header : 'RO水重量(KG)'
 					}, {
 						dataIndex : 'pvaWeight',
 						width : 100,
@@ -239,7 +239,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					}, {
 						dataIndex : 'density',
 						width : 100,
-						header : '浓度（%）'
+						header : '浓度(%）'
 					}, {
 						dataIndex : 'operatorName',
 						width : 100,
@@ -251,7 +251,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					}, {
 						dataIndex : 'weightReal',
 						width : 100,
-						header : '实际总重量'
+						header : '实际总重量(KG)'
 					}, {
 						dataIndex : 'c51Real',
 						width : 100,
@@ -267,7 +267,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					}, {
 						dataIndex : 'roReal',
 						width : 100,
-						header : '实际RO水重量（KG)'
+						header : '实际RO水重量(KG)'
 					}, {
 						dataIndex : 'pvaWeightReal',
 						width : 100,
@@ -275,7 +275,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					}, {
 						dataIndex : 'densityReal',
 						width : 100,
-						header : '实际浓度（%）'
+						header : '实际浓度(%）'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.make.pva.queryPvaByPage.biz.ext',
@@ -446,7 +446,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							name : 'entity/weight',
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : '总重量(kg)',
+							fieldLabel : '总重量(KG)',
 							anchor : '95%',
 							colspan : 1,
 							editable : true,
@@ -623,7 +623,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							dataIndex : 'weight',
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : '总重量(kg)',
+							fieldLabel : '总重量(KG)',
 							anchor : '95%',
 							colspan : 1,
 							editable : true,
@@ -801,7 +801,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							name : 'entity/weight',
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : '稀释配料重量(kg)',
+							fieldLabel : '稀释配料重量(KG)',
 							anchor : '95%',
 							colspan : 1,
 							editable : true,
@@ -1170,7 +1170,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							//allowBlank : false,
 							readOnly : true,
 							// hidden : true,
-							fieldLabel : '总重量(kg)',
+							fieldLabel : '总重量(KG)',
 							anchor : '95%',
 							colspan : 1,
 							editable : true,
@@ -1281,7 +1281,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							dataIndex : 'weightReal',
 							allowBlank : false,
 							// hidden : true,
-							fieldLabel : '实际总重量(kg)',
+							fieldLabel : '实际总重量(KG)',
 							anchor : '95%',
 							colspan : 1,
 							editable : true,

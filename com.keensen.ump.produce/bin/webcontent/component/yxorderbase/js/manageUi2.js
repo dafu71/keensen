@@ -171,9 +171,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		// 托盘材质 "下拉选项：普通木质、出口熏蒸木质、出口免熏蒸木质、塑料，默认“公司标准”"
 		this.trayStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['普通木质', '普通木质'],
-							['出口免熏蒸木质', '出口免熏蒸木质'], ['塑料', '塑料'],
-							['不打托', '不打托']]
+					data : [['普通木质', '普通木质'], ['出口免熏蒸木质', '出口免熏蒸木质'],
+							['塑料', '塑料'], ['不打托', '不打托']]
 				});
 
 		// 托盘尺寸
@@ -781,6 +780,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						header : '唛头开始号',
 						sortable : true
 					}, {
+						dataIndex : 'markDrawingCode2',
+						header : '第二唛头图纸编号',
+						sortable : true
+					}, {
 						dataIndex : 'markEnd',
 						header : '唛头结束号',
 						sortable : true
@@ -811,6 +814,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'aar',
 						header : '耐酸碱要求',
+						hidden : true,
 						sortable : true
 					}, {
 						dataIndex : 'color',
@@ -898,11 +902,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						dataIndex : 'ifphoto',
 						header : '需要拍照',
 						sortable : true
-					}, {
-						dataIndex : 'ifanyone',
-						header : '每款型号',
-						sortable : true
-					}, {
+					}/*
+						 * , { dataIndex : 'ifanyone', header : '每款型号', sortable :
+						 * true }
+						 */, {
 						dataIndex : 'photoSingle',
 						header : '单支拍照要求',
 						xtype : 'dictcolumn',
@@ -1085,6 +1088,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							name : 'mark'
 						}, {
 							name : 'markDrawingCode'
+						}, {
+							name : 'markDrawingCode2'
 						}, {
 							name : 'productRemark'
 						}, {
@@ -1320,7 +1325,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					fieldLabel : '<a class="mya" title="订单编号编码说明" onclick="describeOrderNo();">销售订单编号</a>'
 				}, {
 					xtype : 'combobox',
-					forceSelection : true,
+					forceSelection : false,
 					// readOnly : true,
 					allowBlank : false,
 					mode : 'local',
@@ -1331,13 +1336,16 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 6,
 					emptyText : '--请选择--',
-					editable : false,
+					editable : true,
 					store : this.orderMaterSpecStore,
 					displayField : "materSpecName2",
 					valueField : "materSpecName2",
 					listeners : {
 						"expand" : function(A) {
 							this.reset()
+						},
+						'specialkey' : function() {
+							return false;
 						}
 					}
 				}, {
@@ -1359,6 +1367,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					listeners : {
 						"expand" : function(A) {
 							this.reset()
+						},
+						'specialkey' : function() {
+							return false;
 						}
 					}
 				}, {
@@ -1859,6 +1870,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					xtype : 'combobox',
 					forceSelection : true,
 					// allowBlank : false,
+					hidden : true,
 					mode : 'local',
 					fieldLabel : '耐酸碱要求',
 					ref : '../../aar',
@@ -2540,28 +2552,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							this.reset()
 						}
 					}
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '每款型号',
-					ref : '../../ifanyone',
-					hiddenName : 'entity/ifanyone',
-					dataIndex : 'ifanyone',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
+				}/*
+					 * , { xtype : 'combobox', forceSelection : true, //
+					 * allowBlank : false, mode : 'local', fieldLabel : '每款型号',
+					 * ref : '../../ifanyone', hiddenName : 'entity/ifanyone',
+					 * dataIndex : 'ifanyone', anchor : '100%', colspan : 6,
+					 * emptyText : '--请选择--', editable : false, store :
+					 * this.ynStore, displayField : "name", valueField : "code",
+					 * listeners : { "expand" : function(A) { this.reset() } } }
+					 */, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -3718,6 +3717,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 				}, {
 					xtype : 'combobox',
 					forceSelection : true,
+					hidden : true,
 					// allowBlank : false,
 					mode : 'local',
 					fieldLabel : '耐酸碱要求',
@@ -4321,23 +4321,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					store : this.ynStore,
 					displayField : "name",
 					valueField : "code"
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '每款型号',
-					ref : '../../ifanyone',
-					readOnly : true,
-					dataIndex : 'ifanyone',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
+				}/*
+					 * , { xtype : 'combobox', forceSelection : true, //
+					 * allowBlank : false, mode : 'local', fieldLabel : '每款型号',
+					 * ref : '../../ifanyone', readOnly : true, dataIndex :
+					 * 'ifanyone', anchor : '100%', colspan : 6, emptyText : '',
+					 * editable : false, store : this.ynStore, displayField :
+					 * "name", valueField : "code" }
+					 */, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -6055,6 +6046,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					hsPage : true,
 					selModel : selModel4ChooseMark,
 					tbar : [{
+								text : '打印效果预览',
+								scope : this,
+								iconCls : 'icon-application_form_magnify',
+								handler : this.onPreView
+							}, {
 								text : '确定选择',
 								scope : this,
 								iconCls : 'icon-application_add',
@@ -6143,6 +6139,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									name : 'url'
 								}, {
 									name : 'url2'
+								}, {
+									name : 'code'
 								}]
 					})
 				})
@@ -6690,7 +6688,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 											emptyText : '单击旁边按钮填充',
 											ref : '../../markDrawingCode',
 											dataIndex : 'markDrawingCode',
-											editable : false,
+											editable : true,
 											hideTrigger : false,
 											fieldLabel : '唛头图号',
 											anchor : '95%',

@@ -343,7 +343,13 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onEdit3 = function() {
 };
 
 com.keensen.ump.produce.quality.mptest.waterMgr.prototype.exportExcel = function() {
-	var _this = this;
+	
+	
+	doQuerySqlAndExport(this, this.queryPanel,
+			this.listPanel, '水相液浓度',
+			'com.keensen.ump.produce.quality.mptest5.queryWaterRecords', '0,1');
+			
+	/*var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
@@ -377,7 +383,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.exportExcel = function
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc = function() {

@@ -158,19 +158,39 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						header : '取样位置(m)'
 					}, {
 						dataIndex : 'gfdAvg',
-						header : '膜通量均值'
+						header : '膜通量均值(GFD)'
 					}, {
 						dataIndex : 'saltRejection',
 						header : '脱盐率%'
 					}, {
 						dataIndex : 'gfdStr',
+						hidden:true,
 						header : '膜通量数据'
 					}, {
+						dataIndex : 'gfdStr1',
+						header : '膜通量左(GFD)'
+					}, {
+						dataIndex : 'gfdStr2',
+						header : '膜通量中(GFD)'
+					}, {
+						dataIndex : 'gfdStr3',
+						header : '膜通量右(GFD)'
+					}, {
 						dataIndex : 'conductivityIn',
-						header : '进水电导'
+						header : '进水电导(μS/cm)'
 					}, {
 						dataIndex : 'conductivityStr',
+						hidden:true,
 						header : '出水电导数据'
+					}, {
+						dataIndex : 'conductivityStr1',
+						header : '产水电导左(μS/cm)'
+					}, {
+						dataIndex : 'conductivityStr2',
+						header : '产水电导中(μS/cm)'
+					}, {
+						dataIndex : 'conductivityStr3',
+						header : '产水电导右(μS/cm)'
 					}, {
 						dataIndex : 'recheckName',
 						header : '首/复检'
@@ -291,9 +311,21 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						}, {
 							name : 'gfdStr'
 						}, {
+							name : 'gfdStr1'
+						}, {
+							name : 'gfdStr2'
+						}, {
+							name : 'gfdStr3'
+						}, {
 							name : 'conductivityIn'
 						}, {
 							name : 'conductivityStr'
+						}, {
+							name : 'conductivityStr1'
+						}, {
+							name : 'conductivityStr2'
+						}, {
+							name : 'conductivityStr3'
 						}, {
 							name : 'isValidName'
 						}, {

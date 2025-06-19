@@ -72,7 +72,7 @@ tmp.IF_PRINT_DAY_CODE as "ifPrintDayCode",
 tmp.Y_DAY_CODE_SPAN as "yDayCodeSpan",
 tmp.X_DAY_CODE_SPAN as "xDayCodeSpan",
 tmp.PRINT_DELAY_TIME as "printDelayTime"
-       
+       ,tmp.reserve1 "reserve1"
   FROM KS_BASE_MARK_DRAWING T1 
   LEFT JOIN (select t.template_name,max(t.url) URL,max(t.url2) url2,max(t.code) code,
   max(IF_PRINT_BATCH_NO) as IF_PRINT_BATCH_NO,
@@ -96,7 +96,7 @@ max(IF_PRINT_DAY_CODE) as IF_PRINT_DAY_CODE,
 max(Y_DAY_CODE_SPAN) as Y_DAY_CODE_SPAN,
 max(X_DAY_CODE_SPAN) as X_DAY_CODE_SPAN,
 max(PRINT_DELAY_TIME) as PRINT_DELAY_TIME
-
+,max(t.reserve1) reserve1
   
    from KS_COMPONENT_MARK_TEMPLATE t
 GROUP BY t.template_name) tmp ON tmp.template_name = t1.DRAWING_CODE

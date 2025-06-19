@@ -195,6 +195,8 @@ t.mater_spec_name2 "materSpecName2"
 	   AND L.WORKSHOP_ID = W.DEPT_ID(+)
 	   AND L.FACTORY_ID = F.DEPT_ID(+)
 	   <isNotNull prepend="" property="prodTacheId">AND L.PROD_TACHE_ID in($prodTacheId$)</isNotNull>
+        <isNotNull prepend="" property="lineCode">AND L.LINE_CODE = #lineCode#</isNotNull>
+	   
        ORDER BY L.line_code
      </select>
     <!-- 查询物料规格列表 -->

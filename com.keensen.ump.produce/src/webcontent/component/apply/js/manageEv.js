@@ -16,6 +16,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 
 	// 查询事件
 	this.queryPanel3.mon(this.queryPanel3, 'query', function(form, vals) {
+
 				var store = this.listPanel3.store;
 				store.baseParams = vals;
 				store.load();
@@ -149,8 +150,6 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 				}
 			})
 
-	
-
 	this.listPanel3.mon(this.listPanel3, 'rowclick', function(grid, rowIndex) {
 				var sm = grid.getSelectionModel();
 				if (sm.isSelected(rowIndex)) {
@@ -169,15 +168,16 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 					var r = records[i];
 					var diameter = r.get('diameter');
 					var diameter2 = r.get('diameter2');
-					if(parseFloat(diameter)>201 || parseFloat(diameter2)>201){
+					if (parseFloat(diameter) > 201
+							|| parseFloat(diameter2) > 201) {
 						flag = true
 						break;
 					}
 				}
-				if(flag){
+				if (flag) {
 					_this.editPanel.diameterCheckResult.setVisible(true);
 					_this.editPanel.diameterCheckResult.setDisabled(false);
-				}else{
+				} else {
 					_this.editPanel.diameterCheckResult.setVisible(false);
 					_this.editPanel.diameterCheckResult.setDisabled(true);
 				}
@@ -222,21 +222,21 @@ com.keensen.ump.produce.component.applyMgr.prototype.onChoose = function() {
 
 	this.queryPanel3.orderNo.setValue(orderNo);
 	// this.queryPanel3.prodSpecId.setValue(prodSpecId);
-	this.prodcombo.reset();
-	this.prodcombo.getStore().baseParams = {
+	this.queryPanel3.prodcombo.reset();
+	this.queryPanel3.prodcombo.getStore().baseParams = {
 		'condition/orderNo' : orderNo
 		// ,
 		// 'condition/prodSpecId' : prodSpecId
 	};
-	this.prodcombo.getStore().load();
+	this.queryPanel3.prodcombo.getStore().load();
 
 	var store = this.listPanel3.store;
-	store.baseParams = {
-		'condition/orderNo' : orderNo
-		// ,
-		// 'condition/prodSpecId' : prodSpecId
-	};
-	store.load();
+	// store.baseParams = {
+	// 'condition/orderNo' : orderNo
+	// ,
+	// 'condition/prodSpecId' : prodSpecId
+	// };
+	//store.load();
 
 	var prodSpecNameStore = this.prodSpecNameStore;
 	prodSpecNameStore.baseParams = {
@@ -250,12 +250,17 @@ com.keensen.ump.produce.component.applyMgr.prototype.onChoose = function() {
 
 com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 	var A = this.listPanel3;
+	var _this = this;
+	var records;
+	var obj;
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
-		var records = A.getSelectionModel().getSelections();
+		records = A.getSelectionModel().getSelections();
 		// this.listPanel2.store.removeAll();
+		// 新增
 		if (!this.inputWindow.hidden) {
+			obj = this.inputPanel;
 			var records2 = this.listPanel2.store.getRange();
 
 			for (var i = 0; i < records.length; i++) {
@@ -271,6 +276,62 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 			}
 			var records = this.listPanel2.store.getRange();
 			this.inputPanel.applyAmount.setValue(records.length);
+
+			// 加载订单信息
+			// com.keensen.ump.produce.component.neworder.queryYxOrder
+
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.produce.component.neworder.queryYxOrder.biz.ext",
+				method : "post",
+				jsonData : {
+					'map/orderNo' : records[0].data.orderNo,
+					'map/prodSpecId' : records[0].data.prodSpecId
+
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					var datas = ret.data;
+					if (!Ext.isEmpty(datas)) {
+						var data = datas[0];
+						var orderAmount = data.orderAmount;
+						obj.orderAmount.setValue(orderAmount);
+						var prodSpecName = data.materSpecName2;
+						obj.prodSpecName.setValue(prodSpecName);
+						var prodClassFlag = data.dryWet;
+						obj.prodClassFlag.setValue(prodClassFlag);
+						var lid = data.lidBase;
+						obj.lid.setValue(lid);
+						var markTypeFlag = data.markBase;
+						obj.markTypeFlag.setValue(markTypeFlag);
+						var markSpecCode = data.markBase;
+						obj.markSpecCode.setValue(markSpecCode);
+						var tape = data.tapeBase;
+						obj.tape.setValue(tape);
+						var box = data.boxBase;
+						obj.box.setValue(box);
+						var tray = data.trayBase;
+						obj.tray.setValue(tray);
+						var label = data.labelBase
+						obj.label.setValue(label);
+						var orderType = data.orderTypeBase;
+						obj.orderType.setValue(orderType);
+						var prodAmount = data.prodAmount;
+						obj.prodAmount.setValue(prodAmount);
+						var checkCount = data.checkCount;
+						obj.checkCount.setValue(checkCount);
+					}
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+
 		} else {
 			var records2 = this.listPanel7.store.getRange();
 
@@ -288,6 +349,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 			var records = this.listPanel7.store.getRange();
 			this.modifyPanel.applyAmount.setValue(records.length);
 		}
+
 		this.chooseWindow.hide();
 	}
 }
@@ -305,6 +367,15 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSave = function() {
 	var orderNo2 = records[0].data.orderNo;
 	if (orderNo != orderNo2) {
 		Ext.Msg.alert("系统提示", "请检元件订单号与请检单订单号不一致！");
+		return false;
+	}
+
+	var prodAmount = this.inputPanel.prodAmount.getValue();
+	var checkCount = this.inputPanel.checkCount.getValue();
+	var applyAmount = this.inputPanel.applyAmount.getValue();
+
+	if (parseInt(checkCount) + parseInt(applyAmount) > parseInt(prodAmount)) {
+		Ext.Msg.alert("系统提示", "请检元件数量不能大于订单需生产数量！");
 		return false;
 	}
 
@@ -866,6 +937,8 @@ com.keensen.ump.produce.component.applyMgr.prototype.onChoose2 = function() {
 	} else {
 		var orderNo = this.modifyPanel.orderNo.getValue();
 	}
+
+	this.listPanel3.store.removeAll();
 	// var prodSpecId = this.inputPanel.prodSpecId.getValue();
 	if (Ext.isEmpty(orderNo)) {
 		Ext.Msg.alert("系统提示", "请输入订单号！");
@@ -881,18 +954,17 @@ com.keensen.ump.produce.component.applyMgr.prototype.onChoose2 = function() {
 	this.queryPanel3.prodcombo.reset();
 	this.queryPanel3.prodcombo.getStore().baseParams = {
 		'condition/orderNo' : orderNo
-		// ,
-		// 'condition/prodSpecId' : prodSpecId
+
 	};
 	this.queryPanel3.prodcombo.getStore().load();
 
-	//var store = this.listPanel3.store;
-	//store.baseParams = {
-	//	'condition/orderNo' : orderNo
-		// ,
-		// 'condition/prodSpecId' : prodSpecId
-	//};
-	//store.load();
+	// var store = this.listPanel3.store;
+	// store.baseParams = {
+	// 'condition/orderNo' : orderNo
+	// ,
+	// 'condition/prodSpecId' : prodSpecId
+	// };
+	// store.load();
 
 	var prodSpecNameStore = this.prodSpecNameStore;
 	prodSpecNameStore.baseParams = {

@@ -84,7 +84,31 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 		t1.cut as "cut",
 		t1.raosi as "raosi",
 		t1.package as "package",
-		t1.pipe as "pipe"
+		t1.pipe as "pipe",
+		
+		t1.book_code as "bookCode",
+		t1.book_version as "bookVersion",
+		t1.preparation_time as "preparationTime",
+		t1.prod_type as "prodType",
+		t1.lid as "lid",
+		
+		t1.DENSE_NET_amount as "denseNetAmount",
+		t1.draw_NET_long_width as "drawNetLongWidth",
+		t1.draw_NET_long_amount as "drawNetLongAmount",
+		t1.draw_NET_short_width as "drawNetShortWidth",
+		t1.draw_NET_short_amount as "drawNetShortAmount",
+		t1.test_pressure as "testPressure",
+		t1.keep_pressure_time as "keepPressureTime",
+		t1.pressure_arange as "pressureArange",
+		t1.test_liquid as "testLiquid",
+		t1.test_liquid_density as "testLiquidDensity",
+		t1.test_liquid_pressure as "testLiquidPressure",
+		t1.test_liquid_temp as "testLiquidTemp",
+		t1.test_liquid_ph as "testLiquidPh",
+		t1.test_liquid_recovery as "testLiquidRecovery",
+		t1.test_liquid_gpd as "testLiquidGpd",
+		t1.test_liquid_salt as "testLiquidSalt"
+		
        
   FROM (SELECT S.MATER_SPEC_ID,
                S.MATER_SPEC_CODE,
@@ -127,6 +151,31 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 				s.raosi ,
 				s.package ,
 				s.pipe,
+				
+				s.book_code,
+				s.book_version,
+				s.preparation_time,
+				s.prod_type,
+				s.lid,
+				s.DENSE_NET_amount,
+				s.draw_NET_long_width,
+				s.draw_NET_long_amount,
+				s.draw_NET_short_width,
+				s.draw_NET_short_amount,
+				s.test_pressure,
+				s.keep_pressure_time,
+				s.pressure_arange,
+				s.test_liquid,
+				s.test_liquid_density,
+				s.test_liquid_pressure,
+				s.test_liquid_temp,
+				s.test_liquid_ph,
+				s.test_liquid_recovery,
+				s.test_liquid_gpd,
+				s.test_liquid_salt,
+				
+				
+				
 
                C.MATER_CLASS_CODE,
                C.MATER_CLASS_NAME,
@@ -233,6 +282,28 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 <isNotNull prepend="" property="package"> A.package= #package#,  </isNotNull>
 <isNotNull prepend="" property="pipe"> A.pipe= #pipe#,  </isNotNull>
 	   
+	<isNotNull prepend="" property="bookCode"> A.book_code= #bookCode#,  </isNotNull>
+<isNotNull prepend="" property="bookVersion"> A.book_version= #bookVersion#,  </isNotNull>
+<isNotNull prepend="" property="preparationTime"> A.preparation_time= #preparationTime#,  </isNotNull>
+<isNotNull prepend="" property="prodType"> A.prod_type= #prodType#,  </isNotNull>
+<isNotNull prepend="" property="lid"> A.lid= #lid#,  </isNotNull>
+
+<isNotNull prepend="" property="denseNetAmount"> A.DENSE_NET_amount= #denseNetAmount#,  </isNotNull>
+<isNotNull prepend="" property="drawNetLongWidth"> A.draw_NET_long_width= #drawNetLongWidth#,  </isNotNull>
+<isNotNull prepend="" property="drawNetLongAmount"> A.draw_NET_long_amount= #drawNetLongAmount#,  </isNotNull>
+<isNotNull prepend="" property="drawNetShortWidth"> A.draw_NET_short_width= #drawNetShortWidth#,  </isNotNull>
+<isNotNull prepend="" property="drawNetShortAmount"> A.draw_NET_short_amount= #drawNetShortAmount#,  </isNotNull>
+<isNotNull prepend="" property="testPressure"> A.test_pressure= #testPressure#,  </isNotNull>
+<isNotNull prepend="" property="keepPressureTime"> A.keep_pressure_time= #keepPressureTime#,  </isNotNull>
+<isNotNull prepend="" property="pressureArange"> A.pressure_arange= #pressureArange#,  </isNotNull>
+<isNotNull prepend="" property="testLiquid"> A.test_liquid= #testLiquid#,  </isNotNull>
+<isNotNull prepend="" property="testLiquidDensity"> A.test_liquid_density= #testLiquidDensity#,  </isNotNull>
+<isNotNull prepend="" property="testLiquidPressure"> A.test_liquid_pressure= #testLiquidPressure#,  </isNotNull>
+<isNotNull prepend="" property="testLiquidTemp"> A.test_liquid_temp= #testLiquidTemp#,  </isNotNull>
+<isNotNull prepend="" property="testLiquidPh"> A.test_liquid_ph= #testLiquidPh#,  </isNotNull>
+<isNotNull prepend="" property="testLiquidRecovery"> A.test_liquid_recovery= #testLiquidRecovery#,  </isNotNull>
+<isNotNull prepend="" property="testLiquidGpd"> A.test_liquid_gpd= #testLiquidGpd#,  </isNotNull>
+<isNotNull prepend="" property="testLiquidSalt"> A.test_liquid_salt= #testLiquidSalt#,  </isNotNull>
 	   
 	   
 	   

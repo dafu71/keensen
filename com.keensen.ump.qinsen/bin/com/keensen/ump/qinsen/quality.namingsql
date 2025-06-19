@@ -98,8 +98,8 @@ from(
             
   WHERE 1 = 1
   
-  
-  <isNotNull prepend="" property="productType">AND t1.product_Type = #productType#</isNotNull>
+  <isNotNull prepend="" property="ifTear">AND nvl(t1.if_tear,'是') = #ifTear#</isNotNull>
+        <isNotNull prepend="" property="productType">AND t1.product_Type = #productType#</isNotNull>
         <!--膜片批次和底膜批次都是空白的 -->
   AND NOT ((nvl(T1.TUMO_BATCH_NO,'XXX') = 'XXX')  AND (NVL(T1.Dimo_Batch_No,'XXX') = 'XXX'))
   
@@ -247,8 +247,8 @@ from(
             
   WHERE 1 = 1
   
-  
-  <isNotNull prepend="" property="productType">AND t1.product_Type = #productType#</isNotNull>
+  <isNotNull prepend="" property="ifTear">AND nvl(t1.if_tear,'是') = #ifTear#</isNotNull>
+        <isNotNull prepend="" property="productType">AND t1.product_Type = #productType#</isNotNull>
         <!--膜片批次和底膜批次都是空白的 -->
   AND NOT ((nvl(T1.TUMO_BATCH_NO,'XXX') = 'XXX')  AND (NVL(T1.Dimo_Batch_No,'XXX') = 'XXX'))
   

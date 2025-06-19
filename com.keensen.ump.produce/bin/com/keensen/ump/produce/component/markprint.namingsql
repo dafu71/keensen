@@ -16,8 +16,23 @@
 	  on t3.drawing_code = T1.TEMPLATE_NAME
 	
 	 WHERE 1 = 1  
-     
-     <isNotNull prepend="and" property="specName">t3.spec_name like '%' || #specName# || '%'</isNotNull>
+	 
+	  <isNotNull prepend="and" property="batchNo">t1.TEMPLATE_NAME in(
+		       	SELECT 
+       			OD.TEMPLATE_NAME       
+				  FROM QINSEN.INST_QIJIAN QJ
+				  LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+				    ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID
+				  LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
+				    ON OD.ORDER_NO = QJ.ORDER_NO
+				   AND QJ.PROD_SPEC_ID = OD.MATER_SPEC_ID
+				  LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+				    ON OD.BASE_ID = YB.ID
+				
+				 WHERE QJ.BATCH_NO = #batchNo#
+				 OR jm.batch_no =#batchNo#
+		       )</isNotNull>
+        <isNotNull prepend="and" property="specName">t3.spec_name like '%' || #specName# || '%'</isNotNull>
         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
         <isNotNull prepend="and" property="templateName">t1.TEMPLATE_NAME like '%' || #templateName# || '%'</isNotNull>
         <isNotNull prepend="and" property="remark">t1.REMARK like '%' || #remark# || '%'</isNotNull>
@@ -53,7 +68,9 @@
        T1.DRY_WET AS "dryWet",
        DECODE(T1.MARK, '公司标准', 'Y', 'N') AS "markStand",
        DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿') AS "dryWet2",
-       T1.MATER_SPEC_NAME2 AS "prodSpecName2",
+       
+       <!--打印唛头型号--><!--T1.MATER_SPEC_NAME2 AS "prodSpecName2",-->
+       t1.spec_name_mark "prodSpecName2",
        T1.CODE AS "code"
   FROM (
         
@@ -70,7 +87,9 @@
                 T4.MARK,
                 T4.MATER_SPEC_NAME2,
                 T6.RECORD_ID        WATER_BATCH_ID,
-                T5.CODE
+                T5.CODE,
+                nvl(t4.spec_name_mark,nvl(yb.spec_name_mark,t4.MATER_SPEC_NAME2)) spec_name_mark
+                
           FROM QINSEN.INST_QIJIAN T1
           LEFT JOIN QINSEN.INST_WATER_TEST T6
             ON T6.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
@@ -82,13 +101,16 @@
                             ORDER_NO,
                             MAX(TEMPLATE_NAME) TEMPLATE_NAME,
                             MAX(DRY_WET) DRY_WET,
-                            MAX(MARK) MARK， MAX(MATER_SPEC_NAME2) MATER_SPEC_NAME2
+                            MAX(MARK) MARK， MAX(MATER_SPEC_NAME2) MATER_SPEC_NAME2,
+                            max(reserve1) spec_name_mark, max(base_id) base_id
                        FROM KS_PROD_COMPONENT_YXORDER
                       GROUP BY ORDER_NO, MATER_SPEC_ID) T4
             ON T4.ORDER_NO = T1.ORDER_NO
            AND T4.MATER_SPEC_ID = T1.PROD_SPEC_ID
           LEFT JOIN KS_COMPONENT_MARK_TEMPLATE T5
             ON T5.TEMPLATE_NAME = T4.TEMPLATE_NAME
+          left join KS_COMPONENT_YXORDER_BASE yb
+          on yb.id = t4.base_id
          <!--卷膜序号-->
          WHERE T2.BATCH_NO = #prodBatchNo#) T1
     
@@ -107,7 +129,9 @@
        T1.DRY_WET AS "dryWet",
        DECODE(T1.MARK, '公司标准', 'Y', 'N') AS "markStand",
        DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿') AS "dryWet2",
-       T1.MATER_SPEC_NAME2 AS "prodSpecName2",
+       <!--T1.MATER_SPEC_NAME2 AS "prodSpecName2",-->
+       
+       t1.spec_name_mark "prodSpecName2",
        T1.CODE AS "code",
        nvl(T1.PRINT_CNT,0) AS "printCnt",to_char(t1.max_print_date,'yyyy-MM-dd HH24:mi:ss') "maxPrintDate",
        case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
@@ -133,9 +157,8 @@
 		t1.IF_PRINT_DAY_CODE as "ifPrintDayCode",
 		t1.Y_DAY_CODE_SPAN as "yDayCodeSpan",
 		t1.X_DAY_CODE_SPAN as "xDayCodeSpan",
-		t1.PRINT_DELAY_TIME as "printDelayTime"
-       
-       
+		t1.PRINT_DELAY_TIME as "printDelayTime",
+       t1.reserve1 as "reserve1"
        
        
        
@@ -159,7 +182,9 @@
                 t5.Y_WET_SPAN,t5.X_WET_SPAN,t5.Y_STAR_IMG,
                 t5.X_STAR_IMG,t5.IF_PRINT_DAY_CODE,
                 t5.Y_DAY_CODE_SPAN,t5.X_DAY_CODE_SPAN,
-                t5.PRINT_DELAY_TIME,               
+                t5.PRINT_DELAY_TIME,     
+                
+                T5.reserve1 ,          
                 
                 T4.DRY_WET,
                 T4.MARK,
@@ -167,7 +192,8 @@
                 T6.RECORD_ID        WATER_BATCH_ID,
                 T5.CODE,
                 T7.CNT              PRINT_CNT,
-                t7.max_print_date
+                t7.max_print_date,
+                nvl(t4.spec_name_mark,nvl(yb.spec_name_mark,t4.MATER_SPEC_NAME2)) spec_name_mark
           FROM QINSEN.INST_QIJIAN T1
           
           LEFT JOIN QINSEN.INST_WATER_TEST T6
@@ -180,7 +206,8 @@
                             ORDER_NO,
                             MAX(TEMPLATE_NAME) TEMPLATE_NAME,
                             MAX(DRY_WET) DRY_WET,
-                            MAX(MARK) MARK， MAX(MATER_SPEC_NAME2) MATER_SPEC_NAME2
+                            MAX(MARK) MARK， MAX(MATER_SPEC_NAME2) MATER_SPEC_NAME2,
+                            max(reserve1) spec_name_mark, max(base_id) base_id
                        FROM KS_PROD_COMPONENT_YXORDER
                       GROUP BY ORDER_NO, MATER_SPEC_ID) T4
             ON T4.ORDER_NO = T1.ORDER_NO
@@ -191,6 +218,10 @@
                        FROM KS_COMPONENT_MARK_PRINT_RECORD T
                       GROUP BY T.PROD_BATCH_NO) T7
             ON T7.PROD_BATCH_NO = T1.BATCH_NO
+            
+            left join KS_COMPONENT_YXORDER_BASE yb
+          on yb.id = t4.base_id
+          
             where 1=1
             and T1.BATCH_NO is not null
             <isNotNull prepend="and" property="prodBatchNo">T1.BATCH_NO = #prodBatchNo#</isNotNull>
@@ -219,6 +250,7 @@
     <select id="queryTemplateCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.code "code", t.remark "remark",
 		'模板'|| t.code || '-' || t.remark "text"
 		 from KS_COMPONENT_MARK_CODE t
+		 where t.code in('1','999')
 		 order by t.code</select>
     <select id="queryPackage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT 
@@ -270,103 +302,103 @@
    SET KS_COMPONENT_MARK_TEMPLATE.IF_PRINT_BATCH_NO =
        (SELECT IF_PRINT_BATCH_NO
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'
    ),
        KS_COMPONENT_MARK_TEMPLATE.Y_BATCH_NO =
        (SELECT Y_BATCH_NO
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
    
    KS_COMPONENT_MARK_TEMPLATE.X_BATCH_NO =
        (SELECT X_BATCH_NO
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
        KS_COMPONENT_MARK_TEMPLATE.IF_PRINT_SPEC_NAME =
        (SELECT IF_PRINT_SPEC_NAME
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
    
   KS_COMPONENT_MARK_TEMPLATE.Y_BATCH_SPEC_NAME =
        (SELECT Y_BATCH_SPEC_NAME
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
        KS_COMPONENT_MARK_TEMPLATE.X_BATCH_SPEC_NAME =
        (SELECT X_BATCH_SPEC_NAME
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
    
   
    KS_COMPONENT_MARK_TEMPLATE.IF_PRINT_DRY_WET =
        (SELECT IF_PRINT_DRY_WET
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
        KS_COMPONENT_MARK_TEMPLATE.Y_DRY_IMG =
        (SELECT Y_DRY_IMG
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
    
    
    KS_COMPONENT_MARK_TEMPLATE.X_DRY_IMG =
        (SELECT X_DRY_IMG
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
        KS_COMPONENT_MARK_TEMPLATE.Y_DRY_SPAN =
        (SELECT Y_DRY_SPAN
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
    
    KS_COMPONENT_MARK_TEMPLATE.X_DRY_SPAN =
        (SELECT X_DRY_SPAN
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
        KS_COMPONENT_MARK_TEMPLATE.Y_WET_IMG =
        (SELECT Y_WET_IMG
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
    
    KS_COMPONENT_MARK_TEMPLATE.X_WET_IMG =
        (SELECT X_WET_IMG
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
        KS_COMPONENT_MARK_TEMPLATE.Y_WET_SPAN =
        (SELECT Y_WET_SPAN
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
    
      KS_COMPONENT_MARK_TEMPLATE.X_WET_SPAN =
        (SELECT X_WET_SPAN
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
        KS_COMPONENT_MARK_TEMPLATE.Y_STAR_IMG =
        (SELECT Y_STAR_IMG
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
    
      KS_COMPONENT_MARK_TEMPLATE.X_STAR_IMG =
        (SELECT X_STAR_IMG
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
        KS_COMPONENT_MARK_TEMPLATE.IF_PRINT_DAY_CODE =
        (SELECT IF_PRINT_DAY_CODE
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
    
      KS_COMPONENT_MARK_TEMPLATE.Y_DAY_CODE_SPAN =
        (SELECT Y_DAY_CODE_SPAN
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
        KS_COMPONENT_MARK_TEMPLATE.X_DAY_CODE_SPAN =
        (SELECT X_DAY_CODE_SPAN
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A'),
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
     KS_COMPONENT_MARK_TEMPLATE.PRINT_DELAY_TIME =
        (SELECT PRINT_DELAY_TIME
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A')
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B')
    
  WHERE EXISTS
  (SELECT 1
           FROM KS_COMPONENT_MARK_TEMPLATE
-         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0105-A')
+         WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = 'KS-17-M0091-B')
    and KS_COMPONENT_MARK_TEMPLATE.template_name=#templateName#</update>
 </sqlMap>

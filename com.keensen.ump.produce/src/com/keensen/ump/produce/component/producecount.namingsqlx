@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   <select id="queryRaosiCount" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT WORKER_ID      "workerId",
+       PROD_TYPE      "prodType",
+       AMOUNT         "amount",
+       V.OPERATORNAME "workerName"
+  FROM (SELECT RS.WORKER_ID, RS.PROD_TYPE, COUNT(1) AMOUNT
+          FROM QINSEN.INST_RAOSI RS
+         WHERE RS.PROD_TYPE IS NOT NULL
+           AND TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM-DD HH24:MI:SS') >=
+               #produceBeginDate#
+           AND TO_CHAR(RS.PRODUCE_DT, 'YYYY-MM-DD HH24:MI:SS') &lt;=
+               #produceEndDate#
+           <isNotNull prepend="and" property="workerId"> 
+           rs.worker_Id = #workerId#
+           </isNotNull>
+         GROUP BY RS.WORKER_ID, RS.PROD_TYPE) T1
+  LEFT JOIN V_AC_OPERATOR_TRS V
+    ON V.OPERATORID = T1.WORKER_ID
+ ORDER BY V.OPERATORNAME, PROD_TYPE
+   
+   
+   </select>
+   
+   <select id="queryHHJmCount" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT TT.WORKER_ID      "workerId",
+       V.OPERATORNAME    "workerName",
+       TT.AMOUNT         "amount",
+       TT.TM_BATCH_NO    "tmBatchNo",
+       TT.PROD_SPEC_NAME "prodSpecName"
+  FROM (SELECT T1.WORKER_ID,
+               SUM(T1.AMOUNT) AMOUNT,
+               T1.PROD_SPEC_NAME,
+               T1.TM_BATCH_NO
+          FROM (SELECT T.WORKER_ID,
+                       T.AMOUNT,
+                       T.CM_BATCH_NO,
+                       CM.TUMO_BATCH_ID,
+                       TM.BATCH_NO         TM_BATCH_NO,
+                       PMS.MATER_SPEC_NAME PROD_SPEC_NAME
+                  FROM KS_COMPONENT_HOUSEHOLD_JM T
+                  LEFT JOIN QINSEN.INST_CAIDIEMO CM
+                    ON T.CM_BATCH_NO = CM.BATCH_NO
+                  LEFT JOIN QINSEN.INST_TUMO TM
+                    ON TM.RECORD_ID = CM.TUMO_BATCH_ID
+                  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                    ON PMS.MATER_SPEC_ID = T.PROD_SPEC_ID
+                   WHERE 1=1
+           AND TO_CHAR(T.order_date, 'YYYY-MM-DD HH24:MI:SS') >=
+               #produceBeginDate#
+           AND TO_CHAR(T.order_date, 'YYYY-MM-DD HH24:MI:SS') &lt;=
+               #produceEndDate#
+           <isNotNull prepend="and" property="workerId"> 
+           T.worker_Id = #workerId#
+           </isNotNull>
+                   ) T1
+         GROUP BY T1.WORKER_ID, T1.PROD_SPEC_NAME, T1.TM_BATCH_NO) TT
+  LEFT JOIN V_AC_OPERATOR_TRS V
+    ON V.OPERATORID = TT.WORKER_ID
+   	
+   
+   
+   </select>
+</sqlMap>

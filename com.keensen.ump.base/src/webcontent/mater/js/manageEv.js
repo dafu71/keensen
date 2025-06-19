@@ -17,25 +17,32 @@ com.keensen.ump.base.materClassSpecMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-				var materClassId = cell.get('materClassId');
-				switch (materClassId) {
-					case 25519 :// 膜片
-					case 100030022 :// 膜片SW系列
-					case 100030023 :// 膜片BW系列
-					case 100030024 :// 膜片ULP系列
-					case 100030025 :// 膜片NF系列
-						this.editWindow2.show();
-						this.editWindow2.loadData(cell);
+				if (this.opt == 'editspec') {
+					this.editSpecWindow.show();
+					this.editSpecWindow.loadData(cell);
+				}
+				if (this.opt == 'edit') {
+					var materClassId = cell.get('materClassId');
+					switch (materClassId) {
+						case 25519 :// 膜片
+						case 100030022 :// 膜片SW系列
+						case 100030023 :// 膜片BW系列
+						case 100030024 :// 膜片ULP系列
+						case 100030025 :// 膜片NF系列
+							this.editWindow2.show();
+							this.editWindow2.loadData(cell);
+							break;
 						break;
-					break;
-				case 100030027 :// 工业膜元件
-					this.editWindow3.show();
-					this.editWindow3.loadData(cell);
-					break;
-				default :
-					this.editWindow.show();
-					this.editWindow.loadData(cell);
+					case 100030027 :// 工业膜元件
+						this.editWindow3.show();
+						this.editWindow3.loadData(cell);
+						break;
+					default :
+						this.editWindow.show();
+						this.editWindow.loadData(cell);
+				}
 			}
+
 			}, this);
 
 	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'afterSave',
@@ -117,6 +124,7 @@ com.keensen.ump.base.materClassSpecMgr.prototype.initEvent = function() {
 				};
 				// myGrid.getColumnModel().setHidden(i,true);方式动态显示列/隐藏列
 				// return;
+				Ext.getCmp('materclassspeceditspec').setVisible(false);
 				switch (_this.materClassId) {
 					case 25519 :// 膜片
 					case 100030022 :// 膜片SW系列
@@ -135,6 +143,8 @@ com.keensen.ump.base.materClassSpecMgr.prototype.initEvent = function() {
 						myGrid.getColumnModel().setHidden(obj.pageWidth, true);
 						break;
 					case 100030027 :// 工业膜元件
+						Ext.getCmp('materclassspeceditspec').setVisible(true);
+
 						myGrid.getColumnModel()
 								.setHidden(obj.mpBatchCode, true);
 						myGrid.getColumnModel()
@@ -218,6 +228,7 @@ com.keensen.ump.base.materClassSpecMgr.prototype.onAdd = function() {
 }
 
 com.keensen.ump.base.materClassSpecMgr.prototype.onEdit = function() {
+	this.opt = 'edit';
 	this.listPanel.onEdit();
 }
 
@@ -261,4 +272,9 @@ com.keensen.ump.base.materClassSpecMgr.prototype.onQuery = function() {
 com.keensen.ump.base.materClassSpecMgr.prototype.onQueryReset = function() {
 	Ext.getCmp(materqueryspec).setValue('');
 	Ext.getCmp(materquerystate).setValue('Y');
+}
+
+com.keensen.ump.base.materClassSpecMgr.prototype.onEditSpec = function() {
+	this.opt = 'editspec';
+	this.listPanel.onEdit();
 }

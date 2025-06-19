@@ -72,6 +72,11 @@ com.keensen.ump.produce.component.OutofstockMgr = function() {
 						width : 150,
 						header : '元件型号'
 					}, {
+						dataIndex : 'newSpecName',
+						// width : 150,
+						header : '改后元件型号',
+						sortable : true
+					}, {
 						dataIndex : 'orderNo',
 						width : 120,
 						header : '原订单号'
@@ -146,6 +151,8 @@ com.keensen.ump.produce.component.OutofstockMgr = function() {
 							name : 'batchNo'
 						}, {
 							name : 'qjBatchId'
+						}, {
+							name : 'newSpecName'
 						}]
 			})
 		})
@@ -278,6 +285,10 @@ com.keensen.ump.produce.component.OutofstockMgr = function() {
 						xtype : 'hidden',
 						name : 'entity/qjBatchId',
 						ref : '../qjBatchId'
+					}, {
+						xtype : 'hidden',
+						name : 'entity/newSpecId',
+						ref : '../newSpecId'
 					}],
 			buttons : [{
 						text : "确定",

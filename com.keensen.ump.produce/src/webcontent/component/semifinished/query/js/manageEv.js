@@ -127,7 +127,7 @@ com.keensen.ump.produce.component.QueryStockMgr.prototype.exportExcel = function
 
 	if (this.queryPanel.form.isValid()) {
 		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '白膜库存',
-				this.nameSqlId, '1,9');
+				this.nameSqlId, '1');
 	}
 
 }
@@ -189,8 +189,10 @@ com.keensen.ump.produce.component.QueryStockMgr.prototype.onChooseSingleOrder = 
 	var B = this.chooseSingleOrderListPanel.getSelectionModel().getSelections();
 	if (B && B.length == 1) {
 		var orderNo = B[0].get('orderNo');
+		var newSpecId = B[0].get('materSpecId');
 
 		this.inputWindow.newOrderNo.setValue(orderNo);
+		this.inputWindow.newSpecId.setValue(newSpecId);
 
 		this.chooseSingleOrderWindow.hide();
 	}

@@ -2576,7 +2576,9 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						root : 'data',
 						autoLoad : true,
 						totalProperty : 'totalCount',
-						baseParams : {},
+						baseParams : {
+							'condition/materSpecNotNull' : 'Y'
+						},
 						fields : [{
 									name : 'id'
 								}, {
@@ -2718,6 +2720,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 												'condition/orderDateEnd'],
 										fieldLabel : "订单日期",
 										format : "Y-m-d"
+									}, {
+										xtype : 'hidden',
+										name : 'condition/materSpecNotNull',
+										value : 'Y'
 									}]
 						});
 

@@ -262,6 +262,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						dataIndex : 'orderNo',
 						sortable : true,
+						width : 150,
 						header : '订单号',
 						renderer : function(v, m, r, i) {
 							var confirmDate = r.get('confirmDate');
@@ -559,7 +560,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
-					height : 400,
+					height : 450,
 					region : 'north',
 					// baseCls : "x-panel",
 					autoHide : false,
@@ -574,6 +575,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						allowBlank : false,
 						name : 'orderType',
 						dataIndex : 'orderType',
+						ref : '../orderType',
 						hiddenName : 'orderType',
 						fieldLabel : '订单类型',
 						triggerAction : "all",
@@ -610,8 +612,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						colspan : 12
 					}, {
 						xtype : 'numberfield',
+						ref : '../orderAmount',
 						name : 'orderAmount',
 						allowBlank : false,
+						readOnly:true,
 						fieldLabel : '订单数量',
 						anchor : '95%',
 						colspan : 6
@@ -621,6 +625,28 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						name : 'applyAmount',
 						allowBlank : false,
 						fieldLabel : '请检数量',
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'numberfield',
+						ref : '../prodAmount',
+						//name : 'prodAmount',
+						//allowBlank : false,
+						readOnly:true,
+						fieldLabel : '需生产数量',
+						anchor : '95%',
+						colspan : 6
+					}, {
+						xtype : 'numberfield',
+						ref : '../checkCount',
+						//name : 'prodAmount',
+						//allowBlank : false,
+						readOnly:true,
+						fieldLabel : '已请检数量',
 						anchor : '95%',
 						colspan : 6
 					}, {
@@ -638,6 +664,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						displayField : 'name',
 						valueField : 'name',
 						hiddenName : 'prodSpecName',
+						ref : '../prodSpecName',
 						allowBlank : false,
 						fieldLabel : '元件型号',
 						store : _this.prodSpecStore,
@@ -658,6 +685,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'dictcombobox',
 						name : 'prodClassFlag',
 						hiddenName : 'prodClassFlag',
+						ref : '../prodClassFlag',
 						allowBlank : false,
 						fieldLabel : '元件类型',
 						dictData : KS_PROD_CLASS_FLAG,
@@ -671,6 +699,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'dictcombobox',
 						name : 'lid',
 						hiddenName : 'lid',
+						ref : '../lid',
 						allowBlank : false,
 						fieldLabel : '端盖',
 						dictData : KS_PROD_LID,
@@ -680,6 +709,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'dictcombobox',
 						name : 'markTypeFlag',
 						hiddenName : 'markTypeFlag',
+						ref : '../markTypeFlag',
 						allowBlank : false,
 						fieldLabel : '唛头情况',
 						dictData : KS_PROD_MARK_TYPE_FLAG,
@@ -692,6 +722,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'markSpecCode',
+						ref : '../markSpecCode',
 						fieldLabel : '唛头显示型号',
 						allowBlank : false,
 						anchor : '95%',
@@ -700,6 +731,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'dictcombobox',
 						name : 'tape',
 						hiddenName : 'tape',
+						ref : '../tape',
 						fieldLabel : '膜体所裹胶带',
 						allowBlank : false,
 						dictData : KS_PROD_TAPE,
@@ -734,6 +766,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dictData : KS_COMPONENT_INDUSTRY_BOX,
 						name : 'box',
 						hiddenName : 'box',
+						ref : '../box',
 						fieldLabel : '包装箱',
 						// allowBlank : false,
 						anchor : '95%',
@@ -769,6 +802,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'dictcombobox',
 						name : 'label',
 						hiddenName : 'label',
+						ref : '../label',
 						fieldLabel : '标签',
 						// allowBlank : false,
 						anchor : '95%',
@@ -851,7 +885,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					autoScroll : false,
 					modal : true,
 					width : 800,
-					height : 600,
+					height : 640,
 					layout : 'border',
 					items : [this.inputPanel, this.listPanel2]
 
@@ -869,11 +903,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					totalProperty : '',
 					baseParams : {},
 					fields : [{
-								name : 'id',
+								name : 'id'
+							}, {
 								name : 'name'
 							}]
 				})
-		
+
 		var selModel3 = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : false,
 					handleMouseDown : Ext.emptyFn
@@ -1008,12 +1043,14 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							}, {
 
 								xtype : 'combo',
+								allowBlank : false,
 								fieldLabel : '元件型号',
 								displayField : 'name',
 								valueField : 'id',
 								triggerAction : "all",
 								mode : "local",
-								hiddenName : 'condition/storageIds',
+								hiddenName : 'condition/prodSpecId',
+								name : 'condition/prodSpecId',
 								ref : '../prodcombo',
 								emptyText : '--请选择--',
 								anchor : '100%',
@@ -1033,9 +1070,6 @@ com.keensen.ump.produce.component.applyMgr = function() {
 										'condition/produceDtEnd'],
 								fieldLabel : "元件生产日期",
 								format : "Y-m-d"
-							}, {
-								xtype : 'hidden',
-								name : 'condition/prodSpecName'
 							}]
 				})
 

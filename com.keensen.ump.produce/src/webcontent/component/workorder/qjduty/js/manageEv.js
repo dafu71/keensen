@@ -33,6 +33,13 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr.prototype.initEvent = func
 					_this.rec = r;
 				}).defer(100);
 			}, this);
+			
+	this.listPanel4ModifyProductOrder.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					_this.rec3 = r;
+				}).defer(100);
+			}, this);
 
 	this.qjStore.on('load', function() {
 				var records = _this.qjStore.getRange();
@@ -133,6 +140,17 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr.prototype.onSelectCode = f
 		if (this.editWindow.isVisible()) {
 			this.editWindow.qjCode.setValue(arr.join(','));
 		}
+
+		if (this.window4ModifyProductOrder.isVisible()) {
+			var idx = this.rec3.data['id'];
+			var i = this.listPanel4ModifyProductOrder.store.find('id', idx);
+			var rec2 = this.listPanel4ModifyProductOrder.store.getAt(i);
+			A.getSelectionModel().clearSelections();
+			rec2.set('qjCode', arr.join(','));
+			rec2.commit();
+			A.refresh()
+		}
+
 		this.chooseMachineWindow.hide();
 	}
 
@@ -218,23 +236,100 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr.prototype.onRefreshList = 
 	} else {
 		var relationId = records[0].data.id;
 		var orderId = records[0].data.orderId;
-		this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+		this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		this.requestMask.show();
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.component.workorder2.saveQjDutyList.biz.ext",
+			method : "post",
+			jsonData : {
+				'relationId' : relationId,
+				'orderId' : orderId
+			},
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					if (ret.success) {
+						_this.listPanel.store.reload();
+
+					}
+				}
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+
+	}
+}
+
+com.keensen.ump.produce.component.workorder.QjdutyMgr.prototype.onModifyProductOrder = function() {
+	var records = this.listPanel.getSelectionModel().getSelections();
+	if (records.length == 0) {
+		Ext.Msg.alert("系统提示", "请选择记录！")
+		return false;
+	}
+
+	var ids = [];
+	for (var i = 0; i < records.length; i++) {
+		var qjStateName = records[i].data.qjStateName;
+		var id = records[i].data.id;
+		if (qjStateName == '完成') {
+			Ext.Msg.alert("系统提示", "请选择处理中记录！")
+			return false;
+		}
+		ids.push(id);
+	}
+
+	var store = this.listPanel4ModifyProductOrder.store;
+	store.load({
+				params : {
+					"condition/ids" : ids.join(',')
+				}
+			});
+	this.window4ModifyProductOrder.show();
+}
+
+com.keensen.ump.produce.component.workorder.QjdutyMgr.prototype.onSaveModifyProductOrder = function() {
+	var _this = this;
+	var arrangeDate = this.inputPanel4ModifyProductOrder.arrangeDate.getValue();
+	if (Ext.isEmpty(arrangeDate))
+		return;
+	var store = this.listPanel4ModifyProductOrder.store;
+	var rds = store.getRange();
+	if (rds.length == 0)
+		return;
+	var duties = [];
+	Ext.each(rds, function(r) {
+				var dt = {
+					'id' : r.data['id'],
+					'productOrder' : r.data['productOrder'],
+					'arrangeDate' : arrangeDate,
+					'qjCode' : r.data['qjCode']
+				};
+				duties.push(dt);
+
+			});
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
 			});
 	this.requestMask.show();
 	Ext.Ajax.request({
-		url : "com.keensen.ump.produce.component.workorder2.saveQjDutyList.biz.ext",
+		url : "com.keensen.ump.produce.component.workorder2.modifyProductOrder.biz.ext",
 		method : "post",
 		jsonData : {
-			'relationId' : relationId,
-			'orderId' : orderId
+			'duties' : duties
 		},
 		success : function(resp) {
 			var ret = Ext.decode(resp.responseText);
 			if (ret.success) {
 				if (ret.success) {
 					_this.listPanel.store.reload();
-					
+					_this.inputPanel4ModifyProductOrder.form.reset();
+					_this.window4ModifyProductOrder.hide();
 				}
 			}
 
@@ -243,8 +338,6 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr.prototype.onRefreshList = 
 			_this.requestMask.hide()
 		}
 	})
-		
-	}
 }
 
 function formatDate(date) {

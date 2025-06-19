@@ -63,7 +63,7 @@
        T1.STATUS AS "status",
        T1.BATCH_NO AS "batchNo",
        T1.ORDER_NO AS "orderNo",
-       T1.PROD_SPEC_ID AS "prodSpecId",
+       T1.PROD_SPEC_ID AS "prodSpecId",T1.NEW_SPEC_ID AS "newSpecId",PMS2.MATER_SPEC_NAME AS "newSpecName",
        T1.DELETED AS "deleted",
        T1.NEW_ORDER_NO AS "newOrderNo",
        T1.POSITION AS "position",
@@ -80,6 +80,10 @@
   FROM KS_COMPONENT_SEMI_STOCK T1
   LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
     ON PMS.MATER_SPEC_ID = T1.PROD_SPEC_ID
+    
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS2
+    ON PMS2.MATER_SPEC_ID = T1.NEW_SPEC_ID
+    
   left join qinsen.inst_juanmo_main jm
   ON jm.batch_no = t1.batch_no
 
@@ -197,7 +201,7 @@
        T1.STATUS         AS "status",T1.BATCH_NO       AS "batchNo",
        t1.POSITION as "position",
 		t1.ORDER_NO as "orderNo",
-		t1.PROD_SPEC_ID as "prodSpecId",
+		t1.PROD_SPEC_ID as "prodSpecId",T1.NEW_SPEC_ID AS "newSpecId",PMS2.MATER_SPEC_NAME AS "newSpecName",
 		t1.NEW_ORDER_NO as "newOrderNo",
 		t1.TAKE_USER_ID as "takeUserId",
 		t1.TAKE_USER_NAME as "takeUserName",
@@ -205,6 +209,8 @@
   FROM KS_COMPONENT_SEMI_OUTOFSTOCK T1
   LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
     ON PMS.MATER_SPEC_ID = T1.PROD_SPEC_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS2
+    ON PMS2.MATER_SPEC_ID = T1.NEW_SPEC_ID
 
   where 1=1
 

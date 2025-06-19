@@ -26,8 +26,8 @@
     	if(uid.equals("KS00141")||uid.equals("KS00524")){
     		modifyOrderNoFlag4Wet = 1;
     	}
-    	//气检干膜贴标,罗海鹰、任栋、吴敏
-		if(uid.equals("LHY")||uid.equals("KS00307")||uid.equals("KS01147")||uid.equals("XXB")||uid.equals("KS01441")){   		
+    	//气检干膜贴标,罗海鹰、任栋、吴敏、袁娜
+		if(uid.equals("LHY")||uid.equals("KS00307")||uid.equals("KS01147")||uid.equals("XXB")||uid.equals("KS01441") ||uid.equals("KS01479")){   		
     		modifyOrderNoFlag4Dry = 1;
     	}
     }

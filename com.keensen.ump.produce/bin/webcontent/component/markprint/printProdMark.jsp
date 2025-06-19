@@ -48,8 +48,9 @@
 	String ifPrintDayCode = template.getString("ifPrintDayCode");
 	String yDayCodeSpan = template.getString("yDayCodeSpan");
 	String xDayCodeSpan = template.getString("xDayCodeSpan");
-	String printDelayTime = template.getString("printDelayTime");
-	
+	String printDelayTime = null == template.getString("printDelayTime")?"1000":template.getString("printDelayTime");
+	int batchNoFontSize = null == template.getString("reserve1")?15:Integer.parseInt(template.getString("reserve1"));
+						
 	String url = template.getString("url");
 
 	rootUrl = rootUrl.replace(
@@ -340,11 +341,11 @@ function getDayCode() {
 	// 要延迟执行的函数
 	function printFunction() {
     	window.print();
-    	delayFunction(closeFunction, 5000); // 延迟5秒执行关闭当前窗口
+    	delayFunction(closeFunction, 6000); // 延迟5秒执行关闭当前窗口
 	}
 	
 	function closeFunction() {
-    	//window.close();
+    	window.close();
 	}
  
 	function initPage() {
@@ -355,7 +356,7 @@ function getDayCode() {
 						var dayCode = getDayCode();// 获取入库日期编码
 						
 						<%if("Y".equals(ifPrintBatchNo)){ %>
-												
+						<% if(batchNoFontSize>0){%>								
 						const barcodeElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 						barcodeElement.setAttribute("id", 'barcode_' + batchNo);
 						barcodeElement.setAttribute("width", '200');
@@ -368,16 +369,27 @@ function getDayCode() {
 						const options = {
 							format : "CODE128",
 							displayValue : true,
-							fontSize : 15,
+							fontSize : <%=batchNoFontSize %>,
 							font : 'msyhbd',
 							fontOptions : 'bold',
 							textMargin : 0,
-							height : 50,
+							height : <% if(batchNoFontSize==15){ %>50 <%} else { %>25<%} %>,
 							margin : 0,
-							width : 1.5
+							width : <% if(batchNoFontSize==15){ %>1.5 <%} else { %>1<%} %>
 							};
 						
 						JsBarcode(barcodeElement, batchNo, options);
+						<% }else{ %>
+						// 创建批次元素
+			            var barcodeElement = document.createElement('div');
+			            barcodeElement.className = 'text-overlay';
+			            barcodeElement.textContent = batchNo;
+			            barcodeElement.style.position = "absolute"; // 绝对定位
+					    barcodeElement.style.top = "<%=yBatchNo%>px";          
+					    barcodeElement.style.left = "<%=xBatchNo %>px"; 
+						container.appendChild(barcodeElement);
+						
+						<% } %>
 						<% } %>
             			
 						

@@ -35,7 +35,12 @@
        T1.WORKER_NAME     AS "workerName",
        T1.LINE_CODE       AS "lineCode",
        T1.TOTAL_LOSS      AS "totalLoss",
-       T1.UNUSED_QUANTITY AS "unusedQuantity",T1.LOCATION       AS "location",
+       
+       case when t1.jm_cm_batch_no is not null then T1.UNUSED_QUANTITY2 else T1.UNUSED_QUANTITY end AS "unusedQuantity",
+       
+       <!--T1.UNUSED_QUANTITY AS "unusedQuantity",-->
+       
+       T1.LOCATION       AS "location",
        t1.is_cut_over "isCutOver",t1.IS_CUT_OVER_NAME "isCutOverName",t1.remain_Length "remainLength",
        
        t1.Juanmo "juanmo",
@@ -91,11 +96,23 @@
                (SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
                   FROM QINSEN.INST_JUANMO_DETAIL JD
                  WHERE JD.CDM_BATCH_ID = A.RECORD_ID) UNUSED_QUANTITY
+                 ,A.UNUSED_QUANTITY2 UNUSED_QUANTITY2
+                 ,A.jm_cm_batch_no 
                  ,tm.dimo_batch_no 
                  ,dm.id dm_batch_id
-          FROM QINSEN.INST_CAIDIEMO    A ,
+          FROM 
+         <!--家用膜--> 
+          
+         (SELECT cm.*,nvl(cm.quantity - (jm.amount * pms.Num_Per_Wad),0) UNUSED_QUANTITY2 
+         ,jm.cm_batch_no jm_cm_batch_no FROM QINSEN.INST_CAIDIEMO cm
+			LEFT JOIN KS_COMPONENT_HOUSEHOLD_JM jm
+			ON cm.batch_no=jm.cm_batch_no
+			LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+			    ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID ) A,
+          <!--QINSEN.INST_CAIDIEMO  A ,-->
                QINSEN.INST_TUMO       TM LEFT JOIN (SELECT SUM(D.LOSS) CAIMO_LOSS, D.TUMO_BATCH_ID
                       FROM QINSEN.INST_CDM_DEFECT D
+                      WHERE NVL(d.if_tear,'是') = '是' 
                      GROUP BY D.TUMO_BATCH_ID) T3
             ON T3.TUMO_BATCH_ID = TM.RECORD_ID
             LEFT JOIN ks_prod_diaphragm_zmx_record dm

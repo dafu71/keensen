@@ -44,7 +44,8 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 													['气检', '气检'],
 													['包装', '包装'],
 													['焊管焊网', '焊管焊网'],
-													['裁网', '裁网']]
+													['裁网', '裁网'],
+													['绕丝', '绕丝']]
 										}),
 								mode : "local",
 								editable : false,
@@ -175,7 +176,8 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 													['气检', '气检'],
 													['包装', '包装'],
 													['焊管焊网', '焊管焊网'],
-													['裁网', '裁网']]
+													['裁网', '裁网'],
+													['绕丝', '绕丝']]
 									}),
 							mode : "local",
 							editable : false,
@@ -203,6 +205,17 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 							colspan : 1,
 							regex : /^((2((5[0-5])|([0-4]\d)))|([0-1]?\d{1,2}))(\.((2((5[0-5])|([0-4]\d)))|([0-1]?\d{1,2}))){3}$/,
 							regexText : "不合法的IP"
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						},{
+							xtype : 'textfield',
+							name : 'entity/remark',
+							allowBlank : false,
+							fieldLabel : '备注',
+							anchor : '95%',
+							colspan : 1
 						}]
 			}]
 		});
@@ -252,7 +265,8 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 													['气检', '气检'],
 													['包装', '包装'],
 													['焊管焊网', '焊管焊网'],
-													['裁网', '裁网']]
+													['裁网', '裁网'],
+													['绕丝', '绕丝']]
 									}),
 							mode : "local",
 							editable : false,
@@ -281,6 +295,18 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 							dataIndex : 'ip',
 							regex : /^((2((5[0-5])|([0-4]\d)))|([0-1]?\d{1,2}))(\.((2((5[0-5])|([0-4]\d)))|([0-1]?\d{1,2}))){3}$/,
 							regexText : "不合法的IP"
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						},{
+							xtype : 'textfield',
+							name : 'entity/remark',
+							allowBlank : false,
+							fieldLabel : '备注',
+							anchor : '95%',
+							colspan : 1,
+							dataIndex : 'remark'
 						}, {
 							xtype : 'hidden',
 							name : 'entity/code',

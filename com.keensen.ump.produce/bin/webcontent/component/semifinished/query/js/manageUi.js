@@ -242,6 +242,11 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 						header : '元件型号',
 						sortable : true
 					}, {
+						dataIndex : 'newSpecName',
+						// width : 150,
+						header : '改后元件型号',
+						sortable : true
+					}, {
 						dataIndex : 'orderNo',
 						// width : 150,
 						header : '原订单号',
@@ -326,6 +331,8 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 									name : 'newOrderNo'
 								}, {
 									name : 'position'
+								}, {
+									name : 'newSpecName'
 								}]
 					})
 		})
@@ -589,6 +596,8 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 									name : 'templateName'
 								}, {
 									name : 'baseId'
+								}, {
+									name : 'materSpecId'
 								}]
 					})
 				})
@@ -624,6 +633,10 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 												'condition/orderDateEnd'],
 										fieldLabel : "订单日期",
 										format : "Y-m-d"
+									}, {
+										xtype : 'hidden',
+										name : 'condition/materSpecNotNull',
+										value : 'Y'
 									}]
 						});
 
@@ -727,6 +740,11 @@ com.keensen.ump.produce.component.QueryStockMgr = function() {
 							xtype : 'hidden',
 							ref : '../../takeUserId',
 							name : 'entity/takeUserId'
+
+						}, {
+							xtype : 'hidden',
+							ref : '../../newSpecId',
+							name : 'entity/newSpecId'
 
 						}]
 			}]

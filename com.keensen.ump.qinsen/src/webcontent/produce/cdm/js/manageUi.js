@@ -189,7 +189,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 				});
 
 		this.queryPanel.addButton({
-					text : "剩余可用长度提醒(空头)",
+					text : "剩余可用长度提醒",
 					scope : this,
 					iconCls : 'icon-application_form_magnify',
 					handler : this.onWarn

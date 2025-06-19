@@ -35,6 +35,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		this.initUpdateProdRemarkWindow();
 
 		this.initChooseMarkWindow();
+		
+		this.initUpdateSpecNameMarkWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -259,7 +261,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 100,
+					height : 110,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -290,6 +292,15 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 								fieldLabel : '是否已制定计划',
 								// anchor : '75%',
 								dictData : KS_YESORNO
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 4
+							}, {
+								xtype : 'textfield',
+								name : 'condition/templateName',
+								// anchor : '75%',
+								fieldLabel : '唛头图纸编号 '
 							}]
 				});
 
@@ -335,6 +346,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onUpdateMaterial2
+					}, '-', {
+						text : '修改唛头型号',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onUpdateSpecNameMark
 					}/*
 						 * , '-', { text : '查看生产主计划', scope : this, iconCls :
 						 * 'icon-application_form_magnify', handler :
@@ -355,15 +371,25 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						iconCls : 'icon-application_edit',
 						handler : this.onUpdateTemplateName
 					}, '-', {
-						text : '订单复制新增',
-						scope : this,
-						iconCls : 'icon-application_add',
-						handler : this.onAddOrder
-					}, '-', {
+						xtype : 'splitbutton',
+						//disabled : allRight != '1',
 						text : '订单新增',
-						scope : this,
+						// scale : 'small',
+						// rowspan : 1,
+						// iconAlign : 'top',
 						iconCls : 'icon-application_add',
-						handler : this.onAddOrder2
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '新增',
+									scope : this,
+									iconCls : 'icon-application_add',
+									handler : this.onAddOrder2
+								}, {
+									text : '复制新增',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.onAddOrder
+								}]
 					}, '-', {
 						text : '订单生产备注',
 						scope : this,
@@ -409,12 +435,20 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						header : '订单下达型号',
 						sortable : true
 					}, {
+						dataIndex : 'specNameMark',
+						header : '唛头型号',
+						sortable : true
+					}, {
 						dataIndex : 'materSpecName',
 						header : '对应生产规格',
 						sortable : true
 					}, {
 						dataIndex : 'orderAmount',
 						header : '订单数量',
+						sortable : true
+					}, {
+						dataIndex : 'prodAmount',
+						header : '需生产或入库数量',
 						sortable : true
 					}, {
 						dataIndex : 'orderDate',
@@ -684,6 +718,12 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							name : 'templateName'
 						}, {
 							name : 'baseId'
+						}, {
+							name : 'lid'
+						}, {
+							name : 'prodAmount'
+						}, {
+							name : 'specNameMark'
 						}]
 			})
 		})
@@ -2649,6 +2689,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 				}, {
 					xtype : 'combobox',
 					forceSelection : true,
+					hidden:true,
 					// allowBlank : false,
 					mode : 'local',
 					fieldLabel : '耐酸碱要求',
@@ -3658,5 +3699,63 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							this.listPanel4ChooseMark]
 
 				})
+	}
+	
+	this.initUpdateSpecNameMarkWindow = function() {
+		var _this = this;
+		this.updateSpecNameMarkWindow = this.updateSpecNameMarkWindow
+				|| new Ext.fn.FormWindow({
+					title : '修改唛头型号',
+					height : 240,
+					width : 300,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+
+											}
+										})
+							} else {
+								_this.updateSpecNameMarkWindow.items.items[0].form
+										.reset();
+								_this.updateSpecNameMarkWindow.hide();
+								_this.listPanel.refresh();
+							}
+						},
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandYxOrder.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.neworder.saveEntity4.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/reserve1',
+									dataIndex : 'reserve1',
+									ref : '../../specNameMark',
+									allowBlank : false,
+									anchor : '100%',
+									colspan : 2,
+									fieldLabel : '唛头型号 '
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
+								}]
+					}]
+				});
 	}
 }

@@ -84,6 +84,8 @@
         ON PMS2.MATER_SPEC_ID = qj.gyy_SPEC_ID
        LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION cfg ON cfg.prop_value_id = qj.ng_reason_id
 		where 1=1
+		and qj.order_no != '研发实验'
+		and qj.gyy_conclusion not in('D','F')
 		 <isNotNull prepend="and" property="createTimeStart">t1.create_Time  &gt;=  TO_DATE(#createTimeStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">t1.create_Time  &lt;=  TO_DATE(#createTimeEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="and" property="exceptionType">t1.exception_type = #exceptionType#</isNotNull>
@@ -161,7 +163,7 @@ WHERE qj.ng_reason_id=300061)
     	and 
     	t.jm_batch_no in(
     	select batch_no from qinsen.inst_juanmo_main jm
-    	where to_char(jm.produce_dt,'YYYY-MM-DD HH24:MI')&gt;='2025-04-30 16:00'
+    	where to_char(jm.produce_dt,'YYYY-MM-DD HH24:MI')&lt;='2025-04-30 16:00'
     	)
     )
     
@@ -173,7 +175,11 @@ WHERE qj.ng_reason_id=300061)
 	 LEFT JOIN qinsen.inst_juanmo_main jm
 	 ON qj.juanmo_batch_id=jm.record_id
 	 WHERE qj.is_qualified='N' 
-	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2024-12-01'
+	 
+	 and qj.order_no != '研发实验'
+		and qj.gyy_conclusion not in('D','F')
+		
+	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
 	 AND ROUND((SYSDATE - jm.produce_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
@@ -185,11 +191,13 @@ WHERE qj.ng_reason_id=300061)
     <insert id="insertVstorage4Dry" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_VSTOCK 
 	(jm_batch_no,exception_type,create_time,create_user_id,create_name)
 	SELECT jm.batch_no,decode(NVL(qj.ng_reason_id,0),0,'需班长处理','需要工艺给意见'),SYSDATE,#createUserId#,#createName#
-	 from QINSEN.INST_qijian qj
+	 from QINSEN.INST_qijian qj	 
 	 LEFT JOIN qinsen.inst_juanmo_main jm
 	 ON qj.juanmo_batch_id=jm.record_id
 	 WHERE qj.is_qualified='N' 
-	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2024-12-01'
+	 and qj.order_no != '研发实验'
+	and qj.gyy_conclusion not in('D','F')
+	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
 	 AND ROUND((SYSDATE - jm.produce_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
@@ -205,14 +213,17 @@ WHERE qj.ng_reason_id=300061)
 	 ON wt.juanmo_batch_id = jm.record_id
 	 LEFT JOIN QINSEN.INST_qijian qj 
 	 ON qj.juanmo_batch_id = jm.record_id
-	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2024-12-01'
+	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
 	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
 	 and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
 		LEFT JOIN qinsen.inst_juanmo_main jm2
 		ON jm2.record_id=qj.juanmo_batch_id
-		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)</select>
+		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)
+		
+		and qj.order_no != '研发实验'
+		and qj.gyy_conclusion not in('D','F')</select>
     <insert id="insertVstorage4Wet" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_VSTOCK 
 	(jm_batch_no,exception_type,create_time,create_user_id,create_name)
 	SELECT jm.batch_no,
@@ -223,14 +234,17 @@ WHERE qj.ng_reason_id=300061)
 	 ON wt.juanmo_batch_id = jm.record_id
 	 LEFT JOIN QINSEN.INST_qijian qj 
 	 ON qj.juanmo_batch_id = jm.record_id
-	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2024-12-01'
+	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
 	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
 	 and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
 		LEFT JOIN qinsen.inst_juanmo_main jm2
 		ON jm2.record_id=qj.juanmo_batch_id
-		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)</insert>
+		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)
+		
+		and qj.order_no != '研发实验'
+		and qj.gyy_conclusion not in('D','F')</insert>
     <update id="updateVstorageExceptionType" parameterClass="java.util.HashMap">
    	update KS_COMPONENT_VSTOCK t
    	set t.Exception_Type = #exceptionType#,

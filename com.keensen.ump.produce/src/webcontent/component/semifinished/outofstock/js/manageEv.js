@@ -205,7 +205,7 @@ com.keensen.ump.produce.component.OutofstockMgr.prototype.onChooseSingleOrder = 
 		var prodSpecId = B[0].get('materSpecId');
 
 		this.inputPanel.newOrderNo.setValue(orderNo);
-		this.inputPanel.prodSpecId.setValue(prodSpecId);
+		this.inputPanel.newSpecId.setValue(prodSpecId);
 
 		this.chooseSingleOrderWindow.hide();
 	}

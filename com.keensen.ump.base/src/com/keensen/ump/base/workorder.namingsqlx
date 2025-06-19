@@ -3,7 +3,8 @@
 <sqlMap>
     <!-- 机台查询 -->
      <select id="queryMachine" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-      select t.code "code",t.name "name",t.ip "ip",t.type "type",t2.relation_code "relationCode"
+      select t.code "code",t.name "name",t.ip "ip",t.type "type",t2.relation_code "relationCode",
+      t.remark "remark"
  		from KS_BASE_MACHINE t
  		left join (select t.code,wm_concat(t.relation_code) relation_code 
  		from KS_BASE_MACHINE_RELATION t
@@ -31,7 +32,7 @@
      </select>
      
       <select id="queryMachineCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-      select decode(#type#,'裁叠膜','C','卷膜','J','气检','Q','包装','B','焊管焊网','H','裁网','X','E') || (nvl(max(SUBSTR(t.code,2,10)),0) +1)  "code"
+      select decode(#type#,'裁叠膜','C','卷膜','J','气检','Q','包装','B','焊管焊网','H','裁网','X','绕丝','R','E') || (nvl(max(SUBSTR(t.code,2,10)),0) +1)  "code"
  		from KS_BASE_MACHINE t
  		where 1=1 		
 		and t.type = #type#
@@ -44,4 +45,6 @@
  		where 1=1 		
 		and t.cdm_code = #code#		
      </select>
+     
+    
    </sqlMap>

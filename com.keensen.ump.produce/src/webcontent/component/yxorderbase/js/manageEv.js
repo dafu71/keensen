@@ -293,6 +293,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				// 展品:展品-CRM??????，共计14位;
 				// 特规:CRM??????，共计9位。
 				// B202？？？？？-？？？
+				
 				var regex = /^\d{8}-\d{5}$/;
 				var convention = regex.test(orderNo);
 				var regex = /^\d{8}-\d{5}-\d{1}$/;
@@ -310,9 +311,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var exhibit2 = regex.test(orderNo);
 				var regex = /^\展品-CRM\d{6}-\d{2}$/;
 				var exhibit3 = regex.test(orderNo);
+				//MF-年年月月日日-XXXXXX
+				var regex = /^\MF-\d{6}-\d{6}$/;
+				var exhibit4 = regex.test(orderNo);
+				//售后-CRMXXXXXX
+				var regex = /^\售后-CRM\d{6}$/;
+				var aftersale = regex.test(orderNo);
 
 				if (!convention && !convention2 && !sample && !exhibit
-						&& !exhibit2 && !exhibit3 && !special && !special2) {
+						&& !exhibit2 && !exhibit3 && !exhibit4 && !special && !special2 && !aftersale) {
 					Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 					return false;
 				}
@@ -1421,7 +1428,9 @@ function describeOrderNo() {
 	s += '展品: 展品-CRM??????-?，共14位<br>';
 	s += '展品: 展品-CRM??????-??，共15位<br>';
 	s += '特规: CRM??????，共9位<br>';
-	s += '特规2: B202?????-???，共13位'
+	s += '特规2: B202?????-???，共13位<br>'
+	s += '免费样品: MF-年年月月日日-XXXXXX<br>'
+	s += '售后: 售后-CRM??????，共12位<br>';
 	Ext.Msg.alert("订单编号规则", s);
 }
 
@@ -1513,4 +1522,30 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCancel = function()
 			}
 		})
 	}
+}
+
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onPreView = function() {
+	var A = this.listPanel4ChooseMark;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	}
+	var records = A.getSelectionModel().getSelections();
+	var templateName = records[0].data.drawingCode;
+	
+	var code = records[0].data.code;
+
+	if (code !='1' && code!='999') {
+		Ext.Msg.alert("系统提示", "请选择司标或自定义模板预览！");
+		return;
+	}
+	
+	var f = document.getElementById('componentmarktemplatepreviewForm2');
+	f.drawingCode.value = templateName;
+	var actionUrl = 'com.keensen.ump.produce.component.printMarks4PreView.flow?time='
+			+ Math.random() + '&token=' + Date.now();
+
+	f.action = actionUrl;
+	f.submit();
+
 }

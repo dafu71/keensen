@@ -46,7 +46,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 110,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -85,6 +85,15 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 								name : 'condition/remark',
 								anchor : '100%',
 								fieldLabel : '备注说明'
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 4
+							}, {
+								xtype : 'textfield',
+								name : 'condition/batchNo',
+								anchor : '100%',
+								fieldLabel : '卷膜/元件批次'
 							}]
 				});
 		/*
@@ -652,6 +661,13 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						dataIndex : 'xBatchNo',
 						name : 'entity/xBatchNo',
 						fieldLabel : '元件批次<br>横坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'reserve1',
+						name : 'entity/reserve1',
+						fieldLabel : '元件批次<br>条码字体大小',
 						anchor : '100%',
 						colspan : 1
 					}, {

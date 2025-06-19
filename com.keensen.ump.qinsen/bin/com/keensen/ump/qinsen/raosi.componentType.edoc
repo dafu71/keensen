@@ -4,18 +4,6 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;modiOrder&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;modiOrder&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.modiOrder&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;recordIds(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;orderNo(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.qinsen.raosi.query4Workorder(java.util.Map)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;query4Workorder&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;入库单查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.query4Workorder&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
-    <string>com.keensen.ump.qinsen.raosi.expandRaosi(com.keensen.ump.qinsen.inst.InstRaosi)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandRaosi&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandQijian&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.expandRaosi&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
-    <string>com.keensen.ump.qinsen.raosi.createRecord2(com.keensen.ump.qinsen.inst.InstRaosi)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;createRecord2&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;createRecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.createRecord2&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
     <string>com.keensen.ump.qinsen.raosi.queryRecordsByPage(java.util.Map, com.eos.foundation.PageCond)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryRecordsByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.queryRecordsByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
@@ -24,12 +12,36 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;modiRecord&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;createRecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.modiRecord&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.qinsen.raosi.queryRecords(java.util.Map)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryRecords&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;入库单查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.queryRecords&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+    <string>com.keensen.ump.qinsen.raosi.deleteQijian(com.keensen.ump.qinsen.inst.InstRaosi[])</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteQijian&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.deleteQijian&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.qinsen.inst.InstRaosi[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.qinsen.raosi.createRecord3(com.keensen.ump.qinsen.inst.InstRaosi)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;createRecord3&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;createRecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.createRecord3&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.qinsen.raosi.createRecord2(com.keensen.ump.qinsen.inst.InstRaosi)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;createRecord2&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;createRecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.createRecord2&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.qinsen.raosi.createRecord4(com.keensen.ump.qinsen.inst.InstRaosi)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;createRecord4&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;createRecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.createRecord4&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.qinsen.raosi.expandRaosi(com.keensen.ump.qinsen.inst.InstRaosi)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandRaosi&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandQijian&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.expandRaosi&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.qinsen.raosi.query4Workorder(java.util.Map)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;query4Workorder&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;入库单查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.query4Workorder&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>raosi</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;raosi.componentType&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;raosi&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.qinsen.raosi.queryRecords(java.util.Map)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryRecords&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;入库单查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.queryRecords&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.qinsen.raosi.modiOrderAndProdSpecId(String, String, String)</string>
@@ -40,11 +52,7 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;createRecord&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;createRecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.createRecord&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.qinsen.raosi.deleteQijian(com.keensen.ump.qinsen.inst.InstRaosi[])</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteQijian&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.deleteQijian&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.qinsen.inst.InstRaosi[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
-    <string>com.keensen.ump.qinsen.raosi.createRecord3(com.keensen.ump.qinsen.inst.InstRaosi)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;createRecord3&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;createRecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.createRecord3&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.qinsen.inst.InstRaosi):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+    <string>com.keensen.ump.qinsen.raosi.queryLine()</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryLine&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryLine&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.qinsen.raosi.queryLine&lt;dl&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;lineId(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
 </map>

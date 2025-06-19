@@ -10,6 +10,8 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 		this.initAddWindow();
 		this.initEditWindow();
 		this.initViewWindow();
+		
+		this.initProduceCountWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -190,6 +192,11 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onView
+					}, '-', {
+						text : '产量统计',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onQueryProduceCount
 					},{
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
@@ -786,5 +793,125 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						}]
 			}]
 		});
+	}
+	
+	this.initProduceCountWindow = function() {
+
+		var selModel4ProduceCount = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4ProduceCount = this.listPanel4ProduceCount || new Ext.fn.ListPanel({
+			region : 'center',
+			viewConfig : {
+				forceFit : true
+			},			
+			hsPage : true,
+			selModel : selModel4ProduceCount,
+			delUrl : '1.biz.ext',
+			columns : [new Ext.grid.RowNumberer(), selModel4ProduceCount, {
+						dataIndex : 'workerName',
+						header : '操作工'
+					}, {
+						dataIndex : 'tmBatchNo',
+						header : '膜片批次'
+					}, {
+						dataIndex : 'prodSpecName',
+						header : '卷制类型'
+					}, {
+						dataIndex : 'amount',
+						header : '生产数量'
+					}],
+			store : new Ext.data.JsonStore({
+				url : 'com.keensen.ump.produce.component.producecount.queryHHJmCountByPage.biz.ext',
+				root : 'data',
+				autoLoad : true,
+				totalProperty : 'totalCount',
+				baseParams : {},
+				fields : [{
+							name : 'workerName'
+						}, {
+							name : 'tmBatchNo'
+						}, {
+							name : 'amount'
+						}, {
+							name : 'prodSpecName'
+						}]
+			})
+		})
+
+		this.queryPanel4ProduceCount = this.queryPanel4ProduceCount || new Ext.fn.QueryPanel({
+					height : 80,
+					columns : 3,
+					border : true,
+					region : 'north',
+					// collapsible : true,
+					titleCollapse : false,
+					fields : [{
+						xtype : 'datetimefield',
+						name : 'condition/produceBeginDate',
+						fieldLabel : '生产时间',
+						colspan : 1,
+						anchor : '95%',
+						// allowBlank : false,
+						editable : true,
+						allowBlank:false,
+						format : 'Y-m-d H:i',
+						value : new Date().add(Date.DAY, -1)
+								.format('Y-m-d 00:00')
+					}, {
+						xtype : 'datetimefield',
+						name : 'condition/produceEndDate',
+						fieldLabel : '至',
+						colspan : 1,
+						anchor : '95%',
+						allowBlank:false,
+						editable : true,
+						format : 'Y-m-d H:i',
+						// allowBlank : false,
+						value : new Date().add(Date.DAY, 1)
+								.format('Y-m-d 00:00')
+					}, {
+						xtype : 'componentworkercombobox',
+						hiddenName : 'condition/workerId',
+						// allowBlank:false,
+						anchor : '95%',
+						fieldLabel : '操作工'
+					}]
+				});
+
+		 this.queryPanel4ProduceCount.addButton({
+			 text : "导出",
+			 scope : this,
+			 iconCls : 'icon-application_excel',
+			 handler : this.exportProduceCountExcel
+		 });
+
+		this.queryPanel4ProduceCount.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.produceCountWindow.hide();
+					}
+
+				});
+
+		this.produceCountWindow = this.produceCountWindow
+				|| new Ext.Window({
+							title : '产量统计',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 1024,
+							height : 600,
+							layout : 'border',
+							items : [this.queryPanel4ProduceCount, this.listPanel4ProduceCount]
+
+						});
 	}
 }

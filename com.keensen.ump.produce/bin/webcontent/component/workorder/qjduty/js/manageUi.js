@@ -4,6 +4,8 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 		this.rec = {};
 		this.rec2 = {};
 
+		this.rec3 = {};
+
 		this.defaultQjCode = '';
 
 		this.initStore();
@@ -17,6 +19,8 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 		this.initEditWindow();
 
 		this.initViewListWindow();
+
+		this.initModifyProductOrderWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -98,8 +102,7 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			hsPage : true,
@@ -121,6 +124,11 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDelArrange
+					}, '-', {
+						text : '修改生产顺序',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onModifyProductOrder
 					}, '->', {
 						text : '更新元件清单',
 						scope : this,
@@ -153,6 +161,9 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 						dataIndex : 'qjAmount',
 						header : '已气检数量'
 					}, {
+						dataIndex : 'labelAmount',
+						header : '贴标数量'
+					}, {
 						dataIndex : 'waitAmount',
 						header : '待气检数量'
 					}, {
@@ -166,7 +177,7 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 						header : '生产机台'
 					}, {
 						dataIndex : 'qjStateName',
-						header : '作业状态'
+						header : '气检状态'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.workorder2.query4QjDutyByPage.biz.ext',
@@ -206,6 +217,8 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 							name : 'waitAmount'
 						}, {
 							name : 'qjAmount'
+						}, {
+							name : 'labelAmount'
 						}]
 			})
 		})
@@ -436,9 +449,11 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 					store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.produce.component.neworder.queryYxOrderByPage.biz.ext',
 						root : 'data',
-						autoLoad : true,
+						autoLoad : false,
 						totalProperty : 'totalCount',
-						baseParams : {},
+						baseParams : {
+
+					}	,
 						fields : [{
 									name : 'id'
 								}, {
@@ -597,6 +612,10 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 										name : 'condition/isJuanmo',
 										inputValue : 'Y',
 										anchor : '100%'
+									}, {
+										xtype : 'hidden',
+										name : 'condition/qjdutychoose',
+										value : 1
 									}]
 						});
 
@@ -852,5 +871,168 @@ com.keensen.ump.produce.component.workorder.QjdutyMgr = function() {
 							}]
 
 				})
+	}
+
+	this.initModifyProductOrderWindow = function() {
+		var _this = this;
+		var selModel4ModifyProductOrder = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+		this.listPanel4ModifyProductOrder = this.listPanel4ModifyProductOrder
+				|| new Ext.fn.EditListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					hsPage : false,
+					clicksToEdit : 1,
+
+					autoScroll : false,
+					selModel : selModel4ModifyProductOrder,
+					columns : [new Ext.grid.RowNumberer({
+										width : 30
+									}), selModel4ModifyProductOrder, {
+								dataIndex : 'orderNo',
+								header : '订单号'
+							}, {
+								dataIndex : 'orderType',
+								header : '订单类型'
+							}, {
+								dataIndex : 'materSpecName2',
+								header : '订单下达型号'
+							}, {
+								dataIndex : 'materSpecName',
+								header : '生产规格'
+							}, {
+								dataIndex : 'orderAmount',
+								header : '订单数量'
+							}, {
+
+								dataIndex : 'productOrder',
+								width : 100,
+								header : '生产顺序',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 0,
+											minValue : 1,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+								dataIndex : 'qjCode',
+								width : 200,
+								header : '生产机台',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TriggerField(
+										{
+											allowBlank : false,
+											emptyText : '单击旁边按钮选择机台',
+											editable : false,
+											hideTrigger : false,
+											scope : this,
+											value : _this.defaultQjCode,
+											onTriggerClick : function() {
+												_this.onChooseCode();
+											}
+										}))
+							}, {
+								dataIndex : 'orderId',
+								hidden : true,
+								header : 'orderId'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.workorder2.query4QjDuty.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'orderNo'
+								}, {
+									name : 'materSpecName'
+								}, {
+									name : 'orderAmount'
+								}, {
+									name : 'qjCode'
+								}, {
+									name : 'arrangeDate'
+								}, {
+									name : 'materSpecName2'
+								}, {
+									name : 'orderType'
+								}, {
+									name : 'orderId'
+								}]
+					})
+				})
+
+		this.inputPanel4ModifyProductOrder = this.inputPanel4ModifyProductOrder
+				|| new Ext.fn.InputPanel({
+							height : 80,
+							region : 'north',
+							baseCls : "x-panel",
+							autoHide : false,
+							autoScroll : false,
+							border : true,
+							columns : 6,
+							saveUrl : '1.biz.ext',
+							fields : [{
+										xtype : 'datefield',
+										ref : '../arrangeDate',
+										name : 'entity/arrangeDate',
+										fieldLabel : '排班日期',
+										format : "Y-m-d",
+										value : new Date(),
+										anchor : '90%',
+										colspan : 3
+									}],
+							buttons : [{
+										text : "保存",
+										scope : this,
+										handler : this.onSaveModifyProductOrder
+									}, {
+										text : "关闭",
+										scope : this,
+										handler : function() {
+											this.inputPanel4ModifyProductOrder.form
+													.reset();
+											this.window4ModifyProductOrder
+													.hide();
+										}
+									}]
+
+						})
+
+		this.window4ModifyProductOrder = this.window4ModifyProductOrder
+				|| new Ext.Window({
+							title : '修改生产顺序',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 1024,
+							height : 600,
+							layout : 'border',
+							items : [this.inputPanel4ModifyProductOrder,
+									this.listPanel4ModifyProductOrder]
+
+						});
+
 	}
 }

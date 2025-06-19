@@ -1,6 +1,8 @@
 com.keensen.ump.qinsen.produce.raosiMgr.prototype.initEvent = function() {
 	var _this = this;
 
+	this.getLine();
+
 	// 查询事件
 	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
 			'query', function(form, vals) {
@@ -10,6 +12,19 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.initEvent = function() {
 					params : {
 						"pageCond/begin" : 0,
 						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
+	// 查询事件
+	this.queryPanel4ProduceCount.mon(this.queryPanel4ProduceCount, 'query',
+			function(form, vals) {
+				var store = this.listPanel4ProduceCount.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4ProduceCount.pagingToolbar.pageSize
 					}
 				});
 			}, this);
@@ -103,8 +118,16 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.onEdit = function() {
 };
 
 com.keensen.ump.qinsen.produce.raosiMgr.prototype.onAdd = function() {
-	this.raosiAddWindow.show();
-	this.raosiAddWindow.batchNo.focus();
+	if (Ext.isEmpty(this.lineId)) {
+		this.raosiAddWindow.show();
+		this.raosiAddWindow.lineId.setReadOnly(false);
+		this.raosiAddWindow.batchNo.focus();
+	} else {
+		this.raosiAddWindow.show();
+		this.raosiAddWindow.lineId.setValue(this.lineId);
+		this.raosiAddWindow.lineId.setReadOnly(true);
+		this.raosiAddWindow.batchNo.focus();
+	}
 }
 
 com.keensen.ump.qinsen.produce.raosiMgr.prototype.saveRecInfo = function() {
@@ -115,66 +138,69 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.onScan = function() {
 	// 先加载订单信息
 	var _this = this;
 	var batchNo = _this.raosiAddWindow.batchNo.getValue();
-	if (!Ext.isEmpty(batchNo)) {
-		_this.requestMask = this.requestMask
-				|| new Ext.LoadMask(Ext.getBody(), {
-							msg : "后台正在操作,请稍候!"
-						});
-		_this.requestMask.show();
-		Ext.Ajax.request({
-					url : "com.keensen.ump.qinsen.raosi.query4Workorder.biz.ext",
-					method : "post",
-					jsonData : {
-						'condition/batchNo' : batchNo
-					},
-					success : function(resp) {
-						var ret = Ext.decode(resp.responseText);
-						if (ret.success) {
-							if (!Ext.isEmpty(ret.data)) {
-								var dd = ret.data[0];
-								_this.raosiAddWindow.orderNo
-										.setValue(dd.orderNo);
-								_this.raosiAddWindow.orderType
-										.setValue(dd.orderType);
-								_this.raosiAddWindow.materSpecName2
-										.setValue(dd.materSpecName2);
-								_this.raosiAddWindow.materSpecName
-										.setValue(dd.materSpecName);
-								_this.raosiAddWindow.orderAmount
-										.setValue(dd.orderAmount);
-								_this.raosiAddWindow.qjAmount
-										.setValue(dd.qjAmount);
-								_this.raosiAddWindow.tape.setValue(dd.tape);
-								_this.raosiAddWindow.lid.setValue(dd.lid);
-								_this.raosiAddWindow.snRegular
-										.setValue(dd.snRegular);
-								_this.raosiAddWindow.makeLabel
-										.setValue(dd.makeLabel);
-								_this.raosiAddWindow.labelDouble
-										.setValue(dd.labelDouble);
-								_this.raosiAddWindow.labelDrawingCode
-										.setValue(dd.labelDrawingCode);
-										
-								_this.raosiAddWindow.prodRemark
-										.setValue(dd.prodRemark);
-								_this.raosiAddWindow.saveData();
-							} else {
-								Ext.Msg.alert("系统提示", "该元件序号不存在，请检查！",
-										function() {
-											_this.raosiAddWindow.batchNo
-													.setValue('');
-											_this.raosiAddWindow.batchNo
-													.focus();
-											return false;
-										})
+	var produceFlag = _this.raosiAddWindow.produceFlag.getValue();
+	if (!Ext.isEmpty(batchNo) && !Ext.isEmpty(produceFlag)) {
 
-							}
+		if (produceFlag == 'R') {// 返修
+			_this.raosiAddWindow.saveData();
+		} else {
+
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.qinsen.raosi.query4Workorder.biz.ext",
+				method : "post",
+				jsonData : {
+					'condition/batchNo' : batchNo
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						if (!Ext.isEmpty(ret.data)) {
+							var dd = ret.data[0];
+							_this.raosiAddWindow.orderNo.setValue(dd.orderNo);
+							_this.raosiAddWindow.orderType
+									.setValue(dd.orderType);
+							_this.raosiAddWindow.materSpecName2
+									.setValue(dd.materSpecName2);
+							_this.raosiAddWindow.materSpecName
+									.setValue(dd.materSpecName);
+							_this.raosiAddWindow.orderAmount
+									.setValue(dd.orderAmount);
+							_this.raosiAddWindow.qjAmount.setValue(dd.qjAmount);
+							_this.raosiAddWindow.tape.setValue(dd.tape);
+							_this.raosiAddWindow.lid.setValue(dd.lid);
+							_this.raosiAddWindow.snRegular
+									.setValue(dd.snRegular);
+							_this.raosiAddWindow.makeLabel
+									.setValue(dd.makeLabel);
+							_this.raosiAddWindow.labelDouble
+									.setValue(dd.labelDouble);
+							_this.raosiAddWindow.labelDrawingCode
+									.setValue(dd.labelDrawingCode);
+
+							_this.raosiAddWindow.prodRemark
+									.setValue(dd.prodRemark);
+							_this.raosiAddWindow.saveData();
+						} else {
+							Ext.Msg.alert("系统提示", "该元件序号不存在，请检查！", function() {
+										_this.raosiAddWindow.batchNo
+												.setValue('');
+										_this.raosiAddWindow.batchNo.focus();
+										return false;
+									})
+
 						}
-					},
-					callback : function() {
-						_this.requestMask.hide()
 					}
-				})
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+		}
 	}
 	// this.raosiAddWindow.saveData();
 }
@@ -200,46 +226,27 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.exportExcel = function() {
 		return false;
 
 	}
-	
-	
-	doQuerySqlAndExport(this, this.queryPanel,
-			this.listPanel, '绕丝记录',
+
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '绕丝记录',
 			'com.keensen.ump.qinsen.raosi.queryRecords', '0,1');
-			
-	/*var daochu = _this.queryPanel.getForm().getValues();
 
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			namingsql : 'com.keensen.ump.qinsen.raosi.queryRecords',
-			templateFilename : 'ks_inst_raosi'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
-				}
-
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})*/
+	/*
+	 * var daochu = _this.queryPanel.getForm().getValues();
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+	 * method : "post", jsonData : { 'map' : daochu, namingsql :
+	 * 'com.keensen.ump.qinsen.raosi.queryRecords', templateFilename :
+	 * 'ks_inst_raosi' }, success : function(resp) { var ret =
+	 * Ext.decode(resp.responseText); if (ret.success) {
+	 * 
+	 * var fname = ret.fname; if (Ext.isIE) {
+	 * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); }
+	 * else { window.location.href =
+	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; } } },
+	 * callback : function() { _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.qinsen.produce.raosiMgr.prototype.onModiOrder = function() {
@@ -288,12 +295,12 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.onChooseSingleOrder = function
 		prodSpecId = B[0].get('materSpecId');
 
 	}
-	
+
 	if (Ext.isEmpty(orderNo)) {
 		Ext.Msg.alert('系统提示', '请选择订单号');
 		return false;
 	}
-	
+
 	Ext.Msg.confirm('提示', '共' + records.length + '个批次，您确定要修改这些产品的订单号？',
 			function(btn) {
 				if (btn === 'yes') {
@@ -304,34 +311,65 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.onChooseSingleOrder = function
 									});
 					_this.requestMask.show();
 					Ext.Ajax.request({
-								url : "com.keensen.ump.qinsen.raosi.modiOrderAndProdSpecId.biz.ext",
-								method : "post",
-								jsonData : {
-									orderNo : orderNo,
-									prodSpecId : prodSpecId,
-									recordIds : arr.join(',')
-								},
-								success : function(resp) {
-									var ret = Ext.decode(resp.responseText);
-									if (ret.success) {
-										Ext.Msg.alert("系统提示", "操作成功！",
-												function() {
-													_this.listPanel.store
-															.load();
-													_this.chooseSingleOrderWindow.hide();
+						url : "com.keensen.ump.qinsen.raosi.modiOrderAndProdSpecId.biz.ext",
+						method : "post",
+						jsonData : {
+							orderNo : orderNo,
+							prodSpecId : prodSpecId,
+							recordIds : arr.join(',')
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								Ext.Msg.alert("系统提示", "操作成功！", function() {
+											_this.listPanel.store.load();
+											_this.chooseSingleOrderWindow
+													.hide();
 
-												})
-									} else {
-										Ext.Msg.alert("系统提示", "修改订单号失败！")
+										})
+							} else {
+								Ext.Msg.alert("系统提示", "修改订单号失败！")
 
-									}
+							}
 
-								},
-								callback : function() {
-									_this.requestMask.hide()
-								}
-							})
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
 				}
 			});
 
+}
+
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.onQueryProduceCount = function() {
+	this.produceCountWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.exportProduceCountExcel = function() {
+	doQuerySqlAndExport(this, this.queryPanel4ProduceCount,
+			this.listPanel4ProduceCount, '绕丝产量',
+			'com.keensen.ump.produce.component.producecount.queryRaosiCount',
+			'0,1');
+}
+
+// 获取生产线信息
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.getLine = function() {
+	var _this = this;
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+				url : "com.keensen.ump.qinsen.raosi.queryLine.biz.ext",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					_this.lineId = ret.lineId;
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
 }

@@ -257,7 +257,9 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.exportExcel = function() {
 			.findField(['condition/produceDtStart']).getValue();
 	var end = this.queryPanel.getForm().findField(['condition/produceDtEnd'])
 			.getValue();
-	if (dayDiff(start, end) > 31) {
+			
+	var lineId = this.queryPanel.lineId.getValue();
+	if (dayDiff(start, end) > 31 && Ext.isEmpty(lineId) ) {
 		Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
 		return false;
 

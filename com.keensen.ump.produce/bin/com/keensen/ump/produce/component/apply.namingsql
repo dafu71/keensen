@@ -138,6 +138,11 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
     and (not exists(select 1 from KS_COMPONENT_CHECK_LIST tt where tt.BATCH_NO = T1.BATCH_NO)
     <!--元件做了返工单，可以重复发起请检-->
     or exists(select 1 from KS_COMPONENT_REWORK_LIST tt where tt.BATCH_NO = T1.BATCH_NO))
+    
+    <!--元件已完成绕丝-->
+    and exists(SELECT 1 from qinsen.inst_raosi rs where rs.batch_no = T1.BATCH_NO)
+    
+    
 	<isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
         <isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID in($prodSpecId$)</isNotNull>
         <isNotNull prepend="and" property="prodSpecName">m.mater_spec_name in($prodSpecName$)</isNotNull>

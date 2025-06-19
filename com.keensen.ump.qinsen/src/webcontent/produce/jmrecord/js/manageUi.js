@@ -58,6 +58,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						xtype : 'linecombobox',
 						prodTacheId : '102',
 						hiddenName : 'condition/lineId',
+						ref:'../lineId',
 						anchor : '75%',
 						fieldLabel : '生产线 '
 					}, {

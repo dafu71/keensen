@@ -188,18 +188,18 @@
                                  ,CHK.create_time APPLY_TIME, 
                                  CASE WHEN CHK.STORAGE IS NOT NULL THEN '合格入库' ELSE '' END APPLY_JUDGE_RESULT
                                  
-                           FROM QINSEN.INST_QIJIAN      A,
+                           FROM QINSEN.INST_QIJIAN      A
+                            LEFT JOIN ( SELECT batch_no, MAX(create_time) create_time,MAX(STORAGE) STORAGE from (
+                select t.batch_no,to_char(h.create_time,'YYYY-MM-DD HH24:MI:SS') create_time,H.STORAGE from KS_COMPONENT_CHECK_LIST t
+                LEFT JOIN KS_COMPONENT_CHECK_HEAD h
+                ON t.relation_id = h.id)
+                GROUP BY batch_no) CHK ON A.BATCH_NO = CHK.BATCH_NO
+                           ,
                                  QINSEN.INST_JUANMO_MAIN J,
-                                 QINSEN.PARA_MATER_SPEC  MS,
-                                 
-                                 ( SELECT batch_no, MAX(create_time) create_time,MAX(STORAGE) STORAGE from (
-								select t.batch_no,to_char(h.create_time,'YYYY-MM-DD HH24:MI:SS') create_time,H.STORAGE from KS_COMPONENT_CHECK_LIST t
-								LEFT JOIN KS_COMPONENT_CHECK_HEAD h
-								ON t.relation_id = h.id)
-								GROUP BY batch_no) CHK
+                                 QINSEN.PARA_MATER_SPEC  MS
                           WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
                             AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
-                            AND A.BATCH_NO = CHK.BATCH_NO
+                            
                             <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="" property="batchNo">AND A.BATCH_NO = UPPER(#batchNo#)</isNotNull>
         <isNotNull prepend="" property="batchNoStr">AND A.BATCH_NO LIKE '%' || UPPER(#batchNoStr#) || '%'</isNotNull>
@@ -290,6 +290,7 @@
 	    ON T2.TUMO_BATCH_ID = T1.RECORD_ID
 	  LEFT JOIN (SELECT SUM(D.LOSS) CAIMO_LOSS, D.TUMO_BATCH_ID
 	               FROM QINSEN.INST_CDM_DEFECT D
+	               WHERE NVL(d.if_tear,'是') = '是'
 	              GROUP BY D.TUMO_BATCH_ID) T3
 	    ON T3.TUMO_BATCH_ID = T1.RECORD_ID
 	    where 1=1

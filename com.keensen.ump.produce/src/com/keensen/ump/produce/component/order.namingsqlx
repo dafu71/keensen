@@ -33,7 +33,7 @@
        T1.SBKCGM            AS "sbkcgm",
        T1.SBKCSM            AS "sbkcsm",
        T1.BQ                AS "bq",
-       T1.BAG               AS "bag",
+       T1.BAG               AS "bag",t1.lid "lid",
        T1.BOX               AS "box",
        T1.MARK              AS "mark",
        T1.PACK              AS "pack",
@@ -52,6 +52,15 @@
        STD.A_GPD_CENTER "gpdCenterStd",
        STD.A_SALT_LOW_LIMIT "saltLowLimitStd",
        pms.blanking_size "blankingSize"
+       ,yb.lid "lidBase"
+       ,yb.mark "markBase"
+       ,yb.tape "tapeBase"
+       ,yb.box "boxBase"
+       ,yb.tray "trayBase"
+       ,yb.label "labelBase"
+       ,yb.order_type "orderTypeBase",yb.prod_amount "prodAmount"
+       ,nvl(chk.cnt,0) "checkCount"
+       ,nvl(t1.reserve1,nvl(yb.spec_Name_Mark,t1.mater_spec_name2)) "specNameMark"
   FROM KS_PROD_COMPONENT_YXORDER T1
   left join qinsen.PARA_MATER_SPEC pms
   on T1.MATER_SPEC_Id = pms.mater_spec_id
@@ -60,8 +69,37 @@
   left join (select relation_id ,count(*) cnt from KS_COMPONENT_PLAN_WEEK group by relation_id) t2 
 	on t2.relation_id = t1.id
   left join (select sum(amount) arrange_amount,order_id from KS_COMPONENT_PLAN_WEEK_DAYS group by order_id) t3
-    on t1.id = t3.order_id
+    on t1.id = t3.order_id    
+  LEFT JOIN KS_COMPONENT_YXORDER_BASE yb
+	ON t1.base_id =yb.id  
+	
+  <!--已请检数量-->
+  left join (SELECT tt.order_no,tt.prod_spec_name,COUNT(1) cnt from 
+(
+select t.batch_no,t.relation_id,t.prod_spec_name,h.order_no from KS_COMPONENT_CHECK_LIST t
+LEFT JOIN KS_COMPONENT_CHECK_head h
+ON t.relation_id=h.id) tt
+GROUP BY tt.order_no,tt.prod_spec_name) chk
+on chk.order_no = t1.order_no and chk.prod_spec_name = pms.mater_spec_name
+    
+    <isNotNull prepend="" property="qjdutychoose">  
+    
+    left join 
+    (SELECT jm.order_no,jm.prod_spec_id,MAX(jm.produce_dt) produce_dt
+ 		from qinsen.inst_juanmo_main jm
+ 		GROUP BY jm.order_no,jm.prod_spec_id) jm
+ 	on t1.order_no = jm.order_no and t1.MATER_SPEC_Id = jm.prod_spec_id
+    </isNotNull>
+    
 	where 1=1
+	
+	<isNotNull prepend="and" property="templateName">  
+		       T1.template_Name like '%' || #templateName# || '%'
+	</isNotNull>
+	
+	<isEqual prepend="and" property="materSpecNotNull" compareValue="Y">
+		T1.MATER_SPEC_Id is not null
+	</isEqual>
 	
 	<isNotNull prepend="and" property="prodSpecId"> 
 		       T1.MATER_SPEC_Id = #prodSpecId#
@@ -132,7 +170,14 @@
 	  exists( select 1 from V_KS_RAOSI v where v.order_id = t1.id)
 	</isEqual>
      
+     <isNotNull prepend="" property="qjdutychoose">
+     order by jm.produce_dt desc nulls last
+     </isNotNull>
+     
+     <isNull prepend="" property="qjdutychoose">
      order by t1.id desc
+     </isNull>
+     
 	 </select>
 	 
 	 
@@ -673,16 +718,24 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        T1.ORDER_NO          AS "orderNo",
        T1.ORDER_DATE        AS "orderDate",
        T1.HPMC              AS "hpmc",
-       T1.DW                AS "dw",T1.MATER_SPEC_NAME2   AS "materSpecName2",
-       T1.MATER_SPEC_NAME   AS "materSpecName",T1.MATER_SPEC_ID   AS "materSpecId",chk.apply_amount "applyAmount",
+       T1.DW                AS "dw",       
+       
+       T1.MATER_SPEC_NAME2   AS "materSpecName2",
+       
+       decode(t1.type,'家用膜',T1.MATER_SPEC_NAME2,T1.MATER_SPEC_NAME)   AS "materSpecName",
+       
+       
+       T1.MATER_SPEC_ID   AS "materSpecId",
+       
+       decode(t1.type,'家用膜',hchk.amount,chk.apply_amount) "applyAmount",
         
         case when nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)= 0 then 0
-        else round(100 * nvl(chk.apply_amount,0)/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)  
+        else round(100 * nvl(decode(t1.type,'家用膜',hchk.amount,chk.apply_amount),0)/nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0)  
         end 
         "applyPercent",
         
-        case when nvl(chk.apply_amount,0) >= nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) then '完成'
-        when nvl(t2.amount,0)=0 then '未投料'
+        case when nvl(decode(t1.type,'家用膜',hchk.amount,chk.apply_amount),0) >= nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),0) then '完成'
+        when nvl(decode(t1.type,'家用膜',hc.amount,t2.amount),0)=0 then '未投料'
         else '进行中' end "applyState" ,
         
         
@@ -708,8 +761,8 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        T1.lid            AS "lid",
        T1.tape            AS "tape",
        T1.tray            AS "tray",
-       t2.amount AS "cdmAmount",
-       t3.amount "jmAmount",
+       ceil(decode(t1.type,'家用膜',hc.amount,t2.amount)) AS "cdmAmount",
+       decode(t1.type,'家用膜',hj.amount,t3.amount) "jmAmount",
        t4.amount "qjAmount",t4.qualified_amount "qualifiedAmount",
        t6.amount "wetAmount",t4.label_amount "prodLabelAmount",
        <!--未贴标数=订单数量（本页面）-贴本订单的标签数（本页面）-->
@@ -729,8 +782,10 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        <!--理论可贴标的元件数（支）理论可贴标的元件数（支）=气检合格的元件贴标数+工艺员给出“A、放行原订单”的贴标数（或工艺员意见当中有“放行”字眼的记录）-->
        nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0) "theoryAmount",
        t5.amount "rsAmount",
-		round(100*t2.amount/nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),10000000000000),0) || '%' "cdmFinish",
-		round(100*t3.amount/nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),10000000000000),0) || '%' "jmFinish",
+       
+		round(100*decode(t1.type,'家用膜',hc.amount,t2.amount)/nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),10000000000000),0) || '%' "cdmFinish",
+		
+		round(100*decode(t1.type,'家用膜',hj.amount,t3.amount)/nvl(nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT),10000000000000),0) || '%' "jmFinish",
 		<!--完成比例=贴本订单的标签数量/气检生产数量*100%-->
 		<!--round(100*t4.label_amount/t4.amount,0) || '%' "qjFinish",-->
 		<!-- round(100*(nvl(t4.release_amount,0) + nvl(t4.qualified_amount,0))/t4.amount,0) || '%' "qjFinish",-->
@@ -749,6 +804,35 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
 		nvl(outamount.amount,0) "outAmount"
 		
   FROM KS_PROD_COMPONENT_YXORDER T1
+  
+  <!--家用-->
+   left join
+  (SELECT  SUM(amount) amount,t.order_no,t.prod_spec_name
+  FROM
+  (SELECT cm.num_per_wad,cm.quantity, cm.quantity/cm.num_per_wad amount,
+  cm.order_no,pms.mater_spec_name prod_spec_name from QINSEN.INST_CAIDIEMO cm
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+      ON PMS.MATER_SPEC_ID = cm.PROD_SPEC_ID
+  WHERE EXISTS(SELECT 1  FROM  
+  KS_COMPONENT_HOUSEHOLD_JM jm WHERE  cm.batch_no = jm.cm_batch_no)) t
+  GROUP BY t.order_no,t.prod_spec_name) hc
+  on hc.order_no = t1.order_no and t1.mater_spec_name2=hc.prod_spec_name and t1.type='家用膜'
+  left join
+  (select SUM(amount) amount,t.order_no,pms.mater_spec_name prod_spec_name from KS_COMPONENT_HOUSEHOLD_JM t
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+      ON PMS.MATER_SPEC_ID = t.PROD_SPEC_ID
+  GROUP BY t.order_no,pms.mater_spec_name) hj
+  on hj.order_no = t1.order_no and t1.mater_spec_name2=hj.prod_spec_name and t1.type='家用膜'
+  left join
+  (SELECT  SUM(amount) amount,t.order_no,t.prod_spec_name
+  FROM
+  (SELECT t.reserve1 order_no,t.prod_spec_name,t.apply_amount amount
+  from KS_COMPONENT_HH_CHECK_HEAD t) t 
+  GROUP BY t.order_no,t.prod_spec_name) hchk
+  on hchk.order_no = t1.order_no and t1.mater_spec_name2=hchk.prod_spec_name and t1.type='家用膜'
+  
+  
+  
   left join (SELECT SUM(1) amount,order_no,prod_spec_id from (
 select qj.batch_no,t.order_no,t.prod_spec_id FROM qinsen.inst_qijian qj 
 LEFT JOIN KS_COMPONENT_DUTY_SN_QUERY t ON qj.batch_no>=t.sn_start AND qj.batch_no &lt;=t.sn_end 
@@ -770,6 +854,7 @@ FROM(
 select t.batch_no,t2.order_no,t2.prod_spec_name from KS_COMPONENT_CHECK_LIST t
 LEFT JOIN KS_COMPONENT_CHECK_HEAD t2 ON t.relation_id=t2.id)
 GROUP BY order_no,prod_spec_name) chk on chk.order_no = t1.order_no 
+	<!--勾订单型号-->
 	and chk.PROD_SPEC_name = t1.MATER_SPEC_name2
   LEFT JOIN
 (SELECT t.order_no,t.prod_spec_id mater_spec_id,floor(sum(t.quantity)/min(m.num_per_wad))  AS amount 
@@ -814,7 +899,8 @@ WHERE exists(SELECT 1 FROM qinsen.INST_WATER_TEST tt WHERE tt.juanmo_batch_id = 
 GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.mater_spec_id=t6.prod_spec_id
 
 
-	where 1=1
+	where 1=1	
+	
 	<isNotNull prepend="and" property="orderNo"> 
 		       T1.ORDER_NO = #orderNo#
 	</isNotNull>

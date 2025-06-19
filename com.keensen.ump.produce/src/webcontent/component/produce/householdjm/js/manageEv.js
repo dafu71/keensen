@@ -3,6 +3,19 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 	var _this = this;
 
 	this.getRight();
+	
+	// 查询事件
+	this.queryPanel4ProduceCount.mon(this.queryPanel4ProduceCount,
+			'query', function(form, vals) {
+				var store = this.listPanel4ProduceCount.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4ProduceCount.pagingToolbar.pageSize
+					}
+				});
+			}, this);
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -145,4 +158,14 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.getRight = fu
 
 com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onEdit = function() {
 	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onQueryProduceCount = function() {
+	this.produceCountWindow.show();
+}
+
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.exportProduceCountExcel = function() {
+	doQuerySqlAndExport(this, this.queryPanel4ProduceCount,
+			this.listPanel4ProduceCount, '家用膜产量',
+			'com.keensen.ump.produce.component.producecount.queryHHJmCount', '0,1');
 }

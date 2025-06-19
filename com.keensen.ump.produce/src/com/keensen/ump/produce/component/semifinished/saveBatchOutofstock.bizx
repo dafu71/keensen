@@ -176,6 +176,10 @@
       <process:from type="expression" pattern="reference">null</process:from>
       <process:to type="query">outofstock/id</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/newSpecId</process:from>
+      <process:to type="query">outofstock/newSpecId</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="522" y="189"/>
