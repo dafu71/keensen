@@ -124,6 +124,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					}, '->', {
 						text : '删除',
 						scope : this,
+						hidden: uid != 'KS00610' && uid != 'dafu',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],

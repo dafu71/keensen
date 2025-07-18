@@ -2,6 +2,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 	this.initPanel = function() {
 
+		this.opt = '';
 		this.initStore();
 
 		this.initQueryPanel();
@@ -27,6 +28,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 	}
 
 	this.initStore = function() {
+
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
 
 		this.yseOrNoStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -178,10 +184,15 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcelBatch
 				});
-		/*
-		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
-		 * 'icon-application_excel', handler : this.exportExcel });
-		 */
+
+		this.queryPanel.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					hidden : uid != 'XXB' &&  uid != 'KS01479',
+					handler : this.exportExcel2
+				});
+
 	}
 
 	this.initListPanel = function() {
@@ -193,7 +204,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			id : listid,
@@ -219,6 +230,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						text : '审核',
 						scope : this,
 						iconCls : 'icon-application_edit',
+						hidden : true,
 						handler : this.onExamine
 					}, '-', {
 						text : '检验',
@@ -229,6 +241,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						text : '确认',
 						scope : this,
 						iconCls : 'icon-application_edit',
+						hidden : true,
 						handler : this.onConfirm
 					}, '-', {
 						text : '查看',
@@ -329,6 +342,14 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dictData : KS_YESORNO,
 						dataIndex : 'isExamine',
 						header : '是否已审核'
+					}, {
+						dataIndex : 'stockConfirmUserName',
+						sortable : true,
+						header : '仓库确认人'
+					}, {
+						dataIndex : 'stockConfirmTime',
+						sortable : true,
+						header : '交付仓库时间'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryByPage.biz.ext',
@@ -436,6 +457,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'performance'
 						}, {
 							name : 'ifcstock'
+						}, {
+							name : 'stockConfirmTime'
+						}, {
+							name : 'stockConfirmUserName'
 						}]
 			})
 		})
@@ -569,297 +594,319 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					columns : 12,
 					saveUrl : 'com.keensen.ump.produce.component.apply.add.biz.ext',
 					fields : [{
-						xtype : 'combobox',
-						anchor : '95%',
-						colspan : 6,
-						allowBlank : false,
-						name : 'orderType',
-						dataIndex : 'orderType',
-						ref : '../orderType',
-						hiddenName : 'orderType',
-						fieldLabel : '订单类型',
-						triggerAction : "all",
-						store : new Ext.data.ArrayStore({
-									fields : ['mykey', 'myvalue'],
-									data : [['公司标准', '公司标准'],
-											['非公司标准', '非公司标准']]
-								}),
-						mode : "local",
-						editable : false,
-						displayField : "myvalue",
-						valueField : "mykey",
-						forceSelection : true,
-						emptyText : "--请选择--"
-					}, {
-						xtype : 'trigger',
-						emptyText : '输入订单号，单击旁边按钮选择元件',
-						name : 'orderNo',
-						ref : '../orderNo',
-						allowBlank : false,
-						fieldLabel : '订单号',
-						anchor : '95%',
-						colspan : 6,
-						editable : true,
-						hideTrigger : false,
-						scope : this,
-						onTriggerClick : function() {
-							// _this.onChoose();
-							_this.onChoose2();
-						}
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
-					}, {
-						xtype : 'numberfield',
-						ref : '../orderAmount',
-						name : 'orderAmount',
-						allowBlank : false,
-						readOnly:true,
-						fieldLabel : '订单数量',
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'numberfield',
-						ref : '../applyAmount',
-						name : 'applyAmount',
-						allowBlank : false,
-						fieldLabel : '请检数量',
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
-					}, {
-						xtype : 'numberfield',
-						ref : '../prodAmount',
-						//name : 'prodAmount',
-						//allowBlank : false,
-						readOnly:true,
-						fieldLabel : '需生产数量',
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'numberfield',
-						ref : '../checkCount',
-						//name : 'prodAmount',
-						//allowBlank : false,
-						readOnly:true,
-						fieldLabel : '已请检数量',
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						fieldLabel : '<p style="color:red;">订单要求  </p>',
-						labelSeparator : '',// 去掉冒号
-						colspan : 12
-					}, {
+								xtype : 'textfield',
+								emptyText : '扫码，或手工录入后按回车键',
+								style : '{font-weight:bold;}',
+								// allowBlank : false,
+								fieldLabel : '卷膜序号',
+								ref : '../juanmoBatchNo',
+								anchor : '95%',
+								colspan : 6,
+								listeners : {
+									scope : this,
+									specialkey : function(C, D) {
+										if (D.getKey() == Ext.EventObject.ENTER) {
+											_this.onScan();
 
-						anchor : '95%',
-						colspan : 6,
-						xtype : 'combo',
-						mode : 'local',
-						ref : '../prodSpecName',
-						displayField : 'name',
-						valueField : 'name',
-						hiddenName : 'prodSpecName',
-						ref : '../prodSpecName',
-						allowBlank : false,
-						fieldLabel : '元件型号',
-						store : _this.prodSpecStore,
-						listeners : {
-							'expand' : function(A) {
-								_this.inputPanel.prodSpecName.reset();
-							},
-							'select' : function(combo, record, index) {
-								if (index > -1) {
-									var package2 = record.get('package');
-									_this.inputPanel.package2
-											.setValue(package2);
+										}
+
+									}
 								}
-							}
-						}
+							}, {
+								xtype : 'trigger',
+								emptyText : '输入订单号，单击旁边按钮选择元件',
+								name : 'orderNo',
+								ref : '../orderNo',
+								allowBlank : false,
+								fieldLabel : '订单号',
+								anchor : '95%',
+								colspan : 6,
+								editable : true,
+								hideTrigger : false,
+								scope : this,
+								onTriggerClick : function() {
+									// _this.onChoose();
+									_this.onChoose2();
+								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'combobox',
+								anchor : '95%',
+								colspan : 4,
+								allowBlank : false,
+								name : 'orderType',
+								dataIndex : 'orderType',
+								ref : '../orderType',
+								hiddenName : 'orderType',
+								fieldLabel : '订单类型',
+								triggerAction : "all",
+								store : new Ext.data.ArrayStore({
+											fields : ['mykey', 'myvalue'],
+											data : [['公司标准', '公司标准'],
+													['非公司标准', '非公司标准']]
+										}),
+								mode : "local",
+								editable : false,
+								displayField : "myvalue",
+								valueField : "mykey",
+								forceSelection : true,
+								emptyText : "--请选择--"
+							}, {
+								xtype : 'numberfield',
+								ref : '../orderAmount',
+								name : 'orderAmount',
+								allowBlank : false,
+								readOnly : true,
+								fieldLabel : '订单数量',
+								anchor : '95%',
+								colspan : 4
+							}, {
+								xtype : 'numberfield',
+								ref : '../applyAmount',
+								name : 'applyAmount',
+								allowBlank : false,
+								fieldLabel : '请检数量',
+								anchor : '95%',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'numberfield',
+								ref : '../prodAmount',
+								// name : 'prodAmount',
+								// allowBlank : false,
+								readOnly : true,
+								fieldLabel : '需生产数量',
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'numberfield',
+								ref : '../checkCount',
+								// name : 'prodAmount',
+								// allowBlank : false,
+								readOnly : true,
+								fieldLabel : '已请检数量',
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'displayfield',
+								fieldLabel : '<p style="color:red;">订单要求  </p>',
+								labelSeparator : '',// 去掉冒号
+								colspan : 12
+							}, {
 
-					}, {
-						xtype : 'dictcombobox',
-						name : 'prodClassFlag',
-						hiddenName : 'prodClassFlag',
-						ref : '../prodClassFlag',
-						allowBlank : false,
-						fieldLabel : '元件类型',
-						dictData : KS_PROD_CLASS_FLAG,
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
-					}, {
-						xtype : 'dictcombobox',
-						name : 'lid',
-						hiddenName : 'lid',
-						ref : '../lid',
-						allowBlank : false,
-						fieldLabel : '端盖',
-						dictData : KS_PROD_LID,
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'dictcombobox',
-						name : 'markTypeFlag',
-						hiddenName : 'markTypeFlag',
-						ref : '../markTypeFlag',
-						allowBlank : false,
-						fieldLabel : '唛头情况',
-						dictData : KS_PROD_MARK_TYPE_FLAG,
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
-					}, {
-						xtype : 'textfield',
-						name : 'markSpecCode',
-						ref : '../markSpecCode',
-						fieldLabel : '唛头显示型号',
-						allowBlank : false,
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'dictcombobox',
-						name : 'tape',
-						hiddenName : 'tape',
-						ref : '../tape',
-						fieldLabel : '膜体所裹胶带',
-						allowBlank : false,
-						dictData : KS_PROD_TAPE,
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
-					}, {
-						xtype : 'dictcombobox',
-						name : 'markSpecialFlag',
-						hiddenName : 'markSpecialFlag',
-						allowBlank : false,
-						fieldLabel : '加贴特殊唛头',
-						dictData : KS_YESORNO,
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'textfield',
-						name : 'performance',
-						fieldLabel : '性能',
-						// allowBlank : false,
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
-					}, {
-						xtype : 'dictcombobox',
-						dictData : KS_COMPONENT_INDUSTRY_BOX,
-						name : 'box',
-						hiddenName : 'box',
-						ref : '../box',
-						fieldLabel : '包装箱',
-						// allowBlank : false,
-						anchor : '95%',
-						colspan : 4
-					}, {
-						xtype : 'combobox',
-						name : 'tray',
-						anchor : '95%',
-						colspan : 4,
-						hiddenName : 'tray',
-						ref : '../tray',
-						fieldLabel : '托盘',
-						triggerAction : "all",
-						store : new Ext.data.ArrayStore({
-									id : 0,
-									fields : ['mykey', 'myvalue'],
-									data : [['木托盘', '木托盘'], ['塑料托盘', '塑料托盘'],
-											['免熏蒸托盘', '免熏蒸托盘'], ['其它', '其它']]
-								}),
-						mode : "local",
-						editable : false,
-						displayField : "myvalue",
-						valueField : "mykey",
-						forceSelection : true,
-						emptyText : "--请选择--",
-						listeners : {
-							scope : this,
-							'expand' : function(A) {
-								this.inputPanel.tray.reset();
-							}
-						}
-					}, {
-						xtype : 'dictcombobox',
-						name : 'label',
-						hiddenName : 'label',
-						ref : '../label',
-						fieldLabel : '标签',
-						// allowBlank : false,
-						anchor : '95%',
-						colspan : 4,
-						dictData : KS_COMPONENT_INDUSTRY_LABEL
-					}, {
-						xtype : 'displayfield',
-						fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
-						labelSeparator : '',// 去掉冒号
-						colspan : 12
-					}, {
-						xtype : 'dictcheckboxgroup',
-						columns : 6,
-						ref : '../myabnormal',
-						// hiddenName : 'abnormal',
-						fieldLabel : '外观异常类型',
-						anchor : '95%',
-						colspan : 12,
-						dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
-					}, {
-						xtype : 'textarea',
-						name : 'abnormalExplain',
-						fieldLabel : '外观异常说明',
-						// allowBlank : false,
-						height : 50,
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'textarea',
-						name : 'abnormalOther',
-						fieldLabel : '其他异常备注',
-						// allowBlank : false,
-						height : 50,
-						anchor : '95%',
-						colspan : 6
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
-					}, {
-						// name : 'entity/remark',
-						ref : '../package2',
-						height : 30,
-						xtype : 'textarea',
-						readOnly : true,
-						fieldLabel : '包装特殊要求',
-						colspan : 12,
-						anchor : '95%'
-					}, {
-						xtype : 'hidden',
-						ref : '../abnormal',
-						name : 'abnormal'
-					}],
+								anchor : '95%',
+								colspan : 6,
+								xtype : 'combo',
+								mode : 'local',
+								ref : '../prodSpecName',
+								displayField : 'name',
+								valueField : 'name',
+								hiddenName : 'prodSpecName',
+								ref : '../prodSpecName',
+								allowBlank : false,
+								fieldLabel : '元件型号',
+								store : _this.prodSpecStore,
+								listeners : {
+									'expand' : function(A) {
+										_this.inputPanel.prodSpecName.reset();
+									},
+									'select' : function(combo, record, index) {
+										if (index > -1) {
+											var package2 = record
+													.get('package');
+											_this.inputPanel.package2
+													.setValue(package2);
+										}
+									}
+								}
+
+							}, {
+								xtype : 'dictcombobox',
+								name : 'prodClassFlag',
+								hiddenName : 'prodClassFlag',
+								ref : '../prodClassFlag',
+								allowBlank : false,
+								fieldLabel : '元件类型',
+								dictData : KS_PROD_CLASS_FLAG,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'dictcombobox',
+								name : 'lid',
+								hiddenName : 'lid',
+								ref : '../lid',
+								allowBlank : false,
+								fieldLabel : '端盖',
+								dictData : KS_PROD_LID,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'dictcombobox',
+								name : 'markTypeFlag',
+								hiddenName : 'markTypeFlag',
+								ref : '../markTypeFlag',
+								allowBlank : false,
+								fieldLabel : '唛头情况',
+								dictData : KS_PROD_MARK_TYPE_FLAG,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'textfield',
+								name : 'markSpecCode',
+								ref : '../markSpecCode',
+								fieldLabel : '唛头显示型号',
+								allowBlank : false,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'dictcombobox',
+								name : 'tape',
+								hiddenName : 'tape',
+								ref : '../tape',
+								fieldLabel : '膜体所裹胶带',
+								allowBlank : false,
+								dictData : KS_PROD_TAPE,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'dictcombobox',
+								name : 'markSpecialFlag',
+								hiddenName : 'markSpecialFlag',
+								allowBlank : false,
+								fieldLabel : '加贴特殊唛头',
+								dictData : KS_YESORNO,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'textfield',
+								name : 'performance',
+								fieldLabel : '性能',
+								// allowBlank : false,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'dictcombobox',
+								dictData : KS_COMPONENT_INDUSTRY_BOX,
+								name : 'box',
+								hiddenName : 'box',
+								ref : '../box',
+								fieldLabel : '包装箱',
+								// allowBlank : false,
+								anchor : '95%',
+								colspan : 4
+							}, {
+								xtype : 'combobox',
+								name : 'tray',
+								anchor : '95%',
+								colspan : 4,
+								hiddenName : 'tray',
+								ref : '../tray',
+								fieldLabel : '托盘',
+								triggerAction : "all",
+								store : new Ext.data.ArrayStore({
+											id : 0,
+											fields : ['mykey', 'myvalue'],
+											data : [['木托盘', '木托盘'],
+													['塑料托盘', '塑料托盘'],
+													['免熏蒸托盘', '免熏蒸托盘'],
+													['其它', '其它']]
+										}),
+								mode : "local",
+								editable : false,
+								displayField : "myvalue",
+								valueField : "mykey",
+								forceSelection : true,
+								emptyText : "--请选择--",
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										this.inputPanel.tray.reset();
+									}
+								}
+							}, {
+								xtype : 'dictcombobox',
+								name : 'label',
+								hiddenName : 'label',
+								ref : '../label',
+								fieldLabel : '标签',
+								// allowBlank : false,
+								anchor : '95%',
+								colspan : 4,
+								dictData : KS_COMPONENT_INDUSTRY_LABEL
+							}, {
+								xtype : 'displayfield',
+								fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+								labelSeparator : '',// 去掉冒号
+								colspan : 12
+							}, {
+								xtype : 'dictcheckboxgroup',
+								columns : 6,
+								ref : '../myabnormal',
+								// hiddenName : 'abnormal',
+								fieldLabel : '外观异常类型',
+								anchor : '95%',
+								colspan : 12,
+								dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'textarea',
+								name : 'abnormalExplain',
+								fieldLabel : '外观异常说明',
+								// allowBlank : false,
+								height : 50,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'textarea',
+								name : 'abnormalOther',
+								fieldLabel : '其他异常备注',
+								// allowBlank : false,
+								height : 50,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								// name : 'entity/remark',
+								ref : '../package2',
+								height : 30,
+								xtype : 'textarea',
+								readOnly : true,
+								fieldLabel : '包装特殊要求',
+								colspan : 12,
+								anchor : '95%'
+							}, {
+								xtype : 'hidden',
+								ref : '../abnormal',
+								name : 'abnormal'
+							}],
 					buttons : [{
 								text : "保存",
 								scope : this,
@@ -896,6 +943,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 	this.initChooseWindow = function() {
 
 		var _this = this;
+
 		var prodStore = new Ext.data.JsonStore({
 					url : 'com.keensen.ump.produce.component.apply.queryProd.biz.ext',
 					root : 'data',
@@ -1027,7 +1075,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.queryPanel3 = this.queryPanel3 || new Ext.fn.QueryPanel({
-					height : 80,
+					height : 110,
 					columns : 3,
 					border : true,
 					region : 'north',
@@ -1070,6 +1118,28 @@ com.keensen.ump.produce.component.applyMgr = function() {
 										'condition/produceDtEnd'],
 								fieldLabel : "元件生产日期",
 								format : "Y-m-d"
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 4
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '是否已<br>打印唛头',
+								ref : '../ifprint',
+								hiddenName : 'condition/ifprint',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : _this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel3.ifprint.reset()
+									}
+								}
 							}]
 				})
 
@@ -1132,6 +1202,18 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'prodSpecName',
 						header : '元件型号'
 					}, {
+						dataIndex : 'diameter',
+						header : '上端直径',
+						renderer : function(v, m, r, i) {
+							var str = parseFloat(v) > 202
+									? "<span style='color:red;text-decoration:none'>" + v + "</span>"
+									: v;
+							return str;
+						}
+					}, {
+						dataIndex : 'diameter',
+						header : '下端直径'
+					}, {
 						dataIndex : 'tumoBatchStr',
 						header : '膜片批次'
 					}, {
@@ -1152,12 +1234,6 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					}, {
 						dataIndex : 'state',
 						header : '状态'
-					}, {
-						dataIndex : 'diameter',
-						header : '上端直径'
-					}, {
-						dataIndex : 'diameter',
-						header : '下端直径'
 					}, {
 						dataIndex : 'checkResult',
 						header : '气检值'
@@ -1216,7 +1292,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 470,
+			height : 500,
 			region : 'north',
 			// baseCls : "x-panel",
 			autoHide : false,
@@ -1594,7 +1670,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					autoScroll : false,
 					modal : true,
 					width : 800,
-					height : 600,
+					height : 620,
 					layout : 'border',
 					items : [this.editPanel, this.listPanel4]
 

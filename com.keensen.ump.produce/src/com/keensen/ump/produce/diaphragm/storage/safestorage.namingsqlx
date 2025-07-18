@@ -48,6 +48,23 @@
   
   <select id="queryStockCount" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
   
+  
+  	<!--2025年1月1日之前的不进行报警-->
+		<!--2025-07-08
+		自用的预期标准改为：ULP系列与BW(含HW)系列、SW系列为80个自然日，NF系列标准为160个自然日。
+		大于此标准后，每天邮件或汽泡提醒（提醒内容：有膜片快超期，请立即处理），直至库存产品被领出裁膜。
+		另外膜片自用的超标标准也修改为：ULP系列与BW(含HW)系列、SW系列片为90个自然日，NF系列膜片标准为180个自然日。
+		-->
+		
+		<!--2025-07-14
+		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为170个自然日
+		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
+		-->
+		
+		<!--2025-07-16
+		SW系列与NF系列标准相同。
+		-->
+		
   SELECT
 <!--发货膜片预期标准：30个自然日。-->
  NVL(SUM(CASE
@@ -63,25 +80,39 @@
      0) "deliveryRedCount",
  
  <!--自用膜片预期标准：ULP与BW（含HW）为70个自然日，SW与NF合理时长为160个自然日-->
+ 		<!--2025-07-08
+		自用的预期标准改为：ULP系列与BW(含HW)系列、SW系列为80个自然日，NF系列标准为160个自然日。
+		-->
+		<!--2025-07-14
+		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为170个自然日		
+		-->
  NVL(SUM(CASE
            WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 70 AND
-                T.DIFF &lt;= 90 AND
-                (T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
+                T.DIFF &lt;= 84 AND
+                ( T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
                 T.MATER_CLASS_CODE = 'HW') THEN
             1
-           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 160 AND
-                T.DIFF &lt;= 180 AND
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 170 AND
+                T.DIFF &lt;= 174 AND
                 (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
             1
          END),
      0) "selfYellowCount",
+     
  <!--自用膜片超期标准：ULP与BW（含HW）膜片为90个自然日，SW与NF膜片为180个自然日-->
+ <!--2025年1月1日之前的不进行报警-->
+		<!--2025-07-08
+		膜片自用的超标标准也修改为：ULP系列与BW(含HW)系列、SW系列片为90个自然日，NF系列膜片标准为180个自然日。
+		-->
+		<!--2025-07-14
+		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
+		-->
  NVL(SUM(CASE
-           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 90 AND
-                (T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 84 AND
+                ( T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
                 T.MATER_CLASS_CODE = 'HW') THEN
             1
-           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 180 AND
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 174 AND
                 (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
             1
          END),
@@ -100,30 +131,84 @@
      0) "deliveryRedAmount",
  
  <!--自用膜片预期标准：ULP与BW（含HW）为70个自然日，SW与NF合理时长为160个自然日-->
+ <!--2025-07-08
+		自用的预期标准改为：ULP系列与BW(含HW)系列、SW系列为80个自然日，NF系列标准为160个自然日。
+		-->
+		<!--2025-07-14
+		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为170个自然日		
+		-->
  NVL(SUM(CASE
            WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 70 AND
-                T.DIFF &lt;= 90 AND
-                (T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
+                T.DIFF &lt;= 84 AND
+                ( T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
                 T.MATER_CLASS_CODE = 'HW') THEN
             T.AMOUNT
-           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 160 AND
-                T.DIFF &lt;= 180 AND
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 170 AND
+                T.DIFF &lt;= 174 AND
                 (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
             T.AMOUNT
          END),
      0) "selfYellowAmount",
  <!--自用膜片超期标准：ULP与BW（含HW）膜片为90个自然日，SW与NF膜片为180个自然日-->
+ <!--2025-07-08
+		膜片自用的超标标准也修改为：ULP系列与BW(含HW)系列、SW系列片为90个自然日，NF系列膜片标准为180个自然日。
+		-->
+<!--2025-07-14
+		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
+		-->
  NVL(SUM(CASE
-           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 90 AND
-                (T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 84 AND
+                ( T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
                 T.MATER_CLASS_CODE = 'HW') THEN
             T.AMOUNT
-           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 180 AND
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 174 AND
                 (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
             T.AMOUNT
          END),
      0) "selfRedAmount"
   FROM V_KS_DIAPHRAGM_STOCK_WARN T
+  where to_char(t.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+  
+  <isNotNull prepend="and" property="batchNoStr"> 
+		       t.batch_no in($batchNoStr$)
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="ifChoice"> 
+		       t.if_Choice = #ifChoice#
+	</isNotNull>
+	<isNotNull prepend="and" property="storageIds"> 
+		       t.storage_id in($storageIds$)
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="position"> 
+		       t.position = #position#
+	</isNotNull>
+  	<isNotNull prepend="and" property="perfFlagId"> 
+		       t.PERF_FLAG_ID = #perfFlagId#
+	</isNotNull>
+  
+  	<isNotNull prepend="and" property="lineId"> 
+		       t.line_id = #lineId#
+	</isNotNull> 
+	<isNotNull prepend="and" property="specId"> 
+		       t.spec_id = #specId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="supId"> 
+		       t.SUP_ID = #supId#
+	</isNotNull>
+	
+	 <isNotNull prepend="and" property="orderNo"> 
+		       upper(t.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo"> 
+		       upper(t.plan_No) '%' || upper(#planNo#) || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="batchNoStr"> 
+		       t.batch_no in($batchNoStr$)
+	</isNotNull>
+	
  </select>
  
  <select id="queryStockSelfCount" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
@@ -174,4 +259,15 @@
 	</isNotNull>
 	ORDER BY t.mater_spec_name
  </select>
+ 
+ <!--罗海鹰、吴敏、任栋-->
+ <select id="queryUsers4Mail" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	SELECT V.USERID "userId", V.OPERATORNAME "userName"
+	  FROM (SELECT DISTINCT COLUMN_VALUE USER_ID
+	          FROM TABLE(SPLIT('KS00307,LHY,KS01147,dafu',
+	                           ','))) T
+	  LEFT JOIN V_AC_OPERATOR_TRS V
+	    ON T.USER_ID = V.USERID
+	 WHERE V.USERID IS NOT NULL
+	</select> 
 </sqlMap>

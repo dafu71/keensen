@@ -62,8 +62,8 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateMgr.prototype.initEvent = 
 							scratchLengthSum += parseFloat(scratchLength);
 						})
 						
-				//var passful = aUsefulLengthSum / outLengthSum * 100;
-				var passful = aUsefulLengthSum / actualLengthSum * 100;
+				var passful = aUsefulLengthSum / outLengthSum * 100;
+				//var passful = aUsefulLengthSum / actualLengthSum * 100;
 				
 				passful = roundToDecimalPlace(passful,2);
 				var r = new Ext.data.Record({

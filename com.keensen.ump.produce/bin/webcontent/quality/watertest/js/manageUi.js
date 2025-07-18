@@ -119,22 +119,22 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 			// collapsible : true,
 			titleCollapse : false,
 			fields : [{
-						xtype : 'datefield',
+						xtype : 'datetimefield',
 						name : 'condition/testTimeStart',
 						fieldLabel : '测试时间',
 						colspan : 1,
 						anchor : '85%',
 						// allowBlank : false,
 						editable : true,
-						format : 'Y-m-d'
+						format : 'Y-m-d H:i'
 					}, {
-						xtype : 'datefield',
+						xtype : 'datetimefield',
 						name : 'condition/testTimeEnd',
 						fieldLabel : '至',
 						colspan : 1,
 						anchor : '85%',
 						editable : true,
-						format : 'Y-m-d'
+						format : 'Y-m-d H:i'
 					}, {
 						xtype : 'testtypecombo',
 						hiddenName : 'condition/testTypeId',
@@ -244,7 +244,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 		this.queryPanel.addButton({
 					text : "导出",
 					// rescode : '10002661',
-					hidden : true,
+					//hidden : true,
 					id : hwatertestExportButton,
 					scope : this,
 					iconCls : 'icon-application_excel',
@@ -284,6 +284,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 			delUrl : 'com.keensen.ump.produce.quality.hwatertest.deleteWaterTest.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'testTime',
+						width : 120,
 						header : '测试时间 '
 					}, {
 						dataIndex : 'cmBatchNo',
@@ -500,8 +501,8 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 							height : 5,
 							colspan : 24
 						}, {
-							xtype : 'datefield',
-							format : "Y-m-d",
+							xtype : 'datetimefield',
+							format : "Y-m-d H:i:00",
 							value : new Date(),
 							name : 'entity/testTime',
 							ref : '../../testTime',
@@ -857,8 +858,8 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 							height : 5,
 							colspan : 24
 						}, {
-							xtype : 'datefield',
-							format : "Y-m-d",
+							xtype : 'datetimefield',
+							format : "Y-m-d H:i:00",
 							// value : new Date(),
 							name : 'entity/testTime',
 							dataIndex : 'testTime',

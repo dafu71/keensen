@@ -1,19 +1,21 @@
 com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = function() {
 
 	var _this = this;
-	
-	//导出白名单
-	//李梦超
+
+	// 导出白名单
+	// 李梦超
 	var white = ['KS01242'];
-	
-	
-	
-	if(white.indexOf(uid) > -1 ){
+	var vip = ['XXB', 'LHY'];
+
+	if (white.indexOf(uid) > -1) {
 		var today = new Date();
 		var dayOfWeek = today.getDay();
-		
-		if(dayOfWeek==2)
+
+		if (dayOfWeek == 2)
 			this.queryPanel.buttons[2].setVisible(true);
+	}
+	if (vip.indexOf(uid) > -1) {
+		this.queryPanel.buttons[2].setVisible(true);
 	}
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -67,20 +69,26 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 
 	this.listPanel.store.on('load', function() {
 		var cnt = _this.listPanel.store.getCount();
-		if (cnt == 0)
+		if (cnt == 0) {
+			Ext.getCmp('selfYellowCount').setValue('');
+			Ext.getCmp('selfRedCount').setValue('');
+			Ext.getCmp('selfYellowAmount').setValue('');
+			Ext.getCmp('selfRedAmount').setValue('');
+			Ext.getCmp('deliveryYellowCount').setValue('');
+			Ext.getCmp('deliveryRedCount').setValue('');
+			Ext.getCmp('deliveryYellowAmount').setValue('');
+			Ext.getCmp('deliveryRedAmount').setValue('');
+			Ext.getCmp('storageStockAmount').setValue('');
 			return;
-		
-		/*var records = _this.listPanel.store.getRange();
-		var storageStockAmount = 0;
-		for(var i=0;i<cnt;i++){
-			var r = records[i];
-			var amount = parseFloat(r.data.amount);
-			storageStockAmount +=amount;
-		}*/
-		
-		Ext.getCmp('storageStockAmount').setValue('库存数量:'
-								+ storageStockAmount);
-		
+		}
+		/*
+		 * var records = _this.listPanel.store.getRange(); var
+		 * storageStockAmount = 0; for(var i=0;i<cnt;i++){ var r = records[i];
+		 * var amount = parseFloat(r.data.amount); storageStockAmount +=amount; }
+		 */
+
+		Ext.getCmp('storageStockAmount').setValue('库存数量:' + storageStockAmount);
+
 		_this.requestMask = this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
 							msg : "后台正在操作,请稍候!"
@@ -89,7 +97,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 		Ext.Ajax.request({
 			url : "com.keensen.ump.produce.diaphragm.storage.safestorage.queryStockCount.biz.ext",
 			method : "post",
-			jsonData:_this.queryPanel.getForm().getValues(),
+			jsonData : _this.queryPanel.getForm().getValues(),
 			success : function(resp) {
 				var ret = Ext.decode(resp.responseText);
 				if (ret.success) {
@@ -111,7 +119,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 								+ data.deliveryYellowAmount);
 						Ext.getCmp('deliveryRedAmount').setValue('超标米数:'
 								+ data.deliveryRedAmount);
-						
+
 						Ext.getCmp('storageStockAmount').setValue('库存数量:'
 								+ data.stockAmount);
 
@@ -260,7 +268,8 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.onFhremark =
 					arr2.push(r.data.batchNo);
 				})
 		this.editWindow2.form.findField('param/ids').setValue(arr.join(','));
-		this.editWindow2.form.findField('param/batchNOs').setValue(arr2.join(','));
+		this.editWindow2.form.findField('param/batchNOs').setValue(arr2
+				.join(','));
 		this.editWindow2.show();
 	}
 

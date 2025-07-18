@@ -1146,7 +1146,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 				pgrid : this.listPanel,
 				columns : 1,
 				loadUrl : 'com.keensen.ump.produce.quality.mptest.expandOilList.biz.ext',
-				saveUrl : 'com.keensen.ump.produce.quality.mptest.modiOilListByThird.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.mptest.modiOilListByThird2.biz.ext',
 				fields : [{
 							dataIndex : 'batchNo',
 							ref : '../../batchNo',
@@ -1406,23 +1406,26 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						header : '新配浓度'
 					}, {
 						dataIndex : 'weight',
-						header : '总重量'
+						header : '总重量(KG)'
 					}, {
 						dataIndex : 'c41Plan',
-						header : 'c41计划添加量'
+						header : 'c41计划添加量(KG)'
 					}, {
 						dataIndex : 'c42Plan',
-						header : 'c42计划添加量'
+						header : 'c42计划添加量(g)'
 					}, {
 						dataIndex : 'c41Reality',
-						header : 'c41实际添加量'
+						header : 'c41实际添加量(KG)'
+					}, {
+						dataIndex : 'c42Reality',
+						header : 'c42实际添加量(g)'
 					}, {
 						dataIndex : 'reflux',
-						header : '回流液重量'
-					}, {
+						header : '回流液重量(KG)'
+					}/*, {
 						dataIndex : 'reflux',
-						header : 'c41计划添加量'
-					}, {
+						header : '回流液计划添加量(KG)'
+					}*/, {
 						dataIndex : 'appointFxy',
 						header : '分析员'
 					}/*

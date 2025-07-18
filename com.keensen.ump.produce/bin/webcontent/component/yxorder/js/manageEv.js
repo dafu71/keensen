@@ -188,6 +188,17 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
+	
+	// 新增生产主计划数据后事件
+	this.planWeekWindow.activeItem.mon(this.planWeekWindow.activeItem, 'afterload',
+			function(win, data) {
+				var demandStockDate2 = data.demandStockDate;
+				this.planWeekWindow.enterDate.setValue(demandStockDate2);
+				var prodAmount = data.prodAmount;
+				this.planWeekWindow.jmAmount.setValue(prodAmount);
+				this.planWeekWindow.waitAmount.setValue(prodAmount);
+
+			}, this);
 }
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateMaterial = function() {

@@ -2,7 +2,7 @@
 <!-- author:dafu -->
 <sqlMap>
  <select id="queryApply" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-   SELECT T1.ID                AS "id",
+   SELECT T1.ID                AS "id", T1.is_c "isC",
       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -49,13 +49,32 @@
        T1.TRAY "tray", T1.BOX "box",T1.PERFORMANCE "performance",
        t2.apply_amount "applyAmountTotal",
        T1.is_examine "isExamine",
-       decode(t5.code,null,'否','是') "ifcstock"
+       decode(t5.code,null,'否','是') "ifcstock",
+       
+       DECODE(T1.STOCK_CONFIRM_TIME, NULL, '0', '1') "stockConfirmState",
+       TO_CHAR(T1.STOCK_CONFIRM_TIME, 'YYYY-MM-DD HH24:MI:SS') "stockConfirmTime",
+       T1.STOCK_CONFIRM_USER_ID "stockConfirmUserId",
+       T1.STOCK_CONFIRM_USER_NAME "stockConfirmUserName"
   FROM KS_COMPONENT_CHECK_HEAD T1
   left join (SELECT h.order_no,h.mark_spec_code,SUM(h.apply_amount) apply_amount from KS_COMPONENT_CHECK_HEAD h
 GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mark_spec_code = t2.mark_spec_code
   left join (select DISTINCT t.code code from KS_COMPONENT_C_STOCK t
 WHERE t.type='工业膜') t5 on t5.code=t1.code
   where 1=1
+  <isNotNull prepend="and" property="ifstockconfirm">
+  T1.STOCK_CONFIRM_TIME IS NOT NULL
+  </isNotNull>
+  
+  <isNotNull prepend = "and"  property = "stockConfirmTimeStart"> 
+          to_char(T1.STOCK_CONFIRM_TIME,'yyyy-MM-dd')  &gt;=  #stockConfirmTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "stockConfirmTimeEnd"> 
+          to_char(T1.STOCK_CONFIRM_TIME,'yyyy-MM-dd')  &lt;=  #stockConfirmTimeEnd#
+     </isNotNull>
+     
+     <isNotNull prepend="and" property="isC"> 
+		       t1.is_c  = #isC#
+	</isNotNull>
   
   <isNotNull prepend="and" property="ifcstock"> 
 		       decode(t5.code,null,'N','Y')  = #ifcstock#
@@ -99,7 +118,14 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
 		       T1.storage = #storage#
 	</isNotNull>
 	
-	order by t1.id desc
+	 <isNotNull prepend="" property="ifstockconfirm">
+	  ORDER BY T1.STOCK_CONFIRM_TIME DESC
+	  </isNotNull>
+  
+     <isNull prepend="" property="ifstockconfirm">
+	  order by t1.id desc
+	  </isNull>
+	
     </select>
     
     <select id="queryCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
@@ -187,6 +213,15 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
     <!--元件已完成绕丝-->
     and exists(SELECT 1 from qinsen.inst_raosi rs where rs.batch_no = T1.BATCH_NO)
     
+    <isEqual prepend="" property="ifprint" compareValue="是">
+    <!--元件已打印唛头-->
+    and exists(SELECT 1 from KS_COMPONENT_MARK_PRINT_RECORD prnt where prnt.prod_batch_no = T1.BATCH_NO)
+    </isEqual>
+    
+    <isEqual prepend="" property="ifprint" compareValue="否">
+    <!--元件未打印唛头-->
+    and not exists(SELECT 1 from KS_COMPONENT_MARK_PRINT_RECORD prnt where prnt.prod_batch_no = T1.BATCH_NO)
+    </isEqual>
     
 	<isNotNull prepend="and" property="batchNo"> 
 		       t1.batch_No = #batchNo#
@@ -358,4 +393,31 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
 	</isNotNull>
     </select>
     
+    <select id="queryOrderByJm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT qj.order_no "orderNo",qj.prod_spec_id "prodSpecId",
+	pms.mater_spec_name "prodSpecName" from qinsen.inst_qijian qj
+	LEFT JOIN qinsen.para_mater_spec pms
+	ON pms.mater_spec_id=qj.prod_spec_id
+	LEFT JOIN qinsen.inst_juanmo_main jm
+	ON qj.juanmo_batch_id=jm.record_id
+	where 1=1
+	<isNotNull prepend="and" property="juanmoBatchNo"> 
+		       jm.batch_no = #juanmoBatchNo#
+	</isNotNull>
+	</select>
+  
+   <select id="queryCode4StockConfirm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+       select t.code "code",
+		DECODE(t.stock_confirm_time,NULL,'0','1') "state" ,
+		t.id "id"
+		from KS_COMPONENT_CHECK_HEAD t
+		where
+		t.code = #code#
+   </select>
+   
+   <update id="cancelStockConfirm" parameterClass="java.util.HashMap" >
+    update KS_COMPONENT_CHECK_HEAD t
+    set t.stock_confirm_time = null
+    where id = #id#
+    </update>
     </sqlMap>

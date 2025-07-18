@@ -183,6 +183,16 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 				}
 
 			});
+			
+			
+	this.queryPanel3.prodcombo.store.on('load', function() {
+				if(!Ext.isEmpty(_this.opt)){
+					var prodSpecId = _this.opt;
+					_this.queryPanel3.prodcombo.setValue(prodSpecId);
+					
+				}
+				_this.opt = '';
+			});
 
 }
 
@@ -236,7 +246,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onChoose = function() {
 	// ,
 	// 'condition/prodSpecId' : prodSpecId
 	// };
-	//store.load();
+	// store.load();
 
 	var prodSpecNameStore = this.prodSpecNameStore;
 	prodSpecNameStore.baseParams = {
@@ -730,6 +740,15 @@ com.keensen.ump.produce.component.applyMgr.prototype.onDel3 = function() {
 }
 
 com.keensen.ump.produce.component.applyMgr.prototype.exportExcel = function() {
+	
+	//doQuerySqlAndExport(
+	//			this,
+	//			this.queryPanel,
+	//			this.listPanel,
+	//			'请检',
+	//			'com.keensen.ump.produce.component.apply.queryApply',
+	//			'0,1');
+	//return;
 	var _this = this;
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
@@ -974,4 +993,57 @@ com.keensen.ump.produce.component.applyMgr.prototype.onChoose2 = function() {
 	prodSpecNameStore.load();
 
 	this.chooseWindow.show();
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.onScan = function() {
+	
+	var _this = this;
+	var obj = this.inputPanel.juanmoBatchNo;
+	var juanmoBatchNo = obj.getValue();
+	
+	Ext.Ajax.request({
+		method : "post",
+		scope : this,
+		url : 'com.keensen.ump.produce.component.apply.queryOrderByJm.biz.ext',
+		jsonData : {
+			"condition/juanmoBatchNo" : juanmoBatchNo
+		},
+		success : function(response, action) {
+			var result = Ext.decode(response.responseText);
+			if (result.msg != 1) {
+				Ext.Msg.alert("系统提示", result.msg, function() {
+
+						});
+
+			} else {
+				var data = result.data[0];
+				var orderNo = data.orderNo;
+				var prodSpecId = data.prodSpecId;
+				_this.opt = prodSpecId;
+				
+				_this.inputPanel.orderNo.setValue(orderNo);
+				_this.queryPanel3.orderNo.setValue(orderNo);
+				// this.queryPanel3.prodSpecId.setValue(prodSpecId);
+				_this.queryPanel3.prodcombo.reset();
+				_this.queryPanel3.prodcombo.getStore().baseParams = {
+					'condition/orderNo' : orderNo,
+					'condition/prodSpecId' : prodSpecId
+				};
+				_this.queryPanel3.prodcombo.getStore().load();
+				_this.chooseWindow.show();
+			}
+		}
+	});
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.exportExcel2 = function() {
+	
+	doQuerySqlAndExport(
+				this,
+				this.queryPanel,
+				this.listPanel,
+				'请检',
+				'com.keensen.ump.produce.component.apply.queryApply',
+				'0,1');
+	
 }

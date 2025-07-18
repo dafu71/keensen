@@ -464,7 +464,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 	
 	var test2 = (parseFloat(light2)-parseFloat(a))/parseFloat(b);
 	test2 = test2 * factor;
-	test2 = Math.round(test2 * 100) / 100;
+	test2 = Math.round(test2 * 1000) / 1000;
 	this.editWindow.concentration.setValue(test2);
 	
 	var oiltype = this.editWindow.reserve1.getValue();
@@ -496,7 +496,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 			this.editWindow.c42Plan.setValue(c42Plan);
 			weight = weight + c42Plan / 1000;
 			weight = Math.round(weight * 100) / 100;
-			this.editWindow.weight.setValue(weight);
+			//this.editWindow.weight.setValue(weight);
 			return;
 		}
 		// =(300/0.0025-300/0.0026)/1000
@@ -513,7 +513,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 			this.editWindow.c42Plan.setValue(0);
 			weight = weight + c41Plan;
 			weight = Math.round(weight * 100) / 100;
-			this.editWindow.weight.setValue(weight);
+			//this.editWindow.weight.setValue(weight);
 			return;
 		}
 	}else{//回流油相液
@@ -525,7 +525,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 			this.editWindow.c42Plan.setValue(c42Plan);
 			weight = weight + c42Plan / 1000;
 			weight = Math.round(weight * 100) / 100;
-			this.editWindow.weight.setValue(weight);
+			//this.editWindow.weight.setValue(weight);
 			return;			
 		}else{
 			var c42Plan = 0;
@@ -535,7 +535,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 			this.editWindow.c42Plan.setValue(0);
 			weight = weight + c41Plan;
 			weight = Math.round(weight * 100) / 100;
-			this.editWindow.weight.setValue(weight);
+			//this.editWindow.weight.setValue(weight);
 			return;
 		}
 	}

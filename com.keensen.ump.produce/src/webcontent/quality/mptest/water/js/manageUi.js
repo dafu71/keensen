@@ -26,8 +26,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-			height : 100,
-			columns : 5,
+			height : 130,
+			columns : 4,
 			border : true,
 			// collapsible : true,
 			titleCollapse : false,
@@ -92,6 +92,10 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 				fieldLabel : '水相液批号<br>膜片批号',
 				allowBlank : true
 			}, {
+				xtype : 'displayfield',
+				height : '5',
+				colspan : 4
+			}, {
 
 				xtype : 'combobox',
 				fieldLabel : '当前步骤',
@@ -109,6 +113,14 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						this.queryPanel.step.reset();
 					}
 				}
+			}, {
+				xtype : "dateregion",
+				colspan : 1,
+				anchor : '95%',
+				nameArray : ['condition/createTimeStart',
+						'condition/createTimeEnd'],
+				fieldLabel : "记录日期",
+				format : "Y-m-d"
 			}]
 		});
 
@@ -116,7 +128,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:uid != 'XXB',
+					hidden : uid != 'dafu',
 					handler : this.exportExcel
 				});
 
@@ -143,7 +155,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 		this.listPanel = new Ext.fn.ListPanel({
 			// title : '【水相液浓度列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			tbar : [{
@@ -264,6 +276,79 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 								return '';
 							}
 						}
+					}, {
+						dataIndex : 'c21Test',
+						header : 'c21测试浓度',
+						renderer : function(v, m, r, i) {
+							var up21 = r.get('up21');
+							var low21 = r.get('low21');
+							if (parseFloat(v) >= parseFloat(low21)
+									&& parseFloat(v) <= parseFloat(up21)) {
+								return v
+							} else {
+								return "<span style='color:red'>" + v
+										+ "</span>"
+							}
+						}
+					}, {
+						dataIndex : 'c23Test',
+						header : 'c23测试浓度',
+						renderer : function(v, m, r, i) {
+							var up23 = r.get('up23');
+							var low23 = r.get('low23');
+							if (parseFloat(v) >= parseFloat(low23)
+									&& parseFloat(v) <= parseFloat(up23)) {
+								return v
+							} else {
+								return "<span style='color:red'>" + v
+										+ "</span>"
+							}
+						}
+					}, {
+						dataIndex : 'c27Test',
+						header : 'c27测试浓度',
+						renderer : function(v, m, r, i) {
+							var up27 = r.get('up27');
+							var low27 = r.get('low27');
+							if (parseFloat(v) >= parseFloat(low27)
+									&& parseFloat(v) <= parseFloat(up27)) {
+								return v
+							} else {
+								return "<span style='color:red'>" + v
+										+ "</span>"
+							}
+						}
+					}, {
+						dataIndex : 'c28Test',
+						header : 'c28测试浓度',
+						renderer : function(v, m, r, i) {
+							var up28 = r.get('up28');
+							var low28 = r.get('low28');
+							if (parseFloat(v) >= parseFloat(low28)
+									&& parseFloat(v) <= parseFloat(up28)) {
+								return v
+							} else {
+								return "<span style='color:red'>" + v
+										+ "</span>"
+							}
+						}
+					}, {
+						dataIndex : 'c30Test',
+						header : 'c30测试浓度',
+						renderer : function(v, m, r, i) {
+							var up30 = r.get('up30');
+							var low30 = r.get('low30');
+							if (parseFloat(v) >= parseFloat(low30)
+									&& parseFloat(v) <= parseFloat(up30)) {
+								return v
+							} else {
+								return "<span style='color:red'>" + v
+										+ "</span>"
+							}
+						}
+					}, {
+						dataIndex : 'c29Test',
+						header : 'c29测试浓度'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.mptest5.queryWaterRecordsByPage.biz.ext',
@@ -323,6 +408,42 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							name : 'position'
 						}, {
 							name : 'code'
+						}, {
+							name : 'c21Test'
+						}, {
+							name : 'c23Test'
+						}, {
+							name : 'c29Test'
+						}, {
+							name : 'c27Test'
+						}, {
+							name : 'c28Test'
+						}, {
+							name : 'c30Test'
+						}, {
+							name : 'up21'
+						}, {
+							name : 'up23'
+						}, {
+							name : 'up29'
+						}, {
+							name : 'up27'
+						}, {
+							name : 'up28'
+						}, {
+							name : 'up30'
+						}, {
+							name : 'low21'
+						}, {
+							name : 'low23'
+						}, {
+							name : 'low29'
+						}, {
+							name : 'low27'
+						}, {
+							name : 'low28'
+						}, {
+							name : 'low30'
 						}]
 			})
 		})
@@ -893,7 +1014,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 									var diff21 = _this.editWindow.diff21
 											.getValue();
 									var c21Test = parseFloat(newValue);
-									_this.onJudge(c21,diff21,c21Test,_this.editWindow.c21Info);
+									_this.onJudge(c21, diff21, c21Test,
+											_this.editWindow.c21Info);
 								}
 							}
 						}, {
@@ -925,7 +1047,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 									var diff23 = _this.editWindow.diff23
 											.getValue();
 									var c23Test = parseFloat(newValue);
-									_this.onJudge(c23,diff23,c23Test,_this.editWindow.c23Info);
+									_this.onJudge(c23, diff23, c23Test,
+											_this.editWindow.c23Info);
 								}
 							}
 						}, {
@@ -956,7 +1079,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 									var diff24 = _this.editWindow.diff24
 											.getValue();
 									var c24Test = parseFloat(newValue);
-									_this.onJudge(c24,diff24,c24Test,_this.editWindow.c24Info);
+									_this.onJudge(c24, diff24, c24Test,
+											_this.editWindow.c24Info);
 								}
 							}
 						}, {
@@ -987,7 +1111,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 									var diff27 = _this.editWindow.diff27
 											.getValue();
 									var c27Test = parseFloat(newValue);
-									_this.onJudge(c27,diff27,c27Test,_this.editWindow.c27Info);
+									_this.onJudge(c27, diff27, c27Test,
+											_this.editWindow.c27Info);
 								}
 							}
 						}, {
@@ -1018,7 +1143,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 									var diff28 = _this.editWindow.diff28
 											.getValue();
 									var c28Test = parseFloat(newValue);
-									_this.onJudge(c28,diff28,c28Test,_this.editWindow.c28Info);
+									_this.onJudge(c28, diff28, c28Test,
+											_this.editWindow.c28Info);
 								}
 							}
 						}, {
@@ -1049,7 +1175,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 									var diff30 = _this.editWindow.diff30
 											.getValue();
 									var c30Test = parseFloat(newValue);
-									_this.onJudge(c30,diff30,c30Test,_this.editWindow.c30Info);
+									_this.onJudge(c30, diff30, c30Test,
+											_this.editWindow.c30Info);
 								}
 							}
 						}, {
@@ -2597,13 +2724,13 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 					autoScroll : true,
 					clicksToEdit : 1,
 					selModel : selModel4BaseFormula,
-					
+
 					tbar : [{
-						xtype : 'displayfield',
-						ref:'../info',
-						value : '&nbsp;'
-					}],
-					
+								xtype : 'displayfield',
+								ref : '../info',
+								value : '&nbsp;'
+							}],
+
 					columns : [new Ext.grid.RowNumberer(),
 							selModel4BaseFormula, {
 								dataIndex : 'watertype',
@@ -3045,6 +3172,66 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 											}
 										}))
 
+							}, {
+
+								dataIndex : 'c29',
+								sortable : true,
+								width : 100,
+								header : 'C29浓度',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'c29', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'diff29',
+								sortable : true,
+								width : 100,
+								header : 'C29浓度公差',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'diff29', newValue,
+															oldValue);
+												}
+											}
+										}))
+
 							}],
 					store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.produce.quality.mpwatertest.queryBaseFormula.biz.ext',
@@ -3118,6 +3305,10 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 									name : 'diff30'
 								}, {
 									name : 'watertype'
+								}, {
+									name : 'c29'
+								}, {
+									name : 'diff29'
 								}]
 					})
 				})

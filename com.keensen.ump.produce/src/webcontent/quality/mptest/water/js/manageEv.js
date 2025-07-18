@@ -438,7 +438,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onCalc = function() {
 					_this.inputWindow.c30Plan.setValue(data.c30);
 					
 					_this.inputWindow.c24Plan.setValue(data.c24);
-					
+					_this.inputWindow.c29Plan.setValue(data.c29);
 					_this.inputWindow.roPlan.setValue(data.ro);
 					// _this.inputWindow.c21Plan.setReadOnly(true);
 					// _this.inputWindow.c22Plan.setReadOnly(true);

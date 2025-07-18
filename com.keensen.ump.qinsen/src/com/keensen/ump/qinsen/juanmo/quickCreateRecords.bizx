@@ -19,9 +19,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link27</targetConnections>
-    <targetConnections>link13</targetConnections>
     <targetConnections>link25</targetConnections>
+    <targetConnections>link13</targetConnections>
+    <targetConnections>link27</targetConnections>
     <location x="965" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -123,8 +123,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link11</targetConnections>
     <targetConnections>link22</targetConnections>
+    <targetConnections>link11</targetConnections>
     <location x="816" y="303"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend0label</nodeLabel>
@@ -296,7 +296,7 @@
     <size height="28" width="28"/>
     <nodeLabel>assign3label</nodeLabel>
     <process:copy>
-      <process:from type="query" pattern="reference">entity/produceDt</process:from>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
       <process:to type="query">juanmo/produceDt</process:to>
     </process:copy>
     <process:copy>

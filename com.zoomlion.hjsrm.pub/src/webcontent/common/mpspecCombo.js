@@ -83,6 +83,7 @@ com.keensen.ump.MpspecComboBox = Ext.extend(Ext.form.ComboBox, {
 				this.store = new Ext.data.JsonStore({
 							url:'com.keensen.ump.base.base.queryMpspec.biz.ext',
 							root : 'data',
+							baseParams : {'condition/state':'Y'},
 							autoLoad : true,
 							fields : [{
 										name : "id"

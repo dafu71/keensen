@@ -2,7 +2,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 	this.initPanel = function() {
 
 		this.queryFlag = false;
-		
+
 		var defectTmWinId = Ext.id();
 		var defectZmWinId = Ext.id();
 		var defectTmWinId2 = Ext.id();
@@ -76,17 +76,17 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 
 	this.initQueryPanel = function() {
 		var _this = this;
-		
+
 		this.ynStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['是', '是'], ['否', '否']]
 				});
-		
+
 		this.productTypeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['量产', '量产'], ['试量产', '试量产'], ['实验', '实验']]
 				});
-				
+
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 140,
 					columns : 4,
@@ -148,7 +148,8 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						hiddenName : 'condition/recTacheId',
 						emptyText : '--请选择--',
 						anchor : '95%',
-						store : [[null, '全部'], [100, '涂膜'], [101, '裁叠膜'], [99, '铸膜'], [106, '发货']],
+						store : [[null, '全部'], [100, '涂膜'], [101, '裁叠膜'],
+								[99, '铸膜'], [106, '发货']],
 						listeners : {
 							scope : this,
 							'expand' : function(A) {
@@ -212,24 +213,39 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 							}
 						}
 					}, {
-								xtype : 'combobox',
-								mode : 'local',
-								fieldLabel : '是否已扯',
-								ref : '../ifTear',
-								hiddenName : 'condition/ifTear',
-								anchor : '95%',
-								colspan : 1,
-								emptyText : '--请选择--',
-								editable : false,
-								store : this.ynStore,
-								displayField : "name",
-								valueField : "code",
-								listeners : {
-									"expand" : function(A) {
-										_this.queryPanel.ifTear.reset()
-									}
-								}
-							}]
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否已扯',
+						ref : '../ifTear',
+						hiddenName : 'condition/ifTear',
+						anchor : '95%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.queryPanel.ifTear.reset()
+							}
+						}
+					}, {
+
+						xtype : 'combo',
+						fieldLabel : '是否外销',
+						ref : '../isWx',
+						hiddenName : 'condition/isWx',
+						emptyText : '--请选择--',
+						anchor : '95%',
+						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.isWx.reset();
+							}
+						}
+					}]
 				});
 		this.queryPanel.addButton({
 					text : "导出",
@@ -283,7 +299,7 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
-					},{
+					}, {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
@@ -326,6 +342,10 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 					}, {
 						header : '是否已扯',
 						dataIndex : 'ifTear'
+					}, {
+						header : '外销',
+						width : 50,
+						dataIndex : 'isWxName'
 					}, {
 						header : '不良产生时间',
 						dataIndex : 'produceDate'
@@ -413,6 +433,8 @@ com.keensen.ump.qinsen.quality.DefectMgr = function() {
 							name : 'ifModifyDefect'
 						}, {
 							name : 'ifModifyDefectName'
+						}, {
+							name : 'isWxName'
 						}]
 			})
 		})

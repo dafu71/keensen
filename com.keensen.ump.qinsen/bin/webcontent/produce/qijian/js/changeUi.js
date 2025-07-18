@@ -17,7 +17,7 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr = function() {
 
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
-					columns : 3,
+					columns : 4,
 					border : true,
 					collapsible : false,
 					titleCollapse : false,
@@ -27,7 +27,7 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr = function() {
 						name : 'condition/produceBeginDate',
 						fieldLabel : '补换标时间',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
@@ -38,7 +38,7 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr = function() {
 						name : 'condition/produceEndDate',
 						fieldLabel : '至',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						editable : true,
 						format : 'Y-m-d H:i',
 						allowBlank : false,
@@ -47,9 +47,15 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr = function() {
 					}, {
 
 						xtype : 'textfield',
-						name : 'condition/batchNo',
-						anchor : '75%',
-						fieldLabel : '元件序号'
+						name : 'condition/newBatchNo',
+						anchor : '95%',
+						fieldLabel : '新元件序号'
+					}, {
+
+						xtype : 'textfield',
+						name : 'condition/oldBatchNo',
+						anchor : '95%',
+						fieldLabel : '旧元件序号'
 					}]
 				});
 

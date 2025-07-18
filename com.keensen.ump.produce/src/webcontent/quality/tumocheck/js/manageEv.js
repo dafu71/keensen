@@ -162,7 +162,8 @@ com.keensen.ump.produce.quality.tumocheckMgr.prototype.onDel = function() {
 					url : url,
 					method : "post",
 					jsonData : {
-						'entitys/recordId' : C[0].data.recordId
+						'entitys/recordId' : C[0].data.recordId,
+						'entitys/batchNo' : C[0].data.batchNo
 					},
 					success : function(resp) {
 						var ret = Ext.decode(resp.responseText);

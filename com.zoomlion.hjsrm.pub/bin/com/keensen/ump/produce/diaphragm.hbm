@@ -1593,4 +1593,92 @@
             <column length="50" name="STORAGE_USER_NAME"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.diaphragm.KsDiaphragmC92" table="KS_DIAPHRAGM_C92">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="batchNo" type="string">
+            <column length="20" name="BATCH_NO"/>
+        </property>
+        <property name="a" type="string">
+            <column length="20" name="A"/>
+        </property>
+        <property name="b" type="string">
+            <column length="20" name="B"/>
+        </property>
+        <property name="weightBefore7" type="string">
+            <column length="20" name="WEIGHT_BEFORE7"/>
+        </property>
+        <property name="weightAfter7" type="string">
+            <column length="20" name="WEIGHT_AFTER7"/>
+        </property>
+        <property name="light7" type="string">
+            <column length="20" name="LIGHT7"/>
+        </property>
+        <property name="density7" type="string">
+            <column length="20" name="DENSITY7"/>
+        </property>
+        <property name="result7" type="string">
+            <column length="50" name="RESULT7"/>
+        </property>
+        <property name="weightBefore8" type="string">
+            <column length="20" name="WEIGHT_BEFORE8"/>
+        </property>
+        <property name="weightAfter8" type="string">
+            <column length="20" name="WEIGHT_AFTER8"/>
+        </property>
+        <property name="light8" type="string">
+            <column length="20" name="LIGHT8"/>
+        </property>
+        <property name="density8" type="string">
+            <column length="20" name="DENSITY8"/>
+        </property>
+        <property name="result8" type="string">
+            <column length="50" name="RESULT8"/>
+        </property>
+        <property name="operatorName" type="string">
+            <column length="50" name="OPERATOR_NAME"/>
+        </property>
+    </class>
 </hibernate-mapping>

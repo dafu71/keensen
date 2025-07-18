@@ -5,13 +5,13 @@
 		SELECT
 		DECODE(#watertype#,'水相液','A','水相补充液','S','') || 
 		#line# ||
-		(SELECT mp_batch_code FROM qinsen.PARA_MATER_SPEC WHERE mater_spec_name=#mptype#)||
+		(SELECT nvl(new_batch_code,mp_batch_code) FROM qinsen.PARA_MATER_SPEC WHERE mater_spec_name=#mptype#)||
 		'A' ||
 		(SELECT ymd FROM v_ks_ymd) ||   
 		(SELECT SUBSTR('ABCDEFGHIJKLMNOPQRSTUVWXYZ',COUNT(1)+1 ,1)
 		  FROM KS_QUALITY_MP_TEST_WATER_HEAD T
 		 WHERE TO_CHAR(T.CREATE_TIME, 'yyyyMMdd') > '20240807'
-		 AND SUBSTR(T.BATCH_NO, 6, 4) = (SELECT ymd FROM v_ks_ymd) 
+		 AND SUBSTR(T.BATCH_NO, DECODE(LENGTH(T.BATCH_NO),11,6,7), 4) = (SELECT ymd FROM v_ks_ymd)  
 		 and t.watertype &lt;> '水相循环液') || '1' "batchNo"
 		
 		 FROM DUAL
@@ -26,7 +26,7 @@
        ROUND(T.C27 * #weight# * 10, 0) "c27",
        ROUND(T.C28 * #weight# * 10, 0) "c28",
        ROUND(T.C30 * #weight# * 10, 0) "c30",
-       
+       ROUND(T.C29 * #weight# * 10, 0) "c29",
        ROUND(T.C24 * #weight# * 10, 0) "c24",
        
        ROUND(#weight# -
@@ -150,7 +150,8 @@
        T1.C24            AS "c24",
        T1.C27            AS "c27",
        T1.C28            AS "c28",
-       T1.C30            AS "c30",
+       T1.C30            AS "c30",T1.C29            AS "c29",
+       T1.DIFF29         AS "diff29",
        T1.DIFF21         AS "diff21",
        T1.DIFF22         AS "diff22",
        T1.DIFF23         AS "diff23",

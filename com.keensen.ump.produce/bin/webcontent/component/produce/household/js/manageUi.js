@@ -60,7 +60,7 @@ com.keensen.ump.produce.component.produce.HouseholdMgr = function() {
 				})
 
 		this.basePipeStore = new Ext.data.JsonStore({
-			url : 'com.keensen.ump.produce.component.produce.queryBasePipe.biz.ext',
+			url : 'com.keensen.ump.produce.component.produce.queryBasePipe2.biz.ext',
 			root : 'data',
 			autoLoad : true,
 			baseParams : {

@@ -129,7 +129,8 @@
 		t1.spec_Name_Mark as "specNameMark",
 		t1.spec_Name_Mark2 as "specNameMark2",
 		t1.label_Drawing_Code2 as "labelDrawingCode2",
-		t1.mark_Drawing_Code2 as "markDrawingCode2"
+		t1.mark_Drawing_Code2 as "markDrawingCode2",
+		t1.seal_Require "sealRequire"
         
   FROM KS_COMPONENT_YXORDER_BASE T1
   LEFT JOIN qinsen.para_mater_spec pms on pms.mater_spec_id=t1.mp_spec_id
@@ -401,9 +402,16 @@
        T1.UNIT       AS "unit",
        T1.AMOUNT     AS "amount"
   	FROM KS_COMPONENT_YXORDER_STOCK T1</select>
-    <select id="queryYxorderStockAmount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.MATER_CODE "materCode",SUM(T1.AMOUNT) "amount"
-  FROM KS_COMPONENT_YXORDER_STOCK T1
-  GROUP BY t1.mater_code</select>
+    <select id="queryYxorderStockAmount" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT bm.MATER_CODE "materCode",
+       nvl(T1.AMOUNT,0)     "amount",
+       BM.MATER_NAME "materName",
+       BM.UNIT       "unit",
+       BM.spec_name  "specName"
+  FROM (SELECT T.MATER_CODE, SUM(T.AMOUNT) AMOUNT
+          FROM KS_COMPONENT_YXORDER_STOCK T
+         GROUP BY T.MATER_CODE) T1
+  right JOIN (SELECT DISTINCT MATER_CODE,MATER_NAME,unit,spec_name FROM KS_BASE_MATER) BM
+    ON BM.MATER_CODE = T1.MATER_CODE</select>
     <update id="updateBatchGoodsState" parameterClass="java.util.HashMap">update KS_COMPONENT_YXORDER_MCONFIRM t
      set t.goods_state= #goodsState#,t.update_time = sysdate,
      t.update_user_id = #updateUserId#,t.update_name = #updateName#
@@ -417,5 +425,45 @@
     <update id="saveCancelStateBatch" parameterClass="java.util.HashMap">update KS_COMPONENT_YXORDER_BASE t
     	set t.state = '取消订单',
     	t.update_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
+    <select id="querySpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">    
+  SELECT T.MATER_SPEC_ID "materSpecId",
+       nvl(p.prod_spec_name,T.MATER_SPEC_NAME) "materSpecName",
+       t.dense_net_type "denseNet",
+       DECODE(T.LID, '/', '', NULL, '', T.LID) "lid",
+       T2.A_SALT_LOW_LIMIT "saltLow",
+       T2.A_GPD_LOW_LIMIT "gpdLow",
+       T2.A_GPD_UP_LIMIT "gpdUp",
+       T2.PRESSURE "pressure",
+       T2.TEMPRETURE "temperature",
+       T2.DENSITY "concentration",
+       T2.RECOVERY "recyclePercent",
+       T2.PH "ph",
+       p.label_Drawing_Code as "labelDrawingCode",
+		p.bag_Drawing_Code as "bagDrawingCode",
+		p.box_Drawing_Code as "boxDrawingCode",
+		p.mark_Drawing_Code as "markDrawingCode"
+  FROM QINSEN.PARA_MATER_SPEC T
+  LEFT JOIN QINSEN.INST_PROD_WATER_STD T2
+    ON T.MATER_SPEC_ID = T2.PROD_SPEC_ID
+  left join KS_BASE_PACK_STD p
+    ON T.MATER_SPEC_ID = p.PROD_SPEC_ID
+ WHERE T.MATER_CLASS_ID = 100030027
+	<isNotNull prepend="and" property="materSpecId">t.MATER_SPEC_ID = #materSpecId#</isNotNull>
+        <isNotNull prepend="and" property="materSpecName">nvl(p.prod_spec_name,T.MATER_SPEC_NAME) like '%' || #materSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodType">decode(t.prod_Type,'公司标准','公司标准','非公司标准') = decode(#prodType#,'公司标准','公司标准','贴牌产品','公司标准','非公司标准')</isNotNull>
+        <isNotNull prepend="and" property="noBracket">replace(nvl(p.prod_spec_name,T.MATER_SPEC_NAME),'（','(')  not like '%(%'</isNotNull>
+	
+	order by T.MATER_SPEC_NAME
+	</select>
+    <update id="updateYxOrder4Jy" parameterClass="java.util.HashMap">update KS_PROD_COMPONENT_YXORDER t
+	set t.mater_spec_name = t.mater_spec_name2,
+	t.mater_spec_id = (select distinct mater_spec_id from qinsen.para_mater_spec 
+	where mater_spec_name = t.mater_spec_name2)
+	where t.id = #id#
+	and t.type = '家用膜'</update>
+    <update id="saveCloseStateBatch" parameterClass="java.util.HashMap">update KS_PROD_COMPONENT_YXORDER t
+    	set t.close_state = #closeState#,t.close_remark = #closeRemark#,
+    	t.close_time = sysdate,t.close_user_name = #closeUserName#,t.close_user_id=#closeUserId#
     	where t.id in ($ids$)</update>
 </sqlMap>

@@ -17,7 +17,7 @@ com.keensen.ump.qinsen.produce.printrecordsMgr = function() {
 
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
-					columns : 3,
+					columns : 4,
 					border : true,
 					collapsible : false,
 					titleCollapse : false,
@@ -26,7 +26,7 @@ com.keensen.ump.qinsen.produce.printrecordsMgr = function() {
 						name : 'condition/printBeginDate',
 						fieldLabel : '打印时间',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						//allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
@@ -37,7 +37,7 @@ com.keensen.ump.qinsen.produce.printrecordsMgr = function() {
 						name : 'condition/printEndDate',
 						fieldLabel : '至',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '95%',
 						editable : true,
 						format : 'Y-m-d H:i',
 						//allowBlank : false,
@@ -46,8 +46,13 @@ com.keensen.ump.qinsen.produce.printrecordsMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/markSpecName',
-						anchor : '50%',
+						anchor : '95%',
 						fieldLabel : '唛头显示型号'
+					}, {
+						xtype : 'textfield',
+						name : 'condition/batchNoStr',
+						anchor : '95%',
+						fieldLabel : '元件序列号%-%'
 					}]
 				});
 
@@ -93,7 +98,7 @@ com.keensen.ump.qinsen.produce.printrecordsMgr = function() {
 							var imgUrl = rec.data.imgUrl;
 							var logoId = rec.data.logoId;
 							var recordId = rec.data.recordId;
-							if (logoId.length == 9 && logoId.charAt(0) == '2') {
+							//if (logoId.length == 9 && logoId.charAt(0) == '2') {
 								return '<img src="'
 										+ rootUrl
 										+ imgUri
@@ -101,13 +106,13 @@ com.keensen.ump.qinsen.produce.printrecordsMgr = function() {
 										+ recordId
 										+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
 
-							} else {
-								return '<img src="'
-										+ imgUrl
-										+ '?ver='
-										+ recordId
-										+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
-							}
+							//} else {
+							//	return '<img src="'
+							//			+ imgUrl
+							//			+ '?ver='
+							//			+ recordId
+							//			+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+							//}
 						}
 					}, {
 						header : '元件支数',

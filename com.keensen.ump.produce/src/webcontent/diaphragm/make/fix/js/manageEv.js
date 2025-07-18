@@ -244,13 +244,22 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				if (records.length == 0) {
 					Ext.getCmp('fixtotalc11').setValue('');
 					Ext.getCmp('fixtotalc12').setValue('');
+					Ext.getCmp('fixtotalc13').setValue('');
+					Ext.getCmp('fixtotalc14').setValue('');
+					Ext.getCmp('fixtotal').setValue('');
 					return
 				}
 
 				var totalC11 = records[0].data.totalC11;
 				var totalC12 = records[0].data.totalC12;
-				Ext.getCmp('fixtotalc11').setValue('C11重量合计(kg):' + totalC11);
-				Ext.getCmp('fixtotalc12').setValue('C12重量合计(kg):' + totalC12);
+				var totalC13 = records[0].data.totalC13;
+				var totalC14 = records[0].data.totalC14;				
+				var total = records[0].data.total;
+				Ext.getCmp('fixtotalc11').setValue('C11合计(kg):' + totalC11);
+				Ext.getCmp('fixtotalc12').setValue('C12合计(kg):' + totalC12);
+				Ext.getCmp('fixtotalc13').setValue('C13合计(kg):' + totalC13);
+				Ext.getCmp('fixtotalc14').setValue('C14合计(kg):' + totalC14);
+				Ext.getCmp('fixtotal').setValue('配料合计(kg):' + total);
 			})
 }
 

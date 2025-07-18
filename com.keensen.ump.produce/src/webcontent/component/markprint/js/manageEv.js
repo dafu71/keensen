@@ -354,8 +354,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onView = functi
 	}
 	var records = A.getSelectionModel().getSelections();
 	var templateName = records[0].data.templateName;
-	
-	
+
 	var mk = new Ext.LoadMask(Ext.getBody(), {
 				msg : '正在保存，请稍候!',
 				removeMask : true
@@ -606,15 +605,14 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onPreView = fun
 	}
 	var records = A.getSelectionModel().getSelections();
 	var templateName = records[0].data.templateName;
-	
+
 	var code = records[0].data.code;
 
-	
-	if (code !='1' && code!='999') {
+	if (code != '1' && code != '999') {
 		Ext.Msg.alert("系统提示", "请选择司标或自定义模板预览！");
 		return;
 	}
-	
+
 	var f = document.getElementById('componentmarktemplatepreviewForm');
 	f.drawingCode.value = templateName;
 	var actionUrl = 'com.keensen.ump.produce.component.printMarks4PreView.flow?time='
@@ -632,4 +630,51 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onModifyLableUr
 	this.uploadForm4ChooseLable.reset();
 	this.uploadWin4ChooseLable.show();
 
+}
+
+com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onModiParam = function() {
+	var A = this.listPanel;
+	var _this = this;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var templateName = r.data.templateName;
+
+		Ext.Msg.prompt('修改打印参数', '请输入参考图纸编号', function(btn, text) {
+			if (btn == 'ok' && !Ext.isEmpty(text)) {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.component.makprint.updateMarkTemplateBySource.biz.ext",
+					method : "post",
+					jsonData : {
+						'sourceTemplateName' : text,
+						'templateName' : templateName
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "修改成功！", function() {
+										_this.listPanel.store.load();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "修改失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, false);
+	}
 }

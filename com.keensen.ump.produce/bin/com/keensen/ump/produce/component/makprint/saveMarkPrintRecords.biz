@@ -27,6 +27,7 @@
     </sourceConnections>
     <targetConnections>link0</targetConnections>
     <nodeLabel>loopstart0label</nodeLabel>
+    <process:condition/>
     <process:iterate iterable="list" iterableElement="data"/>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopstart0label" name="label" nodeType="label">
@@ -62,6 +63,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">data/prodBatchNo</process:from>
       <process:to type="query">entity/prodBatchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/templateName</process:from>
+      <process:to type="query">entity/reserve5</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">

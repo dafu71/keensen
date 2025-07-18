@@ -13,6 +13,7 @@ com.keensen.ump.produce.report.component.ProductonMgr = function() {
 	this.createPanel = function() {
 		this.tabPanel = new Ext.fn.TabPanel({
 					activeTab : 0,
+					//draggable: true,
 					items : [this.createDayPanel(), this.createMonthPanel(),
 							this.createYearPanel(), this.createPeriodPanel(),
 							this.createRepairPanel()]

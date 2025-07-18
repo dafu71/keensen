@@ -27,7 +27,7 @@ com.keensen.ump.produce.component.snMgr = function() {
 								name : 'condition/prefix',
 								anchor : '75%',
 								fieldLabel : '前缀'
-							},{
+							}, {
 								xtype : 'textfield',
 								name : 'condition/prodSpecName',
 								anchor : '75%',
@@ -43,7 +43,8 @@ com.keensen.ump.produce.component.snMgr = function() {
 								editable : false,
 								anchor : '85%',
 								colspan : 1,
-								store : [['家用', '家用'], ['工业', '工业']],
+								store : [['家用', '家用'], ['工业', '工业'],
+										['非常规', '非常规']],
 								listeners : {
 									scope : this,
 									'expand' : function(A) {
@@ -91,8 +92,14 @@ com.keensen.ump.produce.component.snMgr = function() {
 						dataIndex : 'num',
 						header : '当前数量'
 					}, {
+						dataIndex : 'digit',
+						header : '后缀编号位数'
+					}, {
 						dataIndex : 'sn',
 						header : '当前最大序列号'
+					}, {
+						dataIndex : 'rule',
+						header : '编码规则'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.sn.queryByPage.biz.ext',
@@ -112,6 +119,10 @@ com.keensen.ump.produce.component.snMgr = function() {
 							name : 'sn'
 						}, {
 							name : 'prodSpecName'
+						}, {
+							name : 'digit'
+						}, {
+							name : 'rule'
 						}]
 			})
 		})
@@ -119,75 +130,117 @@ com.keensen.ump.produce.component.snMgr = function() {
 
 	this.initInputWindow = function() {
 
+		var _this = this;
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
-					height : 500,
-					region : 'center',
-					// baseCls : "x-panel",
-					autoHide : false,
-					autoScroll : false,
-					border : true,
-					columns : 1,
-					saveUrl : 'com.keensen.ump.produce.component.sn.createSn.biz.ext',
-					fields : [{
+			height : 500,
+			region : 'center',
+			// baseCls : "x-panel",
+			autoHide : false,
+			autoScroll : false,
+			border : true,
+			columns : 1,
+			saveUrl : 'com.keensen.ump.produce.component.sn.createSn.biz.ext',
+			fields : [{
 
-								xtype : 'combobox',
-								fieldLabel : '元件类型',
-								ref : '../../useType',
-								hiddenName : 'condition/useType',
-								emptyText : '--请选择--',
-								allowBlank : true,
-								editable : false,
-								anchor : '85%',
-								colspan : 1,
-								store : [['家用', '家用'], ['工业', '工业']],
-								listeners : {
-									scope : this,
-									'expand' : function(A) {
-										this.inputWindow.useType.reset();
-									}
+						xtype : 'combobox',
+						fieldLabel : '元件类型',
+						ref : '../../useType',
+						hiddenName : 'condition/useType',
+						emptyText : '--请选择--',
+						allowBlank : true,
+						editable : false,
+						anchor : '85%',
+						colspan : 1,
+						store : [['家用', '家用'], ['工业', '工业'], ['非常规', '非常规']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.inputWindow.useType.reset();
+							},
+							'select' : function(combo, record, index) {
+								if (index < 0)
+									return;
+								if (index == 2) {
+									_this.inputWindow.digit.setVisible(true);
+									_this.inputWindow.rule.setVisible(true);
+								} else {
+									_this.inputWindow.digit.setVisible(false);
+									_this.inputWindow.rule.setVisible(false);
+									_this.inputWindow.digit.setValue(7 - index);
+									_this.inputWindow.rule.setValue('');
 								}
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 1
-							}, {
-								xtype : 'textfield',
-								name : 'condition/prodSpecName',
-								ref : '../../prodSpecName',
-								allowBlank : false,
-								fieldLabel : '元件型号',
-								anchor : '85%',
-								colspan : 1
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 1
-							}, {
-								xtype : 'textfield',
-								name : 'condition/prefix',
-								ref : '../../prefix',
-								allowBlank : false,
-								fieldLabel : '前缀',
-								anchor : '85%',
-								colspan : 1
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 1
-							}, {
-								xtype : 'numberfield',
-								allowDecimals : false,
-								minValue : 1,
-								maxValue : 60000,
-								name : 'condition/num',
-								ref : '../../num',
-								allowBlank : false,
-								fieldLabel : '数量 ',
-								anchor : '85%',
-								colspan : 1
-							}]
 
-				})
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						name : 'condition/prodSpecName',
+						ref : '../../prodSpecName',
+						allowBlank : false,
+						fieldLabel : '元件型号',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						name : 'condition/prefix',
+						ref : '../../prefix',
+						allowBlank : false,
+						fieldLabel : '前缀',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						allowDecimals : false,
+						minValue : 1,
+						maxValue : 60000,
+						name : 'condition/num',
+						ref : '../../num',
+						allowBlank : false,
+						fieldLabel : '数量 ',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						allowDecimals : false,
+						minValue : 1,
+						maxValue : 60000,
+						name : 'condition/digit',
+						ref : '../../digit',
+						allowBlank : false,
+						fieldLabel : '后缀编号位数 ',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						name : 'condition/rule',
+						ref : '../../rule',
+						// allowBlank : false,
+						fieldLabel : '编码规则',
+						anchor : '85%',
+						colspan : 1
+					}]
+
+		})
 
 		this.inputWindow = this.inputWindow || new Ext.Window({
 					title : '生成元件序列号',

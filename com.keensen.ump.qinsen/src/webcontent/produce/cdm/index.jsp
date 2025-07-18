@@ -68,6 +68,8 @@
 </style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  
+  var chooseOrderBtn = Ext.id();
   var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;
    <% if(workerflag){ %>

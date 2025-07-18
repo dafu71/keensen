@@ -80,6 +80,13 @@ com.keensen.ump.produce.component.markprintlistMgr = function() {
 						scope : this,
 						iconCls : 'icon-printer',
 						handler : this.onPrint
+					}, '-', {
+						text : '打印效果预览',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						// disabled : (uid != 'KS00610') && (uid != 'KS01313')
+						// && (uid != 'KS00524'),
+						handler : this.onPreView
 					}],
 			selModel : selModel,
 			delUrl : '1.biz.ext',

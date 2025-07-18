@@ -25,12 +25,62 @@
        decode(T1.STATE,0,'处理中',1,'完结','报废') "stateName",
        T1.STEP           AS "step",t3.position "position",
        decode(T1.STEP,'first','分析','second','调整','third','配料','invalid','报废','生产使用') "stepName",
-       t2.batch_no "relationBatchNo",t1.relation_Id "relationId"
+       t2.batch_no "relationBatchNo",t1.relation_Id "relationId",
+       lst.C21_TEST "c21Test",
+       lst.C23_TEST "c23Test",
+       lst.C27_TEST "c27Test",
+       lst.C28_TEST "c28Test",
+       lst.C29_TEST "c29Test",
+       lst.C30_TEST "c30Test" ,
+       lst.up21 "up21",
+       lst.up23 "up23",
+       lst.up27 "up27",
+       lst.up28 "up28",
+       lst.up30 "up30",
+       lst.low21 "low21",
+       lst.low23 "low23",
+       lst.low27 "low27",
+       lst.low28 "low28",
+       lst.low30 "low30"
   FROM KS_QUALITY_MP_TEST_WATER_HEAD T1
   left join KS_QUALITY_MP_TEST_WATER_HEAD T2 on t1.relation_id = t2.id
   left join (select t.relation_id,max(t.position) position 
 	from KS_QUALITY_MP_TEST_WATER_LIST t
 	GROUP BY t.relation_id) t3 on t3.relation_id = t1.id
+	
+   left join (SELECT T1.RELATION_ID,
+       NVL(T1.C21_TEST, 0) C21_TEST,
+       NVL(T1.C23_TEST, 0) C23_TEST,
+       NVL(T1.C27_TEST, 0) C27_TEST,
+       NVL(T1.C28_TEST, 0) C28_TEST,
+       NVL(T1.C29_TEST, 0) C29_TEST,
+       NVL(T1.C30_TEST, 0) C30_TEST,
+       H.MPTYPE,
+       H.LINE,
+       H.WATERTYPE,
+       NVL(V.UP21, 100) UP21,
+       NVL(V.UP23, 100) UP23,
+       NVL(V.UP27, 100) UP27,
+       NVL(V.UP28, 100) UP28,
+       NVL(V.UP30, 100) UP30,
+       NVL(V.LOW21, 0) LOW21,
+       NVL(V.LOW23, 0) LOW23,
+       NVL(V.LOW27, 0) LOW27,
+       NVL(V.LOW28, 0) LOW28,
+       NVL(V.LOW30, 0) LOW30
+  FROM KS_QUALITY_MP_TEST_WATER_LIST T1
+  LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD H
+    ON T1.RELATION_ID = H.ID
+  LEFT JOIN V_KS_BASE_FORMULA V
+    ON H.MPTYPE = V.MPTYPE
+   AND H.LINE = V.LINE
+   AND H.WATERTYPE = V.WATERTYPE
+ WHERE T1.ID IN (SELECT MAX(T.ID) ID
+                   FROM KS_QUALITY_MP_TEST_WATER_LIST T
+                  GROUP BY T.RELATION_ID)) lst
+         on lst.RELATION_ID = t1.id	
+	
+	
 		 where 1=1
 		  <isNotNull prepend="and" property="id"> 
 		       t1.ID = #id#
@@ -66,6 +116,13 @@
 			<isNotNull prepend="and" property="batchNo2"> 
 		       t1.batch_no like '%' || #batchNo2# || '%'
 			</isNotNull>
+			
+			<isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
 			
 			order by t1.id desc
     </select>

@@ -85,7 +85,7 @@
        LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION cfg ON cfg.prop_value_id = qj.ng_reason_id
 		where 1=1
 		and qj.order_no != '研发实验'
-		and qj.gyy_conclusion not in('D','F')
+		and nvl(qj.gyy_conclusion,'X') not in('D','F')
 		 <isNotNull prepend="and" property="createTimeStart">t1.create_Time  &gt;=  TO_DATE(#createTimeStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">t1.create_Time  &lt;=  TO_DATE(#createTimeEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="and" property="exceptionType">t1.exception_type = #exceptionType#</isNotNull>
@@ -174,12 +174,12 @@ WHERE qj.ng_reason_id=300061)
 	 from QINSEN.INST_qijian qj
 	 LEFT JOIN qinsen.inst_juanmo_main jm
 	 ON qj.juanmo_batch_id=jm.record_id
-	 WHERE qj.is_qualified='N' 
-	 
-	 and qj.order_no != '研发实验'
-		and qj.gyy_conclusion not in('D','F')
-		
+	 WHERE qj.is_qualified='N' and qj.order_no != '研发实验'
+	 and nvl(qj.gyy_conclusion,'X') not in('D','F')
 	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
+	 
+	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)		
+	 
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
 	 AND ROUND((SYSDATE - jm.produce_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
@@ -196,8 +196,11 @@ WHERE qj.ng_reason_id=300061)
 	 ON qj.juanmo_batch_id=jm.record_id
 	 WHERE qj.is_qualified='N' 
 	 and qj.order_no != '研发实验'
-	and qj.gyy_conclusion not in('D','F')
+	and nvl(qj.gyy_conclusion,'X') not in('D','F')
 	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
+	 
+	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)
+	 
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
 	 AND ROUND((SYSDATE - jm.produce_dt)*24)&gt;96
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
@@ -215,6 +218,9 @@ WHERE qj.ng_reason_id=300061)
 	 ON qj.juanmo_batch_id = jm.record_id
 	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
+	 
+	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)
+	 
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
 	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
 	 and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
@@ -223,7 +229,7 @@ WHERE qj.ng_reason_id=300061)
 		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)
 		
 		and qj.order_no != '研发实验'
-		and qj.gyy_conclusion not in('D','F')</select>
+		and nvl(qj.gyy_conclusion,'X') not in('D','F')</select>
     <insert id="insertVstorage4Wet" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_VSTOCK 
 	(jm_batch_no,exception_type,create_time,create_user_id,create_name)
 	SELECT jm.batch_no,
@@ -236,6 +242,9 @@ WHERE qj.ng_reason_id=300061)
 	 ON qj.juanmo_batch_id = jm.record_id
 	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
+	 
+	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)
+	 
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
 	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
 	 and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
@@ -244,7 +253,7 @@ WHERE qj.ng_reason_id=300061)
 		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)
 		
 		and qj.order_no != '研发实验'
-		and qj.gyy_conclusion not in('D','F')</insert>
+		and nvl(qj.gyy_conclusion,'X') not in('D','F')</insert>
     <update id="updateVstorageExceptionType" parameterClass="java.util.HashMap">
    	update KS_COMPONENT_VSTOCK t
    	set t.Exception_Type = #exceptionType#,
@@ -293,4 +302,22 @@ WHERE qj.ng_reason_id=300061)
 	t.gyy_conclusion = #gyyConclusion#,
 	t.gyy_spec_id = #gyySpecId#
 	WHERE t.record_id = #recordId#</update>
+    <select id="queryUsers4Mail" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT V.USERID "userId", V.OPERATORNAME "userName"
+	  FROM (SELECT DISTINCT COLUMN_VALUE USER_ID
+	          FROM TABLE(SPLIT('KS00420,KS00141,KS00388,KS00866,KS00867,XXB,KS00500,KS01295,
+	    KS00880,KS00017,KS01374,KS00524,KS00517,LHY,KS00610',
+	                           ','))) T
+	  LEFT JOIN V_AC_OPERATOR_TRS V
+	    ON T.USER_ID = V.USERID
+	 WHERE V.USERID IS NOT NULL</select>
+    <select id="queryContent4Mail" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT wm_concat(CONTENT) "content" from 
+	(SELECT COUNT(1) cnt, t.exception_type ,
+	t.exception_type || '共' || COUNT(1) || '条' CONTENT
+	 from KS_COMPONENT_VSTOCK t
+	GROUP BY t.exception_type)</select>
+    <delete id="removeVstorage4Poorrecord" parameterClass="java.util.HashMap">delete from  KS_COMPONENT_VSTOCK t
+   	WHERE t.jm_batch_no in (
+		SELECT replace(T.juanmo_Batch_No,'输入卷膜序号，单击旁边按钮','') juanmo_Batch_No from KS_PROD_QUALITY_POORRECORD t
+	WHERE replace(T.juanmo_Batch_No,'输入卷膜序号，单击旁边按钮','') IS NOT NULL
+	)</delete>
 </sqlMap>

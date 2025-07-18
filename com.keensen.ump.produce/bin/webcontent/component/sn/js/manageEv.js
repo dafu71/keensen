@@ -18,11 +18,23 @@ com.keensen.ump.produce.component.snMgr.prototype.initEvent = function() {
 com.keensen.ump.produce.component.snMgr.prototype.onCreate = function() {
 	var C = this.listPanel.getSelectionModel().getSelections();
 	this.inputWindow.prefix.setValue('');
+	this.inputWindow.prodSpecName.setValue('');
 	this.inputWindow.useType.setValue('');
+	this.inputWindow.digit.setValue('');
+	this.inputWindow.rule.setValue('');
+	this.inputWindow.digit.setVisible(false);
+	this.inputWindow.rule.setVisible(false);
 	var l = C.length;
 	if (l > 0) {
 		this.inputWindow.prefix.setValue(C[0].get('prefix'));
 		this.inputWindow.useType.setValue(C[0].get('useType'));
+		this.inputWindow.prodSpecName.setValue(C[0].get('prodSpecName'));
+		this.inputWindow.digit.setValue(C[0].get('digit'));
+		this.inputWindow.rule.setValue(C[0].get('rule'));
+		if(C[0].get('useType') == '非常规'){
+			this.inputWindow.digit.setVisible(true);
+			this.inputWindow.rule.setVisible(true);
+		}
 	}
 	this.inputWindow.show();
 }
@@ -42,12 +54,14 @@ com.keensen.ump.produce.component.snMgr.prototype.onSave = function() {
 				'condition/num' : this.inputWindow.num.getValue(),
 				'condition/prefix' : this.inputWindow.prefix.getValue(),
 				'condition/useType' : this.inputWindow.useType.getValue(),
-				'condition/prodSpecName' : this.inputWindow.prodSpecName.getValue()
+				'condition/prodSpecName' : this.inputWindow.prodSpecName.getValue(),
+				'condition/digit' : this.inputWindow.digit.getValue(),
+				'condition/rule' : this.inputWindow.rule.getValue()
 			},
 			success : function(resp) {
 				var ret = Ext.decode(resp.responseText);
 				if (ret.success) {
-					_this.listPanel.store.load();
+					_this.listPanel.store.reload();
 					_this.inputPanel.form.reset();
 					_this.inputWindow.hide();
 					var fname = ret.fname;

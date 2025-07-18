@@ -1072,3 +1072,86 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onViewModify = function() {
 	}
 
 }
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onTestC92 = function() {
+	var A = this.listPanel;
+	var arr = ['ULP2-2', 'ULP1-2', 'HW4-1', 'HW1-2', 'ULP3-2'];
+	var arr2 = ['E', 'D'];
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var cell = C[0];
+		var recordId = cell.data.recordId;
+		recordId = recordId + '';
+		var materSpecName = cell.data.materSpecName;
+		var lineCode = cell.data.lineCode;
+		if (arr.indexOf(materSpecName) == -1) {
+			Ext.Msg.alert("系统提示", "该膜片型号没有对应C92浓度标准！");
+			return false;
+		}
+		if (arr2.indexOf(lineCode) == -1) {
+			Ext.Msg.alert("系统提示", "该生产线没有对应C92浓度标准！");
+			return false;
+		}
+
+		this.editC92Window.show();
+		this.editC92Window.loadData(cell);
+
+	}
+
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.calcC92 = function(flag) {
+	var a = this.editC92Window.a.getValue();
+	var b = this.editC92Window.b.getValue();
+	var densityLow7 = this.editC92Window.densityLow7.getValue();
+	var densityUp7 = this.editC92Window.densityUp7.getValue();
+	var densityLow8 = this.editC92Window.densityLow8.getValue();
+	var densityUp8 = this.editC92Window.densityUp8.getValue();
+
+	if (flag == 7) {
+		var light7 = this.editC92Window.light7.getValue();
+		var weightBefore7 = this.editC92Window.weightBefore7.getValue();
+		var weightAfter7 = this.editC92Window.weightAfter7.getValue();
+		if (Ext.isEmpty(light7) && Ext.isEmpty(weightBefore7)
+				&& Ext.isEmpty(weightAfter7)) {
+			return false;
+		}
+
+		var density7 = (parseFloat(light7) * parseFloat(a) + parseFloat(b))
+				* parseFloat(weightAfter7) / parseFloat(weightBefore7);
+		this.editC92Window.density7.setValue(roundToDecimalPlace(density7, 2));
+		if (parseFloat(density7) >= parseFloat(densityLow7)
+				&& parseFloat(density7) <= parseFloat(densityUp7)) {
+			this.editC92Window.result7.setValue('合格,生产使用');
+		}else{
+			this.editC92Window.result7.setValue('不合格,通知班长');
+		}
+	}
+	
+	if (flag == 8) {
+		var light8 = this.editC92Window.light8.getValue();
+		var weightBefore8 = this.editC92Window.weightBefore8.getValue();
+		var weightAfter8 = this.editC92Window.weightAfter8.getValue();
+		if (Ext.isEmpty(light8) && Ext.isEmpty(weightBefore8)
+				&& Ext.isEmpty(weightAfter8)) {
+			return false;
+		}
+
+		var density8 = (parseFloat(light8) * parseFloat(a) + parseFloat(b))
+				* parseFloat(weightAfter8) / parseFloat(weightBefore8);
+		this.editC92Window.density8.setValue(roundToDecimalPlace(density8, 2));
+		if (parseFloat(density8) >= parseFloat(densityLow8)
+				&& parseFloat(density8) <= parseFloat(densityUp8)) {
+			this.editC92Window.result8.setValue('合格,生产使用');
+		}else{
+			this.editC92Window.result8.setValue('不合格,通知班长');
+		}
+	}
+}
+
+function roundToDecimalPlace(number, decimalPlaces) {
+	const factor = Math.pow(10, decimalPlaces);
+	return Math.round(number * factor) / factor;
+}

@@ -174,6 +174,8 @@
         <isNotNull prepend="" property="fCheckEndDate">AND A.F_CHECK_TM &lt; TO_DATE(#fCheckEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="" property="prodBatchId">AND Q.RECORD_ID = #prodBatchId#</isNotNull>
         <isNotNull prepend="" property="prodBatchNo">AND Q.BATCH_NO = UPPER(#prodBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="prodBatchNoStart">AND Q.BATCH_NO &gt;= UPPER(#prodBatchNoStart#)</isNotNull>
+        <isNotNull prepend="" property="prodBatchNoEnd">AND Q.BATCH_NO &lt;= UPPER(#prodBatchNoEnd#)</isNotNull>
         <isNotNull prepend="" property="prodSpecId">AND Q.PROD_SPEC_ID = #prodSpecId#</isNotNull>
         <isNotNull prepend="" property="produceBeginDate">AND Q.PRODUCE_DT &gt;= TO_DATE(#produceBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="" property="produceEndDate">AND Q.PRODUCE_DT &lt; TO_DATE(#produceEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>

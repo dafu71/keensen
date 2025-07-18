@@ -3,6 +3,8 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 		this.initQueryPanel();
 		this.initListPanel();
 
+		this.initEditWindow4CloseState();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -12,7 +14,18 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 	}
 
 	this.initQueryPanel = function() {
+		
 		var _this = this;
+
+		this.closeStateStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['正常关闭', '正常关闭'], ['异常关闭', '异常关闭']]
+				});
+				
+		this.closeStateStore2 = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['未关闭', '未关闭'],['正常关闭', '正常关闭'], ['异常关闭', '异常关闭']]
+				});
 
 		this.warnStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -25,94 +38,130 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 				});
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
-					columns : 3,
-					border : true,
-					// collapsible : true,
-					titleCollapse : false,
-					// title : '【营销订单查询】',
-					fields : [{
-								xtype : 'textfield',
-								name : 'condition/orderNo2',
-								anchor : '75%',
-								fieldLabel : '订单号'
-							}, {
-								xtype : 'prodspeccombobox',
-								hiddenName : 'condition/materSpecId',
-								anchor : '75%',
-								fieldLabel : '生产型号 '
-							}, {
-								xtype : "dateregion",
-								colspan : 1,
-								anchor : '75%',
-								nameArray : ['condition/orderDateStart',
-										'condition/orderDateEnd'],
-								fieldLabel : "订单日期",
-								format : "Y-m-d"
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 3
-							}, {
-								xtype : "dateregion",
-								colspan : 1,
-								anchor : '75%',
-								nameArray : ['condition/demandStockDateStart',
-										'condition/demandStockDateEnd'],
-								fieldLabel : "生产交期",
-								format : "Y-m-d"
-							}, {
-								xtype : 'combobox',
-								mode : 'local',
-								fieldLabel : '警报查询',
-								ref : '../warn',
-								hiddenName : 'condition/warn',
-								anchor : '75%',
-								colspan : 1,
-								emptyText : '--请选择--',
-								editable : false,
-								store : this.warnStore,
-								displayField : "name",
-								valueField : "code",
-								listeners : {
-									"expand" : function(A) {
-										_this.queryPanel.warn.reset()
-									}
-								}
-							}, {
-								xtype : 'combobox',
-								mode : 'local',
-								fieldLabel : '判定状态',
-								ref : '../applyState',
-								hiddenName : 'condition/applyState',
-								anchor : '75%',
-								colspan : 1,
-								emptyText : '--请选择--',
-								editable : false,
-								store : this.applyStateStore,
-								displayField : "name",
-								valueField : "code",
-								listeners : {
-									"expand" : function(A) {
-										_this.queryPanel.applyState.reset()
-									}
-								}
-							}]
-				});
+			height : 180,
+			columns : 3,
+			border : true,
+			// collapsible : true,
+			titleCollapse : false,
+			// title : '【营销订单查询】',
+			fields : [{
+						xtype : 'textfield',
+						name : 'condition/orderNo2',
+						anchor : '75%',
+						fieldLabel : '订单号'
+					}, {
+						xtype : 'prodspeccombobox',
+						hiddenName : 'condition/materSpecId',
+						anchor : '75%',
+						fieldLabel : '生产型号 '
+					}, {
+						xtype : "dateregion",
+						colspan : 1,
+						anchor : '75%',
+						nameArray : ['condition/orderDateStart',
+								'condition/orderDateEnd'],
+						fieldLabel : "订单日期",
+						format : "Y-m-d"
+					}, {
+						xtype : 'displayfield',
+						height : '3',
+						colspan : 3
+					}, {
+						xtype : "dateregion",
+						colspan : 1,
+						anchor : '75%',
+						nameArray : ['condition/demandStockDateStart',
+								'condition/demandStockDateEnd'],
+						fieldLabel : "生产交期",
+						format : "Y-m-d"
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '警报查询',
+						ref : '../warn',
+						hiddenName : 'condition/warn',
+						anchor : '75%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.warnStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.queryPanel.warn.reset()
+							}
+						}
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '判定状态',
+						ref : '../applyState',
+						hiddenName : 'condition/applyState',
+						anchor : '75%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.applyStateStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.queryPanel.applyState.reset()
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						value : '<p style="color:red;">多个订单号请用逗号分隔，或一行一个订单号</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 2
+					}, {
+						xtype : 'textarea',
+						ref : '../orderNoStr',
+						height : 50,
+						colspan : 2,
+						anchor : '75%',
+						fieldLabel : '多订单号查询'
+					}, {
+						xtype : 'combobox',
+						forceSelection : true,
+						mode : 'local',
+						fieldLabel : '关闭状态',
+						ref : '../closeState',
+						hiddenName : 'condition/closeState',
+						anchor : '75%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.closeStateStore2,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
+					}, {
+						xtype : 'hidden',
+						name : 'condition/orderNos',
+						ref : '../orderNos'
+					}]
+		});
 
 		this.queryPanel.addButton({
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					rescode:'10003669',
+					rescode : '10003669',
 					handler : this.exportExcel
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "更新元件序列",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					//rescode:'10003669',
+					// rescode:'10003669',
 					handler : this.modifySn
 				});
 
@@ -164,6 +213,17 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 							locked : true,
 							width : 30
 						}), smLock, {
+					dataIndex : 'closeState',
+					locked : true,
+					header : '关闭状态',
+					renderer : function(v, m, r, i) {
+						if (!Ext.isEmpty(v) && v == '异常关闭') {
+							return "<span style='color:red;text-decoration:none'>"
+									+ v + "</span>"
+						}
+						return v;
+					}
+				}, {
 					dataIndex : 'applyState',
 					locked : true,
 					header : '完成判定',
@@ -290,8 +350,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 						// 入库日期-当前日期≥2天时显黄灯
 						if (v <= 2 && v > 0) {
 							return '<img src="produce/component/semifinished/img/'
-									+ 'yellow'
-									+ '.png" class="myimg"">';
+									+ 'yellow' + '.png" class="myimg"">';
 						}
 
 					}
@@ -330,6 +389,15 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 				}, {
 					dataIndex : 'remark',
 					header : '其它备注'
+				}, {
+					dataIndex : 'closeRemark',
+					header : '关闭说明'
+				}, {
+					dataIndex : 'closeUserName',
+					header : '关闭人'
+				}, {
+					dataIndex : 'closeTime',
+					header : '关闭时间'
 				}]);
 
 		var store = new Ext.data.JsonStore({
@@ -474,6 +542,16 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 						name : 'theoryAmount'
 					}, {
 						name : 'prodLabelAmount'
+					}, {
+						name : 'closeState'
+					}, {
+						name : 'closeUserId'
+					}, {
+						name : 'closeUserName'
+					}, {
+						name : 'closeRemark'
+					}, {
+						name : 'closeTime'
 					}]
 		});
 
@@ -490,9 +568,74 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 					stripeRows : true,
 					delUrl : '1.biz.ext',
 					colModel : columns,
-					store : store
+					store : store,
+					tbar : [{
+								text : '订单关闭',
+								scope : this,
+								iconCls : 'icon-application_edit',
+								handler : this.onCloseOrder
+							}]
 				})
 
+	}
+
+	this.initEditWindow4CloseState = function() {
+
+		this.editWindow4CloseState = this.editWindow4CloseState
+				|| new Ext.fn.FormWindow({
+					title : '订单关闭',
+					height : 600,
+					width : 800,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.neworder.saveYxOrderCloseState2.biz.ext',
+						fields : [{
+									xtype : 'combobox',
+									forceSelection : true,
+									allowBlank : false,
+									// allowBlank : false,
+									mode : 'local',
+									fieldLabel : '关闭状态',
+									ref : '../../closeState',
+									hiddenName : 'entity/closeState',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									store : this.closeStateStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									name : 'entity/closeRemark',
+									allowBlank : false,
+									value : '-',
+									fieldLabel : '处理意见',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../ids',
+									name : 'entity/ids'
+								}]
+					}]
+				});
 	}
 
 }

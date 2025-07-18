@@ -118,6 +118,14 @@
       <process:from type="expression" pattern="reference">c41Reality + c41Plan</process:from>
       <process:to type="query">list/c41Reality</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">c42Reality</process:from>
+      <process:to type="query">list/c42Reality</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">c41Reality</process:from>
+      <process:to type="query">list/c41Reality</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>

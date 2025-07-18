@@ -863,7 +863,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
 				columns : 6,
-				loadUrl : 'com.keensen.ump.produce.quality.deliveryrecord.expand.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.quality.deliveryrecord.expand3.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.deliveryrecord.save.biz.ext',
 				fields : [{
 							xtype : 'displayfield',
@@ -1382,7 +1382,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 				baseCls : "x-plain",
 				pgrid : this.listPanel,
 				columns : 6,
-				loadUrl : 'com.keensen.ump.produce.quality.deliveryrecord.expand.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.quality.deliveryrecord.expand3.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.deliveryrecord.saveReview.biz.ext',
 				fields : [{
 							xtype : 'displayfield',

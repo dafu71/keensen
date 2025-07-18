@@ -50,5 +50,13 @@
 			<input type="hidden" name="code"/>
 		</form>
 	</div>
+	
+	<div style="display: none">
+		
+		
+		<form name="printPreViewForm" id="componentmarktemplatepreviewForm2" action="" target="_blank" method="post" accept-charset="UTF-8">
+			<input type="hidden" name="drawingCode"/>
+		</form>
+	</div>
 </body>
 </html>

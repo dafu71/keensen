@@ -125,6 +125,11 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
 					}, '-', {
+						text : '打印参数更新',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onModiParam
+					}, '-', {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',

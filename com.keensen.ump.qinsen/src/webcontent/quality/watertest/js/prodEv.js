@@ -146,7 +146,8 @@ com.keensen.ump.qinsen.quality.prodMgr.prototype.judge = function() {
 
 	// 优先标准2
 	var prodGpdLowLimit, prodGpdUpLimit, prodSaltLowLimit, prodFactorBUpLimit;
-	if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit !=0) {
+	//不取单品标准 1==2 2025-07-02 17：08
+	if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit !=0 && 1==2) {
 		prodGpdLowLimit = bGpdLowLimit;
 		prodSaltLowLimit = bSaltLowLimit;
 	} else {

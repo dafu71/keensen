@@ -19,6 +19,16 @@
 -->
 <head>
 <title>元件入库请检单</title>
+
+<script type="text/javascript" src="base/jquery/jquery-1.11.3.min.js"></script>
+<script type='text/javascript'
+	src="base/jquery/plugins/JsBarcode.all.min.js"></script>
+<script type='text/javascript' src="base/utility/utf.js"></script>
+<script type="text/javascript"
+	src="base/jquery/plugins/jquery.qrcode.js"></script>
+<script type="text/javascript"
+	src="qinsen/produce/tumo/js/printTumoTag.js?nowtime=<%=String.valueOf(System.currentTimeMillis())%>"></script>
+	
 <style type="text/css">
 <!--
 .style0 {font-family: "仿宋";font-size:9pt;}
@@ -30,20 +40,27 @@
 -->
     </style>
 
-<script type="text/javascript">
-	(function(){
-		window.print();
-	})();
-</script>
 
 </head>
-<body>
+<body onload="initPage()">
 <div align="center" id="pdfContainer">
 
 <table width="780" border="0">
 	<tr>
 		<td width="100%" height="47">
-		<div align="center" class="style3"><strong>元件入库请检单</strong></div>
+		<div align="right" class="style3">		
+		<svg id="barcode_<b:write property="data/code" />" style="width:80mm"></svg>
+		</div>
+		</td>
+	</tr>
+</table>
+<table width="780" border="0">
+	<tr>
+		<td width="100%" height="47">
+		<div align="center" class="style3"><strong>元件入库请检单</strong>
+		
+		
+		</div>
 		</td>
 	</tr>
 </table>
@@ -82,7 +99,8 @@
 		<div align="left" class="style1"><strong>请检日期:</strong><b:write property="data/applyDate" formatPattern="yyyy-MM-dd"/></div>
 		</td>	
 		<td width="33%" height="38">
-		<div align="left" class="style1">&nbsp;</div>
+		<div align="left" class="style1"><strong>带NSF:</strong><input type="checkbox">是&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox">否
+		</div>
 		</td>	
 	</tr>
 	
@@ -220,24 +238,35 @@
 	<tr style="border: 1px solid black;">
 		<td width="15%" height="38">
 		<div align="center" class="style1"><strong>最终判定</strong></div></td>
-		<td width="70%" height="38">
+		<td width="55%" height="38">
 		<div align="center" class="style1"><strong>不合格处理方式</strong></div></td>
+		<td width="15%" height="38">
+		<div align="center" class="style1"><strong>C等品</strong></div></td>
 		<td width="15%" height="38">
 		<div align="center" class="style1"><strong>入库仓位</strong></div></td>			
 	</tr>
 	<tr style="border: 1px solid black;">
 		<td width="15%" height="68">
 		<div align="center" class="style1"><input type="checkbox">合格&nbsp;&nbsp;<br><input type="checkbox">不合格</div></td>
-		<td width="70%" height="68">
+		<td width="55%" height="68">
 		<div align="left" class="style1">
 		&nbsp;&nbsp;<input type="checkbox">返工，重新检验结果：<input type="checkbox">合格<input type="checkbox">不合格
 		<br>
 		&nbsp;&nbsp;<input type="checkbox">让步接收，品质异常单编号：
-		<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+		<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
 		<br>
 		&nbsp;&nbsp;<input type="checkbox">待处理，建议元件型号：
-		<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+		<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
 		</div></td>
+		
+		<td width="15%" height="38">
+		<div align="center" class="style1">&nbsp;<input type="checkbox">是
+		<br>
+		&nbsp;<input type="checkbox">否
+		</div>
+		
+		</td>
+		
 		<td width="15%" height="68">
 		<div align="center" class="style1">&nbsp;<input type="checkbox">成品仓
 		<br>
@@ -294,6 +323,27 @@
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 </div>
-
+<script type="text/javascript">
+ 
+	function initPage() {
+						var batchNo = '<b:write property="data/code" />';
+						var barcode = document.getElementById('barcode_' + batchNo), 
+						options = {
+						format : "CODE128",
+						displayValue : true,
+						fontSize : 16,
+						font : 'msyhbd',
+						fontOptions : 'bold',
+						textMargin : 0,
+						height : 50,
+						margin : 0,
+						width : 3
+						};
+						
+					JsBarcode(barcode, batchNo, options);
+					window.print();
+					
+	};
+</script>
 </body>
 </html>

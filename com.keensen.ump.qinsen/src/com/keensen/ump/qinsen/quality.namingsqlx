@@ -10,7 +10,7 @@ from(
 	SELECT 
        T1.LOSS            
        
-  FROM (SELECT A.RECORD_ID,'TM' flag,
+  FROM (SELECT A.RECORD_ID,'TM' flag,IT.is_wx,
                A.TUMO_BATCH_ID,
                A.DEFECT_ITEM_ID,
                A.LOSS,
@@ -55,7 +55,7 @@ from(
             ON IT.PROD_FLAG_ID = O2.PROP_VALUE_ID  
             UNION ALL
             
-          SELECT A.RECORD_ID,'DM',
+          SELECT A.RECORD_ID,'DM','',
                A.dm_BATCH_ID,
                A.DEFECT_ITEM_ID,
                A.LOSS,
@@ -90,7 +90,7 @@ from(
             ON P.DUTY_TACHE_ID = B.TACHE_ID
           LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD IT
             ON A.DM_BATCH_ID = IT.ID
-         
+          
           LEFT JOIN QINSEN.BASE_PRODUCE_TACHE B2
             ON P.REC_TACHE_ID = B2.TACHE_ID  
               
@@ -100,6 +100,11 @@ from(
             
   WHERE 1 = 1
   
+   
+  <isNotNull prepend = ""  property = "isWx">
+	   AND t1.is_wx = #isWx# 
+	</isNotNull>
+	
   <isNotNull prepend = ""  property = "ifTear">
 	   AND nvl(t1.if_tear,'是') = #ifTear# 
 	</isNotNull>
@@ -188,7 +193,8 @@ from(
        nvl(t1.recorder,t1.operatorname) "createName",
        t1.position "position",t1.label_num "labelNum",
        t1.recorder "recorder",t1.if_tear "ifTear",t1.if_Modify_Defect "ifModifyDefect",
-       decode(t1.if_Modify_Defect,'1','可编辑','不可编辑') "ifModifyDefectName"
+       decode(t1.if_Modify_Defect,'1','可编辑','不可编辑') "ifModifyDefectName",
+       decode(t1.is_wx,'Y','是','N', '否','') "isWxName"
   FROM (SELECT A.RECORD_ID,'TM' flag,
                A.TUMO_BATCH_ID,
                A.DEFECT_ITEM_ID,
@@ -217,7 +223,7 @@ from(
                to_char(A.if_tear) if_tear,to_char(it.if_Modify_Defect) if_Modify_Defect ,
                
                O2.PROP_VALUE_NAME product_type
-               
+               ,IT.is_wx
           FROM QINSEN.INST_CDM_DEFECT A
           LEFT JOIN v_ac_operator_trs v ON A.creator_id = v.operatorid
           LEFT JOIN QINSEN.PARA_CDM_DEFECT P
@@ -265,7 +271,7 @@ from(
                to_char(A.if_tear) if_tear,to_char(it.if_Modify_Defect) if_Modify_Defect ,
                
                T2.product_type
-               
+               ,''
           FROM QINSEN.INST_CDM_DEFECT2 A
           LEFT JOIN v_ac_operator_trs v ON A.creator_id = v.operatorid
           LEFT JOIN QINSEN.PARA_CDM_DEFECT P
@@ -285,6 +291,10 @@ from(
             
             
   WHERE 1 = 1
+  
+  <isNotNull prepend = ""  property = "isWx">
+	   AND t1.is_wx = #isWx# 
+	</isNotNull>
   
   <isNotNull prepend = ""  property = "ifTear">
 	   AND nvl(t1.if_tear,'是') = #ifTear# 

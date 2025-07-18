@@ -21,7 +21,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【元件不良记录查询】',
+					//title : '【元件不良记录查询】',
 					fields : [{
 						xtype : "dateregion",
 						colspan : 1,
@@ -181,7 +181,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【元件不良记录列表】',
+			//title : '【元件不良记录列表】',
 			viewConfig : {
 				forceFit : true
 			},

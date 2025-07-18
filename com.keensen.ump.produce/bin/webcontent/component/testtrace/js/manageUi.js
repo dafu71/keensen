@@ -335,6 +335,7 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 					}, {
 						xtype : 'combobox',
 						allowBlank : false,
+						//readOnly : true,
 						triggerAction : "all",
 						mode : "local",
 						// forceSelection : true,

@@ -112,6 +112,7 @@
        TO_CHAR(T1.INVALID_DT, 'yyyy-MM-dd')  AS "invalidDt",
        T1.INVALID_CODE AS "invalidCode",
        T1.MATER_SPEC_ID AS "materSpecId",
+       
        T1.BATCH_NO AS "batchNo",
        T1.COMPONENT_NUMBER AS "componentNumber",
        T1.AMOUNT AS "amount",
@@ -123,7 +124,8 @@
        decode(T1.WORKSHOP,'工业组件',T1.INVALID_TYPE,T1.INVALID_TYPE2) "invalidTypeName",
        T1.RESPONSIBLE AS "responsible",
        T1.DEAL_METHOD AS "dealMethod",
-       T1.DEPARTMENT AS "department",T1.tap_color AS "tapColor",T1.juanmo_Batch_No "juanmoBatchNo",
+       T1.DEPARTMENT AS "department",T1.tap_color AS "tapColor",
+       replace(T1.juanmo_Batch_No,'输入卷膜序号，单击旁边按钮','')  "juanmoBatchNo",
        T1.COMPONENT_TYPE AS "componentType",
        T2.MATER_SPEC_NAME AS "materSpecName"
   FROM KS_PROD_QUALITY_POORRECORD T1
@@ -695,9 +697,18 @@
                       T.OUT_LENGTH - NVL(T22.LOSS, 0) - NVL(T.TAG_LENGTH, 0)) QUALIFID_LENGTH,
                T.TAG_NUM,
                T.TAG_LENGTH,
-               T.THICK_MAX,
+               <!--T.THICK_MAX,
                T.THICK_MIN,
-               T.THICK_AVG,
+               T.THICK_AVG,-->
+               
+               nvl(kdd.diameter_avg,T.THICK_AVG) THICK_AVG,
+               nvl(kdd.diameter_min,T.THICK_MIN) THICK_MIN,
+               nvl(kdd.diameter_max,T.THICK_MAX) THICK_MAX,           
+              
+               
+               
+               
+               
                T.REMARK PRODUCE_REMARK,T.is_keep
                
           FROM 
@@ -705,6 +716,7 @@
           (select * from QINSEN.INST_TUMO tm where exists(select 1 from QINSEN.INST_TUMO_CHECK tmc where tmc.batch_id=tm.record_id) ) T
           -->
           QINSEN.INST_TUMO T
+          left join KS_DIAPHRAGM_DIAMETER kdd on kdd.batch_no = T.batch_no 
           LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
                       FROM QINSEN.INST_CDM_DEFECT D,
                            QINSEN.PARA_CDM_DEFECT P
@@ -854,6 +866,7 @@
    <!--模块全A判定-->
    <select id="queryTumoCheck2A" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    
+   <!--
    SELECT tt.batch_id
 	FROM(
 	select COUNT(*) cnt ,sum(DECODE(t.perf_flag_id,300029,1,0)) cnt2,t.batch_id
@@ -861,6 +874,15 @@
 	 LEFT JOIN 	 
 	 qinsen.inst_tumo_check t2 ON t2.record_id=t1.record_id
 	 LEFT JOIN qinsen.inst_tumo t3 ON t3.record_id =t2.batch_id) t
+	 
+	 -->
+	 
+	 SELECT tt.batch_id
+  FROM(
+  select COUNT(*) cnt ,sum(DECODE(t.perf_flag_id,300029,1,0)) cnt2,t.batch_id
+   from (SELECT t2.*  FROM
+   qinsen.inst_tumo_check t2 
+   LEFT JOIN qinsen.inst_tumo t3 ON t3.record_id =t2.batch_id) t
 	 
 	 <!--性能自动判定只看初测值-->
 	 where t.recheck_flag = 'N'

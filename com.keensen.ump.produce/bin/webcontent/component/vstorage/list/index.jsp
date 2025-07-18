@@ -32,7 +32,7 @@
 		}
 		//气检干膜贴标,罗海鹰、任栋、吴敏
 		if (uid.equals("LHY") || uid.equals("KS00307")
-		|| uid.equals("KS01147") || uid.equals("XXB")
+		|| uid.equals("KS01147") || uid.equals("dafu")
 		|| uid.equals("KS01441")) {
 			modifyOrderNoFlag4Dry = 1;
 		}

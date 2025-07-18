@@ -533,5 +533,159 @@
 	</isNotNull>
 	
 	 </select>
+	 
+	 <select id="queryC92Std" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+  select 
+    t1.ID as "id",
+	to_char(T1.CREATE_TIME,'yyyy-MM-dd')  as "createTime",
+	t1.CREATE_USER_ID as "createUserId",
+	t1.CREATE_NAME as "createName",
+	t1.UPDATE_TIME as "updateTime",
+	t1.UPDATE_USER_ID as "updateUserId",
+	t1.UPDATE_NAME as "updateName",
+	t1.RESERVE1 as "reserve1",
+	t1.RESERVE2 as "reserve2",
+	t1.RESERVE3 as "reserve3",
+	t1.RESERVE4 as "reserve4",
+	t1.RESERVE5 as "reserve5",
+	t1.ORG_ID as "orgId",
+	t1.STATUS as "status",
+	t1.A as "a",
+	t1.B as "b"
+	from KS_BASE_C92 t1
+	where 1=1
+	<isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+	order by id desc
+    
 
+</select>
+
+<select id="queryC92Range" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+  
+SELECT 
+	t.ID as "id",
+	to_char(t.CREATE_TIME,'yyyy-MM-dd')  as "createTime",
+	t.CREATE_USER_ID as "createUserId",
+	t.CREATE_NAME as "createName",
+	t.UPDATE_TIME as "updateTime",
+	t.UPDATE_USER_ID as "updateUserId",
+	t.UPDATE_NAME as "updateName",
+	t.RESERVE1 as "reserve1",
+	t.RESERVE2 as "reserve2",
+	t.RESERVE3 as "reserve3",
+	t.RESERVE4 as "reserve4",
+	t.RESERVE5 as "reserve5",
+	t.ORG_ID as "orgId",
+	t.STATUS as "status",
+
+	T.LINE        "line",
+       T.LINE_ID     "lineId",
+       T.SPEC_ID     "specId",
+       T.SPEC_NAME   "specName",
+       T.DENSITY_LOW "densityLow",
+       T.DENSITY_UP  "densityUp"，
+       t.trough "trough"
+  FROM KS_BASE_C92_RANGE T
+  where 1=1
+	<isNotNull prepend="and" property="reserve1"> 
+		       T.reserve1 like '%' || #reserve1# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="specId"> 
+		       T.SPEC_ID = #specId#
+	</isNotNull>
+	<isNotNull prepend="and" property="lineId"> 
+		       T.LINE_ID = #lineId#
+	</isNotNull>
+	<isNotNull prepend="and" property="trough"> 
+		       T.trough = #trough#
+	</isNotNull>
+	order by t.trough,T.LINE_ID,T.SPEC_ID
+</select>
+
+<select id="queryC92StdByBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+ 
+SELECT TM.RECORD_ID    "id",
+       TM.BATCH_NO     "batchNo",
+       TM.SPEC_ID      "specId",
+       TM.LINE_ID      "lineId",
+       RG.DENSITY_LOW  "densityLow7",
+       RG.DENSITY_UP   "densityUp7",
+       RG2.DENSITY_LOW "densityLow8",
+       RG2.DENSITY_UP  "densityUp8",
+       C92.A           "a",
+       C92.B           "b"
+  FROM QINSEN.INST_TUMO TM 
+  CROSS JOIN
+       (SELECT A, B
+          FROM KS_BASE_C92
+         WHERE ID = (SELECT MAX(ID) FROM KS_BASE_C92)) C92
+  LEFT JOIN KS_BASE_C92_RANGE RG
+    ON TM.LINE_ID = RG.LINE_ID
+   AND TM.SPEC_ID = RG.SPEC_ID
+   AND RG.TROUGH = '7'
+  LEFT JOIN KS_BASE_C92_RANGE RG2
+    ON TM.LINE_ID = RG2.LINE_ID
+   AND TM.SPEC_ID = RG2.SPEC_ID
+   AND RG2.TROUGH = '8'
+ WHERE 1=1
+ AND tm.batch_no=#batchNo#
+ </select>
+ 
+ <select id="queryC92Solution" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+ SELECT 
+	t1.ID as "id",
+	to_char(t1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')  as "createTime",
+	t1.CREATE_USER_ID as "createUserId",
+	t1.CREATE_NAME as "createName",
+	t1.UPDATE_TIME as "updateTime",
+	t1.UPDATE_USER_ID as "updateUserId",
+	t1.UPDATE_NAME as "updateName",
+	t1.RESERVE1 as "reserve1",
+	t1.RESERVE2 as "reserve2",
+	t1.RESERVE3 as "reserve3",
+	t1.RESERVE4 as "reserve4",
+	t1.RESERVE5 as "reserve5",
+	t1.ORG_ID as "orgId",
+	t1.STATUS as "status",
+ 	t1.batch_no as "batchNo",
+	t1.a as "a",
+	t1.b as "b",
+	t1.weight_before as "weightBefore",
+	t1.weight_after as "weightAfter",
+	t1.light as "light",
+	t1.density as "density",t1.density_low as "densityLow",t1.density_up as "densityUp",
+	t1.result as "result",
+	t1.operator_name as "operatorName"
+	from KS_DIAPHRAGM_C92_SOLUTION t1
+ 	WHERE 1=1
+ 	<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_no=#batchNo#
+	</isNotNull>
+    
+    <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+ 	order by t1.id desc
+  </select>
+  
+  <select id="queryC92Std4Solution" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+ 	SELECT T.DENSITY_LOW "densityLow",
+       T.DENSITY_UP  "densityUp",
+       T2.A          "a",
+       T2.B          "b"
+	  FROM KS_BASE_C92_RANGE T
+	 CROSS JOIN (SELECT A, B
+	               FROM KS_BASE_C92
+	              WHERE ID = (SELECT MAX(ID) FROM KS_BASE_C92)) T2
+	 WHERE T.RESERVE1 = '原液标准'
+  </select>
+ 
 	 </sqlMap>

@@ -124,7 +124,28 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 										this.reset()
 									}
 								}
-							}]
+							}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '已用完',
+							ref : '../used',
+							hiddenName : 'condition/used',
+							dataIndex : 'used',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}]
 				});
 		this.queryPanel.addButton({
 					text : "导出",
@@ -183,6 +204,27 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						xtype : 'displayfield',
 						value : '',
 						id : 'fixtotalc12'
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'fixtotalc13'
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'fixtotalc14'
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'fixtotal'
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.make.deleteFixEntity.biz.ext',
@@ -366,6 +408,12 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							name : 'totalC12'
 						}, {
 							name : 'cps'
+						}, {
+							name : 'totalC13'
+						}, {
+							name : 'totalC14'
+						}, {
+							name : 'total'
 						}]
 			})
 		})

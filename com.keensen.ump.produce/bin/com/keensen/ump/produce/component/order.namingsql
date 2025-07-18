@@ -60,6 +60,9 @@
        ,yb.order_type "orderTypeBase",yb.prod_amount "prodAmount"
        ,nvl(chk.cnt,0) "checkCount"
        ,nvl(t1.reserve1,nvl(yb.spec_Name_Mark,t1.mater_spec_name2)) "specNameMark"
+       
+       ,decode(t1.type,'家用膜',nvl(hchk.apply_amount,0),nvl(gchk.apply_amount,0)) "applyAmount"
+       
   FROM KS_PROD_COMPONENT_YXORDER T1
   left join qinsen.PARA_MATER_SPEC pms
   on T1.MATER_SPEC_Id = pms.mater_spec_id
@@ -80,16 +83,45 @@ LEFT JOIN KS_COMPONENT_CHECK_head h
 ON t.relation_id=h.id) tt
 GROUP BY tt.order_no,tt.prod_spec_name) chk
 on chk.order_no = t1.order_no and chk.prod_spec_name = pms.mater_spec_name
+
+<!--家用请检-->
+ left join
+  (SELECT  SUM(amount) apply_amount,t.order_no,t.prod_spec_name
+  FROM
+  (SELECT t.reserve1 order_no,t.prod_spec_name,t.apply_amount amount
+  from KS_COMPONENT_HH_CHECK_HEAD t) t 
+  GROUP BY t.order_no,t.prod_spec_name) hchk
+  on hchk.order_no = t1.order_no and t1.mater_spec_name2=hchk.prod_spec_name and t1.type='家用膜'
+<!--工业请检-->
+left join
+  (SELECT COUNT(1) apply_amount, order_no,prod_spec_name
+FROM(
+select t.batch_no,t2.order_no,t2.prod_spec_name from KS_COMPONENT_CHECK_LIST t
+LEFT JOIN KS_COMPONENT_CHECK_HEAD t2 ON t.relation_id=t2.id)
+GROUP BY order_no,prod_spec_name) gchk on gchk.order_no = t1.order_no 
+	<!--勾订单型号-->
+	and gchk.PROD_SPEC_name = t1.MATER_SPEC_name2
+	
     
-    <isNotNull prepend="" property="qjdutychoose">left join 
+     <!--气检任务选择订单查询--><isNotNull prepend="" property="qjdutychoose">left join 
     (SELECT jm.order_no,jm.prod_spec_id,MAX(jm.produce_dt) produce_dt
  		from qinsen.inst_juanmo_main jm
  		GROUP BY jm.order_no,jm.prod_spec_id) jm
  	on t1.order_no = jm.order_no and t1.MATER_SPEC_Id = jm.prod_spec_id</isNotNull>
+        <!--包装任务选择订单查询-->
+        <isNotNull prepend="" property="packdutychoose">left join 
+    (SELECT MAX(produce_dt) produce_dt,order_no,prod_spec_id from 
+	(
+	SELECT rs.batch_no,rs.produce_dt,qj.order_no,qj.prod_spec_id from qinsen.inst_raosi rs
+	LEFT JOIN qinsen.inst_qijian qj
+	ON rs.batch_no=qj.batch_no)
+	GROUP BY order_no,prod_spec_id) rs
+ 	on t1.order_no = rs.order_no and t1.MATER_SPEC_Id = rs.prod_spec_id</isNotNull>
     
 	where 1=1
 	
-	<isNotNull prepend="and" property="templateName">T1.template_Name like '%' || #templateName# || '%'</isNotNull>
+	<isNotNull prepend="and" property="homeType">T1.type &lt;&gt; '工业膜'</isNotNull>
+        <isNotNull prepend="and" property="templateName">T1.template_Name like '%' || #templateName# || '%'</isNotNull>
         <isEqual compareValue="Y" prepend="and" property="materSpecNotNull">T1.MATER_SPEC_Id is not null</isEqual>
         <isNotNull prepend="and" property="prodSpecId">T1.MATER_SPEC_Id = #prodSpecId#</isNotNull>
         <isNotNull prepend="and" property="orderSpecName">T1.MATER_SPEC_NAME2 = #orderSpecName#</isNotNull>
@@ -115,7 +147,10 @@ on chk.order_no = t1.order_no and chk.prod_spec_name = pms.mater_spec_name
         <isEqual compareValue="Y" prepend="and" property="isJuanmo">exists( select 1 from KS_COMPONENT_DUTY_JM jm where jm.order_id = t1.id)</isEqual>
         <isEqual compareValue="Y" prepend="and" property="isRaosi">exists( select 1 from V_KS_RAOSI v where v.order_id = t1.id)</isEqual>
         <isNotNull prepend="" property="qjdutychoose">order by jm.produce_dt desc nulls last</isNotNull>
-        <isNull prepend="" property="qjdutychoose">order by t1.id desc</isNull>
+        <isNotNull prepend="" property="packdutychoose">order by rs.produce_dt desc nulls last</isNotNull>
+        <isNull prepend="" property="qjdutychoose">
+            <isNull prepend="" property="packdutychoose">order by t1.id desc</isNull>
+        </isNull>
     </select>
     <select id="queryPlanWeek" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
@@ -512,7 +547,12 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
 	 </select>
     <select id="queryYxOrderTrace" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	
-	SELECT T1.ID AS "id",
+	SELECT T1.ID AS "id", nvl(T1.close_State,'未关闭') "closeState",
+	   t1.close_user_id "closeUserId",
+	   t1.close_user_name "closeUserName",
+	   t1.close_remark "closeRemark",
+	   TO_CHAR(T1.close_TIME, 'yyyy-MM-dd') "closeTime",
+	   
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -606,12 +646,15 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
    left join
   (SELECT  SUM(amount) amount,t.order_no,t.prod_spec_name
   FROM
-  (SELECT cm.num_per_wad,cm.quantity, cm.quantity/cm.num_per_wad amount,
+  (SELECT cm.num_per_wad,cm.quantity, cm.quantity/decode(CM.NUM_PER_WAD,0,pms.num_per_wad) amount,
   cm.order_no,pms.mater_spec_name prod_spec_name from QINSEN.INST_CAIDIEMO cm
   LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
       ON PMS.MATER_SPEC_ID = cm.PROD_SPEC_ID
   WHERE EXISTS(SELECT 1  FROM  
-  KS_COMPONENT_HOUSEHOLD_JM jm WHERE  cm.batch_no = jm.cm_batch_no)) t
+  <!--KS_COMPONENT_HOUSEHOLD_JM jm WHERE  cm.batch_no = jm.cm_batch_no -->
+  ks_prod_component_yxorder od WHERE od.order_no = cm.order_no AND od.mater_spec_id = cm.prod_spec_id
+  
+  )) t
   GROUP BY t.order_no,t.prod_spec_name) hc
   on hc.order_no = t1.order_no and t1.mater_spec_name2=hc.prod_spec_name and t1.type='家用膜'
   left join
@@ -693,7 +736,9 @@ GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.
 
 	where 1=1	
 	
-	<isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
+	<isNotNull prepend="and" property="closeState">nvl(T1.close_State,'未关闭') = #closeState#</isNotNull>
+        <isNotNull prepend="and" property="orderNos">T1.ORDER_NO in ($orderNos$)</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>

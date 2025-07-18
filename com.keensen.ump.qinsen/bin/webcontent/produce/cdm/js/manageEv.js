@@ -1,6 +1,19 @@
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
+	// 查询事件
+	this.queryChooseOrderPanel.mon(this.queryChooseOrderPanel, 'query',
+			function(form, vals) {
+				var store = this.chooseOrderListPanel.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
 
 	this.defectZmWin.listPanel.store.on('load', function() {
 				var defectZmArr = ['B3-底膜针孔',
@@ -260,12 +273,15 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportExcel = function() {
 			.findField(['condition/produceBeginDate']).getValue();
 	var end = this.queryPanel.getForm().findField(['condition/produceEndDate'])
 			.getValue();
-	if (dayDiff(start, end) > 31) {
-		Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
+	if (dayDiff(start, end) > 60) {
+		Ext.Msg.alert("系统提示", "查询间隔日期不能大于2个月！");
 		return false;
 
 	}
-	var daochu = _this.queryPanel.getForm().getValues();
+	
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '裁叠膜记录',
+			'com.keensen.ump.qinsen.cdm.queryRecords', '0,1');
+	/*var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
 				msg : "后台正在操作,请稍候!"
@@ -306,10 +322,14 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportExcel = function() {
 		callback : function() {
 			_this.requestMask.hide()
 		}
-	})
+	})*/
 }
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
+	
+	Ext.getCmp(chooseOrderBtn).setDisabled(true);
+	Ext.getCmp(chooseOrderBtn).setVisible(false);
+	
 	this.inputWindow.produceDt.setValue(new Date());
 	this.inputWindow.buttons[0].setDisabled(true);
 
@@ -569,6 +589,9 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onUpdateLocation = function
 
 // 家用膜
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
+	Ext.getCmp(chooseOrderBtn).setDisabled(false);
+	Ext.getCmp(chooseOrderBtn).setVisible(true);
+	
 	this.inputWindow.produceDt.setValue(new Date());
 	this.inputWindow.buttons[0].setDisabled(false);
 	// this.onPlan();
@@ -586,7 +609,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	this.inputWindow.tumoBatchNo.setVisible(false);
 	this.inputWindow.tumoBatchNo.setDisabled(true);
 
-	this.inputWindow.orderNo.setReadOnly(false);
+	this.inputWindow.orderNo.setReadOnly(true);
 	
 	this.inputWindow.pageType.setVisible(true);
 	this.inputWindow.pageType.setDisabled(false);
@@ -613,4 +636,17 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportRemainLength = functi
 	doQuerySqlAndExport(this, this.queryPanel4RemainLength,
 			this.listPanel4RemainLength, '剩余可用长度',
 			'com.keensen.ump.qinsen.compquery.queryRemainLength', '0,1');
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.chooseOrder = function() {
+	this.chooseOrderWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.chooseOrderOk = function() {
+	var records = this.chooseOrderListPanel.getSelectionModel().getSelections();
+	if(records.length == 0) return;
+	var record = records[0];
+	var orderNo = record.data.orderNo;
+	this.inputWindow.orderNo.setValue(orderNo);
+	this.chooseOrderWindow.hide();
 }

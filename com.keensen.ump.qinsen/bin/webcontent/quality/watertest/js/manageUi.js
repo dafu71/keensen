@@ -45,7 +45,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				});
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-			height : 150,
+			height : 180,
 			columns : 4,
 			border : true,
 			id : 'watertestmgrqueryform',
@@ -218,6 +218,20 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 								this.reset()
 							}
 						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						name : 'condition/prodBatchNoStart',
+						anchor : '85%',
+						xtype : 'textfield',
+						fieldLabel : '元件序号从'
+					}, {
+						name : 'condition/prodBatchNoEnd',
+						anchor : '85%',
+						xtype : 'textfield',
+						fieldLabel : '至'
 					}]
 		});
 
@@ -284,6 +298,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 			delUrl : 'com.keensen.ump.qinsen.watertest.deleteWatertest.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 				header : '量产判定',
+				hidden:true,
 				width : 70,
 				dataIndex : 'isBatchQualifiedName',
 				renderer : function(value, metaData, rec, rowIndex, colIndex,

@@ -916,6 +916,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 												.getValue();
 										var pageWidth = this.planDayWindow.pageWidth
 												.getValue();
+										//pageWidth = parseFloat(pageWidth) == 1.048? 1:pageWidth;
 										var jmAmount = record.get('amount');
 										var useAmount = numPerWad
 												* blankingSize * jmAmount

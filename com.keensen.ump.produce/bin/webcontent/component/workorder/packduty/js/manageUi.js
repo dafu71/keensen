@@ -597,6 +597,10 @@ com.keensen.ump.produce.component.workorder.PackdutyMgr = function() {
 										name : 'condition/isRaosi',
 										inputValue : 'Y',
 										anchor : '100%'
+									}, {
+										xtype : 'hidden',
+										name : 'condition/packdutychoose',
+										value : 1
 									}]
 						});
 

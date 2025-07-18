@@ -290,13 +290,17 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						text : '预警超期说明',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
+						//自用的预期标准改为：ULP系列与BW(含HW)系列、SW系列为80个自然日，NF系列标准为160个自然日。
+						//大于此标准后，每天邮件或汽泡提醒（提醒内容：有膜片快超期，请立即处理），直至库存产品被领出裁膜。
+						//另外膜片自用的超标标准也修改为：ULP系列与BW(含HW)系列、SW系列片为90个自然日，NF系列膜片标准为180个自然日。
 						handler : function() {
 							var s = '预警超期说明:<br>'
-							s += '自用膜片超期标准：ULP与BW（含HW）膜片为90个自然日，SW与NF膜片为180个自然日;<br>';
+							s += '自用膜片超期标准：ULP与BW（含HW）系列为84个自然日,NF、SW系列膜片为174个自然日;<br>';
 							s += '发货膜片超期标准：60个自然日;<br>';
-							s += '自用膜片预期标准：ULP与BW（含HW）为70个自然日，SW与NF合理时长为160个自然日;<br>';
+							s += '自用膜片预期标准：ULP与BW（含HW）为70个自然日,NF、SW系列标准为170个自然日;<br>';
 							s += '发货膜片预期标准：30个自然日。<br>';
-							Ext.Msg.alert("订单编号规则", s);
+							s += '2025年1月1日之前的不进行报警。<br>';
+							Ext.Msg.alert("预警规则", s);
 						}
 					}],
 			selModel : selModel,
@@ -433,7 +437,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.storage.query.queryStockByPage.biz.ext',
 				root : 'data',
-				autoLoad : true,
+				autoLoad : false,
 				totalProperty : 'totalCount',
 				baseParams : {
 					'condition/notZero' : 'Y'

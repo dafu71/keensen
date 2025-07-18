@@ -21,7 +21,7 @@ com.keensen.ump.produce.quality.mptest.c21Mgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					title : '【C21浓度查询】',
+					//title : '【C21浓度查询】',
 					fields : [{
 
 						xtype : 'combobox',
@@ -84,7 +84,7 @@ com.keensen.ump.produce.quality.mptest.c21Mgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【C21浓度列表】',
+			//title : '【C21浓度列表】',
 			viewConfig : {
 				forceFit : true
 			},

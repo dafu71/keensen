@@ -53,3 +53,23 @@ com.keensen.ump.produce.component.markprintlistMgr.prototype.onPrint = function(
 	f.submit();
 
 }
+
+com.keensen.ump.produce.component.markprintlistMgr.prototype.onPreView = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	}
+	var records = A.getSelectionModel().getSelections();
+	var templateName = records[0].data.templateName;
+	
+
+	var f = document.getElementById('componentmarktemplatepreviewForm2');
+	f.drawingCode.value = templateName;
+	var actionUrl = 'com.keensen.ump.produce.component.printMarks4PreView.flow?time='
+			+ Math.random() + '&token=' + Date.now();
+
+	f.action = actionUrl;
+	f.submit();
+
+}

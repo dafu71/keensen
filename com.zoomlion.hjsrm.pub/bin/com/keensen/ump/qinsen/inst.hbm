@@ -1024,6 +1024,125 @@
             <column length="200" name="POSITION"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstCaidiemo" table="INST_CAIDIEMO">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="batchNo" type="string">
+            <column length="20" name="BATCH_NO"/>
+        </property>
+        <property name="lineId" type="int">
+            <column length="9" name="LINE_ID" not-null="true"/>
+        </property>
+        <property name="tumoBatchId" type="int">
+            <column length="9" name="TUMO_BATCH_ID" not-null="true"/>
+        </property>
+        <property name="prodSpecId" type="int">
+            <column length="9" name="PROD_SPEC_ID" not-null="true"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="50" name="ORDER_NO"/>
+        </property>
+        <property name="quantity" type="big_decimal">
+            <column length="6" name="QUANTITY" not-null="true" precision="6" scale="1"/>
+        </property>
+        <property name="numPerWad" type="big_decimal">
+            <column length="5" name="NUM_PER_WAD" precision="5" scale="1"/>
+        </property>
+        <property name="produceDt" type="timestamp">
+            <column name="PRODUCE_DT" not-null="true"/>
+        </property>
+        <property name="teamId" type="int">
+            <column length="9" name="TEAM_ID"/>
+        </property>
+        <property name="workerId" type="int">
+            <column length="9" name="WORKER_ID"/>
+        </property>
+        <property name="createDt" type="timestamp">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="timestamp">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="blankingSize" type="big_decimal">
+            <column length="7" name="BLANKING_SIZE" precision="7" scale="3"/>
+        </property>
+        <property name="denseNet" type="int">
+            <column length="8" name="DENSE_NET"/>
+        </property>
+        <property name="isToMix" type="string">
+            <column length="1" name="IS_TO_MIX"/>
+        </property>
+        <property name="pageWidth" type="big_decimal">
+            <column length="8" name="PAGE_WIDTH" precision="8" scale="3"/>
+        </property>
+        <property name="location" type="string">
+            <column length="50" name="LOCATION"/>
+        </property>
+        <property name="pageType" type="string">
+            <column length="20" name="PAGE_TYPE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstRaosi" table="INST_RAOSI">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="recordId" type="int">
+            <column length="9" name="RECORD_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="batchNo" type="string">
+            <column length="20" name="BATCH_NO" not-null="true"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="50" name="ORDER_NO"/>
+        </property>
+        <property name="lineId" type="int">
+            <column length="9" name="LINE_ID" not-null="true"/>
+        </property>
+        <property name="produceDt" type="timestamp">
+            <column name="PRODUCE_DT" not-null="true"/>
+        </property>
+        <property name="teamId" type="int">
+            <column length="9" name="TEAM_ID" not-null="true"/>
+        </property>
+        <property name="workerId" type="int">
+            <column length="9" name="WORKER_ID" not-null="true"/>
+        </property>
+        <property name="createDt" type="timestamp">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="timestamp">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="prodSpecId" type="int">
+            <column length="9" name="PROD_SPEC_ID"/>
+        </property>
+        <property name="produceFlag" type="string">
+            <column length="1" name="PRODUCE_FLAG" not-null="true"/>
+        </property>
+        <property name="prodType" type="string">
+            <column length="20" name="PROD_TYPE"/>
+        </property>
+    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstTumo" table="INST_TUMO">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="recordId" type="int">
@@ -1198,124 +1317,11 @@
         <property name="c21Result" type="string">
             <column length="20" name="C21_RESULT"/>
         </property>
-    </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstCaidiemo" table="INST_CAIDIEMO">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="recordId" type="int">
-            <column length="9" name="RECORD_ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="batchNo" type="string">
-            <column length="20" name="BATCH_NO"/>
+        <property name="ifPinhole" type="string">
+            <column default="'N'" length="1" name="IF_PINHOLE"/>
         </property>
-        <property name="lineId" type="int">
-            <column length="9" name="LINE_ID" not-null="true"/>
-        </property>
-        <property name="tumoBatchId" type="int">
-            <column length="9" name="TUMO_BATCH_ID" not-null="true"/>
-        </property>
-        <property name="prodSpecId" type="int">
-            <column length="9" name="PROD_SPEC_ID" not-null="true"/>
-        </property>
-        <property name="orderNo" type="string">
-            <column length="50" name="ORDER_NO"/>
-        </property>
-        <property name="quantity" type="big_decimal">
-            <column length="6" name="QUANTITY" not-null="true" precision="6" scale="1"/>
-        </property>
-        <property name="numPerWad" type="big_decimal">
-            <column length="5" name="NUM_PER_WAD" precision="5" scale="1"/>
-        </property>
-        <property name="produceDt" type="timestamp">
-            <column name="PRODUCE_DT" not-null="true"/>
-        </property>
-        <property name="teamId" type="int">
-            <column length="9" name="TEAM_ID"/>
-        </property>
-        <property name="workerId" type="int">
-            <column length="9" name="WORKER_ID"/>
-        </property>
-        <property name="createDt" type="timestamp">
-            <column name="CREATE_DT"/>
-        </property>
-        <property name="changeDt" type="timestamp">
-            <column name="CHANGE_DT"/>
-        </property>
-        <property name="creatorId" type="int">
-            <column length="9" name="CREATOR_ID"/>
-        </property>
-        <property name="changerId" type="int">
-            <column length="9" name="CHANGER_ID"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="blankingSize" type="big_decimal">
-            <column length="7" name="BLANKING_SIZE" precision="7" scale="3"/>
-        </property>
-        <property name="denseNet" type="int">
-            <column length="8" name="DENSE_NET"/>
-        </property>
-        <property name="isToMix" type="string">
-            <column length="1" name="IS_TO_MIX"/>
-        </property>
-        <property name="pageWidth" type="big_decimal">
-            <column length="8" name="PAGE_WIDTH" precision="8" scale="3"/>
-        </property>
-        <property name="location" type="string">
-            <column length="50" name="LOCATION"/>
-        </property>
-        <property name="pageType" type="string">
-            <column length="20" name="PAGE_TYPE"/>
-        </property>
-    </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstRaosi" table="INST_RAOSI">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="recordId" type="int">
-            <column length="9" name="RECORD_ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="batchNo" type="string">
-            <column length="20" name="BATCH_NO" not-null="true"/>
-        </property>
-        <property name="orderNo" type="string">
-            <column length="50" name="ORDER_NO"/>
-        </property>
-        <property name="lineId" type="int">
-            <column length="9" name="LINE_ID" not-null="true"/>
-        </property>
-        <property name="produceDt" type="timestamp">
-            <column name="PRODUCE_DT" not-null="true"/>
-        </property>
-        <property name="teamId" type="int">
-            <column length="9" name="TEAM_ID" not-null="true"/>
-        </property>
-        <property name="workerId" type="int">
-            <column length="9" name="WORKER_ID" not-null="true"/>
-        </property>
-        <property name="createDt" type="timestamp">
-            <column name="CREATE_DT"/>
-        </property>
-        <property name="changeDt" type="timestamp">
-            <column name="CHANGE_DT"/>
-        </property>
-        <property name="creatorId" type="int">
-            <column length="9" name="CREATOR_ID"/>
-        </property>
-        <property name="changerId" type="int">
-            <column length="9" name="CHANGER_ID"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="prodSpecId" type="int">
-            <column length="9" name="PROD_SPEC_ID"/>
-        </property>
-        <property name="produceFlag" type="string">
-            <column length="1" name="PRODUCE_FLAG" not-null="true"/>
-        </property>
-        <property name="prodType" type="string">
-            <column length="20" name="PROD_TYPE"/>
+        <property name="remarkPinhole" type="string">
+            <column length="590" name="REMARK_PINHOLE"/>
         </property>
     </class>
 </hibernate-mapping>

@@ -35,7 +35,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		this.initUpdateProdRemarkWindow();
 
 		this.initChooseMarkWindow();
-		
+
 		this.initUpdateSpecNameMarkWindow();
 
 		return new Ext.fn.fnLayOut({
@@ -123,7 +123,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					data : [['印刷双层', '印刷双层'], ['印刷三层', '印刷三层'], ['网纹', '网纹'],
 							['公司标准', '公司标准'], ['蓝胶带', '蓝胶带'], ['绿胶带', '绿胶带'],
 							['白胶带', '白胶带'], ['黄胶带', '黄胶带'], ['灰胶带', '灰胶带'],
-							['水光蓝胶带', '水光蓝胶带']]
+							['水光蓝胶带', '水光蓝胶带'], ['黑色亮光胶带', '黑色亮光胶带'],
+							['耐酸碱白胶带', '耐酸碱白胶带']]
 				});
 
 		// 制作方式下拉选项：印刷、打印
@@ -147,9 +148,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		// 托盘材质 "下拉选项：普通木质、出口熏蒸木质、出口免熏蒸木质、塑料，默认“公司标准”"
 		this.trayStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['普通木质', '普通木质'], 
-							['出口免熏蒸木质', '出口免熏蒸木质'], ['塑料', '塑料'],
-							['公司标准', '公司标准']]
+					data : [['普通木质', '普通木质'], ['出口免熏蒸木质', '出口免熏蒸木质'],
+							['塑料', '塑料'], ['公司标准', '公司标准']]
 				});
 
 		// 托盘尺寸
@@ -372,7 +372,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						handler : this.onUpdateTemplateName
 					}, '-', {
 						xtype : 'splitbutton',
-						//disabled : allRight != '1',
+						// disabled : allRight != '1',
 						text : '订单新增',
 						// scale : 'small',
 						// rowspan : 1,
@@ -413,6 +413,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, '-', {
 						text : '删除',
 						scope : this,
+						hidden : uid != 'dafu',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],
@@ -445,6 +446,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, {
 						dataIndex : 'orderAmount',
 						header : '订单数量',
+						sortable : true
+					}, {
+						dataIndex : 'applyAmount',
+						header : '请检数量',
 						sortable : true
 					}, {
 						dataIndex : 'prodAmount',
@@ -724,6 +729,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							name : 'prodAmount'
 						}, {
 							name : 'specNameMark'
+						}, {
+							name : 'applyAmount'
 						}]
 			})
 		})
@@ -1132,10 +1139,20 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							allowBlank : false,
 							anchor : '85%',
 							format : "Y-m-d",
-							colspan : 1
+							colspan : 1,
+							listeners : {
+								scope : this,
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return;
+									this.planWeekWindow.endDate
+											.setValue(newValue);
+								}
+							}
 						}, {
 							xtype : 'datefield',
 							name : 'entity/endDate',
+							ref : '../../endDate',
 							fieldLabel : '计划结束时间',
 							allowBlank : false,
 							anchor : '85%',
@@ -1149,6 +1166,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							xtype : 'datefield',
 							name : 'entity/enterDate',
 							fieldLabel : '入库日期',
+							ref : '../../enterDate',
 							allowBlank : false,
 							anchor : '85%',
 							format : "Y-m-d",
@@ -1163,6 +1181,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						}, {
 							xtype : 'numberfield',
 							name : 'entity/jmAmount',
+							ref : '../../jmAmount',
 							fieldLabel : '卷膜数量',
 							allowBlank : false,
 							anchor : '85%',
@@ -1171,6 +1190,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						}, {
 							xtype : 'numberfield',
 							name : 'entity/waitAmount',
+							ref : '../../waitAmount',
 							fieldLabel : '待排产数量',
 							allowBlank : false,
 							anchor : '85%',
@@ -1488,6 +1508,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/jmAmount',
+
 									dataIndex : 'jmAmount',
 									fieldLabel : '卷膜数量',
 									allowBlank : false,
@@ -1498,6 +1519,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/waitAmount',
 									dataIndex : 'waitAmount',
+
 									fieldLabel : '待排产数量',
 									allowBlank : false,
 									anchor : '85%',
@@ -1586,18 +1608,20 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									displayField : "materSpecName",
 									valueField : "materSpecId",
 									listeners : {
-										"focus":function(combo){
-											var materSpecName = combo.getRawValue();
-											//如果为整数		
-											if(!isNaN(materSpecName) && !isNaN(parseInt(materSpecName))){
-												//combo.store.clearFilter();
-												//combo.expand();
+										"focus" : function(combo) {
+											var materSpecName = combo
+													.getRawValue();
+											// 如果为整数
+											if (!isNaN(materSpecName)
+													&& !isNaN(parseInt(materSpecName))) {
+												// combo.store.clearFilter();
+												// combo.expand();
 												this.reset()
 											}
-											
+
 										},
 										"expand" : function(A) {
-											
+
 											// this.reset()
 										},
 										'change' : function(o, newValue,
@@ -1609,43 +1633,29 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 											_this.updatematerialWindow.materSpecName
 													.setValue(materSpecName);
 										}
-											 
-											 
+
 									}
 								}
 
-								/*, 
-									
-										{
-									xtype : 'prodspeccombobox',
-									dataIndex : 'materSpecId',
-									hiddenName : 'entity/materSpecId',
-									ref : '../../materSpecId',
-									allowBlank : false,
-									anchor : '100%',
-									colspan : 2,
-									fieldLabel : '元件型号 ',
-									typeAhead : true,
-									typeAheadDelay : 100,
-									minChars : 1,
-									queryMode : 'local',
-									lastQuery : '',
-									editable : true,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										},
-										'change' : function(o, newValue,
-												oldValue) {
-											if (newValue == oldValue)
-												return false;
-											var materSpecName = _this.updatematerialWindow.materSpecId
-													.getRawValue();
-											_this.updatematerialWindow.materSpecName
-													.setValue(materSpecName);
-										}
-									}
-								}*/, {
+								/*
+								 * ,
+								 *  { xtype : 'prodspeccombobox', dataIndex :
+								 * 'materSpecId', hiddenName :
+								 * 'entity/materSpecId', ref :
+								 * '../../materSpecId', allowBlank : false,
+								 * anchor : '100%', colspan : 2, fieldLabel :
+								 * '元件型号 ', typeAhead : true, typeAheadDelay :
+								 * 100, minChars : 1, queryMode : 'local',
+								 * lastQuery : '', editable : true, listeners : {
+								 * 'specialkey' : function() { return false; },
+								 * 'change' : function(o, newValue, oldValue) {
+								 * if (newValue == oldValue) return false; var
+								 * materSpecName =
+								 * _this.updatematerialWindow.materSpecId
+								 * .getRawValue();
+								 * _this.updatematerialWindow.materSpecName
+								 * .setValue(materSpecName); } } }
+								 */, {
 									name : 'entity/id',
 									xtype : 'hidden',
 									dataIndex : 'id'
@@ -1949,7 +1959,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						successFn : function(i, r) {
 							_this.addOrderMaterSpecWindow.items.items[0].form
 									.reset();
-							_this.addOrderMaterSpecWindow.hide();	
+							_this.addOrderMaterSpecWindow.hide();
 							_this.orderMaterSpecStore.load();
 							_this.orderMaterSpecStore2.load();
 							_this.listPanel3.refresh();
@@ -2342,7 +2352,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					forceSelection : true,
 					readOnly : true,
 					mode : 'local',
-					fieldLabel : '产品类型',
+					fieldLabel : '商品类型',
 					ref : '../../type',
 					dataIndex : 'type',
 					anchor : '100%',
@@ -2539,7 +2549,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					fieldLabel : '产品备注'
 				}, {
 					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">性能要求<br>测试条件</p>',
+					fieldLabel : '<p style="color:red;font-size:16px;">性能要求<br>与测试条件</p>',
 					labelSeparator : '',// 去掉冒号
 					colspan : 24
 				}, {
@@ -2689,7 +2699,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 				}, {
 					xtype : 'combobox',
 					forceSelection : true,
-					hidden:true,
+					hidden : true,
 					// allowBlank : false,
 					mode : 'local',
 					fieldLabel : '耐酸碱要求',
@@ -3225,7 +3235,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					forceSelection : true,
 					// allowBlank : false,
 					mode : 'local',
-					fieldLabel : '需要拍照',
+					fieldLabel : '需要标准拍照',
 					ref : '../../ifphoto',
 					readOnly : true,
 					dataIndex : 'ifphoto',
@@ -3252,7 +3262,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					store : this.ynStore,
 					displayField : "name",
 					valueField : "code"
-				}, {
+				}/*, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -3280,7 +3290,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					anchor : '100%',
 					colspan : 24,
 					dictData : KS_YXORDER_PHOTO_ALL
-				}, {
+				}*/, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">包装</p>',
 					labelSeparator : '',// 去掉冒号
@@ -3700,7 +3710,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 				})
 	}
-	
+
 	this.initUpdateSpecNameMarkWindow = function() {
 		var _this = this;
 		this.updateSpecNameMarkWindow = this.updateSpecNameMarkWindow

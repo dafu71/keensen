@@ -201,6 +201,17 @@
 	<isNotNull prepend="" property="prodBatchNo">
 	   AND Q.BATCH_NO = UPPER(#prodBatchNo#)
 	</isNotNull>
+	
+	
+	<isNotNull prepend="" property="prodBatchNoStart">
+	   AND Q.BATCH_NO >= UPPER(#prodBatchNoStart#)
+	</isNotNull>
+	
+	<isNotNull prepend="" property="prodBatchNoEnd">
+	   AND Q.BATCH_NO &lt;= UPPER(#prodBatchNoEnd#)
+	</isNotNull>
+	
+	
 	<isNotNull prepend="" property="prodSpecId">
 	   AND Q.PROD_SPEC_ID = #prodSpecId#
 	</isNotNull>

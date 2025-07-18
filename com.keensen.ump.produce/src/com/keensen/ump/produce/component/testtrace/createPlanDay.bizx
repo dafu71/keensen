@@ -38,8 +38,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link25</targetConnections>
     <targetConnections>link32</targetConnections>
+    <targetConnections>link25</targetConnections>
     <location x="917" y="155"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -220,7 +220,7 @@
       <process:to type="query">order/materSpecId</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="literal" pattern="reference">干</process:from>
+      <process:from type="literal" pattern="reference">干/湿</process:from>
       <process:to type="query">order/dryWet</process:to>
     </process:copy>
     <process:copy>
@@ -296,9 +296,9 @@
       <sourceNode>invokePojo3</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <targetConnections>link11</targetConnections>
-    <targetConnections>link35</targetConnections>
     <targetConnections>link36</targetConnections>
+    <targetConnections>link35</targetConnections>
+    <targetConnections>link11</targetConnections>
     <location x="589" y="277"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo3label</nodeLabel>

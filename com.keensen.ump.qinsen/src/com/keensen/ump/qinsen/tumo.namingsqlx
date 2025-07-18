@@ -100,7 +100,13 @@
        nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength",
        decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
        t1.kt_amount "ktAmount",
-       t1.dm_batch_id "dmBatchId"
+       t1.dm_batch_id "dmBatchId",t1.pg_judger_name "pgJudgerName",t1.dm_amount "dmAmount",
+       t1.density7 "density7" ,t1.result7 "result7" ,t1.density8 "density8" ,t1.result8 "result8",
+       
+       
+       t1.if_pinhole "ifPinhole", t1.remark_pinhole "remarkPinhole",
+       decode(t1.if_pinhole,'Y', '是', 'N', '否', '') "ifPinholeName"
+       
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,A.water_batch_no,
                A.PLAN_NO,A.if_modify_defect,A.c21_result ,
                A.DIMO_BATCH_NO,
@@ -152,6 +158,8 @@
                A.OUT_BATCH_NO,
                A.IS_KEEP,
                A.MPD,
+               
+               A.if_pinhole, A.remark_pinhole,
                L.LINE_CODE,
                L.LINE_NAME,
                S.MATER_SPEC_CODE,
@@ -206,13 +214,21 @@
                T8.MAC_NAME R_MAC_NAME,
                T8.GFD_AVG R_GFD_AVG,
                T8.SALT_REJECTION R_SALT_REJECTION,
-               t33.reserve4,t33.trend,t33.perf_is_qualified,
+               t33.reserve4,t33.trend,t33.perf_is_qualified,t33.judger_name pg_judger_name ,
                vkrc.sumOutLength,
                
                DECODE(A.IS_CUT_OVER, 'Y', to_char(A.OUT_LENGTH - nvl(kt.CAIMO_LOSS,0) - nvl(T2.CAIMO_LENGTH,0),'FM9999999990.99') , '') kt_amount
-               ,dm.id dm_batch_id
+               ,dm.id dm_batch_id, dm.amount dm_amount,
+               nvl(c92.density7,'') density7 ,c92.result7 ,nvl(c92.density8,'') density8,c92.result8
           FROM QINSEN.INST_TUMO A
-          LEFT JOIN ks_prod_diaphragm_zmx_record dm
+          left join KS_DIAPHRAGM_C92 c92
+          on c92.id = A.record_id
+          
+          LEFT JOIN (select t1.*, NVL(T1.THEORY_AMOUNT, 0) - nvl(defect2.loss,0) amount
+           from ks_prod_diaphragm_zmx_record t1
+          left join (select sum(t.loss) loss ,t.dm_batch_id from QINSEN.Inst_Cdm_Defect2 t
+			where nvl(if_tear,'是') = '是'
+			GROUP BY t.dm_batch_id) defect2 on defect2.dm_batch_id = t1.id) dm
 			ON dm.dimo_batch_no = a.dimo_batch_no
           left join KS_DIAPHRAGM_DIAMETER kdd on kdd.batch_no = A.batch_no 
           left join KS_PROD_DIAPHRAGM_TUMO t33

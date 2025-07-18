@@ -54,7 +54,8 @@
      from qinsen.base_staff t
     where t.dept_id = '100080'</select>
     <!-- 膜片型号查询 -->
-    <select id="queryMpSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
+    <select id="queryMpSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+      select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
 	t.mater_spec_id "id",t.mater_spec_name "name",t.mater_spec_code "code"
 	,t.mp_batch_code "mpBatchCode",t.new_batch_code "newBatchCode"
 	 from qinsen.PARA_MATER_SPEC t
@@ -62,7 +63,9 @@
 	AND t.mater_spec_name IN('ULP1-1','ULP2-1','ULP3-1','ULP4-1','ULP5-1',
   'ULP6-1','BW1-1','BW2-1','BW3-1','HW1-1','HW1-2','SW1-1','SW2-1','SW3-1','NF1','NF2','NF1-R','ULP1-2'
   ,'ULP2-2','SW4-1','ULP3-2','NF2-1','NF1-1','ULP1-2','HW3-1','HW4-1','HW2-1')
-   ORDER BY t.mater_spec_name</select>
+  	<isNotNull prepend="and" property="state">t.state = #state#</isNotNull>
+   ORDER BY t.mater_spec_name
+     </select>
     <!-- 膜片生产线查询 -->
     <select id="queryMpLine" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.line_id,t.line_code "code",t.line_name ,
 	t.line_id "id",t.line_name || '(' || t.line_code || ')' "name"

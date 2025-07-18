@@ -167,6 +167,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 								width : 40
 							}), selModel, {
 						header : '卷膜序号',
+						sortable:true,
 						width : 120,
 						dataIndex : 'batchNo'
 					}, {

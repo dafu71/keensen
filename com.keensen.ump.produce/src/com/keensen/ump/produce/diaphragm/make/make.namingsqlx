@@ -86,7 +86,9 @@
 		       AND t1.machine = #machine#
 	</isNotNull>
      
-     
+      <isNotNull prepend="" property="used"> 
+		       AND nvl(t1.used,nvl2(zmx.zmy_batch_no,'是','否')) = #used#
+	</isNotNull>
 	 ORDER BY t1.CREATE_TIME desc
      </select>
      
@@ -352,10 +354,11 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
      
       <select id="countFix" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
     select 
-   sum(t1.C11) as "c11",
-	sum(t1.C12) as "c12",
-	sum(t1.C13) as "c13",
-	sum(t1.C14) as "c14"
+   nvl(sum(t1.C11),0) as "c11",
+	nvl(sum(t1.C12),0) as "c12",
+	nvl(sum(t1.C13),0) as "c13",
+	nvl(sum(t1.C14),0) as "c14",
+	nvl(sum(t1.C11) + sum(t1.C12) + sum(t1.C13) + sum(t1.C14),0) "total"
 	from KS_PROD_DIAPHRAGM_MAKE_FIX t1
 	left join EOS_DICT_ENTRY t2 on t2.dictid=t1.psf and t2.dicttypeid='KS_PSF'
     left join (select distinct t.zmy_batch_no from KS_PROD_DIAPHRAGM_ZMX_RECORD t) zmx 
@@ -387,7 +390,9 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
 		       AND t1.machine = #machine#
 	</isNotNull>
      
-     
+      <isNotNull prepend="" property="used"> 
+		       AND nvl(t1.used,nvl2(zmx.zmy_batch_no,'是','否')) = #used#
+	</isNotNull>
 	 ORDER BY t1.CREATE_TIME desc
      </select>
      

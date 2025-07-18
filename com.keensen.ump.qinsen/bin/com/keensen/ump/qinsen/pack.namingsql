@@ -108,6 +108,7 @@
         <isNotNull prepend="" property="markSpecName">AND A.MARK_SPEC_NAME = UPPER(#markSpecName#)</isNotNull>
         <isNotNull prepend="" property="printBeginDate">AND A.PRINT_TM &gt;= TO_DATE(#printBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="" property="printEndDate">AND A.PRINT_TM &lt; TO_DATE(#printEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="batchNoStr">and A.BATCH_NO_STR like '%' || #batchNoStr# || '%'</isNotNull>
 	 ORDER BY A.PRINT_TM DESC) T1
 		
 		

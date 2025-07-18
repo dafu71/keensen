@@ -23,7 +23,7 @@
 		t1.TEST_SPEC_ID as "testSpecId",
 		t1.prod_Batch_No as "prodBatchNo",
 		t1.test_pos as "testPos",
-		to_char(t1.test_time,'yyyy-MM-dd') as "testTime",
+		to_char(t1.test_time,'YYYY-MM-DD HH24:MI:SS') as "testTime",
 		t1.test_Liquid as "testLiquid",
 		t1.density as "density",
 		t1.pressure as "pressure",
@@ -56,10 +56,10 @@ ON pms.mater_spec_id = t1.test_spec_id
  on test.prop_value_id = t1.test_Type_Id
   where 1=1
   <isNotNull prepend = "and"  property = "testTimeStart"> 
-          to_char(t1.test_time,'yyyy-MM-dd')  &gt;=  #testTimeStart#
+          to_char(t1.test_time,'YYYY-MM-DD HH24:MI:SS')  &gt;=  #testTimeStart#
      </isNotNull>
      <isNotNull prepend = "and"  property = "testTimeEnd"> 
-          to_char(t1.test_time,'yyyy-MM-dd')  &lt;=  #testTimeEnd#
+          to_char(t1.test_time,'YYYY-MM-DD HH24:MI:SS')  &lt;=  #testTimeEnd#
      </isNotNull>
      
      <isNotNull prepend="" property="testTypeId">

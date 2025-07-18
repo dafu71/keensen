@@ -9,6 +9,7 @@
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
     <targetConnections>link1</targetConnections>
+    <targetConnections>link4</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="com.keensen.ump.produce.component.KsComponentCheckHead" name="data" type="query" valueType="DataObject">data</process:return>
@@ -26,6 +27,16 @@
     <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>end0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link3" name="默认C等品为“否”" type="transition">
+      <sourceNode>invokePojo0</sourceNode>
+      <targetNode>assign1</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">data/isC</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link2</targetConnections>
     <nodeLabel>invokePojo0label</nodeLabel>
@@ -60,6 +71,22 @@
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>
     <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign1" name="赋值1" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link4" name="link4" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link3</targetConnections>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="literal" pattern="reference">否</process:from>
+      <process:to type="query">data/isC</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

@@ -22,6 +22,19 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				});
 	}, this);
 
+	// 查询事件
+	this.queryPanel4ChooseSpec.mon(this.queryPanel4ChooseSpec, 'query',
+			function(form, vals) {
+				var store = this.listPanel4ChooseSpec.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4ChooseSpec.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
 	this.optColumnWin.listPanel.store.on('load', function() {
 				var columnStore = me.optColumnWin.listPanel.store;
 				var columnModel = me.listPanel.getColumnModel();
@@ -293,7 +306,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				// 展品:展品-CRM??????，共计14位;
 				// 特规:CRM??????，共计9位。
 				// B202？？？？？-？？？
-				
+
 				var regex = /^\d{8}-\d{5}$/;
 				var convention = regex.test(orderNo);
 				var regex = /^\d{8}-\d{5}-\d{1}$/;
@@ -311,15 +324,16 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var exhibit2 = regex.test(orderNo);
 				var regex = /^\展品-CRM\d{6}-\d{2}$/;
 				var exhibit3 = regex.test(orderNo);
-				//MF-年年月月日日-XXXXXX
+				// MF-年年月月日日-XXXXXX
 				var regex = /^\MF-\d{6}-\d{6}$/;
 				var exhibit4 = regex.test(orderNo);
-				//售后-CRMXXXXXX
+				// 售后-CRMXXXXXX
 				var regex = /^\售后-CRM\d{6}$/;
 				var aftersale = regex.test(orderNo);
 
 				if (!convention && !convention2 && !sample && !exhibit
-						&& !exhibit2 && !exhibit3 && !exhibit4 && !special && !special2 && !aftersale) {
+						&& !exhibit2 && !exhibit3 && !exhibit4 && !special
+						&& !special2 && !aftersale) {
 					Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 					return false;
 				}
@@ -358,12 +372,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.adjustWindow.reserve1.setVisible(!Ext.isEmpty(ifget));
 
 			}, this);
-			
-	this.addOrderWindow.activeItem.mon(this.addOrderWindow.activeItem, 'afterload',
-			function(win, data) {
+
+	this.addOrderWindow.activeItem.mon(this.addOrderWindow.activeItem,
+			'afterload', function(win, data) {
 
 				var tray = data.tray;
-				if(tray == '公司标准') {
+				if (tray == '公司标准') {
 					this.addOrderWindow.tray.setValue('');
 				}
 
@@ -538,6 +552,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalc = function() {
 }
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = function() {
+
 	// 入库日期-下单日期
 	var demandStockDate = this.addOrderWindow.demandStockDate.getValue();
 	var orderDate = this.addOrderWindow.orderDate.getValue();
@@ -546,6 +561,41 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = functi
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function() {
 	var _this = this;
+	
+	var regex = /^[a-zA-Z]{3}/;
+	var materSpecName2= this.addOrderWindow.materSpecName2.getValue();
+	var orderType = this.addOrderWindow.orderType.getValue();
+	if (Ext.isEmpty(materSpecName2) || Ext.isEmpty(orderType)) {
+		return false;
+	} 
+	
+		
+	if(!regex.test(materSpecName2) && orderType == '特规产品'){
+		Ext.Msg.alert('系统提示', '特规产品不能选司标型号');
+		return false;
+	} 
+	
+
+	// 最终目的地
+	var reserve4 = this.addOrderWindow.reserve4.getValue();
+	var tray = this.addOrderWindow.tray.getValue();
+
+	if (Ext.isEmpty(reserve4) && Ext.isEmpty(tray)) {
+		Ext.Msg.alert('系统提示', '请选择最终目的地');
+		return false;
+	}
+
+	if (Ext.isEmpty(tray)) {
+		Ext.Msg.alert('系统提示', '请选择托盘材质');
+		return false;
+	}
+
+	if (reserve4 == '国外') {
+		if (tray != '出口免熏蒸木质' && tray != '塑料') {
+			Ext.Msg.alert('系统提示', '托盘材质请选择出口免熏蒸木质或塑料');
+			return false;
+		}
+	}
 
 	var prodAmount = _this.addOrderWindow.prodAmount.getValue();
 
@@ -767,10 +817,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = functio
 				'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
 				'0,1');
 	} else {
-		var arr = ['订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号', '货品名称',
-				'干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）', '标签',
-				'标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱', '包装箱内部图纸编号',
-				'是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注', '导入操作员', '订单类型']
+		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号',
+				'货品名称', '干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）',
+				'标签', '标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱',
+				'包装箱内部图纸编号', '是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注',
+				'导入操作员', '订单类型']
 
 		doQuerySqlAndExportExt(
 				this,
@@ -967,7 +1018,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSelect4ChooseLable 
 				this.addOrderWindow.material.setValue('客户订制');
 				this.addOrderWindow.back.setValue('客户订制');
 			}
-			
+
 			if (drawingCode == 'TP-17-0000-A') {
 				this.addOrderWindow.label.setValue('无');
 				this.addOrderWindow.makeLabel.setValue('无需制作');
@@ -1058,9 +1109,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddMC = function() 
 	this.addMaterWindow.snStart.setValue(r.data.snStart);
 	this.addMaterWindow.snEnd.setValue(r.data.snEnd);
 
-	//备注底色和材质这两项取消不带出来
+	// 备注底色和材质这两项取消不带出来
 	var arr = [r.data.label, r.data.makeLabel, r.data.material, r.data.back]
-	//var arr = [r.data.label, r.data.makeLabel];
+	// var arr = [r.data.label, r.data.makeLabel];
 	var remark = arr.join('|');
 	this.addMaterWindow.remark.setValue(remark)
 
@@ -1399,6 +1450,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onFill3 = function() 
 	var rec2 = this.yxorderStockAmountStore.getAt(i);
 	var amount = rec2.get('amount');
 	this.addMaterWindow.k3.setValue(amount);
+
+	var materName = rec2.get('materName');
+	this.addMaterWindow.materName.setValue(materName);
+
+	var unit = rec2.get('unit');
+	this.addMaterWindow.unit.setValue(unit);
+
+	var specName = rec2.get('specName');
+	this.addMaterWindow.specName.setValue(specName);
 }
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onPGConfirm = function() {
@@ -1532,14 +1592,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onPreView = function(
 	}
 	var records = A.getSelectionModel().getSelections();
 	var templateName = records[0].data.drawingCode;
-	
+
 	var code = records[0].data.code;
 
-	if (code !='1' && code!='999') {
+	if (code != '1' && code != '999') {
 		Ext.Msg.alert("系统提示", "请选择司标或自定义模板预览！");
 		return;
 	}
-	
+
 	var f = document.getElementById('componentmarktemplatepreviewForm2');
 	f.drawingCode.value = templateName;
 	var actionUrl = 'com.keensen.ump.produce.component.printMarks4PreView.flow?time='
@@ -1548,4 +1608,69 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onPreView = function(
 	f.action = actionUrl;
 	f.submit();
 
+}
+
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.chooseSpec = function() {
+
+	var orderType = this.addOrderWindow.orderType.getValue();
+	var materSpecName2 = this.addOrderWindow.materSpecName2.getValue();
+
+	if (Ext.isEmpty(orderType) || Ext.isEmpty(materSpecName2))
+		return false;
+
+	this.queryPanel4ChooseSpec.prodType.setValue(orderType);
+	this.queryPanel4ChooseSpec.materSpecName.setValue(materSpecName2);
+	this.listPanel4ChooseSpec.store.removeAll();
+	this.chooseSpecWindow.show();
+}
+
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSelect4ChooseSpec = function() {
+	var A = this.listPanel4ChooseSpec;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var materSpecName = records[0].get('materSpecName');
+		var denseNet = records[0].get('denseNet');
+		var lid = records[0].get('lid');
+		var saltLow = records[0].get('saltLow');
+		var gpdLow = records[0].get('gpdLow');
+		var gpdUp = records[0].get('gpdUp');
+		var pressure = records[0].get('pressure');
+		var temperature = records[0].get('temperature');
+		var concentration = records[0].get('concentration');
+		var recyclePercent = records[0].get('recyclePercent');
+		var ph = records[0].get('ph');
+		// this.addOrderWindow.reserve3.setValue(materSpecName);
+		this.addOrderWindow.denseNet.setValue(denseNet);
+		this.addOrderWindow.lid.setValue(lid);
+		this.addOrderWindow.saltLow.setValue(saltLow);
+		this.addOrderWindow.gpdLow.setValue(gpdLow);
+		this.addOrderWindow.gpdUp.setValue(gpdUp);
+		this.addOrderWindow.pressure.setValue(pressure);
+		this.addOrderWindow.temperature.setValue(temperature);
+		this.addOrderWindow.concentration.setValue(concentration);
+		this.addOrderWindow.recyclePercent.setValue(recyclePercent);
+		this.addOrderWindow.ph.setValue(ph);
+
+		var labelDrawingCode = records[0].get('labelDrawingCode');
+		var markDrawingCode = records[0].get('markDrawingCode');
+		var bagDrawingCode = records[0].get('bagDrawingCode');
+		var boxDrawingCode = records[0].get('boxDrawingCode');
+
+		this.addOrderWindow.labelDrawingCode.setValue(labelDrawingCode);
+		this.addOrderWindow.markDrawingCode.setValue(markDrawingCode);
+		this.addOrderWindow.bagDrawingCode.setValue(bagDrawingCode);
+		this.addOrderWindow.boxDrawingCode.setValue(boxDrawingCode);
+		
+		if(this.addOrderWindow.orderType.getValue()=='公司标准'){
+			this.addOrderWindow.traySize.setValue('公司标准');
+			
+			this.addOrderWindow.makeLabel.setValue('印刷');
+			this.addOrderWindow.makeMark.setValue('打印');
+			
+		}
+
+		this.chooseSpecWindow.hide();
+	}
 }
