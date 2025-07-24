@@ -171,14 +171,14 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						scope : this,
 						iconCls : 'icon-printer',
 						handler : this.onPrint
-					},{
+					}, {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
 						xtype : 'displayfield',
 						value : '',
 						id : 'zmxtotaltheoryamount'
-					},{
+					}, {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
@@ -193,7 +193,9 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.make.deleteZmxEntity.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel, {
 						dataIndex : 'dimoType',
 						header : '底膜类型'
 					}, {

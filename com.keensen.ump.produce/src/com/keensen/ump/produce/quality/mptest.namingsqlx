@@ -28,6 +28,14 @@
   FROM KS_QUALITY_MP_TEST_OIL_HEAD T1
   
 		 where 1=1
+		 
+		  <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI ')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
 		  <isNotNull prepend="and" property="id"> 
 		       t1.ID = #id#
 			</isNotNull>

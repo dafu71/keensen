@@ -136,8 +136,13 @@
   LEFT JOIN qinsen.para_mater_spec pms on pms.mater_spec_id=t1.mp_spec_id
   
 	where 1=1
+	
 	<isNotNull prepend="and" property="orderNo"> 
 		       T1.ORDER_NO = #orderNo# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="materSpecame2"> 
+		       t1.mater_Spec_Name2 = #materSpecame2# 
 	</isNotNull>
 	 <isNotNull prepend = "and"  property = "createTimeStart"> 
           to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#

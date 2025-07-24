@@ -225,13 +225,26 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 						xtype : 'textfield',
 						name : 'condition/juanMoBatchNoMin',
+						ref:'../juanMoBatchNoMin',
 						anchor : '100%',
 						colspan : 3,
-						fieldLabel : '卷膜序号'
+						fieldLabel : '卷膜序号',
+						listeners : {
+							scope : this,
+							'blur' : function(A) {
+								var juanMoBatchNoMin = this.queryPanel.juanMoBatchNoMin.getValue();
+								var juanMoBatchNoMax = this.queryPanel.juanMoBatchNoMax.getValue();
+								if(Ext.isEmpty(juanMoBatchNoMin)) return;
+								if(!Ext.isEmpty(juanMoBatchNoMax)) return;
+								this.queryPanel.juanMoBatchNoMax.setValue(juanMoBatchNoMin);
+								
+							}
+						}
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/juanMoBatchNoMax',
+						ref:'../juanMoBatchNoMax',
 						anchor : '100%',
 						colspan : 3,
 						fieldLabel : '至'
@@ -239,13 +252,26 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 						xtype : 'textfield',
 						name : 'condition/batchNoMin',
+						ref:'../batchNoMin',
 						anchor : '100%',
 						colspan : 3,
-						fieldLabel : '元件序号'
+						fieldLabel : '元件序号',
+						listeners : {
+							scope : this,
+							'blur' : function(A) {
+								var batchNoMin = this.queryPanel.batchNoMin.getValue();
+								var batchNoMax = this.queryPanel.batchNoMax.getValue();
+								if(Ext.isEmpty(batchNoMin)) return;
+								if(!Ext.isEmpty(batchNoMax)) return;
+								this.queryPanel.batchNoMax.setValue(batchNoMin);
+								
+							}
+						}
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/batchNoMax',
+						ref:'../batchNoMax',
 						anchor : '100%',
 						colspan : 3,
 						fieldLabel : '至'

@@ -324,7 +324,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 					return false;
 				}
 
-				var itemArr = [];
+				/*var itemArr = [];
 				var myCheckboxGroup = this.addOrderWindow.photoSingle;
 				for (var i = 0; i < myCheckboxGroup.items.length; i++) {
 					if (myCheckboxGroup.items.itemAt(i).checked) {
@@ -339,7 +339,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 						itemArr.push(i);
 					}
 				}
-				this.addOrderWindow.photoAll2.setValue(itemArr.join(','));
+				this.addOrderWindow.photoAll2.setValue(itemArr.join(','));*/
 			}, this);
 
 	this.adjustWindow.activeItem.mon(this.adjustWindow.activeItem, 'afterload',
@@ -447,7 +447,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onDown = function() {
 		buttons : Ext.Msg.OK,
 		fn : function(btn) {
 			if (btn == "ok") {
-				var fname = "ks_component_yxorderbase_import.xls";
+				var fname = "ks_component_yxorderbase_import2.xls";
 				window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
 						+ fname;
 			}
@@ -546,7 +546,27 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = functi
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function() {
 	var _this = this;
+	
+	
+//	1、如果端盖选定制，则必须要填端盖图纸编号
+//2、标签序号不固定，则必填标签序号
+//3、唛头序号固定，则必填唛头序号
+//4、需生产数量大于0，且标签图纸不是KG开头，则标签图纸编号长度必须大于等于10
+//5、需生产数量大于0，且唛头图纸不是KG开头，则唛头图纸编号长度必须大于等于10
+//6、双标签选择是，则请完整输入第二标签信息
+//7、双唛头选择是，则请完整输入第二唛头信息
+//8、生产周期要求必须>=6天（不强制，只做提醒）
 
+	//如果端盖选定制，则必须要填端盖图纸编号
+	var lid = this.addOrderWindow.lid.getValue();
+	var reserve5 = this.addOrderWindow.reserve5.getValue();
+	if (!Ext.isEmpty(lid) && lid == '定制'
+			&& Ext.isEmpty(reserve5)) {
+		Ext.Msg.alert('系统提示', '请输入端盖图纸编号');
+		return false;
+	}
+
+	
 	var prodAmount = _this.addOrderWindow.prodAmount.getValue();
 
 	// 1、生产周期由系统自动计算得出，只要修改了“下单日期”或“入库日期”则生产周期必须强制重新计算。
@@ -556,11 +576,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 	var snRegular = this.addOrderWindow.snRegular.getValue();
 	var snStart = this.addOrderWindow.snStart.getValue();
 	var snEnd = this.addOrderWindow.snEnd.getValue();
-	if (!Ext.isEmpty(snRegular) && snRegular == '是'
-			&& (Ext.isEmpty(snStart) || Ext.isEmpty(snEnd))) {
-		Ext.Msg.alert('系统提示', '请输入标签序号');
-		return false;
-	}
+//	if (!Ext.isEmpty(snRegular) && snRegular == '否'
+//			&& (Ext.isEmpty(snStart) || Ext.isEmpty(snEnd))) {
+//		Ext.Msg.alert('系统提示', '请输入标签序号');
+//		return false;
+//	}
 
 	// 标签图纸
 	var labelDrawingCode = this.addOrderWindow.labelDrawingCode.getValue();
@@ -587,11 +607,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 	var markRegular = this.addOrderWindow.markRegular.getValue();
 	var markStart = this.addOrderWindow.markStart.getValue();
 	var markEnd = this.addOrderWindow.markEnd.getValue();
-	if (!Ext.isEmpty(markRegular) && markRegular == '是'
-			&& (Ext.isEmpty(markStart) || Ext.isEmpty(markEnd))) {
-		Ext.Msg.alert('系统提示', '请输入唛头序号');
-		return false;
-	}
+//	if (!Ext.isEmpty(markRegular) && markRegular == '是'
+//			&& (Ext.isEmpty(markStart) || Ext.isEmpty(markEnd))) {
+//		Ext.Msg.alert('系统提示', '请输入唛头序号');
+//		return false;
+//	}
 
 	var labelDouble = this.addOrderWindow.labelDouble.getValue();
 	if (labelDouble == '是') {

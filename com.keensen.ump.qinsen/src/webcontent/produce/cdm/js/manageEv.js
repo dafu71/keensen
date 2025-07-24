@@ -330,6 +330,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 	Ext.getCmp(chooseOrderBtn).setDisabled(true);
 	Ext.getCmp(chooseOrderBtn).setVisible(false);
 	
+	this.inputWindow.prodSpecId.setReadOnly(true);
+	
 	this.inputWindow.produceDt.setValue(new Date());
 	this.inputWindow.buttons[0].setDisabled(true);
 
@@ -592,6 +594,9 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	Ext.getCmp(chooseOrderBtn).setDisabled(false);
 	Ext.getCmp(chooseOrderBtn).setVisible(true);
 	
+	
+	this.inputWindow.prodSpecId.setReadOnly(false);
+	
 	this.inputWindow.produceDt.setValue(new Date());
 	this.inputWindow.buttons[0].setDisabled(false);
 	// this.onPlan();
@@ -609,7 +614,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	this.inputWindow.tumoBatchNo.setVisible(false);
 	this.inputWindow.tumoBatchNo.setDisabled(true);
 
-	this.inputWindow.orderNo.setReadOnly(true);
+	this.inputWindow.orderNo.setReadOnly(false);
 	
 	this.inputWindow.pageType.setVisible(true);
 	this.inputWindow.pageType.setDisabled(false);

@@ -752,6 +752,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									: v;
 
 						}
+					}, {
+						header : 'C92浓度<br>判定时间',
+						width : 120,
+						dataIndex : 'c92time'
 					}],
 			store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.qinsen.tumo.queryRecordsByPage.biz.ext',
@@ -975,6 +979,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'ifPinholeName'
 								}, {
 									name : 'dmAmount'
+								}, {
+									name : 'c92time'
 								}]
 					})
 		})

@@ -2269,7 +2269,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							dataIndex : 'dryWet',
 							fieldLabel : '干/湿',
 							allowBlank : false,
-							value : '干',
+							value : '干/湿',
 							anchor : '80%',
 							colspan : 2
 						}, {

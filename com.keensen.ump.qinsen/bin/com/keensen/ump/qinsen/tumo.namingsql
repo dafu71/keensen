@@ -99,7 +99,7 @@
        decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
        t1.kt_amount "ktAmount",
        t1.dm_batch_id "dmBatchId",t1.pg_judger_name "pgJudgerName",t1.dm_amount "dmAmount",
-       t1.density7 "density7" ,t1.result7 "result7" ,t1.density8 "density8" ,t1.result8 "result8",
+       t1.density7 "density7" ,t1.result7 "result7" ,t1.density8 "density8" ,t1.result8 "result8",t1.c92time "c92time",
        
        
        t1.if_pinhole "ifPinhole", t1.remark_pinhole "remarkPinhole",
@@ -217,7 +217,9 @@
                
                DECODE(A.IS_CUT_OVER, 'Y', to_char(A.OUT_LENGTH - nvl(kt.CAIMO_LOSS,0) - nvl(T2.CAIMO_LENGTH,0),'FM9999999990.99') , '') kt_amount
                ,dm.id dm_batch_id, dm.amount dm_amount,
-               nvl(c92.density7,'') density7 ,c92.result7 ,nvl(c92.density8,'') density8,c92.result8
+               nvl(c92.density7,'') density7 ,c92.result7 ,nvl(c92.density8,'') density8,c92.result8,
+               
+               to_char(nvl(c92.update_time,c92.create_time),'yyyy-MM-dd HH24:MI:SS') c92time
           FROM QINSEN.INST_TUMO A
           left join KS_DIAPHRAGM_C92 c92
           on c92.id = A.record_id

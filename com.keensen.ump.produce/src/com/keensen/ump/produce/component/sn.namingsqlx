@@ -66,4 +66,8 @@
 	FROM dual
 	CONNECT BY LEVEL &lt;= #num#
     </select>
+    
+    <select id="queryYm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    select SUBSTR(t.ymd,1,2) "ym" from V_KS_YMD t    
+    </select>
 </sqlMap>

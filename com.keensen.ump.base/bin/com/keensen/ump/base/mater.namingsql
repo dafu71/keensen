@@ -322,4 +322,53 @@ SELECT T1.DRAWING_CODE AS "drawingCode",
         <isNotNull prepend="and" property="materName">T1.MATER_NAME like '%'||#materName#||'%'</isNotNull>
         <isNotNull prepend="and" property="specName">T1.SPEC_NAME like '%'||#specName#||'%'</isNotNull>
     </select>
+    <select id="queryMpBOM" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT 
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       t1.mptype as "mptype",
+		t1.line as "line",
+		t1.mater1 as "mater1",
+		t1.mater2 as "mater2",
+		t1.mater3 as "mater3",
+		t1.mater4 as "mater4",
+		t1.mater5 as "mater5",
+		t1.mater6 as "mater6",
+		t1.mater7 as "mater7",
+		t1.mater8 as "mater8",
+		t1.mater9 as "mater9",
+		t1.mater10 as "mater10",
+		t1.mater11 as "mater11",
+		t1.mater12 as "mater12",
+		t1.mater13 as "mater13",
+		t1.mater14 as "mater14",
+		t1.mater15 as "mater15",
+		t1.mater16 as "mater16",
+		t1.mater17 as "mater17"
+
+  FROM KS_BASE_MP_BOM T1
+  
+
+  where 1=1
+
+  
+   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="mptype">T1.mptype like '%' || #mptype# || '%'</isNotNull>
+        <isNotNull prepend="and" property="line">T1.line = #line#</isNotNull>
+	
+	
+	order by t1.mptype,t1.line 
+    </select>
 </sqlMap>

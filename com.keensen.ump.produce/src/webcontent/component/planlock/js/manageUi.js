@@ -35,9 +35,9 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 								colspan : 1
 							}, {
 								xtype : 'textfield',
-								name : 'condition/orderNo',
+								name : 'condition/orderNo2',
 								// anchor : '95%',
-								fieldLabel : '订单号'
+								fieldLabel : '%-%订单号'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
@@ -59,8 +59,8 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 								xtype : 'textarea',
 								name : 'condition/batchNoStr2',
 								emptyText : '多个批次请用逗号分隔，或一行一个批次',
-								colspan : 2,
-								anchor : '85%',
+								colspan : 1,
+								anchor : '100%',
 								fieldLabel : '膜片批次'
 							}, {
 								xtype : 'combo',
@@ -84,6 +84,24 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 								fieldLabel : '是否已裁完',
 								anchor : '95%',
 								dictData : KS_YESORNO
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '是否符合标准',
+								ref : '../sampleLengthValid',
+								hiddenName : 'condition/sampleLengthValid',
+								anchor : '95%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.sampleLengthValid.reset()
+									}
+								}
 							}, {
 								xtype : 'hidden',
 								name : 'condition/batchNoStr'
@@ -187,6 +205,27 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 					}, {
 						dataIndex : 'batchNo',
 						header : '膜片批次'
+					}, {
+						dataIndex : 'mpSpecName',
+						header : '膜片型号'
+					}, {
+						dataIndex : 'testLengthStd',
+						header : '送样长度标准'
+					}, {
+						dataIndex : 'sampleLength',
+						header : '实际送样长度',
+						renderer : function(v, m, r, i) {
+							var sampleLengthFlag = r.get('sampleLengthFlag');
+							if(sampleLengthFlag == 1){
+								return v;
+							}else{
+								return '';
+							}
+							
+						}
+					}, {
+						dataIndex : 'sampleLengthValid',
+						header : '是否符合标准'
 					}, {
 						dataIndex : 'isCutOver',
 						header : '已裁完',
@@ -367,6 +406,20 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 							name : 'isCutOver'
 						}, {
 							name : 'demandStockDate'
+						}, {
+							name : 'testLength'
+						}, {
+							name : 'testLength2'
+						}, {
+							name : 'testLengthStd'
+						}, {
+							name : 'mpSpecName'
+						}, {
+							name : 'sampleLength'
+						}, {
+							name : 'sampleLengthFlag'
+						}, {
+							name : 'sampleLengthValid'
 						}]
 			})
 		})

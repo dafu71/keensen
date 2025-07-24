@@ -10,8 +10,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link6</targetConnections>
     <targetConnections>link4</targetConnections>
+    <targetConnections>link6</targetConnections>
     <location x="406" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -86,6 +86,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">data/materSpecId</process:from>
       <process:to type="query">template/materSpecId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/labelingModel</process:from>
+      <process:to type="query">template/labelingModel</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">

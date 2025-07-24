@@ -10,6 +10,11 @@
 			pageContext);
 			DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
 			"list");
+			
+			DataObject head = (DataObject) XpathUtil.getObjectByXpath(rootObj,
+			"data");
+			String ifSG = head.get("ifSG").toString();
+			
 %>
 
 <!-- 
@@ -138,16 +143,32 @@
 	</tr>
 	
 	<tr style="border: 1px solid black;">
-		<td width="33%" height="38">
-		<div align="left" class="style1"><strong>性能:</strong><b:write property="data/performance"/></div>
-		</td>
+		
 		<td width="33%" height="38">
 		<div align="left" class="style1"><strong>包装箱:</strong><d:write property="data/box" dictTypeId="KS_COMPONENT_INDUSTRY_BOX"/></div>
 		</td>
 		<td width="33%" height="38">
 		<div align="left" class="style1"><strong>托盘:</strong><b:write property="data/tray"/></div>
-		</td>		
+		</td>	
+		
+		<td width="33%" height="38">
+		&nbsp;
+		<%--<div align="left" class="style1"><strong>性能:</strong><b:write property="data/performance"/></div>--%>
+		</td>
+			
 	</tr>
+	<% if(ifSG.equals("N")){ %>
+	<td width="33%" height="38">
+		<div align="left" class="style1"><strong>最低脱盐率(%)</strong><b:write property="data/saltLow"/></div>
+		</td>
+		<td width="33%" height="38">
+		<div align="left" class="style1"><strong>产水量下限(GPD)</strong><b:write property="data/gpdLow"/></div>
+		</td>	
+		
+		<td width="33%" height="38">
+		<div align="left" class="style1"><strong>产水量上限(GPD)</strong><b:write property="data/gpdUp"/></div>
+		</td>
+		<% } %>
 </table>
 <table width="780" border="0">
 	<tr>

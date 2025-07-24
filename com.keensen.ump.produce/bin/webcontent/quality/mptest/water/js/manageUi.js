@@ -2754,6 +2754,36 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 								header : '涂膜线'
 							}, {
 
+								dataIndex : 'speed',
+								sortable : true,
+								width : 100,
+								header : '泵速(L/h)',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.saveBaseFormula(id,
+															'speed', newValue,
+															oldValue);
+												}
+											}
+										}))
+
+							}, {
+
 								dataIndex : 'c21',
 								sortable : true,
 								width : 100,

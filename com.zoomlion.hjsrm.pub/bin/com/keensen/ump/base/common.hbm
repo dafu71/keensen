@@ -476,4 +476,105 @@
             <column length="20" name="AMOUNT"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.base.common.KsBaseMpBom" table="KS_BASE_MP_BOM">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="mptype" type="string">
+                <column length="20" name="MPTYPE"/>
+            </key-property>
+            <key-property name="line" type="string">
+                <column length="20" name="LINE"/>
+            </key-property>
+        </composite-id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="mater1" type="string">
+            <column length="20" name="MATER1"/>
+        </property>
+        <property name="mater2" type="string">
+            <column length="20" name="MATER2"/>
+        </property>
+        <property name="mater3" type="string">
+            <column length="20" name="MATER3"/>
+        </property>
+        <property name="mater4" type="string">
+            <column length="20" name="MATER4"/>
+        </property>
+        <property name="mater5" type="string">
+            <column length="20" name="MATER5"/>
+        </property>
+        <property name="mater6" type="string">
+            <column length="20" name="MATER6"/>
+        </property>
+        <property name="mater7" type="string">
+            <column length="20" name="MATER7"/>
+        </property>
+        <property name="mater8" type="string">
+            <column length="20" name="MATER8"/>
+        </property>
+        <property name="mater9" type="string">
+            <column length="20" name="MATER9"/>
+        </property>
+        <property name="mater10" type="string">
+            <column length="20" name="MATER10"/>
+        </property>
+        <property name="mater11" type="string">
+            <column length="20" name="MATER11"/>
+        </property>
+        <property name="mater12" type="string">
+            <column length="20" name="MATER12"/>
+        </property>
+        <property name="mater13" type="string">
+            <column length="20" name="MATER13"/>
+        </property>
+        <property name="mater14" type="string">
+            <column length="20" name="MATER14"/>
+        </property>
+        <property name="mater15" type="string">
+            <column length="20" name="MATER15"/>
+        </property>
+        <property name="mater16" type="string">
+            <column length="20" name="MATER16"/>
+        </property>
+        <property name="mater17" type="string">
+            <column length="20" name="MATER17"/>
+        </property>
+    </class>
 </hibernate-mapping>

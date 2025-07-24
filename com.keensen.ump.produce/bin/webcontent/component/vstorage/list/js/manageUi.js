@@ -358,11 +358,11 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						dataIndex : 'pgRemarkTime',
 						width : 120,
 						header : '品管备注时间'
-					}, {
+					}/*, {
 						dataIndex : 'semiStock',
 						width : 120,
 						header : '是否已入白膜仓'
-					}, {
+					}*/, {
 						dataIndex : 'modifyOrderNoTime',
 						width : 120,
 						header : '改订单号时间'
@@ -377,9 +377,9 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 				},
 				fields : [{
 							name : 'gyyConclusion'
-						}, {
+						}/*, {
 							name : 'semiStock'
-						}, {
+						}*/, {
 							name : 'dryWet'
 						}, {
 							name : 'gyyRemarkTime'

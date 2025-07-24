@@ -575,7 +575,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					state : 'Y',
 					anchor : '86%',
 					fieldLabel : '生产规格型号 ',
-					readOnly : true,
+					//readOnly : true,
 					allowBlank : false,
 					typeAhead : true,
 					typeAheadDelay : 100,
@@ -595,6 +595,12 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									.setValue(record.data.pageWidth);
 							this.inputWindow.denseNet
 									.setValue(record.data.denseNet);
+						},
+
+						beforeselect: function(combo, record, index) {
+							// 不执行任何操作，从而禁用触发器点击功能
+							var flag = Ext.getCmp(chooseOrderBtn).isVisible();
+							if(!flag) return false;
 						}
 					},
 					colspan : 12
@@ -852,13 +858,20 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					colspan : 12
 				}, {
 					xtype : 'displayfield',
+					value : '<p style="color:red;">工艺变更中，暂以纸质文件为准。</p>',
+					labelSeparator : '',// 去掉冒号
+					colspan : 12
+				}, {
+					xtype : 'displayfield',
 					height : '5',
+					hidden : true,
 					colspan : 24
 				}, {
 					ref : '../../blankingSize',
 					name : 'entity/blankingSize',
 					fieldLabel : '膜片下料尺寸',
 					xtype : 'textfield',
+					hidden : true,
 					readOnly : true,
 					anchor : '86%',
 					colspan : 12
@@ -872,6 +885,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '浓网型号',
 					xtype : 'textfield',
 					readOnly : true,
+					hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
@@ -880,11 +894,13 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '浓网尺寸',
 					xtype : 'textfield',
 					readOnly : true,
+					hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
 					xtype : 'displayfield',
 					height : '5',
+					hidden : true,
 					colspan : 24
 				}, {
 					ref : '../../pageWidth',
@@ -892,6 +908,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '页宽',
 					xtype : 'textfield',
 					readOnly : true,
+					hidden : true,
 					anchor : '86%',
 					colspan : 12
 				}, {
@@ -900,6 +917,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '淡网型号',
 					xtype : 'textfield',
 					readOnly : true,
+					hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
@@ -908,6 +926,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '淡网短页',
 					xtype : 'textfield',
 					readOnly : true,
+					hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {

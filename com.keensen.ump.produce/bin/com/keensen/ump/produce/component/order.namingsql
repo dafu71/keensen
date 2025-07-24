@@ -120,7 +120,7 @@ GROUP BY order_no,prod_spec_name) gchk on gchk.order_no = t1.order_no
     
 	where 1=1
 	
-	<isNotNull prepend="and" property="homeType">T1.type &lt;&gt; '工业膜'</isNotNull>
+	<isNotNull prepend="and" property="homeType">nvl(T1.type,'家用膜') &lt;&gt; '工业膜'</isNotNull>
         <isNotNull prepend="and" property="templateName">T1.template_Name like '%' || #templateName# || '%'</isNotNull>
         <isEqual compareValue="Y" prepend="and" property="materSpecNotNull">T1.MATER_SPEC_Id is not null</isEqual>
         <isNotNull prepend="and" property="prodSpecId">T1.MATER_SPEC_Id = #prodSpecId#</isNotNull>
@@ -330,12 +330,22 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        t6.cnt "cnt" ,
        decode(instr(T3.MATER_SPEC_NAME,'8040'),0,'4寸','8寸') "size"  ,
        nvl(t8.residue,0) "residue",t8.IS_CUT_OVER "isCutOver",
-       t66.yj_Gpd_Avg  "yjAvgGpd",cnt.cnt "cnt2"
+       t66.yj_Gpd_Avg  "yjAvgGpd",cnt.cnt "cnt2",
+       sl.test_length "testLength",sl.test_length2 "testLength2",
+       sl.test_length || '-' || sl.test_length2 "testLengthStd",t8.mater_spec_name "mpSpecName",t8.out_length "sampleLength",
+       case when substr(T3.ORDER_NO,1,2) = 'SG' and length(T3.ORDER_NO)=8 then 1 else 0 end "sampleLengthFlag",
+       
+       case when substr(T3.ORDER_NO,1,2) = 'SG' and length(T3.ORDER_NO)=8 then 
+       	case when t8.out_length&gt;=nvl(sl.test_length,0) and t8.out_length &lt;=nvl(sl.test_length2,1000000000) and nvl(t8.residue,0)&gt;0 then '是' else '否' end
+       else '' end "sampleLengthValid"
+       
   FROM KS_COMPONENT_PLAN_DAY T1 
   LEFT JOIN (select t.plan_date,t.batch_no,COUNT(1) cnt from KS_COMPONENT_PLAN_DAY t
   GROUP BY t.plan_date,t.batch_no ) cnt ON cnt.batch_no = t1.batch_no AND cnt.plan_date = t1.plan_date
-  LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue,t.spec_id,t.IS_CUT_OVER from V_KS_TUMO_ORIGIN2 t) t8
+  LEFT JOIN (select t.batch_no,t.USEFUL_LENGTH-t.CAIMO_LENGTH residue,t.spec_id,t.IS_CUT_OVER,t.mater_spec_name,t.out_length from V_KS_TUMO_ORIGIN2 t) t8
       ON t8.batch_no=t1.batch_no
+  
+      
   LEFT JOIN KS_COMPONENT_PLAN_WEEK T2
     ON T1.RELATION_ID = T2.ID 
   left join (SELECT COUNT(1) cnt,t.relation_id,t.plan_date from KS_COMPONENT_PLAN_DAY t
@@ -345,6 +355,12 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        
   LEFT JOIN KS_PROD_COMPONENT_YXORDER T3
     ON T3.ID = T2.RELATION_ID
+    
+  left join (select t.mp_spec_id,prod_spec_id,t.test_length,t.test_length2 from KS_QUALITY_SAMPLE_LENGTH t
+	WHERE t.id IN
+	(select MAX(ID) from KS_QUALITY_SAMPLE_LENGTH GROUP BY mp_spec_id,prod_spec_id)) sl 
+	on sl.mp_spec_id = t8.spec_id and sl.prod_spec_id = T3.MATER_SPEC_ID
+	
   left join KS_BASE_DIAPHRAGM kbd
     on kbd.mater_spec_id = t8.spec_id
 LEFT JOIN KS_COMPONENT_MP_SELECT t55  
@@ -353,8 +369,10 @@ LEFT JOIN v_KS_COMPONENT_MP_SELECT t66
 ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID 
   where 1=1
   
-  
-   <isNotNull prepend="and" property="isCutOver">t8.IS_CUT_OVER = #isCutOver#</isNotNull>
+  <isNotNull prepend="and" property="sampleLengthValid">case when substr(T3.ORDER_NO,1,2) = 'SG' and length(T3.ORDER_NO)=8 then 
+       	case when t8.out_length&gt;=nvl(sl.test_length,0) and t8.out_length &lt;=nvl(sl.test_length2,1000000000) and nvl(t8.residue,0)&gt;0 then '是' else '否' end
+       else '' end = #sampleLengthValid#</isNotNull>
+        <isNotNull prepend="and" property="isCutOver">t8.IS_CUT_OVER = #isCutOver#</isNotNull>
         <isNotNull prepend="and" property="batchNoStr">T1.BATCH_NO in($batchNoStr$)</isNotNull>
         <!--
 	SELECT T1.ID AS "id",t1.confirm_Status "confirmStatus",
@@ -434,6 +452,7 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
         <isNotNull prepend="and" property="planWeek">T2.PLAN_WEEK = #planWeek#</isNotNull>
         <isNotNull prepend="and" property="relationId">T1.relation_id = #relationId#</isNotNull>
         <isNotNull prepend="and" property="orderNo">T3.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">T3.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>

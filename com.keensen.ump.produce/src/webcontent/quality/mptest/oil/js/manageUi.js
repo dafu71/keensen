@@ -2,7 +2,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 	this.initPanel = function() {
 
 		this.initStore();
-		
+
 		this.mptypeArr = [['BW1-1', 'BW1-1'], ['BW2-1', 'BW2-1'],
 				['BW3-1', 'BW3-1'], ['ULP1-1', 'ULP1-1'], ['ULP2-1', 'ULP2-1'],
 				['ULP3-1', 'ULP3-1'], ['NF1-R', 'NF1-R'], ['SW1-1', 'SW1-1'],
@@ -57,7 +57,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 		var _this = this;
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 110,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -71,7 +71,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						emptyText : '--请选择--',
 						allowBlank : true,
 						editable : false,
-						anchor : '85%',
+						anchor : '95%',
 						store : [['A', 'A'], ['B', 'B'], ['C', 'C'],
 								['D', 'D'], ['E', 'E'], ['F', 'F']],
 						listeners : {
@@ -89,7 +89,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						emptyText : '--请选择--',
 						allowBlank : true,
 						editable : false,
-						anchor : '85%',
+						anchor : '95%',
 						store : this.mptypeArr,
 						listeners : {
 							scope : this,
@@ -100,7 +100,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 					}, {
 						ref : '../batchNo',
 						name : 'condition/batchNo',
-						anchor : '85%',
+						anchor : '95%',
 						xtype : 'textfield',
 						fieldLabel : '物料批号',
 						allowBlank : true
@@ -113,7 +113,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						emptyText : '--请选择--',
 						allowBlank : true,
 						editable : false,
-						anchor : '85%',
+						anchor : '95%',
 						store : [['first', '分析'], /* ['second', '调整'], */
 								['third', '配料'], ['produce', '生产使用']],
 						listeners : {
@@ -122,6 +122,32 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 								this.queryPanel.step.reset();
 							}
 						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'datetimefield',
+						name : 'condition/createTimeStart',
+						fieldLabel : '生产时间',
+						colspan : 1,
+						anchor : '95%',
+						// allowBlank : false,
+						editable : true,
+						format : 'Y-m-d H:i',
+						value : new Date().add(Date.DAY, -1)
+								.format('Y-m-d 00:00')
+					}, {
+						xtype : 'datetimefield',
+						name : 'condition/createTimeEnd',
+						fieldLabel : '至',
+						colspan : 1,
+						anchor : '95%',
+						editable : true,
+						format : 'Y-m-d H:i',
+						// allowBlank : false,
+						value : new Date().add(Date.DAY, 1)
+								.format('Y-m-d 00:00')
 					}]
 				});
 
@@ -129,10 +155,10 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,
+					hidden : true,
 					handler : this.exportExcel
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "分析室测试任务看板",
 					scope : this,
@@ -204,7 +230,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 			delUrl : '1.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'createTime',
-						header : '日期'
+						header : '时间'
 					}, {
 						dataIndex : 'reserve1',
 						header : '油相类型'
@@ -508,7 +534,6 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 			}]
 		});
 
-		
 	}
 
 	this.initInputWindow2 = function() {
@@ -783,7 +808,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							ref : '../../concentration2',
 							name : 'entity/concentration',
 							allowBlank : false,
-							//readOnly : true,
+							// readOnly : true,
 							fieldLabel : '标准C42浓度(%)',
 							anchor : '85%',
 							colspan : 2
@@ -805,7 +830,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							xtype : 'numberfield',
 							decimalPrecision : 3,
 							name : 'list/factor',
-							//dataIndex : 'factor',
+							// dataIndex : 'factor',
 							ref : '../../factor',
 							readOnly : true,
 							fieldLabel : '标准系数',
@@ -820,7 +845,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							decimalPrecision : 3,
 							allowBlank : false,
 							name : 'list/light2',
-							//dataIndex : 'light2',
+							// dataIndex : 'light2',
 							ref : '../../light2',
 							fieldLabel : '样品吸光度',
 							anchor : '85%',
@@ -835,7 +860,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							name : 'list/concentration',
 							ref : '../../concentration',
 							allowBlank : false,
-							//readOnly : true,
+							// readOnly : true,
 							allowDecimals : true,
 							fieldLabel : '新配C42浓度(%)',
 							anchor : '85%',
@@ -1422,10 +1447,9 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 					}, {
 						dataIndex : 'reflux',
 						header : '回流液重量(KG)'
-					}/*, {
-						dataIndex : 'reflux',
-						header : '回流液计划添加量(KG)'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'reflux', header : '回流液计划添加量(KG)' }
+						 */, {
 						dataIndex : 'appointFxy',
 						header : '分析员'
 					}/*

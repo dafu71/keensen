@@ -95,7 +95,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						text : '导出',
 						scope : this,
 						iconCls : 'icon-application_excel',
-						hidden : uid != 'KS00307' && uid != 'XXB',
+						hidden : uid != 'KS00307' && uid != 'dafu',
 						handler : this.onExport
 					}, '-', {
 						text : '产品规格/内控标准',

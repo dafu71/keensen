@@ -129,16 +129,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 				});
 
 		// 端盖类型选项：蜂窝、格栅、梳齿、旋熔、定制、其他,未选则默认公司标准
-		/*this.lidStore = new Ext.data.SimpleStore({
-					fields : ['code', 'name'],
-					data : [['蜂窝', '蜂窝'], ['格栅', '格栅'], ['梳齿', '梳齿'],
-							['旋熔', '旋熔'], ['定制', '定制'], ['其他', '其他'],
-							['公司标准', '公司标准'], ['梳齿蜂窝', '梳齿蜂窝']]
-				});*/
+		/*
+		 * this.lidStore = new Ext.data.SimpleStore({ fields : ['code', 'name'],
+		 * data : [['蜂窝', '蜂窝'], ['格栅', '格栅'], ['梳齿', '梳齿'], ['旋熔', '旋熔'],
+		 * ['定制', '定制'], ['其他', '其他'], ['公司标准', '公司标准'], ['梳齿蜂窝', '梳齿蜂窝']] });
+		 */
 		this.lidStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['格栅', '格栅'],['定制', '定制'],
-							['公司标准', '公司标准'], ['梳齿蜂窝', '梳齿蜂窝']]
+					data : [['格栅', '格栅'], ['定制', '定制'], ['公司标准', '公司标准'],
+							['梳齿蜂窝', '梳齿蜂窝']]
 				});
 
 		// 卷膜胶带选项：印刷双层、印刷三层、网纹 蓝胶带 绿胶带 白胶带 黄胶带 灰胶带
@@ -458,20 +457,39 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						},
 						'specialkey' : function() {
 							return false;
+						},
+						'select' : function(combo, record, index) {
+							if (index == 0) {
+								_this.addOrderWindow.traySize.setValue('公司标准');
+								_this.addOrderWindow.label.setValue('公司标准');
+								_this.addOrderWindow.mark.setValue('公司标准');
+								_this.addOrderWindow.makeLabel.setValue('印刷');
+								_this.addOrderWindow.makeMark.setValue('打印');
+							}
 						}
 					}
 				}, {
-					anchor : '40%',
+					xtype : 'trigger',
+					name : 'entity/reserve3',
+					emptyText : '单击旁边按钮选择',
+					dataIndex : 'reserve3',
+					ref : '../../reserve3',
+					allowBlank : false, 
+					editable : false,
+					fieldLabel : '卷制型号', 
+					anchor : '100%',
 					colspan : 6,
-					xtype : 'button',
-					iconCls : 'icon-application_form_magnify',
-					text : '导入下单参数',
+					hideTrigger : false,
 					scope : this,
-					handler : function() {
-						this.chooseSpec();
+					onTriggerClick : function() {
+						_this.chooseSpec();
 					}
-
-				}, {
+				}/*
+					 * , { anchor : '40%', colspan : 6, xtype : 'button',
+					 * iconCls : 'icon-application_form_magnify', text :
+					 * '导入下单参数', scope : this, handler : function() {
+					 * this.chooseSpec(); } }
+					 */, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -549,38 +567,21 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							this.reset()
 						}
 					}
-				}/*
-					 * , { xtype : 'trigger', name : 'entity/reserve3',
-					 * emptyText : '单击旁边按钮选择', dataIndex : 'reserve3', ref :
-					 * '../../reserve3', allowBlank : false, // readOnly:true,
-					 * editable : false, fieldLabel : '卷制型号', // readOnly :
-					 * true, anchor : '100%', colspan : 6, hideTrigger : false,
-					 * scope : this, onTriggerClick : function() {
-					 * _this.chooseSpec(); } }
-					 */,
-
-				{
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '最终目的地',
-					ref : '../../reserve4',
-					hiddenName : 'entity/reserve4',
-					dataIndex : 'reserve4',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.destStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
 				}, {
+					xtype : 'displayfield',
+					value : '<p style="color:red;">单击旁边按钮带出产品参数</p>',
+					labelSeparator : '',// 去掉冒号
+					colspan : 6
+				}/*
+					 * , { xtype : 'combobox', forceSelection : true, allowBlank :
+					 * false, mode : 'local', fieldLabel : '最终目的地', ref :
+					 * '../../reserve4', hiddenName : 'entity/reserve4',
+					 * dataIndex : 'reserve4', anchor : '100%', colspan : 6,
+					 * emptyText : '--请选择--', editable : false, store :
+					 * this.destStore, displayField : "name", valueField :
+					 * "code", listeners : { "expand" : function(A) {
+					 * this.reset() } } }
+					 */, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -977,6 +978,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							this.reset()
 						}
 					}
+				}, {//端盖类型这里，如果选择定制，须要填端盖图纸编号
+					name : 'entity/reserve5',
+					dataIndex : 'reserve5',
+					ref:'../../reserve5',
+					anchor : '100%',
+					colspan : 6,
+					xtype : 'textfield',
+					fieldLabel : '端盖图纸编号'
 				}, {
 					xtype : 'mpspeccombobox',
 					hiddenName : 'entity/mpSpecId',
@@ -1230,6 +1239,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							this.reset()
 						}
 					}
+				}, {
+					xtype : 'displayfield',
+					value : '<p style="color:red;">固定序列号参见图纸</p>',
+					labelSeparator : '',// 去掉冒号
+					colspan : 6
 				}/*
 					 * , { xtype : 'combobox', forceSelection : true, hidden :
 					 * true, // allowBlank : false, mode : 'local', fieldLabel :
@@ -1535,6 +1549,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					colspan : 6
 				}, {
 					xtype : 'textfield',
+					allowBlank : false,
 					fieldLabel : '唛头型号',
 					ref : '../../specNameMark',
 					dataIndex : 'specNameMark',
@@ -1893,7 +1908,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 24,
 					xtype : 'textfield',
-					fieldLabel : '打托要求'
+					fieldLabel : '打件/打托要求'
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
@@ -2578,7 +2593,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'pallet',
-						header : '打托要求',
+						header : '打件/打托要求',
 						sortable : true
 					}, {
 						dataIndex : 'goodsWithReport',
@@ -3450,6 +3465,18 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					displayField : "name",
 					valueField : "code"
 				}, {
+					xtype : 'textfield',
+					dataIndex : 'reserve3',
+					ref : '../../reserve3',
+					readOnly : true,
+					fieldLabel : '卷制型号', // readOnly :true,
+					anchor : '100%',
+					colspan : 6
+				}, {
+					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
 					xtype : 'combobox',
 					forceSelection : true,
 					readOnly : true,
@@ -3464,10 +3491,6 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					store : this.typeStore,
 					displayField : "name",
 					valueField : "code"
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
 				}, {
 					xtype : 'combobox',
 					forceSelection : true,
@@ -3766,6 +3789,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					store : this.lidStore,
 					displayField : "name",
 					valueField : "code"
+				}, {
+					readOnly : true,
+					dataIndex : 'reserve5',
+					ref:'../../reserve5',
+					anchor : '100%',
+					colspan : 6,
+					xtype : 'textfield',
+					fieldLabel : '端盖图纸编号'
 				}, {
 					xtype : 'mpspeccombobox',
 					emptyText : '',
@@ -4579,7 +4610,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 12,
 					xtype : 'textfield',
-					fieldLabel : '打托要求'
+					fieldLabel : '打件/打托要求'
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',

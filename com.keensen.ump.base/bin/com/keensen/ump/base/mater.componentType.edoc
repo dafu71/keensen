@@ -1,5 +1,13 @@
 <map>
   <entry>
+    <string>com.keensen.ump.base.mater.deleteMpBOM(com.keensen.ump.base.common.KsBaseMpBom[])</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteMpBOM&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.deleteMpBOM&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.base.common.KsBaseMpBom[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.saveMpBOM(com.keensen.ump.base.common.KsBaseMpBom)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveMpBOM&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.saveMpBOM&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.base.common.KsBaseMpBom):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>com.keensen.ump.base.mater.queryMaterClassTree(java.util.Map)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMaterClassTree&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryMaterClassTree&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
@@ -8,43 +16,55 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteBaseMater&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.deleteBaseMater&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.base.common.KsBaseMater[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.base.mater.saveBaseMater(com.keensen.ump.base.common.KsBaseMater)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveBaseMater&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.saveBaseMater&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.base.common.KsBaseMater):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
     <string>com.keensen.ump.base.mater.queryBaseMaterByPage(java.util.Map, com.eos.foundation.PageCond)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryBaseMaterByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryBaseMaterByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.queryMpBOMByPage(java.util.Map, com.eos.foundation.PageCond)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMpBOMByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryMpBOMByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.base.mater.expandMaterSpec(commonj.sdo.DataObject)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandMaterSpec&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.expandMaterSpec&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(commonj.sdo.DataObject):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.base.mater.saveMaterSpec(java.util.HashMap)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveMaterSpec&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveMaterSpec&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.saveMaterSpec&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
     <string>mater</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;mater.componentType&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;mater&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.expandMpBOM(com.keensen.ump.base.common.KsBaseMpBom)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandMpBOM&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.expandMpBOM&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.base.common.KsBaseMpBom):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.base.common.KsBaseMpBom):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.base.mater.queryDuplicateMaterSpecCode(java.util.HashMap)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryDuplicateMaterSpecCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryDuplicateRecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryDuplicateMaterSpecCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;map(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;cnt(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.base.mater.getNewMaterSpecCode(java.util.Map)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;getNewMaterSpecCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.getNewMaterSpecCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
     <string>com.keensen.ump.base.mater.queryMaterSpecList(java.util.Map)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMaterSpecList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryMaterSpecList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.base.mater.queryBaswMater(java.util.Map)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryBaswMater&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryBaswMater&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
-  </entry>
-  <entry>
     <string>com.keensen.ump.base.mater.expandBaseMater(com.keensen.ump.base.common.KsBaseMater)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandBaseMater&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.expandBaseMater&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.base.common.KsBaseMater):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.base.common.KsBaseMater):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.saveBaseMater(com.keensen.ump.base.common.KsBaseMater)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveBaseMater&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.saveBaseMater&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.base.common.KsBaseMater):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.saveMaterSpec(java.util.HashMap)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveMaterSpec&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveMaterSpec&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.saveMaterSpec&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.queryMpBOM(java.util.Map)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMpBOM&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryMpBOM&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.getNewMaterSpecCode(java.util.Map)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;getNewMaterSpecCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.getNewMaterSpecCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.queryBaswMater(java.util.Map)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryBaswMater&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryBaswMater&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
 </map>

@@ -37,11 +37,11 @@
 		cfg.prop_value_name "ngReasonName",
 		
 		TO_CHAR(qj.modify_order_no_time, 'YYYY-MM-DD HH24:MI') as "modifyOrderNoTime",
-		decode(semi.jm_batch_no,null,'否','是') "semiStock",
+		<!--decode(semi.jm_batch_no,null,'否','是') "semiStock",-->
 		CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END "dryWet",
 		    CASE WHEN t1.exception_type = '超计划生产' 
     AND (SYSDATE - CAST(t1.create_time AS DATE)) * 24&gt;4
-     AND semi.jm_batch_no IS NULL
+     <!--AND semi.jm_batch_no IS NULL-->
      AND  qj.modify_order_no_time IS NULL 
      THEN '1' 
      WHEN t1.exception_type = '需要工艺给意见' 
@@ -70,8 +70,11 @@
        from 
        KS_COMPONENT_VSTOCK  t1
        
+       <!--
        left join (select DISTINCT t.batch_no jm_batch_no from KS_COMPONENT_SEMI_STOCK t) semi
        on semi.jm_batch_no = t1.jm_batch_no
+       -->
+       
        left join qinsen.inst_juanmo_main jm ON t1.jm_batch_no = jm.batch_no
        left join qinsen.inst_qijian qj 
        ON qj.juanmo_batch_id = jm.record_id
@@ -84,6 +87,9 @@
         ON PMS2.MATER_SPEC_ID = qj.gyy_SPEC_ID
        LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION cfg ON cfg.prop_value_id = qj.ng_reason_id
 		where 1=1
+		
+		and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = t1.jm_batch_no)
+		
 		and qj.order_no != '研发实验'
 		and nvl(qj.gyy_conclusion,'X') not in('D','F')
 		 <isNotNull prepend="and" property="createTimeStart">t1.create_Time  &gt;=  TO_DATE(#createTimeStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
@@ -156,6 +162,8 @@ LEFT JOIN qinsen.inst_juanmo_main jm
 ON jm.record_id=qj.juanmo_batch_id
 WHERE qj.ng_reason_id=300061)
 
+or t.jm_batch_no in(select batch_no from KS_COMPONENT_SEMI_STOCK)
+
  <!--排除不在黑名单并且在4月30日16:00之前卷的膜元件-->
     or ( t.jm_batch_no not in(
     	select t.jm_batch_no from KS_COMPONENT_VSTOCK_BLACK t)
@@ -178,6 +186,8 @@ WHERE qj.ng_reason_id=300061)
 	 and nvl(qj.gyy_conclusion,'X') not in('D','F')
 	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 
+	 and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = jm.batch_no)
+	 
 	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)		
 	 
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
@@ -199,6 +209,8 @@ WHERE qj.ng_reason_id=300061)
 	and nvl(qj.gyy_conclusion,'X') not in('D','F')
 	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 
+	 and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = jm.batch_no)
+	 
 	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)
 	 
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
@@ -218,6 +230,8 @@ WHERE qj.ng_reason_id=300061)
 	 ON qj.juanmo_batch_id = jm.record_id
 	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
+	 
+	 and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = jm.batch_no)
 	 
 	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)
 	 
@@ -242,6 +256,8 @@ WHERE qj.ng_reason_id=300061)
 	 ON qj.juanmo_batch_id = jm.record_id
 	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
+	 
+	 and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = jm.batch_no)
 	 
 	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)
 	 

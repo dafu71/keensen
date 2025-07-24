@@ -912,7 +912,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'ifphoto',
-						header : '需要拍照',
+						header : '需要标准拍照',
 						sortable : true
 					}/*
 						 * , { dataIndex : 'ifanyone', header : '每款型号', sortable :
@@ -951,7 +951,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'pallet',
-						header : '打托要求',
+						header : '打件/打托要求',
 						sortable : true
 					}, {
 						dataIndex : 'goodsWithReport',
@@ -1848,7 +1848,19 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							this.reset()
 						}
 					}
-				}, {
+				}, {//端盖类型这里，如果选择定制，须要填端盖图纸编号
+					name : 'entity/reserve5',
+					dataIndex : 'reserve5',
+					ref:'../../reserve5',
+					anchor : '100%',
+					colspan : 6,
+					xtype : 'textfield',
+					fieldLabel : '端盖图纸编号'
+				}
+				
+				
+				
+				, {
 					xtype : 'mpspeccombobox',
 					hiddenName : 'entity/mpSpecId',
 					dataIndex : 'mpSpecId',
@@ -1929,8 +1941,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 6,
 					xtype : 'textfield',
-					fieldLabel : '彩带色卡编号',
-					decimalPrecision : 0
+					fieldLabel : '彩带色卡编号'
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">标签</p>',
@@ -2405,8 +2416,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 6
 				}, {
-					xtype : 'textfield',
+					xtype : 'textfield',//系统"唛头型呈"  将强置必填字段
 					fieldLabel : '唛头型号',
+					allowBlank : false,
 					ref : '../../specNameMark',
 					dataIndex : 'specNameMark',
 					name : 'entity/specNameMark',
@@ -2566,7 +2578,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					forceSelection : true,
 					// allowBlank : false,
 					mode : 'local',
-					fieldLabel : '需要拍照',
+					fieldLabel : '需要标准拍照',
 					ref : '../../ifphoto',
 					hiddenName : 'entity/ifphoto',
 					dataIndex : 'ifphoto',
@@ -2590,7 +2602,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					 * emptyText : '--请选择--', editable : false, store :
 					 * this.ynStore, displayField : "name", valueField : "code",
 					 * listeners : { "expand" : function(A) { this.reset() } } }
-					 */, {
+					 *//*, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -2616,7 +2628,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 24,
 					dictData : KS_YXORDER_PHOTO_ALL
-				}, {
+				}*/, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">包装</p>',
 					labelSeparator : '',// 去掉冒号
@@ -2773,7 +2785,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 24,
 					xtype : 'textfield',
-					fieldLabel : '打托要求'
+					fieldLabel : '打件/打托要求'
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
@@ -3716,6 +3728,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					displayField : "name",
 					valueField : "code"
 				}, {
+					readOnly : true,
+					dataIndex : 'reserve5',
+					ref:'../../reserve5',
+					anchor : '100%',
+					colspan : 6,
+					xtype : 'textfield',
+					fieldLabel : '端盖图纸编号'
+				}, {
 					xtype : 'mpspeccombobox',
 					emptyText : '',
 					readOnly : true,
@@ -4356,7 +4376,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					forceSelection : true,
 					// allowBlank : false,
 					mode : 'local',
-					fieldLabel : '需要拍照',
+					fieldLabel : '需要标准拍照',
 					ref : '../../ifphoto',
 					readOnly : true,
 					dataIndex : 'ifphoto',
@@ -4374,7 +4394,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					 * 'ifanyone', anchor : '100%', colspan : 6, emptyText : '',
 					 * editable : false, store : this.ynStore, displayField :
 					 * "name", valueField : "code" }
-					 */, {
+					 *//*, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -4402,7 +4422,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 24,
 					dictData : KS_YXORDER_PHOTO_ALL
-				}, {
+				}*/, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">包装</p>',
 					labelSeparator : '',// 去掉冒号
@@ -4545,7 +4565,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 12,
 					xtype : 'textfield',
-					fieldLabel : '打托要求'
+					fieldLabel : '打件/打托要求'
 				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
