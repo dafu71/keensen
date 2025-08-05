@@ -868,96 +868,6 @@
             <edit name="macName" type="text"/>
         </field>
     </viewModel>
-    <viewModel author="dafu" displayName="InstJuanmoMain" entityName="com.keensen.ump.qinsen.inst.InstJuanmoMain" id="InstJuanmoMain">
-        <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="主键ID，取自SEQ_INST_JUANMO_MAIN">
-            <view type="write"/>
-            <edit name="recordId" type="text"/>
-        </field>
-        <field dataType="String" dict="false" entityField="batchNo" id="batchNo" label="卷膜批号">
-            <view type="write"/>
-            <edit name="batchNo" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="lineId" id="lineId" label="生产线ID">
-            <view type="write"/>
-            <edit name="lineId" type="text"/>
-        </field>
-        <field dataType="String" dict="false" entityField="isTrial" id="isTrial" label="是否试卷,Y=是，N=否">
-            <view type="write"/>
-            <edit name="isTrial" type="text"/>
-        </field>
-        <field dataType="String" dict="false" entityField="orderNo" id="orderNo" label="订单号">
-            <view type="write"/>
-            <edit name="orderNo" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="prodSpecId" id="prodSpecId" label="元件型号ID">
-            <view type="write"/>
-            <edit name="prodSpecId" type="text"/>
-        </field>
-        <field dataType="Decimal" dict="false" entityField="blankingSize" id="blankingSize" label="下料尺寸，元件型号叠膜时用，单位米">
-            <view type="write"/>
-            <edit name="blankingSize" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="denseNet" id="denseNet" label="浓网，元件型号叠膜时用，单位mil">
-            <view type="write"/>
-            <edit name="denseNet" type="text"/>
-        </field>
-        <field dataType="Date" dict="false" entityField="produceDt" id="produceDt" label="生产日期">
-            <view type="write"/>
-            <edit name="produceDt" type="date"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="teamId" id="teamId" label="班组ID">
-            <view type="write"/>
-            <edit name="teamId" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="workerId" id="workerId" label="生产员工">
-            <view type="write"/>
-            <edit name="workerId" type="text"/>
-        </field>
-        <field dataType="Date" dict="false" entityField="createDt" id="createDt" label="创建日期">
-            <view type="write"/>
-            <edit name="createDt" type="date"/>
-        </field>
-        <field dataType="Date" dict="false" entityField="changeDt" id="changeDt" label="修改日期">
-            <view type="write"/>
-            <edit name="changeDt" type="date"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="creatorId" id="creatorId" label="创建人ID">
-            <view type="write"/>
-            <edit name="creatorId" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="changerId" id="changerId" label="修改人ID">
-            <view type="write"/>
-            <edit name="changerId" type="text"/>
-        </field>
-        <field dataType="String" dict="false" entityField="remark" id="remark" label="说明">
-            <view type="write"/>
-            <edit name="remark" type="text"/>
-        </field>
-        <field dataType="Decimal" dict="false" entityField="pageWidth" id="pageWidth" label="页宽，单位米">
-            <view type="write"/>
-            <edit name="pageWidth" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="cdmBatchStr" label="叠膜栈板号，多个以,分隔">
-            <view type="write"/>
-            <edit name="cdmBatchStr" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="tumoBatchStr" label="膜片批号，多个以,分隔">
-            <view type="write"/>
-            <edit name="tumoBatchStr" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="dimoBatchStr" label="底膜批号，多个以,分隔">
-            <view type="write"/>
-            <edit name="dimoBatchStr" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="pageCntStr" label="页数组成，多个以,分隔">
-            <view type="write"/>
-            <edit name="pageCntStr" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="trailer" label="trailer">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-    </viewModel>
     <viewModel author="dafu" displayName="InstQijian" entityName="com.keensen.ump.qinsen.inst.InstQijian" id="InstQijian">
         <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="主键ID，取自SEQ_INST_QIJIAN">
             <view type="write"/>
@@ -1308,96 +1218,6 @@
             <edit name="" type="text"/>
         </field>
     </viewModel>
-    <viewModel author="dafu" displayName="InstCaidiemo" entityName="com.keensen.ump.qinsen.inst.InstCaidiemo" id="InstCaidiemo">
-        <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="主键ID，取自SEQ_INST_CAIDIEMO">
-            <view type="write"/>
-            <edit name="recordId" type="text"/>
-        </field>
-        <field dataType="String" dict="false" entityField="batchNo" id="batchNo" label="裁叠膜批号">
-            <view type="write"/>
-            <edit name="batchNo" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="lineId" id="lineId" label="生产线ID">
-            <view type="write"/>
-            <edit name="lineId" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="tumoBatchId" id="tumoBatchId" label="涂膜批号ID">
-            <view type="write"/>
-            <edit name="tumoBatchId" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="prodSpecId" id="prodSpecId" label="元件型号ID">
-            <view type="write"/>
-            <edit name="prodSpecId" type="text"/>
-        </field>
-        <field dataType="String" dict="false" entityField="orderNo" id="orderNo" label="订单号">
-            <view type="write"/>
-            <edit name="orderNo" type="text"/>
-        </field>
-        <field dataType="Decimal" dict="false" entityField="quantity" id="quantity" label="页数">
-            <view type="write"/>
-            <edit name="quantity" type="text"/>
-        </field>
-        <field dataType="Decimal" dict="false" entityField="numPerWad" id="numPerWad" label="每叠页数">
-            <view type="write"/>
-            <edit name="numPerWad" type="text"/>
-        </field>
-        <field dataType="Date" dict="false" entityField="produceDt" id="produceDt" label="生产日期">
-            <view type="write"/>
-            <edit name="produceDt" type="date"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="teamId" id="teamId" label="teamId">
-            <view type="write"/>
-            <edit name="teamId" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="workerId" id="workerId" label="生产员工">
-            <view type="write"/>
-            <edit name="workerId" type="text"/>
-        </field>
-        <field dataType="Date" dict="false" entityField="createDt" id="createDt" label="创建日期">
-            <view type="write"/>
-            <edit name="createDt" type="date"/>
-        </field>
-        <field dataType="Date" dict="false" entityField="changeDt" id="changeDt" label="修改日期">
-            <view type="write"/>
-            <edit name="changeDt" type="date"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="creatorId" id="creatorId" label="创建人ID">
-            <view type="write"/>
-            <edit name="creatorId" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="changerId" id="changerId" label="修改人ID">
-            <view type="write"/>
-            <edit name="changerId" type="text"/>
-        </field>
-        <field dataType="String" dict="false" entityField="remark" id="remark" label="说明">
-            <view type="write"/>
-            <edit name="remark" type="text"/>
-        </field>
-        <field dataType="Decimal" dict="false" entityField="blankingSize" id="blankingSize" label="下料尺寸，元件型号叠膜时用，单位米">
-            <view type="write"/>
-            <edit name="blankingSize" type="text"/>
-        </field>
-        <field dataType="Int" dict="false" entityField="denseNet" id="denseNet" label="浓网，元件型号叠膜时用，单位mil">
-            <view type="write"/>
-            <edit name="denseNet" type="text"/>
-        </field>
-        <field dataType="String" dict="false" entityField="isToMix" id="isToMix" label="是否混卷">
-            <view type="write"/>
-            <edit name="isToMix" type="text"/>
-        </field>
-        <field dataType="Decimal" dict="false" entityField="pageWidth" id="pageWidth" label="页宽，单位米">
-            <view type="write"/>
-            <edit name="pageWidth" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="location" label="膜页栈板储位">
-            <view type="write"/>
-            <edit name="location" type="text"/>
-        </field>
-        <field dataType="String" dict="false" id="pageType" label="长页/短页">
-            <view type="write"/>
-            <edit name="" type="text"/>
-        </field>
-    </viewModel>
     <viewModel author="dafu" displayName="InstRaosi" entityName="com.keensen.ump.qinsen.inst.InstRaosi" id="InstRaosi">
         <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="主键ID，取自SEQ_INST_RAOSI">
             <view type="write"/>
@@ -1694,6 +1514,194 @@
             <edit name="" type="text"/>
         </field>
         <field dataType="String" dict="false" id="remarkPinhole" label="针孔说明">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="InstJuanmoMain" entityName="com.keensen.ump.qinsen.inst.InstJuanmoMain" id="InstJuanmoMain">
+        <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="主键ID，取自SEQ_INST_JUANMO_MAIN">
+            <view type="write"/>
+            <edit name="recordId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="batchNo" id="batchNo" label="卷膜批号">
+            <view type="write"/>
+            <edit name="batchNo" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="lineId" id="lineId" label="生产线ID">
+            <view type="write"/>
+            <edit name="lineId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="isTrial" id="isTrial" label="是否试卷,Y=是，N=否">
+            <view type="write"/>
+            <edit name="isTrial" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="orderNo" id="orderNo" label="订单号">
+            <view type="write"/>
+            <edit name="orderNo" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="prodSpecId" id="prodSpecId" label="元件型号ID">
+            <view type="write"/>
+            <edit name="prodSpecId" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="blankingSize" id="blankingSize" label="下料尺寸，元件型号叠膜时用，单位米">
+            <view type="write"/>
+            <edit name="blankingSize" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="denseNet" id="denseNet" label="浓网，元件型号叠膜时用，单位mil">
+            <view type="write"/>
+            <edit name="denseNet" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="produceDt" id="produceDt" label="生产日期">
+            <view type="write"/>
+            <edit name="produceDt" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="teamId" id="teamId" label="班组ID">
+            <view type="write"/>
+            <edit name="teamId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="workerId" id="workerId" label="生产员工">
+            <view type="write"/>
+            <edit name="workerId" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="createDt" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="createDt" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="changeDt" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="changeDt" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="creatorId" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="creatorId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="changerId" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="changerId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="remark" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="pageWidth" id="pageWidth" label="页宽，单位米">
+            <view type="write"/>
+            <edit name="pageWidth" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="cdmBatchStr" label="叠膜栈板号，多个以,分隔">
+            <view type="write"/>
+            <edit name="cdmBatchStr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="tumoBatchStr" label="膜片批号，多个以,分隔">
+            <view type="write"/>
+            <edit name="tumoBatchStr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="dimoBatchStr" label="底膜批号，多个以,分隔">
+            <view type="write"/>
+            <edit name="dimoBatchStr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="pageCntStr" label="页数组成，多个以,分隔">
+            <view type="write"/>
+            <edit name="pageCntStr" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="trailer" label="车号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="pipeCode" label="中心管组件编号">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="InstCaidiemo" entityName="com.keensen.ump.qinsen.inst.InstCaidiemo" id="InstCaidiemo">
+        <field dataType="Int" dict="false" entityField="recordId" id="recordId" label="主键ID，取自SEQ_INST_CAIDIEMO">
+            <view type="write"/>
+            <edit name="recordId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="batchNo" id="batchNo" label="裁叠膜批号">
+            <view type="write"/>
+            <edit name="batchNo" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="lineId" id="lineId" label="生产线ID">
+            <view type="write"/>
+            <edit name="lineId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="tumoBatchId" id="tumoBatchId" label="涂膜批号ID">
+            <view type="write"/>
+            <edit name="tumoBatchId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="prodSpecId" id="prodSpecId" label="元件型号ID">
+            <view type="write"/>
+            <edit name="prodSpecId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="orderNo" id="orderNo" label="订单号">
+            <view type="write"/>
+            <edit name="orderNo" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="quantity" id="quantity" label="页数">
+            <view type="write"/>
+            <edit name="quantity" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="numPerWad" id="numPerWad" label="每叠页数">
+            <view type="write"/>
+            <edit name="numPerWad" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="produceDt" id="produceDt" label="生产日期">
+            <view type="write"/>
+            <edit name="produceDt" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="teamId" id="teamId" label="teamId">
+            <view type="write"/>
+            <edit name="teamId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="workerId" id="workerId" label="生产员工">
+            <view type="write"/>
+            <edit name="workerId" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="createDt" id="createDt" label="创建日期">
+            <view type="write"/>
+            <edit name="createDt" type="date"/>
+        </field>
+        <field dataType="Date" dict="false" entityField="changeDt" id="changeDt" label="修改日期">
+            <view type="write"/>
+            <edit name="changeDt" type="date"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="creatorId" id="creatorId" label="创建人ID">
+            <view type="write"/>
+            <edit name="creatorId" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="changerId" id="changerId" label="修改人ID">
+            <view type="write"/>
+            <edit name="changerId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="remark" id="remark" label="说明">
+            <view type="write"/>
+            <edit name="remark" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="blankingSize" id="blankingSize" label="下料尺寸，元件型号叠膜时用，单位米">
+            <view type="write"/>
+            <edit name="blankingSize" type="text"/>
+        </field>
+        <field dataType="Int" dict="false" entityField="denseNet" id="denseNet" label="浓网，元件型号叠膜时用，单位mil">
+            <view type="write"/>
+            <edit name="denseNet" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="isToMix" id="isToMix" label="是否混卷">
+            <view type="write"/>
+            <edit name="isToMix" type="text"/>
+        </field>
+        <field dataType="Decimal" dict="false" entityField="pageWidth" id="pageWidth" label="页宽，单位米">
+            <view type="write"/>
+            <edit name="pageWidth" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="location" label="膜页栈板储位">
+            <view type="write"/>
+            <edit name="location" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="pageType" label="长页/短页">
+            <view type="write"/>
+            <edit name="" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="denseNetCode" label="浓网编号">
             <view type="write"/>
             <edit name="" type="text"/>
         </field>

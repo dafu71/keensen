@@ -24,7 +24,7 @@
 <!-- 导出Excel -->
 <script src="base/exceljs/polyfill.js"></script>
 <script src="base/exceljs/exceljs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="base/exceljs/FileSaver.min.js"></script>
 <script src="base/exceljs/doQueryAndExport.js"></script>
 
 <script type="text/javascript">

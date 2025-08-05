@@ -54,7 +54,7 @@
 	<isNotNull prepend="" property="batchIdStr">AND T1.RECORD_ID in ($batchIdStr$)</isNotNull>
     </select>
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-   SELECT Z.RECORD_ID AS "recordId",Z.trailer "trailer",z.cut "cut",z.raosi "raosi",
+   SELECT Z.RECORD_ID AS "recordId",Z.trailer "trailer",z.cut "cut",z.raosi "raosi",z.pipe_code "pipeCode",
        Z.BATCH_NO AS "batchNo",
        Z.LINE_ID AS "lineId",
        Z.IS_TRIAL AS "isTrial",
@@ -139,7 +139,7 @@
   FROM (SELECT T.*
           FROM (
                 
-                SELECT A.RECORD_ID,A.trailer,
+                SELECT A.RECORD_ID,A.trailer,A.pipe_code,
                         A.BATCH_NO,
                         A.LINE_ID,
                         A.IS_TRIAL,

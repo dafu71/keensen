@@ -48,9 +48,9 @@
        t1.light_Net_Type as "lightNetType"
        
        ,t1.dm_batch_id "dmBatchId"
-       ,t1.dimo_batch_no "dimoBatchNo"
+       ,t1.dimo_batch_no "dimoBatchNo",t1.dense_net_code "denseNetCode"
        
-  FROM (SELECT A.RECORD_ID,A.LOCATION,
+  FROM (SELECT A.RECORD_ID,A.LOCATION,A.dense_net_code,
                A.BATCH_NO,
                A.LINE_ID,
                A.TUMO_BATCH_ID,

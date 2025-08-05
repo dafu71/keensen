@@ -411,4 +411,19 @@ t.mater_spec_name2 "materSpecName2"
     
    order by  "userId","module","sortNo"
      </select>
+    <select id="queryMenu" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T.RESID "id",
+       'menu' || T.RESID "itemId",
+       T.RESPATH "url",
+       T.RESNAME "text"
+	  FROM T_AC_RESOURCE T
+	 WHERE T.RESTYPE = 'menu'
+	   AND T.RESID IN (SELECT RESID FROM T_AC_APPRESAUTH)
+	   AND T.RESID IN
+	       (SELECT RESID
+	          FROM T_AC_ROLERES RR
+	         WHERE RR.ROLEID IN (SELECT ROLEID
+	                               FROM V_AC_OPERATORROLE_TRS V
+	                              WHERE V.USERID = #userId#))
+	   AND T.RESPATH IS NOT NULL
+	 ORDER BY T.RESNAME</select>
 </sqlMap>

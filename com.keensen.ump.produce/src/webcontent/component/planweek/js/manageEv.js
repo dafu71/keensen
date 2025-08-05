@@ -208,7 +208,7 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	this.planDayWindow.blankingSize.setValue(blankingSize);
 	this.planDayWindow.denseNet.setValue(denseNet);
 	this.planDayWindow.area.setValue(area);
-	this.planDayWindow.pageWidth.setValue(pageWidth);
+	this.planDayWindow.pageWidth.setValue(getOneDecimal(pageWidth));
 
 	this.planDayWindow.show();
 }
@@ -381,4 +381,8 @@ com.keensen.ump.produce.component.planweekMgr.prototype.setDefaultValue = functi
 		rec.set('amount',amount);
 	}
 	
+}
+
+function getOneDecimal(num) {
+    return Math.floor(num * 10) / 10;
 }

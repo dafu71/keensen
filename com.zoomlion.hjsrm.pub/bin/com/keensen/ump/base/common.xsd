@@ -224,4 +224,18 @@
             <xs:element minOccurs="0" name="mater17" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="KsBasePipe">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="pipeType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="longPage" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="shortPage" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pageNum2" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

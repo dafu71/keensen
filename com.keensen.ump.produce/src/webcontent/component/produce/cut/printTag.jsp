@@ -13,7 +13,7 @@
 <script type='text/javascript' src="base/jquery/plugins/JsBarcode.all.min.js"></script>
 <script type='text/javascript' src="base/utility/utf.js"></script>
 <script type="text/javascript" src="base/jquery/plugins/jquery.qrcode.js"></script>
-<script type="text/javascript" src="produce/component/produce/welded/js/printTag.js?nowtime=<%=String.valueOf(System.currentTimeMillis())%>"></script>
+<script type="text/javascript" src="produce/component/produce/cut/js/printTag.js?nowtime=<%=String.valueOf(System.currentTimeMillis())%>"></script>
     
 <style type="text/css">
 	.table{
@@ -69,10 +69,10 @@
     
 </head>
 <body onload="paint()">
-		<table id="weldedprintview" class="table">
+		<table id="cutprintview" class="table">
 			<tr>
 				<td>
-					<div id="weldedcanvas" style="margin:auto;width:112px;height:112px"></div>
+					<div id="cutcanvas" style="margin:auto;width:112px;height:112px"></div>
 				</td>
 				<td class="td_label">
 					&nbsp;&nbsp;&nbsp;淡网编号：<span class="span_label"><b:write property="netCode" /></span><br/>

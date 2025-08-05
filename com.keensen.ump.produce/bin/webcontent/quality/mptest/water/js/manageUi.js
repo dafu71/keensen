@@ -3339,6 +3339,8 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 									name : 'c29'
 								}, {
 									name : 'diff29'
+								}, {
+									name : 'speed'
 								}]
 					})
 				})

@@ -1093,6 +1093,9 @@ Frame.ui.NavigatePanel = Ext.extend(Ext.Panel, {
 	},
 	buildBbar : function() {
 		
+		//搜索菜单
+		var menuCombo = new com.keensen.ump.MenuComboBox({width : 150});
+		
 		var B = new Ext.form.ComboBox({
 			xtype : "combo",
 			typeAhead : true,
@@ -1151,6 +1154,7 @@ Frame.ui.NavigatePanel = Ext.extend(Ext.Panel, {
 		});
 		this.tbar = [
 		//B, 
+		menuCombo,
 		"->", {
 					iconCls : "icon-expand-all",
 					tooltip : "展开所有",

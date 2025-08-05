@@ -318,7 +318,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 						obj.lid.setValue(lid);
 						var markTypeFlag = data.markBase;
 						obj.markTypeFlag.setValue(markTypeFlag);
-						var markSpecCode = data.markBase;
+						var markSpecCode = data.specNameMark;
 						obj.markSpecCode.setValue(markSpecCode);
 						var tape = data.tapeBase;
 						obj.tape.setValue(tape);

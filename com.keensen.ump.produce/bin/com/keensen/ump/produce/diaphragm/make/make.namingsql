@@ -118,8 +118,29 @@
        T1.CUR_AMOUNT AS "curAmount",
        NVL(T1.BEFORE_AMOUNT, 0) + NVL(T1.CUR_AMOUNT, 0) "totalAmount",
        t4.cnt "cnt",
-       defect.loss "loss"
+       defect.loss "loss",
+       fx.mptype "zmcode",
+       t1.RELEASE_AMOUNT "releaseAmount",
+       round((nvl(bm.MATER2,0)+nvl(bm.MATER3,0)+ nvl(bm.MATER4,0)+nvl(bm.MATER5,0))/1000 * (NVL(T1.THEORY_AMOUNT, 0)),2) "usedWeight"
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+ 
+  
+  left join (select t.batch_no,t.mptype from KS_PROD_DIAPHRAGM_MAKE_FIX t) fx
+  on fx.batch_no = REGEXP_SUBSTR(replace(replace(T1.ZMY_BATCH_NO,' ',','),'，',','), '[^,]+', 1, 1)
+  
+  left join (SELECT 
+       MIN(T1.MATER2) MATER2,
+       MIN(T1.MATER3) MATER3,
+       MIN(T1.MATER4) MATER4,
+       MIN(T1.MATER5) MATER5,
+       T2.DMCODE,
+       T2.ZMCODE
+  FROM KS_BASE_MP_BOM T1
+   LEFT JOIN KS_BASE_ZM_DM_TM T2
+    ON T1.MPTYPE = T2.MPTYPE
+ GROUP BY T2.DMCODE, T2.ZMCODE) bm
+  on T1.DIMO_TYPE = bm.DMCODE and fx.mptype = bm.ZMCODE
+  
   left join (select sum(t.loss) loss ,t.dm_batch_id from QINSEN.Inst_Cdm_Defect2 t
 	GROUP BY t.dm_batch_id) defect on defect.dm_batch_id = t1.id
 	

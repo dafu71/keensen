@@ -212,13 +212,17 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 						width:120,
 						header : '长页'
 					}, {
+						dataIndex : 'pageNum',
+						width:120,
+						header : '长页页数'
+					}, {
 						dataIndex : 'shortPage',
 						width:120,
 						header : '短页'
 					}, {
-						dataIndex : 'pageNum',
+						dataIndex : 'pageNum2',
 						width:120,
-						header : '页数'
+						header : '短页页数'
 					}, {
 						dataIndex : 'produceType',
 						width:120,
@@ -298,6 +302,8 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 							name : 'shortPage'
 						}, {
 							name : 'pageNum'
+						}, {
+							name : 'pageNum2'
 						}, {
 							name : 'produceType'
 						}, {
@@ -468,10 +474,18 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 					colspan : 2
 				}, {
 					xtype : 'textfield',
-					allowBlank : false,
+					//allowBlank : false,
 					name : 'entity/pageNum',
 					ref : '../../pageNum',
-					fieldLabel : '页数',
+					fieldLabel : '长页页数',
+					anchor : '95%',
+					colspan : 1
+				}, {
+					xtype : 'textfield',
+					//allowBlank : false,
+					name : 'entity/pageNum2',
+					ref : '../../pageNum2',
+					fieldLabel : '短页页数',
 					anchor : '95%',
 					colspan : 1
 				}, {
@@ -696,11 +710,20 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'textfield',
-							allowBlank : false,
+							//allowBlank : false,
 							name : 'entity/pageNum',
 							dataIndex : 'pageNum',
 							ref : '../../pageNum',
-							fieldLabel : '页数',
+							fieldLabel : '长页页数',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							//allowBlank : false,
+							name : 'entity/pageNum2',
+							dataIndex : 'pageNum2',
+							ref : '../../pageNum2',
+							fieldLabel : '短页页数',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -851,7 +874,14 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 							xtype : 'displayfield',
 							dataIndex : 'pageNum',
 							ref : '../../pageNum',
-							fieldLabel : '页数',
+							fieldLabel : '长页页数',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							dataIndex : 'pageNum2',
+							ref : '../../pageNum2',
+							fieldLabel : '短页页数',
 							anchor : '95%',
 							colspan : 1
 						}, {

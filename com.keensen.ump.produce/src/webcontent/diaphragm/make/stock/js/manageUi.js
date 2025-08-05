@@ -63,7 +63,7 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:uid != 'XXB',
+					hidden:uid != 'dafu',
 					handler : this.exportExcel
 				});
 		this.queryPanel.addButton({

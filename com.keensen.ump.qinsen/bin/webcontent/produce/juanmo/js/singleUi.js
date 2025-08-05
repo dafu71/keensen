@@ -31,14 +31,14 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 		var _this = this;
 		this.panel = this.panel || new Ext.Panel({});
 		this.panel2 = this.panel2 || new Ext.Panel({
-					height : '300',
+					height : '200',
 					baseCls : "x-plain"
 				});
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
 			// baseCls : "x-plain",
 
 			width : '640',
-			height : '520',
+			height : '540',
 			pgrid : '',
 			columns : 24,
 			autoHide : false,
@@ -57,7 +57,7 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				allowBlank : false,
 				ref : '../orderNo',
 				anchor : '100%',
-				colspan : 12,
+				colspan : 10,
 				fieldLabel : '订单号'
 			}, {
 				xtype : 'textfield',
@@ -66,18 +66,14 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				// allowBlank : false,
 				anchor : '100%',
 				fieldLabel : '订单数量(支)',
-				colspan : 12
-			}, {
-				xtype : 'displayfield',
-				height : '5',
-				colspan : 24
+				colspan : 6
 			}, {
 				xtype : 'prodspeccombobox',
 				hiddenName : 'entity/prodSpecId',
 				ref : '../prodSpecId',
 				state : 'Y',
 				anchor : '100%',
-				colspan : 12,
+				colspan : 8,
 				fieldLabel : '元件型号 ',
 				emptyText : '',
 				readOnly : true,
@@ -94,17 +90,17 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 					}
 				}
 			}, {
+				xtype : 'displayfield',
+				height : '5',
+				colspan : 24
+			}, {
 				xtype : 'textfield',
 				ref : '../jmAmount',
 				readOnly : true,
 				// allowBlank : false,
 				anchor : '100%',
 				fieldLabel : '计划卷膜数量(支)',
-				colspan : 12
-			}, {
-				xtype : 'displayfield',
-				height : '5',
-				colspan : 24
+				colspan : 8
 			}, {
 				xtype : 'textfield',
 				ref : '../realityAmount',
@@ -112,7 +108,7 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				// allowBlank : false,
 				anchor : '100%',
 				fieldLabel : '实际卷膜数量(支)',
-				colspan : 12
+				colspan : 8
 			}, {
 				xtype : 'textfield',
 				ref : '../location',
@@ -120,7 +116,7 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				// allowBlank : false,
 				anchor : '100%',
 				fieldLabel : '膜页栈板储位',
-				colspan : 12
+				colspan : 8
 			}, {
 				xtype : 'displayfield',
 				ref : '../displayfield1',
@@ -205,6 +201,22 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				fieldLabel : ' ',
 				value : '<p style="color:red;">光标置于此框内后扫栈板号验证</p>',
 				labelSeparator : '',// 去掉冒号
+				colspan : 12
+			}, {
+				xtype : 'displayfield',
+				height : '5',
+				colspan : 24
+			}, {
+				xtype : 'textfield',
+				name : 'entity/pipeCode',
+				style : '{font-weight:bold;}',
+				//allowBlank : false,
+				fieldLabel : '中心管组件编号',
+				ref : '../pipeCode',
+				anchor : '90%',
+				colspan : 12
+			}, {
+				xtype : 'displayfield',
 				colspan : 12
 			}, {
 				xtype : 'displayfield',

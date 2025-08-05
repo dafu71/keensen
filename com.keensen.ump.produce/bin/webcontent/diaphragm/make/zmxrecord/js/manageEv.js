@@ -1,7 +1,7 @@
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
-	
+
 	var _this = this;
-	
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -54,15 +54,21 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-				this.editWindow.show();
-				this.editWindow.loadData(cell);
-			}, this);
+				if (this.opt == 'updatereleaseamount') {
+					this.updateReleaseAmountWindow.show();
+					this.updateReleaseAmountWindow.loadData(cell);
+				} else {
+					this.editWindow.show();
+					this.editWindow.loadData(cell);
+				}
+			}, this)
+			
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterSave',
 			function(gird, cell) {
-			}, this);
-			
+			}, this)
+
 	this.listPanel.store.on('load', function() {
-		
+
 				var records = _this.listPanel.store.getRange();
 				if (records.length == 0) {
 					Ext.getCmp('zmxtotaltheoryamount').setValue('');
@@ -72,54 +78,43 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 
 				var totalTheoryAmount = records[0].data.totalTheoryAmount;
 				var totalLoss = records[0].data.totalLoss;
-				Ext.getCmp('zmxtotaltheoryamount').setValue('理论投入数合计:' + totalTheoryAmount);
+				Ext.getCmp('zmxtotaltheoryamount').setValue('理论投入数合计:'
+						+ totalTheoryAmount);
 				Ext.getCmp('zmxtotalloss').setValue('不良米数合计:' + totalLoss);
 			})
 }
+
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onUpdateReleaseAmount = function() {
+	this.opt = 'updatereleaseamount';
+	this.listPanel.onEdit();
+};
 
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
 };
 
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.exportExcel = function() {
-	
+
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '铸膜线生产记录',
-				'com.keensen.ump.produce.diaphragm.make.make.queryZmx', '0,1');
-	/*var _this = this;
-	var daochu = _this.queryPanel.getForm().getValues();
-
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			namingsql : 'com.keensen.ump.produce.diaphragm.make.make.queryZmx',
-			templateFilename : 'ks_zm_zmx'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
-				}
-
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})*/
+			'com.keensen.ump.produce.diaphragm.make.make.queryZmx', '0,1');
+	/*
+	 * var _this = this; var daochu = _this.queryPanel.getForm().getValues();
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+	 * method : "post", jsonData : { 'map' : daochu, namingsql :
+	 * 'com.keensen.ump.produce.diaphragm.make.make.queryZmx', templateFilename :
+	 * 'ks_zm_zmx' }, success : function(resp) { var ret =
+	 * Ext.decode(resp.responseText); if (ret.success) {
+	 * 
+	 * var fname = ret.fname; if (Ext.isIE) {
+	 * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); }
+	 * else { window.location.href =
+	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; }
+	 *  }
+	 *  }, callback : function() { _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onAdd = function() {
@@ -166,15 +161,12 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.createDimoBatchNo = func
 		line = line == '铸膜A线' ? 'A' : line == '铸膜B线' ? 'B' : 'C';
 		dimoBatchNo += line;
 		dimoBatchNo += dimoType;
-		/*if (dimoType == 'ULP底膜') {
-			dimoBatchNo += '30';
-		} else if (dimoType == 'BW底膜') {
-			dimoBatchNo += '20';
-		} else if (dimoType == 'SW底膜') {
-			dimoBatchNo += '10';
-		} else if (dimoType == 'NF底膜') {
-			dimoBatchNo += '60';
-		}*/
+		/*
+		 * if (dimoType == 'ULP底膜') { dimoBatchNo += '30'; } else if (dimoType ==
+		 * 'BW底膜') { dimoBatchNo += '20'; } else if (dimoType == 'SW底膜') {
+		 * dimoBatchNo += '10'; } else if (dimoType == 'NF底膜') { dimoBatchNo +=
+		 * '60'; }
+		 */
 		dimoBatchNo += psf;
 		var arr = productDt.split('-');
 		var y = arr[0] - 2020;

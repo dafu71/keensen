@@ -1,40 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xs:schema xmlns="com.keensen.ump.produce.component2" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.keensen.ump.produce.component2">
-    <xs:complexType name="KsComponentWelded">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
-            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="pipeType" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="pipeData" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="pipeSize" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="lightNetBatchNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="lightNetType" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="longPage" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="shortPage" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="produceType" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="perNum" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="produceNum" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="machineCode" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="pipeCode" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="operateUserId" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="operateUserName" nillable="true" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="KsComponentCut">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -153,6 +118,63 @@
             <xs:element minOccurs="0" name="orderNo" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="hjBatchNo" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="orderDate" nillable="true" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsComponentWelded">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pipeType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pipeData" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="batchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pipeSize" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lightNetBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lightNetType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="longPage" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="shortPage" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pageNum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="produceType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="perNum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="produceNum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="machineCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pipeCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="operateUserName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pageNum2" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsComponentYxorderHistory">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="step" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="baseId" nillable="true" type="xs:long"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

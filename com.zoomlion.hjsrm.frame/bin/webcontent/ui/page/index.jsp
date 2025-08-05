@@ -121,6 +121,11 @@ Ext.util.CSS.swapStyleSheet("theme", "<%=themecss%>");
 <script type="text/javascript" src="frame/ui/jslib/bizex.js"></script>
 <!-- 框架页面 -->
 <script type="text/javascript" src="frame/ui/jslib/login.js"></script>
+
+<!-- 自定义组件页面 -->
+<script type="text/javascript" src="pub/common/menuCombo.js"></script>
+
+
 <!-- 框架页面 -->
 <script type="text/javascript" src=frame/ui/jslib/index.js></script>
 <!-- 框架组件 -->

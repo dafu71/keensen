@@ -69,9 +69,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				Ext.Msg.alert('系统提示', '已正式发布不能修改');
 				return false;
 			}
-
+//只要是营销提交了的订单要修改必须计划员驳回才能修改，这也符合记录留痕的基本原则。 任栋  2025-08-05
 			if (hpmc != '其它' && hpmc != '其他') {
-				if (state == '制定中' || state == '物控计划员确认' || state == '不能接单') {
+				if (state == '制定中' || state == '不能接单') {
 					this.addOrderWindow.show();
 					this.addOrderWindow.loadData(cell);
 				} else {
@@ -112,8 +112,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.mcconfirmWindow.show();
 				this.mcconfirmInputPanel.loadData(cell);
 				this.mcconfirmInputPanel.orderNo.setValue(cell.get('orderNo'));
-				this.mcconfirmInputPanel.orderAmount.setValue(cell
-						.get('orderAmount'));
+				this.mcconfirmInputPanel.prodAmount.setValue(cell
+						.get('prodAmount'));
 				this.mcconfirmInputPanel.newMakeLabel.setValue(cell
 						.get('newMakeLabel'));
 				this.mcconfirmInputPanel.newMakeMark.setValue(cell
@@ -366,6 +366,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				if(tray == '公司标准') {
 					this.addOrderWindow.tray.setValue('');
 				}
+				var lid = data.lid;
+				if(lid != '格栅' && lid != '梳齿五星蜂窝' && lid != '定制' && lid != '蜂窝') {
+					this.addOrderWindow.lid.setValue('');
+				}
 
 			}, this);
 
@@ -547,6 +551,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = functi
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function() {
 	var _this = this;
 	
+	var materSpecName2 = this.addOrderWindow.materSpecName2.getValue();
+	var pattern = /^[a-zA-Z0-9-]+$/;  // 正则表达式
+	
+	if (!pattern.test(materSpecName2)) {
+    	Ext.Msg.alert('系统提示', '请检查订单下达型号');
+		return false;
+	}
 	
 //	1、如果端盖选定制，则必须要填端盖图纸编号
 //2、标签序号不固定，则必填标签序号
@@ -559,6 +570,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 
 	//如果端盖选定制，则必须要填端盖图纸编号
 	var lid = this.addOrderWindow.lid.getValue();
+	
+	var type = this.addOrderWindow.type.getValue();
+	if(Ext.isEmpty(lid) && type == '工业膜'){
+		Ext.Msg.alert('系统提示', '请选择端盖');
+		return false;
+	}
+	
 	var reserve5 = this.addOrderWindow.reserve5.getValue();
 	if (!Ext.isEmpty(lid) && lid == '定制'
 			&& Ext.isEmpty(reserve5)) {
@@ -1577,4 +1595,53 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onPreView = function(
 	f.action = actionUrl;
 	f.submit();
 
+}
+
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onChangeTaskState = function() {
+	var A = this.listPanel;
+	var _this = this;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var records = A.getSelectionModel().getSelections();
+
+		var ids = []
+		Ext.each(records, function(r) {
+					var id = r.data.id;
+					ids.push(id);
+				})
+
+		// var id = records[0].get('id');
+		// var deliveryState = records[0].get('deliveryState') == '是' ? '否' :
+		// '是';
+		this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		this.requestMask.show();
+		Ext.Ajax.request({
+			// url :
+			// "com.keensen.ump.produce.component.yxorderbase.saveDeliveryState.biz.ext",
+			url : "com.keensen.ump.produce.component.yxorderbase.saveTaskStateBatch.biz.ext",
+			method : "post",
+			jsonData : {
+				ids : ids.join(',')
+				// 'entity/id' : id,
+				// 'entity/deliveryState' : deliveryState
+			},
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					if (ret.success) {
+						_this.listPanel.store.reload();
+					}
+				}
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+	}
 }

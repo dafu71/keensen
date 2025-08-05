@@ -85,6 +85,12 @@ com.keensen.ump.base.MpBomMgr = function() {
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.base.mater.deleteMpBOM.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
+						dataIndex : 'dmcode',
+						header : '底膜代码'
+					}, {
+						dataIndex : 'zmcode',
+						header : '铸膜液代码'
+					}, {
 						dataIndex : 'mptype',
 						header : '膜种'
 					}, {
@@ -95,52 +101,52 @@ com.keensen.ump.base.MpBomMgr = function() {
 						header : '无纺布(m)'
 					}, {
 						dataIndex : 'mater2',
-						header : 'DMF(kg)'
+						header : 'C11(kg)'
 					}, {
 						dataIndex : 'mater3',
-						header : '聚砜(kg)'
+						header : 'C12(kg)'
 					}, {
 						dataIndex : 'mater4',
-						header : '2-甲氧基乙醇(kg)'
+						header : 'C13(kg)'
 					}, {
 						dataIndex : 'mater5',
-						header : 'PVP K30(kg)'
+						header : 'C14(kg)'
 					}, {
 						dataIndex : 'mater6',
-						header : '氢氧化钠(kg)'
+						header : 'C22(kg)'
 					}, {
 						dataIndex : 'mater7',
-						header : '间苯二胺(kg)'
+						header : 'C21(kg)'
 					}, {
 						dataIndex : 'mater8',
-						header : '哌嗪(kg)'
+						header : 'C29(kg)'
 					}, {
 						dataIndex : 'mater9',
-						header : 'Isopar G(kg)'
+						header : 'C41(kg)'
 					}, {
 						dataIndex : 'mater10',
-						header : '均苯三甲酰氯(kg)'
+						header : 'C42(kg)'
 					}, {
 						dataIndex : 'mater11',
-						header : '甘油(kg)'
+						header : 'C51(kg)'
 					}, {
 						dataIndex : 'mater12',
-						header : '聚乙烯醇540(kg)'
+						header : 'PVA540(kg)'
 					}, {
 						dataIndex : 'mater13',
-						header : '聚乙烯醇205(kg)'
+						header : 'PVA205(kg)'
 					}, {
 						dataIndex : 'mater14',
-						header : '聚乙烯醇165(kg)'
+						header : 'PVA165(kg)'
 					}, {
 						dataIndex : 'mater15',
-						header : '异丙醇(kg)'
+						header : 'C72(kg)'
 					}, {
 						dataIndex : 'mater16',
-						header : '柠檬酸(kg)'
+						header : 'C71(kg)'
 					}, {
 						dataIndex : 'mater17',
-						header : '焦亚硫酸钠(kg)'
+						header : 'C24(kg)'
 					}, {
 						dataIndex : 'updateTime',
 						header : '修改时间'
@@ -200,6 +206,10 @@ com.keensen.ump.base.MpBomMgr = function() {
 									name : 'updateUserId'
 								}, {
 									name : 'updateName'
+								}, {
+									name : 'dmcode'
+								}, {
+									name : 'zmcode'
 								}]
 					})
 		})
@@ -248,7 +258,7 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater2',
-									fieldLabel : 'DMF(kg)',
+									fieldLabel : 'C11(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -258,13 +268,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater3',
-									fieldLabel : '聚砜(kg)',
+									fieldLabel : 'C12(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater4',
-									fieldLabel : '2-甲氧基乙醇(kg)',
+									fieldLabel : 'C13(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -274,13 +284,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater5',
-									fieldLabel : 'PVP K30(kg)',
+									fieldLabel : 'C14(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater6',
-									fieldLabel : '氢氧化钠(kg)',
+									fieldLabel : 'C22(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -290,13 +300,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater7',
-									fieldLabel : '间苯二胺(kg)',
+									fieldLabel : 'C21(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater8',
-									fieldLabel : '哌嗪(kg)',
+									fieldLabel : 'C29(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -306,13 +316,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater9',
-									fieldLabel : 'Isopar G(kg)',
+									fieldLabel : 'C41(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater10',
-									fieldLabel : '均苯三甲酰氯(kg)',
+									fieldLabel : 'C42(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -322,13 +332,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater11',
-									fieldLabel : '甘油(kg)',
+									fieldLabel : 'C51(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater12',
-									fieldLabel : '聚乙烯醇540(kg)',
+									fieldLabel : 'PVA540(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -338,13 +348,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater13',
-									fieldLabel : '聚乙烯醇205(kg)',
+									fieldLabel : 'PVA205(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater14',
-									fieldLabel : '聚乙烯醇165(kg)',
+									fieldLabel : 'PVA165(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -354,13 +364,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater15',
-									fieldLabel : '异丙醇(kg)',
+									fieldLabel : 'C72(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater16',
-									fieldLabel : '柠檬酸(kg)',
+									fieldLabel : 'C71(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -370,7 +380,7 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater17',
-									fieldLabel : '焦亚硫酸钠(kg)',
+									fieldLabel : 'C24(kg)',
 									anchor : '95%',
 									colspan : 1
 								}]
@@ -427,7 +437,7 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater2',
 									dataIndex : 'mater2',
-									fieldLabel : 'DMF(kg)',
+									fieldLabel : 'C11(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -438,14 +448,14 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater3',
 									dataIndex : 'mater3',
-									fieldLabel : '聚砜(kg)',
+									fieldLabel : 'C12(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater4',
 									dataIndex : 'mater4',
-									fieldLabel : '2-甲氧基乙醇(kg)',
+									fieldLabel : 'C13(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -456,14 +466,14 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater5',
 									dataIndex : 'mater5',
-									fieldLabel : 'PVP K30(kg)',
+									fieldLabel : 'C14(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater6',
 									dataIndex : 'mater6',
-									fieldLabel : '氢氧化钠(kg)',
+									fieldLabel : 'C22(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -474,14 +484,14 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater7',
 									dataIndex : 'mater7',
-									fieldLabel : '间苯二胺(kg)',
+									fieldLabel : 'C21(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater8',
 									dataIndex : 'mater8',
-									fieldLabel : '哌嗪(kg)',
+									fieldLabel : 'C29(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -492,14 +502,14 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater9',
 									dataIndex : 'mater9',
-									fieldLabel : 'Isopar G(kg)',
+									fieldLabel : 'C41(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater10',
 									dataIndex : 'mater10',
-									fieldLabel : '均苯三甲酰氯(kg)',
+									fieldLabel : 'C42(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -510,14 +520,14 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater11',
 									dataIndex : 'mater11',
-									fieldLabel : '甘油(kg)',
+									fieldLabel : 'C51(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater12',
 									dataIndex : 'mater12',
-									fieldLabel : '聚乙烯醇540(kg)',
+									fieldLabel : 'PVA540(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -528,14 +538,14 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater13',
 									dataIndex : 'mater13',
-									fieldLabel : '聚乙烯醇205(kg)',
+									fieldLabel : 'PVA205(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater14',
 									dataIndex : 'mater14',
-									fieldLabel : '聚乙烯醇165(kg)',
+									fieldLabel : 'PVA165(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -546,14 +556,14 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater15',
 									dataIndex : 'mater15',
-									fieldLabel : '异丙醇(kg)',
+									fieldLabel : 'C72(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/mater16',
 									dataIndex : 'mater16',
-									fieldLabel : '柠檬酸(kg)',
+									fieldLabel : 'C71(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -564,7 +574,7 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater17',
 									dataIndex : 'mater17',
-									fieldLabel : '焦亚硫酸钠(kg)',
+									fieldLabel : 'C24(kg)',
 									anchor : '95%',
 									colspan : 1
 								}]
@@ -612,7 +622,7 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater2',
-									fieldLabel : 'DMF(kg)',
+									fieldLabel : 'C11(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -622,13 +632,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater3',
-									fieldLabel : '聚砜(kg)',
+									fieldLabel : 'C12(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater4',
-									fieldLabel : '2-甲氧基乙醇(kg)',
+									fieldLabel : 'C13(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -638,13 +648,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater5',
-									fieldLabel : 'PVP K30(kg)',
+									fieldLabel : 'C14(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater6',
-									fieldLabel : '氢氧化钠(kg)',
+									fieldLabel : 'C22(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -654,13 +664,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater7',
-									fieldLabel : '间苯二胺(kg)',
+									fieldLabel : 'C21(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater8',
-									fieldLabel : '哌嗪(kg)',
+									fieldLabel : 'C29(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -670,13 +680,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater9',
-									fieldLabel : 'Isopar G(kg)',
+									fieldLabel : 'C41(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater10',
-									fieldLabel : '均苯三甲酰氯(kg)',
+									fieldLabel : 'C42(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -686,13 +696,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater11',
-									fieldLabel : '甘油(kg)',
+									fieldLabel : 'C51(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater12',
-									fieldLabel : '聚乙烯醇540(kg)',
+									fieldLabel : 'PVA540(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -702,13 +712,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater13',
-									fieldLabel : '聚乙烯醇205(kg)',
+									fieldLabel : 'PVA205(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater14',
-									fieldLabel : '聚乙烯醇165(kg)',
+									fieldLabel : 'PVA165(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -718,13 +728,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater15',
-									fieldLabel : '异丙醇(kg)',
+									fieldLabel : 'C72(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater16',
-									fieldLabel : '柠檬酸(kg)',
+									fieldLabel : 'C71(kg)',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -734,7 +744,7 @@ com.keensen.ump.base.MpBomMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									dataIndex : 'mater17',
-									fieldLabel : '焦亚硫酸钠(kg)',
+									fieldLabel : 'C24(kg)',
 									anchor : '95%',
 									colspan : 1
 								}]

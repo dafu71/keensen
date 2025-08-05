@@ -406,12 +406,12 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								anchor : '100%',
 								colspan : 4
 							}, {
-								ref : '../../workerName',
-								xtype : 'displayfield',
-								fieldLabel : '操作工',
+								ref : '../pipeCode',
+								xtype : 'textfield',
+								fieldLabel : '中心管组件编号',
+								name : 'pipeCode',
 								anchor : '100%',
-								colspan : 4,
-								value : nowStaffName
+								colspan : 4
 							}, {
 								xtype : 'displayfield',
 								height : '5',
@@ -459,7 +459,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								height : 30,
 								fieldLabel : '备注',
 								anchor : '100%',
-								colspan : 8,
+								colspan : 4,
 								allowBlank : true
 							}, {
 								ref : '../trailer',
@@ -469,6 +469,13 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								// readOnly : true,
 								colspan : 4,
 								anchor : '85%'
+							}, {
+								ref : '../../workerName',
+								xtype : 'displayfield',
+								fieldLabel : '操作工',
+								anchor : '100%',
+								colspan : 4,
+								value : nowStaffName
 							}, {
 								ref : '../cdmBatchId',
 								name : 'cdmBatchId',

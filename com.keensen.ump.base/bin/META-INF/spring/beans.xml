@@ -9,5 +9,10 @@
     <bean class="com.keensen.ump.base.ParaMaterSpecBean" id="paramaterspecBean">
         <property name="paramaterspecDao" ref="paramaterspecDao"/>
     </bean>
+    
+    <bean class="com.keensen.ump.base.KeensenK3Dao" id="keensenK3Dao"/>
+    <bean class="com.keensen.ump.base.KeensenK3Bean" id="keensenK3Bean">
+        <property name="keensenK3Dao" ref="keensenK3Dao"/>
+    </bean>
   
 </beans>

@@ -21,11 +21,11 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link36</targetConnections>
-    <targetConnections>link24</targetConnections>
-    <targetConnections>link9</targetConnections>
-    <targetConnections>link32</targetConnections>
     <targetConnections>link34</targetConnections>
+    <targetConnections>link32</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link24</targetConnections>
+    <targetConnections>link36</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -126,8 +126,8 @@
       <sourceNode>transactionbegin0</sourceNode>
       <targetNode>loopstart0</targetNode>
     </sourceConnections>
-    <targetConnections>link1</targetConnections>
     <targetConnections>link35</targetConnections>
+    <targetConnections>link1</targetConnections>
     <nodeLabel>transactionbegin0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="transactionbegin0label" name="label" nodeType="label">
@@ -197,8 +197,8 @@
       <sourceNode>transactionrollback0</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link20</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link20</targetConnections>
     <nodeLabel>transactionrollback0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="transactionrollback0label" name="label" nodeType="label">

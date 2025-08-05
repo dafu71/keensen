@@ -15,10 +15,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link43</targetConnections>
-    <targetConnections>link29</targetConnections>
-    <targetConnections>link7</targetConnections>
     <targetConnections>link6</targetConnections>
+    <targetConnections>link7</targetConnections>
+    <targetConnections>link29</targetConnections>
+    <targetConnections>link43</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns/>
   </nodes>
@@ -303,9 +303,9 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link36</targetConnections>
-    <targetConnections>link35</targetConnections>
     <targetConnections>link27</targetConnections>
+    <targetConnections>link35</targetConnections>
+    <targetConnections>link36</targetConnections>
     <nodeLabel>assign8label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">batchId</process:from>

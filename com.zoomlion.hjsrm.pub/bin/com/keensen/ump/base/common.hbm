@@ -577,4 +577,35 @@
             <column length="20" name="MATER17"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.base.common.KsBasePipe" table="KS_BASE_PIPE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="pipeType" type="string">
+            <column length="100" name="PIPE_TYPE" not-null="true"/>
+        </property>
+        <property name="longPage" type="string">
+            <column length="40" name="LONG_PAGE"/>
+        </property>
+        <property name="shortPage" type="string">
+            <column length="40" name="SHORT_PAGE"/>
+        </property>
+        <property name="pageNum" type="string">
+            <column length="40" name="PAGE_NUM"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="50" name="UPDATE_NAME"/>
+        </property>
+        <property name="pageNum2" type="string">
+            <column length="40" name="PAGE_NUM2"/>
+        </property>
+    </class>
 </hibernate-mapping>

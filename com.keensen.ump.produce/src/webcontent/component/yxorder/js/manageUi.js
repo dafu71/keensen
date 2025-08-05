@@ -111,7 +111,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		// 端盖类型选项：蜂窝、格栅、梳齿、旋熔、定制、其他,未选则默认公司标准
 		this.lidStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['蜂窝', '蜂窝'], ['格栅', '格栅'], ['梳齿', '梳齿'],
+					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'], ['格栅', '格栅'], ['梳齿', '梳齿'],
 							['旋熔', '旋熔'], ['定制', '定制'], ['其他', '其他'],
 							['公司标准', '公司标准']]
 				});

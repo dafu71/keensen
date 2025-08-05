@@ -71,17 +71,10 @@ var opt = '';
 <body>
 <div id="componentproduceweldedmgr"></div>
 
-<div style="display: none">
-<form name="printForm" id="weldedprintForm" action="" target="_blank" method="post" accept-charset="UTF-8">
-			<input type="hidden" name="pkid"/>
-			
-</form>
-</div>
 
 <div style="display: none">
 <form name="weldedprintsForm" id="weldedprintsForm" action="" target="_blank" method="post" accept-charset="UTF-8">
-			<input type="hidden" name="ids"/>
-			
+			<input type="hidden" name="ids"/>			
 </form>
 </div>
 </body>

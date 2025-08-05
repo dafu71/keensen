@@ -169,7 +169,13 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						header : '卷膜序号',
 						sortable:true,
 						width : 120,
-						dataIndex : 'batchNo'
+						dataIndex : 'batchNo',
+						renderer : function(v, m, r, i) {
+							var str = r.get('orderNo')=='研发实验'
+									? "<span style='color:#FF8000;text-decoration:none'>" + v + "</span>"
+									: v;
+							return str;
+						}
 					}, {
 						header : '生产线',
 						width : 60,
@@ -187,6 +193,11 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						sortable : true,
 						width : 50,
 						dataIndex : 'trailer'
+					}, {
+						header : '中心管组件编号',
+						sortable : true,
+						width : 120,
+						dataIndex : 'pipeCode'
 					}, {
 						header : '试卷',
 						width : 40,
@@ -344,6 +355,8 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 							name : 'applyJudgeResult'
 						}, {
 							name : 'trailer'
+						}, {
+							name : 'pipeCode'
 						}]
 			})
 		})

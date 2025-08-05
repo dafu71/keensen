@@ -67,7 +67,7 @@ com.keensen.ump.produce.component.produce.CutMgr.prototype.onPrintTag = function
 		var rec = C[0];
 
 		var pkid = rec.data.id;
-		var f = document.getElementById('weldedprintForm');
+		var f = document.getElementById('cutprintForm');
 		f.pkid.value = pkid;
 		var actionUrl = 'com.keensen.ump.produce.component.printCutTag.flow?token='
 				+ Date.now();
@@ -100,15 +100,20 @@ com.keensen.ump.produce.component.produce.CutMgr.prototype.onScan = function(
 function getSize(str){
 	if(Ext.isEmpty(str)) return '';
 	var arr = [];
-	if(str.indexOf('│')){
-		arr = str.split('│');
-		return arr[1];
+	
+	if (Ext.isEmpty(str))
+		return '';
+
+	var arr = [];
+
+	var splitStr = ['/', '│', '|'];
+	for (var i = 0; i < splitStr.length; i++) {
+		if (str.indexOf(splitStr[i]) > -1) {
+			arr = str.split(splitStr[i]);
+			return arr[1];
+		}
 	}
-	if(str.indexOf('|')){
-		arr = str.split('|');
-		return arr[1];
-	}else{
-		arr = str.split(' ');
-		return arr[1];
-	}	
+	return '';
+	
+	
 }

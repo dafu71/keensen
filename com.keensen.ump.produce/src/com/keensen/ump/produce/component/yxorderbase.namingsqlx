@@ -3,8 +3,8 @@
 <sqlMap>
     <select id="queryYxOrderBase" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	
-	SELECT T1.ID AS "id",T1.DELIVERY_STATE "deliveryState",
-	t1.back "back",t1.material "material",
+	SELECT T1.ID AS "id",T1.DELIVERY_STATE "deliveryState",T1.task_STATE "taskState",
+	t1.back "back",t1.material "material",TO_CHAR(T1.record_TIME, 'yyyy-MM-dd HH24:mi:ss') "recordTime",
 	T1.mp_spec_id "mpSpecId",pms.mater_spec_name "mpSpecName",
 	TO_CHAR(T1.CHANGE_TIME, 'yyyy-MM-dd') "changeTime",
        T1.CHANGE_USER_ID AS "changeUserId",
@@ -136,6 +136,22 @@
   LEFT JOIN qinsen.para_mater_spec pms on pms.mater_spec_id=t1.mp_spec_id
   
 	where 1=1
+	
+	<isNotNull prepend = "and"  property = "recordTimeStart"> 
+          to_char(t1.record_TIME,'yyyy-MM-dd HH24:MI:SS')  &gt;=  #recordTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "recordTimeEnd"> 
+          to_char(t1.record_TIME,'yyyy-MM-dd HH24:MI:SS')  &lt;=  #recordTimeEnd#
+     </isNotNull>
+     
+	<isNotNull prepend="and" property="isNotZero"> 
+		       t1.prod_Amount != 0 
+	</isNotNull>
+	
+	
+	<isNotNull prepend="and" property="taskState"> 
+		       T1.task_State = #taskState# 
+	</isNotNull>
 	
 	<isNotNull prepend="and" property="orderNo"> 
 		       T1.ORDER_NO = #orderNo# 
@@ -628,6 +644,15 @@
     	update KS_PROD_COMPONENT_YXORDER t
     	set t.close_state = #closeState#,t.close_remark = #closeRemark#,
     	t.close_time = sysdate,t.close_user_name = #closeUserName#,t.close_user_id=#closeUserId#
+    	where t.id in ($ids$)
+    	
+    </update>
+    
+    <update id="saveTaskStateBatch" parameterClass="java.util.HashMap" >
+    
+    	update KS_COMPONENT_YXORDER_BASE t
+    	set t.task_state = decode(nvl(t.task_state,'否'),'是','否','是'),
+    	t.change_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
     	where t.id in ($ids$)
     	
     </update>

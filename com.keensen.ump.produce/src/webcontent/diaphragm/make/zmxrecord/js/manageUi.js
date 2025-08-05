@@ -1,10 +1,14 @@
 com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 	this.initPanel = function() {
+
+		this.opt = '';
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
 		this.initEditWindow();
 		this.initChooseWindow();
+
+		this.initUpdateReleaseAmount();
 
 		this.defectZmWin = new com.keensen.ump.defectWindow({
 					dutyTacheCode : 'ZM',
@@ -190,6 +194,11 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAddZmDefect
+					}, '-', {
+						text : '录入铸膜液排料重量',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onUpdateReleaseAmount
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.make.deleteZmxEntity.biz.ext',
@@ -198,6 +207,9 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							}), selModel, {
 						dataIndex : 'dimoType',
 						header : '底膜类型'
+					}, {
+						dataIndex : 'zmcode',
+						header : '铸膜液代码'
 					}, {
 						dataIndex : 'line',
 						header : '生产线别'
@@ -230,6 +242,12 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					}, {
 						dataIndex : 'zmyBatchNo',
 						header : '铸膜液批号'
+					}, {
+						dataIndex : 'usedWeight',
+						header : '铸膜液使用重量(kg)'
+					}, {
+						dataIndex : 'releaseAmount',
+						header : '铸膜液排料重量(kg)'
 					}, {
 						dataIndex : 'theoryAmount',
 						header : '理论投入数'
@@ -389,6 +407,12 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'totalLoss'
 						}, {
 							name : 'totalTheoryAmount'
+						}, {
+							name : 'zmcode'
+						}, {
+							name : 'usedWeight'
+						}, {
+							name : 'releaseAmount'
 						}]
 			})
 		})
@@ -570,6 +594,11 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					editable : true,
 					hideTrigger : false,
 					scope : this,
+					validator : function(val) {
+						if (!/^[a-zA-Z0-9,]+$/.test(val))
+							return '非法字符,必须为数字或字母及逗号';
+					},
+
 					onTriggerClick : function() {
 						_this.onChooseWindowShow(_this);
 					}
@@ -800,6 +829,10 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							editable : true,
 							hideTrigger : false,
 							scope : this,
+							validator : function(val) {
+								if (!/^[a-zA-Z0-9,]+$/.test(val))
+									return '非法字符,必须为数字或字母及逗号';
+							},
 							onTriggerClick : function() {
 
 								_this.onChooseWindowShow(_this);
@@ -1140,6 +1173,47 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					layout : 'border',
 					items : [this.queryPanel2, this.listPanel2]
 
+				});
+	}
+
+	this.initUpdateReleaseAmount = function() {
+		var _this = this;
+		this.updateReleaseAmountWindow = this.updateReleaseAmountWindow
+				|| new Ext.fn.FormWindow({
+					title : '铸膜液排料重量',
+					height : 240,
+					width : 300,
+					closeAction : 'hide',
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.diaphragm.make.make.expandZmxEntity.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.saveEntity4Zmx.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/releaseAmount',
+									dataIndex : 'releaseAmount',
+									fieldLabel : '铸膜液排料重量(kg)',
+									ref : '../../releaseAmount',
+									allowBlank : false,
+									anchor : '100%',
+									colspan : 2
+
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
+								}]
+					}]
 				});
 	}
 }

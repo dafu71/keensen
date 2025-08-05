@@ -94,8 +94,8 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>assign1</targetNode>
     </sourceConnections>
-    <targetConnections>link12</targetConnections>
     <targetConnections>link14</targetConnections>
+    <targetConnections>link12</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseExt.executeNamedSql</process:partner>
@@ -117,8 +117,8 @@
       <sourceNode>subprocess1</sourceNode>
       <targetNode>subprocess2</targetNode>
     </sourceConnections>
-    <targetConnections>link8</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link8</targetConnections>
     <nodeLabel>subprocess1label</nodeLabel>
     <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
       <process:partner type="literal">this.querySn</process:partner>
@@ -228,7 +228,7 @@
       <targetNode>invokePojo1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>

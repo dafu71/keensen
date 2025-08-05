@@ -1,7 +1,7 @@
 com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.initEvent = function() {
 
 	var me = this;
-	
+
 	this.getRight();
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -43,7 +43,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.getRight = 
 			var pg = data[0].pg;
 			var jhy = data[0].jhy;
 			var manager = data[0].manager;
-			
+
 			Ext.getCmp(monitorDealId).setVisible(monitor.indexOf(uid) != -1);
 			Ext.getCmp(monitorRemarkId).setVisible(monitor.indexOf(uid) != -1);
 			Ext.getCmp(gyyRemarkId).setVisible(gyy.indexOf(uid) != -1);
@@ -52,9 +52,8 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.getRight = 
 			Ext.getCmp(modiOrderId).setVisible(jhy.indexOf(uid) != -1);
 			Ext.getCmp(importVStorageId).setVisible(manager.indexOf(uid) != -1);
 			Ext.getCmp(checkOverTimeId).setVisible(manager.indexOf(uid) != -1);
-			//var firstButton = panel.tbar.items.get(0); 
-			//alert(firstButton.text);
-			
+			// var firstButton = panel.tbar.items.get(0);
+			// alert(firstButton.text);
 
 		},
 		callback : function() {
@@ -451,8 +450,11 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMonitorDe
 			var r = C[i];
 			var exceptionType = r.data['exceptionType'];
 			if (exceptionType != '需班长处理') {
-				Ext.Msg.alert("系统提示", "请选择需班长处理的记录！");
-				return;
+				if (exceptionType == '超期停留' && uid != 'KS00524') {
+					Ext.Msg.alert("系统提示", "请选择需班长处理的记录！");
+					return;
+				}
+				
 			} else {
 				recordIds.push(r.data['recordId']);
 			}

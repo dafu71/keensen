@@ -293,7 +293,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				// 展品:展品-CRM??????，共计14位;
 				// 特规:CRM??????，共计9位。
 				// B202？？？？？-？？？
-				
+
 				var regex = /^\d{8}-\d{5}$/;
 				var convention = regex.test(orderNo);
 				var regex = /^\d{8}-\d{5}-\d{1}$/;
@@ -311,15 +311,16 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var exhibit2 = regex.test(orderNo);
 				var regex = /^\展品-CRM\d{6}-\d{2}$/;
 				var exhibit3 = regex.test(orderNo);
-				//MF-年年月月日日-XXXXXX
+				// MF-年年月月日日-XXXXXX
 				var regex = /^\MF-\d{6}-\d{6}$/;
 				var exhibit4 = regex.test(orderNo);
-				//售后-CRMXXXXXX
+				// 售后-CRMXXXXXX
 				var regex = /^\售后-CRM\d{6}$/;
 				var aftersale = regex.test(orderNo);
 
 				if (!convention && !convention2 && !sample && !exhibit
-						&& !exhibit2 && !exhibit3 && !exhibit4 && !special && !special2 && !aftersale) {
+						&& !exhibit2 && !exhibit3 && !exhibit4 && !special
+						&& !special2 && !aftersale) {
 					Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 					return false;
 				}
@@ -358,15 +359,18 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.adjustWindow.reserve1.setVisible(!Ext.isEmpty(ifget));
 
 			}, this);
-			
-	this.addOrderWindow.activeItem.mon(this.addOrderWindow.activeItem, 'afterload',
-			function(win, data) {
+
+	this.addOrderWindow.activeItem.mon(this.addOrderWindow.activeItem,
+			'afterload', function(win, data) {
 
 				var tray = data.tray;
-				if(tray == '公司标准') {
+				if (tray == '公司标准') {
 					this.addOrderWindow.tray.setValue('');
 				}
-
+				var lid = data.lid;
+				if(lid != '格栅' && lid != '梳齿五星蜂窝' && lid != '定制' && lid != '蜂窝') {
+					this.addOrderWindow.lid.setValue('');
+				}
 			}, this);
 
 	// 查询事件
@@ -546,6 +550,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = functi
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function() {
 	var _this = this;
+
+	var materSpecName2 = this.addOrderWindow.materSpecName2.getValue();
+	var pattern = /^[a-zA-Z0-9-]+$/; // 正则表达式
+
+	if (!pattern.test(materSpecName2)) {
+		Ext.Msg.alert('系统提示', '请检查订单下达型号');
+		return false;
+	}
 
 	var prodAmount = _this.addOrderWindow.prodAmount.getValue();
 
@@ -767,10 +779,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = functio
 				'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
 				'0,1');
 	} else {
-		var arr = ['导入时间','订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号', '货品名称',
-				'干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）', '标签',
-				'标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱', '包装箱内部图纸编号',
-				'是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注', '导入操作员', '订单类型']
+		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号',
+				'货品名称', '干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）',
+				'标签', '标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱',
+				'包装箱内部图纸编号', '是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注',
+				'导入操作员', '订单类型']
 
 		doQuerySqlAndExportExt(
 				this,
@@ -967,7 +980,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSelect4ChooseLable 
 				this.addOrderWindow.material.setValue('客户订制');
 				this.addOrderWindow.back.setValue('客户订制');
 			}
-			
+
 			if (drawingCode == 'TP-17-0000-A') {
 				this.addOrderWindow.label.setValue('无');
 				this.addOrderWindow.makeLabel.setValue('无需制作');
@@ -1058,9 +1071,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddMC = function() 
 	this.addMaterWindow.snStart.setValue(r.data.snStart);
 	this.addMaterWindow.snEnd.setValue(r.data.snEnd);
 
-	//备注底色和材质这两项取消不带出来
+	// 备注底色和材质这两项取消不带出来
 	var arr = [r.data.label, r.data.makeLabel, r.data.material, r.data.back]
-	//var arr = [r.data.label, r.data.makeLabel];
+	// var arr = [r.data.label, r.data.makeLabel];
 	var remark = arr.join('|');
 	this.addMaterWindow.remark.setValue(remark)
 
@@ -1532,14 +1545,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onPreView = function(
 	}
 	var records = A.getSelectionModel().getSelections();
 	var templateName = records[0].data.drawingCode;
-	
+
 	var code = records[0].data.code;
 
-	if (code !='1' && code!='999') {
+	if (code != '1' && code != '999') {
 		Ext.Msg.alert("系统提示", "请选择司标或自定义模板预览！");
 		return;
 	}
-	
+
 	var f = document.getElementById('componentmarktemplatepreviewForm2');
 	f.drawingCode.value = templateName;
 	var actionUrl = 'com.keensen.ump.produce.component.printMarks4PreView.flow?time='

@@ -665,7 +665,7 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
    left join
   (SELECT  SUM(amount) amount,t.order_no,t.prod_spec_name
   FROM
-  (SELECT cm.num_per_wad,cm.quantity, cm.quantity/decode(CM.NUM_PER_WAD,0,pms.num_per_wad) amount,
+  (SELECT cm.num_per_wad,cm.quantity, cm.quantity/decode(nvl(CM.NUM_PER_WAD,0),0,pms.num_per_wad,CM.NUM_PER_WAD) amount,
   cm.order_no,pms.mater_spec_name prod_spec_name from QINSEN.INST_CAIDIEMO cm
   LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
       ON PMS.MATER_SPEC_ID = cm.PROD_SPEC_ID
@@ -755,7 +755,11 @@ GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.
 
 	where 1=1	
 	
-	<isNotNull prepend="and" property="closeState">nvl(T1.close_State,'未关闭') = #closeState#</isNotNull>
+	<isNotNull prepend="and" property="workDateStart">exists (SELECT pw.relation_id from KS_COMPONENT_PLAN_WEEK pw
+	where t1.id = pw.relation_id and to_char(pw.start_date,'yyyy-MM-dd')  &gt;=  #workDateStart#)</isNotNull>
+        <isNotNull prepend="and" property="workDateEnd">exists (SELECT pw.relation_id from KS_COMPONENT_PLAN_WEEK pw
+	where t1.id = pw.relation_id and to_char(pw.end_date,'yyyy-MM-dd')  &gt;=  #workDateEnd#)</isNotNull>
+        <isNotNull prepend="and" property="closeState">nvl(T1.close_State,'未关闭') = #closeState#</isNotNull>
         <isNotNull prepend="and" property="orderNos">T1.ORDER_NO in ($orderNos$)</isNotNull>
         <isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>

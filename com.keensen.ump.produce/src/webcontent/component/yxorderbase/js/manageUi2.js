@@ -134,10 +134,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		 * data : [['蜂窝', '蜂窝'], ['格栅', '格栅'], ['梳齿', '梳齿'], ['旋熔', '旋熔'],
 		 * ['定制', '定制'], ['其他', '其他'], ['公司标准', '公司标准'], ['梳齿蜂窝', '梳齿蜂窝']] });
 		 */
+		// 删除、其他、公司标准、旋熔。同时要改成必选项，不选不能下单 2025-07-30 罗
 		this.lidStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['格栅', '格栅'], ['定制', '定制'], ['公司标准', '公司标准'],
-							['梳齿蜂窝', '梳齿蜂窝']]
+					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'],['格栅', '格栅'], ['梳齿五星蜂窝', '梳齿五星蜂窝'], ['定制', '定制']]
 				});
 
 		// 卷膜胶带选项：印刷双层、印刷三层、网纹 蓝胶带 绿胶带 白胶带 黄胶带 灰胶带
@@ -354,6 +354,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						name : 'unit'
 					}, {
 						name : 'specName'
+					}, {
+						name : 'specNameMark'
 					}]
 		})
 	}
@@ -474,9 +476,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					emptyText : '单击旁边按钮选择',
 					dataIndex : 'reserve3',
 					ref : '../../reserve3',
-					allowBlank : false, 
+					allowBlank : false,
 					editable : false,
-					fieldLabel : '卷制型号', 
+					fieldLabel : '卷制型号',
 					anchor : '100%',
 					colspan : 6,
 					hideTrigger : false,
@@ -978,997 +980,1009 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							this.reset()
 						}
 					}
-				}, {//端盖类型这里，如果选择定制，须要填端盖图纸编号
-					name : 'entity/reserve5',
-					dataIndex : 'reserve5',
-					ref:'../../reserve5',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '端盖图纸编号'
-				}, {
-					xtype : 'mpspeccombobox',
-					hiddenName : 'entity/mpSpecId',
-					dataIndex : 'mpSpecId',
-					anchor : '100%',
-					colspan : 6,
-					fieldLabel : '膜片限定'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '卷膜胶带',
-					ref : '../../tape',
-					hiddenName : 'entity/tape',
-					dataIndex : 'tape',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.tapeStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					hidden : true,
-					mode : 'local',
-					fieldLabel : '耐酸碱要求',
-					ref : '../../aar',
-					hiddenName : 'entity/aar',
-					dataIndex : 'aar',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '彩带颜色',
-					ref : '../../color',
-					hiddenName : 'entity/color',
-					dataIndex : 'color',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.colorStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					name : 'entity/colorCode',
-					dataIndex : 'colorCode',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '彩带色卡编号',
-					decimalPrecision : 0
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">标签</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					name : 'entity/label',
-					dataIndex : 'label',
-					ref : '../../label',
-					allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '标签类型',
-					decimalPrecision : 0
-				}, {
-					name : 'entity/labelDrawingCode',
-					ref : '../../labelDrawingCode',
-					dataIndex : 'labelDrawingCode',
-					allowBlank : false,
-					editable : false,
-					anchor : '100%',
-					colspan : 6,
-					fieldLabel : '图纸编号',
-					xtype : 'trigger',
-					emptyText : '单击旁边按钮选择图纸编号',
-					hideTrigger : false,
-					scope : this,
-					onTriggerClick : function() {
-						_this.onChoose4Label(1);
-					}
-
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '新制版',
-					ref : '../../newMakeLabel',
-					hiddenName : 'entity/newMakeLabel',
-					dataIndex : 'newMakeLabel',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '制作方式',
-					ref : '../../makeLabel',
-					hiddenName : 'entity/makeLabel',
-					dataIndex : 'makeLabel',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.makeLabelStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						},
-						"select" : function(combo, record, index) {
-							var makeLabel = combo.getValue();
-							// 制作方式为打印，默认为打印纸/制作方式为印刷与UV打印，默认为PET不干胶
-							// 制作方式为打印，默认为白色/制作方式为印刷与UV打印，默认为透明
-							if (makeLabel == '打印') {
-								_this.addOrderWindow.material.setValue('打印纸');
-								_this.addOrderWindow.back.setValue('白色');
+				}, {	// 端盖类型这里，如果选择定制，须要填端盖图纸编号
+							name : 'entity/reserve5',
+							dataIndex : 'reserve5',
+							ref : '../../reserve5',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '端盖图纸编号'
+						}, {
+							xtype : 'mpspeccombobox',
+							hiddenName : 'entity/mpSpecId',
+							dataIndex : 'mpSpecId',
+							anchor : '100%',
+							colspan : 6,
+							fieldLabel : '膜片限定'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '卷膜胶带',
+							ref : '../../tape',
+							hiddenName : 'entity/tape',
+							dataIndex : 'tape',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.tapeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
 							}
-							if (makeLabel == '印刷' || makeLabel == 'UV打印') {
-								_this.addOrderWindow.material
-										.setValue('PET不干胶');
-								_this.addOrderWindow.back.setValue('透明');
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							hidden : true,
+							mode : 'local',
+							fieldLabel : '耐酸碱要求',
+							ref : '../../aar',
+							hiddenName : 'entity/aar',
+							dataIndex : 'aar',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '彩带颜色',
+							ref : '../../color',
+							hiddenName : 'entity/color',
+							dataIndex : 'color',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.colorStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							name : 'entity/colorCode',
+							dataIndex : 'colorCode',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '彩带色卡编号',
+							decimalPrecision : 0
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">标签</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							name : 'entity/label',
+							dataIndex : 'label',
+							ref : '../../label',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '标签类型',
+							decimalPrecision : 0
+						}, {
+							name : 'entity/labelDrawingCode',
+							ref : '../../labelDrawingCode',
+							dataIndex : 'labelDrawingCode',
+							allowBlank : false,
+							editable : false,
+							anchor : '100%',
+							colspan : 6,
+							fieldLabel : '图纸编号',
+							xtype : 'trigger',
+							emptyText : '单击旁边按钮选择图纸编号',
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onChoose4Label(1);
+							}
+
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '新制版',
+							ref : '../../newMakeLabel',
+							hiddenName : 'entity/newMakeLabel',
+							dataIndex : 'newMakeLabel',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '制作方式',
+							ref : '../../makeLabel',
+							hiddenName : 'entity/makeLabel',
+							dataIndex : 'makeLabel',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.makeLabelStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								},
+								"select" : function(combo, record, index) {
+									var makeLabel = combo.getValue();
+									// 制作方式为打印，默认为打印纸/制作方式为印刷与UV打印，默认为PET不干胶
+									// 制作方式为打印，默认为白色/制作方式为印刷与UV打印，默认为透明
+									if (makeLabel == '打印') {
+										_this.addOrderWindow.material
+												.setValue('打印纸');
+										_this.addOrderWindow.back
+												.setValue('白色');
+									}
+									if (makeLabel == '印刷'
+											|| makeLabel == 'UV打印') {
+										_this.addOrderWindow.material
+												.setValue('PET不干胶');
+										_this.addOrderWindow.back
+												.setValue('透明');
+									}
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '材质',
+							ref : '../../material',
+							hiddenName : 'entity/material',
+							dataIndex : 'material',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.materialStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '底色',
+							ref : '../../back',
+							hiddenName : 'entity/back',
+							dataIndex : 'back',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.backStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
 							}
 						}
-					}
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '材质',
-					ref : '../../material',
-					hiddenName : 'entity/material',
-					dataIndex : 'material',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.materialStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '底色',
-					ref : '../../back',
-					hiddenName : 'entity/back',
-					dataIndex : 'back',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.backStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}
 
-				, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, //
-					 * allowBlank : false, hidden : true, mode : 'local',
-					 * fieldLabel : '水流箭头', ref : '../../waterArrow', hiddenName :
-					 * 'entity/waterArrow', dataIndex : 'waterArrow', anchor :
-					 * '100%', colspan : 6, emptyText : '--请选择--', editable :
-					 * false, store : this.ynStore, displayField : "name",
-					 * valueField : "code", listeners : { "expand" : function(A) {
-					 * this.reset() } } }
-					 */, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '序列是否固定',
-					ref : '../../snRegular',
-					hiddenName : 'entity/snRegular',
-					dataIndex : 'snRegular',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					value : '<p style="color:red;">固定序列号参见图纸</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 6
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, hidden :
-					 * true, // allowBlank : false, mode : 'local', fieldLabel :
-					 * '要NSF标识', ref : '../../labelNsf', hiddenName :
-					 * 'entity/labelNsf', dataIndex : 'labelNsf', anchor :
-					 * '100%', colspan : 6, emptyText : '--请选择--', editable :
-					 * false, store : this.ynStore, displayField : "name",
-					 * valueField : "code", listeners : { "expand" : function(A) {
-					 * this.reset() } } }
-					 */, {
-					xtype : 'textfield',
-					fieldLabel : '标签LOGO',
-					ref : '../../logoLabel',
-					dataIndex : 'logoLabel',
-					hiddenName : 'entity/logoLabel',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					fieldLabel : '标签型号',
-					ref : '../../specNameLabel',
-					dataIndex : 'specNameLabel',
-					hiddenName : 'entity/specNameLabel',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/snStart',
-					dataIndex : 'snStart',
-					ref : '../../snStart',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '序列开始号',
-					decimalPrecision : 0
-				}, {
-					name : 'entity/snEnd',
-					dataIndex : 'snEnd',
-					ref : '../../snEnd',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '序列结束号',
-					decimalPrecision : 0
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '双标签',
-					ref : '../../labelDouble',
-					hiddenName : 'entity/labelDouble',
-					dataIndex : 'labelDouble',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					name : 'entity/labelRuleDouble',
-					dataIndex : 'labelRuleDouble',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textfield',
-					fieldLabel : '双标签时第二个标签图纸编号规则',
-					decimalPrecision : 0
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '第二标签贴的位置 ',
-					ref : '../../positionLabel',
-					hiddenName : 'entity/positionLabel',
-					dataIndex : 'positionLabel',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.positionLabelStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/labelDrawingCode2',
-					ref : '../../labelDrawingCode2',
-					dataIndex : 'labelDrawingCode2',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '第二标签图纸编号',
-					xtype : 'trigger',
-					emptyText : '单击旁边按钮选择图纸编号',
-					editable : true,
-					hideTrigger : false,
-					scope : this,
-					onTriggerClick : function() {
-						_this.onChoose4Label(2);
-					}
-				}, {
-					xtype : 'textfield',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '第二标签LOGO',
-					ref : '../../logoLabel2',
-					dataIndex : 'logoLabel2',
-					name : 'entity/logoLabel2',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					fieldLabel : '第二标签型号',
-					ref : '../../specNameLabel2',
-					dataIndex : 'specNameLabel2',
-					name : 'entity/specNameLabel2',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					fieldLabel : '第二标签制作方式',
-					ref : '../../makeLabel2',
-					dataIndex : 'makeLabel2',
-					name : 'entity/makeLabel2',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">密封圈</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					name : 'entity/sealPosition',
-					dataIndex : 'sealPosition',
-					allowBlank : true,
-					anchor : '100%',
-					colspan : 24,
-					xtype : 'textfield',
-					fieldLabel : '密封圈位置'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/sealAmount',
-					dataIndex : 'sealAmount',
-					allowBlank : true,
-					anchor : '100%',
-					colspan : 24,
-					xtype : 'textfield',
-					fieldLabel : '密封圈数量'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/sealRequire',
-					dataIndex : 'sealRequire',
-					allowBlank : true,
-					anchor : '100%',
-					colspan : 24,
-					xtype : 'textfield',
-					fieldLabel : '家用密封圈固定胶带要求'
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">唛头</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					name : 'entity/mark',
-					ref : '../../mark',
-					dataIndex : 'mark',
-					allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '唛头类型'
-				}, {
-					name : 'entity/markDrawingCode',
-					ref : '../../markDrawingCode',
-					dataIndex : 'markDrawingCode',
-					allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					fieldLabel : '唛头编号',
-					xtype : 'trigger',
-					emptyText : '单击旁边按钮选择图纸编号',
-					editable : false,
-					hideTrigger : false,
-					scope : this,
-					onTriggerClick : function() {
-						_this.onChoose4Mark(1);
-					}
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '制作方式',
-					ref : '../../makeMark',
-					hiddenName : 'entity/makeMark',
-					dataIndex : 'makeMark',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.makeLabelStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '新制版',
-					ref : '../../newMakeMark',
-					hiddenName : 'entity/newMakeMark',
-					dataIndex : 'newMakeMark',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, hidden :
-					 * true, // allowBlank : false, mode : 'local', fieldLabel :
-					 * '要NSF标识', ref : '../../markNsf', hiddenName :
-					 * 'entity/markNsf', dataIndex : 'markNsf', anchor : '100%',
-					 * colspan : 6, emptyText : '--请选择--', editable : false,
-					 * store : this.ynStore, displayField : "name", valueField :
-					 * "code", listeners : { "expand" : function(A) {
-					 * this.reset() } } }
-					 */, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '唛头号是否固定',
-					ref : '../../markRegular',
-					hiddenName : 'entity/markRegular',
-					dataIndex : 'markRegular',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'textfield',
-					fieldLabel : '唛头LOGO',
-					ref : '../../logoMark',
-					dataIndex : 'logoMark',
-					name : 'entity/logoMark',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					allowBlank : false,
-					fieldLabel : '唛头型号',
-					ref : '../../specNameMark',
-					dataIndex : 'specNameMark',
-					name : 'entity/specNameMark',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/markStart',
-					dataIndex : 'markStart',
-					ref : '../../markStart',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '唛头开始号',
-					decimalPrecision : 0
-				}, {
-					name : 'entity/markEnd',
-					dataIndex : 'markEnd',
-					ref : '../../markEnd',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '唛头结束号',
-					decimalPrecision : 0
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '箱唛号是否需要与标签保持一致',
-					ref : '../../ifkeep',
-					hiddenName : 'entity/ifkeep',
-					dataIndex : 'ifkeep',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '双唛头',
-					ref : '../../markDouble',
-					hiddenName : 'entity/markDouble',
-					dataIndex : 'markDouble',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					name : 'entity/markRuleDouble',
-					dataIndex : 'markRuleDouble',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textfield',
-					fieldLabel : '双唛头时第二个标签图纸编号规则',
-					decimalPrecision : 0
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '第二唛头贴的位置 ',
-					ref : '../../positionMark',
-					hiddenName : 'entity/positionMark',
-					dataIndex : 'positionMark',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.positionMarkStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/markDrawingCode2',
-					ref : '../../markDrawingCode2',
-					dataIndex : 'markDrawingCode2',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					fieldLabel : '第二唛头图纸编号',
-					xtype : 'trigger',
-					emptyText : '单击旁边按钮选择图纸编号',
-					editable : true,
-					hideTrigger : false,
-					scope : this,
-					onTriggerClick : function() {
-						_this.onChoose4Mark(2);
-					}
-				}, {
-					xtype : 'textfield',
-					fieldLabel : '第二唛头LOGO',
-					ref : '../../logoMark2',
-					dataIndex : 'logoMark2',
-					name : 'entity/logoMark2',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					fieldLabel : '第二唛头型号',
-					ref : '../../specNameMark2',
-					dataIndex : 'specNameMark2',
-					name : 'entity/specNameMark2',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					fieldLabel : '第二唛头制作方式',
-					ref : '../../makeMark2',
-					dataIndex : 'makeMark2',
-					name : 'entity/makeMark2',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">拍照</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '需要标准拍照',
-					ref : '../../ifphoto',
-					hiddenName : 'entity/ifphoto',
-					dataIndex : 'ifphoto',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					value : '<p style="color:red;">仅提供唛头照、绕丝后标签照、包装封箱前照</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 18
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, //
-					 * allowBlank : false, mode : 'local', fieldLabel : '每款型号',
-					 * ref : '../../ifanyone', hiddenName : 'entity/ifanyone',
-					 * dataIndex : 'ifanyone', anchor : '100%', colspan : 6,
-					 * emptyText : '--请选择--', editable : false, store :
-					 * this.ynStore, displayField : "name", valueField : "code",
-					 * listeners : { "expand" : function(A) { this.reset() } } }
-					 *//*
-					 * , { xtype : 'displayfield', height : 5, colspan : 24 }, {
-					 * xtype : 'dictcheckboxgroup', columns : 6, ref :
-					 * '../../photoSingle', dataIndex : 'photoSingle',
-					 * fieldLabel : '单支拍照要求', anchor : '100%', colspan : 24,
-					 * dictData : KS_YXORDER_PHOTO_SINGLE }, { xtype :
-					 * 'displayfield', height : 5, colspan : 24 }, { xtype :
-					 * 'dictcheckboxgroup', columns : 6, ref : '../../photoAll',
-					 * dataIndex : 'photoAll', fieldLabel : '整托拍照要求', anchor :
-					 * '100%', colspan : 24, dictData : KS_YXORDER_PHOTO_ALL }
-					 */, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">包装</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					name : 'entity/bag',
-					dataIndex : 'bag',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '真空包装袋型号'
-				}, {
-					name : 'entity/bagDrawingCode',
-					ref : '../../bagDrawingCode',
-					dataIndex : 'bagDrawingCode',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '真空包装袋图纸编号'
-				}, {
-					name : 'entity/box',
-					dataIndex : 'box',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '包装箱型号'
-				}, {
-					name : 'entity/boxDrawingCode',
-					ref : '../../boxDrawingCode',
-					dataIndex : 'boxDrawingCode',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '包装箱图纸编号'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/packingNum',
-					dataIndex : 'packingNum',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '装箱支数要求'
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '中芯管打磨',
-					ref : '../../ifpolish',
-					hiddenName : 'entity/ifpolish',
-					dataIndex : 'ifpolish',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">打包</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '托盘材质',
-					ref : '../../tray',
-					hiddenName : 'entity/tray',
-					dataIndex : 'tray',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.trayStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '托盘尺寸',
-					ref : '../../traySize',
-					hiddenName : 'entity/traySize',
-					dataIndex : 'traySize',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.traySizeStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					name : 'entity/packingLayer',
-					dataIndex : 'packingLayer',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '打包层数'
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '出货报告是否随货',
-					ref : '../../goodsWithReport',
-					hiddenName : 'entity/goodsWithReport',
-					dataIndex : 'goodsWithReport',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.goodsWithReportStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/pallet',
-					dataIndex : 'pallet', //
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 24,
-					xtype : 'textfield',
-					fieldLabel : '打件/打托要求'
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					name : 'entity/khxj',
-					dataIndex : 'khxj',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '客户星级评定'
-				}, {
-					name : 'entity/cpxj',
-					dataIndex : 'cpxj',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '产品星级评定'
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">确认</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					allowBlank : false,
-					mode : 'local',
-					fieldLabel : '检查无误可发<br>制造中心确认',
-					ref : '../../ifsubmit',
-					hiddenName : 'entity/ifsubmit',
-					// dataIndex : 'goodsWithReport',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code",
-					listeners : {
-						"expand" : function(A) {
-							this.reset()
-						}
-					}
-				}, {
-					xtype : 'hidden',
-					name : 'entity/photoSingle',
-					ref : '../../photoSingle2'
-				}, {
-					xtype : 'hidden',
-					name : 'entity/photoAll',
-					ref : '../../photoAll2'
-				}, {
-					name : 'entity/id',
-					xtype : 'hidden',
-					dataIndex : 'id'
-				}]
+						, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true, //
+							 * allowBlank : false, hidden : true, mode :
+							 * 'local', fieldLabel : '水流箭头', ref :
+							 * '../../waterArrow', hiddenName :
+							 * 'entity/waterArrow', dataIndex : 'waterArrow',
+							 * anchor : '100%', colspan : 6, emptyText :
+							 * '--请选择--', editable : false, store :
+							 * this.ynStore, displayField : "name", valueField :
+							 * "code", listeners : { "expand" : function(A) {
+							 * this.reset() } } }
+							 */, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '序列是否固定',
+							ref : '../../snRegular',
+							hiddenName : 'entity/snRegular',
+							dataIndex : 'snRegular',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							value : '<p style="color:red;">固定序列号参见图纸</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 6
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * hidden : true, // allowBlank : false, mode :
+							 * 'local', fieldLabel : '要NSF标识', ref :
+							 * '../../labelNsf', hiddenName : 'entity/labelNsf',
+							 * dataIndex : 'labelNsf', anchor : '100%', colspan :
+							 * 6, emptyText : '--请选择--', editable : false, store :
+							 * this.ynStore, displayField : "name", valueField :
+							 * "code", listeners : { "expand" : function(A) {
+							 * this.reset() } } }
+							 */, {
+							xtype : 'textfield',
+							fieldLabel : '标签LOGO',
+							ref : '../../logoLabel',
+							dataIndex : 'logoLabel',
+							hiddenName : 'entity/logoLabel',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '标签型号',
+							ref : '../../specNameLabel',
+							dataIndex : 'specNameLabel',
+							hiddenName : 'entity/specNameLabel',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/snStart',
+							dataIndex : 'snStart',
+							ref : '../../snStart',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '序列开始号',
+							decimalPrecision : 0
+						}, {
+							name : 'entity/snEnd',
+							dataIndex : 'snEnd',
+							ref : '../../snEnd',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '序列结束号',
+							decimalPrecision : 0
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '双标签',
+							ref : '../../labelDouble',
+							hiddenName : 'entity/labelDouble',
+							dataIndex : 'labelDouble',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							name : 'entity/labelRuleDouble',
+							dataIndex : 'labelRuleDouble',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 12,
+							xtype : 'textfield',
+							fieldLabel : '双标签时第二个标签图纸编号规则',
+							decimalPrecision : 0
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '第二标签贴的位置 ',
+							ref : '../../positionLabel',
+							hiddenName : 'entity/positionLabel',
+							dataIndex : 'positionLabel',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.positionLabelStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/labelDrawingCode2',
+							ref : '../../labelDrawingCode2',
+							dataIndex : 'labelDrawingCode2',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '第二标签图纸编号',
+							xtype : 'trigger',
+							emptyText : '单击旁边按钮选择图纸编号',
+							editable : true,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onChoose4Label(2);
+							}
+						}, {
+							xtype : 'textfield',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '第二标签LOGO',
+							ref : '../../logoLabel2',
+							dataIndex : 'logoLabel2',
+							name : 'entity/logoLabel2',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '第二标签型号',
+							ref : '../../specNameLabel2',
+							dataIndex : 'specNameLabel2',
+							name : 'entity/specNameLabel2',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '第二标签制作方式',
+							ref : '../../makeLabel2',
+							dataIndex : 'makeLabel2',
+							name : 'entity/makeLabel2',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">密封圈</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							name : 'entity/sealPosition',
+							dataIndex : 'sealPosition',
+							allowBlank : true,
+							anchor : '100%',
+							colspan : 24,
+							xtype : 'textfield',
+							fieldLabel : '密封圈位置'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/sealAmount',
+							dataIndex : 'sealAmount',
+							allowBlank : true,
+							anchor : '100%',
+							colspan : 24,
+							xtype : 'textfield',
+							fieldLabel : '密封圈数量'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/sealRequire',
+							dataIndex : 'sealRequire',
+							allowBlank : true,
+							anchor : '100%',
+							colspan : 24,
+							xtype : 'textfield',
+							fieldLabel : '家用密封圈固定胶带要求'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">唛头</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							name : 'entity/mark',
+							ref : '../../mark',
+							dataIndex : 'mark',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '唛头类型'
+						}, {
+							name : 'entity/markDrawingCode',
+							ref : '../../markDrawingCode',
+							dataIndex : 'markDrawingCode',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							fieldLabel : '唛头编号',
+							xtype : 'trigger',
+							emptyText : '单击旁边按钮选择图纸编号',
+							editable : false,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onChoose4Mark(1);
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '制作方式',
+							ref : '../../makeMark',
+							hiddenName : 'entity/makeMark',
+							dataIndex : 'makeMark',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.makeLabelStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '新制版',
+							ref : '../../newMakeMark',
+							hiddenName : 'entity/newMakeMark',
+							dataIndex : 'newMakeMark',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * hidden : true, // allowBlank : false, mode :
+							 * 'local', fieldLabel : '要NSF标识', ref :
+							 * '../../markNsf', hiddenName : 'entity/markNsf',
+							 * dataIndex : 'markNsf', anchor : '100%', colspan :
+							 * 6, emptyText : '--请选择--', editable : false, store :
+							 * this.ynStore, displayField : "name", valueField :
+							 * "code", listeners : { "expand" : function(A) {
+							 * this.reset() } } }
+							 */, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '唛头号是否固定',
+							ref : '../../markRegular',
+							hiddenName : 'entity/markRegular',
+							dataIndex : 'markRegular',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '唛头LOGO',
+							ref : '../../logoMark',
+							dataIndex : 'logoMark',
+							name : 'entity/logoMark',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							allowBlank : false,
+							fieldLabel : '唛头型号',
+							ref : '../../specNameMark',
+							dataIndex : 'specNameMark',
+							name : 'entity/specNameMark',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/markStart',
+							dataIndex : 'markStart',
+							ref : '../../markStart',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '唛头开始号',
+							decimalPrecision : 0
+						}, {
+							name : 'entity/markEnd',
+							dataIndex : 'markEnd',
+							ref : '../../markEnd',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '唛头结束号',
+							decimalPrecision : 0
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '箱唛号是否需要与标签保持一致',
+							ref : '../../ifkeep',
+							hiddenName : 'entity/ifkeep',
+							dataIndex : 'ifkeep',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '双唛头',
+							ref : '../../markDouble',
+							hiddenName : 'entity/markDouble',
+							dataIndex : 'markDouble',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							name : 'entity/markRuleDouble',
+							dataIndex : 'markRuleDouble',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 12,
+							xtype : 'textfield',
+							fieldLabel : '双唛头时第二个标签图纸编号规则',
+							decimalPrecision : 0
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '第二唛头贴的位置 ',
+							ref : '../../positionMark',
+							hiddenName : 'entity/positionMark',
+							dataIndex : 'positionMark',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.positionMarkStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/markDrawingCode2',
+							ref : '../../markDrawingCode2',
+							dataIndex : 'markDrawingCode2',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							fieldLabel : '第二唛头图纸编号',
+							xtype : 'trigger',
+							emptyText : '单击旁边按钮选择图纸编号',
+							editable : true,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onChoose4Mark(2);
+							}
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '第二唛头LOGO',
+							ref : '../../logoMark2',
+							dataIndex : 'logoMark2',
+							name : 'entity/logoMark2',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '第二唛头型号',
+							ref : '../../specNameMark2',
+							dataIndex : 'specNameMark2',
+							name : 'entity/specNameMark2',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '第二唛头制作方式',
+							ref : '../../makeMark2',
+							dataIndex : 'makeMark2',
+							name : 'entity/makeMark2',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">拍照</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '需要标准拍照',
+							ref : '../../ifphoto',
+							hiddenName : 'entity/ifphoto',
+							dataIndex : 'ifphoto',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							value : '<p style="color:red;">仅提供唛头照、绕丝后标签照、包装封箱前照</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 18
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true, //
+							 * allowBlank : false, mode : 'local', fieldLabel :
+							 * '每款型号', ref : '../../ifanyone', hiddenName :
+							 * 'entity/ifanyone', dataIndex : 'ifanyone', anchor :
+							 * '100%', colspan : 6, emptyText : '--请选择--',
+							 * editable : false, store : this.ynStore,
+							 * displayField : "name", valueField : "code",
+							 * listeners : { "expand" : function(A) {
+							 * this.reset() } } }
+							 *//*
+							 * , { xtype : 'displayfield', height : 5, colspan :
+							 * 24 }, { xtype : 'dictcheckboxgroup', columns : 6,
+							 * ref : '../../photoSingle', dataIndex :
+							 * 'photoSingle', fieldLabel : '单支拍照要求', anchor :
+							 * '100%', colspan : 24, dictData :
+							 * KS_YXORDER_PHOTO_SINGLE }, { xtype :
+							 * 'displayfield', height : 5, colspan : 24 }, {
+							 * xtype : 'dictcheckboxgroup', columns : 6, ref :
+							 * '../../photoAll', dataIndex : 'photoAll',
+							 * fieldLabel : '整托拍照要求', anchor : '100%', colspan :
+							 * 24, dictData : KS_YXORDER_PHOTO_ALL }
+							 */, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">包装</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							name : 'entity/bag',
+							dataIndex : 'bag',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '真空包装袋型号'
+						}, {
+							name : 'entity/bagDrawingCode',
+							ref : '../../bagDrawingCode',
+							dataIndex : 'bagDrawingCode',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '真空包装袋图纸编号'
+						}, {
+							name : 'entity/box',
+							dataIndex : 'box',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装箱型号'
+						}, {
+							name : 'entity/boxDrawingCode',
+							ref : '../../boxDrawingCode',
+							dataIndex : 'boxDrawingCode',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装箱图纸编号'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/packingNum',
+							dataIndex : 'packingNum',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '装箱支数要求'
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '中芯管打磨',
+							ref : '../../ifpolish',
+							hiddenName : 'entity/ifpolish',
+							dataIndex : 'ifpolish',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">打包</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '托盘材质',
+							ref : '../../tray',
+							hiddenName : 'entity/tray',
+							dataIndex : 'tray',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.trayStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '托盘尺寸',
+							ref : '../../traySize',
+							hiddenName : 'entity/traySize',
+							dataIndex : 'traySize',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.traySizeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							name : 'entity/packingLayer',
+							dataIndex : 'packingLayer',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '打包层数'
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '出货报告是否随货',
+							ref : '../../goodsWithReport',
+							hiddenName : 'entity/goodsWithReport',
+							dataIndex : 'goodsWithReport',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.goodsWithReportStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/pallet',
+							dataIndex : 'pallet', //
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 24,
+							xtype : 'textfield',
+							fieldLabel : '打件/打托要求'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							name : 'entity/khxj',
+							dataIndex : 'khxj',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '客户星级评定'
+						}, {
+							name : 'entity/cpxj',
+							dataIndex : 'cpxj',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '产品星级评定'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">确认</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '检查无误可发<br>制造中心确认',
+							ref : '../../ifsubmit',
+							hiddenName : 'entity/ifsubmit',
+							// dataIndex : 'goodsWithReport',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'hidden',
+							name : 'entity/photoSingle',
+							ref : '../../photoSingle2'
+						}, {
+							xtype : 'hidden',
+							name : 'entity/photoAll',
+							ref : '../../photoAll2'
+						}, {
+							name : 'entity/id',
+							xtype : 'hidden',
+							dataIndex : 'id'
+						}]
 			}]
 		});
 
@@ -1995,7 +2009,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -2105,6 +2119,44 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/createName',
 								fieldLabel : '导入操作员'
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 4
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '任务单是否下达',
+								ref : '../taskState',
+								hiddenName : 'condition/taskState',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.taskState.reset()
+									}
+								}
+							}, {
+								//fieldLabel : '不显示需生产<br>或入库为零',
+								boxLabel :'不显示需生产或入库为零',
+								xtype : 'checkbox',
+								//checked : true,
+								name : 'condition/isNotZero',
+								inputValue : 'Y',
+								anchor : '100%'
+							}, {
+								xtype : "datetimeregion",
+								colspan : 2,
+								// anchor : '75%',
+								nameArray : ['condition/recordTimeStart',
+										'condition/recordTimeEnd'],
+								fieldLabel : "订单状态变更",
+								format : "Y-m-d H:i"
 							}]
 				});
 		this.queryPanel.addButton({
@@ -2181,6 +2233,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									handler : function() {
 										this.optColumnWin.show();
 									}
+								}, '-', {
+									text : '变更任务单下达状态',
+									disabled : allRight != '1',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.onChangeTaskState
 								}]
 					}, '-', {
 						text : '订单计划员接单',
@@ -2407,6 +2465,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'mark',
 						header : '唛头',
+						sortable : true
+					}, {
+						dataIndex : 'specNameMark',
+						header : '唛头型号',
 						sortable : true
 					}, {
 						dataIndex : 'markDrawingCode',
@@ -2973,8 +3035,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							fieldLabel : '需生产或入库(支)',
-							ref : '../../orderAmount',
-							dataIndex : 'orderAmount',
+							ref : '../../prodAmount',
+							dataIndex : 'prodAmount',
 							anchor : '85%',
 							colspan : 1
 						}, {
@@ -3792,7 +3854,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 				}, {
 					readOnly : true,
 					dataIndex : 'reserve5',
-					ref:'../../reserve5',
+					ref : '../../reserve5',
 					anchor : '100%',
 					colspan : 6,
 					xtype : 'textfield',
@@ -5594,8 +5656,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							fieldLabel : '需生产或入库数量(只)',
-							ref : '../../orderAmount',
-							dataIndex : 'orderAmount',
+							ref : '../../prodAmount',
+							dataIndex : 'prodAmount',
 							anchor : '85%',
 							colspan : 1
 						}, {
@@ -6515,8 +6577,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								xtype : 'displayfield',
 								fieldLabel : '需生产或入库(支)',
-								ref : '../orderAmount',
-								dataIndex : 'orderAmount',
+								ref : '../prodAmount',
+								dataIndex : 'prodAmount',
 								anchor : '85%',
 								colspan : 2
 							}, {
@@ -7143,9 +7205,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '需生产或入库(支)',
-						ref : '../orderAmount',
+						ref : '../prodAmount',
 						readOnly : true,
-						dataIndex : 'orderAmount',
+						dataIndex : 'prodAmount',
 						anchor : '85%',
 						colspan : 1
 					}, {
@@ -7447,8 +7509,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								xtype : 'displayfield',
 								fieldLabel : '需生产或入库(支)',
-								ref : '../orderAmount',
-								dataIndex : 'orderAmount',
+								ref : '../prodAmount',
+								dataIndex : 'prodAmount',
 								anchor : '85%',
 								colspan : 2
 							}, {
@@ -7679,8 +7741,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							fieldLabel : '需生产或入库数量(只)',
-							ref : '../../orderAmount',
-							dataIndex : 'orderAmount',
+							ref : '../../prodAmount',
+							dataIndex : 'prodAmount',
 							anchor : '85%',
 							colspan : 1
 						}, {

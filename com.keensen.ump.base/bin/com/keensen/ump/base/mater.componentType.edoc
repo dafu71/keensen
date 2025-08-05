@@ -8,6 +8,10 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveMpBOM&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.saveMpBOM&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.base.common.KsBaseMpBom):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
+    <string>com.keensen.ump.base.mater.expandPipe(com.keensen.ump.base.common.KsBasePipe)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandPipe&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.expandPipe&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.base.common.KsBasePipe):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.base.common.KsBasePipe):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>com.keensen.ump.base.mater.queryMaterClassTree(java.util.Map)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMaterClassTree&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryMaterClassTree&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
@@ -40,6 +44,14 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryDuplicateMaterSpecCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryDuplicateRecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryDuplicateMaterSpecCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;map(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;cnt(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
+    <string>com.keensen.ump.base.mater.savePipe(com.keensen.ump.base.common.KsBasePipe)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;savePipe&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.savePipe&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.base.common.KsBasePipe):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.queryPipeByPage(java.util.Map, com.eos.foundation.PageCond)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryPipeByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryPipeByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>com.keensen.ump.base.mater.queryMaterSpecList(java.util.Map)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMaterSpecList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.queryMaterSpecList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
@@ -54,6 +66,10 @@
   <entry>
     <string>com.keensen.ump.base.mater.saveMaterSpec(java.util.HashMap)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveMaterSpec&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveMaterSpec&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.saveMaterSpec&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.base.mater.deletePipe(com.keensen.ump.base.common.KsBasePipe[])</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deletePipe&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.base.mater.deletePipe&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.base.common.KsBasePipe[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.base.mater.queryMpBOM(java.util.Map)</string>

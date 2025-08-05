@@ -157,7 +157,7 @@
 		</td>
 			
 	</tr>
-	<% if(ifSG.equals("N")){ %>
+	<%--<% if(ifSG.equals("N")){ %>--%>
 	<td width="33%" height="38">
 		<div align="left" class="style1"><strong>最低脱盐率(%)</strong><b:write property="data/saltLow"/></div>
 		</td>
@@ -168,7 +168,7 @@
 		<td width="33%" height="38">
 		<div align="left" class="style1"><strong>产水量上限(GPD)</strong><b:write property="data/gpdUp"/></div>
 		</td>
-		<% } %>
+		<%--<% } %>--%>
 </table>
 <table width="780" border="0">
 	<tr>

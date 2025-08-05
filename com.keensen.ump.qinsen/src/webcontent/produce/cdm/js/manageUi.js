@@ -308,6 +308,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						width : 70,
 						dataIndex : 'outLength'
 					}, {
+						header : '浓网编号',
+						width : 120,
+						dataIndex : 'denseNetCode'
+					}, {
 						header : '已裁完',
 						width : 50,
 						dataIndex : 'isCutOverName'
@@ -482,6 +486,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									name : 'dmBatchId'
 								}, {
 									name : 'dimoBatchNo'
+								}, {
+									name : 'denseNetCode'
 								}]
 					})
 		})
@@ -779,6 +785,14 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					height : 5,
 					colspan : 24
 				}, {
+					xtype : 'textfield',
+					anchor : '100%',
+					ref : '../../denseNetCode',
+					name : 'entity/denseNetCode',
+					allowBlank : true,
+					fieldLabel : '浓网编号',
+					colspan : 8
+				}, {
 					ref : '../../cnt',
 					fieldLabel : '栈板数',
 					xtype : 'numberfield',
@@ -787,7 +801,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					anchor : '86%',
 					minValue : 1,
 					decimalPrecision : 0,
-					colspan : 12
+					colspan : 8
 				}, {
 					xtype : 'textfield',
 					anchor : '86%',
@@ -795,7 +809,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					name : 'entity/batchNo',
 					allowBlank : false,
 					fieldLabel : '起始栈板号',
-					colspan : 12
+					colspan : 8
 				}, {
 					xtype : 'displayfield',
 					height : '5',
@@ -856,22 +870,22 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						}
 					},
 					colspan : 12
-				}, {
+				}/*, {
 					xtype : 'displayfield',
 					value : '<p style="color:red;">工艺变更中，暂以纸质文件为准。</p>',
 					labelSeparator : '',// 去掉冒号
 					colspan : 12
-				}, {
+				}*/, {
 					xtype : 'displayfield',
 					height : '5',
-					hidden : true,
+					//hidden : true,
 					colspan : 24
 				}, {
 					ref : '../../blankingSize',
 					name : 'entity/blankingSize',
 					fieldLabel : '膜片下料尺寸',
 					xtype : 'textfield',
-					hidden : true,
+					//hidden : true,
 					readOnly : true,
 					anchor : '86%',
 					colspan : 12
@@ -885,7 +899,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '浓网型号',
 					xtype : 'textfield',
 					readOnly : true,
-					hidden : true,
+					//hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
@@ -894,13 +908,13 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '浓网尺寸',
 					xtype : 'textfield',
 					readOnly : true,
-					hidden : true,
+					//hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
 					xtype : 'displayfield',
 					height : '5',
-					hidden : true,
+					//hidden : true,
 					colspan : 24
 				}, {
 					ref : '../../pageWidth',
@@ -908,7 +922,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '页宽',
 					xtype : 'textfield',
 					readOnly : true,
-					hidden : true,
+					//hidden : true,
 					anchor : '86%',
 					colspan : 12
 				}, {
@@ -917,7 +931,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '淡网型号',
 					xtype : 'textfield',
 					readOnly : true,
-					hidden : true,
+					//hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
@@ -926,7 +940,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '淡网短页',
 					xtype : 'textfield',
 					readOnly : true,
-					hidden : true,
+					//hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {

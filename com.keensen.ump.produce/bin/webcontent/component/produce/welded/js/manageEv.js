@@ -23,15 +23,16 @@ com.keensen.ump.produce.component.produce.WeldedMgr.prototype.initEvent = functi
 
 	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
 			function() {
-				
+
 				var perNum = this.inputWindow.perNum.getValue();
 				var produceNum = this.inputWindow.produceNum.getValue();
 				if (parseFloat(produceNum) < parseFloat(perNum)) {
 					Ext.Msg.alert("系统提示", "生产数量必须大于每卷数量!");
 					return false;
 				}
-				var num = Math.ceil(parseFloat(produceNum) / parseFloat(perNum));
-				
+				var num = Math
+						.ceil(parseFloat(produceNum) / parseFloat(perNum));
+
 				this.inputWindow.reserve5.setValue(num);
 
 			}, this);
@@ -82,9 +83,10 @@ com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onPrintTag = funct
 		var rec = C[0];
 
 		var pkid = rec.data.id;
-		var f = document.getElementById('weldedprintForm');
-		f.pkid.value = pkid;
-		var actionUrl = 'com.keensen.ump.produce.component.printWeldedTag.flow?token='
+		var f = document.getElementById('weldedprintsForm');
+
+		f.ids.value = pkid;
+		var actionUrl = 'com.keensen.ump.produce.component.printWeldedTags.flow?token='
 				+ Date.now();
 		f.action = actionUrl;
 		f.submit();
@@ -124,18 +126,20 @@ com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onScan = function(
 }
 
 function getSize(str) {
+
 	if (Ext.isEmpty(str))
 		return '';
+
 	var arr = [];
-	if (str.indexOf('│')) {
-		arr = str.split('│');
-		return arr[1];
+
+	var splitStr = ['/', '│', '|'];
+	for (var i = 0; i < splitStr.length; i++) {
+		if (str.indexOf(splitStr[i]) > -1) {
+			arr = str.split(splitStr[i]);
+			return arr[1];
+		}
 	}
-	if (str.indexOf('|')) {
-		arr = str.split('|');
-		return arr[1];
-	} else {
-		arr = str.split(' ');
-		return arr[1];
-	}
+	return '';
+
+	
 }

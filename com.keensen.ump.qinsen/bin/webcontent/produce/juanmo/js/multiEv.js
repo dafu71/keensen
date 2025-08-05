@@ -302,6 +302,8 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.getNewInfo = function()
 	newRec.cdmBatchNo = _this.mainPanel.cdmBatchNo.getValue();
 	
 	newRec.trailer = _this.mainPanel.trailer.getValue();
+	
+	newRec.pipeCode = _this.mainPanel.pipeCode.getValue();
 
 	return newRec;
 }

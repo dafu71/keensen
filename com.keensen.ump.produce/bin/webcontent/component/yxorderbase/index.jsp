@@ -49,6 +49,8 @@
 <ext:dict property="KS_YXORDER_PHOTO_SINGLE" dictTypeId="KS_YXORDER_PHOTO_SINGLE" />
 <ext:dict property="KS_YXORDER_PHOTO_ALL" dictTypeId="KS_YXORDER_PHOTO_ALL" />
 
+<js:load scriptPath="pub/common/datetimeRegion.js"/>
+
 <js:load scriptPath="pub/common/optColumnWin.js"/>
 <js:load scriptPath="pub/common/mpspecCombo.js" />
 

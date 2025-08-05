@@ -1303,139 +1303,6 @@
             <column length="20" name="C51"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.diaphragm.KsProdDiaphragmZmxRecord" table="KS_PROD_DIAPHRAGM_ZMX_RECORD">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="id" type="long">
-            <column length="22" name="ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="createTime" type="timestamp">
-            <column name="CREATE_TIME"/>
-        </property>
-        <property name="createUserId" type="string">
-            <column length="24" name="CREATE_USER_ID"/>
-        </property>
-        <property name="createName" type="string">
-            <column length="24" name="CREATE_NAME"/>
-        </property>
-        <property name="updateTime" type="timestamp">
-            <column name="UPDATE_TIME"/>
-        </property>
-        <property name="updateUserId" type="string">
-            <column length="24" name="UPDATE_USER_ID"/>
-        </property>
-        <property name="updateName" type="string">
-            <column length="24" name="UPDATE_NAME"/>
-        </property>
-        <property name="reserve1" type="string">
-            <column length="1500" name="RESERVE1"/>
-        </property>
-        <property name="reserve2" type="string">
-            <column length="1500" name="RESERVE2"/>
-        </property>
-        <property name="reserve3" type="string">
-            <column length="1500" name="RESERVE3"/>
-        </property>
-        <property name="reserve4" type="string">
-            <column length="1500" name="RESERVE4"/>
-        </property>
-        <property name="reserve5" type="string">
-            <column length="1500" name="RESERVE5"/>
-        </property>
-        <property name="orgId" type="string">
-            <column length="90" name="ORG_ID"/>
-        </property>
-        <property name="status" type="string">
-            <column length="24" name="STATUS"/>
-        </property>
-        <property name="dimoType" type="string">
-            <column length="50" name="DIMO_TYPE"/>
-        </property>
-        <property name="line" type="string">
-            <column length="50" name="LINE"/>
-        </property>
-        <property name="productDt" type="date">
-            <column name="PRODUCT_DT"/>
-        </property>
-        <property name="dimoBatchNo" type="string">
-            <column length="100" name="DIMO_BATCH_NO"/>
-        </property>
-        <property name="supName" type="string">
-            <column length="200" name="SUP_NAME"/>
-        </property>
-        <property name="supId" type="string">
-            <column length="50" name="SUP_ID"/>
-        </property>
-        <property name="wfBatchNo" type="string">
-            <column length="100" name="WF_BATCH_NO"/>
-        </property>
-        <property name="zmyBatchNo" type="string">
-            <column length="100" name="ZMY_BATCH_NO"/>
-        </property>
-        <property name="theoryAmount" type="big_decimal">
-            <column length="10" name="THEORY_AMOUNT" precision="10" scale="2"/>
-        </property>
-        <property name="lose0" type="big_decimal">
-            <column length="10" name="LOSE0" precision="10" scale="2"/>
-        </property>
-        <property name="lose1" type="big_decimal">
-            <column length="10" name="LOSE1" precision="10" scale="2"/>
-        </property>
-        <property name="lose2" type="big_decimal">
-            <column length="10" name="LOSE2" precision="10" scale="2"/>
-        </property>
-        <property name="lose3" type="big_decimal">
-            <column length="10" name="LOSE3" precision="10" scale="2"/>
-        </property>
-        <property name="lose4" type="big_decimal">
-            <column length="10" name="LOSE4" precision="10" scale="2"/>
-        </property>
-        <property name="lose5" type="big_decimal">
-            <column length="10" name="LOSE5" precision="10" scale="2"/>
-        </property>
-        <property name="lose6" type="big_decimal">
-            <column length="10" name="LOSE6" precision="10" scale="2"/>
-        </property>
-        <property name="lose7" type="big_decimal">
-            <column length="10" name="LOSE7" precision="10" scale="2"/>
-        </property>
-        <property name="flaw0" type="big_decimal">
-            <column length="10" name="FLAW0" precision="10" scale="2"/>
-        </property>
-        <property name="flaw1" type="big_decimal">
-            <column length="10" name="FLAW1" precision="10" scale="2"/>
-        </property>
-        <property name="flaw2" type="big_decimal">
-            <column length="10" name="FLAW2" precision="10" scale="2"/>
-        </property>
-        <property name="teamId" type="string">
-            <column length="50" name="TEAM_ID"/>
-        </property>
-        <property name="teamName" type="string">
-            <column length="100" name="TEAM_NAME"/>
-        </property>
-        <property name="beforeAmount" type="big_decimal">
-            <column length="10" name="BEFORE_AMOUNT" precision="10" scale="2"/>
-        </property>
-        <property name="curAmount" type="big_decimal">
-            <column length="10" name="CUR_AMOUNT" precision="10" scale="2"/>
-        </property>
-        <property name="abnormal" type="string">
-            <column length="1000" name="ABNORMAL"/>
-        </property>
-        <property name="pumpSpeed" type="string">
-            <column length="50" name="PUMP_SPEED"/>
-        </property>
-        <property name="base" type="string">
-            <column length="50" name="BASE"/>
-        </property>
-        <property name="productType" type="string">
-            <column length="50" name="PRODUCT_TYPE"/>
-        </property>
-        <property name="ifModifyDefect" type="string">
-            <column default="'1'" length="1" name="IF_MODIFY_DEFECT"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.diaphragm.KsDiaphragmOrderBase" table="KS_DIAPHRAGM_ORDER_BASE">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="long">
@@ -1679,6 +1546,142 @@
         </property>
         <property name="operatorName" type="string">
             <column length="50" name="OPERATOR_NAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.diaphragm.KsProdDiaphragmZmxRecord" table="KS_PROD_DIAPHRAGM_ZMX_RECORD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="dimoType" type="string">
+            <column length="50" name="DIMO_TYPE"/>
+        </property>
+        <property name="line" type="string">
+            <column length="50" name="LINE"/>
+        </property>
+        <property name="productDt" type="date">
+            <column name="PRODUCT_DT"/>
+        </property>
+        <property name="dimoBatchNo" type="string">
+            <column length="100" name="DIMO_BATCH_NO"/>
+        </property>
+        <property name="supName" type="string">
+            <column length="200" name="SUP_NAME"/>
+        </property>
+        <property name="supId" type="string">
+            <column length="50" name="SUP_ID"/>
+        </property>
+        <property name="wfBatchNo" type="string">
+            <column length="100" name="WF_BATCH_NO"/>
+        </property>
+        <property name="zmyBatchNo" type="string">
+            <column length="100" name="ZMY_BATCH_NO"/>
+        </property>
+        <property name="theoryAmount" type="big_decimal">
+            <column length="10" name="THEORY_AMOUNT" precision="10" scale="2"/>
+        </property>
+        <property name="lose0" type="big_decimal">
+            <column length="10" name="LOSE0" precision="10" scale="2"/>
+        </property>
+        <property name="lose1" type="big_decimal">
+            <column length="10" name="LOSE1" precision="10" scale="2"/>
+        </property>
+        <property name="lose2" type="big_decimal">
+            <column length="10" name="LOSE2" precision="10" scale="2"/>
+        </property>
+        <property name="lose3" type="big_decimal">
+            <column length="10" name="LOSE3" precision="10" scale="2"/>
+        </property>
+        <property name="lose4" type="big_decimal">
+            <column length="10" name="LOSE4" precision="10" scale="2"/>
+        </property>
+        <property name="lose5" type="big_decimal">
+            <column length="10" name="LOSE5" precision="10" scale="2"/>
+        </property>
+        <property name="lose6" type="big_decimal">
+            <column length="10" name="LOSE6" precision="10" scale="2"/>
+        </property>
+        <property name="lose7" type="big_decimal">
+            <column length="10" name="LOSE7" precision="10" scale="2"/>
+        </property>
+        <property name="flaw0" type="big_decimal">
+            <column length="10" name="FLAW0" precision="10" scale="2"/>
+        </property>
+        <property name="flaw1" type="big_decimal">
+            <column length="10" name="FLAW1" precision="10" scale="2"/>
+        </property>
+        <property name="flaw2" type="big_decimal">
+            <column length="10" name="FLAW2" precision="10" scale="2"/>
+        </property>
+        <property name="teamId" type="string">
+            <column length="50" name="TEAM_ID"/>
+        </property>
+        <property name="teamName" type="string">
+            <column length="100" name="TEAM_NAME"/>
+        </property>
+        <property name="beforeAmount" type="big_decimal">
+            <column length="10" name="BEFORE_AMOUNT" precision="10" scale="2"/>
+        </property>
+        <property name="curAmount" type="big_decimal">
+            <column length="10" name="CUR_AMOUNT" precision="10" scale="2"/>
+        </property>
+        <property name="abnormal" type="string">
+            <column length="1000" name="ABNORMAL"/>
+        </property>
+        <property name="pumpSpeed" type="string">
+            <column length="50" name="PUMP_SPEED"/>
+        </property>
+        <property name="base" type="string">
+            <column length="50" name="BASE"/>
+        </property>
+        <property name="productType" type="string">
+            <column length="50" name="PRODUCT_TYPE"/>
+        </property>
+        <property name="ifModifyDefect" type="string">
+            <column default="'1'" length="1" name="IF_MODIFY_DEFECT"/>
+        </property>
+        <property name="releaseAmount" type="big_decimal">
+            <column default="0&#10;" length="10" name="RELEASE_AMOUNT" precision="10" scale="2"/>
         </property>
     </class>
 </hibernate-mapping>

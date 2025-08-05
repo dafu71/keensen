@@ -326,7 +326,7 @@ com.keensen.ump.defectWindow = Ext.extend(Ext.Window, {
 									allowNegative : false,
 									allowDecimals : true,
 									minValue : 0,
-									maxValue : 999.999,
+									maxValue : 3000.999,
 									decimalPrecision : 3,
 									listeners : {
 										'specialkey' : function() {

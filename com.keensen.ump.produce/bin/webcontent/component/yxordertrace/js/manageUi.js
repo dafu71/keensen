@@ -115,14 +115,22 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 						fieldLabel : ' ',
 						value : '<p style="color:red;">多个订单号请用逗号分隔，或一行一个订单号</p>',
 						labelSeparator : '',// 去掉冒号
-						colspan : 2
+						colspan : 3
 					}, {
 						xtype : 'textarea',
 						ref : '../orderNoStr',
 						height : 50,
-						colspan : 2,
-						anchor : '75%',
+						colspan : 1,
+						anchor : '95%',
 						fieldLabel : '多订单号查询'
+					}, {
+						xtype : "dateregion",
+						colspan : 1,
+						anchor : '75%',
+						nameArray : ['condition/workDateStart',
+								'condition/workDateEnd'],
+						fieldLabel : "作业日期",
+						format : "Y-m-d"
 					}, {
 						xtype : 'combobox',
 						forceSelection : true,

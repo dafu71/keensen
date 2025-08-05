@@ -84,7 +84,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 			}
 
 			if (hpmc != '其它' && hpmc != '其他') {
-				if (state == '制定中' || state == '物控计划员确认' || state == '不能接单') {
+				if (state == '制定中' || state == '不能接单') {
 					this.addOrderWindow.show();
 					this.addOrderWindow.loadData(cell);
 				} else {
@@ -125,8 +125,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.mcconfirmWindow.show();
 				this.mcconfirmInputPanel.loadData(cell);
 				this.mcconfirmInputPanel.orderNo.setValue(cell.get('orderNo'));
-				this.mcconfirmInputPanel.orderAmount.setValue(cell
-						.get('orderAmount'));
+				this.mcconfirmInputPanel.prodAmount.setValue(cell
+						.get('prodAmount'));
 				this.mcconfirmInputPanel.newMakeLabel.setValue(cell
 						.get('newMakeLabel'));
 				this.mcconfirmInputPanel.newMakeMark.setValue(cell
@@ -1681,5 +1681,54 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSelect4ChooseSpec =
 		}
 
 		this.chooseSpecWindow.hide();
+	}
+}
+
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onChangeTaskState = function() {
+	var A = this.listPanel;
+	var _this = this;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var records = A.getSelectionModel().getSelections();
+
+		var ids = []
+		Ext.each(records, function(r) {
+					var id = r.data.id;
+					ids.push(id);
+				})
+
+		// var id = records[0].get('id');
+		// var deliveryState = records[0].get('deliveryState') == '是' ? '否' :
+		// '是';
+		this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		this.requestMask.show();
+		Ext.Ajax.request({
+			// url :
+			// "com.keensen.ump.produce.component.yxorderbase.saveDeliveryState.biz.ext",
+			url : "com.keensen.ump.produce.component.yxorderbase.saveTaskStateBatch.biz.ext",
+			method : "post",
+			jsonData : {
+				ids : ids.join(',')
+				// 'entity/id' : id,
+				// 'entity/deliveryState' : deliveryState
+			},
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					if (ret.success) {
+						_this.listPanel.store.reload();
+					}
+				}
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
 	}
 }
