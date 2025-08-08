@@ -268,7 +268,7 @@ t.mater_spec_name2 "materSpecName2"
      
      <!-- 查询物料规格列表 -->
      <select id="queryMaterSpecList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-     SELECT S.MATER_SPEC_ID, S.MATER_SPEC_CODE, S.MATER_SPEC_NAME, S.MATER_CLASS_ID,
+     SELECT S.MATER_SPEC_ID, S.MATER_SPEC_CODE, S.MATER_SPEC_NAME, S.MATER_CLASS_ID,s.mp_width,
      s.mater_spec_id "id",s.mater_spec_code "name",
          S.STATE, S.SAFETY_STOCK, S.SUPPLIER_ID, S.MEASUREMENT_UNIT,
          S.PLANNED_UNIT_PRICE, S.THICKNESS, S.WIDTH, S.LENGTH, S.PROP_STRING,

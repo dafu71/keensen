@@ -118,8 +118,10 @@ com.keensen.ump.produce.component.markprintMgr.prototype.onScan = function() {
 					}
 				}
 				if (!isRecord) {
+					
 					var f = document.getElementById('componentmarkprintForm');
-					f.prodBatchNo.value = data.prodBatchNo;
+					//f.prodBatchNo.value = data.prodBatchNo;
+					f.prodBatchNo.value = data.printBatchNo;
 					f.dryWet.value = data.dryWet2;
 					f.url.value = data.url;
 					f.prodSpecName.value = data.prodSpecName;

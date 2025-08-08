@@ -526,15 +526,16 @@ SELECT P.TEAM_ID         AS "teamId",
      
      <select id="queryZmMaterUsed" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
      
-     select round(SUM(c11/1000*nvl(dimo_amount,0)),2) "c11",
-round(SUM(DECODE(psf,'A',c12,0)/1000*nvl(dimo_amount,0)),2) "c12a", 
-round(SUM(DECODE(psf,'B',c12,0)/1000*nvl(dimo_amount,0)),2) "c12b", 
-round(SUM(DECODE(psf,'C',c12,0)/1000*nvl(dimo_amount,0)),2) "c12c",
-round(SUM(DECODE(psf,'D',c12,0)/1000*nvl(dimo_amount,0)),2) "c12d",
-round(SUM(DECODE(psf,'S',c12,0)/1000*nvl(dimo_amount,0)),2) "c12s",
-round(SUM(c12/1000*nvl(dimo_amount,0)),2) "c12",
-round(SUM(c13/1000*nvl(dimo_amount,0)),2) "c13",
-round(SUM(c14/1000*nvl(dimo_amount,0)),2) "c14",
+      select 
+round(SUM(DECODE(psf,'A',c12,0)/1000*nvl(dimo_amount,0)) + SUM(DECODE(psf,'A',c12_percent*nvl(release_amount,0),0)),2) "c12a", 
+round(SUM(DECODE(psf,'B',c12,0)/1000*nvl(dimo_amount,0)) + SUM(DECODE(psf,'B',c12_percent*nvl(release_amount,0),0)),2) "c12b", 
+round(SUM(DECODE(psf,'C',c12,0)/1000*nvl(dimo_amount,0)) + SUM(DECODE(psf,'C',c12_percent*nvl(release_amount,0),0)),2) "c12c",
+round(SUM(DECODE(psf,'D',c12,0)/1000*nvl(dimo_amount,0)) + SUM(DECODE(psf,'D',c12_percent*nvl(release_amount,0),0)),2) "c12d",
+round(SUM(DECODE(psf,'S',c12,0)/1000*nvl(dimo_amount,0)) + SUM(DECODE(psf,'S',c12_percent*nvl(release_amount,0),0)),2) "c12s",
+round(SUM(c11/1000*nvl(dimo_amount,0)) + SUM(c11_percent*nvl(release_amount,0)),2) "c11",
+round(SUM(c12/1000*nvl(dimo_amount,0)) + SUM(c12_percent*NVL(release_amount,0)),2) "c12",
+round(SUM(c13/1000*nvl(dimo_amount,0)) + SUM(c13_percent*nvl(release_amount,0)) ,2) "c13",
+round(SUM(c14/1000*nvl(dimo_amount,0)) + SUM(c14_percent*nvl(release_amount,0)),2) "c14",
 round(SUM(DECODE(SUP_ID,'300020',theory_amount,0)),2) "cloth300020",
 round(SUM(DECODE(SUP_ID,'300021',theory_amount,0)),2) "cloth300021",
 round(SUM(DECODE(SUP_ID,'300022',theory_amount,0)),2) "cloth300022",
@@ -544,6 +545,12 @@ round(SUM(theory_amount),2) "cloth"
 from V_KS_DIAPHRAGM_ZM_DM t
 WHERE to_char(t.dm_product_dt,'YYYY-MM-DD')>=#productDtStart#
 AND to_char(t.dm_product_dt,'YYYY-MM-DD')&lt;=#productDtEnd#
+<isNotNull prepend="" property="line"> 
+		       		AND t.line = #line#
+</isNotNull>
+<isNotNull prepend="" property="dimoType"> 
+		       		AND t.DIMO_TYPE = #dimoType#
+</isNotNull>
      
      
      </select>

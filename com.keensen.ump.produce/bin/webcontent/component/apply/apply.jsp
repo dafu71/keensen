@@ -330,7 +330,7 @@
   <tr  style="border: 1px solid black;">
   <% } %>
    <td  height="38"> <div align="center" class="style1"><%=i+1 %></div> </td>
-	<td height="38"> <div align="center" class="style1"><%=list[i].getString("batchNo") %></div> </td>
+	<td height="38"> <div align="center" class="style1"><%=list[i].getString("printBatchNo") %></div> </td>
 	<td height="38"> <div align="center" class="style1"><%=null == list[i].getString("tumoBatchStr2")?"":list[i].getString("tumoBatchStr2") %></div> </td>
 	<td height="38"> <div align="center" class="style1"><%=list[i].getString("state") %></div> </td> 
 	<td height="38"> <div align="center" class="style1"><%=list[i].getString("checkResult") %></div> </td>   

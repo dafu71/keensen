@@ -1425,7 +1425,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							}
 						},
 						columns : 2,
-						loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek.biz.ext',
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek2.biz.ext',
 						saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanWeek.biz.ext',
 						fields : [{
 									xtype : 'displayfield',

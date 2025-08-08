@@ -374,7 +374,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							}
 						},
 						columns : 2,
-						loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek.biz.ext',
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek2.biz.ext',
 						saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanWeek.biz.ext',
 						fields : [{
 									xtype : 'displayfield',
@@ -670,7 +670,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 			autoScroll : false,
 			border : true,
 			columns : 2,
-			loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek.biz.ext',
+			loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek2.biz.ext',
 			saveUrl : '1.biz.ext',
 			fields : [{
 						xtype : 'displayfield',
@@ -765,6 +765,10 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						xtype : 'hidden',
 						ref : '../area',
 						dataIndex : 'area'
+					}, {
+						xtype : 'hidden',
+						ref : '../mpWidth',
+						dataIndex : 'mpWidth'
 					}]
 
 		})
@@ -1854,7 +1858,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					autoScroll : false,
 					border : true,
 					columns : 2,
-					loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek.biz.ext',
+					loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek2.biz.ext',
 					saveUrl : '1.biz.ext',
 					fields : [{
 								xtype : 'displayfield',
@@ -2384,7 +2388,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						baseCls : "x-plain",
 						pgrid : this.listPanel,
 						columns : 2,
-						loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek.biz.ext.biz.ext',
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandPlanWeek2.biz.ext.biz.ext',
 						saveUrl : 'com.keensen.ump.produce.component.neworder.addPlanWeekDays.biz.ext',
 						fields : [{
 									xtype : 'datefield',

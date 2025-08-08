@@ -588,7 +588,7 @@
     
     
     <select id="querySpec" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >    
-  SELECT T.MATER_SPEC_ID "materSpecId",
+  SELECT T.MATER_SPEC_ID "materSpecId",t.order_spec_name "orderSpecName",
        nvl(p.prod_spec_name,T.MATER_SPEC_NAME) "materSpecName",
        t.dense_net_type "denseNet",
        DECODE(T.LID, '/', '', NULL, '', T.LID) "lid",
@@ -614,7 +614,8 @@
 		       t.MATER_SPEC_ID = #materSpecId# 
 	</isNotNull>
 	<isNotNull prepend="and" property="materSpecName"> 
-		       nvl(p.prod_spec_name,T.MATER_SPEC_NAME) like '%' || #materSpecName# || '%'
+		       <!--nvl(p.prod_spec_name,T.MATER_SPEC_NAME) like '%' || #materSpecName# || '%'-->
+		       t.order_spec_name = #materSpecName#
 	</isNotNull>
 	
 	<isNotNull prepend="and" property="prodType"> 
@@ -633,7 +634,7 @@
 	update KS_PROD_COMPONENT_YXORDER t
 	set t.mater_spec_name = t.mater_spec_name2,
 	t.mater_spec_id = (select distinct mater_spec_id from qinsen.para_mater_spec 
-	where mater_spec_name = t.mater_spec_name2)
+	where mater_spec_name = t.mater_spec_name2 and state='Y')
 	where t.id = #id#
 	and t.type = '家用膜'
 	

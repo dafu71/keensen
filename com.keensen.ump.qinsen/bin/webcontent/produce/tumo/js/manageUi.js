@@ -23,6 +23,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		this.initEditC92Window();
 
+		this.initWindowChooseWaterBatchNo();
+
+		this.initWindow4TroughLiquid();
+
+		this.initAddTroughLiquidWindow();
+
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
 					batchNoControl : true,
@@ -311,12 +317,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								scope : this,
 								iconCls : 'icon-application_delete',
 								handler : this.onDel
-							}, '->', '-', {
-								text : '录入发货不良',
-								scope : this,
-								iconCls : 'icon-application_add',
-								handler : this.onaddFhDefect
-							}, '->', {
+							}, '->'/*
+									 * , '-', { text : '录入发货不良', scope : this,
+									 * iconCls : 'icon-application_add', handler :
+									 * this.onaddFhDefect }
+									 */, '->', {
 								text : '录入铸膜不良',
 								scope : this,
 								iconCls : 'icon-application_add',
@@ -347,8 +352,14 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								text : 'C92测试',
 								scope : this,
 								iconCls : 'icon-application_edit',
-								//hidden : uid != 'XXB',
+								// hidden : uid != 'XXB',
 								handler : this.onTestC92
+							}, '->', '-', {
+								text : '漂洗液录入',
+								scope : this,
+								iconCls : 'icon-application_edit',
+								// hidden : uid != 'XXB',
+								handler : this.onTroughLiquid
 							}]
 				});
 
@@ -502,6 +513,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : '水相液批号',
 						width : 100,
 						dataIndex : 'waterBatchNo'
+					}, {
+						header : '水相补充液批次',
+						width : 100,
+						dataIndex : 'waterBatchNo2'
 					}, {
 						header : '更换漂洗槽',
 						width : 100,
@@ -936,6 +951,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}, {
 									name : 'waterBatchNo'
 								}, {
+									name : 'waterBatchNo2'
+								}, {
 									name : 'thickAvgFlag'
 								}, {
 									name : 'thickMinFlag'
@@ -1358,11 +1375,25 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									listeners : {
 										scope : this,
 										'expand' : function(A) {
-											this.inputWindow.ifPinhole
-													.reset();
+											this.inputWindow.ifPinhole.reset();
 										}
 
 									}
+								}, {
+									xtype : 'trigger',
+									emptyText : '单击旁边选择',
+									editable : true,
+									hideTrigger : false,
+									scope : this,
+									onTriggerClick : function() {
+										_this.onWaterBatchNo2();
+									},
+									ref : '../../waterBatchNo2',
+									name : 'entity/waterBatchNo2',
+									fieldLabel : '水相补充液批次',
+									// allowBlank : false,
+									anchor : '75%',
+									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									height : '5',
@@ -1796,11 +1827,26 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									listeners : {
 										scope : this,
 										'expand' : function(A) {
-											this.inputWindow.ifPinhole
-													.reset();
+											this.inputWindow.ifPinhole.reset();
 										}
 
 									}
+								}, {
+									xtype : 'trigger',
+									emptyText : '单击旁边选择',
+									editable : true,
+									hideTrigger : false,
+									scope : this,
+									onTriggerClick : function() {
+										_this.onWaterBatchNo2();
+									},
+									ref : '../../waterBatchNo2',
+									dataIndex : 'waterBatchNo2',
+									name : 'entity/waterBatchNo2',
+									fieldLabel : '水相补充液批次',
+									// allowBlank : false,
+									anchor : '75%',
+									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									height : '5',
@@ -1822,7 +1868,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									xtype : 'textarea',
 									fieldLabel : '备注',
 									colspan : 2,
-									height: 40,
+									height : 40,
 									anchor : '85%',
 									allowBlank : true
 								}, {
@@ -1836,7 +1882,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									xtype : 'textarea',
 									fieldLabel : '入库意见',
 									anchor : '85%',
-									height: 40,
+									height : 40,
 									colspan : 2,
 									allowBlank : true
 								}, {
@@ -3135,5 +3181,528 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						}]
 			}]
 		});
+	}
+
+	this.initWindowChooseWaterBatchNo = function() {
+		var _this = this;
+
+		var selModelChooseWaterBatchNo = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanelChooseWaterBatchNo = this.listPanelChooseWaterBatchNo
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					selModel : selModelChooseWaterBatchNo,
+					tbar : [{
+								text : '确定选择',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onSelectWaterBatchNo2
+							}],
+					delUrl : '111.biz.ext',
+					columns : [new Ext.grid.RowNumberer({
+										width : 30
+									}), selModelChooseWaterBatchNo, {
+								dataIndex : 'createTime',
+								header : '日期'
+							}, {
+								dataIndex : 'watertype',
+								header : '水相类型'
+							}, {
+								dataIndex : 'line',
+								header : '线别'
+							}, {
+								dataIndex : 'mptype',
+								header : '膜片型号'
+							}, {
+								dataIndex : 'batchNo',
+								header : '水相液批号',
+								renderer : function(v, m, r, i) {
+									var watertype = r.get('watertype');
+									var relationBatchNo = r
+											.get('relationBatchNo');
+									if (watertype == '水相循环液') {
+										return relationBatchNo;
+									} else {
+										return v;
+									}
+								}
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.mpwatertest.queryWaterRecords.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+							'condition/state' : 1,
+							'condition/watertype' : '水相补充液'
+						},
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'createUserId'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'updateTime'
+								}, {
+									name : 'updateUserId'
+								}, {
+									name : 'updateName'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'reserve2'
+								}, {
+									name : 'reserve3'
+								}, {
+									name : 'reserve4'
+								}, {
+									name : 'reserve5'
+								}, {
+									name : 'orgId'
+								}, {
+									name : 'status'
+								}, {
+									name : 'line'
+								}, {
+									name : 'mptype'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'state'
+								}, {
+									name : 'step'
+								}, {
+									name : 'stateName'
+								}, {
+									name : 'stepName'
+								}, {
+									name : 'watertype'
+								}, {
+									name : 'relationBatchNo'
+								}]
+					})
+				})
+
+		this.queryPanelChooseWaterBatchNo = this.queryPanelChooseWaterBatchNo
+				|| new Ext.fn.QueryPanel({
+							height : 80,
+							columns : 3,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/batchNo2',
+										ref : '../batchNo2',
+										// anchor : '85%',
+										fieldLabel : '水相补充液批号'
+									}, {
+										xtype : 'hidden',
+										ref : '../mptype',
+										name : 'condition/mptype'
+									}, {
+										xtype : 'hidden',
+										ref : '../line',
+										name : 'condition/line'
+									}, {
+										xtype : 'hidden',
+										ref : '../line',
+										name : 'condition/watertype',
+										value : '水相补充液'
+									}]
+						})
+
+		this.queryPanelChooseWaterBatchNo.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.queryPanelChooseWaterBatchNo.batchNo2.setValue('');
+						this.windowChooseWaterBatchNo.hide();
+					}
+
+				});
+
+		this.windowChooseWaterBatchNo = this.windowChooseWaterBatchNo
+				|| new Ext.Window({
+							title : '水相补充液查询',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 900,
+							height : 600,
+							layout : 'border',
+							items : [this.queryPanelChooseWaterBatchNo,
+									this.listPanelChooseWaterBatchNo]
+
+						})
+	}
+
+	this.initWindow4TroughLiquid = function() {
+		var _this = this;
+
+		var selModel4TroughLiquid = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.listPanel4TroughLiquid = this.listPanel4TroughLiquid
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					cls : 'custom-row-height', // 应用自定义的CSS类
+					viewConfig : {
+						forceFit : false
+					},
+					tbar : [{
+								text : '新增',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onAddTroughLiquid
+							}, '-', {
+								text : '删除',
+								scope : this,
+								iconCls : 'icon-application_delete',
+								handler : this.onDelTroughLiquid
+							}],
+					hsPage : false,
+					delUrl : 'com.keensen.ump.qinsen.tumo.deleteTroughLiquid.biz.ext',
+					autoScroll : true,
+					selModel : selModel4TroughLiquid,
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4TroughLiquid, {
+								dataIndex : 'batchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'a21',
+								header : 'a21'
+							}, {
+								dataIndex : 'c22',
+								header : 'c22'
+							}, {
+								dataIndex : 'c24',
+								header : 'c24'
+							}, {
+								dataIndex : 'c51',
+								header : 'c51'
+							}, {
+								dataIndex : 'c71',
+								header : 'c71'
+							}, {
+								dataIndex : 'c72',
+								header : 'c72'
+							}, {
+								dataIndex : 'c92',
+								header : 'c92'
+							}, {
+								dataIndex : 'c93',
+								header : 'c93'
+							}, {
+								dataIndex : 'trough',
+								header : '漂洗槽'
+							}, {
+								dataIndex : 'operatorName',
+								header : '下单人'
+							}, {
+								dataIndex : 'createTime',
+								header : '操作时间'
+							}
+
+					],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.qaueryTroughLiquid.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'batchId'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'id'
+								}, {
+									name : 'a21'
+								}, {
+									name : 'c22'
+								}, {
+									name : 'c24'
+								}, {
+									name : 'c51'
+								}, {
+									name : 'c71'
+								}, {
+									name : 'c72'
+								}, {
+									name : 'c92'
+								}, {
+									name : 'c93'
+								}, {
+									name : 'trough'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'operatorName'
+								}]
+					})
+				})
+
+		this.window4TroughLiquid = this.window4TroughLiquid || new Ext.Window({
+					title : '漂洗液记录',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4TroughLiquid],
+					buttons : [{
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.window4TroughLiquid.hide();
+								}
+							}]
+
+				});
+
+	}
+
+	this.initAddTroughLiquidWindow = function() {
+
+		this.addTroughLiquidWindow = this.addTroughLiquidWindow
+				|| new Ext.fn.FormWindow({
+					title : '新增漂洗液',
+					height : 600,
+					width : 800,
+					// itemCls:'required',
+					// style:'margin-top:10px',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
+						xtype : 'inputpanel',
+						pgrid : this.listPanel4TroughLiquid,
+						columns : 1,
+						saveUrl : 'com.keensen.ump.qinsen.tumo.saveTroughLiquid.biz.ext',
+						fields : [{
+									xtype : 'textfield',
+									fieldLabel : '膜片批次',
+									anchor : '95%',
+									allowBlank : false,
+									ref : '../../batchNo'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '漂洗槽',
+									anchor : '95%',
+									name : 'entity/trough',
+									allowBlank : false,
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									value : 0,
+									fieldLabel : 'A21',
+									anchor : '95%',
+									name : 'entity/a21',
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									allowDecimals : true,
+									minValue : 0,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									value : '0',
+									fieldLabel : 'C22',
+									anchor : '95%',
+									name : 'entity/c22',
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									allowDecimals : true,
+									minValue : 0,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									value : '0',
+									fieldLabel : 'C24',
+									anchor : '95%',
+									name : 'entity/c24',
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									allowDecimals : true,
+									minValue : 0,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									value : '0',
+									fieldLabel : 'C51',
+									anchor : '95%',
+									name : 'entity/c51',
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									allowDecimals : true,
+									minValue : 0,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									value : '0',
+									fieldLabel : 'C71',
+									anchor : '95%',
+									name : 'entity/c71',
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									allowDecimals : true,
+									minValue : 0,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									value : '0',
+									fieldLabel : 'C72',
+									anchor : '95%',
+									name : 'entity/c72',
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									allowDecimals : true,
+									minValue : 0,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									value : '0',
+									fieldLabel : 'C92',
+									anchor : '95%',
+									name : 'entity/c92',
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									allowDecimals : true,
+									minValue : 0,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									value  : '0',
+									fieldLabel : 'C93',
+									anchor : '95%',
+									name : 'entity/c93',
+									allowBlank : false,
+									scope : this,
+									allowNegative : false,
+									allowDecimals : true,
+									minValue : 0,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '下单人',
+									anchor : '95%',
+									allowBlank : false,
+									value : uname,
+									name : 'entity/operatorName'
+								}, {
+									xtype : 'hidden',
+									ref : '../../batchId',
+									name : 'entity/batchId'
+								}]
+					}]
+				});
+
 	}
 }

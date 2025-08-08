@@ -156,6 +156,10 @@
       <process:from type="query" pattern="reference">maters[1]/PAGE_WIDTH</process:from>
       <process:to type="query">data/pageWidth</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">maters[1]/MP_WIDTH</process:from>
+      <process:to type="query">data/mpWidth</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="414" y="291"/>

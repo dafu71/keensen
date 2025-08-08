@@ -265,7 +265,21 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						header : '聚砜浓度'
 					}, {
 						dataIndex : 'cps',
+						width : 120,
 						header : '铸膜液粘度'
+					}, {
+						dataIndex : 'cpsResult',
+						header : '粘度判定结果',
+						renderer : function(value, metaData, rec, rowIndex,
+								colIndex, store, view) {
+							var cps = rec.data.cps;
+							if(Ext.isEmpty(cps)) return '';
+							if (value == 0) {
+								return '<font color="red">不合格,通知班长</font>';
+							} else {
+								return '合格,生产使用';
+							}
+						}
 					}, {
 						dataIndex : 'fixStarttime',
 						header : '混料开始时间'
@@ -416,6 +430,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							name : 'totalC14'
 						}, {
 							name : 'total'
+						}, {
+							name : 'cpsResult'
 						}]
 			})
 		})

@@ -57,7 +57,7 @@
     ON T1.PROD_SPEC_ID = T2.MATER_SPEC_ID</select>
     <select id="queryMarkPrint" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
     SELECT T1.JUANMO_BATCH_ID AS "juanmoBatchId",
-       T1.PROD_BATCH_NO AS "prodBatchNo",
+       T1.PROD_BATCH_NO AS "prodBatchNo",t1.print_batch_no "printBatchNo",
        T1.PROD_SPEC_ID AS "prodSpecId",
        T1.ORDER_NO AS "orderNo",
        T1.JUANMO_BATCH_NO AS "juanmoBatchNo",
@@ -74,7 +74,7 @@
        T1.CODE AS "code"
   FROM (
         
-        SELECT T1.JUANMO_BATCH_ID,
+        SELECT T1.JUANMO_BATCH_ID,nvl(t1.print_batch_no,t1.batch_no) print_batch_no,
                 T1.BATCH_NO         PROD_BATCH_NO,
                 T1.PROD_SPEC_ID,
                 T4.ORDER_NO,

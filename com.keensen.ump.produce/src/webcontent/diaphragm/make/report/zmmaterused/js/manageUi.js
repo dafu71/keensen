@@ -29,6 +29,20 @@ com.keensen.ump.produce.diaphragm.make.report.ZmMaterUsedMgr = function() {
 										'condition/productDtEnd'],
 								fieldLabel : "铸膜生产日期",
 								format : "Y-m-d"
+							},{
+								xtype : 'dictcombobox',
+								name : 'condition/dimoType',
+								anchor : '90%',
+								fieldLabel : '底膜类型',
+								hiddenName : 'condition/dimoType',
+								dictData : KS_DIMO_TYPE
+							}, {
+								xtype : 'dictcombobox',
+								name : 'condition/line',
+								anchor : '90%',
+								fieldLabel : '生产线别',
+								hiddenName : 'condition/line',
+								dictData : KS_ZM_LINE
 							}]
 				});
 		this.queryPanel.addButton({

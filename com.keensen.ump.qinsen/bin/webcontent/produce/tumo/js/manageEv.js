@@ -31,6 +31,18 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 						});
 			}, this);
 
+	this.queryPanelChooseWaterBatchNo.mon(this.queryPanelChooseWaterBatchNo,
+			'query', function(form, vals) {
+				var store = this.listPanelChooseWaterBatchNo.store;
+				store.baseParams = vals;
+				store.load({
+							params : {
+								'condition/state' : 1,
+								'condition/watertype' : '水相补充液'
+							}
+						});
+			}, this);
+
 	// 更换漂洗槽提醒
 	if (replaceTroughFlag == 1) {
 		this.replaceTroughInfo();
@@ -1125,11 +1137,11 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.calcC92 = function(flag) {
 		if (parseFloat(density7) >= parseFloat(densityLow7)
 				&& parseFloat(density7) <= parseFloat(densityUp7)) {
 			this.editC92Window.result7.setValue('合格,生产使用');
-		}else{
+		} else {
 			this.editC92Window.result7.setValue('不合格,通知班长');
 		}
 	}
-	
+
 	if (flag == 8) {
 		var light8 = this.editC92Window.light8.getValue();
 		var weightBefore8 = this.editC92Window.weightBefore8.getValue();
@@ -1145,10 +1157,93 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.calcC92 = function(flag) {
 		if (parseFloat(density8) >= parseFloat(densityLow8)
 				&& parseFloat(density8) <= parseFloat(densityUp8)) {
 			this.editC92Window.result8.setValue('合格,生产使用');
-		}else{
+		} else {
 			this.editC92Window.result8.setValue('不合格,通知班长');
 		}
 	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onWaterBatchNo2 = function() {
+	var line = '';
+	var mptype = '';
+	if (!this.inputWindow.hidden) {
+		line = this.inputWindow.lineId.getRawValue();
+		mptype = this.inputWindow.specId.getRawValue();
+	} else {
+		line = this.editWindow.lineId.getRawValue();
+		mptype = this.editWindow.specId.getRawValue();
+	}
+	if (Ext.isEmpty(line)) {
+		Ext.Msg.alert("系统提示", "请选择线别!");
+		return;
+	}
+	line = line.substr(-2, 1);
+	if (Ext.isEmpty(mptype)) {
+		Ext.Msg.alert("系统提示", "请选择膜片型号!");
+		return;
+	}
+	this.queryPanelChooseWaterBatchNo.mptype.setValue(mptype);
+	this.queryPanelChooseWaterBatchNo.line.setValue(line);
+	var store = this.listPanelChooseWaterBatchNo.store;
+
+	store.baseParams = {
+		'condition/state' : 1,
+		'condition/watertype' : '水相补充液',
+		'condition/mptype' : mptype,
+		'condition/line' : line
+	};
+	store.load();
+	this.windowChooseWaterBatchNo.show();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSelectWaterBatchNo2 = function() {
+	var A = this.listPanelChooseWaterBatchNo;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var waterBatchNo = records[0].data.batchNo;
+		// this.listPanel2.store.removeAll();
+		if (!this.inputWindow.hidden) {
+			this.inputWindow.waterBatchNo2.setValue(waterBatchNo);
+		} else {
+			this.editWindow.waterBatchNo2.setValue(waterBatchNo);
+		}
+		this.windowChooseWaterBatchNo.hide();
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onTroughLiquid = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var recordId = records[0].data.recordId;
+		this.listPanel4TroughLiquid.store.baseParams = {
+			'condition/batchId' : recordId
+		}
+		this.listPanel4TroughLiquid.store.load();
+		this.window4TroughLiquid.show();
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddTroughLiquid = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定涂膜数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var recordId = records[0].data.recordId;
+		var batchNo = records[0].data.batchNo;
+		this.addTroughLiquidWindow.batchNo.setValue(batchNo);
+		this.addTroughLiquidWindow.batchId.setValue(recordId);
+		this.addTroughLiquidWindow.show();
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onDelTroughLiquid = function() {
+	this.listPanel4TroughLiquid.onDel();
 }
 
 function roundToDecimalPlace(number, decimalPlaces) {

@@ -90,7 +90,7 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
   WHERE CODE IS NOT NULL</select>
     <select id="queryList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT T1.ID                AS "id",t5.fcode "fcode",
-       T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",
+       T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",nvl(t2.print_batch_no,T1.batch_No) "printBatchNo",
        DECODE(T3.JUANMO_BATCH_ID,NULL,'干','湿') "state",
        h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
        replace(t1.tumo_batch_str,',','&lt;br&gt;') "tumoBatchStr2",

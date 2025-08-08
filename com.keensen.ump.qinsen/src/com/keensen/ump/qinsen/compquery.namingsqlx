@@ -344,7 +344,10 @@
 			AND EXISTS (SELECT dd.tumo_batch_id from QINSEN.INST_CDM_DEFECT dd
 			LEFT JOIN qinsen.para_cdm_defect pd ON dd.defect_item_id=pd.record_id
 			WHERE pd.rec_tache_id=101 AND tm.record_id=dd.tumo_batch_id)) T1
-	  LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
+	  <!--LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,-->
+	  
+	  LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * CS.MP_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
+	  
 	                    C.TUMO_BATCH_ID
 	               FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
 	              WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID

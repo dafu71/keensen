@@ -43,8 +43,15 @@
 	CEIL((TO_DATE(TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24-mi-ss'), 'yyyy-mm-dd hh24-mi-ss') -
             TO_DATE(TO_CHAR(t1.create_time, 'yyyy-mm-dd hh24-mi-ss'), 'yyyy-mm-dd hh24-mi-ss')) * 24) "diff"
 	,nvl(t1.used,nvl2(zmx.zmy_batch_no,'是','否')) "used"
-	, test.cps "cps"
+	, test.cps "cps",
+	case when test.cps>=vs.cps_low and test.cps &lt;=vs.cps_up then 1 else 0 end "cpsResult"
 	from KS_PROD_DIAPHRAGM_MAKE_FIX t1
+	
+	left join (SELECT t.psf mptype,t.polysulfone, REGEXP_SUBSTR(t.stand, '[^-]+', 1, 1) cps_low,
+	REGEXP_SUBSTR(t.stand, '[^-]+', 1, 2) cps_up
+  	from KS_QUALITY_ZMY_VISCOSITY_STAND t) vs
+  	on t1.mptype = vs.mptype and substr(t1.BATCH_NO,5,1)=vs.polysulfone
+	
 	left join EOS_DICT_ENTRY t2 on t2.dictid=t1.psf and t2.dicttypeid='KS_PSF'
     left join (select distinct t.zmy_batch_no from KS_PROD_DIAPHRAGM_ZMX_RECORD t) zmx 
     on zmx.zmy_batch_no = t1.BATCH_NO

@@ -58,6 +58,8 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 						name : 'shortPage'
 					}, {
 						name : 'pageNum'
+					}, {
+						name : 'pageNum2'
 					}]
 		})
 	}
@@ -380,9 +382,11 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 								var longPage = record.get('longPage');
 								var shortPage = record.get('shortPage');
 								var pageNum = record.get('pageNum');
+								var pageNum2 = record.get('pageNum2');
 								_this.inputWindow.longPage.setValue(longPage);
 								_this.inputWindow.shortPage.setValue(shortPage);
 								_this.inputWindow.pageNum.setValue(pageNum);
+								_this.inputWindow.pageNum2.setValue(pageNum2);
 							}
 						}
 					}
@@ -474,7 +478,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 					colspan : 2
 				}, {
 					xtype : 'textfield',
-					//allowBlank : false,
+					readOnly : true,
 					name : 'entity/pageNum',
 					ref : '../../pageNum',
 					fieldLabel : '长页页数',
@@ -482,7 +486,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 					colspan : 1
 				}, {
 					xtype : 'textfield',
-					//allowBlank : false,
+					readOnly : true,
 					name : 'entity/pageNum2',
 					ref : '../../pageNum2',
 					fieldLabel : '短页页数',
@@ -607,12 +611,15 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 										var longPage = record.get('longPage');
 										var shortPage = record.get('shortPage');
 										var pageNum = record.get('pageNum');
+										var pageNum2 = record.get('pageNum2');
 										_this.editWindow.longPage
 												.setValue(longPage);
 										_this.editWindow.shortPage
 												.setValue(shortPage);
 										_this.editWindow.pageNum
 												.setValue(pageNum);
+										_this.editWindow.pageNum2
+												.setValue(pageNum2);
 									}
 								}
 							}
@@ -710,7 +717,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'textfield',
-							//allowBlank : false,
+							readOnly : true,
 							name : 'entity/pageNum',
 							dataIndex : 'pageNum',
 							ref : '../../pageNum',
@@ -719,7 +726,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'textfield',
-							//allowBlank : false,
+							readOnly : true,
 							name : 'entity/pageNum2',
 							dataIndex : 'pageNum2',
 							ref : '../../pageNum2',

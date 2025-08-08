@@ -82,7 +82,10 @@
                
                 MSC.Juanmo ,MSC.light_Net_Type ,MSC.light_Net_Short_Page ,
                 
-               A.QUANTITY * A.BLANKING_SIZE * A.PAGE_WIDTH * decode(nvl(a.page_type,'长页'),'长页',1,0.5) OUT_LENGTH,
+               <!--A.QUANTITY * A.BLANKING_SIZE * trunc(A.PAGE_WIDTH,1) * decode(nvl(a.page_type,'长页'),'长页',1,0.5) OUT_LENGTH,-->
+                <!--膜片下料裁切页宽（膜片投料计算用）-->
+               A.QUANTITY * A.BLANKING_SIZE * A.mp_Width * decode(nvl(a.page_type,'长页'),'长页',1,0.5) OUT_LENGTH,
+               
                DECODE(A.IS_TO_MIX, 'Y', '混卷', 'N', '单卷', '') IS_TO_MIX_STR,
                TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
                QINSEN.PG_GET_INFO.GET_DEPT_NAME_BY_ID(A.TEAM_ID) TEAM_NAME,
@@ -103,7 +106,7 @@
           FROM 
          <!--家用膜--> 
           
-         (SELECT cm.*,nvl(cm.quantity - (jm.amount * pms.Num_Per_Wad),0) UNUSED_QUANTITY2 
+         (SELECT cm.*,nvl(cm.quantity - (jm.amount * pms.Num_Per_Wad),0) UNUSED_QUANTITY2,pms.mp_width 
          ,jm.cm_batch_no jm_cm_batch_no FROM QINSEN.INST_CAIDIEMO cm
 			LEFT JOIN KS_COMPONENT_HOUSEHOLD_JM jm
 			ON cm.batch_no=jm.cm_batch_no
@@ -120,7 +123,8 @@
             
             
             <!--裁叠膜增加长页、短页-->
-            LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
+            <!--LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * trunc(C.PAGE_WIDTH,1) * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,-->
+            LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * CS.mp_Width * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
                            C.TUMO_BATCH_ID
                       FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
                      WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
@@ -211,7 +215,7 @@
 
 <select id="countRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
 SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
-    SUM(A.QUANTITY * A.BLANKING_SIZE * A.PAGE_WIDTH * decode(nvl(a.page_type,'长页'),'长页',1,0.5)) as "totalLength",
+    SUM(A.QUANTITY * A.BLANKING_SIZE * trunc(A.PAGE_WIDTH,1) * decode(nvl(a.page_type,'长页'),'长页',1,0.5)) as "totalLength",
        SUM((SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
               FROM qinsen.INST_JUANMO_DETAIL JD
              WHERE JD.CDM_BATCH_ID = A.RECORD_ID)) as "totalUnusedQuantity"

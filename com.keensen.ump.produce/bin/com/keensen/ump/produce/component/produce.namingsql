@@ -63,14 +63,14 @@ and nvl(t1.status,1) != 0
         <isNotNull prepend="and" property="pipeType">T1.pipe_type = #pipeType#</isNotNull>
         <isNotNull prepend="and" property="machineCode">T1.MACHINE_CODE = #machineCode#</isNotNull>
         <isNotNull prepend="and" property="produceType">T1.PRODUCE_TYPE = #produceType#</isNotNull>
-	
-	order by t1.id desc
+        <isNotNull prepend="" property="ifprint">order by t1.id</isNotNull>
+        <isNull prepend="" property="ifprint">order by t1.id desc</isNull>
     </select>
     <select id="queryBasePipe" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 
        t1.PIPE_TYPE as "pipeType",
 t1.LONG_PAGE as "longPage",
 t1.SHORT_PAGE as "shortPage",
-t1.PAGE_NUM as "pageNum"
+t1.PAGE_NUM as "pageNum",t1.PAGE_NUM2 as "pageNum2"
   FROM KS_BASE_PIPE T1
   where 1=1	
 	order by t1.PIPE_TYPE</select>

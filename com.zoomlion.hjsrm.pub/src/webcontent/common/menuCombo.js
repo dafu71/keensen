@@ -89,7 +89,7 @@ com.keensen.ump.MenuComboBox = Ext.extend(Ext.form.ComboBox, {
 			defaultValue : '',
 			// resizable : false,
 			forceSelection : true,
-			emptyText : "--请选择--",
+			emptyText : "--查找菜单--",
 			initComponent : function() {
 				this.buildStore();
 				com.keensen.ump.MenuComboBox.superclass.initComponent

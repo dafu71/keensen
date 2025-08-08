@@ -2,6 +2,9 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 	this.initPanel = function() {
 
 		this.opt = '';
+
+		this.initStore();
+
 		this.initInputWindow();
 		this.initEditWindow();
 		this.initInputWindow2();
@@ -21,6 +24,12 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 		return this.lay;
 	}
 
+	this.initStore = function() {
+		this.mpWidthStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['1', '1'], ['0.5', '0.5']]
+				});
+	}
 	this.createTreePanel = function() {
 		this.treePanel = this.treePanel || new Ext.Panel({
 					width : 240
@@ -234,7 +243,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						header : '膜片下料裁切尺寸'
 					}, {
 						dataIndex : 'mpWidth',
-						header : '膜片下料裁切页宽'
+						header : '膜片下料裁切页宽<br>（膜片投料计算用）'
 					}, {
 						dataIndex : 'denseNetType',
 						header : '浓网下料型号'
@@ -297,7 +306,7 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 					}, {
 						dataIndex : 'denseNetWidth',
 						// hidden : true,
-						header : '浓网页宽mm'
+						header : '浓网长度mm'
 					}, {
 						dataIndex : 'denseNetAmount',
 						// hidden : true,
@@ -1190,13 +1199,27 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									colspan : 3,
 									allowBlank : true
 								}, {
-									xtype : 'textfield',
-									name : 'entity/mpWidth',
+									xtype : 'combobox',
+									forceSelection : true,
+									allowBlank : false,
+									mode : 'local',
+									fieldLabel : '膜片页宽(m)<br>(仅用于计算)',
+									ref : '../../mpWidth',
+									hiddenName : 'entity/mpWidth',
 									dataIndex : 'mpWidth',
-									fieldLabel : '膜片下料<br>页宽(m)',
 									anchor : '95%',
 									colspan : 3,
-									allowBlank : true
+									emptyText : '--请选择--',
+									editable : true,
+									store : this.mpWidthStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+
 								}, {
 									xtype : 'textfield',
 									name : 'entity/denseNetType',
@@ -1475,13 +1498,27 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									colspan : 3,
 									allowBlank : true
 								}, {
-									xtype : 'textfield',
-									name : 'entity/mpWidth',
+									xtype : 'combobox',
+									forceSelection : true,
+									allowBlank : false,
+									mode : 'local',
+									fieldLabel : '膜片页宽(m)<br>(仅用于计算)',
+									ref : '../../mpWidth',
+									hiddenName : 'entity/mpWidth',
 									dataIndex : 'mpWidth',
-									fieldLabel : '膜片下料<br>页宽(m)',
 									anchor : '95%',
 									colspan : 3,
-									allowBlank : true
+									emptyText : '--请选择--',
+									editable : true,
+									store : this.mpWidthStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+
 								}, {
 									xtype : 'textfield',
 									name : 'entity/denseNetType',

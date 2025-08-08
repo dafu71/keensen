@@ -18,14 +18,19 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 	this.initStore = function() {
 		this.psfStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['30', '30'], ['40', '40']]
+					data : [['30', '30'], ['40', '40'], ['60', '60']]
+				});
+				
+		this.polysulfoneStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D'], ['S', 'S']]
 				});
 	}
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
-					columns : 1,
+					columns : 2,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -33,7 +38,25 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 					fields : [{
 								xtype : 'combobox',
 								mode : 'local',
-								fieldLabel : '产品类型',
+								fieldLabel : '聚砜品牌',
+								ref : '../polysulfone',
+								hiddenName : 'condition/polysulfone',
+								anchor : '50%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.polysulfoneStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.polysulfone.reset()
+									}
+								}
+							},{
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '工艺代码',
 								ref : '../psf',
 								hiddenName : 'condition/psf',
 								anchor : '50%',
@@ -84,11 +107,17 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.quality2.deleteZmyViscosityStand.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
+						dataIndex : 'polysulfone',
+						header : '聚砜品牌'
+					}, {
 						dataIndex : 'psf',
-						header : '产品类型'
+						header : '工艺代码'
 					}, {
 						dataIndex : 'stand',
 						header : '粘度标准范围'
+					}, {
+						dataIndex : 'density',
+						header : '聚砜浓度(%)'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.quality2.queryZmyViscosityStand.biz.ext',
@@ -104,6 +133,10 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 							name : 'psf'
 						}, {
 							name : 'stand'
+						}, {
+							name : 'polysulfone'
+						}, {
+							name : 'density'
 						}]
 			})
 		})
@@ -127,7 +160,30 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 				fields : [{
 							xtype : 'combobox',
 							mode : 'local',
-							fieldLabel : '产品类型',
+							fieldLabel : '聚砜品牌',
+							ref : '../../polysulfone',
+							hiddenName : 'entity/polysulfone',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							store : this.polysulfoneStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.polysulfone.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						},{
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '工艺代码',
 							ref : '../../psf',
 							hiddenName : 'entity/psf',
 							anchor : '95%',
@@ -141,13 +197,6 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 							listeners : {
 								"expand" : function(A) {
 									_this.inputWindow.psf.reset()
-								},
-								"select" : function(combo, record, index) {
-									var psf = combo.getValue();
-									var stand = psf == '30'
-											? '380-500'
-											: '500-600'
-									_this.inputWindow.stand.setValue(stand);
 								}
 							}
 						}, {
@@ -159,6 +208,20 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 							name : 'entity/stand',
 							ref : '../../stand',
 							fieldLabel : '粘度标准范围',
+							regex:/^\d{3}-\d{3}$/,
+							regexText : "不合法的格式",
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/density',
+							ref : '../../density',
+							fieldLabel : '聚砜浓度(%)',
 							allowBlank : false,
 							anchor : '95%',
 							colspan : 1
@@ -187,10 +250,34 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 				fields : [{
 							xtype : 'combobox',
 							mode : 'local',
-							fieldLabel : '产品类型',
+							fieldLabel : '聚砜品牌',
+							ref : '../../polysulfone',
+							dataIndex:'polysulfone',
+							hiddenName : 'entity/polysulfone',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							store : this.polysulfoneStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.polysulfone.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						},{
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '工艺代码',
 							ref : '../../psf',
 							hiddenName : 'entity/psf',
-							dataIndex : 'psf',
+							dataIndex:'psf',
 							anchor : '95%',
 							colspan : 1,
 							emptyText : '--请选择--',
@@ -201,14 +288,7 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 							valueField : "code",
 							listeners : {
 								"expand" : function(A) {
-									_this.editWindow.psf.reset()
-								},
-								"select" : function(combo, record, index) {
-									var psf = combo.getValue();
-									var stand = psf == '30'
-											? '380-500'
-											: '500-600'
-									_this.editWindow.stand.setValue(stand);
+									_this.inputWindow.psf.reset()
 								}
 							}
 						}, {
@@ -218,9 +298,24 @@ com.keensen.ump.produce.quality.zmyndstandMgr = function() {
 						}, {
 							xtype : 'textfield',
 							name : 'entity/stand',
+							dataIndex:'stand',
 							ref : '../../stand',
-							dataIndex : 'stand',
 							fieldLabel : '粘度标准范围',
+							regex:/^\d{3}-\d{3}$/,
+							regexText : "不合法的格式",
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/density',
+							dataIndex:'density',
+							ref : '../../density',
+							fieldLabel : '聚砜浓度(%)',
 							allowBlank : false,
 							anchor : '95%',
 							colspan : 1

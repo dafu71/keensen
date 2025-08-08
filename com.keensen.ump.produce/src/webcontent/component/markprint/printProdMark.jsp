@@ -387,6 +387,7 @@ function getDayCode() {
 			            barcodeElement.style.position = "absolute"; // 绝对定位
 					    barcodeElement.style.top = "<%=yBatchNo%>px";          
 					    barcodeElement.style.left = "<%=xBatchNo %>px"; 
+					    //barcodeElement.style.fontSize = "26px";
 						container.appendChild(barcodeElement);
 						
 						<% } %>
@@ -401,8 +402,8 @@ function getDayCode() {
 		            prodSpecNameElement.textContent = '<%=prodSpecName2 %>';
 		            
 		            <%
-					String fontSize = prodSpecName.length() >= 18 ? "22px"
-					: prodSpecName.length() > 9 ? "26px" : "30px";
+					String fontSize = prodSpecName2.length() >= 18 ? "22px"
+					: prodSpecName2.length() > 9 ? "26px" : "30px";
 					%>
 		            
 		            const fontSize = '<%=fontSize %>';

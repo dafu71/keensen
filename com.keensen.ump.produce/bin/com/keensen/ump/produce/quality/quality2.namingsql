@@ -82,13 +82,17 @@
        T1.ORG_ID          AS "orgId",
        T1.STATUS          AS "status",
        t1.psf as "psf",
-		t1.stand as "stand"  
+		t1.stand as "stand" ,
+		t1.polysulfone "polysulfone",
+		t1.density "density" 
   FROM  KS_QUALITY_ZMY_VISCOSITY_STAND t1
 	where 1=1
 	
 	<isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
-        <isNotNull prepend="and" property="psf">t1.psf like '%' || #psf# || '%'</isNotNull>
-	order by t1.id desc
+        <isNotNull prepend="and" property="psf">t1.psf = #psf#</isNotNull>
+        <isNotNull prepend="and" property="polysulfone">t1.polysulfone = #polysulfone#</isNotNull>
+	
+	order by t1.polysulfone,psf
 	 </select>
     <select id="queryWaterStdcond" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	

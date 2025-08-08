@@ -644,6 +644,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, '-', {
 						text : '删除',
 						scope : this,
+						disabled : allRight != '1',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}/*
@@ -2664,7 +2665,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.ynStore,
 							displayField : "name",
 							valueField : "code",

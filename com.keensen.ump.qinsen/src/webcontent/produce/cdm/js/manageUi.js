@@ -905,7 +905,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 				}, {
 					ref : '../../denseNetWidth',
 					name : 'entity/denseNetWidth',
-					fieldLabel : '浓网尺寸',
+					fieldLabel : '浓网长度mm',
 					xtype : 'textfield',
 					readOnly : true,
 					//hidden : true,

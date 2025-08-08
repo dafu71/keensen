@@ -176,7 +176,9 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	var blankingSize = this.editPlanDayPanel.blankingSize.getValue();
 	var denseNet = this.editPlanDayPanel.denseNet.getValue();
 	var area = this.editPlanDayPanel.area.getValue();
-	var pageWidth = this.editPlanDayPanel.pageWidth.getValue();
+	//var pageWidth = this.editPlanDayPanel.pageWidth.getValue();
+	
+	var pageWidth = this.editPlanDayPanel.mpWidth.getValue();
 
 	//var records = this.listPanel.getSelectionModel().getSelections();
 	//var r = records[0];
@@ -208,7 +210,7 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	this.planDayWindow.blankingSize.setValue(blankingSize);
 	this.planDayWindow.denseNet.setValue(denseNet);
 	this.planDayWindow.area.setValue(area);
-	this.planDayWindow.pageWidth.setValue(getOneDecimal(pageWidth));
+	this.planDayWindow.pageWidth.setValue(pageWidth);
 
 	this.planDayWindow.show();
 }

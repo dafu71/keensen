@@ -142,7 +142,7 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
     
     <select id="queryList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    SELECT T1.ID                AS "id",t5.fcode "fcode",
-       T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",
+       T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",nvl(t2.print_batch_no,T1.batch_No) "printBatchNo",
        DECODE(T3.JUANMO_BATCH_ID,NULL,'干','湿') "state",
        h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
        replace(t1.tumo_batch_str,',','&lt;br>') "tumoBatchStr2",

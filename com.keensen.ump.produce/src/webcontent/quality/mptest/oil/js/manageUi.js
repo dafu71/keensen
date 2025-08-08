@@ -582,7 +582,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 									this.inputWindow2.line.reset();
 								}
 							}
-						}, {
+						},  {
 							xtype : 'mpspeccombobox',
 							valueField : "name",
 							displayField : "name",

@@ -33,42 +33,45 @@
 <script type="text/javascript" src="base/jquery/plugins/jquery.qrcode.js"></script>
     
 <style type="text/css">
-	.main_table{
-		width: 110mm;
+	.main_table {
+	width: 110mm;
 	height: 28mm;
 	text-align: center;
 	vertical-align: top;
 	margin: auto;
  	margin-top: 0mm;
 	font-size: 2px;
-/* 		border:1px solid #000000; */
-	}
-	.td_label{
-		text-align: left;
+	  		
+}
+
+.td_label {
+	text-align: left;
 	vertical-align: middle;
 	padding-left: 2mm;
 	font-size: 2px;
-	}
-	.span_label{
-		align: center;
+}
+
+.span_label {
+	align: center;
 	text-align: left;
 	vertical-align: middle;
 	font-family: Microsoft YaHei;
 	font-size: 2px;
 	font-color: #000000;
 	font-weight: bold;
-	}
-	.span_label2{
-		align: center;
+}
+
+.span_label2 {
+	align: center;
 	text-align: left;
 	vertical-align: middle;
 	font-family: Microsoft YaHei;
 	font-size: 2px;
 	font-color: #000000;
 	font-weight: bold;
-	}
-	
-	.square {
+}
+
+.square {
 	display: inline-block;
 	border: 1px solid #000000;
 	height: 5px;
@@ -115,7 +118,7 @@ function initPage() {
 		secondPrint = j<len;
 %>		
 		htmlArr.push('<tr>');
-		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:12mm">');
+		htmlArr.push('<td style="height:27mm;vertical-align: middle;width:12mm">');
 		htmlArr.push('<div id="canvas_' + <%=i %>
 				+ '" style="margin:auto;width:61px;height:61px"></div>');
 		htmlArr.push('</td>');
@@ -126,8 +129,8 @@ function initPage() {
 				+ '</span><br/>');
 		htmlArr.push('<span class="span_label">' + '<%=list[i].get("createDate") %>'
 				+ '</span><br/>');
-		htmlArr.push('<span class="span_label">' + '<%=list[i].get("machineCode") %>'
-				+ '</span><br/>');
+		<%--htmlArr.push('<span class="span_label">' + '<%=list[i].get("machineCode") %>'
+				+ '</span><br/>');--%>
 		htmlArr.push('<span class="span_label">' + '<%=list[i].get("produceType") %>'
 				+ '</span><br/>');
 		htmlArr.push('<span class="span_label">' + '<%=list[i].get("operateUserName") %>'
@@ -135,7 +138,7 @@ function initPage() {
 		htmlArr.push('</td>');
 		
 		<% if(secondPrint){ %>
-		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:12mm">');
+		htmlArr.push('<td style="height:27mm;vertical-align: middle;width:12mm">');
 		htmlArr.push('<div id="canvas_' + <%=j %>
 				+ '" style="margin:auto;width:61px;height:61px"></div>');
 		htmlArr.push('</td>');
@@ -146,8 +149,8 @@ function initPage() {
 				+ '</span><br/>');
 		htmlArr.push('<span class="span_label">' + '<%=list[j].get("createDate") %>'
 				+ '</span><br/>');
-		htmlArr.push('<span class="span_label">' + '<%=list[j].get("machineCode") %>'
-				+ '</span><br/>');
+		<%--htmlArr.push('<span class="span_label">' + '<%=list[j].get("machineCode") %>'
+				+ '</span><br/>');--%>
 		htmlArr.push('<span class="span_label">' + '<%=list[j].get("produceType") %>'
 				+ '</span><br/>');
 		htmlArr.push('<span class="span_label">' + '<%=list[j].get("operateUserName") %>'
@@ -155,7 +158,7 @@ function initPage() {
 		htmlArr.push('</td>');
 		
 		<% }else{ %>
-		htmlArr.push('<td style="height:15mm;vertical-align: middle; width:24mm"><div id="canvas" style="margin:auto;width:61px;height:61px"></div></td><td class="td_label" style="width:24mm">&nbsp;</td>');
+		htmlArr.push('<td style="height:27mm;vertical-align: middle; width:24mm"><div id="canvas" style="margin:auto;width:61px;height:61px"></div></td><td class="td_label" style="width:24mm">&nbsp;</td>');
 		<% } %>
 		
 		

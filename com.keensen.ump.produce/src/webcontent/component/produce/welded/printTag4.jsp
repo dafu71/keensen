@@ -87,7 +87,7 @@
 					中心管编号：<span class="span_label"><b:write property="pipeCode" /></span><br/>
 					中心管型号：<span class="span_label2"><b:write property="pipeType" /></span><br/>
 					&nbsp;&nbsp;&nbsp;生产日期：<span class="span_label"><b:write property="createDate" /></span><br/>
-					生产机台号：<span class="span_label"><b:write property="machineCode" /></span><br/>
+					<%--生产机台号：<span class="span_label"><b:write property="machineCode" /></span><br/>--%>
 					&nbsp;&nbsp;&nbsp;生产类型：<span class="span_label"><b:write property="produceType" /></span><br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作工：<span class="span_label"><b:write property="operateUserName" /></span>
 					

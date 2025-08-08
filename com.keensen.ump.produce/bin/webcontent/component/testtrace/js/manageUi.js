@@ -112,7 +112,7 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 				scope : this,
 				iconCls : 'icon-application_delete',
 				disabled : (uid != 'KS00610') && (uid != 'KS01313')
-						&& (uid != 'KS00524') && (uid != 'XXB') && (uid != 'KS00307'),
+						&& (uid != 'KS00524') && (uid != 'dafu') && (uid != 'KS00307'),
 				handler : this.onDelete
 			}],
 			delUrl : 'com.keensen.ump.produce.component.testtrace.delete.biz.ext',

@@ -92,7 +92,8 @@
        T1.R_GFD_AVG         AS "rGfdAvg",
        T1.R_SALT_REJECTION  AS "rSaltRejection",
        T1.reserve4 as "reserve4",t1.trend "trend",
-       T1.is_replace_trough as "isReplaceTrough",T1.replace_trough_id "replaceTroughId",T1.water_batch_no "waterBatchNo",
+       T1.is_replace_trough as "isReplaceTrough",T1.replace_trough_id "replaceTroughId",
+       T1.water_batch_no "waterBatchNo",T1.water_batch_no2 "waterBatchNo2",
        T1.sumOutLength "sumOutLength",
        nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) - nvl(T1.CAIMO_LOSS,0) "remainLength",
        nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength",
@@ -105,7 +106,9 @@
        t1.if_pinhole "ifPinhole", t1.remark_pinhole "remarkPinhole",
        decode(t1.if_pinhole,'Y', '是', 'N', '否', '') "ifPinholeName"
        
-  FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,A.water_batch_no,
+  FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,  
+  replace(A.water_batch_no,'单击旁边选择','') water_batch_no,
+  replace(A.water_batch_no2,'单击旁边选择','') water_batch_no2,
                A.PLAN_NO,A.if_modify_defect,A.c21_result ,
                A.DIMO_BATCH_NO,
                A.BATCH_NO,
@@ -263,7 +266,10 @@
   		    on vkrc.replace_trough_id = a.replace_trough_id 
   		    and vkrc.MATER_CLASS_CODE = PMC.MATER_CLASS_CODE 
             
-          LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
+          <!--LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,-->
+          
+          LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * Cs.mp_WIDTH * decode(nvl(c.page_type,'长页'),'长页',1,0.5)) CAIMO_LENGTH,
+          
                            C.TUMO_BATCH_ID
                       FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
                      WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
@@ -568,4 +574,48 @@
 	WHERE t.record_id = #recordId#
 	and not exists(select 1 from qinsen.inst_tumo tm where tm.batch_No = #batchNo#
 	and tm.record_id != #recordId#)</update>
+    <select id="queryTroughLiquid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select 
+    t1.ID as "id",
+	to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mi')as "createTime",
+	t1.CREATE_USER_ID as "createUserId",
+	t1.CREATE_NAME as "createName",
+	to_char(t1.UPDATE_TIME,'yyyy-MM-dd hh24:mi')as "updateTime",
+	t1.UPDATE_USER_ID as "updateUserId",
+	t1.UPDATE_NAME as "updateName",
+	t1.RESERVE1 as "reserve1",
+	t1.RESERVE2 as "reserve2",
+	t1.RESERVE3 as "reserve3",
+	t1.RESERVE4 as "reserve4",
+	t1.RESERVE5 as "reserve5",
+	t1.ORG_ID as "orgId",
+	t1.STATUS as "status",
+	t2.BATCH_NO as "batchNo",
+	t1.batch_id as "batchId",
+	t1.a21 as "a21",
+	t1.c22 as "c22",
+	t1.c24 as "c24",
+	t1.c51 as "c51",
+	t1.c71 as "c71",
+	t1.c72 as "c72",
+	t1.c92 as "c92",
+	t1.c93 as "c93",
+	t1.trough as "trough",
+	t1.operator_name as "operatorName"
+
+	from KS_DIAPHRAGM_TROUGH_LIQUID t1
+	
+	left join qinsen.inst_tumo t2
+	on t2.record_id = t1.batch_id
+    
+     where 1=1
+     <isNotNull prepend="" property="batchNo">AND t2.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="" property="batchId">AND t1.BATCH_id = #batchId#</isNotNull>
+        <isNotNull prepend="" property="batchNo2">AND t2.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="id">AND t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>     
+     
+	 ORDER BY t1.batch_id,t1.CREATE_TIME desc
+     </select>
 </sqlMap>
