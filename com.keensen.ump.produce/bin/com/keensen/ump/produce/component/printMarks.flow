@@ -11,20 +11,21 @@
         <process:parameter description="" historyStateLocation="client" isArray="false" name="prodBatchNos" primitiveType="String"/>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="code" primitiveType="String"/>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="testView" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="isStar" primitiveType="String"/>
       </process:inputParameters>
     </sourceConnections>
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link21</targetConnections>
-    <targetConnections>link17</targetConnections>
-    <targetConnections>link6</targetConnections>
-    <targetConnections>link1</targetConnections>
-    <targetConnections>link8</targetConnections>
-    <targetConnections>link10</targetConnections>
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link19</targetConnections>
     <targetConnections>link23</targetConnections>
+    <targetConnections>link19</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link6</targetConnections>
+    <targetConnections>link17</targetConnections>
+    <targetConnections>link21</targetConnections>
     <nodeLabel>end0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
@@ -57,6 +58,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">prodBatchNos</process:from>
       <process:to type="query">condition/prodBatchNos</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">condition/batchPrint</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">

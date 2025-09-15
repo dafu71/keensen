@@ -34,7 +34,10 @@
   left join (select t.relation_id,COUNT(1) cnt,SUM(t.used) used from KS_DIAPHRAGM_MAKE_PVA_LIST t
 	GROUP BY t.relation_id) t2 on t2.relation_id = t1.id
      where 1=1 and nvl(T1.STATUS,1) != 0
-     <isNotNull prepend="" property="batchNo">AND t1.BATCH_NO = #batchNo#</isNotNull>
+     
+     <isNotNull prepend="" property="tmBatchNo">AND exists ( select 1 from KS_DIAPHRAGM_MAKE_PVA_LIST lst where lst.relation_id=t1.id
+		       and lst.tm_batch_no = #tmBatchNo#)</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND t1.BATCH_NO = #batchNo#</isNotNull>
         <isNotNull prepend="" property="batchNo2">AND t1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
         <isNotNull prepend="" property="operatorName">AND t1.OPERATOR_NAME LIKE '%' || #operatorName# || '%'</isNotNull>
         <isNotNull prepend="" property="id">AND t1.ID = #id#</isNotNull>
@@ -77,8 +80,15 @@
        T1.C14           AS "c14",T1.C51           AS "c51",
        T1.RO            AS "ro",
        T1.OPERATOR_ID   AS "operatorId",
-       T1.OPERATOR_NAME AS "operatorName"
+       T1.OPERATOR_NAME AS "operatorName",t1.tm_batch_no "tmBatchNo"
+       
+       ,MC.prodname || '-' ||  SUBSTR(TRIM(T1.tm_batch_no),5,1) "mptype2"
+       ,SUBSTR(TRIM(T1.tm_batch_no),2,1) "line2"
+       
   FROM KS_DIAPHRAGM_MAKE_PVA_LIST T1
+   LEFT JOIN V_KS_BASE_MP_CODE MC
+	ON MC.prodid = SUBSTR(TRIM(T1.tm_batch_no),3,2)
+  
      where 1=1 and nvl(T1.STATUS,1) != 0
      <isNotNull prepend="" property="batchNo">AND t1.BATCH_NO = #batchNo#</isNotNull>
         <isNotNull prepend="" property="batchNo2">AND t1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
@@ -93,9 +103,34 @@
      
 	 ORDER BY t1.id desc
      </select>
-    <select id="queryPvaListBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 
+    <select id="queryPvaListBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+        <!--	SELECT 
 	(SELECT tt.batch_no from KS_DIAPHRAGM_MAKE_PVA tt WHERE tt.id=#relationId#)
 	 || (select nvl(to_number(SUBSTR(max(t.batch_no),9,10)),0)+1 from KS_DIAPHRAGM_MAKE_PVA_list t
 	WHERE t.relation_id = #relationId#) "batchNo"
-	FROM dual</select>
+	FROM dual-->
+	
+	SELECT (SELECT TT.BATCH_NO FROM KS_DIAPHRAGM_MAKE_PVA TT WHERE TT.ID = #relationId#) ||
+       (SELECT NVL(MAX(TO_NUMBER(NVL(SUBSTR(T.BATCH_NO, 9, 10), 0))), 0) + 1
+          FROM KS_DIAPHRAGM_MAKE_PVA_LIST T
+         WHERE T.RELATION_ID = #relationId#) "batchNo"
+  FROM DUAL
+	     
+	</select>
+    <select id="queryTm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		SELECT TM.RECORD_ID        "recordId",
+       TM.BATCH_NO         "tmBatchNo",
+       TM.SPEC_ID          "materSpecId",
+       TM.LINE_ID          "lineId",
+       PMS.MATER_SPEC_NAME "materSpecName",
+       L.LINE_NAME         "lineName",
+       L.LINE_CODE         "lineCode"
+  FROM QINSEN.INST_TUMO TM
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = TM.SPEC_ID
+  LEFT JOIN QINSEN.BASE_PROD_LINE L
+    ON TM.LINE_ID = L.LINE_ID
+    where 1=1
+     <isNotNull prepend="" property="tmBatchNo">AND TM.BATCH_NO = #tmBatchNo#</isNotNull>
+    </select>
 </sqlMap>

@@ -6,20 +6,22 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 		this.mptypeArr = [['BW1-1', 'BW1-1'], ['BW2-1', 'BW2-1'],
 				['BW3-1', 'BW3-1'], ['ULP1-1', 'ULP1-1'], ['ULP2-1', 'ULP2-1'],
 				['ULP3-1', 'ULP3-1'], ['NF1-R', 'NF1-R'], ['SW1-1', 'SW1-1'],
-				['NF1', 'NF1'], ['NF2', 'NF2']];
+				['NF1', 'NF1'], ['NF2', 'NF2'], ['HW1-2', 'HW1-2']];
 
-		this.mptypeMap = new Map();
-
-		this.mptypeMap.set('BW1-1', [0.245, 0.25, 0.255]);
-		this.mptypeMap.set('BW2-1', [0.245, 0.25, 0.255]);
-		this.mptypeMap.set('BW3-1', [0.245, 0.25, 0.255]);
-		this.mptypeMap.set('ULP1-1', [0.215, 0.22, 0.225]);
-		this.mptypeMap.set('ULP2-1', [0.195, 0.20, 0.205]);
-		this.mptypeMap.set('ULP3-1', [0.145, 0.15, 0.155]);
-		this.mptypeMap.set('NF1-R', [0.145, 0.15, 0.155]);
-		this.mptypeMap.set('SW1-1', [0.315, 0.32, 0.325]);
-		this.mptypeMap.set('NF1', [0.245, 0.25, 0.255]);
-		this.mptypeMap.set('NF2', [0.245, 0.25, 0.255]);
+		/*
+		 * this.mptypeMap = new Map();
+		 * 
+		 * this.mptypeMap.set('BW1-1', [0.245, 0.25, 0.255]);
+		 * this.mptypeMap.set('BW2-1', [0.245, 0.25, 0.255]);
+		 * this.mptypeMap.set('BW3-1', [0.245, 0.25, 0.255]);
+		 * this.mptypeMap.set('ULP1-1', [0.215, 0.22, 0.225]);
+		 * this.mptypeMap.set('ULP2-1', [0.195, 0.20, 0.205]);
+		 * this.mptypeMap.set('ULP3-1', [0.145, 0.15, 0.155]);
+		 * this.mptypeMap.set('NF1-R', [0.145, 0.15, 0.155]);
+		 * this.mptypeMap.set('SW1-1', [0.315, 0.32, 0.325]);
+		 * this.mptypeMap.set('NF1', [0.245, 0.25, 0.255]);
+		 * this.mptypeMap.set('NF2', [0.245, 0.25, 0.255]);
+		 */
 
 		this.initQueryPanel();
 		this.initListPanel();
@@ -29,6 +31,10 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 		this.initEditWindow3();
 		this.initViewWindow();
 		this.initInputWindow2();
+
+		this.initUpdateTmBatchNokWindow();
+
+		this.initEditWindow4();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -148,6 +154,13 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						// allowBlank : false,
 						value : new Date().add(Date.DAY, 1)
 								.format('Y-m-d 00:00')
+					}, {
+						ref : '../tmBatchNo',
+						name : 'condition/tmBatchNo',
+						anchor : '95%',
+						xtype : 'textfield',
+						fieldLabel : '涂膜批号%-%',
+						allowBlank : true
 					}]
 				});
 
@@ -225,6 +238,30 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onView
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : c41invalidtotal
+					}, '->', {
+						text : 'C41报废',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						// disabled : invalid != '1',
+						handler : this.onC41Invalid
+					}, '-', {
+						text : '修改配料',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onUpdateTmBatchNo
+					}, '-', {
+						text : '报废',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						disabled : invalid != '1',
+						handler : this.onInvalid
 					}],
 			selModel : selModel,
 			delUrl : '1.biz.ext',
@@ -235,6 +272,21 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						dataIndex : 'reserve1',
 						header : '油相类型'
 					}, {
+						dataIndex : 'tmBatchNo',
+						header : '膜片批次',
+						renderer : function(v, m, r, i) {
+							var line = r.get('line');
+							var line2 = r.get('line2');
+							var mptype = r.get('mptype');
+							var mptype2 = r.get('mptype2');
+							if (line != line2 || mptype != mptype2) {
+								return "<span style='color:red'>" + v
+										+ "</span>";
+							} else {
+								return v;
+							}
+						}
+					}, {
 						dataIndex : 'line',
 						header : '线别'
 					}, {
@@ -243,6 +295,9 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 					}, {
 						dataIndex : 'batchNo',
 						header : '物料批号'
+					}, {
+						dataIndex : 'c41Invalid',
+						header : 'C41报废(kg)'
 					}, {
 						dataIndex : 'stateName',
 						header : '状态'
@@ -253,7 +308,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.quality.mptest.queryOilRecordsByPage.biz.ext',
 				root : 'data',
-				autoLoad : true,
+				autoLoad : false,
 				totalProperty : 'totalCount',
 				baseParams : {
 
@@ -304,6 +359,16 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							name : 'step'
 						}, {
 							name : 'stepName'
+						}, {
+							name : 'tmBatchNo'
+						}, {
+							name : 'line2'
+						}, {
+							name : 'mptype2'
+						}, {
+							name : 'c41Invalid'
+						}, {
+							name : 'totalC41Invalid'
 						}]
 			})
 		})
@@ -339,6 +404,23 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							xtype : 'textfield',
 							fieldLabel : '回流液批号',
 							readOnly : true
+						}, {
+							xtype : 'trigger',
+							name : 'entity/tmBatchNo',
+							emptyText : '单击旁边按钮验证',
+							dataIndex : 'tmBatchNo',
+							ref : '../../tmBatchNo',
+							regex : /^[A-Z][A-Z0-9]{12}$/,
+							allowBlank : false,
+							editable : true,
+							fieldLabel : '膜片批次',
+							anchor : '95%',
+							colspan : 1,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onTmBatchNo();
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -560,6 +642,23 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							fieldLabel : '回流液批号',
 							readOnly : true
 						}, {
+							xtype : 'trigger',
+							name : 'entity/tmBatchNo',
+							emptyText : '单击旁边按钮验证',
+							dataIndex : 'tmBatchNo',
+							ref : '../../tmBatchNo',
+							regex : /^[A-Z][A-Z0-9]{12}$/,
+							allowBlank : false,
+							editable : true,
+							fieldLabel : '膜片批次',
+							anchor : '95%',
+							colspan : 1,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onTmBatchNo();
+							}
+						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
@@ -582,7 +681,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 									this.inputWindow2.line.reset();
 								}
 							}
-						},  {
+						}, {
 							xtype : 'mpspeccombobox',
 							valueField : "name",
 							displayField : "name",
@@ -1004,6 +1103,14 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							ref : '../../c42Plan2',
 							name : 'list/c42Plan2',
 							dataIndex : 'c42Reality2'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'c42Low',
+							ref : '../../c42Low'
+						}, {
+							xtype : 'hidden',
+							ref : '../../c42Up',
+							dataIndex : 'c42Up'
 						}]
 			}]
 		});
@@ -1567,5 +1674,93 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 
 				});
 
+	}
+
+	this.initUpdateTmBatchNokWindow = function() {
+		var _this = this;
+		this.updateTmBatchNokWindow = this.updateTmBatchNokWindow
+				|| new Ext.fn.FormWindow({
+					title : '修改配料',
+					height : 320,
+					width : 480,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+							_this.updateTmBatchNokWindow.items.items[0].form
+									.reset();
+							_this.updateTmBatchNokWindow.hide();
+							_this.listPanel.refresh();
+						},
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.quality.mptest.expandMpTestOilHead.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.quality.mptest.updateOilHead2TmBatchNo.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/tmBatchNo',
+									dataIndex : 'tmBatchNo',
+									regex : /^[A-Z][A-Z0-9]{12}$/,
+									fieldLabel : '膜片批次',
+									ref : '../../tmBatchNo',
+									allowBlank : false,
+									anchor : '100%',
+									colspan : 2
+
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
+								}]
+					}]
+				});
+	}
+
+	this.initEditWindow4 = function() {
+		var _this = this;
+		this.editWindow4 = this.editWindow4 || new Ext.fn.FormWindow({
+			title : 'C41报废',
+			height : 480,
+			width : 600,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 1,
+				loadUrl : 'com.keensen.ump.produce.quality.mptest.expandMpTestOilHead.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.mpoiltest.saveOilTestC41Invalid.biz.ext',
+				fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									decimalPrecision : 4,
+									minValue : 0,
+									ref : '../../c41Invalid',
+									name : 'entity/c41Invalid',
+									dataIndex : 'c41Invalid',
+									allowBlank : false,
+									fieldLabel : 'C41报废(kg)',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../pkid',
+									name : 'entity/id',
+									dataIndex : 'id'
+								}]
+			}]
+		});
 	}
 }

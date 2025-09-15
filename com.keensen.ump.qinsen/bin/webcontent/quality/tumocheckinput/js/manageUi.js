@@ -312,7 +312,7 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 	}
 
 	this.initStdGrid = function() {
-	
+
 		this.stdGrid = new Ext.fn.ListPanel({
 			title : '【膜片质检标准列表】',
 			height : '420',

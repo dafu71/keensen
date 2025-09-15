@@ -7,6 +7,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 		this.initEditWindow();
 		this.initEditWindow2();
 		this.initEditWindow3();
+		
+		this.initEditWindow4C11Invalid();
+		
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -225,6 +228,19 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						xtype : 'displayfield',
 						value : '',
 						id : 'fixtotal'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'c11invalidtotal'
+					}, '->', {
+						text : 'C11报废',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						//hidden : modifyFlag != 1,
+						handler : this.onC11Invalid
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.make.deleteFixEntity.biz.ext',
@@ -261,6 +277,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						dataIndex : 'c14',
 						header : 'C14重量(kg)'
 					}, {
+						dataIndex : 'c11Invalid',
+						header : 'C11报废(kg)'
+					}, {
 						dataIndex : 'concentration',
 						header : '聚砜浓度'
 					}, {
@@ -273,7 +292,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						renderer : function(value, metaData, rec, rowIndex,
 								colIndex, store, view) {
 							var cps = rec.data.cps;
-							if(Ext.isEmpty(cps)) return '';
+							if (Ext.isEmpty(cps))
+								return '';
 							if (value == 0) {
 								return '<font color="red">不合格,通知班长</font>';
 							} else {
@@ -432,6 +452,10 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							name : 'total'
 						}, {
 							name : 'cpsResult'
+						}, {
+							name : 'c11Invalid'
+						}, {
+							name : 'totalC11Invalid'
 						}]
 			})
 		})
@@ -1284,5 +1308,47 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						}]
 			}]
 		});
+	}
+
+	this.initEditWindow4C11Invalid = function() {
+
+		this.editWindow4C11Invalid = this.editWindow4C11Invalid
+				|| new Ext.fn.FormWindow({
+					title : 'C11报废',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : 'com.keensen.ump.produce.diaphragm.make.make.expandFixEntity.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.saveEntity.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									decimalPrecision : 4,
+									minValue : 0,
+									ref : '../../c11Invalid',
+									name : 'entity/c11Invalid',
+									dataIndex : 'c11Invalid',
+									allowBlank : false,
+									fieldLabel : 'C11报废(kg)',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../pkid',
+									name : 'entity/id',
+									dataIndex : 'id'
+								}]
+					}]
+				});
 	}
 }

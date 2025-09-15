@@ -1,5 +1,8 @@
 com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 	this.initPanel = function() {
+		
+		this.rec = {};
+		
 		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
@@ -128,13 +131,17 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 										this.reset()
 									}
 								}
+							},{
+								xtype : 'textfield',
+								name : 'condition/tmBatchNo',
+								fieldLabel : '涂膜批号'
 							}]
 				});
 		this.queryPanel.addButton({
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,					
+					hidden : true,
 					handler : this.exportExcel
 				});
 
@@ -749,6 +756,22 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							fieldLabel : '稀释料液批号',
 							readOnly : true
 						}, {
+							xtype : 'trigger',
+							name : 'entity/tmBatchNo',
+							emptyText : '单击旁边按钮验证',
+							dataIndex : 'tmBatchNo',
+							ref : '../../tmBatchNo',
+							allowBlank : false,
+							editable : true,
+							fieldLabel : '膜片批次',
+							anchor : '95%',
+							colspan : 1,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onTmBatchNo();
+							}
+						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 2
@@ -938,12 +961,15 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					singleSelect : false
 				});
 
-		this.listPanel4Dilute = this.listPanel4Dilute || new Ext.fn.ListPanel({
+		this.listPanel4Dilute = this.listPanel4Dilute || new Ext.fn.EditListPanel({
+			
+			clicksToEdit : 1,
+			cls : 'custom-row-height', // 应用自定义的CSS类
 			region : 'center',
 			viewConfig : {
 				forceFit : true
 			},
-			delUrl : 'com.keensen.ump.produce.diaphragm.make.pva.deletePvaList.biz.ext',
+			delUrl : 'com.keensen.ump.produce.diaphragm.make.pva.deletePvaLists.biz.ext',
 
 			tbar : [{
 						text : '删除',
@@ -959,6 +985,41 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						dataIndex : 'batchNo',
 						header : '料液批号'
 					}, {
+						dataIndex : 'tmBatchNo',
+						width:150,
+						header : '膜片批次',
+						css : 'background:#c7c7a7;',
+						renderer : function(v, m, r, i) {
+							var line = r.get('line');
+							var line2 = r.get('line2');
+							var mptype = r.get('mptype');
+							var mptype2 = r.get('mptype2');
+							if (line != line2 || mptype != mptype2) {
+								return "<span style='color:red'>" + v
+										+ "</span>";
+							} else {
+								return v;
+							}
+						},
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									allowBlank : false,
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.savePva(id,'tmBatchNo',
+													newValue, oldValue);
+										}
+									}
+								}))
+					}, {
 						dataIndex : 'line',
 						header : '线别'
 					}, {
@@ -972,16 +1033,100 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						header : '母液重量(KG)'
 					}, {
 						dataIndex : 'c90',
-						header : 'C90重量(g)'
+						header : 'C90重量(g)',
+						css : 'background:#c7c7c7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+								{
+									allowBlank : true,
+									allowDecimals : true,
+									
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.savePva(id,'c90',
+													newValue, oldValue);
+										}
+									}
+								}))
 					}, {
 						dataIndex : 'c14',
-						header : 'C14重量(g)'
+						header : 'C14重量(g)',
+						css : 'background:#c7c7d7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+								{
+									allowBlank : true,
+									allowDecimals : true,
+									
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.savePva(id,'c14',
+													newValue, oldValue);
+										}
+									}
+								}))
 					}, {
 						dataIndex : 'c51',
-						header : 'C51重量(g)'
+						header : 'C51重量(g)',
+						css : 'background:#c7c7e7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+								{
+									allowBlank : true,
+									allowDecimals : true,
+									
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.savePva(id,'c51',
+													newValue, oldValue);
+										}
+									}
+								}))
 					}, {
 						dataIndex : 'ro',
-						header : 'RO水重量(KG)'
+						header : 'RO水重量(KG)',
+						css : 'background:#c7c7f7;',
+						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+								{
+									allowBlank : true,
+									allowDecimals : true,
+									
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var id = _this.rec.data['id'];
+											_this.savePva(id,'ro',
+													newValue, oldValue);
+										}
+									}
+								}))
 					}, {
 						dataIndex : 'operatorName',
 						header : '配料人'
@@ -1047,6 +1192,12 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							name : 'operatorName'
 						}, {
 							name : 'c51'
+						}, {
+							name : 'tmBatchNo'
+						}, {
+							name : 'line2'
+						}, {
+							name : 'mptype2'
 						}]
 			})
 		})
@@ -1121,7 +1272,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							anchor : '95%',
 							colspan : 1,
 							emptyText : '--请选择--',
-							//allowBlank : false,
+							// allowBlank : false,
 							readOnly : true,
 							editable : false,
 							store : this.typeStore,
@@ -1145,7 +1296,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							anchor : '95%',
 							colspan : 1,
 							emptyText : '--请选择--',
-							//allowBlank : false,
+							// allowBlank : false,
 							editable : false,
 							editable : false,
 							store : this.pvaStore,
@@ -1167,7 +1318,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							ref : '../../weight',
 							// name : 'entity/weight',
 							dataIndex : 'weight',
-							//allowBlank : false,
+							// allowBlank : false,
 							readOnly : true,
 							// hidden : true,
 							fieldLabel : '总重量(KG)',
@@ -1187,7 +1338,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							// name : 'entity/c51',
 							dataIndex : 'c51',
 							decimalPrecision : 2,
-							//allowBlank : false,
+							// allowBlank : false,
 							readOnly : true,
 							// hidden : true,
 							fieldLabel : 'C51重量(g)',
@@ -1204,7 +1355,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							// name : 'entity/c23a',
 							dataIndex : 'c23a',
 							decimalPrecision : 2,
-							//allowBlank : false,
+							// allowBlank : false,
 							readOnly : true,
 							// hidden : true,
 							fieldLabel : 'C23-A重量(g)',
@@ -1216,7 +1367,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							// name : 'entity/c14',
 							dataIndex : 'c14',
 							decimalPrecision : 2,
-							//allowBlank : false,
+							// allowBlank : false,
 							readOnly : true,
 							// hidden : true,
 							fieldLabel : 'C14重量(g)',
@@ -1233,7 +1384,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							// name : 'entity/ro',
 							dataIndex : 'ro',
 							decimalPrecision : 2,
-							//allowBlank : false,
+							// allowBlank : false,
 							readOnly : true,
 							// hidden : true,
 							fieldLabel : 'RO水重量(KG)',
@@ -1245,7 +1396,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							// name : 'entity/pvaWeight',
 							dataIndex : 'pvaWeight',
 							decimalPrecision : 2,
-							//allowBlank : false,
+							// allowBlank : false,
 							readOnly : true,
 							// hidden : true,
 							fieldLabel : 'PVA重量(g)',
@@ -1262,7 +1413,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							// name : 'entity/density',
 							dataIndex : 'density',
 							decimalPrecision : 2,
-							//allowBlank : false,
+							// allowBlank : false,
 							readOnly : true,
 							// hidden : true,
 							fieldLabel : '浓度(%)',
@@ -1380,7 +1531,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						}]
 			}]
 		});
-		
+
 		this.mixWindow.addButton({
 					text : "计算",
 					scope : this,

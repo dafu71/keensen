@@ -8,7 +8,8 @@
 	       T1.REMARK        AS "remark",
 	       T1.CODE          AS "code",
 	       T2.remark        as "codeRemark",
-	       t3.spec_name "specName",t1.reserve5 "reserve5"
+	       t3.spec_name "specName",t1.reserve5 "reserve5",
+	       nvl(t1.status,1) "status"
 	  FROM KS_COMPONENT_MARK_TEMPLATE T1
 	  left join KS_COMPONENT_MARK_CODE t2
 	  on t1.code = t2.code
@@ -37,6 +38,7 @@
         <isNotNull prepend="and" property="templateName">t1.TEMPLATE_NAME like '%' || #templateName# || '%'</isNotNull>
         <isNotNull prepend="and" property="remark">t1.REMARK like '%' || #remark# || '%'</isNotNull>
         <isNotNull prepend="and" property="code">t1.code = #code#</isNotNull>
+        <isNotNull prepend="" property="status">and nvl(T1.status,1) = #status#</isNotNull>
 	
 	 ORDER BY T1.TEMPLATE_NAME 
     </select>
@@ -82,7 +84,7 @@
                 T3.MATER_SPEC_NAME  PROD_SPEC_NAME,
                 T4.TEMPLATE_NAME,
                 T5.URL,
-                T5.ID               TEMPLATE_ID,
+                T5.ID               TEMPLATE_ID,nvl(t5.status,1) status,
                 T4.DRY_WET,
                 T4.MARK,
                 T4.MATER_SPEC_NAME2,
@@ -111,8 +113,14 @@
             ON T5.TEMPLATE_NAME = T4.TEMPLATE_NAME
           left join KS_COMPONENT_YXORDER_BASE yb
           on yb.id = t4.base_id
-         <!--卷膜序号-->
-         WHERE T2.BATCH_NO = #prodBatchNo#) T1
+         where 1=1
+         
+         
+         
+         <!--卷膜序号--><isNotNull prepend="" property="prodBatchNo">and T2.BATCH_NO = #prodBatchNo#</isNotNull>
+        <!--元件唛头序号-->
+        <isNotNull prepend="" property="printBatchNo">and nvl(T1.print_BATCH_NO,T1.BATCH_NO) = #printBatchNo#</isNotNull>
+         ) T1
     
     </select>
     <select id="queryMarkPrintList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
@@ -186,7 +194,8 @@
                 
                 T5.reserve1 ,          
                 
-                T4.DRY_WET,
+                <!--T4.DRY_WET,-->
+                decode(t6.record_id,null,'干','湿') DRY_WET,
                 T4.MARK,
                 T4.MATER_SPEC_NAME2,
                 T6.RECORD_ID        WATER_BATCH_ID,
@@ -224,7 +233,10 @@
           
             where 1=1
             and T1.BATCH_NO is not null
-            <isNotNull prepend="and" property="prodBatchNo">T1.BATCH_NO = #prodBatchNo#</isNotNull>
+            
+             <isNotNull prepend="and" property="jmbatchNoStr">T2.BATCH_NO in($jmbatchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr2">T1.BATCH_NO in($batchNoStr2$)</isNotNull>
+        <isNotNull prepend="and" property="prodBatchNo">T1.BATCH_NO = #prodBatchNo#</isNotNull>
         <isNotNull prepend="and" property="prodBatchNos">T1.BATCH_NO in ($prodBatchNos$)</isNotNull>
         <isNotNull prepend="and" property="orderNo">T4.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="and" property="prodSpecName2">T4.MATER_SPEC_NAME2 like '%' || #prodSpecName2# || '%'</isNotNull>
@@ -237,8 +249,9 @@
         <isNotNull prepend="" property="ifPrint">AND case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
        			then 'Y' else 'N' end  =  #ifPrint#</isNotNull>
         <isNotNull prepend="" property="printCnt">AND nvl(T1.PRINT_CNT,0) = #printCnt#</isNotNull>
- ORDER BY T1.JUANMO_BATCH_ID DESC
- </select>
+        <isNull prepend="" property="batchPrint">ORDER BY T1.JUANMO_BATCH_ID DESC</isNull>
+        <isNotNull prepend="" property="batchPrint">ORDER BY T1.PROD_BATCH_NO</isNotNull>
+    </select>
     <!-- 查询是否有唯一图例名称冲突记录 -->
     <select id="queryDuplicateRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	SELECT 1
@@ -504,4 +517,12 @@
           FROM KS_COMPONENT_MARK_TEMPLATE
          WHERE KS_COMPONENT_MARK_TEMPLATE.template_name = #sourceTemplateName#)
    and KS_COMPONENT_MARK_TEMPLATE.template_name=#templateName#</update>
+    <update id="saveBatchStatus" parameterClass="java.util.HashMap">update KS_COMPONENT_MARK_TEMPLATE t
+    	set t.status = decode(nvl(t.status,'1'),'1','0','1'),
+    	t.update_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
+    <update id="saveBatchLabelStatus" parameterClass="java.util.HashMap">update KS_BASE_LABEL_DRAWING t
+    	set t.status = decode(nvl(t.status,'1'),'1','0','1'),
+    	t.update_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
 </sqlMap>

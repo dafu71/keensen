@@ -137,7 +137,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr5 = function() {
 		// 删除、其他、公司标准、旋熔。同时要改成必选项，不选不能下单 2025-07-30 罗
 		this.lidStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'],['格栅', '格栅'], ['梳齿五星蜂窝', '梳齿五星蜂窝'], ['定制', '定制']]
+					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'], ['格栅', '格栅'],
+							['梳齿五星蜂窝', '梳齿五星蜂窝'], ['定制', '定制']]
 				});
 
 		// 卷膜胶带选项：印刷双层、印刷三层、网纹 蓝胶带 绿胶带 白胶带 黄胶带 灰胶带
@@ -2142,10 +2143,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr5 = function() {
 									}
 								}
 							}, {
-								//fieldLabel : '不显示需生产<br>或入库为零',
-								boxLabel :'不显示需生产或入库为零',
+								// fieldLabel : '不显示需生产<br>或入库为零',
+								boxLabel : '不显示需生产或入库为零',
 								xtype : 'checkbox',
-								//checked : true,
+								// checked : true,
 								name : 'condition/isNotZero',
 								inputValue : 'Y',
 								anchor : '100%'
@@ -2356,7 +2357,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr5 = function() {
 						sortable : true
 					}, {
 						dataIndex : 'recordTime',
-						width:120,
+						width : 120,
 						header : '订单状态变更时间',
 						sortable : true
 					}, {
@@ -6318,8 +6319,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr5 = function() {
 						autoLoad : false,
 						totalProperty : 'totalCount',
 						baseParams : {
-
-					}	,
+							'condition/status' : 1
+						},
 						fields : [{
 									name : 'drawingCode'
 								}, {
@@ -6410,6 +6411,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr5 = function() {
 										name : 'condition/drawingCode',
 										anchor : '100%',
 										colspan : 1
+									}, {
+										xtype : 'hidden',
+										ref : '../status',
+										name : 'condition/status',
+										value : 1
 									}]
 						})
 

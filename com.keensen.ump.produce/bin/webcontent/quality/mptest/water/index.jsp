@@ -15,6 +15,9 @@
     String fxy = "0";//分析员
     String ply = "0";//配料员
     String invalid = "0";//报废权限
+    
+    String specialQuery = "0";//特殊查看权限
+    
     if(roleId.toString().indexOf("10001322")!=-1 || uid.equals("sysadmin")){
 		gyy="1";
   	}
@@ -31,6 +34,11 @@
   	//30367
   	if(roleId.toString().indexOf("30367")!=-1 || uid.equals("sysadmin")){
 		gymanage="1";
+  	}
+  	//'唐学军','焦明凤','方岳珍','周禹臣',
+	//'刘章豪','骆兵','QISAREN','余普韧','龙昊宇','陶乃银','唐强','曾浩浩','龙竞'
+  	if(("'dafu','KS00296','KS00322','KS00483','KS00017','KS00273','KS01054','KS01213','KS01372','KS01397','KS01443','KS01442','KS01406'").indexOf(uid) != -1){
+  		specialQuery = "1";
   	}
 %>
 <html>
@@ -70,6 +78,9 @@
   var fxy = "<%=fxy %>";
   var ply = "<%=ply %>";
   var invalid = "<%=invalid %>";
+  
+   var specialQuery = "<%=specialQuery %>";
+   
   
   var gymanage = "<%=gymanage %>";
   

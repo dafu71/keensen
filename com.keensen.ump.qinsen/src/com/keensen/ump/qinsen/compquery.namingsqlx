@@ -301,15 +301,18 @@
 	       T1.OUT_LENGTH,
 	       T2.CAIMO_LENGTH,
 	       T3.CAIMO_LOSS,
-	       	       
+	       
+	       <!--已裁完的，需要减去发货后，客户已用长度-->
+      	       	       
 	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) "remainLength"
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)  "remainLength"
 	  
 	       <!--1.已裁完选择“是”
 				2.膜片不良记录有裁叠膜录入不良记录-->
-	  FROM (SELECT * from QINSEN.INST_TUMO tm
-			WHERE tm.is_cut_over='Y'
-			
+	  FROM (SELECT tm.*, used.amount used_amount from QINSEN.INST_TUMO tm
+	  		LEFT JOIN V_KS_DIAPHRAGM_AMOUNT_USED USED
+          	ON USED.BATCH_NO = tm.BATCH_NO	  
+			WHERE tm.is_cut_over='Y'			
 			 <isNotNull prepend = ""  property = "produceDtStart">
 			 and to_char(tm.produce_dt,'yyyy-MM-dd HH24:mi') >= #produceDtStart#
 			 </isNotNull>
@@ -363,10 +366,10 @@
 	    <isEqual prepend = ""  property = "flag" compareValue="1">
 		   AND (
          (   
-             NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) &lt;= -10
+             NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) -nvl(t1.USED_AMOUNT,0) &lt;= -10
           ) 
           OR 
-         (  NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) >= 10 
+         (  NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) -nvl(t1.USED_AMOUNT,0) >= 10 
          )
        )
 	       
@@ -374,11 +377,11 @@
 		
 		<isEqual prepend = ""  property = "flag" compareValue="2">
 		   AND (
-		 		NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)>= 50
+		 		NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) >= 50
 	       		 
 	       		or
 	       		 
-	       	  	NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)&lt;= -50
+	       	  	NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) &lt;= -50
 	       		 
 			)
 	       
@@ -386,11 +389,11 @@
 		
 		<isEqual prepend = ""  property = "flag" compareValue="3">
 		    AND (
-		 		NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)>= 100
+		 		NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) >= 100
 	       		 
 	       		or
 	       		 
-	       	  	NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)&lt;= -100
+	       	  	NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) &lt;= -100
 	       		 
 			)
 	       
@@ -404,32 +407,32 @@
 	    
 	    <isEqual prepend = ""  property = "condition" compareValue="1">
 		  AND ((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0))>= 50
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) ) >= 50
 	       or 
 	       (NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0))&lt;= -50
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) )&lt;= -50
 	       )
 	       
 		</isEqual>
 		
 		 <isEqual prepend = ""  property = "condition" compareValue="2">
 		  AND (((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0))>= 3 
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) )>= 3 
 	      and 
 	       (NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0))&lt;= 50)
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0))&lt;= 50)
 	       or 
 	       ((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0))>= -50
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) )>= -50
 	       and 
 	       (NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0))&lt;= -3))
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) )&lt;= -3))
 	       
 		</isEqual>
 		
 		
 	    order by produce_dt desc, NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) desc
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) desc
 	    
 
 </select> 

@@ -28,6 +28,7 @@
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
 
+<js:load scriptPath="pub/common/datetimeRegion.js"/>
 <js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="produce/component/workorder/packduty/js/manageUi.js"/>
 <js:load scriptPath="produce/component/workorder/packduty/js/manageEv.js"/>

@@ -35,7 +35,7 @@
   - Description:
 -->
 <head>
-<title>油相液浓度</title>
+<title>油相液配置与检测</title>
 
 <!-- 导出Excel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.js"></script>
@@ -63,6 +63,8 @@
   var ply = "<%=ply %>";
   var invalid = "<%=invalid %>";
   var uid = "<%=uid %>";
+  
+  var c41invalidtotal = Ext.id();
   var opt = '';
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.quality.mptest.oilMgr

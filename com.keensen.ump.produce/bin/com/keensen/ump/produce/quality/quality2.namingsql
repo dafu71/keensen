@@ -219,7 +219,7 @@
         <isNotNull prepend="" property="mpSpecCode">AND S1.MATER_SPEC_CODE = #mpSpecCode#</isNotNull>
         <isNotNull prepend="" property="prodSpecName">AND S2.MATER_SPEC_NAME = #prodSpecName#</isNotNull>
         <isNotNull prepend="" property="bSpecName">AND S3.MATER_SPEC_NAME = #bSpecName#</isNotNull>
-	 ORDER BY S2.DISP_ORDER)t1
+	 ORDER BY S2.MATER_SPEC_NAME)t1
 		
 </select>
     <insert id="insertWaterStd" parameterClass="java.util.HashMap">INSERT INTO qinsen.INST_PROD_WATER_STD
@@ -521,4 +521,39 @@ SELECT
 	               FROM KS_BASE_C92
 	              WHERE ID = (SELECT MAX(ID) FROM KS_BASE_C92)) T2
 	 WHERE T.RESERVE1 = '原液标准'</select>
+    <select id="queryC42Range" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  
+SELECT 
+	t.ID as "id",
+	to_char(t.CREATE_TIME,'yyyy-MM-dd')  as "createTime",
+	t.CREATE_USER_ID as "createUserId",
+	t.CREATE_NAME as "createName",
+	t.UPDATE_TIME as "updateTime",
+	t.UPDATE_USER_ID as "updateUserId",
+	t.UPDATE_NAME as "updateName",
+	t.RESERVE1 as "reserve1",
+	t.RESERVE2 as "reserve2",
+	t.RESERVE3 as "reserve3",
+	t.RESERVE4 as "reserve4",
+	t.RESERVE5 as "reserve5",
+	t.ORG_ID as "orgId",
+	t.STATUS as "status",
+	t.code as "code",
+	T.LINE        "line",
+       
+       T.mptype   "mptype",
+       T.c42 "c42",
+       t.diff42 "diff42",
+       
+       to_number(t.c42) - to_number(t.diff42) "c42Low",
+       to_number(t.c42) + to_number(t.diff42) "c42Up"
+       
+  FROM KS_BASE_OIL_FORMULA T
+  where 1=1
+	
+	<isNotNull prepend="and" property="id">T.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="line">T.LINE = #line#</isNotNull>
+        <isNotNull prepend="and" property="mptype">T.mptype = #mptype#</isNotNull>
+	order by t.mptype,t.line
+</select>
 </sqlMap>

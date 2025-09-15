@@ -390,11 +390,26 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 	this.queryPanel4ChooseMark.mon(this.queryPanel4ChooseMark, 'query',
 			function(form, vals) {
 				var store = this.listPanel4ChooseMark.store;
-				store.baseParams = vals;
+				this.queryPanel4ChooseMark.status.setValue('1');
+				store.baseParams = this.queryPanel4ChooseMark.form.getValues();
 				store.load({
 					params : {
 						"pageCond/begin" : 0,
 						"pageCond/length" : this.listPanel4ChooseMark.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+			
+	// 查询事件
+	this.queryPanel4ChooseLable.mon(this.queryPanel4ChooseLable, 'query',
+			function(form, vals) {
+				var store = this.listPanel4ChooseLable.store;
+				this.queryPanel4ChooseLable.status.setValue('1');
+				store.baseParams = this.queryPanel4ChooseLable.form.getValues();
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4ChooseLable.pagingToolbar.pageSize
 					}
 				});
 			}, this);
@@ -572,7 +587,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 	var lid = this.addOrderWindow.lid.getValue();
 	
 	var type = this.addOrderWindow.type.getValue();
-	if(Ext.isEmpty(lid) && type == '工业膜'){
+	if(Ext.isEmpty(lid) && type != '家用膜'){
 		Ext.Msg.alert('系统提示', '请选择端盖');
 		return false;
 	}
@@ -796,7 +811,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onMCConfirm = functio
 }
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = function() {
 	// KS00307 KS01147
-	if (uid == 'KS00307' || uid == 'KS01147') {
+	if (uid == 'KS00307' || uid == 'KS01147' ) {
 		doQuerySqlAndExport(
 				this,
 				this.queryPanel,
@@ -806,7 +821,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = functio
 				'0,1');
 	} else {
 		var arr = ['导入时间','订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号', '货品名称',
-				'干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）', '标签',
+				'干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）', '产品备注','标签',
 				'标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱', '包装箱内部图纸编号',
 				'是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注', '导入操作员', '订单类型']
 
@@ -1030,7 +1045,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onChoose4Mark = funct
 	var materSpecName2 = this.addOrderWindow.materSpecName2.getValue();
 	var store = this.listPanel4ChooseMark.store;
 	store.baseParams = {
-		'condition/specName2' : materSpecName2
+		'condition/specName2' : materSpecName2,
+		'condition/status' : 1
 	};
 	store.load({
 		params : {

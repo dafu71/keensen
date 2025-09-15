@@ -38,6 +38,7 @@
 
 <ext:dict property="KS_DIMO_TYPE"   dictTypeId="KS_DIMO_TYPE" />
 <ext:dict property="KS_ZM_LINE"   dictTypeId="KS_ZM_LINE" />
+<ext:dict property="KS_PSF"   dictTypeId="KS_PSF" />
 
 <js:load scriptPath="pub/common/teamCombo.js" />
 <js:load scriptPath="pub/common/supCombo.js" />

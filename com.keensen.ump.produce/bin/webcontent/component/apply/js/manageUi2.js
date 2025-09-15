@@ -17,6 +17,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		this.initExaminWindow();
 		this.initCStockWindow();
 
+		this.buildExcelUploadWin();
+
 		this.lay = new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -241,8 +243,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						disabled : (uid != 'KS00610') && (uid != 'KS01313')
-								&& (uid != 'KS00524') && (uid != 'XXB')
-								&& (uid != 'KS00307'),
+								&& (uid != 'KS00524') && (uid != 'dafu')
+								&& (uid != 'KS01479') && (uid != 'KS00307'),
 						handler : this.onDeleteOrder
 					}, '-', {
 						text : '审核',
@@ -271,6 +273,34 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_excel',
 						handler : this.exportExcel
+					}, '-', {
+						xtype : 'splitbutton',
+						hidden : uid != 'LHY' && uid != 'KS00307'
+								&& uid != 'KS01479' && uid != 'dafu'
+								&& uid != 'KS01147',
+						text : '导入元件',
+						// scale : 'small',
+						// rowspan : 1,
+						// iconAlign : 'top',
+						iconCls : 'icon-application_add',
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '元件模板下载',
+									scope : this,
+									iconCls : 'icon-application_excel',
+									handler : this.onDownProdTemplate
+								}, {
+									text : '元件上传',
+									scope : this,
+									iconCls : 'icon-application_excel',
+									handler : this.onUploadProd
+								}]
+					}, '-', {
+						text : '请检判定',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : uid != 'dafu',
+						handler : this.onJudge
 					}, '->', {
 						text : '确认入C仓',
 						scope : this,
@@ -289,7 +319,16 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							}), selModel, {
 						dataIndex : 'code',
 						sortable : true,
-						header : '栈板号'
+						header : '栈板号',
+						renderer : function(v, m, r, i) {
+							var orderId = r.get('orderId');
+							if (!Ext.isEmpty(orderId)) {
+								return "<span style='color:red'>" + v
+										+ "</span>";
+							} else {
+								return v;
+							}
+						}
 					}, {
 						dataIndex : 'orderNo',
 						sortable : true,
@@ -485,6 +524,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'stockConfirmUserName'
 						}, {
 							name : 'isC'
+						}, {
+							name : 'orderId'
+						}, {
+							name : 'baseId'
 						}]
 			})
 		})
@@ -812,6 +855,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								colspan : 12
 							}, {
 								xtype : 'dictcombobox',
+								editable : true,
+								forceSelection : false,
+								ref : '../markSpecialFlag',
 								name : 'markSpecialFlag',
 								hiddenName : 'markSpecialFlag',
 								allowBlank : false,
@@ -930,6 +976,22 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								xtype : 'hidden',
 								ref : '../abnormal',
 								name : 'abnormal'
+							}, {
+								xtype : 'hidden',
+								ref : '../reserve4',
+								name : 'reserve4'
+							}, {
+								xtype : 'hidden',
+								ref : '../reserve5',
+								name : 'reserve5'
+							}, {
+								xtype : 'hidden',
+								ref : '../orderId',
+								name : 'orderId'
+							}, {
+								xtype : 'hidden',
+								ref : '../baseId',
+								name : 'baseId'
 							}],
 					buttons : [{
 								text : "保存",
@@ -942,6 +1004,13 @@ com.keensen.ump.produce.component.applyMgr = function() {
 									this.inputPanel.form.reset();
 									this.inputWindow.hide();
 								}
+							}, {
+								text : "保存请检单",
+								hidden : uid != 'LHY' && uid != 'KS00307'
+										&& uid != 'KS01479' && uid != 'dafu'
+										&& uid != 'KS01147',
+								scope : this,
+								handler : this.onSaveApply
 							}]
 
 				})
@@ -978,6 +1047,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								name : 'id'
 							}, {
 								name : 'name'
+							}, {
+								name : 'orderId'
 							}]
 				})
 
@@ -999,6 +1070,14 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onSelect
+					}, '->', {
+						text : '加载订单信息',
+						hidden : uid != 'LHY' && uid != 'KS00307'
+								&& uid != 'KS01479' && uid != 'dafu'
+								&& uid != 'KS01147',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onSelectOrder
 					}],
 			delUrl : '111.biz.ext',
 			columns : [new Ext.grid.RowNumberer({
@@ -1094,6 +1173,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'diameter'
 						}, {
 							name : 'diameter2'
+						}, {
+							name : 'markDrawingCode2'
 						}]
 			})
 		})
@@ -2515,51 +2596,25 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						fieldLabel : '<p style="color:red;">外观和尺寸检查  </p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 12
-					}/*, {
-						xtype : 'dictcombobox',
-						dataIndex : 'markIsok',
-						hiddenName : 'entity/markIsok',
-						readOnly : true,
-						fieldLabel : '包装箱唛头',
-						dictData : KS_YESORNO,
-						anchor : '95%',
-						emptyText : "",
-						colspan : 3
-					}, {
-						xtype : 'dictcombobox',
-						dataIndex : 'labelIsok',
-						hiddenName : 'entity/labelIsok',
-						readOnly : true,
-						fieldLabel : '元件标签',
-						dictData : KS_YESORNO,
-						anchor : '95%',
-						emptyText : "",
-						colspan : 3
-					}, {
-						xtype : 'dictcombobox',
-						dataIndex : 'apperanceIsok',
-						hiddenName : 'entity/apperanceIsok',
-						readOnly : true,
-						fieldLabel : '元件外观',
-						dictData : KS_YESORNO,
-						anchor : '95%',
-						emptyText : "",
-						colspan : 3
-					}, {
-						xtype : 'dictcombobox',
-						dataIndex : 'diameter',
-						hiddenName : 'entity/diameter',
-						readOnly : true,
-						fieldLabel : '元件直径',
-						dictData : KS_YESORNO,
-						anchor : '95%',
-						emptyText : "",
-						colspan : 3
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 12
-					}*/, {
+					}/*
+						 * , { xtype : 'dictcombobox', dataIndex : 'markIsok',
+						 * hiddenName : 'entity/markIsok', readOnly : true,
+						 * fieldLabel : '包装箱唛头', dictData : KS_YESORNO, anchor :
+						 * '95%', emptyText : "", colspan : 3 }, { xtype :
+						 * 'dictcombobox', dataIndex : 'labelIsok', hiddenName :
+						 * 'entity/labelIsok', readOnly : true, fieldLabel :
+						 * '元件标签', dictData : KS_YESORNO, anchor : '95%',
+						 * emptyText : "", colspan : 3 }, { xtype :
+						 * 'dictcombobox', dataIndex : 'apperanceIsok',
+						 * hiddenName : 'entity/apperanceIsok', readOnly : true,
+						 * fieldLabel : '元件外观', dictData : KS_YESORNO, anchor :
+						 * '95%', emptyText : "", colspan : 3 }, { xtype :
+						 * 'dictcombobox', dataIndex : 'diameter', hiddenName :
+						 * 'entity/diameter', readOnly : true, fieldLabel :
+						 * '元件直径', dictData : KS_YESORNO, anchor : '95%',
+						 * emptyText : "", colspan : 3 }, { xtype :
+						 * 'displayfield', height : '5', colspan : 12 }
+						 */, {
 						xtype : 'dictcombobox',
 						dataIndex : 'final',
 						hiddenName : 'entity/final',
@@ -3941,4 +3996,41 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 	}
 
+	// 导入excel面板
+	this.buildExcelUploadWin = function() {
+		this.excelUploadWin = new Ext.Window({
+					title : '导入Excel',
+					collapsible : false,
+					modal : true,
+					closeAction : 'hide',
+					buttonAlign : 'center',
+					layout : 'fit',
+					width : 480,
+					height : 120,
+					items : [{
+								xtype : 'columnform',
+								itemId : 'uploadForm',
+								saveUrl : '111.flow',
+								columns : 1,
+								fileUpload : true,
+								fields : [{
+											name : 'uploadFile',
+											fieldLabel : '选择文件',
+											allowBlank : false,
+											inputType : 'file'
+										}]
+							}],
+					buttons : [{
+								text : '上传',
+								handler : this.doUpload,
+								scope : this
+							}, {
+								text : '关闭',
+								scope : this,
+								handler : function() {
+									this.excelUploadWin.hide();
+								}
+							}]
+				});
+	}
 }

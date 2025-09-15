@@ -32,6 +32,7 @@ FROM
 			A.WATER_REMARK_USER_NAME ,A.DRY_WET,J.trailer,
 		       
 	       A.diff,
+	       
 	        
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
@@ -147,7 +148,7 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
     <!-- 查询气检记录列表 -->
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	
-	SELECT Z.RECORD_ID as "recordId",z.gyy_remark "gyyRemark",
+	SELECT Z.RECORD_ID as "recordId",z.gyy_remark "gyyRemark",z.print_batch_no "printBatchNo",
 		Z.JUANMO_BATCH_ID as "juanmoBatchId",
 		Z.BATCH_NO as "batchNo",
 		Z.LINE_ID as "lineId",
@@ -192,7 +193,7 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 		
 		z.if_semi_stock "ifSemiStock",
 		
-		z.if_check_stock "ifCheckStock",
+		z.if_check_stock "ifCheckStock",z.if_rework "ifRework",
 		 
 		Z.MONITOR_REMARK as "monitorRemark",
 		TO_CHAR(Z.MONITOR_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "monitorRemarkTime",
@@ -216,6 +217,19 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 		z.order_no_original "orderNoOriginal",
 	    z.prod_spec_id_original "prodSpecIdOriginal", 
 	    z.prod_SPEC_name_original "prodSpecNameOriginal", 
+	    
+	    Z.MONITOR_ADVISE as "monitorAdvise",
+		TO_CHAR(Z.MONITOR_ADVISE_TIME, 'YYYY-MM-DD HH24:MI') as "monitorAdviseTime",
+		Z.MONITOR_ADVISE_USER_ID as "monitorAdviseUserId",
+		Z.MONITOR_ADVISE_USER_NAME as "monitorAdviseUserName",
+		Z.PLANNER_ADVISE as "plannerAdvise",
+		TO_CHAR(Z.PLANNER_ADVISE_TIME, 'YYYY-MM-DD HH24:MI') as "plannerAdviseTime",
+		Z.PLANNER_ADVISE_USER_ID as "plannerAdviseUserId",
+		Z.PLANNER_ADVISE_USER_NAME as "plannerAdviseUserName",
+		Z.OVERTIME_ADVISE as "overtimeAdvise",
+		TO_CHAR(Z.OVERTIME_ADVISE_TIME, 'YYYY-MM-DD HH24:MI') as "overtimeAdviseTime",
+		Z.OVERTIME_ADVISE_USER_ID as "overtimeAdviseUserId",
+		Z.OVERTIME_ADVISE_USER_NAME as "overtimeAdviseUserName",
 		
        DECODE(Z.IS_QUALIFIED, 'Y', '是', 'N', '否', '') "isQualifiedName",
        DECODE(Z.IS_FIRST, 'Y', '首检', 'N', '复检', '') "isFirstName",
@@ -273,17 +287,23 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 			A.WATER_REMARK_USER_ID ,
 			A.WATER_REMARK_USER_NAME ,A.DRY_WET,J.trailer,
 		       
-	       A.diff,
+	       A.diff, nvl(A.print_batch_no,A.batch_no) print_batch_no,
+	       A.monitor_advise,A.monitor_advise_time,A.monitor_advise_user_id,A.monitor_advise_user_name,
+	       A.planner_advise,A.planner_advise_time,A.planner_advise_user_id,A.planner_advise_user_name,
+	       A.overtime_advise,A.overtime_advise_time,A.overtime_advise_user_id,A.overtime_advise_user_name,
+	       
 	        
 	        DECODE(ss.Batch_No,NULL,'否','是') if_semi_stock,
 	        
 	        DECODE(A.check_Batch_No,NULL,'否','是') if_check_stock,
 	        
+	        DECODE(A.rw_Batch_No,NULL,'否','是') if_rework,
+	        
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
 	  FROM (SELECT QJ.*,chk.batch_no check_batch_no, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
-CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET,
+CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET, rw.batch_no rw_batch_no,
 
 TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
                                      SYSDATE - 10000),
@@ -294,6 +314,10 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 
 
   FROM QINSEN.INST_QIJIAN QJ
+  
+   <!--是否返工-->
+  left join (select DISTINCT t.batch_no from KS_COMPONENT_REWORK_LIST t) rw
+  on rw.batch_no = qj.batch_no
   
    <!--是否请检入库-->
   left join (select DISTINCT T.BATCH_NO from KS_COMPONENT_CHECK_LIST t
@@ -323,7 +347,9 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
 	   AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
 	   
-	<isEqual compareValue="4寸" prepend="" property="prodType">AND A.team_id in (100516,100070) and (J.LINE_ID = 30061 OR J.LINE_ID = 30221 OR
+	 <isEqual compareValue="Y" prepend="" property="isLabel">AND A.BATCH_NO is not null</isEqual>
+        <isEqual compareValue="N" prepend="" property="isLabel">AND A.BATCH_NO is null</isEqual>
+        <isEqual compareValue="4寸" prepend="" property="prodType">AND A.team_id in (100516,100070) and (J.LINE_ID = 30061 OR J.LINE_ID = 30221 OR
                     J.LINE_ID = 30242)</isEqual>
         <isEqual compareValue="8寸" prepend="" property="prodType">AND A.team_id in (100516,100070) and (J.LINE_ID = 30062 OR J.LINE_ID = 30120 OR
                     J.LINE_ID = 30180 OR J.LINE_ID = 30222)</isEqual>
@@ -454,7 +480,11 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	          WHERE S.STAFF_ID = A.CREATOR_ID) CREATOR_NAME
 	  FROM qinsen.INST_QIJIAN_CHANGE A, qinsen.INST_JUANMO_MAIN M
 	 WHERE A.JUANMO_BATCH_ID = M.RECORD_ID
-	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+	 
+	 
+	 <isNotNull prepend="and" property="newBatchNos">A.NEW_BATCH_NO in ($newBatchNos$)</isNotNull>
+        <isNotNull prepend="and" property="oldBatchNos">A.OLD_BATCH_NO in ($oldBatchNos$)</isNotNull>
+        <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
         <isNotNull prepend="" property="juanmoBatchId">AND A.JUANMO_BATCH_ID = #juanmoBatchId#</isNotNull>
         <isNotNull prepend="" property="oldBatchNo">AND A.OLD_BATCH_NO = UPPER(#oldBatchNo#)</isNotNull>
         <isNotNull prepend="" property="newBatchNo">AND A.NEW_BATCH_NO = UPPER(#newBatchNo#)</isNotNull>
@@ -642,4 +672,31 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
   AND t.gyy_remark IS NOT NULL
   AND EXTRACT(DAY FROM (SYSDATE - T.GYY_REMARK_TIME)) * 24 +
        EXTRACT(HOUR FROM (SYSDATE - T.GYY_REMARK_TIME))&gt;=2</select>
+    <!-- 修改班长处理意见 -->
+    <update id="updateMonitorAdvise" parameterClass="java.util.HashMap">UPDATE QINSEN.inst_qijian A
+	   SET A.CHANGE_DT = SYSDATE,
+	   A.monitor_advise = #advise#,
+	   A.CHANGER_ID = #operatorId#,
+	   A.monitor_advise_time = SYSDATE,
+	   A.monitor_advise_user_id = #userId#,
+	   A.monitor_advise_user_name = #userName#
+	 WHERE A.RECORD_ID in ($recordIds$)</update>
+    <!-- 修改计划员处理意见 -->
+    <update id="updatePlannerAdvise" parameterClass="java.util.HashMap">UPDATE QINSEN.inst_qijian A
+	   SET A.CHANGE_DT = SYSDATE,
+	   A.planner_advise = #advise#,
+	   A.CHANGER_ID = #operatorId#,
+	   A.planner_advise_time = SYSDATE,
+	   A.planner_advise_user_id = #userId#,
+	   A.planner_advise_user_name = #userName#
+	 WHERE A.RECORD_ID in ($recordIds$)</update>
+    <!-- 修改超期停留处理意见 -->
+    <update id="updateOvertimeAdvise" parameterClass="java.util.HashMap">UPDATE QINSEN.inst_qijian A
+	   SET A.CHANGE_DT = SYSDATE,
+	   A.overtime_advise = #advise#,
+	   A.CHANGER_ID = #operatorId#,
+	   A.overtime_advise_time = SYSDATE,
+	   A.overtime_advise_user_id = #userId#,
+	   A.overtime_advise_user_name = #userName#
+	 WHERE A.RECORD_ID in ($recordIds$)</update>
 </sqlMap>

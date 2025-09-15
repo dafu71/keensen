@@ -146,6 +146,10 @@
       <process:from type="query" pattern="reference">countDatas[1]/total</process:from>
       <process:to type="query">data[1]/total</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">countDatas[1]/c11Invalid</process:from>
+      <process:to type="query">data[1]/totalC11Invalid</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
     <figSize height="20" width="40"/>

@@ -165,7 +165,7 @@
     SELECT t1.plan_date "planDate",t1.meter_amount "meterAmount",nvl(t1.jm_amount,0) "jmAmount",
     t1.order_id "orderId",
   t2.order_no "orderNo",t2.mater_spec_id "materSpecId",t2.mater_spec_name "materSpecName",
-  t2.order_type "orderType",
+  t2.order_type "orderType",t2.tape "tape",
     t2.mater_spec_name2 "materSpecName2",
     t2.order_amount "orderAmount",t1.week_remark "weekRemark",
     
@@ -375,7 +375,7 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
        T2.MATER_SPEC_NAME "materSpecName",
        T2.ORDER_TYPE "orderType",
        T2.MATER_SPEC_NAME2 "materSpecName2",
-       T2.ORDER_AMOUNT "orderAmount",
+       T2.ORDER_AMOUNT "orderAmount",yb.color "color",
        nvl(t1.qj_state,0) "qjState",
            t3.jm_amount "jmAmount",
        nvl(t4.wait_amount,0) "waitAmount",
@@ -603,18 +603,47 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
        T2.ORDER_AMOUNT "orderAmount",
        nvl(t1.pack_state,0) "packState",
            t3.jm_amount "jmAmount",
-       nvl(t3.jm_amount,0)-nvl(t5.pack_amount,0) "waitAmount",
+       <!--nvl(t3.jm_amount,0)-nvl(t5.pack_amount,0) "waitAmount",-->
+       nvl(t3.jm_amount,0)-nvl(chk.chk_num,0) "waitAmount",
        nvl(t5.pack_amount,0) "packAmount",
      
-       case when t3.jm_amount = nvl(t5.pack_amount,0) then '完成' else '处理中' end "packStateName"
+       case when t3.jm_amount &lt;= nvl(chk.chk_num,0) then '完成' else '处理中' end "packStateName"
         ,yb.tape "tape",yb.lid "lid",yb.sn_Regular "snRegular",yb.make_Label "makeLabel",
        yb.label_Double "labelDouble",yb.label_Drawing_Code "labelDrawingCode",lb.url "labelUrl"
+       
+       ,chk.chk_num "checkNum"
+       ,yb.mark_drawing_code "markDrawingCode"
+       , replace(yb.mark_drawing_code2,'单击旁边按钮选择图纸编号','') "markDrawingCode2"
+       ,mk.url2 "firsrMarkUrl"
+       ,mk2.url2 "secondMarkUrl"
+       
+        
   FROM KS_COMPONENT_DUTY_PACK T1
   LEFT JOIN KS_PROD_COMPONENT_YXORDER T2
     ON T1.ORDER_ID = T2.ID
+   
+   <!--请检数量--> 
+  left join (SELECT COUNT(1) chk_num,order_no,prod_spec_id
+	FROM
+	(SELECT chk.batch_no,qj.order_no,qj.prod_spec_id
+	FROM
+	(SELECT DISTINCT lst.batch_no
+	 from KS_COMPONENT_CHECK_list lst) chk
+	 LEFT  JOIN (
+	SELECT qj.order_no,qj.prod_spec_id,qj.batch_no from qinsen.inst_qijian qj) qj
+	ON chk.batch_no=qj.batch_no)
+	GROUP BY order_no,prod_spec_id)  chk
+	on chk.order_no = t2.order_no and chk.prod_spec_id = t2.MATER_SPEC_ID
+	    
   
   LEFT JOIN ks_component_yxorder_base yb
     ON yb.id = t2.base_id
+    
+    
+  left join (select DISTINCT t.template_name,t.url,t.url2 from KS_COMPONENT_MARK_TEMPLATE t) mk
+  on mk.template_name = yb.mark_drawing_code 
+  left join (select DISTINCT t.template_name,t.url,t.url2 from KS_COMPONENT_MARK_TEMPLATE t) mk2
+  on mk2.template_name = yb.mark_drawing_code2  
     
   left join KS_BASE_LABEL_DRAWING lb
     on lb.drawing_code = yb.label_drawing_code
@@ -778,4 +807,189 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
         <isNull prepend="" property="getduty">ORDER BY t1.plan_date desc,t1.order_id desc,t3.ARRANGE_DATE desc</isNull>
         <isNotNull prepend="" property="getduty">ORDER BY t3.ARRANGE_DATE,t3.product_order</isNotNull>
     </select>
+    <select id="queryViewOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	
+	SELECT DECODE(SUBSTR(T2.ORDER_NO, 1, 2), 'SG', '1', '0') "testOrder",
+       T2.ORDER_NO "orderNo",
+       T2.MATER_SPEC_ID "materSpecId",
+       T2.MATER_SPEC_NAME "materSpecName",
+       T2.ORDER_TYPE "orderType",
+       T2.MATER_SPEC_NAME2 "materSpecName2",
+       T2.RESERVE2 "prodRemark",
+       T2.ORDER_AMOUNT "orderAmount",
+       T3.JM_AMOUNT "jmAmount",
+       NVL(T3.JM_AMOUNT, 0) - NVL(CHK.CHK_NUM, 0) "waitAmount",
+       NVL(T5.PACK_AMOUNT, 0) "packAmount",
+       CASE
+         WHEN T3.JM_AMOUNT &lt;= NVL(CHK.CHK_NUM, 0) THEN
+          '完成'
+         ELSE
+          '处理中'
+       END "packStateName",
+       
+       decode(substr(t2.order_no,1,2),'SG',sgstd.tape,yb.tape) "tape",
+       
+       yb.ifphoto "ifphoto",
+       
+       decode(substr(t2.order_no,1,2),'SG',sgstd.BAG_SIZE,yb.bag) "bag",
+       
+        decode(substr(t2.order_no,1,2),'SG',sgstd.bag_Drawing_Code,yb.bag_Drawing_Code) "bagDrawingCode",
+       
+       decode(t2.box,null,
+       decode(substr(t2.order_no,1,2),'SG',sgstd.BOX_DRAWING_SIZE,yb.box),
+       t2.box)
+        "box",
+       
+       decode(substr(t2.order_no,1,2),'SG',sgstd.COUNT_PER_BOX,yb.packing_Num) "packingNum",
+       
+       yb.ifpolish "ifpolish",
+       yb.tray "tray",
+       
+       decode(substr(t2.order_no,1,2),'SG',sgstd.TRAY_SIZE,yb.tray_Size) "traySize",
+       
+       decode(substr(t2.order_no,1,2),'SG',sgstd.COUNT_FLOOR,yb.packing_Layer) "packingLayer",
+       
+       decode(t2.lid,null,       
+       decode(substr(t2.order_no,1,2),'SG',sgstd.lid,YB.LID),
+       t2.lid)
+        "lid",
+       YB.SN_REGULAR "snRegular",
+       YB.MAKE_LABEL "makeLabel",
+       YB.LABEL_DOUBLE "labelDouble",
+       
+       decode(t2.LABEL_DRAWING_CODE,null,
+       decode(substr(t2.order_no,1,2),'SG',sgstd.LABEL_DRAWING_CODE,YB.LABEL_DRAWING_CODE),
+       t2.LABEL_DRAWING_CODE) "labelDrawingCode",
+       
+       decode(substr(t2.order_no,1,2),'SG',sgstd.LABEL_url,LB.URL) "labelUrl",
+       CHK.CHK_NUM "checkNum",
+       decode(T2.template_Name,null,
+       decode(substr(t2.order_no,1,2),'SG',sgstd.MARK_DRAWING_CODE,YB.MARK_DRAWING_CODE),T2.template_Name） "markDrawingCode",
+       REPLACE(YB.MARK_DRAWING_CODE2, '单击旁边按钮选择图纸编号', '') "markDrawingCode2",
+       
+       decode(substr(t2.order_no,1,2),'SG',sgstd.mark_url,MK.URL2) "firsrMarkUrl",
+       MK2.URL2 "secondMarkUrl"
+  FROM KS_PROD_COMPONENT_YXORDER T2
+  <!--生管订单-->
+   LEFT join ( SELECT PMS.MATER_SPEC_NAME,
+       T1.PROD_TYPE,
+       T1.LID,
+       T1.TAPE,
+       T1.LABEL_SIZE,
+       LB.LABEL_DRAWING_CODE,
+       LB.URL                      LABEL_URL,
+       T1.COVER_LABEL_SIZE,
+       CV.COVER_LABEL_DRAWING_CODE,
+       CV.URL                      COVER_LABEL_URL,
+       T1.BAG_SIZE,
+       T1.BAG_DRAWING_CODE,
+       T1.BOX_DRAWING_SIZE,
+       T1.BOX_DRAWING_CODE,
+       T1.BOX_MARK_SIZE,
+       MK.TEMPLATE_NAME MARK_DRAWING_CODE,
+       MK.URL                      MARK_URL,
+       T1.COUNT_PER_BOX,
+       T1.COUNT_PER_FLOOR,
+       T1.COUNT_FLOOR,
+       T1.TRAY_SIZE,
+       T1.SPEC_ID
+  FROM KS_BASE_APPEARANCE_STD T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON T1.SPEC_ID = PMS.MATER_SPEC_ID
+  LEFT JOIN (SELECT T1.TEMPLATE_NAME, T1.SPEC_NAME, T2.URL
+               FROM (SELECT MAX(T1.TEMPLATE_NAME) TEMPLATE_NAME, T3.SPEC_NAME
+                       FROM KS_COMPONENT_MARK_TEMPLATE T1
+                       LEFT JOIN KS_BASE_MARK_DRAWING T3
+                         ON T3.DRAWING_CODE = T1.TEMPLATE_NAME
+                     AND t3.logo LIKE '%司标%'
+                      GROUP BY T3.SPEC_NAME) T1
+               LEFT JOIN KS_COMPONENT_MARK_TEMPLATE T2
+                 ON T1.TEMPLATE_NAME = T2.TEMPLATE_NAME
+             
+             ) MK
+    ON MK.SPEC_NAME = PMS.MATER_SPEC_NAME
+  LEFT JOIN (SELECT SPEC_NAME, LABEL_DRAWING_CODE, URL
+               FROM (SELECT T.SPEC_NAME,
+                            MAX(T.DRAWING_CODE) LABEL_DRAWING_CODE
+                       FROM KS_BASE_LABEL_DRAWING T
+                      WHERE T.LOGO = '公司标准'
+                        AND NVL(T.STATUS, 1) = 1
+                      GROUP BY T.SPEC_NAME) LD
+               LEFT JOIN (SELECT URL, DRAWING_CODE
+                           FROM KS_BASE_LABEL_DRAWING
+                          WHERE NVL(STATUS, 1) = 1) LD2
+                 ON LD.LABEL_DRAWING_CODE = LD2.DRAWING_CODE
+             
+             ) LB
+    ON LB.SPEC_NAME = PMS.MATER_SPEC_NAME
+
+  LEFT JOIN (SELECT SPEC_NAME, COVER_LABEL_DRAWING_CODE, URL
+               FROM (SELECT T.SPEC_NAME,
+                            MAX(T.DRAWING_CODE) COVER_LABEL_DRAWING_CODE
+                       FROM KS_BASE_LABEL_DRAWING T
+                      WHERE T.LOGO LIKE '%司标%覆盖版%'
+                        AND NVL(T.STATUS, 1) = 1
+                      GROUP BY T.SPEC_NAME) LD
+               LEFT JOIN (SELECT URL, DRAWING_CODE
+                           FROM KS_BASE_LABEL_DRAWING
+                          WHERE NVL(STATUS, 1) = 1) LD2
+                 ON LD.COVER_LABEL_DRAWING_CODE = LD2.DRAWING_CODE) CV
+    ON CV.SPEC_NAME = PMS.MATER_SPEC_NAME
+) SGSTD
+       ON SGSTD.SPEC_ID = T2.MATER_SPEC_ID  
+       
+  LEFT JOIN (SELECT COUNT(1) CHK_NUM, ORDER_NO, PROD_SPEC_ID
+               FROM (SELECT CHK.BATCH_NO, QJ.ORDER_NO, QJ.PROD_SPEC_ID
+                       FROM (SELECT DISTINCT LST.BATCH_NO
+                               FROM KS_COMPONENT_CHECK_LIST LST) CHK
+                       LEFT JOIN (SELECT QJ.ORDER_NO,
+                                        QJ.PROD_SPEC_ID,
+                                        QJ.BATCH_NO
+                                   FROM QINSEN.INST_QIJIAN QJ) QJ
+                         ON CHK.BATCH_NO = QJ.BATCH_NO)
+              GROUP BY ORDER_NO, PROD_SPEC_ID) CHK
+    ON CHK.ORDER_NO = T2.ORDER_NO
+   AND CHK.PROD_SPEC_ID = T2.MATER_SPEC_ID
+
+  LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+    ON YB.ID = T2.BASE_ID
+
+  LEFT JOIN (SELECT DISTINCT T.TEMPLATE_NAME, T.URL, T.URL2
+               FROM KS_COMPONENT_MARK_TEMPLATE T) MK
+    ON MK.TEMPLATE_NAME = YB.MARK_DRAWING_CODE
+  LEFT JOIN (SELECT DISTINCT T.TEMPLATE_NAME, T.URL, T.URL2
+               FROM KS_COMPONENT_MARK_TEMPLATE T) MK2
+    ON MK2.TEMPLATE_NAME = YB.MARK_DRAWING_CODE2
+
+  LEFT JOIN KS_BASE_LABEL_DRAWING LB
+    ON LB.DRAWING_CODE = YB.LABEL_DRAWING_CODE
+
+  LEFT JOIN (SELECT COUNT(DISTINCT T.JM_BATCH_NO) JM_AMOUNT, T.ORDER_ID
+               FROM V_KS_RAOSI T
+              WHERE EXISTS (SELECT 1
+                       FROM KS_COMPONENT_DUTY_PACK_LIST
+                      WHERE BATCH_NO = T.JM_BATCH_NO)
+              GROUP BY T.ORDER_ID) T3
+    ON T3.ORDER_ID = T2.ID
+
+  LEFT JOIN (SELECT COUNT(DISTINCT T.BATCH_NO) PACK_AMOUNT, V.ORDER_ID
+               FROM KS_COMPONENT_PACKAGE T
+               LEFT JOIN V_KS_RAOSI V
+                 ON V.JM_BATCH_NO = T.BATCH_NO
+              WHERE EXISTS (SELECT 1
+                       FROM KS_COMPONENT_DUTY_PACK_LIST
+                      WHERE BATCH_NO = T.BATCH_NO)
+              GROUP BY V.ORDER_ID) T5
+    ON T5.ORDER_ID = T2.ID
+ WHERE 1 = 1
+   AND (T2.ORDER_NO, T2.MATER_SPEC_ID) IN
+       (SELECT QJ.ORDER_NO, QJ.PROD_SPEC_ID
+          FROM QINSEN.INST_QIJIAN QJ
+         WHERE QJ.JUANMO_BATCH_ID =
+               (SELECT RECORD_ID
+                  FROM QINSEN.INST_JUANMO_MAIN JM
+                 WHERE JM.BATCH_NO = #juanmoBatchNo#))
+	
+	
+	</select>
 </sqlMap>

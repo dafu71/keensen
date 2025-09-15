@@ -3,6 +3,7 @@
 <sqlMap namespace="com.keensen.ump.produce.component.apply">
     <select id="queryApply" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT T1.ID                AS "id", T1.is_c "isC",
+   		t1.order_id "orderId",t1.base_id "baseId",
       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -91,7 +92,7 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
     <select id="queryList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT T1.ID                AS "id",t5.fcode "fcode",
        T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",nvl(t2.print_batch_no,T1.batch_No) "printBatchNo",
-       DECODE(T3.JUANMO_BATCH_ID,NULL,'干','湿') "state",
+       DECODE(T3.JUANMO_BATCH_ID,NULL,nvl(t1.state,'干'),'湿') "state",
        h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
        replace(t1.tumo_batch_str,',','&lt;br&gt;') "tumoBatchStr2",
        h.code "code",T2.CHECK_RESULT "checkResult",
@@ -126,6 +127,8 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
        j.tumo_batch_str "tumoBatchStr",
        T1.diameter "diameter",T1.diameter2 "diameter2"
   FROM QINSEN.INST_QIJIAN T1
+  
+  
   LEFT JOIN (select wm_concat(distinct m.batch_no) tumo_batch_str,dd.main_batch_id record_id
           from qinsen.inst_juanmo_detail dd,
                qinsen.inst_caidiemo      c,
@@ -148,7 +151,8 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
     or exists(select 1 from KS_COMPONENT_REWORK_LIST tt where tt.BATCH_NO = T1.BATCH_NO))
     
     <!--元件已完成绕丝-->
-    and exists(SELECT 1 from qinsen.inst_raosi rs where rs.batch_no = T1.BATCH_NO)
+    and exists(SELECT 1 from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
+	  on rs.juanmo_batch_id = qj.juanmo_batch_id where qj.batch_no = T1.BATCH_NO)
     
     <isEqual compareValue="是" prepend="" property="ifprint">
             <!--元件已打印唛头-->
@@ -167,9 +171,12 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
 	order by T1.BATCH_NO
     </select>
     <select id="queryProd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-    select DISTINCT t.order_no,t.prod_spec_id AS "id",m.mater_spec_name "name" from qinsen.inst_qijian t
-	LEFT JOIN qinsen.para_mater_spec m ON t.prod_spec_id=m.mater_spec_id
-	WHERE 1=1 AND m.mater_spec_name IS NOT NULL
+    select DISTINCT od.id "orderId",t.order_no,t.prod_spec_id AS "id",m.mater_spec_name "name" 
+    from qinsen.inst_qijian t
+  LEFT JOIN qinsen.para_mater_spec m ON t.prod_spec_id=m.mater_spec_id
+  LEFT JOIN Ks_Prod_Component_Yxorder od
+  ON od.order_no = t.order_no AND od.mater_spec_id = t.prod_spec_id
+  WHERE 1=1 AND m.mater_spec_name IS NOT NULL
 	<isNotNull prepend="and" property="orderNo">t.order_no = #orderNo#</isNotNull>
     </select>
     <update id="updatePrintCnt" parameterClass="java.util.HashMap">update KS_COMPONENT_CHECK_HEAD
@@ -283,4 +290,6 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
     <update id="cancelStockConfirm" parameterClass="java.util.HashMap">update KS_COMPONENT_CHECK_HEAD t
     set t.stock_confirm_time = null
     where id = #id#</update>
+    <update id="deleteCheckList" parameterClass="java.util.HashMap">delete from KS_COMPONENT_CHECK_LIST t
+    where relation_id = #relationId#</update>
 </sqlMap>

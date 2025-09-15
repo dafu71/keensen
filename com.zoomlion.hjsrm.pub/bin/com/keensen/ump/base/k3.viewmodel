@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<viewModelSet author="dafu" displayName="k3" id="com.keensen.ump.base.k3">
+    <viewModel author="dafu" displayName="KsBaseK3BomGroup" entityName="com.keensen.ump.base.k3.KsBaseK3BomGroup" id="KsBaseK3BomGroup">
+        <field dataType="Date" dict="false" id="createTime" label="创建时间">
+            <view type="write"/>
+            <edit name="createTime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="createUserId" label="创建人ID">
+            <view type="write"/>
+            <edit name="createUserId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="createName" label="创建人">
+            <view type="write"/>
+            <edit name="createName" type="text"/>
+        </field>
+        <field dataType="Date" dict="false" id="updateTime" label="修改时间">
+            <view type="write"/>
+            <edit name="updateTime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="updateUserId" label="修改人ID">
+            <view type="write"/>
+            <edit name="updateUserId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="updateName" label="修改人">
+            <view type="write"/>
+            <edit name="updateName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve1" label="备用字段1">
+            <view type="write"/>
+            <edit name="reserve1" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve2" label="备用字段2">
+            <view type="write"/>
+            <edit name="reserve2" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve3" label="备用字段3">
+            <view type="write"/>
+            <edit name="reserve3" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve4" label="备用字段4">
+            <view type="write"/>
+            <edit name="reserve4" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="reserve5" label="备用字段5">
+            <view type="write"/>
+            <edit name="reserve5" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="orgId" label="所属单位ID">
+            <view type="write"/>
+            <edit name="orgId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="status" label="是否有效：0无效，1有效">
+            <view type="write"/>
+            <edit name="status" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fname" label="BOM组名称">
+            <view type="write"/>
+            <edit name="fname" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="finterId" label="BOM组内码">
+            <view type="write"/>
+            <edit name="finterId" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="fparentId" label="父级BOM组内码">
+            <view type="write"/>
+            <edit name="fparentId" type="text"/>
+        </field>
+        <field dataType="Long" dict="false" id="fbootId" label="BOM组编号">
+            <view type="write"/>
+            <edit name="fbootId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fnumber" label="启动ID">
+            <view type="write"/>
+            <edit name="fnumber" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="KsBaseK3BomHead" entityName="com.keensen.ump.base.k3.KsBaseK3BomHead" id="KsBaseK3BomHead">
+        <field dataType="Date" dict="false" id="updateTime" label="更新时间">
+            <view type="write"/>
+            <edit name="updateTime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" id="updateUserId" label="更新人ID">
+            <view type="write"/>
+            <edit name="updateUserId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="updateName" label="更新人">
+            <view type="write"/>
+            <edit name="updateName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fbomnumber" label="BOM编码">
+            <view type="write"/>
+            <edit name="fbomnumber" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fversion" label="版本">
+            <view type="write"/>
+            <edit name="fversion" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fstatusEnum" label="状态">
+            <view type="write"/>
+            <edit name="fstatusEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fcheckerStatus" label="审核">
+            <view type="write"/>
+            <edit name="fcheckerStatus" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fnumber" label="物料代码">
+            <view type="write"/>
+            <edit name="fnumber" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fname" label="物料名称">
+            <view type="write"/>
+            <edit name="fname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fmodel" label="规格型号">
+            <view type="write"/>
+            <edit name="fmodel" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fauxPropIdEnum" label="辅助属性">
+            <view type="write"/>
+            <edit name="fauxPropIdEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="ferPclsIdEnum" label="物料属性">
+            <view type="write"/>
+            <edit name="ferPclsIdEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fqty" label="数量">
+            <view type="write"/>
+            <edit name="fqty" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="funitname" label="单位">
+            <view type="write"/>
+            <edit name="funitname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fbillNo" label="工艺路线代码">
+            <view type="write"/>
+            <edit name="fbillNo" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="froutingName" label="工艺路线名称">
+            <view type="write"/>
+            <edit name="froutingName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fyield" label="成品率(%)">
+            <view type="write"/>
+            <edit name="fyield" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fnote" label="备注">
+            <view type="write"/>
+            <edit name="fnote" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fpdmimportDate" label="PDM导入时间">
+            <view type="write"/>
+            <edit name="fpdmimportDate" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="hasSourceMaterial" label="是否有特性来源物料">
+            <view type="write"/>
+            <edit name="hasSourceMaterial" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fitemId" label="物料内码">
+            <view type="write"/>
+            <edit name="fitemId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="finterId" label="BOM内码">
+            <view type="write"/>
+            <edit name="finterId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fbomskipEnum" label="跳层">
+            <view type="write"/>
+            <edit name="fbomskipEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lastUpdateName" label="最后更新人员">
+            <view type="write"/>
+            <edit name="lastUpdateName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fenterTime" label="最后更新日期">
+            <view type="write"/>
+            <edit name="fenterTime" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="lastUseName" label="使用人员">
+            <view type="write"/>
+            <edit name="lastUseName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" id="fusedate" label="使用日期">
+            <view type="write"/>
+            <edit name="fusedate" type="text"/>
+        </field>
+    </viewModel>
+    <viewModel author="dafu" displayName="KsBaseK3BomList" entityName="com.keensen.ump.base.k3.KsBaseK3BomList" id="KsBaseK3BomList">
+        <field dataType="Date" dict="false" entityField="updateTime" id="updateTime" label="更新时间">
+            <view type="write"/>
+            <edit name="updateTime" type="date"/>
+        </field>
+        <field dataType="String" dict="false" entityField="updateUserId" id="updateUserId" label="更新人ID">
+            <view type="write"/>
+            <edit name="updateUserId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="updateName" id="updateName" label="更新人">
+            <view type="write"/>
+            <edit name="updateName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fitemId" id="fitemId" label="物料内码">
+            <view type="write"/>
+            <edit name="fitemId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="finterId" id="finterId" label="BOM内码">
+            <view type="write"/>
+            <edit name="finterId" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fnumber" id="fnumber" label="物料代码">
+            <view type="write"/>
+            <edit name="fnumber" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fname" id="fname" label="物料名称">
+            <view type="write"/>
+            <edit name="fname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fmodel" id="fmodel" label="规格型号">
+            <view type="write"/>
+            <edit name="fmodel" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fauxPropIdEnum" id="fauxPropIdEnum" label="辅助属性">
+            <view type="write"/>
+            <edit name="fauxPropIdEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fmaterielChildType" id="fmaterielChildType" label="子项类型">
+            <view type="write"/>
+            <edit name="fmaterielChildType" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fmarshalTypeEnum" id="fmarshalTypeEnum" label="配置属性">
+            <view type="write"/>
+            <edit name="fmarshalTypeEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="funitname" id="funitname" label="基本单位">
+            <view type="write"/>
+            <edit name="funitname" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fqty" id="fqty" label="基本用量">
+            <view type="write"/>
+            <edit name="fqty" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fbeginDay" id="fbeginDay" label="生效日期">
+            <view type="write"/>
+            <edit name="fbeginDay" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fendDay" id="fendDay" label="失效日期">
+            <view type="write"/>
+            <edit name="fendDay" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fpercent" id="fpercent" label="计划百分比(%)">
+            <view type="write"/>
+            <edit name="fpercent" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fscrap" id="fscrap" label="损耗率(%)">
+            <view type="write"/>
+            <edit name="fscrap" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fpositionNo" id="fpositionNo" label="位置号">
+            <view type="write"/>
+            <edit name="fpositionNo" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fitemSize" id="fitemSize" label="坯料尺寸">
+            <view type="write"/>
+            <edit name="fitemSize" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fitemSuite" id="fitemSuite" label="坯料数">
+            <view type="write"/>
+            <edit name="fitemSuite" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="foperSn" id="foperSn" label="工序号">
+            <view type="write"/>
+            <edit name="foperSn" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="foperName" id="foperName" label="工序">
+            <view type="write"/>
+            <edit name="foperName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fmachinePos" id="fmachinePos" label="工位">
+            <view type="write"/>
+            <edit name="fmachinePos" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="foffSetDay" id="foffSetDay" label="提前期偏置">
+            <view type="write"/>
+            <edit name="foffSetDay" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fbackFlushEnum" id="fbackFlushEnum" label="是否倒冲">
+            <view type="write"/>
+            <edit name="fbackFlushEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fisKeyitemEnum" id="fisKeyitemEnum" label="关键件">
+            <view type="write"/>
+            <edit name="fisKeyitemEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fuseStateEnum" id="fuseStateEnum" label="使用状态">
+            <view type="write"/>
+            <edit name="fuseStateEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fdeletedEnum" id="fdeletedEnum" label="是否禁用">
+            <view type="write"/>
+            <edit name="fdeletedEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fstockName" id="fstockName" label="发料仓库">
+            <view type="write"/>
+            <edit name="fstockName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fspfullName" id="fspfullName" label="发料仓位">
+            <view type="write"/>
+            <edit name="fspfullName" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fnote" id="fnote" label="备注">
+            <view type="write"/>
+            <edit name="fnote" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fnote1" id="fnote1" label="备注1">
+            <view type="write"/>
+            <edit name="fnote1" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fnote2" id="fnote2" label="备注2">
+            <view type="write"/>
+            <edit name="fnote2" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fnote3" id="fnote3" label="备注3">
+            <view type="write"/>
+            <edit name="fnote3" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fpdmimportDate" id="fpdmimportDate" label="PDM导入时间">
+            <view type="write"/>
+            <edit name="fpdmimportDate" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fhasCharEnum" id="fhasCharEnum" label="是否有特性">
+            <view type="write"/>
+            <edit name="fhasCharEnum" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="hasSubstitute" id="hasSubstitute" label="存在替代关系">
+            <view type="write"/>
+            <edit name="hasSubstitute" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="itemNote" id="itemNote" label="特性描述">
+            <view type="write"/>
+            <edit name="itemNote" type="text"/>
+        </field>
+        <field dataType="String" dict="false" entityField="fcostPercentage" id="fcostPercentage" label="拆卸成本拆分比例">
+            <view type="write"/>
+            <edit name="fcostPercentage" type="text"/>
+        </field>
+    </viewModel>
+</viewModelSet>

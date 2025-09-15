@@ -21,7 +21,7 @@
        T1.STATUS            AS "status",
        t1.exception_type	as "exceptionType",
        t1.remark	as "remark",
-       decode(qj.gyy_conclusion,'A','放行原订单','B','降级','C','改判其他无特殊要求的同型号产品','D','报废','E','送水测','F','染色解剖','') "gyyConclusion",
+       decode(qj.gyy_conclusion,'A','放行原订单','B','降级','C','改判其他无特殊要求的同型号产品','D','报废','E','送水测','F','染色解剖','G','补胶','') "gyyConclusion",
 		TO_CHAR(qj.GYY_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "gyyRemarkTime",
 		qj.GYY_REMARK_USER_ID as "gyyRemarkUserId",
 		qj.GYY_REMARK_USER_NAME as "gyyRemarkUserName",
@@ -35,6 +35,19 @@
 		qj.monitor_Remark "monitorRemark",
 		TO_CHAR(qj.monitor_Remark_time, 'YYYY-MM-DD HH24:MI')  "monitorRemarkTime",
 		cfg.prop_value_name "ngReasonName",
+		
+		 qj.MONITOR_ADVISE as "monitorAdvise",
+		TO_CHAR(qj.MONITOR_ADVISE_TIME, 'YYYY-MM-DD HH24:MI') as "monitorAdviseTime",
+		qj.MONITOR_ADVISE_USER_ID as "monitorAdviseUserId",
+		qj.MONITOR_ADVISE_USER_NAME as "monitorAdviseUserName",
+		qj.PLANNER_ADVISE as "plannerAdvise",
+		TO_CHAR(qj.PLANNER_ADVISE_TIME, 'YYYY-MM-DD HH24:MI') as "plannerAdviseTime",
+		qj.PLANNER_ADVISE_USER_ID as "plannerAdviseUserId",
+		qj.PLANNER_ADVISE_USER_NAME as "plannerAdviseUserName",
+		qj.OVERTIME_ADVISE as "overtimeAdvise",
+		TO_CHAR(qj.OVERTIME_ADVISE_TIME, 'YYYY-MM-DD HH24:MI') as "overtimeAdviseTime",
+		qj.OVERTIME_ADVISE_USER_ID as "overtimeAdviseUserId",
+		qj.OVERTIME_ADVISE_USER_NAME as "overtimeAdviseUserName",
 		
 		TO_CHAR(qj.modify_order_no_time, 'YYYY-MM-DD HH24:MI') as "modifyOrderNoTime",
 		<!--decode(semi.jm_batch_no,null,'否','是') "semiStock",-->
@@ -191,7 +204,7 @@ or t.jm_batch_no in(select batch_no from KS_COMPONENT_SEMI_STOCK)
 	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)		
 	 
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
-	 AND ROUND((SYSDATE - jm.produce_dt)*24)&gt;96
+	 AND (ROUND((SYSDATE - jm.produce_dt)*24)&gt;96 or qj.ng_reason_id=300062)
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
 	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
 	  and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
@@ -214,7 +227,7 @@ or t.jm_batch_no in(select batch_no from KS_COMPONENT_SEMI_STOCK)
 	 AND NOT EXISTS(SELECT 1 FROM KS_PROD_QUALITY_POORRECORD pr WHERE jm.batch_no = pr.juanmo_Batch_No)
 	 
 	 AND NOT EXISTS(SELECT 1 FROM qinsen.inst_water_test wt WHERE wt.juanmo_batch_id=jm.record_id)
-	 AND ROUND((SYSDATE - jm.produce_dt)*24)&gt;96
+	 AND (ROUND((SYSDATE - jm.produce_dt)*24)&gt;96 or qj.ng_reason_id=300062)
 	 AND NOT EXISTS(SELECT 1 FROM KS_COMPONENT_CHECK_LIST cl WHERE cl.batch_no = qj.batch_no)
 	 AND NOT EXISTS(SELECT 1 FROM ks_component_vstock v WHERE v.jm_batch_no = jm.batch_no)
 	  and not exists(SELECT jm2.batch_no from QINSEN.inst_qijian qj
@@ -229,7 +242,7 @@ or t.jm_batch_no in(select batch_no from KS_COMPONENT_SEMI_STOCK)
 	 LEFT JOIN QINSEN.INST_qijian qj 
 	 ON qj.juanmo_batch_id = jm.record_id
 	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
-	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
+	 AND (ROUND((SYSDATE - wt.create_dt)*24)&gt;96 or qj.ng_reason_id=300062)
 	 
 	 and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = jm.batch_no)
 	 
@@ -255,7 +268,7 @@ or t.jm_batch_no in(select batch_no from KS_COMPONENT_SEMI_STOCK)
 	 LEFT JOIN QINSEN.INST_qijian qj 
 	 ON qj.juanmo_batch_id = jm.record_id
 	 WHERE to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
-	 AND ROUND((SYSDATE - wt.create_dt)*24)&gt;96
+	 AND (ROUND((SYSDATE - wt.create_dt)*24)&gt;96 or qj.ng_reason_id=30062)
 	 
 	 and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = jm.batch_no)
 	 

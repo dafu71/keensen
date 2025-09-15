@@ -11,7 +11,7 @@
 		t1.type "type",
 		t1.remark "remark"
     from KS_BASE_STORAGE t1
-    where t1.status='1'
+    where nvl(t1.status,1)='1'
     <isNotNull prepend="and" property="name">t1.name like '%'||#name#||'%'</isNotNull>
         <isNotNull prepend="and" property="code">t1.code like '%'||#code#||'%'</isNotNull>
         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>

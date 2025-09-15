@@ -14,12 +14,13 @@
               '家用',
               T.PREFIX || LPAD(T.NUM, 7, 0)) "sn"
         -->
-         T.PREFIX || LPAD(T.NUM, T.DIGIT, 0) "sn",
+         decode(T.USE_TYPE,'家用',T.PREFIX || '年月' || LPAD(T.NUM, T.DIGIT, 0), T.PREFIX || LPAD(T.NUM, T.DIGIT, 0))"sn",
         T.DIGIT "digit",
         T.RULE "rule"
         
   FROM KS_COMPONENT_SN T
   where 1=1
+  and nvl(t.status,1) = 1
     <isNotNull prepend="and" property="id"> 
 		       t.id = #id#
 	</isNotNull>
@@ -58,7 +59,7 @@
     </update>
     
     <select id="querySn" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-    SELECT #prefix# || LPAD(TO_CHAR(ROWNUM + #num2#),     
+    SELECT decode(#useType#,'家用',#prefix# || (select SUBSTR(t.ymd,1,2) from V_KS_YMD t) ,#prefix#) || LPAD(TO_CHAR(ROWNUM + #num2#),     
     <!--DECODE(#useType#,'工业',6, '家用',7)-->
     #digit#
     , '0')    

@@ -278,6 +278,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}
 					}, {
 						dataIndex : 'c21Test',
+						hidden : specialQuery != "1",
 						header : 'c21测试浓度',
 						renderer : function(v, m, r, i) {
 							var up21 = r.get('up21');
@@ -292,6 +293,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}
 					}, {
 						dataIndex : 'c23Test',
+						hidden : specialQuery != "1",
 						header : 'c23测试浓度',
 						renderer : function(v, m, r, i) {
 							var up23 = r.get('up23');
@@ -306,6 +308,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}
 					}, {
 						dataIndex : 'c27Test',
+						hidden : specialQuery != "1",
 						header : 'c27测试浓度',
 						renderer : function(v, m, r, i) {
 							var up27 = r.get('up27');
@@ -320,6 +323,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}
 					}, {
 						dataIndex : 'c28Test',
+						hidden : specialQuery != "1",
 						header : 'c28测试浓度',
 						renderer : function(v, m, r, i) {
 							var up28 = r.get('up28');
@@ -334,6 +338,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}
 					}, {
 						dataIndex : 'c30Test',
+						hidden : specialQuery != "1",
 						header : 'c30测试浓度',
 						renderer : function(v, m, r, i) {
 							var up30 = r.get('up30');
@@ -348,6 +353,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}
 					}, {
 						dataIndex : 'c29Test',
+						hidden : specialQuery != "1",
 						header : 'c29测试浓度'
 					}],
 			store : new Ext.data.JsonStore({

@@ -13,26 +13,26 @@ com.keensen.ump.produce.diaphragm.storage.AllocateMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 80,
 					columns : 4,
 					border : true,
 					//collapsible : true,
 					titleCollapse : false,
-					title : '【调拨单查询】',
+					//title : '【调拨单查询】',
 					fields : [{
 								xtype : 'storagecombobox',
 								hiddenName : 'condition/fromStorageId',
-								anchor : '60%',
+								anchor : '95%',
 								fieldLabel : '源仓库'
 							},{
 								xtype : 'storagecombobox',
 								hiddenName : 'condition/toStorageId',
-								anchor : '60%',
+								anchor : '95%',
 								fieldLabel : '目标仓库'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/batchNo',
-								anchor : '60%',
+								anchor : '95%',
 								fieldLabel : '批号'
 							}, {
 								xtype : "dateregion",
@@ -56,7 +56,7 @@ com.keensen.ump.produce.diaphragm.storage.AllocateMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			title : '【调拨单列表】',
+			//title : '【调拨单列表】',
 			viewConfig : {
 				forceFit : true
 			},

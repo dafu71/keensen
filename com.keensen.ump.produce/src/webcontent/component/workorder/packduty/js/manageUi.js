@@ -149,9 +149,12 @@ com.keensen.ump.produce.component.workorder.PackdutyMgr = function() {
 					}, {
 						dataIndex : 'jmAmount',
 						header : '卷膜数量'
-					}, {
+					}/*, {
 						dataIndex : 'packAmount',
 						header : '已包装数量'
+					}*/, {
+						dataIndex : 'checkNum',
+						header : '请检数量'
 					}, {
 						dataIndex : 'waitAmount',
 						header : '待包装数量'
@@ -206,6 +209,8 @@ com.keensen.ump.produce.component.workorder.PackdutyMgr = function() {
 							name : 'waitAmount'
 						}, {
 							name : 'packAmount'
+						}, {
+							name : 'checkNum'
 						}]
 			})
 		})
@@ -597,6 +602,14 @@ com.keensen.ump.produce.component.workorder.PackdutyMgr = function() {
 										name : 'condition/isRaosi',
 										inputValue : 'Y',
 										anchor : '100%'
+									}, {
+										xtype : "datetimeregion",
+										colspan : 1,
+										// anchor : '75%',
+										nameArray : ['condition/rsProduceDtStart',
+												'condition/rsProduceDtEnd'],
+										fieldLabel : "绕丝时间",
+										format : "Y-m-d H:i"
 									}, {
 										xtype : 'hidden',
 										name : 'condition/packdutychoose',

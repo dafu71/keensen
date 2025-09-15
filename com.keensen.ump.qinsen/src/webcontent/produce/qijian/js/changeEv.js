@@ -9,6 +9,48 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr.prototype.initEvent = function() 
 			// return false;
 
 		}
+
+		var newBatchNoStr = this.queryPanel.newBatchNoStr.getValue();
+		var oldBatchNoStr = this.queryPanel.oldBatchNoStr.getValue();
+
+		if (!Ext.isEmpty(newBatchNoStr)) {
+			var batchNoStr = newBatchNoStr;
+			var regEx = new RegExp("\\n", "gi");
+			batchNoStr = batchNoStr.replace(regEx, ",");
+			batchNoStr = batchNoStr.replaceAll('，', ',');
+			batchNoStr = batchNoStr.replaceAll(' ', '');
+			var arr = [];
+			arr = batchNoStr.split(',');
+			var arr2 = [];
+			for (var i = 0; i < arr.length; i++) {
+				arr2.push("'" + arr[i] + "'");
+			}
+			this.queryPanel.newBatchNos.setValue(arr2.join(",") == "''"
+					? null
+					: arr2.join(","));
+		}else{
+			this.queryPanel.newBatchNos.setValue('');
+		}
+		
+		if (!Ext.isEmpty(oldBatchNoStr)) {
+			var batchNoStr = oldBatchNoStr;
+			var regEx = new RegExp("\\n", "gi");
+			batchNoStr = batchNoStr.replace(regEx, ",");
+			batchNoStr = batchNoStr.replaceAll('，', ',');
+			batchNoStr = batchNoStr.replaceAll(' ', '');
+			var arr = [];
+			arr = batchNoStr.split(',');
+			var arr2 = [];
+			for (var i = 0; i < arr.length; i++) {
+				arr2.push("'" + arr[i] + "'");
+			}
+			this.queryPanel.oldBatchNos.setValue(arr2.join(",") == "''"
+					? null
+					: arr2.join(","));
+		}else{
+			this.queryPanel.oldBatchNos.setValue('');
+		}
+
 		var store = this.listPanel.store;
 
 		store.baseParams = this.queryPanel.getForm().getValues();
@@ -23,7 +65,7 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr.prototype.initEvent = function() 
 
 com.keensen.ump.qinsen.produce.qijianchangeMgr.prototype.exportExcel = function() {
 	var _this = this;
-	
+
 	var daochu = _this.queryPanel.getForm().getValues();
 
 	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
@@ -65,4 +107,3 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr.prototype.exportExcel = function(
 		}
 	})
 }
-

@@ -20,7 +20,6 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.initEvent = function() 
 				_this.dealCdmBatchNo();
 			});
 
-
 	this.inputPanel.lineId.mon(this.inputPanel.lineId, "change", function(
 					thisFiled, newValue, oldValue) {
 				var now = new Date();
@@ -42,7 +41,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.initEvent = function() 
 
 // 校验叠膜栈板号，加载相关信息
 com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.dealCdmBatchNo = function() {
-	
+
 	var _this = this;
 	var cdmBatchNo = _this.inputPanel.cdmBatchNo.getValue();
 	if (cdmBatchNo) {
@@ -62,20 +61,20 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.dealCdmBatchNo = functi
 				if (ret.success) {
 					if (!Ext.isEmpty(ret.data)) {
 						var dd = ret.data[0];
-						//_this.inputPanel.orderNo.setValue(dd.orderNo);
-						//_this.inputPanel.prodSpecId.setValue(dd.prodSpecId);
+						// _this.inputPanel.orderNo.setValue(dd.orderNo);
+						// _this.inputPanel.prodSpecId.setValue(dd.prodSpecId);
 						_this.inputPanel.inQuantity.setValue(dd.numPerWad);
 						_this.inputPanel.outQuantity.setValue(dd.numPerWad);
 						_this.inputPanel.blankingSize.setValue(dd.blankingSize);
 						_this.inputPanel.denseNet.setValue(dd.denseNet);
 						_this.inputPanel.pageWidth.setValue(dd.pageWidth);
 						_this.inputPanel.cdmBatchId.setValue(dd.recordId);// 裁叠膜批号ID
-						
-						
+
 						_this.inputPanel.juanmo.setValue(dd.juanmo);
 						_this.inputPanel.lightNetType.setValue(dd.lightNetType);
-						_this.inputPanel.lightNetShortPage.setValue(dd.lightNetShortPage);
-						
+						_this.inputPanel.lightNetShortPage
+								.setValue(dd.lightNetShortPage);
+
 						_this.genBatchNo();
 					} else {
 						Ext.Msg.alert("系统提示", "该栈板号不存在，请检查！", function() {
@@ -216,6 +215,10 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onSave = function() {
 											var recordIdStr = ret.recordIdStr;
 											_this.inputPanel.produceDt
 													.setValue(new Date());
+											_this.inputPanel.pipeCode
+													.setValue('');
+											_this.inputPanel.pipeInfo
+													.setValue('');
 
 											Ext.Msg.confirm('提示',
 													'是否立即打印产品标签？',
@@ -272,53 +275,60 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onGetDuty = function() 
 			});
 	_this.requestMask.show();
 	Ext.Ajax.request({
-		url : "com.keensen.ump.produce.component.workorder2.getJmDuty.biz.ext",
-		method : "post",
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-				if (!Ext.isEmpty(ret.data)) {
-					var orderNo = ret.data[0].orderNo;
-					var orderId = ret.data[0].orderId;
-					var orderType = ret.data[0].orderType;
-					var materSpecName2 = ret.data[0].materSpecName2;
-					var orderAmount = ret.data[0].orderAmount;
-					var planDate = ret.data[0].planDate;
-					var jmAmount = ret.data[0].jmAmount;
-					var orderAmount = ret.data[0].orderAmount;
-					var materSpecId = ret.data[0].materSpecId;
-					var realityAmount = ret.data[0].realityAmount;					
-					var prodRemark = ret.data[0].weekRemark;
-					
-					_this.inputPanel.orderNo.setValue(orderNo);
-					_this.inputPanel.orderAmount.setValue(orderAmount);
-					_this.inputPanel.planDate.setValue(planDate);
-					_this.inputPanel.jmAmount.setValue(jmAmount);
-					_this.inputPanel.prodSpecId.setValue(materSpecId);
-					_this.inputPanel.orderId.setValue(orderId);
-					_this.inputPanel.orderAmount.setValue(orderAmount);
-					_this.inputPanel.realityAmount.setValue(realityAmount);					
-					_this.inputPanel.prodRemark.setValue(prodRemark);
-					
-					var store = _this.jmdutyStore;
-					store.load({
-								params : {
-									'condition/planDate' : planDate,
-									'condition/orderId' : orderId
-								}
-							});
-					// _this.dealTumoBatchNo();
-				} else {
-					Ext.Msg.alert("系统提示", "该机台没有分配任务，请检查！", function() {
-								_this.inputPanel.cdmBatchNo.setValue('');
-								return false;
-							})
+				url : "com.keensen.ump.produce.component.workorder2.getJmDuty.biz.ext",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						if (!Ext.isEmpty(ret.data)) {
+							var orderNo = ret.data[0].orderNo;
+							var orderId = ret.data[0].orderId;
+							var orderType = ret.data[0].orderType;
+							var materSpecName2 = ret.data[0].materSpecName2;
+							var orderAmount = ret.data[0].orderAmount;
+							var planDate = ret.data[0].planDate;
+							var jmAmount = ret.data[0].jmAmount;
+							var orderAmount = ret.data[0].orderAmount;
+							var materSpecId = ret.data[0].materSpecId;
+							var realityAmount = ret.data[0].realityAmount;
+							var prodRemark = ret.data[0].weekRemark;
+							var tape = ret.data[0].tape;
 
+							_this.inputPanel.orderNo.setValue(orderNo);
+							_this.inputPanel.orderAmount.setValue(orderAmount);
+							_this.inputPanel.planDate.setValue(planDate);
+							_this.inputPanel.jmAmount.setValue(jmAmount);
+							_this.inputPanel.prodSpecId.setValue(materSpecId);
+							_this.inputPanel.orderId.setValue(orderId);
+							_this.inputPanel.orderAmount.setValue(orderAmount);
+							_this.inputPanel.realityAmount
+									.setValue(realityAmount);
+							_this.inputPanel.prodRemark.setValue(prodRemark);
+							_this.inputPanel.tape.setValue(tape);
+
+							_this.inputPanel.pipeCode.setValue('');
+							_this.inputPanel.pipeInfo.setValue('');
+
+							var store = _this.jmdutyStore;
+							store.load({
+										params : {
+											'condition/planDate' : planDate,
+											'condition/orderId' : orderId
+										}
+									});
+							// _this.dealTumoBatchNo();
+						} else {
+							Ext.Msg.alert("系统提示", "该机台没有分配任务，请检查！", function() {
+										_this.inputPanel.cdmBatchNo
+												.setValue('');
+										return false;
+									})
+
+						}
+					}
+				},
+				callback : function() {
+					_this.requestMask.hide()
 				}
-			}
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})
+			})
 }

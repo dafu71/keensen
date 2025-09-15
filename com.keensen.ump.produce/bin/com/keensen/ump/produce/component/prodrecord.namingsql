@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.prodrecord">
+    <select id="queryProdRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+      t1.client as "client",
+	t1.prod_type as "prodType",
+	t1.prod_name as "prodName",
+	t1.dry_wet as "dryWet",
+	t1.quantity as "quantity",
+	t1.white as "white",
+	t1.label as "label",
+	t1.lid as "lid",
+	t1.bag as "bag",
+	t1.box as "box",
+	t1.locate as "locate",
+	t1.batch_no as "batchNo",
+	t1.qijian as "qijian",
+	t1.gpd as "gpd",
+	t1.salt as "salt",
+	t1.describe as "describe",
+	t1.deal as "deal",
+	t1.order_no as "orderNo",
+	TO_CHAR(sysdate, 'yyyy-MM-dd') "packDate",
+	nvl(v.qj_batch_no,nvl(t1.reserve1,t1.batch_no)) "qjBatchNo",
+	nvl(v.prod_spec_name,nvl(t1.reserve2,t1.prod_name)) "qjSpecName",
+    decode(v.batch_no,null,0,1) "isqj"
+
+  FROM KS_COMPONENT_PROD_RECORD t1
+  
+   LEFT JOIN V_KS_QJ_BATCH_NO v
+  on v.batch_no = t1.batch_no
+  
+   
+  where 1=1
+ and nvl(t1.status,1) != 0
+ 
+  <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="client">t1.client like '%' || #client# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodType">t1.prod_Type like '%' || #prodType# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodName">t1.prod_name like '%' || #prodName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">t1.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="qjBatchNo">t1.v.qj_batch_no like '%' || #qjBatchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dryWet">t1.dry_wet like '%' || #dryWet# || '%'</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id  = #id#</isNotNull>
+        <isNotNull prepend="and" property="ids">t1.id  in ($ids$)</isNotNull>
+  
+  
+	  order by t1.id desc
+	
+	
+    </select>
+    <delete id="deleteProdRecord" parameterClass="java.util.HashMap">
+   delete from KS_COMPONENT_PROD_RECORD 
+   where 1=1
+    <isNotNull prepend="and" property="id">id = #id#</isNotNull>
+    </delete>
+    <select id="queryMarkPrintList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT nvl(pr.qj_batch_no,nvl(pr.reserve1,PR.BATCH_NO))           "prodBatchNo",
+       nvl(pr.qj_spec_name,nvl(pr.reserve2,PR.PROD_NAME))          "prodSpecName2",
+       PR.DRY_WET            "dryWet",
+       T1.IF_PRINT_BATCH_NO  AS "ifPrintBatchNo",
+       T1.Y_BATCH_NO         AS "yBatchNo",
+       T1.X_BATCH_NO         AS "xBatchNo",
+       T1.IF_PRINT_SPEC_NAME AS "ifPrintSpecName",
+       T1.Y_BATCH_SPEC_NAME  AS "yBatchSpecName",
+       T1.X_BATCH_SPEC_NAME  AS "xBatchSpecName",
+       T1.IF_PRINT_DRY_WET   AS "ifPrintDryWet",
+       T1.Y_DRY_IMG          AS "yDryImg",
+       T1.X_DRY_IMG          AS "xDryImg",
+       T1.Y_DRY_SPAN         AS "yDrySpan",
+       T1.X_DRY_SPAN         AS "xDrySpan",
+       T1.Y_WET_IMG          AS "yWetImg",
+       T1.X_WET_IMG          AS "xWetImg",
+       T1.Y_WET_SPAN         AS "yWetSpan",
+       T1.X_WET_SPAN         AS "xWetSpan",
+       T1.Y_STAR_IMG         AS "yStarImg",
+       T1.X_STAR_IMG         AS "xStarImg",
+       T1.IF_PRINT_DAY_CODE  AS "ifPrintDayCode",
+       T1.Y_DAY_CODE_SPAN    AS "yDayCodeSpan",
+       T1.X_DAY_CODE_SPAN    AS "xDayCodeSpan",
+       T1.PRINT_DELAY_TIME   AS "printDelayTime",
+       T1.RESERVE1           AS "reserve1",
+       T1.TEMPLATE_NAME AS "templateName",
+       T1.URL AS "url"
+  FROM (select t1.*,v.prod_spec_name qj_spec_name,v.qj_batch_no from KS_COMPONENT_PROD_RECORD t1
+  LEFT JOIN V_KS_QJ_BATCH_NO v
+  on v.batch_no = t1.batch_no)
+   PR,
+       (SELECT *
+          FROM KS_COMPONENT_MARK_TEMPLATE T
+         WHERE T.TEMPLATE_NAME = 'KS-17-M0057-A') T1
+         where 1=1 
+         <isNotNull prepend="and" property="ids">pr.id  in ($ids$)</isNotNull> 
+  
+	  order by pr.id desc
+   
+   </select>
+</sqlMap>

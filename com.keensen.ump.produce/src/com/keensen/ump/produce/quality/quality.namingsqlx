@@ -926,7 +926,8 @@
 	SELECT T1.ID           "id", rownum "rn",
        T1.RELATION_ID  "relationId",
        nvl(T1.WATER,'')        "water",
-       to_char(nvl(T1.DESALINATION,''),'fm999.00') "desalination",
+       case when REGEXP_INSTR(T1.DESALINATION, '[^0-9.]') = 0 then to_char(nvl(T1.DESALINATION,''),'fm999.00')
+       else T1.DESALINATION end  "desalination",
        T1.BATCH_NO     "batchNo"
   FROM KS_QUALITY_DELIVERYRECORD_LIST T1
   WHERE 1=1

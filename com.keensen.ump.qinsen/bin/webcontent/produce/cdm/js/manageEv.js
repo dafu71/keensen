@@ -1,7 +1,59 @@
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 
 	var _this = this;
-	
+
+	this.listPanel.selModel.on('rowselect', function(o, i, r) {
+		var _this = this;
+		var A = this.listPanel;
+	(function() {
+			var records = A.getSelectionModel().getSelections();
+
+			var totalQuantity = 0;
+			var totalUnusedQuantity = 0;
+			var totalCdmLength = 0;
+			for (var i = 0; i < records.length; i++) {
+				var quantity = records[i].data.quantity;
+				var unusedQuantity = records[i].data.unusedQuantity;
+				var outLength = records[i].data.outLength;
+				totalQuantity += quantity;
+				totalUnusedQuantity += unusedQuantity;
+				totalCdmLength += outLength;
+			}
+			Ext.getCmp('totalCdmLengthTxt2').setValue('选中长度合计(m):'
+					+ totalCdmLength);
+			Ext.getCmp('totalQuantityTxt2').setValue('选中页数合计:' + totalQuantity);
+			Ext.getCmp('totalUnusedQuantityTxt2').setValue('选中未卷页数合计:'
+					+ totalUnusedQuantity);
+
+		}).defer(100);
+	}, this);
+
+	this.listPanel.selModel.on('rowdeselect', function(o, i, r) {
+		var _this = this;
+		var A = this.listPanel;
+	(function() {
+			var records = A.getSelectionModel().getSelections();
+
+			var totalQuantity = 0;
+			var totalUnusedQuantity = 0;
+			var totalCdmLength = 0;
+			for (var i = 0; i < records.length; i++) {
+				var quantity = records[i].data.quantity;
+				var unusedQuantity = records[i].data.unusedQuantity;
+				var outLength = records[i].data.outLength;
+				totalQuantity += quantity;
+				totalUnusedQuantity += unusedQuantity;
+				totalCdmLength += outLength;
+			}
+			Ext.getCmp('totalCdmLengthTxt2').setValue('选中长度合计(m):'
+					+ totalCdmLength);
+			Ext.getCmp('totalQuantityTxt2').setValue('选中页数合计:' + totalQuantity);
+			Ext.getCmp('totalUnusedQuantityTxt2').setValue('选中未卷页数合计:'
+					+ totalUnusedQuantity);
+
+		}).defer(100);
+	}, this);
+
 	// 查询事件
 	this.queryChooseOrderPanel.mon(this.queryChooseOrderPanel, 'query',
 			function(form, vals) {
@@ -16,8 +68,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 			}, this);
 
 	this.defectZmWin.listPanel.store.on('load', function() {
-				var defectZmArr = ['B3-底膜针孔',
-                         'B4-底膜刮痕'];
+				var defectZmArr = ['B3-底膜针孔', 'B4-底膜刮痕'];
 				_this.defectZmWin.listPanel.store.filterBy(function(record) {
 							var text = '' + record.get('defectName');
 							return (defectZmArr.includes(text));
@@ -168,29 +219,48 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 
 	this.defectTmWin.mon(this.defectTmWin, 'beforehide', function() {
 
-		var A = this.listPanel;
-		if (!A.getSelectionModel().getSelected()) {
-			return;
-		} else {
-			var C = A.getSelectionModel().getSelections();
-			var rec = C[0];
-			var tumoBatchId = rec.data.tumoBatchId;
-			var tumoBatchNo = rec.data.tumoBatchNo;
-			var isCutOver = rec.data.isCutOver;
-			this.updateIsCutOverWindow.show();
-			this.updateIsCutOverWindow.recordId.setValue(tumoBatchId);
-			this.updateIsCutOverWindow.batchNo.setValue(tumoBatchNo);
-			this.updateIsCutOverWindow.isCutOver.setValue(isCutOver);
-		}	
-	}, this);
+				var A = this.listPanel;
+				if (!A.getSelectionModel().getSelected()) {
+					return;
+				} else {
+					var C = A.getSelectionModel().getSelections();
+					var rec = C[0];
+					var tumoBatchId = rec.data.tumoBatchId;
+					var tumoBatchNo = rec.data.tumoBatchNo;
+					var isCutOver = rec.data.isCutOver;
+					this.updateIsCutOverWindow.show();
+					this.updateIsCutOverWindow.recordId.setValue(tumoBatchId);
+					this.updateIsCutOverWindow.batchNo.setValue(tumoBatchNo);
+					this.updateIsCutOverWindow.isCutOver.setValue(isCutOver);
+				}
+			}, this);
 
 }
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onEdit = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	}
+	var B = A.getSelectionModel().getSelections();
+	if (B.length > 1) {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return
+	}
+
 	this.listPanel.onEdit();
 };
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onDel = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	}
+	var B = A.getSelectionModel().getSelections();
+	if (B.length > 1) {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return
+	}
 	this.listPanel.onDel();
 };
 
@@ -204,6 +274,14 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.destroy = function() {
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPrintCaidieMoTag = function() {
 	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	}
+	var B = A.getSelectionModel().getSelections();
+	if (B.length > 1) {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return
+	}
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
@@ -240,6 +318,14 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onaddTmDefect = function() 
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	}
+	var B = A.getSelectionModel().getSelections();
+	if (B.length > 1) {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return
+	}
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
 		var C = A.getSelectionModel().getSelections();
 		var r = C[0];
@@ -253,6 +339,14 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onaddTmDefect = function() 
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onaddZmDefect = function() {
 	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	}
+	var B = A.getSelectionModel().getSelections();
+	if (B.length > 1) {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return
+	}
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
@@ -278,62 +372,37 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportExcel = function() {
 		return false;
 
 	}
-	
+
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '裁叠膜记录',
 			'com.keensen.ump.qinsen.cdm.queryRecords', '0,1');
-	/*var daochu = _this.queryPanel.getForm().getValues();
-
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			namingsql : 'com.keensen.ump.qinsen.cdm.queryRecords',
-			templateFilename : 'ks_inst_caidiemo'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-				if (ret.success) {
-					var fname = ret.fname;
-					if (!Ext.isEmpty(fname)) {
-						if (Ext.isIE) {
-							window
-									.open('/default/deliverynote/seek/down4IE.jsp?fname='
-											+ fname);
-						} else {
-							window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-									+ fname;
-						}
-					} else {
-						Ext.Msg.alert("系统提示", ret.msg);
-						return false;
-					}
-
-				}
-
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})*/
+	/*
+	 * var daochu = _this.queryPanel.getForm().getValues();
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+	 * method : "post", jsonData : { 'map' : daochu, namingsql :
+	 * 'com.keensen.ump.qinsen.cdm.queryRecords', templateFilename :
+	 * 'ks_inst_caidiemo' }, success : function(resp) { var ret =
+	 * Ext.decode(resp.responseText); if (ret.success) { if (ret.success) { var
+	 * fname = ret.fname; if (!Ext.isEmpty(fname)) { if (Ext.isIE) { window
+	 * .open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); } else {
+	 * window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" +
+	 * fname; } } else { Ext.Msg.alert("系统提示", ret.msg); return false; } } } },
+	 * callback : function() { _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
-	
+
 	Ext.getCmp(chooseOrderBtn).setDisabled(true);
 	Ext.getCmp(chooseOrderBtn).setVisible(false);
-	
+
 	this.inputWindow.prodSpecId.setReadOnly(true);
-	
+
 	this.inputWindow.produceDt.setValue(new Date());
-	this.inputWindow.buttons[0].setDisabled(true);
+	// this.inputWindow.buttons[0].setDisabled(true);
+	this.inputWindow.buttons[0].setDisabled(false);
 
 	this.inputWindow.displayfield1.setVisible(true);
 	this.inputWindow.orderType.setVisible(true);
@@ -348,7 +417,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 
 	this.inputWindow.tumoBatchNo.setVisible(true);
 	this.inputWindow.tumoBatchNo.setDisabled(false);
-	
+
 	this.inputWindow.pageType.setVisible(false);
 	this.inputWindow.pageType.setDisabled(true);
 
@@ -477,21 +546,25 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPlan = function() {
 
 					var i = _this.inputWindow.prodSpecId.store.find('id',
 							materSpecId);
-					if(i==-1) return;
+					if (i == -1)
+						return;
 					var rec = _this.inputWindow.prodSpecId.store.getAt(i);
 					_this.inputWindow.blankingSize
 							.setValue(rec.data.blankingSize);
 					_this.inputWindow.pageWidth.setValue(rec.data.pageWidth);
-					//_this.inputWindow.denseNet.setValue(rec.data.denseNet);
-					
-					_this.inputWindow.denseNetType.setValue(rec.data.denseNetType);
-					_this.inputWindow.denseNetWidth.setValue(rec.data.denseNetWidth);
-					_this.inputWindow.lightNetType.setValue(rec.data.lightNetType);
-					_this.inputWindow.lightNetShortPage.setValue(rec.data.lightNetShortPage);
-					_this.inputWindow.denseNetCdm.setValue(rec.data.denseNetCdm);
-					
-					
-					
+					// _this.inputWindow.denseNet.setValue(rec.data.denseNet);
+
+					_this.inputWindow.denseNetType
+							.setValue(rec.data.denseNetType);
+					_this.inputWindow.denseNetWidth
+							.setValue(rec.data.denseNetWidth);
+					_this.inputWindow.lightNetType
+							.setValue(rec.data.lightNetType);
+					_this.inputWindow.lightNetShortPage
+							.setValue(rec.data.lightNetShortPage);
+					_this.inputWindow.denseNetCdm
+							.setValue(rec.data.denseNetCdm);
+					_this.inputWindow.numPerWad.setValue(rec.data.numPerWad);
 
 					var store = _this.cdmdutyStore;
 					store.load({
@@ -558,11 +631,13 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.checkTumoBatchNo = function
 		var tumoBatchNo2 = this.inputWindow.tumoBatchNo2.getValue();
 		if (tumoBatchNo != tumoBatchNo2) {
 			Ext.Msg.alert("系统提示", "流转单上的二维码，与领取任务中的膜批次不一致！", function() {
-
+						// this.inputWindow.buttons[0].setDisabled(tumoBatchNo
+						// != tumoBatchNo2);
+						return;
 					})
 
 		}
-		this.inputWindow.buttons[0].setDisabled(tumoBatchNo != tumoBatchNo2)
+
 	} else {
 		this.dealTumoBatchNo();
 	}
@@ -571,6 +646,16 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.checkTumoBatchNo = function
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onUpdateLocation = function() {
 
 	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+		return
+	}
+	var B = A.getSelectionModel().getSelections();
+
+	if (B.length > 1) {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return
+	}
 	if (!A.getSelectionModel().getSelected()) {
 		this.updateLocationWindow.batchNo.setValue('');
 		this.updateLocationWindow.recordId.setValue('');
@@ -593,10 +678,9 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onUpdateLocation = function
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	Ext.getCmp(chooseOrderBtn).setDisabled(false);
 	Ext.getCmp(chooseOrderBtn).setVisible(true);
-	
-	
+
 	this.inputWindow.prodSpecId.setReadOnly(false);
-	
+
 	this.inputWindow.produceDt.setValue(new Date());
 	this.inputWindow.buttons[0].setDisabled(false);
 	// this.onPlan();
@@ -615,10 +699,10 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	this.inputWindow.tumoBatchNo.setDisabled(true);
 
 	this.inputWindow.orderNo.setReadOnly(false);
-	
+
 	this.inputWindow.pageType.setVisible(true);
 	this.inputWindow.pageType.setDisabled(false);
-	
+
 	this.inputWindow.show();
 }
 
@@ -649,7 +733,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.chooseOrder = function() {
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.chooseOrderOk = function() {
 	var records = this.chooseOrderListPanel.getSelectionModel().getSelections();
-	if(records.length == 0) return;
+	if (records.length == 0)
+		return;
 	var record = records[0];
 	var orderNo = record.data.orderNo;
 	this.inputWindow.orderNo.setValue(orderNo);

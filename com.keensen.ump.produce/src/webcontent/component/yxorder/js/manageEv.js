@@ -1,6 +1,19 @@
 com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 	var _this = this;
 
+	// 查询事件
+	this.queryPanel4ChooseLable.mon(this.queryPanel4ChooseLable, 'query',
+			function(form, vals) {
+				var store = this.listPanel4ChooseLable.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4ChooseLable.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
 	this.updatematerialWindow.activeItem.mon(
 			this.updatematerialWindow.activeItem, 'beforeload', function(win,
 					data) {
@@ -161,12 +174,12 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 			this.updateProdRemarkWindow.show();
 			this.updateProdRemarkWindow.loadData(cell);
 		}
-		
+
 		if (this.opt == 'updatespecnamemark') {
 			this.updateSpecNameMarkWindow.show();
 			this.updateSpecNameMarkWindow.loadData(cell);
 		}
-		
+
 	}, this);
 
 	// 增加修改事件
@@ -188,10 +201,9 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
-	
 	// 新增生产主计划数据后事件
-	this.planWeekWindow.activeItem.mon(this.planWeekWindow.activeItem, 'afterload',
-			function(win, data) {
+	this.planWeekWindow.activeItem.mon(this.planWeekWindow.activeItem,
+			'afterload', function(win, data) {
 				var demandStockDate2 = data.demandStockDate;
 				this.planWeekWindow.enterDate.setValue(demandStockDate2);
 				var prodAmount = data.prodAmount;
@@ -465,7 +477,8 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onChoose4Mark = function(
 	var materSpecName2 = this.addOrderWindow2.materSpecId.getRawValue();
 	var store = this.listPanel4ChooseMark.store;
 	store.baseParams = {
-		'condition/specName2' : materSpecName2
+		'condition/specName2' : materSpecName2,
+		'condition/status' : 1
 	};
 	store.load({
 		params : {
@@ -507,4 +520,32 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateSGOrder = functio
 com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateSpecNameMark = function() {
 	this.opt = 'updatespecnamemark';
 	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onChoose4Label = function() {
+	this.queryPanel4ChooseLable.form.reset();
+	var store = this.listPanel4ChooseLable.store;
+	store.baseParams = {};
+	store.load({
+		params : {
+			"pageCond/begin" : 0,
+			"pageCond/length" : this.listPanel4ChooseLable.pagingToolbar.pageSize
+		}
+	});
+	this.chooseLableWindow.show();
+
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onSelect4ChooseLable = function() {
+	var A = this.listPanel4ChooseLable;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+
+		var drawingCode = records[0].data.drawingCode;
+		this.addOrderWindow2.labelDrawingCode.setValue(drawingCode);
+
+		this.chooseLableWindow.hide();
+	}
 }

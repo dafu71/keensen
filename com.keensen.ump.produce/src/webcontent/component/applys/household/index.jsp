@@ -25,6 +25,13 @@
 -->
 <head>
 <title>家用膜入库请检</title>
+
+<!-- 导出Excel -->
+<script src="base/exceljs/polyfill.js"></script>
+<script src="base/exceljs/exceljs.min.js"></script>
+<script src="base/exceljs/FileSaver.min.js"></script>
+<script src="base/exceljs/doQueryAndExport.js"></script>
+
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component.applys');
 </script>

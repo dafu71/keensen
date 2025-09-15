@@ -334,8 +334,9 @@
     
     <select id="queryProdSpecName" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
     
-    SELECT t1.prod_spec_name "prodSpecName",pms.mater_spec_id "prodSpecId" from  KS_BASE_SPEC_RELATION t1
-    LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_name=t1.prod_spec_name 
+    SELECT pms.mater_spec_name "prodSpecName",pms.mater_spec_id "prodSpecId" from ks_base_sample_standard t1
+    
+    LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id=t1.prod_spec_id
     
     </select>
     
@@ -388,7 +389,7 @@
    </insert>
    
    <select id="queryDiaphragmTest" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-   	SELECT T1.MATER_SPEC_NAME AS "materSpecName",
+  <!-- 	SELECT T1.MATER_SPEC_NAME AS "materSpecName",
        T1.MATER_SPEC_ID AS "materSpecId",
        T1.MATER_CODE AS "materCode",pms.new_batch_code "newBatchCode",
        T1.PROD_SPEC_NAME AS "prodSpecName", T1.PROD_SPEC_ID AS "prodSpecId",
@@ -407,6 +408,30 @@
   LEFT JOIN  KS_BASE_SAMPLE_STANDARD bss
   ON bss.prod_spec_id = t1.prod_spec_id
   AND bss.mater_spec_id = t1.mater_spec_id
+  -->
+  
+    SELECT bss.MATER_SPEC_NAME AS "materSpecName",
+       bss.MATER_SPEC_ID AS "materSpecId",
+       pms.mp_batch_code AS "materCode",pms.new_batch_code "newBatchCode",
+       pms2.mater_SPEC_NAME AS "prodSpecName", bss.PROD_SPEC_ID AS "prodSpecId",
+       CASE
+         WHEN INSTR(bss.PROD_SPEC_NAME, '-4') > 0 THEN
+          10
+         ELSE
+          40.25
+       END "length",
+       (nvl(bss.sample_length_low,0) + nvl(bss.sample_length_up,0))/2 "sampleLength",
+       
+       nvl(bss.sample_length_low,0) "sampleLengthLow",
+       nvl(bss.sample_length_up,0) "sampleLengthUp",
+       
+       bss.sample_times "sampleTimes",
+       nvl(bss.amount,0) "sampleAmount"
+  FROM KS_BASE_SAMPLE_STANDARD bss
+   LEFT JOIN qinsen.para_mater_spec pms
+	ON pms.mater_spec_id = bss.mater_spec_id
+	left join qinsen.para_mater_spec pms2
+	on pms2.mater_spec_id = bss.prod_spec_id
 	</select>
 	
 	<update id="updateCdmState" parameterClass="java.util.HashMap" >
@@ -437,6 +462,10 @@
     pms2.mater_SPEC_NAME as "prodSpecName",
     t1.PROD_SPEC_ID as "prodSpecId",
     t1.sample_length as "sampleLength",
+    
+    t1.sample_length_low as "sampleLengthLow",
+    t1.sample_length_up as "sampleLengthUp",
+    
     t1.sample_times as "sampleTimes",
     t1.amount as "amount"       
   FROM KS_base_sample_standard T1

@@ -202,11 +202,11 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		this.selModel = this.selModel || new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
+					singleSelect : false/*,
 					header : '',
 					listeners : {
 
-		}
+		}*/
 				});
 
 		this.bar = this.bar || new Ext.Toolbar({
@@ -280,6 +280,30 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						xtype : 'displayfield',
 						value : '合计未卷页数:',
 						id : 'totalUnusedQuantityTxt'
+					},'->',{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '选中长度合计(m):',
+						id : 'totalCdmLengthTxt2'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '选中页数合计:',
+						id : 'totalQuantityTxt2'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '选中未卷页数合计:',
+						id : 'totalUnusedQuantityTxt2'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}],
 			hsPage : true,
 			id : 'produce-caidiemo-list',
@@ -356,7 +380,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						width : 70,
 						dataIndex : 'isToMixStr'
 					}, {
-						header : '每叠页数',
+						header : '每支页数',
 						width : 70,
 						dataIndex : 'numPerWad'
 					}, {
@@ -581,7 +605,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					state : 'Y',
 					anchor : '86%',
 					fieldLabel : '生产规格型号 ',
-					//readOnly : true,
+					// readOnly : true,
 					allowBlank : false,
 					typeAhead : true,
 					typeAheadDelay : 100,
@@ -599,14 +623,26 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									.setValue(record.data.blankingSize);
 							this.inputWindow.pageWidth
 									.setValue(record.data.pageWidth);
-							this.inputWindow.denseNet
-									.setValue(record.data.denseNet);
+							//this.inputWindow.denseNet.setValue(record.data.denseNet);
+
+							this.inputWindow.denseNetType
+									.setValue(record.data.denseNetType);
+							this.inputWindow.denseNetWidth
+									.setValue(record.data.denseNetWidth);
+							this.inputWindow.lightNetType
+									.setValue(record.data.lightNetType);
+							this.inputWindow.lightNetShortPage
+									.setValue(record.data.lightNetShortPage);
+									
+							this.inputWindow.numPerWad
+									.setValue(record.data.numPerWad);
 						},
 
-						beforeselect: function(combo, record, index) {
+						beforeselect : function(combo, record, index) {
 							// 不执行任何操作，从而禁用触发器点击功能
 							var flag = Ext.getCmp(chooseOrderBtn).isVisible();
-							if(!flag) return false;
+							if (!flag)
+								return false;
 						}
 					},
 					colspan : 12
@@ -870,22 +906,20 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						}
 					},
 					colspan : 12
-				}/*, {
-					xtype : 'displayfield',
-					value : '<p style="color:red;">工艺变更中，暂以纸质文件为准。</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 12
-				}*/, {
+				}/*
+					 * , { xtype : 'displayfield', value : '<p style="color:red;">工艺变更中，暂以纸质文件为准。</p>',
+					 * labelSeparator : '',// 去掉冒号 colspan : 12 }
+					 */, {
 					xtype : 'displayfield',
 					height : '5',
-					//hidden : true,
+					// hidden : true,
 					colspan : 24
 				}, {
 					ref : '../../blankingSize',
 					name : 'entity/blankingSize',
 					fieldLabel : '膜片下料尺寸',
 					xtype : 'textfield',
-					//hidden : true,
+					// hidden : true,
 					readOnly : true,
 					anchor : '86%',
 					colspan : 12
@@ -899,7 +933,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '浓网型号',
 					xtype : 'textfield',
 					readOnly : true,
-					//hidden : true,
+					// hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
@@ -908,13 +942,13 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '浓网长度mm',
 					xtype : 'textfield',
 					readOnly : true,
-					//hidden : true,
+					// hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
 					xtype : 'displayfield',
 					height : '5',
-					//hidden : true,
+					// hidden : true,
 					colspan : 24
 				}, {
 					ref : '../../pageWidth',
@@ -922,7 +956,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '页宽',
 					xtype : 'textfield',
 					readOnly : true,
-					//hidden : true,
+					// hidden : true,
 					anchor : '86%',
 					colspan : 12
 				}, {
@@ -931,7 +965,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '淡网型号',
 					xtype : 'textfield',
 					readOnly : true,
-					//hidden : true,
+					// hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
@@ -940,7 +974,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					fieldLabel : '淡网短页',
 					xtype : 'textfield',
 					readOnly : true,
-					//hidden : true,
+					// hidden : true,
 					anchor : '100%',
 					colspan : 6
 				}, {
@@ -949,7 +983,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					colspan : 24
 				}, {
 					ref : '../../numPerWad',
-					fieldLabel : '每叠页数',
+					fieldLabel : '每支页数',
 					allowBlank : false,
 					name : 'entity/numPerWad',
 					xtype : 'numberfield',
@@ -1184,6 +1218,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 											.setValue(record.data.pageWidth);
 									this.editWindow.denseNet
 											.setValue(record.data.denseNet);
+
+									
 								}
 							}
 						}, {
@@ -1264,7 +1300,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							colspan : 2
 						}, {
 							ref : '../../numPerWad',
-							fieldLabel : '每叠页数',
+							fieldLabel : '每支页数',
 							dataIndex : 'numPerWad',
 							allowBlank : false,
 							name : 'entity/numPerWad',

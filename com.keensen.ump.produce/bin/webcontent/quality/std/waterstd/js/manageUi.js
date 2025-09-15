@@ -95,6 +95,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 																 * 'mpSpecCode' },
 																 */		{
 						header : '元件型号',
+						sortable : true,
 						width : 120,
 						dataIndex : 'prodSpecName'
 					}, {

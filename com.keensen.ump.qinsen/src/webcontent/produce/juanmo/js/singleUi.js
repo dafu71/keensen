@@ -82,7 +82,7 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				minChars : 1,
 				queryMode : 'local',
 				lastQuery : '',
-				editable : true,
+				editable : false,
 				allowBlank : false,
 				listeners : {
 					'specialkey' : function() {
@@ -141,8 +141,15 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				ref : '../juanmo',
 				xtype : 'textfield',
 				fieldLabel : '卷膜工艺要求',
-				colspan : 24,
+				colspan : 16,
 				anchor : '90%',
+				readOnly : true
+			}, {
+				ref : '../tape',
+				xtype : 'textfield',
+				fieldLabel : '卷膜胶带',
+				colspan : 8,
+				anchor : '100%',
 				readOnly : true
 			}, {
 				xtype : 'displayfield',
@@ -210,16 +217,66 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 				xtype : 'textfield',
 				name : 'entity/pipeCode',
 				style : '{font-weight:bold;}',
-				//allowBlank : false,
+				allowBlank : false,
 				fieldLabel : '中心管组件编号',
+				regex : /^[A-Za-z0-9]{14}$/,
 				ref : '../pipeCode',
 				anchor : '90%',
-				colspan : 12
+				colspan : 24,
+				listeners : {
+					"blur" : function(A) {
+						var pipeCode = _this.inputPanel.pipeCode.getValue();
+						if (!Ext.isEmpty(pipeCode) && pipeCode.length == 14) {
+
+							Ext.Ajax.request({
+								url : "com.keensen.ump.produce.component.produce.queryPipeInfo.biz.ext",
+								method : "post",
+								jsonData : {
+									'pipeCode' : pipeCode
+								},
+								success : function(resp) {
+									var ret = Ext.decode(resp.responseText);
+									if (ret.success) {
+										if (!Ext.isEmpty(ret.data)) {
+											var dd = ret.data;
+											var perNum = dd.perNum;
+											var jmNum = dd.jmNum;
+											if (perNum > jmNum) {
+												_this.inputPanel.pipeInfo
+														.setValue('<span style="color:red;">每卷数量:'
+																+ perNum
+																+ ',已卷数量:'
+																+ jmNum
+																+ '</span>');
+											} else {
+												_this.inputPanel.pipeInfo
+														.setValue('<span style="color:red;">每卷数量:'
+																+ perNum
+																+ ',已卷数量:'
+																+ jmNum
+																+ ',不能使用</span>');
+												_this.inputPanel.pipeCode
+														.setValue('');
+											}
+										} else {
+											_this.inputPanel.pipeInfo
+													.setValue('<span style="color:red;">该中心管组件编号不存在</span>');
+											_this.inputPanel.pipeCode
+													.setValue('');
+
+										}
+									}
+								},
+								callback : function() {
+
+								}
+							})
+						}
+					}
+				}
 			}, {
 				xtype : 'displayfield',
-				colspan : 12
-			}, {
-				xtype : 'displayfield',
+				ref : '../pipeInfo',
 				colspan : 24
 			}, {
 				xtype : 'datetimefield',

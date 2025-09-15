@@ -202,12 +202,29 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						colspan : 2
 					}, {
 						xtype : 'textfield',
-						readOnly : true,
+						//readOnly : true,
+						style : '{font-weight:bold;}',
 						allowBlank : false,
 						anchor : '80%',
 						ref : '../prodBatchNo',
 						fieldLabel : '元件序号',
-						colspan : 2
+						colspan : 2,
+						keys : {
+							key : Ext.EventObject.ENTER,
+							fn : function(btn, e) {
+								searchData();
+							}
+						},
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+									this.onScan2();
+
+								}
+
+							}
+						}
 					}, {
 						xtype : 'displayfield',
 						height : '10',
@@ -377,7 +394,7 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 				})
 
 		this.viewDutyPanel = this.viewDutyPanel || new Ext.fn.EditPanel({
-			height : 300,
+			height : 400,
 			region : 'north',
 			baseCls : "x-panel",
 			autoHide : false,
@@ -459,10 +476,10 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						colspan : 1
 					}, {
 						xtype : 'displayfield',
-						fieldLabel : '已包装数量',
-						ref : '../packAmount',
+						fieldLabel : '已请检数',
+						ref : '../checkNum',
 						readOnly : true,
-						dataIndex : 'packAmount',
+						dataIndex : 'checkNum',
 						anchor : '85%',
 						colspan : 1
 					}, {
@@ -536,9 +553,59 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						anchor : '100%',
 						colspan : 1
 					}, {
+						xtype : 'displayfield',
+						height : 5,
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '唛头编号',
+						ref : '../markDrawingCode',
+						readOnly : true,
+						dataIndex : 'markDrawingCode',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '第二唛头编号',
+						ref : '../markDrawingCode2',
+						readOnly : true,
+						dataIndex : 'markDrawingCode2',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '唛头图纸',
+						ref : '../picturePanel4firsrMarkUrl',
+						height : '60',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '第二唛头图纸',
+						ref : '../picturePanel4secondMarkUrl',
+						height : '60',
+						anchor : '100%',
+						colspan : 1
+					}, {
 						xtype : 'hidden',
 						name : 'labelUrl',
 						dataIndex : 'labelUrl'
+
+					}, {
+						xtype : 'hidden',
+						name : 'firsrMarkUrl',
+						dataIndex : 'firsrMarkUrl'
+
+					}, {
+						xtype : 'hidden',
+						name : 'secondMarkUrl',
+						dataIndex : 'secondMarkUrl'
 
 					}],
 			buttons : [{

@@ -168,6 +168,7 @@ com.keensen.ump.produce.component.InteractiveSelectMgr.prototype.createPlanDay =
 		'map/tumoBatchNo' : tumoBatchNo
 	};
 	store.load({});
+	//mpSize需要修改blankingSize
 	var orderAmount = this.queryPanel.orderAmount.getValue();
 	var mpSize = this.queryPanel.mpSize.getValue();
 

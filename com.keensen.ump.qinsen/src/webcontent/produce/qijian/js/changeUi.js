@@ -16,7 +16,7 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr = function() {
 		var _this = this;		
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 120,
 					columns : 4,
 					border : true,
 					collapsible : false,
@@ -46,16 +46,26 @@ com.keensen.ump.qinsen.produce.qijianchangeMgr = function() {
 								.format('Y-m-d 00:00')
 					}, {
 
-						xtype : 'textfield',
-						name : 'condition/newBatchNo',
+						xtype : 'textarea',
+						ref : '../newBatchNoStr',
 						anchor : '95%',
 						fieldLabel : '新元件序号'
 					}, {
 
-						xtype : 'textfield',
-						name : 'condition/oldBatchNo',
+						xtype : 'textarea',
+						ref : '../oldBatchNoStr',
 						anchor : '95%',
 						fieldLabel : '旧元件序号'
+					}, {
+
+						xtype : 'hidden',
+						name : 'condition/newBatchNos',
+						ref : '../newBatchNos'
+					}, {
+
+						xtype : 'hidden',
+						name : 'condition/oldBatchNos',
+						ref : '../oldBatchNos'
 					}]
 				});
 

@@ -21,8 +21,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				var hitUserid = r.data.hitUserid;
 				var diff = r.data.diff;
 				if (diff > 48) {
-					 Ext.Msg.alert('系统提示', '不能删除两天前的记录');0910
-					 return false;
+					Ext.Msg.alert('系统提示', '不能删除两天前的记录');
+					0910
+					return false;
 				}
 				if (uid != createUserId) {
 					Ext.Msg.alert('系统提示', '不能删除' + createName + '的记录');
@@ -38,7 +39,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				var fixUsername = this.inputWindow.fixUserid.getRawValue();
 				this.inputWindow.fixUsername.setValue(fixUsername);
 			}, this);
-			
+
 	this.editWindow2.activeItem.mon(this.editWindow2.activeItem, 'beforeSave',
 			function() {
 				var hitUsername = this.editWindow2.hitUserid.getRawValue();
@@ -50,7 +51,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				if (opt == 'fix' || opt == 'hit') {
 					var diff = cell.get('diff');
 					if (diff > 48) {
-						Ext.Msg.alert('系统提示', '不能修改两天前的记录');0910
+						Ext.Msg.alert('系统提示', '不能修改两天前的记录');
+						0910
 						return false;
 					}
 				}
@@ -91,6 +93,11 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 						this.editWindow3.show();
 						this.editWindow3.loadData(cell);
 					}
+				}
+
+				if (opt == 'c11invalid') {
+					this.editWindow4C11Invalid.show();
+					this.editWindow4C11Invalid.loadData(cell);
 				}
 			}, this);
 
@@ -237,9 +244,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				}
 
 			}, this);
-			
+
 	this.listPanel.store.on('load', function() {
-		
+
 				var records = _this.listPanel.store.getRange();
 				if (records.length == 0) {
 					Ext.getCmp('fixtotalc11').setValue('');
@@ -247,19 +254,23 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 					Ext.getCmp('fixtotalc13').setValue('');
 					Ext.getCmp('fixtotalc14').setValue('');
 					Ext.getCmp('fixtotal').setValue('');
+					Ext.getCmp('c11invalidtotal').setValue('');
 					return
 				}
 
 				var totalC11 = records[0].data.totalC11;
 				var totalC12 = records[0].data.totalC12;
 				var totalC13 = records[0].data.totalC13;
-				var totalC14 = records[0].data.totalC14;				
+				var totalC14 = records[0].data.totalC14;
 				var total = records[0].data.total;
+				var totalC11Invalid = records[0].data.totalC11Invalid;
+							
 				Ext.getCmp('fixtotalc11').setValue('C11合计(kg):' + totalC11);
 				Ext.getCmp('fixtotalc12').setValue('C12合计(kg):' + totalC12);
 				Ext.getCmp('fixtotalc13').setValue('C13合计(kg):' + totalC13);
 				Ext.getCmp('fixtotalc14').setValue('C14合计(kg):' + totalC14);
 				Ext.getCmp('fixtotal').setValue('配料合计(kg):' + total);
+				Ext.getCmp('c11invalidtotal').setValue('C11报废合计(kg):' + totalC11Invalid);
 			})
 }
 
@@ -270,6 +281,11 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onAdd = function() {
 	this.inputWindow.show();
 
 }
+
+com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onC11Invalid = function() {
+	opt = 'c11invalid';
+	this.listPanel.onEdit();
+};
 
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onEdit = function() {
 	opt = 'fix';
@@ -285,43 +301,26 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
 };
 
-/*com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel = function() {
-	var _this = this;
-	var daochu = _this.queryPanel.getForm().getValues();
-
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			namingsql : 'com.keensen.ump.produce.diaphragm.make.make.queryFix',
-			templateFilename : 'ks_zm_fix'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
-				}
-
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})
-}*/
+/*
+ * com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel =
+ * function() { var _this = this; var daochu =
+ * _this.queryPanel.getForm().getValues();
+ * 
+ * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), { msg :
+ * "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+ * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+ * method : "post", jsonData : { 'map' : daochu, namingsql :
+ * 'com.keensen.ump.produce.diaphragm.make.make.queryFix', templateFilename :
+ * 'ks_zm_fix' }, success : function(resp) { var ret =
+ * Ext.decode(resp.responseText); if (ret.success) {
+ * 
+ * var fname = ret.fname; if (Ext.isIE) {
+ * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); } else {
+ * window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" +
+ * fname; }
+ *  }
+ *  }, callback : function() { _this.requestMask.hide() } }) }
+ */
 
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onEdit3 = function() {
 	opt = 'modify';
@@ -342,13 +341,13 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onCalc = function() {
 	var c12 = record.get('c12');
 	var c13 = record.get('c13');
 	var c14 = record.get('c14');
-	this.inputWindow.c11.setValue((parseFloat(weight) * parseFloat(c11)/100)
+	this.inputWindow.c11.setValue((parseFloat(weight) * parseFloat(c11) / 100)
 			.toFixed(1));
-	this.inputWindow.c12.setValue((parseFloat(weight) * parseFloat(c12)/100)
+	this.inputWindow.c12.setValue((parseFloat(weight) * parseFloat(c12) / 100)
 			.toFixed(1));
-	this.inputWindow.c13.setValue((parseFloat(weight) * parseFloat(c13)/100)
+	this.inputWindow.c13.setValue((parseFloat(weight) * parseFloat(c13) / 100)
 			.toFixed(1));
-	this.inputWindow.c14.setValue((parseFloat(weight) * parseFloat(c14)/100)
+	this.inputWindow.c14.setValue((parseFloat(weight) * parseFloat(c14) / 100)
 			.toFixed(1));
 }
 
@@ -366,17 +365,18 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onCalc2 = function() {
 	var c12 = record.get('c12');
 	var c13 = record.get('c13');
 	var c14 = record.get('c14');
-	this.editWindow3.c11.setValue((parseFloat(weight) * parseFloat(c11)/100)
+	this.editWindow3.c11.setValue((parseFloat(weight) * parseFloat(c11) / 100)
 			.toFixed(1));
-	this.editWindow3.c12.setValue((parseFloat(weight) * parseFloat(c12)/100)
+	this.editWindow3.c12.setValue((parseFloat(weight) * parseFloat(c12) / 100)
 			.toFixed(1));
-	this.editWindow3.c13.setValue((parseFloat(weight) * parseFloat(c13)/100)
+	this.editWindow3.c13.setValue((parseFloat(weight) * parseFloat(c13) / 100)
 			.toFixed(1));
-	this.editWindow3.c14.setValue((parseFloat(weight) * parseFloat(c14)/100)
+	this.editWindow3.c14.setValue((parseFloat(weight) * parseFloat(c14) / 100)
 			.toFixed(1));
 }
 
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.exportExcel = function() {
-	doQuerySqlAndExport(this,this.queryPanel,this.listPanel,'铸膜混料','com.keensen.ump.produce.diaphragm.make.make.queryFix')
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '铸膜混料',
+			'com.keensen.ump.produce.diaphragm.make.make.queryFix')
 
 }

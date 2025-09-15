@@ -18,7 +18,7 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					//title : '【底膜库存查询】',
+					// title : '【底膜库存查询】',
 					fields : [{
 								xtype : 'dictcombobox',
 								name : 'condition/dimoType',
@@ -51,19 +51,32 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 								height : '5',
 								colspan : 4
 							}, {
-								fieldLabel : '不展示结存<br>小于100',
+								boxLabel : '不展示结存小于100',
 								xtype : 'checkbox',
 								checked : true,
 								name : 'condition/notLessthan100',
 								inputValue : 'Y',
 								anchor : '90%'
+							}, {
+								xtype : 'supcombobox',
+								hiddenName : 'condition/supId',
+								anchor : '90%',
+								fieldLabel : '无纺布供应商'
+							}, {
+								xtype : 'dictcombobox',
+								name : 'condition/psf',
+								fieldLabel : '聚砜类型',
+								hiddenName : 'condition/psf',
+								dictData : KS_PSF,
+								anchor : '90%',
+								colspan : 1
 							}]
 				});
 		this.queryPanel.addButton({
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:uid != 'dafu',
+					hidden : uid != 'dafu',
 					handler : this.exportExcel
 				});
 		this.queryPanel.addButton({
@@ -93,7 +106,7 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【底膜库存列表】',
+			// title : '【底膜库存列表】',
 			viewConfig : {
 				forceFit : true
 			},
@@ -125,6 +138,9 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					}, {
 						dataIndex : 'supName',
 						header : '无纺布（供应商）'
+					}, {
+						dataIndex : 'psfName',
+						header : '聚砜类型'
 					}, {
 						dataIndex : 'dimoBatchNo',
 						header : '底膜批号'
@@ -163,6 +179,8 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 							name : 'base'
 						}, {
 							name : 'id'
+						}, {
+							name : 'psfName'
 						}]
 			})
 		})

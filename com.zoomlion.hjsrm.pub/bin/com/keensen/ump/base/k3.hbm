@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+ "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.base.k3.KsBaseK3BomGroup" table="KS_BASE_K3_BOM_GROUP">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="finterId" type="long">
+            <column length="22" name="FINTER_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="fname" type="string">
+            <column length="50" name="FNAME"/>
+        </property>
+        <property name="fparentId" type="long">
+            <column length="22" name="FPARENT_ID"/>
+        </property>
+        <property name="fbootId" type="long">
+            <column length="22" name="FBOOT_ID"/>
+        </property>
+        <property name="fnumber" type="string">
+            <column length="20" name="FNUMBER"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.base.k3.KsBaseK3BomHead" table="KS_BASE_K3_BOM_HEAD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="fitemId" type="string">
+            <column length="10" name="FITEM_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="20" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="50" name="UPDATE_NAME"/>
+        </property>
+        <property name="fbomnumber" type="string">
+            <column length="50" name="FBOMNUMBER"/>
+        </property>
+        <property name="fversion" type="string">
+            <column length="50" name="FVERSION"/>
+        </property>
+        <property name="fstatusEnum" type="string">
+            <column length="50" name="FSTATUS_ENUM"/>
+        </property>
+        <property name="fcheckerStatus" type="string">
+            <column length="50" name="FCHECKER_STATUS"/>
+        </property>
+        <property name="fnumber" type="string">
+            <column length="50" name="FNUMBER"/>
+        </property>
+        <property name="fname" type="string">
+            <column length="50" name="FNAME"/>
+        </property>
+        <property name="fmodel" type="string">
+            <column length="50" name="FMODEL"/>
+        </property>
+        <property name="fauxPropIdEnum" type="string">
+            <column length="50" name="FAUX_PROP_ID_ENUM"/>
+        </property>
+        <property name="ferPclsIdEnum" type="string">
+            <column length="50" name="FER_PCLS_ID_ENUM"/>
+        </property>
+        <property name="fqty" type="string">
+            <column length="50" name="FQTY"/>
+        </property>
+        <property name="funitname" type="string">
+            <column length="50" name="FUNITNAME"/>
+        </property>
+        <property name="fbillNo" type="string">
+            <column length="50" name="FBILL_NO"/>
+        </property>
+        <property name="froutingName" type="string">
+            <column length="50" name="FROUTING_NAME"/>
+        </property>
+        <property name="fyield" type="string">
+            <column length="50" name="FYIELD"/>
+        </property>
+        <property name="fnote" type="string">
+            <column length="50" name="FNOTE"/>
+        </property>
+        <property name="fpdmimportDate" type="string">
+            <column length="50" name="FPDMIMPORT_DATE"/>
+        </property>
+        <property name="hasSourceMaterial" type="string">
+            <column length="50" name="HAS_SOURCE_MATERIAL"/>
+        </property>
+        <property name="finterId" type="string">
+            <column length="50" name="FINTER_ID" not-null="true"/>
+        </property>
+        <property name="fbomskipEnum" type="string">
+            <column length="50" name="FBOMSKIP_ENUM"/>
+        </property>
+        <property name="lastUpdateName" type="string">
+            <column length="50" name="LAST_UPDATE_NAME"/>
+        </property>
+        <property name="fenterTime" type="string">
+            <column length="50" name="FENTER_TIME"/>
+        </property>
+        <property name="lastUseName" type="string">
+            <column length="50" name="LAST_USE_NAME"/>
+        </property>
+        <property name="fusedate" type="string">
+            <column length="50" name="FUSEDATE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.base.k3.KsBaseK3BomList" table="KS_BASE_K3_BOM_LIST">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="fitemId" type="string">
+            <column length="10" name="FITEM_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="20" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="50" name="UPDATE_NAME"/>
+        </property>
+        <property name="finterId" type="string">
+            <column length="10" name="FINTER_ID" not-null="true"/>
+        </property>
+        <property name="fnumber" type="string">
+            <column length="50" name="FNUMBER"/>
+        </property>
+        <property name="fname" type="string">
+            <column length="50" name="FNAME"/>
+        </property>
+        <property name="fmodel" type="string">
+            <column length="50" name="FMODEL"/>
+        </property>
+        <property name="fauxPropIdEnum" type="string">
+            <column length="50" name="FAUX_PROP_ID_ENUM"/>
+        </property>
+        <property name="fmaterielChildType" type="string">
+            <column length="50" name="FMATERIEL_CHILD_TYPE"/>
+        </property>
+        <property name="fmarshalTypeEnum" type="string">
+            <column length="50" name="FMARSHAL_TYPE_ENUM"/>
+        </property>
+        <property name="funitname" type="string">
+            <column length="50" name="FUNITNAME"/>
+        </property>
+        <property name="fqty" type="string">
+            <column length="50" name="FQTY"/>
+        </property>
+        <property name="fbeginDay" type="string">
+            <column length="50" name="FBEGIN_DAY"/>
+        </property>
+        <property name="fendDay" type="string">
+            <column length="50" name="FEND_DAY"/>
+        </property>
+        <property name="fpercent" type="string">
+            <column length="50" name="FPERCENT"/>
+        </property>
+        <property name="fscrap" type="string">
+            <column length="50" name="FSCRAP"/>
+        </property>
+        <property name="fpositionNo" type="string">
+            <column length="50" name="FPOSITION_NO"/>
+        </property>
+        <property name="fitemSize" type="string">
+            <column length="50" name="FITEM_SIZE"/>
+        </property>
+        <property name="fitemSuite" type="string">
+            <column length="50" name="FITEM_SUITE"/>
+        </property>
+        <property name="foperSn" type="string">
+            <column length="50" name="FOPER_SN"/>
+        </property>
+        <property name="foperName" type="string">
+            <column length="50" name="FOPER_NAME"/>
+        </property>
+        <property name="fmachinePos" type="string">
+            <column length="50" name="FMACHINE_POS"/>
+        </property>
+        <property name="foffSetDay" type="string">
+            <column length="50" name="FOFF_SET_DAY"/>
+        </property>
+        <property name="fbackFlushEnum" type="string">
+            <column length="50" name="FBACK_FLUSH_ENUM"/>
+        </property>
+        <property name="fisKeyitemEnum" type="string">
+            <column length="50" name="FIS_KEYITEM_ENUM"/>
+        </property>
+        <property name="fuseStateEnum" type="string">
+            <column length="50" name="FUSE_STATE_ENUM"/>
+        </property>
+        <property name="fdeletedEnum" type="string">
+            <column length="50" name="FDELETED_ENUM"/>
+        </property>
+        <property name="fstockName" type="string">
+            <column length="50" name="FSTOCK_NAME"/>
+        </property>
+        <property name="fspfullName" type="string">
+            <column length="50" name="FSPFULL_NAME"/>
+        </property>
+        <property name="fnote" type="string">
+            <column length="50" name="FNOTE"/>
+        </property>
+        <property name="fnote1" type="string">
+            <column length="50" name="FNOTE1"/>
+        </property>
+        <property name="fnote2" type="string">
+            <column length="50" name="FNOTE2"/>
+        </property>
+        <property name="fnote3" type="string">
+            <column length="50" name="FNOTE3"/>
+        </property>
+        <property name="fpdmimportDate" type="string">
+            <column length="50" name="FPDMIMPORT_DATE"/>
+        </property>
+        <property name="fhasCharEnum" type="string">
+            <column length="50" name="FHAS_CHAR_ENUM"/>
+        </property>
+        <property name="hasSubstitute" type="string">
+            <column length="50" name="HAS_SUBSTITUTE"/>
+        </property>
+        <property name="itemNote" type="string">
+            <column length="50" name="ITEM_NOTE"/>
+        </property>
+        <property name="fcostPercentage" type="string">
+            <column length="50" name="FCOST_PERCENTAGE"/>
+        </property>
+    </class>
+</hibernate-mapping>

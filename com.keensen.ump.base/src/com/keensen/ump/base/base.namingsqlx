@@ -125,7 +125,7 @@
 		t.cut as "cut",
 		t.raosi as "raosi",
 		t.package as "package",
-		t.pipe as "pipe"   
+		t.pipe as "pipe"  ,t.lid "lid" 
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030027)
 	<isNotNull prepend="and" property="materSpecName"> 

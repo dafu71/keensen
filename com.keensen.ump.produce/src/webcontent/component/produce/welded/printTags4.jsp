@@ -33,6 +33,27 @@
 <script type="text/javascript" src="base/jquery/plugins/jquery.qrcode.js"></script>
     
 <style type="text/css">
+
+.image-container {
+			width: 110mm;
+			height: 28mm;
+            position: relative;
+            display: inline-block;
+            border: 0px solid #ccc;
+        }
+ 
+ .primary_table {
+	width: 110mm;
+	height: 28mm;
+	text-align: center;
+	vertical-align: middle;
+	margin: 0 0;
+	/* margin-top: 2mm; */
+	font-size: 10pt;
+	/* 	border:1px solid #000000; */
+}
+ 
+        
 	.main_table {
 	width: 110mm;
 	height: 28mm;
@@ -106,12 +127,23 @@ function initPage() {
 	 %>
 	
 <% 	for (int i = 0; i < list.length; i+=2) { 
-        br = i%2==0;
+        br = i%2==0;      
+        
+        
+        
 		if (br) { %>
-			htmlArr.push('<table id="printview" align=left border=0 class="main_table">');
+			htmlArr.push('<table border=0 style="background-size: cover;page-break-after:always;" class="primary_table" border=0>');
+			htmlArr.push('<tr><td>');
+			htmlArr.push('<div class="image-container" id="image-container<%=i %>">');
+		
+			htmlArr.push('<table id="printview<%=i %>" align=left border=0 class="main_table" >');
 <% 		} else {   %>
+			htmlArr.push('<table style="background-size: cover;page-break-after:always;" class="primary_table" border=0>');
+			htmlArr.push('<tr><td>');
+		
+			htmlArr.push('<div class="image-container" id="image-container<%=i %>">');
 			htmlArr
-					.push('<table id="printview" align=left border=0 class="main_table" style="page-break-after:always;">');
+					.push('<table id="printview<%=i %>" align=left border=0 class="main_table" style="page-break-after:always;">');
 <% 		}  %>
 <% 	
 		j = i+1;
@@ -120,7 +152,7 @@ function initPage() {
 		htmlArr.push('<tr>');
 		htmlArr.push('<td style="height:27mm;vertical-align: middle;width:12mm">');
 		htmlArr.push('<div id="canvas_' + <%=i %>
-				+ '" style="margin:auto;width:61px;height:61px"></div>');
+				+ '" style="margin:auto;width:61px;height:71px"></div>');
 		htmlArr.push('</td>');
 		htmlArr.push('<td class="td_label" style="width:37mm">');
 		htmlArr.push('<span class="span_label">' + '<%=list[i].get("pipeCode") %>'
@@ -131,6 +163,8 @@ function initPage() {
 				+ '</span><br/>');
 		<%--htmlArr.push('<span class="span_label">' + '<%=list[i].get("machineCode") %>'
 				+ '</span><br/>');--%>
+		htmlArr.push('<span class="span_label">' + '每卷数量:<%=list[i].get("perNum") %>'
+				+ '</span><br/>');
 		htmlArr.push('<span class="span_label">' + '<%=list[i].get("produceType") %>'
 				+ '</span><br/>');
 		htmlArr.push('<span class="span_label">' + '<%=list[i].get("operateUserName") %>'
@@ -140,7 +174,7 @@ function initPage() {
 		<% if(secondPrint){ %>
 		htmlArr.push('<td style="height:27mm;vertical-align: middle;width:12mm">');
 		htmlArr.push('<div id="canvas_' + <%=j %>
-				+ '" style="margin:auto;width:61px;height:61px"></div>');
+				+ '" style="margin:auto;width:61px;height:71px"></div>');
 		htmlArr.push('</td>');
 		htmlArr.push('<td class="td_label" style="width:37mm">');
 		htmlArr.push('<span class="span_label">' + '<%=list[j].get("pipeCode") %>'
@@ -151,6 +185,8 @@ function initPage() {
 				+ '</span><br/>');
 		<%--htmlArr.push('<span class="span_label">' + '<%=list[j].get("machineCode") %>'
 				+ '</span><br/>');--%>
+		htmlArr.push('<span class="span_label">' + '每卷数量:<%=list[j].get("perNum") %>'
+				+ '</span><br/>');
 		htmlArr.push('<span class="span_label">' + '<%=list[j].get("produceType") %>'
 				+ '</span><br/>');
 		htmlArr.push('<span class="span_label">' + '<%=list[j].get("operateUserName") %>'
@@ -158,14 +194,15 @@ function initPage() {
 		htmlArr.push('</td>');
 		
 		<% }else{ %>
-		htmlArr.push('<td style="height:27mm;vertical-align: middle; width:24mm"><div id="canvas" style="margin:auto;width:61px;height:61px"></div></td><td class="td_label" style="width:24mm">&nbsp;</td>');
+		htmlArr.push('<td style="height:27mm;vertical-align: middle; width:24mm"><div id="canvas" style="margin:auto;width:61px;height:71px"></div></td><td class="td_label" style="width:24mm">&nbsp;</td>');
 		<% } %>
 		
 		
 		
 		htmlArr.push('</tr>');
 		
-		htmlArr.push('</table>');
+		htmlArr.push('</table></div>');
+		htmlArr.push('</td></tr></table>');
 	<% } %>
 	$("body").append(htmlArr.join(''));
 	paint();
@@ -177,9 +214,9 @@ function paint() {
 	<% for (int i = 0; i < list.length; i++) { %>
 		$('#canvas_' + <%=i %>).qrcode({
 			render : 'canvas',// 设置渲染方式，有table和canvas
-			text : '<%=list[i].get("batchNo") %>',
-			width : 42, // 二维码的宽度
-			height : 42, // 二维码的高度
+			text : '<%=list[i].get("pipeCode") %>',
+			width : 52, // 二维码的宽度
+			height : 52, // 二维码的高度
 			correctLevel : 2
 				// 纠错级别，低
 			});

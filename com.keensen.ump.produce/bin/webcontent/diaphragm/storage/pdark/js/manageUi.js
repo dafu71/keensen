@@ -127,7 +127,7 @@ com.keensen.ump.produce.diaphragm.storage.PdarkMgr = function() {
 								combo.store.filterBy(function(record) {
 											return record.get('id') == 1
 													|| record.get('id') == 2
-													|| record.get('id') == 3
+													|| record.get('id') == 3 || record.get('id') == 81
 										});
 
 							}

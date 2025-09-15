@@ -122,11 +122,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		// 端盖类型选项：蜂窝、格栅、梳齿、旋熔、定制、其他,未选则默认公司标准
 		// 删除其他、公司标准、旋熔。同时要改成必选项，不选不能下单 2025-07-30 罗
 		// 梳齿改梳齿五星蜂窝
-				//蜂窝需要改为帽檐蜂窝（非五星） 2025-08-04
+		// 蜂窝需要改为帽檐蜂窝（非五星） 2025-08-04
 		this.lidStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'], ['格栅', '格栅'], ['梳齿五星蜂窝', '梳齿五星蜂窝'],
-							['定制', '定制']]
+					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'], ['格栅', '格栅'],
+							['梳齿五星蜂窝', '梳齿五星蜂窝'], ['定制', '定制']]
 				});
 
 		// 卷膜胶带选项：印刷双层、印刷三层、网纹 蓝胶带 绿胶带 白胶带 黄胶带 灰胶带
@@ -483,10 +483,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									}
 								}
 							}, {
-								//fieldLabel : '不显示需生产<br>或入库为零',
+								// fieldLabel : '不显示需生产<br>或入库为零',
 								xtype : 'checkbox',
-								boxLabel :'不显示需生产或入库为零',
-								//checked : true,
+								boxLabel : '不显示需生产或入库为零',
+								// checked : true,
 								name : 'condition/isNotZero',
 								inputValue : 'Y',
 								anchor : '100%'
@@ -697,7 +697,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'recordTime',
-						width:120,
+						width : 120,
 						header : '订单状态变更时间',
 						sortable : true
 					}, {
@@ -1004,6 +1004,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'ifpolish',
 						header : '中芯管打磨',
+						sortable : true
+					}, {
+						dataIndex : 'packingLid',
+						header : '包装端盖',
 						sortable : true
 					}, {
 						dataIndex : 'tray',
@@ -1316,6 +1320,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							name : 'taskState'
 						}, {
 							name : 'recordTime'
+						}, {
+							name : 'packingLid'
 						}]
 			})
 		})
@@ -2743,8 +2749,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							// allowBlank : false,
 							anchor : '100%',
 							colspan : 6,
-							xtype : 'textfield',
-							fieldLabel : '装箱支数要求'
+							xtype : 'numberfield',
+							allowBlank : false,
+							allowDecimals : false,
+							fieldLabel : '装箱（支/箱）'
 						}, {
 							xtype : 'combobox',
 							forceSelection : true,
@@ -2766,6 +2774,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									this.reset()
 								}
 							}
+						}, {
+							name : 'entity/packingLid',
+							dataIndex : 'packingLid',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装端盖'
 						}, {
 							xtype : 'displayfield',
 							fieldLabel : '<p style="color:red;font-size:16px;">打包</p>',
@@ -4537,6 +4551,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					displayField : "name",
 					valueField : "code"
 				}, {
+					name : 'entity/packingLid',
+					dataIndex : 'packingLid',
+					readOnly : true,
+					colspan : 6,
+					xtype : 'textfield',
+					fieldLabel : '包装端盖'
+				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">打包</p>',
 					labelSeparator : '',// 去掉冒号
@@ -6036,8 +6057,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						autoLoad : false,
 						totalProperty : 'totalCount',
 						baseParams : {
-
-					}	,
+							'condition/status' : 1
+						},
 						fields : [{
 									name : 'drawingCode'
 								}, {
@@ -6113,6 +6134,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										name : 'condition/drawingCode',
 										anchor : '100%',
 										fieldLabel : '图纸编号'
+									}, {
+										xtype : 'hidden',
+										ref : '../status',
+										name : 'condition/status',
+										value : 1
 									}]
 						})
 
@@ -6238,8 +6264,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						autoLoad : false,
 						totalProperty : 'totalCount',
 						baseParams : {
-
-					}	,
+							'condition/status' : 1
+						},
 						fields : [{
 									name : 'drawingCode'
 								}, {
@@ -6330,6 +6356,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										name : 'condition/drawingCode',
 										anchor : '100%',
 										colspan : 1
+									}, {
+										xtype : 'hidden',
+										ref : '../status',
+										name : 'condition/status',
+										value : 1
 									}]
 						})
 

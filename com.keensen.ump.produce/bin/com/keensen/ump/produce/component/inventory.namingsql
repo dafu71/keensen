@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.inventory">
+    <select id="queryK3Stock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.mater_code as "materCode",
+		t1.batch_no as "batchNo",
+		t1.class_name as "className",
+		t1.prod_spec_name as "prodSpecName",
+		t1.orig_spec_name as "origSpecName",
+		t1.amount as "amount",
+		t1.prod_type as "prodType",
+		t1.storage as "storage",
+		t1.position as "position",
+		t1.prod_state as "prodState",
+		t1.remark as "remark",
+		substr(trim(t1.Store_Time),1,10) as "storeTime",
+		t1.apperance as "apperance",
+		t1.lid as "lid",
+		t1.tape as "tape",
+		t1.f_gpd as "fGpd",
+		t1.f_salt as "fSalt",
+		t1.F_CHECK_TM as "fCheckTm",
+		t1.r_gpd as "rGpd",
+		t1.r_SALT as "rSalt",
+		t1.r_CHECK_TM as "rCheckTm"
+
+  FROM KS_COMPONENT_K3_STOCK t1
+  where 1=1
+ and nvl(t1.status,1) != 0
+ 
+ <isNotNull prepend="and" property="prodSpecName">t1.prod_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id  = #id#</isNotNull>
+        <isNotNull prepend="and" property="storeTimeStart">substr(trim(t1.Store_Time),1,10)  &gt;=  #storeTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="storeTimeEnd">substr(trim(t1.Store_Time),1,10) &lt;=  #storeTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="materCode">t1.mater_Code like '%' || #materCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.batch_No like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="storage">T1.storage = #storage#</isNotNull>
+        <isNotNull prepend="and" property="position">T1.position like '%' || #position# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodState">t1.prod_state like '%' || #prodState# || '%'</isNotNull>
+	  order by t1.id desc
+	
+	
+    </select>
+    <delete id="deleteK3Stock" parameterClass="java.util.HashMap">
+   delete from KS_COMPONENT_K3_STOCK 
+   where 1=1
+    <isNotNull prepend="and" property="id">id = #id#</isNotNull>
+    </delete>
+</sqlMap>

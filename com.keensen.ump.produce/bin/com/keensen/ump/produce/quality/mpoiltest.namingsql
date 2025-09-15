@@ -4,13 +4,15 @@
     <select id="queryOilBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT
 		DECODE(#oiltype#,'新配油相液','Y','回流油相液','J','') || 
 		#line# ||
-		(SELECT mp_batch_code FROM qinsen.PARA_MATER_SPEC WHERE mater_spec_name=#mptype#)
+		(SELECT nvl(new_batch_code,mp_batch_code) FROM qinsen.PARA_MATER_SPEC WHERE mater_spec_name=#mptype#)
 		||		
 		(SELECT ymd FROM v_ks_ymd) ||   
 		(SELECT trim(to_char(COUNT(1)+1 ,'00'))
 		  FROM KS_QUALITY_MP_TEST_OIL_HEAD T
 		 WHERE TO_CHAR(T.CREATE_TIME, 'yyyyMMdd') &gt; '20240820'
-		 AND SUBSTR(T.BATCH_NO, 5, 4) = (SELECT ymd FROM v_ks_ymd)) "batchNo"
+		 AND CASE WHEN length(T.BATCH_NO)= 10 THEN SUBSTR(T.BATCH_NO, 5, 4)
+       ELSE SUBSTR(T.BATCH_NO, 6, 4) END = (SELECT ymd FROM v_ks_ymd)) "batchNo"
+		 
 		 FROM DUAL</select>
     <select id="queryWeight" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T.MPTYPE,t.line,t.c42 "c42std",
        ROUND(T.C42 *#weight# * 10, 3) "c42",

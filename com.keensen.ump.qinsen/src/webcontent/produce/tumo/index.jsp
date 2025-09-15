@@ -96,6 +96,13 @@
   //var sumOutLength = 10;
   
   var listid = 'produce-tumo-list';
+  
+  var listPanel4TroughLiquidId = Ext.id();
+  var window4TroughLiquidId = Ext.id();
+  var listPanel4WaterLiquidId = Ext.id();
+  var window4WaterLiquidId = Ext.id();
+  var window4LiquidAdjustId = Ext.id();
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.tumoMgr
 		});

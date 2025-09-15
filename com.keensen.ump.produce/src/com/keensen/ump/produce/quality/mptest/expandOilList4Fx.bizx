@@ -10,7 +10,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link6</targetConnections>
+    <targetConnections>link8</targetConnections>
+    <targetConnections>link10</targetConnections>
     <location x="525" y="154"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -148,7 +149,7 @@
   <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="queryLight" displayName="queryLight" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link6" name="link6" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess2</sourceNode>
-      <targetNode>end0</targetNode>
+      <targetNode>assign3</targetNode>
     </sourceConnections>
     <targetConnections>link5</targetConnections>
     <location x="645" y="289"/>
@@ -169,6 +170,86 @@
     <figSize height="20" width="80"/>
     <node>subprocess2</node>
   </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign3" name="赋值3" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>subprocess3</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <location x="744" y="287"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/mptype</process:from>
+      <process:to type="query">condition3/mptype</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data/line</process:from>
+      <process:to type="query">condition3/line</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <location x="738" y="323"/>
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="qaueryC42Range" displayName="qaueryC42Range" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link9" name="link9" displayName="连接线" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">datas3</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="744" y="154"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.quality.quality2.qaueryC42Range</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="condition" type="query" value="java.util.Map" valueType="Java" pattern="reference">condition3</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="data" type="query" value="commonj.sdo.DataObject[]" valueType="Java">datas3</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="695" y="189"/>
+    <figSize height="20" width="125"/>
+    <node>subprocess3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign4" name="赋值4" displayName="赋值" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <location x="660" y="75"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">datas3[1]/c42Low</process:from>
+      <process:to type="query">data/c42Low</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">datas3[1]/c42Up</process:from>
+      <process:to type="query">data/c42Up</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <location x="654" y="111"/>
+    <figSize height="20" width="40"/>
+    <node>assign4</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="dafu" createTime="2024-03-04 15:11:18" date="2024-03-04Z" description="" name="expandOilList" version="6.3"/>
@@ -178,6 +259,8 @@
     <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="condition"/>
     <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="abs"/>
     <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="condition2"/>
+    <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="condition3"/>
+    <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="datas3"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input anyType="commonj.sdo.DataObject" description="" isArray="false" name="entity"/>

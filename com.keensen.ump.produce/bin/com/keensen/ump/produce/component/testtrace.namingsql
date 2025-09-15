@@ -291,8 +291,9 @@
          ORDER BY T.BATCH_NO, JM.BATCH_NO) T1
 
     </select>
-    <select id="queryProdSpecName" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t1.prod_spec_name "prodSpecName",pms.mater_spec_id "prodSpecId" from  KS_BASE_SPEC_RELATION t1
-    LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_name=t1.prod_spec_name</select>
+    <select id="queryProdSpecName" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT pms.mater_spec_name "prodSpecName",pms.mater_spec_id "prodSpecId" from ks_base_sample_standard t1
+    
+    LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id=t1.prod_spec_id</select>
     <select id="queryBaseCalendar" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
     select t.calendar_date "calendarDate",t.weekday_number "weekdayNumber",t.if_rest "ifRest"
  	from KS_BASE_CALENDAR t
@@ -329,12 +330,13 @@
     FROM DUAL
   CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) -
              TRUNC(TO_DATE(to_char(#startDate#, 'YYYY-MM-DD'), 'YYYY-MM-DD')) + 1</insert>
-    <select id="queryDiaphragmTest" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.MATER_SPEC_NAME AS "materSpecName",
+    <select id="queryDiaphragmTest" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+        <!-- 	SELECT T1.MATER_SPEC_NAME AS "materSpecName",
        T1.MATER_SPEC_ID AS "materSpecId",
        T1.MATER_CODE AS "materCode",pms.new_batch_code "newBatchCode",
        T1.PROD_SPEC_NAME AS "prodSpecName", T1.PROD_SPEC_ID AS "prodSpecId",
        CASE
-         WHEN INSTR(T1.PROD_SPEC_NAME, '-4') &gt; 0 THEN
+         WHEN INSTR(T1.PROD_SPEC_NAME, '-4') > 0 THEN
           10
          ELSE
           40.25
@@ -347,7 +349,32 @@
 	ON pms.mater_spec_id = t1.mater_spec_id
   LEFT JOIN  KS_BASE_SAMPLE_STANDARD bss
   ON bss.prod_spec_id = t1.prod_spec_id
-  AND bss.mater_spec_id = t1.mater_spec_id</select>
+  AND bss.mater_spec_id = t1.mater_spec_id
+  -->
+  
+    SELECT bss.MATER_SPEC_NAME AS "materSpecName",
+       bss.MATER_SPEC_ID AS "materSpecId",
+       pms.mp_batch_code AS "materCode",pms.new_batch_code "newBatchCode",
+       pms2.mater_SPEC_NAME AS "prodSpecName", bss.PROD_SPEC_ID AS "prodSpecId",
+       CASE
+         WHEN INSTR(bss.PROD_SPEC_NAME, '-4') &gt; 0 THEN
+          10
+         ELSE
+          40.25
+       END "length",
+       (nvl(bss.sample_length_low,0) + nvl(bss.sample_length_up,0))/2 "sampleLength",
+       
+       nvl(bss.sample_length_low,0) "sampleLengthLow",
+       nvl(bss.sample_length_up,0) "sampleLengthUp",
+       
+       bss.sample_times "sampleTimes",
+       nvl(bss.amount,0) "sampleAmount"
+  FROM KS_BASE_SAMPLE_STANDARD bss
+   LEFT JOIN qinsen.para_mater_spec pms
+	ON pms.mater_spec_id = bss.mater_spec_id
+	left join qinsen.para_mater_spec pms2
+	on pms2.mater_spec_id = bss.prod_spec_id
+	</select>
     <update id="updateCdmState" parameterClass="java.util.HashMap">UPDATE KS_COMPONENT_DUTY_CDM t 
 	SET t.cdm_state=0
 	WHERE to_char(t.plan_date,'yyyy-MM-dd')=#planDate# AND t.order_id=#orderId#</update>
@@ -373,6 +400,10 @@
     pms2.mater_SPEC_NAME as "prodSpecName",
     t1.PROD_SPEC_ID as "prodSpecId",
     t1.sample_length as "sampleLength",
+    
+    t1.sample_length_low as "sampleLengthLow",
+    t1.sample_length_up as "sampleLengthUp",
+    
     t1.sample_times as "sampleTimes",
     t1.amount as "amount"       
   FROM KS_base_sample_standard T1

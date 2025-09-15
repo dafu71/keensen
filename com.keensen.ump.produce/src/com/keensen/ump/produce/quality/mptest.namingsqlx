@@ -5,10 +5,10 @@
    <select id="queryOilRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
      SELECT T1.ID             AS "id",T1.CONCENTRATION  AS "concentrationStd",
       to_char(t1.CREATE_TIME,'YYYY-MM-DD HH24:MI:SS') as "createTime",
-		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_USER_ID as "createUserId",t1.tm_batch_no "tmBatchNo",
 		t1.CREATE_NAME as "createName",
 		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
-       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_USER_ID AS "updateUserId",t1.c41_invalid "c41Invalid",
        T1.UPDATE_NAME    AS "updateName",
        T1.RESERVE1       AS "reserve1",
        T1.RESERVE2       AS "reserve2",
@@ -25,9 +25,20 @@
        decode(T1.STATE,0,'处理中',1,'完结','作废') "stateName",
        T1.STEP           AS "step",
        decode(T1.STEP,'first','分析','second','调整','third','配料','生产使用') "stepName"
+       
+       ,MC.prodname || '-' ||  SUBSTR(TRIM(T1.tm_batch_no),5,1) "mptype2"
+       ,SUBSTR(TRIM(T1.tm_batch_no),2,1) "line2"
+       
   FROM KS_QUALITY_MP_TEST_OIL_HEAD T1
-  
+  LEFT JOIN V_KS_BASE_MP_CODE MC
+	ON MC.prodid = SUBSTR(TRIM(T1.tm_batch_no),3,2)
 		 where 1=1
+		 and nvl(t1.status,1) = 1
+		 <isNotNull prepend="and" property="tmBatchNo"> 
+		       t1.tm_batch_no like '%' || #tmBatchNo# || '%'
+			</isNotNull>
+		 
+		
 		 
 		  <isNotNull prepend = "and"  property = "createTimeStart"> 
           to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI ')  &gt;=  #createTimeStart#
@@ -100,6 +111,7 @@
     ON T1.RELATION_ID = T2.ID
     left join v_KS_BASE_OIL_FORMULA t3 on t3.mptype=t2.mptype and t3.line = t2.line
 		 where 1=1
+		 and nvl(t2.status,1) = 1
 		  <isNotNull prepend="and" property="id"> 
 		       t1.ID = #id#
 			</isNotNull>
@@ -117,10 +129,10 @@
   (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' BATCH_NO FROM dual
   WHERE NOT EXISTS(
   select t.BATCH_NO from KS_QUALITY_MP_TEST_OIL_HEAD t
-  WHERE SUBSTR(t.BATCH_NO,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE SUBSTR(t.BATCH_NO,1,8) = to_char(SYSDATE,'yyyyMMdd') and nvl(t.status,1) = 1) 
   UNION
   select to_char(to_number(max(t.BATCH_NO))+1) CODE from KS_QUALITY_MP_TEST_OIL_HEAD t
-  WHERE SUBSTR(t.BATCH_NO,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE SUBSTR(t.BATCH_NO,1,8) = to_char(SYSDATE,'yyyyMMdd') and nvl(t.status,1) = 1)
   WHERE BATCH_NO IS NOT NULL
      
     </select> 
@@ -217,8 +229,10 @@
   FROM KS_QUALITY_MP_TEST_ZMY_LIST T1
   LEFT JOIN KS_QUALITY_MP_TEST_ZMY_HEAD T2  
     ON T1.RELATION_ID = T2.ID
+   LEFT JOIN ks_prod_diaphragm_make_fix fx
+  ON fx.batch_no = t2.batch_no 
   left join KS_QUALITY_ZMY_VISCOSITY_STAND std
-    on std.psf = T2.mptype
+    on std.psf = T2.mptype AND fx.psf = std.polysulfone
 		 where 1=1
 		  <isNotNull prepend="and" property="id"> 
 		       t1.ID = #id#
@@ -255,7 +269,7 @@
 		FROM(
 		select '油相液浓度' item, COUNT(*) cnt,t.step,
 		 decode(T.STEP,'first','分析','second','调整','third','配料','生产使用') step_Name 
-		 from KS_QUALITY_MP_TEST_OIL_HEAD t
+		 from (select * from KS_QUALITY_MP_TEST_OIL_HEAD where 1=1 and nvl(status,1) = 1) t
 		GROUP BY t.step
 		UNION ALL
 		select '水相液浓度' item, COUNT(*) cnt,t.step,
@@ -306,7 +320,48 @@ LEFT JOIN KS_QUALITY_MP_TEST_OIL_HEAD h
 ON t.relation_id = h.id
 WHERE to_char(t.first_date,'yyyy-MM-dd') = to_char(SYSDATE,'yyyy-MM-dd')
 AND h.mptype=#mptype#
-AND t.light IS NOT NULL
+AND t.light IS NOT NULL and nvl(h.status,1) = 1
 ORDER BY t.first_date DESC
 </select>
+
+<select id="countOil" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT sum(nvl(t1.c41_invalid,0)) "c41Invalid"     
+       
+  FROM KS_QUALITY_MP_TEST_OIL_HEAD T1
+  LEFT JOIN V_KS_BASE_MP_CODE MC
+	ON MC.prodid = SUBSTR(TRIM(T1.tm_batch_no),3,2)
+		 where 1=1
+		 and nvl(t1.status,1) = 1
+		 <isNotNull prepend="and" property="tmBatchNo"> 
+		       t1.tm_batch_no like '%' || #tmBatchNo# || '%'
+			</isNotNull>
+		 
+		
+		 
+		  <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI ')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
+		  <isNotNull prepend="and" property="id"> 
+		       t1.ID = #id#
+			</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       (t1.batch_no like '%' || #batchNo# || '%' or t1.reflux_no like '%' || #batchNo# || '%')
+			</isNotNull>
+			<isNotNull prepend="and" property="line"> 
+		       t1.line = #line#
+			</isNotNull>
+			<isNotNull prepend="and" property="mptype"> 
+		       t1.mptype = #mptype#
+			</isNotNull>
+			<isNotNull prepend="and" property="step"> 
+		       t1.STEP = #step#
+			</isNotNull>
+			
+    </select>
+
+
   </sqlMap>

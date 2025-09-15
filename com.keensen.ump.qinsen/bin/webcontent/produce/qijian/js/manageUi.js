@@ -25,6 +25,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 		this.initChooseSingleOrderWindow();
 
+		this.initEditWindow4MonitorAdvise();
+		this.initEditWindow4PlannerAdvise();
+		this.initEditWindow4OvertimeAdvise();
+
 		this.opt = '';
 
 		this.gridPanel = this.gridPanel || new Ext.Panel({
@@ -83,13 +87,13 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 				});
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 195,
-					columns : 16,
-					border : true,
-					collapsible : false,
-					titleCollapse : false,
-					// title : '【卷膜记录查询】',
-					fields : [{
+			height : 195,
+			columns : 16,
+			border : true,
+			collapsible : false,
+			titleCollapse : false,
+			// title : '【卷膜记录查询】',
+			fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
 						fieldLabel : '生产时间',
@@ -225,26 +229,31 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 						xtype : 'textfield',
 						name : 'condition/juanMoBatchNoMin',
-						ref:'../juanMoBatchNoMin',
+						ref : '../juanMoBatchNoMin',
 						anchor : '100%',
 						colspan : 3,
 						fieldLabel : '卷膜序号',
 						listeners : {
 							scope : this,
 							'blur' : function(A) {
-								var juanMoBatchNoMin = this.queryPanel.juanMoBatchNoMin.getValue();
-								var juanMoBatchNoMax = this.queryPanel.juanMoBatchNoMax.getValue();
-								if(Ext.isEmpty(juanMoBatchNoMin)) return;
-								if(!Ext.isEmpty(juanMoBatchNoMax)) return;
-								this.queryPanel.juanMoBatchNoMax.setValue(juanMoBatchNoMin);
-								
+								var juanMoBatchNoMin = this.queryPanel.juanMoBatchNoMin
+										.getValue();
+								var juanMoBatchNoMax = this.queryPanel.juanMoBatchNoMax
+										.getValue();
+								if (Ext.isEmpty(juanMoBatchNoMin))
+									return;
+								if (!Ext.isEmpty(juanMoBatchNoMax))
+									return;
+								this.queryPanel.juanMoBatchNoMax
+										.setValue(juanMoBatchNoMin);
+
 							}
 						}
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/juanMoBatchNoMax',
-						ref:'../juanMoBatchNoMax',
+						ref : '../juanMoBatchNoMax',
 						anchor : '100%',
 						colspan : 3,
 						fieldLabel : '至'
@@ -252,26 +261,30 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 						xtype : 'textfield',
 						name : 'condition/batchNoMin',
-						ref:'../batchNoMin',
+						ref : '../batchNoMin',
 						anchor : '100%',
 						colspan : 3,
 						fieldLabel : '元件序号',
 						listeners : {
 							scope : this,
 							'blur' : function(A) {
-								var batchNoMin = this.queryPanel.batchNoMin.getValue();
-								var batchNoMax = this.queryPanel.batchNoMax.getValue();
-								if(Ext.isEmpty(batchNoMin)) return;
-								if(!Ext.isEmpty(batchNoMax)) return;
+								var batchNoMin = this.queryPanel.batchNoMin
+										.getValue();
+								var batchNoMax = this.queryPanel.batchNoMax
+										.getValue();
+								if (Ext.isEmpty(batchNoMin))
+									return;
+								if (!Ext.isEmpty(batchNoMax))
+									return;
 								this.queryPanel.batchNoMax.setValue(batchNoMin);
-								
+
 							}
 						}
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/batchNoMax',
-						ref:'../batchNoMax',
+						ref : '../batchNoMax',
 						anchor : '100%',
 						colspan : 3,
 						fieldLabel : '至'
@@ -315,6 +328,22 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 								this.reset()
 							}
 						}
+					}, {
+
+						xtype : 'combo',
+						fieldLabel : '有无贴标',
+						ref : '../isLabel',
+						hiddenName : 'condition/isLabel',
+						emptyText : '--请选择--',
+						anchor : '75%',
+						colspan : 4,
+						store : [[null, '全部'], ['Y', '有'], ['N', '无']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.isLabel.reset();
+							}
+						}
 					}/*
 						 * , {
 						 * 
@@ -325,7 +354,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						 * xtype : 'textfield', name : 'condition/batchNo',
 						 * anchor : '75%', fieldLabel : '元件序号' }
 						 */]
-				});
+		});
 
 		this.queryPanel.addButton({
 					text : "导出",
@@ -382,7 +411,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						text : '水测员工接收',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						hidden : waterTestFlag != 1,
+						// hidden : waterTestFlag != 1,
 						handler : this.onWaterRemark
 					}, '-', {
 						text : '工艺员备注',
@@ -396,6 +425,33 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						iconCls : 'icon-application_edit',
 						hidden : monitorFlag != 1,
 						handler : this.onMonitorRemark2
+					}, '-', {
+						xtype : 'splitbutton',
+						// disabled : allRight != '1',
+						text : '处理意见',
+						// scale : 'small',
+						// rowspan : 1,
+						// iconAlign : 'top',
+						iconCls : 'icon-application_add',
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '班长处理意见',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.onMonitorAdvise
+								}, {
+									text : '计划员处理意见',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.onPlannerAdvise
+								}, {
+									text : '超期停留处理意见',
+									scope : this,
+									hidden : uid != 'LHY' && uid != 'KS00524' && uid != 'dafu',
+									iconCls : 'icon-application_edit',
+									handler : this.onOvertimeAdvise
+
+								}]
 					}, '->', {
 						xtype : 'displayfield',
 						value : '',
@@ -424,11 +480,18 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.qijian.deleteQijian.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 30
+							}), selModel, {
 						header : '元件序号',
 						sortable : true,
 						width : 120,
 						dataIndex : 'batchNo'
+					}, {
+						header : '唛头显示<br>元件序号',
+						sortable : true,
+						width : 120,
+						dataIndex : 'printBatchNo'
 					}, {
 						header : '卷膜序号',
 						sortable : true,
@@ -646,6 +709,21 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						width : 160,
 						dataIndex : 'remark',
 						sortable : true
+					}, {
+						header : '班长处理意见',
+						width : 160,
+						dataIndex : 'monitorAdvise',
+						sortable : true
+					}, {
+						header : '计划员处理意见',
+						width : 160,
+						dataIndex : 'plannerAdvise',
+						sortable : true
+					}, {
+						header : '超期停留处理意见',
+						width : 160,
+						dataIndex : 'overtimeAdvise',
+						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.qinsen.qijian.queryRecordsByPage.biz.ext',
@@ -827,6 +905,16 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							name : 'ifSemiStock'
 						}, {
 							name : 'ifCheckStock'
+						}, {
+							name : 'printBatchNo'
+						}, {
+							name : 'ifRework'
+						}, {
+							name : 'monitorAdvise'
+						}, {
+							name : 'plannerAdvise'
+						}, {
+							name : 'overtimeAdvise'
 						}]
 			})
 		})
@@ -2152,7 +2240,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 				})
 
 		this.viewDutyPanel = this.viewDutyPanel || new Ext.fn.EditPanel({
-			height : 430,
+			height : 460,
 			region : 'north',
 			baseCls : "x-panel",
 			autoHide : false,
@@ -2314,6 +2402,14 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						colspan : 2
 					}, {
 						xtype : 'displayfield',
+						fieldLabel : '缠胶带颜色',
+						ref : '../color',
+						readOnly : true,
+						dataIndex : 'color',
+						anchor : '85%',
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">元件序号</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 6
@@ -2462,7 +2558,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					autoScroll : false,
 					modal : true,
 					width : 1024,
-					height : 600,
+					height : 640,
 					layout : 'border',
 					items : [this.viewDutyPanel, this.viewDutyListPanel]
 
@@ -2780,5 +2876,119 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									this.chooseSingleOrderListPanel]
 
 						});
+	}
+
+	this.initEditWindow4MonitorAdvise = function() {
+
+		this.editWindow4MonitorAdvise = this.editWindow4MonitorAdvise
+				|| new Ext.fn.FormWindow({
+					title : '班长处理意见',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.vstorage.updateMonitorAdvise.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									name : 'advise',
+									allowBlank : false,
+									ref : '../../advise',
+									fieldLabel : '处理意见',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordIds',
+									name : 'recordIds'
+								}]
+					}]
+				});
+	}
+
+	this.initEditWindow4PlannerAdvise = function() {
+
+		this.editWindow4PlannerAdvise = this.editWindow4PlannerAdvise
+				|| new Ext.fn.FormWindow({
+					title : '计划员处理意见',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.vstorage.updatePlannerAdvise.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									name : 'advise',
+									allowBlank : false,
+									ref : '../../advise',
+									fieldLabel : '处理意见',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordIds',
+									name : 'recordIds'
+								}]
+					}]
+				});
+	}
+
+	this.initEditWindow4OvertimeAdvise = function() {
+
+		this.editWindow4OvertimeAdvise = this.editWindow4OvertimeAdvise
+				|| new Ext.fn.FormWindow({
+					title : '超期停留处理意见',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.vstorage.updateOvertimeAdvise.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									name : 'advise',
+									allowBlank : false,
+									ref : '../../advise',
+									fieldLabel : '处理意见',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordIds',
+									name : 'recordIds'
+								}]
+					}]
+				});
 	}
 }

@@ -52,6 +52,10 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 						name : 'sampleAmount'
 					}, {
 						name : 'newBatchCode'
+					}, {
+						name : 'sampleLengthLow'
+					}, {
+						name : 'sampleLengthUp'
 					}]
 		})
 	}
@@ -243,7 +247,7 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
 			// baseCls : "x-plain",
 			width : '520',
-			height : '300',
+			height : '330',
 			pgrid : '',
 			columns : 2,
 			autoHide : false,
@@ -327,6 +331,16 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 						fieldLabel : ' ',
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 						labelSeparator : '',// 去掉冒号
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						height : '10',
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						ref : '../info',
+						readOnly : true,
+						fieldLabel : '送样长度标准',
 						colspan : 2
 					}, {
 						xtype : 'displayfield',
@@ -425,6 +439,9 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 					}, {
 						xtype : 'hidden',
 						ref : '../sampleLength'
+					}, {
+						xtype : 'hidden',
+						ref : '../materSpecName'
 					}],
 			buttons : [{
 						text : "确定",

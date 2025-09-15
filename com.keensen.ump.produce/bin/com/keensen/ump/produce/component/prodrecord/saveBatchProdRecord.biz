@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="saveBatchProdRecord" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
+    <sourceConnections xsi:type="process:tLink" id="link6" name="link6" isDefault="true" type="transition">
+      <sourceNode>start0</sourceNode>
+      <targetNode>assign0</targetNode>
+    </sourceConnections>
+    <nodeLabel>start0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
+    <targetConnections>link8</targetConnections>
+    <nodeLabel>end0label</nodeLabel>
+    <process:returns/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="start0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>start0</node>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="end0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>end0</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link7" name="link7" isDefault="true" type="transition">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>loopstart0</targetNode>
+    </sourceConnections>
+    <targetConnections>link6</targetConnections>
+    <nodeLabel>assign0label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/batchNos</process:from>
+      <process:to type="query">batchNos</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">batchNos.split(&quot;,&quot;)</process:from>
+      <process:to type="query">arr</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>assign0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopStart" id="loopstart0" name="循环" grouped="true" type="loopstart" matchedName="loopend0" loopType="iterate">
+    <sourceConnections xsi:type="process:tLink" id="link9" name="link9" isDefault="true" type="transition">
+      <sourceNode>loopstart0</sourceNode>
+      <targetNode>assign1</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <nodeLabel>loopstart0label</nodeLabel>
+    <process:iterate iterable="arr" iterableElement="batchNo"/>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopstart0label" name="label" nodeType="label">
+    <figSize height="20" width="31"/>
+    <node>loopstart0</node>
+  </nodes>
+  <nodes xsi:type="process:tLoopEnd" id="loopend0" name="循环结束" grouped="true" type="loopend" matchedName="loopstart0">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" isDefault="true" type="transition">
+      <sourceNode>loopend0</sourceNode>
+      <targetNode>end0</targetNode>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <nodeLabel>loopend0label</nodeLabel>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="loopend0label" name="label" nodeType="label">
+    <figSize height="20" width="61"/>
+    <node>loopend0</node>
+  </nodes>
+  <nodes xsi:type="model:GroupNode" id="group0" name="group" grouped="true" gstart="loopstart0" gend="loopend0">
+    <chidren>loopend0</chidren>
+    <chidren>loopstart0</chidren>
+    <chidren>assign1</chidren>
+    <chidren>subprocess0</chidren>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign1" name="赋值1" grouped="true" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" isDefault="true" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>subprocess0</targetNode>
+    </sourceConnections>
+    <targetConnections>link9</targetConnections>
+    <nodeLabel>assign1label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">batchNo</process:from>
+      <process:to type="query">entity/batchNo</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">null</process:from>
+      <process:to type="query">entity/id</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign1</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" id="subprocess0" name="saveProdRecord" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>loopend0</targetNode>
+    </sourceConnections>
+    <targetConnections>link10</targetConnections>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">this.saveProdRecord</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="entity" type="query" value="com.keensen.ump.produce.component.KsComponentProdRecord" valueType="DataObject" pattern="reference">entity</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables/>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <figSize height="20" width="121"/>
+    <node>subprocess0</node>
+  </nodes>
+  <topRuler/>
+  <leftRuler/>
+  <process:info version="6.3"/>
+  <process:variables>
+    <process:variable historyStateLocation="client" isArray="true" name="arr" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="batchNos" primitiveType="String"/>
+    <process:variable historyStateLocation="client" isArray="false" name="batchNo" primitiveType="String"/>
+  </process:variables>
+  <process:inputs varArgs="false">
+    <process:input isArray="false" modelType="com.keensen.ump.produce.component.KsComponentProdRecord" name="entity"/>
+  </process:inputs>
+  <process:outputs/>
+  <process:extAttribute1>public</process:extAttribute1>
+  <process:transactionType>true</process:transactionType>
+</process:tBusinessLogic>

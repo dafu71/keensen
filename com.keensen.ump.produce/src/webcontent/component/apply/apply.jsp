@@ -152,8 +152,7 @@
 		</td>	
 		
 		<td width="33%" height="38">
-		&nbsp;
-		<%--<div align="left" class="style1"><strong>性能:</strong><b:write property="data/performance"/></div>--%>
+		<div align="left" class="style1"><strong>款式:</strong><b:write property="data/style"/></div>
 		</td>
 			
 	</tr>
@@ -333,7 +332,7 @@
 	<td height="38"> <div align="center" class="style1"><%=list[i].getString("printBatchNo") %></div> </td>
 	<td height="38"> <div align="center" class="style1"><%=null == list[i].getString("tumoBatchStr2")?"":list[i].getString("tumoBatchStr2") %></div> </td>
 	<td height="38"> <div align="center" class="style1"><%=list[i].getString("state") %></div> </td> 
-	<td height="38"> <div align="center" class="style1"><%=list[i].getString("checkResult") %></div> </td>   
+	<td height="38"> <div align="center" class="style1"><%=null == list[i].get("checkResult")?"":list[i].getString("checkResult") %></div> </td>   
   
   <% if(i%2==1 || i==list.length-1){ %>
   </tr>

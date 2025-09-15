@@ -240,6 +240,9 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						dataIndex : 'wfBatchNo',
 						header : '无纺布批号'
 					}, {
+						dataIndex : 'psfName',
+						header : '聚砜类型'
+					}, {
 						dataIndex : 'zmyBatchNo',
 						header : '铸膜液批号'
 					}, {
@@ -413,6 +416,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'usedWeight'
 						}, {
 							name : 'releaseAmount'
+						}, {
+							name : 'psfName'
 						}]
 			})
 		})

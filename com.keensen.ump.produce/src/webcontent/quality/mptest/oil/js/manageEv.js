@@ -106,8 +106,8 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 				var reflux = this.editWindow3.reflux.getValue();
 				var weight = this.editWindow3.weight.getValue();
 				if (parseFloat(c41Reality) != 0 && parseFloat(reflux) != 0) {
-					//Ext.Msg.alert("系统提示", "不能同时添加C41和回流液重量");
-					//return false;
+					// Ext.Msg.alert("系统提示", "不能同时添加C41和回流液重量");
+					// return false;
 				}
 
 				if (parseFloat(c41Reality) == 0 && parseFloat(reflux) == 0) {
@@ -149,7 +149,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 						this.editWindow.batchNo.setVisible(false);
 						this.editWindow.refluxNo.setVisible(true);
 						this.editWindow.reflux.setVisible(true);
-						
+
 					} else {
 						this.editWindow.batchNo.setVisible(true);
 						this.editWindow.refluxNo.setVisible(false);
@@ -230,6 +230,22 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 				var step = cell.data.step;
+				if (this.opt == 'c41invalid') {					
+					this.editWindow4.loadData(cell);
+					//var c41Invalid = cell.get('c41Invalid');
+					//var id = cell.get('id');
+					//this.editWindow4.c41Invalid.setValue(c41Invalid);
+					//this.editWindow4.pkid.setValue(id);
+					this.editWindow4.show();
+					return false;
+				}
+		
+				if (this.opt == 'updateTmBatchNo') {
+					this.updateTmBatchNokWindow.show();
+					this.updateTmBatchNokWindow.loadData(cell);
+					return false;
+				}
+
 				if (this.opt == 'first' && step != 'first') {
 					Ext.Msg.alert("系统提示", "请选择待分析数据！");
 					return false;
@@ -252,6 +268,28 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.initEvent = function() {
 					this.editWindow3.loadData(cell);
 				}
 			}, this);
+			
+	this.listPanel.store.on('load', function() {
+				var records = _this.listPanel.store.getRange();
+				if (records.length == 0) {					
+					Ext.getCmp(c41invalidtotal).setValue('');
+					return
+				}
+				
+				var totalC41Invalid = records[0].data.totalC41Invalid;
+				
+				Ext.getCmp(c41invalidtotal).setValue('C41报废合计(kg):' + totalC41Invalid);
+			})
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.destroy = function() {
+	this.editWindow4.destroy();
+
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onUpdateTmBatchNo = function() {
+	this.opt = 'updateTmBatchNo';
+	this.listPanel.onEdit();
 }
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onView = function() {
@@ -331,55 +369,35 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onEdit3 = function() {
 	this.listPanel.onEdit();
 };
 
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onC41Invalid = function() {
+	this.opt = 'c41invalid';
+	this.listPanel.onEdit();
+};
+
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.exportExcel = function() {
-	
+
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '油相液浓度',
-			'com.keensen.ump.produce.quality.mptest.queryOilRecords','7,8');
-	/*var _this = this;
-	var daochu = _this.queryPanel.getForm().getValues();
-
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlLimited.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			'map/limited' : '10000',
-			namingsql : 'com.keensen.ump.produce.quality.mptest.queryOilListRecords',
-			templateFilename : 'ks_mp_mptest_oil'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-
-				var fname = ret.fname;
-				if (Ext.isEmpty(fname)) {
-					Ext.Msg.alert("系统提示", ret.msg);
-					return
-				} else {
-					if (Ext.isIE) {
-						window
-								.open('/default/deliverynote/seek/down4IE.jsp?fname='
-										+ fname);
-					} else {
-						window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-								+ fname;
-					}
-				}
-			}
-
-		},
-		failure : function(resp, options) {
-			var ret = Ext.decode(resp.responseText);
-			// Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})*/
+			'com.keensen.ump.produce.quality.mptest.queryOilRecords', '7,8');
+	/*
+	 * var _this = this; var daochu = _this.queryPanel.getForm().getValues();
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSqlLimited.biz.ext",
+	 * method : "post", jsonData : { 'map' : daochu, 'map/limited' : '10000',
+	 * namingsql : 'com.keensen.ump.produce.quality.mptest.queryOilListRecords',
+	 * templateFilename : 'ks_mp_mptest_oil' }, success : function(resp) { var
+	 * ret = Ext.decode(resp.responseText); if (ret.success) {
+	 * 
+	 * var fname = ret.fname; if (Ext.isEmpty(fname)) { Ext.Msg.alert("系统提示",
+	 * ret.msg); return } else { if (Ext.isIE) { window
+	 * .open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); } else {
+	 * window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" +
+	 * fname; } } } }, failure : function(resp, options) { var ret =
+	 * Ext.decode(resp.responseText); // Ext.MessageBox.alert('失败',
+	 * '请求超时或网络故障,错误编号：' + response.status); }, callback : function() {
+	 * _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc = function() {
@@ -441,32 +459,46 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 	var rec = this.c42Store.getAt(0);
 	var a = rec.data.a;
 	var b = rec.data.b;
-	
+
 	var concentration2 = this.editWindow.concentration2.getValue();
-	
+
 	var light = this.editWindow.light.getValue();
 	var light2 = this.editWindow.light2.getValue();
-	
+
 	if (Ext.isEmpty(light)) {
 		Ext.Msg.alert("系统提示", "请输入标样吸光度!");
 		return;
 	}
-	
+
 	if (Ext.isEmpty(light2)) {
 		Ext.Msg.alert("系统提示", "请输入样品吸光度!");
 		return;
 	}
-	
-	var test = (parseFloat(light)-parseFloat(a))/parseFloat(b);
-	var factor = parseFloat(concentration2)/test;
+
+	var test = (parseFloat(light) - parseFloat(a)) / parseFloat(b);
+	var factor = parseFloat(concentration2) / test;
 	factor = Math.round(factor * 1000) / 1000;
 	this.editWindow.factor.setValue(factor);
-	
-	var test2 = (parseFloat(light2)-parseFloat(a))/parseFloat(b);
+
+	var test2 = (parseFloat(light2) - parseFloat(a)) / parseFloat(b);
 	test2 = test2 * factor;
 	test2 = Math.round(test2 * 1000) / 1000;
 	this.editWindow.concentration.setValue(test2);
-	
+
+	// 浓度判定
+	var c42 = this.editWindow.concentration.getValue();
+	var c42Low = this.editWindow.c42Low.getValue();
+	var c42Up = this.editWindow.c42Up.getValue();
+
+	if (!Ext.isEmpty(c42Low) && !Ext.isEmpty(c42Up) && !Ext.isEmpty(c42)) {
+		if (parseFloat(c42) >= parseFloat(c42Low)
+				&& parseFloat(c42) <= parseFloat(c42Up)) {
+			this.editWindow.ifok.setValue('生产使用');
+		} else {
+			this.editWindow.ifok.setValue('调整');
+		}
+	}
+
 	var oiltype = this.editWindow.reserve1.getValue();
 	var weight = this.editWindow.weight2.getValue();
 	weight = parseFloat(weight);
@@ -475,7 +507,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 		Ext.Msg.alert("系统提示", "请输入C42浓度!");
 		return;
 	}
-	
+
 	// 测试的
 	concentration = parseFloat(concentration) / 100;
 	// 理论的
@@ -496,7 +528,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 			this.editWindow.c42Plan.setValue(c42Plan);
 			weight = weight + c42Plan / 1000;
 			weight = Math.round(weight * 100) / 100;
-			//this.editWindow.weight.setValue(weight);
+			// this.editWindow.weight.setValue(weight);
 			return;
 		}
 		// =(300/0.0025-300/0.0026)/1000
@@ -513,29 +545,29 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4fx = function() {
 			this.editWindow.c42Plan.setValue(0);
 			weight = weight + c41Plan;
 			weight = Math.round(weight * 100) / 100;
-			//this.editWindow.weight.setValue(weight);
+			// this.editWindow.weight.setValue(weight);
 			return;
 		}
-	}else{//回流油相液
+	} else {// 回流油相液
 		if (concentration < concentration2) {
 			var c41Plan = 0;
-			var c42Plan = weight * 1000 * (concentration2-concentration);
+			var c42Plan = weight * 1000 * (concentration2 - concentration);
 			c42Plan = Math.round(c42Plan * 100) / 100;
 			this.editWindow.c41Plan.setValue(0);
 			this.editWindow.c42Plan.setValue(c42Plan);
 			weight = weight + c42Plan / 1000;
 			weight = Math.round(weight * 100) / 100;
-			//this.editWindow.weight.setValue(weight);
-			return;			
-		}else{
+			// this.editWindow.weight.setValue(weight);
+			return;
+		} else {
 			var c42Plan = 0;
-			var c41Plan = 100 * (concentration/concentration2 -1);
+			var c41Plan = 100 * (concentration / concentration2 - 1);
 			c41Plan = Math.round(c41Plan * 100) / 100;
 			this.editWindow.c41Plan.setValue(c41Plan);
 			this.editWindow.c42Plan.setValue(0);
 			weight = weight + c41Plan;
 			weight = Math.round(weight * 100) / 100;
-			//this.editWindow.weight.setValue(weight);
+			// this.editWindow.weight.setValue(weight);
 			return;
 		}
 	}
@@ -604,10 +636,11 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onCalc4pl = function() {
 	c41Reality = parseFloat(c41Reality);
 	var c42Reality = this.editWindow3.c42Reality.getValue();
 	c42Reality = parseFloat(c42Reality);
-	//var reflux = weight2 - c41Plan - c42Plan/1000 +  c41Reality + c42Reality/1000;
-	var reflux = weight2 +  c41Reality + c42Reality/1000;
+	// var reflux = weight2 - c41Plan - c42Plan/1000 + c41Reality +
+	// c42Reality/1000;
+	var reflux = weight2 + c41Reality + c42Reality / 1000;
 	reflux = Math.round(reflux * 1000) / 1000;
-	this.editWindow3.reflux.setValue(reflux);	
+	this.editWindow3.reflux.setValue(reflux);
 }
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onBoard = function() {
@@ -616,4 +649,88 @@ com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onBoard = function() {
 
 com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onBoard2 = function() {
 	window.open('com.keensen.ump.produce.quality.queryBoard.flow?flag=2');
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onTmBatchNo = function() {
+	var _this = this;
+
+	var obj = this.inputWindow.hidden ? this.inputWindow2 : this.inputWindow;
+	var tmBatchNo = obj.tmBatchNo.getValue();
+	if (Ext.isEmpty(tmBatchNo))
+		return;
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+				url : "com.keensen.ump.produce.diaphragm.make.pva.queryTm2.biz.ext",
+				method : "post",
+				jsonData : {
+					'condition/tmBatchNo' : tmBatchNo
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					var datas = ret.data;
+					if (!Ext.isEmpty(datas)) {
+						var data = datas[0];
+						var line = data.lineCode;
+						var mptype = data.materSpecName;
+						obj.line.setValue(line);
+						obj.mptype.setValue(mptype);
+
+					} else {
+						Ext.Msg.alert('系统提示', '没有找到涂膜数据');
+						return false;
+					}
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+}
+
+com.keensen.ump.produce.quality.mptest.oilMgr.prototype.onInvalid = function() {
+	var _this = this;
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+
+			Ext.Msg.confirm("操作确认", "您确实要报废吗?", function(btn) {
+				if (btn == "yes") {
+					var A = B[0];
+
+					var id = A.data.id;
+					this.requestMask = this.requestMask
+							|| new Ext.LoadMask(Ext.getBody(), {
+										msg : "后台正在操作,请稍候!"
+									});
+					this.requestMask.show();
+					Ext.Ajax.request({
+						url : "com.keensen.ump.produce.quality.mpoiltest.modifyOilTestStatus.biz.ext",
+						method : "post",
+						jsonData : {
+							'entitys/id' : id
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								_this.listPanel.store.reload();
+							}
+
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
+				}
+			})
+
+		}
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
 }

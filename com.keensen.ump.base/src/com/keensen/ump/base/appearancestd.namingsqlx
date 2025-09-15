@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+ <select id="queryAppearanceStd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       PMS.MATER_SPEC_NAME AS "specName",
+       T1.PROD_TYPE AS "prodType",
+       T1.LID AS "lid",
+       T1.TAPE AS "tape",
+       T1.LABEL_SIZE AS "labelSize",
+       LB.LABEL_DRAWING_CODE AS "labelDrawingCode",
+       T1.COVER_LABEL_SIZE AS "coverLabelSize",
+       CV.COVER_LABEL_DRAWING_CODE AS "coverLabelDrawingCode",
+       T1.BAG_SIZE AS "bagSize",
+       T1.BAG_DRAWING_CODE AS "bagDrawingCode",
+       T1.BOX_DRAWING_SIZE AS "boxDrawingSize",
+       T1.BOX_DRAWING_CODE AS "boxDrawingCode",
+       T1.BOX_MARK_SIZE AS "boxMarkSize",
+       MK.TEMPLATE_NAME AS "markDrawingCode",
+       T1.COUNT_PER_BOX AS "countPerBox",
+       T1.COUNT_PER_FLOOR AS "countPerFloor",
+       T1.COUNT_FLOOR AS "countFloor",
+       T1.TRAY_SIZE AS "traySize",
+       T1.SPEC_ID AS "specId"
+  FROM KS_BASE_APPEARANCE_STD T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON T1.SPEC_ID = PMS.MATER_SPEC_ID
+  LEFT JOIN (SELECT MAX(T1.TEMPLATE_NAME) TEMPLATE_NAME, T3.SPEC_NAME
+               FROM KS_COMPONENT_MARK_TEMPLATE T1
+               LEFT JOIN KS_BASE_MARK_DRAWING T3
+                 ON T3.DRAWING_CODE = T1.TEMPLATE_NAME
+                 AND t3.logo LIKE '%司标%'
+              GROUP BY T3.SPEC_NAME) MK
+    ON MK.SPEC_NAME = PMS.MATER_SPEC_NAME
+  LEFT JOIN (SELECT T.SPEC_NAME, MAX(T.DRAWING_CODE) LABEL_DRAWING_CODE
+               FROM KS_BASE_LABEL_DRAWING T
+              WHERE T.LOGO = '公司标准'
+                AND NVL(T.STATUS, 1) = 1
+              GROUP BY T.SPEC_NAME) LB
+    ON LB.SPEC_NAME = PMS.MATER_SPEC_NAME
+
+  LEFT JOIN (SELECT T.SPEC_NAME,
+                    MAX(T.DRAWING_CODE) COVER_LABEL_DRAWING_CODE
+               FROM KS_BASE_LABEL_DRAWING T
+              WHERE T.LOGO LIKE '%司标%覆盖版%'
+                AND NVL(T.STATUS, 1) = 1
+              GROUP BY T.SPEC_NAME) CV
+    ON CV.SPEC_NAME = PMS.MATER_SPEC_NAME
+ WHERE 1 = 1
+  
+   <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="specName"> 
+		       pms.mater_spec_name like '%' || #specName# || '%'
+	</isNotNull>
+	
+	
+	  order by t1.id desc
+
+	
+    </select>
+  </sqlMap>

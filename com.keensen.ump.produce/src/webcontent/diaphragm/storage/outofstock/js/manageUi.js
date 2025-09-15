@@ -183,6 +183,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 				fields : [{
 							xtype : 'dictcombobox',
 							hiddenName : 'outofstock/type',
+							ref:'../../type',
 							allowBlank : false,
 							fieldLabel : '出库类型',
 							colspan : 2,
@@ -235,6 +236,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 							// allowBlank : false,
 							name : 'outofstock/storageId',
 							emptyText : '',
+							ref : '../../storageId',
 							colspan : 2,
 							readOnly : true,
 							fieldLabel : '仓库'

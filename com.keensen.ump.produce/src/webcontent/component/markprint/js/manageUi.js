@@ -45,6 +45,12 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 	this.initQueryPanel = function() {
 
 		var _this = this;
+
+		var statusStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['0', '停用'], ['1', '在用']]
+				});
+
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 110,
 					columns : 4,
@@ -94,6 +100,25 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 								name : 'condition/batchNo',
 								anchor : '100%',
 								fieldLabel : '卷膜/元件批次'
+							}, {
+								xtype : 'combobox',
+								forceSelection : true,
+								mode : 'local',
+								fieldLabel : '使用状态',
+								ref : '../status',
+								hiddenName : 'condition/status',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : statusStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
 							}]
 				});
 		/*
@@ -152,6 +177,11 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						// && (uid != 'KS00524'),
 						handler : this.onView
 					}, '->', {
+						text : '变更使用状态',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onChangeStatus
+					}, '-', {
 						text : '测试照片上传',
 						scope : this,
 						iconCls : 'icon-application_edit',
@@ -232,6 +262,15 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}, {
 						dataIndex : 'remark',
 						header : '备注说明'
+					}, {
+						dataIndex : 'status',
+						header : '使用状态',
+						renderer : function(value, metaData, rec, rowIndex,
+								colIndex, store, view) {
+							return value == '0'
+									? "<span style='color:red'>停用</span>"
+									: '在用'
+						}
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.makprint.queryMarkPrintByPage.biz.ext',
@@ -257,6 +296,8 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							name : 'specName'
 						}, {
 							name : 'reserve5'
+						}, {
+							name : 'status'
 						}]
 			})
 		})
@@ -530,7 +571,8 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hideTrigger : false,
 						scope : this,
 						onTriggerClick : function() {
-							_this.onUploadWindowShow(3);
+							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu')
+								_this.onUploadWindowShow(3);
 						}
 					}, {
 						xtype : 'displayfield',
@@ -547,7 +589,8 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hideTrigger : false,
 						scope : this,
 						onTriggerClick : function() {
-							_this.onUploadWindowShow(4);
+							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu')
+								_this.onUploadWindowShow(4);
 						}
 					}, {
 						xtype : 'displayfield',
@@ -670,6 +713,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						colspan : 1
 					}, {
 						xtype : 'numberfield',
+						allowDecimals : false,
 						dataIndex : 'reserve1',
 						name : 'entity/reserve1',
 						fieldLabel : '元件批次<br>条码字体大小',
@@ -932,6 +976,11 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 								scope : this,
 								iconCls : 'icon-application_edit',
 								handler : this.onModifyLableUrl
+							}, '->', {
+								text : '变更使用状态',
+								scope : this,
+								iconCls : 'icon-application_edit',
+								handler : this.onChangeLabelStatus
 							}],
 					delUrl : 'com.keensen.ump.base.paramaterspec.deleteLabelDrawing.biz.ext',
 					columns : [new Ext.grid.RowNumberer({
@@ -1092,6 +1141,15 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 
 									}
 								}
+							}, {
+								dataIndex : 'status',
+								header : '使用状态',
+								renderer : function(value, metaData, rec,
+										rowIndex, colIndex, store, view) {
+									return value == '0'
+											? "<span style='color:red'>停用</span>"
+											: '在用'
+								}
 							}],
 					store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.base.paramaterspec.queryLabelDrawingByPage.biz.ext',
@@ -1117,6 +1175,8 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 									name : 'id'
 								}, {
 									name : 'url'
+								}, {
+									name : 'status'
 								}]
 					})
 				})
@@ -1141,10 +1201,15 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}]
 		})
 
+		var statusStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['0', '停用'], ['1', '在用']]
+				});
+
 		this.queryPanel4ChooseLable = this.queryPanel4ChooseLable
 				|| new Ext.fn.QueryPanel({
 							height : 80,
-							columns : 3,
+							columns : 4,
 							border : true,
 							region : 'north',
 							// collapsible : true,
@@ -1205,6 +1270,25 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 										name : 'condition/drawingCode',
 										anchor : '100%',
 										colspan : 1
+									}, {
+										xtype : 'combobox',
+										forceSelection : true,
+										mode : 'local',
+										fieldLabel : '使用状态',
+										ref : '../status',
+										hiddenName : 'condition/status',
+										anchor : '100%',
+										colspan : 1,
+										emptyText : '--请选择--',
+										editable : false,
+										store : statusStore,
+										displayField : "name",
+										valueField : "code",
+										listeners : {
+											"expand" : function(A) {
+												this.reset()
+											}
+										}
 									}]
 						})
 
@@ -1228,7 +1312,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					buttonAlign : "center",
 					autoScroll : false,
 					modal : true,
-					width : 900,
+					width : 1024,
 					height : 600,
 					layout : 'border',
 					items : [this.queryPanel4ChooseLable,

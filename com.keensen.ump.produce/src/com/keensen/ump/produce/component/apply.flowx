@@ -46,7 +46,7 @@
     <figSize height="20" width="66"/>
     <node>view0</node>
   </nodes>
-  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="expandHead" displayName="expandHead" type="subprocess">
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="expandHead" displayName="expandHead2" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess0</sourceNode>
       <targetNode>assign0</targetNode>
@@ -55,8 +55,8 @@
     <location x="193" y="150"/>
     <size height="27" width="27"/>
     <nodeLabel>subprocess0label</nodeLabel>
-    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
-      <process:partner type="literal">com.keensen.ump.produce.component.apply.expandHead</process:partner>
+    <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.component.apply.expandHead2</process:partner>
       <process:inputVariables>
         <process:inputVariable id="0" name="entity" type="query" value="com.keensen.ump.produce.component.KsComponentCheckHead" valueType="DataObject" pattern="reference">entity</process:inputVariable>
       </process:inputVariables>

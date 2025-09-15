@@ -211,6 +211,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								anchor : '100%',
 								fieldLabel : '元件型号 ',
 								typeAhead : true,
+								editable : false,
 								typeAheadDelay : 100,
 								minChars : 1,
 								queryMode : 'local',
@@ -246,7 +247,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								xtype : 'displayfield',
 								ref : '../displayfield1',
 								height : 5,
-								colspan : 24
+								colspan : 12
 							}, {
 								xtype : 'textfield',
 								ref : '../prodRemark',
@@ -255,10 +256,15 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								readOnly : true,
 								anchor : '95%',
 								fieldLabel : '订单生产备注',
-								colspan : 12
-							}
-
-							, {
+								colspan : 9
+							}, {
+								ref : '../tape',
+								xtype : 'textfield',
+								fieldLabel : '卷膜胶带',
+								colspan : 3,
+								anchor : '100%',
+								readOnly : true
+							}, {
 								ref : '../cdmBatchId',
 								name : 'cdmBatchId',
 								xtype : 'hidden'
@@ -298,229 +304,272 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 
 				})
 		this.mainPanel = this.mainPanel || new Ext.fn.ColumnFormPanel({
-					height : 230,
-					width : 800,
-					title : '卷膜信息',
-					columns : 12,
-					autoHide : true,
-					border : false,
-					fields : [{
-								xtype : 'datetimefield',
-								format : "Y-m-d H:i:00",
-								name : 'produceDt',
-								ref : '../produceDt',
-								fieldLabel : '生产时间',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4,
-								value : new Date()
-							}, {
-								xtype : 'linecombobox',
-								prodTacheId : 102,
-								ref : '../lineId',
-								hiddenName : 'lineId',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4,
-								fieldLabel : '生产线 '
-							}, {
+			height : 230,
+			width : 800,
+			title : '卷膜信息',
+			columns : 12,
+			autoHide : true,
+			border : false,
+			fields : [{
+						xtype : 'datetimefield',
+						format : "Y-m-d H:i:00",
+						name : 'produceDt',
+						ref : '../produceDt',
+						fieldLabel : '生产时间',
+						allowBlank : false,
+						anchor : '100%',
+						colspan : 4,
+						value : new Date()
+					}, {
+						xtype : 'linecombobox',
+						prodTacheId : 102,
+						ref : '../lineId',
+						hiddenName : 'lineId',
+						allowBlank : false,
+						anchor : '100%',
+						colspan : 4,
+						fieldLabel : '生产线 '
+					}, {
 
-								xtype : 'combo',
-								fieldLabel : '试卷',
-								ref : '../isTrial',
-								hiddenName : 'isTrial',
-								emptyText : '--请选择--',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4,
-								store : [['N', '否'], ['Y', '是']],
-								listeners : {
-									scope : this,
-									'expand' : function(A) {
-										this.mainPanel.isTrial.reset();
-									}
-								}
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 12
-							}, {
-								ref : '../cnt',
-								fieldLabel : '元件支数',
-								xtype : 'numberfield',
-								name : 'cnt',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4,
-								value : 1,
-								minValue : 1,
-								decimalPrecision : 0
-							}, {
-								xtype : 'textfield',
-								name : 'juanMoBatchNo',
-								ref : '../juanMoBatchNo',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4,
-								fieldLabel : '起始卷膜序号'
-							}, {
-								xtype : 'textfield',
-								name : 'orderNo',
-								allowBlank : false,
-								ref : '../orderNo',
-								anchor : '100%',
-								colspan : 4,
-								fieldLabel : '订单号'
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 12
-							}, {
-								xtype : 'prodspeccombobox',
-								hiddenName : 'prodSpecId',
-								ref : '../prodSpecId',
-								state : 'Y',
-								anchor : '100%',
-								colspan : 4,
-								fieldLabel : '元件型号 ',
-								typeAhead : true,
-								typeAheadDelay : 100,
-								minChars : 1,
-								queryMode : 'local',
-								lastQuery : '',
-								editable : true,
-								allowBlank : false,
-								listeners : {
-									'specialkey' : function() {
-										return false;
-									}
-								}
-							}, {
-								xtype : 'tacheteamcombobox',
-								tacheCode : 'JM',
-								name : 'teamId',
-								fieldLabel : '生产班组',
-								hiddenName : 'teamId',
-								ref : '../teamId',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4
-							}, {
-								ref : '../pipeCode',
-								xtype : 'textfield',
-								fieldLabel : '中心管组件编号',
-								name : 'pipeCode',
-								anchor : '100%',
-								colspan : 4
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 12
-							}, {
-								ref : '../pageCnt',
-								name : 'pageCnt',
-								fieldLabel : '膜页数',
-								xtype : 'textfield',
-								readOnly : true,
-								anchor : '100%',
-								colspan : 3
-							}, {
-								ref : '../blankingSize',
-								name : 'blankingSize',
-								fieldLabel : '下料尺寸',
-								xtype : 'textfield',
-								readOnly : true,
-								anchor : '100%',
-								colspan : 3
-							}, {
-								ref : '../denseNet',
-								name : 'denseNet',
-								fieldLabel : '浓网',
-								xtype : 'textfield',
-								readOnly : true,
-								anchor : '100%',
-								colspan : 3
-							}, {
-								ref : '../pageWidth',
-								name : 'pageWidth',
-								fieldLabel : '页宽',
-								xtype : 'textfield',
-								readOnly : true,
-								anchor : '100%',
-								colspan : 3
-							}, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 12
-							}, {
-								name : 'remark',
-								ref : '../remark',
-								xtype : 'textarea',
-								height : 30,
-								fieldLabel : '备注',
-								anchor : '100%',
-								colspan : 4,
-								allowBlank : true
-							}, {
-								ref : '../trailer',
-								name : 'trailer',
-								fieldLabel : '车号',
-								xtype : 'textfield',
-								// readOnly : true,
-								colspan : 4,
-								anchor : '85%'
-							}, {
-								ref : '../../workerName',
-								xtype : 'displayfield',
-								fieldLabel : '操作工',
-								anchor : '100%',
-								colspan : 4,
-								value : nowStaffName
-							}, {
-								ref : '../cdmBatchId',
-								name : 'cdmBatchId',
-								xtype : 'hidden'
-							}, {
-								ref : '../startSeq',
-								name : 'startSeq',
-								xtype : 'hidden'
-							}, {
-								ref : '../prefix',
-								name : 'prefix',
-								xtype : 'hidden'
-							}, {
-								name : 'workerId',
-								xtype : 'hidden',
-								value : nowStaffId
-							}, {
-								name : 'orderId',
-								xtype : 'hidden',
-								ref : '../orderId'
-							}, {
-								name : 'planDate',
-								xtype : 'hidden',
-								ref : '../planDate'
-							}, {
-								name : 'cdmBatchNo',
-								xtype : 'hidden',
-								ref : '../cdmBatchNo'
-							}],
-					buttons : [{
-								text : "保存",
-								scope : this,
-								iconCls : 'icon-page_save',
-								handler : this.onSave
+						xtype : 'combo',
+						fieldLabel : '试卷',
+						ref : '../isTrial',
+						hiddenName : 'isTrial',
+						emptyText : '--请选择--',
+						allowBlank : false,
+						anchor : '100%',
+						colspan : 4,
+						store : [['N', '否'], ['Y', '是']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.mainPanel.isTrial.reset();
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						ref : '../cnt',
+						fieldLabel : '元件支数',
+						xtype : 'numberfield',
+						name : 'cnt',
+						allowBlank : false,
+						anchor : '100%',
+						colspan : 4,
+						value : 1,
+						minValue : 1,
+						decimalPrecision : 0
+					}, {
+						xtype : 'textfield',
+						name : 'juanMoBatchNo',
+						ref : '../juanMoBatchNo',
+						allowBlank : false,
+						anchor : '100%',
+						colspan : 4,
+						fieldLabel : '起始卷膜序号'
+					}, {
+						xtype : 'textfield',
+						name : 'orderNo',
+						allowBlank : false,
+						ref : '../orderNo',
+						anchor : '100%',
+						colspan : 4,
+						fieldLabel : '订单号'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'prodspeccombobox',
+						hiddenName : 'prodSpecId',
+						ref : '../prodSpecId',
+						state : 'Y',
+						anchor : '100%',
+						colspan : 4,
+						fieldLabel : '元件型号 ',
+						typeAhead : true,
+						typeAheadDelay : 100,
+						minChars : 1,
+						queryMode : 'local',
+						lastQuery : '',
+						editable : true,
+						allowBlank : false,
+						listeners : {
+							'specialkey' : function() {
+								return false;
+							}
+						}
+					}, {
+						xtype : 'tacheteamcombobox',
+						tacheCode : 'JM',
+						name : 'teamId',
+						fieldLabel : '生产班组',
+						hiddenName : 'teamId',
+						ref : '../teamId',
+						allowBlank : false,
+						anchor : '100%',
+						colspan : 4
+					}, {
+						ref : '../pipeCode',
+						xtype : 'textfield',
+						allowBlank : false,
+						fieldLabel : '中心管组件编号',
+						regex : /^[A-Za-z0-9]{14}$/,
+						name : 'pipeCode',
+						anchor : '100%',
+						colspan : 4,
+						listeners : {
+							"blur" : function(A) {
+								var pipeCode = _this.mainPanel.pipeCode
+										.getValue();
+								if (!Ext.isEmpty(pipeCode)
+										&& pipeCode.length == 14) {
 
-							}, {
-								text : '重置',
-								scope : this,
-								iconCls : 'icon-application_reset',
-								handler : function() {
-									this.clearInfo();
-								}
-							}]
+									Ext.Ajax.request({
+										url : "com.keensen.ump.produce.component.produce.queryPipeInfo.biz.ext",
+										method : "post",
+										jsonData : {
+											'pipeCode' : pipeCode
+										},
+										success : function(resp) {
+											var ret = Ext
+													.decode(resp.responseText);
+											if (ret.success) {
+												if (!Ext.isEmpty(ret.data)) {
+													var dd = ret.data;
+													var perNum = dd.perNum;
+													var jmNum = dd.jmNum;
+													if (perNum > jmNum) {
+														
+													} else {
+														alert('每卷数量:' + perNum + ',已卷数量:'+ jmNum + ',不能使用');
+														_this.mainPanel.pipeCode.setValue('');
+													}
+												} else {
+													alert('该中心管组件编号不存在');
+													_this.mainPanel.pipeCode.setValue('');
 
-				})
+												}
+											}
+										},
+										callback : function() {
+
+										}
+									})
+								}
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						ref : '../pageCnt',
+						name : 'pageCnt',
+						fieldLabel : '膜页数',
+						xtype : 'textfield',
+						readOnly : true,
+						anchor : '100%',
+						colspan : 3
+					}, {
+						ref : '../blankingSize',
+						name : 'blankingSize',
+						fieldLabel : '下料尺寸',
+						xtype : 'textfield',
+						readOnly : true,
+						anchor : '100%',
+						colspan : 3
+					}, {
+						ref : '../denseNet',
+						name : 'denseNet',
+						fieldLabel : '浓网',
+						xtype : 'textfield',
+						readOnly : true,
+						anchor : '100%',
+						colspan : 3
+					}, {
+						ref : '../pageWidth',
+						name : 'pageWidth',
+						fieldLabel : '页宽',
+						xtype : 'textfield',
+						readOnly : true,
+						anchor : '100%',
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						name : 'remark',
+						ref : '../remark',
+						xtype : 'textarea',
+						height : 30,
+						fieldLabel : '备注',
+						anchor : '100%',
+						colspan : 4,
+						allowBlank : true
+					}, {
+						ref : '../trailer',
+						name : 'trailer',
+						fieldLabel : '车号',
+						xtype : 'textfield',
+						// readOnly : true,
+						colspan : 4,
+						anchor : '85%'
+					}, {
+						ref : '../../workerName',
+						xtype : 'displayfield',
+						fieldLabel : '操作工',
+						anchor : '100%',
+						colspan : 4,
+						value : nowStaffName
+					}, {
+						ref : '../cdmBatchId',
+						name : 'cdmBatchId',
+						xtype : 'hidden'
+					}, {
+						ref : '../startSeq',
+						name : 'startSeq',
+						xtype : 'hidden'
+					}, {
+						ref : '../prefix',
+						name : 'prefix',
+						xtype : 'hidden'
+					}, {
+						name : 'workerId',
+						xtype : 'hidden',
+						value : nowStaffId
+					}, {
+						name : 'orderId',
+						xtype : 'hidden',
+						ref : '../orderId'
+					}, {
+						name : 'planDate',
+						xtype : 'hidden',
+						ref : '../planDate'
+					}, {
+						name : 'cdmBatchNo',
+						xtype : 'hidden',
+						ref : '../cdmBatchNo'
+					}],
+			buttons : [{
+						text : "保存",
+						scope : this,
+						iconCls : 'icon-page_save',
+						handler : this.onSave
+
+					}, {
+						text : '重置',
+						scope : this,
+						iconCls : 'icon-application_reset',
+						handler : function() {
+							this.clearInfo();
+						}
+					}]
+
+		})
 		this.detailGrid = this.detailGrid || new Ext.grid.GridPanel({
 					width : '100%',
 					title : '混卷组成',

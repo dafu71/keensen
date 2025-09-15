@@ -5,7 +5,7 @@
    		SELECT T1.RECORD_ID         AS "recordId", T1.dm_Use_Length as "dmUseLength",
        T1.PLAN_NO           AS "planNo",t1.if_modify_defect "ifModifyDefect",
        T1.DIMO_BATCH_NO     AS "dimoBatchNo",t1.c21_result "c21Result",
-       T1.BATCH_NO          AS "batchNo",
+       T1.BATCH_NO          AS "batchNo",t1.c72_invalid "c72Invalid",
        T1.LINE_ID           AS "lineId",
        T1.SPEC_ID           AS "specId",
        T1.WF_SUP_ID         AS "wfSupId",
@@ -98,20 +98,25 @@
        nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) - nvl(T1.CAIMO_LOSS,0) "remainLength",
        nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength",
        decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
-       t1.kt_amount "ktAmount",
+       <!--已裁完的，需要减去发货后，客户已用长度--><!--t1.kt_amount "ktAmount",-->
+       decode(T1.IS_CUT_OVER ,'Y',t1.kt_amount-nvl(t1.USED_AMOUNT,0),t1.kt_amount) "ktAmount",
+       
        t1.dm_batch_id "dmBatchId",t1.pg_judger_name "pgJudgerName",t1.dm_amount "dmAmount",
        t1.density7 "density7" ,t1.result7 "result7" ,t1.density8 "density8" ,t1.result8 "result8",t1.c92time "c92time",
        
        
        t1.if_pinhole "ifPinhole", t1.remark_pinhole "remarkPinhole",
-       decode(t1.if_pinhole,'Y', '是', 'N', '否', '') "ifPinholeName"
+       decode(t1.if_pinhole,'Y', '是', 'N', '否', '') "ifPinholeName",
+        t1.tld_weight "troughLiquidWeight",t1.wld_weight "waterLiquidWeight",
+        t1.c90 "c90",t1.pva_used "pvaUsed"
+        ,t1.USED_AMOUNT "usedAmount"
        
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,  
   replace(A.water_batch_no,'单击旁边选择','') water_batch_no,
   replace(A.water_batch_no2,'单击旁边选择','') water_batch_no2,
                A.PLAN_NO,A.if_modify_defect,A.c21_result ,
                A.DIMO_BATCH_NO,
-               A.BATCH_NO,
+               A.BATCH_NO,A.c72_invalid,
                A.LINE_ID,
                A.SPEC_ID,
                A.WF_SUP_ID,
@@ -222,8 +227,24 @@
                ,dm.id dm_batch_id, dm.amount dm_amount,
                nvl(c92.density7,'') density7 ,c92.result7 ,nvl(c92.density8,'') density8,c92.result8,
                
-               to_char(nvl(c92.update_time,c92.create_time),'yyyy-MM-dd HH24:MI:SS') c92time
+               to_char(nvl(c92.update_time,c92.create_time),'yyyy-MM-dd HH24:MI:SS') c92time,
+               tld.weight tld_weight,wld.weight wld_weight,pva.c90,pva.used pva_used
+               ,USED.AMOUNT USED_AMOUNT
           FROM QINSEN.INST_TUMO A
+          
+          LEFT JOIN V_KS_DIAPHRAGM_AMOUNT_USED USED
+          ON USED.BATCH_NO = A.BATCH_NO
+          
+          left join (select SUM(t.c90) c90 ,SUM(t.used) used,t.tm_batch_no from KS_DIAPHRAGM_MAKE_PVA_LIST t
+			GROUP BY t.tm_batch_no) pva
+			on pva.tm_batch_no = a.batch_no
+          
+          left join (SELECT t.batch_id,SUM(t.weight) weight from KS_DIAPHRAGM_TROUGH_LIQUID t
+		GROUP BY t.batch_id) tld on tld.batch_id = a.record_id
+		 left join (SELECT t.batch_id,SUM(t.weight) weight from KS_DIAPHRAGM_water_LIQUID t
+		 where t.item not in('RO水','水相液排料')
+		GROUP BY t.batch_id) wld on wld.batch_id = a.record_id
+          
           left join KS_DIAPHRAGM_C92 c92
           on c92.id = A.record_id
           
@@ -346,7 +367,9 @@
             ON T8.BATCH_ID = A.RECORD_ID
             
             where 1=1
-            <isNotNull prepend="" property="lastCaimoDateStart">AND SUBSTR(T4.LAST_CAIMO_DATE,1,10) &gt;= #lastCaimoDateStart#</isNotNull>
+            
+            <isNotNull prepend="" property="prodFlagId">AND A.PROD_FLAG_ID = #prodFlagId#</isNotNull>
+        <isNotNull prepend="" property="lastCaimoDateStart">AND SUBSTR(T4.LAST_CAIMO_DATE,1,10) &gt;= #lastCaimoDateStart#</isNotNull>
         <isNotNull prepend="" property="lastCaimoDateEnd">AND SUBSTR(T4.LAST_CAIMO_DATE,1,10) &lt;= #lastCaimoDateEnd#</isNotNull>
             
             ) T1
@@ -359,7 +382,8 @@
 	on cd.tumo_batch_id = T1.RECORD_ID
        where 1=1
        
-       	<isNotNull prepend="" property="isCutOver">AND T1.is_Cut_Over = #isCutOver#</isNotNull>
+       <isNotNull prepend="and" property="ktAmountThan10">to_number(t1.kt_amount) &gt;10</isNotNull>
+        <isNotNull prepend="" property="isCutOver">AND T1.is_Cut_Over = #isCutOver#</isNotNull>
         <isNotNull prepend="" property="produceDtStart">AND T1.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">AND T1.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="" property="lineId">AND T1.LINE_ID = #lineId#</isNotNull>
@@ -390,8 +414,9 @@
    	SELECT nvl(COUNT(1),0) "cnt", nvl(SUM(T.OUT_LENGTH),0) "totalLength",
        nvl(SUM(T.USEFUL_LENGTH),0) "totalUsefulLength",
        nvl(SUM(T.CAIMO_LENGTH),0) "totalCdmLength", nvl(SUM(T.CAIMO_LOSS),0) "totalLoss",
-       sum(nvl(tag_num,0)) "totalTagNum"
-  FROM (SELECT A.RECORD_ID, A.OUT_LENGTH, nvl(a.tag_num2,a.tag_num) tag_num,
+       sum(nvl(tag_num,0)) "totalTagNum",
+       nvl(sum(C72_invalid),0) as "c72invalidtotal"
+  FROM (SELECT A.RECORD_ID, A.OUT_LENGTH, nvl(a.tag_num2,a.tag_num) tag_num,A.C72_invalid,
                 (SELECT nvl(A.OUT_LENGTH - NVL(SUM(D.LOSS), 0),0)
                     FROM qinsen.INST_CDM_DEFECT D, qinsen.PARA_CDM_DEFECT P
                    WHERE D.TUMO_BATCH_ID = A.RECORD_ID
@@ -416,8 +441,9 @@
      AND A.SPEC_ID = S.MATER_SPEC_ID
      AND A.WF_SUP_ID = O1.PROP_VALUE_ID
      AND A.PROD_FLAG_ID = O2.PROP_VALUE_ID
-	
-	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+     
+      <isNotNull prepend="" property="prodFlagId">AND A.PROD_FLAG_ID = #prodFlagId#</isNotNull>
+        <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
         <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
         <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="" property="orderNoStr">AND A.ORDER_NO LIKE '%' || #orderNoStr# || '%'</isNotNull>
@@ -592,14 +618,8 @@
 	t1.STATUS as "status",
 	t2.BATCH_NO as "batchNo",
 	t1.batch_id as "batchId",
-	t1.a21 as "a21",
-	t1.c22 as "c22",
-	t1.c24 as "c24",
-	t1.c51 as "c51",
-	t1.c71 as "c71",
-	t1.c72 as "c72",
-	t1.c92 as "c92",
-	t1.c93 as "c93",
+	t1.item as "item",
+	t1.weight as "weight",
 	t1.trough as "trough",
 	t1.operator_name as "operatorName"
 
@@ -618,4 +638,228 @@
      
 	 ORDER BY t1.batch_id,t1.CREATE_TIME desc
      </select>
+    <select id="queryTroughLiquid4Add" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 1 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 2 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 3 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 4 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 5 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 6 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 7 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 8 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 9 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 10 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 11 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 12 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 13 "trough",'' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		ORDER BY 1</select>
+    <select id="queryLiquidAdjust" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd hh24:mi') AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd hh24:mi') AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       L.LINE_NAME || '(' || l.line_code || ')' AS "lineName",
+       T1.LINE_ID AS "lineId",
+       T1.ITEM AS "item",
+       T1.WEIGHT AS "weight",
+       T1.TROUGH AS "trough",
+       T1.OPERATOR_NAME AS "operatorName",
+       T1.SPEC_ID "specId",
+       PMS.MATER_SPEC_NAME "specName",
+       t1.adjust_state "adjustState",
+       t1.adjust_type as "adjustType"
+  FROM KS_DIAPHRAGM_LIQUID_ADJUST T1
+
+  LEFT JOIN QINSEN.BASE_PROD_LINE L
+    ON T1.LINE_ID = L.LINE_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON T1.SPEC_ID = PMS.MATER_SPEC_ID
+ WHERE 1 = 1
+ 
+ <isNotNull prepend="" property="idStr">AND t1.id in ($idStr$)</isNotNull>
+        <isNotNull prepend="" property="adjustType">AND t1.adjust_type = #adjustType#</isNotNull>
+        <isNotNull prepend="" property="adjustState">AND t1.adjust_state = #adjustState#</isNotNull>
+        <isNotNull prepend="" property="lineId">AND T1.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND t1.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="" property="id">AND t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="" property="operatorName">AND t1.operator_Name like '%' || #operatorName# || '%'</isNotNull>
+        <isNotNull prepend="" property="updateName">AND t1.update_Name like '%' || #updateName# || '%'</isNotNull>
+	
+	 ORDER BY t1.CREATE_TIME desc
+     </select>
+    <select id="queryLiquidAdjust4Add" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 1 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 2 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 3 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 4 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 5 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 6 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 7 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 8 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 9 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 10 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 11 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 12 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 13 "trough",'' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		ORDER BY 1</select>
+    <select id="queryWaterAdjust4Add" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 'C21' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 'C22' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 'C23' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 'C24' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 'C27' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 'C28' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 'C29' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT 'C30' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual		
+		UNION ALL
+		SELECT 'RO水' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		UNION ALL
+		SELECT '水相液排料' "item", '' "weight", #operatorName# "operatorName",#reserve1# "reserve1"
+		FROM dual
+		
+		ORDER BY 1</select>
+    <select id="queryWaterLiquid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    select 
+    t1.ID as "id",
+	to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mi')as "createTime",
+	t1.CREATE_USER_ID as "createUserId",
+	t1.CREATE_NAME as "createName",
+	to_char(t1.UPDATE_TIME,'yyyy-MM-dd hh24:mi')as "updateTime",
+	t1.UPDATE_USER_ID as "updateUserId",
+	t1.UPDATE_NAME as "updateName",
+	t1.RESERVE1 as "reserve1",
+	t1.RESERVE2 as "reserve2",
+	t1.RESERVE3 as "reserve3",
+	t1.RESERVE4 as "reserve4",
+	t1.RESERVE5 as "reserve5",
+	t1.ORG_ID as "orgId",
+	t1.STATUS as "status",
+	t2.BATCH_NO as "batchNo",
+	t1.batch_id as "batchId",
+	t1.item as "item",
+	t1.weight as "weight",
+	t1.water_type as "waterType",
+	t1.operator_name as "operatorName"
+
+	from KS_DIAPHRAGM_WATER_LIQUID t1
+	
+	left join qinsen.inst_tumo t2
+	on t2.record_id = t1.batch_id
+    
+     where 1=1
+     <isNotNull prepend="" property="batchNo">AND t2.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="" property="batchId">AND t1.BATCH_id = #batchId#</isNotNull>
+        <isNotNull prepend="" property="batchNo2">AND t2.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="" property="id">AND t1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>     
+     
+	 ORDER BY t1.batch_id,t1.CREATE_TIME desc
+     </select>
+    <select id="queryWaterLiquid4Add" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 'C21' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 'C22' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 'C23' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 'C24' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 'C27' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 'C28' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 'C29' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT 'C30' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual		
+		UNION ALL
+		SELECT 'RO水' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		UNION ALL
+		SELECT '水相液排料' "item", '' "weight", #operatorName# "operatorName",#batchId# "batchId",#batchNo# "batchNo"
+		FROM dual
+		
+		ORDER BY 1</select>
 </sqlMap>

@@ -467,4 +467,33 @@ and nvl(t1.status,1) != 0
 	ON t.worker_id = v.operatorid
  </select>
  
+  <select id="queryHWaterTest" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT t.id "id",t.gpd "gpd"  ,t.salt "salt",t.batch_no "batchNo",
+   	t.is_prod_qualified "isProdQualified" from KS_QUALITY_HH_WATER_TEST t
+	WHERE t.id IN(SELECT MAX(ID) FROM KS_QUALITY_HH_WATER_TEST GROUP BY batch_no)
+	AND t.batch_no in ($batchNoStr$)
+	ORDER BY t.batch_no
+ </select>
+ 
+ <select id="queryHHCheckTumo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT t.id "id",t.gpd "gpd"  ,t.salt "salt",t.batch_no "batchNo",
+   	t.is_prod_qualified "isProdQualified",t.amount "amount",t.batch_no_str "batchNoStr" ,
+   	to_char(t.jm_produce_dt,'YYYY-MM-DD') "jmProduceDt" 
+   	from KS_COMPONENT_HH_CHECK_TUMO t
+	WHERE 1=1
+	AND t.relation_id = #relationId#
+	ORDER BY t.batch_no
+ </select>
+ 
+ <select id="queryPipeInfo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	select t.pipe_code,nvl(t.per_num,0) "perNum", nvl(t2.cnt,0) "jmNum"
+	 from KS_COMPONENT_WELDED t
+	 LEFT JOIN
+	 (SELECT jm.pipe_code,COUNT(1) cnt
+	  from qinsen.inst_juanmo_main jm
+	  GROUP BY jm.pipe_code) t2
+	  ON t.pipe_code = t2.pipe_code
+	 WHERE nvl(t.status,1) = 1
+	 and t.pipe_Code = #pipeCode#
+ </select>
 </sqlMap>

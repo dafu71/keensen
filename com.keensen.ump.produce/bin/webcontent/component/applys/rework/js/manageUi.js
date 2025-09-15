@@ -13,6 +13,8 @@ com.keensen.ump.produce.component.applys.reworkMgr = function() {
 		this.initFourthWindow();
 		this.initViewWindow();
 
+		this.initReworkListWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -130,7 +132,7 @@ com.keensen.ump.produce.component.applys.reworkMgr = function() {
 		this.listPanel = new Ext.fn.ListPanel({
 			// title : '【营销订单列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			id : mylistid,
@@ -173,6 +175,11 @@ com.keensen.ump.produce.component.applys.reworkMgr = function() {
 						 * , '-', { text : '打印', scope : this, iconCls :
 						 * 'icon-printer', handler : this.onPrint }
 						 */, '->', {
+						text : '计划员确认',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onBatchNoConfirm
+					}, {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
@@ -213,6 +220,9 @@ com.keensen.ump.produce.component.applys.reworkMgr = function() {
 					}, {
 						dataIndex : 'createTime',
 						header : '发起日期'
+					}, {
+						dataIndex : 'id',
+						header : 'id'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.applys.queryReworkByPage.biz.ext',
@@ -1998,5 +2008,105 @@ com.keensen.ump.produce.component.applys.reworkMgr = function() {
 						}]
 			}]
 		});
+	}
+
+	this.initReworkListWindow = function() {
+
+		var selModel4ReworkList = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.listPanel4ReworkList = this.listPanel4ReworkList
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : [{
+								text : '计划员确认',
+								scope : this,
+								iconCls : 'icon-application_edit',
+								handler : this.confirmBatchNo
+							}],
+					hsPage : false,
+					selModel : selModel4ReworkList,
+					delUrl : 'com.keensen.ump.produce.component.neworder.deleteReworkList.biz.ext',
+					columns : [new Ext.grid.RowNumberer(), selModel4ReworkList,
+							{
+								dataIndex : 'batchNo',
+								header : '元件序号'
+							}, {
+								dataIndex : 'qjBatchNo',
+								header : '新元件序号'
+							}, {
+								dataIndex : 'reserve5',
+								header : '确认状态'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.applys.queryReworkList.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {},
+						fields : [{
+									name : 'batchNo'
+								}, {
+									name : 'qjBatchNo'
+								}, {
+									name : 'reserve5'
+								}, {
+									name : 'id'
+								}]
+					})
+				})
+
+		this.queryPanel4ReworkList = this.queryPanel4ReworkList
+				|| new Ext.fn.QueryPanel({
+							height : 80,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/batchNo',
+										ref : '../batchNo',
+										anchor : '85%',
+										fieldLabel : '元件序号'
+									}, {
+										xtype : 'textfield',
+										ref : '../qjBatchNo',
+										name : 'condition/qjBatchNo',
+										anchor : '85%',
+										fieldLabel : '新元件序号'
+									}]
+						});
+
+		this.queryPanel4ReworkList.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.reworkListWindow.hide();
+					}
+
+				});
+
+		this.reworkListWindow = this.reworkListWindow || new Ext.Window({
+					title : '元件查询',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 600,
+					height : 480,
+					layout : 'border',
+					items : [this.queryPanel4ReworkList,
+							this.listPanel4ReworkList]
+
+				});
 	}
 }

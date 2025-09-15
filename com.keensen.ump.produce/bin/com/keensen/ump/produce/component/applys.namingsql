@@ -103,7 +103,8 @@
        T1.TRAY "tray", T1.BOX "box",T1.PERFORMANCE "performance",
        <!--t2.apply_amount "applyAmountTotal",-->
        T1.is_examine "isExamine",
-       decode(t5.code,null,'否','是') "ifcstock"
+       decode(t5.code,null,'否','是') "ifcstock",
+       decode(t1.confirm_date,null,'N','Y') "ifConfirmed"
   FROM KS_COMPONENT_HH_CHECK_HEAD T1
   
   left join (select DISTINCT t.code code from KS_COMPONENT_C_STOCK t
@@ -533,4 +534,18 @@ WHERE SUBSTR(T.CODE, 2, 8) = TO_CHAR(SYSDATE, 'yyyyMMdd'))
 	  from KS_COMPONENT_HH_CHECK_LIST t
 	  WHERE SUBSTR(t.batch_no,-8,4) = to_char(SYSDATE,'MMdd')) t1,
 	(select ROWNUM rn from dual connect by level &lt;= #num#) t2</insert>
+    <select id="queryReworkList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+       SELECT T.BATCH_NO "batchNo", V.QJ_BATCH_NO "qjBatchNo",t.reserve5 "reserve5",t.id "id"
+  FROM KS_COMPONENT_REWORK_LIST T
+  LEFT JOIN V_KS_QJ_BATCH_NO V
+    ON T.BATCH_NO = V.BATCH_NO
+ WHERE T.RELATION_ID = #relationId#
+ <isNotNull prepend="and" property="batchNo">T.BATCH_NO like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="qjBatchNo">V.QJ_BATCH_NO like '%' || #qjBatchNo# || '%'</isNotNull>
+     order by T.BATCH_NO
+    </select>
+    <update id="updateReworkList" parameterClass="java.util.HashMap">update KS_COMPONENT_REWORK_LIST t
+    set t.reserve5 = '已确认'
+     WHERE 1=1 	
+     and id in ($ids$)</update>
 </sqlMap>

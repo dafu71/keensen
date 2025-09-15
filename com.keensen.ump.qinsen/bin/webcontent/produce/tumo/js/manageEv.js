@@ -2,6 +2,22 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 
 	var _this = this;
 
+	// 定时更新漂洗液添加提醒
+
+	var liquidAdjusr = setInterval(function() {
+				var spacepanel = Ext.getCmp('spacepanel');
+				var itemId = 'menu10001942';
+				var pnl = spacepanel.getItem(itemId);
+				var activeTab = spacepanel.getActiveTab();
+				if (pnl == null) {
+					clearInterval(liquidAdjusr);
+				} else {
+					if (activeTab.getItemId() == itemId) {
+						_this.liquidAdjustStore.load();
+					}
+				}
+			}, 60000);
+
 	this.defectZmWin.listPanel.store.on('load', function() {
 				var defectZmArr = ['A1-底膜折痕', 'A9-铸膜设备不良', 'A10-铸膜液断流',
 						'A11-铸膜深刮痕', 'A12-无纺布来料不良', 'A13-铸膜浅刮痕', 'A14-工艺异常报废'];
@@ -203,6 +219,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 								+ data.totalLoss);
 						Ext.getCmp('totalTagNumTxt').setValue('合计标签数:'
 								+ data.totalTagNum);
+						Ext.getCmp('c72invalidtotal').setValue('C72报废合计(kg):' + data.c72invalidtotal);
+						
 
 					} else {
 						Ext.getCmp('totalLengthTxt').setValue('合计长度(m):');
@@ -211,7 +229,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 						Ext.getCmp('totalCdmLengthTxt').setValue('合计裁膜产出(m):');
 						Ext.getCmp('totalLossTxt').setValue('合计不良(m):');
 						Ext.getCmp('totalTagNumTxt').setValue('合计标签数:');
+						Ext.getCmp('c72invalidtotal').setValue('C72报废合计(kg):');
 					}
+					
 				}
 			},
 			callback : function() {
@@ -411,6 +431,61 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				this.judgeC21();
 
 			}, this);
+
+	// 增加删除后事件
+	this.listPanel4TroughLiquid.mon(this.listPanel4TroughLiquid, 'afterdel',
+			function(gird, cell) {
+				_this.listPanel.store.reload();
+
+			}, this);
+
+	// 增加修改事件
+	this.listPanel4LiquidAdjust.mon(this.listPanel4LiquidAdjust, 'update',
+			function(gird, cell) {
+				var _this = this;
+				var id = cell.get('id');
+				Ext.Msg.confirm("操作确认", "该指令确实已经完成?", function(A) {
+					if (A == "yes") {
+						Ext.Ajax.request({
+							url : "com.keensen.ump.qinsen.tumo.saveLiquidAdjust.biz.ext",
+							jsonData : {
+								"entity/id" : id,
+								"entity/adjustState" : '已调整'
+							},
+							success : function(F) {
+								var B = Ext.decode(F.responseText);
+								if (B.success) {
+									_this.listPanel4LiquidAdjust.store.reload();
+								}
+							}
+						})
+					}
+				})
+			}, this);
+
+	this.queryPanel4LiquidAdjustView.mon(this.queryPanel4LiquidAdjustView,
+			'query', function(form, vals) {
+				var store = this.listPanel4LiquidAdjustView.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
+	this.liquidAdjustStore.on('load', function() {
+				var ret = _this.liquidAdjustStore.getRange();
+				if (Ext.isEmpty(ret) || ret.length == 0) {
+
+				} else {
+					if (Ext.getCmp(window4LiquidAdjustId).hidden) {
+						_this.onQueryLiquidAdjust();
+					}
+				}
+
+			})
 
 }
 
@@ -880,7 +955,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onWaterBatchNo = function() {
 	var store = this.listPanel3.store;
 
 	store.baseParams = {
-		'condition/state' : 1,
+		'condition/notstep' : "'third'",
 		'condition/watertype' : '水相液',
 		'condition/mptype' : mptype,
 		'condition/line' : line
@@ -1187,7 +1262,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onWaterBatchNo2 = function() {
 	var store = this.listPanelChooseWaterBatchNo.store;
 
 	store.baseParams = {
-		'condition/state' : 1,
+		'condition/notstep' : "'third'",
 		'condition/watertype' : '水相补充液',
 		'condition/mptype' : mptype,
 		'condition/line' : line
@@ -1213,7 +1288,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSelectWaterBatchNo2 = functio
 	}
 }
 
-com.keensen.ump.qinsen.produce.tumoMgr.prototype.onTroughLiquid = function() {
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onTroughAdjust = function() {
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
@@ -1228,6 +1303,21 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onTroughLiquid = function() {
 	}
 }
 
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onWaterAdjust = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var recordId = records[0].data.recordId;
+		this.listPanel4WaterLiquid.store.baseParams = {
+			'condition/batchId' : recordId
+		}
+		this.listPanel4WaterLiquid.store.load();
+		this.window4WaterLiquid.show();
+	}
+}
+
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddTroughLiquid = function() {
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
@@ -1236,17 +1326,484 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddTroughLiquid = function() 
 		var records = A.getSelectionModel().getSelections();
 		var recordId = records[0].data.recordId;
 		var batchNo = records[0].data.batchNo;
-		this.addTroughLiquidWindow.batchNo.setValue(batchNo);
-		this.addTroughLiquidWindow.batchId.setValue(recordId);
+
+		var store = this.listPanel4AddTroughLiquid.store;
+
+		store.baseParams = {
+			'condition/batchNo' : batchNo,
+			'condition/batchId' : recordId,
+			'condition/operatorName' : ''
+		};
+		store.load();
 		this.addTroughLiquidWindow.show();
 	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddWaterLiquid = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定涂膜数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var recordId = records[0].data.recordId;
+		var batchNo = records[0].data.batchNo;
+
+		var store = this.listPanel4AddWaterLiquid.store;
+
+		store.baseParams = {
+			'condition/batchNo' : batchNo,
+			'condition/batchId' : recordId,
+			'condition/operatorName' : ''
+		};
+		store.load();
+		this.addWaterLiquidWindow.show();
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveWaterLiquid = function() {
+
+	var _this = this;
+	var A = this.listPanel4AddWaterLiquid;
+	var records = A.store.getRange();
+	var entitys = [];
+	Ext.each(records, function(r) {
+				if (!Ext.isEmpty(r.data['weight'])
+						&& !Ext.isEmpty(r.data['waterType']) && !Ext.isEmpty(r.data['reserve5'])
+						&& !Ext.isEmpty(r.data['operatorName'])) {
+					var d = {
+						'item' : r.data['item'],
+						'waterType' : r.data['waterType'],
+						'weight' : r.data['weight'],
+						'operatorName' : r.data['operatorName'],
+						'batchId' : r.data['batchId'],
+						'reserve5' : r.data['reserve5']
+					}
+					entitys.push(d);
+				}
+			});
+
+	if (null == entitys || entitys.length == 0) {
+		Ext.Msg.alert("系统提示", "没有填写任何有效数据！");
+		return false;
+	} else {
+		var mk = new Ext.LoadMask(document.body, {
+					msg : '正在保存，请稍候!',
+					removeMask : true
+				});
+		mk.show();
+
+		var saveUrl = 'com.keensen.ump.qinsen.tumo.saveBatchWaterLiquid.biz.ext';
+		Ext.Ajax.request({
+					method : "post",
+					scope : this,
+					url : saveUrl,
+					jsonData : {
+						"entitys" : entitys
+					},
+					success : function(response, action) {
+						mk.hide();
+						// 返回值处理
+						var result = Ext.decode(response.responseText);
+						if (result.success) {
+							Ext.Msg.alert("系统提示", "保存成功!", function() {
+										_this.addWaterLiquidWindow.hide();
+										_this.listPanel4WaterLiquid.store
+												.reload({});
+										_this.listPanel.store.reload({});
+
+									}, _this);
+						} else {
+							Ext.Msg.alert("系统提示", "保存失败!", function() {
+										_this.addWaterLiquidWindow.hide();
+										_this.listPanel4WaterLiquid.store
+												.reload({});
+									}, _this);
+						}
+
+					},
+					failure : function(resp, opts) {
+						mk.hide();
+					}
+				});
+
+	}
+
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onDelWaterLiquid = function() {
+	this.listPanel4WaterLiquid.onDel();
 }
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onDelTroughLiquid = function() {
 	this.listPanel4TroughLiquid.onDel();
 }
 
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveTroughLiquid = function() {
+
+	var _this = this;
+	var A = this.listPanel4AddTroughLiquid;
+	var records = A.store.getRange();
+	var entitys = [];
+	Ext.each(records, function(r) {
+				if (!Ext.isEmpty(r.data['weight'])
+						&& !Ext.isEmpty(r.data['item']) && !Ext.isEmpty(r.data['reserve5'])
+						&& !Ext.isEmpty(r.data['operatorName'])) {
+					var d = {
+						'item' : r.data['item'],
+						'trough' : r.data['trough'],
+						'weight' : r.data['weight'],
+						'operatorName' : r.data['operatorName'],
+						'batchId' : r.data['batchId'],
+						'reserve5' : r.data['reserve5']
+					}
+					entitys.push(d);
+				}
+			});
+
+	if (null == entitys || entitys.length == 0) {
+		Ext.Msg.alert("系统提示", "没有填写任何有效数据！");
+		return false;
+	} else {
+		var mk = new Ext.LoadMask(document.body, {
+					msg : '正在保存，请稍候!',
+					removeMask : true
+				});
+		mk.show();
+
+		var saveUrl = 'com.keensen.ump.qinsen.tumo.saveBatchTroughLiquid.biz.ext';
+		Ext.Ajax.request({
+					method : "post",
+					scope : this,
+					url : saveUrl,
+					jsonData : {
+						"entitys" : entitys
+					},
+					success : function(response, action) {
+						mk.hide();
+						// 返回值处理
+						var result = Ext.decode(response.responseText);
+						if (result.success) {
+							Ext.Msg.alert("系统提示", "保存成功!", function() {
+										_this.addTroughLiquidWindow.hide();
+										_this.listPanel4TroughLiquid.store
+												.reload({});
+										_this.listPanel.store.reload({});
+
+									}, _this);
+						} else {
+							Ext.Msg.alert("系统提示", "保存失败!", function() {
+										_this.addTroughLiquidWindow.hide();
+										_this.listPanel4TroughLiquid.store
+												.reload({});
+									}, _this);
+						}
+
+					},
+					failure : function(resp, opts) {
+						mk.hide();
+					}
+				});
+
+	}
+
+}
+
+// 水相调整
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAdjustWater = function() {
+	var store = this.listPanel4LiquidAdjust.store;
+	store.baseParams = {
+		'condition/adjustState' : '待调整',
+		'condition/adjustType' : 'water'
+	}
+	store.load();
+	this.listPanel4LiquidAdjust.addLiquidAdjust.setVisible(true);
+	this.listPanel4LiquidAdjust.delLiquidAdjust.setVisible(true);
+	this.listPanel4LiquidAdjust.excuteLiquidAdjust.setVisible(false);
+	this.window4LiquidAdjust.setTitle('水相调整');
+	this.window4LiquidAdjust.show();
+}
+
+// 漂洗液调整
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAdjustLiquid = function() {
+	var store = this.listPanel4LiquidAdjust.store;
+	store.baseParams = {
+		'condition/adjustState' : '待调整',
+		'condition/adjustType' : 'liquid'
+	}
+	store.load();
+	this.listPanel4LiquidAdjust.addLiquidAdjust.setVisible(true);
+	this.listPanel4LiquidAdjust.delLiquidAdjust.setVisible(true);
+	this.listPanel4LiquidAdjust.excuteLiquidAdjust.setVisible(false);
+	this.window4LiquidAdjust.setTitle('漂洗液调整');
+	this.window4LiquidAdjust.show();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onQueryLiquidAdjust = function() {
+	var store = this.listPanel4LiquidAdjust.store;
+	store.baseParams = {
+		'condition/adjustState' : '待调整'
+	}
+	store.load();
+	this.listPanel4LiquidAdjust.addLiquidAdjust.setVisible(false);
+	this.listPanel4LiquidAdjust.delLiquidAdjust.setVisible(false);
+	this.listPanel4LiquidAdjust.excuteLiquidAdjust.setVisible(true);
+	this.window4LiquidAdjust.show();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAddLiquidAdjust = function() {
+	var title = this.window4LiquidAdjust.title;
+	if (title == '漂洗液调整') {
+		var store = this.listPanel4AddLiquidAdjust.store;
+		store.baseParams = {
+			'condition/operatorName' : ''
+		};
+		store.load();
+		this.addLiquidAdjustWindow.show();
+	} else {
+		var store = this.listPanel4AddWaterAdjust.store;
+		store.baseParams = {
+			'condition/operatorName' : ''
+		};
+		store.load();
+		this.addWaterAdjustWindow.show();
+	}
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveLiquidAdjust = function() {
+
+	var _this = this;
+
+	var A = this.listPanel4AddLiquidAdjust;
+
+	var lineId = A.lineId.getValue();
+
+	if (Ext.isEmpty(lineId)) {
+		Ext.Msg.alert("系统提示", "生产线不能为空！");
+		return false;
+	}
+	var specId = A.specId.getValue();
+	if (Ext.isEmpty(specId)) {
+		Ext.Msg.alert("系统提示", "膜片型号不能为空！");
+		return false;
+	}
+
+	var records = A.store.getRange();
+	var entitys = [];
+	Ext.each(records, function(r) {
+				if (!Ext.isEmpty(r.data['weight'])
+						&& !Ext.isEmpty(r.data['item'])
+						&& !Ext.isEmpty(r.data['operatorName'])) {
+					var d = {
+						'item' : r.data['item'],
+						'trough' : r.data['trough'],
+						'weight' : r.data['weight'],
+						'operatorName' : r.data['operatorName'],
+						'specId' : specId,
+						'lineId' : lineId,
+						'reserve1' : r.data['reserve1'],
+						'adjustType' : 'liquid'
+					}
+					entitys.push(d);
+				}
+			});
+
+	if (null == entitys || entitys.length == 0) {
+		Ext.Msg.alert("系统提示", "没有填写任何有效数据！");
+		return false;
+	} else {
+		var mk = new Ext.LoadMask(document.body, {
+					msg : '正在保存，请稍候!',
+					removeMask : true
+				});
+		mk.show();
+
+		var saveUrl = 'com.keensen.ump.qinsen.tumo.saveBatchLiquidAdjust.biz.ext';
+		Ext.Ajax.request({
+					method : "post",
+					scope : this,
+					url : saveUrl,
+					jsonData : {
+						"entitys" : entitys
+					},
+					success : function(response, action) {
+						mk.hide();
+						// 返回值处理
+						var result = Ext.decode(response.responseText);
+						if (result.success) {
+							Ext.Msg.alert("系统提示", "保存成功!", function() {
+										_this.addLiquidAdjustWindow.hide();
+										_this.listPanel4LiquidAdjust.store
+												.reload({});
+									}, _this);
+						} else {
+							Ext.Msg.alert("系统提示", "保存失败!", function() {
+										_this.addLiquidAdjustWindow.hide();
+										_this.listPanel4LiquidAdjust.store
+												.reload({});
+									}, _this);
+						}
+
+					},
+					failure : function(resp, opts) {
+						mk.hide();
+					}
+				});
+
+	}
+
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveWaterAdjust = function() {
+
+	var _this = this;
+
+	var A = this.listPanel4AddWaterAdjust;
+
+	var lineId = A.lineId.getValue();
+
+	if (Ext.isEmpty(lineId)) {
+		Ext.Msg.alert("系统提示", "生产线不能为空！");
+		return false;
+	}
+	var specId = A.specId.getValue();
+	if (Ext.isEmpty(specId)) {
+		Ext.Msg.alert("系统提示", "膜片型号不能为空！");
+		return false;
+	}
+	var trough = A.trough.getValue();
+	if (Ext.isEmpty(trough)) {
+		Ext.Msg.alert("系统提示", "水相类型不能为空！");
+		return false;
+	}
+
+	var records = A.store.getRange();
+	var entitys = [];
+	Ext.each(records, function(r) {
+				if (!Ext.isEmpty(r.data['weight'])
+						&& !Ext.isEmpty(r.data['item'])
+						&& !Ext.isEmpty(r.data['operatorName'])) {
+					var d = {
+						'item' : r.data['item'],
+						'trough' : trough,
+						'weight' : r.data['weight'],
+						'operatorName' : r.data['operatorName'],
+						'specId' : specId,
+						'lineId' : lineId,
+						'reserve1' : r.data['reserve1'],
+						'adjustType' : 'water'
+					}
+					entitys.push(d);
+				}
+			});
+
+	if (null == entitys || entitys.length == 0) {
+		Ext.Msg.alert("系统提示", "没有填写任何有效数据！");
+		return false;
+	} else {
+		var mk = new Ext.LoadMask(document.body, {
+					msg : '正在保存，请稍候!',
+					removeMask : true
+				});
+		mk.show();
+
+		var saveUrl = 'com.keensen.ump.qinsen.tumo.saveBatchLiquidAdjust.biz.ext';
+		Ext.Ajax.request({
+					method : "post",
+					scope : this,
+					url : saveUrl,
+					jsonData : {
+						"entitys" : entitys
+					},
+					success : function(response, action) {
+						mk.hide();
+						// 返回值处理
+						var result = Ext.decode(response.responseText);
+						if (result.success) {
+							Ext.Msg.alert("系统提示", "保存成功!", function() {
+										_this.addWaterAdjustWindow.hide();
+										_this.listPanel4LiquidAdjust.store
+												.reload({});
+									}, _this);
+						} else {
+							Ext.Msg.alert("系统提示", "保存失败!", function() {
+										_this.addWaterAdjustWindow.hide();
+										_this.listPanel4LiquidAdjust.store
+												.reload({});
+									}, _this);
+						}
+
+					},
+					failure : function(resp, opts) {
+						mk.hide();
+					}
+				});
+
+	}
+
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onDelLiquidAdjust = function() {
+	this.listPanel4LiquidAdjust.onDel();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onExcuteLiquidAdjust = function() {
+	this.listPanel4LiquidAdjust.onEdit();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAdjustLiquidView = function() {
+	this.listPanel4LiquidAdjustView.store.removeAll();
+	this.liquidAdjustViewWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onPrintLiquidAdjust = function() {
+	var A = this.listPanel4LiquidAdjust;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var arr = [];
+		for (var i = 0; i < records.length; i++) {
+			var id = records[i].data.id;
+			arr.push(id)
+		}
+		
+		var actionUrl = 'com.keensen.ump.qinsen.printLiquidAdjusts.flow?token='
+				+ Date.now() + '&idStr=' + arr.join(',');
+		window.open(actionUrl);
+	}
+
+};
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onC72Invalid = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		this.editWindow4C72Invalid.loadData(records[0]);
+		this.editWindow4C72Invalid.show();
+	}
+	
+};
+
+
 function roundToDecimalPlace(number, decimalPlaces) {
 	const factor = Math.pow(10, decimalPlaces);
 	return Math.round(number * factor) / factor;
+}
+
+function viewTroughLiquid(recordId) {
+	Ext.getCmp(listPanel4TroughLiquidId).store.baseParams = {
+		'condition/batchId' : recordId
+	}
+	Ext.getCmp(listPanel4TroughLiquidId).store.load();
+	Ext.getCmp(window4TroughLiquidId).show();
+}
+
+function viewWaterLiquid(recordId) {
+	Ext.getCmp(listPanel4WaterLiquidId).store.baseParams = {
+		'condition/batchId' : recordId
+	}
+	Ext.getCmp(listPanel4WaterLiquidId).store.load();
+	Ext.getCmp(window4WaterLiquidId).show();
 }

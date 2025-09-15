@@ -10,7 +10,9 @@
 	DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(
 			rootObj, "list");
 	String rootUrl = request.getRequestURL().toString();
-
+	String isStar = null == request.getParameter("isStar") ? ""
+			: request.getParameter("isStar").toString();
+	
 	int tableHeight = 265;
 
 	rootUrl = rootUrl.replace(
@@ -287,7 +289,7 @@ for (int i = 0; i < list.length; i++) {
 	class="main_table" border=0>
 	<tr hight="260px">
 		<td align="left">
-		<div class="image-container" id="image-container"><img
+		<div class="image-container" id="image-container<%=i %>"><img
 			src="<%=rootUrl %><%=list[i].get("url") %>" id="preview-image<%=i %>">
 		</div>
 		</td>
@@ -309,16 +311,17 @@ for (int i = 0; i < list.length; i++) {
 	function printFunction() {
 
     	window.print();
-    	delayFunction(closeFunction, 5000); // 延迟5秒执行关闭当前窗口
+    	//delayFunction(closeFunction, 5000); // 延迟5秒执行关闭当前窗口
 	}
 	
 	function closeFunction() {
     	//window.close();
 	}
  
-	function initPage() {
+ 
+function initPage() {
 	
-						const container = document.getElementById('image-container');
+						
 						var dayCode = getDayCode();// 获取入库日期编码
 			<%-- 循环开始--%>			
 			<% 	for (int i = 0; i < list.length; i++) { 		
@@ -343,11 +346,16 @@ for (int i = 0; i < list.length; i++) {
 						int xWetSpan = Integer.parseInt(list[i].get("xWetSpan").toString());
 						int yDayCodeSpan = Integer.parseInt(list[i].get("yDayCodeSpan").toString());
 						int xDayCodeSpan = Integer.parseInt(list[i].get("xDayCodeSpan").toString());
+						
+						int yStarImg = Integer.parseInt(list[i].get("yStarImg").toString());
+						int xStarImg = Integer.parseInt(list[i].get("xStarImg").toString());
+	
 						String dryWet = list[i].get("dryWet").toString();
 						int batchNoFontSize = null == list[i].get("reserve1")?15:Integer.parseInt(list[i].get("reserve1").toString());
 						
 			%>			
 				var batchNo = '<%=prodBatchNo %>';
+				var container = document.getElementById('image-container<%=i %>');
 						<%if("Y".equals(ifPrintBatchNo)){					
 						
 						 %>
@@ -358,11 +366,11 @@ for (int i = 0; i < list.length; i++) {
 						barcodeElement.setAttribute("width", '200');
 												
 						barcodeElement.style.position = "absolute"; // 绝对定位
-					    barcodeElement.style.top = "<%=yBatchNo + tableHeight*i %>px";          
+					    barcodeElement.style.top = "<%=yBatchNo %>px";          
 					    barcodeElement.style.left = "<%=xBatchNo %>px"; 
 						
 						container.appendChild(barcodeElement);
-						const options = {
+						const options<%=i %> = {
 							format : "CODE128",
 							displayValue : true,
 							fontSize : <%=batchNoFontSize %>,
@@ -374,14 +382,14 @@ for (int i = 0; i < list.length; i++) {
 							width : <% if(batchNoFontSize==15){ %>1.5 <%} else { %>1<%} %>
 							};
 						
-						JsBarcode(barcodeElement, batchNo, options);
+						JsBarcode(barcodeElement, batchNo, options<%=i %>);
 						<% }else{ %>
 						// 创建批次元素
 			            var barcodeElement = document.createElement('div');
 			            barcodeElement.className = 'text-overlay';
 			            barcodeElement.textContent = batchNo;
 			            barcodeElement.style.position = "absolute"; // 绝对定位
-					    barcodeElement.style.top = "<%=yBatchNo + tableHeight*i %>pxpx";          
+					    barcodeElement.style.top = "<%=yBatchNo  %>px";          
 					    barcodeElement.style.left = "<%=xBatchNo %>px"; 
 						container.appendChild(barcodeElement);
 						
@@ -407,7 +415,7 @@ for (int i = 0; i < list.length; i++) {
 		            
 		            // 设置样式
 		            prodSpecNameElement.style.left = '<%=xBatchSpecName %>px';
-		            prodSpecNameElement.style.top = '<%=yBatchSpecName + tableHeight*i %>px';
+		            prodSpecNameElement.style.top = '<%=yBatchSpecName  %>px';
 		            prodSpecNameElement.style.fontSize = fontSize;
 		            prodSpecNameElement.style.fontWeight = 'bold';
 		            prodSpecNameElement.style.color = color;
@@ -424,14 +432,14 @@ for (int i = 0; i < list.length; i++) {
 				dryimg.className = 'symbol_dry';      // 应用样式类
 				dryimg.style.position = 'absolute';
 				dryimg.style.left = '<%=xDryImg %>px';
-				dryimg.style.top = '<%=yDryImg + tableHeight*i %>px';
+				dryimg.style.top = '<%=yDryImg  %>px';
 				container.appendChild(dryimg);
 				
 				var dryspan = document.createElement('span');
 				dryspan.className = 'span_a';
 				dryspan.style.position = 'absolute';
 				dryspan.style.left = '<%=xDrySpan %>px';
-				dryspan.style.top = '<%=yDrySpan + tableHeight*i %>px';
+				dryspan.style.top = '<%=yDrySpan  %>px';
 				dryspan.textContent = 'DRY';
 				container.appendChild(dryspan);
 				
@@ -443,45 +451,45 @@ for (int i = 0; i < list.length; i++) {
 				wetimg.style.top = '<%=yWetImg %>px';
 				container.appendChild(wetimg);
 				
-				const wetspan = document.createElement('span');
+				var wetspan = document.createElement('span');
 				wetspan.className = 'span_a';
 				wetspan.style.position = 'absolute';
 				wetspan.style.left = '<%=xWetSpan %>px';
-				wetspan.style.top = '<%=yWetSpan + tableHeight*i %>px';
+				wetspan.style.top = '<%=yWetSpan  %>px';
 				wetspan.textContent = 'WET';
 				container.appendChild(wetspan);
 			<%
 		} else {
 		%>	
-				const dryimg = document.createElement('img');
+				var dryimg = document.createElement('img');
 				dryimg.src = "<%=rootUrl %>/qinsen/produce/pack/print/image/ring.png";
 				dryimg.className = 'symbol_dry';      // 应用样式类
 				dryimg.style.position = 'absolute';
 				dryimg.style.left = '<%=xDryImg %>px';
-				dryimg.style.top = '<%=yDryImg + tableHeight*i %>px';
+				dryimg.style.top = '<%=yDryImg  %>px';
 				container.appendChild(dryimg);
 				
-				const dryspan = document.createElement('span');
+				var dryspan = document.createElement('span');
 				dryspan.className = 'span_a';
 				dryspan.style.position = 'absolute';
 				dryspan.style.left = '<%=xDrySpan %>px';
-				dryspan.style.top = '<%=yDrySpan + tableHeight*i %>px';
+				dryspan.style.top = '<%=yDrySpan  %>px';
 				dryspan.textContent = 'DRY';
 				container.appendChild(dryspan);
 				
-				const wetimg = document.createElement('img');
+				var wetimg = document.createElement('img');
 				wetimg.src = "<%=rootUrl %>/qinsen/produce/pack/print/image/round.png";
 				wetimg.className = 'symbol_wet';      // 应用样式类
 				wetimg.style.position = 'absolute';
 				wetimg.style.left = '<%=xWetImg %>px';
-				wetimg.style.top = '<%=yWetImg + tableHeight*i %>px';
+				wetimg.style.top = '<%=yWetImg  %>px';
 				container.appendChild(wetimg);
 				
-				const wetspan = document.createElement('span');
+				var wetspan = document.createElement('span');
 				wetspan.className = 'span_a';
 				wetspan.style.position = 'absolute';
 				wetspan.style.left = '<%=xWetSpan %>px';
-				wetspan.style.top = '<%=yWetSpan + tableHeight*i %>px';
+				wetspan.style.top = '<%=yWetSpan  %>px';
 				wetspan.textContent = 'WET';
 				container.appendChild(wetspan);
 		<%
@@ -490,17 +498,17 @@ for (int i = 0; i < list.length; i++) {
 		
 		<% } %>
 		
-		<%--<% if("Y".equals(isStar)){ %>
+		<% if("Y".equals(isStar)){ %>
 		
-		const starimg = document.createElement('img');
+		var starimg = document.createElement('img');
 		starimg.src = "<%=rootUrl %>/qinsen/produce/pack/print/image/mark_star.png";
 		starimg.className = 'star';      // 应用样式类
 		starimg.style.position = 'absolute';
 		starimg.style.left = '<%=xStarImg %>px';
-		starimg.style.top = '<%=yStarImg + tableHeight*i %>px';
+		starimg.style.top = '<%=yStarImg %>px';
 		container.appendChild(starimg);
 		
-	<% } %>		--%>
+	<% } %>		
 	
 	<%if("Y".equals(ifPrintDayCode)){ 
 		
@@ -510,7 +518,7 @@ for (int i = 0; i < list.length; i++) {
 				dayCodespan.className = 'span_day';
 				dayCodespan.style.position = 'absolute';
 				dayCodespan.style.left = '<%=xDayCodeSpan %>px';
-				dayCodespan.style.top = '<%=yDayCodeSpan + tableHeight*i %>px';
+				dayCodespan.style.top = '<%=yDayCodeSpan  %>px';
 				dayCodespan.textContent = dayCode;
 				container.appendChild(dayCodespan);
 						

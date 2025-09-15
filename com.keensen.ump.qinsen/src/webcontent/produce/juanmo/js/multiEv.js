@@ -266,12 +266,13 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.clearInfo = function() 
 	_this.mainPanel.teamId.setValue(teamId);// 班组维持不变
 	_this.mainPanel.produceDt.setValue(new Date());
 	_this.mainPanel.trailer.setValue(trailer);
-	
-	//重置自由卷
-	//var	vals = {};
-	//vals['nameSqlId'] = 'com.keensen.ump.produce.component.workorder.queryJmChooseCdm';
-	//_this.chooseCdmStore.baseParams = vals;
-	//_this.chooseCdmStore.load();
+
+	// 重置自由卷
+	// var vals = {};
+	// vals['nameSqlId'] =
+	// 'com.keensen.ump.produce.component.workorder.queryJmChooseCdm';
+	// _this.chooseCdmStore.baseParams = vals;
+	// _this.chooseCdmStore.load();
 }
 
 // 获取新数据
@@ -296,13 +297,13 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.getNewInfo = function()
 
 	newRec.startSeq = _this.mainPanel.startSeq.getValue();
 	newRec.prefix = _this.mainPanel.prefix.getValue();
-	
+
 	newRec.orderId = _this.mainPanel.orderId.getValue();
 	newRec.planDate = _this.mainPanel.planDate.getValue();
 	newRec.cdmBatchNo = _this.mainPanel.cdmBatchNo.getValue();
-	
+
 	newRec.trailer = _this.mainPanel.trailer.getValue();
-	
+
 	newRec.pipeCode = _this.mainPanel.pipeCode.getValue();
 
 	return newRec;
@@ -376,8 +377,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 		}
 
 		var newRec = _this.getNewInfo();
-		
-		
+
 		_this.requestMask = this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
 							msg : "后台正在操作,请稍候!"
@@ -396,7 +396,9 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 					if (ret.err == '0') {
 						var recordIdStr = ret.recordIdStr;
 						_this.mainPanel.produceDt.setValue(new Date());
-						
+						_this.mainPanel.pipeCode.setValue('');
+						_this.mainPanel.pipeInfo.setValue('');
+
 						Ext.Msg.alert("系统提示", '操作成功！', function() {
 							_this.clearInfo();
 							Ext.Msg.confirm('提示', '是否立即打印产品标签？', function(btn) {
@@ -465,12 +467,18 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onGetDuty = function() 
 						var materSpecId = ret.data[0].materSpecId;
 						var realityAmount = ret.data[0].realityAmount;
 						var prodRemark = ret.data[0].weekRemark;
-						
+						var tape = ret.data[0].tape;
+
 						_this.mainPanel.orderNo.setValue(orderNo);
 						_this.mainPanel.prodSpecId.setValue(materSpecId);
 						_this.mainPanel.planDate.setValue(planDate);
 						_this.mainPanel.orderId.setValue(orderId);
 						_this.cdmPanel.prodRemark.setValue(prodRemark);
+						_this.cdmPanel.tape.setValue(tape);
+
+						_this.mainPanel.produceDt.setValue(new Date());
+
+						_this.mainPanel.pipeCode.setValue('');
 
 						var store = _this.jmdutyStore;
 						store.load({

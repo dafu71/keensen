@@ -408,7 +408,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr5.prototype.initEvent = function
 	this.queryPanel4ChooseMark.mon(this.queryPanel4ChooseMark, 'query',
 			function(form, vals) {
 				var store = this.listPanel4ChooseMark.store;
-				store.baseParams = vals;
+				this.queryPanel4ChooseMark.status.setValue('1');
+				store.baseParams = this.queryPanel4ChooseMark.form.getValues();
 				store.load({
 					params : {
 						"pageCond/begin" : 0,
@@ -1053,7 +1054,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr5.prototype.onChoose4Mark = func
 	var materSpecName2 = this.addOrderWindow.materSpecName2.getValue();
 	var store = this.listPanel4ChooseMark.store;
 	store.baseParams = {
-		'condition/specName2' : materSpecName2
+		'condition/specName2' : materSpecName2,
+		'condition/status' : 1
 	};
 	store.load({
 		params : {

@@ -37,6 +37,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		this.initChooseMarkWindow();
 
 		this.initUpdateSpecNameMarkWindow();
+		
+		this.initChooseLableWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -111,9 +113,9 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		// 端盖类型选项：蜂窝、格栅、梳齿、旋熔、定制、其他,未选则默认公司标准
 		this.lidStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'], ['格栅', '格栅'], ['梳齿', '梳齿'],
-							['旋熔', '旋熔'], ['定制', '定制'], ['其他', '其他'],
-							['公司标准', '公司标准']]
+					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'], ['格栅', '格栅'],
+							['梳齿', '梳齿'], ['旋熔', '旋熔'], ['定制', '定制'],
+							['其他', '其他'], ['公司标准', '公司标准']]
 				});
 
 		// 卷膜胶带选项：印刷双层、印刷三层、网纹
@@ -413,7 +415,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, '-', {
 						text : '删除',
 						scope : this,
-						hidden : uid != 'dafu',
+						hidden : uid != 'dafu' && uid != 'KS00307',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],
@@ -552,6 +554,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, {
 						dataIndex : 'bq',
 						header : '标签',
+						sortable : true
+					}, {
+						dataIndex : 'labelDrawingCode',
+						header : '标签图纸编号',
 						sortable : true
 					}, {
 						dataIndex : 'bag',
@@ -731,6 +737,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							name : 'specNameMark'
 						}, {
 							name : 'applyAmount'
+						}, {
+							name : 'labelDrawingCode'
 						}]
 			})
 		})
@@ -1638,8 +1646,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 								}
 
 								/*
-								 * ,
-								 *  { xtype : 'prodspeccombobox', dataIndex :
+								 * , { xtype : 'prodspeccombobox', dataIndex :
 								 * 'materSpecId', hiddenName :
 								 * 'entity/materSpecId', ref :
 								 * '../../materSpecId', allowBlank : false,
@@ -2159,6 +2166,13 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 	this.initAddOrderWindow2 = function() {
 		var _this = this;
+
+		var typeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['工业膜', '工业膜'], ['家用膜', '家用膜'], ['商用膜', '商用膜'],
+							['膜片', '膜片'], ['其他', '其他']]
+				});
+
 		this.addOrderWindow2 = this.addOrderWindow2 || new Ext.fn.FormWindow({
 			title : '新增订单',
 			height : 480,
@@ -2197,6 +2211,32 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
+							xtype : 'combobox',
+							value : '工业膜',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '产品类型',
+							ref : '../../type',
+							hiddenName : 'entity/type',
+							dataIndex : 'type',
+							anchor : '80%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							store : typeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 							xtype : 'prodspeccombobox',
 							hiddenName : 'entity/materSpecId',
 							ref : '../../materSpecId',
@@ -2215,6 +2255,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									return false;
 								},
 								'change' : function(o, newValue, oldValue) {
+									var i = o.store.find('id', newValue);
+									var rec2 = o.store.getAt(i);
+									var lid = rec2.get('lid');
+									_this.addOrderWindow2.lid.setValue(lid);
 									if (newValue == oldValue)
 										return false;
 									var materSpecName = _this.addOrderWindow2.materSpecId
@@ -2272,6 +2316,82 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							value : '干/湿',
 							anchor : '80%',
 							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/lid',
+							dataIndex : 'lid',
+							fieldLabel : '端盖 ',
+							ref : '../../lid',
+							allowBlank : false,
+							anchor : '80%',
+							colspan : 2
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/bq',
+							dataIndex : 'bq',
+							fieldLabel : '标签',
+							ref : '../../bq',
+							allowBlank : false,
+							anchor : '80%',
+							colspan : 2
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/mark',
+							dataIndex : 'mark',
+							fieldLabel : '唛头',
+							ref : '../../mark',
+							allowBlank : false,
+							anchor : '80%',
+							colspan : 2
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/box',
+							dataIndex : 'box',
+							fieldLabel : '包装箱',
+							ref : '../../box',
+							allowBlank : false,
+							anchor : '80%',
+							colspan : 2
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'trigger',
+							name : 'entity/labelDrawingCode',
+							dataIndex : 'labelDrawingCode',
+							fieldLabel : '标签图纸编号',
+							ref : '../../labelDrawingCode',
+							allowBlank : false,
+							anchor : '80%',
+							colspan : 2,
+							emptyText : '单击旁边按钮选择图纸编号',
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onChoose4Label();
+							}
+
 						}, {
 							name : 'entity/materSpecName2',
 							ref : '../../materSpecName2',
@@ -3262,35 +3382,18 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					store : this.ynStore,
 					displayField : "name",
 					valueField : "code"
-				}/*, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'dictcheckboxgroup',
-					columns : 6,
-					ref : '../../photoSingle',
-					dataIndex : 'photoSingle',
-					readOnly : true,
-					fieldLabel : '单支拍照要求',
-					anchor : '100%',
-					colspan : 24,
-					dictData : KS_YXORDER_PHOTO_SINGLE
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'dictcheckboxgroup',
-					columns : 6,
-					ref : '../../photoAll',
-					dataIndex : 'photoAll',
-					readOnly : true,
-					fieldLabel : '整托拍照要求',
-					anchor : '100%',
-					colspan : 24,
-					dictData : KS_YXORDER_PHOTO_ALL
-				}*/, {
+				}/*
+					 * , { xtype : 'displayfield', height : 5, colspan : 24 }, {
+					 * xtype : 'dictcheckboxgroup', columns : 6, ref :
+					 * '../../photoSingle', dataIndex : 'photoSingle', readOnly :
+					 * true, fieldLabel : '单支拍照要求', anchor : '100%', colspan :
+					 * 24, dictData : KS_YXORDER_PHOTO_SINGLE }, { xtype :
+					 * 'displayfield', height : 5, colspan : 24 }, { xtype :
+					 * 'dictcheckboxgroup', columns : 6, ref : '../../photoAll',
+					 * dataIndex : 'photoAll', readOnly : true, fieldLabel :
+					 * '整托拍照要求', anchor : '100%', colspan : 24, dictData :
+					 * KS_YXORDER_PHOTO_ALL }
+					 */, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">包装</p>',
 					labelSeparator : '',// 去掉冒号
@@ -3767,5 +3870,189 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 								}]
 					}]
 				});
+	}
+	
+	// ChooseLable
+	this.initChooseLableWindow = function() {
+		var _this = this;
+
+		var selModel4ChooseLable = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4ChooseLable = this.listPanel4ChooseLable
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : true,
+					selModel : selModel4ChooseLable,
+					tbar : [{
+								text : '确定选择',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onSelect4ChooseLable
+							}],
+					delUrl : '111.biz.ext',
+					columns : [new Ext.grid.RowNumberer({
+										width : 30
+									}), selModel4ChooseLable, {
+								dataIndex : 'drawingName',
+								hidden : true,
+								header : '图纸名称'
+							}, {
+								dataIndex : 'drawingCode',
+								header : '图纸编号'
+							}, {
+								dataIndex : 'materCode',
+								header : '物料号'
+							}, {
+								dataIndex : 'logo',
+								hidden : true,
+								header : '标签LOGO'
+							}, {
+								dataIndex : 'specName',
+								header : '贴牌型号'
+							}, {
+								dataIndex : 'labelSize',
+								hidden : true,
+								header : '标签尺寸'
+							}, {
+								dataIndex : 'url',
+								header : '标签背景图',
+								renderer : function(value, metaData, rec,
+										rowIndex, colIndex, store, view) {
+									if (!Ext.isEmpty(value)) {
+
+										return '<img src="'
+												+ markRootUrl
+												+ value
+												+ '?ver='
+												+ rec.data.id
+												+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+
+									}
+								}
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.base.paramaterspec.queryLabelDrawingByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {
+							'condition/status' : 1
+						},
+						fields : [{
+									name : 'drawingCode'
+								}, {
+									name : 'logo'
+								}, {
+									name : 'specName'
+								}, {
+									name : 'drawingName'
+								}, {
+									name : 'materCode'
+								}, {
+									name : 'labelSize'
+								}, {
+									name : 'url'
+								}]
+					})
+				})
+
+		this.queryPanel4ChooseLable = this.queryPanel4ChooseLable
+				|| new Ext.fn.QueryPanel({
+							height : 110,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [/*
+										 * { xtype : 'combobox', forceSelection :
+										 * true, mode : 'local', fieldLabel :
+										 * '标签LOGO', // ref : '../../logoLabel',
+										 * hiddenName : 'condition/logo', anchor :
+										 * '100%', colspan : 1, emptyText : '',
+										 * editable : false, store :
+										 * this.labelDrawingLogoStore,
+										 * displayField : "logo", valueField :
+										 * "logo" },
+										 */{
+										xtype : 'combobox',
+										forceSelection : true,
+										mode : 'local',
+										fieldLabel : '贴牌型号',
+										// ref : '../../specNameLabel',
+										hiddenName : 'condition/specName',
+										anchor : '100%',
+										colspan : 1,
+										emptyText : '',
+										editable : false,
+										store : this.labelDrawingSpecNameStore,
+										displayField : "specName",
+										valueField : "specName"
+									}/*
+										 * , { xtype : 'displayfield', height :
+										 * '5', colspan : 2 }, { xtype :
+										 * 'textfield', mode : 'local',
+										 * fieldLabel : '%-标签LOGO-%', // ref :
+										 * '../../logoLabel', name :
+										 * 'condition/logo2', anchor : '100%',
+										 * colspan : 1 }
+										 */, {
+										xtype : 'textfield',
+										mode : 'local',
+										fieldLabel : '%-贴牌型号-%',
+										ref : '../specNameLabel',
+										name : 'condition/specName2',
+										anchor : '100%',
+										colspan : 1
+									}, {
+										xtype : 'displayfield',
+										height : 5,
+										colspan : 4
+									}, {
+										xtype : 'textfield',
+										name : 'condition/drawingCode',
+										anchor : '100%',
+										fieldLabel : '图纸编号'
+									}, {
+										xtype : 'hidden',
+										ref : '../status',
+										name : 'condition/status',
+										value : 1
+									}]
+						})
+
+		this.queryPanel4ChooseLable.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.chooseLableWindow.hide();
+					}
+
+				});
+
+		this.chooseLableWindow = this.chooseLableWindow || new Ext.Window({
+					title : '标签图纸编号查询',
+					// 自定义属性
+					opt : '',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 900,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4ChooseLable,
+							this.listPanel4ChooseLable]
+
+				})
 	}
 }

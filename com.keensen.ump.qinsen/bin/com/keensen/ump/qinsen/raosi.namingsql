@@ -3,7 +3,7 @@
 <sqlMap namespace="com.keensen.ump.qinsen.raosi">
     <!-- 查询记录列表 -->
     <select id="queryRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-	select t1.RECORD_ID as "recordId",
+	select t1.RECORD_ID as "recordId", t1.qj_batch_no "qjBatchNo",
 		t1.BATCH_NO as "batchNo",
 		t1.LINE_ID as "lineId",
 		t1.PRODUCE_DT as "produceDt",
@@ -32,14 +32,14 @@
 		t1.prod_type "prodType"
 	from(
 	
-	SELECT A.RECORD_ID, A.BATCH_NO, A.LINE_ID, A.PRODUCE_DT,A.prod_type,
+	SELECT A.RECORD_ID, A.BATCH_NO, A.LINE_ID, A.PRODUCE_DT,A.prod_type, A.qj_batch_no,
 	       A.TEAM_ID, A.WORKER_ID, A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID,
 	       A.CHANGER_ID, A.REMARK, A.PROD_SPEC_ID, A.PRODUCE_FLAG,
 	       Q.ORDER_NO, Q.JUANMO_BATCH_ID, 
 	       Q.record_id qj_batch_id,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME,
-	       DECODE(A.PRODUCE_FLAG, 'W', '白膜', 'R', '返修', '') PRODUCE_FLAG_NAME,
+	       DECODE(A.PRODUCE_FLAG, 'W', '白膜', 'R', '返修', 'C', '返修重绕','F', '返修覆盖','') PRODUCE_FLAG_NAME,
 	       TO_CHAR(A.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') PRODUCE_DATE,
 	       qinsen.PG_GET_INFO.GET_DEPT_NAME_BY_ID(A.TEAM_ID) TEAM_NAME,
 	       qinsen.PG_GET_INFO.GET_STAFF_NAME_BY_ID(A.WORKER_ID) WORKER_NAME,
@@ -53,11 +53,17 @@
 	          WHERE D.CDM_BATCH_ID = C.RECORD_ID
 	            AND C.TUMO_BATCH_ID = M.RECORD_ID
 	            AND D.MAIN_BATCH_ID = J.RECORD_ID) TUMO_BATCH_STR
-	  FROM qinsen.INST_RAOSI A, qinsen.INST_QIJIAN Q, qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
+	  FROM 
+	  (select rs.*,qj.batch_no qj_batch_no from  qinsen.INST_RAOSI rs
+	  left join qinsen.INST_qijian qj
+	  on rs.juanmo_batch_id = qj.juanmo_batch_id
+	  ) A, qinsen.INST_QIJIAN Q, qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
 	 WHERE A.BATCH_NO = Q.BATCH_NO(+)
 	   AND Q.JUANMO_BATCH_ID = J.RECORD_ID(+)
 	   AND Q.PROD_SPEC_ID = MS.MATER_SPEC_ID(+)
 	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="qjBatchNo">AND A.qj_batch_no = #qjBatchNo#</isNotNull>
+        <isNotNull prepend="" property="prodType">AND A.prod_Type = #prodType#</isNotNull>
         <isNotNull prepend="" property="lineId">AND A.LINE_ID = #lineId#</isNotNull>
         <isNotNull prepend="" property="teamId">AND A.TEAM_ID = #teamId#</isNotNull>
         <isNotNull prepend="" property="workerId">AND A.WORKER_ID = #workerId#</isNotNull>

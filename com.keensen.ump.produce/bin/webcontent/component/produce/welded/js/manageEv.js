@@ -49,7 +49,12 @@ com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onEdit = function(
 }
 
 com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onDel = function() {
+	var B = this.listPanel.getSelectionModel().getSelections();
 	this.listPanel.onDel();
+	if (B && B.length != 1) {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return
+	}
 }
 
 com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onView = function() {
@@ -80,12 +85,14 @@ com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onPrintTag = funct
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
 	} else {
 		var C = A.getSelectionModel().getSelections();
-		var rec = C[0];
+		var arr = [];
+		for (var i = 0; i < C.length; i++) {
+			arr.push(C[i].data.id)
+		}
 
-		var pkid = rec.data.id;
 		var f = document.getElementById('weldedprintsForm');
 
-		f.ids.value = pkid;
+		f.ids.value = arr.join(',');
 		var actionUrl = 'com.keensen.ump.produce.component.printWeldedTags.flow?token='
 				+ Date.now();
 		f.action = actionUrl;
@@ -141,5 +148,4 @@ function getSize(str) {
 	}
 	return '';
 
-	
 }

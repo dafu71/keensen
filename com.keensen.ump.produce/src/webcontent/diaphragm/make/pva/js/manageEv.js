@@ -26,6 +26,13 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 		 */
 	}
 
+	this.listPanel4Dilute.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					_this.rec = r;
+				}).defer(100);
+			}, this);
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -209,15 +216,117 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onMixCalc = function() {
 		Ext.Msg.alert('系统提示', '请输入完整数据');
 		return false;
 	} else {
-		var weightReal = (parseFloat(c51Real) + parseFloat(c23aReal) + parseFloat(c14Real) + parseFloat(pvaWeightReal))/1000 + parseFloat(roReal);
+		var weightReal = (parseFloat(c51Real) + parseFloat(c23aReal)
+				+ parseFloat(c14Real) + parseFloat(pvaWeightReal))
+				/ 1000 + parseFloat(roReal);
 		this.mixWindow.weightReal.setValue(roundToDecimalPlace(weightReal, 3));
 		var densityReal = pvaWeightReal / weightReal / 10;
-		this.mixWindow.densityReal.setValue(roundToDecimalPlace(densityReal, 3));
+		this.mixWindow.densityReal
+				.setValue(roundToDecimalPlace(densityReal, 3));
 	}
 }
 
 com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onDelList = function() {
-	this.listPanel4Dilute.onDel();
+
+	var _this = this;
+	var C = this.listPanel4Dilute.getSelectionModel().getSelections();
+
+	var entitys = [];
+	Ext.each(C, function(r) {
+				var d = {
+					'id' : r.data['id']
+				}
+				entitys.push(d);
+
+			});
+
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.diaphragm.make.pva.deleteBatchPvaList.biz.ext",
+		method : "post",
+		jsonData : {
+			'entitys' : entitys
+		},
+		success : function(resp) {
+			_this.listPanel4Dilute.store.reload();
+			_this.listPanel.store.reload();
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onTmBatchNo = function() {
+	var _this = this;
+	var tmBatchNo = this.editWindow2.tmBatchNo.getValue();
+	if (Ext.isEmpty(tmBatchNo))
+		return;
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+				url : "com.keensen.ump.produce.diaphragm.make.pva.queryTm2.biz.ext",
+				method : "post",
+				jsonData : {
+					'condition/tmBatchNo' : tmBatchNo
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					var datas = ret.data;
+					if (!Ext.isEmpty(datas)) {
+						var data = datas[0];
+						var line = data.lineCode;
+						var mptype = data.materSpecName;
+						_this.editWindow2.line.setValue(line);
+						_this.editWindow2.mptype.setValue(mptype);
+
+					} else {
+						Ext.Msg.alert('系统提示', '没有找到涂膜数据');
+						return false;
+					}
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+}
+
+com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.savePva = function(
+		pkid, field, newValue, oldValue) {
+	var _this = this;
+	if (Ext.isEmpty(newValue))
+		return;
+
+	var obj = {};
+	obj['entity/id'] = pkid;
+	obj['entity/' + field] = newValue
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "正在保存,请稍候!"
+			});
+	this.requestMask.show();
+
+	Ext.Ajax.request({
+				url : "com.keensen.ump.produce.diaphragm.make.pva.savePvaList.biz.ext",
+				method : "post",
+				jsonData : obj,
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						// _this.listPanel4ChooseLable.store.reload();
+					}
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
 }
 
 function roundToDecimalPlace(number, decimalPlaces) {

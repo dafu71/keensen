@@ -525,15 +525,30 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 								},
 								'select' : function(combo, record, index) {
 									if (index > -1) {
+										
+										_this.addWindow.prodGpdStd
+												.setValue('');
+										_this.addWindow.prodSaltStd
+												.setValue('');
+												
 										var testSpecId = combo.getValue();
 										var i = _this.waterStdStore.find(
 												'prodSpecId', testSpecId, 0,
 												false);
 										var rec = _this.waterStdStore.getAt(i);
-										var bGpdLowLimit = rec
-												.get('bGpdLowLimit');
-										var bSaltLowLimit = rec
-												.get('bSaltLowLimit');
+										
+										var bGpdLowLimit = '';
+										var bSaltLowLimit = '';
+										if(null != rec.get('aGpdLowLimit')){
+											bGpdLowLimit = rec
+												.get('aGpdLowLimit');
+										}
+										if(null != rec.get('aSaltLowLimit')){
+											bSaltLowLimit = rec
+												.get('aSaltLowLimit');
+										}
+										
+										
 
 										_this.addWindow.prodGpdStd
 												.setValue(bGpdLowLimit);
@@ -884,15 +899,27 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 								},
 								'select' : function(combo, record, index) {
 									if (index > -1) {
+										
+										_this.editWindow.prodGpdStd
+												.setValue('');
+										_this.editWindow.prodSaltStd
+												.setValue('');
+												
 										var testSpecId = combo.getValue();
 										var i = _this.waterStdStore.find(
 												'prodSpecId', testSpecId, 0,
 												false);
 										var rec = _this.waterStdStore.getAt(i);
-										var bGpdLowLimit = rec
-												.get('bGpdLowLimit');
-										var bSaltLowLimit = rec
-												.get('bSaltLowLimit');
+										var bGpdLowLimit = '';
+										var bSaltLowLimit = '';
+										if(null != rec.get('aGpdLowLimit')){
+											bGpdLowLimit = rec
+												.get('aGpdLowLimit');
+										}
+										if(null != rec.get('aSaltLowLimit')){
+											bSaltLowLimit = rec
+												.get('aSaltLowLimit');
+										}
 
 										_this.editWindow.prodGpdStd
 												.setValue(bGpdLowLimit);

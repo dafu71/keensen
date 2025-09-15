@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <!-- BOM组查询 -->
+     <select id="queryBomGroup" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+      select t1.FNAME as "fname",
+		t1.FINTER_ID as "finterId",
+		t1.FPARENT_ID as "fparentId",
+		t1.FBOOT_ID as "fbootId",
+		t1.FNUMBER as "fnumber",
+		'(' || t1.FNUMBER || ')' || t1.FNAME as "text"
+  	from KS_BASE_K3_BOM_GROUP t1
+  	order by t1.FINTER_ID
+     </select>
+ </sqlMap>

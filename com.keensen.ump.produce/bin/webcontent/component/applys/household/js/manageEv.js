@@ -3,6 +3,19 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 	var _this = this;
 
 	// 查询事件
+	this.queryChooseOrderPanel.mon(this.queryChooseOrderPanel, 'query',
+			function(form, vals) {
+				var store = this.chooseOrderListPanel.store;
+				store.baseParams = this.queryChooseOrderPanel.form.getValues();
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
+	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
 		store.baseParams = vals;
@@ -14,125 +27,6 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 				});
 	}, this);
 
-	// 查询事件
-	this.queryPanel3.mon(this.queryPanel3, 'query', function(form, vals) {
-				var store = this.listPanel3.store;
-				store.baseParams = vals;
-				store.load();
-			}, this);
-
-	// 增加修改事件
-	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-				var confirmDate = cell.get('confirmDate');
-				if (this.opt == 'check') {
-					if (!Ext.isEmpty(confirmDate)) {
-						Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
-						return;
-					}
-					this.editWindow.show();
-					this.editPanel.loadData(cell);
-					var relationId = cell.get('id');
-
-					this.editWindow.storage.setValue('3');
-
-					var store = this.listPanel4.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				} else if (this.opt == 'confirm') {
-					if (!Ext.isEmpty(confirmDate)) {
-						Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
-						return;
-					}
-					this.editWindow2.show();
-					this.editPanel2.loadData(cell);
-					var relationId = cell.get('id');
-
-					var store = this.listPanel5.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				} else if (this.opt == 'examine') {
-
-					this.examineWindow.show();
-					this.examinePanel.loadData(cell);
-					var relationId = cell.get('id');
-
-					var store = this.examineListPanel.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				} else if (this.opt == 'modify') {
-					if (!Ext.isEmpty(confirmDate)) {
-						Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
-						return;
-					}
-					this.modifyWindow.show();
-					this.modifyPanel.loadData(cell);
-					var relationId = cell.get('id');
-
-					var store = this.listPanel7.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				} else if (this.opt == 'cstock') {
-					this.cstockWindow.show();
-					this.editPanel8.loadData(cell);
-					var relationId = cell.get('id');
-
-					var store = this.listPanel8.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				} else {
-					this.editWindow3.show();
-					this.editPanel3.loadData(cell);
-					var relationId = cell.get('id');
-
-					var store = this.listPanel6.store;
-					store.load({
-								params : {
-									'condition/relationId' : relationId
-									// 修改时加载
-								}
-							});
-				}
-			}, this);
-
-	// 增加删除后事件
-	this.listPanel4.mon(this.listPanel4, 'afterdel', function(gird, cell) {
-				_this.listPanel4.store.reload();
-				var applyAmount = _this.editPanel.applyAmount.getValue();
-				applyAmount = parseInt(applyAmount) - 1;
-				_this.editPanel.applyAmount.setValue(applyAmount);
-			}, this);
-
-	this.listPanel4.mon(this.listPanel4, 'beforedel', function(gird, cell) {
-
-			})
-
-	this.listPanel7.mon(this.listPanel7, 'afterdel', function(gird, cell) {
-				_this.listPanel7.store.reload();
-				var applyAmount = _this.modifyPanel.applyAmount.getValue();
-				applyAmount = parseInt(applyAmount) - 1;
-				_this.modifyPanel.applyAmount.setValue(applyAmount);
-			}, this);
-
 	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
 				var C = gird.getSelectionModel().getSelections();
 				var r = C[0];
@@ -143,27 +37,60 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 				}
 			})
 
-	this.prodcombo.mon(this.prodcombo, 'select', function(record, index) {
-				var prodSpecName = this.prodcombo.getValue();
-				arr = prodSpecName.split(',');
-				var arr2 = [];
-				for (var i = 0; i < arr.length; i++) {
-					arr2.push("'" + arr[i] + "'");
-				}
-				this.queryPanel3.form.findField('condition/prodSpecName')
-						.setValue(arr2.join(","));
-			}, this);
+	// 增加修改事件
+	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+				var confirmDate = cell.get('confirmDate');
 
-	this.listPanel3.mon(this.listPanel3, 'rowclick', function(grid, rowIndex) {
-				var sm = grid.getSelectionModel();
-				if (sm.isSelected(rowIndex)) {
-					sm.deselectRow(rowIndex)
-				} else {
-					sm.selectRow(rowIndex, true);
-					sm.grid.getView().focusRow(rowIndex);
+				if (this.opt == 'modify') {
+					if (!Ext.isEmpty(confirmDate)) {
+						// Ext.Msg.alert("系统提示", "已确认请检单不能修改！");
+						// return;
+					}
+					this.editWindow4ModifyOrder.show();
+					this.editPanel4ModifyOrder.loadData(cell);
+					var relationId = cell.get('id');
+					this.hWaterTestStore.removeAll();
+
+					var store = this.listPanel4ModifyOrder.store;
+					store.load({
+								params : {
+									'condition/relationId' : relationId
+								}
+							});
+				}
+
+				if (this.opt == 'view') {
+
+					this.editWindow4ViewOrder.show();
+					this.editPanel4ViewOrder.loadData(cell);
+					this.editPanel4ViewOrder.buttons[0].hide();
+					var relationId = cell.get('id');
+					this.hWaterTestStore.removeAll();
+
+					var store = this.listPanel4ViewOrder.store;
+					store.load({
+								params : {
+									'condition/relationId' : relationId
+								}
+							});
+				}
+
+				if (this.opt == 'confirm') {
+
+					this.editWindow4ViewOrder.show();
+					this.editPanel4ViewOrder.loadData(cell);
+					this.editPanel4ViewOrder.buttons[0].show();
+					var relationId = cell.get('id');
+					this.hWaterTestStore.removeAll();
+
+					var store = this.listPanel4ViewOrder.store;
+					store.load({
+								params : {
+									'condition/relationId' : relationId
+								}
+							});
 				}
 			}, this);
-
 }
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onDeleteOrder = function() {
@@ -175,12 +102,6 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onDeleteOrder = func
 	} else {
 		this.listPanel.onDel();
 	}
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onAdd = function() {
-	this.inputPanel.form.reset();
-	// this.listPanel2.store.removeAll();
-	this.inputWindow.show();
 }
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onChoose = function() {
@@ -210,13 +131,6 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onChoose = function(
 	};
 	this.prodcombo.getStore().load();
 
-	var store = this.listPanel3.store;
-	store.baseParams = {
-		'condition/orderNo' : orderNo
-		// ,
-		// 'condition/prodSpecId' : prodSpecId
-	};
-	store.load();
 	this.chooseWindow.show();
 }
 
@@ -267,17 +181,36 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSelect = function(
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onSave = function() {
 	var _this = this;
 
-	var itemArr = [];
-	var myCheckboxGroup = this.inputPanel.myabnormal;
-	for (var i = 0; i < myCheckboxGroup.items.length; i++) {
-		if (myCheckboxGroup.items.itemAt(i).checked) {
-			itemArr.push(i);
-		}
-	}
+	var pnl = this.editWindow4ModifyOrder.hidden
+			? this.inputPanel4AddOrder
+			: this.editPanel4ModifyOrder;
+	var lst = this.editWindow4ModifyOrder.hidden
+			? this.ListPanel4AddOrder
+			: this.listPanel4ModifyOrder;
+	var wd = this.editWindow4ModifyOrder.hidden
+			? this.inputWindow4AddOrder
+			: this.editWindow4ModifyOrder;
 
-	this.inputPanel.abnormal.setValue(itemArr.join(','));
-	
-	if (this.inputPanel.form.isValid()) {
+	if (pnl.form.isValid()) {
+
+		var records = lst.store.getRange();
+		var entitys = [];
+		Ext.each(records, function(r) {
+					if (!Ext.isEmpty(r.data['amount'])
+							&& !Ext.isEmpty(r.data['jmProduceDt'])
+							&& !Ext.isEmpty(r.data['batchNoStr'])) {
+						var d = {
+							'batchNo' : r.data['batchNo'],
+							'gpd' : r.data['gpd'],
+							'salt' : r.data['salt'],
+							'isProdQualified' : r.data['isProdQualified'],
+							'amount' : r.data['amount'],
+							'batchNoStr' : r.data['batchNoStr'],
+							'jmProduceDt' : r.data['jmProduceDt']
+						}
+						entitys.push(d);
+					}
+				});
 
 		_this.requestMask = _this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
@@ -285,16 +218,17 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSave = function() 
 						});
 		_this.requestMask.show();
 		Ext.Ajax.request({
-			url : "com.keensen.ump.produce.component.applys.addBatchHHApply.biz.ext",
+			url : "com.keensen.ump.produce.component.applys.saveHHCheck.biz.ext",
 			method : "post",
 			jsonData : {
-				'entity' : this.inputPanel.form.getValues()
+				'entity' : pnl.form.getValues(),
+				'tumos' : entitys
 			},
 			success : function(resp) {
-					// 返回值处理
+				// 返回值处理
 
 				_this.listPanel.refresh();
-				_this.inputWindow.hide();
+				wd.hide();
 
 			},
 			callback : function() {
@@ -306,188 +240,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSave = function() 
 
 }
 
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveCheck = function() {
-	var _this = this;
-
-	if (this.editPanel.form.isValid()) {
-
-		var mk = new Ext.LoadMask(this.editWindow.id, {
-					msg : '正在保存，请稍候!',
-					removeMask : true
-				});
-		mk.show();
-		Ext.Ajax.request({
-			method : "post",
-			scope : this,
-			url : 'com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext',
-			jsonData : this.editPanel.form.getValues(),
-			success : function(response, action) {
-				mk.hide();
-				// 返回值处理
-				var result = Ext.decode(response.responseText);
-				if (result.success) {
-					// _this.listPanel.store.load();
-					_this.listPanel.refresh();
-					_this.editWindow.hide();
-				} else {
-					mk.hide();
-				}
-			},
-			failure : function(resp, opts) {
-				mk.hide();
-			}
-		});
-	}
-
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveConfirm = function() {
-	var _this = this;
-
-	if (this.editPanel2.form.isValid()) {
-
-		var mk = new Ext.LoadMask(this.editWindow2.id, {
-					msg : '正在保存，请稍候!',
-					removeMask : true
-				});
-		mk.show();
-		Ext.Ajax.request({
-					method : "post",
-					scope : this,
-					url : 'com.keensen.ump.produce.component.apply.saveHead.biz.ext',
-					jsonData : this.editPanel2.form.getValues(),
-					success : function(response, action) {
-						mk.hide();
-						// 返回值处理
-						var result = Ext.decode(response.responseText);
-						if (result.success) {
-							// _this.listPanel.store.load();
-							_this.listPanel.refresh();
-							_this.editWindow2.hide();
-						} else {
-							mk.hide();
-						}
-					},
-					failure : function(resp, opts) {
-						mk.hide();
-					}
-				});
-	}
-
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveModify = function() {
-	var _this = this;
-	/*
-	 * var A = this.listPanel7; var records = A.store.getRange(); if
-	 * (records.length == 0) { Ext.Msg.alert("系统提示", "请选择元件！"); return false; }
-	 */
-
-	var itemArr = [];
-	var myCheckboxGroup = this.modifyPanel.myabnormal;
-	for (var i = 0; i < myCheckboxGroup.items.length; i++) {
-		if (myCheckboxGroup.items.itemAt(i).checked) {
-			itemArr.push(i);
-		}
-	}
-
-	this.modifyPanel.abnormal.setValue(itemArr.join(','));
-
-	if (this.modifyPanel.form.isValid()) {
-
-		/*
-		 * var datas = []; Ext.each(records, function(r) { datas.push(r.data);
-		 * });
-		 */
-		var mk = new Ext.LoadMask(this.modifyWindow.id, {
-					msg : '正在保存，请稍候!',
-					removeMask : true
-				});
-		mk.show();
-		Ext.Ajax.request({
-			method : "post",
-			scope : this,
-			// url :
-			// 'com.keensen.ump.produce.component.apply.saveHead.biz.ext',
-			// jsonData : this.modifyPanel.form.getValues(),
-			url : 'com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext',
-			jsonData : {
-				'entity' : this.modifyPanel.form.getValues()
-				/*
-				 * , "list" : datas
-				 */
-			},
-			success : function(response, action) {
-				mk.hide();
-				// 返回值处理
-				var result = Ext.decode(response.responseText);
-				if (result.success) {
-					// _this.listPanel.store.load();
-					_this.listPanel.refresh();
-					_this.modifyWindow.hide();
-				} else {
-					mk.hide();
-				}
-			},
-			failure : function(resp, opts) {
-				mk.hide();
-			}
-		});
-	}
-
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveExamine = function() {
-	var _this = this;
-
-	if (this.examinePanel.form.isValid()) {
-
-		var mk = new Ext.LoadMask(this.examineWindow.id, {
-					msg : '正在保存，请稍候!',
-					removeMask : true
-				});
-		mk.show();
-		Ext.Ajax.request({
-			method : "post",
-			scope : this,
-			url : 'com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext',
-			jsonData : this.examinePanel.form.getValues(),
-			success : function(response, action) {
-				mk.hide();
-				// 返回值处理
-				var result = Ext.decode(response.responseText);
-				if (result.success) {
-					// _this.listPanel.store.load();
-					_this.listPanel.refresh();
-					_this.examineWindow.hide();
-				} else {
-					mk.hide();
-				}
-			},
-			failure : function(resp, opts) {
-				mk.hide();
-			}
-		});
-	}
-
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onCheck = function() {
-	var B = this.listPanel.getSelectionModel().getSelections();
-	if (B && B.length != 0) {
-		if (B.length > 1) {
-			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
-			return
-		} else {
-			this.opt = 'check';
-			this.listPanel.onEdit();
-		}
-	} else {
-		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
-	}
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onModify = function() {
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onModifyOrder = function() {
 	var B = this.listPanel.getSelectionModel().getSelections();
 	if (B && B.length != 0) {
 		if (B.length > 1) {
@@ -517,22 +270,310 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onConfirm = function
 	}
 }
 
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onExamine = function() {
-	var B = this.listPanel.getSelectionModel().getSelections();
-	if (B && B.length != 0) {
-		if (B.length > 1) {
-			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
-			return
-		} else {
-			this.opt = 'examine';
-			this.listPanel.onEdit();
-		}
-	} else {
-		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
-	}
+com.keensen.ump.produce.component.applys.applyMgr.prototype.destroy = function() {
+	this.inputWindow4AddOrder.destroy();
+	this.editWindow4ModifyOrder.destroy();
+	this.editWindow4ViewOrder.destroy();
+	this.chooseWindow.destroy();
+
 }
 
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onView = function() {
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onPrint = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var id = r.data.id;
+		window.open('com.keensen.ump.produce.component.hhapply.flow?entity/id='
+						+ id, "top");
+
+	}
+
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.exportExcel = function() {
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '家用膜入库请检',
+			'com.keensen.ump.produce.component.applys.queryHHApply', '0,1');
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.chooseOrder = function() {
+	this.chooseOrderWindow.show();
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.chooseOrderOk = function() {
+
+	// var obj = this.modifyWindow.hidden ? this.inputPanel :
+	// this.modifyPanel.hidden ? this.inputPanel4AddOrder:this.modifyPanel;
+	var obj = this.editWindow4ModifyOrder.hidden
+			? this.inputPanel4AddOrder
+			: this.editPanel4ModifyOrder;
+	var records = this.chooseOrderListPanel.getSelectionModel().getSelections();
+	if (records.length == 0)
+		return;
+	var record = records[0];
+	var materSpecName2 = record.data.materSpecName2;
+	var orderNo = record.data.orderNo;
+	var dryWet = record.data.dryWet;
+	var markSpecCode = record.data.specNameMark;
+	var tapColor = record.data.tapeBase;
+	var orderAmount = record.data.orderAmount;
+	var gpdAvg = record.data.gpdAvg;
+	var saltAvg = record.data.saltAvg;
+	var orderType = record.data.orderType;
+	var makeLabelBase = record.data.makeLabelBase;
+
+	var label = record.data.labelBase;
+	var bag = record.data.bagBase;
+	var box = record.data.boxBase;
+	
+	var quantityPerBox = record.data.packingNum;
+	var tumoBatchStr = record.data.tumoBatchStr;
+
+	obj.prodSpecName.setValue(materSpecName2);
+	obj.orderNo.setValue(orderNo);
+	obj.dryWet.setValue(dryWet);
+	obj.markSpecCode.setValue(markSpecCode);
+	obj.tapColor.setValue(tapColor);
+	obj.orderAmount.setValue(orderAmount);
+	obj.gpdAvg.setValue(gpdAvg);
+	obj.saltAvg.setValue(saltAvg);
+	obj.orderType.setValue(orderType);
+
+	obj.label.setValue(label);
+	obj.bag.setValue(bag);
+	obj.box.setValue(box);
+
+	obj.makeLabelBase.setValue(makeLabelBase);
+	obj.quantityPerBox.setValue(quantityPerBox);
+	obj.tumoBatchStr.setValue(tumoBatchStr);
+
+	this.chooseOrderWindow.hide();
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.queryHWaterTest = function() {
+
+	var obj = this.editWindow4ModifyOrder.hidden
+			? this.inputPanel4AddOrder
+			: this.editPanel4ModifyOrder;
+	var lst = this.editWindow4ModifyOrder.hidden
+			? this.ListPanel4AddOrder
+			: this.listPanel4ModifyOrder;
+	lst.store.removeAll();
+	var tumoBatchStr = obj.tumoBatchStr.getValue();
+
+	if (Ext.isEmpty(tumoBatchStr)) {
+		Ext.Msg.alert("系统提示", "请输入涂膜批次，多个以半角逗号隔开!");
+		return;
+	}
+
+	var arr = tumoBatchStr.split(',');
+	var arr2 = [];
+	for (var i = 0; i < arr.length; i++) {
+		arr2.push("'" + arr[i] + "'")
+	}
+
+	this.hWaterTestStore.baseParams = {
+		'condition/batchNoStr' : arr2.join(',')
+	};
+	this.hWaterTestStore.load({});
+
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onAddOrder = function() {
+	this.ListPanel4AddOrder.store.removeAll();
+	this.inputPanel4AddOrder.form.reset();
+	this.inputWindow4AddOrder.show();
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.calculateBox = function() {
+	var obj = this.editWindow4ModifyOrder.hidden
+			? this.inputPanel4AddOrder
+			: this.editPanel4ModifyOrder;
+	var applyAmount = obj.applyAmount.getValue();
+	var quantityPerBox = obj.quantityPerBox.getValue();
+	if (Ext.isEmpty(applyAmount) || Ext.isEmpty(quantityPerBox)) {
+		Ext.Msg.alert("系统提示", "请检数量和单箱数量不能为空");
+		return
+	}
+
+	var quantityBox = Math.ceil(applyAmount / quantityPerBox);
+	var quantityLastBox = applyAmount % quantityPerBox;
+	obj.quantityBox.setValue(quantityBox);
+	obj.quantityLastBox.setValue(quantityLastBox);
+
+	return;
+	// 唛头
+	var makeLabelBase = obj.makeLabelBase.getValue();
+	var orderType = obj.orderType.getValue();
+	var applyAmount = obj.applyAmount.getValue();
+	var materSpecName2 = obj.prodSpecName.getValue();
+	
+	//alert(makeLabelBase + '----' + orderType + '----' + applyAmount + '----' +materSpecName2) ;
+
+	if (Ext.isEmpty(makeLabelBase) || Ext.isEmpty(orderType)
+			|| Ext.isEmpty(applyAmount) || Ext.isEmpty(materSpecName2)) {
+		return;
+	}
+	var markSn = '';
+	if (orderType == '公司标准' && makeLabelBase.indexOf('印刷') > -1) {
+		markSn = 'K';
+	} else if (orderType == '公司标准' && makeLabelBase.indexOf('打印') > -1) {
+		markSn = 'S'
+	} else {
+		markSn = 'T'
+	}
+
+	if (materSpecName2.substring(0, 2) == 'RO') {
+		markSn += '3'
+	} else if (materSpecName2.substring(0, 3) == 'SHF') {
+		markSn += '4'
+	} else if (materSpecName2.substring(0, 3) == 'NF') {
+		if (materSpecName2.substring(materSpecName2.length - 1)) {
+			markSn += '7'
+		} else {
+			markSn += '6'
+		}
+	} else {
+		markSn += 'X'
+	}
+
+	var arr = materSpecName2.split('-');
+
+	if (arr.length >= 2) {
+		if (arr[1] == '1812') {
+			markSn += 'A2'
+		}
+		if (arr[1] == '2012') {
+			markSn += 'B2'
+		}
+		if (arr[1] == '2812') {
+			markSn += 'C2'
+		}
+		if (arr[1] == '3213') {
+			markSn += 'E3'
+		}
+		if (arr[1] == '3012') {
+			markSn += 'D2'
+		}
+		if (arr[1] == '3013') {
+			markSn += 'D3'
+		}
+		if (arr[1] == '3020') {
+			markSn += 'DA'
+		}
+	}
+	if (arr.length > 2) {
+		if (arr[2] == '50') {
+			markSn += '050'
+		}
+		if (arr[2] == '50S') {
+			markSn += '05S'
+		}
+
+		if (arr[2] == '75') {
+			if (arr.length > 3 && arr[3] == '2')
+				markSn += '072'
+			else
+				markSn += '070';
+		}
+		if (arr[2] == '75A') {
+			markSn += '07A'
+		}
+		if (arr[2] == '75S') {
+			markSn += '07S'
+		}
+		if (arr[2] == '100') {
+			markSn += '100'
+		}
+		if (arr[2] == '100') {
+			if (arr.length > 3 && arr[3] == '2') {
+				markSn += '102'
+			}
+			if (arr.length > 3 && arr[3] == '3') {
+				markSn += '103'
+			}
+		}
+		if (arr[2] == '100S') {
+			markSn += '10S'
+		}
+		if (arr[2] == '150') {
+			markSn += '150'
+		}
+		if (arr[2] == '150') {
+			if (arr.length > 3 && arr[3] == '2') {
+				markSn += '152'
+			}
+		}
+		if (arr[2] == '200') {
+			markSn += '200'
+		}
+		if (arr[2] == '300') {
+			markSn += '300'
+		}
+		if (arr[2] == '400') {
+			markSn += '400'
+		}
+		if (arr[2] == '400A') {
+			markSn += '40A'
+		}
+		if (arr[2] == '500') {
+			markSn += '500'
+		}
+		if (arr[2] == '600') {
+			markSn += '600'
+		}
+		
+		if (arr[2] == '600S') {
+			markSn += '60S'
+		}
+		if (arr[2] == '800') {
+			markSn += '800'
+		}
+		if (arr[2] == '1000') {
+			markSn += 'A00'
+		}
+		if (arr[2] == '1200') {
+			markSn += 'A20'
+		}
+	} else {
+		markSn += '000'
+	}
+
+	var now = new Date();
+	var ymd = now.toISOString().slice(0, 10);
+	var yearCode = ' ';
+	var monthCode = ' ';
+	var dayCode = '  ';
+	var dateArr = ymd.split('-');
+	yearCode = dateArr[0].substr(3);
+	mon = dateArr[1];
+	switch (mon) {
+		case '10' :
+			monthCode = 'A';
+			break;
+		case '11' :
+			monthCode = 'B';
+			break;
+		case '12' :
+			monthCode = 'C';
+			break;
+		default :
+			monthCode = mon.substr(1);
+	}
+	
+
+	markSn += yearCode + monthCode ;
+
+	var markSnStart = '1'.padStart(7, "0");
+	var markSnEnd = ('' + quantityBox).padStart(7, "0");
+	
+	obj.markSnStart.setValue(markSn + markSnStart);
+	obj.markSnEnd.setValue(markSn + markSnEnd);
+} 
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onViewOrder = function() {
 	var B = this.listPanel.getSelectionModel().getSelections();
 	if (B && B.length != 0) {
 		if (B.length > 1) {
@@ -547,203 +588,14 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onView = function() 
 	}
 }
 
-com.keensen.ump.produce.component.applys.applyMgr.prototype.destroy = function() {
-	this.inputWindow.destroy();
-	this.chooseWindow.destroy();
-	this.editWindow.destroy();
-	this.editWindow2.destroy();
-	this.editWindow3.destroy();
-	this.modifyWindow.destroy();
-	this.cstockWindow.destroy();
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onPrint = function() {
-	var A = this.listPanel;
-	if (!A.getSelectionModel().getSelected()) {
-		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
-	} else {
-		var C = A.getSelectionModel().getSelections();
-		var r = C[0];
-		var id = r.data.id;
-		window.open('com.keensen.ump.produce.component.apply.flow?entity/id='
-						+ id, "top");
-
-	}
-
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onDel = function() {
-
-	var records = this.listPanel4.store.getRange();
-	if (records.length == 1) {
-		Ext.Msg.alert("系统提示", "至少需要有一条元件记录！")
-		return false;
-	} else {
-		this.listPanel4.onDel();
-	}
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onDel2 = function() {
-
-	var records = this.listPanel7.store.getRange();
-	if (records.length == 1) {
-		Ext.Msg.alert("系统提示", "至少需要有一条元件记录！")
-		return false;
-	} else {
-		this.listPanel7.onDel();
-	}
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onDel3 = function() {
-	var records = this.listPanel2.getSelectionModel().getSelected();
-	if (records.length == 1) {
-		Ext.Msg.alert("系统提示", "至少需要有一条元件记录！")
-		return false;
-	} else {
-		this.listPanel2.store.remove(records);
-	}
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.exportExcel = function() {
-	var _this = this;
-	var A = this.listPanel;
-	if (!A.getSelectionModel().getSelected()) {
-		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
-	} else {
-		var C = A.getSelectionModel().getSelections();
-		var r = C[0];
-		var id = r.data.id;
-		this.requestMask = this.requestMask
-				|| new Ext.LoadMask(Ext.getBody(), {
-							msg : "后台正在操作,请稍候!"
-						});
-		this.requestMask.show();
-		Ext.Ajax.request({
-			url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
-			method : "post",
-			jsonData : {
-				'map' : {
-					'condition/relationId' : id
-				},
-				namingsql : 'com.keensen.ump.produce.component.apply.queryList2',
-				templateFilename : 'ks_component_apply_export'
-			},
-			success : function(resp) {
-				var ret = Ext.decode(resp.responseText);
-				if (ret.success) {
-					var fname = ret.fname;
-					if (Ext.isIE) {
-						window
-								.open('/default/deliverynote/seek/down4IE.jsp?fname='
-										+ fname);
-					} else {
-						window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-								+ fname;
-					}
-				}
-
-			},
-			callback : function() {
-				_this.requestMask.hide()
-			}
-		})
-
-	}
-
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.exportExcelBatch = function() {
-	var _this = this;
-	var vals = this.queryPanel.form.getValues();
-	var start = vals['condition/createTimeStart'];
-	var end = vals['condition/createTimeEnd'];
-	if (Ext.isEmpty(start) || Ext.isEmpty(end)) {
-		Ext.Msg.alert("系统提示", "请选择请检日期时间段！");
-		return false;
-	}
-	if (dayDiff(start, end) > 31) {
-		Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
-		return false;
-
-	}
-
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.keensen.ump.produce.component.apply.queryList2.biz.ext",
-		method : "post",
-		responseType : 'blob',
-		jsonData : {
-			'condition/createTimeStart' : start,
-			'condition/createTimeEnd' : end
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-				if (!Ext.isEmpty(ret.data)) {
-					var str = '<style>td{border:1px black solid;}</style>'
-							+ '<table class="table-data table-bordered table"><tr>';
-					str += '<td align="center">订单号</td><td align="center">栈板号</td>'
-							+ '<td align="center">订单元件型号</td>'
-							+ '<td align="center">唛头显示型号</td>'
-							+ '<td align="center">元件型号（卷制）</td>'
-							+ '<td align="center">元件序列号</td>'
-							+ '<td align="center">膜片批次</td>' + '</tr>';
-					Ext.each(ret.data, function(r) {
-								str += '<tr><td align="center">' + r.orderNo
-										+ '</td><td align="center">'
-										+ String(r.code)
-										+ '</td><td align="center">'
-										+ r.orderProdSpecName
-										+ '</td><td align="center">'
-										+ r.markSpecCode
-										+ '</td><td align="center">'
-										+ r.prodSpecName
-										+ '</td><td align="center">'
-										+ String(r.batchNo)
-										+ '</td><td align="center">'
-										+ r.tumoBatchStr + '</td></tr>';
-							})
-					str += '</table>';
-					// application/vnd.ms-excel;charset=utf-8
-					var blob = new Blob(["\ufeff", str], {
-								type : 'application/vnd.ms-excel;charset=utf-8'
-							});
-					var link = document.createElement('a');
-					var url = URL.createObjectURL(blob);
-					link.href = url;
-					link.download = 'exported-data.xls'; // 指定导出文件的名称
-					document.body.appendChild(link);
-					link.click();
-					document.body.removeChild(link);
-				} else {
-					Ext.Msg.alert("系统提示", "没有查询到数据!");
-				}
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})
-
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onCStock = function() {
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onConfirmOrder = function() {
 	var B = this.listPanel.getSelectionModel().getSelections();
 	if (B && B.length != 0) {
 		if (B.length > 1) {
 			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
 			return
 		} else {
-			var storage = B[0].data.storage;
-			if (storage != 3) {
-				Ext.Msg.alert("系统提示", "请选择入库为C仓库记录!");
-				return
-			}
-			this.opt = 'cstock';
+			this.opt = 'confirm';
 			this.listPanel.onEdit();
 		}
 	} else {
@@ -751,43 +603,31 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onCStock = function(
 	}
 }
 
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveCStcok = function() {
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveConfirm = function() {
+
 	var _this = this;
-	var pkid = _this.editPanel8.pkid.getValue();
 
-	Ext.Msg.confirm("操作确认", "您确实要入C仓吗?", function(A) {
+	var pkid = this.editPanel4ViewOrder.pkid.getValue();
 
-		if (A == "yes") {
-
-			var mk = new Ext.LoadMask(_this.cstockWindow.id, {
-						msg : '正在保存，请稍候!',
-						removeMask : true
-					});
-			mk.show();
-			Ext.Ajax.request({
-				method : "post",
-				scope : _this,
-				url : 'com.keensen.ump.produce.component.applys.insertHHCStock.biz.ext',
-				jsonData : {
-					'map/relationId' : pkid
-				},
-				success : function(response, action) {
-					mk.hide();
-					// 返回值处理
-					var result = Ext.decode(response.responseText);
-					if (result.success) {
-						// _this.listPanel.store.load();
-						_this.listPanel.refresh();
-						_this.editPanel8.form.reset();
-						_this.cstockWindow.hide();
-					} else {
-						mk.hide();
-					}
-				},
-				failure : function(resp, opts) {
-					mk.hide();
-				}
+	_this.requestMask = _this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
 			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.applys.saveHHCheckConfirm.biz.ext",
+		method : "post",
+		jsonData : {
+			'id' : pkid
+		},
+		success : function(resp) {
+			// 返回值处理
+
+			_this.listPanel.refresh();
+			_this.editWindow4ViewOrder.hide();
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
 		}
 	})
 }

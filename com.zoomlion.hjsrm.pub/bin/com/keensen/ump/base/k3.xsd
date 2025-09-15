@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.keensen.ump.base.k3" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.keensen.ump.base.k3">
+    <xs:complexType name="KsBaseK3BomGroup">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="finterId" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="fparentId" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="fbootId" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="fnumber" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsBaseK3BomHead">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fbomnumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fversion" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fstatusEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fcheckerStatus" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fnumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fmodel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fauxPropIdEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ferPclsIdEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fqty" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="funitname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fbillNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="froutingName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fyield" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fnote" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fpdmimportDate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hasSourceMaterial" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fitemId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="finterId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fbomskipEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lastUpdateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fenterTime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lastUseName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fusedate" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsBaseK3BomList">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fitemId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="finterId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fnumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fmodel" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fauxPropIdEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fmaterielChildType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fmarshalTypeEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="funitname" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fqty" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fbeginDay" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fendDay" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fpercent" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fscrap" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fpositionNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fitemSize" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fitemSuite" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="foperSn" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="foperName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fmachinePos" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="foffSetDay" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fbackFlushEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fisKeyitemEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fuseStateEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fdeletedEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fstockName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fspfullName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fnote" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fnote1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fnote2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fnote3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fpdmimportDate" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fhasCharEnum" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="hasSubstitute" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="itemNote" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fcostPercentage" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

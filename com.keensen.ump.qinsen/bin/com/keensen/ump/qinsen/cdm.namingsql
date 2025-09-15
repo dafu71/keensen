@@ -169,10 +169,23 @@
     <select id="countRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
     SUM(A.QUANTITY * A.BLANKING_SIZE * trunc(A.PAGE_WIDTH,1) * decode(nvl(a.page_type,'长页'),'长页',1,0.5)) as "totalLength",
-       SUM((SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
+      <!-- SUM((SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
               FROM qinsen.INST_JUANMO_DETAIL JD
              WHERE JD.CDM_BATCH_ID = A.RECORD_ID)) as "totalUnusedQuantity"
-    FROM qinsen.INST_CAIDIEMO A, qinsen.INST_TUMO TM, qinsen.PARA_MATER_SPEC MST,
+             -->
+             
+             sum(case when A.jm_cm_batch_no is not null then A.UNUSED_QUANTITY2 else (SELECT A.QUANTITY - NVL(SUM(JD.IN_QUANTITY), 0)
+              FROM qinsen.INST_JUANMO_DETAIL JD
+             WHERE JD.CDM_BATCH_ID = A.RECORD_ID) end ) as "totalUnusedQuantity"
+             
+             
+             
+    FROM (SELECT cm.*,nvl(cm.quantity - (jm.amount * pms.Num_Per_Wad),0) UNUSED_QUANTITY2,pms.mp_width 
+         ,jm.cm_batch_no jm_cm_batch_no FROM QINSEN.INST_CAIDIEMO cm
+			LEFT JOIN KS_COMPONENT_HOUSEHOLD_JM jm
+			ON cm.batch_no=jm.cm_batch_no
+			LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+			    ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID ) A, qinsen.INST_TUMO TM, qinsen.PARA_MATER_SPEC MST,
          qinsen.PARA_MATER_SPEC MSC
    WHERE A.TUMO_BATCH_ID = TM.RECORD_ID
      AND A.PROD_SPEC_ID = MSC.MATER_SPEC_ID

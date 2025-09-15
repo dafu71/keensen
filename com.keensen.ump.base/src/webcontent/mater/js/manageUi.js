@@ -93,10 +93,12 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 			tbar : [{
 						text : '新增',
 						scope : this,
+						hidden: modifyLimit != '1',
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
 					}, '-', {
 						text : '修改',
+						hidden: modifyLimit != '1',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
@@ -108,8 +110,9 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						handler : this.onExport
 					}, '-', {
 						text : '产品规格/内控标准',
+						hidden: modifyLimit != '1',
 						id : 'materclassspeceditspec',
-						hidden : true,
+						//hidden : true,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEditSpec
@@ -240,6 +243,8 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 						header : '中心管'
 					}, {
 						dataIndex : 'mpSize',
+						ref : '../mpSize',
+						hidden : true,
 						header : '膜片下料裁切尺寸'
 					}, {
 						dataIndex : 'mpWidth',
@@ -1197,7 +1202,8 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									fieldLabel : '膜片下料<br>裁切尺寸(m)',
 									anchor : '95%',
 									colspan : 3,
-									allowBlank : true
+									hidden:true
+									//allowBlank : true
 								}, {
 									xtype : 'combobox',
 									forceSelection : true,
@@ -1496,7 +1502,8 @@ com.keensen.ump.base.materClassSpecMgr = function() {
 									fieldLabel : '膜片下料<br>裁切尺寸(m)',
 									anchor : '95%',
 									colspan : 3,
-									allowBlank : true
+									hidden:true
+									//allowBlank : true
 								}, {
 									xtype : 'combobox',
 									forceSelection : true,

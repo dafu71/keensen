@@ -148,8 +148,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false
 				});
 		this.listPanel = new Ext.fn.ListPanel({
 			// title : '【BOM列表】',
@@ -331,7 +330,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
 			title : '新增',
-			height : 600,
+			height : 480,
 			width : 800,
 			// itemCls:'required',
 			// style:'margin-top:10px',
@@ -567,7 +566,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
 			title : '修改',
-			height : 600,
+			height : 480,
 			width : 800,
 			resizable : false,
 			minimizable : false,

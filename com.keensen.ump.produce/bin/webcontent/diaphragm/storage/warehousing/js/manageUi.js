@@ -108,7 +108,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,
+					hidden : true,
 					handler : this.exportExcel
 				});
 
@@ -423,6 +423,8 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 	}
 
 	this.initInputWindow2 = function() {
+		// 1、退货入库的膜片，必须是发货仓出去的
+		// 2、退货入库直接入返厂仓
 		this.inputWindow2 = this.inputWindow2 || new Ext.fn.FormWindow({
 			title : '退货入库',
 			height : 380,
@@ -455,7 +457,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					}
 				},
 				columns : 2,
-				saveUrl : 'com.keensen.ump.produce.diaphragm.storage.warehousing.warehousing2.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.diaphragm.storage.warehousing.warehousing3.biz.ext',
 				fields : [{
 					xtype : 'textfield',
 					name : 'warehousing/batchNo',
@@ -511,13 +513,19 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					height : '5',
 					colspan : 2
 				}, {
+					xtype : 'textfield',
+					value : '返厂仓',
+					readOnly : true,
+					fieldLabel : '退至仓库',
+					colspan : 2
+				}/*, {
 					xtype : 'storagecombobox',
 					hiddenName : 'warehousing/storageId',
 					allowBlank : false,
 					name : 'warehousing/storageId',
 					fieldLabel : '仓库',
 					colspan : 2
-				}, {
+				}*/, {
 					xtype : 'displayfield',
 					height : '5',
 					colspan : 2
@@ -615,6 +623,15 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 					xtype : 'hidden',
 					name : 'warehousing/type',
 					value : '退货入库'
+				}, {
+					xtype : 'hidden',
+					name : 'warehousing/storageId',
+					value : 3
+				}
+				, {
+					xtype : 'hidden',
+					name : 'warehousing/toId',
+					value : 81
 				}
 				/*
 				 * , { xtype : 'hidden', name : 'warehousing/customerCode' }

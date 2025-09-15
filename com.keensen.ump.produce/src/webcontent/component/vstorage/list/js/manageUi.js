@@ -32,7 +32,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 					fields : ['code', 'name'],
 					data : [['A', '放行原订单'], ['B', '降级'],
 							['C', '改判其他无特殊要求的同型号产品'], ['D', '报废'],
-							['E', '送水测'], ['F', '染色解剖']]
+							['E', '送水测'], ['F', '染色解剖'],['G', '补胶']]
 				});
 
 	}
@@ -266,6 +266,14 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						width : 150,
 						header : '卷膜生产时间'
 					}, {
+						dataIndex : 'updateTime',
+						width : 150,
+						header : '最新跟进时间'
+					}, {
+						dataIndex : 'updateName',
+						width : 150,
+						header : '最新跟进人'
+					}, {
 						dataIndex : 'wtCreateDt',
 						width : 150,
 						header : '水测时间'
@@ -317,11 +325,11 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 					}, {
 						dataIndex : 'createTime',
 						width : 120,
-						header : '入仓时间'
+						header : '抓取数据时间'
 					}, {
 						dataIndex : 'createName',
 						width : 120,
-						header : '入仓操作员'
+						header : '抓取数据操作员'
 					}, {
 						dataIndex : 'exceptionType',
 						width : 150,
@@ -366,6 +374,21 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						dataIndex : 'modifyOrderNoTime',
 						width : 120,
 						header : '改订单号时间'
+					}, {
+						header : '班长处理意见',
+						width : 160,
+						dataIndex : 'monitorAdvise',
+						sortable : true
+					}, {
+						header : '计划员处理意见',
+						width : 160,
+						dataIndex : 'plannerAdvise',
+						sortable : true
+					}, {
+						header : '超期停留处理意见',
+						width : 160,
+						dataIndex : 'overtimeAdvise',
+						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.vstorage.queryByPage.biz.ext',
@@ -467,6 +490,12 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 							name : 'wtCreateDt'
 						}, {
 							name : 'checkResult'
+						}, {
+							name : 'monitorAdvise'
+						}, {
+							name : 'plannerAdvise'
+						}, {
+							name : 'overtimeAdvise'
 						}]
 			})
 		})
@@ -515,7 +544,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 					fields : ['code', 'name'],
 					data : [['A', '放行原订单'], ['B', '降级'],
 							['C', '改判其他无特殊要求的同型号产品'], ['D', '报废'],
-							['E', '送水测'], ['F', '染色解剖']]
+							['E', '送水测'], ['F', '染色解剖'], ['G', '补胶']]
 				});
 
 		this.editWindow4Gyy = this.editWindow4Gyy || new Ext.fn.FormWindow({

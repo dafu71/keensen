@@ -85,7 +85,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						hiddenName : 'condition/produceFlag',
 						emptyText : '--请选择--',
 						anchor : '95%',
-						store : [[null, '全部'], ['W', '白膜'], ['Y', '返修']],
+						store : [[null, '全部'], ['W', '白膜'], ['R', '返修'], ['C', '返修重绕'], ['F', '返修覆盖']],
 						listeners : {
 							scope : this,
 							'expand' : function(A) {
@@ -116,8 +116,33 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 						xtype : 'textfield',
 						name : 'condition/batchNo',
 						anchor : '95%',
-						fieldLabel : '元件序号'
-					}]
+						fieldLabel : '扫码元件序号'
+					}, {
+						xtype : 'textfield',
+						name : 'condition/qjBatchNo',
+						anchor : '95%',
+						fieldLabel : '当前元件序号'
+					}, {
+
+							xtype : 'combo',
+							mode : 'local',
+							fieldLabel : '生产类型',
+							ref : '../prodType',
+							hiddenName : 'condition/prodType',
+							emptyText : '--请选择--',
+							colspan : 1,
+							//allowBlank : false,
+							anchor : '95%%',
+							store : _this.prodTypeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.queryPanel.prodType.reset();
+								}
+							}
+						}]
 				});
 
 		this.queryPanel.addButton({
@@ -173,8 +198,11 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.raosi.deleteQijian.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
-						header : '元件序号',
+						header : '扫码元件序号',
 						dataIndex : 'batchNo'
+					}, {
+						header : '当前元件序号',
+						dataIndex : 'qjBatchNo'
 					}, {
 						header : '生产标志',
 						dataIndex : 'produceFlagName'
@@ -265,6 +293,8 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							name : 'qjBatchId'
 						}, {
 							name : 'prodType'
+						}, {
+							name : 'qjBatchNo'
 						}]
 			})
 		})
@@ -288,7 +318,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 				xtype : 'inputpanel',
 				pgrid : this.listPanel,
 				columns : 6,
-				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord4.biz.ext',
+				saveUrl : 'com.keensen.ump.qinsen.raosi.createRecord5.biz.ext',
 				successFn : function(i, r) {
 					if (r.err != '0') {
 						
@@ -394,7 +424,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 							colspan : 3,
 							allowBlank : false,
 							anchor : '90%%',
-							store : [['W', '白膜'], ['R', '返修']],
+							store : [['W', '白膜'], ['C', '返修重绕'], ['F', '返修覆盖']],
 							listeners : {
 								scope : this,
 								'expand' : function(A) {
@@ -693,7 +723,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 									colspan : 1,
 									allowBlank : false,
 									anchor : '90%%',
-									store : [['W', '白膜'], ['R', '返修']],
+									store : [['W', '白膜'], ['C', '返修重绕'], ['F', '返修覆盖']],
 									listeners : {
 										scope : this,
 										'expand' : function(A) {

@@ -75,20 +75,23 @@ com.keensen.ump.produce.component.SampleStandardMgr = function() {
 						text : '新增',
 						scope : this,
 						iconCls : 'icon-application_add',
+						hidden:uid != 'LHY' && uid != 'dafu',
 						handler : this.onAdd
 					}, '-', {
 						text : '修改',
 						scope : this,
+						hidden:uid != 'LHY' && uid != 'dafu',
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',
+						hidden:uid != 'LHY' && uid != 'dafu',
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],
 			selModel : selModel,
-			delUrl : 'com.keensen.ump.produce.component.testtrace.deleteSampleStandard.biz.ext',
+			delUrl : 'com.keensen.ump.produce.component.testtrace.deleteSampleStandard2.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						header : '膜片型号',
 						// width : 120,
@@ -98,9 +101,13 @@ com.keensen.ump.produce.component.SampleStandardMgr = function() {
 						// width : 120,
 						dataIndex : 'prodSpecName'
 					}, {
-						header : '送样长度',
+						header : '送样长度下限',
 						// width : 60,
-						dataIndex : 'sampleLength'
+						dataIndex : 'sampleLengthLow'
+					}, {
+						header : '送样长度上限',
+						// width : 60,
+						dataIndex : 'sampleLengthUp'
 					}, {
 						header : '送样频次',
 						// width : 60,
@@ -136,6 +143,10 @@ com.keensen.ump.produce.component.SampleStandardMgr = function() {
 							name : 'sampleTimes'
 						}, {
 							name : 'amount'
+						}, {
+							name : 'sampleLengthLow'
+						}, {
+							name : 'sampleLengthUp'
 						}]
 			})
 		})
@@ -174,13 +185,26 @@ com.keensen.ump.produce.component.SampleStandardMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'numberfield',
-							name : 'entity/sampleLength',
-							ref : '../../sampleLength',
-							fieldLabel : '送样长度',
+							name : 'entity/sampleLengthLow',
+							ref : '../../sampleLengthLow',
+							fieldLabel : '送样长度下限',
 							allowBlank : false,
 							anchor : '75%',
-							allowDecimals : false,
+							allowDecimals : true,
 							minValue : 0
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/sampleLengthUp',
+							ref : '../../sampleLengthUp',
+							fieldLabel : '送样长度上限',
+							allowBlank : false,
+							anchor : '75%',
+							allowDecimals : true,
+							minValue : 0
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
 						}, {
 							xtype : 'numberfield',
 							name : 'entity/amount',
@@ -245,14 +269,28 @@ com.keensen.ump.produce.component.SampleStandardMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'numberfield',
-							name : 'entity/sampleLength',
-							ref : '../../sampleLength',
-							dataIndex : 'sampleLength',
-							fieldLabel : '送样长度',
+							name : 'entity/sampleLengthLow',
+							ref : '../../sampleLengthLow',
+							dataIndex : 'sampleLengthLow',
+							fieldLabel : '送样长度下限',
 							allowBlank : false,
 							anchor : '75%',
-							allowDecimals : false,
+							allowDecimals : true,
 							minValue : 0
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/sampleLengthUp',
+							ref : '../../sampleLengthUp',
+							dataIndex : 'sampleLengthUp',
+							fieldLabel : '送样长度上限',
+							allowBlank : false,
+							anchor : '75%',
+							allowDecimals : true,
+							minValue : 0
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
 						}, {
 							xtype : 'numberfield',
 							name : 'entity/amount',

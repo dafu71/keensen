@@ -208,6 +208,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					}, '->', {
 						text : '删除',
 						scope : this,
+						hidden: uid != 'KS00307' && uid != 'LHY',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],

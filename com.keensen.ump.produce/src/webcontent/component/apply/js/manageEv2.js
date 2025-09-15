@@ -24,6 +24,20 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+		
+		var orderId = cell.get('orderId');
+		var baseId = cell.get('baseId');
+		
+		if(this.opt == 'judge'){
+			if (Ext.isEmpty(orderId)) {
+				Ext.Msg.alert("系统提示", "历史数据无法判定！");
+				return;
+			}else{
+				
+				return false;
+			}
+		}
+		
 		var confirmDate = cell.get('confirmDate');
 		if (this.opt == 'check') {
 			if (!Ext.isEmpty(confirmDate)) {
@@ -106,6 +120,20 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 							// 修改时加载
 						}
 					});
+		} else if (this.opt == 'uploadprod') {
+			var _this = this;
+			Ext.MessageBox.show({
+						title : '操作提示',
+						buttons : Ext.MessageBox.OK,
+						msg : '文件必须为Excel xls文件，且文件名不能包含字符.和斜杠等特殊字符',
+						icon : Ext.MessageBox.INFO,
+						fn : function() {
+							var uploadForm = _this.excelUploadWin
+									.getComponent('uploadForm').getForm();
+							uploadForm.reset();
+							_this.excelUploadWin.show();
+						}
+					});
 		} else {
 			this.editWindow3.show();
 			this.editPanel3.loadData(cell);
@@ -183,13 +211,12 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 				}
 
 			});
-			
-			
+
 	this.queryPanel3.prodcombo.store.on('load', function() {
-				if(!Ext.isEmpty(_this.opt)){
+				if (!Ext.isEmpty(_this.opt)) {
 					var prodSpecId = _this.opt;
 					_this.queryPanel3.prodcombo.setValue(prodSpecId);
-					
+
 				}
 				_this.opt = '';
 			});
@@ -334,6 +361,17 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 						obj.prodAmount.setValue(prodAmount);
 						var checkCount = data.checkCount;
 						obj.checkCount.setValue(checkCount);
+						
+						
+						var orderId = data.orderId;
+						obj.orderId.setValue(orderId);
+						var baseId = data.baseId;
+						obj.baseId.setValue(baseId);
+						
+						
+						var markDrawingCode2 = data.markDrawingCode2;
+						if (!Ext.isEmpty(markDrawingCode2))
+							obj.markSpecialFlag.setValue(markDrawingCode2);
 					}
 
 				},
@@ -740,15 +778,15 @@ com.keensen.ump.produce.component.applyMgr.prototype.onDel3 = function() {
 }
 
 com.keensen.ump.produce.component.applyMgr.prototype.exportExcel = function() {
-	
-	//doQuerySqlAndExport(
-	//			this,
-	//			this.queryPanel,
-	//			this.listPanel,
-	//			'请检',
-	//			'com.keensen.ump.produce.component.apply.queryApply',
-	//			'0,1');
-	//return;
+
+	// doQuerySqlAndExport(
+	// this,
+	// this.queryPanel,
+	// this.listPanel,
+	// '请检',
+	// 'com.keensen.ump.produce.component.apply.queryApply',
+	// '0,1');
+	// return;
 	var _this = this;
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
@@ -996,54 +1034,279 @@ com.keensen.ump.produce.component.applyMgr.prototype.onChoose2 = function() {
 }
 
 com.keensen.ump.produce.component.applyMgr.prototype.onScan = function() {
-	
+
 	var _this = this;
 	var obj = this.inputPanel.juanmoBatchNo;
 	var juanmoBatchNo = obj.getValue();
-	
+
 	Ext.Ajax.request({
-		method : "post",
-		scope : this,
-		url : 'com.keensen.ump.produce.component.apply.queryOrderByJm.biz.ext',
-		jsonData : {
-			"condition/juanmoBatchNo" : juanmoBatchNo
-		},
-		success : function(response, action) {
-			var result = Ext.decode(response.responseText);
-			if (result.msg != 1) {
-				Ext.Msg.alert("系统提示", result.msg, function() {
+				method : "post",
+				scope : this,
+				url : 'com.keensen.ump.produce.component.apply.queryOrderByJm.biz.ext',
+				jsonData : {
+					"condition/juanmoBatchNo" : juanmoBatchNo
+				},
+				success : function(response, action) {
+					var result = Ext.decode(response.responseText);
+					if (result.msg != 1) {
+						Ext.Msg.alert("系统提示", result.msg, function() {
 
-						});
+								});
 
-			} else {
-				var data = result.data[0];
-				var orderNo = data.orderNo;
-				var prodSpecId = data.prodSpecId;
-				_this.opt = prodSpecId;
-				
-				_this.inputPanel.orderNo.setValue(orderNo);
-				_this.queryPanel3.orderNo.setValue(orderNo);
-				// this.queryPanel3.prodSpecId.setValue(prodSpecId);
-				_this.queryPanel3.prodcombo.reset();
-				_this.queryPanel3.prodcombo.getStore().baseParams = {
-					'condition/orderNo' : orderNo,
-					'condition/prodSpecId' : prodSpecId
-				};
-				_this.queryPanel3.prodcombo.getStore().load();
-				_this.chooseWindow.show();
-			}
-		}
-	});
+					} else {
+						var data = result.data[0];
+						var orderNo = data.orderNo;
+						var prodSpecId = data.prodSpecId;
+						_this.opt = prodSpecId;
+
+						_this.inputPanel.orderNo.setValue(orderNo);
+						_this.queryPanel3.orderNo.setValue(orderNo);
+						// this.queryPanel3.prodSpecId.setValue(prodSpecId);
+						_this.queryPanel3.prodcombo.reset();
+						_this.queryPanel3.prodcombo.getStore().baseParams = {
+							'condition/orderNo' : orderNo,
+							'condition/prodSpecId' : prodSpecId
+						};
+						_this.queryPanel3.prodcombo.getStore().load();
+						_this.chooseWindow.show();
+					}
+				}
+			});
 }
 
 com.keensen.ump.produce.component.applyMgr.prototype.exportExcel2 = function() {
-	
-	doQuerySqlAndExport(
-				this,
-				this.queryPanel,
-				this.listPanel,
-				'请检',
-				'com.keensen.ump.produce.component.apply.queryApply',
-				'0,1');
-	
+
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '请检',
+			'com.keensen.ump.produce.component.apply.queryApply', '0,1');
+
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.onSelectOrder = function() {
+
+	var _this = this;
+	var obj = this.inputPanel;
+	// 加载订单信息
+	// com.keensen.ump.produce.component.neworder.queryYxOrder
+
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.neworder.queryYxOrder.biz.ext",
+		method : "post",
+		jsonData : {
+			'map/orderNo' : _this.queryPanel3.orderNo.getValue(),
+			'map/prodSpecId' : _this.queryPanel3.prodcombo.getValue()
+
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			var datas = ret.data;
+			if (!Ext.isEmpty(datas)) {
+				var data = datas[0];
+				var orderAmount = data.orderAmount;
+				obj.orderAmount.setValue(orderAmount);
+				obj.applyAmount.setValue(orderAmount);
+				var prodSpecName = data.materSpecName2;
+				obj.prodSpecName.setValue(prodSpecName);
+				var prodClassFlag = data.dryWet;
+				obj.prodClassFlag.setValue(prodClassFlag);
+				var lid = data.lidBase;
+				obj.lid.setValue(lid);
+				var markTypeFlag = data.markBase;
+				obj.markTypeFlag.setValue(markTypeFlag);
+				var markSpecCode = data.specNameMark;
+				obj.markSpecCode.setValue(markSpecCode);
+				var tape = data.tapeBase;
+				obj.tape.setValue(tape);
+				var box = data.boxBase;
+				obj.box.setValue(box);
+				var tray = data.trayBase;
+				obj.tray.setValue(tray);
+				var label = data.labelBase
+				obj.label.setValue(label);
+				var orderType = data.orderTypeBase;
+				obj.orderType.setValue(orderType);
+				var prodAmount = data.prodAmount;
+				obj.prodAmount.setValue(prodAmount);
+				var checkCount = data.checkCount;
+				obj.checkCount.setValue(checkCount);
+				var markDrawingCode2 = data.markDrawingCode2;
+				if (!Ext.isEmpty(markDrawingCode2))
+					obj.markSpecialFlag.setValue(markDrawingCode2);
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+
+	this.chooseWindow.hide();
+
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.onSaveApply = function() {
+
+	var _this = this;
+
+	if (this.inputPanel.form.isValid()) {
+
+		Ext.Msg.prompt('请检原因', '请输入发起特殊请检的原因', function(btn, text) {
+			if (btn == 'ok') {
+				if (Ext.isEmpty(text)) {
+					Ext.Msg.alert("系统提示", "请输入请检原因！");
+					return;
+				}
+				var datas = [];
+				this.inputPanel.reserve5.setValue('special');
+				this.inputPanel.reserve4.setValue(text);
+
+				var mk = new Ext.LoadMask(this.inputWindow.id, {
+							msg : '正在保存，请稍候!',
+							removeMask : true
+						});
+				mk.show();
+				Ext.Ajax.request({
+					method : "post",
+					scope : this,
+					url : 'com.keensen.ump.produce.component.apply.add.biz.ext',
+					jsonData : {
+						'entity' : this.inputPanel.form.getValues(),
+						"list" : datas
+					},
+					success : function(response, action) {
+						mk.hide();
+						// 返回值处理
+						var result = Ext.decode(response.responseText);
+						if (result.success) {
+							// _this.listPanel.store.load();
+							_this.listPanel.refresh();
+							_this.inputWindow.hide();
+						} else {
+							mk.hide();
+						}
+					},
+					failure : function(resp, opts) {
+						mk.hide();
+					}
+				});
+			}
+		}, this, true);
+	}
+}
+
+// 模板文件下载
+com.keensen.ump.produce.component.applyMgr.prototype.onDownProdTemplate = function() {
+
+	Ext.Msg.show({
+		width : 350,
+		title : "操作提示",
+		msg : "下载模板后，请按照示例填写真实订单数据，并注意日期和数字格式,示例数据请删除后再提交。",
+		icon : Ext.Msg.WARNING,
+		buttons : Ext.Msg.OK,
+		fn : function(btn) {
+			if (btn == "ok") {
+				var fname = "ks_component_check_list.xls";
+				window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
+						+ fname;
+			}
+		}
+
+	})
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.onUploadProd = function() {
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+			var reserve5 = B[0].data.reserve5;
+			if (reserve5 != 'special') {
+				Ext.Msg.alert("系统提示", "请选择特殊请检工单!");
+				return
+			}
+			this.opt = 'uploadprod';
+			this.listPanel.onEdit();
+		}
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
+}
+
+// 文件上传
+com.keensen.ump.produce.component.applyMgr.prototype.doUpload = function() {
+
+	var B = this.listPanel.getSelectionModel().getSelections();
+	var id = B[0].data.id;
+
+	var _this = this;
+	// var store = this.listPanel.store;
+	this.uploadInputPanel = this.excelUploadWin.getComponent('uploadForm');
+	// 校验
+	this.fileUploadObj = this.uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	this.filePath = this.fileUploadObj.getValue();
+	// 文件后缀
+	this.sfileName = this.filePath.split(".");
+
+	if (this.sfileName[1] == null || this.sfileName[1].toLowerCase() != "xls") {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为Excel xls文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+	if (this.uploadInputPanel.form.isValid()) {
+		// var url = this.uploadInputPanel.saveUrl;
+		var url = 'com.keensen.ump.produce.component.importCheckList.flow?relationId='
+				+ id;
+		this.uploadInputPanel.form.submit({
+					method : "POST",
+					timeout : 1200,
+					url : url,
+					waitTitle : "操作提示",
+					waitMsg : "上传数据中...",
+					success : function(form, action) {
+						var result = action.result;
+						if (result.success) {
+							_this.excelUploadWin.hide();
+							Ext.Msg.alert("操作提示", result.msg == "1"
+											? "批量上传成功"
+											: result.msg, function() {
+										_this.listPanel.store.load();
+									}, this);
+						}
+					},
+					failure : function(form, action) {
+						Ext.MessageBox.show({
+									title : '操作提示',
+									buttons : Ext.MessageBox.OK,
+									msg : "导入失败，请检查文件格式或网络是否正常",
+									icon : Ext.MessageBox.ERROR
+								});
+					}
+				});
+	}
+
+}
+
+com.keensen.ump.produce.component.applyMgr.prototype.onJudge = function() {
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+			this.opt = 'judge';
+			this.listPanel.onEdit();
+		}
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
 }

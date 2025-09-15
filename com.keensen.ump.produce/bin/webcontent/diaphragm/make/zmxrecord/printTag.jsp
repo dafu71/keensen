@@ -73,6 +73,7 @@
 					底膜类型：<span class="span_label"><b:write property="data/dimoType" /></span><br/>
 					实际长度：<span class="span_label"><b:write property="data/dimoAmount" /></span><br/>
 					无纺布（供应商）：<span class="span_label"><b:write property="data/supName" /></span><br/>
+					聚砜类型：<span class="span_label"><b:write property="data/psfName" /></span><br/>
 				</td>
 			</tr>
 			

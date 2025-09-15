@@ -931,8 +931,8 @@ com.keensen.ump.produce.quality.mptest.zmyMgr = function() {
 						dataIndex : 'c13',
 						header : 'C13重量(kg)'
 					}, {
-						dataIndex : 'c13',
-						header : 'C13重量(kg)'
+						dataIndex : 'c14',
+						header : 'C14重量(kg)'
 					}, {
 						dataIndex : 'appointFxy',
 						header : '分析员'

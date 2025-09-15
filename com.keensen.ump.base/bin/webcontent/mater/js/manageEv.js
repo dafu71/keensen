@@ -143,7 +143,7 @@ com.keensen.ump.base.materClassSpecMgr.prototype.initEvent = function() {
 						myGrid.getColumnModel().setHidden(obj.pageWidth, true);
 						break;
 					case 100030027 :// 工业膜元件
-						Ext.getCmp('materclassspeceditspec').setVisible(true);
+						Ext.getCmp('materclassspeceditspec').setVisible(true && modifyLimit == '1');
 
 						myGrid.getColumnModel()
 								.setHidden(obj.mpBatchCode, true);

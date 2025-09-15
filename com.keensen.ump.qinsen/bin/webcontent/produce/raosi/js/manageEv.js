@@ -141,7 +141,7 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.onScan = function() {
 	var produceFlag = _this.raosiAddWindow.produceFlag.getValue();
 	if (!Ext.isEmpty(batchNo) && !Ext.isEmpty(produceFlag)) {
 
-		if (produceFlag == 'R') {// 返修
+		if (produceFlag == 'R' || produceFlag == 'C' || produceFlag == 'F') {// 返修
 			_this.raosiAddWindow.saveData();
 		} else {
 

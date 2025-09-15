@@ -344,10 +344,11 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onModiOrder = function() {
 
 		var recordId = records[i].get('recordId');
 		var dryWet = records[i].get('dryWet');
-		
+
 		var ifCheckStock = records[i].get('ifCheckStock');
-		
-		if (ifCheckStock == '是') {
+		var ifRework = records[i].get('ifRework');
+
+		if (ifCheckStock == '是' && ifRework == '否') {
 			Ext.Msg.alert('系统提示', '已请检入库的元件不能修改');
 			return false;
 		}
@@ -361,8 +362,6 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onModiOrder = function() {
 			Ext.Msg.alert('系统提示', '您无权修改湿膜订单号');
 			return false;
 		}
-		
-		
 
 	}
 	this.chooseSingleOrderWindow.show();
@@ -569,20 +568,14 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.exportExcel = function() {
 
 	}
 
-	
 	if (Ext.isEmpty(this.exportFields)) {
 		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '气检记录',
 				'com.keensen.ump.qinsen.qijian.queryRecords', '0,1');
 	} else {
 		var arr = this.exportFields.split(',');
-		
-		doQuerySqlAndExportExt(
-				this,
-				this.queryPanel,
-				this.listPanel,
-				'气检记录',
-				'com.keensen.ump.qinsen.qijian.queryRecords',
-				arr);
+
+		doQuerySqlAndExportExt(this, this.queryPanel, this.listPanel, '气检记录',
+				'com.keensen.ump.qinsen.qijian.queryRecords', arr);
 	}
 	/*
 	 * var daochu = _this.queryPanel.getForm().getValues();
@@ -860,11 +853,11 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.getRight = function() {
 					Ext.getCmp(qijianExportButton).setVisible(exportLimitUsers
 							.indexOf(uid) != -1
 							|| exportUsers.indexOf(uid) != -1);
-					
+
 					if (exportLimitUsers.indexOf(uid) != -1) {
 						_this.exportFields = qijian.exportLimitFields;
 					}
-					
+
 				},
 				callback : function() {
 				}
@@ -874,4 +867,65 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.getRight = function() {
 function roundToDecimalPlace(number, decimalPlaces) {
 	const factor = Math.pow(10, decimalPlaces);
 	return Math.round(number * factor) / factor;
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onMonitorAdvise = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			recordIds.push(r.data['recordId']);
+
+		}
+		
+		this.editWindow4MonitorAdvise.advise.setValue('');
+		this.editWindow4MonitorAdvise.recordIds.setValue(recordIds.join(','));
+		this.editWindow4MonitorAdvise.show();
+	}
+	
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onPlannerAdvise = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			recordIds.push(r.data['recordId']);
+
+		}
+		
+		this.editWindow4PlannerAdvise.advise.setValue('');
+		this.editWindow4PlannerAdvise.recordIds.setValue(recordIds.join(','));
+		this.editWindow4PlannerAdvise.show();
+	}
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onOvertimeAdvise = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			recordIds.push(r.data['recordId']);
+
+		}
+		
+		this.editWindow4OvertimeAdvise.advise.setValue('');
+		this.editWindow4OvertimeAdvise.recordIds.setValue(recordIds.join(','));
+		this.editWindow4OvertimeAdvise.show();
+	}
 }

@@ -18,7 +18,7 @@
 	t1.RESERVE5 as "reserve5",
 	t1.ORG_ID as "orgId",
 	t1.STATUS as "status",
-	t1.BATCH_NO as "batchNo",
+	t1.BATCH_NO as "batchNo",t1.c11_invalid "c11Invalid",
 	t1.C11 as "c11",
 	t1.C12 as "c12",
 	t1.C13 as "c13",
@@ -126,13 +126,14 @@
        NVL(T1.BEFORE_AMOUNT, 0) + NVL(T1.CUR_AMOUNT, 0) "totalAmount",
        t4.cnt "cnt",
        defect.loss "loss",
-       fx.mptype "zmcode",
+       fx.mptype "zmcode",fx.psf_Name "psfName",
        t1.RELEASE_AMOUNT "releaseAmount",
        round((nvl(bm.MATER2,0)+nvl(bm.MATER3,0)+ nvl(bm.MATER4,0)+nvl(bm.MATER5,0))/1000 * (NVL(T1.THEORY_AMOUNT, 0)),2) "usedWeight"
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
  
   
-  left join (select t.batch_no,t.mptype from KS_PROD_DIAPHRAGM_MAKE_FIX t) fx
+  left join (select t.batch_no,t.mptype,dictname psf_Name from KS_PROD_DIAPHRAGM_MAKE_FIX t
+  left join EOS_DICT_ENTRY t2 on t2.dictid=t.psf and t2.dicttypeid='KS_PSF') fx
   on fx.batch_no = REGEXP_SUBSTR(replace(replace(T1.ZMY_BATCH_NO,' ',','),'，',','), '[^,]+', 1, 1)
   
   left join (SELECT 
@@ -177,7 +178,7 @@ where nvl(if_tear,'是') = '是'
 	ORDER BY t1.CREATE_TIME desc
      </select>
     <select id="queryStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-	     SELECT T1.DIMO_BATCH_NO AS "dimoBatchNo",
+	     SELECT T1.DIMO_BATCH_NO AS "dimoBatchNo",fx.psf_Name "psfName",
        T1.PRODUCT_DT AS "productDt",
        T1.LINE AS "line",T3.base "base",t3.id "id",
        T1.DIMO_TYPE AS "dimoType",
@@ -219,6 +220,8 @@ where nvl(if_tear,'是') = '是'
           FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T
          GROUP BY T.DIMO_BATCH_NO) T1
          
+         
+         
   left join (SELECT SUM(LOSS) LOSE, DIMO_BATCH_NO
   FROM (SELECT ZM.DIMO_BATCH_NO,
                T.DM_BATCH_ID,
@@ -236,11 +239,20 @@ where nvl(if_tear,'是') = '是'
                FROM V_KS_TUMO_ALL T
               GROUP BY T.DIMO_BATCH_NO) T2
     ON T1.DIMO_BATCH_NO = T2.DIMO_BATCH_NO
-     LEFT JOIN (select t.id,t.base,t.dimo_batch_no,t.sup_id,t2.prop_value_name sup_name,t.pump_speed from KS_PROD_DIAPHRAGM_ZMX_RECORD t
+     LEFT JOIN (select t.id,t.base,t.dimo_batch_no,t.sup_id,t2.prop_value_name sup_name,t.pump_speed,
+     REGEXP_SUBSTR(replace(replace(T.ZMY_BATCH_NO,' ',','),'，',','), '[^,]+', 1, 1) zmy_batch_no from KS_PROD_DIAPHRAGM_ZMX_RECORD t
 LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
  	on t2.prop_id = 30021 and t2.prop_value_id = t.SUP_ID) t3 ON t3.dimo_batch_no=t1.DIMO_BATCH_NO
+ 	
+ 	 left join (select t.batch_no,t.mptype,dictname psf_Name,t.psf from KS_PROD_DIAPHRAGM_MAKE_FIX t
+  left join EOS_DICT_ENTRY t2 on t2.dictid=t.psf and t2.dicttypeid='KS_PSF') fx
+  on fx.batch_no = T3.zmy_batch_no
+ 	
  WHERE 1 = 1
-  <isNotNull prepend="" property="base">AND t3.base = #base#</isNotNull>
+ 
+ 	<isNotNull prepend="" property="psf">AND fx.psf = #psf#</isNotNull>
+        <isNotNull prepend="" property="supId">AND t3.sup_id = #supId#</isNotNull>
+        <isNotNull prepend="" property="base">AND t3.base = #base#</isNotNull>
         <isNotNull prepend="" property="dimoType">AND t1.dimo_Type = #dimoType#</isNotNull>
         <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
         <isNotNull prepend="and" property="productDtStart">T1.PRODUCT_DT &gt;=  #productDtStart#</isNotNull>
@@ -313,7 +325,8 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
 	nvl(sum(t1.C12),0) as "c12",
 	nvl(sum(t1.C13),0) as "c13",
 	nvl(sum(t1.C14),0) as "c14",
-	nvl(sum(t1.C11) + sum(t1.C12) + sum(t1.C13) + sum(t1.C14),0) "total"
+	nvl(sum(t1.C11) + sum(t1.C12) + sum(t1.C13) + sum(t1.C14),0) "total",
+	nvl(sum(t1.C11_invalid),0) as "c11Invalid"
 	from KS_PROD_DIAPHRAGM_MAKE_FIX t1
 	left join EOS_DICT_ENTRY t2 on t2.dictid=t1.psf and t2.dicttypeid='KS_PSF'
     left join (select distinct t.zmy_batch_no from KS_PROD_DIAPHRAGM_ZMX_RECORD t) zmx 

@@ -31,9 +31,13 @@
        T1.SPEC_NAME    AS "specName",
        T1.LABEL_SIZE   AS "labelSize",
        T1.BUSINESSMAN  AS "businessman",
-       T1.REMARK       AS "remark",T1.url "url"
+       T1.REMARK       AS "remark",T1.url "url",t1.status "status"
   FROM KS_BASE_LABEL_DRAWING T1 
     where 1=1
+    
+    <isNotNull prepend="and" property="status"> 
+		       nvl(t1.status,1) = #status#
+	</isNotNull>
     
 	<isNotNull prepend="and" property="logo"> 
 		       T1.LOGO = #logo#
@@ -125,8 +129,13 @@ max(PRINT_DELAY_TIME) as PRINT_DELAY_TIME
 ,max(t.reserve1) reserve1
   
    from KS_COMPONENT_MARK_TEMPLATE t
+       
 GROUP BY t.template_name) tmp ON tmp.template_name = t1.DRAWING_CODE
     where 1=1
+    
+   <isNotNull prepend="and" property="status"> 
+		        trim(T1.DRAWING_CODE) IN(SELECT template_name FROM KS_COMPONENT_MARK_TEMPLATE  WHERE nvl(status,'1') = #status#)
+	</isNotNull>
     
 	<isNotNull prepend="and" property="logo"> 
 		       T1.LOGO = #logo#

@@ -11,6 +11,7 @@
         <process:parameter description="" historyStateLocation="client" isArray="false" name="prodBatchNos" primitiveType="String"/>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="code" primitiveType="String"/>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="testView" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="isStar" primitiveType="String"/>
       </process:inputParameters>
     </sourceConnections>
     <location x="100" y="150"/>
@@ -68,6 +69,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">prodBatchNos</process:from>
       <process:to type="query">condition/prodBatchNos</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">condition/batchPrint</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">

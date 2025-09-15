@@ -270,7 +270,8 @@ SELECT P.TEAM_ID         AS "teamId",
 	round(SUM(nvl(notear.loss,0)),0) "noTearLength" ,
 	round(SUM(nvl(scratch.loss,0)),0) "scratchLength" ,
 	round(SUM(nvl(t.out_length,0)),0) - round(SUM(nvl(notear.loss,0)),0) + round(SUM(nvl(scratch.loss,0)),0) "actualLength"
-	 from V_KS_TUMO_PASSREATE t
+	 from (select * from V_KS_TUMO_PASSREATE t
+		WHERE SUBSTR(t.batch_no,1,1) !='P') t
 	 left join 
 		 (SELECT DDD.LOSS,
 	       T.TM_BATCH_ID,

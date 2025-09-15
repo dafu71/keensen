@@ -1,0 +1,945 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.report.diaghragm">
+    <select id="queryMainMater" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT TM.RECORD_ID,
+       TM.BATCH_NO "batchNo",
+       TM.OUT_LENGTH "outLength",
+       DM.DIMO_BATCH_NO "dmBatchNo",
+       REGEXP_SUBSTR(REPLACE(REPLACE(DM.ZMY_BATCH_NO, ' ', ','), '，', ','),
+                     '[^,]+',
+                     1,
+                     1) "zmyBatchNo",
+       DM.THEORY_AMOUNT "dmTheoryAmount",
+       PL.LINE_CODE "line",
+       REPLACE(TM.WATER_BATCH_NO, '单击旁边选择', '') "waterBatchNo",
+       REPLACE(TM.WATER_BATCH_NO2, '单击旁边选择', '') "waterBatchNo2",
+       WLD.WEIGHT "waterLiquidWeight",
+       TLD.WEIGHT "troughLiquidWeight"， PVA.USED "pvaUsed",
+       NVL(OIL.WEIGHT, 0) / 1000 "oilWeight",
+       PMS.MATER_SPEC_NAME "specName",
+       O1.PROP_VALUE_NAME "wfSupplierName",
+       TM.ORDER_NO "orderNo",
+       TM.PLAN_NO "planNo",
+       O2.PROP_VALUE_NAME "prodFlagName",
+       TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') "produceDt",
+       BD.DEPT_NAME "teamName"
+  FROM QINSEN.INST_TUMO TM
+  LEFT JOIN QINSEN.BASE_DEPARTMENT BD
+    ON BD.DEPT_ID = TM.TEAM_ID
+  LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION O2
+    ON TM.PROD_FLAG_ID = O2.PROP_VALUE_ID
+  LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION O1
+    ON TM.WF_SUP_ID = O1.PROP_VALUE_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = TM.SPEC_ID
+  LEFT JOIN QINSEN.BASE_PROD_LINE PL
+    ON PL.LINE_ID = TM.LINE_ID
+  LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD DM
+    ON TM.DIMO_BATCH_NO = DM.DIMO_BATCH_NO
+  LEFT JOIN (SELECT T.BATCH_ID, SUM(T.WEIGHT) WEIGHT
+               FROM KS_DIAPHRAGM_WATER_LIQUID T
+              WHERE T.ITEM NOT IN ('RO水', '水相液排料')
+              GROUP BY T.BATCH_ID) WLD
+    ON WLD.BATCH_ID = TM.RECORD_ID
+  LEFT JOIN (SELECT T.BATCH_ID, SUM(T.WEIGHT) WEIGHT
+               FROM KS_DIAPHRAGM_TROUGH_LIQUID T
+              GROUP BY T.BATCH_ID) TLD
+    ON TLD.BATCH_ID = TM.RECORD_ID
+  LEFT JOIN (SELECT SUM(T.C90) C90, SUM(T.USED) USED, T.TM_BATCH_NO
+               FROM KS_DIAPHRAGM_MAKE_PVA_LIST T
+              GROUP BY T.TM_BATCH_NO) PVA
+    ON PVA.TM_BATCH_NO = TM.BATCH_NO
+
+  LEFT JOIN (SELECT SUM(WEIGHT) WEIGHT, TM_BATCH_NO
+               FROM (SELECT SUM(WEIGHT) * 1000 WEIGHT, TM_BATCH_NO
+                       FROM (SELECT T.ID, T.TM_BATCH_NO, LST.WEIGHT
+                               FROM (SELECT *
+                                       FROM KS_QUALITY_MP_TEST_OIL_HEAD H
+                                      WHERE H.RESERVE1 = '新配油相液'
+                                      and nvl(h.status,1) = 1) T
+                               LEFT JOIN (SELECT SUM(T.WEIGHT) WEIGHT,
+                                                T.RELATION_ID
+                                           FROM KS_QUALITY_MP_TEST_OIL_LIST T
+                                          GROUP BY T.RELATION_ID) LST
+                                 ON T.ID = LST.RELATION_ID)
+                      GROUP BY TM_BATCH_NO
+                     UNION ALL
+                     SELECT SUM(WEIGHT) WEIGHT, TM_BATCH_NO
+                       FROM (SELECT T.ID, T.TM_BATCH_NO, LST.WEIGHT
+                               FROM (SELECT *
+                                       FROM KS_QUALITY_MP_TEST_OIL_HEAD H
+                                      WHERE H.RESERVE1 = '回流油相液' and nvl(h.status,1) = 1) T
+                               LEFT JOIN (SELECT SUM(NVL(T.C42_REALITY, 0) +
+                                                    NVL(T.C41_REALITY, 0) * 1000) WEIGHT,
+                                                T.RELATION_ID
+                                           FROM KS_QUALITY_MP_TEST_OIL_LIST T
+                                          GROUP BY T.RELATION_ID) LST
+                                 ON T.ID = LST.RELATION_ID)
+                      GROUP BY TM_BATCH_NO)
+              GROUP BY TM_BATCH_NO) OIL
+    ON OIL.TM_BATCH_NO = TM.BATCH_NO
+
+ WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+   <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+   
+   ORDER BY tm.batch_no
+   </select>
+    <select id="queryPvaAndTrough" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 	SELECT T1.BATCH_NO      AS "batchNo",
+ 	decode(t1.prod_flag_id,'300027', '量产', '300028', '实验', '300140', '试量产','') "prodFlagName",
+       T1.OUT_LENGTH    AS "outLength",
+       T1.ORDER_NO      AS "orderNo",
+       T1.PLAN_NO       AS "planNo",
+       T1.LINE_ID       AS "lineId",
+       T1.LINE          AS "line",
+       T1.SPEC_ID       AS "specId",
+       T1.SPEC_NAME     AS "specName",
+       T1.C22_WEIGHT    AS "c22Weight",
+       T1.C22_STD       AS "c22Std",
+       T1.C51_STD       AS "c51Std",
+       T1.C51_WEIGHT    AS "c51Weight",
+       T1.C71_STD       AS "c71Std",
+       T1.C71_WEIGHT    AS "c71Weight",
+       T1.C72_STD       AS "c72Std",
+       T1.C72_WEIGHT    AS "c72Weight",
+       T1.USED_WEIGHT   AS "usedWeight",
+       T1.PVA165_STD    AS "pva165Std",
+       T1.PVA165_WEIGHT AS "pva165Weight",
+       T1.PVA205_STD    AS "pva205Std",
+       T1.PVA205_WEIGHT AS "pva205Weight",
+       T1.PVA540_STD    AS "pva540Std",
+       T1.PVA540_WEIGHT AS "pva540Weight",
+       T1.TM_BATCH_ID   AS "tmBatchId"
+  FROM (
+        
+        SELECT TRGH.BATCH_NO,TRGH.prod_flag_id,
+                TRGH.OUT_LENGTH,
+                TRGH.ORDER_NO,
+                TRGH.PLAN_NO,
+                TRGH.LINE_ID,
+                PL.LINE_CODE LINE,
+                TRGH.SPEC_ID,
+                PMS.MATER_SPEC_NAME SPEC_NAME,
+                TRGH.C22_WEIGHT,
+                TRGH.C22_STD,
+                TRGH.C51_STD,
+                NVL(TRGH.C51_WEIGHT, 0) + NVL(PVA.C51_WEIGHT, 0) C51_WEIGHT， TRGH.C71_STD,
+                TRGH.C71_WEIGHT,
+                TRGH.C72_STD,
+                TRGH.C72_WEIGHT， PVA.USED_WEIGHT,
+                PVA.PVA165_STD,
+                PVA.PVA165_WEIGHT,
+                PVA.PVA205_STD,
+                PVA.PVA205_WEIGHT,
+                PVA.PVA540_STD,
+                PVA.PVA540_WEIGHT,
+                TM_BATCH_ID
+          FROM (SELECT TM.BATCH_NO,TM.prod_flag_id,
+                        TM.RECORD_ID TM_BATCH_ID,
+                        TM.OUT_LENGTH,
+                        TM.ORDER_NO,
+                        TM.PLAN_NO,
+                        TM.LINE_ID,
+                        TM.SPEC_ID,
+                        BM.C22 * TM.OUT_LENGTH / 1000 C22_STD,
+                        TM.OUT_LENGTH * C22_METER C22_WEIGHT,
+                        BM.C51 * TM.OUT_LENGTH / 1000 C51_STD,
+                        TM.OUT_LENGTH * C51_METER C51_WEIGHT,
+                        BM.C71 * TM.OUT_LENGTH / 1000 C71_STD,
+                        TM.OUT_LENGTH * C71_METER C71_WEIGHT,
+                        BM.C72 * TM.OUT_LENGTH / 1000 C72_STD,
+                        TM.OUT_LENGTH * C72_METER C72_WEIGHT
+                   FROM QINSEN.INST_TUMO TM
+                   LEFT JOIN (SELECT TM.ORDER_NO,
+                                    TM.OUT_LENGTH,
+                                    TM.LINE_ID,
+                                    TM.SPEC_ID,
+                                    TRGH.C22_WEIGHT,
+                                    TRGH.C51_WEIGHT,
+                                    TRGH.C71_WEIGHT,
+                                    TRGH.C72_WEIGHT,
+                                    TRGH.C22_WEIGHT / TM.OUT_LENGTH C22_METER,
+                                    TRGH.C51_WEIGHT / TM.OUT_LENGTH C51_METER,
+                                    TRGH.C71_WEIGHT / TM.OUT_LENGTH C71_METER,
+                                    TRGH.C72_WEIGHT / TM.OUT_LENGTH C72_METER
+                               FROM (SELECT ORDER_NO,
+                                            LINE_ID,
+                                            SPEC_ID,
+                                            SUM(C22_WEIGHT) C22_WEIGHT,
+                                            SUM(C51_WEIGHT) C51_WEIGHT,
+                                            SUM(C71_WEIGHT) C71_WEIGHT,
+                                            SUM(C72_WEIGHT) C72_WEIGHT
+                                       FROM (SELECT TM.BATCH_NO,
+                                                    TM.ORDER_NO,
+                                                    TM.LINE_ID,
+                                                    TM.SPEC_ID,
+                                                    T.C22_WEIGHT,
+                                                    T.C51_WEIGHT,
+                                                    T.C71_WEIGHT,
+                                                    T.C72_WEIGHT
+                                               FROM (SELECT T.BATCH_ID,
+                                                            NVL(SUM(DECODE(T.ITEM,
+                                                                           'C22',
+                                                                           T.WEIGHT,
+                                                                           0)),
+                                                                0) C22_WEIGHT,
+                                                            NVL(SUM(DECODE(T.ITEM,
+                                                                           'C51',
+                                                                           T.WEIGHT,
+                                                                           0)),
+                                                                0) C51_WEIGHT,
+                                                            NVL(SUM(DECODE(T.ITEM,
+                                                                           'C71',
+                                                                           T.WEIGHT,
+                                                                           0)),
+                                                                0) C71_WEIGHT,
+                                                            NVL(SUM(DECODE(T.ITEM,
+                                                                           'C72',
+                                                                           T.WEIGHT,
+                                                                           0)),
+                                                                0) C72_WEIGHT
+                                                       FROM KS_DIAPHRAGM_TROUGH_LIQUID T
+                                                      GROUP BY T.BATCH_ID) T
+                                               LEFT JOIN QINSEN.INST_TUMO TM
+                                                 ON TM.RECORD_ID = T.BATCH_ID)
+                                      WHERE ORDER_NO IS NOT NULL
+                                        AND LENGTH(ORDER_NO) &gt; 10
+                                      GROUP BY ORDER_NO, LINE_ID, SPEC_ID) TRGH
+                               LEFT JOIN (SELECT TM.ORDER_NO,
+                                                TM.LINE_ID,
+                                                TM.SPEC_ID,
+                                                SUM(TM.OUT_LENGTH) OUT_LENGTH
+                                           FROM QINSEN.INST_TUMO TM
+                                          WHERE TM.ORDER_NO IS NOT NULL
+                                            AND LENGTH(TM.ORDER_NO) &gt; 10
+                                          GROUP BY TM.ORDER_NO,
+                                                   TM.LINE_ID,
+                                                   TM.SPEC_ID) TM
+                                 ON TM.ORDER_NO = TRGH.ORDER_NO
+                                AND TM.LINE_ID = TRGH.LINE_ID
+                                AND TM.SPEC_ID = TRGH.SPEC_ID) TRGH
+                     ON TM.ORDER_NO = TRGH.ORDER_NO
+                    AND TM.LINE_ID = TRGH.LINE_ID
+                    AND TM.SPEC_ID = TRGH.SPEC_ID
+                   LEFT JOIN QINSEN.BASE_PROD_LINE PL
+                     ON PL.LINE_ID = TM.LINE_ID
+                   LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                     ON PMS.MATER_SPEC_ID = TM.SPEC_ID
+                   LEFT JOIN (SELECT T1.LINE,
+                                    T1.MPTYPE,
+                                    MIN(T1.MATER6) C22,
+                                    MIN(T1.MATER11) C51,
+                                    MIN(T1.MATER16) C71,
+                                    MIN(T1.MATER15) C72
+                               FROM KS_BASE_MP_BOM T1
+                              GROUP BY T1.LINE, T1.MPTYPE) BM
+                     ON BM.LINE = PL.LINE_CODE
+                    AND BM.MPTYPE = PMS.MATER_SPEC_NAME
+                  WHERE TM.ORDER_NO IS NOT NULL
+                    AND SUBSTR(TM.BATCH_NO, 1, 1) != 'E'
+                    AND LENGTH(TM.ORDER_NO) &gt; 10
+                    AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+                    AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+                     <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>
+   ) TRGH
+          LEFT JOIN (SELECT TM.BATCH_NO,
+                            TM.OUT_LENGTH,
+                            PL.LINE_CODE LINE,
+                            PMS.MATER_SPEC_NAME SPEC_NAME,
+                            BM.C51 * TM.OUT_LENGTH / 1000 C51_STD,
+                            C51_METER * TM.OUT_LENGTH C51_WEIGHT,
+                            
+                            USED_METER * TM.OUT_LENGTH USED_WEIGHT,
+                            BM.PVA165 * TM.OUT_LENGTH / 1000 PVA165_STD,
+                            PVA165_METER * TM.OUT_LENGTH PVA165_WEIGHT,
+                            BM.PVA205 * TM.OUT_LENGTH / 1000 PVA205_STD,
+                            PVA205_METER * TM.OUT_LENGTH PVA205_WEIGHT,
+                            BM.PVA540 * TM.OUT_LENGTH / 1000 PVA540_STD,
+                            PVA540_METER * TM.OUT_LENGTH PVA540_WEIGHT
+                       FROM (SELECT TM.ORDER_NO,
+                                    TM.SPEC_ID,
+                                    TM.LINE_ID,
+                                    OUT_LENGTH,
+                                    TM.BATCH_NO
+                               FROM QINSEN.INST_TUMO TM
+                              WHERE TM.ORDER_NO IS NOT NULL
+                                AND SUBSTR(TM.BATCH_NO, 1, 1) != 'E'
+                                AND LENGTH(TM.ORDER_NO) &gt; 10
+                                AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;=
+                                    #productDtStart#
+                                AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;=
+                                    #productDtEnd#
+                                  <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>) TM
+                       LEFT JOIN (SELECT PVA.*,
+                                        TM.OUT_LENGTH,
+                                        PVA.C51_WEIGHT / 1000 / TM.OUT_LENGTH C51_METER,
+                                        PVA.USED / TM.OUT_LENGTH USED_METER,
+                                        PVA.PVA165_WEIGHT / TM.OUT_LENGTH PVA165_METER,
+                                        PVA.PVA205_WEIGHT / TM.OUT_LENGTH PVA205_METER,
+                                        PVA.PVA540_WEIGHT / TM.OUT_LENGTH PVA540_METER
+                                   FROM (SELECT PVA.ORDER_NO,
+                                                PVA.LINE_ID,
+                                                PVA.SPEC_ID,
+                                                SUM(PVA.C51_WEIGHT) C51_WEIGHT,
+                                                SUM(PVA.USED) USED,
+                                                SUM(DECODE(PVA.PVA,
+                                                           'PVA-165',
+                                                           PVA_WEIGHT,
+                                                           0)) PVA165_WEIGHT,
+                                                SUM(DECODE(PVA.PVA,
+                                                           'PVA-205',
+                                                           PVA_WEIGHT,
+                                                           0)) PVA205_WEIGHT,
+                                                SUM(DECODE(PVA.PVA,
+                                                           'PVA540',
+                                                           PVA_WEIGHT,
+                                                           0)) PVA540_WEIGHT
+                                           FROM (SELECT H.PVA,
+                                                        LST.TM_BATCH_NO,
+                                                        LST.C51,
+                                                        LST.USED,
+                                                        LST.USED *
+                                                        DECODE(H.PVA,
+                                                               'PVA-165',
+                                                               0.01,
+                                                               'PVA-205',
+                                                               0.01,
+                                                               'PVA540',
+                                                               0.02,
+                                                               '0.01') PVA_WEIGHT,
+                                                        LST.USED *
+                                                        DECODE(H.PVA,
+                                                               'PVA-165',
+                                                               0.01,
+                                                               'PVA-205',
+                                                               0.02,
+                                                               'PVA540',
+                                                               0.015,
+                                                               '0.01') + LST.C51 C51_WEIGHT,
+                                                        LST.TM_BATCH_NO,
+                                                        TM.ORDER_NO,
+                                                        TM.SPEC_ID,
+                                                        TM.LINE_ID
+                                                   FROM KS_DIAPHRAGM_MAKE_PVA_LIST LST
+                                                   LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
+                                                     ON LST.RELATION_ID = H.ID
+                                                   LEFT JOIN QINSEN.INST_TUMO TM
+                                                     ON TM.BATCH_NO =
+                                                        LST.TM_BATCH_NO
+                                                  WHERE LST.TM_BATCH_NO IS NOT NULL
+                                                    AND TM.ORDER_NO IS NOT NULL
+                                                    AND SUBSTR(TM.BATCH_NO, 1, 1) != 'E'
+                                                    AND LENGTH(TM.ORDER_NO) &gt; 10) PVA
+                                          GROUP BY PVA.ORDER_NO,
+                                                   PVA.LINE_ID,
+                                                   PVA.SPEC_ID) PVA
+                                   LEFT JOIN (SELECT TM.ORDER_NO,
+                                                    TM.SPEC_ID,
+                                                    TM.LINE_ID,
+                                                    SUM(TM.OUT_LENGTH) OUT_LENGTH
+                                               FROM QINSEN.INST_TUMO TM
+                                              WHERE TM.ORDER_NO IS NOT NULL
+                                                AND SUBSTR(TM.BATCH_NO, 1, 1) != 'E'
+                                                AND LENGTH(TM.ORDER_NO) &gt; 10
+                                              GROUP BY TM.ORDER_NO,
+                                                       TM.SPEC_ID,
+                                                       TM.LINE_ID) TM
+                                     ON TM.ORDER_NO = PVA.ORDER_NO
+                                    AND TM.SPEC_ID = PVA.SPEC_ID
+                                    AND TM.LINE_ID = PVA.LINE_ID) PVA
+                         ON TM.ORDER_NO = PVA.ORDER_NO
+                        AND TM.SPEC_ID = PVA.SPEC_ID
+                        AND TM.LINE_ID = PVA.LINE_ID
+                       LEFT JOIN QINSEN.BASE_PROD_LINE PL
+                         ON PL.LINE_ID = TM.LINE_ID
+                       LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                         ON PMS.MATER_SPEC_ID = TM.SPEC_ID
+                       LEFT JOIN (SELECT T1.LINE,
+                                        T1.MPTYPE,
+                                        MIN(T1.MATER11) C51,
+                                        MIN(T1.MATER14) PVA165,
+                                        MIN(T1.MATER13) PVA205,
+                                        MIN(T1.MATER12) PVA540
+                                   FROM KS_BASE_MP_BOM T1
+                                  GROUP BY T1.LINE, T1.MPTYPE) BM
+                         ON BM.LINE = PL.LINE_CODE
+                        AND BM.MPTYPE = PMS.MATER_SPEC_NAME) PVA
+            ON TRGH.BATCH_NO = PVA.BATCH_NO
+          LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+            ON PMS.MATER_SPEC_ID = TRGH.SPEC_ID
+          LEFT JOIN QINSEN.BASE_PROD_LINE PL
+            ON PL.LINE_ID = TRGH.LINE_ID) T1
+   ORDER BY t1.batch_no
+  </select>
+    <select id="queryWater" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  SELECT T1.BATCH_NO   AS "batchNo",
+  decode(t1.prod_flag_id,'300027', '量产', '300028', '实验', '300140', '试量产','') "prodFlagName",
+       T1.OUT_LENGTH AS "outLength",
+       T1.ORDER_NO   AS "orderNo",
+       T1.PLAN_NO    AS "planNo",
+       T1.LINE_ID    AS "lineId",
+       T1.LINE       AS "line",
+       T1.SPEC_ID    AS "specId",
+       T1.SPEC_NAME  AS "specName",
+       T1.C21_STD    AS "c21Std",
+       T1.C21_WEIGHT AS "c21Weight",
+       T1.C22_STD    AS "c22Std",
+       T1.C22_WEIGHT AS "c22Weight",
+       T1.C24_STD    AS "c24Std",
+       T1.C24_WEIGHT AS "c24Weight",
+       T1.C29_STD    AS "c29Std",
+       T1.C29_WEIGHT AS "c29Weight"
+       from
+	(SELECT TM.BATCH_NO,tm.prod_flag_id,
+       TM.OUT_LENGTH,
+       TM.ORDER_NO,
+       TM.PLAN_NO,
+       tm.line_ID,
+       tm.spec_ID,
+       PL.LINE_CODE LINE,
+       PMS.MATER_SPEC_NAME SPEC_NAME,
+       BM.C21 / 1000 * TM.OUT_LENGTH C21_STD,
+        nvl(WT.C21_METER * TM.OUT_LENGTH,0) + nvl(WT2.C21_METER * TM.OUT_LENGTH,0) +
+               NVL(C21.WEIGHT, 0) C21_WEIGHT,
+               BM.C22 / 1000 * TM.OUT_LENGTH C22_STD,
+               nvl(WT.C22_METER * TM.OUT_LENGTH,0) + nvl(WT2.C22_METER * TM.OUT_LENGTH,0) +
+               NVL(C22.WEIGHT, 0) C22_WEIGHT,
+               BM.C24 / 1000 * TM.OUT_LENGTH C24_STD,
+               nvl(WT.C24_METER * TM.OUT_LENGTH,0) + nvl(WT2.C24_METER * TM.OUT_LENGTH,0) +
+               NVL(C24.WEIGHT, 0) C24_WEIGHT,
+               BM.C29 / 1000 * TM.OUT_LENGTH C29_STD,
+               nvl(WT.C29_METER * TM.OUT_LENGTH,0) + nvl(WT2.C29_METER * TM.OUT_LENGTH,0) +
+               NVL(C29.WEIGHT, 0) C29_WEIGHT
+  FROM QINSEN.INST_TUMO TM
+
+  LEFT JOIN (SELECT T.BATCH_ID, SUM(T.WEIGHT)/1000 WEIGHT
+               FROM KS_DIAPHRAGM_WATER_LIQUID T
+              WHERE T.ITEM = 'C21'
+              GROUP BY T.BATCH_ID) C21
+    ON C21.BATCH_ID = TM.RECORD_ID
+  LEFT JOIN (SELECT T.BATCH_ID, SUM(T.WEIGHT)/1000 WEIGHT
+               FROM KS_DIAPHRAGM_WATER_LIQUID T
+              WHERE T.ITEM = 'C22'
+              GROUP BY T.BATCH_ID) C22
+    ON C22.BATCH_ID = TM.RECORD_ID
+  LEFT JOIN (SELECT T.BATCH_ID, SUM(T.WEIGHT)/1000 WEIGHT
+               FROM KS_DIAPHRAGM_WATER_LIQUID T
+              WHERE T.ITEM = 'C24'
+              GROUP BY T.BATCH_ID) C24
+    ON C24.BATCH_ID = TM.RECORD_ID
+  LEFT JOIN (SELECT T.BATCH_ID, SUM(T.WEIGHT)/1000 WEIGHT
+               FROM KS_DIAPHRAGM_WATER_LIQUID T
+              WHERE T.ITEM = 'C29'
+              GROUP BY T.BATCH_ID) C29
+    ON C29.BATCH_ID = TM.RECORD_ID
+  LEFT JOIN (SELECT H.BATCH_NO,
+                    H.WATERTYPE,
+                    H.MPTYPE,
+                    H.LINE,
+                    NVL(WT.WATER_LENGTH, 0) WATER_LENGTH,
+                    NVL(WT2.WATER_LENGTH2, 0) WATER_LENGTH2,
+                    NVL(WT.WATER_LENGTH, 0) + NVL(WT2.WATER_LENGTH2, 0) QUATITY,
+                    T.C21_REALITY,
+                    T.C22_REALITY,
+                    T.C24_REALITY,
+                    T.C29_REALITY,
+                     T.C21_REALITY /
+                           (1000 * DECODE(NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0),
+                                          0,
+                                          10000000000,
+                                          NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0)))
+                           
+                           C21_METER,
+                           T.C22_REALITY /
+                           (1000 * DECODE(NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0),
+                                          0,
+                                          10000000000,
+                                          NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0))) C22_METER,
+                           T.C24_REALITY /
+                           (1000 * DECODE(NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0),
+                                          0,
+                                          10000000000,
+                                          NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0))) C24_METER,
+                           T.C29_REALITY /
+                           (1000 * DECODE(NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0),
+                                          0,
+                                          10000000000,
+                                          NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0))) C29_METER
+               FROM (SELECT LST.RELATION_ID,
+                            SUM(C21_REALITY) C21_REALITY,
+                            SUM(C22_REALITY) C22_REALITY,
+                            SUM(C24_REALITY) C24_REALITY,
+                            SUM(C29_REALITY) C29_REALITY
+                       FROM KS_QUALITY_MP_TEST_WATER_LIST LST
+                      GROUP BY LST.RELATION_ID) T
+               LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD H
+                 ON T.RELATION_ID = H.ID
+               LEFT JOIN (SELECT NVL(SUM(T.OUT_LENGTH), 0) WATER_LENGTH,
+                                T.WATER_BATCH_NO
+                           FROM QINSEN.INST_TUMO T
+                          WHERE T.WATER_BATCH_NO IS NOT NULL
+                            AND EXISTS
+                          (SELECT 1
+                                   FROM KS_QUALITY_MP_TEST_WATER_HEAD WH
+                                  WHERE WH.BATCH_NO = T.WATER_BATCH_NO
+                                    AND WH.WATERTYPE = '水相液')
+                          GROUP BY T.WATER_BATCH_NO) WT
+                 ON WT.WATER_BATCH_NO = H.BATCH_NO
+               LEFT JOIN (SELECT NVL(SUM(T.OUT_LENGTH), 0) WATER_LENGTH2,
+                                T.WATER_BATCH_NO2 WATER_BATCH_NO
+                           FROM QINSEN.INST_TUMO T
+                          WHERE T.WATER_BATCH_NO2 IS NOT NULL
+                            AND EXISTS
+                          (SELECT 1
+                                   FROM KS_QUALITY_MP_TEST_WATER_HEAD WH
+                                  WHERE WH.BATCH_NO = T.WATER_BATCH_NO2
+                                    AND WH.WATERTYPE = '水相补充液')
+                          GROUP BY T.WATER_BATCH_NO2) WT2
+                 ON WT2.WATER_BATCH_NO = H.BATCH_NO
+              WHERE H.WATERTYPE IN ('水相液', '水相补充液')
+                AND H.BATCH_NO IN (SELECT TM.WATER_BATCH_NO
+                                     FROM QINSEN.INST_TUMO TM
+                                    WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;=
+                                          #productDtStart#
+                                      AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;=
+                                          #productDtEnd#
+                                       <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>
+                                   UNION ALL
+                                   SELECT TM.WATER_BATCH_NO2
+                                     FROM QINSEN.INST_TUMO TM
+                                    WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;=
+                                          #productDtStart#
+                                      AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;=
+                                          #productDtEnd#
+                                    <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>      
+                                          
+                                          )) WT
+
+    ON TM.WATER_BATCH_NO = WT.BATCH_NO
+
+  LEFT JOIN (SELECT T1.LINE,
+                    T1.MPTYPE,
+                    MIN(T1.MATER7) C21,
+                    MIN(T1.MATER6) C22,
+                    MIN(T1.MATER17) C24,
+                    MIN(T1.MATER8) C29
+               FROM KS_BASE_MP_BOM T1
+              GROUP BY T1.LINE, T1.MPTYPE) BM
+    ON BM.LINE = WT.LINE
+   AND BM.MPTYPE = WT.MPTYPE
+
+  LEFT JOIN (SELECT H.BATCH_NO,
+                    H.WATERTYPE,
+                    H.MPTYPE,
+                    H.LINE,
+                    NVL(WT.WATER_LENGTH, 0) WATER_LENGTH,
+                    NVL(WT2.WATER_LENGTH2, 0) WATER_LENGTH2,
+                    NVL(WT.WATER_LENGTH, 0) + NVL(WT2.WATER_LENGTH2, 0) QUATITY,
+                    T.C21_REALITY,
+                    T.C22_REALITY,
+                    T.C24_REALITY,
+                    T.C29_REALITY,
+                     T.C21_REALITY /
+                           (1000 * DECODE(NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0),
+                                          0,
+                                          10000000000,
+                                          NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0)))
+                           
+                           C21_METER,
+                           T.C22_REALITY /
+                           (1000 * DECODE(NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0),
+                                          0,
+                                          10000000000,
+                                          NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0))) C22_METER,
+                           T.C24_REALITY /
+                           (1000 * DECODE(NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0),
+                                          0,
+                                          10000000000,
+                                          NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0))) C24_METER,
+                           T.C29_REALITY /
+                           (1000 * DECODE(NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0),
+                                          0,
+                                          10000000000,
+                                          NVL(WT.WATER_LENGTH, 0) +
+                                          NVL(WT2.WATER_LENGTH2, 0))) C29_METER
+               FROM (SELECT LST.RELATION_ID,
+                            SUM(C21_REALITY) C21_REALITY,
+                            SUM(C22_REALITY) C22_REALITY,
+                            SUM(C24_REALITY) C24_REALITY,
+                            SUM(C29_REALITY) C29_REALITY
+                       FROM KS_QUALITY_MP_TEST_WATER_LIST LST
+                      GROUP BY LST.RELATION_ID) T
+               LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD H
+                 ON T.RELATION_ID = H.ID
+               LEFT JOIN (SELECT NVL(SUM(T.OUT_LENGTH), 0) WATER_LENGTH,
+                                T.WATER_BATCH_NO
+                           FROM QINSEN.INST_TUMO T
+                          WHERE T.WATER_BATCH_NO IS NOT NULL
+                            AND EXISTS
+                          (SELECT 1
+                                   FROM KS_QUALITY_MP_TEST_WATER_HEAD WH
+                                  WHERE WH.BATCH_NO = T.WATER_BATCH_NO
+                                    AND WH.WATERTYPE = '水相液')
+                          GROUP BY T.WATER_BATCH_NO) WT
+                 ON WT.WATER_BATCH_NO = H.BATCH_NO
+               LEFT JOIN (SELECT NVL(SUM(T.OUT_LENGTH), 0) WATER_LENGTH2,
+                                T.WATER_BATCH_NO2 WATER_BATCH_NO
+                           FROM QINSEN.INST_TUMO T
+                          WHERE T.WATER_BATCH_NO2 IS NOT NULL
+                            AND EXISTS
+                          (SELECT 1
+                                   FROM KS_QUALITY_MP_TEST_WATER_HEAD WH
+                                  WHERE WH.BATCH_NO = T.WATER_BATCH_NO2
+                                    AND WH.WATERTYPE = '水相补充液')
+                          GROUP BY T.WATER_BATCH_NO2) WT2
+                 ON WT2.WATER_BATCH_NO = H.BATCH_NO
+              WHERE H.WATERTYPE IN ('水相液', '水相补充液')
+                AND H.BATCH_NO IN (SELECT TM.WATER_BATCH_NO
+                                     FROM QINSEN.INST_TUMO TM
+                                    WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;=
+                                          #productDtStart#
+                                      AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;=
+                                          #productDtEnd#
+                                       <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>
+                                   UNION ALL
+                                   SELECT TM.WATER_BATCH_NO2
+                                     FROM QINSEN.INST_TUMO TM
+                                    WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;=
+                                          #productDtStart#
+                                      AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;=
+                                          #productDtEnd#
+                                     <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>
+                                          
+                                          )) WT2
+
+    ON TM.WATER_BATCH_NO2 = WT2.BATCH_NO
+    
+    
+    LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = TM.SPEC_ID
+  LEFT JOIN QINSEN.BASE_PROD_LINE PL
+    ON PL.LINE_ID = TM.LINE_ID
+    
+ WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+   <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>
+	) t1
+   ORDER BY t1.batch_no
+  </select>
+    <select id="queryOil" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  	SELECT T1.BATCH_NO   AS "batchNo",
+  	decode(t1.prod_flag_id,'300027', '量产', '300028', '实验', '300140', '试量产','') "prodFlagName",
+       T1.OUT_LENGTH AS "outLength",
+       T1.ORDER_NO   AS "orderNo",
+       T1.PLAN_NO    AS "planNo",
+       T1.LINE_ID    AS "lineId",
+       T1.LINE       AS "line",
+       T1.SPEC_ID    AS "specId",
+       T1.SPEC_NAME  AS "specName",
+       T1.C41_STD    AS "c41Std",
+       T1.C41_WEIGHT AS "c41Weight",
+       T1.C42_STD    AS "c42Std",
+       T1.C42_WEIGHT AS "c42Weight"
+  FROM (SELECT TM.BATCH_NO,TM.prod_flag_id,
+               TM.OUT_LENGTH,
+               TM.ORDER_NO,
+               TM.PLAN_NO,
+               TM.LINE_ID,
+               TM.SPEC_ID,
+               PL.LINE_CODE LINE,
+               PMS.MATER_SPEC_NAME SPEC_NAME,
+               BM.C41 / 1000 * TM.OUT_LENGTH C41_STD,
+               C41_METER * TM.OUT_LENGTH C41_WEIGHT,
+               BM.C42 / 1000 * TM.OUT_LENGTH C42_STD,
+               C42_METER * TM.OUT_LENGTH C42_WEIGHT
+          FROM QINSEN.INST_TUMO TM
+          LEFT JOIN QINSEN.BASE_PROD_LINE PL
+            ON PL.LINE_ID = TM.LINE_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+            ON PMS.MATER_SPEC_ID = TM.SPEC_ID
+          LEFT JOIN (SELECT T1.LINE,
+                           T1.MPTYPE,
+                           MIN(T1.MATER9) C41,
+                           MIN(T1.MATER10) C42
+                      FROM KS_BASE_MP_BOM T1
+                     GROUP BY T1.LINE, T1.MPTYPE) BM
+            ON BM.LINE = PL.LINE_CODE
+           AND BM.MPTYPE = PMS.MATER_SPEC_NAME
+          LEFT JOIN (SELECT OIL.ORDER_NO,
+                           OIL.LINE,
+                           OIL.SPEC_NAME,
+                           OIL.C41_REALITY,
+                           OIL.C42_REALITY,
+                           TM.OUT_LENGTH,
+                           NVL(OIL.C41_REALITY, 0) /
+                           NVL(TM.OUT_LENGTH, 1000000000) C41_METER,
+                           NVL(OIL.C42_REALITY, 0) /
+                           NVL(TM.OUT_LENGTH, 1000000000) / 1000 C42_METER
+                      FROM (SELECT SUM(C41_REALITY) C41_REALITY,
+                                   SUM(C42_REALITY) C42_REALITY,
+                                   ORDER_NO,
+                                   LINE,
+                                   SPEC_NAME
+                              FROM (SELECT TM.ORDER_NO,
+                                           PL.LINE_CODE        LINE,
+                                           PMS.MATER_SPEC_NAME SPEC_NAME,
+                                           OL.C41_REALITY,
+                                           OL.C42_REALITY
+                                      FROM (SELECT OIL.TM_BATCH_NO,
+                                                   SUM(OIL.C41_REALITY) C41_REALITY,
+                                                   SUM(OIL.C42_REALITY) C42_REALITY
+                                              FROM (SELECT H.TM_BATCH_NO,
+                                                           LST.C41_REALITY,
+                                                           LST.C42_REALITY
+                                                      FROM (select * from KS_QUALITY_MP_TEST_OIL_HEAD where 1=1 and nvl(status,1) = 1) H
+                                                      LEFT JOIN (SELECT SUM(T.C41_REALITY) C41_REALITY,
+                                                                       SUM(T.C42_REALITY) C42_REALITY,
+                                                                       T.RELATION_ID
+                                                                  FROM KS_QUALITY_MP_TEST_OIL_LIST T
+                                                                 GROUP BY T.RELATION_ID) LST
+                                                        ON H.ID =
+                                                           LST.RELATION_ID) OIL
+                                             GROUP BY OIL.TM_BATCH_NO) OL
+                                      LEFT JOIN QINSEN.INST_TUMO TM
+                                        ON OL.TM_BATCH_NO = TM.BATCH_NO
+                                      LEFT JOIN QINSEN.BASE_PROD_LINE PL
+                                        ON PL.LINE_ID = TM.LINE_ID
+                                      LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                                        ON PMS.MATER_SPEC_ID = TM.SPEC_ID)
+                             GROUP BY ORDER_NO, LINE, SPEC_NAME) OIL
+                      LEFT JOIN (SELECT SUM(OUT_LENGTH) OUT_LENGTH,
+                                       ORDER_NO,
+                                       LINE,
+                                       SPEC_NAME
+                                  FROM (SELECT TM.BATCH_NO,
+                                               TM.OUT_LENGTH,
+                                               TM.ORDER_NO,
+                                               TM.LINE_ID,
+                                               TM.SPEC_ID,
+                                               PL.LINE_CODE        LINE,
+                                               PMS.MATER_SPEC_NAME SPEC_NAME
+                                          FROM QINSEN.INST_TUMO TM
+                                          LEFT JOIN QINSEN.BASE_PROD_LINE PL
+                                            ON PL.LINE_ID = TM.LINE_ID
+                                          LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                                            ON PMS.MATER_SPEC_ID = TM.SPEC_ID)
+                                 GROUP BY ORDER_NO, LINE, SPEC_NAME) TM
+                        ON OIL.ORDER_NO = TM.ORDER_NO
+                       AND OIL.LINE = TM.LINE
+                       AND OIL.SPEC_NAME = TM.SPEC_NAME
+                     ORDER BY ORDER_NO, LINE, SPEC_NAME) OIL
+            ON OIL.ORDER_NO = TM.ORDER_NO
+           AND OIL.LINE = PL.LINE_CODE
+           AND OIL.SPEC_NAME = PMS.MATER_SPEC_NAME
+         WHERE TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+           AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+           <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>
+								   ) T1
+  	
+  
+  ORDER BY t1.batch_no
+  </select>
+    <select id="queryZmy" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  
+  SELECT T1.BATCH_NO   AS "batchNo",
+  decode(t1.prod_flag_id,'300027', '量产', '300028', '实验', '300140', '试量产','') "prodFlagName",
+  
+       T1.OUT_LENGTH AS "outLength",
+       T1.ORDER_NO   AS "orderNo",
+       T1.PLAN_NO    AS "planNo",
+       T1.LINE_ID    AS "lineId",
+       T1.LINE       AS "line",
+       T1.SPEC_ID    AS "specId",
+       T1.SPEC_NAME  AS "specName",
+       T1.C11_STD    AS "c11Std",
+       T1.C11_WEIGHT AS "c11Weight",
+       T1.C12_STD    AS "c12Std",
+       T1.C12_WEIGHT AS "c12Weight",
+       T1.C13_STD    AS "c13Std",
+       T1.C13_WEIGHT AS "c13Weight",
+       T1.C14_STD    AS "c14Std",
+       T1.C14_WEIGHT AS "c14Weight"
+  FROM (SELECT BATCH_NO,prod_flag_id,
+               ORDER_NO,
+               SPEC_ID,
+               LINE_ID,
+               PLAN_NO,
+               OUT_LENGTH,
+               LINE_CODE LINE,
+               MATER_SPEC_NAME SPEC_NAME,
+               REMAIN_WEIGHT,
+               USED_WEIGHT,
+               THEORY_AMOUNT,
+               OUT_LENGTH * C11 / 1000 C11_STD,
+               C11_PERCENT,
+               OUT_LENGTH * REMAIN_WEIGHT * C11_PERCENT / THEORY_AMOUNT C11_WEIGHT,
+               OUT_LENGTH * C12 / 1000 C12_STD,
+               C12_PERCENT,
+               OUT_LENGTH * REMAIN_WEIGHT * C12_PERCENT / THEORY_AMOUNT C12_WEIGHT,
+               OUT_LENGTH * C13 / 1000 C13_STD,
+               C13_PERCENT,
+               OUT_LENGTH * REMAIN_WEIGHT * C13_PERCENT / THEORY_AMOUNT C13_WEIGHT,
+               OUT_LENGTH * C14 / 1000 C14_STD,
+               C14_PERCENT,
+               OUT_LENGTH * REMAIN_WEIGHT * C14_PERCENT / THEORY_AMOUNT C14_WEIGHT
+          FROM (SELECT TM.BATCH_NO,tm.prod_flag_id,
+                       TM.ORDER_NO,
+                       TM.PLAN_NO,
+                       TM.LINE_ID,
+                       PL.LINE_CODE,
+                       TM.SPEC_ID,
+                       PMS.MATER_SPEC_NAME,
+                       TM.OUT_LENGTH,
+                       TM.DIMO_BATCH_NO,
+                       FX.BATCH_NO ZMY_BATCH_NO,
+                       ZM.THEORY_AMOUNT,
+                       ZM.DIMO_TYPE,
+                       FX.MPTYPE,
+                       ZM.RELEASE_AMOUNT RELEASE_WEIGHT,
+                       ROUND((NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                             NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)) / 1000 *
+                             (NVL(ZM.THEORY_AMOUNT, 0)),
+                             2) USED_WEIGHT,
+                       ROUND((NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                             NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)) / 1000 *
+                             (NVL(ZM.THEORY_AMOUNT, 0)),
+                             2) + ZM.RELEASE_AMOUNT REMAIN_WEIGHT,
+                       BM.MATER2 C11,
+                       BM.MATER3 C12,
+                       BM.MATER4 C13,
+                       BM.MATER5 C14,
+                       ROUND(NVL(BM.MATER2, 0) /
+                             DECODE((NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                                    NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)),
+                                    0,
+                                    10000000000,
+                                    NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                                    NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)),
+                             2)
+                       
+                       C11_PERCENT,
+                       ROUND(NVL(BM.MATER3, 0) /
+                             DECODE((NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                                    NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)),
+                                    0,
+                                    10000000000,
+                                    NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                                    NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)),
+                             2) C12_PERCENT,
+                       ROUND(NVL(BM.MATER4, 0) /
+                             DECODE((NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                                    NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)),
+                                    0,
+                                    10000000000,
+                                    NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                                    NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)),
+                             2) C13_PERCENT,
+                       ROUND(NVL(BM.MATER5, 0) /
+                             DECODE((NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                                    NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)),
+                                    0,
+                                    10000000000,
+                                    NVL(BM.MATER2, 0) + NVL(BM.MATER3, 0) +
+                                    NVL(BM.MATER4, 0) + NVL(BM.MATER5, 0)),
+                             2) C14_PERCENT
+                  FROM QINSEN.INST_TUMO TM
+                  LEFT JOIN QINSEN.BASE_PROD_LINE PL
+                    ON PL.LINE_ID = TM.LINE_ID
+                  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                    ON PMS.MATER_SPEC_ID = TM.SPEC_ID
+                  LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD ZM
+                    ON TM.DIMO_BATCH_NO = ZM.DIMO_BATCH_NO
+                  LEFT JOIN (SELECT T.BATCH_NO, T.MPTYPE, DICTNAME PSF_NAME
+                              FROM KS_PROD_DIAPHRAGM_MAKE_FIX T
+                              LEFT JOIN EOS_DICT_ENTRY T2
+                                ON T2.DICTID = T.PSF
+                               AND T2.DICTTYPEID = 'KS_PSF') FX
+                    ON FX.BATCH_NO = REGEXP_SUBSTR(REPLACE(REPLACE(ZM.ZMY_BATCH_NO,
+                                                                   ' ',
+                                                                   ','),
+                                                           '，',
+                                                           ','),
+                                                   '[^,]+',
+                                                   1,
+                                                   1)
+                  LEFT JOIN (SELECT MIN(T1.MATER2) MATER2,
+                                   MIN(T1.MATER3) MATER3,
+                                   MIN(T1.MATER4) MATER4,
+                                   MIN(T1.MATER5) MATER5,
+                                   T2.DMCODE,
+                                   T2.ZMCODE
+                              FROM KS_BASE_MP_BOM T1
+                              LEFT JOIN KS_BASE_ZM_DM_TM T2
+                                ON T1.MPTYPE = T2.MPTYPE
+                             GROUP BY T2.DMCODE, T2.ZMCODE) BM
+                    ON ZM.DIMO_TYPE = BM.DMCODE
+                   AND FX.MPTYPE = BM.ZMCODE
+                 WHERE 1 = 1
+                   <!--AND SUBSTR(TM.BATCH_NO, 1, 1) != 'E'-->
+                   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &gt;= #productDtStart#
+                   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+                   
+                   <isNotNull prepend="" property="lineId">AND TM.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="" property="specId">AND TM.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="" property="orderNo">AND TM.order_no like '%' || #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="batchNo">AND TM.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="" property="prodFlagId">AND TM.prod_Flag_Id = #prodFlagId#</isNotNull>
+                   
+                   )) T1
+  ORDER BY t1.batch_no
+  
+  </select>
+</sqlMap>

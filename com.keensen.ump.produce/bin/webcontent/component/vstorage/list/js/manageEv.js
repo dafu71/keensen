@@ -384,8 +384,8 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMonitorRe
 		var recordIds = [];
 		for (var i = 0; i < C.length; i++) {
 			var r = C[i];
-			var ngReasonName = r.data['ngReasonName'];
-			var exceptionType = r.data['exceptionType'];
+			var ngReasonName = r.data.ngReasonName;
+			var exceptionType = r.data.exceptionType;
 			if (Ext.isEmpty(ngReasonName)) {
 				Ext.Msg.alert("系统提示", "请选择质检不合格的记录！");
 				return;
@@ -394,10 +394,12 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMonitorRe
 				Ext.Msg.alert("系统提示", "请选择需班长处理的记录！");
 				return;
 			} else {
-				recordIds.push(r.data['recordId']);
+				recordIds.push(r.data.recordId);
 			}
 		}
 
+		if(recordIds.length == 0) return;
+		
 		var monitorRemark = '本次元件已送水测';
 		Ext.Msg.prompt('班长挑水测', '请输入', function(btn, text) {
 			if (btn == 'ok') {
@@ -448,17 +450,19 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMonitorDe
 		var recordIds = [];
 		for (var i = 0; i < C.length; i++) {
 			var r = C[i];
-			var exceptionType = r.data['exceptionType'];
+			var exceptionType = r.data.exceptionType;
 			if (exceptionType != '需班长处理') {
 				if (exceptionType == '超期停留' && uid != 'KS00524') {
 					Ext.Msg.alert("系统提示", "请选择需班长处理的记录！");
 					return;
 				}
 				
-			} else {
-				recordIds.push(r.data['recordId']);
-			}
+			} 
+			recordIds.push(r.data.recordId);
+			
 		}
+		
+		if(recordIds.length == 0) return;
 		this.monitorDealWindow.items.items[0].form.reset();
 		this.monitorDealWindow.recordIds.setValue(recordIds.join(","));
 		this.monitorDealWindow.show();

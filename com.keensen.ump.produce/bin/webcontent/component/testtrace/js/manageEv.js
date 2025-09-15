@@ -68,9 +68,21 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onScan = function() {
 	var prodSpecName = rec2.get('prodSpecName');
 	var prodSpecId = rec2.get('prodSpecId');
 	var sampleLength = rec2.get('sampleLength');
+	
+	
+	var sampleLengthLow = rec2.get('sampleLengthLow');
+	var sampleLengthUp = rec2.get('sampleLengthUp');
+	var info = '<p style="color:red;">型号' + prodSpecName + ',送样长度下限' + sampleLengthLow + ',长度上限' + sampleLengthUp + '</p>';
+		
 	this.inputPanel.prodSpecName.setValue(prodSpecName);
 	this.inputPanel.prodSpecId.setValue(prodSpecId);
 	this.inputPanel.sampleLength.setValue(sampleLength);
+	
+	this.inputPanel.info.setValue(info);
+	
+	var materSpecName = rec2.get('materSpecName');
+	this.inputPanel.materSpecName.setValue(materSpecName);
+	
 }
 
 com.keensen.ump.produce.component.testtraceMgr.prototype.onCalc = function() {
@@ -87,10 +99,11 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onCalc = function() {
 	if (Ext.isEmpty(testLength)) {
 		Ext.Msg.alert("系统提示", "试卷膜片长度不能为空！");
 		return;
+	}else{
+		var length = prodSpecName.indexOf('-4') > -1 ? 10 : 40.25;
+		var testAmount = Math.floor(testLength / length);
+		this.inputPanel.testAmount.setValue(testAmount);
 	}
-	var length = prodSpecName.indexOf('-4') > -1 ? 10 : 40.25;
-	var testAmount = Math.floor(testLength / length);
-	this.inputPanel.testAmount.setValue(testAmount);
 }
 
 com.keensen.ump.produce.component.testtraceMgr.prototype.onCalc2 = function() {
@@ -122,11 +135,47 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onSubmit = function() {
 
 	var arr = ['换产试卷', '正常试卷', '发货试卷', '生管试卷', '返厂试卷', '实验试卷'];
 	var testType = arr[obj.getRawValue()];
+	
+	
 
 	var prodSpecName = this.inputPanel.prodSpecName.getValue();
 	var prodSpecId = this.inputPanel.prodSpecId.getValue();
 	var testAmount = this.inputPanel.testAmount.getValue();
 	var testLength = this.inputPanel.testLength.getValue();
+	
+	//元件试卷类型不匹配
+	var materSpec = this.inputPanel.materSpecName.getValue();
+	materSpec = materSpec.substring(0,3);
+	materSpec = materSpec.replace(/[\d-]/g, ''); // 将所有数字和破折号替换为''	
+	
+	var prodSpec = prodSpecName.substring(0,4);
+	prodSpec = prodSpec.replace(/[\d-]/g, ''); // 将所有数字和破折号替换为''
+	
+	if(materSpec == 'SW' && prodSpec != 'SW'){
+		Ext.Msg.alert("系统提示", "元件试卷类型不匹配");
+		return;
+	}
+	
+	if(materSpec == 'NF' && prodSpec != 'NF'){
+		Ext.Msg.alert("系统提示", "元件试卷类型不匹配");
+		return;
+	}
+	
+	if(materSpec == 'BW' && prodSpec != 'BW'){
+		Ext.Msg.alert("系统提示", "元件试卷类型不匹配");
+		return;
+	}
+	
+	if(materSpec == 'HW' && prodSpec != 'BW'){
+		Ext.Msg.alert("系统提示", "元件试卷类型不匹配");
+		return;
+	}
+	
+	if(materSpec == 'ULP' && prodSpec != 'ULP' && prodSpec != 'XLP' && prodSpec != 'RO'){
+		Ext.Msg.alert("系统提示", "元件试卷类型不匹配");
+		return;
+	}
+	
 	if (!this.inputPanel.form.isValid()) {
 		return;
 	}
@@ -142,7 +191,8 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onSubmit = function() {
 		return;
 	}
 	
-
+	
+	
 	Ext.Ajax.request({
 				method : "post",
 				scope : this,

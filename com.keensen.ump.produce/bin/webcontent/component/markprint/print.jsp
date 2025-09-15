@@ -12,7 +12,7 @@
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
     String rootUrl = request.getRequestURL().toString();
-  	rootUrl = rootUrl.replace("/produce/component/markprint/index.jsp","");
+  	rootUrl = rootUrl.replace("/produce/component/markprint/print.jsp","");
 %>
 <html>
 <!-- 
@@ -29,6 +29,8 @@
 <js:load scriptPath="produce/component/markprint/js/printUi.js"/>
 <js:load scriptPath="produce/component/markprint/js/printEv.js"/>
 <script type="text/javascript">
+
+	var labelRootUrl = "<%=rootUrl %>";
   var rootUrl = "<%=rootUrl %>";
   var uid = "<%=uid %>";
   var listid = Ext.id();

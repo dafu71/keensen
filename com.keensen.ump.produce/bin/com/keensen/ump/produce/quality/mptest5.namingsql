@@ -82,7 +82,9 @@
 	
 	
 		 where 1=1
-		  <isNotNull prepend="and" property="id">t1.ID = #id#</isNotNull>
+		 
+		  <isNotNull prepend="and" property="notstep">t1.step not in ($notstep$)</isNotNull>
+        <isNotNull prepend="and" property="id">t1.ID = #id#</isNotNull>
         <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
         <isNotNull prepend="and" property="line">t1.line = #line#</isNotNull>
         <isNotNull prepend="and" property="mptype">t1.mptype = #mptype#</isNotNull>
@@ -226,7 +228,7 @@
               '配料',
               '生产使用') "stepName",2 iorder,'black' "color"
   FROM KS_QUALITY_MP_TEST_OIL_HEAD T
-  WHERE T.STEP IN ('first') 
+  WHERE T.STEP IN ('first') and nvl(t.status,1) = 1
   union
  SELECT '铸膜液' "materName",t.create_time,' ' "code",
        decode(t.machine,'A', '罗斯混料机A', 'B', '豪杰特混料机B', 'C', '豪杰特混料机C','') "line",
@@ -273,7 +275,7 @@
               '配料',
               '生产使用') "stepName",2 iorder,'black' "color"
   FROM KS_QUALITY_MP_TEST_OIL_HEAD T
-  WHERE T.STEP IN ('third')
+  WHERE T.STEP IN ('third') and nvl(t.status,1) = 1
 
   union
  SELECT '铸膜液' "materName",t.create_time,' ' "code",

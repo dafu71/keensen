@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.produce.component.order">
-    <select id="queryYxOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    <select id="queryYxOrder" parameterClass="java.util.HashMap" remapResults="true" resultClass="commonj.sdo.DataObject">
    	
-	SELECT T1.ID AS "id",T1.base_ID AS "baseId",
+	SELECT 
+	
+		decode(t1.label_drawing_code,null,yb.label_drawing_code,t1.label_drawing_code) "labelDrawingCode",
+	
+	
+	
+	T1.ID AS "id",T1.base_ID AS "baseId",T1.ID AS "orderId",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -11,7 +17,11 @@
        T1.UPDATE_USER_ID AS "updateUserId",
        T1.UPDATE_NAME AS "updateName",	
 		T1.SCFS              AS "scfs",T1.reserve1 "reserve1",T1.reserve2 "reserve2",
-       T1.BM                AS "bm",T1.template_Name                AS "templateName",
+       T1.BM                AS "bm",
+       
+       decode(T1.template_Name,null, 
+       (decode(substr(t1.order_no,1,2),'SG',SGSTD.MARK_DRAWING_CODE,T1.template_Name )),T1.template_Name) AS "templateName",
+       
        T1.SFFH              AS "sffh",
        T1.ORDER_TYPE        AS "orderType",
        T1.TYPE              AS "type",
@@ -51,19 +61,145 @@
        STD.A_GPD_CENTER "gpdCenterStd",
        STD.A_SALT_LOW_LIMIT "saltLowLimitStd",
        pms.blanking_size "blankingSize"
-       ,yb.lid "lidBase"
-       ,yb.mark "markBase"
-       ,yb.tape "tapeBase"
-       ,yb.box "boxBase"
-       ,yb.tray "trayBase"
-       ,yb.label "labelBase"
+       
+       ,
+       decode(t1.lid,null,
+       decode(substr(t1.order_no,1,2),'SG',sgstd.lid,nvl(yb.lid,t1.lid)),
+       t1.lid)
+        "lidBase",
+       
+       yb.color "color"
+       ,
+       
+       decode(t1.mark,null,
+       yb.mark,
+       t1.mark) "markBase"
+       
+       ,
+       
+       decode(substr(t1.order_no,1,2),'SG',sgstd.tape,yb.tape)
+       "tapeBase"       
+       ,
+       
+       decode(t1.box,null,
+       decode(substr(t1.order_no,1,2),'SG','公司标准',yb.box), 
+       t1.box)       
+       "boxBase"
+       
+       ,yb.bag "bagBase",yb.make_Label "makeLabelBase",
+       decode(yb.mark_drawing_code2,'单击旁边按钮选择图纸编号','',yb.mark_drawing_code2) "markDrawingCode2"
+       ,
+       decode(substr(t1.order_no,1,2),'SG','公司标准',yb.tray) "trayBase"
+             
+       ,
+       decode(t1.bq,null,
+       decode(substr(t1.order_no,1,2),'SG','公司标准',yb.label),
+       t1.bq)
+        "labelBase"
+       
+       
        ,yb.order_type "orderTypeBase",yb.prod_amount "prodAmount"
        ,nvl(chk.cnt,0) "checkCount"
        ,nvl(t1.reserve1,nvl(yb.spec_Name_Mark,t1.mater_spec_name2)) "specNameMark"
        
-       ,decode(t1.type,'家用膜',nvl(hchk.apply_amount,0),nvl(gchk.apply_amount,0)) "applyAmount"
+       ,yb.packing_Num "packingNum"
        
+       ,decode(t1.type,'家用膜',nvl(hchk.apply_amount,0),nvl(gchk.apply_amount,0)) "applyAmount",
+       
+       wstd.a_gpd_center "gpdAvg",wstd.a_salt_low_limit "saltAvg",
+       trim(yb.salt_Low) "saltLowBase",trim(yb.gpd_Low) "gpdLowBase",trim(yb.gpd_Up) "gpdUpBase"
+       
+        <isNotNull prepend="" property="homeType">,hcm.tm_batch_no "tumoBatchStr"</isNotNull>
   FROM KS_PROD_COMPONENT_YXORDER T1
+  
+  <!--生管订单-->
+   LEFT JOIN 
+   
+   ( SELECT PMS.MATER_SPEC_NAME,
+       T1.PROD_TYPE,
+       T1.LID,
+       T1.TAPE,
+       T1.LABEL_SIZE,
+       LB.LABEL_DRAWING_CODE,
+       LB.URL                      LABEL_URL,
+       T1.COVER_LABEL_SIZE,
+       CV.COVER_LABEL_DRAWING_CODE,
+       CV.URL                      COVER_LABEL_URL,
+       T1.BAG_SIZE,
+       T1.BAG_DRAWING_CODE,
+       T1.BOX_DRAWING_SIZE,
+       T1.BOX_DRAWING_CODE,
+       T1.BOX_MARK_SIZE,
+       MK.TEMPLATE_NAME MARK_DRAWING_CODE,
+       MK.URL                      MARK_URL,
+       T1.COUNT_PER_BOX,
+       T1.COUNT_PER_FLOOR,
+       T1.COUNT_FLOOR,
+       T1.TRAY_SIZE,
+       T1.SPEC_ID
+  FROM KS_BASE_APPEARANCE_STD T1
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON T1.SPEC_ID = PMS.MATER_SPEC_ID
+  LEFT JOIN 
+  (SELECT T1.TEMPLATE_NAME, T1.SPEC_NAME, T2.URL
+               FROM (SELECT MAX(T1.TEMPLATE_NAME) TEMPLATE_NAME, T3.SPEC_NAME
+                       FROM KS_COMPONENT_MARK_TEMPLATE T1
+                       LEFT JOIN KS_BASE_MARK_DRAWING T3
+                         ON T3.DRAWING_CODE = T1.TEMPLATE_NAME
+                     		AND t3.logo LIKE '%司标%'
+                      GROUP BY T3.SPEC_NAME) T1
+               LEFT JOIN KS_COMPONENT_MARK_TEMPLATE T2
+                 ON T1.TEMPLATE_NAME = T2.TEMPLATE_NAME
+             
+             ) MK
+    ON MK.SPEC_NAME = PMS.MATER_SPEC_NAME
+  LEFT JOIN (SELECT SPEC_NAME, LABEL_DRAWING_CODE, URL
+               FROM (SELECT T.SPEC_NAME,
+                            MAX(T.DRAWING_CODE) LABEL_DRAWING_CODE
+                       FROM KS_BASE_LABEL_DRAWING T
+                      WHERE T.LOGO = '公司标准'
+                        AND NVL(T.STATUS, 1) = 1
+                      GROUP BY T.SPEC_NAME) LD
+               LEFT JOIN (SELECT URL, DRAWING_CODE
+                           FROM KS_BASE_LABEL_DRAWING
+                          WHERE NVL(STATUS, 1) = 1) LD2
+                 ON LD.LABEL_DRAWING_CODE = LD2.DRAWING_CODE
+             
+             ) LB
+	    ON LB.SPEC_NAME = PMS.MATER_SPEC_NAME
+	
+	  LEFT JOIN (SELECT SPEC_NAME, COVER_LABEL_DRAWING_CODE, URL
+	               FROM (SELECT T.SPEC_NAME,
+	                            MAX(T.DRAWING_CODE) COVER_LABEL_DRAWING_CODE
+	                       FROM KS_BASE_LABEL_DRAWING T
+	                      WHERE T.LOGO LIKE '%司标%覆盖版%'
+	                        AND NVL(T.STATUS, 1) = 1
+	                      GROUP BY T.SPEC_NAME) LD
+	               LEFT JOIN (SELECT URL, DRAWING_CODE
+	                           FROM KS_BASE_LABEL_DRAWING
+	                          WHERE NVL(STATUS, 1) = 1) LD2
+	                 ON LD.COVER_LABEL_DRAWING_CODE = LD2.DRAWING_CODE) CV
+	    ON CV.SPEC_NAME = PMS.MATER_SPEC_NAME
+	) SGSTD
+       ON SGSTD.SPEC_ID = T1.MATER_SPEC_ID  
+  
+  
+  <isNotNull prepend="" property="homeType">left join 
+		      (SELECT order_no,prod_spec_id,wm_concat(batch_no) tm_batch_no from (
+				SELECT DISTINCT cm.order_no,cm.prod_spec_id,tm.batch_no
+				 from qinsen.inst_caidiemo cm
+				 LEFT JOIN qinsen.inst_tumo tm
+				 ON tm.record_id=cm.tumo_batch_id
+				 WHERE cm.order_no IS NOT NULL AND cm.prod_spec_id IS NOT NULL AND LENGTH(cm.order_no)&gt;=10)
+				GROUP BY order_no,prod_spec_id) hcm
+				on hcm.order_no = t1.order_no and hcm.prod_spec_id = t1.MATER_SPEC_Id</isNotNull>
+  
+  
+  left join (SELECT std.prod_spec_id,std.a_gpd_center,std.a_salt_low_limit from 
+	QINSEN.INST_PROD_WATER_STD std) wstd
+	on wstd.prod_spec_id = t1.MATER_SPEC_Id
+  
+  
   left join qinsen.PARA_MATER_SPEC pms
   on T1.MATER_SPEC_Id = pms.mater_spec_id
   left join QINSEN.INST_PROD_WATER_STD std 
@@ -120,7 +256,11 @@ GROUP BY order_no,prod_spec_name) gchk on gchk.order_no = t1.order_no
     
 	where 1=1
 	
-	<isNotNull prepend="and" property="homeType">nvl(T1.type,'家用膜') &lt;&gt; '工业膜'</isNotNull>
+	<!--包装任务选择订单查询--><isNotNull prepend="" property="packdutychoose">
+            <isNotNull prepend="and" property="rsProduceDtStart">to_char(rs.produce_dt,'yyyy-MM-dd HH24:mi:ss')  &gt;=  #rsProduceDtStart#</isNotNull>
+            <isNotNull prepend="and" property="rsProduceDtEnd">to_char(rs.produce_dt,'yyyy-MM-dd HH24:mi:ss')  &lt;=  #rsProduceDtEnd#</isNotNull>
+        </isNotNull>
+        <isNotNull prepend="and" property="homeType">T1.type = '家用膜'</isNotNull>
         <isNotNull prepend="and" property="templateName">T1.template_Name like '%' || #templateName# || '%'</isNotNull>
         <isEqual compareValue="Y" prepend="and" property="materSpecNotNull">T1.MATER_SPEC_Id is not null</isEqual>
         <isNotNull prepend="and" property="prodSpecId">T1.MATER_SPEC_Id = #prodSpecId#</isNotNull>

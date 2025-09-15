@@ -28,7 +28,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 		var store = new Ext.data.SimpleStore({
 					fields : ['id', 'name'],
 					data : [['1', '膜片AB仓'], ['2', '膜片C仓'], ['3', '膜片发货仓'],
-							['4', '试卷合格仓'], ['5', '半成品仓']]
+							['4', '试卷合格仓'], ['5', '半成品仓'], ['81', '返厂仓']]
 				});
 
 		this.storagecombo = new Ext.form.ComboBox({
@@ -77,7 +77,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 												 * ,{ xtype : 'storagecombobox',
 												 * hiddenName :
 												 * 'condition/storageId', anchor :
-												 * '75%', fieldLabel : '仓库' }
+												 * '95%', fieldLabel : '仓库' }
 												 */,	{
 								xtype : 'storageposcombobox',
 								hiddenName : 'condition/position',
@@ -87,17 +87,17 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								queryMode : 'local',
 								lastQuery : '',
 								editable : true,
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '库位'
 							}, {
 								xtype : 'mplinecombobox',
 								hiddenName : 'condition/lineId',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '生产线 '
 							}, {
 								xtype : 'mpspeccombobox',
 								hiddenName : 'condition/specId',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '膜片型号 '
 							}, {
 								xtype : 'displayfield',
@@ -106,22 +106,22 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 							}, {
 								xtype : 'supcombobox',
 								hiddenName : 'condition/supId',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '无纺布供应商'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/orderNo',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '订单号'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/planNo',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '计划单号'
 							}, {
 								xtype : 'mpperfcombobox',
 								hiddenName : 'condition/perfFlagId',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '膜片等级'
 							}, {
 								xtype : 'displayfield',
@@ -132,11 +132,11 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								colspan : 2,
 								name : 'condition/batchNoStr2',
 								emptyText : '多个批次请用逗号分隔，或一行一个批次',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '批号'
 							}, {
 								xtype : 'dictcombobox',
-								anchor : '75%',
+								anchor : '95%',
 								hiddenName : 'condition/ifChoice',
 								fieldLabel : '是否备货',
 								dictData : ABF_YESORNO,
@@ -147,7 +147,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								checked : true,
 								name : 'condition/notZero',
 								inputValue : 'Y',
-								anchor : '75%'
+								anchor : '95%'
 							}, {
 								xtype : 'displayfield',
 								height : '5',
@@ -158,7 +158,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 								fieldLabel : '报警',
 								ref : '../ifWarn',
 								hiddenName : 'condition/ifWarn',
-								anchor : '75%',
+								anchor : '95%',
 								colspan : 1,
 								emptyText : '--请选择--',
 								editable : false,

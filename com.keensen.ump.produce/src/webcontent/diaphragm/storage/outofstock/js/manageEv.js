@@ -65,10 +65,20 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.initEvent = fu
 						.findField("outofstock/stockAmount").getValue();
 		var amount = this.inputWindow.form
 						.findField("outofstock/amount").getValue();
+						
+		var type = this.inputWindow.type.getValue();
+		var storageId = this.inputWindow.storageId.getValue();
+		
+		if(type == '发货出库' && storageId != 3 ){
+			Ext.Msg.alert("系统提示", "请走膜片发货仓发货出库！");
+			return false;
+		}
+		
 		if(parseFloat(amount)>parseFloat(stockAmount)){
 			Ext.Msg.alert("系统提示", "出库数量大于库存无法出库！");
 			return false;
 		}
+		
 
 			}, this);
 

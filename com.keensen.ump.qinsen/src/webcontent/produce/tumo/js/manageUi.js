@@ -29,6 +29,20 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		this.initAddTroughLiquidWindow();
 
+		this.initWindow4LiquidAdjust();
+
+		this.initAddLiquidAdjustWindow();
+
+		this.initLiquidAdjustViewWindow();
+
+		this.initAddWaterAdjustWindow();
+
+		this.initWindow4WaterLiquid();
+
+		this.initAddWaterLiquidWindow();
+		
+		this.initEditWindow4C72Invalid();
+
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
 					batchNoControl : true,
@@ -54,6 +68,41 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.defectViewWindow = new com.keensen.ump.defectViewWindow({
 					id : 'tm-defectviewwindow'
 				});
+
+		this.liquidAdjustStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.qinsen.tumo.queryLiquidAdjust.biz.ext',
+					root : 'data',
+					autoLoad : false,
+					totalProperty : '',
+					baseParams : {
+						'condition/adjustState' : '待调整'
+
+					},
+					fields : [{
+								name : 'specId'
+							}, {
+								name : 'specName'
+							}, {
+								name : 'lineName'
+							}, {
+								name : 'lineId'
+							}, {
+								name : 'id'
+							}, {
+								name : 'item'
+							}, {
+								name : 'weight'
+							}, {
+								name : 'trough'
+							}, {
+								name : 'createTime'
+							}, {
+								name : 'operatorName'
+							}, {
+								name : 'reserve1'
+							}]
+				});
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -65,7 +114,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 210,
+					height : 200,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -242,6 +291,30 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								this.queryPanel.isCutOver.reset();
 							}
 						}
+					}, {
+
+						xtype : 'combo',
+						fieldLabel : '生产类型',
+						ref : '../prodFlagId',
+						hiddenName : 'condition/prodFlagId',
+						emptyText : '--请选择--',
+						anchor : '90%',
+						store : [[null, '全部'], ['300027', '量产'],
+								['300028', '实验'], ['300140', '试量产']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.prodFlagId.reset();
+							}
+						}
+					}, {
+						// fieldLabel : '不显示需生产<br>或入库为零',
+						xtype : 'checkbox',
+						boxLabel : '空头数大于10m',
+						// checked : true,
+						name : 'condition/ktAmountThan10',
+						inputValue : 'Y',
+						anchor : '90%'
 					}]
 				});
 
@@ -260,11 +333,19 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					iconCls : 'icon-application_form_magnify',
 					handler : this.replaceTroughInfo
 				});
+
 		this.queryPanel.addButton({
 					text : "多批号查询",
 					scope : this,
 					iconCls : 'icon-application_form_magnify',
 					handler : this.onQueryByBatchNos
+				});
+
+		this.queryPanel.addButton({
+					text : "工艺调整指令",
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.onQueryLiquidAdjust
 				});
 
 	}
@@ -355,11 +436,50 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								// hidden : uid != 'XXB',
 								handler : this.onTestC92
 							}, '->', '-', {
-								text : '漂洗液录入',
+								xtype : 'splitbutton',
+								text : '录入调整',
+
+								iconCls : 'icon-application_edit',
+								arrowAlign : 'bottom',
+								menu : [{
+											text : '录入水相调整',
+											scope : this,
+											iconCls : 'icon-application_edit',
+											handler : this.onWaterAdjust
+										}, {
+											text : '录入漂洗液',
+											scope : this,
+											iconCls : 'icon-application_edit',
+											handler : this.onTroughAdjust
+										}]
+							}, '->', '-', {
+								xtype : 'splitbutton',
+								text : '工艺调整',
+
+								iconCls : 'icon-application_edit',
+								arrowAlign : 'bottom',
+								menu : [{
+											text : '水相调整',
+											scope : this,
+											iconCls : 'icon-application_edit',
+											handler : this.onAdjustWater
+										}, {
+											text : '漂洗液调整',
+											scope : this,
+											iconCls : 'icon-application_edit',
+											handler : this.onAdjustLiquid
+										}, '-', {
+											text : '工艺调整记录',
+											scope : this,
+											iconCls : 'icon-application_form_magnify',
+											handler : this.onAdjustLiquidView
+										}]
+							}, '->', {
+								text : 'C72报废',
 								scope : this,
 								iconCls : 'icon-application_edit',
-								// hidden : uid != 'XXB',
-								handler : this.onTroughLiquid
+								// hidden : modifyFlag != 1,
+								handler : this.onC72Invalid
 							}]
 				});
 
@@ -412,6 +532,13 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'displayfield',
 						value : '合计标签数',
 						id : 'totalTagNumTxt'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : 'C72报废合计(kg):',
+						id : 'c72invalidtotal'
 					}],
 			hsPage : true,
 			id : 'produce-tumo-list',
@@ -440,11 +567,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 90,
 						dataIndex : 'qualifidLength'
 					}, {
-						header : '裁膜产出m',
+						header : '裁膜产出(m)',
 						width : 80,
 						dataIndex : 'caimoLength'
 					}, {
-						header : '不良m',
+						header : '不良(m)',
 						width : 50,
 						dataIndex : 'caimoLoss',
 						renderer : function(v, m, r, i) {
@@ -464,11 +591,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 80,
 						dataIndex : 'ktAmount'
 					}, {
-						header : '剩余可用长度',
+						header : '剩余可用长度(m)',
 						width : 80,
 						dataIndex : 'remainLength'
 					}, {
-						header : '底膜放卷长度',
+						header : '底膜放卷长度(m)',
 						width : 80,
 						dataIndex : 'dmUseLength'
 					}, {
@@ -517,6 +644,42 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : '水相补充液批次',
 						width : 100,
 						dataIndex : 'waterBatchNo2'
+					}, {
+						header : '水相液调整重量(g)',
+						width : 120,
+						dataIndex : 'waterLiquidWeight',
+						renderer : function(v, m, r, i) {
+							if (!Ext.isEmpty(v) && v > 0) {
+								var recordId = r.get('recordId');
+								var style = "<a style='text-decoration:none'";
+								var str = style
+										+ " href='javascript:viewWaterLiquid("
+										+ Ext.encode(recordId) + ");'>" + v
+										+ "</a>";
+
+								return str;
+							}
+						}
+					}, {
+						header : '漂洗液重量(kg)',
+						width : 100,
+						dataIndex : 'troughLiquidWeight',
+						renderer : function(v, m, r, i) {
+							if (!Ext.isEmpty(v) && v > 0) {
+								var recordId = r.get('recordId');
+								var style = "<a style='text-decoration:none'";
+								var str = style
+										+ " href='javascript:viewTroughLiquid("
+										+ Ext.encode(recordId) + ");'>" + v
+										+ "</a>";
+
+								return str;
+							}
+						}
+					}, {
+						header : 'PVA-母液(kg)',
+						width : 100,
+						dataIndex : 'pvaUsed'
 					}, {
 						header : '更换漂洗槽',
 						width : 100,
@@ -771,6 +934,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : 'C92浓度<br>判定时间',
 						width : 120,
 						dataIndex : 'c92time'
+					}, {
+						header : 'C72报废(kg)',
+						width : 120,
+						dataIndex : 'c72Invalid'
 					}],
 			store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.qinsen.tumo.queryRecordsByPage.biz.ext',
@@ -998,6 +1165,16 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'dmAmount'
 								}, {
 									name : 'c92time'
+								}, {
+									name : 'troughLiquidWeight'
+								}, {
+									name : 'waterLiquidWeight'
+								}, {
+									name : 'c90'
+								}, {
+									name : 'pvaUsed'
+								}, {
+									name : 'c72Invalid'
 								}]
 					})
 		})
@@ -1113,6 +1290,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									ref : '../../batchNo',
 									fieldLabel : '膜片批次',
 									allowBlank : false,
+									regex : /^[A-Za-z0-9]{13}$/,
 									anchor : '75%',
 									colspan : 1
 								}, {
@@ -1551,6 +1729,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									dataIndex : 'batchNo',
 									ref : '../../batchNo',
 									fieldLabel : '膜片批次',
+									regex : /^[A-Za-z0-9]{13}$/,
 									allowBlank : false,
 									readOnly : true,
 									anchor : '75%',
@@ -2689,6 +2868,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						fields : [{
 									xtype : 'textfield',
 									fieldLabel : '膜片批次',
+									regex : /^[A-Za-z0-9]{13}$/,
 									anchor : '95%',
 									allowBlank : false,
 									ref : '../../tumoBatchNo'
@@ -2906,6 +3086,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						fields : [{
 									xtype : 'textfield',
 									fieldLabel : '膜片批次',
+									regex : /^[A-Za-z0-9]{13}$/,
 									anchor : '95%',
 									allowBlank : false,
 									name : 'entity/batchNo',
@@ -3240,7 +3421,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						autoLoad : false,
 						totalProperty : '',
 						baseParams : {
-							'condition/state' : 1,
+							'condition/notstep' : '配料',
 							'condition/watertype' : '水相补充液'
 						},
 						fields : [{
@@ -3352,6 +3533,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						})
 	}
 
+	// 漂洗液录入
 	this.initWindow4TroughLiquid = function() {
 		var _this = this;
 
@@ -3361,10 +3543,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		this.listPanel4TroughLiquid = this.listPanel4TroughLiquid
 				|| new Ext.fn.ListPanel({
+					id : listPanel4TroughLiquidId,
 					region : 'center',
 					cls : 'custom-row-height', // 应用自定义的CSS类
 					viewConfig : {
-						forceFit : false
+						forceFit : true
 					},
 					tbar : [{
 								text : '新增',
@@ -3386,35 +3569,23 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								dataIndex : 'batchNo',
 								header : '膜片批次'
 							}, {
-								dataIndex : 'a21',
-								header : 'a21'
-							}, {
-								dataIndex : 'c22',
-								header : 'c22'
-							}, {
-								dataIndex : 'c24',
-								header : 'c24'
-							}, {
-								dataIndex : 'c51',
-								header : 'c51'
-							}, {
-								dataIndex : 'c71',
-								header : 'c71'
-							}, {
-								dataIndex : 'c72',
-								header : 'c72'
-							}, {
-								dataIndex : 'c92',
-								header : 'c92'
-							}, {
-								dataIndex : 'c93',
-								header : 'c93'
-							}, {
 								dataIndex : 'trough',
-								header : '漂洗槽'
+								header : '漂洗槽',
+								renderer : function(v, m, r, i) {
+									return v + '槽';
+								}
+							}, {
+								dataIndex : 'item',
+								header : '漂洗液项目'
+							}, {
+								dataIndex : 'weight',
+								header : '漂洗液重量(kg)'
+							}, {
+								dataIndex : 'reserve5',
+								header : '收卷米数(m)'
 							}, {
 								dataIndex : 'operatorName',
-								header : '下单人'
+								header : '记录人'
 							}, {
 								dataIndex : 'createTime',
 								header : '操作时间'
@@ -3422,7 +3593,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 					],
 					store : new Ext.data.JsonStore({
-						url : 'com.keensen.ump.qinsen.tumo.qaueryTroughLiquid.biz.ext',
+						url : 'com.keensen.ump.qinsen.tumo.queryTroughLiquid.biz.ext',
 						root : 'data',
 						autoLoad : false,
 						totalProperty : '',
@@ -3436,32 +3607,23 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}, {
 									name : 'id'
 								}, {
-									name : 'a21'
+									name : 'item'
 								}, {
-									name : 'c22'
-								}, {
-									name : 'c24'
-								}, {
-									name : 'c51'
-								}, {
-									name : 'c71'
-								}, {
-									name : 'c72'
-								}, {
-									name : 'c92'
-								}, {
-									name : 'c93'
+									name : 'weight'
 								}, {
 									name : 'trough'
 								}, {
 									name : 'createTime'
 								}, {
 									name : 'operatorName'
+								}, {
+									name : 'reserve5'
 								}]
 					})
 				})
 
 		this.window4TroughLiquid = this.window4TroughLiquid || new Ext.Window({
+					id : window4TroughLiquidId,
 					title : '漂洗液记录',
 					resizable : true,
 					minimizable : false,
@@ -3487,222 +3649,1252 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 	}
 
 	this.initAddTroughLiquidWindow = function() {
+		var _this = this;
+
+		this.itemStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['C22', 'C22'], ['C24', 'C24'], ['C51', 'C51'],
+							['C71', 'C71'], ['C72', 'C72']]
+				});
+
+		var selModel4AddTroughLiquid = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4AddTroughLiquid = this.listPanel4AddTroughLiquid
+				|| new Ext.fn.EditListPanel({
+
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					hsPage : false,
+					autoScroll : true,
+					clicksToEdit : 1,
+					selModel : selModel4AddTroughLiquid,
+
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4AddTroughLiquid, {
+								dataIndex : 'trough',
+								// sortable : true,
+								width : 100,
+								header : '漂洗槽',
+								renderer : function(v, m, r, i) {
+									return v + '槽';
+								}
+							}, {
+
+								dataIndex : 'item',
+								// sortable : true,
+								width : 100,
+								header : '漂洗液项目',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+										{
+											typeAhead : true,
+											typeAheadDelay : 100,
+											triggerAction : "all",
+											lazyRender : true,
+											minChars : 1,
+											mode : 'local',
+											lastQuery : '',
+											// allowBlank : false,
+											// mode : 'local',
+											emptyText : '--请选择--',
+											// lastQuery : '',
+											store : this.itemStore,
+											hiddenName : 'code',
+											valueField : 'name',
+											displayField : 'name',
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'weight',
+								// sortable : true,
+								width : 100,
+								header : '重量(kg)',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+
+											scope : this,
+											allowNegative : false,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'reserve5',
+								// sortable : true,
+								width : 100,
+								header : '收卷米数',
+								css : 'background:#c7c7b7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'operatorName',
+								// sortable : true,
+								width : 100,
+								header : '记录人',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+										// value : uname
+										}))
+
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.queryTroughLiquid4Add.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'trough'
+								}, {
+									name : 'item'
+								}, {
+									name : 'weight'
+								}, {
+									name : 'operatorName'
+								}, {
+									name : 'batchId'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'reserve5'
+								}]
+					})
+				})
 
 		this.addTroughLiquidWindow = this.addTroughLiquidWindow
-				|| new Ext.fn.FormWindow({
-					title : '新增漂洗液',
-					height : 600,
-					width : 800,
-					// itemCls:'required',
-					// style:'margin-top:10px',
+				|| new Ext.Window({
+					title : '新增漂洗液(<span style="color:red">请完整填写漂洗液项目、重量、记录人，不要求每条记录都填写)</span>',
 					resizable : true,
 					minimizable : false,
 					maximizable : true,
-					items : [{
-						xtype : 'inputpanel',
-						pgrid : this.listPanel4TroughLiquid,
-						columns : 1,
-						saveUrl : 'com.keensen.ump.qinsen.tumo.saveTroughLiquid.biz.ext',
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4AddTroughLiquid],
+					buttons : [{
+								text : "保存",
+								scope : this,
+								handler : this.onSaveTroughLiquid
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.addTroughLiquidWindow.hide();
+								}
+							}]
+
+				});
+
+	}
+
+	this.initWindow4LiquidAdjust = function() {
+		var _this = this;
+
+		var selModel4LiquidAdjust = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.listPanel4LiquidAdjust = this.listPanel4LiquidAdjust
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					cls : 'custom-row-height', // 应用自定义的CSS类
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : [{
+								text : '新增',
+								ref : '../addLiquidAdjust',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onAddLiquidAdjust
+							}, '-', {
+								text : '删除',
+								ref : '../delLiquidAdjust',
+								scope : this,
+								iconCls : 'icon-application_delete',
+								handler : this.onDelLiquidAdjust
+							}, '-', {
+								text : '打印',
+								// hidden:true,
+								ref : '../printLiquidAdjust',
+								scope : this,
+								iconCls : 'icon-printer',
+								handler : this.onPrintLiquidAdjust
+							}, '->', '-', {
+								text : '完成调整',
+								ref : '../excuteLiquidAdjust',
+								scope : this,
+								iconCls : 'icon-application_edit',
+								handler : this.onExcuteLiquidAdjust
+							}],
+					hsPage : false,
+					delUrl : 'com.keensen.ump.qinsen.tumo.deleteLiquidAdjust.biz.ext',
+					autoScroll : true,
+					selModel : selModel4LiquidAdjust,
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4LiquidAdjust, {
+								dataIndex : 'lineName',
+								header : '线别'
+							}, {
+								dataIndex : 'specName',
+								header : '膜片型号'
+							}, {
+								dataIndex : 'trough',
+								header : '调整类型',
+								renderer : function(v, m, r, i) {
+									var adjustType = r.get('adjustType');
+									if (adjustType == 'liquid')
+										return '漂洗' + v + '槽';
+									if (adjustType == 'water') {
+										var trough = r.get('trough');
+										return trough;
+									}
+
+								}
+							}, {
+								dataIndex : 'item',
+								header : '调整项目'
+							}, {
+								dataIndex : 'weight',
+								header : '重量',
+								renderer : function(v, m, r, i) {
+									var adjustType = r.get('adjustType');
+									if (adjustType == 'liquid')
+										return v + 'kg';
+									if (adjustType == 'water') {
+										var item = r.get('item');
+										if (item == 'RO水' || item == '水相液排料')
+											return v + 'kg'
+										else
+											return v + 'g';
+									}
+								}
+							}, {
+								dataIndex : 'operatorName',
+								header : '下单人'
+							}, {
+								dataIndex : 'createTime',
+								header : '下单时间'
+							}, {
+								dataIndex : 'reserve1',
+								header : '备注 '
+							}
+
+					],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.queryLiquidAdjust.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+							'condition/adjustState' : '待调整'
+
+						},
 						fields : [{
-									xtype : 'textfield',
-									fieldLabel : '膜片批次',
-									anchor : '95%',
-									allowBlank : false,
-									ref : '../../batchNo'
+									name : 'specId'
 								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
+									name : 'specName'
 								}, {
-									xtype : 'textfield',
-									fieldLabel : '漂洗槽',
-									anchor : '95%',
-									name : 'entity/trough',
-									allowBlank : false,
-									scope : this,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										}
+									name : 'lineName'
+								}, {
+									name : 'lineId'
+								}, {
+									name : 'id'
+								}, {
+									name : 'item'
+								}, {
+									name : 'weight'
+								}, {
+									name : 'trough'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'operatorName'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'adjustType'
+								}]
+					})
+				})
+
+		this.window4LiquidAdjust = this.window4LiquidAdjust || new Ext.Window({
+					title : '工艺调整指令',
+					id : window4LiquidAdjustId,
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4LiquidAdjust],
+					buttons : [{
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.window4LiquidAdjust.hide();
+								}
+							}]
+
+				});
+
+	}
+
+	this.initAddLiquidAdjustWindow = function() {
+		var _this = this;
+
+		this.itemStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['C22', 'C22'], ['C24', 'C24'], ['C51', 'C51'],
+							['C71', 'C71'], ['C72', 'C72']]
+				});
+
+		var selModel4AddLiquidAdjust = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4AddLiquidAdjust = this.listPanel4AddLiquidAdjust
+				|| new Ext.fn.EditListPanel({
+
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					hsPage : false,
+					autoScroll : true,
+					clicksToEdit : 1,
+					selModel : selModel4AddLiquidAdjust,
+					tbar : [{
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '生产线<span style="color:red">*</span>:'
+							}, {
+								xtype : 'linecombobox',
+								allowBlank : false,
+								ref : '../lineId',
+								prodTacheId : '100',
+								hiddenName : 'lineId',
+								anchor : '90%',
+								fieldLabel : '生产线'
+							}, {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '膜片型号<span style="color:red">*</span>:'
+							}, {
+								xtype : 'mpspeccombobox',
+								allowBlank : false,
+								ref : '../specId',
+								prodTacheId : '100',
+								hiddenName : 'specId',
+								anchor : '90%',
+								fieldLabel : '膜片型号'
+							}],
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4AddLiquidAdjust, {
+								dataIndex : 'trough',
+								// sortable : true,
+								width : 100,
+								header : '漂洗槽',
+								renderer : function(v, m, r, i) {
+									return v + '槽';
+								}
+							}, {
+
+								dataIndex : 'item',
+								// sortable : true,
+								width : 100,
+								header : '漂洗液项目',
+								css : 'background:#c7c7a7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+										{
+											typeAhead : true,
+											typeAheadDelay : 100,
+											triggerAction : "all",
+											lazyRender : true,
+											minChars : 1,
+											mode : 'local',
+											lastQuery : '',
+											// allowBlank : false,
+											// mode : 'local',
+											emptyText : '--请选择--',
+											// lastQuery : '',
+											store : this.itemStore,
+											hiddenName : 'code',
+											valueField : 'name',
+											displayField : 'name',
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'weight',
+								// sortable : true,
+								width : 100,
+								header : '重量(kg)',
+								css : 'background:#c7c7b7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+
+											scope : this,
+											allowNegative : false,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'operatorName',
+								// sortable : true,
+								width : 100,
+								header : '下单人',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+										// value : uname
+										}))
+
+							}, {
+
+								dataIndex : 'reserve1',
+								// sortable : true,
+								width : 300,
+								header : '备注',
+								css : 'background:#c7c7d7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+										// value : uname
+										}))
+
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.queryLiquidAdjust4Add.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'trough'
+								}, {
+									name : 'item'
+								}, {
+									name : 'weight'
+								}, {
+									name : 'operatorName'
+								}]
+					})
+				})
+
+		this.addLiquidAdjustWindow = this.addLiquidAdjustWindow
+				|| new Ext.Window({
+					title : '新增漂洗液调整(<span style="color:red">请完整填写漂洗液项目、重量、下单人，不要求每条记录都填写)</span>',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4AddLiquidAdjust],
+					buttons : [{
+								text : "保存",
+								scope : this,
+								handler : this.onSaveLiquidAdjust
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.addLiquidAdjustWindow.hide();
+								}
+							}]
+
+				});
+
+	}
+
+	this.initLiquidAdjustViewWindow = function() {
+		var _this = this;
+
+		var selModel4LiquidAdjustView = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4LiquidAdjustView = this.listPanel4LiquidAdjustView
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : true,
+					selModel : selModel4LiquidAdjustView,
+					delUrl : '111.biz.ext',
+					columns : [new Ext.grid.RowNumberer({
+										width : 30
+									}), selModel4LiquidAdjustView, {
+								dataIndex : 'adjustState',
+								header : '状态',
+								renderer : function(v, m, r, i) {
+
+									if (v == '待调整') {
+										return "<span style='color:red'>" + v
+												+ "</span>";
+									} else {
+										return v;
 									}
+								}
+							}, {
+								dataIndex : 'lineName',
+								header : '线别'
+							}, {
+								dataIndex : 'specName',
+								header : '膜片型号'
+							}, {
+								dataIndex : 'trough',
+								header : '调整类型',
+								renderer : function(v, m, r, i) {
+									var adjustType = r.get('adjustType');
+									if (adjustType == 'liquid')
+										return '漂洗' + v + '槽'
+									else
+										return r.get('trough');
+								}
+							}, {
+								dataIndex : 'item',
+								header : '调整项目'
+							}, {
+								dataIndex : 'weight',
+								header : '重量',
+								renderer : function(v, m, r, i) {
+									var adjustType = r.get('adjustType');
+									if (adjustType == 'liquid')
+										return v + 'kg';
+									if (adjustType == 'water') {
+										var item = r.get('item');
+										if (item == 'RO水' || item == '水相液排料')
+											return v + 'kg'
+										else
+											return v + 'g'
+									}
+
+								}
+							}, {
+								dataIndex : 'operatorName',
+								header : '下单人'
+							}, {
+								dataIndex : 'reserve1',
+								header : '下单备注'
+							}, {
+								dataIndex : 'createTime',
+								header : '下单时间'
+							}, {
+								dataIndex : 'updateName',
+								header : '调整人'
+							}, {
+								dataIndex : 'updateTime',
+								header : '调整时间'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.queryLiquidAdjustByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {
+							'condition/status' : 1
+						},
+						fields : [{
+									name : 'specId'
 								}, {
+									name : 'specName'
+								}, {
+									name : 'lineName'
+								}, {
+									name : 'lineId'
+								}, {
+									name : 'id'
+								}, {
+									name : 'item'
+								}, {
+									name : 'weight'
+								}, {
+									name : 'trough'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'operatorName'
+								}, {
+									name : 'updateTime'
+								}, {
+									name : 'updateName'
+								}, {
+									name : 'adjustState'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'adjustType'
+								}]
+					})
+				})
+
+		this.queryPanel4LiquidAdjustView = this.queryPanel4LiquidAdjustView
+				|| new Ext.fn.QueryPanel({
+							height : 110,
+							columns : 3,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+
+								xtype : 'combo',
+								fieldLabel : '状态',
+								ref : '../adjustState',
+								hiddenName : 'condition/adjustState',
+								emptyText : '--请选择--',
+								anchor : '85%',
+								store : [['待调整', '待调整'], ['已调整', '已调整']],
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										this.queryPanel4LiquidAdjustView.adjustState
+												.reset();
+									}
+								}
+							}, {
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '85%',
+								nameArray : ['condition/createTimeStart',
+										'condition/createTimeEnd'],
+								fieldLabel : "下单时间",
+								format : "Y-m-d"
+							}, {
+								xtype : 'linecombobox',
+								ref : '../lineId',
+								prodTacheId : '100',
+								hiddenName : 'condition/lineId',
+								anchor : '85%',
+								fieldLabel : '生产线'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 3
+							}, {
+								xtype : 'mpspeccombobox',
+								ref : '../specId',
+								prodTacheId : '100',
+								hiddenName : 'condition/specId',
+								anchor : '85%',
+								fieldLabel : '膜片型号'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/operatorName',
+								anchor : '85%',
+								fieldLabel : '下单人%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/updateName',
+								anchor : '85%',
+								fieldLabel : '调整人%-%'
+							}]
+						})
+
+		this.queryPanel4LiquidAdjustView.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.liquidAdjustViewWindow.hide();
+					}
+
+				});
+
+		this.liquidAdjustViewWindow = this.liquidAdjustViewWindow
+				|| new Ext.Window({
+							title : '工艺调整记录',
+							// 自定义属性
+							opt : '',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 1024,
+							height : 600,
+							layout : 'border',
+							items : [this.queryPanel4LiquidAdjustView,
+									this.listPanel4LiquidAdjustView]
+
+						})
+	}
+
+	this.initAddWaterAdjustWindow = function() {
+		var _this = this;
+
+		var selModel4AddWaterAdjust = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4AddWaterAdjust = this.listPanel4AddWaterAdjust
+				|| new Ext.fn.EditListPanel({
+
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					hsPage : false,
+					autoScroll : true,
+					clicksToEdit : 1,
+					selModel : selModel4AddWaterAdjust,
+					tbar : [{
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '生产线<span style="color:red">*</span>:'
+							}, {
+								xtype : 'linecombobox',
+								allowBlank : false,
+								ref : '../lineId',
+								prodTacheId : '100',
+								hiddenName : 'lineId',
+								width : 150,
+								fieldLabel : '生产线'
+							}, {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '膜片型号<span style="color:red">*</span>:'
+							}, {
+								xtype : 'mpspeccombobox',
+								allowBlank : false,
+								ref : '../specId',
+								prodTacheId : '100',
+								hiddenName : 'specId',
+								width : 150,
+								fieldLabel : '膜片型号'
+							}, {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '水相类型<span style="color:red">*</span>:'
+							}, {
+
+								xtype : 'combobox',
+								fieldLabel : '水相类型',
+								ref : '../trough',
+								emptyText : '--请选择--',
+								allowBlank : true,
+								editable : false,
+								width : 150,
+								store : [['水相补充液', '水相补充液'], ['水相液', '水相液']],
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										_this.listPanel4AddWaterAdjust.trough
+												.reset();
+									}
+								}
+							}],
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4AddWaterAdjust, {
+								dataIndex : 'item',
+								// sortable : true,
+								width : 100,
+								header : '项目',
+								renderer : function(v, m, r, i) {
+
+									if (v == 'RO水' || v == '水相液排料')
+										return v + '(kg)'
+									else
+										return v + '(g)'
+								}
+							}, {
+
+								dataIndex : 'weight',
+								// sortable : true,
+								width : 100,
+								header : '重量',
+								css : 'background:#c7c7b7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+
+											scope : this,
+											allowNegative : false,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'operatorName',
+								// sortable : true,
+								width : 100,
+								header : '下单人',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+										// value : uname
+										}))
+
+							}, {
+
+								dataIndex : 'reserve1',
+								// sortable : true,
+								width : 300,
+								header : '备注',
+								css : 'background:#c7c7d7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+										// value : uname
+										}))
+
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.queryWaterAdjust4Add.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'item'
+								}, {
+									name : 'weight'
+								}, {
+									name : 'operatorName'
+								}]
+					})
+				})
+
+		this.addWaterAdjustWindow = this.addWaterAdjustWindow
+				|| new Ext.Window({
+					title : '新增水相调整(<span style="color:red">请完整填写水相液项目、重量、下单人，不要求每条记录都填写)</span>',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4AddWaterAdjust],
+					buttons : [{
+								text : "保存",
+								scope : this,
+								handler : this.onSaveWaterAdjust
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.addWaterAdjustWindow.hide();
+								}
+							}]
+
+				});
+
+	}
+
+	this.initWindow4WaterLiquid = function() {
+		var _this = this;
+
+		var selModel4WaterLiquid = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.listPanel4WaterLiquid = this.listPanel4WaterLiquid
+				|| new Ext.fn.ListPanel({
+					id : listPanel4WaterLiquidId,
+					region : 'center',
+					cls : 'custom-row-height', // 应用自定义的CSS类
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : [{
+								text : '新增',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onAddWaterLiquid
+							}, '-', {
+								text : '删除',
+								scope : this,
+								iconCls : 'icon-application_delete',
+								handler : this.onDelWaterLiquid
+							}],
+					hsPage : false,
+					delUrl : 'com.keensen.ump.qinsen.tumo.deleteWaterLiquid.biz.ext',
+					autoScroll : true,
+					selModel : selModel4WaterLiquid,
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4WaterLiquid, {
+								dataIndex : 'batchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'waterType',
+								header : '水相液类型'
+							}, {
+								dataIndex : 'item',
+								header : '水相液项目'
+							}, {
+								dataIndex : 'weight',
+								header : '重量',
+								renderer : function(v, m, r, i) {
+									var item = r.get('item')
+									if (item == 'RO水' || item == '水相液排料')
+										return v + 'kg'
+									else
+										return v + 'g'
+								}
+							}, {
+								dataIndex : 'reserve5',
+								header : '收卷米数(m)'
+							}, {
+								dataIndex : 'operatorName',
+								header : '记录人'
+							}, {
+								dataIndex : 'createTime',
+								header : '操作时间'
+							}
+
+					],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.queryWaterLiquid.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'batchId'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'id'
+								}, {
+									name : 'item'
+								}, {
+									name : 'weight'
+								}, {
+									name : 'waterType'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'operatorName'
+								}, {
+									name : 'reserve5'
+								}]
+					})
+				})
+
+		this.window4WaterLiquid = this.window4WaterLiquid || new Ext.Window({
+					id : window4WaterLiquidId,
+					title : '水相液记录',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4WaterLiquid],
+					buttons : [{
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.window4WaterLiquid.hide();
+								}
+							}]
+
+				});
+
+	}
+
+	this.initAddWaterLiquidWindow = function() {
+		var _this = this;
+
+		this.waterTypeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['水相补充液', '水相补充液'], ['水相液', '水相液']]
+				});
+
+		var selModel4AddWaterLiquid = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4AddWaterLiquid = this.listPanel4AddWaterLiquid
+				|| new Ext.fn.EditListPanel({
+
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					hsPage : false,
+					autoScroll : true,
+					clicksToEdit : 1,
+					selModel : selModel4AddWaterLiquid,
+
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4AddWaterLiquid, {
+
+								dataIndex : 'item',
+								// sortable : true,
+								width : 100,
+								header : '水相液项目',
+								renderer : function(v, m, r, i) {
+
+									if (v == 'RO水' || v == '水相液排料')
+										return v + '(kg)'
+									else
+										return v + '(g)'
+								}
+
+							}, {
+								dataIndex : 'waterType',
+								// sortable : true,
+								width : 150,
+								header : '水相类型',
+								css : 'background:#c7c7a7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+										{
+											typeAhead : true,
+											typeAheadDelay : 100,
+											triggerAction : "all",
+											lazyRender : true,
+											minChars : 1,
+											mode : 'local',
+											lastQuery : '',
+											// allowBlank : false,
+											// mode : 'local',
+											emptyText : '--请选择--',
+											// lastQuery : '',
+											store : this.waterTypeStore,
+											hiddenName : 'code',
+											valueField : 'name',
+											displayField : 'name',
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'weight',
+								// sortable : true,
+								width : 100,
+								header : '重量',
+								css : 'background:#c7c7b7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+
+											scope : this,
+											allowNegative : false,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'reserve5',
+								// sortable : true,
+								width : 100,
+								header : '收卷米数',
+								css : 'background:#c7c7b7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'operatorName',
+								// sortable : true,
+								width : 100,
+								header : '记录人',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+										// value : uname
+										}))
+
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.queryWaterLiquid4Add.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'waterType'
+								}, {
+									name : 'item'
+								}, {
+									name : 'weight'
+								}, {
+									name : 'operatorName'
+								}, {
+									name : 'batchId'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'reserve5'
+								}]
+					})
+				})
+
+		this.addWaterLiquidWindow = this.addWaterLiquidWindow
+				|| new Ext.Window({
+					title : '新增水相液(<span style="color:red">请完整填写水相液项目、重量、记录人，不要求每条记录都填写)</span>',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.listPanel4AddWaterLiquid],
+					buttons : [{
+								text : "保存",
+								scope : this,
+								handler : this.onSaveWaterLiquid
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.addWaterLiquidWindow.hide();
+								}
+							}]
+
+				});
+
+	}
+	
+	this.initEditWindow4C72Invalid = function() {
+
+		this.editWindow4C72Invalid = this.editWindow4C72Invalid
+				|| new Ext.fn.FormWindow({
+					title : 'C72报废',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : 'com.keensen.ump.qinsen.tumo.expandTumo.biz.ext',
+						saveUrl : 'com.keensen.ump.qinsen.tumo.saveTumoC72Invalid.biz.ext',
+						fields : [{
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 1
 								}, {
 									xtype : 'numberfield',
-									value : 0,
-									fieldLabel : 'A21',
-									anchor : '95%',
-									name : 'entity/a21',
-									allowBlank : false,
-									scope : this,
-									allowNegative : false,
-									allowDecimals : true,
+									decimalPrecision : 4,
 									minValue : 0,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'numberfield',
-									value : '0',
-									fieldLabel : 'C22',
-									anchor : '95%',
-									name : 'entity/c22',
+									ref : '../../c72Invalid',
+									name : 'entity/c72Invalid',
+									dataIndex : 'c72Invalid',
 									allowBlank : false,
-									scope : this,
-									allowNegative : false,
-									allowDecimals : true,
-									minValue : 0,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'numberfield',
-									value : '0',
-									fieldLabel : 'C24',
+									fieldLabel : 'C72报废(kg)',
 									anchor : '95%',
-									name : 'entity/c24',
-									allowBlank : false,
-									scope : this,
-									allowNegative : false,
-									allowDecimals : true,
-									minValue : 0,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
 									colspan : 1
-								}, {
-									xtype : 'numberfield',
-									value : '0',
-									fieldLabel : 'C51',
-									anchor : '95%',
-									name : 'entity/c51',
-									allowBlank : false,
-									scope : this,
-									allowNegative : false,
-									allowDecimals : true,
-									minValue : 0,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'numberfield',
-									value : '0',
-									fieldLabel : 'C71',
-									anchor : '95%',
-									name : 'entity/c71',
-									allowBlank : false,
-									scope : this,
-									allowNegative : false,
-									allowDecimals : true,
-									minValue : 0,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'numberfield',
-									value : '0',
-									fieldLabel : 'C72',
-									anchor : '95%',
-									name : 'entity/c72',
-									allowBlank : false,
-									scope : this,
-									allowNegative : false,
-									allowDecimals : true,
-									minValue : 0,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'numberfield',
-									value : '0',
-									fieldLabel : 'C92',
-									anchor : '95%',
-									name : 'entity/c92',
-									allowBlank : false,
-									scope : this,
-									allowNegative : false,
-									allowDecimals : true,
-									minValue : 0,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'numberfield',
-									value  : '0',
-									fieldLabel : 'C93',
-									anchor : '95%',
-									name : 'entity/c93',
-									allowBlank : false,
-									scope : this,
-									allowNegative : false,
-									allowDecimals : true,
-									minValue : 0,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'textfield',
-									fieldLabel : '下单人',
-									anchor : '95%',
-									allowBlank : false,
-									value : uname,
-									name : 'entity/operatorName'
 								}, {
 									xtype : 'hidden',
-									ref : '../../batchId',
-									name : 'entity/batchId'
+									ref : '../../recordId',
+									name : 'entity/recordId',
+									dataIndex : 'recordId'
 								}]
 					}]
 				});
-
 	}
 }

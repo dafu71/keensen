@@ -30,10 +30,10 @@
        ROUND(T.C24 * #weight# * 10, 0) "c24",
        
        ROUND(#weight# -
-             (ROUND(T.C21 * #weight# * 10, 0) + ROUND(T.C22 * #weight# * 10, 0) +
-             ROUND(T.C23 * #weight# * 10, 0) + ROUND(T.C27 * #weight# * 10, 0) +
-             ROUND(T.C28 * #weight# * 10, 0) + ROUND(T.C30 * #weight# * 10, 0)
-             + ROUND(T.C24 * #weight# * 10, 0)) / 1000,
+             (ROUND(nvl(T.C21,0) * #weight# * 10, 0) + ROUND(nvl(T.C22,0) * #weight# * 10, 0) +
+             ROUND(nvl(T.C23,0) * #weight# * 10, 0) + ROUND(nvl(T.C27,0) * #weight# * 10, 0) +
+             ROUND(nvl(T.C28,0) * #weight# * 10, 0) + ROUND(nvl(T.C30,0) * #weight# * 10, 0)
+             + ROUND(nvl(T.C24,0) * #weight# * 10, 0) + ROUND(nvl(T.C29,0) * #weight# * 10, 0)) / 1000,
              2) "ro"
 	  FROM KS_BASE_FORMULA T
 	 WHERE T.MPTYPE = #mptype#
