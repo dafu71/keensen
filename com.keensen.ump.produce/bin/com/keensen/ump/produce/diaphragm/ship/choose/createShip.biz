@@ -155,6 +155,10 @@
       <process:from type="query" pattern="reference">deliveryOrderNo</process:from>
       <process:to type="query">ship/deliveryOrderNo</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">clientName</process:from>
+      <process:to type="query">ship/clientName</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
@@ -351,6 +355,7 @@
     <process:input isArray="false" name="planNo" primitiveType="String"/>
     <process:input isArray="false" name="deliveryOrderNo" primitiveType="String"/>
     <process:input isArray="false" name="deliveryDt" primitiveType="String"/>
+    <process:input isArray="false" name="clientName" primitiveType="String"/>
   </process:inputs>
   <process:outputs/>
   <process:extAttribute1>public</process:extAttribute1>

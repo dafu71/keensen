@@ -215,6 +215,16 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.doUpload = func
 								.setValue(_this.filePath);
 						_this.editPanel.form.findField('entity/url2')
 								.setValue(fname);
+					} else if (myflag == '7') {
+						_this.inputPanel.form.findField('stampUrl2')
+								.setValue(_this.filePath);
+						_this.inputPanel.form.findField('entity/stampUrl')
+								.setValue(fname);
+					} else if (myflag == '8') {
+						_this.editPanel.form.findField('stampUrl2')
+								.setValue(_this.filePath);
+						_this.editPanel.form.findField('entity/stampUrl')
+								.setValue(fname);
 					} else if (myflag == '5') {
 						var A = _this.listPanel;
 						if (!A.getSelectionModel().getSelected()) {
@@ -704,7 +714,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onChangeStatus 
 			method : "post",
 			jsonData : {
 				ids : ids.join(',')
-				
+
 			},
 			success : function(resp) {
 				var ret = Ext.decode(resp.responseText);
@@ -747,7 +757,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onChangeLabelSt
 			method : "post",
 			jsonData : {
 				ids : ids.join(',')
-				
+
 			},
 			success : function(resp) {
 				var ret = Ext.decode(resp.responseText);

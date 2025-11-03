@@ -286,7 +286,7 @@ function getDayCode() {
 <% 	for (int i = 0; i < list.length; i++) { %>
 
 <table style="background-size: cover;page-break-after:always;"
-	class="main_table" border=0>
+	class="main_table" border=1>
 	<tr hight="260px">
 		<td align="left">
 		<div class="image-container" id="image-container">
@@ -332,7 +332,7 @@ function getDayCode() {
 						int yBatchSpecName = Integer.parseInt(list[i].get("yBatchSpecName").toString());
 						int xBatchSpecName = Integer.parseInt(list[i].get("xBatchSpecName").toString());
 						String prodSpecName = list[i].get("prodSpecName").toString();
-						String fontSize = prodSpecName.length() >= 18 ? "22px" : prodSpecName.length() > 9 ? "26px" : "30px";
+						String fontSize = prodSpecName.length() >= 15 ? "22px" : prodSpecName.length() > 9 ? "26px" : "30px";
 						int yDryImg = Integer.parseInt(list[i].get("yDryImg").toString());
 						int xDryImg = Integer.parseInt(list[i].get("xDryImg").toString());
 						int yDrySpan = Integer.parseInt(list[i].get("yDrySpan").toString());

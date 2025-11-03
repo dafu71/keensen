@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.orderrecord">
+    <select id="queryOrderInputList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.STATE AS "state",
+       T1.RELATION_ID AS "relationId",
+       T1.JM_SPEC_NAME AS "jmSpecName",
+       T1.IF_REVIEW AS "ifReview",
+       T1.IF_STANDARD AS "ifStandard",
+       
+       case when T1.IF_STANDARD is null then '有外观评审'
+       when T1.IF_STANDARD = '是' then '公司标准'
+       else '非公司标准' end "orderType",
+       
+       T1.REVIEW_NO AS "reviewNo",
+       T1.REVIEW_ID AS "reviewId",
+       T1.AMOUNT AS "amount",
+       T1.WET_AMOUNT AS "wetAmount",
+       
+       T1.WET_STOCK_AMOUNT AS "wetStockAmount",
+       T1.DRY_STOCK_AMOUNT AS "dryStockAmount",
+       
+       T1.AMOUNT - nvl(T1.WET_AMOUNT,0) as "dryAmount",
+       round(nvl(T1.WET_AMOUNT,0)/T1.AMOUNT * 100,2) || '%' "wetPercent",
+       
+        case when nvl(T1.WET_AMOUNT,0)= nvl(T1.AMOUNT,0) then '湿'
+       when nvl(T1.WET_AMOUNT,0) = 0 then '干'
+       else '干/湿' end "dryWet",
+       
+       
+       T1.LABEL_SN AS "labelSn",
+       T1.MARK_SN AS "markSn",
+       H.ORDER_NO AS "orderNo",
+       TO_CHAR(H.DELIVERY_DATE, 'yyyy-MM-dd') AS "deliveryDate"
+  FROM KS_COMPONENT_ORDER_INPUT_LIST T1
+  LEFT JOIN KS_COMPONENT_ORDER_INPUT_HEAD H
+    ON T1.RELATION_ID = H.ID
+ WHERE 1 = 1
+  and t1.jm_spec_name is not null
+   <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName">t1.jm_spec_name like '%' || #jmSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">t1.jm_spec_name = #jmSpecName2#</isNotNull>
+        <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
+        <isNotNull prepend="and" property="orderNoStr">H.ORDER_NO like '%' || #orderNoStr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">H.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="deliveryDateStart">TO_CHAR(H.DELIVERY_DATE, 'yyyy-MM-dd')  &gt;=  #deliveryDateStart#</isNotNull>
+        <isNotNull prepend="and" property="deliveryDateEnd">TO_CHAR(H.DELIVERY_DATE, 'yyyy-MM-dd')  &lt;=  #deliveryDateEnd#</isNotNull>
+	  order by h.id
+
+	
+    </select>
+    <select id="queryJmSpecName4Standard" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT pms.jm_spec_name "jmSpecName",pms.prod_type
+	 from qinsen.para_mater_spec pms
+	 WHERE pms.prod_type = '公司标准' and pms.state='Y'
+	 AND pms.jm_spec_name IS NOT NULL
+	 order by pms.jm_spec_name</select>
+    <select id="queryJmSpecName4NotStandard" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT pms.jm_spec_name "jmSpecName",pms.prod_type
+	 from qinsen.para_mater_spec pms
+	 WHERE pms.prod_type != '公司标准' and pms.state='Y'
+	 AND pms.jm_spec_name IS NOT NULL
+	 order by pms.jm_spec_name</select>
+    <select id="queryReview" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT '评审卷膜型号1' "jmSpecName",'标签序列号1' "labelSn",'唛头序列号1' "markSn",
+	'1' "reviewId",'评审号1' "reviewNo" , null "amount" from dual
+	UNION
+	SELECT '评审卷膜型号2' "jmSpecName",'标签序列号2' "labelSn",'唛头序列号2' "markSn",
+	'2' "reviewId",'评审号2' "reviewNo",null from dual</select>
+</sqlMap>

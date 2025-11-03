@@ -65,6 +65,9 @@
   var teamId = '';
   <% } %>
   var listid = 'produce-jmrecord-list';
+  
+  var quantityTotalId = Ext.id();
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.jmrecordMgr
 		});

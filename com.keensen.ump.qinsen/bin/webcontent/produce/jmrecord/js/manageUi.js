@@ -8,6 +8,8 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 		this.initDetailAddWindow();
 		this.initDetailEditWindow();
 
+		this.initProduceCountWindow();
+
 		this.gridPanel = this.gridPanel || new Ext.Panel({
 					layout : 'border',
 					collapsible : false,
@@ -26,18 +28,18 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 140,
+					height : 180,
 					columns : 4,
 					border : true,
-					collapsible : false,
+					collapsible : true,
 					titleCollapse : false,
-					// title : '【卷膜记录查询】',
+					title : '',
 					fields : [{
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
 						fieldLabel : '生产时间',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '100%',
 						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
@@ -48,7 +50,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						name : 'condition/produceDtEnd',
 						fieldLabel : '至',
 						colspan : 1,
-						anchor : '75%',
+						anchor : '100%',
 						editable : true,
 						format : 'Y-m-d H:i',
 						// allowBlank : false,
@@ -58,13 +60,13 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						xtype : 'linecombobox',
 						prodTacheId : '102',
 						hiddenName : 'condition/lineId',
-						ref:'../lineId',
-						anchor : '75%',
+						ref : '../lineId',
+						anchor : '100%',
 						fieldLabel : '生产线 '
 					}, {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'condition/prodSpecId',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '元件型号 '
 					}, {
 						xtype : 'displayfield',
@@ -73,7 +75,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 					}, {
 						xtype : 'componentworkercombobox',
 						hiddenName : 'condition/workerId',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '操作工'
 					}, {
 
@@ -82,7 +84,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						ref : '../isAirQualifiedId',
 						hiddenName : 'condition/isAirQualifiedId',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '100%',
 						store : [[null, '全部'], ['Y', '合格'], ['N', '不合格']],
 						listeners : {
 							scope : this,
@@ -93,12 +95,12 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/orderNo',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '订单号'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/dimoBatchNo',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '底膜批次'
 					}, {
 						xtype : 'displayfield',
@@ -108,19 +110,19 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 
 						xtype : 'textfield',
 						name : 'condition/tumoBatchNoStr',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '膜片批次%-%'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/cdmBatchNo',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '叠膜栈板号'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/batchNo',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '卷膜序号'
 					}]
 				});
@@ -132,6 +134,29 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
 				});
+
+		this.queryPanel.addButton({
+					text : "工作量查询",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQueryQuantity
+				});
+
+		this.queryPanel.addButton({
+			text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_add',
+			handler : this.onStart
+		});
+
+		this.queryPanel.addButton({
+			text : "<span style='color:red;font-size:14px;'>下&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_edit',
+			handler : this.onEnd
+		});
 	}
 
 	this.initListPanel = function() {
@@ -167,12 +192,13 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 								width : 40
 							}), selModel, {
 						header : '卷膜序号',
-						sortable:true,
+						sortable : true,
 						width : 120,
 						dataIndex : 'batchNo',
 						renderer : function(v, m, r, i) {
-							var str = r.get('orderNo')=='研发实验'
-									? "<span style='color:#FF8000;text-decoration:none'>" + v + "</span>"
+							var str = r.get('orderNo') == '研发实验'
+									? "<span style='color:#FF8000;text-decoration:none'>"
+											+ v + "</span>"
 									: v;
 							return str;
 						}
@@ -1024,6 +1050,136 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 									xtype : 'hidden'
 								}]
 					}]
+				});
+	}
+
+	this.initProduceCountWindow = function() {
+
+		var _this = this;
+
+		var selModel4ProduceCount = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4ProduceCount = this.listPanel4ProduceCount
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : ['->', {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '',
+								id : quantityTotalId
+							}, {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}],
+					hsPage : true,
+					selModel : selModel4ProduceCount,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4ProduceCount, {
+								dataIndex : 'dataCount',
+								header : '生产日期'
+							}, {
+								dataIndex : 'userName',
+								header : '操作工'
+							}, {
+								dataIndex : 'prodSpecName',
+								header : '元件型号'
+							}, {
+								dataIndex : 'quantity',
+								header : '生产数量'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.productioncount.queryProductJmListByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'userName'
+								}, {
+									name : 'prodSpecName'
+								}, {
+									name : 'dataCount'
+								}, {
+									name : 'quantity'
+								}, {
+									name : 'quantityTotal'
+								}]
+					})
+				})
+
+		this.queryPanel4ProduceCount = this.queryPanel4ProduceCount
+				|| new Ext.fn.QueryPanel({
+							height : 80,
+							columns : 4,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+								xtype : "dateregion",
+								colspan : 2,
+								anchor : '95%',
+								nameArray : ['condition/dateCountStart',
+										'condition/dateCountEnd'],
+								fieldLabel : "生产日期",
+								format : "Y-m-d",
+								value : new Date()
+							}, {
+								xtype : 'textfield',
+								name : 'condition/userName',
+								anchor : '95%',
+								fieldLabel : '操作工',
+								value : nowStaffName
+
+							}, {
+								xtype : 'textfield',
+								name : 'condition/prodSpecName',
+								anchor : '95%',
+								fieldLabel : '元件型号'
+							}]
+						});
+
+		this.queryPanel4ProduceCount.addButton({
+					text : "导出",
+					scope : this,
+					hidden : true,
+					iconCls : 'icon-application_excel',
+					handler : this.exportProduceCountExcel
+				});
+
+		this.queryPanel4ProduceCount.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.produceCountWindow.hide();
+					}
+
+				});
+
+		this.produceCountWindow = this.produceCountWindow || new Ext.Window({
+					title : '产量统计',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4ProduceCount,
+							this.listPanel4ProduceCount]
+
 				});
 	}
 }

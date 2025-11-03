@@ -209,7 +209,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : uid != 'XXB' && uid != 'KS01479',
+					hidden : uid != 'dafu' && uid != 'KS01479',
 					handler : this.exportExcel2
 				});
 
@@ -1083,6 +1083,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			columns : [new Ext.grid.RowNumberer({
 								width : 30
 							}), selModel3, {
+						dataIndex : 'isqj',
+						header : '有无气检'
+					}, {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
@@ -1090,6 +1093,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						header : '元件型号'
 					}, {
 						dataIndex : 'batchNo',
+						sortable : true,
 						header : '元件序号'
 					}, {
 						dataIndex : 'tumoBatchStr',
@@ -1132,7 +1136,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						header : '元件返工单号'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.component.apply.queryComponent.biz.ext',
+				url : 'com.keensen.ump.produce.component.apply.queryComponentMix.biz.ext',
 				root : 'data',
 				autoLoad : false,
 				totalProperty : 'totalCount',
@@ -1175,6 +1179,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'diameter2'
 						}, {
 							name : 'markDrawingCode2'
+						}, {
+							name : 'isqj'
 						}]
 			})
 		})

@@ -69,6 +69,9 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   
+  var addBtn = Ext.id();
+  var add2Btn = Ext.id();
+  
   var chooseOrderBtn = Ext.id();
   var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;
@@ -78,6 +81,9 @@
   var teamId = '';
   <% } %>
   var listid = 'produce-caidiemo-list';
+  
+  var quantityTotalId = Ext.id();
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.CaidiemoMgr
 		});

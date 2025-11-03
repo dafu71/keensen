@@ -19,6 +19,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 		this.initChooseOrderWindow();
 
+		this.initProdCdmListWindow();
+
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					// id : defectTmWinId,
 					relationListId : 'produce-caidiemo-list',
@@ -74,7 +76,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 170,
+					height : 180,
 					columns : 4,
 					border : true,
 					collapsible : true,
@@ -197,28 +199,53 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					handler : this.onWarn
 				});
 
+		this.queryPanel.addButton({
+					text : "工作量查询",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQueryQuantity
+				});
+
+	
+		this.queryPanel.addButton({
+					text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
+					height : 40,
+					scope : this,
+					iconCls : 'icon-application_add',
+					handler : this.onStart
+				});
+
+		this.queryPanel.addButton({
+					text : "<span style='color:red;font-size:14px;'>下&nbsp;&nbsp;机</span>",
+					height : 40,
+					scope : this,
+					iconCls : 'icon-application_edit',
+					handler : this.onEnd
+				});
+
 	}
 
 	this.initListPanel = function() {
 		var _this = this;
 		this.selModel = this.selModel || new Ext.grid.CheckboxSelectionModel({
-					singleSelect : false/*,
-					header : '',
-					listeners : {
-
-		}*/
-				});
+			singleSelect : false
+				/*
+				 * , header : '', listeners : { }
+				 */
+			});
 
 		this.bar = this.bar || new Ext.Toolbar({
 					items : [{
 								text : '新增工业膜',
 								scope : this,
 								iconCls : 'icon-application_add',
+								id : addBtn,
 								handler : this.onAdd
 							}, '-', {
 								text : '新增家用膜',
 								scope : this,
 								iconCls : 'icon-application_add',
+								id : add2Btn,
 								handler : this.onAdd2
 							}, '-', {
 								text : '修改',
@@ -280,7 +307,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						xtype : 'displayfield',
 						value : '合计未卷页数:',
 						id : 'totalUnusedQuantityTxt'
-					},'->',{
+					}, '->', {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
@@ -623,7 +650,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									.setValue(record.data.blankingSize);
 							this.inputWindow.pageWidth
 									.setValue(record.data.pageWidth);
-							//this.inputWindow.denseNet.setValue(record.data.denseNet);
+							// this.inputWindow.denseNet.setValue(record.data.denseNet);
 
 							this.inputWindow.denseNetType
 									.setValue(record.data.denseNetType);
@@ -633,7 +660,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									.setValue(record.data.lightNetType);
 							this.inputWindow.lightNetShortPage
 									.setValue(record.data.lightNetShortPage);
-									
+
 							this.inputWindow.numPerWad
 									.setValue(record.data.numPerWad);
 						},
@@ -957,12 +984,21 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					xtype : 'textfield',
 					readOnly : true,
 					// hidden : true,
-					anchor : '86%',
-					colspan : 12
+					anchor : '100%',
+					colspan : 6
 				}, {
-					ref : '../../lightNetType',
-					name : 'entity/lightNetType',
-					fieldLabel : '淡网型号',
+					ref : '../../lightNetShortType',
+					name : 'entity/lightNetShortType',
+					fieldLabel : '短页淡网型号',
+					xtype : 'textfield',
+					readOnly : true,
+					// hidden : true,
+					anchor : '100%',
+					colspan : 6
+				}, {
+					ref : '../../lightNetLongType',
+					name : 'entity/lightNetLongType',
+					fieldLabel : '长页淡网型号',
 					xtype : 'textfield',
 					readOnly : true,
 					// hidden : true,
@@ -1219,7 +1255,6 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									this.editWindow.denseNet
 											.setValue(record.data.denseNet);
 
-									
 								}
 							}
 						}, {
@@ -1893,6 +1928,148 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					layout : 'border',
 					items : [this.queryChooseOrderPanel,
 							this.chooseOrderListPanel]
+
+				});
+	}
+
+	this.initProdCdmListWindow = function() {
+
+		var selModel4ProdCdmList = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4ProdCdmList = this.listPanel4ProdCdmList
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : ['->',{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : quantityTotalId
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}],
+					hsPage : true,
+					selModel : selModel4ProdCdmList,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4ProdCdmList, {
+								dataIndex : 'dataCount',
+								header : '生产日期'
+							}, {
+								dataIndex : 'userName',
+								header : '操作工'
+							}, {
+								dataIndex : 'batchNo',
+								header : '膜批次'
+							}, {
+								dataIndex : 'prodSpecName',
+								header : '元件型号'
+							}, {
+								dataIndex : 'quantity',
+								header : '产量'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.productioncount.queryProducCdmListByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'dataCount'
+								}, {
+									name : 'userName'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'prodSpecName'
+								}, {
+									name : 'quantity'
+								}, {
+									name : 'quantityTotal'
+								}]
+					})
+				})
+
+		this.queryPanel4ProdCdmList = this.queryPanel4ProdCdmList
+				|| new Ext.fn.QueryPanel({
+							height : 110,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/prodSpecName',
+										anchor : '85%',
+										fieldLabel : '元件型号'
+									}, {
+										xtype : 'textfield',
+										name : 'condition/batchNo',
+										anchor : '85%',
+										fieldLabel : '涂膜批次'
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 2
+									}, {
+										xtype : 'textfield',
+										name : 'condition/userName',
+										anchor : '85%',
+										fieldLabel : '操作工',
+										value : nowStaffName
+										
+									}, {
+										xtype : "dateregion",
+										colspan : 1,
+										anchor : '85%',
+										nameArray : [
+												'condition/dateCountStart',
+												'condition/dateCountEnd'],
+										fieldLabel : "生产日期",
+										format : "Y-m-d",
+										value : new Date()
+									}]
+						});
+
+		// this.queryPanel4ProdCdmList.addButton({
+		// text : "导出",
+		// scope : this,
+		// iconCls : 'icon-application_excel',
+		// handler : this.exportProduceCountExcel
+		// });
+
+		this.queryPanel4ProdCdmList.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.prodCdmListWindow.hide();
+					}
+
+				});
+
+		this.prodCdmListWindow = this.prodCdmListWindow || new Ext.Window({
+					title : '产量查询',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4ProdCdmList,
+							this.listPanel4ProdCdmList]
 
 				});
 	}

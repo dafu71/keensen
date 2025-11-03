@@ -339,6 +339,9 @@ function initPage() {
 						String batchNo = list[i].get("batchNo").toString();
 						String dryWet = list[i].get("dryWet").toString();
 						String packDate = list[i].get("packDate").toString();
+						
+						int yStarImg = Integer.parseInt(list[i].get("yStarImg").toString());
+						int xStarImg = Integer.parseInt(list[i].get("xStarImg").toString());
 			%>			
 				var container = document.getElementById('image-container<%=i %>');		    
     			var clientspan = document.createElement('span');
@@ -403,6 +406,15 @@ function initPage() {
 				dryWetspan.style.top = '180px';
 				dryWetspan.textContent = ' 干/湿:' + '<%=dryWet %>';
 				container.appendChild(dryWetspan);
+				
+				
+				var starimg = document.createElement('img');
+				starimg.src = "<%=rootUrl %>/qinsen/produce/pack/print/image/mark_star.png";
+				starimg.className = 'star';      // 应用样式类
+				starimg.style.position = 'absolute';
+				starimg.style.left = '<%=xStarImg %>px';
+				starimg.style.top = '<%=yStarImg %>px';
+				container.appendChild(starimg);
 				
 				var packDatespan = document.createElement('span');
 				packDatespan.className = 'span_a';

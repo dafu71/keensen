@@ -12,6 +12,8 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 		this.buildExcelUploadWin();
 		this.initGoodsStateChangeWindow();
 
+		this.initChoosesingleSnWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -21,6 +23,13 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 	}
 
 	this.initStore = function() {
+
+		this.useTypeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['家用', '贴牌规则（家用）'], ['工业', '贴牌规则（工业）'],
+							['非常规', '贴牌非规则'], ['公司标签', '公司标签']]
+				});
+
 		// 计划状态 制定中，申购邮件已发，采购已下单
 		this.materPlanStateStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -197,25 +206,30 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						text : '新增',
 						scope : this,
 						iconCls : 'icon-application_add',
-						hidden : uid != 'KS01147' && uid != 'XXB',
+						hidden : uid != 'KS01147' && uid != 'dafu',
 						handler : this.onAdd
 					}, '-', {
 						text : '修改',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						hidden : uid != 'KS01147' && uid != 'XXB',
+						hidden : uid != 'KS01147' && uid != 'dafu',
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
-						hidden : uid != 'KS01147',
+						hidden : uid != 'KS01147' && uid != 'dafu',
 						handler : this.onDel
 					}, '-', {
 						text : '变更到货状态',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onGoodsStateChange
+					}, '-', {
+						text : '更新序列号',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onModifySN
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.yxorderbase.deleteMConfirm.biz.ext',
@@ -244,19 +258,9 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						header : '下单型号',
 						sortable : true
 					}, {
-						dataIndex : 'orderAmount',
-						width : 120,
-						header : '订单数量',
-						sortable : true
-					}, {
 						dataIndex : 'materCode',
 						width : 120,
 						header : '物料长代码',
-						sortable : true
-					}, {
-						dataIndex : 'goodsState',
-						width : 120,
-						header : '到货状态',
 						sortable : true
 					}, {
 						dataIndex : 'materName',
@@ -272,6 +276,11 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						dataIndex : 'unit',
 						width : 100,
 						header : '单位'
+					}, {
+						dataIndex : 'orderAmount',
+						width : 120,
+						header : '订单数量',
+						sortable : true
 					}, {
 						dataIndex : 'amount',
 						width : 120,
@@ -294,7 +303,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 					}, {
 						dataIndex : 'drawingCode',
 						width : 120,
-						header : '图号'
+						header : '图纸编号'
 					}, {
 						dataIndex : 'snStart',
 						width : 120,
@@ -303,7 +312,11 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						dataIndex : 'snEnd',
 						width : 120,
 						header : '序列结束号'
-					}, {
+					}/*
+						 * , { dataIndex : 'snStart2', width : 120, header :
+						 * '订单序列开始号' }, { dataIndex : 'snEnd2', width : 120,
+						 * header : '订单序列结束号' }
+						 */, {
 						dataIndex : 'materType',
 						width : 150,
 						header : '物料类型',
@@ -313,6 +326,27 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						width : 120,
 						header : '计划状态',
 						sortable : true
+					}, {
+						dataIndex : 'baseId',
+						width : 120,
+						header : '营销订单统计表id',
+						sortable : true
+					}, {
+						dataIndex : 'goodsState',
+						width : 120,
+						header : '到货状态',
+						sortable : true
+					}, {
+						dataIndex : 'snId',
+						width : 120,
+						header : '元件序号是否维护',
+						renderer : function(value, metadata, record, rowIndex,
+								columnIndex, store) {
+							value = (value == null)
+									? '否'
+									: "<span style='color:red'>是<span>";
+							return value;
+						}
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.yxorderbase.queryOrderMCByPage.biz.ext',
@@ -394,6 +428,12 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 							name : 'drawingCode'
 						}, {
 							name : 'orderAmount'
+						}, {
+							name : 'snId'
+						}, {
+							name : 'snStart2'
+						}, {
+							name : 'snEnd2'
 						}]
 			})
 		})
@@ -798,6 +838,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 							xtype : 'trigger',
 							// emptyText : '单击旁边按钮填充',
 							ref : '../../labelDrawingCode',
+							name : 'entity/labelDrawingCode',
 							dataIndex : 'labelDrawingCode',
 							editable : true,
 							hideTrigger : true,
@@ -811,6 +852,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 							xtype : 'trigger',
 							// emptyText : '单击旁边按钮填充',
 							ref : '../../markDrawingCode',
+							name : 'entity/markDrawingCode',
 							dataIndex : 'markDrawingCode',
 							editable : true,
 							hideTrigger : true,
@@ -1381,4 +1423,194 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 					}]
 				});
 	}
+
+	this.initChoosesingleSnWindow = function() {
+
+		var _this = this;
+		var choosesingleSnSelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.choosesingleSnListPanel = this.choosesingleSnListPanel
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					tbar : [{
+								text : '确定选择',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onChooseSingleSn
+							}],
+					hsPage : true,
+					selModel : choosesingleSnSelModel,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							choosesingleSnSelModel, {
+								dataIndex : 'useType',
+								header : '标签类型',
+								renderer : function(v, m, r, i) {
+									var prefix = r.get("prefix");
+
+									if (prefix.substr(0, 1) == 'K')
+										return '公司标签';
+									if (v == '家用')
+										return '贴牌规则（家用）';
+									if (v == '工业')
+										return '贴牌规则（工业）';
+									if (v == '非常规')
+										return '贴牌非规则';
+									return v;
+								}
+							}, {
+								dataIndex : 'drawingCode',
+								header : '图纸编号'
+							}, {
+								dataIndex : 'prodSpecName',
+								header : '标签型号'
+							}, {
+								dataIndex : 'reserve1',
+								header : '标签LOGO'
+							}, {
+								dataIndex : 'reserve2',
+								header : '制作方式'
+							}, {
+								dataIndex : 'prefix',
+								header : '前缀'
+							}, {
+								dataIndex : 'num',
+								header : '当前数量'
+							}, {
+								dataIndex : 'digit',
+								header : '后缀编号位数'
+							}, {
+								dataIndex : 'sn',
+								header : '当前最大序列号'
+							}, {
+								dataIndex : 'rule',
+								header : '编码规则'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.sn.queryByPage.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : 'totalCount',
+						baseParams : {
+							'condition/status' : 1
+						},
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'useType'
+								}, {
+									name : 'prefix'
+								}, {
+									name : 'num'
+								}, {
+									name : 'sn'
+								}, {
+									name : 'prodSpecName'
+								}, {
+									name : 'digit'
+								}, {
+									name : 'rule'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'reserve2'
+								}, {
+									name : 'drawingCode'
+								}]
+					})
+				})
+
+		this.queryChoosesingleSnPanel = this.queryChoosesingleSnPanel
+				|| new Ext.fn.QueryPanel({
+							height : 120,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/prefix',
+										anchor : '95%',
+										fieldLabel : '前缀'
+									}, {
+										xtype : 'textfield',
+										name : 'condition/drawingCode',
+										anchor : '95%',
+										fieldLabel : '图纸编号'
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 2
+									}, {
+										xtype : 'textfield',
+										name : 'condition/prodSpecName2',
+										ref : '../prodSpecName',
+										anchor : '95%',
+										fieldLabel : '标签型号'
+									}, {
+
+										xtype : 'combobox',
+										mode : 'local',
+										fieldLabel : '标签类型',
+										ref : '../useType',
+										hiddenName : 'condition/useType',
+										emptyText : '--请选择--',
+										allowBlank : true,
+										editable : false,
+										anchor : '95%',
+										colspan : 1,
+										store : _this.useTypeStore,
+										displayField : "name",
+										valueField : "code",
+										listeners : {
+											scope : this,
+											'expand' : function(A) {
+												_this.queryChoosesingleSnPanel.useType
+														.reset();
+											}
+										}
+									}, {
+										xtype : 'hidden',
+										name : 'condition/status',
+										value : 1
+
+									}]
+						});
+
+		this.queryChoosesingleSnPanel.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.choosesingleSnWindow.hide();
+					}
+
+				});
+
+		this.choosesingleSnWindow = this.choosesingleSnWindow
+				|| new Ext.Window({
+							title : '元件序列号查询',
+							projectId : '',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 800,
+							height : 600,
+							layout : 'border',
+							items : [this.queryChoosesingleSnPanel,
+									this.choosesingleSnListPanel]
+
+						});
+	}
+
 }

@@ -21,7 +21,7 @@
        T1.STATUS            AS "status",
        t1.exception_type	as "exceptionType",
        t1.remark	as "remark",
-       decode(qj.gyy_conclusion,'A','放行原订单','B','降级','C','改判其他无特殊要求的同型号产品','D','报废','E','送水测','F','染色解剖','G','补胶','') "gyyConclusion",
+       decode(qj.gyy_conclusion,'A','放行原订单','B','降级','C','改判其他无特殊要求的同型号产品','D','报废','E','送水测','F','染色解剖','G','补胶','H','符合内控性能，可放行','') "gyyConclusion",
 		TO_CHAR(qj.GYY_REMARK_TIME, 'YYYY-MM-DD HH24:MI') as "gyyRemarkTime",
 		qj.GYY_REMARK_USER_ID as "gyyRemarkUserId",
 		qj.GYY_REMARK_USER_NAME as "gyyRemarkUserName",
@@ -101,6 +101,10 @@
        LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION cfg ON cfg.prop_value_id = qj.ng_reason_id
 		where 1=1
 		
+		and not exists(select 1 from KS_PROD_QUALITY_POORRECORD where JUANMO_BATCH_NO = t1.jm_batch_no)
+		
+		and nvl(qj.overtime_deal,'保留') != '移除'
+		 
 		and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = t1.jm_batch_no)
 		
 		and qj.order_no != '研发实验'
@@ -151,6 +155,14 @@
   	 
     select COUNT(1) "amount", t.exception_type "exceptionType"
 	from KS_COMPONENT_VSTOCK t
+	 left join qinsen.inst_juanmo_main jm ON t.jm_batch_no = jm.batch_no
+  left join qinsen.inst_qijian qj 
+       ON qj.juanmo_batch_id = jm.record_id
+       where 1=1 AND nvl(qj.overtime_deal,'保留') != '移除'
+  and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = t.jm_batch_no)
+		
+		and qj.order_no != '研发实验'
+		and nvl(qj.gyy_conclusion,'X') not in('D','F')
 	<!-- WHERE 
 	t.jm_batch_no not in (
 	    select jm.batch_no from KS_COMPONENT_CHECK_LIST t
@@ -195,7 +207,7 @@ or t.jm_batch_no in(select batch_no from KS_COMPONENT_SEMI_STOCK)
 	 from QINSEN.INST_qijian qj
 	 LEFT JOIN qinsen.inst_juanmo_main jm
 	 ON qj.juanmo_batch_id=jm.record_id
-	 WHERE qj.is_qualified='N' and qj.order_no != '研发实验'
+	 WHERE qj.is_qualified='N' and qj.order_no != '研发实验' and nvl(qj.overtime_deal,'保留') != '移除'
 	 and nvl(qj.gyy_conclusion,'X') not in('D','F')
 	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 
@@ -219,7 +231,7 @@ or t.jm_batch_no in(select batch_no from KS_COMPONENT_SEMI_STOCK)
 	 ON qj.juanmo_batch_id=jm.record_id
 	 WHERE qj.is_qualified='N' 
 	 and qj.order_no != '研发实验'
-	and nvl(qj.gyy_conclusion,'X') not in('D','F')
+	and nvl(qj.gyy_conclusion,'X') not in('D','F') and nvl(qj.overtime_deal,'保留') != '移除'
 	 AND to_char(jm.produce_dt,'YYYY-MM-DD')&gt;='2025-04-30'
 	 
 	 and not exists(select 1 from KS_COMPONENT_SEMI_STOCK semi where semi.batch_no = jm.batch_no)
@@ -255,7 +267,7 @@ or t.jm_batch_no in(select batch_no from KS_COMPONENT_SEMI_STOCK)
 		ON jm2.record_id=qj.juanmo_batch_id
 		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)
 		
-		and qj.order_no != '研发实验'
+		and qj.order_no != '研发实验' and nvl(qj.overtime_deal,'保留') != '移除'
 		and nvl(qj.gyy_conclusion,'X') not in('D','F')</select>
     <insert id="insertVstorage4Wet" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_VSTOCK 
 	(jm_batch_no,exception_type,create_time,create_user_id,create_name)
@@ -281,7 +293,7 @@ or t.jm_batch_no in(select batch_no from KS_COMPONENT_SEMI_STOCK)
 		ON jm2.record_id=qj.juanmo_batch_id
 		WHERE qj.ng_reason_id=300061 and jm2.batch_no = jm.batch_no)
 		
-		and qj.order_no != '研发实验'
+		and qj.order_no != '研发实验' and nvl(qj.overtime_deal,'保留') != '移除'
 		and nvl(qj.gyy_conclusion,'X') not in('D','F')</insert>
     <update id="updateVstorageExceptionType" parameterClass="java.util.HashMap">
    	update KS_COMPONENT_VSTOCK t

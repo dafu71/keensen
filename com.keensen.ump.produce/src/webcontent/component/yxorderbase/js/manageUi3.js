@@ -49,6 +49,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 	this.initStore = function() {
 
+		// 密封圌位置，包括:6.35+1mm、25+2mm、55+2mm 30±2mm
+		this.sealPositionStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['6.35±1mm', '6.35±1mm'], ['25±2mm', '25±2mm'],
+							['55±2mm', '55±2mm'], ['30±2mm', '30±2mm'], ['10±2mm', '10±2mm']]
+				});
+
 		// 制定中，物控计划员确认，正式发布，修订中
 		this.stateStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -285,7 +292,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.materNameStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['标签', '标签'], ['唛头', '唛头'], ['真空袋', '真空袋'],
-							['纸箱', '纸箱'], ['浓网', '浓网']]
+							['纸箱', '纸箱'], ['浓网', '浓网'], ['第二标签', '第二标签'],
+							['第二唛头', '第二唛头']]
 				});
 
 		// 物料单位 个/张
@@ -1400,7 +1408,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}
 				},
 				columns : 24,
-				loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandYxOrderBase.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandYxOrderBase4Add.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveEntity.biz.ext',
 				fields : [{
 					xtype : 'displayfield',
@@ -2355,14 +2363,33 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							labelSeparator : '',// 去掉冒号
 							colspan : 24
 						}, {
-							name : 'entity/sealPosition',
+							xtype : 'combo',
+							mode : 'local',
+							//forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '密封圈位置',
+							ref : '../../sealPosition',
+							hiddenName : 'entity/sealPosition',
 							dataIndex : 'sealPosition',
-							allowBlank : true,
 							anchor : '100%',
 							colspan : 24,
-							xtype : 'textfield',
-							fieldLabel : '密封圈位置'
-						}, {
+							emptyText : '--请选择--',
+							editable : true,
+							store : _this.sealPositionStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}/*
+							 * , { name : 'entity/sealPosition', dataIndex :
+							 * 'sealPosition', allowBlank : true, anchor :
+							 * '100%', colspan : 24, xtype : 'textfield',
+							 * fieldLabel : '密封圈位置' }
+							 */, {
 							xtype : 'displayfield',
 							height : 5,
 							colspan : 24
@@ -3924,13 +3951,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					displayField : "name",
 					valueField : "code"
 				}, {
+					dataIndex : 'labelDrawingUrl',
+					anchor : '100%',
+					colspan : 6,
+					// rowspan : 3,
+					ref : '../../labelDrawingUrl',
 					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
+					fieldLabel : '图纸'
 				}, {
 					xtype : 'combobox',
 					forceSelection : true,
@@ -4272,7 +4299,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					ref : '../../markRegular',
 					dataIndex : 'markRegular',
 					anchor : '100%',
-					colspan : 6,
+					colspan : 4,
 					emptyText : '',
 					editable : false,
 					store : this.ynStore,
@@ -4288,7 +4315,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					dataIndex : 'logoMark',
 					hiddenName : 'entity/logoMark',
 					anchor : '100%',
-					colspan : 6,
+					colspan : 4,
 					emptyText : '',
 					editable : false,
 					store : this.labelDrawingLogoStore,
@@ -4304,17 +4331,35 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					dataIndex : 'specNameMark',
 					hiddenName : 'entity/specNameMark',
 					anchor : '100%',
-					colspan : 6,
+					colspan : 4,
 					emptyText : '',
 					editable : false,
 					store : this.markDrawingSpecNameStore,
 					displayField : "specName",
 					valueField : "specName"
 				}, {
+					dataIndex : 'markDrawingUrl',
+					anchor : '100%',
+					colspan : 6,
+					// rowspan : 3,
+					ref : '../../markDrawingUrl',
+					xtype : 'displayfield',
+					fieldLabel : '图纸'
+				}, {
+					dataIndex : 'stampUrl',
+					anchor : '100%',
+					colspan : 6,
+					// rowspan : 3,
+					ref : '../../stampUrl',
+					xtype : 'displayfield',
+					fieldLabel : '受控章'
+				}, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
-				}, {
+				}/*
+					 * , { xtype : 'displayfield', height : 5, colspan : 24 }
+					 */, {
 					readOnly : true,
 					dataIndex : 'markStart',
 					ref : '../../markStart',
@@ -6462,6 +6507,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								dataIndex : 'remark',
 								header : '备注'
+							}, {
+								dataIndex : 'snStart',
+								header : '序列开始号'
+							}, {
+								dataIndex : 'snEnd',
+								header : '序列结束号'
 							}],
 					store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.produce.component.yxorderbase.queryYxOrderMCConfirm.biz.ext',
@@ -6527,6 +6578,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									name : 'baseId'
 								}, {
 									name : 'materType'
+								}, {
+									name : 'snStart'
+								}, {
+									name : 'snEnd'
 								}]
 					})
 				})
@@ -6885,7 +6940,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 											ref : '../../snStart',
 											dataIndex : 'snStart',
 											readOnly : true,
-											fieldLabel : '序列开始号',
+											fieldLabel : '标签序列开始号',
 											anchor : '95%',
 											colspan : 1
 										}, {
@@ -6893,7 +6948,27 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 											ref : '../../snEnd',
 											dataIndex : 'snEnd',
 											readOnly : true,
-											fieldLabel : '序列结束号',
+											fieldLabel : '标签序列结束号',
+											anchor : '95%',
+											colspan : 1
+										}, {
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'textfield',
+											ref : '../../markStart',
+											dataIndex : 'markStart',
+											readOnly : true,
+											fieldLabel : '唛头序列开始号',
+											anchor : '95%',
+											colspan : 1
+										}, {
+											xtype : 'textfield',
+											ref : '../../markEnd',
+											dataIndex : 'markEnd',
+											readOnly : true,
+											fieldLabel : '唛头序列结束号',
 											anchor : '95%',
 											colspan : 1
 										}

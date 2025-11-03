@@ -87,6 +87,19 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 
+		if (this.opt == 'modifyorder') {
+			var baseId = cell.get('baseId');
+			if (!Ext.isEmpty(baseId)) {
+				Ext.Msg.alert('系统提示', '营销订单不能修改');
+				return false;
+			} else {
+				this.modifyOrderWindow.show();
+				this.modifyOrderWindow.loadData(cell);
+				return;
+			}
+
+		}
+
 		if (this.opt == 'updatesgorder') {
 			var orderNo = cell.get('orderNo');
 			if (orderNo.substr(0, 2) == 'SG') {
@@ -502,10 +515,11 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onSelect4ChooseMark = fun
 		var drawingCode = records[0].data.drawingCode;
 		var opt = this.chooseMarkWindow.opt
 		if (opt == '1') {
-
 			this.addOrderWindow2.markDrawingCode.setValue(drawingCode);
-		} else {
+		} else if (opt == '2') {
 			this.updateTemplateNameWindow.markDrawingCode.setValue(drawingCode);
+		} else {
+			this.modifyOrderWindow.markDrawingCode.setValue(drawingCode);
 		}
 
 		this.chooseMarkWindow.hide();
@@ -544,8 +558,18 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onSelect4ChooseLable = fu
 		var records = A.getSelectionModel().getSelections();
 
 		var drawingCode = records[0].data.drawingCode;
-		this.addOrderWindow2.labelDrawingCode.setValue(drawingCode);
+
+		var obj = this.addOrderWindow2.isVisible()
+				? this.addOrderWindow2
+				: this.modifyOrderWindow;
+
+		obj.labelDrawingCode.setValue(drawingCode);
 
 		this.chooseLableWindow.hide();
 	}
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onModifyOrder = function() {
+	this.opt = 'modifyorder';
+	this.listPanel.onEdit();
 }

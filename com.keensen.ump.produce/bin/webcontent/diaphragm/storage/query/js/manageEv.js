@@ -5,7 +5,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr.prototype.initEvent = 
 	// 导出白名单
 	// 李梦超
 	var white = ['KS01242'];
-	var vip = ['XXB', 'LHY'];
+	var vip = ['dafu', 'LHY'];
 
 	if (white.indexOf(uid) > -1) {
 		var today = new Date();

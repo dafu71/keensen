@@ -42,6 +42,7 @@
 <ext:dict property="KS_DIMO_TYPE"   dictTypeId="KS_DIMO_TYPE" />
 <ext:dict property="KS_ZM_LINE"   dictTypeId="KS_ZM_LINE" />
 
+
 <js:load scriptPath="produce/diaphragm/make/report/zmmaterused/js/manageUi.js"/>
 <js:load scriptPath="produce/diaphragm/make/report/zmmaterused/js/manageEv.js"/>
 

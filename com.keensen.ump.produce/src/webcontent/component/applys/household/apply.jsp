@@ -76,7 +76,7 @@
 </head>
 <body onload="initPage()">
 <div align="center" id="pdfContainer">
-<%--<table width="780" border="0">
+<table width="780" border="0">
 	<tr>
 		<td width="100%" height="47">
 		<div align="right" class="style3">		
@@ -84,7 +84,7 @@
 		</div>
 		</td>
 	</tr>
-</table>--%>
+</table>
 <table width="780" border="0">
 	<tr>
 		<td width="100%" height="47">
@@ -153,7 +153,7 @@
 	<tr style="border: 1px solid black;">
 		<td width="33%" height="38">
 		<div align="left" class="style1"><strong>元件类型:</strong><b:write
-			property="data/prodSpecName" /></div>
+			property="data/dryWet" /></div>
 		</td>
 		<td width="33%" height="38">
 		<div align="left" class="style1"><strong>胶带颜色:</strong><b:write
@@ -178,8 +178,18 @@
 			property="data/box" dictTypeId="KS_COMPONENT_INDUSTRY_BOX" /></div>
 		</td>
 	</tr>
+	<tr style="border: 1px solid black;">
+		<td width="33%" height="38">
+		<div align="left" class="style1"><strong>Y型圈位置:</strong><b:write
+			property="data/sealPosition" /></div>
+		</td>
+		<td width="33%" height="38">&nbsp;
+		</td>
+		<td width="33%" height="38">&nbsp;
+		</td>
+	</tr>	
 </table>
-<table width="780" border="0">
+<%--<table width="780" border="0">
 	<tr>
 		<td width="100%" height="28">
 		<div align="center" class="style2"><strong>性能要求</strong></div>
@@ -199,7 +209,7 @@
 		</td>
 
 	</tr>
-</table>
+</table>--%>
 <table width="780" border="0">
 	<tr>
 		<td width="100%" height="28">
@@ -241,7 +251,7 @@
 <table width="780" border="0">
 	<tr>
 		<td width="100%" height="28">
-		<div align="center" class="style2"><strong>性能数据</strong></div>
+		<div align="center" class="style2"><strong>请检元件生产信息</strong></div>
 		</td>
 	</tr>
 </table>
@@ -347,7 +357,7 @@
 		<div align="center" class="style1">目视</div>
 		</td>
 		<td width="20%" height="38">
-		<div align="center" class="style1">5</div>
+		<div align="center" class="style1"> 抽5箱</div>
 		</td>
 		<td width="20%" height="38">
 		<div align="center" class="style1"><input type="checkbox">合格<input
@@ -368,7 +378,7 @@
 		<div align="center" class="style1">目视</div>
 		</td>
 		<td width="20%" height="38">
-		<div align="center" class="style1">5</div>
+		<div align="center" class="style1">5%</div>
 		</td>
 		<td width="20%" height="38">
 		<div align="center" class="style1"><input type="checkbox">合格<input
@@ -381,15 +391,15 @@
 		<div align="center" class="style2"><strong>元件外观</strong></div>
 		</td>
 		<td width="35%" height="68">
-		<div align="left" class="style1">&nbsp;&nbsp;玻璃钢表面平整，无刺手凸点或毛刺。<br>
-		&nbsp;&nbsp;玻璃钢内部和端面颜色均匀。<br>
-		&nbsp;&nbsp;膜元件端盖处平齐。</div>
+		<div align="left" class="style1">&nbsp;&nbsp;胶带颜色一致，端面平整。<br>
+		&nbsp;&nbsp;Y型圈位置符合订单要求。<br>
+		</div>
 		</td>
 		<td width="10%" height="68">
 		<div align="center" class="style1">目视</div>
 		</td>
 		<td width="20%" height="68">
-		<div align="center" class="style1">50%</div>
+		<div align="center" class="style1">5-10支</div>
 		</td>
 		<td width="20%" height="68">
 		<div align="center" class="style1"><input type="checkbox">合格<input
@@ -402,15 +412,13 @@
 		<div align="center" class="style2"><strong>元件直径</strong></div>
 		</td>
 		<td width="35%" height="56">
-		<div align="left" class="style1">&nbsp;&nbsp;直径检测仪测试合格或<br>
-		&nbsp;&nbsp;测直径的卡规可正常通过。</div>
+		<div align="left" class="style1">&nbsp;&nbsp;直径符合元件标准。</div>
 		</td>
 		<td width="10%" height="56">
 		<div align="center" class="style1">测量</div>
 		</td>
 		<td width="20%" height="56">
-		<div align="center" class="style1">8寸：100%<br>
-		4寸：10%</div>
+		<div align="center" class="style1">5-10支</div>
 		</td>
 		<td width="20%" height="56">
 		<div align="center" class="style1"><input type="checkbox">合格<input
@@ -460,11 +468,18 @@
 		</td>
 
 		<td width="15%" height="68">
+		<div align="center" class="style1">&nbsp;<input type="checkbox" >成品仓
+		<br>
+		&nbsp;<input type="checkbox" >订单仓 <br>
+		&nbsp;&nbsp;<input type="checkbox" >C等品仓</div>
+		</td>
+		
+		<%--<td width="15%" height="68">
 		<div align="center" class="style1">&nbsp;<input type="checkbox" <% if(storage==0){ %> checked  <% } %>>成品仓
 		<br>
 		&nbsp;<input type="checkbox" <% if(storage==2){ %> checked  <% } %>>订单仓 <br>
 		&nbsp;&nbsp;<input type="checkbox" <% if(storage==1){ %> checked  <% } %>>C等品仓</div>
-		</td>
+		</td>--%>
 	</tr>
 </table>
 <table width="780" border="0">
@@ -484,7 +499,7 @@
 <script type="text/javascript">
  
 	function initPage() {
-						<%--var batchNo = '<b:write property="data/code" />';
+						var batchNo = '<b:write property="data/code" />';
 						var barcode = document.getElementById('barcode_' + batchNo), 
 						options = {
 						format : "CODE128",
@@ -498,7 +513,7 @@
 						width : 3
 						};
 						
-					JsBarcode(barcode, batchNo, options);--%>
+					JsBarcode(barcode, batchNo, options);
 					window.print();
 					
 	};

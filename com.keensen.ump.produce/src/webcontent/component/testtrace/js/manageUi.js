@@ -377,6 +377,7 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 							'select' : function(combo, record, eOpts) {
 								this.inputPanel.prodSpecId
 										.setValue(record.data.prodSpecId);
+								_this.onProdSpecChange(record.data.prodSpecId,record.data.prodSpecName);
 
 							}
 						}
@@ -442,6 +443,12 @@ com.keensen.ump.produce.component.testtraceMgr = function() {
 					}, {
 						xtype : 'hidden',
 						ref : '../materSpecName'
+					}, {
+						xtype : 'hidden',
+						ref : '../sampleLengthLow'
+					}, {
+						xtype : 'hidden',
+						ref : '../sampleLengthUp'
 					}],
 			buttons : [{
 						text : "确定",

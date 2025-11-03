@@ -476,7 +476,7 @@ round(SUM(DECODE(psf,'B',c12,0)/1000*nvl(dimo_amount,0)) + SUM(DECODE(psf,'B',c1
 round(SUM(DECODE(psf,'C',c12,0)/1000*nvl(dimo_amount,0)) + SUM(DECODE(psf,'C',c12_percent*nvl(release_amount,0),0)),2) "c12c",
 round(SUM(DECODE(psf,'D',c12,0)/1000*nvl(dimo_amount,0)) + SUM(DECODE(psf,'D',c12_percent*nvl(release_amount,0),0)),2) "c12d",
 round(SUM(DECODE(psf,'S',c12,0)/1000*nvl(dimo_amount,0)) + SUM(DECODE(psf,'S',c12_percent*nvl(release_amount,0),0)),2) "c12s",
-round(SUM(c11/1000*nvl(dimo_amount,0)) + SUM(c11_percent*nvl(release_amount,0)),2) "c11",
+round(SUM(c11/1000*nvl(dimo_amount,0)) + sum(c11_invalid) + SUM(c11_percent*nvl(release_amount,0)),2)  "c11",
 round(SUM(c12/1000*nvl(dimo_amount,0)) + SUM(c12_percent*NVL(release_amount,0)),2) "c12",
 round(SUM(c13/1000*nvl(dimo_amount,0)) + SUM(c13_percent*nvl(release_amount,0)) ,2) "c13",
 round(SUM(c14/1000*nvl(dimo_amount,0)) + SUM(c14_percent*nvl(release_amount,0)),2) "c14",

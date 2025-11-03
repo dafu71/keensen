@@ -124,15 +124,25 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						arrowAlign : 'bottom',
 						menu : [{
-									text : '打印',
+									text : '打印(湿膜数据)',
 									scope : this,
 									iconCls : 'icon-printer',
 									handler : this.onPrint
 								}, {
-									text : '查看',
+									text : '查看(湿膜数据)',
 									scope : this,
 									iconCls : 'icon-application_form_magnify',
 									handler : this.onView
+								}, '-', {
+									text : '打印(气检数据)',
+									scope : this,
+									iconCls : 'icon-printer',
+									handler : this.onPrint3
+								}, {
+									text : '查看(气检数据)',
+									scope : this,
+									iconCls : 'icon-application_form_magnify',
+									handler : this.onView3
 								}]
 					}, '-', {
 						xtype : 'splitbutton',
@@ -143,15 +153,25 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						arrowAlign : 'bottom',
 						menu : [{
-									text : '打印',
+									text : '打印(湿膜数据)',
 									scope : this,
 									iconCls : 'icon-printer',
 									handler : this.onPrint2
 								}, {
-									text : '查看',
+									text : '查看(湿膜数据)',
 									scope : this,
 									iconCls : 'icon-application_form_magnify',
 									handler : this.onView2
+								}, '-', {
+									text : '打印(气检数据)',
+									scope : this,
+									iconCls : 'icon-printer',
+									handler : this.onPrint4
+								}, {
+									text : '查看(气检数据)',
+									scope : this,
+									iconCls : 'icon-application_form_magnify',
+									handler : this.onView4
 								}]
 					}, '->', {
 						xtype : 'splitbutton',
@@ -1869,7 +1889,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 					}]
 		});
 	}
-	
+
 	// 导入合格证明细
 	this.buildExcelUploadWin2 = function() {
 		this.excelUploadWin2 = new Ext.Window({
@@ -1881,7 +1901,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 			layout : 'fit',
 			width : 480,
 			height : 120,
-			itype:'',//自定义操作类型
+			itype : '',// 自定义操作类型
 			items : [{
 				xtype : 'columnform',
 				itemId : 'uploadForm',

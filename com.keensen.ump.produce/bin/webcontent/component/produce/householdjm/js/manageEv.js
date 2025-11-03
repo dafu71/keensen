@@ -4,6 +4,16 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 
 	this.getRight();
 	
+	this.listPanel4ProduceCount.store.on('load', function() {
+				var records = _this.listPanel4ProduceCount.store.getRange();
+				if (records.length == 0) {
+					Ext.getCmp(quantityTotalId).setValue('');
+					return
+				}
+				var quantityTotal = records[0].data.quantityTotal;
+				Ext.getCmp(quantityTotalId).setValue('合计数量:' + quantityTotal);
+			})
+	
 	// 查询事件
 	this.queryPanel4ProduceCount.mon(this.queryPanel4ProduceCount,
 			'query', function(form, vals) {
@@ -168,4 +178,68 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.exportProduce
 	doQuerySqlAndExport(this, this.queryPanel4ProduceCount,
 			this.listPanel4ProduceCount, '家用膜产量',
 			'com.keensen.ump.produce.component.producecount.queryHHJmCount', '0,1');
+}
+
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onStart = function() {
+	var _this = this;
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.productioncount.saveHHJmStart.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				var msg = ret.msg;
+				_this.queryPanel.setTitle("<span style='color:red'>" + msg
+						+ "</span>");
+			}
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onEnd = function() {
+	var _this = this;
+	Ext.Msg.confirm("操作确认", "您确实要下机结算工作量吗?", function(A) {
+		if (A == "yes") {
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.produce.component.productioncount.saveHHJmEnd.biz.ext",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						var msg = ret.msg;
+						_this.queryPanel.setTitle("<span style='color:red'>"
+								+ msg + "</span>");
+					}
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+		}
+	})
+}
+
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onQueryQuantity = function() {
+	this.produceCountWindow.show();
+}
+
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.exportProduceCountExcel = function() {
+	
+	
+	doQuerySqlAndExport(this, this.queryPanel4ProduceCount, this.listPanel4ProduceCount, '产量统计',
+			'com.keensen.ump.produce.component.productioncount.queryProductHHJmList', '0,1');
+			
+	
 }

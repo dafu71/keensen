@@ -33,17 +33,19 @@
 	t1.salt as "salt",
 	t1.describe as "describe",
 	t1.deal as "deal",
-	t1.order_no as "orderNo",
+	t1.order_no as "orderNo",nvl(qj.order_no,t1.order_no2) as "orderNo2",t1.order_id as "orderId",
 	TO_CHAR(sysdate, 'yyyy-MM-dd') "packDate",
 	nvl(v.qj_batch_no,nvl(t1.reserve1,t1.batch_no)) "qjBatchNo",
 	nvl(v.prod_spec_name,nvl(t1.reserve2,t1.prod_name)) "qjSpecName",
-    decode(v.batch_no,null,0,1) "isqj"
+    decode(v.batch_no,null,0,1) "isqj",
+    qj.record_id "qjRecordId"
 
   FROM KS_COMPONENT_PROD_RECORD t1
   
    LEFT JOIN V_KS_QJ_BATCH_NO v
   on v.batch_no = t1.batch_no
-  
+  LEFT JOIN qinsen.inst_qijian qj
+ ON v.juanmo_batch_id =qj.juanmo_batch_id
    
   where 1=1
  and nvl(t1.status,1) != 0
@@ -75,8 +77,12 @@
 		       t1.batch_no like '%' || #batchNo# || '%'
 	</isNotNull>
 	
-	<isNotNull prepend="and" property="qjBatchNo"> 
-		       t1.v.qj_batch_no like '%' || #qjBatchNo# || '%'
+	<isNotNull prepend="and" property="batchNos"> 
+		       t1.batch_no in ($batchNos$)
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="qjBatchNos"> 
+		       nvl(v.qj_batch_no,nvl(t1.reserve1,t1.batch_no)) in ($qjBatchNos$)
 	</isNotNull>
 	
 	<isNotNull prepend="and" property="dryWet"> 
@@ -89,6 +95,10 @@
 	
 	<isNotNull prepend="and" property="ids"> 
 		       t1.id  in ($ids$)
+	</isNotNull>
+  
+  	 <isNotNull prepend="and" property="orderId"> 
+		       t1.order_id  = #orderId#
 	</isNotNull>
   
   
@@ -106,9 +116,9 @@
    </delete>
    
    <select id="queryMarkPrintList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-   	SELECT nvl(pr.qj_batch_no,nvl(pr.reserve1,PR.BATCH_NO))           "prodBatchNo",
-       nvl(pr.qj_spec_name,nvl(pr.reserve2,PR.PROD_NAME))          "prodSpecName2",
-       PR.DRY_WET            "dryWet",
+   	SELECT nvl(t1.qj_batch_no,nvl(t1.prod_Batch_No,t1.BATCH_NO))           "prodBatchNo",
+       nvl(t1.qj_spec_name,nvl(t1.prod_Spec_Name2,t1.PROD_NAME))          "prodSpecName2",
+       t1.DRY_WET            "dryWet", t1.pkid "pkid",
        T1.IF_PRINT_BATCH_NO  AS "ifPrintBatchNo",
        T1.Y_BATCH_NO         AS "yBatchNo",
        T1.X_BATCH_NO         AS "xBatchNo",
@@ -133,19 +143,33 @@
        T1.RESERVE1           AS "reserve1",
        T1.TEMPLATE_NAME AS "templateName",
        T1.URL AS "url"
-  FROM (select t1.*,v.prod_spec_name qj_spec_name,v.qj_batch_no from KS_COMPONENT_PROD_RECORD t1
+  FROM (select t.*,v.prod_spec_name qj_spec_name,v.qj_batch_no,t1.reserve1 prod_Batch_No ,t1.reserve2 prod_Spec_Name2
+  ,t1.DRY_WET,t1.BATCH_NO,t1.PROD_NAME,t1.ID pkid
+  from KS_COMPONENT_PROD_RECORD t1
   LEFT JOIN V_KS_QJ_BATCH_NO v
-  on v.batch_no = t1.batch_no)
-   PR,
-       (SELECT *
-          FROM KS_COMPONENT_MARK_TEMPLATE T
-         WHERE T.TEMPLATE_NAME = 'KS-17-M0057-A') T1
+  on v.batch_no = t1.batch_no
+  left join KS_PROD_COMPONENT_YXORDER od
+  on od.id = t1.order_id
+  left join KS_COMPONENT_MARK_TEMPLATE T
+  on od.template_name = t.template_name) T1
          where 1=1 
+         and T1.URL is not null
          <isNotNull prepend="and" property="ids"> 
-		       pr.id  in ($ids$)
+		       t1.pkid  in ($ids$)
 		</isNotNull> 
   
-	  order by pr.id desc
+	  order by t1.id desc
    
    </select>
+   
+   <update id="modifyOrderNo" parameterClass="java.util.HashMap" >
+    
+     UPDATE KS_COMPONENT_PROD_RECORD t
+	SET t.order_no2 = #orderNo#,t.reserve2 = #prodSpecName#,
+	t.update_time = sysdate,t.update_user_id = #userId#,
+	t.update_name = #userName#,t.order_id = #orderId#
+	where id in($ids$)
+    </update>
+   
+  
     </sqlMap>

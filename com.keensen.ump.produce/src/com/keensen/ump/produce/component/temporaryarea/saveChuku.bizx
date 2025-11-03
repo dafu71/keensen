@@ -20,8 +20,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link4</targetConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link4</targetConnections>
     <targetConnections>link10</targetConnections>
     <location x="600" y="150"/>
     <size height="28" width="28"/>
@@ -171,6 +171,10 @@
     <process:copy>
       <process:from type="literal" pattern="reference">出库</process:from>
       <process:to type="query">record/flag</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data[1]/workshop</process:from>
+      <process:to type="query">record/workshop</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">

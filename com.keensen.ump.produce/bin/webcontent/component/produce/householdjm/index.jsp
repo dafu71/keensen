@@ -11,6 +11,7 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    String uname = userObject.getUserName();
 %>
 <html>
 <!-- 
@@ -72,6 +73,11 @@ var operatorid = "<%=operatorid%>";
 var operatorname = "<%=operatorname%>";
 var opt = '';
   var listid = Ext.id();
+  
+  var quantityTotalId = Ext.id();
+  var nowStaffName = "<%=uname %>";
+  var nowStaffId = <%=operatorid %>;
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.produce.HouseholdJmMgr
 		});

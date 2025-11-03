@@ -36,6 +36,7 @@
 
 <js:load scriptPath="pub/common/lineCombo.js" />
 <js:load scriptPath="pub/common/mpspecCombo.js" />
+<js:load scriptPath="pub/common/supCombo.js" />
 
 <js:load scriptPath="produce/report/diaghragm/mater/js/mainUi.js"/>
 <js:load scriptPath="produce/report/diaghragm/mater/js/mainEv.js"/>

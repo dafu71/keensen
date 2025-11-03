@@ -216,6 +216,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreateOrder = f
 	} else {
 		var records = A.getSelectionModel().getSelections();
 		var deliveryDt = this.orderNoWindow.deliveryDt.getValue();
+		var clientName = this.orderNoWindow.clientName.getValue();
 		if (!Ext.isEmpty(deliveryDt))
 			deliveryDt = formatTime(deliveryDt);
 		var deliveryOrderNo = this.orderNoWindow.deliveryOrderNo.getValue();
@@ -256,6 +257,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreateOrder = f
 					r.set('shipflag', 'n');
 					r.set('deliveryDt', deliveryDt);
 					r.set('deliveryOrderNo', deliveryOrderNo);
+					r.set('clientName',clientName);
 					list.push(r.data);
 				});
 		Ext.Msg.confirm("系统提示", '是否生成发货单?', function(btnText) {

@@ -152,6 +152,10 @@
       <process:from type="literal" pattern="reference">出库</process:from>
       <process:to type="query">record/flag</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">data[1]/workshop</process:from>
+      <process:to type="query">record/workshop</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <figSize height="20" width="40"/>

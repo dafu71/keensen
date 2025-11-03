@@ -151,8 +151,8 @@ com.keensen.ump.produce.report.diaghragm.MaterPvaMgr = function() {
 						dataIndex : 'planNo',
 						header : '计划单号'
 					}, {
-						dataIndex : 'c22Std',
-						header : 'C22(kg)标准',
+						dataIndex : 'c22aStd',
+						header : 'C22-A(kg)标准',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
 							if (batchNo == '合计' ) {
@@ -164,8 +164,8 @@ com.keensen.ump.produce.report.diaghragm.MaterPvaMgr = function() {
 							}
 						}
 					}, {
-						dataIndex : 'c22Weight',
-						header : 'C22(kg)实际',
+						dataIndex : 'c22aWeight',
+						header : 'C22-A(kg)实际',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
 							if (batchNo == '合计' ) {
@@ -391,6 +391,10 @@ com.keensen.ump.produce.report.diaghragm.MaterPvaMgr = function() {
 							name : 'tmBatchId'
 						}, {
 							name : 'prodFlagName'
+						}, {
+							name : 'c22aWeight'
+						}, {
+							name : 'c22aStd'
 						}
 
 				]

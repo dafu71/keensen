@@ -115,7 +115,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 200,
-					columns : 4,
+					columns : 24,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -124,7 +124,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'datetimefield',
 						name : 'condition/produceDtStart',
 						fieldLabel : '生产时间',
-						colspan : 1,
+						colspan : 6,
 						anchor : '90%',
 						// allowBlank : false,
 						editable : true,
@@ -135,7 +135,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'datetimefield',
 						name : 'condition/produceDtEnd',
 						fieldLabel : '至',
-						colspan : 1,
+						colspan : 6,
 						anchor : '90%',
 						editable : true,
 						format : 'Y-m-d H:i',
@@ -149,20 +149,23 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'linecombobox',
 						prodTacheId : '100',
 						hiddenName : 'condition/lineId',
+						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '生产线 '
 					}, {
 						xtype : 'mpspeccombobox',
 						hiddenName : 'condition/specId',
+						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '膜片型号 '
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 4
+						colspan : 24
 					}, {
 						xtype : 'supcombobox',
 						hiddenName : 'condition/supId',
+						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '无纺布供应商'
 					}, {
@@ -171,6 +174,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						fieldLabel : '判定结果',
 						ref : '../isQualified',
 						hiddenName : 'condition/isQualified',
+						colspan : 6,
 						emptyText : '--请选择--',
 						anchor : '90%',
 						store : [[null, '全部'], ['Y', '合格'], ['N', '不合格']],
@@ -186,6 +190,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						fieldLabel : '是否外销',
 						ref : '../isWx',
 						hiddenName : 'condition/isWx',
+						colspan : 6,
 						emptyText : '--请选择--',
 						anchor : '90%',
 						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
@@ -198,40 +203,46 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}, {
 						xtype : 'mpworkercombobox',
 						hiddenName : 'condition/workerId',
+						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '操作工'
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 4
+						colspan : 24
 					}, {
 						xtype : 'textfield',
 						name : 'condition/orderNoStr',
+						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '订单号%-%'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/planNo',
+						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '计划单号'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/dimoBatchNo',
+						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '底膜批次'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/batchNoStr',
+						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '膜片批次%-%'
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 4
+						colspan : 24
 					}, {
 						xtype : 'textfield',
 						name : 'condition/outBatchNo',
+						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '膜片卷号'
 					}, {
@@ -240,6 +251,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						fieldLabel : '是否保留品',
 						ref : '../isKeep',
 						hiddenName : 'condition/isKeep',
+						colspan : 6,
 						emptyText : '--请选择--',
 						anchor : '90%',
 						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
@@ -253,7 +265,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'datefield',
 						name : 'condition/lastCaimoDateStart',
 						fieldLabel : '最后裁膜时间',
-						colspan : 1,
+						colspan : 6,
 						anchor : '90%',
 						// allowBlank : false,
 						editable : true,
@@ -262,14 +274,14 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						xtype : 'datefield',
 						name : 'condition/lastCaimoDateEnd',
 						fieldLabel : '至',
-						colspan : 1,
+						colspan : 6,
 						anchor : '90%',
 						editable : true,
 						format : 'Y-m-d'
 					}, {
 						xtype : 'displayfield',
 						height : '5',
-						colspan : 4
+						colspan : 24
 					}, {
 
 						xtype : 'combo',
@@ -283,7 +295,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						allowBlank : true,
 						// value : 'N',
 						anchor : '90%',
-						colspan : 1,
+						colspan : 6,
 						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
 						listeners : {
 							scope : this,
@@ -299,6 +311,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						hiddenName : 'condition/prodFlagId',
 						emptyText : '--请选择--',
 						anchor : '90%',
+						colspan : 6,
 						store : [[null, '全部'], ['300027', '量产'],
 								['300028', '实验'], ['300140', '试量产']],
 						listeners : {
@@ -308,13 +321,31 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							}
 						}
 					}, {
+						
+						xtype : 'numberfield',
+						fieldLabel : '废品数大于',
+						// checked : true,
+						name : 'condition/wasteLoss',
+						colspan : 4,
+						anchor : '100%'
+					}, {
 						// fieldLabel : '不显示需生产<br>或入库为零',
 						xtype : 'checkbox',
-						boxLabel : '空头数大于10m',
+						boxLabel : '空头>10m',
 						// checked : true,
 						name : 'condition/ktAmountThan10',
 						inputValue : 'Y',
-						anchor : '90%'
+						colspan : 4,
+						anchor : '100%'
+					}, {
+						
+						xtype : 'checkbox',
+						boxLabel : 'C72报废>0',
+						// checked : true,
+						name : 'condition/c72InvalidMoreThan0',
+						inputValue : 'Y',
+						colspan : 4,
+						anchor : '100%'
 					}]
 				});
 
@@ -537,6 +568,13 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
 						xtype : 'displayfield',
+						value : '合计废品(m)',
+						id : 'totalWasteTxt'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
 						value : 'C72报废合计(kg):',
 						id : 'c72invalidtotal'
 					}],
@@ -554,6 +592,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : '膜片批次',
 						width : 120,
 						dataIndex : 'batchNo'
+					}, {
+						header : '返厂数量(m)',
+						width : 60,
+						dataIndex : 'fccAmount'
 					}, {
 						header : '长度(m)',
 						width : 60,
@@ -586,6 +628,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								return str;
 							}
 						}
+					}, {
+						header : '废品数',
+						width : 80,
+						dataIndex : 'wasteLoss'
 					}, {
 						header : '空头数',
 						width : 80,
@@ -938,6 +984,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : 'C72报废(kg)',
 						width : 120,
 						dataIndex : 'c72Invalid'
+					}, {
+						header : 'C72报废备注',
+						width : 120,
+						dataIndex : 'c72InvalidReason'
 					}],
 			store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.qinsen.tumo.queryRecordsByPage.biz.ext',
@@ -946,6 +996,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						totalProperty : 'totalCount',
 						baseParams : {},
 						fields : [{
+									name : 'wasteLoss'
+								},{
 									name : 'recordId'
 								}, {
 									name : 'specNameOriginal'
@@ -1175,6 +1227,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'pvaUsed'
 								}, {
 									name : 'c72Invalid'
+								}, {
+									name : 'fccAmount'
+								}, {
+									name : 'c72InvalidReason'
 								}]
 					})
 		})
@@ -3422,6 +3478,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						totalProperty : '',
 						baseParams : {
 							'condition/notstep' : '配料',
+							'condition/state' : 1,
 							'condition/watertype' : '水相补充液'
 						},
 						fields : [{
@@ -3653,7 +3710,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		this.itemStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['C22', 'C22'], ['C24', 'C24'], ['C51', 'C51'],
+					data : [['C22-A', 'C22-A'], ['C24', 'C24'], ['C51', 'C51'],
 							['C71', 'C71'], ['C72', 'C72']]
 				});
 
@@ -3983,7 +4040,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 
 		this.itemStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
-					data : [['C22', 'C22'], ['C24', 'C24'], ['C51', 'C51'],
+					data : [['C22-A', 'C22-A'], ['C24', 'C24'], ['C51', 'C51'],
 							['C71', 'C71'], ['C72', 'C72']]
 				});
 
@@ -4886,6 +4943,21 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									dataIndex : 'c72Invalid',
 									allowBlank : false,
 									fieldLabel : 'C72报废(kg)',
+									anchor : '95%',
+									colspan : 1
+								},{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									decimalPrecision : 4,
+									minValue : 0,
+									ref : '../../c72InvalidReason',
+									name : 'entity/c72InvalidReason',
+									dataIndex : 'c72InvalidReason',
+									allowBlank : false,
+									fieldLabel : '报废原因备注',
 									anchor : '95%',
 									colspan : 1
 								}, {

@@ -212,65 +212,6 @@
             <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="ParaMaterSpec">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="materSpecId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="materSpecCode" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="materSpecName" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="materClassId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="safetyStock" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="supplierId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="measurementUnit" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="plannedUnitPrice" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="thickness" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="width" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="length" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="propString" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="dispOrder" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="mpBatchCode" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="qtJudgeFlag" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="numPerWad" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="blankingSize" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="denseNet" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="area" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="pageWidth" nillable="true" type="xs:decimal"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="InstTumoCheck">
-        <xs:sequence>
-            <xs:any minOccurs="0"/>
-            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="batchId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="checkNo" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="positionLength" nillable="true" type="xs:float"/>
-            <xs:element minOccurs="0" name="gfdAvg" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="gfdStr" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="conductivityIn" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="conductivityOutAvg" nillable="true" type="xs:decimal"/>
-            <xs:element minOccurs="0" name="conductivityStr" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="saltRejection" nillable="true" type="xs:decimal"/>
-            <xs:element default="N" minOccurs="0" name="recheckFlag" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="submitterId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="submitTm" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="checkerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="checkTm" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="perfFlagId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="isQualified" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
-            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
-            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
-            <xs:element minOccurs="0" name="macName" nillable="true" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
     <xs:complexType name="InstCdmDefect">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -450,6 +391,115 @@
             <xs:element minOccurs="0" name="juanmoBatchId" nillable="true" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="InstTumoCheck">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="recordId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="batchId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="checkNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="positionLength" nillable="true" type="xs:float"/>
+            <xs:element minOccurs="0" name="gfdAvg" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="gfdStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="conductivityIn" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="conductivityOutAvg" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="conductivityStr" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="saltRejection" nillable="true" type="xs:decimal"/>
+            <xs:element default="N" minOccurs="0" name="recheckFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="submitterId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="submitTm" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="checkerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="checkTm" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="perfFlagId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="isQualified" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="macName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="recorder" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ParaMaterSpec">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="materSpecId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="materSpecCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materSpecName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materClassId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="safetyStock" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="supplierId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="measurementUnit" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="plannedUnitPrice" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="thickness" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="width" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="length" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="propString" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dispOrder" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="changeDt" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="creatorId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="changerId" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mpBatchCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="qtJudgeFlag" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="numPerWad" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="blankingSize" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="denseNet" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="area" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="pageWidth" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="mpSize" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="mpWidth" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="denseNetType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="denseNetWidth" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="denseNetCdm" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lightNetType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lightNetLongPage" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lightNetShortPage" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="juanmo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="cut" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="raosi" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="package" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pipe" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="newBatchCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bookCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bookVersion" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="preparationTime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="prodType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="denseNetAmount" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="drawNetLongWidth" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="drawNetLongAmount" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="drawNetShortWidth" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="drawNetShortAmount" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testPressure" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="keepPressureTime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="pressureArange" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testLiquid" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testLiquidDensity" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testLiquidPressure" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testLiquidTemp" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testLiquidPh" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testLiquidRecovery" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testLiquidGpd" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="testLiquidSalt" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orderSpecName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="jmSpecName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="craftNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="denseNetSpan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lightNetLongType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lightNetLongSpan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lightNetShortType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="intakePipeLength" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="effluentPipeLength" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="juanmoTape" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="diameter" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="fileNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="modifyRecord" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
     <xs:complexType name="InstTumo">
         <xs:sequence>
             <xs:any minOccurs="0"/>
@@ -514,6 +564,10 @@
             <xs:element minOccurs="0" name="remarkPinhole" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="waterBatchNo2" nillable="true" type="xs:string"/>
             <xs:element minOccurs="0" name="c72Invalid" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="c72InvalidReason" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c72InvalidTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="c72InvalidUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="c72InvalidName" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

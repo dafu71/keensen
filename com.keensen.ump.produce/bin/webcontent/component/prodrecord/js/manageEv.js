@@ -1,8 +1,74 @@
 com.keensen.ump.produce.component.ProdRecordMgr.prototype.initEvent = function() {
+
+	// 查询事件
+	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleOrderListPanel.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
+	// 气检记录-换标
+	this.changeTagWindow.activeItem.mon(this.changeTagWindow.activeItem,
+			'beforeSave', function() {
+				if (this.changeTagWindow.oldBatchNo.getValue() == this.changeTagWindow.newBatchNo
+						.getValue()) {
+					Ext.Msg.alert("系统提示", '新旧元件序号相同，请修改');
+					return false;
+				}
+			}, this);
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
+
+		var batchNoStr = this.queryPanel.batchNoStr.getValue();
+		var qjBatchNoStr = this.queryPanel.qjBatchNoStr.getValue();
+
+		if (!Ext.isEmpty(batchNoStr)) {
+			var batchNoStr = batchNoStr;
+			var regEx = new RegExp("\\n", "gi");
+			batchNoStr = batchNoStr.replace(regEx, ",");
+			batchNoStr = batchNoStr.replaceAll('，', ',');
+			batchNoStr = batchNoStr.replaceAll(' ', '');
+			var arr = [];
+			arr = batchNoStr.split(',');
+			var arr2 = [];
+			for (var i = 0; i < arr.length; i++) {
+				arr2.push("'" + arr[i] + "'");
+			}
+			this.queryPanel.batchNos.setValue(arr2.join(",") == "''"
+					? null
+					: arr2.join(","));
+		} else {
+			this.queryPanel.batchNos.setValue('');
+		}
+
+		if (!Ext.isEmpty(qjBatchNoStr)) {
+			var batchNoStr = qjBatchNoStr;
+			var regEx = new RegExp("\\n", "gi");
+			batchNoStr = batchNoStr.replace(regEx, ",");
+			batchNoStr = batchNoStr.replaceAll('，', ',');
+			batchNoStr = batchNoStr.replaceAll(' ', '');
+			var arr = [];
+			arr = batchNoStr.split(',');
+			var arr2 = [];
+			for (var i = 0; i < arr.length; i++) {
+				arr2.push("'" + arr[i] + "'");
+			}
+			this.queryPanel.qjBatchNos.setValue(arr2.join(",") == "''"
+					? null
+					: arr2.join(","));
+		} else {
+			this.queryPanel.qjBatchNos.setValue('');
+		}
+
 		var store = this.listPanel.store;
-		store.baseParams = vals;
+		store.baseParams = this.queryPanel.getForm().getValues();;
 		store.load({
 					params : {
 						"pageCond/begin" : 0,
@@ -63,11 +129,18 @@ com.keensen.ump.produce.component.ProdRecordMgr.prototype.onChangeLabel = functi
 			var id = A.get('id');
 			var isqj = A.get('isqj');
 			if (isqj == '1') {
-				Ext.Msg.alert("系统提示", "有气检记录的请走气检换标!");
+				// Ext.Msg.alert("系统提示", "有气检记录的请走气检换标!");
+				var qjBatchNo = A.get('qjBatchNo');
+				this.changeTagWindow.form.reset();
+				this.changeTagWindow.produceDt.setValue(new Date());
+				this.changeTagWindow.workerId.setValue(nowStaffId);
+				this.changeTagWindow.oldBatchNo.setValue(qjBatchNo);
+				this.changeTagWindow.show();
 				return
+			} else {
+				this.changeLabelWindow.show();
+				this.changeLabelWindow.loadData(A);
 			}
-			this.changeLabelWindow.show();
-			this.changeLabelWindow.loadData(A);
 		}
 	}
 }
@@ -217,6 +290,122 @@ com.keensen.ump.produce.component.ProdRecordMgr.prototype.onPrintMarks = functio
 		f.ids.value = arr.join(',');
 
 		var actionUrl = 'com.keensen.ump.produce.component.printProdRecordMarks.flow?token='
+				+ Date.now();
+		f.action = actionUrl;
+		f.submit();
+
+	}
+
+}
+
+com.keensen.ump.produce.component.ProdRecordMgr.prototype.onPrintMarks2 = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var arr = [];
+		for (var i = 0; i < C.length; i++) {
+			arr.push(C[i].data.id);
+		}
+
+		var f = document.getElementById('prodrecordprintForm');
+		f.ids.value = arr.join(',');
+
+		var actionUrl = 'com.keensen.ump.produce.component.printProdRecordMarks.flow?isStar=Y&token='
+				+ Date.now();
+		f.action = actionUrl;
+		f.submit();
+
+	}
+
+}
+
+com.keensen.ump.produce.component.ProdRecordMgr.prototype.onModiOrder = function() {
+
+	this.chooseSingleOrderWindow.show();
+}
+
+com.keensen.ump.produce.component.ProdRecordMgr.prototype.onChooseSingleOrder = function() {
+
+	var _this = this;
+	var B = this.chooseSingleOrderListPanel.getSelectionModel().getSelections();
+	if (B && B.length == 1) {
+		var orderNo = B[0].get('orderNo');
+		var orderId = B[0].get('id');
+		var prodSpecId = B[0].get('materSpecId');
+		var prodSpecName = B[0].get('materSpecName');
+
+		var A = this.listPanel;
+		var C = A.getSelectionModel().getSelections();
+		var arr = [];
+		var qjarr = [];
+		for (var i = 0; i < C.length; i++) {
+			arr.push(C[i].data.id);
+			if (!Ext.isEmpty(C[i].data.qjRecordId)) {
+				qjarr.push(C[i].data.qjRecordId);
+			}
+		}
+		this.chooseSingleOrderWindow.hide();
+		Ext.Msg.confirm('提示', '共' + C.length + '个批次，您确定要修改这些产品的订单号？', function(
+				btn) {
+			if (btn === 'yes') {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.component.prodrecord.modifyOrderNo.biz.ext",
+					method : "post",
+					jsonData : {
+						orderNo : orderNo,
+						orderId : orderId,
+						prodSpecId : prodSpecId,
+						prodSpecName : prodSpecName,
+						recordIds : qjarr.join(','),
+						ids : arr.join(',')
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.load();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "修改订单号失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide();
+
+					}
+				})
+			}
+		});
+
+	}
+}
+
+com.keensen.ump.produce.component.ProdRecordMgr.prototype.onPrintTag = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var arr = [];
+		for (var i = 0; i < C.length; i++) {
+
+			arr.push(C[i].data.id)
+		}
+
+		var f = document.getElementById('prodrecordprinttagsForm');
+
+		f.ids.value = arr.join(',');
+		var actionUrl = 'com.keensen.ump.produce.component.printProdrecordTags.flow?token='
 				+ Date.now();
 		f.action = actionUrl;
 		f.submit();

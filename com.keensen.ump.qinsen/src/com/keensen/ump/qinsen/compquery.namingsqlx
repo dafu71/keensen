@@ -303,13 +303,21 @@
 	       T3.CAIMO_LOSS,
 	       
 	       <!--已裁完的，需要减去发货后，客户已用长度-->
-      	       	       
+      	  case 
+      	  WHEN t1.IS_CUT_OVER = 'Y' THEN 0
+      	  when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
 	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)  "remainLength"
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end  "remainLength"
 	  
 	       <!--1.已裁完选择“是”
 				2.膜片不良记录有裁叠膜录入不良记录-->
-	  FROM (SELECT tm.*, used.amount used_amount from QINSEN.INST_TUMO tm
+	  FROM (SELECT tm.*, used.amount used_amount from QINSEN.INST_TUMO tm 
+	  
+	  
 	  		LEFT JOIN V_KS_DIAPHRAGM_AMOUNT_USED USED
           	ON USED.BATCH_NO = tm.BATCH_NO	  
 			WHERE tm.is_cut_over='Y'			
@@ -361,15 +369,44 @@
 	               WHERE NVL(d.if_tear,'是') = '是'
 	              GROUP BY D.TUMO_BATCH_ID) T3
 	    ON T3.TUMO_BATCH_ID = T1.RECORD_ID
+	    
+	    left join (SELECT batch_no,amount FROM KS_PROD_DIAPHRAGM_WAREHOUSING
+WHERE ID IN(
+SELECT MAX(ID) FROM 
+(select t.id,t.batch_no from KS_PROD_DIAPHRAGM_WAREHOUSING t
+WHERE t.storage_id=81 AND TYPE='退货入库'
+ ) GROUP BY batch_no)) fcc
+ 
+ on fcc.batch_no = T1.batch_no
+ 
 	    where 1=1
 	    
 	    <isEqual prepend = ""  property = "flag" compareValue="1">
 		   AND (
          (   
-             NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) -nvl(t1.USED_AMOUNT,0) &lt;= -10
+         
+         
+         case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end
+             <!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) -nvl(t1.USED_AMOUNT,0)--> &lt;= -10
           ) 
           OR 
-         (  NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) -nvl(t1.USED_AMOUNT,0) >= 10 
+         (  
+         
+          case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end
+         
+         <!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) -nvl(t1.USED_AMOUNT,0)--> >= 10 
          )
        )
 	       
@@ -377,11 +414,25 @@
 		
 		<isEqual prepend = ""  property = "flag" compareValue="2">
 		   AND (
-		 		NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) >= 50
+		   
+		    case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end
+		 		<!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)--> >= 50
 	       		 
 	       		or
-	       		 
-	       	  	NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) &lt;= -50
+	       case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end 		 
+	       	  	<!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)--> &lt;= -50
 	       		 
 			)
 	       
@@ -389,11 +440,26 @@
 		
 		<isEqual prepend = ""  property = "flag" compareValue="3">
 		    AND (
-		 		NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) >= 100
+		    
+		     case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end
+	       
+		 		<!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)--> >= 100
 	       		 
 	       		or
-	       		 
-	       	  	NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) &lt;= -100
+	        case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end		 
+	       	  <!--	NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)--> &lt;= -100
 	       		 
 			)
 	       
@@ -406,33 +472,110 @@
 	    
 	    
 	    <isEqual prepend = ""  property = "condition" compareValue="1">
-		  AND ((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) ) >= 50
+	    
+	    
+	    
+		  AND ((
+		  
+		   case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) --> 
+	       
+	       end
+	       
+		 <!-- NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)-->
+	       
+	        ) >= 50
 	       or 
-	       (NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) )&lt;= -50
+	       (
+	       
+	        case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end
+	       <!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       )
+	       
+	       &lt;= -50
 	       )
 	       
 		</isEqual>
 		
 		 <isEqual prepend = ""  property = "condition" compareValue="2">
-		  AND (((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) )>= 3 
+		  AND (((
+		  
+		   case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end
+	       
+		  <!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0)  -nvl(t1.USED_AMOUNT,0) 
+	       -->
+	       
+	       )>= 3 
 	      and 
-	       (NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0))&lt;= 50)
+	       (
+	       
+	        case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) --> 
+	       
+	       end
+	       
+	       <!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)-->
+	       
+	       )&lt;= 50)
 	       or 
-	       ((NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) )>= -50
+	       ((
+	       
+	        case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) -->
+	       
+	       end
+	       
+	       <!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)-->
+	       
+	        )>= -50
 	       and 
-	       (NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) )&lt;= -3))
+	       (
+	       
+	        case WHEN t1.IS_CUT_OVER = 'Y' THEN 0 when nvl(fcc.amount,0)>0 then
+      	  fcc.amount -  NVL(T2.CAIMO_LENGTH, 0) - NVL(T3.CAIMO_LOSS, 0)
+      	   else    	       
+	       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) --> 
+	       
+	       end
+	       
+	       <!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)-->
+	       
+	        )&lt;= -3))
 	       
 		</isEqual>
 		
 		
 	    order by produce_dt desc, NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
-	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0) desc
+	       NVL(T3.CAIMO_LOSS, 0) <!-- -nvl(t1.USED_AMOUNT,0) --> desc
 	    
 
 </select> 

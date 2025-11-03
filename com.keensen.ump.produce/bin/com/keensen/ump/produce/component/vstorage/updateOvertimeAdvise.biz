@@ -49,6 +49,10 @@
       <process:from type="query" pattern="reference">m:userObject/userName</process:from>
       <process:to type="query">map/userName</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">overtimeDeal</process:from>
+      <process:to type="query">map/overtimeDeal</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>
@@ -87,6 +91,7 @@
   <process:inputs varArgs="false">
     <process:input isArray="false" name="advise" primitiveType="String"/>
     <process:input isArray="false" name="recordIds" primitiveType="String"/>
+    <process:input isArray="false" name="overtimeDeal" primitiveType="String"/>
   </process:inputs>
   <process:outputs/>
   <process:extAttribute1>public</process:extAttribute1>

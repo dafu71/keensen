@@ -10,6 +10,10 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 
 		this.initMonitorDealWindow();
 
+		this.initEditWindow4MonitorAdvise();
+		this.initEditWindow4PlannerAdvise();
+		this.initEditWindow4OvertimeAdvise();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -32,7 +36,12 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 					fields : ['code', 'name'],
 					data : [['A', '放行原订单'], ['B', '降级'],
 							['C', '改判其他无特殊要求的同型号产品'], ['D', '报废'],
-							['E', '送水测'], ['F', '染色解剖'],['G', '补胶']]
+							['E', '送水测'], ['F', '染色解剖'], ['G', '补胶'], ['H', '符合内控性能，可放行']]
+				});
+
+		this.dealStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['保留', '保留'], ['移除', '移除']]
 				});
 
 	}
@@ -132,8 +141,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 										this.reset()
 									}
 								}
-							},
-							{
+							}, {
 
 								xtype : 'textfield',
 								name : 'condition/orderNo',
@@ -143,15 +151,13 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 								xtype : 'displayfield',
 								height : '5',
 								colspan : 4
-							},
-							{
+							}, {
 
 								xtype : 'textfield',
 								name : 'condition/dimoBatchStr',
 								anchor : '85%',
 								fieldLabel : '底膜批次%-%'
-							},
-							{
+							}, {
 
 								xtype : 'textfield',
 								name : 'condition/tumoBatchStr',
@@ -176,15 +182,15 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 
 		this.queryPanel.addButton({
 					text : "导入卷膜",
-					id:importVStorageId,
+					id : importVStorageId,
 					scope : this,
 					iconCls : 'icon-application_edit',
 					handler : this.importVStorage
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "检查超期停留",
-					id:checkOverTimeId,
+					id : checkOverTimeId,
 					scope : this,
 					iconCls : 'icon-application_edit',
 					handler : this.checkOverTime
@@ -202,44 +208,72 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						text : '班长处理',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						id:monitorDealId,
+						id : monitorDealId,
 						// hidden : gyyFlag != 1,
 						handler : this.onMonitorDeal
 					}, '-', {
 						text : '班长挑水测',
-						id:monitorRemarkId,
+						id : monitorRemarkId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : monitorFlag != 1,
 						handler : this.onMonitorRemark
 					}, '-', {
 						text : '工艺员意见',
-						id:gyyRemarkId,
+						id : gyyRemarkId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : gyyFlag != 1,
 						handler : this.onGyyRemark
 					}, '-', {
 						text : '品管意见',
-						id:pgRemarkId,
+						id : pgRemarkId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : gyyFlag != 1,
 						handler : this.onPgRemark
 					}, '-', {
 						text : '入白膜仓',
-						id:warehousingId,
+						id : warehousingId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : modifyOrderNoFlag != 1,
 						handler : this.onWarehousing
 					}, '-', {
 						text : '批量改订单',
-						id:modiOrderId,
+						id : modiOrderId,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						// hidden : modifyOrderNoFlag != 1,
 						handler : this.onModiOrder
+					}, '-', {
+						xtype : 'splitbutton',
+						// disabled : allRight != '1',
+						text : '处理意见',
+						// scale : 'small',
+						// rowspan : 1,
+						// iconAlign : 'top',
+						iconCls : 'icon-application_add',
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '班长处理意见',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.onMonitorAdvise
+								}, {
+									text : '计划员处理意见',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.onPlannerAdvise
+								}, {
+									text : '超期停留处理意见',
+									scope : this,
+									hidden : uid != 'LHY' && uid != 'KS00524'
+											&& uid != 'dafu',
+									iconCls : 'icon-application_edit',
+									handler : this.onOvertimeAdvise
+
+								}]
 					}, '->', {
 						xtype : 'displayfield',
 						value : "<span style='color:red'>超过4小时未处理，卷膜序号标红</span>"
@@ -366,11 +400,10 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 						dataIndex : 'pgRemarkTime',
 						width : 120,
 						header : '品管备注时间'
-					}/*, {
-						dataIndex : 'semiStock',
-						width : 120,
-						header : '是否已入白膜仓'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'semiStock', width : 120, header :
+						 * '是否已入白膜仓' }
+						 */, {
 						dataIndex : 'modifyOrderNoTime',
 						width : 120,
 						header : '改订单号时间'
@@ -400,9 +433,9 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 				},
 				fields : [{
 							name : 'gyyConclusion'
-						}/*, {
-							name : 'semiStock'
-						}*/, {
+						}/*
+							 * , { name : 'semiStock' }
+							 */, {
 							name : 'dryWet'
 						}, {
 							name : 'gyyRemarkTime'
@@ -544,7 +577,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 					fields : ['code', 'name'],
 					data : [['A', '放行原订单'], ['B', '降级'],
 							['C', '改判其他无特殊要求的同型号产品'], ['D', '报废'],
-							['E', '送水测'], ['F', '染色解剖'], ['G', '补胶']]
+							['E', '送水测'], ['F', '染色解剖'], ['G', '补胶'], ['H', '符合内控性能，可放行']]
 				});
 
 		this.editWindow4Gyy = this.editWindow4Gyy || new Ext.fn.FormWindow({
@@ -908,6 +941,146 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr = function() {
 									name : 'param/recordIds',
 									xtype : 'hidden',
 									ref : '../../recordIds'
+								}]
+					}]
+				});
+	}
+
+	this.initEditWindow4MonitorAdvise = function() {
+
+		this.editWindow4MonitorAdvise = this.editWindow4MonitorAdvise
+				|| new Ext.fn.FormWindow({
+					title : '班长处理意见',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.vstorage.updateMonitorAdvise.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									name : 'advise',
+									allowBlank : false,
+									ref : '../../advise',
+									fieldLabel : '处理意见',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordIds',
+									name : 'recordIds'
+								}]
+					}]
+				});
+	}
+
+	this.initEditWindow4PlannerAdvise = function() {
+
+		this.editWindow4PlannerAdvise = this.editWindow4PlannerAdvise
+				|| new Ext.fn.FormWindow({
+					title : '计划员处理意见',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.vstorage.updatePlannerAdvise.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									name : 'advise',
+									allowBlank : false,
+									ref : '../../advise',
+									fieldLabel : '处理意见',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordIds',
+									name : 'recordIds'
+								}]
+					}]
+				});
+	}
+
+	this.initEditWindow4OvertimeAdvise = function() {
+
+		var _this = this;
+		this.editWindow4OvertimeAdvise = this.editWindow4OvertimeAdvise
+				|| new Ext.fn.FormWindow({
+					title : '超期停留处理意见',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.vstorage.updateOvertimeAdvise.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									name : 'advise',
+									allowBlank : false,
+									ref : '../../advise',
+									fieldLabel : '处理意见',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'combobox',
+									mode : 'local',
+									fieldLabel : '是否保留',
+									ref : '../../overtimeDeal',
+									hiddenName : 'overtimeDeal',
+									name : 'overtimeDeal',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									hidden : uid != 'LHY' && uid != 'dafu',
+									store : this.dealStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											_this.editWindow4OvertimeAdvise.overtimeDeal
+													.reset()
+										}
+									}
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordIds',
+									name : 'recordIds'
 								}]
 					}]
 				});

@@ -24,9 +24,15 @@
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		--><!--2025-07-16
 		SW系列与NF系列标准相同。
+		--><!--2025-10-11
+		发货预期标准申请把SW2-1和SW3-1改为60个自然日，避免海水膜频繁调仓
+		mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1'
 		--><!--发货-->
 		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01' THEN 'red'
-         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01' THEN 'yellow'
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) 
+         AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01' 
+         and vkt.mater_spec_name != 'SW2-1' and vkt.mater_spec_name != 'SW3-1'
+         THEN 'yellow'
         <!--自用膜片--><!--超期标准--><!--2025-07-14
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		-->
@@ -64,7 +70,7 @@
        vkt.QUALIFID_LENGTH  as "qualifidLength",
        vkt.LINE_NAME       as "lineName",
        vkt.LINE_CODE       as "lineCode",
-       vkt.PRODUCE_DT      as "produceDt",
+       to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')      as "produceDt",
        vkt.IS_QUALIFIED    as "isQualified",
        vkt.OUT_LENGTH      as "outLength",
        vkt.LOSS            as "loss",
@@ -146,9 +152,15 @@
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		--><!--2025-07-16
 		SW系列与NF系列标准相同。
+		--><!--2025-10-11
+		发货预期标准申请把SW2-1和SW3-1改为60个自然日，避免海水膜频繁调仓
+		mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1'
 		--><!--发货-->
 		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01' THEN 'red'
-         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01' THEN 'yellow'
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) 
+         AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01' 
+         and vkt.mater_spec_name != 'SW2-1' and vkt.mater_spec_name != 'SW3-1'
+         THEN 'yellow'
         <!--自用膜片--><!--超期标准--><!--2025-07-14
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		-->
@@ -174,7 +186,7 @@
        END) = #ifWarn#
 	</isNotNull>
 	
-	order by vkt.PRODUCE_DT desc nulls last
+	order by T1.ID DESC
      </select>
     <select id="queryWarehousing" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
      select t1.ID             as "id",
@@ -240,11 +252,19 @@
        t1.AMOUNT         as "amount",
        t1.TYPE           as "type",
        t1.REMARK         as "remark"，
-       t2.name as "storageName"
+       t2.name as "storageName",
+       tm.spec_id "specId",
+       pms.mater_spec_name "specName"
   from KS_PROD_DIAPHRAGM_OUTOFSTOCK t1
+  LEFT JOIN qinsen.inst_tumo tm
+  ON t1.batch_no = tm.batch_no
+  LEFT JOIN qinsen.para_mater_spec pms
+  ON pms.mater_spec_id= tm.spec_id
   left join ks_base_storage t2 on t1.storage_id=t2.id
   where 1=1
-    <isNotNull prepend="and" property="storageName">t2.name like '%'||#storageName#||'%'</isNotNull>
+  
+  	<isNotNull prepend="and" property="specId">tm.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="storageName">t2.name like '%'||#storageName#||'%'</isNotNull>
         <isNotNull prepend="and" property="storageId">t1.storage_id = #storageId#</isNotNull>
         <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
@@ -477,9 +497,15 @@
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		--><!--2025-07-16
 		SW系列与NF系列标准相同。
+		--><!--2025-10-11
+		发货预期标准申请把SW2-1和SW3-1改为60个自然日，避免海水膜频繁调仓
+		mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1'
 		--><!--发货-->
 		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01' THEN 'red'
-         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01' THEN 'yellow'
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;30) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) 
+         AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01' 
+         and vkt.mater_spec_name != 'SW2-1' and vkt.mater_spec_name != 'SW3-1'
+         THEN 'yellow'
         <!--自用膜片--><!--超期标准-->
          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT&gt;0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&gt;84) 
          AND (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')&gt;= '2025-01-01'
@@ -505,4 +531,23 @@
      set t.reserve1= #reserve1#,t.update_time = sysdate,
      t.update_user_id = #updateUserId#,t.update_name = #updateName#
      where t.id in($ids$)</update>
+    <select id="countOutofstock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select sum(t1.AMOUNT)         as "amountTotal"
+  from KS_PROD_DIAPHRAGM_OUTOFSTOCK t1
+  LEFT JOIN qinsen.inst_tumo tm
+  ON t1.batch_no = tm.batch_no
+  LEFT JOIN qinsen.para_mater_spec pms
+  ON pms.mater_spec_id= tm.spec_id
+  left join ks_base_storage t2 on t1.storage_id=t2.id
+  where 1=1
+  
+  	<isNotNull prepend="and" property="specId">tm.spec_id = #specId#</isNotNull>
+        <isNotNull prepend="and" property="storageName">t2.name like '%'||#storageName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="storageId">t1.storage_id = #storageId#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="type">t1.type = #type#</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+    </select>
 </sqlMap>

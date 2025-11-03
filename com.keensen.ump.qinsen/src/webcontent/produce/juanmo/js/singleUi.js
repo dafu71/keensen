@@ -470,6 +470,7 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr = function() {
 						text : "领取任务",
 						scope : this,
 						iconCls : 'icon-page_save',
+						id : singleGetdutyId,
 						handler : this.onGetDuty
 
 					}, {

@@ -136,6 +136,10 @@ com.keensen.ump.ProdspecComboBox = Ext.extend(Ext.form.ComboBox, {
 										name : 'pipe'
 									}, {
 										name : 'lid'
+									}, {
+										name : 'lightNetShortType'
+									}, {
+										name : 'lightNetLongType'
 									}],
 							listeners : {
 								scope : this,

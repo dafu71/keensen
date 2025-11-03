@@ -97,6 +97,7 @@
        t1.bq)
         "labelBase"
        
+       , yb.seal_Position "sealPosition"
        
        ,yb.order_type "orderTypeBase",yb.prod_amount "prodAmount"
        ,nvl(chk.cnt,0) "checkCount"
@@ -683,8 +684,8 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
        T1.ORDER_ID        AS "orderId",
        T1.PLAN_DATE      AS "planDate",
        nvl(T1.AMOUNT,0)         AS "amount", nvl(t3.selected,0) "selected",
-       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) * nvl(T5.page_width,0) "useAmount",
-       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) * nvl(T5.page_width,0) - nvl(t3.selected,0) "needAmount",
+       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) * nvl(T5.mp_Width,0) "useAmount",
+       nvl(t5.num_Per_Wad,0) * nvl(t5.blanking_Size,0) * nvl(T1.AMOUNT,0) * nvl(T5.mp_Width,0) - nvl(t3.selected,0) "needAmount",
        t1.PRODUCT_ORDER "productOrder",
        t1.ORDER_REMARK  "orderRemark",
        to_char(T1.PLAN_DATE,'D') AS "weekday",

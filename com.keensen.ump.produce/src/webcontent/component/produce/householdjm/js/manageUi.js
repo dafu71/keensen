@@ -10,7 +10,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 		this.initAddWindow();
 		this.initEditWindow();
 		this.initViewWindow();
-		
+
 		this.initProduceCountWindow();
 
 		return new Ext.fn.fnLayOut({
@@ -58,10 +58,10 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 180,
 					columns : 3,
 					border : true,
-					// collapsible : true,
+					collapsible : true,
 					titleCollapse : false,
 					// title : '【BOM查询】',
 					fields : [{
@@ -130,22 +130,22 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 								height : 5,
 								colspan : 3
 							}, {
-						xtype : 'prodspeccombobox',
-						hiddenName : 'condition/prodSpecId',
-						anchor : '90%',
-						fieldLabel : '卷制型号 ',
-						typeAhead : true,
-						typeAheadDelay : 100,
-						minChars : 1,
-						queryMode : 'local',
-						lastQuery : '',
-						editable : true,
-						listeners : {
-							'specialkey' : function() {
-								return false;
-							}
-						}
-					}]
+								xtype : 'prodspeccombobox',
+								hiddenName : 'condition/prodSpecId',
+								anchor : '90%',
+								fieldLabel : '卷制型号 ',
+								typeAhead : true,
+								typeAheadDelay : 100,
+								minChars : 1,
+								queryMode : 'local',
+								lastQuery : '',
+								editable : true,
+								listeners : {
+									'specialkey' : function() {
+										return false;
+									}
+								}
+							}]
 				});
 
 		this.queryPanel.addButton({
@@ -153,10 +153,32 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 					// disabled : allRight != '1',
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
 					id : exportExcelBtn,
 					handler : this.exportExcel
 				});
+
+		this.queryPanel.addButton({
+					text : "工作量查询",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQueryQuantity
+				});
+
+		this.queryPanel.addButton({
+			text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_add',
+			handler : this.onStart
+		});
+
+		this.queryPanel.addButton({
+			text : "<span style='color:red;font-size:14px;'>下&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_edit',
+			handler : this.onEnd
+		});
 
 	}
 
@@ -197,7 +219,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onQueryProduceCount
-					},{
+					}, {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
@@ -642,14 +664,14 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 
 				},
 				columns : 2,
-				loadUrl:'com.keensen.ump.produce.component.produce.expandHouseholdJm.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.component.produce.expandHouseholdJm.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.component.produce.saveHouseholdJm.biz.ext',
 				fields : [{
 							xtype : 'textfield',
 							ref : '../../cmBatchNo',
 							emptyText : '光标置于此框内后扫码，或手工录入后按回车键',
 							name : 'entity/cmBatchNo',
-							dataIndex:'cmBatchNo',
+							dataIndex : 'cmBatchNo',
 							allowBlank : false,
 							fieldLabel : '裁叠膜栈板号',
 							anchor : '95%',
@@ -675,7 +697,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							name : 'entity/hjBatchNo',
 							// allowBlank : false,
 							fieldLabel : '混卷栈板号',
-							dataIndex:'hjBatchNo',
+							dataIndex : 'hjBatchNo',
 							anchor : '95%',
 							colspan : 2
 						}, {
@@ -687,7 +709,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							fieldLabel : '订单号',
 							xtype : 'textfield',
 							name : 'entity/orderNo',
-							dataIndex:'orderNo',
+							dataIndex : 'orderNo',
 							readOnly : true,
 							allowBlank : false,
 							anchor : '95%',
@@ -706,7 +728,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							anchor : '95%',
 							colspan : 2,
 							fieldLabel : '卷制型号 ',
-							dataIndex:'prodSpecId',
+							dataIndex : 'prodSpecId',
 							typeAhead : true,
 							typeAheadDelay : 100,
 							minChars : 1,
@@ -727,7 +749,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							xtype : 'combo',
 							fieldLabel : '操作机台',
 							allowBlank : false,
-							dataIndex:'machineCode',
+							dataIndex : 'machineCode',
 							mode : 'local',
 							anchor : '95%',
 							colspan : 2,
@@ -754,7 +776,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							xtype : 'numberfield',
 							name : 'entity/amount',
 							dataIndex : 'amount',
-							dataIndex:'amount',
+							dataIndex : 'amount',
 							allowBlank : false,
 							anchor : '95%',
 							decimalPrecision : 0,
@@ -768,7 +790,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							format : "Y-m-d H:i:00",
 							name : 'entity/orderDate',
 							ref : '../../orderDate',
-							dataIndex:'orderDate',
+							dataIndex : 'orderDate',
 							fieldLabel : '卷膜日期',
 							allowBlank : false,
 							anchor : '95%',
@@ -780,7 +802,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						}, {
 							xtype : 'componentworkercombobox',
 							ref : '../../workerId',
-							dataIndex:'workerId',
+							dataIndex : 'workerId',
 							allowBlank : false,
 							hiddenName : 'entity/workerId',
 							anchor : '95%',
@@ -789,12 +811,12 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 						}, {
 							xtype : 'hidden',
 							name : 'entity/id',
-							dataIndex:'id'
+							dataIndex : 'id'
 						}]
 			}]
 		});
 	}
-	
+
 	this.initProduceCountWindow = function() {
 
 		var selModel4ProduceCount = new Ext.grid.CheckboxSelectionModel({
@@ -802,91 +824,113 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 					header : ''
 				});
 
-		this.listPanel4ProduceCount = this.listPanel4ProduceCount || new Ext.fn.ListPanel({
-			region : 'center',
-			viewConfig : {
-				forceFit : true
-			},			
-			hsPage : true,
-			selModel : selModel4ProduceCount,
-			delUrl : '1.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel4ProduceCount, {
-						dataIndex : 'workerName',
-						header : '操作工'
+		this.listPanel4ProduceCount = this.listPanel4ProduceCount
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : ['->', {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
-						dataIndex : 'tmBatchNo',
-						header : '膜片批次'
+						xtype : 'displayfield',
+						value : '',
+						id : quantityTotalId
 					}, {
-						dataIndex : 'prodSpecName',
-						header : '卷制类型'
-					}, {
-						dataIndex : 'amount',
-						header : '生产数量'
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}],
-			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.component.producecount.queryHHJmCountByPage.biz.ext',
-				root : 'data',
-				autoLoad : true,
-				totalProperty : 'totalCount',
-				baseParams : {},
-				fields : [{
-							name : 'workerName'
-						}, {
-							name : 'tmBatchNo'
-						}, {
-							name : 'amount'
-						}, {
-							name : 'prodSpecName'
-						}]
-			})
-		})
+					hsPage : true,
+					selModel : selModel4ProduceCount,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4ProduceCount, {
+								dataIndex : 'dataCount',
+								header : '生产日期'
+							}, {
+								dataIndex : 'userName',
+								header : '操作工'
+							}, {
+								dataIndex : 'batchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'prodSpecName',
+								header : '卷制类型'
+							}, {
+								dataIndex : 'quantity',
+								header : '生产数量'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.productioncount.queryProductHHJmListByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'userName'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'quantity'
+								}, {
+									name : 'prodSpecName'
+								}, {
+									name : 'dataCount'
+								}, {
+									name : 'quantityTotal'
+								}]
+					})
+				})
 
-		this.queryPanel4ProduceCount = this.queryPanel4ProduceCount || new Ext.fn.QueryPanel({
-					height : 80,
-					columns : 3,
-					border : true,
-					region : 'north',
-					// collapsible : true,
-					titleCollapse : false,
-					fields : [{
-						xtype : 'datetimefield',
-						name : 'condition/produceBeginDate',
-						fieldLabel : '生产时间',
-						colspan : 1,
-						anchor : '95%',
-						// allowBlank : false,
-						editable : true,
-						allowBlank:false,
-						format : 'Y-m-d H:i',
-						value : new Date().add(Date.DAY, -1)
-								.format('Y-m-d 00:00')
-					}, {
-						xtype : 'datetimefield',
-						name : 'condition/produceEndDate',
-						fieldLabel : '至',
-						colspan : 1,
-						anchor : '95%',
-						allowBlank:false,
-						editable : true,
-						format : 'Y-m-d H:i',
-						// allowBlank : false,
-						value : new Date().add(Date.DAY, 1)
-								.format('Y-m-d 00:00')
-					}, {
-						xtype : 'componentworkercombobox',
-						hiddenName : 'condition/workerId',
-						// allowBlank:false,
-						anchor : '95%',
-						fieldLabel : '操作工'
-					}]
+		this.queryPanel4ProduceCount = this.queryPanel4ProduceCount
+				|| new Ext.fn.QueryPanel({
+							height : 110,
+							columns : 3,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/prodSpecName',
+										anchor : '100%',
+										fieldLabel : '元件型号'
+									}, {
+										xtype : 'textfield',
+										name : 'condition/batchNo',
+										anchor : '100%',
+										fieldLabel : '涂膜批次'
+									}, {
+										xtype : 'textfield',
+										name : 'condition/userName',
+										anchor : '100%',
+										fieldLabel : '操作工',
+										value : nowStaffName
+
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 3
+									}, {
+										xtype : "dateregion",
+										colspan : 1,
+										anchor : '100%',
+										nameArray : [
+												'condition/dateCountStart',
+												'condition/dateCountEnd'],
+										fieldLabel : "生产日期",
+										format : "Y-m-d",
+										value : new Date()
+									}]
+						});
+
+		this.queryPanel4ProduceCount.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportProduceCountExcel
 				});
-
-		 this.queryPanel4ProduceCount.addButton({
-			 text : "导出",
-			 scope : this,
-			 iconCls : 'icon-application_excel',
-			 handler : this.exportProduceCountExcel
-		 });
 
 		this.queryPanel4ProduceCount.addButton({
 					text : "关闭",
@@ -897,21 +941,21 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 
 				});
 
-		this.produceCountWindow = this.produceCountWindow
-				|| new Ext.Window({
-							title : '产量统计',
-							resizable : true,
-							minimizable : false,
-							maximizable : true,
-							closeAction : "hide",
-							buttonAlign : "center",
-							autoScroll : false,
-							modal : true,
-							width : 1024,
-							height : 600,
-							layout : 'border',
-							items : [this.queryPanel4ProduceCount, this.listPanel4ProduceCount]
+		this.produceCountWindow = this.produceCountWindow || new Ext.Window({
+					title : '产量统计',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4ProduceCount,
+							this.listPanel4ProduceCount]
 
-						});
+				});
 	}
 }

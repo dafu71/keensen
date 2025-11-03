@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="createRecord5" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
   <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
-    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="白膜" isDefault="false" type="transition">
       <sourceNode>start0</sourceNode>
       <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">entity/produceFlag</process:leftOperand>
+          <process:rightOperand type="literal">W</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link15" name="返修" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link15" name="返修" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
       <targetNode>subprocess1</targetNode>
       <process:transitionCondition>
@@ -176,8 +182,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link7</targetConnections>
     <targetConnections>link16</targetConnections>
+    <targetConnections>link7</targetConnections>
     <nodeLabel>subprocess0label</nodeLabel>
     <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
       <process:partner type="literal">com.keensen.ump.qinsen.qijian.queryRecords</process:partner>

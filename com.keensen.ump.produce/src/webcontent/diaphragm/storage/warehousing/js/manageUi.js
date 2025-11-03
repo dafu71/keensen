@@ -626,7 +626,7 @@ com.keensen.ump.produce.diaphragm.storage.WarehousingMgr = function() {
 				}, {
 					xtype : 'hidden',
 					name : 'warehousing/storageId',
-					value : 3
+					value : 81
 				}
 				, {
 					xtype : 'hidden',

@@ -1,7 +1,22 @@
 com.keensen.ump.qinsen.produce.raosiMgr.prototype.initEvent = function() {
 	var _this = this;
+	
+	Ext.getCmp(addRsBtn).setDisabled(true);
 
 	this.getLine();
+	
+	
+	this.listPanel4ProduceCount.store.on('load', function() {
+				
+				var records = _this.listPanel4ProduceCount.store.getRange();
+				if (records.length == 0) {
+					Ext.getCmp(quantityTotalId).setValue('');
+				} else {
+					var quantityTotal = records[0].data.quantityTotal;
+					Ext.getCmp(quantityTotalId).setValue('产量合计:'
+							+ quantityTotal);
+				}
+			});
 
 	// 查询事件
 	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
@@ -372,4 +387,70 @@ com.keensen.ump.qinsen.produce.raosiMgr.prototype.getLine = function() {
 					_this.requestMask.hide()
 				}
 			})
+}
+
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.onStart = function() {
+	var _this = this;
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.productioncount.saveRsStart.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				
+				Ext.getCmp(addRsBtn).setDisabled(false);
+				var msg = ret.msg;
+				_this.queryPanel.setTitle("<span style='color:red'>" + msg
+						+ "</span>");
+			}
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.onEnd = function() {
+	var _this = this;
+	Ext.Msg.confirm("操作确认", "您确实要下机结算工作量吗?", function(A) {
+		if (A == "yes") {
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.produce.component.productioncount.saveRsEnd.biz.ext",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						var msg = ret.msg;
+						_this.queryPanel.setTitle("<span style='color:red'>"
+								+ msg + "</span>");
+					}
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+		}
+	})
+}
+
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.onQueryQuantity = function() {
+	this.produceCountWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.raosiMgr.prototype.exportProduceCountExcel = function() {
+	
+	
+	doQuerySqlAndExport(this, this.queryPanel4ProduceCount, this.listPanel4ProduceCount, '产量统计',
+			'com.keensen.ump.produce.component.productioncount.queryProductRsList', '0,1');
+			
+	
 }

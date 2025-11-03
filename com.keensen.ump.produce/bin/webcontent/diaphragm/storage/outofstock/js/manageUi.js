@@ -32,7 +32,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 110,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -41,34 +41,48 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 					fields : [{
 								xtype : 'storagecombobox',
 								hiddenName : 'condition/storageId',
-								anchor : '80%',
+								anchor : '100%',
 								fieldLabel : '仓库'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/batchNo',
-								anchor : '80%',
+								anchor : '100%',
 								fieldLabel : '批号'
 							}, {
 								xtype : 'dictcombobox',
 								name : 'condition/type',
 								hiddenName : 'condition/type',
 								fieldLabel : '出库类型',
-								anchor : '80%',
+								anchor : '100%',
 								dictData : OUTOFSTOCK_TYPE
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
-								anchor : '95%',
+								anchor : '100%',
 								nameArray : ['condition/createTimeStart',
 										'condition/createTimeEnd'],
 								fieldLabel : "出库日期",
 								format : "Y-m-d"
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'mpspeccombobox',
+								hiddenName : 'condition/specId',
+								anchor : '100%',
+								fieldLabel : '膜片型号 '
 							}]
 				});
-		/*
-		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
-		 * 'icon-application_excel', handler : this.exportExcel });
-		 */
+
+		this.queryPanel.addButton({
+					text : "导出",
+					scope : this,
+					hidden : uid != 'dafu',
+					iconCls : 'icon-application_excel',
+					handler : this.exportExcel
+				});
+
 	}
 
 	this.initListPanel = function() {
@@ -89,6 +103,16 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
+					}, '->', {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : quantityTotalId
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}/*
 						 * , '-', { text : '发货出库', scope : this, iconCls :
 						 * 'icon-application_add', handler : this.onAdd2 }
@@ -100,6 +124,9 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 					}, {
 						dataIndex : 'batchNo',
 						header : '批号'
+					}, {
+						dataIndex : 'specName',
+						header : '膜片型号'
 					}, {
 						dataIndex : 'amount',
 						header : '数量'
@@ -137,6 +164,10 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 							name : 'id'
 						}, {
 							name : 'createTime'
+						}, {
+							name : 'specName'
+						}, {
+							name : 'amountTotal'
 						}]
 			})
 		})
@@ -183,7 +214,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr = function() {
 				fields : [{
 							xtype : 'dictcombobox',
 							hiddenName : 'outofstock/type',
-							ref:'../../type',
+							ref : '../../type',
 							allowBlank : false,
 							fieldLabel : '出库类型',
 							colspan : 2,

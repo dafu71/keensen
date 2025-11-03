@@ -105,7 +105,15 @@
        T1.is_examine "isExamine",
        decode(t5.code,null,'否','是') "ifcstock",
        decode(t1.confirm_date,null,'N','Y') "ifConfirmed"
+       
+       ,checked.apply_amount "checkedAmount"
+       
   FROM KS_COMPONENT_HH_CHECK_HEAD T1
+  left join (select t.reserve1 order_no,t.prod_spec_name,sum(t.apply_amount) apply_amount
+	 from KS_COMPONENT_HH_CHECK_HEAD t
+	 WHERE t.reserve1 IS NOT NULL
+	 GROUP BY t.reserve1,t.prod_spec_name) checked 
+	 on checked.order_no = t1.reserve1 and t1.prod_spec_name = checked.prod_spec_name
   
   left join (select DISTINCT t.code code from KS_COMPONENT_C_STOCK t
 WHERE t.type='家用膜') t5 on t5.code=t1.code
@@ -372,10 +380,14 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
     <select id="queryHHApplyCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT CODE "code" from 
   (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' CODE FROM dual
   WHERE NOT EXISTS(
-  select t.code from KS_COMPONENT_HH_CHECK_HEAD t
+  select t.code from (select code from KS_COMPONENT_CHECK_HEAD 
+						UNION ALL
+					   select code from KS_COMPONENT_HH_CHECK_HEAD t) t
   WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
   UNION
-  select to_char(to_number(max(t.code))+1) CODE from KS_COMPONENT_HH_CHECK_HEAD t
+  select to_char(to_number(max(t.code))+1) CODE from (select code from KS_COMPONENT_CHECK_HEAD 
+						UNION ALL
+					   select code from KS_COMPONENT_HH_CHECK_HEAD t) t
   WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
   WHERE CODE IS NOT NULL</select>
     <select id="queryHHBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT REPLACE(#prodSpecName#,'-','') || to_char(SYSDATE,'MMdd') || 

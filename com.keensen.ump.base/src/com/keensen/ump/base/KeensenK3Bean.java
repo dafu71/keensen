@@ -325,7 +325,7 @@ public class KeensenK3Bean extends BaseBean {
 				dl.set("fqty", dd.getString("fqty"));
 				dl.set("funitname", dd.getString("funitname"));
 				dl.set("fversion", dd.getString("fversion"));
-				dl.set("fstatusEnum", dd.getString("fstatus_enum"));
+				dl.set("fstatusEnum", dd.getString("fuseStatus_enum"));
 				dl.set("fcheckerStatus", dd.getString("fcheckerStatus"));
 				dl.set("fauxPropIdEnum", dd.getString("fauxPropID_enum"));
 				dl.set("ferpClsIdEnum", dd.getString("ferpClsID_enum"));

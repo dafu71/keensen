@@ -52,6 +52,8 @@
 	int batchNoFontSize = null == template.getString("reserve1")?15:Integer.parseInt(template.getString("reserve1"));
 						
 	String url = template.getString("url");
+	
+	System.out.println("isStar" + isStar);
 
 	rootUrl = rootUrl.replace(
 			"/produce/component/markprint/printProdMark.jsp", "");
@@ -402,7 +404,7 @@ function getDayCode() {
 		            prodSpecNameElement.textContent = '<%=prodSpecName2 %>';
 		            
 		            <%
-					String fontSize = prodSpecName2.length() >= 18 ? "22px"
+					String fontSize = prodSpecName2.length() >= 15 ? "22px"
 					: prodSpecName2.length() > 9 ? "26px" : "30px";
 					%>
 		            

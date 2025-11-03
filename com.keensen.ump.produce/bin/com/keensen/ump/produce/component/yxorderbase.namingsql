@@ -130,7 +130,8 @@
 		t1.spec_Name_Mark2 as "specNameMark2",
 		t1.label_Drawing_Code2 as "labelDrawingCode2",
 		t1.mark_Drawing_Code2 as "markDrawingCode2",
-		t1.seal_Require "sealRequire"
+		t1.seal_Require "sealRequire",
+		t1.DENSE_NET_CDM "denseNetCdm"
         
   FROM KS_COMPONENT_YXORDER_BASE T1
   LEFT JOIN qinsen.para_mater_spec pms on pms.mater_spec_id=t1.mp_spec_id
@@ -141,6 +142,7 @@
         <isNotNull prepend="and" property="recordTimeEnd">to_char(t1.record_TIME,'yyyy-MM-dd HH24:MI:SS')  &lt;=  #recordTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="isNotZero">t1.prod_Amount != 0</isNotNull>
         <isNotNull prepend="and" property="taskState">T1.task_State = #taskState#</isNotNull>
+        <isNotNull prepend="and" property="notId">T1.id != #notId#</isNotNull>
         <isNotNull prepend="and" property="orderNo">T1.ORDER_NO = #orderNo#</isNotNull>
         <isNotNull prepend="and" property="materSpecame2">t1.mater_Spec_Name2 = #materSpecame2#</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
@@ -355,15 +357,31 @@
 		t2.BAG_DRAWING_CODE as "bagDrawingCode",
 		t2.BOX_DRAWING_CODE as "boxDrawingCode",
 		t2.MARK_DRAWING_CODE as "markDrawingCode",
-		decode(t1.mater_type,'标签',t2.LABEL_DRAWING_CODE,'唛头',t2.MARK_DRAWING_CODE
+		decode(t1.mater_type,'标签',decode(t1.base_id,null,t1.LABEL_DRAWING_CODE,t2.LABEL_DRAWING_CODE),'唛头',nvl(t1.MARK_DRAWING_CODE,t2.MARK_DRAWING_CODE)
 		,'真空袋',decode(t1.BASE_ID,null,t1.BAG_DRAWING_CODE,t2.BAG_DRAWING_CODE) 
 		,'纸箱',decode(t1.BASE_ID,null,t1.BOX_DRAWING_CODE,t2.BOX_DRAWING_CODE),'') "drawingCode",
-		t2.sn_start as "snStart",
-		t2.sn_end as "snEnd",
+		decode(t1.mater_type,'标签',t2.sn_start,'唛头',t2.mark_start,'') as "snStart2",
+		decode(t1.mater_type,'标签',t2.sn_end,'唛头',t2.mark_end,'') as "snEnd2",
+		nvl(t1.sn_start, decode(t1.mater_type,'标签',t2.sn_start,'唛头',t2.mark_start,null)) "snStart", 
+		nvl(t1.sn_end, decode(t1.mater_type,'标签',t2.sn_end,'唛头',t2.mark_end,null)) "snEnd",
 		decode(t1.BASE_ID,null,t1.reserve2,t2.prod_Name) "prodName"
+		
+		,sn.id "snId"
+		
 	  FROM KS_COMPONENT_YXORDER_MCONFIRM T1
+	  
+	  
 	  LEFT JOIN KS_COMPONENT_YXORDER_BASE T2
 	    ON T1.base_ID = T2.ID
+	    
+	  
+	  left join (SELECT t.id,t.drawing_code from KS_COMPONENT_SN t
+		WHERE t.id IN(
+		SELECT MAX(ID) FROM KS_COMPONENT_SN t
+		WHERE t.drawing_code IS NOT NULL
+		GROUP BY t.drawing_code
+		)) sn
+		on sn.drawing_code = t2.LABEL_DRAWING_CODE and t1.mater_type = '标签'
 	    WHERE 1=1
 	<isNotNull prepend="and" property="baseId">t1.BASE_ID = #baseId#</isNotNull>
         <isNotNull prepend="and" property="relationId">t1.RELATION_ID = #relationId#</isNotNull>
@@ -378,7 +396,7 @@
         <isNotNull prepend="and" property="goodsState">t1.goods_State = #goodsState#</isNotNull>
         <isNotNull prepend="and" property="materCode">t1.MATER_code like '%' || #materCode# || '%'</isNotNull>
 	
- 	ORDER BY t1.RELATION_ID,T1.ID
+ 	ORDER BY t1.RELATION_ID desc nulls last,T1.ID 
 
 	 </select>
     <insert id="backupMConfirm" parameterClass="java.util.HashMap">insert into KS_COMPONENT_YX_MCONFIRM_BAK

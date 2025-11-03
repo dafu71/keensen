@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.productioncount">
+    <select id="queryProductionCdm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID                 AS "id",
+
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID     AS "createUserId",
+       T1.CREATE_NAME        AS "createName",
+    
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID     AS "updateUserId",
+       T1.UPDATE_NAME        AS "updateName",
+       T1.RESERVE1           AS "reserve1",
+       T1.RESERVE2           AS "reserve2",
+       T1.RESERVE3           AS "reserve3",
+       T1.RESERVE4           AS "reserve4",
+       T1.RESERVE5           AS "reserve5",
+       T1.ORG_ID             AS "orgId",
+       T1.STATUS             AS "status",
+       t1.user_id as "userId",
+		t1.user_name as "userName",
+		 to_char(t1.date_count,'yyyy-MM-dd') as "dateCount",
+		TO_CHAR(t1.time_start, 'yyyy-MM-dd HH24:mi:ss') as "timeStart",
+		TO_CHAR(t1.time_end, 'yyyy-MM-dd HH24:mi:ss') as "timeEnd",
+		t1.quantity as "quantity",
+		t1.confirm_user_id as "confirmUserId",
+		t1.confirm_user_name as "confirmUserName",
+		t1.confirm_time as "confirmTime",
+		t1.confirm_user_id2 as "confirmUserId2",
+		t1.confirm_user_name2 as "confirmUserName2",
+		t1.confirm_time2 as "confirmTime2",
+		t1.confirm_user_id3 as "confirmUserId3",
+		t1.confirm_user_name3 as "confirmUserName3",
+		t1.confirm_time3 as "confirmTime3",
+		
+		case when to_char(t1.date_count,'yyyy-MM-dd') = to_char(sysdate,'yyyy-MM-dd')
+		then 1
+		else 0 end "ifExistToday"
+		
+		from KS_COMPONENT_PRODUCTION_CDM t1
+		where 1=1
+		<isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <!--检查开机信息-->
+        <isEqual compareValue="1" prepend="" property="checkstart">and t1.id = (select max(id) from KS_COMPONENT_PRODUCTION_CDM
+		       where user_id = #userId#)</isEqual>
+    </select>
+    <insert id="insertProductionCdmList" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_PRODUC_CDM_LIST
+  (ID,
+   RELATION_ID,
+   TUMO_BATCH_ID,
+   PROD_SPEC_ID,
+   BATCH_NO,
+   PRO_SPEC_NAME,
+   QUANTITY)
+  SELECT SEQ_COMPONENT_PRODUC_CDM_LIST.NEXTVAL,
+         #relationId#,
+         TUMO_BATCH_ID,
+         PROD_SPEC_ID,
+         TM.BATCH_NO,
+         PMS.MATER_SPEC_NAME,
+         QUANTITY
+    FROM (SELECT TUMO_BATCH_ID, PROD_SPEC_ID, SUM(QUANTITY) QUANTITY
+            FROM (SELECT T.RECORD_ID,
+                         TO_CHAR(T.create_dt, 'YYYY-MM-DD') create_dt,
+                         T.TEAM_ID,
+                         T.WORKER_ID,
+                         T.QUANTITY,
+                         T.TUMO_BATCH_ID,
+                         T.PROD_SPEC_ID
+                    FROM QINSEN.INST_CAIDIEMO T
+                   WHERE TO_CHAR(T.create_dt, 'YYYY-MM-DD HH24:MI') &gt;=
+                         (SELECT TO_CHAR(TIME_START, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCTION_CDM
+                           WHERE ID = #relationId#)
+                     AND TO_CHAR(T.create_dt, 'YYYY-MM-DD HH24:MI') &lt;=
+                         (SELECT TO_CHAR(TIME_END, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCTION_CDM
+                           WHERE ID = #relationId#)
+                     AND T.WORKER_ID = (SELECT EMPID
+                                          FROM KS_COMPONENT_PRODUCTION_CDM CM
+                                          LEFT JOIN V_AC_OPERATOR_TRS V
+                                            ON V.USERID = CM.USER_ID
+                                         WHERE ID = #relationId#))
+           GROUP BY TUMO_BATCH_ID, PROD_SPEC_ID) CM
+    LEFT JOIN QINSEN.INST_TUMO TM
+      ON CM.TUMO_BATCH_ID = TM.RECORD_ID
+    LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+      ON PMS.MATER_SPEC_ID = CM.PROD_SPEC_ID</insert>
+    <select id="queryProducCdmList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT h.user_name "userName",to_char(h.date_count,'YYYY-MM-DD') "dataCount",
+	t.batch_no "batchNo",t.pro_spec_name "prodSpecName",t.quantity "quantity",
+	to_char(h.time_start,'YYYY-MM-DD HH24:MI:SS') "timeStart",
+	to_char(h.time_end,'YYYY-MM-DD HH24:MI:SS') "timeEnd",
+	h.user_id,t.id "id",t.relation_id "relationId"
+	FROM KS_COMPONENT_PRODUC_CDM_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCTION_CDM h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by h.user_name , to_char(h.date_count,'YYYY-MM-DD')
+ </select>
+    <select id="countProducCdmList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT sum(t.quantity) "quantityTotal"
+	FROM KS_COMPONENT_PRODUC_CDM_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCTION_CDM h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by h.user_name , to_char(h.date_count,'YYYY-MM-DD')
+ </select>
+    <select id="queryProductRs" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID                 AS "id",
+
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID     AS "createUserId",
+       T1.CREATE_NAME        AS "createName",
+    
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID     AS "updateUserId",
+       T1.UPDATE_NAME        AS "updateName",
+       T1.RESERVE1           AS "reserve1",
+       T1.RESERVE2           AS "reserve2",
+       T1.RESERVE3           AS "reserve3",
+       T1.RESERVE4           AS "reserve4",
+       T1.RESERVE5           AS "reserve5",
+       T1.ORG_ID             AS "orgId",
+       T1.STATUS             AS "status",
+       t1.user_id as "userId",
+		t1.user_name as "userName",
+		 to_char(t1.date_count,'yyyy-MM-dd') as "dateCount",
+		TO_CHAR(t1.time_start, 'yyyy-MM-dd HH24:mi:ss') as "timeStart",
+		TO_CHAR(t1.time_end, 'yyyy-MM-dd HH24:mi:ss') as "timeEnd",
+		t1.quantity as "quantity",
+		t1.confirm_user_id as "confirmUserId",
+		t1.confirm_user_name as "confirmUserName",
+		t1.confirm_time as "confirmTime",
+		t1.confirm_user_id2 as "confirmUserId2",
+		t1.confirm_user_name2 as "confirmUserName2",
+		t1.confirm_time2 as "confirmTime2",
+		t1.confirm_user_id3 as "confirmUserId3",
+		t1.confirm_user_name3 as "confirmUserName3",
+		t1.confirm_time3 as "confirmTime3",
+		
+		case when to_char(t1.date_count,'yyyy-MM-dd') = to_char(sysdate,'yyyy-MM-dd')
+		then 1
+		else 0 end "ifExistToday"
+		
+		from KS_COMPONENT_PRODUCT_RS t1
+		where 1=1
+		<isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <!--检查开机信息-->
+        <isEqual compareValue="1" prepend="" property="checkstart">and t1.id = (select max(id) from KS_COMPONENT_PRODUCT_RS
+		       where user_id = #userId#)</isEqual>
+    </select>
+    <insert id="insertProductRsList" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_PRODUCt_rs_LIST
+	  (ID,
+	   RELATION_ID,
+	   prod_type,
+	   QUANTITY)
+	  SELECT SEQ_COMPONENT_PRODUC_RS_LIST.NEXTVAL,
+	         #relationId#,
+	         prod_type,
+	         QUANTITY
+	    FROM (select t.prod_type,COUNT(1) quantity from qinsen.inst_raosi t
+	                   WHERE TO_CHAR(T.CREATE_DT, 'YYYY-MM-DD HH24:MI') &gt;=
+	                         (SELECT TO_CHAR(TIME_START, 'YYYY-MM-DD HH24:MI')
+	                            FROM KS_COMPONENT_PRODUCT_RS
+	                           WHERE ID = #relationId#)
+	                     AND TO_CHAR(T.CREATE_DT, 'YYYY-MM-DD HH24:MI') &lt;=
+	                         (SELECT TO_CHAR(TIME_END, 'YYYY-MM-DD HH24:MI')
+	                            FROM KS_COMPONENT_PRODUCT_RS
+	                           WHERE ID = #relationId#)
+	                     AND T.WORKER_ID = (SELECT EMPID
+	                                          FROM KS_COMPONENT_PRODUCT_RS RS
+	                                          LEFT JOIN V_AC_OPERATOR_TRS V
+	                                            ON V.USERID = RS.USER_ID
+	                                         WHERE ID = #relationId#)
+	           GROUP BY prod_type)</insert>
+    <select id="queryProductRsList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT h.user_name "userName",to_char(h.date_count,'YYYY-MM-DD') "dataCount",
+	t.prod_type "prodType",t.quantity "quantity",
+	to_char(h.time_start,'YYYY-MM-DD HH24:MI:SS') "timeStart",
+	to_char(h.time_end,'YYYY-MM-DD HH24:MI:SS') "timeEnd",
+	h.user_id,t.id,t.relation_id "relationId"
+	FROM KS_COMPONENT_PRODUCt_rs_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_rs h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodType">t.prod_type = #prodType#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by h.user_name , to_char(h.date_count,'YYYY-MM-DD')
+ </select>
+    <select id="countProductRsList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT sum(t.quantity) "quantityTotal"
+	FROM KS_COMPONENT_PRODUCt_rs_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_rs h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodType">t.prod_type = #prodType#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by to_char(h.date_count,'YYYY-MM-DD'),h.user_id
+ </select>
+    <select id="queryProdType" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select DISTINCT t.prod_type "prodType" from qinsen.inst_raosi t
+WHERE t.prod_type IS NOT NULL
+ORDER BY t.prod_type</select>
+    <select id="queryProductJm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID                 AS "id",
+
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID     AS "createUserId",
+       T1.CREATE_NAME        AS "createName",
+    
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID     AS "updateUserId",
+       T1.UPDATE_NAME        AS "updateName",
+       T1.RESERVE1           AS "reserve1",
+       T1.RESERVE2           AS "reserve2",
+       T1.RESERVE3           AS "reserve3",
+       T1.RESERVE4           AS "reserve4",
+       T1.RESERVE5           AS "reserve5",
+       T1.ORG_ID             AS "orgId",
+       T1.STATUS             AS "status",
+       t1.user_id as "userId",
+		t1.user_name as "userName",
+		 to_char(t1.date_count,'yyyy-MM-dd') as "dateCount",
+		TO_CHAR(t1.time_start, 'yyyy-MM-dd HH24:mi:ss') as "timeStart",
+		TO_CHAR(t1.time_end, 'yyyy-MM-dd HH24:mi:ss') as "timeEnd",
+		t1.quantity as "quantity",
+		t1.confirm_user_id as "confirmUserId",
+		t1.confirm_user_name as "confirmUserName",
+		t1.confirm_time as "confirmTime",
+		t1.confirm_user_id2 as "confirmUserId2",
+		t1.confirm_user_name2 as "confirmUserName2",
+		t1.confirm_time2 as "confirmTime2",
+		t1.confirm_user_id3 as "confirmUserId3",
+		t1.confirm_user_name3 as "confirmUserName3",
+		t1.confirm_time3 as "confirmTime3",
+		
+		case when to_char(t1.date_count,'yyyy-MM-dd') = to_char(sysdate,'yyyy-MM-dd')
+		then 1
+		else 0 end "ifExistToday"
+		
+		from KS_COMPONENT_PRODUCT_JM t1
+		where 1=1
+		<isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <!--检查开机信息-->
+        <isEqual compareValue="1" prepend="" property="checkstart">and t1.id = (select max(id) from KS_COMPONENT_PRODUCT_JM
+		       where user_id = #userId#)</isEqual>
+    </select>
+    <insert id="insertProductJmList" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_PRODUCT_JM_LIST
+  (ID,
+   RELATION_ID,
+   PROD_SPEC_ID,
+   PRO_SPEC_NAME,
+   QUANTITY)
+  SELECT SEQ_COMPONENT_PRODUCT_JM_LIST.NEXTVAL,
+         #relationId#,
+         PROD_SPEC_ID,
+         PMS.MATER_SPEC_NAME,
+         QUANTITY
+    FROM (SELECT PROD_SPEC_ID, COUNT(1) QUANTITY
+            FROM (SELECT T.RECORD_ID,
+                         TO_CHAR(T.create_dt, 'YYYY-MM-DD') create_dt,
+                         T.TEAM_ID,
+                         T.WORKER_ID,
+                         T.PROD_SPEC_ID
+                    FROM QINSEN.INST_JUANMO_MAIN T
+                   WHERE TO_CHAR(T.create_dt, 'YYYY-MM-DD HH24:MI') &gt;=
+                         (SELECT TO_CHAR(TIME_START, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_JM
+                           WHERE ID = #relationId#)
+                     AND TO_CHAR(T.create_dt, 'YYYY-MM-DD HH24:MI') &lt;=
+                         (SELECT TO_CHAR(TIME_END, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_JM
+                           WHERE ID = #relationId#)
+                     AND T.WORKER_ID = (SELECT EMPID
+                                          FROM KS_COMPONENT_PRODUCT_JM CM
+                                          LEFT JOIN V_AC_OPERATOR_TRS V
+                                            ON V.USERID = CM.USER_ID
+                                         WHERE ID = #relationId#))
+           GROUP BY PROD_SPEC_ID) JM
+    
+    LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+      ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID</insert>
+    <select id="queryProductJmList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT h.user_name "userName",to_char(h.date_count,'YYYY-MM-DD') "dataCount",
+	t.batch_no "batchNo",t.pro_spec_name "prodSpecName",t.quantity "quantity",
+	to_char(h.time_start,'YYYY-MM-DD HH24:MI:SS') "timeStart",
+	to_char(h.time_end,'YYYY-MM-DD HH24:MI:SS') "timeEnd",
+	h.user_id,t.id,t.relation_id "relationId"
+	FROM KS_COMPONENT_PRODUCT_JM_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_JM h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by h.user_name , to_char(h.date_count,'YYYY-MM-DD')
+ </select>
+    <select id="countProductJmList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT sum(t.quantity) "quantityTotal"
+	FROM KS_COMPONENT_PRODUCT_JM_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_JM h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by to_char(h.date_count,'YYYY-MM-DD'),h.user_id
+ </select>
+    <select id="queryProductHHJm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID                 AS "id",
+
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID     AS "createUserId",
+       T1.CREATE_NAME        AS "createName",
+    
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID     AS "updateUserId",
+       T1.UPDATE_NAME        AS "updateName",
+       T1.RESERVE1           AS "reserve1",
+       T1.RESERVE2           AS "reserve2",
+       T1.RESERVE3           AS "reserve3",
+       T1.RESERVE4           AS "reserve4",
+       T1.RESERVE5           AS "reserve5",
+       T1.ORG_ID             AS "orgId",
+       T1.STATUS             AS "status",
+       t1.user_id as "userId",
+		t1.user_name as "userName",
+		 to_char(t1.date_count,'yyyy-MM-dd') as "dateCount",
+		TO_CHAR(t1.time_start, 'yyyy-MM-dd HH24:mi:ss') as "timeStart",
+		TO_CHAR(t1.time_end, 'yyyy-MM-dd HH24:mi:ss') as "timeEnd",
+		t1.quantity as "quantity",
+		t1.confirm_user_id as "confirmUserId",
+		t1.confirm_user_name as "confirmUserName",
+		t1.confirm_time as "confirmTime",
+		t1.confirm_user_id2 as "confirmUserId2",
+		t1.confirm_user_name2 as "confirmUserName2",
+		t1.confirm_time2 as "confirmTime2",
+		t1.confirm_user_id3 as "confirmUserId3",
+		t1.confirm_user_name3 as "confirmUserName3",
+		t1.confirm_time3 as "confirmTime3",
+		
+		case when to_char(t1.date_count,'yyyy-MM-dd') = to_char(sysdate,'yyyy-MM-dd')
+		then 1
+		else 0 end "ifExistToday"
+		
+		from KS_COMPONENT_PRODUCT_HHJM t1
+		where 1=1
+		<isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <!--检查开机信息-->
+        <isEqual compareValue="1" prepend="" property="checkstart">and t1.id = (select max(id) from KS_COMPONENT_PRODUCT_HHJM
+		       where user_id = #userId#)</isEqual>
+    </select>
+    <insert id="insertProductHHJmList" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_PRODUCT_HHJM_LIST
+  (ID,
+   RELATION_ID,
+   TUMO_BATCH_ID,
+   PROD_SPEC_ID,
+   BATCH_NO,
+   PRO_SPEC_NAME,
+   QUANTITY)
+  SELECT SEQ_COMPONENT_PROD_HHJM_LIST.NEXTVAL,
+         #relationId#,
+         TUMO_BATCH_ID,
+         PROD_SPEC_ID,
+         TM.BATCH_NO,
+         PMS.MATER_SPEC_NAME,
+         QUANTITY
+    FROM (SELECT TUMO_BATCH_ID, PROD_SPEC_ID, SUM(QUANTITY) QUANTITY
+            FROM (SELECT T.id RECORD_ID,
+                         TO_CHAR(T.create_time, 'YYYY-MM-DD') create_dt,
+                         T.WORKER_ID,
+                         T.AMOUNT QUANTITY,
+                         Tm.Record_Id TUMO_BATCH_ID,
+                         T.PROD_SPEC_ID
+                    FROM KS_COMPONENT_HOUSEHOLD_JM T
+                    LEFT JOIN QINSEN.INST_caidiemo cm
+                    ON cm.batch_no = t.cm_batch_no
+                    LEFT JOIN qinsen.inst_tumo tm
+                    ON tm.record_id = cm.tumo_batch_id
+                   WHERE TO_CHAR(T.create_time, 'YYYY-MM-DD HH24:MI') &gt;=
+                         (SELECT TO_CHAR(TIME_START, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_HHJM
+                           WHERE ID = #relationId#)
+                     AND TO_CHAR(T.create_time, 'YYYY-MM-DD HH24:MI') &lt;=
+                         (SELECT TO_CHAR(TIME_END, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_HHJM
+                           WHERE ID = #relationId#)
+                     AND T.WORKER_ID = (SELECT EMPID
+                                          FROM KS_COMPONENT_PRODUCT_HHJM JM
+                                          LEFT JOIN V_AC_OPERATOR_TRS V
+                                            ON V.USERID = JM.USER_ID
+                                         WHERE ID = #relationId#))
+           GROUP BY TUMO_BATCH_ID, PROD_SPEC_ID) JM
+    LEFT JOIN QINSEN.INST_TUMO TM
+      ON JM.TUMO_BATCH_ID = TM.RECORD_ID
+    LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+      ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID</insert>
+    <select id="queryProductHHJmList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT h.user_name "userName",to_char(h.date_count,'YYYY-MM-DD') "dataCount",
+	t.batch_no "batchNo",t.pro_spec_name "prodSpecName",t.quantity "quantity",
+	to_char(h.time_start,'YYYY-MM-DD HH24:MI:SS') "timeStart",
+	to_char(h.time_end,'YYYY-MM-DD HH24:MI:SS') "timeEnd",
+	h.user_id,t.id,t.relation_id "relationId"
+	FROM KS_COMPONENT_PRODUCT_HHJM_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_HHJM h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by h.user_name , to_char(h.date_count,'YYYY-MM-DD')
+ </select>
+    <select id="countProductHHJmList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT sum(t.quantity) "quantityTotal"
+	FROM KS_COMPONENT_PRODUCT_HHJM_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_HHJM h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by to_char(h.date_count,'YYYY-MM-DD'),h.user_id
+ </select>
+    <select id="queryProductQj" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID                 AS "id",
+
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID     AS "createUserId",
+       T1.CREATE_NAME        AS "createName",
+    
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID     AS "updateUserId",
+       T1.UPDATE_NAME        AS "updateName",
+       T1.RESERVE1           AS "reserve1",
+       T1.RESERVE2           AS "reserve2",
+       T1.RESERVE3           AS "reserve3",
+       T1.RESERVE4           AS "reserve4",
+       T1.RESERVE5           AS "reserve5",
+       T1.ORG_ID             AS "orgId",
+       T1.STATUS             AS "status",
+       t1.user_id as "userId",
+		t1.user_name as "userName",
+		 to_char(t1.date_count,'yyyy-MM-dd') as "dateCount",
+		TO_CHAR(t1.time_start, 'yyyy-MM-dd HH24:mi:ss') as "timeStart",
+		TO_CHAR(t1.time_end, 'yyyy-MM-dd HH24:mi:ss') as "timeEnd",
+		t1.quantity as "quantity",
+		t1.confirm_user_id as "confirmUserId",
+		t1.confirm_user_name as "confirmUserName",
+		t1.confirm_time as "confirmTime",
+		t1.confirm_user_id2 as "confirmUserId2",
+		t1.confirm_user_name2 as "confirmUserName2",
+		t1.confirm_time2 as "confirmTime2",
+		t1.confirm_user_id3 as "confirmUserId3",
+		t1.confirm_user_name3 as "confirmUserName3",
+		t1.confirm_time3 as "confirmTime3",
+		
+		case when to_char(t1.date_count,'yyyy-MM-dd') = to_char(sysdate,'yyyy-MM-dd')
+		then 1
+		else 0 end "ifExistToday"
+		
+		from KS_COMPONENT_PRODUCT_QJ t1
+		where 1=1
+		<isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <!--检查开机信息-->
+        <isEqual compareValue="1" prepend="" property="checkstart">and t1.id = (select max(id) from KS_COMPONENT_PRODUCT_QJ
+		       where user_id = #userId#)</isEqual>
+    </select>
+    <insert id="insertProductQjList" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_PRODUCT_QJ_LIST
+  (ID,
+   RELATION_ID,
+   PROD_SPEC_ID,
+   PRO_SPEC_NAME,
+   QUANTITY)
+  SELECT SEQ_COMPONENT_PRODUCT_QJ_LIST.NEXTVAL,
+         #relationId#,
+         PROD_SPEC_ID,
+         PMS.MATER_SPEC_NAME,
+         QUANTITY
+    FROM (SELECT PROD_SPEC_ID, COUNT(1) QUANTITY
+            FROM (SELECT T.RECORD_ID,
+                         TO_CHAR(T.create_dt, 'YYYY-MM-DD') create_dt,
+                         T.TEAM_ID,
+                         T.WORKER_ID,
+                         T.PROD_SPEC_ID
+                    FROM QINSEN.INST_QIJIAN T
+                   WHERE TO_CHAR(T.create_dt, 'YYYY-MM-DD HH24:MI') &gt;=
+                         (SELECT TO_CHAR(TIME_START, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_QJ
+                           WHERE ID = #relationId#)
+                     AND TO_CHAR(T.create_dt, 'YYYY-MM-DD HH24:MI') &lt;=
+                         (SELECT TO_CHAR(TIME_END, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_QJ
+                           WHERE ID = #relationId#)
+                     AND T.WORKER_ID = (SELECT EMPID
+                                          FROM KS_COMPONENT_PRODUCT_QJ QJ
+                                          LEFT JOIN V_AC_OPERATOR_TRS V
+                                            ON V.USERID = QJ.USER_ID
+                                         WHERE ID = #relationId#))
+           GROUP BY PROD_SPEC_ID) QJ
+    
+    LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+      ON PMS.MATER_SPEC_ID = QJ.PROD_SPEC_ID</insert>
+    <select id="queryProductQjList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT h.user_name "userName",to_char(h.date_count,'YYYY-MM-DD') "dataCount",
+	t.batch_no "batchNo",t.pro_spec_name "prodSpecName",t.quantity "quantity",
+	to_char(h.time_start,'YYYY-MM-DD HH24:MI:SS') "timeStart",
+	to_char(h.time_end,'YYYY-MM-DD HH24:MI:SS') "timeEnd",
+	h.user_id,t.id,t.relation_id "relationId"
+	FROM KS_COMPONENT_PRODUCT_QJ_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_QJ h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by h.user_name , to_char(h.date_count,'YYYY-MM-DD')
+ </select>
+    <select id="countProductQjList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT sum(t.quantity) "quantityTotal"
+	FROM KS_COMPONENT_PRODUCT_QJ_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_QJ h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by to_char(h.date_count,'YYYY-MM-DD'),h.user_id
+ </select>
+    <select id="queryProductTrim" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID                 AS "id",
+
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID     AS "createUserId",
+       T1.CREATE_NAME        AS "createName",
+    
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID     AS "updateUserId",
+       T1.UPDATE_NAME        AS "updateName",
+       T1.RESERVE1           AS "reserve1",
+       T1.RESERVE2           AS "reserve2",
+       T1.RESERVE3           AS "reserve3",
+       T1.RESERVE4           AS "reserve4",
+       T1.RESERVE5           AS "reserve5",
+       T1.ORG_ID             AS "orgId",
+       T1.STATUS             AS "status",
+       t1.user_id as "userId",
+		t1.user_name as "userName",
+		 to_char(t1.date_count,'yyyy-MM-dd') as "dateCount",
+		TO_CHAR(t1.time_start, 'yyyy-MM-dd HH24:mi:ss') as "timeStart",
+		TO_CHAR(t1.time_end, 'yyyy-MM-dd HH24:mi:ss') as "timeEnd",
+		t1.quantity as "quantity",
+		t1.confirm_user_id as "confirmUserId",
+		t1.confirm_user_name as "confirmUserName",
+		t1.confirm_time as "confirmTime",
+		t1.confirm_user_id2 as "confirmUserId2",
+		t1.confirm_user_name2 as "confirmUserName2",
+		t1.confirm_time2 as "confirmTime2",
+		t1.confirm_user_id3 as "confirmUserId3",
+		t1.confirm_user_name3 as "confirmUserName3",
+		t1.confirm_time3 as "confirmTime3",
+		
+		case when to_char(t1.date_count,'yyyy-MM-dd') = to_char(sysdate,'yyyy-MM-dd')
+		then 1
+		else 0 end "ifExistToday"
+		
+		from KS_COMPONENT_PRODUCT_TRIM t1
+		where 1=1
+		<isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <!--检查开机信息-->
+        <isEqual compareValue="1" prepend="" property="checkstart">and t1.id = (select max(id) from KS_COMPONENT_PRODUCT_TRIM
+		       where user_id = #userId#)</isEqual>
+    </select>
+    <insert id="insertProductTrimList" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_PRODUCT_TRIM_LIST
+  (ID,
+   RELATION_ID,
+   PROD_SPEC_ID,
+   PRO_SPEC_NAME,
+   QUANTITY)
+  SELECT SEQ_COMPONENT_PRODUCT_TR_LIST.NEXTVAL,
+         #relationId#,
+         PROD_SPEC_ID,
+         PMS.MATER_SPEC_NAME,
+         QUANTITY
+    FROM (SELECT PROD_SPEC_ID, COUNT(1) QUANTITY
+            FROM (SELECT T.ID,
+                         TO_CHAR(T.create_time, 'YYYY-MM-DD') create_dt,
+                         jm.PROD_SPEC_ID
+                    FROM KS_COMPONENT_TRIM T
+                    LEFT JOIN qinsen.inst_juanmo_main jm
+                    ON jm.record_id = t.juanmo_batch_id
+                   WHERE TO_CHAR(T.create_time, 'YYYY-MM-DD HH24:MI') &gt;=
+                         (SELECT TO_CHAR(TIME_START, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_TRIM
+                           WHERE ID = #relationId#)
+                     AND TO_CHAR(T.create_time, 'YYYY-MM-DD HH24:MI') &lt;=
+                         (SELECT TO_CHAR(TIME_END, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_TRIM
+                           WHERE ID = #relationId#)
+                     AND T.operate_user_ID = (SELECT user_id
+                                          FROM KS_COMPONENT_PRODUCT_TRIM tr
+                                          
+                                         WHERE ID = #relationId#))
+           GROUP BY PROD_SPEC_ID) tr
+    
+    LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+      ON PMS.MATER_SPEC_ID = tr.PROD_SPEC_ID</insert>
+    <select id="queryProductTrimList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT h.user_name "userName",to_char(h.date_count,'YYYY-MM-DD') "dataCount",
+	t.batch_no "batchNo",t.pro_spec_name "prodSpecName",t.quantity "quantity",
+	to_char(h.time_start,'YYYY-MM-DD HH24:MI:SS') "timeStart",
+	to_char(h.time_end,'YYYY-MM-DD HH24:MI:SS') "timeEnd",
+	h.user_id,t.id,t.relation_id "relationId"
+	FROM KS_COMPONENT_PRODUCT_TRIM_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_TRIM h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by h.user_name , to_char(h.date_count,'YYYY-MM-DD')
+ </select>
+    <select id="countProductTrimList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 
+ SELECT sum(t.quantity) "quantityTotal"
+	FROM KS_COMPONENT_PRODUCT_TRIM_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_TRIM h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id">h.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="userId">h.user_id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.pro_spec_id = #prodSpecId#</isNotNull>
+        <isNotNull prepend="and" property="userName">h.user_name like '%' || #userName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">t.pro_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t.batch_no like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dateCountStart">to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#</isNotNull>
+        <isNotNull prepend="and" property="dateCountEnd">to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#</isNotNull>
+     order by to_char(h.date_count,'YYYY-MM-DD'),h.user_id
+ </select>
+    <delete id="deleteProductionCdmList" parameterClass="java.util.HashMap">delete from KS_COMPONENT_PRODUC_CDM_LIST where relation_id = #relationId#</delete>
+    <delete id="deleteProductRsList" parameterClass="java.util.HashMap">delete from KS_COMPONENT_PRODUCt_rs_LIST where relation_id = #relationId#</delete>
+    <delete id="deleteProductJmList" parameterClass="java.util.HashMap">delete from KS_COMPONENT_PRODUCT_JM_LIST where relation_id = #relationId#</delete>
+    <delete id="deleteProductHHJmList" parameterClass="java.util.HashMap">delete from KS_COMPONENT_PRODUCT_HHJM_LIST where relation_id = #relationId#</delete>
+    <delete id="deleteProductQjList" parameterClass="java.util.HashMap">delete from KS_COMPONENT_PRODUCT_QJ_LIST where relation_id = #relationId#</delete>
+    <delete id="deleteProductTrimList" parameterClass="java.util.HashMap">delete from KS_COMPONENT_PRODUCT_TRIM_LIST where relation_id = #relationId#</delete>
+</sqlMap>

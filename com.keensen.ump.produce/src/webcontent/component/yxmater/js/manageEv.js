@@ -3,6 +3,20 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.initEvent = function() {
 	me.inputWindow.materCode.setDisabled(true);
 	me.editWindow2.materCode.setDisabled(true);
 	me.editWindow.materCode.setDisabled(true);
+
+	// 查询事件
+	this.queryChoosesingleSnPanel.mon(this.queryChoosesingleSnPanel, 'query',
+			function(form, vals) {
+				var store = this.choosesingleSnListPanel.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.choosesingleSnListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -239,5 +253,162 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.onGoodsStateChange = func
 		this.goodsStateChangeWindow.form.findField('param/materCodes')
 				.setValue(arr2.join(','));
 		this.goodsStateChangeWindow.show();
+	}
+}
+
+com.keensen.ump.produce.component.YxmaterMgr.prototype.onModifySN = function() {
+
+	var _this = this;
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		if (C.length > 1) {
+			Ext.Msg.alert("系统提示", "没有选定数据，请选择一行数据！");
+			return false;
+		} else {
+			var r = C[0];
+			var id = r.data.id;
+			var amount = r.data.amount;
+			var snId = r.data.snId;
+			var materType = r.data.materType;
+			var prodName = r.data.prodName;
+
+			if (materType != '标签' && materType != '唛头') {
+				Ext.Msg.alert("系统提示", "请选择物料类型为标签或者唛头的数据！");
+				return false;
+			}
+
+			
+			if (!Ext.isEmpty(amount) && !Ext.isEmpty(snId)) {// 有图号的
+
+				Ext.Msg.confirm("操作确认", "您确实要更新序列号吗?", function(A) {
+					if (A == "yes") {
+						Ext.Ajax.request({
+							url : "com.keensen.ump.produce.component.yxorderbase.modifySN.biz.ext",
+							method : "post",
+							jsonData : {
+								'snId' : snId,
+								'id' : id,
+								'materType' : materType,
+								'num' : amount
+							},
+							success : function(resp) {
+								var ret = Ext.decode(resp.responseText);
+								if (ret.success) {
+									_this.listPanel.store.reload();
+
+									/*var fname = ret.fname;
+									if (Ext.isEmpty(fname)) {
+										Ext.Msg.alert("系统提示", ret.msg);
+										return
+									} else {
+										if (amount > 0) {
+											if (Ext.isIE) {
+												window
+														.open('/default/deliverynote/seek/down4IE.jsp?fname='
+																+ fname);
+											} else {
+												window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
+														+ fname;
+											}
+										}
+									}*/
+								}
+
+							},
+							failure : function(resp, options) {
+								// var ret = Ext.decode(resp.responseText);
+								Ext.MessageBox.alert('失败', '请求超时或网络故障');
+							},
+							callback : function() {
+								_this.requestMask.hide()
+							}
+						})
+					}
+				})
+
+			} else {
+				this.choosesingleSnWindow.show();
+				this.queryChoosesingleSnPanel.prodSpecName.setValue(prodName);
+			}
+
+		}
+
+	}
+}
+
+com.keensen.ump.produce.component.YxmaterMgr.prototype.onChooseSingleSn = function() {
+	var _this = this;
+
+	var lst = this.choosesingleSnListPanel;
+	var rd = lst.getSelectionModel().getSelections();
+	var snId = rd[0].data.id;
+
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		if (C.length > 1) {
+			Ext.Msg.alert("系统提示", "没有选定数据，请选择一行数据！");
+			return false;
+		} else {
+			var r = C[0];
+			var id = r.data.id;
+			var amount = r.data.amount;
+			var materType = r.data.materType;
+
+			
+			this.choosesingleSnWindow.hide();
+			Ext.Msg.confirm("操作确认", "您确实要更新序列号吗?", function(A) {
+				if (A == "yes") {
+					Ext.Ajax.request({
+						url : "com.keensen.ump.produce.component.yxorderbase.modifySN.biz.ext",
+						method : "post",
+						jsonData : {
+							'snId' : snId,
+							'id' : id,
+							'materType' : materType,
+							'num' : amount
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								_this.listPanel.store.reload();
+
+								/*var fname = ret.fname;
+								if (Ext.isEmpty(fname)) {
+									Ext.Msg.alert("系统提示", ret.msg);
+									return
+								} else {
+									if (amount > 0) {
+										if (Ext.isIE) {
+											window
+													.open('/default/deliverynote/seek/down4IE.jsp?fname='
+															+ fname);
+										} else {
+											window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
+													+ fname;
+										}
+									}
+								}*/
+							}
+
+						},
+						failure : function(resp, options) {
+							// var ret = Ext.decode(resp.responseText);
+							Ext.MessageBox.alert('失败', '请求超时或网络故障');
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
+				}
+			})
+
+		}
+
 	}
 }

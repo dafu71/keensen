@@ -1,9 +1,17 @@
 com.keensen.ump.produce.quality.poorMgr = function() {
 	this.initPanel = function() {
+
+		this.initStore();
+
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
 		this.initEditWindow();
+
+		this.initAbilitionWindow();
+
+		this.initAbilitionJudgeWindow();
+		this.initAbilitionQueryWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -11,6 +19,37 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					renderTo : 'poormgr',
 					panels : [this.queryPanel, this.listPanel]
 				});
+	}
+
+	this.initStore = function() {
+
+		this.industryInvalidTypeStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.quality.poorrecord.queryIndustryInvalidType.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			baseParams : {
+
+		}	,
+			fields : [{
+						name : "dictid"
+					}, {
+						name : "dictname"
+					}]
+		});
+
+		this.invalidDealMethodStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.quality.poorrecord.queryInvalidDealMethod.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			baseParams : {
+
+		}	,
+			fields : [{
+						name : "dictid"
+					}, {
+						name : "dictname"
+					}]
+		});
 	}
 
 	this.initQueryPanel = function() {
@@ -21,18 +60,18 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
-					//title : '【元件不良记录查询】',
+					// title : '【元件不良记录查询】',
 					fields : [{
 						xtype : "dateregion",
 						colspan : 1,
-						anchor : '95%',
+						anchor : '100%',
 						nameArray : ['condition/invalidDtStart',
 								'condition/invalidDtEnd'],
 						fieldLabel : "报废日期",
 						format : "Y-m-d"
 					}, {
 						xtype : 'combobox',
-						anchor : '75%',
+						anchor : '100%',
 						name : 'condition/workshop',
 						hiddenName : 'condition/workshop',
 						fieldLabel : '车间',
@@ -85,7 +124,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						xtype : 'prodspeccombobox',
 						ref : '../prodSpecSel',
 						hiddenName : 'condition/materSpecId',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '元件型号 ',
 						typeAhead : true,
 						typeAheadDelay : 100,
@@ -100,7 +139,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/batchNo',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '膜片批次'
 					}, {
 						xtype : 'displayfield',
@@ -109,22 +148,22 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/invalidCode',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '报废单编码'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/responsible',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '责任人'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/department',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '责任部门'
 					}, {
 						xtype : 'dictcombobox',
 						name : 'condition/dealMethod',
-						anchor : '75%',
+						anchor : '100%',
 						hiddenName : 'condition/dealMethod',
 						fieldLabel : '处理方式',
 						dictData : KS_INVALID_DEAL_METHOD
@@ -135,28 +174,28 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					}, {
 						xtype : 'dictcombobox',
 						name : 'condition/componentType',
-						anchor : '75%',
+						anchor : '100%',
 						hiddenName : 'condition/componentType',
 						fieldLabel : '元件归属类型',
 						dictData : KS_COMPONENT_TYPE
 					}, {
 						xtype : 'dictcombobox',
 						name : 'condition/invalidType',
-						anchor : '75%',
+						anchor : '100%',
 						hiddenName : 'condition/invalidType',
 						fieldLabel : '不合格类型<br>(工业）',
 						dictData : KS_INDUSTRY_INVALID_TYPE
 					}, {
 						xtype : 'dictcombobox',
 						name : 'condition/invalidType2',
-						anchor : '75%',
+						anchor : '100%',
 						hiddenName : 'condition/invalidType2',
 						fieldLabel : '不合格类型<br>(民用）',
 						dictData : KS_CIVIL_INVALID_TYPE
-					},{
+					}, {
 						xtype : "dateregion",
 						colspan : 1,
-						anchor : '95%',
+						anchor : '100%',
 						nameArray : ['condition/createTimeStart',
 								'condition/createTimeEnd'],
 						fieldLabel : "录入日期",
@@ -168,7 +207,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:uid != 'XXB' && uid != 'KS00307' ,
+					hidden : uid != 'dafu' && uid != 'KS00307' && uid != 'LHY',
 					handler : this.exportExcel
 				});
 
@@ -181,9 +220,9 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					header : ''
 				});
 		this.listPanel = new Ext.fn.ListPanel({
-			//title : '【元件不良记录列表】',
+			// title : '【元件不良记录列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			tbar : [{
@@ -201,7 +240,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
-					}, '-',{
+					}, '-', {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
@@ -212,6 +251,17 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						width : 100,
 						readOnly : true,
 						ref : '../length'
+
+					}, '->', {
+						text : '元件报废判定',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onAbilition
+					}, '-', {
+						text : '元件报废申请查询',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onAbolitionQuery
 
 					}],
 			selModel : selModel,
@@ -225,19 +275,24 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 						header : '报废日期'
 					}, {
 						dataIndex : 'invalidCode',
+						width : 120,
 						sortable : true,
 						header : '报废单编码'
 					}, {
 						dataIndex : 'materSpecName',
+						width : 120,
 						header : '元件型号'
 					}, {
 						dataIndex : 'batchNo',
+						width : 120,
 						header : '膜片批次'
 					}, {
 						dataIndex : 'juanmoBatchNo',
+						width : 120,
 						header : '卷膜序号'
 					}, {
 						dataIndex : 'componentNumber',
+						width : 120,
 						header : '元件序列号'
 					}, {
 						dataIndex : 'amount',
@@ -474,7 +529,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 				}, {
 					xtype : 'trigger',
 					allowBlank : true,
-					ref:'../../juanmoBatchNo',
+					ref : '../../juanmoBatchNo',
 					name : 'entity/juanmoBatchNo',
 					emptyText : "输入卷膜序号，单击旁边按钮",
 					fieldLabel : '卷膜序号',
@@ -746,7 +801,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 				}, {
 					xtype : 'trigger',
 					allowBlank : true,
-					ref:'../../juanmoBatchNo',
+					ref : '../../juanmoBatchNo',
 					name : 'entity/juanmoBatchNo',
 					dataIndex : 'juanmoBatchNo',
 					fieldLabel : '卷膜序号',
@@ -916,4 +971,587 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 		});
 	}
 
+	this.initAbilitionWindow = function() {
+
+		var selModel4Abilition = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4Abilition = this.listPanel4Abilition
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : [{
+								text : '判定',
+								scope : this,
+								iconCls : 'icon-application_edit',
+								handler : this.onAbilitionJudge
+							}],
+					hsPage : true,
+					selModel : selModel4Abilition,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer({
+										width : 20
+									}), selModel4Abilition, {
+								dataIndex : 'code',
+								width : 150,
+								header : '报废单编码'
+							}, {
+								dataIndex : 'deptName',
+								width : 150,
+								header : '申请部门'
+							}, {
+								dataIndex : 'belongType',
+								header : '归属类型'
+							}, {
+								dataIndex : 'createName',
+								header : '申请人'
+							}, {
+								dataIndex : 'createTime',
+								header : '申请时间'
+							}, {
+								dataIndex : 'result',
+								header : '判定结果'
+							}, {
+								dataIndex : 'judgeTime',
+								header : '判定时间'
+							}, {
+								dataIndex : 'judgeUserName',
+								header : '判定人'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.abilition.queryAbilitionByPage.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'code'
+								}, {
+									name : 'dept'
+								}, {
+									name : 'code'
+								}, {
+									name : 'deptName'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'belongType'
+								}, {
+									name : 'result'
+								}, {
+									name : 'judgeUserName'
+								}, {
+									name : 'judgeTime'
+								}, {
+									name : 'id'
+								}]
+					})
+				})
+
+		this.queryPanel4Abilition = this.queryPanel4Abilition
+				|| new Ext.fn.QueryPanel({
+							height : 110,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '100%',
+								nameArray : ['condition/createTimeStart',
+										'condition/createTimeEnd'],
+								fieldLabel : "申请日期",
+								format : "Y-m-d"
+							}, {
+								xtype : 'textfield',
+								name : 'condition/code',
+								anchor : '100%',
+								fieldLabel : '报废单编码%-%'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 2
+							}, {
+								xtype : 'textfield',
+								name : 'condition/deptName',
+								anchor : '100%',
+								fieldLabel : '申请部门%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/createName',
+								anchor : '100%',
+								fieldLabel : '申请人%-%'
+							}]
+						});
+
+		this.queryPanel4Abilition.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportAbilitionExcel
+				});
+
+		this.queryPanel4Abilition.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.abilitionWindow.hide();
+					}
+
+				});
+
+		this.abilitionWindow = this.abilitionWindow || new Ext.Window({
+					title : '元件报废判定',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4Abilition,
+							this.listPanel4Abilition]
+
+				});
+	}
+
+	this.initAbilitionJudgeWindow = function() {
+
+		var _this = this;
+
+		var selModel4AbilitionJudge = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.listPanel4AbilitionJudge = this.listPanel4AbilitionJudge
+				|| new Ext.fn.EditListPanel({
+
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					hsPage : false,
+					autoScroll : true,
+					clicksToEdit : 1,
+					selModel : selModel4AbilitionJudge,
+
+					tbar : [{
+								xtype : 'displayfield',
+								ref : '../info',
+								value : '&nbsp;'
+							}],
+
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4AbilitionJudge, {
+								dataIndex : 'prodSpecName',
+								sortable : true,
+								width : 140,
+								header : '元件型号'
+							}, {
+								dataIndex : 'jmBatchNo',
+								sortable : true,
+								width : 100,
+								header : '卷膜序号'
+							}, {
+								dataIndex : 'tmBatchNo',
+								sortable : true,
+								width : 100,
+								header : '膜片批次'
+							}, {
+
+								dataIndex : 'invalidType',
+								sortable : true,
+								width : 100,
+								header : '不合格类型',
+								css : 'background:#c7c7a7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+										{
+											allowBlank : false,
+											mode : 'local',
+											hiddenName : 'dictid',
+											anchor : '100%',
+											colspan : 6,
+											emptyText : '--请选择--',
+											editable : false,
+											store : _this.industryInvalidTypeStore,
+											displayField : "dictname",
+											valueField : "dictid",
+											scope : this,
+											listeners : {
+												"expand" : function(A) {
+													this.reset()
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'describe',
+								width : 200,
+								sortable : true,
+								header : '不合格描述',
+								css : 'background:#c7c7b7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											allowBlank : true,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'responsible',
+								sortable : true,
+								width : 100,
+								header : '责任人',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											allowBlank : true,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'department',
+								sortable : true,
+								width : 100,
+								header : '责任部门',
+								css : 'background:#c7c7d7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											allowBlank : true,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
+
+								dataIndex : 'dealMethod',
+								sortable : true,
+								width : 100,
+								header : '处理方式',
+								css : 'background:#c7c7e7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+										{
+											allowBlank : false,
+											mode : 'local',
+											hiddenName : 'dictid',
+											anchor : '100%',
+											colspan : 6,
+											emptyText : '--请选择--',
+											editable : false,
+											store : _this.invalidDealMethodStore,
+											displayField : "dictname",
+											valueField : "dictid",
+											scope : this,
+											listeners : {
+												"expand" : function(A) {
+													this.reset()
+												}
+											}
+										}))
+
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.abilition.queryAbilitionList.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'prodSpecName'
+								}, {
+									name : 'jmBatchNo'
+								}, {
+									name : 'tmBatchNo'
+								}, {
+									name : 'invalidType'
+								}, {
+									name : 'describe'
+								}, {
+									name : 'responsible'
+								}, {
+									name : 'department'
+								}, {
+									name : 'dealMethod'
+								}, {
+									name : 'relationId'
+								}]
+					})
+				})
+
+		this.abilitionJudgeWindow = this.abilitionJudgeWindow
+				|| new Ext.Window({
+							title : '报废判定',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 1024,
+							height : 600,
+							layout : 'border',
+							items : [this.listPanel4AbilitionJudge],
+							buttons : [{
+										text : "保存",
+										scope : this,
+										handler : this.onSaveAbilitionJudge
+									}, {
+										text : "关闭",
+										scope : this,
+										handler : function() {
+											this.abilitionJudgeWindow.hide();
+										}
+									}]
+
+						});
+
+	}
+
+	this.initAbilitionQueryWindow = function() {
+
+		var selModel4AbilitionQuery = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4AbilitionQueryList = this.listPanel4AbilitionQueryList
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					tbar : [{}],
+					hsPage : true,
+					selModel : selModel4AbilitionQuery,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer({
+										width : 20
+									}), selModel4AbilitionQuery, {
+								dataIndex : 'code',
+								width : 150,
+								header : '报废单编码'
+							}, {
+								dataIndex : 'deptName',
+								width : 150,
+								header : '申请部门'
+							}, {
+								dataIndex : 'belongType',
+								header : '归属类型'
+							}, {
+								dataIndex : 'juanmoLength',
+								header : '膜片长度(m)'
+							}, {
+								dataIndex : 'materCode',
+								header : '物料代码'
+							}, {
+								dataIndex : 'prodSpecName',
+								header : '元件型号'
+							}, {
+								dataIndex : 'tapeColor',
+								header : '胶带颜色'
+							}, {
+								dataIndex : 'dryWet',
+								header : '干/湿膜'
+							}, {
+								dataIndex : 'jmBatchNo',
+								header : '卷膜序号'
+							}, {
+								dataIndex : 'tmBatchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'amount',
+								header : '报废数量'
+							}, {
+								dataIndex : 'unit',
+								header : '单位'
+							}, {
+								dataIndex : 'returnFactory',
+								header : '入库/返厂日期'
+							}, {
+								dataIndex : 'checkTm',
+								// format : "Y-m-d",
+								header : '水测时间'
+							}, {
+								dataIndex : 'gpd',
+								header : '产水量'
+							}, {
+								dataIndex : 'belongType',
+								header : '脱盐率'
+							}, {
+								dataIndex : 'describe',
+								header : '报废原因'
+							}, {
+								dataIndex : 'responsible',
+								header : '责任人'
+							}, {
+								dataIndex : 'department',
+								header : '责任部门'
+							}, {
+								dataIndex : 'dealMethod',
+								header : '处理方式'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.abilition.queryAbilitionListByPage.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'jmBatchNo'
+								}, {
+									name : 'tmBatchNo'
+								}, {
+									name : 'tapeColor'
+								}, {
+									name : 'amount'
+								}, {
+									name : 'juanmoLength'
+								}, {
+									name : 'dryWet'
+								}, {
+									name : 'checkTm'
+								}, {
+									name : 'gpd'
+								}, {
+									name : 'salt'
+								}, {
+									name : 'code'
+								}, {
+									name : 'dept'
+								}, {
+									name : 'code'
+								}, {
+									name : 'deptName'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'belongType'
+								}, {
+									name : 'prodSpecId'
+								}, {
+									name : 'prodSpecName'
+								}, {
+									name : 'department'
+								}, {
+									name : 'dealMethod'
+								}, {
+									name : 'responsible'
+								}, {
+									name : 'describe'
+								}, {
+									name : 'returnFactory'
+								}, {
+									name : 'materCode'
+								}, {
+									name : 'unit'
+								}]
+					})
+				})
+
+		this.queryPanel4AbilitionQuery = this.queryPanel4AbilitionQuery
+				|| new Ext.fn.QueryPanel({
+							height : 110,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '100%',
+								nameArray : ['condition/createTimeStart',
+										'condition/createTimeEnd'],
+								fieldLabel : "申请日期",
+								format : "Y-m-d"
+							}, {
+								xtype : 'textfield',
+								name : 'condition/code',
+								anchor : '100%',
+								fieldLabel : '报废单编码%-%'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 2
+							}, {
+								xtype : 'textfield',
+								name : 'condition/jmBatchNo',
+								anchor : '100%',
+								fieldLabel : '卷膜序号%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/createName',
+								anchor : '100%',
+								fieldLabel : '申请人%-%'
+							}]
+						});
+
+		this.queryPanel4AbilitionQuery.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportAbilitionQuery
+				});
+
+		this.queryPanel4AbilitionQuery.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.abilitionQueryWindow.hide();
+					}
+
+				});
+
+		this.abilitionQueryWindow = this.abilitionQueryWindow
+				|| new Ext.Window({
+							title : '元件报废查询',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 1024,
+							height : 600,
+							layout : 'border',
+							items : [this.queryPanel4AbilitionQuery,
+									this.listPanel4AbilitionQueryList]
+
+						});
+	}
 }

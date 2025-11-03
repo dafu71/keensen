@@ -28,7 +28,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								name : 'condition/produceDtStart',
 								fieldLabel : '生产时间',
 								colspan : 1,
-								anchor : '75%',
+								anchor : '95%',
 								allowBlank : true,
 								editable : true,
 								format : 'Y-m-d H:i'
@@ -37,7 +37,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								name : 'condition/produceDtEnd',
 								fieldLabel : '至',
 								colspan : 1,
-								anchor : '75%',
+								anchor : '95%',
 								allowBlank : true,
 								editable : true,
 								format : 'Y-m-d H:i'
@@ -49,12 +49,12 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								xtype : 'linecombobox',
 								prodTacheId : '100',
 								hiddenName : 'condition/lineId',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '生产线 '
 							}, {
 								xtype : 'dictcombobox',
 								name : 'condition/ddflag',
-								anchor : '75%',
+								anchor : '95%',
 								dataIndex : 'condition/ddflag',
 								hiddenName : 'condition/ddflag',
 								fieldLabel : '是否让步',
@@ -81,12 +81,12 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								 */, {
 								xtype : 'textfield',
 								name : 'condition/orderNo',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '订单号'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/planNo',
-								anchor : '75%',
+								anchor : '95%',
 								fieldLabel : '计划单号'
 							}, {
 								xtype : 'textfield',
@@ -109,7 +109,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								name : 'condition/batchNoStr2',
 								emptyText : '多个批次请用逗号分隔，或一行一个批次',
 								colspan : 2,
-								anchor : '85%',
+								anchor : '95%',
 								fieldLabel : '膜片批次'
 							}, {
 								xtype : 'hidden',
@@ -505,6 +505,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 											colspan : 2
 										}, {
 											xtype : 'textfield',
+											allowBlank:false,
 											ref : '../../deliveryOrderNo',
 											fieldLabel : '实际发货订单号',
 											anchor : '100%',
@@ -517,9 +518,21 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 										}, {
 											xtype : 'datetimefield',
 											ref : '../../deliveryDt',
+											allowBlank:false,
 											fieldLabel : '实际发货时间',
 											format : "Y-m-d H:i:00",
 											value : new Date(),
+											anchor : '100%',
+											colspan : 2
+										}, {
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'textfield',
+											ref : '../../clientName',
+											allowBlank:false,
+											fieldLabel : '实际发货客户',
 											anchor : '100%',
 											colspan : 2
 										}]

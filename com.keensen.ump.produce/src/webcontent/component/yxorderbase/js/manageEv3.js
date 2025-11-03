@@ -69,7 +69,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				Ext.Msg.alert('系统提示', '已正式发布不能修改');
 				return false;
 			}
-//只要是营销提交了的订单要修改必须计划员驳回才能修改，这也符合记录留痕的基本原则。 任栋  2025-08-05
+			// 只要是营销提交了的订单要修改必须计划员驳回才能修改，这也符合记录留痕的基本原则。 任栋 2025-08-05
 			if (hpmc != '其它' && hpmc != '其他') {
 				if (state == '制定中' || state == '不能接单') {
 					this.addOrderWindow.show();
@@ -293,7 +293,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				// 展品:展品-CRM??????，共计14位;
 				// 特规:CRM??????，共计9位。
 				// B202？？？？？-？？？
-				
+
 				var regex = /^\d{8}-\d{5}$/;
 				var convention = regex.test(orderNo);
 				var regex = /^\d{8}-\d{5}-\d{1}$/;
@@ -311,35 +311,95 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var exhibit2 = regex.test(orderNo);
 				var regex = /^\展品-CRM\d{6}-\d{2}$/;
 				var exhibit3 = regex.test(orderNo);
-				//MF-年年月月日日-XXXXXX
+				// MF-年年月月日日-XXXXXX
 				var regex = /^\MF-\d{6}-\d{6}$/;
 				var exhibit4 = regex.test(orderNo);
-				//售后-CRMXXXXXX
+				// 售后-CRMXXXXXX
 				var regex = /^\售后-CRM\d{6}$/;
 				var aftersale = regex.test(orderNo);
 
 				if (!convention && !convention2 && !sample && !exhibit
-						&& !exhibit2 && !exhibit3 && !exhibit4 && !special && !special2 && !aftersale) {
+						&& !exhibit2 && !exhibit3 && !exhibit4 && !special
+						&& !special2 && !aftersale) {
 					Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 					return false;
 				}
 
-				/*var itemArr = [];
-				var myCheckboxGroup = this.addOrderWindow.photoSingle;
-				for (var i = 0; i < myCheckboxGroup.items.length; i++) {
-					if (myCheckboxGroup.items.itemAt(i).checked) {
-						itemArr.push(i);
-					}
+				/*
+				 * var itemArr = []; var myCheckboxGroup =
+				 * this.addOrderWindow.photoSingle; for (var i = 0; i <
+				 * myCheckboxGroup.items.length; i++) { if
+				 * (myCheckboxGroup.items.itemAt(i).checked) { itemArr.push(i); } }
+				 * this.addOrderWindow.photoSingle2.setValue(itemArr.join(','));
+				 * var itemArr = []; var myCheckboxGroup =
+				 * this.addOrderWindow.photoAll; for (var i = 0; i <
+				 * myCheckboxGroup.items.length; i++) { if
+				 * (myCheckboxGroup.items.itemAt(i).checked) { itemArr.push(i); } }
+				 * this.addOrderWindow.photoAll2.setValue(itemArr.join(','));
+				 */
+		}, this);
+
+	this.orderViewWindow.activeItem.mon(this.orderViewWindow.activeItem,
+			'afterload', function(win, data) {
+
+				var labelUrl = data.labelDrawingUrl;
+				var markUrl = data.markDrawingUrl;
+				var stampUrl = data.stampUrl;
+
+				// if(Ext.isEmpty(labelUrl) || Ext.isEmpty(markUrl)) return
+				// false;
+
+				this.orderViewWindow.labelDrawingUrl.update('');
+				if (!Ext.isEmpty(labelUrl)) {
+					labelUrl = markRootUrl + labelUrl;
+					labelUrl = '<img title="单击查看完整图片" src="'
+							+ labelUrl
+							+ '?ver='
+							+ data.orderNo
+							+ '" onclick= "javascript:window.open('
+							+ "'"
+							+ labelUrl
+							+ "'"
+							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
+					this.orderViewWindow.labelDrawingUrl.update(labelUrl);
 				}
-				this.addOrderWindow.photoSingle2.setValue(itemArr.join(','));
-				var itemArr = [];
-				var myCheckboxGroup = this.addOrderWindow.photoAll;
-				for (var i = 0; i < myCheckboxGroup.items.length; i++) {
-					if (myCheckboxGroup.items.itemAt(i).checked) {
-						itemArr.push(i);
-					}
+
+				this.orderViewWindow.markDrawingUrl.update('');
+				if (!Ext.isEmpty(markUrl)) {
+					
+
+					markUrl = markRootUrl + markUrl;
+					markUrl = '<img title="单击查看完整图片" src="'
+							+ markUrl
+							+ '?ver='
+							+ data.orderNo
+							+ '" onclick= "javascript:window.open('
+							+ "'"
+							+ markUrl
+							+ "'"
+							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
+					this.orderViewWindow.markDrawingUrl.update(markUrl);
+
 				}
-				this.addOrderWindow.photoAll2.setValue(itemArr.join(','));*/
+				
+				this.orderViewWindow.stampUrl.update('');
+				if (!Ext.isEmpty(stampUrl)) {
+					
+
+					stampUrl = markRootUrl + stampUrl;
+					stampUrl = '<img title="单击查看完整图片" src="'
+							+ stampUrl
+							+ '?ver='
+							+ data.orderNo
+							+ '" onclick= "javascript:window.open('
+							+ "'"
+							+ stampUrl
+							+ "'"
+							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
+					this.orderViewWindow.stampUrl.update(stampUrl);
+
+				}
+
 			}, this);
 
 	this.adjustWindow.activeItem.mon(this.adjustWindow.activeItem, 'afterload',
@@ -358,16 +418,17 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.adjustWindow.reserve1.setVisible(!Ext.isEmpty(ifget));
 
 			}, this);
-			
-	this.addOrderWindow.activeItem.mon(this.addOrderWindow.activeItem, 'afterload',
-			function(win, data) {
+
+	this.addOrderWindow.activeItem.mon(this.addOrderWindow.activeItem,
+			'afterload', function(win, data) {
 
 				var tray = data.tray;
-				if(tray == '公司标准') {
+				if (tray == '公司标准') {
 					this.addOrderWindow.tray.setValue('');
 				}
 				var lid = data.lid;
-				if(lid != '格栅' && lid != '梳齿五星蜂窝' && lid != '定制' && lid != '蜂窝') {
+				if (lid != '格栅' && lid != '梳齿五星蜂窝' && lid != '定制'
+						&& lid != '蜂窝') {
 					this.addOrderWindow.lid.setValue('');
 				}
 
@@ -399,7 +460,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 					}
 				});
 			}, this);
-			
+
 	// 查询事件
 	this.queryPanel4ChooseLable.mon(this.queryPanel4ChooseLable, 'query',
 			function(form, vals) {
@@ -565,41 +626,39 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = functi
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function() {
 	var _this = this;
-	
+
 	var materSpecName2 = this.addOrderWindow.materSpecName2.getValue();
-	var pattern = /^[a-zA-Z0-9-]+$/;  // 正则表达式
-	
+	var pattern = /^[a-zA-Z0-9-]+$/; // 正则表达式
+
 	if (!pattern.test(materSpecName2)) {
-    	Ext.Msg.alert('系统提示', '请检查订单下达型号');
+		Ext.Msg.alert('系统提示', '请检查订单下达型号');
 		return false;
 	}
-	
-//	1、如果端盖选定制，则必须要填端盖图纸编号
-//2、标签序号不固定，则必填标签序号
-//3、唛头序号固定，则必填唛头序号
-//4、需生产数量大于0，且标签图纸不是KG开头，则标签图纸编号长度必须大于等于10
-//5、需生产数量大于0，且唛头图纸不是KG开头，则唛头图纸编号长度必须大于等于10
-//6、双标签选择是，则请完整输入第二标签信息
-//7、双唛头选择是，则请完整输入第二唛头信息
-//8、生产周期要求必须>=6天（不强制，只做提醒）
 
-	//如果端盖选定制，则必须要填端盖图纸编号
+	// 1、如果端盖选定制，则必须要填端盖图纸编号
+	// 2、标签序号不固定，则必填标签序号
+	// 3、唛头序号固定，则必填唛头序号
+	// 4、需生产数量大于0，且标签图纸不是KG开头，则标签图纸编号长度必须大于等于10
+	// 5、需生产数量大于0，且唛头图纸不是KG开头，则唛头图纸编号长度必须大于等于10
+	// 6、双标签选择是，则请完整输入第二标签信息
+	// 7、双唛头选择是，则请完整输入第二唛头信息
+	// 8、生产周期要求必须>=6天（不强制，只做提醒）
+
+	// 如果端盖选定制，则必须要填端盖图纸编号
 	var lid = this.addOrderWindow.lid.getValue();
-	
+
 	var type = this.addOrderWindow.type.getValue();
-	if(Ext.isEmpty(lid) && type != '家用膜'){
+	if (Ext.isEmpty(lid) && type != '家用膜') {
 		Ext.Msg.alert('系统提示', '请选择端盖');
 		return false;
 	}
-	
+
 	var reserve5 = this.addOrderWindow.reserve5.getValue();
-	if (!Ext.isEmpty(lid) && lid == '定制'
-			&& Ext.isEmpty(reserve5)) {
+	if (!Ext.isEmpty(lid) && lid == '定制' && Ext.isEmpty(reserve5)) {
 		Ext.Msg.alert('系统提示', '请输入端盖图纸编号');
 		return false;
 	}
 
-	
 	var prodAmount = _this.addOrderWindow.prodAmount.getValue();
 
 	// 1、生产周期由系统自动计算得出，只要修改了“下单日期”或“入库日期”则生产周期必须强制重新计算。
@@ -609,11 +668,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 	var snRegular = this.addOrderWindow.snRegular.getValue();
 	var snStart = this.addOrderWindow.snStart.getValue();
 	var snEnd = this.addOrderWindow.snEnd.getValue();
-//	if (!Ext.isEmpty(snRegular) && snRegular == '否'
-//			&& (Ext.isEmpty(snStart) || Ext.isEmpty(snEnd))) {
-//		Ext.Msg.alert('系统提示', '请输入标签序号');
-//		return false;
-//	}
+	// if (!Ext.isEmpty(snRegular) && snRegular == '否'
+	// && (Ext.isEmpty(snStart) || Ext.isEmpty(snEnd))) {
+	// Ext.Msg.alert('系统提示', '请输入标签序号');
+	// return false;
+	// }
 
 	// 标签图纸
 	var labelDrawingCode = this.addOrderWindow.labelDrawingCode.getValue();
@@ -640,11 +699,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 	var markRegular = this.addOrderWindow.markRegular.getValue();
 	var markStart = this.addOrderWindow.markStart.getValue();
 	var markEnd = this.addOrderWindow.markEnd.getValue();
-//	if (!Ext.isEmpty(markRegular) && markRegular == '是'
-//			&& (Ext.isEmpty(markStart) || Ext.isEmpty(markEnd))) {
-//		Ext.Msg.alert('系统提示', '请输入唛头序号');
-//		return false;
-//	}
+	// if (!Ext.isEmpty(markRegular) && markRegular == '是'
+	// && (Ext.isEmpty(markStart) || Ext.isEmpty(markEnd))) {
+	// Ext.Msg.alert('系统提示', '请输入唛头序号');
+	// return false;
+	// }
 
 	var labelDouble = this.addOrderWindow.labelDouble.getValue();
 	if (labelDouble == '是') {
@@ -679,7 +738,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 					if (A == "yes") {
 
 						/*
-						 * var label = this.addOrderWindow.label.getValue(); var
+						 * var mark = this.addOrderWindow.label.getValue(); var
 						 * logoLabel = this.addOrderWindow.logoLabel.getValue();
 						 * var specNameLabel =
 						 * this.addOrderWindow.specNameLabel.getValue(); if
@@ -811,7 +870,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onMCConfirm = functio
 }
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = function() {
 	// KS00307 KS01147
-	if (uid == 'KS00307' || uid == 'KS01147' ) {
+	if (uid == 'KS00307' || uid == 'KS01147') {
 		doQuerySqlAndExport(
 				this,
 				this.queryPanel,
@@ -820,10 +879,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = functio
 				'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
 				'0,1');
 	} else {
-		var arr = ['导入时间','订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号', '货品名称',
-				'干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）', '产品备注','标签',
-				'标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱', '包装箱内部图纸编号',
-				'是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注', '导入操作员', '订单类型']
+		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号',
+				'货品名称', '干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）',
+				'产品备注', '标签', '标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱',
+				'包装箱内部图纸编号', '是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注',
+				'导入操作员', '订单类型']
 
 		doQuerySqlAndExportExt(
 				this,
@@ -1020,7 +1080,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSelect4ChooseLable 
 				this.addOrderWindow.material.setValue('客户订制');
 				this.addOrderWindow.back.setValue('客户订制');
 			}
-			
+
 			if (drawingCode == 'TP-17-0000-A') {
 				this.addOrderWindow.label.setValue('无');
 				this.addOrderWindow.makeLabel.setValue('无需制作');
@@ -1112,11 +1172,19 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddMC = function() 
 	this.addMaterWindow.snStart.setValue(r.data.snStart);
 	this.addMaterWindow.snEnd.setValue(r.data.snEnd);
 
-	//备注底色和材质这两项取消不带出来
+	this.addMaterWindow.markStart.setValue(r.data.markStart);
+	this.addMaterWindow.markEnd.setValue(r.data.markEnd);
+
+	this.addMaterWindow.bagDrawingCode.setValue(r.data.bagDrawingCode);
+	this.addMaterWindow.boxDrawingCode.setValue(r.data.boxDrawingCode);
+
+	// 备注底色和材质这两项取消不带出来
 	var arr = [r.data.label, r.data.makeLabel, r.data.material, r.data.back]
-	//var arr = [r.data.label, r.data.makeLabel];
+	// var arr = [r.data.label, r.data.makeLabel];
 	var remark = arr.join('|');
-	this.addMaterWindow.remark.setValue(remark)
+	this.addMaterWindow.remark.setValue(remark);
+
+	this.addMaterWindow.planState.setValue('申购邮件已发');
 
 	this.addMaterWindow.show();
 }
@@ -1143,6 +1211,20 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onInsertMater = funct
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.insertMater = function() {
 	var store;
+
+	var snStart = '';
+	var snEnd = '';
+
+	if (this.addMaterWindow.materType.getValue() == '标签') {
+		snStart = this.addMaterWindow.snStart.getValue();
+		snEnd = this.addMaterWindow.snEnd.getValue();
+	}
+
+	if (this.addMaterWindow.materType.getValue() == '唛头') {
+		snStart = this.addMaterWindow.markStart.getValue();
+		snEnd = this.addMaterWindow.markEnd.getValue();
+	}
+
 	if (this.mcconfirmWindow2.hidden)
 		store = this.mcconfirmListPanel.store;
 	else
@@ -1159,7 +1241,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.insertMater = functio
 				amount : this.addMaterWindow.amount.getValue(),
 				k3 : this.addMaterWindow.k3.getValue(),
 				demandDate : this.addMaterWindow.demandDate.getRawValue(),
-				remark : this.addMaterWindow.remark.getValue()
+				remark : this.addMaterWindow.remark.getValue(),
+				snStart : snStart,
+				snEnd : snEnd
 			})
 	store.add(r);
 	this.addMaterWindow.planState.setValue('');
@@ -1174,6 +1258,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.insertMater = functio
 	this.addMaterWindow.k3.setValue('');
 	this.addMaterWindow.demandDate.setValue('');
 	this.addMaterWindow.remark.setValue('');
+
+	this.addMaterWindow.planState.setValue('申购邮件已发');
 }
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onInsertMater2 = function() {
@@ -1247,7 +1333,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onSaveMCConfirm = fun
 							'amount' : r.data['amount'],
 							'k3' : r.data['k3'],
 							'demandDate' : r.data['demandDate'],
-							'remark' : r.data['remark']
+							'remark' : r.data['remark'],
+							'snStart' : r.data['snStart'],
+							'snEnd' : r.data['snEnd']
 						};
 						mconfirm.push(dt);
 
@@ -1453,13 +1541,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onFill3 = function() 
 	var rec2 = this.yxorderStockAmountStore.getAt(i);
 	var amount = rec2.get('amount');
 	this.addMaterWindow.k3.setValue(amount);
-	
+
 	var materName = rec2.get('materName');
 	this.addMaterWindow.materName.setValue(materName);
-	
+
 	var unit = rec2.get('unit');
 	this.addMaterWindow.unit.setValue(unit);
-	
+
 	var specName = rec2.get('specName');
 	this.addMaterWindow.specName.setValue(specName);
 }
@@ -1595,14 +1683,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onPreView = function(
 	}
 	var records = A.getSelectionModel().getSelections();
 	var templateName = records[0].data.drawingCode;
-	
+
 	var code = records[0].data.code;
 
-	if (code !='1' && code!='999') {
+	if (code != '1' && code != '999') {
 		Ext.Msg.alert("系统提示", "请选择司标或自定义模板预览！");
 		return;
 	}
-	
+
 	var f = document.getElementById('componentmarktemplatepreviewForm2');
 	f.drawingCode.value = templateName;
 	var actionUrl = 'com.keensen.ump.produce.component.printMarks4PreView.flow?time='

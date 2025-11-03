@@ -1,5 +1,8 @@
 com.keensen.ump.qinsen.produce.qijianchangeMgr.prototype.initEvent = function() {
 	var _this = this;
+	
+	
+			
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var start = vals['condition/produceBeginDate'];

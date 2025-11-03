@@ -96,6 +96,10 @@
       <process:from type="query" pattern="reference">r/sendAmount</process:from>
       <process:to type="query">sendAmount</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">r/createShips</process:from>
+      <process:to type="query">createShips</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <location x="269" y="191"/>
@@ -123,6 +127,7 @@
         <process:inputVariable id="6" name="planNo" type="query" value="String" valueType="Primitive" pattern="reference">r/planNo</process:inputVariable>
         <process:inputVariable id="7" name="deliveryOrderNo" type="query" value="String" valueType="Primitive" pattern="reference">r/deliveryOrderNo</process:inputVariable>
         <process:inputVariable id="8" name="deliveryDt" type="query" value="String" valueType="Primitive" pattern="reference">r/deliveryDt</process:inputVariable>
+        <process:inputVariable id="9" name="clientName" type="query" value="String" valueType="Primitive" pattern="reference">r/clientName</process:inputVariable>
       </process:inputVariables>
       <process:outputVariables/>
     </process:flow>
@@ -161,6 +166,7 @@
     <process:variable description="" historyStateLocation="client" isArray="false" name="batchNo" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="sendId" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="sendAmount" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="createShips" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input anyType="commonj.sdo.DataObject" description="" isArray="true" name="list"/>

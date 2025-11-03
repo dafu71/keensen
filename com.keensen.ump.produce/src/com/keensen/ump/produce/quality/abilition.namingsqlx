@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+
+  <select id="queryJuanmo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT JM.BATCH_NO "jmBatchNo",
+       JM.RECORD_ID "jmBatchId",
+       JM.PROD_SPEC_ID "prodSpecId",
+       PMS.MATER_SPEC_NAME "prodSpecName",
+       JMD.JUANMO_LENGTH * JM.BLANKING_SIZE * JM.PAGE_WIDTH "juanmoLength",
+       DECODE(WT.CHECK_TM,NULL,'/', WT.CHECK_TM) "checkTm",
+       1 "amount",
+       DECODE(WT.CHECK_TM,NULL,'/', WT.GPD) "gpd",
+       DECODE(WT.CHECK_TM,NULL,'/', WT.SALT) "salt",
+       T4.TUMO_BATCH_STR AS "tmBatchNo",
+       DECODE( WT.CHECK_TM,NULL,'干','湿') "dryWet"
+  FROM QINSEN.INST_JUANMO_MAIN JM
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID
+  LEFT JOIN (SELECT D.MAIN_BATCH_ID, SUM(D.OUT_QUANTITY) JUANMO_LENGTH
+               FROM QINSEN.INST_JUANMO_DETAIL D
+              GROUP BY D.MAIN_BATCH_ID) JMD
+    ON JMD.MAIN_BATCH_ID = JM.RECORD_ID
+  LEFT JOIN (SELECT WT.RECORD_ID,
+                    WT.JUANMO_BATCH_ID,
+                    to_char(NVL(WT.R_CHECK_TM, WT.F_CHECK_TM),'YYYY-MM-DD') CHECK_TM,
+                    DECODE(WT.R_CHECK_TM, NULL, 'f', 'r') FLAG,
+                    DECODE(WT.R_CHECK_TM, NULL, WT.F_GPD, WT.R_GPD) GPD,
+                    DECODE(WT.R_CHECK_TM, NULL, WT.F_SALT, WT.R_SALT) SALT
+               FROM QINSEN.INST_WATER_TEST WT
+              WHERE (NVL(WT.R_CHECK_TM, WT.F_CHECK_TM), WT.JUANMO_BATCH_ID) IN
+                    (SELECT MAX(CHECK_TM), JUANMO_BATCH_ID
+                       FROM (SELECT WT.RECORD_ID,
+                                    WT.JUANMO_BATCH_ID,
+                                    NVL(WT.R_CHECK_TM, WT.F_CHECK_TM) CHECK_TM
+                               FROM QINSEN.INST_WATER_TEST WT)
+                      GROUP BY JUANMO_BATCH_ID)) WT
+    ON WT.JUANMO_BATCH_ID = JM.RECORD_ID
+  LEFT JOIN (SELECT WM_CONCAT(DISTINCT M.BATCH_NO) TUMO_BATCH_STR,
+                    D.MAIN_BATCH_ID
+               FROM QINSEN.INST_JUANMO_DETAIL D,
+                    QINSEN.INST_CAIDIEMO      C,
+                    QINSEN.INST_TUMO          M
+              WHERE D.CDM_BATCH_ID = C.RECORD_ID
+                AND C.TUMO_BATCH_ID = M.RECORD_ID
+              GROUP BY D.MAIN_BATCH_ID) T4
+    ON T4.MAIN_BATCH_ID = JM.RECORD_ID
+where 1=1
+   <isNotNull prepend = ""  property = "jmBatchIds">
+	   AND JM.RECORD_ID in ($jmBatchIds$)
+	</isNotNull>
+    </select>
+    
+    <select id="queryAbilition" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ID                AS "id", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.code as "code",t1.result as "result",t1.judge_user_name as "judgeUserName",
+       TO_CHAR(T1.judge_TIME, 'yyyy-MM-dd HH24:mi:ss') as "judgeTime",
+		t1.dept as "dept",
+		t1.belong_type as "belongType",
+		decode(t1.dept,'YJZZ', '元件制造部' ,'YF', '研发中心','ZLGL', '质量管理部' ,'JSFW', '技术服务部' ,'CW', '财务部') "deptName"
+       
+  FROM KS_COMPONENT_ABILITION T1
+  
+  where 1=1
+ 
+  
+   <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	
+		
+	<isNotNull prepend="and" property="code"> 
+		       T1.CODE like '%' || #code# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="createName"> 
+		       T1.CREATE_NAME like '%' || #createName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="deptName"> 
+		       decode(t1.dept,'YJZZ', '元件制造部' ,'YF', '研发中心','ZLGL', '质量管理部' ,'JSFW', '技术服务部' ,'CW', '财务部') like '%' || #deptName# || '%'
+	</isNotNull>
+	
+	  order by t1.id desc
+	 
+	
+    </select>
+    
+    <select id="queryAbilitionList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT T2.ID                AS "id", T2.relation_ID                AS "relationId", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.code as "code",
+		t1.dept as "dept",
+		t1.belong_type as "belongType",
+		
+		t2.INVALID_TYPE "invalidType",
+		t2.DESCRIBE "describe",
+		t2.DEAL_METHOD "dealMethod",
+		t2.RESPONSIBLE "responsible",
+		t2.DEPARTMENT "department", t2.prod_spec_id "prodSpecId",
+		pms.mater_spec_name "prodSpecName",
+		
+		
+		t2.jm_batch_no as "jmBatchNo",
+		t2.tm_batch_no as "tmBatchNo",
+		t2.tape_color as "tapeColor",
+		t2.amount as "amount",
+		t2.JUANMO_LENGTH as "juanmoLength",
+		t2.dry_wet as "dryWet",
+		to_char(t2.check_tm,'YYYY-MM-DD') as "checkTm",
+		t2.gpd as "gpd",
+		t2.salt as "salt",
+		 decode(t1.dept,'YJZZ', '元件制造部' ,'YF', '研发中心','ZLGL', '质量管理部' ,'JSFW', '技术服务部' ,'CW', '财务部') "deptName"
+       
+       ,poor.DEPARTMENT "department"
+       ,poor.DEAL_METHOD "dealMethod"
+       ,poor.RESPONSIBLE "responsible"
+       ,poor.DESCRIBE "describe"
+       ,'/' "returnFactory"
+       ,'/' "materCode"
+       ,'支' "unit"
+       
+  FROM KS_COMPONENT_ABILITION_LIST t2
+  left join
+  KS_COMPONENT_ABILITION T1
+  on t2.relation_id = t1.id
+  left join qinsen.para_mater_spec pms
+  on pms.mater_spec_id = t2.prod_spec_id
+  left join (SELECT T.INVALID_CODE,
+       T.JUANMO_BATCH_NO,
+       T.RESPONSIBLE,
+       T.DEPARTMENT,
+       T.DEAL_METHOD,
+       T.DESCRIBE
+  FROM KS_PROD_QUALITY_POORRECORD T
+ ORDER BY T.ID DESC) poor
+ on poor.INVALID_CODE = t1.code and poor.JUANMO_BATCH_NO=t2.jm_batch_no
+  where 1=1
+ 
+   <isNotNull prepend="and" property="jmBatchNos"> 
+		       t2.jm_batch_no in ($jmBatchNos$)
+	</isNotNull>
+	
+   <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
+    <isNotNull prepend="and" property="id"> 
+		       t2.id = #id#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="relationId"> 
+		       t2.relation_Id = #relationId#
+	</isNotNull>
+	
+		
+	<isNotNull prepend="and" property="code"> 
+		       T1.CODE like '%' || #code# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="jmBatchNo"> 
+		       t2.jm_batch_no like '%' || #jmBatchNo# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="createName"> 
+		       T1.CREATE_NAME like '%' || #createName# || '%'
+	</isNotNull>
+	
+	  order by t1.id desc,t2.id
+	 
+	
+    </select>
+    
+    <select id="queryCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT 'YJBF-' || TO_CHAR(SYSDATE, 'YYYYMMDD') || '-' ||
+       TO_CHAR(DECODE(COUNT(1), 0, 1, COUNT(1) + 1)) || '-' || #dept# "code"
+  FROM KS_COMPONENT_ABILITION T
+ 	WHERE TO_CHAR(T.CREATE_TIME, 'YYYY-MM-DD') =
+       TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+    </select>
+    
+    <select id="queryAbilition4Mail" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT '卷膜序号:' || T.JM_BATCH_NOS "jmBatchNos",
+       '报废单编码:' || H.CODE "code",
+       '申请人:' || H.CREATE_NAME "createName",
+       '申请时间:' || TO_CHAR(H.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime"
+  FROM (SELECT LISTAGG(T.JM_BATCH_NO, ', ') WITHIN GROUP(ORDER BY T.JM_BATCH_NO) JM_BATCH_NOS,
+               T.RELATION_ID
+          FROM KS_COMPONENT_ABILITION_LIST T
+         GROUP BY T.RELATION_ID) T
+  LEFT JOIN KS_COMPONENT_ABILITION H
+    ON T.RELATION_ID = H.ID
+ WHERE T.RELATION_ID = #relationId#
+    </select>
+    
+    
+     <!--李雅淇,郑希海,金婷-->
+ <select id="queryUsers4Mail" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	SELECT V.USERID "userId", V.OPERATORNAME "userName"
+	  FROM (SELECT DISTINCT COLUMN_VALUE USER_ID
+	          FROM TABLE(SPLIT('KS01295,KS01327,KS00561,dafu',
+	                           ','))) T
+	  LEFT JOIN V_AC_OPERATOR_TRS V
+	    ON T.USER_ID = V.USERID
+	 WHERE V.USERID IS NOT NULL
+	</select> 
+	
+	<select id="queryIndustryInvalidType" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	
+	SELECT t.dictid "dictid",t.dictname "dictname" from eos_dict_entry t
+	WHERE t.dicttypeid='KS_INDUSTRY_INVALID_TYPE' AND status=1
+	ORDER BY t.sortno
+	</select>
+	
+	<select id="queryInvalidDealMethod" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	
+	SELECT t.dictid "dictid",t.dictname "dictname" from eos_dict_entry t
+	WHERE t.dicttypeid='KS_INVALID_DEAL_METHOD' AND status=1
+	ORDER BY t.sortno
+	</select>
+	
+	<update id="updateAbilitionResult" parameterClass="java.util.HashMap">
+	
+	UPDATE KS_COMPONENT_ABILITION T
+   SET T.RESULT          = '报废',
+       T.JUDGE_USER_ID   = #userId#,
+       T.JUDGE_USER_NAME = #userName#,
+       T.JUDGE_TIME      = SYSDATE
+ WHERE T.ID = #relationId#
+   AND NOT EXISTS (SELECT 1
+          FROM KS_COMPONENT_ABILITION_LIST LST
+         WHERE LST.RELATION_ID = #relationId#
+           AND LST.DEAL_METHOD IS NULL)
+   AND NOT EXISTS (SELECT 1
+          FROM KS_COMPONENT_ABILITION h
+         WHERE h.ID = #relationId#
+           AND h.result is not null)
+     </update>
+           
+    </sqlMap>

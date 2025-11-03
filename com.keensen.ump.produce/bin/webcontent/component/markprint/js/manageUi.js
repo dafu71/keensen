@@ -203,7 +203,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						header : '唛头图纸编号'
 					}, {
 						dataIndex : 'url',
-						header : '标签背景图',
+						header : '唛头背景图',
 						renderer : function(value, metaData, rec, rowIndex,
 								colIndex, store, view) {
 							// if (value) {
@@ -232,6 +232,22 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 									+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
 
 							// }
+						}
+					}, {
+						dataIndex : 'stampUrl',
+						header : '受控章',
+						renderer : function(value, metaData, rec, rowIndex,
+								colIndex, store, view) {
+							if (!Ext.isEmpty(value)) {
+
+							return '<img src="'
+									+ markRootUrl
+									+ value
+									+ '?ver='
+									+ rec.data.id
+									+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+
+							 }
 						}
 					}, {
 						dataIndex : 'code',
@@ -298,6 +314,8 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							name : 'reserve5'
 						}, {
 							name : 'status'
+						}, {
+							name : 'stampUrl'
 						}]
 			})
 		})
@@ -388,7 +406,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}, {
 						xtype : 'trigger',
 						name : 'url',
-						fieldLabel : '标签背景图',
+						fieldLabel : '唛头背景图',
 						allowBlank : false,
 						colspan : 2,
 						anchor : '95%',
@@ -414,6 +432,23 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						scope : this,
 						onTriggerClick : function() {
 							_this.onUploadWindowShow(2);
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'trigger',
+						name : 'stampUrl2',
+						fieldLabel : '受控章',
+						allowBlank : false,
+						colspan : 2,
+						anchor : '95%',
+						editable : false,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							_this.onUploadWindowShow(7);
 						}
 					}, {
 						xtype : 'displayfield',
@@ -499,6 +534,10 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						xtype : 'hidden',
 						dataIndex : 'url2',
 						name : 'entity/url2'
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'stampUrl',
+						name : 'entity/stampUrl'
 					}],
 			buttons : [{
 						text : "确定",
@@ -563,7 +602,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}, {
 						xtype : 'trigger',
 						name : 'localurl',
-						fieldLabel : '新标签背景图',
+						fieldLabel : '新唛头背景图',
 						allowBlank : true,
 						colspan : 4,
 						anchor : '95%',
@@ -571,7 +610,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hideTrigger : false,
 						scope : this,
 						onTriggerClick : function() {
-							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu')
+							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu' || uid == 'KS01020' || uid == 'KS01490' || uid == 'KS01473'||'KS00296' )
 								_this.onUploadWindowShow(3);
 						}
 					}, {
@@ -589,8 +628,26 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hideTrigger : false,
 						scope : this,
 						onTriggerClick : function() {
-							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu')
+							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu' || uid == 'KS01020' || uid == 'KS01490' || uid == 'KS01473' || 'KS00296')
 								_this.onUploadWindowShow(4);
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'trigger',
+						name : 'stampUrl2',
+						fieldLabel : '受控章',
+						allowBlank : true,
+						colspan : 4,
+						anchor : '95%',
+						editable : false,
+						hideTrigger : false,
+						scope : this,
+						onTriggerClick : function() {
+							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu' || uid == 'KS01020' || uid == 'KS01490' || uid == 'KS01473' || 'KS00296' )
+								_this.onUploadWindowShow(8);
 						}
 					}, {
 						xtype : 'displayfield',
@@ -910,6 +967,10 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						xtype : 'hidden',
 						dataIndex : 'id',
 						name : 'entity/id'
+					}, {
+						xtype : 'hidden',
+						dataIndex : 'stampUrl',
+						name : 'entity/stampUrl'
 					}],
 			buttons : [{
 						text : "确定",

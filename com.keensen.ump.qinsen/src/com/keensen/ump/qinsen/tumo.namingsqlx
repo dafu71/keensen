@@ -5,7 +5,7 @@
    		SELECT T1.RECORD_ID         AS "recordId", T1.dm_Use_Length as "dmUseLength",
        T1.PLAN_NO           AS "planNo",t1.if_modify_defect "ifModifyDefect",
        T1.DIMO_BATCH_NO     AS "dimoBatchNo",t1.c21_result "c21Result",
-       T1.BATCH_NO          AS "batchNo",t1.c72_invalid "c72Invalid",
+       T1.BATCH_NO          AS "batchNo",t1.c72_invalid "c72Invalid",c72_invalid_reason "c72InvalidReason",
        T1.LINE_ID           AS "lineId",
        T1.SPEC_ID           AS "specId",
        T1.WF_SUP_ID         AS "wfSupId",
@@ -97,12 +97,31 @@
        T1.is_replace_trough as "isReplaceTrough",T1.replace_trough_id "replaceTroughId",
        T1.water_batch_no "waterBatchNo",T1.water_batch_no2 "waterBatchNo2",
        T1.sumOutLength "sumOutLength",
-       nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) - nvl(T1.CAIMO_LOSS,0) "remainLength",
+       
+       <!--剩余可用长度=长度-裁膜产出-废品数-->
+       <!--当已裁完为是，剩余可用长度为0-->
+       <!--nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) - nvl(T1.CAIMO_LOSS,0) "remainLength",-->
+       case when nvl(T1.IS_CUT_OVER,'N') = 'Y' then 0
+       else
+       nvl(T1.OUT_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) - nvl(t1.waste_loss,0) end "remainLength",
+       
+       
        nvl(T1.QUALIFID_LENGTH,0) - nvl(T1.CAIMO_LENGTH,0) "QMinusClength",
        decode(t1.perf_is_qualified,'Y', '合格', 'N', '不合格', '') "perfIsQualifiedName",
        <!--已裁完的，需要减去发货后，客户已用长度-->
        <!--t1.kt_amount "ktAmount",-->
-       decode(T1.IS_CUT_OVER ,'Y',t1.kt_amount-nvl(t1.USED_AMOUNT,0),t1.kt_amount) "ktAmount",
+       <!--decode(T1.IS_CUT_OVER ,'Y',t1.kt_amount-nvl(t1.USED_AMOUNT,0),t1.kt_amount) "ktAmount",-->
+       
+       <!--自用膜片空头 空头=长度-裁膜产出-废品数-->
+       <!--返厂膜片空头 空头=返厂长度-裁膜产出-裁膜报废--><!--返厂膜片判断标准为是否在返厂仓-->
+       <!--当已裁完为否时，空头为0-->
+       case when nvl(T1.IS_CUT_OVER,'N') = 'N' then 0
+       else 
+       decode(t1.fcc_exist,1,t1.fcc_amount-T1.CAIMO_LENGTH-t1.waste_cm_loss,
+       t1.out_length-T1.CAIMO_LENGTH-t1.waste_loss) end "ktAmount",
+       
+       
+       
        
        t1.dm_batch_id "dmBatchId",t1.pg_judger_name "pgJudgerName",t1.dm_amount "dmAmount",
        t1.density7 "density7" ,t1.result7 "result7" ,t1.density8 "density8" ,t1.result8 "result8",t1.c92time "c92time",
@@ -113,13 +132,15 @@
         t1.tld_weight "troughLiquidWeight",t1.wld_weight "waterLiquidWeight",
         t1.c90 "c90",t1.pva_used "pvaUsed"
         ,t1.USED_AMOUNT "usedAmount"
+        
+        ,t1.waste_loss "wasteLoss" ,nvl(t1.fcc_amount,0) "fccAmount"
        
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,  
   replace(A.water_batch_no,'单击旁边选择','') water_batch_no,
   replace(A.water_batch_no2,'单击旁边选择','') water_batch_no2,
                A.PLAN_NO,A.if_modify_defect,A.c21_result ,
                A.DIMO_BATCH_NO,
-               A.BATCH_NO,A.c72_invalid,
+               A.BATCH_NO,A.c72_invalid,A.c72_invalid_reason,
                A.LINE_ID,
                A.SPEC_ID,
                A.WF_SUP_ID,
@@ -232,8 +253,25 @@
                
                to_char(nvl(c92.update_time,c92.create_time),'yyyy-MM-dd HH24:MI:SS') c92time,
                tld.weight tld_weight,wld.weight wld_weight,pva.c90,pva.used pva_used
-               ,USED.AMOUNT USED_AMOUNT
+               ,USED.AMOUNT USED_AMOUNT,nvl(wst.loss,0) waste_loss,nvl(wst.cm_loss,0) waste_cm_loss,nvl(wst.tm_loss,0) waste_tm_loss,
+               nvl(fcc.amount,0) fcc_amount, decode(fcc.batch_no,null,0,1) fcc_exist
           FROM QINSEN.INST_TUMO A
+          
+         <!-- left join (select t.batch_no,t.amount
+ from KS_PROD_DIAPHRAGM_STOCK t
+ WHERE t.storage_id = 81) fcc -->
+ 
+ left join (SELECT batch_no,amount FROM KS_PROD_DIAPHRAGM_WAREHOUSING
+WHERE ID IN(
+SELECT MAX(ID) FROM 
+(select t.id,t.batch_no from KS_PROD_DIAPHRAGM_WAREHOUSING t
+WHERE t.storage_id=81 AND TYPE='退货入库'
+ ) GROUP BY batch_no)) fcc
+ 
+ on fcc.batch_no = a.batch_no
+          
+          LEFT JOIN V_KS_DIAPHRAGM_TM_WASTE wst
+          on wst.tumo_batch_id = a.record_id
           
           LEFT JOIN V_KS_DIAPHRAGM_AMOUNT_USED USED
           ON USED.BATCH_NO = A.BATCH_NO
@@ -392,8 +430,18 @@
 	on cd.tumo_batch_id = T1.RECORD_ID
        where 1=1
        
+       <isNotNull prepend="and" property="wasteLoss"> 
+       nvl(t1.waste_loss,0) > #wasteLoss#
+       </isNotNull>
        <isNotNull prepend="and" property="ktAmountThan10"> 
-		       to_number(t1.kt_amount) >10 
+		       to_number(case when nvl(T1.IS_CUT_OVER,'N') = 'N' then 0
+       else 
+       decode(t1.fcc_exist,1,t1.fcc_amount-T1.CAIMO_LENGTH-t1.waste_cm_loss,
+       t1.out_length-T1.CAIMO_LENGTH-t1.waste_loss) end) >10 
+	</isNotNull>
+	
+	 <isNotNull prepend="and" property="c72InvalidMoreThan0"> 
+		       to_number(nvl(t1.c72_invalid,0)) >0 
 	</isNotNull>
 	
        	<isNotNull prepend = ""  property = "isCutOver"> 
@@ -469,7 +517,8 @@
        nvl(SUM(T.CAIMO_LENGTH),0) "totalCdmLength", nvl(SUM(T.CAIMO_LOSS),0) "totalLoss",
        sum(nvl(tag_num,0)) "totalTagNum",
        nvl(sum(C72_invalid),0) as "c72invalidtotal"
-  FROM (SELECT A.RECORD_ID, A.OUT_LENGTH, nvl(a.tag_num2,a.tag_num) tag_num,A.C72_invalid,
+       ,nvl(sum(t.wst_loss),0) as "wastelosstotal"
+  FROM (SELECT a.loss wst_loss,A.RECORD_ID, A.OUT_LENGTH, nvl(a.tag_num2,a.tag_num) tag_num,A.C72_invalid,
                 (SELECT nvl(A.OUT_LENGTH - NVL(SUM(D.LOSS), 0),0)
                     FROM qinsen.INST_CDM_DEFECT D, qinsen.PARA_CDM_DEFECT P
                    WHERE D.TUMO_BATCH_ID = A.RECORD_ID
@@ -482,7 +531,9 @@
                 (SELECT nvl(SUM(D.LOSS),0)
                     FROM qinsen.INST_CDM_DEFECT D
                    WHERE D.TUMO_BATCH_ID = A.RECORD_ID) CAIMO_LOSS
-           FROM (SELECT * FROM qinsen.INST_TUMO tm
+           FROM (SELECT TM.*,WST.loss,CD.* FROM qinsen.INST_TUMO tm 
+            LEFT JOIN  V_KS_DIAPHRAGM_TM_WASTE wst
+           ON TM.record_id = wst.tumo_batch_id  
            left join (SELECT tumo_batch_id,sum(t.label_num) tag_num2
        from qinsen.inst_cdm_defect t
       WHERE t.if_tear!= '是'
@@ -490,11 +541,12 @@
       ON tm.record_id  = cd.tumo_batch_id   
           ) A, qinsen.BASE_PROD_LINE L, qinsen.PARA_MATER_SPEC S,
                 qinsen.CONF_PROP_VALUE_OPTION O1, qinsen.CONF_PROP_VALUE_OPTION O2
+                
    WHERE A.LINE_ID = L.LINE_ID
      AND A.SPEC_ID = S.MATER_SPEC_ID
      AND A.WF_SUP_ID = O1.PROP_VALUE_ID
      AND A.PROD_FLAG_ID = O2.PROP_VALUE_ID
-     
+    
       <isNotNull prepend = ""  property = "prodFlagId">
 	   	AND A.PROD_FLAG_ID = #prodFlagId#
 		</isNotNull>

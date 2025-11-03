@@ -18,6 +18,10 @@
     int modifyOrderNoFlag = roleId.indexOf("10001561")>-1?1:0;
     int monitorFlag = roleId.indexOf("30431")>-1?1:0;
     int waterTestFlag = roleId.indexOf("30622")>-1?1:0;
+    
+    //10001981  元件报废申请
+  	 int abilitionAdd = roleId.indexOf("10001981")>-1?1:0;
+  	 
     //修改干湿膜订单号权限
     int modifyOrderNoFlag4Wet = 0;
     int modifyOrderNoFlag4Dry = 0;
@@ -27,12 +31,14 @@
     		modifyOrderNoFlag4Wet = 1;
     	}
     	//气检干膜贴标,罗海鹰、任栋、吴敏、袁娜
-		if(uid.equals("LHY")||uid.equals("KS00307")||uid.equals("KS01147")||uid.equals("XXB")||uid.equals("KS01441") ||uid.equals("KS01479")){   		
+		if(uid.equals("LHY")||uid.equals("KS00307")||uid.equals("KS01147")||uid.equals("dafu")||uid.equals("KS01441") ||uid.equals("KS01479")){   		
     		modifyOrderNoFlag4Dry = 1;
     	}
     }
     String rootUrl = request.getRequestURL().toString();
   	rootUrl = rootUrl.replace("/qinsen/produce/qijian/index.jsp","");
+  	
+  	//System.out.println(roleId);
 %>
 <html>
 <!-- 
@@ -86,6 +92,8 @@
   var modifyOrderNoFlag4Wet = <%=modifyOrderNoFlag4Wet %>;
   var modifyOrderNoFlag4Dry = <%=modifyOrderNoFlag4Dry %>;
   
+  var abilitionAdd = <%=abilitionAdd %>;
+  
   var waterTestFlag = <%=waterTestFlag %>;
    var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;
@@ -96,7 +104,7 @@
   <% } %>
   var listid = 'produce-qijianmgr-list';
   
-  
+  var quantityTotalId = Ext.id();
   var qijianExportButton = Ext.id();
   
   FunctionMgr.load({ 
@@ -107,5 +115,10 @@
 <body>
 <div id="qijianmgr"></div>
 
+<div style="display: none">
+<form name="qjianprinttagsForm" id="qjianprinttagsForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+			<input type="hidden" name="ids"/>			
+</form>
+</div>
 </body>
 </html>

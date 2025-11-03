@@ -25,6 +25,12 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 
 	// 初始化store
 	this.initStore = function() {
+		
+		this.monitorStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['KS00867', '张博宁'], ['KS00866', '周波'],
+							['KS00880', '王金铁'], ['KS00500', '何选鹏']]
+				});
 
 		this.typeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -898,19 +904,42 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
-							ref : '../../displayfield300',
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'operatorrolecombobox',
-							currentRolecode : '10001321',
-							// valueField : "operatorId",
+							xtype : 'combo',
+							store : _this.monitorStore,
+							mode : 'local',
+							emptyText : '--请选择--',
+							editable : false,
 							allowBlank : false,
+							hiddenName : 'entity/operatorId',
+							ref : '../../operatorId',
+							name : 'entity/operatorId',
+							displayField : "name",
+							valueField : "code",
 							anchor : '95%',
 							colspan : 1,
-							ref : '../../operatorId',
-							hiddenName : 'entity/operatorId',
-							fieldLabel : '配料人'
+							fieldLabel : '班长',
+							listeners : {
+								'expand' : function(A) {
+									_this.editWindow2.operatorId.reset();
+								},
+								'select' : function(combo, record, index) {
+									if (index > -1) {
+										var operatorName = record.get('name');
+										_this.editWindow2.operatorName
+												.setValue(operatorName);
+									}
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							allowBlank : false,
+							name : 'entity/recorder',
+							fieldLabel : '录入人',
+							anchor : '95%',
+							colspan : 1
 						}, {
 							xtype : 'hidden',
 							dataIndex : 'id',
@@ -1131,6 +1160,9 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						dataIndex : 'operatorName',
 						header : '配料人'
 					}, {
+						dataIndex : 'recorder',
+						header : '记录人'
+					}, {
 						dataIndex : 'createTime',
 						header : '配料时间'
 					}],
@@ -1198,6 +1230,8 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							name : 'line2'
 						}, {
 							name : 'mptype2'
+						}, {
+							name : 'recorder'
 						}]
 			})
 		})

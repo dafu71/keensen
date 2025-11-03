@@ -253,7 +253,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						header : '铸膜液排料重量(kg)'
 					}, {
 						dataIndex : 'theoryAmount',
-						header : '理论投入数'
+						header : '放卷底膜长度'
 					}, {
 						dataIndex : 'dimoAmount',
 						header : '底膜实际长度'

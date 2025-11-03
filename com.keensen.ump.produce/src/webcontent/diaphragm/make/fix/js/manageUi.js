@@ -7,9 +7,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 		this.initEditWindow();
 		this.initEditWindow2();
 		this.initEditWindow3();
-		
+
 		this.initEditWindow4C11Invalid();
-		
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -20,6 +20,12 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 
 	// 初始化store
 	this.initStore = function() {
+
+		this.monitorStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['KS00867', '张博宁'], ['KS00866', '周波'],
+							['KS00880', '王金铁'], ['KS00500', '何选鹏']]
+				});
 
 		this.ynStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -239,7 +245,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						text : 'C11报废',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						//hidden : modifyFlag != 1,
+						// hidden : modifyFlag != 1,
 						handler : this.onC11Invalid
 					}],
 			selModel : selModel,
@@ -280,6 +286,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						dataIndex : 'c11Invalid',
 						header : 'C11报废(kg)'
 					}, {
+						dataIndex : 'c11InvalidReason',
+						header : 'C11报废备注'
+					}, {
 						dataIndex : 'concentration',
 						header : '聚砜浓度'
 					}, {
@@ -316,6 +325,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						dataIndex : 'fixUsername',
 						header : '混料人'
 					}, {
+						dataIndex : 'recorder',
+						header : '混料录入人'
+					}, {
 						dataIndex : 'hitStarttime',
 						header : '打料开始时间'
 					}, {
@@ -339,6 +351,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						 */, {
 						dataIndex : 'hitUsername',
 						header : '打料人'
+					}, {
+						dataIndex : 'recorder2',
+						header : '打料录入人'
 					}/*
 						 * , { dataIndex : 'remark', header : '备注' }
 						 */],
@@ -456,6 +471,12 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							name : 'c11Invalid'
 						}, {
 							name : 'totalC11Invalid'
+						}, {
+							name : 'recorder'
+						}, {
+							name : 'recorder2'
+						}, {
+							name : 'c11InvalidReason'
 						}]
 			})
 		})
@@ -677,13 +698,39 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'operatorrolecombobox',
-							currentRolecode : '10001501',
+							xtype : 'combo',
+							store : _this.monitorStore,
+							mode : 'local',
+							emptyText : '--请选择--',
+							editable : false,
 							allowBlank : false,
-							anchor : '95%',
-							ref : '../../fixUserid',
 							hiddenName : 'entity/fixUserid',
-							fieldLabel : '混料人'
+							ref : '../../fixUserid',
+							name : 'entity/fixUserid',
+							displayField : "name",
+							valueField : "code",
+							anchor : '95%',
+							colspan : 1,
+							fieldLabel : '班长',
+							listeners : {
+								'expand' : function(A) {
+									_this.inputWindow.fixUserid.reset();
+								},
+								'select' : function(combo, record, index) {
+									if (index > -1) {
+										var fixUsername = record.get('name');
+										_this.inputWindow.fixUsername
+												.setValue(fixUsername);
+									}
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							allowBlank : false,
+							name : 'entity/recorder',
+							fieldLabel : '录入人',
+							anchor : '95%',
+							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -818,6 +865,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 	}
 
 	this.initEditWindow2 = function() {
+		
+		var _this = this;
+		
 		this.editWindow2 = this.editWindow2 || new Ext.fn.FormWindow({
 			title : '打料记录',
 			height : 600,
@@ -914,6 +964,40 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
+							xtype : 'combo',
+							store : _this.monitorStore,
+							mode : 'local',
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							hiddenName : 'entity/hitUserid',
+							ref : '../../hitUserid',
+							name : 'entity/hitUserid',
+							displayField : "name",
+							valueField : "code",
+							anchor : '95%',
+							colspan : 1,
+							fieldLabel : '班长',
+							listeners : {
+								'expand' : function(A) {
+									_this.editWindow2.hitUserid.reset();
+								},
+								'select' : function(combo, record, index) {
+									if (index > -1) {
+										var hitUsername = record.get('name');
+										_this.editWindow2.hitUsername
+												.setValue(hitUsername);
+									}
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							allowBlank : false,
+							name : 'entity/recorder2',
+							fieldLabel : '录入人',
+							anchor : '95%',
+							colspan : 1
+						}/*, {
 							xtype : 'operatorrolecombobox',
 							currentRolecode : '10001501',
 							ref : '../../hitUserid',
@@ -922,7 +1006,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							ref : '../../hitUserid',
 							hiddenName : 'entity/hitUserid',
 							fieldLabel : '打料人'
-						}/*
+						}*//*
 							 * , { xtype : 'displayfield', height : '5', colspan :
 							 * 2 }, { xtype : 'textarea', name :
 							 * 'entity/remark', dataIndex : 'remark', fieldLabel :
@@ -1195,8 +1279,16 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						}, {
 							xtype : 'textfield',
 							readOnly : true,
-							fieldLabel : '混料人',
+							fieldLabel : '班长',
 							dataIndex : 'fixUsername',
+							anchor : '95%',
+							colspan : 1
+
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							fieldLabel : '录入人',
+							dataIndex : 'recorder',
 							anchor : '95%',
 							colspan : 1
 
@@ -1326,7 +1418,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						pgrid : this.listPanel,
 						columns : 1,
 						loadUrl : 'com.keensen.ump.produce.diaphragm.make.make.expandFixEntity.biz.ext',
-						saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.saveEntity.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.saveC11Invalid.biz.ext',
 						fields : [{
 									xtype : 'displayfield',
 									height : '5',
@@ -1340,6 +1432,21 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 									dataIndex : 'c11Invalid',
 									allowBlank : false,
 									fieldLabel : 'C11报废(kg)',
+									anchor : '95%',
+									colspan : 1
+								},{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									decimalPrecision : 4,
+									minValue : 0,
+									ref : '../../c11InvalidReason',
+									name : 'entity/c11InvalidReason',
+									dataIndex : 'c11InvalidReason',
+									allowBlank : false,
+									fieldLabel : '报废原因备注',
 									anchor : '95%',
 									colspan : 1
 								}, {

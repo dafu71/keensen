@@ -109,7 +109,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 
 			}
 
-			if (dayDiff(start, end) > 93) {
+			if (dayDiff(start, end) > 93 && uid != 'dafu') {
 				Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
 				return false;
 
@@ -118,7 +118,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 		}
 
 		if (!Ext.isEmpty(start2) && !Ext.isEmpty(end2)) {
-			if (dayDiff(start2, end2) > 93) {
+			if (dayDiff(start2, end2) > 93 && uid != 'dafu') {
 				Ext.Msg.alert("系统提示", "查询裁膜时间间隔日期不能大于3个月！");
 				return false;
 
@@ -220,7 +220,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 						Ext.getCmp('totalTagNumTxt').setValue('合计标签数:'
 								+ data.totalTagNum);
 						Ext.getCmp('c72invalidtotal').setValue('C72报废合计(kg):' + data.c72invalidtotal);
-						
+						Ext.getCmp('totalWasteTxt').setValue('合计废品(m):' + data.wastelosstotal);
 
 					} else {
 						Ext.getCmp('totalLengthTxt').setValue('合计长度(m):');
@@ -230,6 +230,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 						Ext.getCmp('totalLossTxt').setValue('合计不良(m):');
 						Ext.getCmp('totalTagNumTxt').setValue('合计标签数:');
 						Ext.getCmp('c72invalidtotal').setValue('C72报废合计(kg):');
+						Ext.getCmp('totalWasteTxt').setValue('合计废品(m):');
+						
 					}
 					
 				}

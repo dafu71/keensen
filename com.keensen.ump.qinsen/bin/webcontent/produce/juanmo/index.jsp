@@ -65,6 +65,11 @@
   var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;
   
+  
+  var quickGetdutyId = Ext.id();
+  var singleGetdutyId = Ext.id();
+  var multiGetdutyId = Ext.id();
+  
   <% if(workerflag){ %>
   var teamId = "<%=userOrgId %>";
   <% }else{ %>

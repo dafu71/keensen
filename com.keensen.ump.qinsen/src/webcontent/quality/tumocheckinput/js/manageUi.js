@@ -2,13 +2,14 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 
 	this.initPanel = function() {
 
+		this.initStore();
 		this.initMasterPanel();
 		this.initStdGrid();
 		this.initRecGrid();
 
 		this.optPanel = this.optPanel || new Ext.Panel({
 					layout : 'border',
-					height : '420',
+					height : '450',
 					collapsible : false,
 					titleCollapse : false,
 					items : [this.masterPanel, this.stdGrid]
@@ -25,18 +26,27 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 
 	}
 
+	this.initStore = function() {
+		this.monitorStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['100171', '张博宁'], ['100163', '周波'],
+							['100170', '王金铁'], ['100189', '何选鹏']]
+				});
+
+	}
+
 	this.initMasterPanel = function() {
 		var _this = this;
 		this.masterPanel = this.masterPanel || new Ext.fn.InputPanel({
 			// title:'检测录入',
 			width : '700',
-			height : '420',
+			height : '450',
 			region : 'west',
 			pgrid : '',
 			columns : 6,
 			autoHide : false,
 			border : true,
-			saveUrl : 'com.keensen.ump.qinsen.tumocheck.createRecord.biz.ext',
+			saveUrl : 'com.keensen.ump.qinsen.tumocheck.createRecordsBatch.biz.ext',
 			fields : [{
 						xtype : 'displayfield',
 						height : '10',
@@ -64,6 +74,28 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 						fieldLabel : ' ',
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
 						labelSeparator : '',// 去掉冒号
+						colspan : 6
+					}, {
+						xtype : 'textfield',
+						name : 'entity/checkCodeInfo2',
+						style : '{font-weight:bold;}',
+						//allowBlank : false,
+						fieldLabel : '第二请检信息',
+						ref : '../checkCodeInfo2',
+						anchor : '100%',
+						colspan : 3
+					}, {
+						xtype : 'textfield',
+						name : 'entity/checkCodeInfo3',
+						style : '{font-weight:bold;}',
+						//allowBlank : false,
+						fieldLabel : '第三请检信息',
+						ref : '../checkCodeInfo3',
+						anchor : '100%',
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						height : '5',
 						colspan : 6
 					}, {
 						xtype : 'textfield',
@@ -177,21 +209,51 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 						allowBlank : false,
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '膜通量左(GFD)'
+						fieldLabel : '膜通量左(GFD)',
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+									_this.masterPanel.gfd2.focus();
+
+								}
+
+							}
+						}
 					}, {
 						xtype : 'numberfield',
 						ref : '../gfd2',
 						allowBlank : false,
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '膜通量中(GFD)'
+						fieldLabel : '膜通量中(GFD)',
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+									_this.masterPanel.gfd3.focus();
+
+								}
+
+							}
+						}
 					}, {
 						xtype : 'numberfield',
 						ref : '../gfd3',
 						allowBlank : false,
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '膜通量右(GFD)'
+						fieldLabel : '膜通量右(GFD)',
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+									_this.masterPanel.cdtOut1.focus();
+
+								}
+
+							}
+						}
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -202,14 +264,34 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 						allowBlank : false,
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '产水电导左(μS/cm)'
+						fieldLabel : '产水电导左(μS/cm)',
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+									_this.masterPanel.cdtOut2.focus();
+
+								}
+
+							}
+						}
 					}, {
 						xtype : 'numberfield',
 						allowBlank : false,
 						ref : '../cdtOut2',
 						anchor : '90%',
 						colspan : 2,
-						fieldLabel : '产水电导中(μS/cm)'
+						fieldLabel : '产水电导中(μS/cm)',
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+									_this.masterPanel.cdtOut3.focus();
+
+								}
+
+							}
+						}
 					}, {
 						xtype : 'numberfield',
 						allowBlank : false,
@@ -262,17 +344,34 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 						height : '5',
 						colspan : 6
 					}, {
-						xtype : 'executoroptioncombobox',
-						tacheCode : 'TM',
-						state : 'A',
+						xtype : 'combo',
+						store : _this.monitorStore,
+						mode : 'local',
+						emptyText : '--请选择--',
+						editable : false,
 						allowBlank : false,
 						hiddenName : 'entity/checkerId',
 						ref : '../checkerId',
 						name : 'entity/checkerId',
+						displayField : "name",
+						valueField : "code",
 						anchor : '90%',
 						colspan : 3,
-						fieldLabel : '分析员'
+						fieldLabel : '班长'
 					}, {
+						xtype : 'textfield',
+						allowBlank : false,
+						name : 'entity/recorder',
+						fieldLabel : '录入人',
+						anchor : '90%',
+						colspan : 3
+					}/*
+						 * , { xtype : 'executoroptioncombobox', tacheCode :
+						 * 'TM', state : 'A', allowBlank : false, hiddenName :
+						 * 'entity/checkerId', ref : '../checkerId', name :
+						 * 'entity/checkerId', anchor : '90%', colspan : 3,
+						 * fieldLabel : '班长' }
+						 */, {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 6
@@ -315,7 +414,7 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 
 		this.stdGrid = new Ext.fn.ListPanel({
 			title : '【膜片质检标准列表】',
-			height : '420',
+			height : '450',
 			region : 'center',
 			viewConfig : {
 				forceFit : true
@@ -412,7 +511,7 @@ com.keensen.ump.qinsen.quality.tumocheckinputMgr = function() {
 
 	this.initRecGrid = function() {
 		this.recGrid = this.recGrid || new Ext.fn.ListPanel({
-			title : '【批次检测数据】',
+			// title : '【批次检测数据】',
 			viewConfig : {
 				forceFit : false
 			},

@@ -120,7 +120,7 @@ com.keensen.ump.produce.component.applys.cstockMgr = function() {
 								anchor : '100%',
 								nameArray : ['condition/createTimeStart',
 										'condition/createTimeEnd'],
-								fieldLabel : "入库日期",
+								fieldLabel : "申请日期",
 								format : "Y-m-d"
 							}]
 				});

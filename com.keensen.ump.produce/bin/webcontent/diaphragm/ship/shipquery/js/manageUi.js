@@ -29,23 +29,23 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 					}, {
 						xtype : 'mplinecombobox',
 						hiddenName : 'condition/lineId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '生产线 '
 					}, {
 						xtype : 'mpspeccombobox',
 						hiddenName : 'condition/specId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '膜片型号 '
 					}, {
 						xtype : 'textfield',
 						name : 'condition/batchNo2',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '膜片批次'
 					}/*
 						 * , { xtype : 'displayfield', height : '5', colspan : 4 }, {
 						 * xtype : 'supcombobox', hiddenName :
-						 * 'condition/supId', anchor : '75%', fieldLabel :
-						 * '无纺布供应商' }, { xtype : 'combobox', anchor : '75%',
+						 * 'condition/supId', anchor : '95%', fieldLabel :
+						 * '无纺布供应商' }, { xtype : 'combobox', anchor : '95%',
 						 * name : 'condition/isWx', hiddenName :
 						 * 'condition/isWx', fieldLabel : '是否外销', triggerAction :
 						 * "all", store : new Ext.data.ArrayStore({ id : 0,
@@ -54,9 +54,9 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 						 * displayField : "myvalue", valueField : "mykey",
 						 * forceSelection : true, emptyText : "--请选择--" }, {
 						 * xtype : 'mpworkercombobox', hiddenName :
-						 * 'condition/workerId', anchor : '75%', fieldLabel :
+						 * 'condition/workerId', anchor : '95%', fieldLabel :
 						 * '操作工' }, { xtype : 'storagecombobox', hiddenName :
-						 * 'condition/storageId', anchor : '75%', fieldLabel :
+						 * 'condition/storageId', anchor : '95%', fieldLabel :
 						 * '仓库' }
 						 */, {
 						xtype : 'displayfield',
@@ -65,22 +65,22 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/orderNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '订单号'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/planNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '计划单号'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/dimoBatchNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '底膜批次'
 					}, {
 						xtype : 'mpperfcombobox',
 						hiddenName : 'condition/perfFlagId',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '膜片等级'
 					}, {
 						xtype : 'displayfield',
@@ -89,7 +89,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/deliveryOrderNo',
-						anchor : '75%',
+						anchor : '95%',
 						fieldLabel : '实际发货<br>订单号'
 					}, {
 						xtype : "dateregion",
@@ -103,9 +103,14 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 						xtype : 'textarea',
 						name : 'condition/batchNoStr2',
 						emptyText : '多个批次请用逗号分隔，或一行一个批次',
-						colspan : 2,
+						colspan : 1,
 						anchor : '95%',
 						fieldLabel : '多膜片批次'
+					}, {
+						xtype : 'textfield',
+						name : 'condition/clientName',
+						anchor : '95%',
+						fieldLabel : '发货客户'
 					}, {
 						xtype : 'hidden',
 						name : 'condition/batchNoStr'
@@ -113,7 +118,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 						 * , { xtype : 'displayfield', height : '5', colspan : 4 }
 						 *//*
 						 * , { xtype : 'dictcombobox', name :
-						 * 'condition/ifconfirm', anchor : '75%', dataIndex :
+						 * 'condition/ifconfirm', anchor : '95%', dataIndex :
 						 * 'condition/ifconfirm', hiddenName :
 						 * 'condition/ifconfirm', fieldLabel : '是否已发货', dictData :
 						 * ABF_YESORNO }
@@ -125,7 +130,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 					scope : this,
 					iconCls : 'icon-application_excel',
 					rescode : '10003668',
-					hidden:true,
+					hidden : true,
 					handler : this.exportExcel
 				});
 
@@ -168,6 +173,10 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 			}, {
 				dataIndex : 'deliveryDt',
 				header : '实际发货时间'
+			}, {
+				dataIndex : 'clientName',
+				hidden : uid != 'KS00610',
+				header : '实际发货客户'
 			}, {
 				dataIndex : 'produceDt',
 				header : '生产日期'
@@ -275,6 +284,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 							name : 'deliveryOrderNo'
 						}, {
 							name : 'deliveryDt'
+						}, {
+							name : 'clientName'
 						}]
 			})
 		})

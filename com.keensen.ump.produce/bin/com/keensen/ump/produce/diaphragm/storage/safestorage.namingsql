@@ -50,11 +50,21 @@
         <!--2025-07-16
 		SW系列与NF系列标准相同。
 		-->
+        <!--2025-10-11
+		发货预期标准申请把SW2-1和SW3-1改为60个自然日，避免海水膜频繁调仓
+		mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1'
+		-->
 		
   SELECT
 <!--发货膜片预期标准：30个自然日。-->
  NVL(SUM(CASE
-           WHEN T.STORAGE_ID = 3 AND T.DIFF &gt; 30 AND T.DIFF &lt;= 60 THEN
+           WHEN T.STORAGE_ID = 3 AND T.DIFF &gt; 30 AND T.DIFF &lt;= 60 
+           and mater_spec_name != 'SW2-1' and mater_spec_name != 'SW3-1'
+           THEN
+            1
+           WHEN T.STORAGE_ID = 3 AND T.DIFF  &gt;= 60 
+           and (mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1')
+           THEN
             1
          END),
      0) "deliveryYellowCount",
@@ -100,7 +110,12 @@
      0) "selfRedCount",
  <!--发货膜片预期标准：30个自然日。-->
  NVL(SUM(CASE
-           WHEN T.STORAGE_ID = 3 AND T.DIFF &gt; 30 AND T.DIFF &lt;= 60 THEN
+           WHEN T.STORAGE_ID = 3 AND T.DIFF &gt; 30 AND T.DIFF &lt;= 60
+           and mater_spec_name != 'SW2-1' and mater_spec_name != 'SW3-1' THEN
+            T.AMOUNT
+           WHEN T.STORAGE_ID = 3 AND T.DIFF  &gt;= 60 
+           and (mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1')
+           THEN
             T.AMOUNT
          END),
      0) "deliveryYellowAmount",

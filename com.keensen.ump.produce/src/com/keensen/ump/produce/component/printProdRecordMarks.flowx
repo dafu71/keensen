@@ -9,6 +9,7 @@
         <process:parameter anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="list"/>
         <process:parameter anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="condition"/>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="ids" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="isStar" primitiveType="String"/>
       </process:inputParameters>
     </sourceConnections>
     <location x="100" y="150"/>
@@ -35,7 +36,7 @@
       <targetNode>subprocess0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -132,4 +133,5 @@
   <leftRuler/>
   <process:info author="dafu" createTime="2024-06-28 14:43:54" date="2024-06-28Z" description="" name="printMarks" version="6.3"/>
   <process:variables/>
+  <process:inputParameters/>
 </process:tPageFlow>

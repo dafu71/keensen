@@ -116,7 +116,7 @@
        t2.PLAN_NO         as "planNo",
        t2.ORDER_NO        as "orderNo",
        t2.delivery_order_no as "deliveryOrderNo",
-        
+       t2.client_name "clientName",
        to_char(t2.delivery_dt,'YYYY-MM-DD HH24:MI:SS') as "deliveryDt",
        
        t1.SUP_ID          as "supId",
@@ -139,7 +139,9 @@
   left join V_KS_TUMO3 t1 
     on t1.RECORD_ID = t2.RECORD_ID
  where 1=1
-    <isNotNull prepend="and" property="ifconfirm">nvl(t2.ifconfirm,'n') = #ifconfirm#</isNotNull>
+ 
+ <isNotNull prepend="and" property="clientName">t2.client_Name like '%' || #clientName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="ifconfirm">nvl(t2.ifconfirm,'n') = #ifconfirm#</isNotNull>
         <isNotNull prepend="and" property="perfFlagId">t1.PERF_FLAG_ID = #perfFlagId#</isNotNull>
         <isNotNull prepend="and" property="lineId">t1.line_id = #lineId#</isNotNull>
         <isNotNull prepend="and" property="specId">t1.spec_id = #specId#</isNotNull>

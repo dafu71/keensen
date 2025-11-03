@@ -161,6 +161,14 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						xtype : 'textfield',
 						fieldLabel : '涂膜批号%-%',
 						allowBlank : true
+					}, {
+						
+						xtype : 'checkbox',
+						boxLabel : 'C41报废大于0',
+						// checked : true,
+						name : 'condition/c41InvalidMoreThan0',
+						inputValue : 'Y',
+						anchor : '95%'
 					}]
 				});
 

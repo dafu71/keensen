@@ -276,8 +276,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 
 com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.onAdd = function() {
 
-	this.inputWindow.form.findField("entity/fixUserid").setValue(uid);
-	this.inputWindow.form.findField("entity/fixUsername").setValue(uname);
+	//this.inputWindow.form.findField("entity/fixUserid").setValue(uid);
+	//this.inputWindow.form.findField("entity/fixUsername").setValue(uname);
 	this.inputWindow.show();
 
 }

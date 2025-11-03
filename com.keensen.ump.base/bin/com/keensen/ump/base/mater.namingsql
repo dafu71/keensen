@@ -104,7 +104,22 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 		t1.test_liquid_ph as "testLiquidPh",
 		t1.test_liquid_recovery as "testLiquidRecovery",
 		t1.test_liquid_gpd as "testLiquidGpd",
-		t1.test_liquid_salt as "testLiquidSalt"
+		t1.test_liquid_salt as "testLiquidSalt",
+		
+		t1.file_no "fileNo",
+		t1.modify_record "modifyRecord",
+		
+		t1.jm_spec_name as "jmSpecName",
+		t1.craft_no as "craftNo",
+		t1.dense_Net_span as "denseNetSpan",
+		t1.light_Net_Long_type as "lightNetLongType",
+		t1.light_Net_Long_span as "lightNetLongSpan",
+		t1.light_Net_short_type as "lightNetShortType",
+		t1.intake_pipe_length as "intakePipeLength",
+		t1.effluent_pipe_length as "effluentPipeLength",
+		t1.juanmo_tape as "juanmoTape",
+		t1.mater_type "materType",
+		t1.diameter "diameter"
 		
        
   FROM (SELECT S.MATER_SPEC_ID,
@@ -171,12 +186,24 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 				s.test_liquid_gpd,
 				s.test_liquid_salt,
 				
-				
-				
+								
+				s.jm_spec_name ,
+		s.craft_no ,
+		s.dense_Net_span ,
+		s.light_Net_Long_type ,
+		s.light_Net_Long_span ,
+		s.light_Net_short_type ,
+		s.intake_pipe_length ,
+		s.effluent_pipe_length ,
+		s.juanmo_tape ,
+		s.mater_type,s.diameter,
+		
+		s.file_no ,
+		s.modify_record,		
 
                C.MATER_CLASS_CODE,
                C.MATER_CLASS_NAME,
-               DECODE(S.STATE, 'Y', '在用', 'N', '停用', '') STATE_NAME,
+               DECODE(S.STATE, 'Y', '在用', 'N', '停用', 'W', '待审核', '') STATE_NAME,
                DECODE(S.QT_JUDGE_FLAG, 'F', '初检', 'L', '复检', '') QT_JUDGE_FLAG_NAME,
                (SELECT O.PROP_VALUE_CODE
                   FROM QINSEN.CONF_PROP_VALUE_OPTION O
@@ -194,18 +221,26 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
                  WHERE BS.STAFF_ID = C.CHANGER_ID) CHANGER
           FROM QINSEN.PARA_MATER_SPEC S, QINSEN.PARA_MATER_CLASS C
          WHERE S.MATER_CLASS_ID = C.MATER_CLASS_ID
-         <isNotNull prepend="" property="materSpecId">AND S.MATER_SPEC_ID = #materSpecId#</isNotNull>
+         
+         
+         <isNotNull prepend="" property="jmSpecName2">AND S.jm_SPEC_NAME = #jmSpecName2#</isNotNull>
+        <isEqual compareValue="1" prepend="" property="selectFlag">AND S.MATER_SPEC_NAME not like '%(%'  AND S.MATER_SPEC_NAME not like '%（%'</isEqual>
+        <isNotNull prepend="" property="materSpecId">AND S.MATER_SPEC_ID = #materSpecId#</isNotNull>
         <isNotNull prepend="" property="materSpecCode">AND S.MATER_SPEC_CODE LIKE '%'||UPPER(#materSpecCode#)||'%'</isNotNull>
         <isNotNull prepend="" property="materSpecName">AND S.MATER_SPEC_NAME LIKE '%'||#materSpecName#||'%'</isNotNull>
+        <isNotNull prepend="" property="jmSpecName">AND S.jm_SPEC_NAME LIKE '%'||#jmSpecName#||'%'</isNotNull>
         <isNotNull prepend="" property="materClassId">AND S.MATER_CLASS_ID = #materClassId#</isNotNull>
         <isNotNull prepend="" property="materClassIds">AND S.MATER_CLASS_ID IN
 		($materClassIds$)</isNotNull>
         <isNotNull prepend="" property="materClassCode">AND C.MATER_CLASS_CODE = #materClassCode#</isNotNull>
         <isNotNull prepend="" property="state">AND S.STATE = #state#</isNotNull>
         <isNotNull prepend="" property="supplierId">AND S.SUPPLIER_ID = #supplierId#</isNotNull>
+        <isNotNull prepend="" property="prodType">AND S.prod_Type = #prodType#</isNotNull>
+        <isNotNull prepend="" property="notProdType">AND S.prod_Type != #notProdType#</isNotNull>
+        <isNotNull prepend="" property="craftNo">AND S.craft_No LIKE '%'||#craftNo#||'%'</isNotNull>
          
          ) T1
- ORDER BY T1.DISP_ORDER2, T1.DISP_ORDER, T1.MATER_SPEC_NAME
+ ORDER BY T1.MATER_SPEC_NAME
 
 
 </select>
@@ -355,7 +390,7 @@ SELECT T1.DRAWING_CODE AS "drawingCode",
 		t1.mater14 as "mater14",
 		t1.mater15 as "mater15",
 		t1.mater16 as "mater16",
-		t1.mater17 as "mater17",
+		t1.mater17 as "mater17",t1.c22a as "c22a",
     t2.dmcode "dmcode",
     t2.zmcode "zmcode"
 
@@ -390,4 +425,81 @@ SELECT T1.DRAWING_CODE AS "drawingCode",
         <isNotNull prepend="and" property="pipeType">T1.PIPE_TYPE like '%' || #pipeType# || '%'</isNotNull>
 	order by id desc
     </select>
+    <select id="queryCraftspackage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT 
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       t1.craft_no as "craftNo",
+		t1.num_Per_Wad as "numPerWad",
+		t1.blanking_Size as "blankingSize",
+		t1.mp_Width as "mpWidth",
+		t1.dense_Net as "denseNet",
+		t1.dense_Net_Width as "denseNetWidth",
+		t1.dense_Net_Span as "denseNetSpan",
+		t1.light_Net_Long_Type as "lightNetLongType",
+		t1.light_Net_Long_Page as "lightNetLongPage",
+		t1.light_Net_Long_Span as "lightNetLongSpan",
+		t1.light_Net_Short_Type as "lightNetShortType",
+		t1.light_Net_Short_Page as "lightNetShortPage",
+		t1.draw_Net_Short_Width as "drawNetShortWidth",
+		t1.pipe as "pipe",t1.state as "state"
+
+
+  FROM KS_BASE_CRAFTS_PACKAGE t1
+  
+
+  where 1=1
+
+     
+   
+	
+	<isNotNull prepend="and" property="craftNoStr">t1.craft_no like '%' || #craftNoStr# || '%'</isNotNull>
+        <isNotNull prepend="and" property="craftNo">t1.craft_no = #craftNo#</isNotNull>
+        <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
+	
+	
+	order by t1.craft_no
+    </select>
+    <update id="updateMaterByCraftNo" parameterClass="java.util.HashMap">
+    UPDATE qinsen.para_mater_spec pms
+	SET pms.num_per_wad = (SELECT cp.num_per_wad
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.blanking_size = (SELECT cp.blanking_size
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.mp_width = (SELECT cp.mp_width
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.dense_net = (SELECT cp.dense_net
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.dense_net_width = (SELECT cp.dense_net_width
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.dense_net_span = (SELECT cp.dense_net_span
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.light_net_long_type = (SELECT cp.light_net_long_type
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.light_net_long_page = (SELECT cp.light_net_long_page
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.light_net_long_span = (SELECT cp.light_net_long_span
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.light_net_short_type = (SELECT cp.light_net_short_type
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.light_net_short_page = (SELECT cp.light_net_short_page
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.draw_net_short_width = (SELECT cp.draw_net_short_width
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no),
+	pms.pipe = (SELECT cp.pipe
+	FROM KS_BASE_CRAFTS_PACKAGE cp WHERE pms.craft_no = cp.craft_no)
+	WHERE pms.mater_spec_id = #materSpecId#
+	<isNotNull prepend="and" property="craftNo">exists ( select 1 from KS_BASE_CRAFTS_PACKAGE where craft_no = #craftNo#)</isNotNull>
+    </update>
 </sqlMap>

@@ -84,7 +84,7 @@
 		 where 1=1
 		 
 		  <isNotNull prepend="and" property="notstep"> 
-		       t1.step not in ($notstep$)
+		       t1.step not in ($notstep$) and t1.step != 'invalid' 
 			</isNotNull>
 			
 		  <isNotNull prepend="and" property="id"> 

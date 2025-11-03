@@ -14,7 +14,7 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 		var _this = this;
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					ref :'../queryPanel',
+					ref : '../queryPanel',
 					height : 110,
 					columns : 4,
 					border : true,
@@ -67,7 +67,7 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'textfield',
-						ref:'../orderNo',
+						ref : '../orderNo',
 						name : 'condition/orderNo',
 						anchor : '100%',
 						fieldLabel : '订单号%-%'
@@ -79,7 +79,8 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 						hiddenName : 'condition/prodFlagId',
 						emptyText : '--请选择--',
 						anchor : '100%',
-						store : [[null, '全部'], ['300027', '量产'], ['300028', '实验'], ['300140', '试量产']],
+						store : [[null, '全部'], ['300027', '量产'],
+								['300028', '实验'], ['300140', '试量产']],
 						listeners : {
 							scope : this,
 							'expand' : function(A) {
@@ -89,10 +90,15 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 					}, {
 
 						xtype : 'textfield',
-						ref:'../batchNo',
+						ref : '../batchNo',
 						name : 'condition/batchNo',
 						anchor : '100%',
 						fieldLabel : '膜片批次%-%'
+					}, {
+						xtype : 'supcombobox',
+						hiddenName : 'condition/supId',
+						anchor : '100%',
+						fieldLabel : '无纺布供应商'
 					}]
 				});
 		this.queryPanel.addButton({
@@ -121,11 +127,11 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 			// 'com.keensen.ump.produce.diaphragm.make.make.deleteZmxEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'batchNo',
-						width:150,
+						width : 150,
 						header : '膜片批次',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
-							if (batchNo == '合计' ) {
+							if (batchNo == '合计') {
 								return "<span style='color:red'>" + v
 										+ "</span>";
 
@@ -147,7 +153,7 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 						header : '长度(m)',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
-							if (batchNo == '合计' ) {
+							if (batchNo == '合计') {
 								return "<span style='color:red'>" + v
 										+ "</span>";
 
@@ -166,10 +172,10 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 						header : '底膜批次'
 					}, {
 						dataIndex : 'dmTheoryAmount',
-						header : '底膜理论投入数',
+						header : '放卷底膜长度',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
-							if (batchNo == '合计' ) {
+							if (batchNo == '合计') {
 								return "<span style='color:red'>" + v
 										+ "</span>";
 
@@ -188,7 +194,7 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 						header : '水相液调整重量(g)',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
-							if (batchNo == '合计' ) {
+							if (batchNo == '合计') {
 								return "<span style='color:red'>" + v
 										+ "</span>";
 
@@ -201,7 +207,7 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 						header : '漂洗液重量(kg)',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
-							if (batchNo == '合计' ) {
+							if (batchNo == '合计') {
 								return "<span style='color:red'>" + v
 										+ "</span>";
 
@@ -214,7 +220,7 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 						header : 'PVA-母液(kg)',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
-							if (batchNo == '合计' ) {
+							if (batchNo == '合计') {
 								return "<span style='color:red'>" + v
 										+ "</span>";
 
@@ -227,7 +233,7 @@ com.keensen.ump.produce.report.diaghragm.MaterMainMgr = function() {
 						header : '油相液重量（kg）',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
-							if (batchNo == '合计' ) {
+							if (batchNo == '合计') {
 								return "<span style='color:red'>" + v
 										+ "</span>";
 

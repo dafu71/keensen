@@ -14,6 +14,15 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.initEvent = fu
 	}, this);
 
 	this.listPanel.store.on('load', function(o) {
+
+		var records = _this.listPanel.store.getRange();
+		if (records.length == 0) {
+			Ext.getCmp(quantityTotalId).setValue('');
+		} else {
+			var quantityTotal = records[0].data.amountTotal;
+			Ext.getCmp(quantityTotalId).setValue("<span style='color:red'>数量统计:" + quantityTotal + "米</span>");
+		}
+
 		if (currentWindow == 'inputWindow2') {
 			var obj = _this.inputWindow2.form.findField("outofstock/batchNo");
 			obj.setValue('');
@@ -36,10 +45,12 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.initEvent = fu
 
 	this.inputWindow2.activeItem.mon(this.inputWindow2.activeItem,
 			'beforeSave', function() {
-				/*var obj = this.inputWindow2.form
-						.findField("outofstock/customerName");
-				this.inputWindow2.form.findField("outofstock/customerCode")
-						.setValue(obj.actualValue);*/
+				/*
+				 * var obj = this.inputWindow2.form
+				 * .findField("outofstock/customerName");
+				 * this.inputWindow2.form.findField("outofstock/customerCode")
+				 * .setValue(obj.actualValue);
+				 */
 				var batchNo = this.inputWindow2.form
 						.findField("outofstock/batchNo").getValue();
 
@@ -48,7 +59,7 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.initEvent = fu
 	this.inputWindow2.activeItem.mon(this.inputWindow2.activeItem, 'afterSave',
 			function() {
 				// currentWindow = 'inputWindow2';
-				//this.listPanel.store.reload();
+				// this.listPanel.store.reload();
 
 			}, this);
 
@@ -58,27 +69,26 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.initEvent = fu
 				// this.listPanel.store.reload();
 
 			}, this);
-			
+
 	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
 			function() {
-		var stockAmount = this.inputWindow.form
+				var stockAmount = this.inputWindow.form
 						.findField("outofstock/stockAmount").getValue();
-		var amount = this.inputWindow.form
+				var amount = this.inputWindow.form
 						.findField("outofstock/amount").getValue();
-						
-		var type = this.inputWindow.type.getValue();
-		var storageId = this.inputWindow.storageId.getValue();
-		
-		if(type == '发货出库' && storageId != 3 ){
-			Ext.Msg.alert("系统提示", "请走膜片发货仓发货出库！");
-			return false;
-		}
-		
-		if(parseFloat(amount)>parseFloat(stockAmount)){
-			Ext.Msg.alert("系统提示", "出库数量大于库存无法出库！");
-			return false;
-		}
-		
+
+				var type = this.inputWindow.type.getValue();
+				var storageId = this.inputWindow.storageId.getValue();
+
+				if (type == '发货出库' && storageId != 3) {
+					Ext.Msg.alert("系统提示", "请走膜片发货仓发货出库！");
+					return false;
+				}
+
+				if (parseFloat(amount) > parseFloat(stockAmount)) {
+					Ext.Msg.alert("系统提示", "出库数量大于库存无法出库！");
+					return false;
+				}
 
 			}, this);
 
@@ -108,9 +118,11 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.initEvent = fu
 
 com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.onSave2 = function() {
 	var me = this;
-	//var obj = this.inputWindow2.form.findField("outofstock/customerName");
-	var batchNo = this.inputWindow2.form.findField("outofstock/batchNo").getValue();
-	var customerCode = this.inputWindow2.form.findField("outofstock/customerCode").getValue();
+	// var obj = this.inputWindow2.form.findField("outofstock/customerName");
+	var batchNo = this.inputWindow2.form.findField("outofstock/batchNo")
+			.getValue();
+	var customerCode = this.inputWindow2.form
+			.findField("outofstock/customerCode").getValue();
 	// 退货入库的产品，需要进行判定合格后才允许出库发货如属退货产品，出货又发往原客户，系统给予告警提示
 	Ext.Ajax.request({
 		method : "post",
@@ -195,12 +207,17 @@ com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.onScan = funct
 						.setValue(data.perfFlagName);
 				this.inputWindow.form.findField("outofstock/position")
 						.setValue(data.position);
-				
+
 			}
 		}
 	});
 }
 
+com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.exportExcel = function() {
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '膜片出库',
+			'com.keensen.ump.produce.diaphragm.storage.stock.queryOutofstock');
+
+}
 
 /*
  * com.keensen.ump.produce.diaphragm.storage.OutofstockMgr.prototype.onEdit =

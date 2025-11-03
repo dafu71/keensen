@@ -429,7 +429,7 @@
        T1.JUDGE_TIME AS "judgeTime",
        T1.PRODUCE_REMARK AS "produceRemark",
        T1.REMARK AS "remark",
-       T1.JUDGE_REMARK AS "judgeRemark"
+       T1.JUDGE_REMARK AS "judgeRemark",T1.recorder "recorder"
   FROM V_KS_TUMO_CHECK_FIRST T1
   left join KS_PROD_DIAPHRAGM_TUMO_CHECK t3
   on t1.record_id = t3.record_id
@@ -925,7 +925,7 @@
 
 	SELECT T1.ID           "id", rownum "rn",
        T1.RELATION_ID  "relationId",
-       nvl(T1.WATER,'')        "water",
+       to_char(nvl(T1.WATER,''),'fm0.00')       "water",
        case when REGEXP_INSTR(T1.DESALINATION, '[^0-9.]') = 0 then to_char(nvl(T1.DESALINATION,''),'fm999.00')
        else T1.DESALINATION end  "desalination",
        T1.BATCH_NO     "batchNo"

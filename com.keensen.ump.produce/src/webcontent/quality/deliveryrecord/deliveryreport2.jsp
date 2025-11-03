@@ -282,7 +282,7 @@
 <p>&nbsp;</p>
 <table width="780" border="0" >
 <tr>
-    <td width="50%"> <div align="left" class="style2"><strong>Test Data of Membrane</strong></div> </td>
+    <td width="50%"> <div align="left" class="style2"><strong>‌Membrane Element Related Information</strong></div> </td>
 	<td width="50%">&nbsp; </td>
   </tr>
 </table>

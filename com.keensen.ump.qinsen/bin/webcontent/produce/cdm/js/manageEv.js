@@ -2,6 +2,34 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 
 	var _this = this;
 
+	Ext.getCmp(addBtn).setDisabled(true);
+	Ext.getCmp(add2Btn).setDisabled(true);
+
+	this.listPanel4ProdCdmList.store.on('load', function() {
+
+				var records = _this.listPanel4ProdCdmList.store.getRange();
+				if (records.length == 0) {
+					Ext.getCmp(quantityTotalId).setValue('');
+				} else {
+					var quantityTotal = records[0].data.quantityTotal;
+					Ext.getCmp(quantityTotalId).setValue('产量合计:'
+							+ quantityTotal);
+				}
+			});
+
+	// 查询事件
+	this.queryPanel4ProdCdmList.mon(this.queryPanel4ProdCdmList, 'query',
+			function(form, vals) {
+				var store = this.listPanel4ProdCdmList.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4ProdCdmList.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
 	this.listPanel.selModel.on('rowselect', function(o, i, r) {
 		var _this = this;
 		var A = this.listPanel;
@@ -270,6 +298,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.destroy = function() {
 	Ext.getCmp('cdm-defectviewwindow').destroy();
 	this.defectTmWin.destroy();
 	this.defectZmWin.destroy();
+	this.prodCdmListWindow.destroy();
 }
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPrintCaidieMoTag = function() {
@@ -430,12 +459,15 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function() {
 	var _this = this;
 	var batchNo = '';
+
 	if (this.inputWindow.tumoBatchNo.hidden) {
 		batchNo = this.inputWindow.tumoBatchNo2.getValue();
 	} else {
 		batchNo = this.inputWindow.tumoBatchNo.getValue();
 	}
 
+	batchNo = batchNo.trim();
+	
 	if (batchNo.length != 11 && batchNo.length != 12 && batchNo.length != 13) {
 		Ext.Msg.alert("系统提示", "膜片批次长度应为11或12位或13位，请检查！");
 		return false;
@@ -558,8 +590,13 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onPlan = function() {
 							.setValue(rec.data.denseNetType);
 					_this.inputWindow.denseNetWidth
 							.setValue(rec.data.denseNetWidth);
-					_this.inputWindow.lightNetType
-							.setValue(rec.data.lightNetType);
+					// _this.inputWindow.lightNetType
+					// .setValue(rec.data.lightNetType);
+					_this.inputWindow.lightNetShortType
+							.setValue(rec.data.lightNetShortType);
+					_this.inputWindow.lightNetLongType
+							.setValue(rec.data.lightNetLongType);
+
 					_this.inputWindow.lightNetShortPage
 							.setValue(rec.data.lightNetShortPage);
 					_this.inputWindow.denseNetCdm
@@ -739,4 +776,75 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.chooseOrderOk = function() 
 	var orderNo = record.data.orderNo;
 	this.inputWindow.orderNo.setValue(orderNo);
 	this.chooseOrderWindow.hide();
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onStart = function() {
+	var _this = this;
+
+	Ext.getCmp(addBtn).setDisabled(false);
+	Ext.getCmp(add2Btn).setDisabled(false);
+
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.productioncount.saveCdmStart.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				var msg = ret.msg;
+				_this.queryPanel.setTitle("<span style='color:red'>" + msg
+						+ "</span>");
+			}
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onEnd = function() {
+	var _this = this;
+	Ext.Msg.confirm("操作确认", "您确实要下机结算工作量吗?", function(A) {
+		if (A == "yes") {
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.produce.component.productioncount.saveCdmEnd.biz.ext",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						var msg = ret.msg;
+						_this.queryPanel.setTitle("<span style='color:red'>"
+								+ msg + "</span>");
+					}
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+		}
+	})
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onQueryQuantity = function() {
+	this.prodCdmListWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportProduceCountExcel = function() {
+
+	doQuerySqlAndExport(
+			this,
+			this.queryPanel4ProdCdmList,
+			this.listPanel4ProdCdmList,
+			'产量统计',
+			'com.keensen.ump.produce.component.productioncount.queryProducCdmList',
+			'0,1');
+
 }

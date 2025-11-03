@@ -14,6 +14,17 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.initEvent =
 					}
 				});
 	}, this);
+	
+	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel, 'query', function(form, vals) {
+		var store = this.chooseSingleOrderListPanel.store;
+		store.baseParams = vals;
+		store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+	}, this);
 
 	me.onMsg();
 
@@ -452,7 +463,7 @@ com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMonitorDe
 			var r = C[i];
 			var exceptionType = r.data.exceptionType;
 			if (exceptionType != '需班长处理') {
-				if (exceptionType == '超期停留' && uid != 'KS00524') {
+				if (exceptionType == '超期停留' && uid != 'KS00524' && uid != 'dafu' && uid != 'LHY') {
 					Ext.Msg.alert("系统提示", "请选择需班长处理的记录！");
 					return;
 				}
@@ -543,4 +554,65 @@ function hideNotification(notification) {
 	setTimeout(function() {
 				notification.remove();
 			}, 500);
+}
+
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onMonitorAdvise = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			recordIds.push(r.data['qjBatchId']);
+
+		}
+		
+		this.editWindow4MonitorAdvise.advise.setValue('');
+		this.editWindow4MonitorAdvise.recordIds.setValue(recordIds.join(','));
+		this.editWindow4MonitorAdvise.show();
+	}
+	
+}
+
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onPlannerAdvise = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			recordIds.push(r.data['qjBatchId']);
+
+		}
+		
+		this.editWindow4PlannerAdvise.advise.setValue('');
+		this.editWindow4PlannerAdvise.recordIds.setValue(recordIds.join(','));
+		this.editWindow4PlannerAdvise.show();
+	}
+}
+
+com.keensen.ump.produce.component.vstorage.VstorageListMgr.prototype.onOvertimeAdvise = function() {
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var recordIds = [];
+		for (var i = 0; i < C.length; i++) {
+			var r = C[i];
+			recordIds.push(r.data['qjBatchId']);
+
+		}
+		
+		this.editWindow4OvertimeAdvise.advise.setValue('');
+		this.editWindow4OvertimeAdvise.recordIds.setValue(recordIds.join(','));
+		this.editWindow4OvertimeAdvise.show();
+	}
 }

@@ -64,6 +64,8 @@
   var uid = "<%=uid %>";
    var nowStaffName = "<%=uname %>";
    var modifyOrderNoFlag = <%=modifyOrderNoFlag %>;
+   
+   var addRsBtn = Ext.id();
 
   var nowStaffId = <%=operatorid %>;
    <% if(workerflag){ %>
@@ -72,6 +74,9 @@
   var teamId = '';
   <% } %>
   var listid = 'produce-raosimgr-list';
+  
+  var quantityTotalId = Ext.id();
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.raosiMgr
 		});

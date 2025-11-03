@@ -4,7 +4,7 @@
    <select id="queryFix" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
     select 
     t1.ID as "id",t1.mptype "mptype",t1.machine "machine",t1.psf "psf",	t1.weight "weight", 
-    t2.dictname "psfName",
+    t2.dictname "psfName", t1.recorder "recorder",t1.recorder2 "recorder2",
 	to_char(t1.CREATE_TIME,'yyyy-MM-dd hh24:mi')as "createTime",
 	t1.CREATE_USER_ID as "createUserId",
 	t1.CREATE_NAME as "createName",
@@ -18,7 +18,7 @@
 	t1.RESERVE5 as "reserve5",
 	t1.ORG_ID as "orgId",
 	t1.STATUS as "status",
-	t1.BATCH_NO as "batchNo",t1.c11_invalid "c11Invalid",
+	t1.BATCH_NO as "batchNo",t1.c11_invalid "c11Invalid",t1.c11_invalid_reason "c11InvalidReason",
 	t1.C11 as "c11",
 	t1.C12 as "c12",
 	t1.C13 as "c13",

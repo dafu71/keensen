@@ -124,7 +124,7 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 					}, '->', {
 						text : '删除',
 						scope : this,
-						hidden: uid != 'KS00610' && uid != 'dafu',
+						hidden: uid != 'KS00610' && uid != 'dafu' && uid != 'KS00517',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],
@@ -240,6 +240,9 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 						dataIndex : 'checkerName',
 						header : '分析员'
 					}, {
+						dataIndex : 'recorder',
+						header : '记录人'
+					}, {
 						dataIndex : 'checkTime',
 						header : '检测时间'
 					}, {
@@ -347,6 +350,8 @@ com.keensen.ump.produce.quality.tumocheckMgr = function() {
 							name : 'batchId'
 						}, {
 							name : 'recordId'
+						}, {
+							name : 'recorder'
 						}]
 			})
 		})

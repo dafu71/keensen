@@ -11,6 +11,7 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    String uname = userObject.getUserName();
 %>
 <html>
 <!-- 
@@ -35,11 +36,15 @@
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
-
+<js:load scriptPath="pub/common/prodspecCombo.js" />
 <js:load scriptPath="produce/component/prodrecord/js/manageUi.js"/>
 <js:load scriptPath="produce/component/prodrecord/js/manageEv.js"/>
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  
+   var nowStaffName = "<%=uname %>";
+  var nowStaffId = <%=operatorid %>;
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.ProdRecordMgr
 		});
@@ -53,5 +58,12 @@
 		<input type="hidden" name="ids"/>			
 	</form>
 </div>
+
+<div style="display: none">
+<form name="prodrecordprinttagsForm" id="prodrecordprinttagsForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+			<input type="hidden" name="ids"/>			
+</form>
+</div>
+
 </body>
 </html>

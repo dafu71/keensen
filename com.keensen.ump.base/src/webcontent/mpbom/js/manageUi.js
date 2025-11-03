@@ -148,6 +148,9 @@ com.keensen.ump.base.MpBomMgr = function() {
 						dataIndex : 'mater17',
 						header : 'C24(kg)'
 					}, {
+						dataIndex : 'c22a',
+						header : 'C22-A(kg)'
+					}, {
 						dataIndex : 'updateTime',
 						header : '修改时间'
 					}, {
@@ -210,6 +213,8 @@ com.keensen.ump.base.MpBomMgr = function() {
 									name : 'dmcode'
 								}, {
 									name : 'zmcode'
+								}, {
+									name : 'c22a'
 								}]
 					})
 		})
@@ -381,6 +386,12 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'numberfield',
 									name : 'entity/mater17',
 									fieldLabel : 'C24(kg)',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/c22a',
+									fieldLabel : 'C22-A(kg)',
 									anchor : '95%',
 									colspan : 1
 								}]
@@ -577,6 +588,13 @@ com.keensen.ump.base.MpBomMgr = function() {
 									fieldLabel : 'C24(kg)',
 									anchor : '95%',
 									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/c22a',
+									dataIndex : 'c22a',
+									fieldLabel : 'C22-A(kg)',
+									anchor : '95%',
+									colspan : 1
 								}]
 					}]
 		});
@@ -745,6 +763,12 @@ com.keensen.ump.base.MpBomMgr = function() {
 									xtype : 'displayfield',
 									dataIndex : 'mater17',
 									fieldLabel : 'C24(kg)',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									dataIndex : 'c22a',
+									fieldLabel : 'C22-A(kg)',
 									anchor : '95%',
 									colspan : 1
 								}]

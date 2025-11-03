@@ -37,8 +37,10 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		this.initChooseMarkWindow();
 
 		this.initUpdateSpecNameMarkWindow();
-		
+
 		this.initChooseLableWindow();
+
+		this.initModifyOrderWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -375,7 +377,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, '-', {
 						xtype : 'splitbutton',
 						// disabled : allRight != '1',
-						text : '订单新增',
+						text : '订单新增与修改',
 						// scale : 'small',
 						// rowspan : 1,
 						// iconAlign : 'top',
@@ -391,6 +393,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									scope : this,
 									iconCls : 'icon-application_edit',
 									handler : this.onAddOrder
+								}, {
+									text : '修改',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.onModifyOrder
 								}]
 					}, '-', {
 						text : '订单生产备注',
@@ -3871,7 +3878,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}]
 				});
 	}
-	
+
 	// ChooseLable
 	this.initChooseLableWindow = function() {
 		var _this = this;
@@ -4054,5 +4061,260 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							this.listPanel4ChooseLable]
 
 				})
+	}
+
+	this.initModifyOrderWindow = function() {
+		var _this = this;
+
+		var typeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['工业膜', '工业膜'], ['家用膜', '家用膜'], ['商用膜', '商用膜'],
+							['膜片', '膜片'], ['其他', '其他']]
+				});
+
+		this.modifyOrderWindow = this.modifyOrderWindow
+				|| new Ext.fn.FormWindow({
+					title : '新增订单',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+							_this.modifyOrderWindow.items.items[0].form.reset();
+							_this.modifyOrderWindow.hide();
+							_this.listPanel.refresh();
+
+						},
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandYxOrder.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.neworder.saveEntity.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/orderNo',
+									dataIndex : 'orderNo',
+									fieldLabel : '订单编号 ',
+									ref : '../../orderNo',
+									allowBlank : false,
+									anchor : '80%',
+									colspan : 2
+
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'combobox',
+									value : '工业膜',
+									forceSelection : true,
+									allowBlank : false,
+									mode : 'local',
+									fieldLabel : '产品类型',
+									ref : '../../type',
+									hiddenName : 'entity/type',
+									dataIndex : 'type',
+									anchor : '80%',
+									colspan : 2,
+									emptyText : '--请选择--',
+									editable : false,
+									store : typeStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'prodspeccombobox',
+									hiddenName : 'entity/materSpecId',
+									dataIndex : 'materSpecId',
+									ref : '../../materSpecId',
+									allowBlank : false,
+									anchor : '80%',
+									colspan : 2,
+									fieldLabel : '对应生产规格',
+									typeAhead : true,
+									typeAheadDelay : 100,
+									minChars : 1,
+									queryMode : 'local',
+									lastQuery : '',
+									editable : true,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											var i = o.store
+													.find('id', newValue);
+											var rec2 = o.store.getAt(i);
+											var lid = rec2.get('lid');
+											_this.modifyOrderWindow.lid
+													.setValue(lid);
+											if (newValue == oldValue)
+												return false;
+											var materSpecName = _this.modifyOrderWindow.materSpecId
+													.getRawValue();
+											_this.modifyOrderWindow.materSpecName
+													.setValue(materSpecName);
+											_this.modifyOrderWindow.materSpecName2
+													.setValue(materSpecName);
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/orderAmount',
+									dataIndex : 'orderAmount',
+									fieldLabel : '订单数量 ',
+									ref : '../../orderAmount',
+									allowBlank : false,
+									anchor : '80%',
+									colspan : 2
+
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									name : 'entity/templateName',
+									ref : '../../markDrawingCode',
+									allowBlank : false,
+									dataIndex : 'markDrawingCode',
+									anchor : '80%',
+									colspan : 2,
+									fieldLabel : '唛头编号',
+									xtype : 'trigger',
+									emptyText : '单击旁边按钮选择图纸编号',
+									editable : false,
+									hideTrigger : false,
+									scope : this,
+									onTriggerClick : function() {
+										_this.onChoose4Mark(3);
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/dryWet',
+									ref : '../../dryWet',
+									dataIndex : 'dryWet',
+									fieldLabel : '干/湿',
+									allowBlank : false,
+									value : '干/湿',
+									anchor : '80%',
+									colspan : 2
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/lid',
+									dataIndex : 'lid',
+									fieldLabel : '端盖 ',
+									ref : '../../lid',
+									allowBlank : false,
+									anchor : '80%',
+									colspan : 2
+
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/bq',
+									dataIndex : 'bq',
+									fieldLabel : '标签',
+									ref : '../../bq',
+									allowBlank : false,
+									anchor : '80%',
+									colspan : 2
+
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/mark',
+									dataIndex : 'mark',
+									fieldLabel : '唛头',
+									ref : '../../mark',
+									allowBlank : false,
+									anchor : '80%',
+									colspan : 2
+
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/box',
+									dataIndex : 'box',
+									fieldLabel : '包装箱',
+									ref : '../../box',
+									allowBlank : false,
+									anchor : '80%',
+									colspan : 2
+
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'trigger',
+									name : 'entity/labelDrawingCode',
+									dataIndex : 'labelDrawingCode',
+									fieldLabel : '标签图纸编号',
+									ref : '../../labelDrawingCode',
+									allowBlank : false,
+									anchor : '80%',
+									colspan : 2,
+									emptyText : '单击旁边按钮选择图纸编号',
+									hideTrigger : false,
+									scope : this,
+									onTriggerClick : function() {
+										_this.onChoose4Label();
+									}
+
+								}, {
+									name : 'entity/materSpecName2',
+									dataIndex : 'materSpecName2',
+									ref : '../../materSpecName2',
+									xtype : 'hidden'
+								}, {
+									name : 'entity/materSpecName',
+									dataIndex : 'materSpecName',
+									ref : '../../materSpecName',
+									xtype : 'hidden'
+								}, {
+									name : 'entity/id',
+									dataIndex : 'id',
+									ref : '../../pkid',
+									xtype : 'hidden'
+								}]
+					}]
+				});
 	}
 }

@@ -66,6 +66,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 			saveUrl : 'com.keensen.ump.qinsen.juanmo.quickCreateRecords.biz.ext',
 			fields : [{
 				xtype : 'displayfield',
+				ref : '../loginfo',
 				fieldLabel : "<span style='color:red;font-size:16px;'>"
 						+ '作业计划信息' + "</span>",
 				colspan : 24,
@@ -287,12 +288,14 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 																+ ',已卷数量:'
 																+ jmNum
 																+ ',不能使用</span>');
-												_this.inputPanel.pipeCode.setValue('');
+												_this.inputPanel.pipeCode
+														.setValue('');
 											}
 										} else {
 											_this.inputPanel.pipeInfo
 													.setValue('<span style="color:red;">该中心管组件编号不存在</span>');
-											_this.inputPanel.pipeCode.setValue('');
+											_this.inputPanel.pipeCode
+													.setValue('');
 
 										}
 									}
@@ -508,6 +511,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 						text : "领取任务",
 						scope : this,
 						iconCls : 'icon-page_save',
+						id : quickGetdutyId,
 						handler : this.onGetDuty
 
 					}, {
@@ -526,6 +530,20 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 							this.inputPanel.cdmBatchNo.focus();
 							this.inputPanel.teamId.setValue(teamId);// 班组维持不变
 						}
+					}, {
+						text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
+						height : 40,
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onStart
+
+					}, {
+						text : "<span style='color:red;font-size:14px;'>下&nbsp;&nbsp;机</span>",
+						height : 40,
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onEnd
+
 					}]
 		})
 

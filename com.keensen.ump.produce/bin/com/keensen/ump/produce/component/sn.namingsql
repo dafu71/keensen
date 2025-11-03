@@ -15,28 +15,43 @@
         -->
          decode(T.USE_TYPE,'家用',T.PREFIX || '年月' || LPAD(T.NUM, T.DIGIT, 0), T.PREFIX || LPAD(T.NUM, T.DIGIT, 0))"sn",
         T.DIGIT "digit",
-        T.RULE "rule"
-        
+        T.RULE "rule",
+        t.reserve1 "reserve1",
+        t.reserve2 "reserve2",
+        T.drawing_Code "drawingCode"
   FROM KS_COMPONENT_SN T
   where 1=1
-  and nvl(t.status,1) = 1
-    <isNotNull prepend="and" property="id">t.id = #id#</isNotNull>
-        <isNotNull prepend="and" property="useType">t.USE_TYPE = #useType#</isNotNull>
-        <isNotNull prepend="and" property="prefix">t.prefix = #prefix#</isNotNull>
-        <isNotNull prepend="and" property="prodSpecName">t.prod_Spec_Name like '%' || #prodSpecName# || '%'</isNotNull>
+  
+  <isNotNull prepend="" property="status">and nvl(t.status,1) = #status#</isNotNull>
+        <isNotNull prepend="and" property="id">t.id = #id#</isNotNull>
+        <isNull prepend="" property="id">
+            <isNotNull prepend="and" property="useType">t.USE_TYPE = #useType#</isNotNull>
+            <isNotNull prepend="and" property="prefix">t.prefix = #prefix#</isNotNull>
+            <isNotNull prepend="and" property="prodSpecName">t.prod_Spec_Name like '%' || #prodSpecName# || '%'</isNotNull>
+            <isNotNull prepend="and" property="drawingCode">T.drawing_Code like '%' || #drawingCode# || '%'</isNotNull>
+            <isNotNull prepend="and" property="prodSpecName2">t.prod_Spec_Name = #prodSpecName2#</isNotNull>
+        </isNull>
 	order by id desc
     </select>
     <insert id="insertSn" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_SN
-  (id,use_type,prefix,NUM,prod_Spec_Name,digit,rule)
-  SELECT SEQ_COMPONENT_SN.NEXTVAL,#useType#,#prefix#,#num#,#prodSpecName#,#digit#,#rule# FROM dual
+  (id,use_type,prefix,NUM,prod_Spec_Name,digit,rule,drawing_Code,reserve1,reserve2)
+  SELECT SEQ_COMPONENT_SN.NEXTVAL,#useType#,#prefix#,#num#,#prodSpecName#,#digit#,#rule#,#drawingCode#,#reserve1# ,#reserve2# FROM dual
   where not exists(select 1 from KS_COMPONENT_SN where use_type = #useType# and prefix = #prefix#)</insert>
     <update id="updateSn" parameterClass="java.util.HashMap">
     update KS_COMPONENT_SN
     set  
     <isNotNull prepend="" property="digit">digit=#digit#,</isNotNull>
         <isNotNull prepend="" property="rule">rule=#rule#,</isNotNull>
+        <isNotNull prepend="" property="prodSpecName">prod_Spec_Name=#prodSpecName#,</isNotNull>
+        <isNotNull prepend="" property="reserve1">reserve1=#reserve1#,</isNotNull>
+        <isNotNull prepend="" property="reserve2">reserve2=#reserve2#,</isNotNull>
+        <isNotNull prepend="" property="drawingCode">drawing_Code=#drawingCode#,</isNotNull>
+        <isNotNull prepend="" property="useType">use_type=#useType#,</isNotNull>
+        <isNotNull prepend="" property="prefix">prefix=#prefix#,</isNotNull>
+	
     num = num + #num#
-    where use_type = #useType# and prefix = #prefix#
+    <!--where use_type = #useType# and prefix = #prefix#-->
+    where id = #id#
     </update>
     <select id="querySn" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
     SELECT decode(#useType#,'家用',#prefix# || (select SUBSTR(t.ymd,1,2) from V_KS_YMD t) ,#prefix#) || LPAD(TO_CHAR(ROWNUM + #num2#),     

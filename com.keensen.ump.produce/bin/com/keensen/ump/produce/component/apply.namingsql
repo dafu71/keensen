@@ -83,15 +83,23 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
     <select id="queryCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT CODE "code" from 
   (SELECT to_char(SYSDATE,'yyyyMMdd')|| '001' CODE FROM dual
   WHERE NOT EXISTS(
-  select t.code from KS_COMPONENT_CHECK_HEAD t
+  select t.code from (select code from KS_COMPONENT_CHECK_HEAD 
+						UNION ALL
+					   select code from KS_COMPONENT_HH_CHECK_HEAD t) t
   WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
   UNION
-  select to_char(to_number(max(t.code))+1) CODE from KS_COMPONENT_CHECK_HEAD t
+  select to_char(to_number(max(t.code))+1) CODE from (select code from KS_COMPONENT_CHECK_HEAD 
+						UNION ALL
+					   select code from KS_COMPONENT_HH_CHECK_HEAD t) t
   WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
   WHERE CODE IS NOT NULL</select>
     <select id="queryList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT T1.ID                AS "id",t5.fcode "fcode",
-       T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",nvl(t2.print_batch_no,T1.batch_No) "printBatchNo",
+       T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",
+       
+       <!--nvl(t2.print_batch_no,T1.batch_No) "printBatchNo",-->
+       nvl(t2.batch_no,T1.batch_No) "printBatchNo",
+       
        DECODE(T3.JUANMO_BATCH_ID,NULL,nvl(t1.state,'干'),'湿') "state",
        h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
        replace(t1.tumo_batch_str,',','&lt;br&gt;') "tumoBatchStr2",
@@ -121,13 +129,31 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
        T1.JUANMO_BATCH_ID AS "juanmoBatchId",T1.CHECK_RESULT "checkResult",
        T1.ORDER_NO AS "orderNo",
        T1.PROD_SPEC_ID AS "prodSpecId",
-       DECODE(T3.JUANMO_BATCH_ID, NULL, '干', '湿') AS "state",
+       
+      <!-- DECODE(T3.JUANMO_BATCH_ID, NULL, '干', '湿') AS "state",-->
+       
+       nvl(rec.dry_wet,DECODE(T3.JUANMO_BATCH_ID, NULL, '干', '湿')) AS "state",
        to_char(T1.PRODUCE_DT,'yyyy-MM-dd') "produceDt",
        m.mater_spec_name "prodSpecName",
        j.tumo_batch_str "tumoBatchStr",
-       T1.diameter "diameter",T1.diameter2 "diameter2"
+       T1.diameter "diameter",T1.diameter2 "diameter2",od.id "orderId"
   FROM QINSEN.INST_QIJIAN T1
   
+  left join KS_PROD_COMPONENT_YXORDER od
+  on od.mater_spec_id = T1.PROD_SPEC_ID and od.order_no = t1.order_no
+  
+  left join 
+  (select v.qj_batch_no,t1.dry_wet,t1.batch_no FROM 
+	(
+	SELECT batch_no,dry_wet FROM KS_COMPONENT_PROD_RECORD
+	WHERE ID IN(
+	SELECT MAX(ID)
+	FROM KS_COMPONENT_PROD_RECORD
+	WHERE 1=1 and nvl(status,1) != 0
+	GROUP BY batch_no)) t1  
+	   LEFT JOIN V_KS_QJ_BATCH_NO v
+	  on v.batch_no = t1.batch_no) rec
+  on rec.qj_batch_no =t1.batch_no
   
   LEFT JOIN (select wm_concat(distinct m.batch_no) tumo_batch_str,dd.main_batch_id record_id
           from qinsen.inst_juanmo_detail dd,
@@ -172,7 +198,9 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
     </select>
     <select id="queryProd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
     select DISTINCT od.id "orderId",t.order_no,t.prod_spec_id AS "id",m.mater_spec_name "name" 
-    from qinsen.inst_qijian t
+    from (select order_no ,prod_spec_id from qinsen.inst_qijian
+    union select order_no2 order_no, qj_spec_id prod_spec_id from V_KS_COMPONENT_PROD_RECORD)
+     t
   LEFT JOIN qinsen.para_mater_spec m ON t.prod_spec_id=m.mater_spec_id
   LEFT JOIN Ks_Prod_Component_Yxorder od
   ON od.order_no = t.order_no AND od.mater_spec_id = t.prod_spec_id
@@ -292,4 +320,103 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
     where id = #id#</update>
     <update id="deleteCheckList" parameterClass="java.util.HashMap">delete from KS_COMPONENT_CHECK_LIST t
     where relation_id = #relationId#</update>
+    <select id="queryComponentMix" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT '有' "isqj",
+   		T1.BATCH_NO AS "batchNo",t5.fcode "fcode",
+       T1.JUANMO_BATCH_ID AS "juanmoBatchId", 
+       to_char(T1.CHECK_RESULT) "checkResult",
+       T1.ORDER_NO AS "orderNo",
+       T1.PROD_SPEC_ID AS "prodSpecId",
+       
+      <!-- DECODE(T3.JUANMO_BATCH_ID, NULL, '干', '湿') AS "state",-->
+       
+       nvl(rec.dry_wet,DECODE(T3.JUANMO_BATCH_ID, NULL, '干', '湿')) AS "state",
+       to_char(T1.PRODUCE_DT,'yyyy-MM-dd') "produceDt",
+       m.mater_spec_name "prodSpecName",
+       j.tumo_batch_str "tumoBatchStr",
+       T1.diameter "diameter",T1.diameter2 "diameter2"
+  FROM QINSEN.INST_QIJIAN T1
+  
+  left join 
+  (select v.qj_batch_no,t1.dry_wet,t1.batch_no FROM 
+	(
+	SELECT batch_no,dry_wet FROM KS_COMPONENT_PROD_RECORD
+	WHERE ID IN(
+	SELECT MAX(ID)
+	FROM KS_COMPONENT_PROD_RECORD
+	WHERE 1=1 and nvl(status,1) != 0
+	GROUP BY batch_no)) t1  
+	   LEFT JOIN V_KS_QJ_BATCH_NO v
+	  on v.batch_no = t1.batch_no) rec
+  on rec.qj_batch_no =t1.batch_no
+  
+  LEFT JOIN (select wm_concat(distinct m.batch_no) tumo_batch_str,dd.main_batch_id record_id
+          from qinsen.inst_juanmo_detail dd,
+               qinsen.inst_caidiemo      c,
+               qinsen.inst_tumo          m
+         where dd.cdm_batch_id = c.record_id
+           and c.tumo_batch_id = m.record_id
+           GROUP BY dd.main_batch_id) j ON t1.juanmo_batch_id=j.record_id
+  LEFT JOIN qinsen.para_mater_spec m ON m.mater_spec_id = T1.PROD_SPEC_ID
+  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM QINSEN.INST_WATER_TEST) T3
+    ON T3.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
+   
+  left join (select t.batch_no,max(t.code) fcode from KS_COMPONENT_REWORK_LIST t
+	GROUP BY t.batch_no) t5
+	on t5.batch_no = T1.BATCH_NO
+  where 1=1
+    and T1.BATCH_NO is not null
+    and (not exists(select 1 from KS_COMPONENT_CHECK_LIST tt where tt.BATCH_NO = T1.BATCH_NO)
+    <!--元件做了返工单，可以重复发起请检-->
+    or exists(select 1 from KS_COMPONENT_REWORK_LIST tt where tt.BATCH_NO = T1.BATCH_NO))
+    
+    <!--元件已完成绕丝--><!--and exists(SELECT 1 from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
+	  on rs.juanmo_batch_id = qj.juanmo_batch_id where qj.batch_no = T1.BATCH_NO)-->
+	  
+	  
+	  
+	  and exists(SELECT 1 from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
+   on rs.juanmo_batch_id = qj.juanmo_batch_id   
+  left join V_KS_QJ_BATCH_NO_raosi v
+	  on rs.batch_no = v.batch_no
+    where V.batch_no = T1.BATCH_NO)
+    
+    <isEqual compareValue="是" prepend="" property="ifprint">
+            <!--元件已打印唛头-->
+    and exists(SELECT 1 from KS_COMPONENT_MARK_PRINT_RECORD prnt where prnt.prod_batch_no = T1.BATCH_NO)
+    </isEqual>
+        <isEqual compareValue="否" prepend="" property="ifprint">
+            <!--元件未打印唛头-->
+    and not exists(SELECT 1 from KS_COMPONENT_MARK_PRINT_RECORD prnt where prnt.prod_batch_no = T1.BATCH_NO)
+    </isEqual>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t1.PROD_SPEC_ID in($prodSpecId$)</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName">m.mater_spec_name in($prodSpecName$)</isNotNull>
+        <isNotNull prepend="and" property="orderNo">t1.order_no = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="produceDtStart">to_char(T1.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="produceDtEnd">to_char(T1.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#</isNotNull>
+	union all
+	SELECT 
+		'无' "isqj",
+		T1.qj_BATCH_NO AS "batchNo",null "fcode",
+       T1.JUANMO_BATCH_ID AS "juanmoBatchId",T1.qijian "checkResult",
+       od.ORDER_NO AS "orderNo",
+       od.mater_SPEC_ID AS "prodSpecId",     
+     
+       t1.dry_wet AS "state",
+       substr(T1.CREATE_TIME, 1,10) "produceDt",
+       od.mater_spec_name "prodSpecName",
+       null "tumoBatchStr",
+       null "diameter",null "diameter2"
+	  FROM (select * from V_KS_COMPONENT_PROD_RECORD t
+	WHERE T.isqj != 1 and t.order_id = #orderId#) T1
+	left join KS_PROD_COMPONENT_YXORDER od
+	on od.id = t1.order_id
+	where 1=1 and not exists(select 1 from KS_COMPONENT_CHECK_LIST tt where tt.BATCH_NO = T1.qj_BATCH_NO)
+	
+	
+	
+	
+    </select>
 </sqlMap>

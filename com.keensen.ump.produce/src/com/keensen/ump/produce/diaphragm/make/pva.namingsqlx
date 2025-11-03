@@ -110,7 +110,7 @@
        T1.C90           AS "c90",
        T1.C14           AS "c14",T1.C51           AS "c51",
        T1.RO            AS "ro",
-       T1.OPERATOR_ID   AS "operatorId",
+       T1.OPERATOR_ID   AS "operatorId",t1.recorder "recorder",
        T1.OPERATOR_NAME AS "operatorName",t1.tm_batch_no "tmBatchNo"
        
        ,MC.prodname || '-' ||  SUBSTR(TRIM(T1.tm_batch_no),5,1) "mptype2"

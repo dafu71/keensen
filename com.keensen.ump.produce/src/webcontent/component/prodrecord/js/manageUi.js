@@ -10,8 +10,12 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 
 		this.initInputWindow();
 		this.initEditWindow();
-		
+
 		this.initChangeLabelWindow();
+
+		this.initChangeTagWindow();
+		
+		this.initChooseSingleOrderWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -69,7 +73,7 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -110,14 +114,24 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 								height : '5',
 								colspan : 4
 							}, {
-								xtype : 'textfield',
-								name : 'condition/batchNo',
-								fieldLabel : '登记元件序列号%-%'
+
+								xtype : 'textarea',
+								ref : '../batchNoStr',
+								anchor : '100%',
+								fieldLabel : '登记元件序列号'
 							}, {
-								xtype : 'textfield',
-								name : 'condition/qjBatchNo',
-								fieldLabel : '当前元件序列号%-%'
-							}, {
+
+								xtype : 'textarea',
+								ref : '../qjBatchNoStr',
+								anchor : '100%',
+								fieldLabel : '当前元件序列号'
+							}/*
+								 * , { xtype : 'textfield', name :
+								 * 'condition/batchNo', fieldLabel :
+								 * '登记元件序列号%-%' }, { xtype : 'textfield', name :
+								 * 'condition/qjBatchNo', fieldLabel :
+								 * '当前元件序列号%-%' }
+								 */, {
 								xtype : 'combobox',
 								mode : 'local',
 								fieldLabel : '干/湿',
@@ -143,6 +157,16 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 										'condition/createTimeEnd'],
 								fieldLabel : "登记日期",
 								format : "Y-m-d"
+							}, {
+
+								xtype : 'hidden',
+								name : 'condition/batchNos',
+								ref : '../batchNos'
+							}, {
+
+								xtype : 'hidden',
+								name : 'condition/qjBatchNos',
+								ref : '../qjBatchNos'
 							}]
 				});
 		this.queryPanel.addButton({
@@ -184,15 +208,31 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 						iconCls : 'icon-application_edit',
 						handler : this.onChangeLabel
 					}, '-', {
+						text : '批量改订单',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						//hidden:true,
+						handler : this.onModiOrder
+					}, '-', {
 						text : '废止',
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDelete
+					}, '-', {
+						text : '打印序列号',
+						scope : this,
+						iconCls : 'icon-printer',
+						handler : this.onPrintTag
 					}, '->', {
 						text : '打印唛头',
 						scope : this,
 						iconCls : 'icon-printer',
 						handler : this.onPrintMarks
+					},'-', {
+						text : '打印唛头(带五星)',
+						scope : this,
+						iconCls : 'icon-printer',
+						handler : this.onPrintMarks2
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.prodrecord.updateBatchStatus.biz.ext',
@@ -200,6 +240,10 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 						dataIndex : 'createTime',
 						width : 150,
 						header : '登记日期'
+					}, {
+						dataIndex : 'orderNo2',
+						width : 100,
+						header : '实际返工订单号'
 					}, {
 						dataIndex : 'isqj',
 						width : 100,
@@ -289,6 +333,10 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 						dataIndex : 'orderNo',
 						width : 100,
 						header : '返工处理的订单号'
+					}, {
+						dataIndex : 'qjRecordId',
+						width : 100,
+						header : '气检id'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.prodrecord.queryProdRecordByPage.biz.ext',
@@ -348,6 +396,12 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 							name : 'reserve1'
 						}, {
 							name : 'reserve2'
+						}, {
+							name : 'qjRecordId'
+						}, {
+							name : 'orderNo2'
+						}, {
+							name : 'orderId'
 						}]
 			})
 		})
@@ -1003,7 +1057,7 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 									anchor : '100%',
 									colspan : 2
 
-								},{
+								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 2
@@ -1015,7 +1069,7 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 									anchor : '100%',
 									colspan : 2
 
-								},{
+								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 2
@@ -1050,5 +1104,351 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 								}]
 					}]
 				});
+	}
+
+	this.initChangeTagWindow = function() {
+		var _this = this;
+		this.changeTagWindow = this.changeTagWindow || new Ext.fn.FormWindow({
+			title : '气检换标',
+			height : 480,
+			width : 600,
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+						xtype : 'inputpanel',
+						pgrid : this.listPanel,
+						columns : 1,
+						saveUrl : 'com.keensen.ump.qinsen.qijian.changeTag.biz.ext',
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+												// _this.qijianAddWindow.hide();
+											}
+										})
+							} else {
+								_this.listPanel.store.load();
+								_this.changeTagWindow.hide();
+
+							}
+						},
+
+						fields : [{
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									xtype : 'datetimefield',
+									format : "Y-m-d",
+									anchor : '90%',
+									ref : '../../produceDt',
+									name : 'entity/produceDt',
+									allowBlank : false,
+									fieldLabel : '换标日期',
+									value : new Date()
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									ref : '../../oldBatchNo',
+									fieldLabel : '旧元件序号',
+									name : 'entity/oldBatchNo',
+									readOnly : true,
+									allowBlank : false,
+									anchor : '90%'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'prodspeccombobox',
+									hiddenName : 'entity/newSpecId',
+									ref : '../../newSpecId',
+									anchor : '90%',
+									fieldLabel : '新元件型号 ',
+									typeAhead : true,
+									typeAheadDelay : 100,
+									minChars : 1,
+									queryMode : 'local',
+									lastQuery : '',
+									editable : true,
+									allowBlank : true,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									ref : '../../newBatchNo',
+									fieldLabel : '新元件序号',
+									name : 'entity/newBatchNo',
+									allowBlank : false,
+									anchor : '90%'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									name : 'entity/remark',
+									xtype : 'textarea',
+									fieldLabel : '备注',
+									colspan : 1,
+									anchor : '90%',
+									allowBlank : true
+								}, {
+									name : 'entity/workerId',
+									ref : '../../workerId',
+									value : nowStaffId,
+									xtype : 'hidden'
+								}]
+					}]
+		})
+	}
+	
+	this.initChooseSingleOrderWindow = function() {
+
+		var chooseSingleOrderSelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.chooseSingleOrderListPanel = this.chooseSingleOrderListPanel
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : [{
+								text : '确定选择',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onChooseSingleOrder
+							}],
+					hsPage : true,
+					selModel : chooseSingleOrderSelModel,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							chooseSingleOrderSelModel, {
+								dataIndex : 'orderType',
+								header : '订单类型',
+								sortable : true
+							}, {
+								dataIndex : 'orderNo',
+								header : '订单编号',
+								sortable : true
+							}, {
+								dataIndex : 'templateName',
+								header : '唛头图纸编号',
+								sortable : true
+							}, {
+								dataIndex : 'materSpecName2',
+								header : '订单下达型号',
+								sortable : true
+							}, {
+								dataIndex : 'materSpecName',
+								header : '对应生产规格',
+								sortable : true
+							}, {
+								dataIndex : 'orderAmount',
+								header : '订单数量',
+								sortable : true
+							}, {
+								dataIndex : 'orderDate',
+								header : '订单日期',
+								sortable : true
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.neworder.queryYxOrderByPage.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : 'totalCount',
+						baseParams : {
+							'condition/materSpecNotNull' : 'Y'
+						},
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'lidTape'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'createUserId'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'updateTime'
+								}, {
+									name : 'updateUserId'
+								}, {
+									name : 'updateName'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'reserve2'
+								}, {
+									name : 'reserve3'
+								}, {
+									name : 'reserve4'
+								}, {
+									name : 'reserve5'
+								}, {
+									name : 'orgId'
+								}, {
+									name : 'status'
+								}, {
+									name : 'scfs'
+								}, {
+									name : 'bm'
+								}, {
+									name : 'sffh'
+								}, {
+									name : 'orderType'
+								}, {
+									name : 'type'
+								}, {
+									name : 'khxj'
+								}, {
+									name : 'cpxj'
+								}, {
+									name : 'ddxj'
+								}, {
+									name : 'orderNo'
+								}, {
+									name : 'orderDate'
+								}, {
+									name : 'hpmc'
+								}, {
+									name : 'dw'
+								}, {
+									name : 'materSpecName'
+								}, {
+									name : 'cpgg'
+								}, {
+									name : 'dryWet'
+								}, {
+									name : 'orderAmount'
+								}, {
+									name : 'dfh'
+								}, {
+									name : 'xsc'
+								}, {
+									name : 'sbkcgm'
+								}, {
+									name : 'sbkcsm'
+								}, {
+									name : 'bq'
+								}, {
+									name : 'bag'
+								}, {
+									name : 'box'
+								}, {
+									name : 'mark'
+								}, {
+									name : 'pack'
+								}, {
+									name : 'performance'
+								}, {
+									name : 'remark'
+								}, {
+									name : 'demandStockDate'
+								}, {
+									name : 'rksl'
+								}, {
+									name : 'jhwcsj'
+								}, {
+									name : 'scwcrq'
+								}, {
+									name : 'cnt'
+								}, {
+									name : 'arrangeAmount'
+								}, {
+									name : 'ifplan'
+								}, {
+									name : 'materSpecName2'
+								}, {
+									name : 'templateName'
+								}, {
+									name : 'baseId'
+								}, {
+									name : 'materSpecId'
+								}]
+					})
+				})
+
+		this.queryChooseSingleOrderPanel = this.queryChooseSingleOrderPanel
+				|| new Ext.fn.QueryPanel({
+							height : 120,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/orderNo2',
+										// anchor : '75%',
+										fieldLabel : '订单号'
+									}, {
+										xtype : 'textfield',
+										name : 'condition/materSpecName',
+										// anchor : '75%',
+										fieldLabel : '规格型号 '
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 2
+									}, {
+										xtype : "dateregion",
+										colspan : 1,
+										// anchor : '75%',
+										nameArray : [
+												'condition/orderDateStart',
+												'condition/orderDateEnd'],
+										fieldLabel : "订单日期",
+										format : "Y-m-d"
+									}, {
+										xtype : 'hidden',
+										name : 'condition/materSpecNotNull',
+										value : 'Y'
+									}]
+						});
+
+		this.queryChooseSingleOrderPanel.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.chooseSingleOrderWindow.hide();
+					}
+
+				});
+
+		this.chooseSingleOrderWindow = this.chooseSingleOrderWindow
+				|| new Ext.Window({
+							title : '订单查询',
+							projectId : '',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 800,
+							height : 600,
+							layout : 'border',
+							items : [this.queryChooseSingleOrderPanel,
+									this.chooseSingleOrderListPanel]
+
+						});
 	}
 }

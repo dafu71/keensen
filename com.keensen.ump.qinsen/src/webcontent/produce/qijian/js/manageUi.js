@@ -3,6 +3,8 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 		this.queryFlag = false;
 
+		this.initStore();
+
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initDetailPanel();
@@ -29,6 +31,12 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 		this.initEditWindow4PlannerAdvise();
 		this.initEditWindow4OvertimeAdvise();
 
+		this.initProduceCountWindow();
+
+		this.initInputWindow4Abilition();
+		this.initInputWindow4Abilition2();
+		this.initAbilitionWindow();
+
 		this.opt = '';
 
 		this.gridPanel = this.gridPanel || new Ext.Panel({
@@ -45,6 +53,36 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					panels : [this.queryPanel, this.gridPanel]
 				});
 		return this.lay;
+	}
+
+	this.initStore = function() {
+
+		this.prodSpecStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.base.base.queryProdspec.biz.ext',
+					root : 'data',
+					autoLoad : true,
+					baseParams : {
+						'condition/state' : 'Y'
+					},
+					fields : [{
+								name : "materSpecId"
+							}, {
+								name : "materSpecName"
+							}]
+				});
+
+		this.deptStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['YJZZ', '元件制造部'], ['YF', '研发中心'],
+							['ZLGL', '质量管理部'], ['JSFW', '技术服务部'], ['CW', '财务部']]
+				});
+
+		this.belongTypeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['生产制程报废', '生产制程报废'], ['产品库存报废', '产品库存报废'],
+							['研发在制报废', '研发在制'], ['研发库存报废', '研发库存报废'],
+							['返厂报废', '返厂报废']]
+				});
 	}
 
 	this.initQueryPanel = function() {
@@ -87,10 +125,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 				});
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-			height : 195,
+			height : 240,
 			columns : 16,
 			border : true,
-			collapsible : false,
+			collapsible : true,
 			titleCollapse : false,
 			// title : '【卷膜记录查询】',
 			fields : [{
@@ -357,6 +395,13 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 		});
 
 		this.queryPanel.addButton({
+					text : "多卷膜序号查询",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQueryByJmBatchNos
+				});
+
+		this.queryPanel.addButton({
 					text : "导出",
 					// rescode : '10002661',
 					scope : this,
@@ -373,6 +418,29 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					iconCls : 'icon-application_form_magnify',
 					handler : this.onDuty
 				});
+
+		this.queryPanel.addButton({
+					text : "工作量查询",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQueryQuantity
+				});
+
+		this.queryPanel.addButton({
+			text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_add',
+			handler : this.onStart
+		});
+
+		this.queryPanel.addButton({
+			text : "<span style='color:red;font-size:14px;'>下&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_edit',
+			handler : this.onEnd
+		});
 	}
 
 	this.initListPanel = function() {
@@ -447,12 +515,47 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 								}, {
 									text : '超期停留处理意见',
 									scope : this,
-									hidden : uid != 'LHY' && uid != 'KS00524' && uid != 'dafu',
+									hidden : uid != 'LHY' && uid != 'KS00524'
+											&& uid != 'dafu',
 									iconCls : 'icon-application_edit',
 									handler : this.onOvertimeAdvise
 
 								}]
-					}, '->', {
+					}, '-', {
+						text : '打印序列号',
+						scope : this,
+						iconCls : 'icon-printer',
+						handler : this.onPrintTag
+					}, '-', {
+						xtype : 'splitbutton',
+						// disabled : allRight != '1',
+						hidden : abilitionAdd == 0,
+						text : '报废申请',
+						// scale : 'small',
+						// rowspan : 1,
+						// iconAlign : 'top',
+						iconCls : 'icon-application_add',
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '选择',
+									scope : this,
+									iconCls : 'icon-application_add',
+									handler : this.onAbolitionSelect
+								}, {
+									text : '录入',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.onAbolitionInput
+								}, '-', {
+									text : '查看',
+									scope : this,
+									iconCls : 'icon-application_form_magnify',
+									handler : this.onAbolitionQuery
+
+								}]
+					}
+
+					, '->', {
 						xtype : 'displayfield',
 						value : '',
 						id : 'qijianamountinfo'
@@ -496,7 +599,14 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						header : '卷膜序号',
 						sortable : true,
 						width : 120,
-						dataIndex : 'juanmoBatchNo'
+						dataIndex : 'juanmoBatchNo',
+						renderer : function(v, m, r, i) {
+							var abilitionCode = r.get('abilitionCode');
+							return Ext.isEmpty(abilitionCode)
+									? v
+									: "<span style='text-decoration: line-through;'>"
+											+ v + "</span>";
+						}
 					}, {
 						dataIndex : 'ifCheckStock',
 						sortable : true,
@@ -724,6 +834,11 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						width : 160,
 						dataIndex : 'overtimeAdvise',
 						sortable : true
+					}, {
+						header : '报废单号',
+						width : 160,
+						dataIndex : 'abilitionCode',
+						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.qinsen.qijian.queryRecordsByPage.biz.ext',
@@ -915,6 +1030,8 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							name : 'plannerAdvise'
 						}, {
 							name : 'overtimeAdvise'
+						}, {
+							name : 'abilitionCode'
 						}]
 			})
 		})
@@ -1637,8 +1754,8 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									name : 'entity/remark',
 									xtype : 'textarea',
 									fieldLabel : '备注',
-									colspan : 2,
-									anchor : '95%',
+									colspan : 1,
+									anchor : '90%',
 									allowBlank : true
 								}, {
 									name : 'entity/workerId',
@@ -2956,6 +3073,13 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 	this.initEditWindow4OvertimeAdvise = function() {
 
+		var _this = this;
+
+		this.dealStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['保留', '保留'], ['移除', '移除']]
+				});
+
 		this.editWindow4OvertimeAdvise = this.editWindow4OvertimeAdvise
 				|| new Ext.fn.FormWindow({
 					title : '超期停留处理意见',
@@ -2984,11 +3108,884 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									anchor : '95%',
 									colspan : 1
 								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'combobox',
+									mode : 'local',
+									fieldLabel : '是否保留',
+									ref : '../../overtimeDeal',
+									hiddenName : 'overtimeDeal',
+									name : 'overtimeDeal',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									hidden : uid != 'LHY' && uid != 'dafu',
+									store : this.dealStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											_this.editWindow4OvertimeAdvise.overtimeDeal
+													.reset()
+										}
+									}
+								}, {
 									xtype : 'hidden',
 									ref : '../../recordIds',
 									name : 'recordIds'
 								}]
 					}]
+				});
+	}
+
+	this.initProduceCountWindow = function() {
+
+		var _this = this;
+
+		var selModel4ProduceCount = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4ProduceCount = this.listPanel4ProduceCount
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : ['->', {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '',
+								id : quantityTotalId
+							}, {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}],
+					hsPage : true,
+					selModel : selModel4ProduceCount,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4ProduceCount, {
+								dataIndex : 'dataCount',
+								header : '生产日期'
+							}, {
+								dataIndex : 'userName',
+								header : '操作工'
+							}, {
+								dataIndex : 'prodSpecName',
+								header : '元件型号'
+							}, {
+								dataIndex : 'quantity',
+								header : '生产数量'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.productioncount.queryProductQjListByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'userName'
+								}, {
+									name : 'prodSpecName'
+								}, {
+									name : 'dataCount'
+								}, {
+									name : 'quantity'
+								}, {
+									name : 'quantityTotal'
+								}]
+					})
+				})
+
+		this.queryPanel4ProduceCount = this.queryPanel4ProduceCount
+				|| new Ext.fn.QueryPanel({
+							height : 80,
+							columns : 4,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+								xtype : "dateregion",
+								colspan : 2,
+								anchor : '95%',
+								nameArray : ['condition/dateCountStart',
+										'condition/dateCountEnd'],
+								fieldLabel : "生产日期",
+								format : "Y-m-d",
+								value : new Date()
+							}, {
+								xtype : 'textfield',
+								name : 'condition/userName',
+								anchor : '95%',
+								fieldLabel : '操作工',
+								value : nowStaffName
+
+							}, {
+								xtype : 'textfield',
+								name : 'condition/prodSpecName',
+								anchor : '95%',
+								fieldLabel : '元件型号'
+							}]
+						});
+
+		this.queryPanel4ProduceCount.addButton({
+					text : "导出",
+					scope : this,
+					hidden : true,
+					iconCls : 'icon-application_excel',
+					handler : this.exportProduceCountExcel
+				});
+
+		this.queryPanel4ProduceCount.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.produceCountWindow.hide();
+					}
+
+				});
+
+		this.produceCountWindow = this.produceCountWindow || new Ext.Window({
+					title : '产量统计',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4ProduceCount,
+							this.listPanel4ProduceCount]
+
+				});
+	}
+
+	this.initInputWindow4Abilition = function() {
+		var _this = this;
+
+		var selModel4Abilition = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4Abilition = this.listPanel4Abilition
+				|| new Ext.fn.EditListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					clicksToEdit : 1,
+					tbar : [{}],
+					autoScroll : false,
+					selModel : selModel4Abilition,
+					columns : [new Ext.grid.RowNumberer({
+										width : 20
+									}), selModel4Abilition, {
+								dataIndex : 'prodSpecName',
+								header : '元件型号'
+							}, {
+								dataIndex : 'jmBatchNo',
+								header : '卷膜序号'
+							}, {
+								dataIndex : 'tmBatchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'tapeColor',
+								header : '胶带颜色',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											// allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'amount',
+								header : '数量'
+							}, {
+								dataIndex : 'juanmoLength',
+								header : '膜片长度(m)'
+							}, {
+								dataIndex : 'dryWet',
+								header : '干/湿'
+							}, {
+								dataIndex : 'checkTm',
+								format : "Y-m-d",
+								header : '水测时间',
+								renderer : function(value) {
+
+									if (Ext.isEmpty(value))
+										return '';
+
+									if (typeof value == "string") {
+										return value;
+									} else {
+										return value.format("Y-m-d");
+									}
+								}
+							}, {
+								dataIndex : 'gpd',
+								header : '产水量'
+							}, {
+								dataIndex : 'salt',
+								header : '脱盐率'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.abilition.queryJuanmo.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'jmBatchNo'
+								}, {
+									name : 'tmBatchNo'
+								}, {
+									name : 'tapeColor'
+								}, {
+									name : 'amount'
+								}, {
+									name : 'juanmoLength'
+								}, {
+									name : 'dryWet'
+								}, {
+									name : 'checkTm'
+								}, {
+									name : 'gpd'
+								}, {
+									name : 'salt'
+								}, {
+									name : 'prodSpecName'
+								}, {
+									name : 'prodSpecId'
+								}]
+					})
+				})
+
+		this.inputPanel4Abilition = this.inputPanel4Abilition
+				|| new Ext.fn.InputPanel({
+							height : 120,
+							region : 'north',
+							baseCls : "x-panel",
+							autoHide : false,
+							autoScroll : false,
+							border : true,
+							columns : 12,
+							saveUrl : '1.biz.ext',
+							fields : [{
+										xtype : 'combobox',
+										allowBlank : false,
+										mode : 'local',
+										fieldLabel : '申请部门',
+										ref : '../dept',
+										hiddenName : 'dept',
+										anchor : '100%',
+										colspan : 6,
+										emptyText : '--请选择--',
+										editable : false,
+										store : _this.deptStore,
+										displayField : "name",
+										valueField : "code",
+										listeners : {
+											"expand" : function(A) {
+												_this.inputPanel4Abilition.dept
+														.reset()
+											}
+										}
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 12
+									}, {
+										xtype : 'combobox',
+										allowBlank : false,
+										mode : 'local',
+										fieldLabel : '元件归属类型',
+										ref : '../belongType',
+										hiddenName : 'belongType',
+										anchor : '100%',
+										colspan : 6,
+										emptyText : '--请选择--',
+										editable : false,
+										store : _this.belongTypeStore,
+										displayField : "name",
+										valueField : "code",
+										listeners : {
+											"expand" : function(A) {
+												_this.inputPanel4Abilition.belongType
+														.reset()
+											}
+										}
+									}],
+							buttons : [{
+										text : "保存",
+										scope : this,
+										handler : this.onSaveAbilition
+									}, {
+										text : "关闭",
+										scope : this,
+										handler : function() {
+											_this.inputPanel4Abilition.form
+													.reset();
+											_this.inputWindow4Abilition.hide();
+										}
+									}]
+
+						})
+
+		this.inputWindow4Abilition = this.inputWindow4Abilition
+				|| new Ext.Window({
+							title : '新增',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 1024,
+							height : 600,
+							layout : 'border',
+							items : [this.inputPanel4Abilition,
+									this.listPanel4Abilition]
+
+						});
+
+	}
+
+	this.initInputWindow4Abilition2 = function() {
+		var _this = this;
+
+		var selModel4Abilition = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4Abilition2 = this.listPanel4Abilition2
+				|| new Ext.fn.EditListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					clicksToEdit : 1,
+					tbar : [{
+								text : '新增',
+								autoHeight : true,
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onAddList
+							}, '-', {
+								text : '删除',
+								scope : this,
+								iconCls : 'icon-application_delete',
+								handler : this.onDelList
+							}],
+					autoScroll : false,
+					selModel : selModel4Abilition,
+					columns : [new Ext.grid.RowNumberer({
+										width : 20
+									}), selModel4Abilition, {
+								dataIndex : 'prodSpecId',
+								header : '元件型号',
+								css : 'background:#c7c7a7;',
+
+								renderer : function(value) {
+									var rowIndex = _this.prodSpecStore.find(
+											"materSpecId", "" + value);
+									if (rowIndex < 0)
+										return '';
+									var record = _this.prodSpecStore
+											.getAt(rowIndex);
+									return record
+											? record.get('materSpecName')
+											: '';
+								},
+								editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+										{
+											allowBlank : false,
+											mode : 'local',
+											hiddenName : 'materSpecId',
+											anchor : '100%',
+											colspan : 6,
+											emptyText : '--请选择--',
+											editable : false,
+											store : _this.prodSpecStore,
+											displayField : "materSpecName",
+											valueField : "materSpecId",
+											scope : this,
+											listeners : {
+												"expand" : function(A) {
+													this.reset()
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'jmBatchNo',
+								header : '卷膜序号',
+								css : 'background:#c7c7a7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'tmBatchNo',
+								header : '膜片批次',
+								css : 'background:#c7c7b7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											// allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'tapeColor',
+								header : '胶带颜色',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											// allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'amount',
+								header : '数量',
+								css : 'background:#c7c7d7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											// allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'juanmoLength',
+								header : '膜片长度(m)',
+								css : 'background:#c7c7e7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											// allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'dryWet',
+								header : '干/湿',
+								css : 'background:#c7c7f7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											// allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'checkTm',
+								format : "Y-m-d",
+								header : '水测时间',
+								css : 'background:#c7c7a7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.DateField(
+										{
+											// allowBlank : false,
+											format : "Y-m-d",
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										})),
+								renderer : function(value) {
+
+									if (Ext.isEmpty(value))
+										return '';
+
+									if (typeof value == "string") {
+										return value;
+									} else {
+										return value.format("Y-m-d");
+									}
+								}
+							}, {
+								dataIndex : 'gpd',
+								header : '产水量',
+								css : 'background:#c7c7a7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											// allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'salt',
+								header : '脱盐率',
+								css : 'background:#c7c7b7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											// allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.abilition.queryJuanmo.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'jmBatchNo'
+								}, {
+									name : 'tmBatchNo'
+								}, {
+									name : 'tapeColor'
+								}, {
+									name : 'amount'
+								}, {
+									name : 'juanmoLength'
+								}, {
+									name : 'dryWet'
+								}, {
+									name : 'checkTm'
+								}, {
+									name : 'gpd'
+								}, {
+									name : 'salt'
+								}, {
+									name : 'prodSpecId'
+								}, {
+									name : 'prodSpecName'
+								}]
+					})
+				})
+
+		this.inputPanel4Abilition2 = this.inputPanel4Abilition2
+				|| new Ext.fn.InputPanel({
+							height : 120,
+							region : 'north',
+							baseCls : "x-panel",
+							autoHide : false,
+							autoScroll : false,
+							border : true,
+							columns : 12,
+							saveUrl : '1.biz.ext',
+							fields : [{
+								xtype : 'combobox',
+								allowBlank : false,
+								mode : 'local',
+								fieldLabel : '申请部门',
+								ref : '../dept',
+								hiddenName : 'dept',
+								anchor : '100%',
+								colspan : 6,
+								emptyText : '--请选择--',
+								editable : false,
+								store : _this.deptStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.inputPanel4Abilition2.dept
+												.reset()
+									}
+								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'combobox',
+								allowBlank : false,
+								mode : 'local',
+								fieldLabel : '元件归属类型',
+								ref : '../belongType',
+								hiddenName : 'belongType',
+								anchor : '100%',
+								colspan : 6,
+								emptyText : '--请选择--',
+								editable : false,
+								store : _this.belongTypeStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.inputPanel4Abilition2.belongType
+												.reset()
+									}
+								}
+							}],
+							buttons : [{
+										text : "保存",
+										scope : this,
+										handler : this.onSaveAbilition
+									}, {
+										text : "关闭",
+										scope : this,
+										handler : function() {
+											_this.inputPanel4Abilition2.form
+													.reset();
+											_this.inputWindow4Abilition2.hide();
+										}
+									}]
+
+						})
+
+		this.inputWindow4Abilition2 = this.inputWindow4Abilition2
+				|| new Ext.Window({
+							title : '新增',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 1024,
+							height : 600,
+							layout : 'border',
+							items : [this.inputPanel4Abilition2,
+									this.listPanel4Abilition2]
+
+						});
+
+	}
+
+	this.initAbilitionWindow = function() {
+
+		var selModel4Abilition = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4AbilitionList = this.listPanel4AbilitionList
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : false
+					},
+					tbar : [{}],
+					hsPage : true,
+					selModel : selModel4Abilition,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer({
+										width : 20
+									}), selModel4Abilition, {
+								dataIndex : 'code',
+								width : 150,
+								header : '报废单编码'
+							}, {
+								dataIndex : 'deptName',
+								width : 150,
+								header : '申请部门'
+							}, {
+								dataIndex : 'belongType',
+								header : '归属类型'
+							}, {
+								dataIndex : 'jmBatchNo',
+								header : '卷膜序号'
+							}, {
+								dataIndex : 'prodSpecName',
+								header : '元件型号'
+							}, {
+								dataIndex : 'tmBatchNo',
+								header : '膜片批次'
+							}, {
+								dataIndex : 'tapeColor',
+								header : '胶带颜色'
+							}, {
+								dataIndex : 'amount',
+								header : '数量'
+							}, {
+								dataIndex : 'juanmoLength',
+								header : '膜片长度(m)'
+							}, {
+								dataIndex : 'dryWet',
+								header : '干/湿'
+							}, {
+								dataIndex : 'checkTm',
+								// format : "Y-m-d",
+								header : '水测时间'
+							}, {
+								dataIndex : 'gpd',
+								header : '产水量'
+							}, {
+								dataIndex : 'belongType',
+								header : '脱盐率'
+							}, {
+								dataIndex : 'createName',
+								header : '申请人'
+							}, {
+								dataIndex : 'createTime',
+								header : '申请时间'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.abilition.queryAbilitionListByPage.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'jmBatchNo'
+								}, {
+									name : 'tmBatchNo'
+								}, {
+									name : 'tapeColor'
+								}, {
+									name : 'amount'
+								}, {
+									name : 'juanmoLength'
+								}, {
+									name : 'dryWet'
+								}, {
+									name : 'checkTm'
+								}, {
+									name : 'gpd'
+								}, {
+									name : 'salt'
+								}, {
+									name : 'code'
+								}, {
+									name : 'dept'
+								}, {
+									name : 'code'
+								}, {
+									name : 'deptName'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'belongType'
+								}, {
+									name : 'prodSpecId'
+								}, {
+									name : 'prodSpecName'
+								}]
+					})
+				})
+
+		this.queryPanel4Abilition = this.queryPanel4Abilition
+				|| new Ext.fn.QueryPanel({
+							height : 110,
+							columns : 2,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '100%',
+								nameArray : ['condition/createTimeStart',
+										'condition/createTimeEnd'],
+								fieldLabel : "申请日期",
+								format : "Y-m-d"
+							}, {
+								xtype : 'textfield',
+								name : 'condition/code',
+								anchor : '100%',
+								fieldLabel : '报废单编码%-%'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 2
+							}, {
+								xtype : 'textfield',
+								name : 'condition/jmBatchNo',
+								anchor : '100%',
+								fieldLabel : '卷膜序号%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/createName',
+								anchor : '100%',
+								fieldLabel : '申请人%-%'
+							}]
+						});
+
+		// this.queryPanel4Abilition.addButton({
+		// text : "导出",
+		// scope : this,
+		// iconCls : 'icon-application_excel',
+		// handler : this.exportAbilitionExcel
+		// });
+
+		this.queryPanel4Abilition.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.abilitionWindow.hide();
+					}
+
+				});
+
+		this.abilitionWindow = this.abilitionWindow || new Ext.Window({
+					title : '元件报废查询',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4Abilition,
+							this.listPanel4AbilitionList]
+
 				});
 	}
 }

@@ -78,7 +78,7 @@
        T1.LABEL_SIZE   AS "labelSize",
        T1.BUSINESSMAN  AS "businessman",
        T1.REMARK       AS "remark",
-       tmp.url "url",
+       tmp.url "url",tmp.stamp_url "stampUrl",
        tmp.url2 "url2",tmp.code "code",
        
 tmp.IF_PRINT_BATCH_NO as "ifPrintBatchNo",
@@ -104,7 +104,8 @@ tmp.X_DAY_CODE_SPAN as "xDayCodeSpan",
 tmp.PRINT_DELAY_TIME as "printDelayTime"
        ,tmp.reserve1 "reserve1"
   FROM KS_BASE_MARK_DRAWING T1 
-  LEFT JOIN (select t.template_name,max(t.url) URL,max(t.url2) url2,max(t.code) code,
+  LEFT JOIN (select t.template_name,max(t.url) URL,max(t.url2) url2,
+  max(t.stamp_url) stamp_url,max(t.code) code,
   max(IF_PRINT_BATCH_NO) as IF_PRINT_BATCH_NO,
 max(Y_BATCH_NO) as Y_BATCH_NO,
 max(X_BATCH_NO) as X_BATCH_NO,

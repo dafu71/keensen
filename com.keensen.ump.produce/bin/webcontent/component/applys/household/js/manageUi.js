@@ -24,7 +24,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 
 	this.initHWaterTestStore = function() {
 		this.hWaterTestStore = new Ext.data.JsonStore({
-			url : 'com.keensen.ump.produce.component.produce.queryHWaterTest2.biz.ext',
+			url : 'com.keensen.ump.produce.component.produce.queryHWaterTest3.biz.ext',
 			root : 'data',
 			autoLoad : false,
 			baseParams : {},
@@ -42,6 +42,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						name : 'batchNoStr'
 					}, {
 						name : 'jmProduceDt'
+					}, {
+						name : 'sameSalt'
+					}, {
+						name : 'sameGpd'
 					}]
 		})
 	}
@@ -175,6 +179,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						dataIndex : 'reserve1',
 						sortable : true,
 						header : '订单号'
+					}, {
+						dataIndex : 'orderType',
+						sortable : true,
+						header : '订单类型'
 					}/*, {
 						dataIndex : 'ifcstock',
 						sortable : true,
@@ -188,9 +196,17 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						sortable : true,
 						header : '元件型号'
 					}, {
+						dataIndex : 'orderAmount',
+						sortable : true,
+						header : '订单数量'
+					}, {
 						dataIndex : 'applyAmount',
 						sortable : true,
 						header : '请检数量'
+					}, {
+						dataIndex : 'checkedAmount',
+						sortable : true,
+						header : '请检总数量'
 					}/*, {
 						dataIndex : 'storage',
 						xtype : 'dictcolumn',
@@ -320,6 +336,8 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 							name : 'ifcstock'
 						}, {
 							name : 'ifConfirmed'
+						}, {
+							name : 'checkedAmount'
 						}]
 			})
 		})
@@ -677,7 +695,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								width : 300,
 								header : '元件序号',
 								css : 'background:#c7c7c7;',
-								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								editor : new Ext.grid.GridEditor(new Ext.form.TextArea(
 										{
 											allowBlank : false,
 											scope : this
@@ -1001,6 +1019,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								xtype : 'hidden',
 								ref : '../makeLabelBase',
 								name : 'reserve3'
+							}, {
+								xtype : 'hidden',
+								ref : '../orderId',
+								name : 'orderId'
 							}],
 					buttons : [{
 								text : "保存",
@@ -1096,7 +1118,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								width : 300,
 								header : '元件序号',
 								css : 'background:#c7c7c7;',
-								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								editor : new Ext.grid.GridEditor(new Ext.form.TextArea(
 										{
 											allowBlank : false,
 											scope : this
@@ -1185,7 +1207,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								height : '5',
 								colspan : 12
 							}, {
-								xtype : 'textfield',
+								xtype : 'numberfield',
 								name : 'orderAmount',
 								dataIndex : 'orderAmount',
 								ref : '../orderAmount',
@@ -1445,6 +1467,11 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								dataIndex : 'reserve3',
 								ref : '../makeLabelBase',
 								name : 'reserve3'
+							}, {
+								xtype : 'hidden',
+								ref : '../orderId',
+								dataIndex : 'orderId',
+								name : 'orderId'
 							}],
 					buttons : [{
 								text : "保存",
@@ -1575,7 +1602,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								height : '5',
 								colspan : 12
 							}, {
-								xtype : 'textfield',
+								xtype : 'numberfield',
 								readOnly : true,
 								dataIndex : 'orderAmount',
 								ref : '../orderAmount',

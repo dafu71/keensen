@@ -13,6 +13,8 @@
 	String isStar = null == request.getParameter("isStar") ? ""
 			: request.getParameter("isStar").toString();
 	
+	
+	
 	int tableHeight = 265;
 
 	rootUrl = rootUrl.replace(
@@ -335,7 +337,7 @@ function initPage() {
 						int yBatchSpecName = Integer.parseInt(list[i].get("yBatchSpecName").toString());
 						int xBatchSpecName = Integer.parseInt(list[i].get("xBatchSpecName").toString());
 						String prodSpecName = list[i].get("prodSpecName2").toString();
-						String fontSize = prodSpecName.length() >= 18 ? "22px" : prodSpecName.length() > 9 ? "26px" : "30px";
+						String fontSize = prodSpecName.length() >= 15 ? "22px" : prodSpecName.length() > 9 ? "26px" : "30px";
 						int yDryImg = Integer.parseInt(list[i].get("yDryImg").toString());
 						int xDryImg = Integer.parseInt(list[i].get("xDryImg").toString());
 						int yDrySpan = Integer.parseInt(list[i].get("yDrySpan").toString());

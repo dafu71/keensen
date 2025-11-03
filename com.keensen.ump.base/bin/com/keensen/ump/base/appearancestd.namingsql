@@ -34,7 +34,14 @@
        T1.COUNT_PER_FLOOR AS "countPerFloor",
        T1.COUNT_FLOOR AS "countFloor",
        T1.TRAY_SIZE AS "traySize",
-       T1.SPEC_ID AS "specId"
+       T1.SPEC_ID AS "specId",
+       t1.tape_color "tapeColor",
+       t1.jm_spec_name "jmSpecName",
+       T1.state "state",
+       T1.diameter "diameter",
+       T1.linker "linker",
+       T1.pack "pack",
+       T1.y_distance "yDistance"
   FROM KS_BASE_APPEARANCE_STD T1
   LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
     ON T1.SPEC_ID = PMS.MATER_SPEC_ID
@@ -60,14 +67,18 @@
               GROUP BY T.SPEC_NAME) CV
     ON CV.SPEC_NAME = PMS.MATER_SPEC_NAME
  WHERE 1 = 1
-  
+  and t1.jm_spec_name is not null
    <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
         <isNotNull prepend="and" property="specName">pms.mater_spec_name like '%' || #specName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName">t1.jm_spec_name like '%' || #jmSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">t1.jm_spec_name = #jmSpecName2#</isNotNull>
+        <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
+        <isNotNull prepend="and" property="reserve1">t1.reserve1 = #reserve1#</isNotNull>
+        <isNotNull prepend="and" property="notreserve1">t1.reserve1 != #notreserve1#</isNotNull>
 	
-	
-	  order by t1.id desc
+	  order by decode(t1.reserve1,'公司标准',1,'非标工业膜',2,3),t1.spec_id 
 
 	
     </select>

@@ -277,6 +277,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 								text : "领取任务",
 								scope : this,
 								iconCls : 'icon-page_save',
+								id : multiGetdutyId,
 								handler : this.onGetDuty
 
 							}, {
@@ -566,6 +567,13 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr = function() {
 						iconCls : 'icon-application_reset',
 						handler : function() {
 							this.clearInfo();
+						}
+					}, {
+						text : '清空混卷组成',
+						scope : this,
+						iconCls : 'icon-application_reset',
+						handler : function() {
+							this.clearDetail();
 						}
 					}]
 

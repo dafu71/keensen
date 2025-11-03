@@ -540,7 +540,7 @@
 	<table width="780" border="0">
 		<tr>
 			<td width="50%">
-			<div align="left" class="style2"><strong>测试膜元件性能数据</strong></div>
+			<div align="left" class="style2"><strong>膜元件相关信息</strong></div>
 			</td>
 			<td width="50%">&nbsp;</td>
 		</tr>

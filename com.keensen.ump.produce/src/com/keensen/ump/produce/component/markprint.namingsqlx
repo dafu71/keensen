@@ -4,7 +4,7 @@
     <select id="query" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
 	SELECT T1.ID            AS "id",
 	       T1.TEMPLATE_NAME AS "templateName",
-	       T1.URL           AS "url",T1.URL2           AS "url2",
+	       T1.URL           AS "url",T1.URL2           AS "url2",t1.stamp_url "stampUrl",
 	       T1.REMARK        AS "remark",
 	       T1.CODE          AS "code",
 	       T2.remark        as "codeRemark",
@@ -163,9 +163,9 @@
        T1.TEMPLATE_NAME AS "templateName",
        T1.URL AS "url",
        T1.TEMPLATE_ID AS "templateId",
-       T1.DRY_WET AS "dryWet",
+       nvl(rec_dry_wet,T1.DRY_WET) AS "dryWet",
        DECODE(T1.MARK, '公司标准', 'Y', 'N') AS "markStand",
-       DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿') AS "dryWet2",
+       nvl(rec_dry_wet,DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿')) AS "dryWet2",
        <!--T1.MATER_SPEC_NAME2 AS "prodSpecName2",-->
        
        t1.spec_name_mark "prodSpecName2",
@@ -231,8 +231,23 @@
                 T5.CODE,
                 T7.CNT              PRINT_CNT,
                 t7.max_print_date,
-                nvl(t4.spec_name_mark,nvl(yb.spec_name_mark,t4.MATER_SPEC_NAME2)) spec_name_mark
+                nvl(t4.spec_name_mark,nvl(yb.spec_name_mark,t4.MATER_SPEC_NAME2)) spec_name_mark,
+                
+                rec.dry_wet rec_dry_wet
           FROM QINSEN.INST_QIJIAN T1
+          
+          left join 
+  (select v.qj_batch_no,t1.dry_wet,t1.batch_no FROM 
+	(
+	SELECT batch_no,dry_wet FROM KS_COMPONENT_PROD_RECORD
+	WHERE ID IN(
+	SELECT MAX(ID)
+	FROM KS_COMPONENT_PROD_RECORD
+	WHERE 1=1 and nvl(status,1) != 0
+	GROUP BY batch_no)) t1  
+	   LEFT JOIN V_KS_QJ_BATCH_NO v
+	  on v.batch_no = t1.batch_no) rec
+  on rec.qj_batch_no = t1.batch_no
           
           LEFT JOIN QINSEN.INST_WATER_TEST T6
             ON T6.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID

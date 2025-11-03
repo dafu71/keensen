@@ -332,3 +332,70 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onGetDuty = function() 
 				}
 			})
 }
+
+com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onStart = function() {
+	var _this = this;
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.productioncount.saveJmStart.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				var msg = ret.msg;
+				_this.inputPanel.loginfo.setValue("<span style='color:red'>"
+						+ msg + "</span>");
+
+				if (msg.indexOf("已经结算") == -1) {
+					Ext.getCmp(quickGetdutyId).setDisabled(false);
+					Ext.getCmp(singleGetdutyId).setDisabled(false);
+					Ext.getCmp(multiGetdutyId).setDisabled(false);
+				} else {
+					Ext.getCmp(quickGetdutyId).setDisabled(true);
+					Ext.getCmp(singleGetdutyId).setDisabled(true);
+					Ext.getCmp(multiGetdutyId).setDisabled(true);
+				}
+			}
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onEnd = function() {
+	var _this = this;
+	Ext.Msg.confirm("操作确认", "您确实要下机结算工作量吗?", function(A) {
+		if (A == "yes") {
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.produce.component.productioncount.saveJmEnd.biz.ext",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						var msg = ret.msg;
+						_this.inputPanel.loginfo
+								.setValue("<span style='color:red'>" + msg
+										+ "</span>");
+
+						Ext.getCmp(quickGetdutyId).setDisabled(true);
+						Ext.getCmp(singleGetdutyId).setDisabled(true);
+						Ext.getCmp(multiGetdutyId).setDisabled(true);
+
+					}
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+		}
+	})
+}

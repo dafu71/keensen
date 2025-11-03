@@ -16,7 +16,7 @@ com.keensen.ump.produce.diaphragm.make.report.ZmMaterUsedMgr = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
-					columns : 4,
+					columns : 3,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -27,7 +27,7 @@ com.keensen.ump.produce.diaphragm.make.report.ZmMaterUsedMgr = function() {
 								colspan : 1,
 								nameArray : ['condition/productDtStart',
 										'condition/productDtEnd'],
-								fieldLabel : "铸膜生产日期",
+								fieldLabel : "铸膜生产时间",
 								format : "Y-m-d"
 							},{
 								xtype : 'dictcombobox',
@@ -49,7 +49,7 @@ com.keensen.ump.produce.diaphragm.make.report.ZmMaterUsedMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					hidden : uid != 'dafu' && uid !='KS00017',
 					handler : this.exportExcel
 				});
 

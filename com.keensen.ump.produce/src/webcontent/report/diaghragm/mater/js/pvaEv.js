@@ -25,6 +25,10 @@ com.keensen.ump.produce.report.diaghragm.MaterPvaMgr.prototype.initEvent = funct
 				var records = _this.listPanel.store.getRange();
 
 				var outLength = 0;
+				
+				var c22aStd = 0;
+				var c22aWeight = 0;
+				
 				var c22Std = 0;
 				var c22Weight = 0;
 				var c51Std = 0;
@@ -45,6 +49,10 @@ com.keensen.ump.produce.report.diaghragm.MaterPvaMgr.prototype.initEvent = funct
 
 				for (var i = 0; i < records.length; i++) {
 					outLength += records[i].data.outLength;
+					
+					c22aStd += records[i].data.c22aStd;
+					c22aWeight += records[i].data.c22aWeight;
+					
 					c22Std += records[i].data.c22Std;
 					c22Weight += records[i].data.c22Weight;
 					c51Std += records[i].data.c51Std;
@@ -64,6 +72,8 @@ com.keensen.ump.produce.report.diaghragm.MaterPvaMgr.prototype.initEvent = funct
 				var r = new Ext.data.Record({
 							batchNo : '合计',
 							outLength : outLength,
+							c22aStd : c22aStd,
+							c22aWeight : c22aWeight,
 							c22Std : c22Std,
 							c22Weight : c22Weight,
 							c51Std : c51Std,

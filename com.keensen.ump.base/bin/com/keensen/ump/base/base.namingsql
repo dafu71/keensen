@@ -60,7 +60,7 @@
 	,t.mp_batch_code "mpBatchCode",t.new_batch_code "newBatchCode"
 	 from qinsen.PARA_MATER_SPEC t
 	WHERE T.Mater_Class_Id IN(100030024,100030025,100030023,100030022)
-	AND t.mater_spec_name IN('ULP1-1','ULP2-1','ULP3-1','ULP4-1','ULP5-1',
+	AND t.mater_spec_name IN('ULP1-1','ULP2-1','ULP3-1','ULP4-1','ULP5-1','NF3-1',
   'ULP6-1','BW1-1','BW2-1','BW3-1','HW1-1','HW1-2','SW1-1','SW2-1','SW3-1','NF1','NF2','NF1-R','ULP1-2'
   ,'ULP2-2','SW4-1','ULP3-2','NF2-1','NF1-1','ULP1-2','HW3-1','HW4-1','HW2-1')
   	<isNotNull prepend="and" property="state">t.state = #state#</isNotNull>
@@ -81,16 +81,21 @@
 		    and t.prop_value_id != 300030</select>
     <!-- 元件型号查询 -->
     <select id="queryProdSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-      select t.mater_spec_id,t.mater_spec_code,t.mater_spec_name,
+      select t.mater_spec_id "materSpecId",t.mater_spec_code,t.mater_spec_name "materSpecName",
 	t.mater_spec_id "id",t.mater_spec_name "name",
 	 t.blanking_size "blankingSize", t.mater_spec_id "materSpecId",
 	       t.dense_net "denseNet", t.area "area", t.page_width "pageWidth",t.NUM_PER_WAD "numPerWad",
 	  t.blanking_size * t.NUM_PER_WAD "pageSize" ,
 	  t.mp_Size as "mpSize",
 		t.mp_Width as "mpWidth",
-		t.dense_Net_Type as "denseNetType",
+		<!--t.dense_Net_Type as "denseNetType",-->
+		t.dense_Net as "denseNetType",
 		t.dense_Net_Width as "denseNetWidth",
 		t.dense_Net_Cdm as "denseNetCdm",
+		
+		t.light_Net_Long_Type "lightNetLongType",
+		t.light_Net_Short_Type "lightNetShortType",
+		
 		t.light_Net_Type as "lightNetType",
 		t.light_Net_Long_Page as "lightNetLongPage",
 		t.light_Net_Short_Page as "lightNetShortPage",

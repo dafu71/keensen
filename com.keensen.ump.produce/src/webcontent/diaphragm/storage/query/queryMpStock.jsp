@@ -5,16 +5,15 @@
 <%@page import="commonj.sdo.DataObject"%>
 <html>
 <%
-	Object rootObj = XpathUtil.getDataContextRoot("request",
+			Object rootObj = XpathUtil.getDataContextRoot("request",
 			pageContext);
-			
-	String flag = (String)XpathUtil.getObjectByXpath(rootObj,"flag");
-	DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
-			"list");
+
+	String flag = (String) XpathUtil.getObjectByXpath(rootObj, "flag");
+	DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(
+			rootObj, "list");
 	int cnt = list.length;
 
-
-	//System.out.println(list2);	
+	//System.out.println(list2);
 %>
 
 <!-- 
@@ -24,8 +23,15 @@
 -->
 <head>
 <title>库存超期提醒</title>
- <h:css href="/css/style1/style-custom.css"/>  
- <style type="text/css">
+
+<!-- 导出Excel -->
+<script src="base/exceljs/polyfill.js"></script>
+<script src="base/exceljs/exceljs.min.js"></script>
+<script src="base/exceljs/FileSaver.min.js"></script>
+<script src="base/exceljs/doExport.js"></script>
+
+<h:css href="/css/style1/style-custom.css" />
+<style type="text/css">
 <!--
 .style0 {font-family: "仿宋";font-size:9pt;}
 .style1 {font-family: "仿宋";font-size:11pt;}
@@ -36,108 +42,140 @@
  
 -->
     </style>
-    
+
 </head>
 
 <script type="text/javascript">
 	(function(){
 		setInterval(function(){ location.reload(true); }, 60000);
 	})();
-</script> 
+</script>
 
 <body>
-<div align="center" >
+<div align="center">
+
 <table border="1" width="100%" class="EOS_table">
- <tr>
-        <th width="10%" align="center">
-          	膜片批次
-        </th> 
-        <th width="10%" align="center">
-          仓库名称
-        </th>        
-        <th  width="10%" align="center">
-          库位
-        </th>
-        <th width="10%" align="center">
-          生产日期
-        </th>        
-        <th  width="10%" align="center">
-          库存数量
-        </th>
-         <th  width="10%" align="center">
-          长度(米)
-        </th>
-         <th  width="10%" align="center">
-          可用长度(米)
-        </th>
-         <th  width="10%" align="center">
-          合格长度(米)
-        </th>
-         <th  width="10%" align="center">
-          膜片系列
-        </th>
-        <th  width="10%" align="center">
-          膜片型号
-        </th>
-        
-        
-</tr>
+	<tr>
+		<td align="center">
+		<button type="button" onclick="exprotExcel()">导出Excel</button>
+		</td>
+	</tr>
+</table>
 
-<%  for(int i=0;i<list.length;i++){ %>
-<%
-	
-	String style5="style5";
-	
- %>
 
-  
-  <tr class="EOS_table_row">
-		 <td align='center' class="<%=style5 %>">
-        <%=list[i].getString("batchNo") %>
-        </td>
+<table border="1" width="100%" class="EOS_table">
+	<tr>
+		<th width="10%" align="center">膜片批次</th>
+		<th width="10%" align="center">仓库名称</th>
+		<th width="10%" align="center">库位</th>
+		<th width="10%" align="center">生产日期</th>
+		<th width="10%" align="center">库存数量</th>
+		<th width="10%" align="center">长度(米)</th>
+		<th width="10%" align="center">可用长度(米)</th>
+		<th width="10%" align="center">合格长度(米)</th>
+		<th width="10%" align="center">膜片系列</th>
+		<th width="10%" align="center">膜片型号</th>
 
-    	<td align='center' class="<%=style5 %>">
-    	<%=list[i].getString("storageName") %>
-          
-        </td>
-        <td align='center' class="<%=style5 %>">
-        <%=list[i].getString("position") %>
-        </td>
-        
-         <td align='center' class="<%=style5 %>">
-        <%=list[i].getString("produceDt") %>
-        </td>
 
-    	<td align='center' class="<%=style5 %>">
-    	<%=list[i].getString("amount") %>
-          
-        </td>
-        <td align='center' class="<%=style5 %>">
-        <%=list[i].getString("outLength") %>
-        </td>
-        
-         <td align='center' class="<%=style5 %>">
-        <%=list[i].getString("usefulLength") %>
-        </td>
+	</tr>
 
-    	<td align='center' class="<%=style5 %>">
-    	<%=list[i].getString("qualifidLength") %>
-          
-        </td>
-        <td align='center' class="<%=style5 %>">
-        <%=list[i].getString("materClassCode") %>
-        </td>
-        
-        <td align='center' class="<%=style5 %>">
-        <%=list[i].getString("materSpecCode") %>
-        </td>
-       
-         </tr>
+	<%
+	for (int i = 0; i < list.length; i++) {
+	%>
+	<%
+	String style5 = "style5";
+	%>
 
-<% } %>
+
+	<tr class="EOS_table_row">
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("batchNo")%>
+		</td>
+
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("storageName")%>
+
+		</td>
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("position")%>
+		</td>
+
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("produceDt")%>
+		</td>
+
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("amount")%>
+
+		</td>
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("outLength")%>
+		</td>
+
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("usefulLength")%>
+		</td>
+
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("qualifidLength")%>
+
+		</td>
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("materClassCode")%>
+		</td>
+
+		<td align='center' class="<%=style5 %>"><%=list[i].getString("materSpecCode")%>
+		</td>
+
+	</tr>
+
+	<%
+	}
+	%>
 
 </table>
 </div>
+
+<script type="text/javascript">
+
+	function exprotExcel(){
+		var mytitle = '膜片超期提醒';
+		var columnArr = ['膜片批次','仓库名称','库位','生产日期','库存数量','	长度(米)','可用长度(米)','	合格长度(米)','膜片系列','膜片型号'];
+		var columns = [];
+		// 创建一个workbook
+		var workbook = new ExcelJS.Workbook();
+		// workbook 添加一个标签的sheet
+		var worksheet = workbook.addWorksheet(mytitle);
+		// 设置sheet数据中的列名
+		for(var i=0;i<columnArr.length;i++){
+			var column = {};
+			column.header = columnArr[i];
+			column.key = i;							
+			columns.push(column);
+		}
+		
+				
+		worksheet.columns = columns;
+		// 设置数据（可以通过后台获取、获取已经存在的数据）
+
+		// 开始添加数据
+		var data = [];
+		
+		<%
+			for (int i = 0; i < list.length; i++) {
+		%>
+				var d = ['<%=list[i].getString("batchNo")%>','<%=list[i].getString("storageName")%>',
+				'<%=list[i].getString("position")%>','<%=list[i].getString("produceDt")%>',
+				'<%=list[i].getString("amount")%>','<%=list[i].getString("outLength")%>',
+				'<%=list[i].getString("usefulLength")%>','<%=list[i].getString("qualifidLength")%>',
+				'<%=list[i].getString("materClassCode")%>','<%=list[i].getString("materSpecCode")%>'];
+				data.push(d)
+		<% } %>
+	
+		
+		worksheet.addRows(data);
+		const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+		// 下载excel
+		workbook.xlsx.writeBuffer().then((data) => {
+			const blob = new Blob([data], {
+					type: EXCEL_TYPE
+				});
+			saveAs(blob, 'download.xlsx');
+		});
+	}
+</script>
+
 
 </body>
 </html>

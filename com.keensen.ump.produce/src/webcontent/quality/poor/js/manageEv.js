@@ -14,6 +14,31 @@ com.keensen.ump.produce.quality.poorMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
+	this.queryPanel4AbilitionQuery.mon(this.queryPanel4AbilitionQuery, 'query', function(form, vals) {
+		var store = this.listPanel4AbilitionQueryList.store;
+		store.baseParams = vals;
+		store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4AbilitionQueryList.pagingToolbar.pageSize
+					}
+				});
+	}, this);
+	
+	this.queryPanel4Abilition.mon(this.queryPanel4Abilition, 'query', function(
+			form, vals) {
+		var store = this.listPanel4Abilition.store;
+		store.baseParams = vals;
+		store.load({
+			params : {
+				"pageCond/begin" : 0,
+				"pageCond/length" : this.listPanel4Abilition.pagingToolbar.pageSize
+			}
+		});
+	}, this);
+	
+	
+
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 				this.editWindow.show();
@@ -326,4 +351,140 @@ com.keensen.ump.produce.quality.poorMgr.prototype.onGetBatchNo2 = function() {
 			}
 		})
 	}
+}
+
+com.keensen.ump.produce.quality.poorMgr.prototype.onAbilition = function() {
+
+	this.abilitionWindow.show();
+}
+
+com.keensen.ump.produce.quality.poorMgr.prototype.onAbilitionJudge = function() {
+
+	var A = this.listPanel4Abilition;
+	var store = A.store;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var pkid = C[0].data.id;
+		var result = C[0].data.result;
+
+		if (result == '报废') {
+			Ext.Msg.alert("系统提示", "已判定，无须再次判定！");
+			return false;
+
+		} else {
+
+			this.listPanel4AbilitionJudge.store.load({
+						params : {
+							"condition/relationId" : pkid
+						}
+					});
+			this.abilitionJudgeWindow.show();
+		}
+	}
+}
+
+com.keensen.ump.produce.quality.poorMgr.prototype.onSaveAbilitionJudge = function() {
+
+	var _this = this;
+	var store = this.listPanel4AbilitionJudge.store;
+
+	var records = store.getRange();
+
+	var list = [];
+
+	var relationId = records[0].data['relationId'];
+
+	Ext.each(records, function(r) {
+
+				var d = {
+					'id' : r.data['id'],
+					'invalidType' : r.data['invalidType'],
+					'describe' : r.data['describe'],
+					'responsible' : r.data['responsible'],
+					'department' : r.data['department'],
+					'dealMethod' : r.data['dealMethod']
+				}
+
+				list.push(d);
+
+			});
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+		method : "POST",
+		url : 'com.keensen.ump.produce.quality.abilition.saveAbilitionListBatch.biz.ext',
+		jsonData : {
+			'list' : list,
+			'relationId' : relationId
+		},
+		success : function(F) {
+			var B = Ext.decode(F.responseText);
+			if (B.success) {
+				var msg = B.msg;
+				if (Ext.isEmpty(msg)) {
+					Ext.MessageBox.alert("操作提示", "保存成功!", function() {
+								_this.listPanel.store.reload({});
+								_this.listPanel4Abilition.store.reload({});
+								_this.abilitionJudgeWindow.hide();
+							})
+				} else {
+					var datas = B.datas;
+					var arr = [];
+					for (var i = 0; i < datas.length; i++) {
+						arr.push(datas[i].jmBatchNo);
+					}
+					var msg = arr.join(',') + msg;
+					Ext.MessageBox.alert("操作提示", msg, function() {
+							})
+				}
+			}
+		},
+		failure : function(C, B) {
+			if (B.result.exception) {
+				var A, E;
+				if (B.result.exception.extype == "biz") {
+					E = "【" + B.result.exception.message + "】";
+					A = Ext.Msg.WARNING;
+				} else {
+					A = Ext.Msg.ERROR;
+					E = "【系统发生异常！请与管理员联系】";
+				}
+				Ext.Msg.show({
+							width : 350,
+							title : "操作提示",
+							msg : E,
+							icon : A,
+							buttons : Ext.Msg.OK
+						})
+			}
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+
+}
+
+com.keensen.ump.produce.quality.poorMgr.prototype.exportAbilitionExcel = function() {
+
+	doQuerySqlAndExport(this, this.queryPanel4Abilition,
+			this.listPanel4Abilition, '报废单',
+			'com.keensen.ump.produce.quality.abilition.queryAbilition');
+}
+
+com.keensen.ump.produce.quality.poorMgr.prototype.onAbolitionQuery = function() {
+	
+	this.abilitionQueryWindow.show();
+}
+
+com.keensen.ump.produce.quality.poorMgr.prototype.exportAbilitionQuery = function() {
+
+	doQuerySqlAndExport(this, this.queryPanel4AbilitionQuery,
+			this.listPanel4AbilitionQueryList, '报废单明细',
+			'com.keensen.ump.produce.quality.abilition.queryAbilitionList','0,1,2,3,4,5');
 }

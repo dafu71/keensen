@@ -90,6 +90,10 @@
 	   			AND TM.SPEC_ID = #specId#
    </isNotNull>
    
+   <isNotNull prepend = ""  property = "supId">
+	   			AND TM.WF_SUP_ID = #supId#
+   </isNotNull>
+   
    <isNotNull prepend = ""  property = "orderNo">
 	   			AND TM.order_no like '%' || #orderNo# || '%'
    </isNotNull>
@@ -116,6 +120,8 @@
        T1.LINE          AS "line",
        T1.SPEC_ID       AS "specId",
        T1.SPEC_NAME     AS "specName",
+       T1.C22a_WEIGHT    AS "c22aWeight",
+       T1.C22a_STD       AS "c22aStd",
        T1.C22_WEIGHT    AS "c22Weight",
        T1.C22_STD       AS "c22Std",
        T1.C51_STD       AS "c51Std",
@@ -142,6 +148,8 @@
                 PL.LINE_CODE LINE,
                 TRGH.SPEC_ID,
                 PMS.MATER_SPEC_NAME SPEC_NAME,
+                TRGH.C22a_WEIGHT,
+                TRGH.C22a_STD,
                 TRGH.C22_WEIGHT,
                 TRGH.C22_STD,
                 TRGH.C51_STD,
@@ -163,7 +171,11 @@
                         TM.PLAN_NO,
                         TM.LINE_ID,
                         TM.SPEC_ID,
-                        BM.C22 * TM.OUT_LENGTH / 1000 C22_STD,
+                        
+                        BM.C22a * TM.OUT_LENGTH / 1000 C22a_STD,
+                        TM.OUT_LENGTH * C22a_METER C22a_WEIGHT,
+                        
+                        BM.C22a * TM.OUT_LENGTH / 1000 C22_STD,
                         TM.OUT_LENGTH * C22_METER C22_WEIGHT,
                         BM.C51 * TM.OUT_LENGTH / 1000 C51_STD,
                         TM.OUT_LENGTH * C51_METER C51_WEIGHT,
@@ -176,10 +188,12 @@
                                     TM.OUT_LENGTH,
                                     TM.LINE_ID,
                                     TM.SPEC_ID,
+                                    TRGH.C22a_WEIGHT,
                                     TRGH.C22_WEIGHT,
                                     TRGH.C51_WEIGHT,
                                     TRGH.C71_WEIGHT,
                                     TRGH.C72_WEIGHT,
+                                    TRGH.C22a_WEIGHT / TM.OUT_LENGTH C22a_METER,
                                     TRGH.C22_WEIGHT / TM.OUT_LENGTH C22_METER,
                                     TRGH.C51_WEIGHT / TM.OUT_LENGTH C51_METER,
                                     TRGH.C71_WEIGHT / TM.OUT_LENGTH C71_METER,
@@ -187,6 +201,7 @@
                                FROM (SELECT ORDER_NO,
                                             LINE_ID,
                                             SPEC_ID,
+                                            SUM(C22a_WEIGHT) C22a_WEIGHT,
                                             SUM(C22_WEIGHT) C22_WEIGHT,
                                             SUM(C51_WEIGHT) C51_WEIGHT,
                                             SUM(C71_WEIGHT) C71_WEIGHT,
@@ -195,11 +210,19 @@
                                                     TM.ORDER_NO,
                                                     TM.LINE_ID,
                                                     TM.SPEC_ID,
+                                                    T.C22a_WEIGHT,
                                                     T.C22_WEIGHT,
                                                     T.C51_WEIGHT,
                                                     T.C71_WEIGHT,
                                                     T.C72_WEIGHT
                                                FROM (SELECT T.BATCH_ID,
+                                               
+                                               				 NVL(SUM(DECODE(T.ITEM,
+                                                                           'C22-A',
+                                                                           T.WEIGHT,
+                                                                           0)),
+                                                                0) C22a_WEIGHT,
+                                               				
                                                             NVL(SUM(DECODE(T.ITEM,
                                                                            'C22',
                                                                            T.WEIGHT,
@@ -249,6 +272,7 @@
                      ON PMS.MATER_SPEC_ID = TM.SPEC_ID
                    LEFT JOIN (SELECT T1.LINE,
                                     T1.MPTYPE,
+                                    MIN(T1.c22a) C22a,
                                     MIN(T1.MATER6) C22,
                                     MIN(T1.MATER11) C51,
                                     MIN(T1.MATER16) C71,
@@ -322,7 +346,7 @@
    </isNotNull>) TM
                        LEFT JOIN (SELECT PVA.*,
                                         TM.OUT_LENGTH,
-                                        PVA.C51_WEIGHT / 1000 / TM.OUT_LENGTH C51_METER,
+                                        PVA.C51_WEIGHT / TM.OUT_LENGTH C51_METER,
                                         PVA.USED / TM.OUT_LENGTH USED_METER,
                                         PVA.PVA165_WEIGHT / TM.OUT_LENGTH PVA165_METER,
                                         PVA.PVA205_WEIGHT / TM.OUT_LENGTH PVA205_METER,
@@ -365,7 +389,7 @@
                                                                0.02,
                                                                'PVA540',
                                                                0.015,
-                                                               '0.01') + LST.C51 C51_WEIGHT,
+                                                               '0.01') + LST.C51/1000 C51_WEIGHT,
                                                         LST.TM_BATCH_NO,
                                                         TM.ORDER_NO,
                                                         TM.SPEC_ID,
@@ -1050,6 +1074,939 @@
                    
                    )) T1
   ORDER BY t1.batch_no
+  
+  </select>
+  
+  
+  <select id="queryMaterialByLine" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  SELECT PL.LINE_CODE      AS "lineCode",
+       T1.LINE_ID        AS "lineId",
+       T1.OUT_LENGTH     AS "outLength",
+       T1.C41_BOM        AS "c41Bom",
+       T1.C41_REALITY    AS "c41Reality",
+       T1.C41_DIFF       AS "c41Diff",
+       T1.C42_BOM        AS "c42Bom",
+       T1.C42_REALITY    AS "c42Reality",
+       T1.C42_DIFF       AS "c42Diff",
+       T1.C51_BOM        AS "c51Bom",
+       T1.C51_REALITY    AS "c51Reality",
+       T1.C51_DIFF       AS "c51Diff",
+       T1.PVA165_BOM     AS "pva165Bom",
+       T1.PVA165_REALITY AS "pva165Reality",
+       T1.PVA165_DIFF    AS "pva165Diff",
+       T1.PVA205_BOM     AS "pva205Bom",
+       T1.PVA205_REALITY AS "pva205Reality",
+       T1.PVA205_DIFF    AS "pva205Diff",
+       T1.PVA540_BOM     AS "pva540Bom",
+       T1.PVA540_REALITY AS "pva540Reality",
+       T1.PVA540_DIFF    AS "pva540Diff",
+       T1.C71_BOM        AS "c71Bom",
+       T1.C71_REALITY    AS "c71Reality",
+       T1.C71_DIFF       AS "c71Diff",
+       T1.C72_BOM        AS "c72Bom",
+       T1.C72_REALITY    AS "c72Reality",
+       T1.C72_DIFF       AS "c72Diff",
+       T1.C21_BOM        AS "c21Bom",
+       T1.C21_REALITY    AS "c21Reality",
+       T1.C21_DIFF       AS "c21Diff",
+       T1.C22_BOM        AS "c22Bom",
+       T1.C22_REALITY    AS "c22Reality",
+       T1.C22_DIFF       AS "c22Diff",
+       T1.C24_BOM        AS "c24Bom",
+       T1.C24_REALITY    AS "c24Reality",
+       T1.C24_DIFF       AS "c24Diff",
+       
+       T1.C22a_BOM        AS "c22aBom",
+       T1.C22a_REALITY    AS "c22aReality",
+       T1.C22a_DIFF       AS "c22aDiff",
+       
+       T1.C29_BOM        AS "c29Bom",
+       T1.C29_REALITY    AS "c29Reality",
+       T1.C29_DIFF       AS "c29Diff"
+  FROM (SELECT TB.LINE_ID,
+               SUM(OUT_LENGTH) OUT_LENGTH,
+               
+               SUM(C41_BOM) C41_BOM,
+               SUM(C41_REALITY) C41_REALITY,
+               SUM(C41_REALITY) - SUM(C41_BOM) C41_DIFF,
+               SUM(C42_BOM) C42_BOM,
+               SUM(C42_REALITY) C42_REALITY,
+               SUM(C42_REALITY) - SUM(C42_BOM) C42_DIFF,
+               SUM(C51_BOM) C51_BOM,
+               SUM(C51_REALITY) C51_REALITY,
+               SUM(C51_REALITY) - SUM(C51_BOM) C51_DIFF,
+               SUM(PVA165_BOM) PVA165_BOM,
+               SUM(PVA165_REALITY) PVA165_REALITY,
+               SUM(PVA165_REALITY) - SUM(PVA165_BOM) PVA165_DIFF,
+               SUM(PVA205_BOM) PVA205_BOM,
+               SUM(PVA205_REALITY) PVA205_REALITY,
+               SUM(PVA205_REALITY) - SUM(PVA205_BOM) PVA205_DIFF,
+               SUM(PVA540_BOM) PVA540_BOM,
+               SUM(PVA540_REALITY) PVA540_REALITY,
+               SUM(PVA540_REALITY) - SUM(PVA540_BOM) PVA540_DIFF,
+               SUM(C71_BOM) C71_BOM,
+               SUM(C71_REALITY) C71_REALITY,
+               SUM(C71_REALITY) - SUM(C71_BOM) C71_DIFF,
+               SUM(C72_BOM) C72_BOM,
+               SUM(C72_REALITY) C72_REALITY,
+               SUM(C72_REALITY) - SUM(C72_BOM) C72_DIFF,
+               SUM(C21_BOM) C21_BOM,
+               SUM(C21_REALITY) C21_REALITY,
+               SUM(C21_REALITY) - SUM(C21_BOM) C21_DIFF,
+               SUM(C22_BOM) C22_BOM,
+               SUM(C22_REALITY) C22_REALITY,
+               SUM(C22_REALITY) - SUM(C22_BOM) C22_DIFF,
+               SUM(C24_BOM) C24_BOM,
+               SUM(C24_REALITY) C24_REALITY,
+               SUM(C24_REALITY) - SUM(C24_BOM) C24_DIFF,
+               
+               SUM(C22a_BOM) C22a_BOM,
+               SUM(C22a_REALITY) C22a_REALITY,
+               SUM(C22a_REALITY) - SUM(C22a_BOM) C22a_DIFF,
+               
+               SUM(C29_BOM) C29_BOM,
+               SUM(C29_REALITY) C29_REALITY,
+               SUM(C29_REALITY) - SUM(C29_BOM) C29_DIFF
+          FROM (SELECT TM.LINE_ID,
+                       TM.SPEC_ID,
+                       TM.OUT_LENGTH,
+                       TM.BATCH_NO,
+                       TM.RECORD_ID,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C41, 0) / 1000 C41_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C42, 0) / 1000 C42_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C51, 0) / 1000 C51_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(PVA165, 0) / 1000 PVA165_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(PVA205, 0) / 1000 PVA205_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(PVA540, 0) / 1000 PVA540_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C71, 0) / 1000 C71_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C72, 0) / 1000 C72_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C21, 0) / 1000 C21_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C22, 0) / 1000 C22_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C24, 0) / 1000 C24_BOM,
+                       
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C22a, 0) / 1000 C22a_BOM,
+                       
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C29, 0) / 1000 C29_BOM,
+                       OIL.C41_REALITY,
+                       OIL.C42_REALITY,
+                       NVL(C51.C51_REALITY, 0) C51_REALITY,
+                       NVL(PVA165.PVA165_REALITY, 0) PVA165_REALITY,
+                       NVL(PVA205.PVA205_REALITY, 0) PVA205_REALITY,
+                       NVL(PVA540.PVA540_REALITY, 0) PVA540_REALITY,
+                       NVL(C71_REALITY, 0) C71_REALITY,
+                       NVL(C72_REALITY, 0) C72_REALITY,
+                       NVL(C24_REALITY, 0) C24_REALITY,
+                       NVL(C22a_REALITY, 0) C22a_REALITY,
+                       NVL(C21_REALITY, 0) C21_REALITY,
+                       NVL(C22_REALITY, 0) C22_REALITY,
+                       NVL(C29_REALITY, 0) C29_REALITY
+                  FROM (SELECT TM.LINE_ID,
+                               TM.SPEC_ID,
+                               TM.OUT_LENGTH,
+                               TM.BATCH_NO,
+                               TM.RECORD_ID
+                          FROM QINSEN.INST_TUMO TM
+                         WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                            
+                            
+                            ) TM
+                  LEFT JOIN V_KS_BASE_MP_BOM BOM
+                    ON BOM.LINE_ID = TM.LINE_ID
+                   AND BOM.SPEC_ID = TM.SPEC_ID
+                  LEFT JOIN (SELECT T1.TM_BATCH_NO,
+                                   (C41_INVALID + C41) C41_REALITY,
+                                   C42 C42_REALITY
+                              FROM (SELECT H.TM_BATCH_NO,
+                                           SUM(NVL(H.C41_INVALID, 0)) C41_INVALID
+                                      FROM KS_QUALITY_MP_TEST_OIL_HEAD H
+                                     GROUP BY H.TM_BATCH_NO) T1
+                              LEFT JOIN (SELECT SUM(C41) C41,
+                                               SUM(C42) C42,
+                                               TM_BATCH_NO
+                                          FROM (SELECT NVL(T.C41_REALITY, 0) C41,
+                                                       NVL(T.C42_REALITY, 0) / 1000 C42,
+                                                       T.RELATION_ID,
+                                                       H.TM_BATCH_NO
+                                                  FROM KS_QUALITY_MP_TEST_OIL_LIST T
+                                                  LEFT JOIN KS_QUALITY_MP_TEST_OIL_HEAD H
+                                                    ON T.RELATION_ID = H.ID)
+                                         GROUP BY TM_BATCH_NO) T2
+                                ON T1.TM_BATCH_NO = T2.TM_BATCH_NO) OIL
+                    ON OIL.TM_BATCH_NO = TM.BATCH_NO
+                  LEFT JOIN (SELECT SUM(NVL(C51, 0)) C51_REALITY, TM_BATCH_NO
+                              FROM (SELECT DECODE(H.PVA,
+                                                               'PVA-165',
+                                                               0.01,
+                                                               'PVA-205',
+                                                               0.02,
+                                                               'PVA540',
+                                                               0.015,
+                                                               '0.01')*t.used + TO_NUMBER(NVL(T.C51, 0)) / 1000 C51,
+                                           T.TM_BATCH_NO
+                                      FROM KS_DIAPHRAGM_MAKE_PVA_LIST T
+                                      LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
+                                                     ON T.RELATION_ID = H.ID
+                                     WHERE T.TM_BATCH_NO IS NOT NULL
+                                    UNION ALL
+                                    SELECT TO_NUMBER(NVL(T.WEIGHT, 0)),
+                                           TM.BATCH_NO
+                                      FROM KS_DIAPHRAGM_TROUGH_LIQUID T
+                                      LEFT JOIN QINSEN.INST_TUMO TM
+                                        ON TM.RECORD_ID = T.BATCH_ID
+                                     WHERE T.ITEM = 'C51')
+                             GROUP BY TM_BATCH_NO) C51
+                    ON C51.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT SUM(PVA_WEIGHT) PVA165_REALITY,
+                                   TM_BATCH_NO
+                              FROM (SELECT LST.TM_BATCH_NO,
+                                           LST.USED * 0.01 PVA_WEIGHT
+                                      FROM KS_DIAPHRAGM_MAKE_PVA_LIST LST
+                                      LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
+                                        ON H.ID = LST.RELATION_ID
+                                     WHERE LST.TM_BATCH_NO IS NOT NULL
+                                       AND H.PVA = 'PVA-165')
+                             GROUP BY TM_BATCH_NO
+                            
+                            ) PVA165
+                    ON PVA165.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT SUM(PVA_WEIGHT) PVA205_REALITY,
+                                   TM_BATCH_NO
+                              FROM (SELECT LST.TM_BATCH_NO,
+                                           LST.USED * 0.01 PVA_WEIGHT
+                                      FROM KS_DIAPHRAGM_MAKE_PVA_LIST LST
+                                      LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
+                                        ON H.ID = LST.RELATION_ID
+                                     WHERE LST.TM_BATCH_NO IS NOT NULL
+                                       AND H.PVA = 'PVA-205')
+                             GROUP BY TM_BATCH_NO
+                            
+                            ) PVA205
+                    ON PVA205.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT SUM(PVA_WEIGHT) PVA540_REALITY,
+                                   TM_BATCH_NO
+                              FROM (SELECT LST.TM_BATCH_NO,
+                                           LST.USED * 0.02 PVA_WEIGHT
+                                      FROM KS_DIAPHRAGM_MAKE_PVA_LIST LST
+                                      LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
+                                        ON H.ID = LST.RELATION_ID
+                                     WHERE LST.TM_BATCH_NO IS NOT NULL
+                                       AND H.PVA = 'PVA540')
+                             GROUP BY TM_BATCH_NO
+                            
+                            ) PVA540
+                    ON PVA540.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT TM_BATCH_NO,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C71' THEN
+                                          TO_NUMBER(WEIGHT)
+                                         ELSE
+                                          0
+                                       END) C71_REALITY,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C72' THEN
+                                          TO_NUMBER(WEIGHT)
+                                         ELSE
+                                          0
+                                       END) C72_REALITY,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C24' THEN
+                                          TO_NUMBER(WEIGHT)
+                                         ELSE
+                                          0
+                                       END) C24_REALITY,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C22-A' THEN
+                                          TO_NUMBER(WEIGHT)
+                                         ELSE
+                                          0
+                                       END) C22a_REALITY
+                              FROM (SELECT TM.BATCH_NO TM_BATCH_NO,
+                                           T.ITEM,
+                                           T.WEIGHT
+                                      FROM (select TR.BATCH_ID, TR.ITEM, to_number(TR.WEIGHT) WEIGHT FROM KS_DIAPHRAGM_TROUGH_LIQUID TR
+											  union all 
+											  select WT.BATCH_ID, WT.ITEM, nvl(WT.WEIGHT,0)/1000 WEIGHT FROM KS_DIAPHRAGM_WATER_LIQUID WT
+											  WHERE WT.ITEM = 'C24'	
+											  
+											  union all
+											  
+											  SELECT tt.BATCH_id,'C24',lst.c24_reality/1000 WEIGHT from 
+												(SELECT MAX(TM.record_id) BATCH_id, TM.WATER_BATCH_NO
+												  FROM QINSEN.INST_TUMO TM
+												 WHERE 1 = 1
+												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+												   <isNotNull prepend="and" property="lineId"> 
+		       										TM.LINE_ID = #lineId#
+													</isNotNull>
+												 GROUP BY TM.WATER_BATCH_NO
+												 UNION ALL
+												 SELECT MAX(TM.record_id) BATCH_id, TM.WATER_BATCH_NO2
+												  FROM QINSEN.INST_TUMO TM
+												 WHERE 1 = 1
+												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+												   <isNotNull prepend="and" property="lineId"> 
+		       										TM.LINE_ID = #lineId#
+													</isNotNull>
+												 GROUP BY TM.WATER_BATCH_NO2) tt
+												 LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD h
+												  ON tt.WATER_BATCH_NO=h.BATCH_NO
+												 LEFT JOIN KS_QUALITY_MP_TEST_WATER_LIST lst
+												 ON h.id = lst.relation_id
+												 WHERE nvl(lst.c24_reality,0)>0										
+											
+									  ) T
+                                      LEFT JOIN QINSEN.INST_TUMO TM
+                                        ON TM.RECORD_ID = T.BATCH_ID
+                                     WHERE T.ITEM IN ('C71', 'C72', 'C24', 'C22-A'))
+                             GROUP BY TM_BATCH_NO) TROUGH
+                    ON TROUGH.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT BATCH_NO TM_BATCH_NO,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C21' THEN
+                                          WEIGHT
+                                         ELSE
+                                          0
+                                       END) C21_REALITY,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C22' THEN
+                                          WEIGHT
+                                         ELSE
+                                          0
+                                       END) C22_REALITY
+                              FROM (SELECT TO_NUMBER(T.WEIGHT)/ 1000 WEIGHT,
+                                           T.ITEM,
+                                           TM.BATCH_NO
+                                      FROM KS_DIAPHRAGM_WATER_LIQUID T
+                                      LEFT JOIN QINSEN.INST_TUMO TM
+                                        ON TM.RECORD_ID = T.BATCH_ID
+                                     WHERE T.ITEM IN ('C21', 'C22')
+                                     
+                                      UNION ALL 
+                                     SELECT TO_NUMBER(T.WEIGHT) WEIGHT,
+                                           trim(T.ITEM) item,
+                                           TM.BATCH_NO
+                                      FROM KS_DIAPHRAGM_TROUGH_LIQUID T
+                                      LEFT JOIN QINSEN.INST_TUMO TM
+                                        ON TM.RECORD_ID = T.BATCH_ID
+                                     WHERE T.ITEM IN ('C21', 'C22')
+                                     
+                                    UNION ALL
+                                    SELECT TO_NUMBER(NVL(T.C21_REALITY, 0))/1000,
+                                           'C21',
+                                           tumo.BATCH_NO
+                                      FROM KS_QUALITY_MP_TEST_WATER_LIST T
+                                      LEFT JOIN (select * from KS_QUALITY_MP_TEST_WATER_HEAD t
+                                           WHERE t.watertype IN ('水相液','水相补充液')) H
+                                        ON H.ID = T.RELATION_ID
+                                      LEFT JOIN (SELECT max(tm.batch_no) batch_no,tm.water_batch_no from qinsen.inst_tumo tm
+                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                                      GROUP BY tm.water_batch_no
+                                      UNION ALL
+                                      SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
+                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                                      GROUP BY tm.water_batch_no2) tumo
+                                      ON tumo.water_batch_no = H.BATCH_NO
+                                    UNION ALL
+                                    SELECT TO_NUMBER(NVL(T.C22_REALITY, 0))/1000,
+                                           'C22',
+                                           tumo.BATCH_NO
+                                      FROM KS_QUALITY_MP_TEST_WATER_LIST T
+                                      LEFT JOIN (select * from KS_QUALITY_MP_TEST_WATER_HEAD t
+                                           WHERE t.watertype IN ('水相液','水相补充液')) H
+                                        ON H.ID = T.RELATION_ID
+                                      LEFT JOIN (SELECT max(tm.batch_no) batch_no,tm.water_batch_no from qinsen.inst_tumo tm
+                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                                      GROUP BY tm.water_batch_no
+                                      UNION ALL
+                                      SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
+                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                                      GROUP BY tm.water_batch_no2) tumo
+                                      ON tumo.water_batch_no = H.BATCH_NO)
+                             GROUP BY BATCH_NO) WATER
+                    ON WATER.TM_BATCH_NO = TM.BATCH_NO
+                  LEFT JOIN (SELECT TM_BATCH_NO ,C29_REALITY from 
+(SELECT BATCH_NO TM_BATCH_NO,SUM(C29_REALITY)/1000 C29_REALITY
+                              FROM (
+                                    
+                                    SELECT TO_NUMBER(NVL(T.C29_REALITY, 0)) C29_REALITY,
+                                            tumo.BATCH_NO
+                                      FROM KS_QUALITY_MP_TEST_WATER_LIST T
+                                      LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD H
+                                        ON H.ID = T.RELATION_ID
+                                      LEFT JOIN 
+                                      (
+                                      SELECT MAX(batch_no) batch_no ,water_batch_no
+                                      FROM
+                                      (SELECT tm.water_batch_no,tm.batch_no FROM qinsen.inst_tumo tm
+                                      WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                                      UNION ALL
+                                      SELECT tm.water_batch_no2,tm.batch_no FROM qinsen.inst_tumo tm
+                                      WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>) 
+                                      GROUP BY water_batch_no) tumo
+                                      ON tumo.water_batch_no = h.batch_no
+                             ) c29
+                             GROUP BY BATCH_NO)
+                             WHERE C29_REALITY>0) C29
+                    ON C29.TM_BATCH_NO = TM.BATCH_NO) TB
+         GROUP BY TB.LINE_ID) T1
+  LEFT JOIN QINSEN.BASE_PROD_LINE PL
+    ON PL.LINE_ID = T1.LINE_ID
+    
+    UNION ALL
+    
+    
+  SELECT '汇总'      AS "lineCode",
+       0        AS "lineId",
+       T1.OUT_LENGTH     AS "outLength",
+       T1.C41_BOM        AS "c41Bom",
+       T1.C41_REALITY    AS "c41Reality",
+       T1.C41_DIFF       AS "c41Diff",
+       T1.C42_BOM        AS "c42Bom",
+       T1.C42_REALITY    AS "c42Reality",
+       T1.C42_DIFF       AS "c42Diff",
+       T1.C51_BOM        AS "c51Bom",
+       T1.C51_REALITY    AS "c51Reality",
+       T1.C51_DIFF       AS "c51Diff",
+       T1.PVA165_BOM     AS "pva165Bom",
+       T1.PVA165_REALITY AS "pva165Reality",
+       T1.PVA165_DIFF    AS "pva165Diff",
+       T1.PVA205_BOM     AS "pva205Bom",
+       T1.PVA205_REALITY AS "pva205Reality",
+       T1.PVA205_DIFF    AS "pva205Diff",
+       T1.PVA540_BOM     AS "pva540Bom",
+       T1.PVA540_REALITY AS "pva540Reality",
+       T1.PVA540_DIFF    AS "pva540Diff",
+       T1.C71_BOM        AS "c71Bom",
+       T1.C71_REALITY    AS "c71Reality",
+       T1.C71_DIFF       AS "c71Diff",
+       T1.C72_BOM        AS "c72Bom",
+       T1.C72_REALITY    AS "c72Reality",
+       T1.C72_DIFF       AS "c72Diff",
+       T1.C21_BOM        AS "c21Bom",
+       T1.C21_REALITY    AS "c21Reality",
+       T1.C21_DIFF       AS "c21Diff",
+       T1.C22_BOM        AS "c22Bom",
+       T1.C22_REALITY    AS "c22Reality",
+       T1.C22_DIFF       AS "c22Diff",
+       T1.C24_BOM        AS "c24Bom",
+       T1.C24_REALITY    AS "c24Reality",
+       T1.C24_DIFF       AS "c24Diff",
+       
+       T1.C22a_BOM        AS "c22aBom",
+       T1.C22a_REALITY    AS "c22aReality",
+       T1.C22a_DIFF       AS "c22aDiff",
+       
+       T1.C29_BOM        AS "c29Bom",
+       T1.C29_REALITY    AS "c29Reality",
+       T1.C29_DIFF       AS "c29Diff"
+  FROM (SELECT TB.LINE_ID,
+               SUM(OUT_LENGTH) OUT_LENGTH,
+               
+               SUM(C41_BOM) C41_BOM,
+               SUM(C41_REALITY) C41_REALITY,
+               SUM(C41_REALITY) - SUM(C41_BOM) C41_DIFF,
+               SUM(C42_BOM) C42_BOM,
+               SUM(C42_REALITY) C42_REALITY,
+               SUM(C42_REALITY) - SUM(C42_BOM) C42_DIFF,
+               SUM(C51_BOM) C51_BOM,
+               SUM(C51_REALITY) C51_REALITY,
+               SUM(C51_REALITY) - SUM(C51_BOM) C51_DIFF,
+               SUM(PVA165_BOM) PVA165_BOM,
+               SUM(PVA165_REALITY) PVA165_REALITY,
+               SUM(PVA165_REALITY) - SUM(PVA165_BOM) PVA165_DIFF,
+               SUM(PVA205_BOM) PVA205_BOM,
+               SUM(PVA205_REALITY) PVA205_REALITY,
+               SUM(PVA205_REALITY) - SUM(PVA205_BOM) PVA205_DIFF,
+               SUM(PVA540_BOM) PVA540_BOM,
+               SUM(PVA540_REALITY) PVA540_REALITY,
+               SUM(PVA540_REALITY) - SUM(PVA540_BOM) PVA540_DIFF,
+               SUM(C71_BOM) C71_BOM,
+               SUM(C71_REALITY) C71_REALITY,
+               SUM(C71_REALITY) - SUM(C71_BOM) C71_DIFF,
+               SUM(C72_BOM) C72_BOM,
+               SUM(C72_REALITY) C72_REALITY,
+               SUM(C72_REALITY) - SUM(C72_BOM) C72_DIFF,
+               SUM(C21_BOM) C21_BOM,
+               SUM(C21_REALITY) C21_REALITY,
+               SUM(C21_REALITY) - SUM(C21_BOM) C21_DIFF,
+               SUM(C22_BOM) C22_BOM,
+               SUM(C22_REALITY) C22_REALITY,
+               SUM(C22_REALITY) - SUM(C22_BOM) C22_DIFF,
+               SUM(C24_BOM) C24_BOM,
+               SUM(C24_REALITY) C24_REALITY,
+               SUM(C24_REALITY) - SUM(C24_BOM) C24_DIFF,
+               
+               SUM(C22a_BOM) C22a_BOM,
+               SUM(C22a_REALITY) C22a_REALITY,
+               SUM(C22a_REALITY) - SUM(C22a_BOM) C22a_DIFF,
+               
+               SUM(C29_BOM) C29_BOM,
+               SUM(C29_REALITY) C29_REALITY,
+               SUM(C29_REALITY) - SUM(C29_BOM) C29_DIFF
+          FROM (SELECT TM.LINE_ID,
+                       TM.SPEC_ID,
+                       TM.OUT_LENGTH,
+                       TM.BATCH_NO,
+                       TM.RECORD_ID,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C41, 0) / 1000 C41_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C42, 0) / 1000 C42_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C51, 0) / 1000 C51_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(PVA165, 0) / 1000 PVA165_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(PVA205, 0) / 1000 PVA205_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(PVA540, 0) / 1000 PVA540_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C71, 0) / 1000 C71_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C72, 0) / 1000 C72_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C21, 0) / 1000 C21_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C22, 0) / 1000 C22_BOM,
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C24, 0) / 1000 C24_BOM,
+                       
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C22a, 0) / 1000 C22a_BOM,
+                       
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C29, 0) / 1000 C29_BOM,
+                       OIL.C41_REALITY,
+                       OIL.C42_REALITY,
+                       NVL(C51.C51_REALITY, 0) C51_REALITY,
+                       NVL(PVA165.PVA165_REALITY, 0) PVA165_REALITY,
+                       NVL(PVA205.PVA205_REALITY, 0) PVA205_REALITY,
+                       NVL(PVA540.PVA540_REALITY, 0) PVA540_REALITY,
+                       NVL(C71_REALITY, 0) C71_REALITY,
+                       NVL(C72_REALITY, 0) C72_REALITY,
+                       NVL(C24_REALITY, 0) C24_REALITY,
+                        NVL(C22a_REALITY, 0) C22a_REALITY,
+                       NVL(C21_REALITY, 0) C21_REALITY,
+                       NVL(C22_REALITY, 0) C22_REALITY,
+                       NVL(C29_REALITY, 0) C29_REALITY
+                  FROM (SELECT TM.LINE_ID,
+                               TM.SPEC_ID,
+                               TM.OUT_LENGTH,
+                               TM.BATCH_NO,
+                               TM.RECORD_ID
+                          FROM QINSEN.INST_TUMO TM
+                         WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                            ) TM
+                  LEFT JOIN V_KS_BASE_MP_BOM BOM
+                    ON BOM.LINE_ID = TM.LINE_ID
+                   AND BOM.SPEC_ID = TM.SPEC_ID
+                  LEFT JOIN (SELECT T1.TM_BATCH_NO,
+                                   (C41_INVALID + C41) C41_REALITY,
+                                   C42 C42_REALITY
+                              FROM (SELECT H.TM_BATCH_NO,
+                                           SUM(NVL(H.C41_INVALID, 0)) C41_INVALID
+                                      FROM KS_QUALITY_MP_TEST_OIL_HEAD H
+                                     GROUP BY H.TM_BATCH_NO) T1
+                              LEFT JOIN (SELECT SUM(C41) C41,
+                                               SUM(C42) C42,
+                                               TM_BATCH_NO
+                                          FROM (SELECT NVL(T.C41_REALITY, 0) C41,
+                                                       NVL(T.C42_REALITY, 0) / 1000 C42,
+                                                       T.RELATION_ID,
+                                                       H.TM_BATCH_NO
+                                                  FROM KS_QUALITY_MP_TEST_OIL_LIST T
+                                                  LEFT JOIN KS_QUALITY_MP_TEST_OIL_HEAD H
+                                                    ON T.RELATION_ID = H.ID)
+                                         GROUP BY TM_BATCH_NO) T2
+                                ON T1.TM_BATCH_NO = T2.TM_BATCH_NO) OIL
+                    ON OIL.TM_BATCH_NO = TM.BATCH_NO
+                  LEFT JOIN (SELECT SUM(NVL(C51, 0)) C51_REALITY, TM_BATCH_NO
+                              FROM (SELECT DECODE(H.PVA,
+                                                               'PVA-165',
+                                                               0.01,
+                                                               'PVA-205',
+                                                               0.02,
+                                                               'PVA540',
+                                                               0.015,
+                                                               '0.01')*t.used + TO_NUMBER(NVL(T.C51, 0)) / 1000 C51,
+                                           T.TM_BATCH_NO
+                                      FROM KS_DIAPHRAGM_MAKE_PVA_LIST T
+                                      LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
+                                                     ON T.RELATION_ID = H.ID
+                                     WHERE T.TM_BATCH_NO IS NOT NULL
+                                    UNION ALL
+                                    SELECT TO_NUMBER(NVL(T.WEIGHT, 0)),
+                                           TM.BATCH_NO
+                                      FROM KS_DIAPHRAGM_TROUGH_LIQUID T
+                                      LEFT JOIN QINSEN.INST_TUMO TM
+                                        ON TM.RECORD_ID = T.BATCH_ID
+                                     WHERE T.ITEM = 'C51')
+                             GROUP BY TM_BATCH_NO) C51
+                    ON C51.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT SUM(PVA_WEIGHT) PVA165_REALITY,
+                                   TM_BATCH_NO
+                              FROM (SELECT LST.TM_BATCH_NO,
+                                           LST.USED * 0.01 PVA_WEIGHT
+                                      FROM KS_DIAPHRAGM_MAKE_PVA_LIST LST
+                                      LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
+                                        ON H.ID = LST.RELATION_ID
+                                     WHERE LST.TM_BATCH_NO IS NOT NULL
+                                       AND H.PVA = 'PVA-165')
+                             GROUP BY TM_BATCH_NO
+                            
+                            ) PVA165
+                    ON PVA165.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT SUM(PVA_WEIGHT) PVA205_REALITY,
+                                   TM_BATCH_NO
+                              FROM (SELECT LST.TM_BATCH_NO,
+                                           LST.USED * 0.01 PVA_WEIGHT
+                                      FROM KS_DIAPHRAGM_MAKE_PVA_LIST LST
+                                      LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
+                                        ON H.ID = LST.RELATION_ID
+                                     WHERE LST.TM_BATCH_NO IS NOT NULL
+                                       AND H.PVA = 'PVA-205')
+                             GROUP BY TM_BATCH_NO
+                            
+                            ) PVA205
+                    ON PVA205.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT SUM(PVA_WEIGHT) PVA540_REALITY,
+                                   TM_BATCH_NO
+                              FROM (SELECT LST.TM_BATCH_NO,
+                                           LST.USED * 0.02 PVA_WEIGHT
+                                      FROM KS_DIAPHRAGM_MAKE_PVA_LIST LST
+                                      LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
+                                        ON H.ID = LST.RELATION_ID
+                                     WHERE LST.TM_BATCH_NO IS NOT NULL
+                                       AND H.PVA = 'PVA540')
+                             GROUP BY TM_BATCH_NO
+                            
+                            ) PVA540
+                    ON PVA540.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT TM_BATCH_NO,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C71' THEN
+                                          TO_NUMBER(WEIGHT)
+                                         ELSE
+                                          0
+                                       END) C71_REALITY,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C72' THEN
+                                          TO_NUMBER(WEIGHT)
+                                         ELSE
+                                          0
+                                       END) C72_REALITY,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C24' THEN
+                                          TO_NUMBER(WEIGHT)
+                                         ELSE
+                                          0
+                                       END) C24_REALITY,
+                                    SUM(CASE
+                                         WHEN ITEM = 'C22-A' THEN
+                                          TO_NUMBER(WEIGHT)
+                                         ELSE
+                                          0
+                                       END) C22a_REALITY
+                              FROM (SELECT TM.BATCH_NO TM_BATCH_NO,
+                                           T.ITEM,
+                                           T.WEIGHT
+                                      FROM (select TR.BATCH_ID, TR.ITEM, to_number(TR.WEIGHT) WEIGHT FROM KS_DIAPHRAGM_TROUGH_LIQUID TR
+											  union all 
+											  select WT.BATCH_ID, WT.ITEM, nvl(WT.WEIGHT,0)/1000 WEIGHT FROM KS_DIAPHRAGM_WATER_LIQUID WT
+											  WHERE WT.ITEM = 'C24'	
+											  union all
+											  
+											  SELECT tt.BATCH_id,'C24',lst.c24_reality/1000 WEIGHT from 
+												(SELECT MAX(TM.record_id) BATCH_id, TM.WATER_BATCH_NO
+												  FROM QINSEN.INST_TUMO TM
+												 WHERE 1 = 1
+												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+												   <isNotNull prepend="and" property="lineId"> 
+		       										TM.LINE_ID = #lineId#
+													</isNotNull>
+												 GROUP BY TM.WATER_BATCH_NO
+												 UNION ALL
+												 SELECT MAX(TM.record_id) BATCH_id, TM.WATER_BATCH_NO2
+												  FROM QINSEN.INST_TUMO TM
+												 WHERE 1 = 1
+												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+												   <isNotNull prepend="and" property="lineId"> 
+		       										TM.LINE_ID = #lineId#
+													</isNotNull>
+												 GROUP BY TM.WATER_BATCH_NO2) tt
+												 LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD h
+												  ON tt.WATER_BATCH_NO=h.BATCH_NO
+												 LEFT JOIN KS_QUALITY_MP_TEST_WATER_LIST lst
+												 ON h.id = lst.relation_id
+												 WHERE nvl(lst.c24_reality,0)>0						
+											
+									  ) T
+                                      LEFT JOIN QINSEN.INST_TUMO TM
+                                        ON TM.RECORD_ID = T.BATCH_ID
+                                     WHERE T.ITEM IN ('C71', 'C72', 'C24','C22-A'))
+                             GROUP BY TM_BATCH_NO) TROUGH
+                    ON TROUGH.TM_BATCH_NO = TM.BATCH_NO
+                
+                  LEFT JOIN (SELECT BATCH_NO TM_BATCH_NO,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C21' THEN
+                                          WEIGHT
+                                         ELSE
+                                          0
+                                       END) C21_REALITY,
+                                   SUM(CASE
+                                         WHEN ITEM = 'C22' THEN
+                                          WEIGHT
+                                         ELSE
+                                          0
+                                       END) C22_REALITY
+                              FROM (SELECT TO_NUMBER(T.WEIGHT)/ 1000 WEIGHT,
+                                           T.ITEM,
+                                           TM.BATCH_NO
+                                      FROM KS_DIAPHRAGM_WATER_LIQUID T
+                                      LEFT JOIN QINSEN.INST_TUMO TM
+                                        ON TM.RECORD_ID = T.BATCH_ID
+                                     WHERE T.ITEM IN ('C21', 'C22')
+                                     
+                                      UNION ALL 
+                                     SELECT TO_NUMBER(T.WEIGHT) WEIGHT,
+                                           trim(T.ITEM) item,
+                                           TM.BATCH_NO
+                                      FROM KS_DIAPHRAGM_TROUGH_LIQUID T
+                                      LEFT JOIN QINSEN.INST_TUMO TM
+                                        ON TM.RECORD_ID = T.BATCH_ID
+                                     WHERE T.ITEM IN ('C21', 'C22')
+                                     
+                                    UNION ALL
+                                   SELECT TO_NUMBER(NVL(T.C21_REALITY, 0))/1000,
+                                           'C21',
+                                           tumo.BATCH_NO
+                                      FROM KS_QUALITY_MP_TEST_WATER_LIST T
+                                      LEFT JOIN (select * from KS_QUALITY_MP_TEST_WATER_HEAD t
+                                           WHERE t.watertype IN ('水相液','水相补充液')) H
+                                        ON H.ID = T.RELATION_ID
+                                      LEFT JOIN (SELECT max(tm.batch_no) batch_no,tm.water_batch_no from qinsen.inst_tumo tm
+                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                                      GROUP BY tm.water_batch_no
+                                      UNION ALL
+                                      SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
+                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                                      GROUP BY tm.water_batch_no2) tumo
+                                      ON tumo.water_batch_no = H.BATCH_NO
+                                    UNION ALL
+                                    SELECT TO_NUMBER(NVL(T.C22_REALITY, 0))/1000,
+                                           'C22',
+                                           tumo.BATCH_NO
+                                      FROM KS_QUALITY_MP_TEST_WATER_LIST T
+                                      LEFT JOIN (select * from KS_QUALITY_MP_TEST_WATER_HEAD t
+                                           WHERE t.watertype IN ('水相液','水相补充液')) H
+                                        ON H.ID = T.RELATION_ID
+                                      LEFT JOIN (SELECT max(tm.batch_no) batch_no,tm.water_batch_no from qinsen.inst_tumo tm
+                                      GROUP BY tm.water_batch_no
+                                      UNION ALL
+                                      SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
+                                      GROUP BY tm.water_batch_no2) tumo
+                                      ON tumo.water_batch_no = H.BATCH_NO)
+                             GROUP BY BATCH_NO) WATER
+                    ON WATER.TM_BATCH_NO = TM.BATCH_NO
+                  LEFT JOIN (SELECT TM_BATCH_NO ,C29_REALITY from 
+(SELECT BATCH_NO TM_BATCH_NO,SUM(C29_REALITY)/1000 C29_REALITY
+                              FROM (
+                                    
+                                    SELECT TO_NUMBER(NVL(T.C29_REALITY, 0)) C29_REALITY,
+                                            tumo.BATCH_NO
+                                      FROM KS_QUALITY_MP_TEST_WATER_LIST T
+                                      LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD H
+                                        ON H.ID = T.RELATION_ID
+                                      LEFT JOIN 
+                                      (
+                                      SELECT MAX(batch_no) batch_no ,water_batch_no
+                                      FROM
+                                      (SELECT tm.water_batch_no,tm.batch_no FROM qinsen.inst_tumo tm
+                                      WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+                                      UNION ALL
+                                      SELECT tm.water_batch_no2,tm.batch_no FROM qinsen.inst_tumo tm
+                                      WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull>) 
+                                      GROUP BY water_batch_no) tumo
+                                      ON tumo.water_batch_no = h.batch_no
+                             ) c29
+                             GROUP BY BATCH_NO)
+                             WHERE C29_REALITY>0) C29
+                    ON C29.TM_BATCH_NO = TM.BATCH_NO) TB
+         ) T1
+    
+    
+ ORDER BY 1
+  
+  
+  </select>
+  
+  
+  <select id="queryZmMaterialByLine" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  SELECT 1 MYORDER,
+       LINE "line",
+       ROUND(SUM(THEORY_AMOUNT), 2) "theoryAmount",
+       ROUND(SUM(THEORY_AMOUNT), 2) "theoryAmount2",
+       ROUND(SUM(C11_BOM), 2) "c11Bom",
+       ROUND(SUM(C12_BOM), 2) "c12Bom",
+       ROUND(SUM(C13_BOM), 2) "c13Bom",
+       ROUND(SUM(C14_BOM), 2) "c14Bom",
+       ROUND(SUM(C11_REALITY), 2) "c11Reality",
+       ROUND(SUM(C12_REALITY), 2) "c12Reality",
+       ROUND(SUM(C13_REALITY), 2) "c13Reality",
+       ROUND(SUM(C14_REALITY), 2) "c14Reality",
+       ROUND(SUM(C11_DIFF), 2) "c11Diff",
+       ROUND(SUM(C12_DIFF), 2) "c12Diff",
+       ROUND(SUM(C13_DIFF), 2) "c13Diff",
+       ROUND(SUM(C14_DIFF), 2) "c14Diff"
+  FROM (SELECT T.LINE,
+               T.THEORY_AMOUNT,
+               T.RELEASE_AMOUNT,
+               T.C11 / 1000 * NVL(DIMO_AMOUNT, 0) C11_BOM,
+               T.C12 / 1000 * NVL(DIMO_AMOUNT, 0) C12_BOM,
+               T.C13 / 1000 * NVL(DIMO_AMOUNT, 0) C13_BOM,
+               T.C14 / 1000 * NVL(DIMO_AMOUNT, 0) C14_BOM,
+               T.C11_INVALID,
+               T.C11_PERCENT,
+               T.C12_PERCENT,
+               T.C13_PERCENT,
+               T.C14_PERCENT,
+               T.RELEASE_AMOUNT,
+               T.DIMO_AMOUNT,
+               T.C11 / 1000 * NVL(DIMO_AMOUNT, 0) + C11_INVALID +
+               C11_PERCENT * NVL(RELEASE_AMOUNT, 0) C11_REALITY,
+               C12 / 1000 * NVL(DIMO_AMOUNT, 0) +
+               C12_PERCENT * NVL(RELEASE_AMOUNT, 0) C12_REALITY,
+               C13 / 1000 * NVL(DIMO_AMOUNT, 0) +
+               C13_PERCENT * NVL(RELEASE_AMOUNT, 0) C13_REALITY,
+               C14 / 1000 * NVL(DIMO_AMOUNT, 0) +
+               C14_PERCENT * NVL(RELEASE_AMOUNT, 0) C14_REALITY,
+               C11_INVALID + C11_PERCENT * NVL(RELEASE_AMOUNT, 0) C11_DIFF,
+               C12_PERCENT * NVL(RELEASE_AMOUNT, 0) C12_DIFF,
+               C13_PERCENT * NVL(RELEASE_AMOUNT, 0) C13_DIFF,
+               C14_PERCENT * NVL(RELEASE_AMOUNT, 0) C14_DIFF
+          FROM V_KS_DIAPHRAGM_ZM_DM T
+         WHERE TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD') >= #productDtStart#
+           AND TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+           
+           <isNotNull prepend="and" property="line"> 
+		       				T.LINE  = #line#
+			</isNotNull> 
+           
+           )
+ GROUP BY LINE
+UNION ALL
+SELECT 2 MYORDER,
+       '汇总',
+       ROUND(SUM(THEORY_AMOUNT), 2) ,
+       ROUND(SUM(THEORY_AMOUNT), 2) ,
+       ROUND(SUM(C11_BOM), 2) "c11Bom",
+       ROUND(SUM(C12_BOM), 2) "c12Bom",
+       ROUND(SUM(C13_BOM), 2) "c13Bom",
+       ROUND(SUM(C14_BOM), 2) "c14Bom",
+       ROUND(SUM(C11_REALITY), 2) "c11Reality",
+       ROUND(SUM(C12_REALITY), 2) "c12Reality",
+       ROUND(SUM(C13_REALITY), 2) "c13Reality",
+       ROUND(SUM(C14_REALITY), 2) "c14Reality",
+       ROUND(SUM(C11_DIFF), 2) "c11Diff",
+       ROUND(SUM(C12_DIFF), 2) "c12Diff",
+       ROUND(SUM(C13_DIFF), 2) "c13Diff",
+       ROUND(SUM(C14_DIFF), 2) "c14Diff"
+  FROM (SELECT T.LINE,
+               T.THEORY_AMOUNT,
+               T.RELEASE_AMOUNT,
+               T.C11 / 1000 * NVL(DIMO_AMOUNT, 0) C11_BOM,
+               T.C12 / 1000 * NVL(DIMO_AMOUNT, 0) C12_BOM,
+               T.C13 / 1000 * NVL(DIMO_AMOUNT, 0) C13_BOM,
+               T.C14 / 1000 * NVL(DIMO_AMOUNT, 0) C14_BOM,
+               T.C11_INVALID,
+               T.C11_PERCENT,
+               T.C12_PERCENT,
+               T.C13_PERCENT,
+               T.C14_PERCENT,
+               T.RELEASE_AMOUNT,
+               T.DIMO_AMOUNT,
+               T.C11 / 1000 * NVL(DIMO_AMOUNT, 0) + C11_INVALID +
+               C11_PERCENT * NVL(RELEASE_AMOUNT, 0) C11_REALITY,
+               C12 / 1000 * NVL(DIMO_AMOUNT, 0) +
+               C12_PERCENT * NVL(RELEASE_AMOUNT, 0) C12_REALITY,
+               C13 / 1000 * NVL(DIMO_AMOUNT, 0) +
+               C13_PERCENT * NVL(RELEASE_AMOUNT, 0) C13_REALITY,
+               C14 / 1000 * NVL(DIMO_AMOUNT, 0) +
+               C14_PERCENT * NVL(RELEASE_AMOUNT, 0) C14_REALITY,
+               C11_INVALID + C11_PERCENT * NVL(RELEASE_AMOUNT, 0) C11_DIFF,
+               C12_PERCENT * NVL(RELEASE_AMOUNT, 0) C12_DIFF,
+               C13_PERCENT * NVL(RELEASE_AMOUNT, 0) C13_DIFF,
+               C14_PERCENT * NVL(RELEASE_AMOUNT, 0) C14_DIFF
+          FROM V_KS_DIAPHRAGM_ZM_DM T
+         WHERE TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD') >= #productDtStart#
+           AND TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+           <isNotNull prepend="and" property="line"> 
+		       				T.LINE  = #line#
+			</isNotNull>)
+ ORDER BY MYORDER,  "line"
+  
   
   </select>
  </sqlMap>

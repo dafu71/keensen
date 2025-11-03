@@ -91,6 +91,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 							});
 				}
 			}, this);
+
 }
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onDeleteOrder = function() {
@@ -313,6 +314,8 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.chooseOrderOk = func
 	if (records.length == 0)
 		return;
 	var record = records[0];
+	
+	var orderId = record.data.id;
 	var materSpecName2 = record.data.materSpecName2;
 	var orderNo = record.data.orderNo;
 	var dryWet = record.data.dryWet;
@@ -327,7 +330,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.chooseOrderOk = func
 	var label = record.data.labelBase;
 	var bag = record.data.bagBase;
 	var box = record.data.boxBase;
-	
+
 	var quantityPerBox = record.data.packingNum;
 	var tumoBatchStr = record.data.tumoBatchStr;
 
@@ -348,6 +351,8 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.chooseOrderOk = func
 	obj.makeLabelBase.setValue(makeLabelBase);
 	obj.quantityPerBox.setValue(quantityPerBox);
 	obj.tumoBatchStr.setValue(tumoBatchStr);
+	
+	obj.orderId.setValue(orderId);
 
 	this.chooseOrderWindow.hide();
 }
@@ -360,6 +365,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.queryHWaterTest = fu
 	var lst = this.editWindow4ModifyOrder.hidden
 			? this.ListPanel4AddOrder
 			: this.listPanel4ModifyOrder;
+	var orderAmount = obj.orderAmount.getValue();
 	lst.store.removeAll();
 	var tumoBatchStr = obj.tumoBatchStr.getValue();
 
@@ -375,6 +381,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.queryHWaterTest = fu
 	}
 
 	this.hWaterTestStore.baseParams = {
+		'condition/orderAmount' : orderAmount,
 		'condition/batchNoStr' : arr2.join(',')
 	};
 	this.hWaterTestStore.load({});
@@ -409,8 +416,9 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.calculateBox = funct
 	var orderType = obj.orderType.getValue();
 	var applyAmount = obj.applyAmount.getValue();
 	var materSpecName2 = obj.prodSpecName.getValue();
-	
-	//alert(makeLabelBase + '----' + orderType + '----' + applyAmount + '----' +materSpecName2) ;
+
+	// alert(makeLabelBase + '----' + orderType + '----' + applyAmount + '----'
+	// +materSpecName2) ;
 
 	if (Ext.isEmpty(makeLabelBase) || Ext.isEmpty(orderType)
 			|| Ext.isEmpty(applyAmount) || Ext.isEmpty(materSpecName2)) {
@@ -524,7 +532,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.calculateBox = funct
 		if (arr[2] == '600') {
 			markSn += '600'
 		}
-		
+
 		if (arr[2] == '600S') {
 			markSn += '60S'
 		}
@@ -562,16 +570,15 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.calculateBox = funct
 		default :
 			monthCode = mon.substr(1);
 	}
-	
 
-	markSn += yearCode + monthCode ;
+	markSn += yearCode + monthCode;
 
 	var markSnStart = '1'.padStart(7, "0");
 	var markSnEnd = ('' + quantityBox).padStart(7, "0");
-	
+
 	obj.markSnStart.setValue(markSn + markSnStart);
 	obj.markSnEnd.setValue(markSn + markSnEnd);
-} 
+}
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onViewOrder = function() {
 	var B = this.listPanel.getSelectionModel().getSelections();

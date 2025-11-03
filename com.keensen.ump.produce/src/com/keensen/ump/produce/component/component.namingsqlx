@@ -40,6 +40,10 @@
        T1.CONFIRMEDBY_USERID AS "confirmedbyUserid"
   FROM KS_PROD_COMPONENT_ORDER T1
     where 1=1
+    
+    
+   
+	
     <isNotNull prepend = "and"  property = "createTimeStart"> 
           to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
      </isNotNull>
@@ -228,27 +232,116 @@
 	
 	<select id="queryTemporaryArea" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	
-	SELECT T1.CREATE_TIME    AS "createTime",
+	SELECT TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
-       T1.CREATE_NAME    AS "createName",
-       T1.UPDATE_TIME    AS "updateTime",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
        T1.UPDATE_USER_ID AS "updateUserId",
-       T1.UPDATE_NAME    AS "updateName",
-       T1.RESERVE1       AS "reserve1",
-       T1.RESERVE2       AS "reserve2",
-       T1.RESERVE3       AS "reserve3",
-       T1.RESERVE4       AS "reserve4",
-       T1.RESERVE5       AS "reserve5",
-       T1.ORG_ID         AS "orgId",
-       T1.STATUS         AS "status",
-       T1.STORAGE_NAME   AS "storageName",
-       T1.POSITION       AS "position",
-       T1.AMOUNT         AS "amount",
-       T1.STORAGE_ID     AS "storageId",
-       T1.BATCH_NO       AS "batchNo"
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.STORAGE_NAME AS "storageName",
+       T1.POSITION AS "position",
+       T1.AMOUNT AS "amount",
+       T1.STORAGE_ID AS "storageId",
+       T1.BATCH_NO AS "batchNo",
+       T1.WORKSHOP "workshop",
+       TM.PRODUCE_DT "produceDt",
+       TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'), 'YYYY-MM-DD') -
+       TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') "diff",
+       TM.SPEC_ID "specId",
+       PMS.MATER_SPEC_NAME "specName",
+       TM2.REMAIN_LENGTH "remainLength",
+       
+       (CASE
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 84) AND
+              (TM2.MATER_CLASS_CODE = 'ULP' OR TM2.MATER_CLASS_CODE = 'BW' OR
+              TM2.MATER_CLASS_CODE = 'HW') THEN
+          'red'
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 174) AND
+              (TM2.MATER_CLASS_CODE = 'SW' OR TM2.MATER_CLASS_CODE = 'NF') THEN
+          'red'
+       
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 70) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) &lt;= 84) AND
+              (TM2.MATER_CLASS_CODE = 'ULP' OR TM2.MATER_CLASS_CODE = 'BW' OR
+              TM2.MATER_CLASS_CODE = 'HW') THEN
+          'yellow'
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 170) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) &lt;= 174) AND
+              (TM2.MATER_CLASS_CODE = 'SW' OR TM2.MATER_CLASS_CODE = 'NF') THEN
+          'yellow'
+       
+       END) "ifWarn"
+
   FROM KS_PROD_COMPONENT_TEMPAREA T1
 
-	where 1=1
+  LEFT JOIN (SELECT NVL(T1.IS_CUT_OVER, 'N') IS_CUT_OVER,
+                    NVL(T1.OUT_LENGTH, 0) OUT_LENGTH,
+                    T1.BATCH_NO,
+                    NVL(T2.CAIMO_LENGTH, 0) CAIMO_LENGTH,
+                    NVL(WST.LOSS, 0) WASTE_LOSS,
+                    PMC.MATER_CLASS_CODE,
+                    CASE
+                      WHEN NVL(T1.IS_CUT_OVER, 'N') = 'Y' THEN
+                       0
+                      ELSE
+                       NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
+                       NVL(WST.LOSS, 0)
+                    END REMAIN_LENGTH
+               FROM QINSEN.INST_TUMO T1
+               LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                 ON PMS.MATER_SPEC_ID = T1.SPEC_ID
+               LEFT JOIN QINSEN.PARA_MATER_CLASS PMC
+                 ON PMS.MATER_CLASS_ID = PMC.MATER_CLASS_ID
+               LEFT JOIN V_KS_DIAPHRAGM_TM_WASTE WST
+                 ON WST.TUMO_BATCH_ID = T1.RECORD_ID
+               LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE *
+                                    CS.MP_WIDTH *
+                                    DECODE(NVL(C.PAGE_TYPE, '长页'),
+                                           '长页',
+                                           1,
+                                           0.5)) CAIMO_LENGTH,
+                                C.TUMO_BATCH_ID
+                           FROM QINSEN.INST_CAIDIEMO   C,
+                                QINSEN.PARA_MATER_SPEC CS
+                          WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
+                          GROUP BY C.TUMO_BATCH_ID) T2
+                 ON T2.TUMO_BATCH_ID = T1.RECORD_ID) TM2
+    ON TM2.BATCH_NO = T1.BATCH_NO
+
+  LEFT JOIN QINSEN.INST_TUMO TM
+    ON T1.BATCH_NO = TM.BATCH_NO
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = TM.SPEC_ID
+ WHERE 1 = 1
 	<isNotNull prepend="and" property="batchNoStr"> 
 		       t1.batch_no in($batchNoStr$)
 	</isNotNull>
@@ -270,6 +363,65 @@
 	<isNotNull prepend="and" property="position"> 
 		       T1.POSITION like '%' || #position# || '%'
 	</isNotNull>
+	
+	<isNotNull prepend="and" property="specName"> 
+		       pms.mater_spec_name like '%' || #specName# || '%'
+	</isNotNull>
+	
+	 <isNotNull prepend="and" property="workshop"> 
+		      t1.workshop = #workshop#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="ifWarn"> 
+	
+	(CASE
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 84) AND
+              (TM2.MATER_CLASS_CODE = 'ULP' OR TM2.MATER_CLASS_CODE = 'BW' OR
+              TM2.MATER_CLASS_CODE = 'HW') THEN
+          'red'
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 174) AND
+              (TM2.MATER_CLASS_CODE = 'SW' OR TM2.MATER_CLASS_CODE = 'NF') THEN
+          'red'
+       
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 70) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) &lt;= 84) AND
+              (TM2.MATER_CLASS_CODE = 'ULP' OR TM2.MATER_CLASS_CODE = 'BW' OR
+              TM2.MATER_CLASS_CODE = 'HW') THEN
+          'yellow'
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 170) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) &lt;= 174) AND
+              (TM2.MATER_CLASS_CODE = 'SW' OR TM2.MATER_CLASS_CODE = 'NF') THEN
+          'yellow'
+       
+       END) = #ifWarn#
+	
+	
+	
+	</isNotNull>
+	
+	order by t1.CREATE_TIME desc
 	 </select>
 	 
 	 <select id="queryHuanku" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
@@ -292,5 +444,83 @@
 	</isNotNull>
 	 </select>
 	 
+	  <select id="queryTumo4Temparea" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   		SELECT NVL(T1.IS_CUT_OVER, 'N') IS_CUT_OVER,
+       NVL(T1.OUT_LENGTH, 0) OUT_LENGTH,
+       T1.BATCH_NO "batchNo",
+       NVL(T2.CAIMO_LENGTH, 0) CAIMO_LENGTH,
+       NVL(WST.LOSS, 0) WASTE_LOSS,
+       CASE
+         WHEN NVL(T1.IS_CUT_OVER, 'N') = 'Y' THEN
+          0
+         ELSE
+          NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(WST.LOSS, 0)
+       END "remainLength"
+  FROM QINSEN.INST_TUMO T1
+  LEFT JOIN V_KS_DIAPHRAGM_TM_WASTE WST
+    ON WST.TUMO_BATCH_ID = T1.RECORD_ID
+  LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * CS.MP_WIDTH *
+                        DECODE(NVL(C.PAGE_TYPE, '长页'), '长页', 1, 0.5)) CAIMO_LENGTH,                    
+                    C.TUMO_BATCH_ID
+               FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
+              WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
+              GROUP BY C.TUMO_BATCH_ID) T2
+    ON T2.TUMO_BATCH_ID = T1.RECORD_ID
+    where 1=1
+    and not exists(select 1 from KS_PROD_COMPONENT_TEMPAREA t where t.batch_no = t1.batch_no)
+    and NVL(T1.IS_CUT_OVER, 'N') = 'N'
+    and (CASE
+         WHEN NVL(T1.IS_CUT_OVER, 'N') = 'Y' THEN
+          0
+         ELSE
+          NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(WST.LOSS, 0)
+       END )>0
+   	<isNotNull prepend="and" property="batchNo"> 
+		       T1.BATCH_NO = #batchNo#
+	</isNotNull>
+   	
+	  </select>
+	  
+	  <delete id="deleteTemparea" parameterClass="java.util.HashMap" >
+   delete from  KS_PROD_COMPONENT_TEMPAREA t
+	WHERE
+	  1=1
+	  and exists(	  
+		  select 1 from
+		  (SELECT NVL(T1.IS_CUT_OVER, 'N') IS_CUT_OVER,
+	       NVL(T1.OUT_LENGTH, 0) OUT_LENGTH,
+	       T1.BATCH_NO ,
+	       NVL(T2.CAIMO_LENGTH, 0) CAIMO_LENGTH,
+	       NVL(WST.LOSS, 0) WASTE_LOSS,
+	       CASE
+	         WHEN NVL(T1.IS_CUT_OVER, 'N') = 'Y' THEN
+	          0
+	         ELSE
+	          NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(WST.LOSS, 0)
+	       END "remainLength"
+	  FROM QINSEN.INST_TUMO T1
+	  LEFT JOIN V_KS_DIAPHRAGM_TM_WASTE WST
+	    ON WST.TUMO_BATCH_ID = T1.RECORD_ID
+	  LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * CS.MP_WIDTH *
+	                        DECODE(NVL(C.PAGE_TYPE, '长页'), '长页', 1, 0.5)) CAIMO_LENGTH,                    
+	                    C.TUMO_BATCH_ID
+	               FROM QINSEN.INST_CAIDIEMO C, QINSEN.PARA_MATER_SPEC CS
+	              WHERE C.PROD_SPEC_ID = CS.MATER_SPEC_ID
+	              GROUP BY C.TUMO_BATCH_ID) T2
+	    ON T2.TUMO_BATCH_ID = T1.RECORD_ID
+	    
+	    where 1=1
+     and NVL(T1.IS_CUT_OVER, 'N') = 'Y'
+    and (CASE
+         WHEN NVL(T1.IS_CUT_OVER, 'N') = 'Y' THEN
+          0
+         ELSE
+          NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) - NVL(WST.LOSS, 0)
+       END )&lt;= 0) tt
+	    where tt.BATCH_NO = t.batch_no 
+	  
+	  )
+	</delete>
+	  
 	
 </sqlMap>

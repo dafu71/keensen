@@ -35,6 +35,18 @@
       <process:from type="expression" pattern="reference">new Date()</process:from>
       <process:to type="query">entity/changeDt</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">entity/c72InvalidName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">entity/c72InvalidTime</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/c72InvalidUserId</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>

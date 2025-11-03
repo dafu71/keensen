@@ -208,7 +208,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					}, '->', {
 						text : '删除',
 						scope : this,
-						hidden: uid != 'KS00307' && uid != 'LHY',
+						hidden : uid != 'KS00307' && uid != 'LHY'
+								&& uid != 'dafu',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],
@@ -921,7 +922,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 												.getValue();
 										var pageWidth = this.planDayWindow.pageWidth
 												.getValue();
-										//pageWidth = parseFloat(pageWidth) == 1.048? 1:pageWidth;
+										// pageWidth = parseFloat(pageWidth) ==
+										// 1.048? 1:pageWidth;
 										var jmAmount = record.get('amount');
 										var useAmount = numPerWad
 												* blankingSize * jmAmount
@@ -1102,7 +1104,17 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							// readOnly : true,
 							minValue : 1,
 							anchor : '85%',
-							colspan : 3
+							colspan : 3,
+							listeners : {
+								scope : this,
+								'blur' : function() {
+									var batchNo = this.planDayWindow.batchNo
+											.getValue();
+									this.planDayWindow.batchNo.setValue(batchNo
+											.trim());
+								}
+							}
+
 						}, {
 							xtype : 'displayfield',
 							height : '5',

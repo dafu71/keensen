@@ -326,14 +326,30 @@ and nvl(t1.status,1) != 0
 	LEFT JOIN v_ac_operator_trs v
 	ON t.worker_id = v.operatorid</select>
     <select id="queryHWaterTest" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.id "id",t.gpd "gpd"  ,t.salt "salt",t.batch_no "batchNo",
-   	t.is_prod_qualified "isProdQualified" from KS_QUALITY_HH_WATER_TEST t
+   	t.is_prod_qualified "isProdQualified" 
+   	,v.salt "sameSalt", v.gpd "sameGpd"
+   	from KS_QUALITY_HH_WATER_TEST t
+   	left join V_KS_HH_WATER_TEST_BATCH_NO v
+   	on v.batch_no = t.batch_no
+	WHERE t.id IN(SELECT MAX(ID) FROM KS_QUALITY_HH_WATER_TEST GROUP BY batch_no)
+	AND t.batch_no in ($batchNoStr$)
+	ORDER BY t.batch_no</select>
+    <!--订单数小于50，则取同底膜水测-->
+    <select id="queryHWaterTest2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.id "id",nvl(t.gpd,v.gpd) "gpd"  ,nvl(t.salt,v.salt) "salt",t.batch_no "batchNo",
+   	t.is_prod_qualified "isProdQualified" 
+   	,v.salt "sameSalt", v.gpd "sameGpd"
+   	from KS_QUALITY_HH_WATER_TEST t
+   	left join V_KS_HH_WATER_TEST_BATCH_NO v
+   	on v.batch_no = t.batch_no
 	WHERE t.id IN(SELECT MAX(ID) FROM KS_QUALITY_HH_WATER_TEST GROUP BY batch_no)
 	AND t.batch_no in ($batchNoStr$)
 	ORDER BY t.batch_no</select>
     <select id="queryHHCheckTumo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT t.id "id",t.gpd "gpd"  ,t.salt "salt",t.batch_no "batchNo",
    	t.is_prod_qualified "isProdQualified",t.amount "amount",t.batch_no_str "batchNoStr" ,
    	to_char(t.jm_produce_dt,'YYYY-MM-DD') "jmProduceDt" 
+   		
    	from KS_COMPONENT_HH_CHECK_TUMO t
+   
 	WHERE 1=1
 	AND t.relation_id = #relationId#
 	ORDER BY t.batch_no</select>
@@ -346,4 +362,60 @@ and nvl(t1.status,1) != 0
 	  ON t.pipe_code = t2.pipe_code
 	 WHERE nvl(t.status,1) = 1
 	 and t.pipe_Code = #pipeCode#</select>
+    <select id="queryTrim" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.ID             AS "id",
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       t1.machine_code as "machineCode",
+		t1.operate_user_id as "operateUserId",
+		t1.OPERATE_USER_NAME as "operateUserName",
+		t1.JUANMO_BATCH_ID as "juanmoBatchId",jm.batch_no "jmBatchNo",
+		jm.order_no "orderNo",pms.mater_spec_name "prodSpecName",
+		PMS.INTAKE_PIPE_LENGTH "intakePipeLength",
+       PMS.EFFLUENT_PIPE_LENGTH "effluentPipeLength",
+		t1.line_id as "lineId",
+		t1.is_overlap as "isOverlap"
+
+  FROM KS_COMPONENT_trim T1
+  left join QINSEN.INST_JUANMO_MAIN JM on jm.record_id  = t1.JUANMO_BATCH_ID
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID
+
+  where 1=1 and nvl(t1.status,1) != 0
+  
+  <isNotNull prepend="and" property="jmBatchNo">jm.batch_no like '%' ||  #jmBatchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo">jm.order_no like '%' ||  #orderNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="machineCode">T1.MACHINE_CODE = #machineCode#</isNotNull>
+        <isNotNull prepend="and" property="operateUserName">t1.OPERATE_USER_NAME like '%' ||  #operateUserName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="operateUserId">t1.operate_user_id = #operateUserId#</isNotNull>
+	
+	order by t1.id desc
+    
+    </select>
+    <select id="queryJuanmo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT JM.RECORD_ID "recordId",
+       JM.BATCH_NO "batchNo",
+       JM.ORDER_NO "orderNo",
+       JM.PROD_SPEC_ID "prodSpecId",
+       PMS.MATER_SPEC_NAME "prodSpecName",
+       PMS.INTAKE_PIPE_LENGTH "intakePipeLength",
+       PMS.EFFLUENT_PIPE_LENGTH "effluentPipeLength"
+  FROM QINSEN.INST_JUANMO_MAIN JM
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID
+ WHERE JM.BATCH_NO = #jmBatchNo#
+ and not exists(select 1 from KS_COMPONENT_trim where JUANMO_BATCH_ID = JM.RECORD_ID)</select>
 </sqlMap>

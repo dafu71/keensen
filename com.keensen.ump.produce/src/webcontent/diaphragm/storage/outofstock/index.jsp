@@ -20,6 +20,14 @@
 -->
 <head>
 <title>膜片出库</title>
+
+
+<!-- 导出Excel -->
+<script src="base/exceljs/polyfill.js"></script>
+<script src="base/exceljs/exceljs.min.js"></script>
+<script src="base/exceljs/FileSaver.min.js"></script>
+<script src="base/exceljs/doQueryAndExport.js"></script>
+
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.diaphragm.storage');
 </script>
@@ -27,11 +35,13 @@
 <ext:dict property="STORAGE_TYPE"   dictTypeId="STORAGE_TYPE" />
 <js:load scriptPath="pub/common/storageCombo.js" />
 <js:load scriptPath="pub/common/customerCombo.js" />
+<js:load scriptPath="pub/common/mpspecCombo.js" />
 <js:load scriptPath="produce/diaphragm/storage/outofstock/js/manageUi.js"/>
 <js:load scriptPath="produce/diaphragm/storage/outofstock/js/manageEv.js"/>
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var listid = 'outofstock-list';
+  var quantityTotalId = Ext.id();
   var currentWindow ='';
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.storage.OutofstockMgr

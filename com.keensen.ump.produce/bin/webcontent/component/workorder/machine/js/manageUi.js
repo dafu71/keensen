@@ -45,7 +45,8 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 													['包装', '包装'],
 													['焊管焊网', '焊管焊网'],
 													['裁网', '裁网'],
-													['绕丝', '绕丝']]
+													['绕丝', '绕丝'],
+													['切边', '切边']]
 										}),
 								mode : "local",
 								editable : false,
@@ -177,7 +178,8 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 													['包装', '包装'],
 													['焊管焊网', '焊管焊网'],
 													['裁网', '裁网'],
-													['绕丝', '绕丝']]
+													['绕丝', '绕丝'],
+													['切边', '切边']]
 									}),
 							mode : "local",
 							editable : false,
@@ -266,7 +268,8 @@ com.keensen.ump.produce.component.workorder.machineMgr = function() {
 													['包装', '包装'],
 													['焊管焊网', '焊管焊网'],
 													['裁网', '裁网'],
-													['绕丝', '绕丝']]
+													['绕丝', '绕丝'],
+													['切边', '切边']]
 									}),
 							mode : "local",
 							editable : false,
