@@ -129,6 +129,10 @@ com.keensen.ump.produce.component.markprintlistMgr = function() {
 						header : '元件序号',
 						sortable : true
 					}, {
+						dataIndex : 'printBatchNo',
+						header : '打印序号',
+						sortable : true
+					}, {
 						dataIndex : 'orderNo',
 						header : '订单号',
 						sortable : true
@@ -203,6 +207,8 @@ com.keensen.ump.produce.component.markprintlistMgr = function() {
 							name : 'ifPrint'
 						}, {
 							name : 'maxPrintDate'
+						}, {
+							name : 'printBatchNo'
 						}]
 			})
 		})

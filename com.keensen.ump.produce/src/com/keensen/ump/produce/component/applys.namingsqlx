@@ -134,7 +134,8 @@
        T1.TRAY "tray", T1.BOX "box",T1.PERFORMANCE "performance",
        <!--t2.apply_amount "applyAmountTotal",-->
        T1.is_examine "isExamine",
-       decode(t5.code,null,'否','是') "ifcstock",
+       <!--decode(t5.code,null,'否','是') "ifcstock",-->
+       t1.ifcstock  "ifcstock",
        decode(t1.confirm_date,null,'N','Y') "ifConfirmed"
        
        ,checked.apply_amount "checkedAmount"

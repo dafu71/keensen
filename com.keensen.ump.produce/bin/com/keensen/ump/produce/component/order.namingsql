@@ -29,7 +29,7 @@
        T1.CPXJ              AS "cpxj",
        T1.DDXJ              AS "ddxj",
        T1.ORDER_NO          AS "orderNo",
-       T1.ORDER_DATE        AS "orderDate",
+        NVL(T1.ORDER_DATE, to_date(TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd'), 'yyyy-MM-dd')) AS "orderDate",
        T1.HPMC              AS "hpmc",
        T1.DW                AS "dw",
        T1.MATER_SPEC_NAME   AS "materSpecName",T1.MATER_SPEC_Id   AS "materSpecId",
@@ -276,8 +276,8 @@ GROUP BY order_no,prod_spec_name) gchk on gchk.order_no = t1.order_no
         <isNotNull prepend="and" property="materSpecName">upper(t1.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
         <isNotNull prepend="and" property="materSpecName2">upper(t1.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
         <isNotNull prepend="and" property="dMaterSpecName">upper(t1.MATER_SPEC_NAME2) = upper(#dMaterSpecName#)</isNotNull>
-        <isNotNull prepend="and" property="orderDateStart">to_char(t1.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
-        <isNotNull prepend="and" property="orderDateEnd">to_char(t1.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="orderDateStart">to_char(nvl(T1.ORDER_DATE, T1.CREATE_TIME),'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
+        <isNotNull prepend="and" property="orderDateEnd">to_char(nvl(T1.ORDER_DATE, T1.CREATE_TIME),'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
         <isNotNull prepend="and" property="ifplan2">decode(nvl(t2.cnt,0),0,'N','Y') = #ifplan2#</isNotNull>
         <isNotNull prepend="and" property="planDateStart">exists(select 1 from KS_COMPONENT_PLAN_DAY pd
        where t1.id = pd.order_id and 
@@ -320,7 +320,10 @@ GROUP BY order_no,prod_spec_name) gchk on gchk.order_no = t1.order_no
        T2.DRY_WET         AS "dryWet",
        T2.BQ              AS "bq",
        T2.PERFORMANCE     AS "performance",
-       T2.ORDER_DATE      AS "orderDate",
+       <!--T2.ORDER_DATE      AS "orderDate",-->
+       
+       NVL(T2.ORDER_DATE, to_date(TO_CHAR(T2.CREATE_TIME, 'yyyy-MM-dd'), 'yyyy-MM-dd')) AS "orderDate",
+       
        t2.order_amount    AS "orderAmount",
        t2.xsc             AS "xsc",
        t3.cnt             AS "cnt",
@@ -349,8 +352,8 @@ GROUP BY order_no,prod_spec_name) gchk on gchk.order_no = t1.order_no
         <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
         <isNotNull prepend="and" property="materSpecName">upper(t2.MATER_SPEC_NAME) like '%' || upper(#materSpecName#) || '%'</isNotNull>
         <isNotNull prepend="and" property="materSpecName2">upper(t2.MATER_SPEC_NAME) = upper(#materSpecName2#)</isNotNull>
-        <isNotNull prepend="and" property="orderDateStart">to_char(t2.order_Date,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
-        <isNotNull prepend="and" property="orderDateEnd">to_char(t2.order_Date,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="orderDateStart">to_char(NVL(T2.ORDER_DATE, T2.CREATE_TIME),'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
+        <isNotNull prepend="and" property="orderDateEnd">to_char(NVL(T2.ORDER_DATE, T2.CREATE_TIME),'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
      order by t1.relation_Id desc,t1.id desc
 	 </select>
     <insert id="insertPlanWeekDays" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_PLAN_WEEK_DAYS
@@ -1040,7 +1043,7 @@ GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.
   FROM KS_COMPONENT_MATER_RELATION T1
   LEFT JOIN qinsen.para_mater_spec pms 
   ON t1.mater_spec_id = pms.mater_spec_id
-  where 1=1
+  where 1=1 and pms.state = 'Y'
    <isNotNull prepend="and" property="materSpecName2">T1.MATER_SPEC_NAME2 like '%' || #materSpecName2# || '%'</isNotNull>
         <isNotNull prepend="and" property="materSpecName">T1.MATER_SPEC_NAME like '%' || #materSpecName# || '%'</isNotNull>
         <isNotNull prepend="and" property="materSpecName22">T1.MATER_SPEC_NAME2 = #materSpecName22#</isNotNull>

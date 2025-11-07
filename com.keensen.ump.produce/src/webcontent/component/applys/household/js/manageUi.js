@@ -23,6 +23,12 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 	}
 
 	this.initHWaterTestStore = function() {
+
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
+
 		this.hWaterTestStore = new Ext.data.JsonStore({
 			url : 'com.keensen.ump.produce.component.produce.queryHWaterTest3.biz.ext',
 			root : 'data',
@@ -160,11 +166,17 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						iconCls : 'icon-printer',
 						handler : this.onPrint
 					}, '->', {
+						text : '确认入C仓',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onCStock
+					}, '-', {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
 						disabled : (uid != 'KS00610') && (uid != 'KS01313')
-								&& (uid != 'KS00524') && (uid != 'dafu') && (uid != 'KS01479'),
+								&& (uid != 'KS00524') && (uid != 'dafu')
+								&& (uid != 'KS01479'),
 						handler : this.onDeleteOrder
 					}],
 			selModel : selModel,
@@ -183,11 +195,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						dataIndex : 'orderType',
 						sortable : true,
 						header : '订单类型'
-					}/*, {
-						dataIndex : 'ifcstock',
-						sortable : true,
-						header : '已确认入C仓'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'ifcstock', sortable : true, header :
+						 * '已确认入C仓' }
+						 */, {
 						dataIndex : 'markSpecCode',
 						sortable : true,
 						header : '唛头显示型号'
@@ -195,6 +206,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						dataIndex : 'prodSpecName',
 						sortable : true,
 						header : '元件型号'
+					}, {
+						dataIndex : 'ifcstock',
+						sortable : true,
+						header : '已确认入C仓'
 					}, {
 						dataIndex : 'orderAmount',
 						sortable : true,
@@ -207,13 +222,11 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						dataIndex : 'checkedAmount',
 						sortable : true,
 						header : '请检总数量'
-					}/*, {
-						dataIndex : 'storage',
-						xtype : 'dictcolumn',
-						dictData : KS_PROD_STORAGE,
-						sortable : true,
-						header : '入库'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'storage', xtype : 'dictcolumn',
+						 * dictData : KS_PROD_STORAGE, sortable : true, header :
+						 * '入库' }
+						 */, {
 						dataIndex : 'applyUserName',
 						sortable : true,
 						header : '请检人'
@@ -226,7 +239,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						sortable : true,
 						dictData : KS_YESORNO,
 						dataIndex : 'ifConfirmed',
-						header : '是否已 确认'
+						header : '是否已确认'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.applys.queryHHApplyByPage.biz.ext',
@@ -734,7 +747,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 
 		this.inputPanel4AddOrder = this.inputPanel4AddOrder
 				|| new Ext.fn.InputPanel({
-					height : 420,
+					height : 440,
 					region : 'north',
 					baseCls : "x-panel",
 					autoHide : false,
@@ -744,7 +757,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 					saveUrl : 'com.keensen.ump.produce.component.applys.addHHApply.biz.ext',
 					fields : [{
 								xtype : 'trigger',
-								triggerClass :'x-form-search-trigger',
+								triggerClass : 'x-form-search-trigger',
 								emptyText : '单击旁边按钮选择订单',
 								name : 'reserve1',
 								ref : '../orderNo',
@@ -856,10 +869,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 													['灰', '灰'], ['水光蓝', '水光蓝']]
 										}),
 								mode : "local",
-								//editable : false,
+								// editable : false,
 								displayField : "myvalue",
 								valueField : "mykey",
-								//forceSelection : true,
+								// forceSelection : true,
 								emptyText : "--请选择--",
 								listeners : {
 									scope : this,
@@ -940,7 +953,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								colspan : 12
 							}, {
 								xtype : 'trigger',
-								triggerClass :'x-form-search-trigger',
+								triggerClass : 'x-form-search-trigger',
 								emptyText : '单击旁边按钮计算',
 								name : 'quantityPerBox',
 								ref : '../quantityPerBox',
@@ -972,34 +985,23 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								allowBlank : false,
 								anchor : '100%',
 								colspan : 4
-							}/*, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 12
-							}, {
-								xtype : 'textfield',
-								ref : '../markSnStart',
-								name : 'markSnStart',
-								fieldLabel : '唛头起始号',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4
-							}, {
-								xtype : 'textfield',
-								ref : '../markSnEnd',
-								name : 'markSnEnd',
-								fieldLabel : '唛头尾号',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4
-							}*/, {
+							}/*
+								 * , { xtype : 'displayfield', height : '5',
+								 * colspan : 12 }, { xtype : 'textfield', ref :
+								 * '../markSnStart', name : 'markSnStart',
+								 * fieldLabel : '唛头起始号', allowBlank : false,
+								 * anchor : '100%', colspan : 4 }, { xtype :
+								 * 'textfield', ref : '../markSnEnd', name :
+								 * 'markSnEnd', fieldLabel : '唛头尾号', allowBlank :
+								 * false, anchor : '100%', colspan : 4 }
+								 */, {
 								xtype : 'displayfield',
 								fieldLabel : '<p style="color:red;">膜片批次</p>',
 								labelSeparator : '',// 去掉冒号
 								colspan : 12
 							}, {
 								xtype : 'trigger',
-								triggerClass :'x-form-search-trigger',
+								triggerClass : 'x-form-search-trigger',
 								emptyText : '输入膜片批次,单击旁边按钮加载水测记录',
 								name : 'tumoBatchStr',
 								ref : '../tumoBatchStr',
@@ -1016,6 +1018,60 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									_this.queryHWaterTest();
 								}
 							}, {
+								xtype : 'displayfield',
+								fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+								labelSeparator : '',// 去掉冒号
+								colspan : 12
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '是否待处理元件',
+								ref : '../ifwaited',
+								hiddenName : 'ifwaited',
+								anchor : '95%',
+								colspan : 4,
+								emptyText : '--请选择--',
+								value : '否',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.inputPanel4AddOrder.ifwaited
+												.reset()
+									}
+								}
+							}, {
+								xtype : 'dictcheckboxgroup',
+								columns : 6,
+								ref : '../myabnormal',
+								// hiddenName : 'abnormal',
+								fieldLabel : '外观异常类型',
+								anchor : '95%',
+								colspan : 12,
+								dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'textarea',
+								name : 'abnormalExplain',
+								fieldLabel : '外观异常说明',
+								// allowBlank : false,
+								height : 30,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'textarea',
+								name : 'abnormalOther',
+								fieldLabel : '其他异常备注',
+								// allowBlank : false,
+								height : 30,
+								anchor : '95%',
+								colspan : 6
+							}, {
 								xtype : 'hidden',
 								ref : '../makeLabelBase',
 								name : 'reserve3'
@@ -1023,6 +1079,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								xtype : 'hidden',
 								ref : '../orderId',
 								name : 'orderId'
+							}, {
+								xtype : 'hidden',
+								ref : '../abnormal',
+								name : 'abnormal'
 							}],
 					buttons : [{
 								text : "保存",
@@ -1156,7 +1216,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 
 		this.editPanel4ModifyOrder = this.editPanel4ModifyOrder
 				|| new Ext.fn.EditPanel({
-					height : 420,
+					height : 440,
 					region : 'north',
 					// baseCls : "x-panel",
 					autoHide : false,
@@ -1167,7 +1227,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 					saveUrl : 'com.keensen.ump.produce.component.applys.ModifyHHApply.biz.ext',
 					fields : [{
 								xtype : 'trigger',
-								triggerClass :'x-form-search-trigger',
+								triggerClass : 'x-form-search-trigger',
 								emptyText : '单击旁边按钮选择订单',
 								name : 'reserve1',
 								dataIndex : 'reserve1',
@@ -1287,10 +1347,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 													['灰', '灰'], ['水光蓝', '水光蓝']]
 										}),
 								mode : "local",
-								//editable : false,
+								// editable : false,
 								displayField : "myvalue",
 								valueField : "mykey",
-								//forceSelection : true,
+								// forceSelection : true,
 								emptyText : "--请选择--",
 								listeners : {
 									scope : this,
@@ -1377,7 +1437,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								colspan : 12
 							}, {
 								xtype : 'trigger',
-								triggerClass :'x-form-search-trigger',
+								triggerClass : 'x-form-search-trigger',
 								emptyText : '单击旁边按钮计算',
 								name : 'quantityPerBox',
 								dataIndex : 'quantityPerBox',
@@ -1412,36 +1472,24 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								allowBlank : false,
 								anchor : '100%',
 								colspan : 4
-							}/*, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 12
-							}, {
-								xtype : 'textfield',
-								ref : '../markSnStart',
-								name : 'markSnStart',
-								dataIndex : 'markSnStart',
-								fieldLabel : '唛头起始号',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4
-							}, {
-								xtype : 'textfield',
-								ref : '../markSnEnd',
-								name : 'markSnEnd',
-								dataIndex : 'markSnEnd',
-								fieldLabel : '唛头尾号',
-								allowBlank : false,
-								anchor : '100%',
-								colspan : 4
-							}*/, {
+							}/*
+								 * , { xtype : 'displayfield', height : '5',
+								 * colspan : 12 }, { xtype : 'textfield', ref :
+								 * '../markSnStart', name : 'markSnStart',
+								 * dataIndex : 'markSnStart', fieldLabel :
+								 * '唛头起始号', allowBlank : false, anchor : '100%',
+								 * colspan : 4 }, { xtype : 'textfield', ref :
+								 * '../markSnEnd', name : 'markSnEnd', dataIndex :
+								 * 'markSnEnd', fieldLabel : '唛头尾号', allowBlank :
+								 * false, anchor : '100%', colspan : 4 }
+								 */, {
 								xtype : 'displayfield',
 								fieldLabel : '<p style="color:red;">膜片批次</p>',
 								labelSeparator : '',// 去掉冒号
 								colspan : 12
 							}, {
 								xtype : 'trigger',
-								triggerClass :'x-form-search-trigger',
+								triggerClass : 'x-form-search-trigger',
 								emptyText : '输入膜片批次,单击旁边按钮加载水测记录',
 								name : 'tumoBatchStr',
 								dataIndex : 'tumoBatchStr',
@@ -1459,6 +1507,63 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									_this.queryHWaterTest();
 								}
 							}, {
+								xtype : 'displayfield',
+								fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+								labelSeparator : '',// 去掉冒号
+								colspan : 12
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '是否待处理元件',
+								dataIndex : 'ifwaited',
+								ref : '../ifwaited',
+								hiddenName : 'ifwaited',
+								anchor : '95%',
+								colspan : 4,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.inputPanel4AddOrder.ifwaited
+												.reset()
+									}
+								}
+							}, {
+								xtype : 'dictcheckboxgroup',
+								columns : 6,
+								ref : '../myabnormal',
+								dataIndex : 'abnormal',
+								// hiddenName : 'abnormal',
+								fieldLabel : '外观异常类型',
+								anchor : '95%',
+								colspan : 12,
+								dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'textarea',
+								name : 'abnormalExplain',
+								dataIndex : 'abnormalExplain',
+								fieldLabel : '外观异常说明',
+								// allowBlank : false,
+								height : 30,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'textarea',
+								name : 'abnormalOther',
+								dataIndex : 'abnormalOther',
+								fieldLabel : '其他异常备注',
+								// allowBlank : false,
+								height : 30,
+								anchor : '95%',
+								colspan : 6
+							}, {
 								xtype : 'hidden',
 								name : 'id',
 								dataIndex : 'id'
@@ -1472,6 +1577,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								ref : '../orderId',
 								dataIndex : 'orderId',
 								name : 'orderId'
+							}, {
+								xtype : 'hidden',
+								ref : '../abnormal',
+								name : 'abnormal'
 							}],
 					buttons : [{
 								text : "保存",
@@ -1564,7 +1673,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 
 		this.editPanel4ViewOrder = this.editPanel4ViewOrder
 				|| new Ext.fn.EditPanel({
-					height : 420,
+					height : 440,
 					region : 'north',
 					// baseCls : "x-panel",
 					autoHide : false,
@@ -1735,27 +1844,17 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								fieldLabel : '尾箱元件数(支)',
 								anchor : '100%',
 								colspan : 4
-							}/*, {
-								xtype : 'displayfield',
-								height : '5',
-								colspan : 12
-							}, {
-								xtype : 'textfield',
-								readOnly : true,
-								ref : '../markSnStart',
-								dataIndex : 'markSnStart',
-								fieldLabel : '唛头起始号',
-								anchor : '100%',
-								colspan : 4
-							}, {
-								xtype : 'textfield',
-								readOnly : true,
-								ref : '../markSnEnd',
-								dataIndex : 'markSnEnd',
-								fieldLabel : '唛头尾号',
-								anchor : '100%',
-								colspan : 4
-							}*/, {
+							}/*
+								 * , { xtype : 'displayfield', height : '5',
+								 * colspan : 12 }, { xtype : 'textfield',
+								 * readOnly : true, ref : '../markSnStart',
+								 * dataIndex : 'markSnStart', fieldLabel :
+								 * '唛头起始号', anchor : '100%', colspan : 4 }, {
+								 * xtype : 'textfield', readOnly : true, ref :
+								 * '../markSnEnd', dataIndex : 'markSnEnd',
+								 * fieldLabel : '唛头尾号', anchor : '100%', colspan :
+								 * 4 }
+								 */, {
 								xtype : 'displayfield',
 								fieldLabel : '<p style="color:red;">膜片批次</p>',
 								labelSeparator : '',// 去掉冒号
@@ -1768,6 +1867,67 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								fieldLabel : '膜批次',
 								anchor : '100%',
 								colspan : 12
+							}, {
+								xtype : 'displayfield',
+								fieldLabel : '<p style="color:red;">外观不合格信息  </p>',
+								labelSeparator : '',// 去掉冒号
+								colspan : 12
+							}, {
+								xtype : 'combobox',
+								readOnly : true,
+								mode : 'local',
+								fieldLabel : '是否待处理元件',
+								dataIndex : 'ifwaited',
+								ref : '../ifwaited',
+								// hiddenName : 'ifwaited',
+								anchor : '95%',
+								colspan : 4,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.inputPanel4AddOrder.ifwaited
+												.reset()
+									}
+								}
+							}, {
+								xtype : 'dictcheckboxgroup',
+								columns : 6,
+								ref : '../myabnormal',
+								readOnly : true,
+								dataIndex : 'abnormal',
+								// hiddenName : 'abnormal',
+								fieldLabel : '外观异常类型',
+								anchor : '95%',
+								colspan : 12,
+								dictData : KS_COMPONENT_INDUSTRY_ABNORMAL
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'textarea',
+								// name : 'abnormalExplain',
+								readOnly : true,
+								dataIndex : 'abnormalExplain',
+								fieldLabel : '外观异常说明',
+								// allowBlank : false,
+								height : 30,
+								anchor : '95%',
+								colspan : 6
+							}, {
+								xtype : 'textarea',
+								// name : 'abnormalOther',
+								readOnly : true,
+								dataIndex : 'abnormalOther',
+								fieldLabel : '其他异常备注',
+								// allowBlank : false,
+								height : 30,
+								anchor : '95%',
+								colspan : 6
 							}, {
 								xtype : 'hidden',
 								ref : '../pkid',

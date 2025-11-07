@@ -240,13 +240,13 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					}, {
 						dataIndex : 'arrangeAmount',
 						header : '已排产数量'
-					}, {
+					}/*, {
 						dataIndex : 'bm',
 						header : '编码'
 					}, {
 						dataIndex : 'performance',
 						header : '产品性能'
-					}, {
+					}*/, {
 						dataIndex : 'materSpecName',
 						header : '规格型号'
 					}, {

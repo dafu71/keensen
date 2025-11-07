@@ -194,6 +194,16 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSave = function() 
 
 	if (pnl.form.isValid()) {
 
+		var itemArr = [];
+		var myCheckboxGroup = pnl.myabnormal;
+		for (var i = 0; i < myCheckboxGroup.items.length; i++) {
+			if (myCheckboxGroup.items.itemAt(i).checked) {
+				itemArr.push(i);
+			}
+		}
+
+		pnl.abnormal.setValue(itemArr.join(','));
+
 		var records = lst.store.getRange();
 		var entitys = [];
 		Ext.each(records, function(r) {
@@ -314,7 +324,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.chooseOrderOk = func
 	if (records.length == 0)
 		return;
 	var record = records[0];
-	
+
 	var orderId = record.data.id;
 	var materSpecName2 = record.data.materSpecName2;
 	var orderNo = record.data.orderNo;
@@ -351,7 +361,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.chooseOrderOk = func
 	obj.makeLabelBase.setValue(makeLabelBase);
 	obj.quantityPerBox.setValue(quantityPerBox);
 	obj.tumoBatchStr.setValue(tumoBatchStr);
-	
+
 	obj.orderId.setValue(orderId);
 
 	this.chooseOrderWindow.hide();
@@ -391,6 +401,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.queryHWaterTest = fu
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onAddOrder = function() {
 	this.ListPanel4AddOrder.store.removeAll();
 	this.inputPanel4AddOrder.form.reset();
+	this.inputPanel4AddOrder.ifwaited.setValue('否');
 	this.inputWindow4AddOrder.show();
 }
 
@@ -637,4 +648,58 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveConfirm = func
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onCStock = function() {
+
+	var _this = this;
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+			var record = B[0];
+			var pkid = record.data.id;
+			var ifcstock = record.data.ifcstock;
+			
+			
+			if (ifcstock == '是') {
+				Ext.Msg.alert("系统提示", "请选择未确认入C仓的数据!");
+				return
+			}
+
+			Ext.Msg.confirm("系统提示", "您确定入C仓吗？", function(D) {
+				if (D == "yes") {
+					_this.requestMask = _this.requestMask
+							|| new Ext.LoadMask(Ext.getBody(), {
+										msg : "后台正在操作,请稍候!"
+									});
+					_this.requestMask.show();
+					Ext.Ajax.request({
+						url : "com.keensen.ump.produce.component.applys.saveHHApplyHead.biz.ext",
+						method : "post",
+						jsonData : {
+							'entity/id' : pkid,
+							'entity/opt' : 'modify',
+							'entity/ifcstock' : '是'
+						},
+						success : function(resp) {
+							// 返回值处理
+
+							_this.listPanel.refresh();
+							_this.editWindow4ViewOrder.hide();
+
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
+				}
+			})
+
+		}
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
 }

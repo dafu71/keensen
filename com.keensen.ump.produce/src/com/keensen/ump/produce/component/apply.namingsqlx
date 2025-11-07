@@ -150,7 +150,7 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
        T1.batch_No    AS "batchNo",t1.prod_spec_name "prodSpecName",
        
        <!--nvl(t2.print_batch_no,T1.batch_No) "printBatchNo",-->
-       nvl(t2.batch_no,T1.batch_No) "printBatchNo",
+       nvl(nvl(t2.print_batch_no,t2.batch_no),T1.batch_No) "printBatchNo",
        
        DECODE(T3.JUANMO_BATCH_ID,NULL,nvl(t1.state,'干'),'湿') "state",
        h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",

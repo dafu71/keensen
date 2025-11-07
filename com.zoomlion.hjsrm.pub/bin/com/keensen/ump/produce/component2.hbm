@@ -1868,4 +1868,26 @@
             <column length="50" name="PROD_SPEC_NAME"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component2.KsComponentWorker" table="KS_COMPONENT_WORKER">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="userId" type="string">
+            <column length="24" name="USER_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="userName" type="string">
+            <column length="50" name="USER_NAME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="50" name="UPDATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="confirmCode" type="string">
+            <column length="50" name="CONFIRM_CODE"/>
+        </property>
+    </class>
 </hibernate-mapping>

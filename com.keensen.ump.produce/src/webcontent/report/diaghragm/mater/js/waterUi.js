@@ -216,6 +216,7 @@ com.keensen.ump.produce.report.diaghragm.MaterWaterMgr = function() {
 						}
 					}, {
 						dataIndex : 'c24Std',
+						hidden:true,
 						header : 'C24(kg)标准',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');
@@ -229,6 +230,7 @@ com.keensen.ump.produce.report.diaghragm.MaterWaterMgr = function() {
 						}
 					}, {
 						dataIndex : 'c24Weight',
+						hidden:true,
 						header : 'C24(kg)实际',
 						renderer : function(v, m, r, i) {
 							var batchNo = r.get('batchNo');

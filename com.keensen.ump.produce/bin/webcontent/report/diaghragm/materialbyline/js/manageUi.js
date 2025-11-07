@@ -193,12 +193,15 @@ com.keensen.ump.produce.report.diaghragm.MaterialByLineMgr = function() {
 						header : 'C22-A<br>差异'
 					}, {
 						dataIndex : 'c24Bom',
+						hidden:true,
 						header : 'C24<br>BOM用量'
 					}, {
 						dataIndex : 'c24Reality',
+						hidden:true,
 						header : 'C24<br>实际M用量'
 					}, {
 						dataIndex : 'c24Diff',
+						hidden:true,
 						header : 'C24<br>差异'
 					}, {
 						dataIndex : 'c29Bom',

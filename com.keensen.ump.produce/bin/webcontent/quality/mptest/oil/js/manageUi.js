@@ -307,6 +307,9 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						dataIndex : 'c41Invalid',
 						header : 'C41报废(kg)'
 					}, {
+						dataIndex : 'c41InvalidReason',
+						header : 'C41报废备注'
+					}, {
 						dataIndex : 'stateName',
 						header : '状态'
 					}, {
@@ -377,6 +380,8 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							name : 'c41Invalid'
 						}, {
 							name : 'totalC41Invalid'
+						}, {
+							name : 'c41InvalidReason'
 						}]
 			})
 		})
@@ -1760,6 +1765,21 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 									dataIndex : 'c41Invalid',
 									allowBlank : false,
 									fieldLabel : 'C41报废(kg)',
+									anchor : '95%',
+									colspan : 1
+								},{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									decimalPrecision : 4,
+									minValue : 0,
+									ref : '../../c41InvalidReason',
+									name : 'entity/c41InvalidReason',
+									dataIndex : 'c41InvalidReason',
+									allowBlank : false,
+									fieldLabel : '报废原因备注',
 									anchor : '95%',
 									colspan : 1
 								}, {

@@ -261,29 +261,27 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.clearInfo = function() 
 	var isTrial = _this.mainPanel.isTrial.getValue();
 	var prodSpecId = _this.mainPanel.prodSpecId.getValue();
 	var orderNo = _this.mainPanel.orderNo.getValue();
-	
-	
+
 	var pageCnt = _this.mainPanel.pageCnt.getValue();
 	var blankingSize = _this.mainPanel.blankingSize.getValue();
 	var denseNet = _this.mainPanel.denseNet.getValue();
 	var pageWidth = _this.mainPanel.pageWidth.getValue();
-	
-	
+
 	_this.cdmInfo = '';
 	_this.cdmPanel.form.reset();
 	_this.mainPanel.form.reset();
-	
-	//不清空混卷记录
-	//_this.detailGrid.getStore().loadData('');
+
+	// 不清空混卷记录
+	// _this.detailGrid.getStore().loadData('');
 	_this.cdmPanel.cdmBatchNo.focus();
 	_this.mainPanel.teamId.setValue(teamId);// 班组维持不变
 	_this.mainPanel.produceDt.setValue(new Date());
 	_this.mainPanel.trailer.setValue(trailer);
-	
+
 	_this.mainPanel.isTrial.setValue(isTrial);
 	_this.mainPanel.prodSpecId.setValue(prodSpecId);
 	_this.mainPanel.orderNo.setValue(orderNo);
-	
+
 	_this.mainPanel.pageCnt.setValue(pageCnt);
 	_this.mainPanel.blankingSize.setValue(blankingSize);
 	_this.mainPanel.denseNet.setValue(denseNet);
@@ -385,6 +383,13 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.validRecInfo = function
 // 保存数据
 com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 	var _this = this;
+
+	var pipeCode = this.mainPanel.pipeCode.getValue();
+	if (Ext.isEmpty(pipeCode)) {
+		Ext.Msg.alert("系统提示", "中心管组件编号不能为空！");
+		return false;
+	}
+
 	if (_this.validRecInfo()) {
 		var detail = new Array();
 		var list = _this.detailGrid.getStore().getRange();
@@ -418,7 +423,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 						var recordIdStr = ret.recordIdStr;
 						_this.mainPanel.produceDt.setValue(new Date());
 						_this.mainPanel.pipeCode.setValue('');
-						
+
 						Ext.Msg.alert("系统提示", '操作成功！', function() {
 							_this.clearInfo();
 							Ext.Msg.confirm('提示', '是否立即打印产品标签？', function(btn) {
@@ -458,15 +463,14 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 }
 
 com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.clearDetail = function() {
-	
+
 	this.mainPanel.pageCnt.setValue('');
 	this.mainPanel.blankingSize.setValue('');
 	this.mainPanel.denseNet.setValue('');
 	this.mainPanel.pageWidth.setValue('');
 	this.detailGrid.getStore().removeAll();
-	
-}
 
+}
 
 com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onGetDuty = function() {
 	var _this = this;
@@ -510,9 +514,9 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onGetDuty = function() 
 						_this.mainPanel.produceDt.setValue(new Date());
 
 						_this.mainPanel.pipeCode.setValue('');
-						
-						//清空混卷记录
-						//_this.detailGrid.getStore().loadData('');
+
+						// 清空混卷记录
+						// _this.detailGrid.getStore().loadData('');
 
 						var store = _this.jmdutyStore;
 						store.load({

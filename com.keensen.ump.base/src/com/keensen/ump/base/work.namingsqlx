@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   
+   <!-- 生产线查询 -->
+    <select id="queryLine" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">    
+		SELECT T1.LINE_ID         AS "lineId",
+			   T1.PROD_TACHE_ID   AS "prodTacheId",
+		       T1.LINE_CODE       AS "lineCode",
+		       T1.LINE_NAME       AS "lineName",
+		       T1.STATE           AS "state",
+		       decode(T1.state,'A','在用','X','失效','') "stateName",
+		       T1.DISP_ORDER      AS "dispOrder",
+		       T1.TACHE_CODE      AS "tacheCode",
+		       T1.TACHE_NAME      AS "tacheName",
+		       T1.WORKSHOP_ID     AS "workshopId",
+		       T1.DEPT_NAME       AS "deptName",
+		       T1.DEPT_TYPE_ID    AS "deptTypeId",
+		       T1.PROP_VALUE_CODE AS "propValueCode",
+		       T1.PROP_VALUE_NAME AS "propValueName"
+		  FROM (SELECT T.LINE_ID,
+		               T.LINE_CODE,
+		               T.LINE_NAME,
+		               T.STATE,
+		               T.DISP_ORDER,
+		               T.PROD_TACHE_ID,
+		               PT.TACHE_CODE,
+		               PT.TACHE_NAME,
+		               T.WORKSHOP_ID,
+		               BD.DEPT_NAME,
+		               BD.DEPT_TYPE_ID,
+		               BD.PROP_VALUE_CODE,
+		               BD.PROP_VALUE_NAME
+		          FROM QINSEN.BASE_PROD_LINE T
+		          LEFT JOIN QINSEN.BASE_PRODUCE_TACHE PT
+		            ON PT.TACHE_ID = T.PROD_TACHE_ID
+		          LEFT JOIN (SELECT T.DEPT_ID,
+		                           T.DEPT_NAME,
+		                           T.STATE,
+		                           T.DEPT_TYPE_ID,
+		                           TT.PROP_VALUE_CODE,
+		                           TT.PROP_VALUE_NAME
+		                      FROM QINSEN.BASE_DEPARTMENT T
+		                      LEFT JOIN (SELECT *
+		                                  FROM QINSEN.CONF_PROP_VALUE_OPTION T
+		                                 WHERE T.PROP_ID =
+		                                       (SELECT T.PROP_ID
+		                                          FROM QINSEN.CONF_PROP T
+		                                         WHERE T.PROP_CODE = 'DEPT_TYPE')) TT
+		                        ON TT.PROP_VALUE_ID = T.DEPT_TYPE_ID) BD
+		            ON BD.DEPT_ID = T.WORKSHOP_ID) T1
+		            
+		            where 1=1
+		            <isNotNull prepend="and" property="prodTacheId"> 
+		            T1.PROD_TACHE_ID= #prodTacheId#
+		            </isNotNull>
+		            <isNotNull prepend="and" property="lineCode"> 
+		            T1.LINE_CODE= #lineCode#
+		            </isNotNull>
+		            
+		            <isNotNull prepend="and" property="lineId"> 
+		            T1.LINE_ID= #lineId#
+		            </isNotNull>
+		            
+		            <isNotNull prepend="and" property="state"> 
+		            T1.state= #state#
+		            </isNotNull>
+		            
+		            <isNotNull prepend="and" property="lineName"> 
+		            T1.LINE_NAME like '%' || #lineName# || '%'
+		            </isNotNull>
+		            
+		 ORDER BY T1.PROD_TACHE_ID, to_number(T1.DISP_ORDER)   
+    
+    </select>
+    
+    <!-- 工序查询 -->
+     <select id="queryTache" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	     SELECT T.TACHE_ID "prodTacheId",
+	       T.TACHE_NAME || '(' || P.PRODUCT_NAME || ')' "prodTacheName"
+	  FROM QINSEN.BASE_PRODUCE_TACHE T
+	  LEFT JOIN QINSEN.BASE_PRODUCT P
+	    ON T.PRODUCT_ID = T.PRODUCT_ID
+	 ORDER BY TO_NUMBER(T.TACHE_ID)
+	 </select>
+	 
+	  <!-- 生产车间查询 -->
+     <select id="queryWorkshop" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+	     SELECT T.DEPT_ID "workshopId", T.DEPT_NAME "workshopName"
+	  FROM QINSEN.BASE_DEPARTMENT T
+	 WHERE T.DEPT_TYPE_ID = '17'
+	 </select>
+	 
+	 <!-- 查询编号是否重复 -->
+	<select id="qryDuplicateProdLineCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	
+	SELECT *
+      FROM QINSEN.BASE_PROD_LINE 
+     WHERE LINE_CODE = UPPER(#lineCode#)
+      <isNotNull prepend="and" property="prodTacheId">
+		   PROD_TACHE_ID = #prodTacheId#
+		 </isNotNull>	 
+		 <isNotNull prepend="and" property="lineId">	 
+		   LINE_ID &lt;&gt; #lineId#
+		 </isNotNull>
+		
+	</select>
+
+
+	<!-- 新增生产线 -->
+	<insert id="insertProdLine" parameterClass="java.util.HashMap">
+		
+			INSERT INTO QINSEN.BASE_PROD_LINE
+			  (LINE_ID, LINE_CODE, LINE_NAME, WORKSHOP_ID, GROUP_ID, DISP_ORDER,
+			   PROD_TACHE_ID, STATE,  
+			   CREATE_DT, CHANGE_DT, CREATOR_ID, CHANGER_ID, REMARK)
+			VALUES
+		  		(QINSEN.SEQ_BASE_PROD_LINE.NEXTVAL, UPPER(#lineCode#), #lineName#, #workshopId#, #groupId#, #dispOrder#,
+		  		 #prodTacheId#, #state#, 
+		  		 SYSDATE, SYSDATE, #operatorId#, #operatorId#, #remark#)
+	</insert>
+	
+	<!-- 修改生产线 -->
+	<update id="updateProdLine" parameterClass="java.util.HashMap">
+		UPDATE QINSEN.BASE_PROD_LINE A
+		   SET A.CHANGE_DT  = SYSDATE,
+			<isNotNull prepend="" property="lineCode">
+		       A.LINE_CODE = UPPER(#lineCode#),
+			</isNotNull>
+			<isNotNull prepend="" property="lineName">
+		       A.LINE_NAME = #lineName#,
+			</isNotNull>
+			<isNotNull prepend="" property="workshopId">
+		       A.WORKSHOP_ID = #workshopId#,
+			</isNotNull>
+			<isNotNull prepend="" property="groupId">
+		       A.GROUP_ID = #groupId#,
+			</isNotNull>
+			<isNotNull prepend="" property="dispOrder">
+		       A.DISP_ORDER = #dispOrder#,
+			</isNotNull>
+			<isNotNull prepend="" property="prodTacheId">
+		       A.PROD_TACHE_ID = #prodTacheId#,
+			</isNotNull>
+			<isNotNull prepend="" property="state">
+		       A.STATE = #state#,
+			</isNotNull>
+			<isNotNull prepend="" property="remark">
+		       A.REMARK = #remark#,
+			</isNotNull>
+		       A.CHANGER_ID = #operatorId#
+		 WHERE A.LINE_ID = #lineId#
+	</update>
+</sqlMap>

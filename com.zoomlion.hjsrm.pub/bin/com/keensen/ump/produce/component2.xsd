@@ -710,4 +710,15 @@
             <xs:element minOccurs="0" name="prodSpecName" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="KsComponentWorker">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="confirmCode" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

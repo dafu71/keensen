@@ -327,7 +327,7 @@ function initPage() {
 						var dayCode = getDayCode();// 获取入库日期编码
 			<%-- 循环开始--%>			
 			<% 	for (int i = 0; i < list.length; i++) { 		
-						String prodBatchNo = list[i].get("prodBatchNo").toString();
+						String prodBatchNo = list[i].get("printBatchNo").toString();
 						String ifPrintSpecName = list[i].get("ifPrintSpecName").toString();
 						String ifPrintBatchNo = list[i].get("ifPrintBatchNo").toString();
 						String ifPrintDryWet = list[i].get("ifPrintDryWet").toString();

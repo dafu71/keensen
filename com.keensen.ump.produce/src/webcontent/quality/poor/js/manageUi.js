@@ -24,7 +24,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 	this.initStore = function() {
 
 		this.industryInvalidTypeStore = new Ext.data.JsonStore({
-			url : 'com.keensen.ump.produce.quality.poorrecord.queryIndustryInvalidType.biz.ext',
+			url : 'com.keensen.ump.produce.quality.poorrecord.queryIndustryInvalidType2.biz.ext',
 			root : 'data',
 			autoLoad : true,
 			baseParams : {
@@ -38,7 +38,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 		});
 
 		this.invalidDealMethodStore = new Ext.data.JsonStore({
-			url : 'com.keensen.ump.produce.quality.poorrecord.queryInvalidDealMethod.biz.ext',
+			url : 'com.keensen.ump.produce.quality.poorrecord.queryInvalidDealMethod2.biz.ext',
 			root : 'data',
 			autoLoad : true,
 			baseParams : {
@@ -1407,7 +1407,7 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 								dataIndex : 'gpd',
 								header : '产水量'
 							}, {
-								dataIndex : 'belongType',
+								dataIndex : 'salt',
 								header : '脱盐率'
 							}, {
 								dataIndex : 'describe',

@@ -126,7 +126,7 @@
     <select id="queryMarkPrintList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    
     SELECT T1.JUANMO_BATCH_ID AS "juanmoBatchId",
-       T1.PROD_BATCH_NO AS "prodBatchNo",
+       T1.PROD_BATCH_NO AS "prodBatchNo",t1.PRint_BATCH_NO "printBatchNo",
        T1.PROD_SPEC_ID AS "prodSpecId",
        T1.ORDER_NO AS "orderNo",
        T1.JUANMO_BATCH_NO AS "juanmoBatchNo",
@@ -173,7 +173,7 @@
   FROM (
         
         SELECT T1.JUANMO_BATCH_ID, 
-                T1.BATCH_NO         PROD_BATCH_NO,
+                T1.BATCH_NO         PROD_BATCH_NO,nvl(T1.print_BATCH_NO ,T1.BATCH_NO)        PRint_BATCH_NO,
                 T1.PROD_SPEC_ID,
                 T4.ORDER_NO,
                 T2.BATCH_NO         JUANMO_BATCH_NO,

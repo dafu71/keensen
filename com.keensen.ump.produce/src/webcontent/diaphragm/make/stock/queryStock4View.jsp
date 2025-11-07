@@ -84,7 +84,7 @@
 	String diff = list[i].getString("diff");
 	int diff2 =Integer.valueOf(diff);
 	String style5="";
-	if(diff2>15){
+	if(diff2>45){
 		style5="style5";
 	}else{
 		style5="style4";
@@ -132,7 +132,7 @@
 	String diff = list2[i].getString("diff");
 	int diff2 =Integer.valueOf(diff);
 	String style5="";
-	if(diff2>15){
+	if(diff2>45){
 		style5="style5";
 	}else{
 		style5="style4";

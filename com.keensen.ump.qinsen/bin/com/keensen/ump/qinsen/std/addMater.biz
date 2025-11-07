@@ -8,8 +8,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link10</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link10</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="ret" type="query" valueType="Primitive">ret</process:return>
@@ -101,6 +101,7 @@
       <targetNode>invokePojo0</targetNode>
     </sourceConnections>
     <targetConnections>link7</targetConnections>
+    <targetConnections>link12</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseUtil.saveEntity</process:partner>
@@ -150,6 +151,16 @@
         <process:complexCondition>
           <process:code>1==2</process:code>
         </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" type="transition">
+      <sourceNode>subprocess2</sourceNode>
+      <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">entity/newBatchCode</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link6</targetConnections>
@@ -223,6 +234,22 @@
   <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
     <node>assign3</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign4" name="赋值4" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" isDefault="true" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link11</targetConnections>
+    <nodeLabel>assign4label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/mpBatchCode</process:from>
+      <process:to type="query">entity/newBatchCode</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign4</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

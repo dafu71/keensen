@@ -14,10 +14,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link23</targetConnections>
-    <targetConnections>link21</targetConnections>
-    <targetConnections>link20</targetConnections>
     <targetConnections>link14</targetConnections>
+    <targetConnections>link20</targetConnections>
+    <targetConnections>link21</targetConnections>
+    <targetConnections>link23</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="com.keensen.ump.produce.component.KsComponentYxorderBase" name="data" type="query" valueType="DataObject">data</process:return>
@@ -531,6 +531,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">appearance/countFloor</process:from>
       <process:to type="query">data/packingLayer</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">appearance/pack</process:from>
+      <process:to type="query">data/packingLid</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign8label" name="label" nodeType="label">

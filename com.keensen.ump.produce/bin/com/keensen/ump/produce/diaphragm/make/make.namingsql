@@ -259,7 +259,10 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
         <isNotNull prepend="and" property="productDtEnd">T1.PRODUCT_DT &lt;=   #productDtEnd#</isNotNull>
         <isNotNull prepend="" property="dimoBatchNo">AND T1.DIMO_BATCH_NO = #dimoBatchNo#</isNotNull>
         <isNotNull prepend="" property="dimoBatchNo2">AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'</isNotNull>
-        <isEqual compareValue="Y" prepend="" property="notLessthan100">AND T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)&gt;100</isEqual>
+        <isEqual compareValue="Y" prepend="" property="notLessthan100">
+            <!-- AND T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)>100-->
+		   and   T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) &gt;100
+	</isEqual>
 	
      order by t1.y desc,t1.m DESC,t1.d DESC
      </select>
@@ -272,7 +275,10 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
        T1.LOSE AS "lose",
        T1.THEORY_AMOUNT - T1.LOSE "dimoAmount",
        T2.PROD_LENGTH "prodLength",
-       T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue",t3.sup_name "supName",nvl(t3.pump_speed,'无') "pumpSpeed"
+       <!--T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue"-->
+       T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) "residue"
+       
+       ,t3.sup_name "supName",nvl(t3.pump_speed,'无') "pumpSpeed"
   FROM (SELECT T.DIMO_BATCH_NO,
                '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
                DECODE(SUBSTR(T.DIMO_BATCH_NO, 7, 1),
@@ -303,6 +309,22 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
                SUM(NVL(T.LOSE6, 0)) + SUM(NVL(T.LOSE7, 0)) LOSE
           FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T
          GROUP BY T.DIMO_BATCH_NO) T1
+         
+         
+         left join (SELECT SUM(LOSS) LOSE, DIMO_BATCH_NO
+  FROM (SELECT ZM.DIMO_BATCH_NO,
+               T.DM_BATCH_ID,
+               T.DEFECT_ITEM_ID,
+               T.IF_TEAR,
+               T.LOSS
+          FROM QINSEN.INST_CDM_DEFECT2 T
+          LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD ZM
+            ON T.DM_BATCH_ID = ZM.ID
+        )
+ GROUP BY DIMO_BATCH_NO)  t5
+ on t5.DIMO_BATCH_NO =  T1.DIMO_BATCH_NO    
+         
+         
   LEFT JOIN (SELECT T.DIMO_BATCH_NO, SUM(T.OUT_LENGTH) PROD_LENGTH
                FROM V_KS_TUMO_ALL T
               GROUP BY T.DIMO_BATCH_NO) T2
@@ -312,11 +334,13 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
  	on t2.prop_id = 30021 and t2.prop_value_id = t.SUP_ID) t3 ON t3.dimo_batch_no=t1.DIMO_BATCH_NO
  WHERE 1 = 1
  AND 
- T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)&gt;#num#
+ <!--T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)>#num#-->
+ 
+ T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) &gt;#num#
  
   <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
         <isNotNull prepend="" property="base">AND t3.base = #base#</isNotNull>
- ORDER BY T1.LINE,T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) desc
+ ORDER BY T1.LINE,T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) desc
      
      </select>
     <select id="countFix" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">

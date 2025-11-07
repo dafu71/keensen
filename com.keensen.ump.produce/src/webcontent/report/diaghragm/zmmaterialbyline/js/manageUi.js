@@ -132,7 +132,7 @@ com.keensen.ump.produce.report.diaghragm.ZmMaterialByLineMgr = function() {
 						header : 'C14<br>差异(kg)'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.report.diaghragm.queryZmMaterialByLine.biz.ext',
+				url : 'com.keensen.ump.produce.report.diaghragm.queryZmMaterialByLine2.biz.ext',
 				root : 'data',
 				autoLoad : false,
 				totalProperty : '',

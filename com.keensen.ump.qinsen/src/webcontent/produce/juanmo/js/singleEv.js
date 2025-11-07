@@ -145,6 +145,13 @@ com.keensen.ump.qinsen.produce.juanmo.singleMgr.prototype.genBatchNo = function(
 com.keensen.ump.qinsen.produce.juanmo.singleMgr.prototype.onSave = function() {
 	var _this = this;
 	if (this.inputPanel.form.isValid()) {
+
+		var pipeCode = this.inputPanel.pipeCode.getValue();
+		if (Ext.isEmpty(pipeCode)) {
+			Ext.Msg.alert("系统提示", "中心管组件编号不能为空！");
+			return false;
+		}
+
 		var produceDate = this.inputPanel.produceDt.getRawValue();
 		var date = new Date(produceDate);
 		produceDate = date.format('Ymd');

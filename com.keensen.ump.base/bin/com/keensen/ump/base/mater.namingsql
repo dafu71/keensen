@@ -264,7 +264,7 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 	  (#materSpecId#, UPPER(#materSpecCode#), #materSpecName#, 
 	   #materClassId#, #measurementUnit#, #plannedUnitPrice#, 
 	   'Y', #dispOrder#, #remark#, #thickness#, #width#, #length#, #supplierId#,
-	   #mpBatchCode#, #qtJudgeFlag#, #numPerWad#, #blankingSize#, #denseNet#, #area#, #pageWidth#,
+	   #mpBatchCode#, #qtJudgeFlag#, #numPerWad#, #blankingSize#, #denseNet#, #area#, #mpWidth#,
 	   sysdate, sysdate, #operatorId#, #operatorId#,
 	   #mpSize#,#mpWidth#,#denseNetType#,#denseNetWidth#,
 	   #denseNetCdm#,#lightNetType#,#lightNetLongPage#,
@@ -275,7 +275,7 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 	   SET A.CHANGE_DT = SYSDATE, 
 	   
 	   <isNotNull prepend="" property="mpSize">A.mp_Size= #mpSize#,</isNotNull>
-        <isNotNull prepend="" property="mpWidth">A.mp_Width= #mpWidth#,</isNotNull>
+        <isNotNull prepend="" property="mpWidth">A.mp_Width= #mpWidth#, A.page_Width= #mpWidth#,</isNotNull>
         <isNotNull prepend="" property="denseNetType">A.dense_Net_Type= #denseNetType#,</isNotNull>
         <isNotNull prepend="" property="denseNetWidth">A.dense_Net_Width= #denseNetWidth#,</isNotNull>
         <isNotNull prepend="" property="denseNetCdm">A.dense_Net_Cdm= #denseNetCdm#,</isNotNull>

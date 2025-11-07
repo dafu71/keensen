@@ -3338,5 +3338,17 @@
         <property name="c41Invalid" type="big_decimal">
             <column length="10" name="C41_INVALID" precision="10" scale="4"/>
         </property>
+        <property name="c41InvalidReason" type="string">
+            <column length="500" name="C41_INVALID_REASON"/>
+        </property>
+        <property name="c41InvalidTime" type="timestamp">
+            <column name="C41_INVALID_TIME"/>
+        </property>
+        <property name="c41InvalidUserId" type="string">
+            <column length="20" name="C41_INVALID_USER_ID"/>
+        </property>
+        <property name="c41InvalidName" type="string">
+            <column length="50" name="C41_INVALID_NAME"/>
+        </property>
     </class>
 </hibernate-mapping>

@@ -65,7 +65,7 @@
 			src="produce/quality/deliveryrecord/img/image001.jpg" width="161"
 			height="56"></td>
 		<td width="50%">
-		<div align="left" class="style0">地址：湖南省长沙市高新开发区麓谷麓天路6号</div>
+		<div align="left" class="style0">地址：湖南省长沙市望城区湘江新区明湖路370号</div>
 		</td>
 	</tr>
 	<tr>
