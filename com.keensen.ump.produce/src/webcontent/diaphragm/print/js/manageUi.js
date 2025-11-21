@@ -192,7 +192,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 				});
 
 		var templateData = [
-				["produce/diaphragm/print/img/mpmark1.png", "常用模板"],
+				["produce/diaphragm/print/img/mpmark99.png", "常用模板"],
 				["produce/diaphragm/print/img/mpmark0.jpg", "新MH发货模板"],
 				["produce/diaphragm/print/img/mpmark11.png", "BW SHEET模板"],
 				["produce/diaphragm/print/img/mpmark0.png",
@@ -248,6 +248,8 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr = function() {
 									fields : ["value", "text"],
 									data : templateData
 								}),
+								
+						value:'produce/diaphragm/print/img/mpmark99.png',
 						name : "templateValue",
 						mode : "local",
 						anchor : '100%',

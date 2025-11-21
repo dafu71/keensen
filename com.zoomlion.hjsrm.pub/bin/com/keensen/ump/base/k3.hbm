@@ -266,4 +266,141 @@
             <column length="50" name="FCOST_PERCENTAGE"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.base.k3.KsBaseK3BomMater" table="KS_BASE_K3_BOM_MATER">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id dummy="true">
+            <key-property name="updateTime" type="timestamp">
+                <column name="UPDATE_TIME"/>
+            </key-property>
+            <key-property name="updateUserId" type="string">
+                <column length="20" name="UPDATE_USER_ID"/>
+            </key-property>
+            <key-property name="updateName" type="string">
+                <column length="50" name="UPDATE_NAME"/>
+            </key-property>
+            <key-property name="fitemId" type="string">
+                <column length="10" name="FITEM_ID"/>
+            </key-property>
+            <key-property name="finterId" type="string">
+                <column length="10" name="FINTER_ID" not-null="true"/>
+            </key-property>
+            <key-property name="fnumber" type="string">
+                <column length="50" name="FNUMBER"/>
+            </key-property>
+            <key-property name="fname" type="string">
+                <column length="50" name="FNAME"/>
+            </key-property>
+            <key-property name="fmodel" type="string">
+                <column length="50" name="FMODEL"/>
+            </key-property>
+            <key-property name="fauxPropIdEnum" type="string">
+                <column length="50" name="FAUX_PROP_ID_ENUM"/>
+            </key-property>
+            <key-property name="fmaterielChildType" type="string">
+                <column length="50" name="FMATERIEL_CHILD_TYPE"/>
+            </key-property>
+            <key-property name="fmarshalTypeEnum" type="string">
+                <column length="50" name="FMARSHAL_TYPE_ENUM"/>
+            </key-property>
+            <key-property name="funitname" type="string">
+                <column length="50" name="FUNITNAME"/>
+            </key-property>
+            <key-property name="fqty" type="string">
+                <column length="50" name="FQTY"/>
+            </key-property>
+            <key-property name="fbeginDay" type="string">
+                <column length="50" name="FBEGIN_DAY"/>
+            </key-property>
+            <key-property name="fendDay" type="string">
+                <column length="50" name="FEND_DAY"/>
+            </key-property>
+            <key-property name="fpercent" type="string">
+                <column length="50" name="FPERCENT"/>
+            </key-property>
+            <key-property name="fscrap" type="string">
+                <column length="50" name="FSCRAP"/>
+            </key-property>
+            <key-property name="fpositionNo" type="string">
+                <column length="50" name="FPOSITION_NO"/>
+            </key-property>
+            <key-property name="fitemSize" type="string">
+                <column length="50" name="FITEM_SIZE"/>
+            </key-property>
+            <key-property name="fitemSuite" type="string">
+                <column length="50" name="FITEM_SUITE"/>
+            </key-property>
+            <key-property name="foperSn" type="string">
+                <column length="50" name="FOPER_SN"/>
+            </key-property>
+            <key-property name="foperName" type="string">
+                <column length="50" name="FOPER_NAME"/>
+            </key-property>
+            <key-property name="fmachinePos" type="string">
+                <column length="50" name="FMACHINE_POS"/>
+            </key-property>
+            <key-property name="foffSetDay" type="string">
+                <column length="50" name="FOFF_SET_DAY"/>
+            </key-property>
+            <key-property name="fbackFlushEnum" type="string">
+                <column length="50" name="FBACK_FLUSH_ENUM"/>
+            </key-property>
+            <key-property name="fisKeyitemEnum" type="string">
+                <column length="50" name="FIS_KEYITEM_ENUM"/>
+            </key-property>
+            <key-property name="fuseStateEnum" type="string">
+                <column length="50" name="FUSE_STATE_ENUM"/>
+            </key-property>
+            <key-property name="fdeletedEnum" type="string">
+                <column length="50" name="FDELETED_ENUM"/>
+            </key-property>
+            <key-property name="fstockName" type="string">
+                <column length="50" name="FSTOCK_NAME"/>
+            </key-property>
+            <key-property name="fspfullName" type="string">
+                <column length="50" name="FSPFULL_NAME"/>
+            </key-property>
+            <key-property name="fnote" type="string">
+                <column length="50" name="FNOTE"/>
+            </key-property>
+            <key-property name="fnote1" type="string">
+                <column length="50" name="FNOTE1"/>
+            </key-property>
+            <key-property name="fnote2" type="string">
+                <column length="50" name="FNOTE2"/>
+            </key-property>
+            <key-property name="fnote3" type="string">
+                <column length="50" name="FNOTE3"/>
+            </key-property>
+            <key-property name="fpdmimportDate" type="string">
+                <column length="50" name="FPDMIMPORT_DATE"/>
+            </key-property>
+            <key-property name="fhasCharEnum" type="string">
+                <column length="50" name="FHAS_CHAR_ENUM"/>
+            </key-property>
+            <key-property name="hasSubstitute" type="string">
+                <column length="50" name="HAS_SUBSTITUTE"/>
+            </key-property>
+            <key-property name="itemNote" type="string">
+                <column length="50" name="ITEM_NOTE"/>
+            </key-property>
+            <key-property name="fcostPercentage" type="string">
+                <column length="50" name="FCOST_PERCENTAGE"/>
+            </key-property>
+            <key-property name="parentBomNumber" type="string">
+                <column length="50" name="PARENT_BOM_NUMBER"/>
+            </key-property>
+            <key-property name="parentMaterialNumber" type="string">
+                <column length="50" name="PARENT_MATERIAL_NUMBER"/>
+            </key-property>
+            <key-property name="parentMaterialName" type="string">
+                <column length="50" name="PARENT_MATERIAL_NAME"/>
+            </key-property>
+            <key-property name="bomGroupName" type="string">
+                <column length="50" name="BOM_GROUP_NAME"/>
+            </key-property>
+            <key-property name="parentFmodel" type="string">
+                <column length="50" name="PARENT_FMODEL"/>
+            </key-property>
+        </composite-id>
+    </class>
 </hibernate-mapping>

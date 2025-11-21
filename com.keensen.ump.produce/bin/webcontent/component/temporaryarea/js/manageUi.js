@@ -197,6 +197,18 @@ com.keensen.ump.produce.component.TempareaMgr = function() {
 						dataIndex : 'createTime',
 						header : '入库时间'
 					}, {
+						dataIndex : 'diff2',
+						header : '入库超时报警',
+						renderer : function(v, m, r, i) {
+
+							if (v > 6) {
+								return '<img src="produce/component/semifinished/img/'
+										+ 'yellow'
+										+ '.png" width="20" height="20">';
+
+							}
+						}
+					}, {
 						dataIndex : 'createName',
 						header : '入库操作人'
 					}],
@@ -232,6 +244,8 @@ com.keensen.ump.produce.component.TempareaMgr = function() {
 							name : 'remainLength'
 						}, {
 							name : 'ifWarn'
+						}, {
+							name : 'diff2'
 						}]
 			})
 		})

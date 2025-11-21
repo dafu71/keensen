@@ -236,6 +236,8 @@
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
        TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') -
+       TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'), 'YYYY-MM-DD') "diff2",
        T1.UPDATE_USER_ID AS "updateUserId",
        T1.UPDATE_NAME AS "updateName",
        T1.RESERVE1 AS "reserve1",
@@ -251,7 +253,7 @@
        T1.STORAGE_ID AS "storageId",
        T1.BATCH_NO AS "batchNo",
        T1.WORKSHOP "workshop",
-       TM.PRODUCE_DT "produceDt",
+        TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI:SS') "produceDt",
        TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'), 'YYYY-MM-DD') -
        TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') "diff",
        TM.SPEC_ID "specId",
@@ -416,6 +418,56 @@
           'yellow'
        
        END) = #ifWarn#
+	
+	
+	
+	</isNotNull>
+	
+	
+	<isNotNull prepend="and" property="warn"> 
+	
+	(CASE
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 84) AND
+              (TM2.MATER_CLASS_CODE = 'ULP' OR TM2.MATER_CLASS_CODE = 'BW' OR
+              TM2.MATER_CLASS_CODE = 'HW') THEN
+          'red'
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 174) AND
+              (TM2.MATER_CLASS_CODE = 'SW' OR TM2.MATER_CLASS_CODE = 'NF') THEN
+          'red'
+       
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 70) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) &lt;= 84) AND
+              (TM2.MATER_CLASS_CODE = 'ULP' OR TM2.MATER_CLASS_CODE = 'BW' OR
+              TM2.MATER_CLASS_CODE = 'HW') THEN
+          'yellow'
+         WHEN (TM2.REMAIN_LENGTH > 0) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) > 170) AND
+              (ROUND(TO_DATE(TO_CHAR(T1.CREATE_TIME, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') -
+                     TO_DATE(TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD')) &lt;= 174) AND
+              (TM2.MATER_CLASS_CODE = 'SW' OR TM2.MATER_CLASS_CODE = 'NF') THEN
+          'yellow'
+       
+       END) in ('red','yellow')
 	
 	
 	

@@ -31,10 +31,9 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 						ref : '../reserve1',
 						hiddenName : 'condition/reserve1',
 						fieldLabel : '区域',
-						store : [['0', '裁叠膜工序'], ['1', '卷膜工序'], ['2', '气检工序'],
-								['3', '新基地水测工序'], ['4', '老基地水测工序'],
-								['5', '绕丝工序'], ['6', '包装工序'], ['7', '保留区'],
-								['8', '走廊存放区'], ['9', '历史呆滞品区'], ['10', '白膜仓库']],
+						store : [['1', '卷膜岗位'], ['2', '气检岗位'],
+								['5', '绕丝岗位'], ['6', '包装岗位'], ['11', '水测岗位'],
+								['10', '白膜仓库'], ['12', '返修仓库']],
 						listeners : {
 							scope : this,
 							'expand' : function(A) {
@@ -49,7 +48,7 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 						fieldLabel : '序号/批号'
 					}]
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "模板下载",
 					scope : this,
@@ -67,7 +66,7 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:uid != 'KS00307',
+					hidden : uid != 'KS00307',
 					handler : this.exportExcel
 				});
 
@@ -80,11 +79,11 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 			// title : '【盘点库存列表】',
 			region : "center",
 			viewConfig : {
-				// forceFit : true
+		// forceFit : true
 			},
 			hsPage : true,
-			
-			tbar : [ '->', {
+
+			tbar : ['->', {
 						text : '删除',
 						scope : this,
 						iconCls : 'icon-application_delete',
@@ -93,47 +92,46 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 			id : listid,
 			clicksToEdit : 1,
 			selModel : selModel,
-			delUrl:'com.keensen.ump.produce.component.stocktaking.deleteEntity.biz.ext',
+			delUrl : 'com.keensen.ump.produce.component.stocktaking.deleteEntity.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'batchNo2',
 						header : '导入序号',
-						width:100
+						width : 100
 					}, {
 						dataIndex : 'batchNo',
 						header : '元件序号',
-						width:100
+						width : 100
 					}, {
 						dataIndex : 'juanmoBatchNo',
 						header : '卷膜批号',
-						width:100
+						width : 100
 					}, {
 						dataIndex : 'materSpecName',
 						header : '生产规格型号',
-						width:100
+						width : 100
 					}, {
 						dataIndex : 'orderMaterSpecName',
 						header : '订单下达型号',
-						width:100
-					}/*, {
-						dataIndex : 'markSpecCode',
-						header : '唛头标签型号',
-						width:100
-					}*/, {
+						width : 100
+					}/*
+						 * , { dataIndex : 'markSpecCode', header : '唛头标签型号',
+						 * width:100 }
+						 */, {
 						dataIndex : 'produceDt',
 						header : '卷膜日期',
-						width:100
+						width : 100
 					}, {
 						dataIndex : 'step',
-						header : '工序',
-						width:100
+						header : '岗位',
+						width : 100
 					}, {
 						dataIndex : 'createTime',
 						header : '盘库时间',
-						width:120
+						width : 120
 					}, {
 						dataIndex : 'createName',
 						header : '盘库人',
-						width:100
+						width : 100
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.stocktaking.queryByPage.biz.ext',
@@ -192,19 +190,19 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 						xtype : 'displayfield',
 						height : '50',
 						colspan : 2
-					},{
+					}, {
 						xtype : 'displayfield',
 						ref : '../lastBatchNo',
-						fieldLabel:'<p style="color:red;font-size:12px;">上支元件</p>',
+						fieldLabel : '<p style="color:red;font-size:12px;">上支元件</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
-						fieldLabel:'<p style="color:red;font-size:12px;">总数量</p>',
+						fieldLabel : '<p style="color:red;font-size:12px;">总数量</p>',
 						labelSeparator : '',// 去掉冒号
 						ref : '../count',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'displayfield',
 						height : 10,
 						colspan : 2
@@ -217,51 +215,34 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 						allowBlank : false,
 						fieldLabel : '区域<span style="color:red">*</span>',
 						anchor : '100%',
-						items : [{
-									boxLabel : '裁叠膜工序',
-									name : 'entity/reserve1',
-									inputValue : '0',
-									checked : true
-								}, {
-									boxLabel : '卷膜工序',
+						items : [ {
+									boxLabel : '卷膜岗位',
 									name : 'entity/reserve1',
 									inputValue : '1'
 								}, {
-									boxLabel : '气检工序',
+									boxLabel : '气检岗位',
 									name : 'entity/reserve1',
 									inputValue : '2'
 								}, {
-									boxLabel : '新基地水测工序',
-									name : 'entity/reserve1',
-									inputValue : '3'
-								}, {
-									boxLabel : '老基地水测工序',
-									name : 'entity/reserve1',
-									inputValue : '4'
-								}, {
-									boxLabel : '绕丝工序',
+									boxLabel : '绕丝岗位',
 									name : 'entity/reserve1',
 									inputValue : '5'
 								}, {
-									boxLabel : '包装工序',
+									boxLabel : '水测岗位',
+									name : 'entity/reserve1',
+									inputValue : '11'
+								}, {
+									boxLabel : '包装岗位',
 									name : 'entity/reserve1',
 									inputValue : '6'
-								}, {
-									boxLabel : '保留区',
-									name : 'entity/reserve1',
-									inputValue : '7'
-								}, {
-									boxLabel : '走廊存放区',
-									name : 'entity/reserve1',
-									inputValue : '8'
-								}, {
-									boxLabel : '历史呆滞品区',
-									name : 'entity/reserve1',
-									inputValue : '9'
 								}, {
 									boxLabel : '白膜仓库',
 									name : 'entity/reserve1',
 									inputValue : '10'
+								}, {
+									boxLabel : '返修仓库',
+									name : 'entity/reserve1',
+									inputValue : '12'
 								}]
 					}, {
 						xtype : 'displayfield',
@@ -301,7 +282,7 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 		})
 
 	}
-	
+
 	// 导入excel面板
 	this.buildExcelUploadWin = function() {
 		this.excelUploadWin = new Ext.Window({
@@ -314,18 +295,18 @@ com.keensen.ump.produce.component.PdastocktakingMgr = function() {
 			width : 480,
 			height : 120,
 			items : [{
-						xtype : 'columnform',
-						itemId : 'uploadForm',
-						saveUrl : 'com.keensen.ump.produce.component.importStocktaking.flow',
-						columns : 1,
-						fileUpload : true,
-						fields : [{
-									name : 'uploadFile',
-									fieldLabel : '选择文件',
-									allowBlank : false,
-									inputType : 'file'
-								}]
-					}],
+				xtype : 'columnform',
+				itemId : 'uploadForm',
+				saveUrl : 'com.keensen.ump.produce.component.importStocktaking.flow',
+				columns : 1,
+				fileUpload : true,
+				fields : [{
+							name : 'uploadFile',
+							fieldLabel : '选择文件',
+							allowBlank : false,
+							inputType : 'file'
+						}]
+			}],
 			buttons : [{
 						text : '上传',
 						handler : this.doUpload,

@@ -133,7 +133,7 @@ com.keensen.ump.base.CraftMgr = function() {
 						header : '物料编号'
 					}, {
 						dataIndex : 'materSpecName',
-						header : '生产内部型号'
+						header : '卷膜工艺执行型号'
 					}, {
 						dataIndex : 'materType',
 						header : '产品类别',
@@ -1081,7 +1081,7 @@ com.keensen.ump.base.CraftMgr = function() {
 									colspan : 3
 								}, {
 									xtype : 'textfield',
-									fieldLabel : '生产内部型号',
+									fieldLabel : '卷膜工艺执行型号',
 									allowBlank : false,
 									name : 'entity/materSpecName',
 									anchor : '95%',

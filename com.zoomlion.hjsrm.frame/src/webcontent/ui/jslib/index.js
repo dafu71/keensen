@@ -574,6 +574,7 @@ Frame.ui.Header = Ext.extend(Ext.Panel, {
 	},
 
 	buildTpl : function(mydata) {
+
 		if (mydata.logoimg == null || mydata.logoimg == ''
 				|| mydata.logoimg == 'null') {
 			mydata.logoimg = 'frame/ui/img/logo.png';
@@ -581,15 +582,15 @@ Frame.ui.Header = Ext.extend(Ext.Panel, {
 		// <div class="left"><img src="{logoimg}" width=107% height=50/></div>
 		var tpl = new Ext.XTemplate('<div class="top" >'
 				+ '<div class="right">'
-				+ '<div id="menu" class="menu"><ul id="menu_ul"><li><a id="m_0"  href="javascript:loadDesktop()" >我的桌面</a></li>'
+				+ '<div id="menu" class="menu" style="width: 810px;"><ul id="menu_ul"><li><a id="m_0"  href="javascript:loadDesktop()" >我的桌面</a></li>'
 				+ '<tpl for="apps">'
-				+ '<tpl if="xindex<=6"><li class="js">|</li><li><a id="m_{resid}" href="javascript:loadMenus({resid})">{reslabel}</a></li>'
+				+ '<tpl if="xindex<=7"><li class="js">|</li><li><a id="m_{resid}" href="javascript:loadMenus({resid})">{reslabel}</a></li>'
 				+ '</tpl></tpl><li class="js">|</li><li class="hdmn"><li><a href="javascript: function myvoid(){return;};" onmouseover="mopen()" onmouseout="mclosetime()">其他</a></li>'
 				+ '</li></ul>' + '</div>' + '</div>' + '</div></div>');
 		var hm = document.getElementById("hiddenMenu");
 		var hl = '';
 		for (var i = 0; i < mydata.apps.length; i++) {
-			if (i > 5) {
+			if (i > 6) {
 				hl += '<a id="m_' + mydata.apps[i].resid
 						+ '" href="javascript:loadMenusbyHide('
 						+ mydata.apps[i].resid + ')">'

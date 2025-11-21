@@ -260,7 +260,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						dataIndex : 'specName',
 						header : '贴牌型号'
 					}, {
-						dataIndex : 'reserve5',
+						dataIndex : 'reserve2',
 						header : '测试照片',
 						renderer : function(value, metaData, rec, rowIndex,
 								colIndex, store, view) {
@@ -311,7 +311,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						}, {
 							name : 'specName'
 						}, {
-							name : 'reserve5'
+							name : 'reserve2'
 						}, {
 							name : 'status'
 						}, {
@@ -467,7 +467,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hiddenName : 'entity/code',
 						emptyText : '--请选择--',
 						anchor : '95%',
-						colspan : 2,
+						colspan : 1,
 						store : this.codeStore,
 						listeners : {
 							// scope : this,
@@ -476,17 +476,13 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							}
 						}
 					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 2
-					}, {
 						xtype : 'textarea',
 						name : 'entity/remark',
 						dataIndex : 'remark',
 						allowBlank : true,
 						fieldLabel : '备注说明',
 						anchor : '95%',
-						colspan : 2
+						colspan :1
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">台账</p>',
@@ -576,7 +572,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 		var _this = this;
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 650,
+			height : 660,
 			region : 'center',
 			// baseCls : "x-panel",
 			pgrid : this.listPanel,
@@ -667,7 +663,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hiddenName : 'entity/code',
 						emptyText : '--请选择--',
 						anchor : '95%',
-						colspan : 4,
+						colspan : 2,
 						store : this.codeStore,
 						listeners : {
 							// scope : this,
@@ -676,17 +672,13 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							}
 						}
 					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, {
 						xtype : 'textfield',
 						name : 'entity/remark',
 						dataIndex : 'remark',
 						allowBlank : true,
 						fieldLabel : '备注说明',
 						anchor : '95%',
-						colspan : 4
+						colspan : 2
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">台账</p>',
@@ -700,7 +692,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						xtype : 'textfield',
 						name : 'entity/materCode',
 						dataIndex : 'materCode',
-						fieldLabel : '物料号（外购必填）',
+						fieldLabel : '物料号(外购必填)',
 						anchor : '95%',
 						colspan : 2
 					}, {
@@ -949,6 +941,43 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						dataIndex : 'xDayCodeSpan',
 						name : 'entity/xDayCodeSpan',
 						fieldLabel : '日期码<br>横坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否打印<br>NSF',
+						dataIndex : 'reserve3',
+						ref : '../reserve3',
+						hiddenName : 'entity/reserve3',
+						anchor : '100%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.reserve3.reset()
+							}
+						}
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'reserve4',
+						name : 'entity/reserve4',
+						fieldLabel : 'NSF<br>纵坐标',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'reserve5',
+						name : 'entity/reserve5',
+						fieldLabel : 'NSF<br>横坐标',
 						anchor : '100%',
 						colspan : 1
 					}, {

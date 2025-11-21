@@ -48,7 +48,7 @@
   <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" type="switch">
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
       <sourceNode>switch0</sourceNode>
-      <targetNode>invokePojo0</targetNode>
+      <targetNode>assign3</targetNode>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link3" name="新增" type="transition">
       <sourceNode>switch0</sourceNode>
@@ -72,7 +72,7 @@
       <sourceNode>invokePojo0</sourceNode>
       <targetNode>assign0</targetNode>
     </sourceConnections>
-    <targetConnections>link2</targetConnections>
+    <targetConnections>link13</targetConnections>
     <nodeLabel>invokePojo0label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseExt.executeNamedSql</process:partner>
@@ -94,7 +94,7 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>assign1</targetNode>
     </sourceConnections>
-    <targetConnections>link12</targetConnections>
+    <targetConnections>link11</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.database.DatabaseExt.executeNamedSql</process:partner>
@@ -116,8 +116,8 @@
       <sourceNode>subprocess1</sourceNode>
       <targetNode>subprocess2</targetNode>
     </sourceConnections>
-    <targetConnections>link9</targetConnections>
     <targetConnections>link8</targetConnections>
+    <targetConnections>link9</targetConnections>
     <nodeLabel>subprocess1label</nodeLabel>
     <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
       <process:partner type="literal">this.querySn</process:partner>
@@ -214,7 +214,7 @@
   <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" type="switch">
     <sourceConnections xsi:type="process:tLink" id="link12" name="link12" isDefault="true" type="transition">
       <sourceNode>switch1</sourceNode>
-      <targetNode>invokePojo1</targetNode>
+      <targetNode>assign2</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
           <process:leftOperand type="query"/>
@@ -228,6 +228,54 @@
   <nodes xsi:type="model:NodeElementLabel" id="switch1label" name="label" nodeType="label">
     <figSize height="20" width="55"/>
     <node>switch1</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign2" name="赋值2" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link11" name="link11" isDefault="true" type="transition">
+      <sourceNode>assign2</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link12</targetConnections>
+    <nodeLabel>assign2label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">condition/createUserId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">condition/createName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">condition/createTime</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign2label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign2</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" id="assign3" name="赋值3" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link13" name="link13" isDefault="true" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>invokePojo0</targetNode>
+    </sourceConnections>
+    <targetConnections>link2</targetConnections>
+    <nodeLabel>assign3label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">condition/updateUserId</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userName</process:from>
+      <process:to type="query">condition/updateName</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">new Date()</process:from>
+      <process:to type="query">condition/updateTime</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign3label" name="label" nodeType="label">
+    <figSize height="20" width="40"/>
+    <node>assign3</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

@@ -121,7 +121,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
 								// anchor : '75%',
-								fieldLabel : '规格型号 '
+								fieldLabel : '卷膜工艺执行型号 '
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
@@ -248,7 +248,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						header : '产品性能'
 					}*/, {
 						dataIndex : 'materSpecName',
-						header : '规格型号'
+						header : '卷膜工艺执行型号'
 					}, {
 						dataIndex : 'dryWet',
 						header : '干/湿膜'
@@ -688,7 +688,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						colspan : 1
 					}, {
 						xtype : 'displayfield',
-						fieldLabel : '规格型号',
+						fieldLabel : '卷膜工艺执行型号',
 						ref : '../materSpecName',
 						dataIndex : 'materSpecName',
 						anchor : '85%',
@@ -837,7 +837,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							colspan : 3
 						}, {
 							xtype : 'textfield',
-							fieldLabel : '规格型号',
+							fieldLabel : '卷膜工艺执行型号',
 							ref : '../../materSpecName',
 							readOnly : true,
 							anchor : '85%',
@@ -1270,7 +1270,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							colspan : 3
 						}, {
 							xtype : 'textfield',
-							fieldLabel : '规格型号',
+							fieldLabel : '卷膜工艺执行型号',
 							ref : '../../materSpecName',
 							readOnly : true,
 							anchor : '85%',
@@ -1887,7 +1887,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								colspan : 1
 							}, {
 								xtype : 'displayfield',
-								fieldLabel : '规格型号',
+								fieldLabel : '卷膜工艺执行型号',
 								ref : '../materSpecName',
 								dataIndex : 'materSpecName',
 								anchor : '85%',
@@ -2237,7 +2237,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						header : '订单号'
 					}, {
 						dataIndex : 'materSpecName',
-						header : '规格型号号'
+						header : '卷膜工艺执行型号'
 					}, {
 						dataIndex : 'planDate',
 						header : '计划日期'

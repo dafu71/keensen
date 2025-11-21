@@ -1393,6 +1393,12 @@
                                         ON TM.RECORD_ID = T.BATCH_ID
                                      WHERE T.ITEM IN ('C21', 'C22')
                                      
+                                        AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+			                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+			                            <isNotNull prepend="and" property="lineId"> 
+					       				TM.LINE_ID = #lineId#
+									    </isNotNull>
+                                     
                                       UNION ALL 
                                      SELECT TO_NUMBER(T.WEIGHT) WEIGHT,
                                            trim(T.ITEM) item,
@@ -1401,6 +1407,11 @@
                                       LEFT JOIN QINSEN.INST_TUMO TM
                                         ON TM.RECORD_ID = T.BATCH_ID
                                      WHERE T.ITEM IN ('C21', 'C22')
+                                      AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+			                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+			                            <isNotNull prepend="and" property="lineId"> 
+					       				TM.LINE_ID = #lineId#
+									    </isNotNull>
                                      
                                     UNION ALL
                                     SELECT TO_NUMBER(NVL(T.C21_REALITY, 0))/1000,
@@ -1425,7 +1436,7 @@
                             
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
-						</isNotNull>
+						</isNotNull> 
                                       GROUP BY tm.water_batch_no2) tumo
                                       ON tumo.water_batch_no = H.BATCH_NO
                                     UNION ALL
@@ -1438,20 +1449,20 @@
                                         ON H.ID = T.RELATION_ID
                                       LEFT JOIN (SELECT max(tm.batch_no) batch_no,tm.water_batch_no from qinsen.inst_tumo tm
                                        WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
-                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
-                            
-                             <isNotNull prepend="and" property="lineId"> 
-		       				TM.LINE_ID = #lineId#
-						</isNotNull>
+				                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+				                            
+				                             <isNotNull prepend="and" property="lineId"> 
+						       				TM.LINE_ID = #lineId#
+										</isNotNull>
                                       GROUP BY tm.water_batch_no
                                       UNION ALL
                                       SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
-                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
-                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
-                            
-                             <isNotNull prepend="and" property="lineId"> 
-		       				TM.LINE_ID = #lineId#
-						</isNotNull>
+			                           WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+			                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+			                            
+			                             <isNotNull prepend="and" property="lineId"> 
+					       				TM.LINE_ID = #lineId#
+									</isNotNull>
                                       GROUP BY tm.water_batch_no2) tumo
                                       ON tumo.water_batch_no = H.BATCH_NO)
                              GROUP BY BATCH_NO) WATER
@@ -1807,7 +1818,11 @@
                                       LEFT JOIN QINSEN.INST_TUMO TM
                                         ON TM.RECORD_ID = T.BATCH_ID
                                      WHERE T.ITEM IN ('C21', 'C22')
-                                     
+                                      AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+			                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+			                            <isNotNull prepend="and" property="lineId"> 
+					       				TM.LINE_ID = #lineId#
+									    </isNotNull>
                                       UNION ALL 
                                      SELECT TO_NUMBER(T.WEIGHT) WEIGHT,
                                            trim(T.ITEM) item,
@@ -1816,7 +1831,11 @@
                                       LEFT JOIN QINSEN.INST_TUMO TM
                                         ON TM.RECORD_ID = T.BATCH_ID
                                      WHERE T.ITEM IN ('C21', 'C22')
-                                     
+                                      AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+			                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+			                            <isNotNull prepend="and" property="lineId"> 
+					       				TM.LINE_ID = #lineId#
+									    </isNotNull>
                                     UNION ALL
                                    SELECT TO_NUMBER(NVL(T.C21_REALITY, 0))/1000,
                                            'C21',
@@ -1852,15 +1871,32 @@
                                            WHERE t.watertype IN ('水相液','水相补充液')) H
                                         ON H.ID = T.RELATION_ID
                                       LEFT JOIN (SELECT max(tm.batch_no) batch_no,tm.water_batch_no from qinsen.inst_tumo tm
+                                      
+                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull> 
+                                      
                                       GROUP BY tm.water_batch_no
                                       UNION ALL
                                       SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
+                                      
+                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+                            AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
+                            
+                             <isNotNull prepend="and" property="lineId"> 
+		       				TM.LINE_ID = #lineId#
+						</isNotNull> 
+                                      
+                                      
                                       GROUP BY tm.water_batch_no2) tumo
                                       ON tumo.water_batch_no = H.BATCH_NO)
                              GROUP BY BATCH_NO) WATER
                     ON WATER.TM_BATCH_NO = TM.BATCH_NO
                   LEFT JOIN (SELECT TM_BATCH_NO ,C29_REALITY from 
-(SELECT BATCH_NO TM_BATCH_NO,SUM(C29_REALITY)/1000 C29_REALITY
+							(SELECT BATCH_NO TM_BATCH_NO,SUM(C29_REALITY)/1000 C29_REALITY
                               FROM (
                                     
                                     SELECT TO_NUMBER(NVL(T.C29_REALITY, 0)) C29_REALITY,

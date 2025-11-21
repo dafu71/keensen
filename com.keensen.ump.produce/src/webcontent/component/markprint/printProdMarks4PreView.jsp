@@ -97,6 +97,15 @@
 	font-weight: bold;
 }
 
+.span_aa {
+	vertical-align: middle;
+	margin-left: 1mm;
+	font-size: 16px;
+	font-family:Arial;
+	font-color: #000000;
+	
+}
+
 .span_day {
 	align: center;
 	text-align: left;
@@ -320,8 +329,17 @@ function getDayCode() {
 	
 						const container = document.getElementById('image-container');
 						var dayCode = getDayCode();// 获取入库日期编码
+						
+						
 			<%-- 循环开始--%>			
-			<% 	for (int i = 0; i < list.length; i++) { 		
+			<% 	for (int i = 0; i < list.length; i++) { 
+			
+			
+			
+						String ifPrintNsf = null == list[i].get("reserve3")?"N" : list[i].get("reserve3").toString();
+						int xNsf = null == list[i].get("reserve5")? 100000: Integer.parseInt(list[i].get("reserve5").toString());
+						int yNsf = null == list[i].get("reserve4")? 100000: Integer.parseInt(list[i].get("reserve4").toString());
+					
 						String prodBatchNo = list[i].get("prodBatchNo").toString();
 						String ifPrintSpecName = list[i].get("ifPrintSpecName").toString();
 						String ifPrintBatchNo = list[i].get("ifPrintBatchNo").toString();
@@ -332,7 +350,12 @@ function getDayCode() {
 						int yBatchSpecName = Integer.parseInt(list[i].get("yBatchSpecName").toString());
 						int xBatchSpecName = Integer.parseInt(list[i].get("xBatchSpecName").toString());
 						String prodSpecName = list[i].get("prodSpecName").toString();
+						
 						String fontSize = prodSpecName.length() >= 15 ? "22px" : prodSpecName.length() > 9 ? "26px" : "30px";
+						if("Y".equals(ifPrintNsf)){							
+							fontSize = prodSpecName.length() >= 15 ? "21px" : prodSpecName.length() > 9 ? "21px" : "21px";
+						}
+						
 						int yDryImg = Integer.parseInt(list[i].get("yDryImg").toString());
 						int xDryImg = Integer.parseInt(list[i].get("xDryImg").toString());
 						int yDrySpan = Integer.parseInt(list[i].get("yDrySpan").toString());
@@ -349,8 +372,121 @@ function getDayCode() {
 						int batchNoFontSize = null == list[i].get("reserve1")?15:Integer.parseInt(list[i].get("reserve1").toString());
 						
 						String dryWet = list[i].get("dryWet").toString();
+						dryWet = "湿";
 						
-			%>			
+			%>	
+			
+			<%if("Y".equals(ifPrintNsf)){ %>
+			
+			//固定字段
+			//brand
+			var brand = document.createElement('div');
+		    brand.className = 'text-overlay';
+		    brand.textContent = 'Brand:';
+		        		            
+		    var fontSize = '21px';
+		    var color = 'black';
+		            
+		    // 设置样式
+		    brand.style.left = '40px';
+		    brand.style.top = '<%=10 + tableHeight*i %>px';
+		    brand.style.fontSize = fontSize;
+		    brand.style.fontName = 'Arial';
+		    brand.style.fontWeight = 'bold';
+		    brand.style.color = color;
+		           
+		    container.appendChild(brand);
+		    
+		    //brandvalue
+			var brandvalue = document.createElement('div');
+		    brandvalue.className = 'text-overlay';
+		    brandvalue.textContent = 'KeenSen';
+		    brand.style.fontName = 'Arial';
+		        		            
+		    var fontSize = '21px';
+		    var color = 'black';
+		            
+		    // 设置样式
+		    brandvalue.style.left = '140px';
+		    brandvalue.style.top = '<%=10 + tableHeight*i %>px';
+		    brandvalue.style.fontSize = fontSize;
+		    brandvalue.style.fontName = 'Arial';
+		    //brand.style.fontWeight = 'bold';
+		    brandvalue.style.color = color;
+		           
+		    container.appendChild(brandvalue);
+		            
+			//model
+			var model = document.createElement('div');
+		    model.className = 'text-overlay';
+		    model.textContent = 'Model:';
+		        		            
+		    var fontSize = '21px';
+		    var color = 'black';
+		            
+		    // 设置样式
+		    model.style.left = '40px';
+		    model.style.top = '<%=60 + tableHeight*i %>px';
+		    model.style.fontSize = fontSize;
+		    model.style.fontWeight = 'bold';
+		    model.style.color = color;
+		    model.style.fontName = 'Arial';
+		           
+		    container.appendChild(model);
+		    
+		    //sn
+			var sn = document.createElement('div');
+		    sn.className = 'text-overlay';
+		    sn.textContent = 'S/N:';
+		        		            
+		    var fontSize = '21px';
+		    var color = 'black';
+		            
+		    // 设置样式
+		    sn.style.left = '65px';
+		    sn.style.top = '<%=110 + tableHeight*i %>px';
+		    sn.style.fontSize = fontSize;
+		    sn.style.fontWeight = 'bold';
+		    sn.style.color = color;
+		    sn.style.fontName = 'Arial';       
+		    container.appendChild(sn);
+		    
+		    //qty
+			var qty = document.createElement('div');
+		    qty.className = 'text-overlay';
+		    qty.textContent = 'QTY:';
+		        		            
+		    var fontSize = '21px';
+		    var color = 'black';
+		            
+		    // 设置样式
+		    qty.style.left = '62px';
+		    qty.style.top = '<%=160 + tableHeight*i %>px';
+		    qty.style.fontSize = fontSize;
+		    qty.style.fontWeight = 'bold';
+		    qty.style.color = color;
+		    qty.style.fontName = 'Arial';       
+		    container.appendChild(qty);
+		    
+		    //qty
+			var qtyvalue = document.createElement('div');
+		    qtyvalue.className = 'text-overlay';
+		    qtyvalue.textContent = '1 pc';
+		        		            
+		    var fontSize = '21px';
+		    var color = 'black';
+		            
+		    // 设置样式
+		    qtyvalue.style.left = '140px';
+		    qtyvalue.style.top = '<%=160 + tableHeight*i %>px';
+		    qtyvalue.style.fontSize = fontSize;
+		    //qty.style.fontWeight = 'bold';
+		    qtyvalue.style.color = color;
+		    qtyvalue.style.fontName = 'Arial';        
+		    container.appendChild(qtyvalue);
+		    
+		    <% } %>
+					
 				var batchNo = '<%=prodBatchNo %>';
 						<%if("Y".equals(ifPrintBatchNo)){					
 						
@@ -373,9 +509,20 @@ function getDayCode() {
 							font : 'msyhbd',
 							fontOptions : 'bold',
 							textMargin : 0,
-							height : <% if(batchNoFontSize==15){ %>50 <%} %><% else { %>25<%} %>,
+							
+							<%if("Y".equals(ifPrintNsf)){ %>
+							height : <% if(batchNoFontSize<=15){ %>30 <%} %><% else { %>25<%} %>,
 							margin : 0,
-							width : <% if(batchNoFontSize==15){ %>1.5 <%} %><% else { %>1<%} %>
+							width : <% if(batchNoFontSize<=15){ %>1.5 <%} %><% else { %>1<%} %>
+							
+							<% }else{ %>
+							
+							height : <% if(batchNoFontSize<=15){ %>50 <%} %><% else { %>25<%} %>,
+							margin : 0,
+							width : <% if(batchNoFontSize<=15){ %>1.5 <%} %><% else { %>1<%} %>
+							
+							<% } %>
+							
 							};
 						
 						JsBarcode(barcodeElement, batchNo, options);
@@ -390,6 +537,32 @@ function getDayCode() {
 						container.appendChild(barcodeElement);
 						<% } %>
             			<% } %>
+					
+					
+					
+					<%if("Y".equals(ifPrintNsf) && xNsf<2000){
+					
+						
+					
+					 %>
+					// 创建Nsf元素
+		            var nsfElement = document.createElement('div');
+		            nsfElement.className = 'text-overlay';
+		            nsfElement.textContent = 'Certified to NSF/ANSI/CAN 61';
+		            
+		            		            
+		            var fontSize = '12px';
+		            var color = 'black';
+		            
+		            // 设置样式
+		            nsfElement.style.left = '<%=xNsf %>px';
+		            nsfElement.style.top = '<%=yNsf + tableHeight*i %>px';
+		            nsfElement.style.fontSize = fontSize;
+		            //nsfElement.style.fontWeight = 'bold';
+		            nsfElement.style.color = color;
+		            
+		            container.appendChild(nsfElement);
+		            <% } %>
 						
 					
 					<%if("Y".equals(ifPrintSpecName)){
@@ -402,7 +575,6 @@ function getDayCode() {
 		            prodSpecNameElement.className = 'text-overlay';
 		            prodSpecNameElement.textContent = '<%=prodSpecName %>';
 		            
-		            		            
 		            var fontSize = '<%=fontSize %>';
 		            var color = 'black';
 		            
@@ -410,16 +582,19 @@ function getDayCode() {
 		            prodSpecNameElement.style.left = '<%=xBatchSpecName %>px';
 		            prodSpecNameElement.style.top = '<%=yBatchSpecName + tableHeight*i %>px';
 		            prodSpecNameElement.style.fontSize = fontSize;
-		            prodSpecNameElement.style.fontWeight = 'bold';
+		            //prodSpecNameElement.style.fontWeight = 'bold';
 		            prodSpecNameElement.style.color = color;
 		            
 		            container.appendChild(prodSpecNameElement);
 		            <% } %>
 		  
-		  <%if("Y".equals(ifPrintDryWet)){		  
+		
+		 
+		   <%if("Y".equals(ifPrintDryWet)){		  
 				if (dryWet.equals("干")) {
 			%>
 		
+				<% if(yDryImg<2000){ %>
 				var dryimg = document.createElement('img');
 				dryimg.src = "<%=rootUrl %>/qinsen/produce/pack/print/image/round.png";
 				dryimg.className = 'symbol_dry';      // 应用样式类
@@ -427,7 +602,9 @@ function getDayCode() {
 				dryimg.style.left = '<%=xDryImg %>px';
 				dryimg.style.top = '<%=yDryImg + tableHeight*i %>px';
 				container.appendChild(dryimg);
+				<% } %>
 				
+				<% if(yDrySpan<2000){ %>
 				var dryspan = document.createElement('span');
 				dryspan.className = 'span_a';
 				dryspan.style.position = 'absolute';
@@ -435,7 +612,9 @@ function getDayCode() {
 				dryspan.style.top = '<%=yDrySpan + tableHeight*i %>px';
 				dryspan.textContent = 'DRY';
 				container.appendChild(dryspan);
+				<% } %>
 				
+				<% if(yWetImg<2000){ %>
 				var wetimg = document.createElement('img');
 				wetimg.src = "<%=rootUrl %>/qinsen/produce/pack/print/image/ring.png";
 				wetimg.className = 'symbol_wet';      // 应用样式类
@@ -443,7 +622,9 @@ function getDayCode() {
 				wetimg.style.left = '<%=xWetImg %>px';
 				wetimg.style.top = '<%=yWetImg %>px';
 				container.appendChild(wetimg);
+				<% } %>
 				
+				<% if(yWetSpan<2000){ %>
 				const wetspan = document.createElement('span');
 				wetspan.className = 'span_a';
 				wetspan.style.position = 'absolute';
@@ -451,9 +632,13 @@ function getDayCode() {
 				wetspan.style.top = '<%=yWetSpan + tableHeight*i %>px';
 				wetspan.textContent = 'WET';
 				container.appendChild(wetspan);
+				<% } %>
+				
 			<%
 		} else {
 		%>	
+				
+				<% if(yDryImg<2000){ %>
 				const dryimg = document.createElement('img');
 				dryimg.src = "<%=rootUrl %>/qinsen/produce/pack/print/image/ring.png";
 				dryimg.className = 'symbol_dry';      // 应用样式类
@@ -461,7 +646,9 @@ function getDayCode() {
 				dryimg.style.left = '<%=xDryImg %>px';
 				dryimg.style.top = '<%=yDryImg + tableHeight*i %>px';
 				container.appendChild(dryimg);
+				<% } %>
 				
+				<% if(yDrySpan<2000){ %>
 				const dryspan = document.createElement('span');
 				dryspan.className = 'span_a';
 				dryspan.style.position = 'absolute';
@@ -469,7 +656,10 @@ function getDayCode() {
 				dryspan.style.top = '<%=yDrySpan + tableHeight*i %>px';
 				dryspan.textContent = 'DRY';
 				container.appendChild(dryspan);
+				<% } %>
 				
+				
+				<% if(yWetImg<2000){ %>
 				const wetimg = document.createElement('img');
 				wetimg.src = "<%=rootUrl %>/qinsen/produce/pack/print/image/round.png";
 				wetimg.className = 'symbol_wet';      // 应用样式类
@@ -477,7 +667,9 @@ function getDayCode() {
 				wetimg.style.left = '<%=xWetImg %>px';
 				wetimg.style.top = '<%=yWetImg + tableHeight*i %>px';
 				container.appendChild(wetimg);
+				<% } %>
 				
+				<% if(yWetSpan<2000){ %>
 				const wetspan = document.createElement('span');
 				wetspan.className = 'span_a';
 				wetspan.style.position = 'absolute';
@@ -485,11 +677,16 @@ function getDayCode() {
 				wetspan.style.top = '<%=yWetSpan + tableHeight*i %>px';
 				wetspan.textContent = 'WET';
 				container.appendChild(wetspan);
+				<% } %>
 		<%
 		}
 		%>	
 		
 		<% } %>
+		
+		
+		 
+		
 		
 		<% if("Y".equals(isStar)){ %>
 		
@@ -515,7 +712,8 @@ function getDayCode() {
 				dayCodespan.textContent = dayCode;
 				container.appendChild(dayCodespan);
 						
-    <% } %> 		    
+    <% } %> 
+		 		    
     
    <%-- 循环结束--%>
     <% } %>    					

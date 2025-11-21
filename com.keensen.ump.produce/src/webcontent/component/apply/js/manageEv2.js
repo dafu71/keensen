@@ -2,6 +2,11 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 
 	var _this = this;
 
+	this.chooseWindow.mon(this.chooseWindow, 'hide', function() {
+		
+		this.listPanel3.store.removeAll();
+			}, this);
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -24,20 +29,20 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-		
+
 		var orderId = cell.get('orderId');
 		var baseId = cell.get('baseId');
-		
-		if(this.opt == 'judge'){
+
+		if (this.opt == 'judge') {
 			if (Ext.isEmpty(orderId)) {
 				Ext.Msg.alert("系统提示", "历史数据无法判定！");
 				return;
-			}else{
-				
+			} else {
+
 				return false;
 			}
 		}
-		
+
 		var confirmDate = cell.get('confirmDate');
 		if (this.opt == 'check') {
 			if (!Ext.isEmpty(confirmDate)) {
@@ -361,14 +366,12 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 						obj.prodAmount.setValue(prodAmount);
 						var checkCount = data.checkCount;
 						obj.checkCount.setValue(checkCount);
-						
-						
+
 						var orderId = data.orderId;
 						obj.orderId.setValue(orderId);
 						var baseId = data.baseId;
 						obj.baseId.setValue(baseId);
-						
-						
+
 						var markDrawingCode2 = data.markDrawingCode2;
 						if (!Ext.isEmpty(markDrawingCode2))
 							obj.markSpecialFlag.setValue(markDrawingCode2);
@@ -1036,6 +1039,8 @@ com.keensen.ump.produce.component.applyMgr.prototype.onChoose2 = function() {
 com.keensen.ump.produce.component.applyMgr.prototype.onScan = function() {
 
 	var _this = this;
+
+	_this.listPanel3.store.removeAll();
 	var obj = this.inputPanel.juanmoBatchNo;
 	var juanmoBatchNo = obj.getValue();
 

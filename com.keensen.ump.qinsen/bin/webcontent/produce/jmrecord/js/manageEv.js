@@ -1,8 +1,8 @@
 com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.initEvent = function() {
 	var _this = this;
-	
+
 	this.listPanel4ProduceCount.store.on('load', function() {
-				
+
 				var records = _this.listPanel4ProduceCount.store.getRange();
 				if (records.length == 0) {
 					Ext.getCmp(quantityTotalId).setValue('');
@@ -12,7 +12,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.initEvent = function() {
 							+ quantityTotal);
 				}
 			});
-			
+
 	// 查询事件
 	this.queryPanel4ProduceCount.mon(this.queryPanel4ProduceCount, 'query',
 			function(form, vals) {
@@ -25,7 +25,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.initEvent = function() {
 					}
 				});
 			}, this);
-			
+
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		// var start = vals['condition/produceDtStart'];
@@ -241,8 +241,6 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onPrintTag = function() {
 		f.action = actionUrl;
 		f.submit();
 
-		
-
 	}
 }
 
@@ -283,51 +281,35 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.exportExcel = function() {
 			.findField(['condition/produceDtStart']).getValue();
 	var end = this.queryPanel.getForm().findField(['condition/produceDtEnd'])
 			.getValue();
-			
+
 	var lineId = this.queryPanel.lineId.getValue();
-	if (dayDiff(start, end) > 31 && Ext.isEmpty(lineId) ) {
+	if (dayDiff(start, end) > 31 && Ext.isEmpty(lineId)) {
 		Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！");
 		return false;
 
 	}
-	
+
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '卷膜记录',
 			'com.keensen.ump.qinsen.juanmo.queryRecords', '0,1');
-			
-	/*var daochu = _this.queryPanel.getForm().getValues();
 
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			namingsql : 'com.keensen.ump.qinsen.juanmo.queryRecords',
-			templateFilename : 'ks_inst_juanmo'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
-				}
-
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})*/
+	/*
+	 * var daochu = _this.queryPanel.getForm().getValues();
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+	 * method : "post", jsonData : { 'map' : daochu, namingsql :
+	 * 'com.keensen.ump.qinsen.juanmo.queryRecords', templateFilename :
+	 * 'ks_inst_juanmo' }, success : function(resp) { var ret =
+	 * Ext.decode(resp.responseText); if (ret.success) {
+	 * 
+	 * var fname = ret.fname; if (Ext.isIE) {
+	 * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); }
+	 * else { window.location.href =
+	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; }
+	 *  }
+	 *  }, callback : function() { _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.destroy = function() {
@@ -361,29 +343,66 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onStart = function() {
 }
 
 com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onEnd = function() {
+	
 	var _this = this;
 	Ext.Msg.confirm("操作确认", "您确实要下机结算工作量吗?", function(A) {
 		if (A == "yes") {
-			_this.requestMask = this.requestMask
-					|| new Ext.LoadMask(Ext.getBody(), {
-								msg : "后台正在操作,请稍候!"
-							});
-			_this.requestMask.show();
-			Ext.Ajax.request({
-				url : "com.keensen.ump.produce.component.productioncount.saveJmEnd.biz.ext",
-				method : "post",
-				success : function(resp) {
-					var ret = Ext.decode(resp.responseText);
-					if (ret.success) {
-						var msg = ret.msg;
-						_this.queryPanel.setTitle("<span style='color:red'>"
-								+ msg + "</span>");
+			Ext.Msg.prompt('您的确认码', '请输入', function(btn, text) {
+				if (btn == 'ok') {
+					var confirmCode = text.trim();
+					if (Ext.isEmpty(confirmCode)) {
+						Ext.Msg.alert('系统提示', '确认码不能为空');
+						return false;
+					} else {
+						_this.requestMask = this.requestMask
+								|| new Ext.LoadMask(Ext.getBody(), {
+											msg : "后台正在操作,请稍候!"
+										});
+						_this.requestMask.show();
+						Ext.Ajax.request({
+							url : "com.keensen.ump.produce.component.produce.queryConfirmCode.biz.ext",
+							jsonData : {
+								'confirmCode' : confirmCode
+							},
+							method : "post",
+							success : function(resp) {
+								var ret = Ext.decode(resp.responseText);
+								if (ret.success) {
+									var err = ret.err;
+									var msg = ret.msg;
+									if (err != '0') {
+										Ext.Msg.alert('系统提示', msg);
+										return false;
+									} else {
+										Ext.Ajax.request({
+											url : "com.keensen.ump.produce.component.productioncount.saveJmEnd.biz.ext",
+											method : "post",
+											success : function(resp) {
+												var ret = Ext
+														.decode(resp.responseText);
+												if (ret.success) {
+													var msg = ret.msg;
+													_this.queryPanel
+															.setTitle("<span style='color:red'>"
+																	+ msg
+																	+ "</span>");
+												}
+											},
+											callback : function() {
+												_this.requestMask.hide()
+											}
+										})
+									}
+								}
+							},
+							callback : function() {
+								_this.requestMask.hide()
+							}
+						})
 					}
-				},
-				callback : function() {
-					_this.requestMask.hide()
 				}
-			})
+			}, this, false);
+
 		}
 	})
 }
@@ -393,10 +412,13 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onQueryQuantity = function(
 }
 
 com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.exportProduceCountExcel = function() {
-	
-	
-	doQuerySqlAndExport(this, this.queryPanel4ProduceCount, this.listPanel4ProduceCount, '产量统计',
-			'com.keensen.ump.produce.component.productioncount.queryProductJmList', '0,1');
-			
-	
+
+	doQuerySqlAndExport(
+			this,
+			this.queryPanel4ProduceCount,
+			this.listPanel4ProduceCount,
+			'产量统计',
+			'com.keensen.ump.produce.component.productioncount.queryProductJmList',
+			'0,1');
+
 }

@@ -95,7 +95,7 @@
        T1.STATUS AS "status",
        T1.DIMO_TYPE AS "dimoType",T1.PRODUCT_TYPE AS "productType",
        T1.LINE AS "line",
-       T1.PRODUCT_DT AS "productDt",
+       to_char(T1.PRODUCT_DT,'yyyy-MM-dd hh24:mi') AS "productDt",
        T1.DIMO_BATCH_NO AS "dimoBatchNo",
        t2.prop_value_name AS "supName",
        T1.SUP_ID AS "supId",
@@ -182,11 +182,12 @@ where nvl(if_tear,'是') = '是'
        T1.PRODUCT_DT AS "productDt",
        T1.LINE AS "line",T3.base "base",t3.id "id",
        T1.DIMO_TYPE AS "dimoType",
-       T1.THEORY_AMOUNT AS "theoryAmount",
+       T1.THEORY_AMOUNT AS "theoryAmount",nvl(t1.scrap_amount,0) "scrapAmount",
+       nvl(T1.position,'') "position",
        nvl(T5.LOSE,0) AS "lose",
        T1.THEORY_AMOUNT - nvl(T5.LOSE,0) "dimoAmount",
        T2.PROD_LENGTH "prodLength",
-       T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) "residue",
+       T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) - nvl(t1.scrap_amount,0) "residue",
        t3.sup_name "supName",nvl(t3.pump_speed,'无') "pumpSpeed"
        FROM (SELECT T.DIMO_BATCH_NO,
                '202' || SUBSTR(T.DIMO_BATCH_NO, 6, 1) Y,
@@ -213,6 +214,7 @@ where nvl(if_tear,'是') = '是'
                MAX(T.LINE) LINE,
                MAX(T.DIMO_TYPE) DIMO_TYPE,
                MAX(T.THEORY_AMOUNT) THEORY_AMOUNT,
+               max(t.scrap_amount) scrap_amount, nvl(max(t.position),'') position,
                SUM(NVL(T.LOSE0, 0)) + SUM(NVL(T.LOSE1, 0)) +
                SUM(NVL(T.LOSE2, 0)) + SUM(NVL(T.LOSE3, 0)) +
                SUM(NVL(T.LOSE4, 0)) + SUM(NVL(T.LOSE5, 0)) +
@@ -250,7 +252,8 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
  	
  WHERE 1 = 1
  
- 	<isNotNull prepend="" property="psf">AND fx.psf = #psf#</isNotNull>
+ 	<isNotNull prepend="" property="position">AND T1.position like '%' || #position# || '%'</isNotNull>
+        <isNotNull prepend="" property="psf">AND fx.psf = #psf#</isNotNull>
         <isNotNull prepend="" property="supId">AND t3.sup_id = #supId#</isNotNull>
         <isNotNull prepend="" property="base">AND t3.base = #base#</isNotNull>
         <isNotNull prepend="" property="dimoType">AND t1.dimo_Type = #dimoType#</isNotNull>
@@ -261,7 +264,7 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
         <isNotNull prepend="" property="dimoBatchNo2">AND T1.DIMO_BATCH_NO like '%' || #dimoBatchNo2# || '%'</isNotNull>
         <isEqual compareValue="Y" prepend="" property="notLessthan100">
             <!-- AND T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)>100-->
-		   and   T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) &gt;100
+		   and   T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) - nvl(t1.scrap_amount,0) &gt;100
 	</isEqual>
 	
      order by t1.y desc,t1.m DESC,t1.d DESC
@@ -272,11 +275,11 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
        T1.LINE AS "line",T3.base "base",
        T1.DIMO_TYPE AS "dimoType",
        T1.THEORY_AMOUNT AS "theoryAmount",
-       T1.LOSE AS "lose",
+       T1.LOSE AS "lose",nvl(T1.position,'') "position",
        T1.THEORY_AMOUNT - T1.LOSE "dimoAmount",
        T2.PROD_LENGTH "prodLength",
        <!--T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0) "residue"-->
-       T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) "residue"
+       T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) - nvl(t1.scrap_amount,0) "residue"
        
        ,t3.sup_name "supName",nvl(t3.pump_speed,'无') "pumpSpeed"
   FROM (SELECT T.DIMO_BATCH_NO,
@@ -303,6 +306,7 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
                MAX(T.LINE) LINE,
                MAX(T.DIMO_TYPE) DIMO_TYPE,
                MAX(T.THEORY_AMOUNT) THEORY_AMOUNT,
+               max(t.scrap_amount) scrap_amount,nvl(max(t.position),'') position,
                SUM(NVL(T.LOSE0, 0)) + SUM(NVL(T.LOSE1, 0)) +
                SUM(NVL(T.LOSE2, 0)) + SUM(NVL(T.LOSE3, 0)) +
                SUM(NVL(T.LOSE4, 0)) + SUM(NVL(T.LOSE5, 0)) +
@@ -336,7 +340,7 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
  AND 
  <!--T1.THEORY_AMOUNT - T1.LOSE - nvl(T2.PROD_LENGTH,0)>#num#-->
  
- T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) &gt;#num#
+ T1.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) - nvl(t1.scrap_amount,0)  &gt;#num#
  
   <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
         <isNotNull prepend="" property="base">AND t3.base = #base#</isNotNull>
@@ -370,7 +374,7 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
     <select id="countZmx" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
      SELECT 
        nvl(sum(T1.THEORY_AMOUNT),0) AS "theoryAmount",
-     
+       sum(nvl(t1.release_amount,0)) "releaseAmount",
        nvl(sum(defect.loss),0) "loss"
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
   left join (select sum(t.loss) loss ,t.dm_batch_id from QINSEN.Inst_Cdm_Defect2 t
@@ -401,4 +405,66 @@ where nvl(if_tear,'是') = '是'
         <isNotNull prepend="" property="createName">AND t1.CREATE_NAME like '%' || #createName# || '%'</isNotNull>
 	ORDER BY t1.CREATE_TIME desc
      </select>
+    <update id="updateZmxScrap" parameterClass="java.util.HashMap">UPDATE KS_PROD_DIAPHRAGM_ZMX_RECORD T
+   SET T.SCRAP_AMOUNT          = #scrapAmount#,
+       T.SCRAP_USER_ID   = #userId#,
+       T.SCRAP_USER_NAME = #userName#,
+       T.SCRAP_TIME      = SYSDATE
+ WHERE T.DIMO_BATCH_NO = #dimoBatchNo#</update>
+    <update id="updateZmxPosition" parameterClass="java.util.HashMap">UPDATE KS_PROD_DIAPHRAGM_ZMX_RECORD T
+   	SET    
+   		T.position = #position#,   
+       	T.POSITION_USER_ID   = #userId#,
+       	T.POSITION_USER_NAME = #userName#,
+       	T.POSITION_TIME      = SYSDATE
+ 	WHERE T.DIMO_BATCH_NO = #dimoBatchNo#
+ 		and T.position is null
+ 		and not exists(select 1 from KS_PROD_DIAPHRAGM_ZMX_RECORD where position=#position#)</update>
+    <update id="updateZmxPosition2Null" parameterClass="java.util.HashMap">UPDATE KS_PROD_DIAPHRAGM_ZMX_RECORD T
+   	SET    
+   		T.position = null,   
+       	T.POSITION_USER_ID   = #userId#,
+       	T.POSITION_USER_NAME = #userName#,
+       	T.POSITION_TIME      = SYSDATE
+ 	WHERE T.DIMO_BATCH_NO = #dimoBatchNo#
+ 		and T.position is not null</update>
+    <select id="queryStockDetailBoard" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.position "position",
+		t.dimo_batch_no "dimoBatchNo",
+		round(SYSDATE - to_date(to_char(t.PRODUCT_DT,'yyyy-mm-dd'),'yyyy-mm-dd')) "diff"
+		from KS_PROD_DIAPHRAGM_ZMX_RECORD t
+		WHERE t.position IS NOT NULL
+		ORDER BY t.position</select>
+    <select id="queryStockCountBoard" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	  
+	  SELECT DIMO_TYPE "dimoType", COUNT(1) "cnt", SUM(RESIDUE) "residue"
+		  FROM (SELECT T1.DIMO_BATCH_NO,
+		               T1.DIMO_TYPE,
+		               T1.POSITION,
+		               T1.THEORY_AMOUNT - NVL(T5.LOSE, 0) - NVL(T2.PROD_LENGTH, 0) -
+		               NVL(T1.SCRAP_AMOUNT, 0) RESIDUE,
+		               T1.PRODUCT_DT
+		          FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+		          LEFT JOIN (SELECT SUM(LOSS) LOSE, DIMO_BATCH_NO
+		                      FROM (SELECT ZM.DIMO_BATCH_NO,
+		                                   T.DM_BATCH_ID,
+		                                   T.DEFECT_ITEM_ID,
+		                                   T.IF_TEAR,
+		                                   T.LOSS
+		                              FROM QINSEN.INST_CDM_DEFECT2 T
+		                              LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD ZM
+		                                ON T.DM_BATCH_ID = ZM.ID)
+		                     GROUP BY DIMO_BATCH_NO) T5
+		            ON T5.DIMO_BATCH_NO = T1.DIMO_BATCH_NO
+		          LEFT JOIN (SELECT T.DIMO_BATCH_NO, SUM(T.OUT_LENGTH) PROD_LENGTH
+		                      FROM V_KS_TUMO_ALL T
+		                     GROUP BY T.DIMO_BATCH_NO) T2
+		            ON T1.DIMO_BATCH_NO = T2.DIMO_BATCH_NO
+		         WHERE T1.DIMO_TYPE IN ('20', '30', '40', '50', '60')
+		           AND T1.POSITION IS NOT NULL)
+		           WHERE 1=1
+		           <isNotNull prepend="" property="diff">AND SYSDATE - to_date(to_char(PRODUCT_DT,'yyyy-mm-dd'),'yyyy-mm-dd') &gt;#diff#</isNotNull>
+		 GROUP BY DIMO_TYPE
+		 ORDER BY DIMO_TYPE
+	  
+	  </select>
 </sqlMap>

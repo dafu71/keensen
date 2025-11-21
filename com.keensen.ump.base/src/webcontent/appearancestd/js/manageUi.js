@@ -24,7 +24,7 @@ com.keensen.ump.base.AppearancestdMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 90,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -37,7 +37,7 @@ com.keensen.ump.base.AppearancestdMgr = function() {
 							},{
 								xtype : 'textfield',
 								name : 'condition/specName',
-								fieldLabel : '内部型号%-%'
+								fieldLabel : '卷膜工艺执行型号%-%'
 							}/*, {
 								xtype : 'combobox',
 								mode : 'local',
@@ -98,7 +98,7 @@ com.keensen.ump.base.AppearancestdMgr = function() {
 					}, {
 						dataIndex : 'specName',
 						sortable:true,
-						header : '生产内部型号'
+						header : '卷膜工艺执行型号'
 					}, {
 						dataIndex : 'diameter',
 						header : '白膜直径(mm)'

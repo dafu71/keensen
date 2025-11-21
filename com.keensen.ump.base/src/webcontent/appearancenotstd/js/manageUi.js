@@ -24,7 +24,7 @@ com.keensen.ump.base.AppearancenotstdMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 90,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -34,29 +34,24 @@ com.keensen.ump.base.AppearancenotstdMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/jmSpecName',
 								fieldLabel : '卷膜型号%-%'
-							},{
+							}, {
 								xtype : 'textfield',
 								name : 'condition/specName',
-								fieldLabel : '内部型号%-%'
-							}/*, {
-								xtype : 'combobox',
-								mode : 'local',
-								fieldLabel : '司标/非司标',
-								ref : '../reserve1',
-								hiddenName : 'condition/reserve1',
-								anchor : '100%',
-								colspan : 1,
-								emptyText : '--请选择--',
-								editable : false,
-								store : this.standStore,
-								displayField : "name",
-								valueField : "code",
-								listeners : {
-									"expand" : function(A) {
-										_this.queryPanel.reserve1.reset()
-									}
-								}
-							}*/]
+								fieldLabel : '卷膜工艺执行型号%-%'
+							}, {
+								xtype : 'hidden',
+								name : 'condition/notreserve1',
+								value : '公司标准'
+							}/*
+								 * , { xtype : 'combobox', mode : 'local',
+								 * fieldLabel : '司标/非司标', ref : '../reserve1',
+								 * hiddenName : 'condition/reserve1', anchor :
+								 * '100%', colspan : 1, emptyText : '--请选择--',
+								 * editable : false, store : this.standStore,
+								 * displayField : "name", valueField : "code",
+								 * listeners : { "expand" : function(A) {
+								 * _this.queryPanel.reserve1.reset() } } }
+								 */]
 				});
 		this.queryPanel.addButton({
 					text : "导出",
@@ -93,12 +88,12 @@ com.keensen.ump.base.AppearancenotstdMgr = function() {
 						header : '司标/非司标'
 					}, {
 						dataIndex : 'jmSpecName',
-						sortable:true,
+						sortable : true,
 						header : '卷膜型号'
 					}, {
 						dataIndex : 'specName',
-						sortable:true,
-						header : '生产内部型号'
+						sortable : true,
+						header : '卷膜工艺执行型号'
 					}, {
 						dataIndex : 'diameter',
 						header : '白膜直径(mm)'
@@ -167,12 +162,12 @@ com.keensen.ump.base.AppearancenotstdMgr = function() {
 						header : '托盘尺寸（m）'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.base.appearancestd.queryAppearanceNotStdByPage.biz.ext',
+				url : 'com.keensen.ump.base.appearancestd.queryAppearanceNotStdByPage2.biz.ext',
 				root : 'data',
 				autoLoad : true,
 				totalProperty : 'totalCount',
 				baseParams : {
-			// 'condition/werks' : 3000
+					'condition/notreserve1' : '公司标准'
 				},
 				fields : [{
 							name : 'specName'

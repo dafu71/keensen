@@ -129,6 +129,7 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 		});
 		this.queryPanel.addButton({
 					text : "任务安排",
+					hidden : modifyLimit != 1,
 					scope : this,
 					iconCls : 'icon-application_edit',
 					handler : this.onArrange
@@ -145,6 +146,7 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 		this.listPanel = new Ext.fn.ListPanel({
 			tbar : [{
 						text : '机台分配膜片',
+						hidden : modifyLimit != 1,
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onDutyView

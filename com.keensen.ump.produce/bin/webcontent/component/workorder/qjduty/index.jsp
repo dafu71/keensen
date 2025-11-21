@@ -11,6 +11,13 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    
+    //10001951 10001947  30298
+    int modifyLimit = 0;
+    
+    if(roleId.indexOf("10001951")>-1 || roleId.indexOf("10001947")>-1 || roleId.indexOf("30298")>-1){
+    	modifyLimit = 1;
+    }
 %>
 <html>
 <!-- 
@@ -34,6 +41,7 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var jmcodeId = Ext.id();
+  var modifyLimit = "<%=modifyLimit %>";
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.workorder.QjdutyMgr
 		});

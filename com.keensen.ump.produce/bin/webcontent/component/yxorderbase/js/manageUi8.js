@@ -1044,7 +1044,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'gpdLow',
-						header : '产水量（GPD）',
+						header : '产水量范围（GPD）',
 						sortable : true
 					}, {
 						dataIndex : 'gpdUp',
@@ -1459,7 +1459,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					dataIndex : 'jmSpecName',
 					ref : '../../jmSpecName',
 					// readOnly : true,
-					allowBlank : false,
+					//allowBlank : false,
 					editable : true,
 					fieldLabel : '<font style="color:red;">卷膜型号</font>',
 					// readOnly : true,
@@ -1835,7 +1835,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100',
 					colspan : 6,
 					xtype : 'textfield',
-					fieldLabel : '产水量(GPD)',
+					fieldLabel : '产水量范围(GPD)',
 					// minValue : 0,
 					// decimalPrecision : 0,
 					allowBlank : false
@@ -1933,7 +1933,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						// decimalPrecision : 0
 					}, {
 					xtype : 'combobox',
-					forceSelection : true,
+					forceSelection : false,
 					// allowBlank : false,
 					mode : 'local',
 					fieldLabel : '端盖类型',
@@ -1943,7 +1943,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 6,
 					emptyText : '--请选择--',
-					editable : false,
+					editable : true,
 					store : this.lidStore,
 					displayField : "name",
 					valueField : "code",
@@ -1982,7 +1982,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							colspan : 24
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '卷膜胶带',
@@ -1992,7 +1992,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.tapeStore,
 							displayField : "name",
 							valueField : "code",
@@ -2003,7 +2003,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							// allowBlank : false,
 							hidden : true,
 							mode : 'local',
@@ -2014,7 +2014,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.ynStore,
 							displayField : "name",
 							valueField : "code",
@@ -2025,7 +2025,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '彩带颜色',
@@ -2035,7 +2035,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.colorStore,
 							displayField : "name",
 							valueField : "code",
@@ -2085,7 +2085,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '新制版',
@@ -2095,7 +2095,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.ynStore,
 							displayField : "name",
 							valueField : "code",
@@ -2110,7 +2110,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							colspan : 24
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '制作方式',
@@ -2120,7 +2120,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.makeLabelStore,
 							displayField : "name",
 							valueField : "code",
@@ -2149,7 +2149,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '材质',
@@ -2159,7 +2159,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.materialStore,
 							displayField : "name",
 							valueField : "code",
@@ -2170,7 +2170,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '底色',
@@ -2180,7 +2180,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.backStore,
 							displayField : "name",
 							valueField : "code",
@@ -2208,7 +2208,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							 * this.reset() } } }
 							 */, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '序列是否固定',
@@ -2218,7 +2218,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.ynStore,
 							displayField : "name",
 							valueField : "code",
@@ -2313,7 +2313,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							decimalPrecision : 0
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '第二标签贴的位置 ',
@@ -2323,7 +2323,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.positionLabelStore,
 							displayField : "name",
 							valueField : "code",
@@ -2388,7 +2388,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							xtype : 'combo',
 							mode : 'local',
-							// forceSelection : true,
+							forceSelection : false,
 							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '密封圈位置',
@@ -2468,7 +2468,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '制作方式',
@@ -2478,7 +2478,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.makeLabelStore,
 							displayField : "name",
 							valueField : "code",
@@ -2641,7 +2641,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							decimalPrecision : 0
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '第二唛头贴的位置 ',
@@ -2651,7 +2651,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.positionMarkStore,
 							displayField : "name",
 							valueField : "code",
@@ -2843,7 +2843,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							colspan : 24
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '托盘材质',
@@ -2853,7 +2853,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.trayStore,
 							displayField : "name",
 							valueField : "code",
@@ -2864,7 +2864,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '托盘尺寸',
@@ -2874,7 +2874,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.traySizeStore,
 							displayField : "name",
 							valueField : "code",
@@ -2894,7 +2894,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							fieldLabel : '打包层数'
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
+							forceSelection : false,
 							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '出货报告是否随货',
@@ -2904,7 +2904,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 6,
 							emptyText : '--请选择--',
-							editable : false,
+							editable : true,
 							store : this.goodsWithReportStore,
 							displayField : "name",
 							valueField : "code",
@@ -3767,7 +3767,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100',
 					colspan : 6,
 					xtype : 'textfield',
-					fieldLabel : '产水量(GPD)',
+					fieldLabel : '产水量范围(GPD)',
 					readOnly : true
 				}, {
 					dataIndex : 'gpdUp',

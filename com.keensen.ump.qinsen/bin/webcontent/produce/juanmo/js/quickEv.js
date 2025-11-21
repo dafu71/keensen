@@ -145,14 +145,13 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.genBatchNo = function()
 com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onSave = function() {
 	var _this = this;
 	if (this.inputPanel.form.isValid()) {
-		
+
 		var pipeCode = this.inputPanel.pipeCode.getValue();
-		if(Ext.isEmpty(pipeCode)){
+		if (Ext.isEmpty(pipeCode)) {
 			Ext.Msg.alert("系统提示", "中心管组件编号不能为空！");
 			return false;
 		}
-		
-		
+
 		var produceDate = this.inputPanel.produceDt.getRawValue();
 		var date = new Date(produceDate);
 		produceDate = date.format('Ymd');
@@ -378,32 +377,69 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onEnd = function() {
 	var _this = this;
 	Ext.Msg.confirm("操作确认", "您确实要下机结算工作量吗?", function(A) {
 		if (A == "yes") {
-			_this.requestMask = this.requestMask
-					|| new Ext.LoadMask(Ext.getBody(), {
-								msg : "后台正在操作,请稍候!"
-							});
-			_this.requestMask.show();
-			Ext.Ajax.request({
-				url : "com.keensen.ump.produce.component.productioncount.saveJmEnd.biz.ext",
-				method : "post",
-				success : function(resp) {
-					var ret = Ext.decode(resp.responseText);
-					if (ret.success) {
-						var msg = ret.msg;
-						_this.inputPanel.loginfo
-								.setValue("<span style='color:red'>" + msg
-										+ "</span>");
+			Ext.Msg.prompt('您的确认码', '请输入', function(btn, text) {
+				if (btn == 'ok') {
+					var confirmCode = text.trim();
+					if (Ext.isEmpty(confirmCode)) {
+						Ext.Msg.alert('系统提示', '确认码不能为空');
+						return false;
+					} else {
+						_this.requestMask = this.requestMask
+								|| new Ext.LoadMask(Ext.getBody(), {
+											msg : "后台正在操作,请稍候!"
+										});
+						_this.requestMask.show();
+						Ext.Ajax.request({
+							url : "com.keensen.ump.produce.component.produce.queryConfirmCode.biz.ext",
+							jsonData : {
+								'confirmCode' : confirmCode
+							},
+							method : "post",
+							success : function(resp) {
+								var ret = Ext.decode(resp.responseText);
+								if (ret.success) {
+									var err = ret.err;
+									var msg = ret.msg;
+									if (err != '0') {
+										Ext.Msg.alert('系统提示', msg);
+										return false;
+									} else {
+										Ext.Ajax.request({
+											url : "com.keensen.ump.produce.component.productioncount.saveJmEnd.biz.ext",
+											method : "post",
+											success : function(resp) {
+												var ret = Ext
+														.decode(resp.responseText);
+												if (ret.success) {
+													var msg = ret.msg;
+													_this.inputPanel.loginfo
+															.setValue("<span style='color:red'>"
+																	+ msg
+																	+ "</span>");
 
-						Ext.getCmp(quickGetdutyId).setDisabled(true);
-						Ext.getCmp(singleGetdutyId).setDisabled(true);
-						Ext.getCmp(multiGetdutyId).setDisabled(true);
+													Ext.getCmp(quickGetdutyId)
+															.setDisabled(true);
+													Ext.getCmp(singleGetdutyId)
+															.setDisabled(true);
+													Ext.getCmp(multiGetdutyId)
+															.setDisabled(true);
 
+												}
+											},
+											callback : function() {
+												_this.requestMask.hide()
+											}
+										})
+									}
+								}
+							},
+							callback : function() {
+								_this.requestMask.hide()
+							}
+						})
 					}
-				},
-				callback : function() {
-					_this.requestMask.hide()
 				}
-			})
+			}, this, false);
 		}
 	})
 }

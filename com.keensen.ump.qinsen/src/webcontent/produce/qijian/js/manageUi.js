@@ -37,6 +37,8 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 		this.initInputWindow4Abilition2();
 		this.initAbilitionWindow();
 
+		this.initModifyPrintBatchNoWindow();
+
 		this.opt = '';
 
 		this.gridPanel = this.gridPanel || new Ext.Panel({
@@ -580,6 +582,29 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						iconCls : 'icon-application_edit',
 						hidden : modifyOrderNoFlag != 1,
 						handler : this.onModiOrder
+					}, '-', {
+						xtype : 'splitbutton',
+						// disabled : allRight != '1',
+						text : '其它修改',
+						// scale : 'small',
+						// rowspan : 1,
+						// iconAlign : 'top',
+						iconCls : 'icon-application_edit',
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '修改打印序号',
+									scope : this,
+									hidden : modifyPrintBatchNo == 0,
+									iconCls : 'icon-application_edit',
+									handler : this.modifyPrintBatchNo
+								}, {
+									text : '修改为湿膜',
+									scope : this,
+									hidden : modifyPrintBatchNo == 0,
+									iconCls : 'icon-application_edit',
+									handler : this.modifyDryWet
+
+								}]
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.qijian.deleteQijian.biz.ext',
@@ -591,7 +616,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						width : 120,
 						dataIndex : 'batchNo'
 					}, {
-						header : '唛头显示<br>元件序号',
+						header : '打印<br>元件序号',
 						sortable : true,
 						width : 120,
 						dataIndex : 'printBatchNo'
@@ -776,6 +801,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						dataIndex : 'modifyOrderNoName',
 						sortable : true
 					}, {
+						header : '改订单原因',
+						width : 120,
+						dataIndex : 'modifyOrderNoAdvise'
+					}, {
 						header : '包装工序改订单',
 						width : 120,
 						dataIndex : 'packageModify'
@@ -839,6 +868,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						width : 160,
 						dataIndex : 'abilitionCode',
 						sortable : true
+					}, {
+						header : '改湿膜原因',
+						width : 120,
+						dataIndex : 'modifyDryWetAdvise'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.qinsen.qijian.queryRecordsByPage.biz.ext',
@@ -1032,6 +1065,10 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							name : 'overtimeAdvise'
 						}, {
 							name : 'abilitionCode'
+						}, {
+							name : 'modifyDryWetAdvise'
+						}, {
+							name : 'modifyOrderNoAdvise'
 						}]
 			})
 		})
@@ -3987,5 +4024,57 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							this.listPanel4AbilitionList]
 
 				});
+	}
+
+	this.initModifyPrintBatchNoWindow = function() {
+		var _this = this;
+		this.modifyPrintBatchNoWindow = this.modifyPrintBatchNoWindow
+				|| new Ext.fn.FormWindow({
+					title : '气检记录-换标',
+					height : 480,
+					width : 600,
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
+						xtype : 'inputpanel',
+						pgrid : this.listPanel,
+						columns : 1,
+						saveUrl : 'com.keensen.ump.qinsen.qijian.modifyPrintBatchNo.biz.ext',
+						successFn : function(i, r) {
+							if (r.err != '0') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.msg,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+												// _this.qijianAddWindow.hide();
+											}
+										})
+							} else {
+								_this.listPanel.store.load();
+								_this.modifyPrintBatchNoWindow.hide();
+
+							}
+						},
+
+						fields : [{
+									xtype : 'displayfield',
+									height : '5'
+								}, {
+									ref : '../../printBatchNo',
+									fieldLabel : '打印元件序号',
+									name : 'entity/printBatchNo',
+									allowBlank : false,
+									anchor : '90%'
+								}, {
+									name : 'entity/recordId',
+									ref : '../../recordId',
+									xtype : 'hidden'
+								}]
+					}]
+				})
 	}
 }

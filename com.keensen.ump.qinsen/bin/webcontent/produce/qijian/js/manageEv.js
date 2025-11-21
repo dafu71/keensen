@@ -16,18 +16,18 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 					}
 				});
 			}, this);
-			
-	this.queryPanel4Abilition.mon(this.queryPanel4Abilition, 'query',
-			function(form, vals) {
-				var store = this.listPanel4AbilitionList.store;
-				store.baseParams = vals;
-				store.load({
-					params : {
-						"pageCond/begin" : 0,
-						"pageCond/length" : this.listPanel4AbilitionList.pagingToolbar.pageSize
-					}
-				});
-			}, this);
+
+	this.queryPanel4Abilition.mon(this.queryPanel4Abilition, 'query', function(
+			form, vals) {
+		var store = this.listPanel4AbilitionList.store;
+		store.baseParams = vals;
+		store.load({
+			params : {
+				"pageCond/begin" : 0,
+				"pageCond/length" : this.listPanel4AbilitionList.pagingToolbar.pageSize
+			}
+		});
+	}, this);
 
 	this.listPanel4ProduceCount.store.on('load', function() {
 
@@ -452,43 +452,49 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onChooseSingleOrder = functio
 		return false;
 	}
 
-	Ext.Msg.confirm('提示', '共' + records.length + '个批次，您确定要修改这些产品的订单号？',
-			function(btn) {
-				if (btn === 'yes') {
-					_this.requestMask = this.requestMask
-							|| new Ext.LoadMask(Ext.getBody(), {
-										msg : "后台正在操作,请稍候!"
-									});
-					_this.requestMask.show();
-					Ext.Ajax.request({
-						url : "com.keensen.ump.qinsen.qijian.modiOrderAndProdSpecId.biz.ext",
-						method : "post",
-						jsonData : {
-							orderNo : orderNo,
-							prodSpecId : prodSpecId,
-							recordIds : arr.join(',')
-						},
-						success : function(resp) {
-							var ret = Ext.decode(resp.responseText);
-							if (ret.success) {
-								Ext.Msg.alert("系统提示", "操作成功！", function() {
-											_this.listPanel.store.load();
-											_this.chooseSingleOrderWindow
-													.hide();
+	Ext.Msg.prompt('提示', '共' + records.length + '个批次，请您输入修改订单的原因', function(
+			btn, text) {
+		if (btn === 'ok') {
 
-										})
-							} else {
-								Ext.Msg.alert("系统提示", "修改订单号失败！")
+			if (Ext.isEmpty(text)) {
+				Ext.Msg.alert("系统提示", "请输入修改订单的原因！");
+				return;
+			}
 
-							}
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+				url : "com.keensen.ump.qinsen.qijian.modiOrderAndProdSpecId2.biz.ext",
+				method : "post",
+				jsonData : {
+					orderNo : orderNo,
+					prodSpecId : prodSpecId,
+					recordIds : arr.join(','),
+					modifyOrderNoAdvise : text
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						Ext.Msg.alert("系统提示", "操作成功！", function() {
+									_this.listPanel.store.load();
+									_this.chooseSingleOrderWindow.hide();
 
-						},
-						callback : function() {
-							_this.requestMask.hide()
-						}
-					})
+								})
+					} else {
+						Ext.Msg.alert("系统提示", "修改订单号失败！")
+
+					}
+
+				},
+				callback : function() {
+					_this.requestMask.hide()
 				}
-			});
+			})
+		}
+	}, this, true);
 
 }
 
@@ -994,26 +1000,62 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onEnd = function() {
 	var _this = this;
 	Ext.Msg.confirm("操作确认", "您确实要下机结算工作量吗?", function(A) {
 		if (A == "yes") {
-			_this.requestMask = this.requestMask
-					|| new Ext.LoadMask(Ext.getBody(), {
-								msg : "后台正在操作,请稍候!"
-							});
-			_this.requestMask.show();
-			Ext.Ajax.request({
-				url : "com.keensen.ump.produce.component.productioncount.saveQjEnd.biz.ext",
-				method : "post",
-				success : function(resp) {
-					var ret = Ext.decode(resp.responseText);
-					if (ret.success) {
-						var msg = ret.msg;
-						_this.queryPanel.setTitle("<span style='color:red'>"
-								+ msg + "</span>");
+			Ext.Msg.prompt('您的确认码', '请输入', function(btn, text) {
+				if (btn == 'ok') {
+					var confirmCode = text.trim();
+					if (Ext.isEmpty(confirmCode)) {
+						Ext.Msg.alert('系统提示', '确认码不能为空');
+						return false;
+					} else {
+						_this.requestMask = this.requestMask
+								|| new Ext.LoadMask(Ext.getBody(), {
+											msg : "后台正在操作,请稍候!"
+										});
+						_this.requestMask.show();
+						Ext.Ajax.request({
+							url : "com.keensen.ump.produce.component.produce.queryConfirmCode.biz.ext",
+							jsonData : {
+								'confirmCode' : confirmCode
+							},
+							method : "post",
+							success : function(resp) {
+								var ret = Ext.decode(resp.responseText);
+								if (ret.success) {
+									var err = ret.err;
+									var msg = ret.msg;
+									if (err != '0') {
+										Ext.Msg.alert('系统提示', msg);
+										return false;
+									} else {
+										Ext.Ajax.request({
+											url : "com.keensen.ump.produce.component.productioncount.saveQjEnd.biz.ext",
+											method : "post",
+											success : function(resp) {
+												var ret = Ext
+														.decode(resp.responseText);
+												if (ret.success) {
+													var msg = ret.msg;
+													_this.queryPanel
+															.setTitle("<span style='color:red'>"
+																	+ msg
+																	+ "</span>");
+												}
+											},
+											callback : function() {
+												_this.requestMask.hide()
+											}
+										})
+									}
+								}
+							},
+							callback : function() {
+								_this.requestMask.hide()
+							}
+						})
 					}
-				},
-				callback : function() {
-					_this.requestMask.hide()
 				}
-			})
+			}, this, false);
+
 		}
 	})
 }
@@ -1127,12 +1169,12 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onSaveAbilition = function() 
 				Ext.Msg.alert("系统提示", "卷膜序号必填！")
 				return false;
 			}
-			
+
 			if (Ext.isEmpty(tmBatchNo)) {
 				Ext.Msg.alert("系统提示", "涂膜序号必填！")
 				return false;
 			}
-			
+
 			if (Ext.isEmpty(prodSpecId)) {
 				Ext.Msg.alert("系统提示", "元件型号必填！")
 				return false;
@@ -1143,6 +1185,8 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onSaveAbilition = function() 
 
 		Ext.each(records, function(r) {
 
+					var checkTm = r.data['checkTm'];
+					checkTm = checkTm.length < 5 ? null : checkTm;
 					var d = {
 						'jmBatchNo' : r.data['jmBatchNo'],
 						'tmBatchNo' : r.data['tmBatchNo'],
@@ -1150,7 +1194,7 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onSaveAbilition = function() 
 						'amount' : r.data['amount'],
 						'juanmoLength' : r.data['juanmoLength'],
 						'dryWet' : r.data['dryWet'],
-						'checkTm' : r.data['checkTm'],
+						'checkTm' : checkTm,
 						'gpd' : r.data['gpd'],
 						'salt' : r.data['salt'],
 						'prodSpecName' : r.data['prodSpecName'],
@@ -1227,7 +1271,6 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onAbolitionInput = function()
 	this.inputWindow4Abilition2.show();
 }
 
-
 com.keensen.ump.qinsen.produce.qijianMgr.prototype.onAbolitionQuery = function() {
 
 	this.abilitionWindow.show();
@@ -1296,4 +1339,85 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.onQueryByJmBatchNos = functio
 					});
 		}
 	}, this, true);
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.modifyPrintBatchNo = function() {
+
+	var A = this.listPanel;
+	var store = this.listPanel4Abilition.store;
+
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		if (C.length > 1) {
+			Ext.Msg.alert("系统提示", "请选择一行数据！");
+		} else {
+			var recordId = C[0].data.recordId;
+			var printBatchNo = C[0].data.printBatchNo;
+			this.modifyPrintBatchNoWindow.recordId.setValue(recordId);
+			this.modifyPrintBatchNoWindow.printBatchNo.setValue(printBatchNo);
+			this.modifyPrintBatchNoWindow.show();
+
+		}
+	}
+
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.modifyDryWet = function() {
+
+	var _this = this;
+	var A = this.listPanel;
+	var store = this.listPanel4Abilition.store;
+
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+	} else {
+
+		Ext.Msg.prompt('提示', '请您输入修改湿膜的原因', function(btn, text) {
+			if (btn == 'ok') {
+
+				if (Ext.isEmpty(text)) {
+					Ext.Msg.alert("系统提示", "请输入原因！");
+					return;
+				}
+
+				var C = A.getSelectionModel().getSelections();
+
+				var records = A.getSelectionModel().getSelections();
+
+				var ids = []
+				Ext.each(records, function(r) {
+							var juanmoBatchId = r.data.juanmoBatchId;
+							ids.push(juanmoBatchId);
+						})
+				this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.component.apply.saveBatchDryWet2.biz.ext",
+					method : "post",
+					jsonData : {
+						ids : ids.join(','),
+						modifyDryWetAdvise : text
+
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							if (ret.success) {
+								_this.listPanel.store.reload();
+							}
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
+			}
+		}, this, true);
+	}
 }

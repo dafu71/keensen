@@ -62,10 +62,24 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 					this.editWindow.loadData(cell);
 				}
 			}, this)
-			
+
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterSave',
 			function(gird, cell) {
 			}, this)
+
+	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterload',
+			function(win, data) {
+				var regEx = new RegExp("\\-", "gi");
+				if (data.productDt) {
+					data.productDt = data.productDt.split('.')[0];
+					var date1 = data.productDt.replace(regEx, "/");
+					this.editWindow.items.items[0].form
+							.findField('entity/productDt')
+							.setValue(new Date(date1));
+				}
+				
+
+			}, this);
 
 	this.listPanel.store.on('load', function() {
 
@@ -73,14 +87,18 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 				if (records.length == 0) {
 					Ext.getCmp('zmxtotaltheoryamount').setValue('');
 					Ext.getCmp('zmxtotalloss').setValue('');
+					Ext.getCmp('zmxtotalrelease').setValue('');
 					return
 				}
 
 				var totalTheoryAmount = records[0].data.totalTheoryAmount;
 				var totalLoss = records[0].data.totalLoss;
+				var zmxtotalrelease = records[0].data.zmxtotalrelease;
 				Ext.getCmp('zmxtotaltheoryamount').setValue('理论投入数合计:'
 						+ totalTheoryAmount);
 				Ext.getCmp('zmxtotalloss').setValue('不良米数合计:' + totalLoss);
+				Ext.getCmp('zmxtotalrelease').setValue('铸膜液排料重量合计:'
+						+ zmxtotalrelease);
 			})
 }
 
@@ -111,9 +129,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.exportExcel = function()
 	 * var fname = ret.fname; if (Ext.isIE) {
 	 * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); }
 	 * else { window.location.href =
-	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; }
-	 *  }
-	 *  }, callback : function() { _this.requestMask.hide() } })
+	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; } } },
+	 * callback : function() { _this.requestMask.hide() } })
 	 */
 }
 

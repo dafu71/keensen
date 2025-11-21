@@ -117,6 +117,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						handler : this.onRelation
 					}, '-', {
 						xtype : 'splitbutton',
+						hidden : nqLimit != 1 && pgLimit !=1,
 						text : '中文报告',
 						// scale : 'small',
 						// rowspan : 1,
@@ -124,28 +125,33 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						arrowAlign : 'bottom',
 						menu : [{
-									text : '打印(湿膜数据)',
+									text : '打印(通用报告)',
 									scope : this,
 									iconCls : 'icon-printer',
+									hidden : pgLimit !=1,
 									handler : this.onPrint
 								}, {
-									text : '查看(湿膜数据)',
+									text : '查看(通用报告)',
 									scope : this,
 									iconCls : 'icon-application_form_magnify',
+									hidden : nqLimit != 1 && pgLimit !=1,
 									handler : this.onView
 								}, '-', {
-									text : '打印(气检数据)',
+									text : '打印(特殊客户T)',
 									scope : this,
 									iconCls : 'icon-printer',
+									hidden : pgLimit !=1,
 									handler : this.onPrint3
 								}, {
-									text : '查看(气检数据)',
+									text : '查看(特殊客户T)',
 									scope : this,
 									iconCls : 'icon-application_form_magnify',
+									hidden : nqLimit != 1 && pgLimit !=1,
 									handler : this.onView3
 								}]
 					}, '-', {
 						xtype : 'splitbutton',
+						hidden : nqLimit != 1 && pgLimit !=1,
 						text : '英文报告',
 						// scale : 'small',
 						// rowspan : 1,
@@ -153,23 +159,27 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						arrowAlign : 'bottom',
 						menu : [{
-									text : '打印(湿膜数据)',
+									text : '打印(通用报告)',
 									scope : this,
+									hidden : pgLimit !=1,
 									iconCls : 'icon-printer',
 									handler : this.onPrint2
 								}, {
-									text : '查看(湿膜数据)',
+									text : '查看(通用报告)',
 									scope : this,
+									hidden : nqLimit != 1 && pgLimit !=1,
 									iconCls : 'icon-application_form_magnify',
 									handler : this.onView2
 								}, '-', {
-									text : '打印(气检数据)',
+									text : '打印(特殊客户T)',
 									scope : this,
+									hidden : pgLimit !=1,
 									iconCls : 'icon-printer',
 									handler : this.onPrint4
 								}, {
-									text : '查看(气检数据)',
+									text : '查看(特殊客户T)',
 									scope : this,
+									hidden : nqLimit != 1 && pgLimit !=1,
 									iconCls : 'icon-application_form_magnify',
 									handler : this.onView4
 								}]
@@ -182,7 +192,7 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 						menu : [{
 									text : '打印',
 									scope : this,
-									iconCls : 'icon-printer',
+									iconCls : 'icon-printer',									
 									handler : this.onCertificatePrint
 								}, {
 									text : '查看',

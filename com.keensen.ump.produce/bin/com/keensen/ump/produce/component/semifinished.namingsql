@@ -109,7 +109,12 @@
     CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END "dryWet"
     from qinsen.inst_qijian qj
     left join qinsen.inst_juanmo_main jm ON qj.juanmo_batch_id = jm.record_id
-     LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+     LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               )) WT 
   		ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID
     LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
         ON PMS.MATER_SPEC_ID = jm.PROD_SPEC_ID

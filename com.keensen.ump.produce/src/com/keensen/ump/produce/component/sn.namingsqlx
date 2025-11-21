@@ -4,6 +4,12 @@
    
     <select id="query" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
     SELECT T.ID "id",t.prod_Spec_Name "prodSpecName",
+    
+    
+       to_char(t.create_time,'yyyy-MM-dd') "createTime",
+       T.CREATE_USER_ID     AS "createUserId",
+       T.CREATE_NAME        AS "createName",
+       
        T.USE_TYPE "useType",
        T.PREFIX "prefix",
        T.NUM "num",
@@ -57,8 +63,10 @@
     
     <insert id="insertSn" parameterClass="java.util.HashMap" >
     INSERT INTO KS_COMPONENT_SN
-  (id,use_type,prefix,NUM,prod_Spec_Name,digit,rule,drawing_Code,reserve1,reserve2)
-  SELECT SEQ_COMPONENT_SN.NEXTVAL,#useType#,#prefix#,#num#,#prodSpecName#,#digit#,#rule#,#drawingCode#,#reserve1# ,#reserve2# FROM dual
+  (id,use_type,prefix,NUM,prod_Spec_Name,digit,rule,drawing_Code,reserve1,reserve2,create_User_Id,create_name,create_time)
+  SELECT SEQ_COMPONENT_SN.NEXTVAL,#useType#,#prefix#,#num#,#prodSpecName#,#digit#,#rule#,#drawingCode#,#reserve1# ,#reserve2# 
+  ,#createUserId#,#createName#,#createTime#
+  FROM dual
   where not exists(select 1 from KS_COMPONENT_SN where use_type = #useType# and prefix = #prefix#)
     
     </insert>
@@ -66,6 +74,17 @@
     <update id="updateSn" parameterClass="java.util.HashMap" >
     update KS_COMPONENT_SN
     set  
+    
+    <isNotNull prepend="" property="updateUserId"> 
+		       update_User_Id=#updateUserId#,
+	</isNotNull>
+    <isNotNull prepend="" property="updateName"> 
+		       update_name=#updateName#,
+	</isNotNull>
+    <isNotNull prepend="" property="updateTime"> 
+		       update_time=#updateTime#,
+	</isNotNull>
+    
     <isNotNull prepend="" property="digit"> 
 		       digit=#digit#,
 	</isNotNull>

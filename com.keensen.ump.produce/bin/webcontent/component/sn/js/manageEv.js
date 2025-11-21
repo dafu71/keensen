@@ -200,6 +200,7 @@ com.keensen.ump.produce.component.snMgr.prototype.onModify = function() {
 		}
 	}
 	this.inputWindow.show();
+	this.getExample();
 }
 
 com.keensen.ump.produce.component.snMgr.prototype.onAdd = function() {
@@ -314,4 +315,64 @@ com.keensen.ump.produce.component.snMgr.prototype.onModifyNum = function() {
 			this.modifyNumWindow.show();
 		}
 	}
+}
+
+com.keensen.ump.produce.component.snMgr.prototype.getExample = function() {
+
+	var useType = this.inputWindow.useType.getValue();
+	var prefix = this.inputWindow.prefix.getValue();
+	var digit = this.inputWindow.digit.getValue();
+
+	this.inputWindow.example.setValue(getSn(useType, prefix, digit));
+}
+
+function formatDate() {
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = String(date.getMonth() + 1).padStart(2, '0');
+	var day = String(date.getDate()).padStart(2, '0');
+	// var hours = String(date.getHours()).padStart(2, '0');
+	// var minutes = String(date.getMinutes()).padStart(2, '0');
+	// var seconds = String(date.getSeconds()).padStart(2, '0');
+
+	return {
+		year : year,
+		month : month,
+		day : day
+	}
+}
+
+function padNumber(num, length) {
+	return num.toString().padStart(length, '0');
+}
+
+function getSn(useType, prefix, digit) {
+
+	if (Ext.isEmpty(useType) || Ext.isEmpty(prefix) || Ext.isEmpty(digit)) {
+		return '';
+	}
+	var ret = '';
+	var dt = formatDate();
+	var ycode = dt.year - 2020;
+	var m = dt.month;
+	var mcode = ''
+	switch (m) {
+		case '10' :
+			mcode = 'A';
+			break;
+		case '11' :
+			mcode = 'B';
+			break;
+		case '12' :
+			mcode = 'C';
+			break;
+		default :
+			mcode = m;
+	}
+	if (useType == '家用') {
+		ret = prefix + ycode + mcode + padNumber(1, digit);
+	} else {
+		ret = prefix + padNumber(1, digit);
+	}
+	return ret;
 }

@@ -1,10 +1,12 @@
 com.keensen.ump.produce.component.snMgr = function() {
 
 	this.initPanel = function() {
+
+		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
-		
+
 		this.initModifyNumtWindow();
 
 		return new Ext.fn.fnLayOut({
@@ -15,10 +17,7 @@ com.keensen.ump.produce.component.snMgr = function() {
 				});
 	}
 
-	this.initQueryPanel = function() {
-
-		var _this = this;
-
+	this.initStore = function() {
 		this.useTypeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['家用', '贴牌规则（家用）'], ['工业', '贴牌规则（工业）'],
@@ -29,6 +28,12 @@ com.keensen.ump.produce.component.snMgr = function() {
 					fields : ['code', 'name'],
 					data : [['1', '在用'], ['0', '停用']]
 				});
+
+	}
+
+	this.initQueryPanel = function() {
+
+		var _this = this;
 
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 110,
@@ -176,10 +181,10 @@ com.keensen.ump.produce.component.snMgr = function() {
 						header : '标签类型',
 						renderer : function(v, m, r, i) {
 							var prefix = r.get("prefix");
-							
-							if(prefix.substr(0,1)=='K')
+
+							if (prefix.substr(0, 1) == 'K')
 								return '公司标签';
-							
+
 							if (v == '家用')
 								return '贴牌规则（家用）';
 							if (v == '工业')
@@ -215,6 +220,12 @@ com.keensen.ump.produce.component.snMgr = function() {
 					}, {
 						dataIndex : 'rule',
 						header : '编码规则'
+					}, {
+						dataIndex : 'createTime',
+						header : '规则保存时间'
+					}, {
+						dataIndex : 'createName',
+						header : '规则编制人'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.sn.queryByPage.biz.ext',
@@ -246,6 +257,10 @@ com.keensen.ump.produce.component.snMgr = function() {
 							name : 'reserve2'
 						}, {
 							name : 'drawingCode'
+						}, {
+							name : 'createName'
+						}, {
+							name : 'createTime'
 						}]
 			})
 		})
@@ -265,145 +280,172 @@ com.keensen.ump.produce.component.snMgr = function() {
 					saveUrl : 'com.keensen.ump.produce.component.sn.createSn.biz.ext',
 					fields : [{
 
-						xtype : 'combobox',
-						fieldLabel : '标签类型',
-						ref : '../../useType',
-						hiddenName : 'condition/useType',
-						emptyText : '--请选择--',
-						allowBlank : false,
-						editable : false,
-						anchor : '85%',
-						colspan : 1,
-						store : [['家用', '家用'], ['工业', '工业'], ['非常规', '非常规'],
-								['公司标签', '公司标签']],
-						listeners : {
-							scope : this,
-							'expand' : function(A) {
-								this.inputWindow.useType.reset();
-							},
-							'select' : function(combo, record, index) {
-								if (index < 0)
-									return;
-								if (index == 2) {
-									// _this.inputWindow.digit.setVisible(true);
-									// _this.inputWindow.rule.setVisible(true);
-								} else {
-									// _this.inputWindow.digit.setVisible(false);
-									// _this.inputWindow.rule.setVisible(false);
-									// _this.inputWindow.digit.setValue(7 -
-									// index);
-									// _this.inputWindow.rule.setValue('');
-								}
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '标签类型',
+								ref : '../../useType',
+								hiddenName : 'condition/useType',
+								emptyText : '--请选择--',
+								allowBlank : false,
+								editable : false,
+								anchor : '85%',
+								colspan : 1,
+								store : _this.useTypeStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										this.inputWindow.useType.reset();
+									},
+									'select' : function(combo, record, index) {
+										if (index < 0)
+											return;
+										_this.getExample();
+										if (index == 2) {
+											// _this.inputWindow.digit.setVisible(true);
+											// _this.inputWindow.rule.setVisible(true);
+										} else {
+											// _this.inputWindow.digit.setVisible(false);
+											// _this.inputWindow.rule.setVisible(false);
+											// _this.inputWindow.digit.setValue(7
+											// -
+											// index);
+											// _this.inputWindow.rule.setValue('');
+										}
 
-							}
-						}
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 1
-					}, {
-						xtype : 'textfield',
-						name : 'condition/drawingCode',
-						ref : '../../drawingCode',
-						// allowBlank : false,
-						fieldLabel : '图纸编号',
-						anchor : '85%',
-						colspan : 1
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 1
-					}, {
-						xtype : 'textfield',
-						name : 'condition/prodSpecName',
-						ref : '../../prodSpecName',
-						allowBlank : false,
-						fieldLabel : '标签型号',
-						anchor : '85%',
-						colspan : 1
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 1
-					}, {
-						xtype : 'textfield',
-						name : 'condition/reserve1',
-						ref : '../../reserve1',
-						// allowBlank : false,
-						fieldLabel : '标签LOGO',
-						anchor : '85%',
-						colspan : 1
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 1
-					}, {
-						xtype : 'textfield',
-						name : 'condition/reserve2',
-						ref : '../../reserve2',
-						// allowBlank : false,
-						fieldLabel : '制作方式',
-						anchor : '85%',
-						colspan : 1
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 1
-					}, {
-						xtype : 'textfield',
-						name : 'condition/prefix',
-						ref : '../../prefix',
-						allowBlank : false,
-						fieldLabel : '前缀',
-						anchor : '85%',
-						colspan : 1
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 1
-					}, {
-						xtype : 'numberfield',
-						allowDecimals : false,
-						minValue : 0,
-						maxValue : 60000,
-						name : 'condition/num',
-						ref : '../../num',
-						allowBlank : false,
-						fieldLabel : '数量 ',
-						anchor : '85%',
-						colspan : 1
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 1
-					}, {
-						xtype : 'numberfield',
-						allowDecimals : false,
-						minValue : 1,
-						maxValue : 60000,
-						name : 'condition/digit',
-						ref : '../../digit',
-						allowBlank : false,
-						fieldLabel : '后缀编号位数 ',
-						anchor : '85%',
-						colspan : 1
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 1
-					}, {
-						xtype : 'textfield',
-						name : 'condition/rule',
-						ref : '../../rule',
-						// allowBlank : false,
-						fieldLabel : '编码规则',
-						anchor : '85%',
-						colspan : 1
-					}, {
-						xtype : 'hidden',
-						name : 'condition/id',
-						ref : '../../pkid'
-					}]
+									}
+								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 1
+							}, {
+								xtype : 'textfield',
+								name : 'condition/drawingCode',
+								ref : '../../drawingCode',
+								// allowBlank : false,
+								fieldLabel : '图纸编号',
+								anchor : '85%',
+								colspan : 1
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 1
+							}, {
+								xtype : 'textfield',
+								name : 'condition/prodSpecName',
+								ref : '../../prodSpecName',
+								allowBlank : false,
+								fieldLabel : '标签型号',
+								anchor : '85%',
+								colspan : 1
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 1
+							}, {
+								xtype : 'textfield',
+								name : 'condition/reserve1',
+								ref : '../../reserve1',
+								// allowBlank : false,
+								fieldLabel : '标签LOGO',
+								anchor : '85%',
+								colspan : 1
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 1
+							}, {
+								xtype : 'textfield',
+								name : 'condition/reserve2',
+								ref : '../../reserve2',
+								// allowBlank : false,
+								fieldLabel : '制作方式',
+								anchor : '85%',
+								colspan : 1
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 1
+							}, {
+								xtype : 'textfield',
+								name : 'condition/prefix',
+								ref : '../../prefix',
+								allowBlank : false,
+								fieldLabel : '前缀',
+								anchor : '85%',
+								colspan : 1,
+								listeners : {
+									scope : this,
+									'change' : function(A) {
+										_this.getExample();
+									}
+								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 1
+							}, {
+								xtype : 'numberfield',
+								allowDecimals : false,
+								minValue : 0,
+								maxValue : 60000,
+								name : 'condition/num',
+								ref : '../../num',
+								allowBlank : false,
+								fieldLabel : '数量 ',
+								anchor : '85%',
+								colspan : 1
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 1
+							}, {
+								xtype : 'numberfield',
+								allowDecimals : false,
+								minValue : 1,
+								maxValue : 60000,
+								name : 'condition/digit',
+								ref : '../../digit',
+								allowBlank : false,
+								fieldLabel : '后缀编号位数 ',
+								anchor : '85%',
+								colspan : 1,
+								listeners : {
+									scope : this,
+									'change' : function(A) {
+										_this.getExample();
+									}
+								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 1
+							}, {
+								xtype : 'textfield',
+								name : 'condition/rule',
+								ref : '../../rule',
+								// allowBlank : false,
+								fieldLabel : '编码规则',
+								anchor : '85%',
+								colspan : 1
+							}, {
+								xtype : 'displayfield',
+								height : '30',
+								colspan : 1
+							}, {
+								xtype : 'hidden',
+								name : 'condition/id',
+								ref : '../../pkid'
+							}, {
+								xtype : 'textfield',
+								ref : '../../example',
+								readOnly : true,
+								fieldLabel : '编码示例',
+								anchor : '85%',
+								colspan : 1
+							}]
 
 				})
 
@@ -432,45 +474,44 @@ com.keensen.ump.produce.component.snMgr = function() {
 							}]
 				});
 	}
-	
+
 	this.initModifyNumtWindow = function() {
 		var _this = this;
-		this.modifyNumWindow = this.modifyNumWindow
-				|| new Ext.fn.FormWindow({
-					title : '修改当前数量',
-					height : 240,
-					width : 300,
-					resizable : false,
-					minimizable : false,
-					maximizable : false,
-					items : [{
-						xtype : 'inputpanel',
-						baseCls : "x-plain",
-						pgrid : this.listPanel,
-						columns : 2,
-						loadUrl : '1.biz.ext',
-						saveUrl : 'com.keensen.ump.produce.component.sn.modifySnNum.biz.ext',
-						fields : [{
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'numberfield',
-									name : 'entity/num',
-									dataIndex : 'num',
-									fieldLabel : '当前数量 ',
-									ref : '../../num',
-									allowBlank : false,
-									anchor : '100%',
-									colspan : 2
+		this.modifyNumWindow = this.modifyNumWindow || new Ext.fn.FormWindow({
+			title : '修改当前数量',
+			height : 240,
+			width : 300,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'inputpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 2,
+				loadUrl : '1.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.sn.modifySnNum.biz.ext',
+				fields : [{
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/num',
+							dataIndex : 'num',
+							fieldLabel : '当前数量 ',
+							ref : '../../num',
+							allowBlank : false,
+							anchor : '100%',
+							colspan : 2
 
-								}, {
-									name : 'entity/id',
-									ref : '../../pkid',
-									xtype : 'hidden',
-									dataIndex : 'id'
-								}]
-					}]
-				});
+						}, {
+							name : 'entity/id',
+							ref : '../../pkid',
+							xtype : 'hidden',
+							dataIndex : 'id'
+						}]
+			}]
+		});
 	}
 }

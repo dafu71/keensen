@@ -7,13 +7,13 @@ SELECT SUM(juanmo_Length) "juanmoLength"
 FROM
 (
 	SELECT 
-       (SELECT SUM(D.OUT_QUANTITY) * Z.BLANKING_SIZE * Z.PAGE_WIDTH
+       (SELECT SUM(D.OUT_QUANTITY) * Z.BLANKING_SIZE * nvl(Z.PAGE_WIDTH,Z.PAGE_WIDTH3)
            FROM qinsen.INST_JUANMO_DETAIL D
           WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) juanmo_Length 
 	  FROM (SELECT  T.* 
 	          FROM (
 
-	SELECT A.RECORD_ID, A.JUANMO_BATCH_ID, A.BATCH_NO, A.LINE_ID,A.gyy_remark,
+	SELECT A.RECORD_ID, A.JUANMO_BATCH_ID, A.BATCH_NO, A.LINE_ID,A.gyy_remark,a.page_width3,
 	       A.PROD_SPEC_ID, A.ORDER_NO, A.PRODUCE_DT, A.PRESURE, A.CHECK_RESULT,
 	       A.IS_QUALIFIED, A.IS_FIRST, A.STD_STR, A.TEAM_ID, A.WORKER_ID, A.NG_REASON_ID, 
 	       A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID, A.CHANGER_ID, A.REMARK,
@@ -38,7 +38,7 @@ FROM
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
-	  FROM (SELECT QJ.*, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
+	  FROM (SELECT pms3.page_width page_width3,QJ.*, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
 CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END DRY_WET,
 
 TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
@@ -51,6 +51,9 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 
   FROM QINSEN.INST_QIJIAN QJ
   
+  LEFT JOIN qinsen.para_mater_spec pms3
+  ON pms3.mater_spec_id=qj.prod_spec_id
+  
   left join  qinsen.PARA_MATER_SPEC pms2
   on QJ.prod_SPEC_ID_original = PMS2.MATER_SPEC_ID
   
@@ -59,7 +62,12 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
     ON RS.BATCH_NO = QJ.BATCH_NO
   left join  qinsen.PARA_MATER_SPEC pms
   on QJ.gyy_SPEC_ID = PMS.MATER_SPEC_ID
-  LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               )) WT 
   ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID) A, 
   qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
 	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
@@ -240,8 +248,8 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
    <select id="queryRecords" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
 	
 	SELECT Z.RECORD_ID as "recordId",z.gyy_remark "gyyRemark",
-	<!--z.print_batch_no "printBatchNo",-->
-	Z.BATCH_NO "printBatchNo",
+	nvl(z.print_batch_no,z.batch_no) "printBatchNo",
+	<!--Z.BATCH_NO "printBatchNo",-->
 		Z.JUANMO_BATCH_ID as "juanmoBatchId",
 		Z.BATCH_NO as "batchNo",
 		Z.LINE_ID as "lineId",
@@ -268,7 +276,7 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 		Z.JM_LINE_ID as "jmLineId",
 		Z.JM_WORKER_ID as "jmWorkerId",
 		Z.BLANKING_SIZE as "blankingSize",
-		Z.PAGE_WIDTH as "pageWidth",
+		nvl(Z.PAGE_WIDTH,Z.PAGE_WIDTH3)  as "pageWidth",
 		Z.JUANMO_BATCH_NO as "juanmoBatchNo",
 		Z.PROD_SPEC_AREA as "prodSpecArea",
 		Z.PROD_SPEC_CODE as "prodSpecCode",
@@ -326,6 +334,9 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 		Z.OVERTIME_ADVISE_USER_ID as "overtimeAdviseUserId",
 		Z.OVERTIME_ADVISE_USER_NAME as "overtimeAdviseUserName",
 		
+		z.modify_dry_wet_advise "modifyDryWetAdvise",
+		z.modify_order_no_advise "modifyOrderNoAdvise",
+		
        DECODE(Z.IS_QUALIFIED, 'Y', '是', 'N', '否', '') "isQualifiedName",
        DECODE(Z.IS_FIRST, 'Y', '首检', 'N', '复检', '') "isFirstName",
        DECODE(Z.JUDGE_FLAG, 'Y', '是', 'N', '否', '') "judgeFlagName",
@@ -353,7 +364,7 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
           WHERE D.CDM_BATCH_ID = C.RECORD_ID
             AND C.TUMO_BATCH_ID = M.RECORD_ID
             AND D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) "dimoBatchStr",
-       (SELECT SUM(D.OUT_QUANTITY) * Z.BLANKING_SIZE * Z.PAGE_WIDTH
+       (SELECT SUM(D.OUT_QUANTITY) * Z.BLANKING_SIZE * nvl(Z.PAGE_WIDTH,Z.PAGE_WIDTH3)
            FROM qinsen.INST_JUANMO_DETAIL D
           WHERE D.MAIN_BATCH_ID = Z.JUANMO_BATCH_ID) "juanmoLength",
        (SELECT TO_CHAR(MAX(QC.PRODUCE_DT), 'YYYY-MM-DD HH24:MI')
@@ -363,7 +374,7 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	  FROM (SELECT  T.* 
 	          FROM (
 
-	SELECT A.RECORD_ID, A.JUANMO_BATCH_ID, A.BATCH_NO, A.LINE_ID,A.gyy_remark,
+	SELECT A.RECORD_ID, A.JUANMO_BATCH_ID, A.BATCH_NO, A.LINE_ID,A.gyy_remark,a.page_width3,
 	       A.PROD_SPEC_ID, A.ORDER_NO, A.PRODUCE_DT, A.PRESURE, A.CHECK_RESULT,
 	       A.IS_QUALIFIED, A.IS_FIRST, A.STD_STR, A.TEAM_ID, A.WORKER_ID, A.NG_REASON_ID, 
 	       A.CREATE_DT, A.CHANGE_DT, A.CREATOR_ID, A.CHANGER_ID, A.REMARK,
@@ -381,6 +392,8 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 			A.WATER_REMARK_TIME ,
 			A.WATER_REMARK_USER_ID ,
 			A.WATER_REMARK_USER_NAME ,A.DRY_WET,J.trailer,
+			
+			A.modify_order_no_advise ,A.modify_dry_wet_advise,
 		       
 	       A.diff, nvl(A.print_batch_no,A.batch_no) print_batch_no,
 	       A.monitor_advise,A.monitor_advise_time,A.monitor_advise_user_id,A.monitor_advise_user_name,
@@ -398,7 +411,7 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
-	  FROM (SELECT QJ.*,chk.batch_no check_batch_no, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
+	  FROM (SELECT pms3.page_width page_width3,QJ.*,chk.batch_no check_batch_no, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
       nvl(rec.dry_wet,CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END) DRY_WET, rw.batch_no rw_batch_no,
 
 TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
@@ -410,7 +423,8 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 
 
   FROM QINSEN.INST_QIJIAN QJ
-  
+  LEFT JOIN qinsen.para_mater_spec pms3
+  ON pms3.mater_spec_id=qj.prod_spec_id
   
   <!--返工登记-->
   left join 
@@ -445,7 +459,12 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
     ON RS.BATCH_NO = QJ.BATCH_NO
   left join  qinsen.PARA_MATER_SPEC pms
   on QJ.gyy_SPEC_ID = PMS.MATER_SPEC_ID
-  LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_ID FROM QINSEN.INST_WATER_TEST T) WT 
+  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               )) WT 
   ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID) A 
   , 
   qinsen.INST_JUANMO_MAIN J
@@ -826,6 +845,10 @@ on ab.jm_batch_no = J.batch_no
 	t.prod_spec_id = #prodSpecId#,
 	</isNotNull>
 	
+	<isNotNull prepend = ""  property = "modifyOrderNoAdvise">
+	t.modify_order_no_advise = #modifyOrderNoAdvise#,
+	</isNotNull>
+	
 	t.order_no_original = t.order_no,t.prod_spec_id_original = t.prod_spec_id,
 	t.change_dt = SYSDATE,t.changer_id = #changerId#,
 	t.modify_order_no_time = sysdate,
@@ -1008,5 +1031,14 @@ SELECT T.BATCH_NO "batchNo",
 	   
 	 WHERE A.RECORD_ID in ($recordIds$)
 </update>
+
+
+<!-- 批量改干湿膜 -->
+	<update id="modiDryWet" parameterClass="java.util.HashMap" >
+	UPDATE qinsen.INST_QIJIAN t  SET t.modify_dry_wet_advise = #modifyDryWetAdvise#,
+	
+	t.change_dt = SYSDATE,t.changer_id = #changerId#
+	WHERE t.juanmo_batch_id IN($juanmoBatchId$)
+	</update>
 
 </sqlMap>

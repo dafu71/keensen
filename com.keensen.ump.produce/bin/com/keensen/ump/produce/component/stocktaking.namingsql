@@ -19,8 +19,8 @@
 	-->
 	
 	SELECT t.batch_no2 "batchNo2",t.id "id", t.juanmo_batch_no "juanmoBatchNo",t.batch_no "batchNo" ,
-	nvl(t.reserve2,decode(t.reserve1,0,'裁叠膜工序',1,'卷膜工序',2,'气检工序',3,'新基地水测工序',4,'老基地水测工序',5,'绕丝工序',
-	6,'包装工序',7,'保留区',8,'走廊存放区',9,'历史呆滞品区',10,'白膜仓库')) "step",t.create_time "createTime", t.create_name "createName"
+	nvl(t.reserve2,decode(t.reserve1,0,'裁叠膜岗位',1,'卷膜岗位',2,'气检岗位',3,'新基地水测岗位',4,'老基地水测岗位',5,'绕丝岗位',
+	6,'包装岗位',7,'保留区',8,'走廊存放区',9,'历史呆滞品区',10,'白膜仓库',11,'水测岗位',12,'返修仓库')) "step",t.create_time "createTime", t.create_name "createName"
 	, t.mater_spec_name "materSpecName",t.mater_spec_name2 "orderMaterSpecName",t.produce_dt "produceDt"
 	<!--,t2.mark_spec_code "markSpecCode"-->
 	from 
@@ -94,4 +94,58 @@
          STATUS,
          BATCH_NO
     FROM KS_PROD_COMPONENT_STOCKTAKING</insert>
+    <select id="queryJuanmoState" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT (SELECT COUNT(1)
+          FROM QINSEN.INST_JUANMO_MAIN JM
+         WHERE JM.PRODUCE_DT &gt; SYSDATE - 45
+           AND JM.BATCH_NO = #juanmoBatchNo#) "jm",
+       (SELECT COUNT(1)
+          FROM QINSEN.INST_QIJIAN QJ
+         WHERE QJ.JUANMO_BATCH_ID =
+               (SELECT JM.RECORD_ID
+                  FROM QINSEN.INST_JUANMO_MAIN JM
+                 WHERE JM.BATCH_NO = #juanmoBatchNo#)) "qj",
+       (SELECT COUNT(1)
+          FROM QINSEN.INST_QIJIAN QJ
+         WHERE QJ.JUANMO_BATCH_ID =
+               (SELECT JM.RECORD_ID
+                  FROM QINSEN.INST_JUANMO_MAIN JM
+                 WHERE JM.BATCH_NO = #juanmoBatchNo#)
+           AND QJ.BATCH_NO IS NOT NULL) "haslabel",
+       (SELECT COUNT(1)
+          FROM KS_COMPONENT_TRIM T
+         WHERE T.JUANMO_BATCH_ID =
+               (SELECT JM.RECORD_ID
+                  FROM QINSEN.INST_JUANMO_MAIN JM
+                 WHERE JM.BATCH_NO = #juanmoBatchNo#)) "trim",
+       (SELECT COUNT(1)
+          FROM QINSEN.INST_RAOSI RS
+         WHERE RS.JUANMO_BATCH_ID =
+               (SELECT JM.RECORD_ID
+                  FROM QINSEN.INST_JUANMO_MAIN JM
+                 WHERE JM.BATCH_NO = #juanmoBatchNo#)) "raosi",
+       (SELECT COUNT(1)
+          FROM QINSEN.INST_WATER_TEST WT
+         WHERE WT.JUANMO_BATCH_ID =
+               (SELECT JM.RECORD_ID
+                  FROM QINSEN.INST_JUANMO_MAIN JM
+                 WHERE JM.BATCH_NO = #juanmoBatchNo#)) "water",
+       (SELECT COUNT(1)
+          FROM QINSEN.INST_QIJIAN QJ
+         WHERE QJ.NG_REASON_ID = 300061
+           AND QJ.JUANMO_BATCH_ID =
+               (SELECT JM.RECORD_ID
+                  FROM QINSEN.INST_JUANMO_MAIN JM
+                 WHERE JM.BATCH_NO = #juanmoBatchNo#)) "scrap",
+       (SELECT COUNT(1)
+          FROM KS_COMPONENT_SEMI_STOCK T
+         WHERE T.BATCH_NO = #juanmoBatchNo#) "semi",
+       (SELECT COUNT(1)
+          FROM KS_COMPONENT_PROD_RECORD T
+          LEFT JOIN V_KS_QJ_BATCH_NO V
+            ON V.BATCH_NO = T.BATCH_NO
+         WHERE V.JUANMO_BATCH_ID =
+               (SELECT JM.RECORD_ID
+                  FROM QINSEN.INST_JUANMO_MAIN JM
+                 WHERE JM.BATCH_NO = #juanmoBatchNo#)) "rework"
+  FROM DUAL</select>
 </sqlMap>

@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.marketing.appearance">
+    <select id="queryParaMaterSpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     select t.mater_spec_id   "materSpecId",
+       t.mater_spec_code "materSpecCode",
+       t.mater_spec_name "materSpecName",
+       t.mater_class_id  "materClassId",
+       t.state           "state",
+       decode(t.state,'Y','再用','停用') "statename",
+       t.safety_Stock  "safetyStock"
+    from qinsen.PARA_MATER_SPEC t
+    where 1=1
+    <isNotNull prepend="and" property="materSpecName">t.mater_spec_name like '%'||#materSpecName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="materSpecCode">t.mater_spec_code = #materSpecCode#</isNotNull>
+        <isNotNull prepend="and" property="state">t.state = #state#</isNotNull>
+    </select>
+    <select id="queryLabelDrawing" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.DRAWING_NAME AS "drawingName",T1.id "id",
+       T1.USED_DATE    AS "usedDate",
+       T1.DRAWING_CODE AS "drawingCode",
+       T1.MATER_CODE   AS "materCode",
+       T1.LOGO         AS "logo",
+       T1.SPEC_NAME    AS "specName",
+       T1.LABEL_SIZE   AS "labelSize",
+       T1.BUSINESSMAN  AS "businessman",
+       T1.REMARK       AS "remark",T1.url "url",t1.status "status"
+  FROM KS_MARKETING_LABEL T1 
+    where 1=1
+    
+    <isNotNull prepend="and" property="status">nvl(t1.status,1) = #status#</isNotNull>
+        <isNotNull prepend="and" property="logo">T1.LOGO = #logo#</isNotNull>
+        <isNotNull prepend="and" property="specName">T1.SPEC_NAME = #specName#</isNotNull>
+        <isNotNull prepend="and" property="logo2">T1.LOGO like '%' || #logo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="specName2">T1.SPEC_NAME like '%' || #specName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="drawingCode">T1.DRAWING_CODE like '%' || #drawingCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="drawingName">T1.DRAWING_NAME like '%' || #drawingName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="drawingCode2">T1.DRAWING_CODE = #drawingCode2#</isNotNull>
+	
+	ORDER BY T1.LOGO,T1.SPEC_NAME
+     </select>
+    <select id="queryMarkDrawing" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     SELECT T1.DRAWING_NAME AS "drawingName",t1.id "id",
+       T1.USED_DATE    AS "usedDate",
+       T1.DRAWING_CODE AS "drawingCode",
+       T1.MATER_CODE   AS "materCode",
+       T1.LOGO         AS "logo",
+       T1.SPEC_NAME    AS "specName",
+       T1.LABEL_SIZE   AS "labelSize",
+       T1.BUSINESSMAN  AS "businessman",
+       T1.REMARK       AS "remark",
+       tmp.url "url",tmp.stamp_url "stampUrl",
+       tmp.url2 "url2",tmp.code "code",
+       
+tmp.IF_PRINT_BATCH_NO as "ifPrintBatchNo",
+tmp.Y_BATCH_NO as "yBatchNo",
+tmp.X_BATCH_NO as "xBatchNo",
+tmp.IF_PRINT_SPEC_NAME as "ifPrintSpecName",
+tmp.Y_BATCH_SPEC_NAME as "yBatchSpecName",
+tmp.X_BATCH_SPEC_NAME as "xBatchSpecName",
+tmp.IF_PRINT_DRY_WET as "ifPrintDryWet",
+tmp.Y_DRY_IMG as "yDryImg",
+tmp.X_DRY_IMG as "xDryImg",
+tmp.Y_DRY_SPAN as "yDrySpan",
+tmp.X_DRY_SPAN as "xDrySpan",
+tmp.Y_WET_IMG as "yWetImg",
+tmp.X_WET_IMG as "xWetImg",
+tmp.Y_WET_SPAN as "yWetSpan",
+tmp.X_WET_SPAN as "xWetSpan",
+tmp.Y_STAR_IMG as "yStarImg",
+tmp.X_STAR_IMG as "xStarImg",
+tmp.IF_PRINT_DAY_CODE as "ifPrintDayCode",
+tmp.Y_DAY_CODE_SPAN as "yDayCodeSpan",
+tmp.X_DAY_CODE_SPAN as "xDayCodeSpan",
+tmp.PRINT_DELAY_TIME as "printDelayTime"
+       ,tmp.reserve1 "reserve1"
+  FROM KS_MARKETING_MARK T1 
+  LEFT JOIN (select t.template_name,max(t.url) URL,max(t.url2) url2,
+  max(t.stamp_url) stamp_url,max(t.code) code,
+  max(IF_PRINT_BATCH_NO) as IF_PRINT_BATCH_NO,
+max(Y_BATCH_NO) as Y_BATCH_NO,
+max(X_BATCH_NO) as X_BATCH_NO,
+max(IF_PRINT_SPEC_NAME) as IF_PRINT_SPEC_NAME,
+max(Y_BATCH_SPEC_NAME) as Y_BATCH_SPEC_NAME,
+max(X_BATCH_SPEC_NAME) as X_BATCH_SPEC_NAME,
+max(IF_PRINT_DRY_WET) as IF_PRINT_DRY_WET,
+max(Y_DRY_IMG) as Y_DRY_IMG,
+max(X_DRY_IMG) as X_DRY_IMG,
+max(Y_DRY_SPAN) as Y_DRY_SPAN,
+max(X_DRY_SPAN) as X_DRY_SPAN,
+max(Y_WET_IMG) as Y_WET_IMG,
+max(X_WET_IMG) as X_WET_IMG,
+max(Y_WET_SPAN) as Y_WET_SPAN,
+max(X_WET_SPAN) as X_WET_SPAN,
+max(Y_STAR_IMG) as Y_STAR_IMG,
+max(X_STAR_IMG) as X_STAR_IMG,
+max(IF_PRINT_DAY_CODE) as IF_PRINT_DAY_CODE,
+max(Y_DAY_CODE_SPAN) as Y_DAY_CODE_SPAN,
+max(X_DAY_CODE_SPAN) as X_DAY_CODE_SPAN,
+max(PRINT_DELAY_TIME) as PRINT_DELAY_TIME
+,max(t.reserve1) reserve1
+  
+   from KS_MARKETING_MARK_TEMPLATE t
+       
+GROUP BY t.template_name) tmp ON tmp.template_name = t1.DRAWING_CODE
+    where 1=1
+    
+   <isNotNull prepend="and" property="status">trim(T1.DRAWING_CODE) IN(SELECT template_name FROM KS_MARKETING_MARK_TEMPLATE  WHERE nvl(status,'1') = #status#)</isNotNull>
+        <isNotNull prepend="and" property="logo">T1.LOGO = #logo#</isNotNull>
+        <isNotNull prepend="and" property="specName">T1.SPEC_NAME = #specName#</isNotNull>
+        <isNotNull prepend="and" property="logo2">T1.LOGO like '%' || #logo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="specName2">T1.SPEC_NAME like '%' || #specName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="drawingCode">T1.DRAWING_CODE like '%' || #drawingCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="drawingCode2">T1.DRAWING_CODE = #drawingCode2#</isNotNull>
+	
+	ORDER BY T1.LOGO,T1.SPEC_NAME
+     </select>
+    <select id="queryMarkDrawingLogo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DISTINCT T1.LOGO         AS "logo"
+	  FROM KS_MARKETING_MARK T1
+	 ORDER BY T1.LOGO</select>
+    <select id="queryLabelDrawingLogo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DISTINCT T1.LOGO         AS "logo"
+	  FROM KS_MARKETING_LABEL T1
+	 ORDER BY T1.LOGO</select>
+    <select id="queryLabelDrawingSpecName" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DISTINCT T1.SPEC_NAME    AS "specName"
+	  FROM KS_MARKETING_LABEL T1
+	 ORDER BY T1.SPEC_NAME</select>
+    <select id="queryMarkDrawingSpecName" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DISTINCT T1.SPEC_NAME    AS "specName"
+	  FROM KS_BASE_Mark_DRAWING T1
+	 ORDER BY T1.SPEC_NAME</select>
+    <update id="saveBatchLabelStatus" parameterClass="java.util.HashMap">update KS_MARKETING_LABEL t
+    	set t.status = decode(nvl(t.status,'1'),'1','0','1'),
+    	t.update_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
+    <select id="queryMark" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT T1.ID            AS "id",
+	       T1.TEMPLATE_NAME AS "templateName",
+	       T1.URL           AS "url",T1.URL2           AS "url2",t1.stamp_url "stampUrl",
+	       T1.REMARK        AS "remark",
+	       T1.CODE          AS "code",
+	       T2.remark        as "codeRemark",
+	       t3.spec_name "specName",t1.reserve5 "reserve5",t1.reserve2 "reserve2",
+	       nvl(t1.status,1) "status"
+	  FROM KS_MARKETING_MARK_TEMPLATE T1
+	  left join KS_COMPONENT_MARK_CODE t2
+	  on t1.code = t2.code
+	  left join KS_MARKETING_MARK t3
+	  on t3.drawing_code = T1.TEMPLATE_NAME
+	
+	 WHERE 1 = 1  
+	 
+	  <isNotNull prepend="and" property="batchNo">t1.TEMPLATE_NAME in(
+		       	SELECT 
+       			OD.TEMPLATE_NAME       
+				  FROM QINSEN.INST_QIJIAN QJ
+				  LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+				    ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID
+				  LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
+				    ON OD.ORDER_NO = QJ.ORDER_NO
+				   AND QJ.PROD_SPEC_ID = OD.MATER_SPEC_ID
+				  LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+				    ON OD.BASE_ID = YB.ID
+				
+				 WHERE QJ.BATCH_NO = #batchNo#
+				 OR jm.batch_no =#batchNo#
+		       )</isNotNull>
+        <isNotNull prepend="and" property="specName">t3.spec_name like '%' || #specName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="templateName">t1.TEMPLATE_NAME like '%' || #templateName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="remark">t1.REMARK like '%' || #remark# || '%'</isNotNull>
+        <isNotNull prepend="and" property="code">t1.code = #code#</isNotNull>
+        <isNotNull prepend="" property="status">and nvl(T1.status,1) = #status#</isNotNull>
+	
+	 ORDER BY T1.TEMPLATE_NAME 
+    </select>
+    <!-- 查询是否有唯一图例名称冲突记录 -->
+    <select id="queryDuplicateRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT 1
+	  FROM KS_MARKETING_MARK_TEMPLATE A
+	 WHERE A.template_name = #templateName#
+	<isNotNull prepend="" property="id">AND A.id &lt;&gt; #id#</isNotNull>
+    </select>
+    <update id="updateMarkDrawing" parameterClass="java.util.HashMap">
+    update KS_MARKETING_MARK
+    set create_time = sysdate,
+    <isNotNull prepend="" property="drawingName">drawing_name = #drawingName# ,</isNotNull>
+        <isNotNull prepend="" property="drawingCode">drawing_code = #drawingCode# ,</isNotNull>
+        <isNotNull prepend="" property="materCode">mater_code = #materCode# ,</isNotNull>
+        <isNotNull prepend="" property="logo">logo = #logo# ,</isNotNull>
+        <isNotNull prepend="" property="specName">spec_name = #specName# ,</isNotNull>
+        <isNotNull prepend="" property="labelSize">label_size = #labelSize# ,</isNotNull>
+	update_user_id = #userId#,update_name = #userName#
+    where id = #id#
+    
+    </update>
+    <update id="updateTemplate" parameterClass="java.util.HashMap">UPDATE KS_MARKETING_MARK_TEMPLATE
+   SET KS_MARKETING_MARK_TEMPLATE.IF_PRINT_BATCH_NO =
+       (SELECT IF_PRINT_BATCH_NO
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'
+   ),
+       KS_MARKETING_MARK_TEMPLATE.Y_BATCH_NO =
+       (SELECT Y_BATCH_NO
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+   
+   KS_MARKETING_MARK_TEMPLATE.X_BATCH_NO =
+       (SELECT X_BATCH_NO
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+       KS_MARKETING_MARK_TEMPLATE.IF_PRINT_SPEC_NAME =
+       (SELECT IF_PRINT_SPEC_NAME
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+   
+  KS_MARKETING_MARK_TEMPLATE.Y_BATCH_SPEC_NAME =
+       (SELECT Y_BATCH_SPEC_NAME
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+       KS_MARKETING_MARK_TEMPLATE.X_BATCH_SPEC_NAME =
+       (SELECT X_BATCH_SPEC_NAME
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+   
+  
+   KS_MARKETING_MARK_TEMPLATE.IF_PRINT_DRY_WET =
+       (SELECT IF_PRINT_DRY_WET
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+       KS_MARKETING_MARK_TEMPLATE.Y_DRY_IMG =
+       (SELECT Y_DRY_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+   
+   
+   KS_MARKETING_MARK_TEMPLATE.X_DRY_IMG =
+       (SELECT X_DRY_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+       KS_MARKETING_MARK_TEMPLATE.Y_DRY_SPAN =
+       (SELECT Y_DRY_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+   
+   KS_MARKETING_MARK_TEMPLATE.X_DRY_SPAN =
+       (SELECT X_DRY_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+       KS_MARKETING_MARK_TEMPLATE.Y_WET_IMG =
+       (SELECT Y_WET_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+   
+   KS_MARKETING_MARK_TEMPLATE.X_WET_IMG =
+       (SELECT X_WET_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+       KS_MARKETING_MARK_TEMPLATE.Y_WET_SPAN =
+       (SELECT Y_WET_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+   
+     KS_MARKETING_MARK_TEMPLATE.X_WET_SPAN =
+       (SELECT X_WET_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+       KS_MARKETING_MARK_TEMPLATE.Y_STAR_IMG =
+       (SELECT Y_STAR_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+   
+     KS_MARKETING_MARK_TEMPLATE.X_STAR_IMG =
+       (SELECT X_STAR_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+       KS_MARKETING_MARK_TEMPLATE.IF_PRINT_DAY_CODE =
+       (SELECT IF_PRINT_DAY_CODE
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+   
+     KS_MARKETING_MARK_TEMPLATE.Y_DAY_CODE_SPAN =
+       (SELECT Y_DAY_CODE_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+       KS_MARKETING_MARK_TEMPLATE.X_DAY_CODE_SPAN =
+       (SELECT X_DAY_CODE_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B'),
+    KS_MARKETING_MARK_TEMPLATE.PRINT_DELAY_TIME =
+       (SELECT PRINT_DELAY_TIME
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B')
+   
+ WHERE EXISTS
+ (SELECT 1
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = 'KS-17-M0091-B')
+   and KS_MARKETING_MARK_TEMPLATE.template_name=#templateName#</update>
+    <insert id="insertMarkDrawing" parameterClass="java.util.HashMap">insert into KS_MARKETING_MARK
+    (id,drawing_name,drawing_code,mater_code,logo,spec_name,label_size,
+    create_time,create_user_id,create_name)
+    select #id#,#drawingName#,#drawingCode#,#materCode#,#logo#,
+    #specName#,#labelSize#,sysdate,#userId#,#userName# from dual
+    where not Exists(select 1 from KS_MARKETING_MARK where drawing_code = #drawingCode#)</insert>
+    <select id="queryMarkPrintList" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   
+    SELECT T1.JUANMO_BATCH_ID AS "juanmoBatchId",
+       T1.PROD_BATCH_NO AS "prodBatchNo",t1.PRint_BATCH_NO "printBatchNo",
+       T1.PROD_SPEC_ID AS "prodSpecId",
+       T1.ORDER_NO AS "orderNo",
+       T1.JUANMO_BATCH_NO AS "juanmoBatchNo",
+       T1.PROD_SPEC_NAME AS "prodSpecName",
+       T1.TEMPLATE_NAME AS "templateName",
+       T1.URL AS "url",
+       T1.TEMPLATE_ID AS "templateId",
+       nvl(rec_dry_wet,T1.DRY_WET) AS "dryWet",
+       DECODE(T1.MARK, '公司标准', 'Y', 'N') AS "markStand",
+       nvl(rec_dry_wet,DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿')) AS "dryWet2",
+       <!--T1.MATER_SPEC_NAME2 AS "prodSpecName2",-->
+       
+       t1.spec_name_mark "prodSpecName2",
+       T1.CODE AS "code",
+       nvl(T1.PRINT_CNT,0) AS "printCnt",to_char(t1.max_print_date,'yyyy-MM-dd HH24:mi:ss') "maxPrintDate",
+       case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
+       then '是' else '否' end "ifPrint",
+       
+       t1.IF_PRINT_BATCH_NO as "ifPrintBatchNo",
+		t1.Y_BATCH_NO as "yBatchNo",
+		t1.X_BATCH_NO as "xBatchNo",
+		t1.IF_PRINT_SPEC_NAME as "ifPrintSpecName",
+		t1.Y_BATCH_SPEC_NAME as "yBatchSpecName",
+		t1.X_BATCH_SPEC_NAME as "xBatchSpecName",
+		t1.IF_PRINT_DRY_WET as "ifPrintDryWet",
+		t1.Y_DRY_IMG as "yDryImg",
+		t1.X_DRY_IMG as "xDryImg",
+		t1.Y_DRY_SPAN as "yDrySpan",
+		t1.X_DRY_SPAN as "xDrySpan",
+		t1.Y_WET_IMG as "yWetImg",
+		t1.X_WET_IMG as "xWetImg",
+		t1.Y_WET_SPAN as "yWetSpan",
+		t1.X_WET_SPAN as "xWetSpan",
+		t1.Y_STAR_IMG as "yStarImg",
+		t1.X_STAR_IMG as "xStarImg",
+		t1.IF_PRINT_DAY_CODE as "ifPrintDayCode",
+		t1.Y_DAY_CODE_SPAN as "yDayCodeSpan",
+		t1.X_DAY_CODE_SPAN as "xDayCodeSpan",
+		t1.PRINT_DELAY_TIME as "printDelayTime",
+       t1.reserve1 as "reserve1",
+       t1.reserve3 as "reserve3",t1.reserve4 as "reserve4",t1.reserve5 as "reserve5"
+       
+       
+       
+  FROM (
+        
+        SELECT T1.JUANMO_BATCH_ID, 
+                T1.BATCH_NO         PROD_BATCH_NO,nvl(T1.print_BATCH_NO ,T1.BATCH_NO)        PRint_BATCH_NO,
+                T1.PROD_SPEC_ID,
+                T4.ORDER_NO,
+                T2.BATCH_NO         JUANMO_BATCH_NO,
+                T3.MATER_SPEC_NAME  PROD_SPEC_NAME,
+                T4.TEMPLATE_NAME,
+                T5.URL,
+                T5.ID               TEMPLATE_ID,
+                t5.IF_PRINT_BATCH_NO,
+                t5.Y_BATCH_NO,t5.X_BATCH_NO,
+                t5.IF_PRINT_SPEC_NAME,t5.Y_BATCH_SPEC_NAME,
+                t5.X_BATCH_SPEC_NAME,t5.IF_PRINT_DRY_WET,
+                t5.Y_DRY_IMG,t5.X_DRY_IMG,t5.Y_DRY_SPAN,
+                t5.X_DRY_SPAN,t5.Y_WET_IMG,t5.X_WET_IMG,
+                t5.Y_WET_SPAN,t5.X_WET_SPAN,t5.Y_STAR_IMG,
+                t5.X_STAR_IMG,t5.IF_PRINT_DAY_CODE,
+                t5.Y_DAY_CODE_SPAN,t5.X_DAY_CODE_SPAN,
+                t5.PRINT_DELAY_TIME,     
+                
+                T5.reserve1 , T5.reserve3 , T5.reserve4 , T5.reserve5 ,          
+                
+                <!--T4.DRY_WET,-->
+                decode(t6.record_id,null,'干','湿') DRY_WET,
+                T4.MARK,
+                T4.MATER_SPEC_NAME2,
+                T6.RECORD_ID        WATER_BATCH_ID,
+                T5.CODE,
+                T7.CNT              PRINT_CNT,
+                t7.max_print_date,
+                nvl(t4.spec_name_mark,nvl(yb.spec_name_mark,t4.MATER_SPEC_NAME2)) spec_name_mark,
+                
+                rec.dry_wet rec_dry_wet
+          FROM QINSEN.INST_QIJIAN T1
+          
+          left join 
+  (select v.qj_batch_no,t1.dry_wet,t1.batch_no FROM 
+	(
+	SELECT batch_no,dry_wet FROM KS_COMPONENT_PROD_RECORD
+	WHERE ID IN(
+	SELECT MAX(ID)
+	FROM KS_COMPONENT_PROD_RECORD
+	WHERE 1=1 and nvl(status,1) != 0
+	GROUP BY batch_no)) t1  
+	   LEFT JOIN V_KS_QJ_BATCH_NO v
+	  on v.batch_no = t1.batch_no) rec
+  on rec.qj_batch_no = t1.batch_no
+          
+          LEFT JOIN QINSEN.INST_WATER_TEST T6
+            ON T6.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
+          LEFT JOIN QINSEN.INST_JUANMO_MAIN T2
+            ON T1.JUANMO_BATCH_ID = T2.RECORD_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC T3
+            ON T3.MATER_SPEC_ID = T1.PROD_SPEC_ID
+          LEFT JOIN (SELECT MATER_SPEC_ID,
+                            ORDER_NO,
+                            MAX(TEMPLATE_NAME) TEMPLATE_NAME,
+                            MAX(DRY_WET) DRY_WET,
+                            MAX(MARK) MARK， MAX(MATER_SPEC_NAME2) MATER_SPEC_NAME2,
+                            max(reserve1) spec_name_mark, max(base_id) base_id
+                       FROM KS_PROD_COMPONENT_YXORDER
+                      GROUP BY ORDER_NO, MATER_SPEC_ID) T4
+            ON T4.ORDER_NO = T1.ORDER_NO
+           AND T4.MATER_SPEC_ID = T1.PROD_SPEC_ID
+          LEFT JOIN KS_MARKETING_MARK_TEMPLATE T5
+            ON T5.TEMPLATE_NAME = T4.TEMPLATE_NAME
+          LEFT JOIN (SELECT T.PROD_BATCH_NO, COUNT(*) CNT,MAX(t.create_time) max_print_date
+                       FROM KS_COMPONENT_MARK_PRINT_RECORD T
+                      GROUP BY T.PROD_BATCH_NO) T7
+            ON T7.PROD_BATCH_NO = T1.BATCH_NO
+            
+            left join KS_COMPONENT_YXORDER_BASE yb
+          on yb.id = t4.base_id
+          
+            where 1=1
+            and T1.BATCH_NO is not null
+            
+             <isNotNull prepend="and" property="jmbatchNoStr">T2.BATCH_NO in($jmbatchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr2">T1.BATCH_NO in($batchNoStr2$)</isNotNull>
+        <isNotNull prepend="and" property="prodBatchNo">T1.BATCH_NO = #prodBatchNo#</isNotNull>
+        <isNotNull prepend="and" property="prodBatchNos">T1.BATCH_NO in ($prodBatchNos$)</isNotNull>
+        <isNotNull prepend="and" property="orderNo">T4.ORDER_NO = #orderNo#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecName2">T4.MATER_SPEC_NAME2 like '%' || #prodSpecName2# || '%'</isNotNull>
+        
+        ) T1
+        where 1=1
+        <isNotNull prepend="" property="templateName">AND t1.template_name=#templateName#</isNotNull>
+        <isNotNull prepend="" property="testView">AND case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
+       			then '是' else '否' end  =  '是'</isNotNull>
+        <isNotNull prepend="" property="ifPrint">AND case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
+       			then 'Y' else 'N' end  =  #ifPrint#</isNotNull>
+        <isNotNull prepend="" property="printCnt">AND nvl(T1.PRINT_CNT,0) = #printCnt#</isNotNull>
+        <isNull prepend="" property="batchPrint">ORDER BY T1.JUANMO_BATCH_ID DESC</isNull>
+        <isNotNull prepend="" property="batchPrint">ORDER BY T1.PROD_BATCH_NO</isNotNull>
+    </select>
+    <update id="updateMarkTemplateBySource" parameterClass="java.util.HashMap">UPDATE KS_MARKETING_MARK_TEMPLATE
+   SET KS_MARKETING_MARK_TEMPLATE.IF_PRINT_BATCH_NO =
+       (SELECT IF_PRINT_BATCH_NO
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#
+   ),
+       KS_MARKETING_MARK_TEMPLATE.Y_BATCH_NO =
+       (SELECT Y_BATCH_NO
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+   
+   KS_MARKETING_MARK_TEMPLATE.X_BATCH_NO =
+       (SELECT X_BATCH_NO
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+       KS_MARKETING_MARK_TEMPLATE.IF_PRINT_SPEC_NAME =
+       (SELECT IF_PRINT_SPEC_NAME
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+   
+  KS_MARKETING_MARK_TEMPLATE.Y_BATCH_SPEC_NAME =
+       (SELECT Y_BATCH_SPEC_NAME
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+       KS_MARKETING_MARK_TEMPLATE.X_BATCH_SPEC_NAME =
+       (SELECT X_BATCH_SPEC_NAME
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+   
+  
+   KS_MARKETING_MARK_TEMPLATE.IF_PRINT_DRY_WET =
+       (SELECT IF_PRINT_DRY_WET
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+       KS_MARKETING_MARK_TEMPLATE.Y_DRY_IMG =
+       (SELECT Y_DRY_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+   
+   
+   KS_MARKETING_MARK_TEMPLATE.X_DRY_IMG =
+       (SELECT X_DRY_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+       KS_MARKETING_MARK_TEMPLATE.Y_DRY_SPAN =
+       (SELECT Y_DRY_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+   
+   KS_MARKETING_MARK_TEMPLATE.X_DRY_SPAN =
+       (SELECT X_DRY_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+       KS_MARKETING_MARK_TEMPLATE.Y_WET_IMG =
+       (SELECT Y_WET_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+   
+   KS_MARKETING_MARK_TEMPLATE.X_WET_IMG =
+       (SELECT X_WET_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+       KS_MARKETING_MARK_TEMPLATE.Y_WET_SPAN =
+       (SELECT Y_WET_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+   
+     KS_MARKETING_MARK_TEMPLATE.X_WET_SPAN =
+       (SELECT X_WET_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+       KS_MARKETING_MARK_TEMPLATE.Y_STAR_IMG =
+       (SELECT Y_STAR_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+   
+     KS_MARKETING_MARK_TEMPLATE.X_STAR_IMG =
+       (SELECT X_STAR_IMG
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+       KS_MARKETING_MARK_TEMPLATE.IF_PRINT_DAY_CODE =
+       (SELECT IF_PRINT_DAY_CODE
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+   
+     KS_MARKETING_MARK_TEMPLATE.Y_DAY_CODE_SPAN =
+       (SELECT Y_DAY_CODE_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+       KS_MARKETING_MARK_TEMPLATE.X_DAY_CODE_SPAN =
+       (SELECT X_DAY_CODE_SPAN
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#),
+    KS_MARKETING_MARK_TEMPLATE.PRINT_DELAY_TIME =
+       (SELECT PRINT_DELAY_TIME
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#)
+   
+ WHERE EXISTS
+ (SELECT 1
+          FROM KS_MARKETING_MARK_TEMPLATE
+         WHERE KS_MARKETING_MARK_TEMPLATE.template_name = #sourceTemplateName#)
+   and KS_MARKETING_MARK_TEMPLATE.template_name=#templateName#</update>
+    <update id="saveBatchMarkStatus" parameterClass="java.util.HashMap">update KS_MARKETING_MARK_TEMPLATE t
+    	set t.status = decode(nvl(t.status,'1'),'1','0','1'),
+    	t.update_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
+    <select id="queryBox" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.box_Drawing_Code as "boxDrawingCode",
+		t1.mater_code as "materCode",
+		t1.mater_name as "materName",
+		t1.spec_name as "specName",
+		t1.url as "url",
+		t1.state as "state"
+		from KS_MARKETING_BOX t1
+       where 1=1
+       
+        <isNotNull prepend="and" property="boxDrawingCode">t1.box_Drawing_Code like '%'||#boxDrawingCode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="specName">t1.spec_name like '%'||#specName#||'%'</isNotNull>
+        <isNotNull prepend="and" property="materName">t1.mater_name like '%'|| #materName# ||'%'</isNotNull>
+        <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+	order by t1.id desc
+       </select>
+    <update id="saveBatchBoxState" parameterClass="java.util.HashMap">update KS_MARKETING_BOX t
+    	set t.state = decode(nvl(t.state,'1'),'1','0','1'),
+    	t.update_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
+    <select id="queryBag" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.bag_Drawing_Code as "bagDrawingCode",
+		t1.mater_code as "materCode",
+		t1.mater_name as "materName",
+		t1.spec_name as "specName",
+		t1.url as "url",
+		t1.state as "state"
+		from KS_MARKETING_Bag t1
+       where 1=1
+       
+        <isNotNull prepend="and" property="bagDrawingCode">t1.bag_Drawing_Code like '%'||#bagDrawingCode#||'%'</isNotNull>
+        <isNotNull prepend="and" property="specName">t1.spec_name like '%'||#specName# ||'%'</isNotNull>
+        <isNotNull prepend="and" property="materName">t1.mater_name like '%'|| #materName# ||'%'</isNotNull>
+        <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+	order by t1.id desc
+       </select>
+    <update id="saveBatchBagState" parameterClass="java.util.HashMap">update KS_MARKETING_Bag t
+    	set t.state = decode(nvl(t.state,'1'),'1','0','1'),
+    	t.update_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
+</sqlMap>

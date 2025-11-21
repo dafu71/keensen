@@ -18,6 +18,11 @@
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
       <targetNode>assign2</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>1==2</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link4</targetConnections>
     <nodeLabel>assign0label</nodeLabel>

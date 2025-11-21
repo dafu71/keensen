@@ -66,7 +66,7 @@
 <table border="1" width="100%" class="EOS_table">
 	<tr>
 		<th width="10%" align="center">膜片批次</th>
-		<th width="10%" align="center">仓库名称</th>
+		<th width="10%" align="center">存位区域</th>
 		<th width="10%" align="center">库位</th>
 		<th width="10%" align="center">生产日期</th>
 		<th width="10%" align="center">库存数量</th>

@@ -1,7 +1,11 @@
 com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 	this.initPanel = function() {
+		
 		this.initQueryPanel();
 		this.initListPanel();
+		
+		this.initUpdateZmxScrapWindow();
+		
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -70,6 +74,11 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 								dictData : KS_PSF,
 								anchor : '90%',
 								colspan : 1
+							}, {
+								xtype : 'textfield',
+								anchor : '90%',
+								name : 'condition/position',
+								fieldLabel : '存放库位'
 							}]
 				});
 		this.queryPanel.addButton({
@@ -85,18 +94,19 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.onShow
 				});
+				
 		this.queryPanel.addButton({
-					text : "老基地库存显示",
+					text : "底膜生产看板",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					handler : this.onShow4Old
+					handler : this.onStockBoard
 				});
-		this.queryPanel.addButton({
-					text : "新基地库存显示",
-					scope : this,
-					iconCls : 'icon-application_excel',
-					handler : this.onShow4New
-				});
+		/*
+		 * this.queryPanel.addButton({ text : "老基地库存显示", scope : this, iconCls :
+		 * 'icon-application_excel', handler : this.onShow4Old });
+		 * this.queryPanel.addButton({ text : "新基地库存显示", scope : this, iconCls :
+		 * 'icon-application_excel', handler : this.onShow4New });
+		 */
 	}
 
 	this.initListPanel = function() {
@@ -111,11 +121,14 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 				forceFit : true
 			},
 			hsPage : true,
-			tbar : [{
-						text : '新/老基地切换',
+			tbar : [/*
+					 * { text : '新/老基地切换', scope : this, iconCls :
+					 * 'icon-application_edit', handler : this.onChange }
+					 */'->',{
+						text : '底膜报废',
 						scope : this,
 						iconCls : 'icon-application_edit',
-						handler : this.onChange
+						handler : this.onScrap
 					}],
 			selModel : selModel,
 			// delUrl :
@@ -123,10 +136,10 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'productDt',
 						header : '生产日期'
-					}, {
+					}/*, {
 						dataIndex : 'base',
 						header : '基地'
-					}, {
+					}*/, {
 						dataIndex : 'line',
 						header : '生产线别'
 					}, {
@@ -139,6 +152,9 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 						dataIndex : 'supName',
 						header : '无纺布（供应商）'
 					}, {
+						dataIndex : 'position',
+						header : '存放库位'
+					}, {
 						dataIndex : 'psfName',
 						header : '聚砜类型'
 					}, {
@@ -147,6 +163,9 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					}, {
 						dataIndex : 'dimoAmount',
 						header : '底膜合格数'
+					}, {
+						dataIndex : 'scrapAmount',
+						header : '底膜报废数'
 					}, {
 						dataIndex : 'residue',
 						header : '底膜剩余（=结存）'
@@ -181,9 +200,59 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 							name : 'id'
 						}, {
 							name : 'psfName'
+						}, {
+							name : 'scrapAmount'
+						}, {
+							name : 'position'
 						}]
 			})
 		})
 	}
 
+	this.initUpdateZmxScrapWindow = function() {
+		
+		var _this = this;
+		this.updateZmxScrapWindow = this.updateZmxScrapWindow
+				|| new Ext.fn.FormWindow({
+					title : '底膜报废数量录入',
+					height : 240,
+					width : 300,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+
+							_this.updateZmxScrapWindow.hide();
+							_this.listPanel.refresh();
+						},
+						columns : 2,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.diaphragm.make.make.updateZmxScrap.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'numberfield',
+									name : 'param/scrapAmount',
+									dataIndex : 'scrapAmount',
+									fieldLabel : '报废数量 ',
+									ref : '../../scrapAmount',
+									allowBlank : false,
+									anchor : '100%',
+									colspan : 2
+
+								}, {
+									name : 'param/dimoBatchNo',
+									ref : '../../dimoBatchNo',
+									xtype : 'hidden',
+									dataIndex : 'dimoBatchNo'
+								}]
+					}]
+				});
+	}
 }

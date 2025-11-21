@@ -93,7 +93,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 90,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -110,7 +110,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 							}, {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
-								fieldLabel : '内部型号%-%'
+								fieldLabel : '卷膜工艺执行型号%-%'
 							}, {
 								xtype : 'combo',
 								fieldLabel : '状态',
@@ -183,7 +183,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 
 					}, {
 						xtype : 'displayfield',
-						value : '生产内部型号:'
+						value : '卷膜工艺执行型号:'
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
@@ -200,7 +200,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 						header : '物料编号'
 					}, {
 						dataIndex : 'materSpecName',
-						header : '生产内部型号'
+						header : '卷膜工艺执行型号'
 					}/*
 						 * , { dataIndex : 'materType', header : '产品类别', css :
 						 * modifyLimit != 1 ? '' : 'background:#c7c7c7;', editor :
@@ -2105,7 +2105,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 									colspan : 1
 								}, {
 									xtype : 'textfield',
-									fieldLabel : '生产内部型号',
+									fieldLabel : '卷膜工艺执行型号',
 									allowBlank : false,
 									name : 'entity/materSpecName',
 									ref : '../../materSpecName',

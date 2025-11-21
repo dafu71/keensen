@@ -246,7 +246,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.doUpload = func
 							url : 'com.keensen.ump.produce.component.makprint.saveMarkPrint2.biz.ext',
 							jsonData : {
 								'entity/id' : pkid,
-								'entity/reserve5' : fname
+								'entity/reserve2' : fname
 							},
 							success : function(response, action) {
 								mk.hide();

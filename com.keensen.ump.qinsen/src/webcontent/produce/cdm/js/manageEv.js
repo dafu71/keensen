@@ -467,7 +467,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function(
 	}
 
 	batchNo = batchNo.trim();
-	
+
 	if (batchNo.length != 11 && batchNo.length != 12 && batchNo.length != 13) {
 		Ext.Msg.alert("系统提示", "膜片批次长度应为11或12位或13位，请检查！");
 		return false;
@@ -809,26 +809,64 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onEnd = function() {
 	var _this = this;
 	Ext.Msg.confirm("操作确认", "您确实要下机结算工作量吗?", function(A) {
 		if (A == "yes") {
-			_this.requestMask = this.requestMask
-					|| new Ext.LoadMask(Ext.getBody(), {
-								msg : "后台正在操作,请稍候!"
-							});
-			_this.requestMask.show();
-			Ext.Ajax.request({
-				url : "com.keensen.ump.produce.component.productioncount.saveCdmEnd.biz.ext",
-				method : "post",
-				success : function(resp) {
-					var ret = Ext.decode(resp.responseText);
-					if (ret.success) {
-						var msg = ret.msg;
-						_this.queryPanel.setTitle("<span style='color:red'>"
-								+ msg + "</span>");
+
+			// 校验确认码
+			Ext.Msg.prompt('您的确认码', '请输入', function(btn, text) {
+				if (btn == 'ok') {
+					var confirmCode = text.trim();
+					if (Ext.isEmpty(confirmCode)) {
+						Ext.Msg.alert('系统提示', '确认码不能为空');
+						return false;
+					} else {
+						_this.requestMask = this.requestMask
+								|| new Ext.LoadMask(Ext.getBody(), {
+											msg : "后台正在操作,请稍候!"
+										});
+						_this.requestMask.show();
+						Ext.Ajax.request({
+							url : "com.keensen.ump.produce.component.produce.queryConfirmCode.biz.ext",
+							jsonData : {
+								'confirmCode' : confirmCode
+							},
+							method : "post",
+							success : function(resp) {
+								var ret = Ext.decode(resp.responseText);
+								if (ret.success) {
+									var err = ret.err;
+									var msg = ret.msg;
+									if (err != '0') {
+										Ext.Msg.alert('系统提示', msg);
+										return false;
+									} else {
+										Ext.Ajax.request({
+											url : "com.keensen.ump.produce.component.productioncount.saveCdmEnd.biz.ext",
+											method : "post",
+											success : function(resp) {
+												var ret = Ext
+														.decode(resp.responseText);
+												if (ret.success) {
+													var msg = ret.msg;
+													_this.queryPanel
+															.setTitle("<span style='color:red'>"
+																	+ msg
+																	+ "</span>");
+												}
+											},
+											callback : function() {
+												_this.requestMask.hide()
+											}
+										})
+									}
+								}
+							},
+							callback : function() {
+								_this.requestMask.hide()
+							}
+						})
 					}
-				},
-				callback : function() {
-					_this.requestMask.hide()
 				}
-			})
+			}, this, false);
+
 		}
 	})
 }

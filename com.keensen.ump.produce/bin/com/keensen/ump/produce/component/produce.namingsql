@@ -418,4 +418,6 @@ and nvl(t1.status,1) != 0
     ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID
  WHERE JM.BATCH_NO = #jmBatchNo#
  and not exists(select 1 from KS_COMPONENT_trim where JUANMO_BATCH_ID = JM.RECORD_ID)</select>
+    <select id="queryConfirmCodeWorker" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.user_id "userId",t.user_name "userName"
+ 	from KS_COMPONENT_WORKER t</select>
 </sqlMap>

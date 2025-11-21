@@ -600,4 +600,9 @@ and nvl(t1.status,1) != 0
   
     </select>
     
+    <select id="queryConfirmCodeWorker" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    select t.user_id "userId",t.user_name "userName"
+ 	from KS_COMPONENT_WORKER t    
+    </select>
+    
 </sqlMap>

@@ -11,6 +11,23 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    
+    //10002001
+    //销售内勤
+    int nqLimit = 0;
+    
+    //品管30479  30797
+    int pgLimit = 0;
+    
+    //销售内勤
+    if(roleId.indexOf("10002001")>-1){
+    	nqLimit = 1;
+    }
+    
+    //品管
+    if(roleId.indexOf("30479")>-1 || roleId.indexOf("30797")>-1){
+    	pgLimit = 1;
+    }
 %>
 <html>
 <!-- 
@@ -33,6 +50,11 @@
 
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  
+  var nqLimit = <%=nqLimit %>;
+  var pgLimit = <%=pgLimit %>;
+  
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.quality.deliveryrecordMgr
 		});

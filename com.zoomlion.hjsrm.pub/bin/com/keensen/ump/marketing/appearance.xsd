@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="com.keensen.ump.marketing.appearance" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="com.keensen.ump.marketing.appearance">
+    <xs:complexType name="KsMarketingLabel">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="drawingName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="usedDate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="drawingCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="specName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="businessman" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="labelSize" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="url" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsMarketingMark">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="drawingName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="usedDate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="drawingCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="logo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="specName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="businessman" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="labelSize" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsMarketingMarkTemplate">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="templateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="url" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="code" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="url2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ifPrintBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="yBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="xBatchNo" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ifPrintSpecName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="yBatchSpecName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="xBatchSpecName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ifPrintDryWet" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="yDryImg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="xDryImg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="yDrySpan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="xDrySpan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="yWetImg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="xWetImg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="yWetSpan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="xWetSpan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="yStarImg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="xStarImg" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ifPrintDayCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="yDayCodeSpan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="xDayCodeSpan" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="printDelayTime" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="stampUrl" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsMarketingBox">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="boxDrawingCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="specName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="url" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="KsMarketingBag">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+            <xs:element minOccurs="0" name="createTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="createUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="createName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="updateUserId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="updateName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve1" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve2" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve3" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve4" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reserve5" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="orgId" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="status" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bagDrawingCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materCode" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="materName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="specName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="url" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="state" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

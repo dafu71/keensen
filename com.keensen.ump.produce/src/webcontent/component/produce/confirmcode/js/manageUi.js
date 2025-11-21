@@ -12,6 +12,7 @@ com.keensen.ump.produce.component.produce.ConfirmCodeMgr = function() {
 				});
 	}
 	this.initInputWindow = function() {
+	
 		var _this = this;
 		this.panel = this.panel || new Ext.Panel({});
 		this.panel2 = this.panel2 || new Ext.Panel({
@@ -22,7 +23,7 @@ com.keensen.ump.produce.component.produce.ConfirmCodeMgr = function() {
 			// baseCls : "x-plain",
 
 			width : '600',
-			height : '400',
+			height : '200',
 			// title : '生产入库',
 			pgrid : '',
 			columns : 1,
@@ -31,19 +32,23 @@ com.keensen.ump.produce.component.produce.ConfirmCodeMgr = function() {
 			saveUrl : 'com.keensen.ump.produce.component.produce.createConfirmCode.biz.ext',
 			fields : [{
 						xtype : 'displayfield',
-						height : '50',
-						value:'<p style="color:red;">初始确认码为888888</p>',
-						colspan : 1
-					}, {
-						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
 					},{
+						xtype : 'displayfield',
+						height : '20',
+						value : '<span style="font-size:16px;color:red;">初始确认码为888888</span>',
+						colspan : 1
+					},{
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 1
+					}, {
 						xtype : 'textfield',
 						name : 'oldcode',
 						inputType : "password",
 						allowBlank : false,
-						fieldLabel : '原确认码',
+						fieldLabel : '<span style="font-size:12px;">原确认码</span>',
 						ref : '../oldcode',
 						anchor : '80%',
 						colspan : 1
@@ -51,12 +56,12 @@ com.keensen.ump.produce.component.produce.ConfirmCodeMgr = function() {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'textfield',
 						name : 'newcode',
 						inputType : "password",
 						allowBlank : false,
-						fieldLabel : '新设确认码',
+						fieldLabel : '<span style="font-size:12px;">新确认码</span>',
 						ref : '../newcode',
 						anchor : '80%',
 						colspan : 1
@@ -64,20 +69,26 @@ com.keensen.ump.produce.component.produce.ConfirmCodeMgr = function() {
 						xtype : 'displayfield',
 						height : '10',
 						colspan : 1
-					},{
+					}, {
 						xtype : 'textfield',
 						name : 'newcode2',
 						inputType : "password",
 						allowBlank : false,
-						fieldLabel : '重复确认码',
+						fieldLabel : '<p style="font-size:12px;">重复确认码</p>',
 						ref : '../newcode2',
 						anchor : '80%',
 						colspan : 1
 					}],
 			buttons : [{
 						text : "确定",
+						height:30,
 						scope : this,
 						handler : this.onSave
+					}, {
+						text : "导出已确认名单",
+						hidden : uid != 'dafu' && uid != 'KS00524',
+						scope : this,
+						handler : this.onExport
 					}]
 		})
 

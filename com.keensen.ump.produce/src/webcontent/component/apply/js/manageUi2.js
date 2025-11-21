@@ -30,6 +30,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 	}
 
 	this.initStore = function() {
+		
+		this.drywetStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['干', '干'], ['湿', '湿'], ['干/湿', '干/湿']]
+				});
 
 		this.ynStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -191,6 +196,24 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								listeners : {
 									"expand" : function(A) {
 										_this.queryPanel.isC.reset()
+									}
+								}
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '干/湿',
+								ref : '../dryWet',
+								hiddenName : 'condition/dryWet',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.drywetStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.dryWet.reset()
 									}
 								}
 							}]
@@ -364,6 +387,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						sortable : true,
 						header : '元件型号'
 					}, {
+						dataIndex : 'dryWet',
+						sortable : true,
+						header : '干/湿'
+					}, {
 						dataIndex : 'orderAmount',
 						sortable : true,
 						header : '订单数量'
@@ -528,6 +555,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'orderId'
 						}, {
 							name : 'baseId'
+						}, {
+							name : 'dryWet'
 						}]
 			})
 		})

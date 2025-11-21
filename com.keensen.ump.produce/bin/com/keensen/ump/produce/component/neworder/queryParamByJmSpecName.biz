@@ -227,7 +227,7 @@
       <targetNode>end0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -279,16 +279,8 @@
       <process:to type="query">data/markDrawingCode</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">appearance/bagSize</process:from>
-      <process:to type="query">data/bag</process:to>
-    </process:copy>
-    <process:copy>
       <process:from type="query" pattern="reference">appearance/bagDrawingCode</process:from>
       <process:to type="query">data/bagDrawingCode</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">appearance/boxDrawingSize</process:from>
-      <process:to type="query">data/box</process:to>
     </process:copy>
     <process:copy>
       <process:from type="query" pattern="reference">appearance/boxDrawingCode</process:from>
@@ -313,6 +305,18 @@
     <process:copy>
       <process:from type="query" pattern="reference">appearance/pack</process:from>
       <process:to type="query">data/packingLid</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">appearance/boxDrawingSize</process:from>
+      <process:to type="query">data/box</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">appearance/bagSize</process:from>
+      <process:to type="query">data/bag</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">appearance/reserve1</process:from>
+      <process:to type="query">data/appearancestd</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign8label" name="label" nodeType="label">

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+   <select id="queryMpDeliveryrecord" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ 
+		    select t1.ID as "id",
+		   
+		to_char(t1.CREATE_TIME,'yyyy-MM-dd') as "createTime",
+		t1.CREATE_USER_ID as "createUserId",
+		t1.CREATE_NAME as "createName",
+		to_char(t1.UPDATE_TIME,'yyyy-MM-dd') as "updateTime",
+		t1.UPDATE_USER_ID as "updateUserId",
+		t1.UPDATE_NAME as "updateName",
+		t1.RESERVE1 as "reserve1",
+		t1.RESERVE2 as "reserve2",
+		t1.RESERVE3 as "reserve3",
+		t1.RESERVE4 as "reserve4",
+		t1.RESERVE5 as "reserve5",
+		t1.ORG_ID as "orgId",
+		t1.STATUS as "status",
+		t1.client as "client",
+		t1.order_no as "orderNo",
+		t1.spec_id as "specId",
+		t1.amount as "amount",
+		t1.url as "url",
+		t2.mater_spec_name "specName"
+
+		 from KS_QUALITY_MP_DELIVERYRECORD t1
+		 left join qinsen.para_mater_spec t2
+		 on t1.spec_id = t2.mater_spec_id
+		  where 1=1
+		  
+	
+		  <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="specId"> 
+		       t1.SPEC_ID = #specId#
+	</isNotNull>
+	 <isNotNull prepend="and" property="orderNo"> 
+		       upper(t1.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+
+	
+	<isNotNull prepend="and" property="Id"> 
+		       t1.ID = #Id#
+	</isNotNull>
+	
+	
+	order by t1.id desc
+	</select>
+	
+	</sqlMap>

@@ -144,13 +144,13 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 			var outBatchNo = r.data.outBatchNo;
 			var usefulLength = Ext.isEmpty(r.data.usefulLength2)
 					? ''
-					: 'null' == r.data.usefulLength2 ? '' : r.data.usefulLength2
+					: 'null' == r.data.usefulLength2 ? '' : roundToDecimalPlace(r.data.usefulLength2,2)
 							+ 'm';
 			var qualifidLength = Ext.isEmpty(r.data.qualifidLength2)
 					? ''
 					: 'null' == r.data.qualifidLength2
 							? ''
-							: r.data.qualifidLength2 + 'm';
+							: roundToDecimalPlace(r.data.qualifidLength2,2) + 'm';
 			var outLength = r.data.outLength + 'm';
 
 			LODOP.SET_PRINT_PAGESIZE(1, paperwidth, paperheight, "");
@@ -159,41 +159,70 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 			LODOP.SET_PRINT_STYLEA(0,"Stretch",1);
 
 			if (templateName == '常用模板') {
-				LODOP.ADD_PRINT_IMAGE(10, 21, 265, 33, rootUrl
-								+ "produce/diaphragm/print/img/log.jpg");
+			
+				LODOP.ADD_PRINT_IMAGE(0, 0, "100%","100%", rootUrl
+								+ "produce/diaphragm/print/img/mpmark88.png");
 				LODOP.SET_PRINT_STYLEA(0, "Stretch", 1);
-				LODOP.ADD_PRINT_TEXT(77, 20, 96, 36, "型号：");
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(77, 96, 115, 35, materSpecCode);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(113, 20, 100, 35, "批号：");
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(113, 96, 129, 35, outBatchNo);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(149, 20, 155, 35, "实发数量：");
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(147, 136, 120, 35, usefulLength);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(184, 20, 156, 35, "可用数量：");
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(183, 136, 120, 35, qualifidLength);
-				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 16);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				//LODOP.ADD_PRINT_TEXT(17, 20, 96, 36, "膜片型号：");
+				
+				//LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				//LODOP.SET_PRINT_STYLEA(0, "FontSize", 12);
+				//LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				
+				LODOP.ADD_PRINT_TEXT(25, 68, 96, 36, "膜片型号");
+				//LODOP.SET_PRINT_STYLEA(0,"FontSize", 16);
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.ADD_PRINT_TEXT(37, 83, 96, 36, "Model");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");
+				LODOP.ADD_PRINT_TEXT(32, 115, 96, 36, ":");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");
+				
+				
+				
+				LODOP.ADD_PRINT_TEXT(29, 130, 115, 35, materSpecCode);
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "Arial");				
+				LODOP.SET_PRINT_STYLEA(0,"FontSize", 12);
+				LODOP.SET_PRINT_STYLEA(0,"Bold", 1);
+				
+				
+				
+				LODOP.ADD_PRINT_TEXT(74, 90, 100, 35, "批号");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.ADD_PRINT_TEXT(86, 75, 100, 35, "Lot No");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.ADD_PRINT_TEXT(81, 115, 100, 35, ":");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				
+				
+				LODOP.ADD_PRINT_TEXT(80, 130, 129, 35, outBatchNo);
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "Arial");
+				LODOP.SET_PRINT_STYLEA(0,"FontSize", 12);
+				LODOP.SET_PRINT_STYLEA(0,"Bold", 1);				
+				
+				LODOP.ADD_PRINT_TEXT(125, 48, 155, 35, "本卷长度(m)");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.ADD_PRINT_TEXT(135, 77, 155, 35, "Length");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.ADD_PRINT_TEXT(130, 115, 155, 35, ":");				
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				
+				
+				LODOP.ADD_PRINT_TEXT(131, 130, 120, 35, usefulLength.replace('m',''));
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "Arial");
+				LODOP.SET_PRINT_STYLEA(0,"FontSize", 12);
+				LODOP.SET_PRINT_STYLEA(0,"Bold", 1);
+				
+				LODOP.ADD_PRINT_TEXT(178, 48, 156, 35, "可用长度(m)");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.ADD_PRINT_TEXT(190, 18, 156, 35, "Available Length");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.ADD_PRINT_TEXT(185, 115, 156, 35, ":");
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");					
+				
+				LODOP.ADD_PRINT_TEXT(182, 130, 120, 35, qualifidLength.replace('m',''));
+				LODOP.SET_PRINT_STYLEA(0,"FontName", "Arial");
+				LODOP.SET_PRINT_STYLEA(0,"FontSize", 12);
+				LODOP.SET_PRINT_STYLEA(0,"Bold", 1);
 
 			} else if (templateName == 'SW模板') {
 				LODOP.ADD_PRINT_TEXT(19, 167, 250, 45, materSpecCode);
@@ -542,4 +571,9 @@ function copyToClipboard(text) {
 	textarea.select();
 	document.execCommand("copy");
 	document.body.removeChild(textarea);
+}
+
+function roundToDecimalPlace(number, decimalPlaces) {
+	const factor = Math.pow(10, decimalPlaces);
+	return Math.round(number * factor) / factor;
 }

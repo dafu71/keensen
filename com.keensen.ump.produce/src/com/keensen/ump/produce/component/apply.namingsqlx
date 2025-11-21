@@ -52,6 +52,8 @@
        T1.is_examine "isExamine",
        decode(t5.code,null,'否','是') "ifcstock",
        
+       replace(replace(replace(t1.prod_class_flag,'D','干'),'W','湿'),'O','干/湿') "dryWet",
+       
        DECODE(T1.STOCK_CONFIRM_TIME, NULL, '0', '1') "stockConfirmState",
        TO_CHAR(T1.STOCK_CONFIRM_TIME, 'YYYY-MM-DD HH24:MI:SS') "stockConfirmTime",
        T1.STOCK_CONFIRM_USER_ID "stockConfirmUserId",
@@ -62,6 +64,11 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
   left join (select DISTINCT t.code code from KS_COMPONENT_C_STOCK t
 WHERE t.type='工业膜') t5 on t5.code=t1.code
   where 1=1
+  
+  <isNotNull prepend="and" property="dryWet"> 
+		       replace(replace(replace(replace(replace(t1.prod_class_flag,'D','干'),'W','湿'),'O','干/湿'),'膜',''),'干湿','干/湿') = #dryWet# 
+	</isNotNull>
+	
   <isNotNull prepend="and" property="ifstockconfirm">
   T1.STOCK_CONFIRM_TIME IS NOT NULL
   </isNotNull>
@@ -162,7 +169,11 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
   LEFT JOIN QINSEN.INST_QIJIAN T2
     ON T1.BATCH_NO = T2.BATCH_NO
   LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
-               FROM QINSEN.INST_WATER_TEST) T3
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               )) T3
     ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
   left join (select t.batch_no,max(h.code) fcode from KS_COMPONENT_REWORK_LIST t
 LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
@@ -227,7 +238,11 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
            GROUP BY dd.main_batch_id) j ON t1.juanmo_batch_id=j.record_id
   LEFT JOIN qinsen.para_mater_spec m ON m.mater_spec_id = T1.PROD_SPEC_ID
   LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
-               FROM QINSEN.INST_WATER_TEST) T3
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               )) T3
     ON T3.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
    
   left join (select t.batch_no,max(t.code) fcode from KS_COMPONENT_REWORK_LIST t
@@ -312,7 +327,11 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
     ON T1.BATCH_NO = T2.BATCH_NO
   LEFT JOIN QINSEN.INST_JUANMO_MAIN T4 ON t2.juanmo_batch_id = t4.record_id
   LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
-               FROM QINSEN.INST_WATER_TEST) T3
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               )) T3
     ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
    LEFT JOIN (select t.record_id,LISTAGG(t.tumo_batch_no, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no) tumo_batch_str,
 LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no) page_size
@@ -362,7 +381,11 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
     ON T1.BATCH_NO = T2.BATCH_NO
   LEFT JOIN QINSEN.INST_JUANMO_MAIN T4 ON t2.juanmo_batch_id = t4.record_id
   LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
-               FROM QINSEN.INST_WATER_TEST) T3
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               )) T3
     ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
  
   where 1=1
@@ -500,7 +523,11 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
            GROUP BY dd.main_batch_id) j ON t1.juanmo_batch_id=j.record_id
   LEFT JOIN qinsen.para_mater_spec m ON m.mater_spec_id = T1.PROD_SPEC_ID
   LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
-               FROM QINSEN.INST_WATER_TEST) T3
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               )) T3
     ON T3.JUANMO_BATCH_ID = T1.JUANMO_BATCH_ID
    
   left join (select t.batch_no,max(t.code) fcode from KS_COMPONENT_REWORK_LIST t
@@ -576,4 +603,6 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
 	
 	
     </select>
+    
+    
     </sqlMap>

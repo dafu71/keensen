@@ -30,9 +30,14 @@
     <node>end0</node>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign0" name="赋值" type="assign">
-    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link1" name="" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
       <targetNode>subprocess0</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>1==2</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link0</targetConnections>
     <nodeLabel>assign0label</nodeLabel>

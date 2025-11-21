@@ -19,6 +19,9 @@
     int monitorFlag = roleId.indexOf("30431")>-1?1:0;
     int waterTestFlag = roleId.indexOf("30622")>-1?1:0;
     
+    //10001481
+    int modifyPrintBatchNo = roleId.indexOf("10001481")>-1?1:0;
+    
     //10001981  元件报废申请
   	 int abilitionAdd = roleId.indexOf("10001981")>-1?1:0;
   	 
@@ -93,6 +96,7 @@
   var modifyOrderNoFlag4Dry = <%=modifyOrderNoFlag4Dry %>;
   
   var abilitionAdd = <%=abilitionAdd %>;
+  var modifyPrintBatchNo = <%=modifyPrintBatchNo %>;
   
   var waterTestFlag = <%=waterTestFlag %>;
    var nowStaffName = "<%=uname %>";

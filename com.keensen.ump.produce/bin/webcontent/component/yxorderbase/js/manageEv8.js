@@ -878,7 +878,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = functio
 				'0,1');
 	} else {
 		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号',
-				'货品名称', '干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存数量（支）',
+				'货品名称', '干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存膜元件（支）',
 				'产品备注', '标签', '标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱',
 				'包装箱内部图纸编号', '是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注',
 				'导入操作员', '订单类型']
@@ -1771,7 +1771,6 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.updateParameter = fun
 			var ret = Ext.decode(resp.responseText);
 			if (ret.success) {
 				var data = ret.data;
-				
 
 				if (data.emptyFlag == 1) {
 					Ext.Msg.alert("系统提示", "没有卷膜型号" + jmSpecName + "对应的规格和标准！");
@@ -1789,7 +1788,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.updateParameter = fun
 					obj.lid.setValue(null);
 					obj.tape.setValue(null);
 					obj.color.setValue(null);
-					
+
 					obj.specNameLabel.setValue(null);
 					obj.labelDrawingCode.setValue(null);
 					obj.hpmc.setValue(null);
@@ -1821,22 +1820,30 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.updateParameter = fun
 					obj.lid.setValue(data.lid);
 					obj.tape.setValue(data.tape);
 					obj.color.setValue(data.color);
-					
+
 					obj.specNameLabel.setValue(data.specNameLabel);
 					obj.labelDrawingCode.setValue(data.labelDrawingCode);
 					obj.hpmc.setValue(data.hpmc);
 					obj.sealPosition.setValue(data.sealPosition);
 					obj.specNameMark.setValue(data.specNameMark);
 					obj.markDrawingCode.setValue(data.markDrawingCode);
-					obj.bag.setValue(data.bag);
+
+					var appearancestd = null == data.appearancestd
+							? ''
+							: data.appearancestd;
+					obj.bag.setValue(appearancestd + data.bag == null
+							? ''
+							: data.bag);
 					obj.bagDrawingCode.setValue(data.bagDrawingCode);
-					obj.box.setValue(data.box);
+					obj.box.setValue(appearancestd + data.box == null
+							? ''
+							: data.box);
 					obj.boxDrawingCode.setValue(data.boxDrawingCode);
 					obj.packingNum.setValue(data.packingNum);
 					obj.traySize.setValue(data.traySize);
 					obj.packingLayer.setValue(data.packingLayer);
 					obj.packingLid.setValue(data.packingLid);
-					
+
 				}
 
 			}

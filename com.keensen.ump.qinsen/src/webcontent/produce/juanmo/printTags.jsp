@@ -73,6 +73,16 @@
 	font-weight: bold;
 }
 
+.span_label3 {
+	align: center;
+	text-align: left;
+	vertical-align: middle;
+	font-family: Microsoft YaHei;
+	font-size: 2px;
+	font-color: #000000;
+	font-weight: bold;
+}
+
 .square {
 	display: inline-block;
 	border: 1px solid #000000;
@@ -119,43 +129,50 @@ function initPage() {
 		secondPrint = j<len;
 %>		
 		htmlArr.push('<tr>');
-		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:12mm">');
+		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:10mm">');
 		htmlArr.push('<div id="canvas_' + <%=i %>
 				+ '" style="margin:auto;width:61px;height:61px"></div>');
+		
+		htmlArr.push('<span class="span_label">' + '<%=list[i].get("workerName") %>'
+				+ '</span>');
+				
 		htmlArr.push('</td>');
-		htmlArr.push('<td class="td_label" style="width:37mm">');
+		htmlArr.push('<td class="td_label" style="width:39mm">');
 		htmlArr.push('<span class="span_label">' + '<%=list[i].get("batchNo") %>'
 				+ '</span><br/>');
-		htmlArr.push('<span class="span_label">' + '<%=list[i].get("prodSpecName") %>'
+		htmlArr.push('<span class="span_label3">' + '<%=list[i].get("prodSpecName") %>'
 				+ '</span><br/>');
-		htmlArr.push('<span class="span_label">' + '<%=list[i].get("produceDay") %>'
-				+ '</span><br/>');
+		<%--htmlArr.push('<span class="span_label">' + '<%=list[i].get("produceDay") %>'
+				+ '</span><br/>');--%>
 		<%--htmlArr.push('<span class="span_label">' + '<%=list[i].get("lineCode") %>'
 				+ '</span><br/>');--%>
 		htmlArr.push('<span class="span_label">' + '<%=list[i].get("orderNo") %>'
 				+ '</span><br/>');
-		htmlArr.push('<span class="span_label">' + '<%=list[i].get("workerName") %>'
-				+ '</span>');
+		<%--htmlArr.push('<span class="span_label">' + '<%=list[i].get("workerName") %>'
+				+ '</span>');--%>
 		htmlArr.push('</td>');
 		
 		<% if(secondPrint){ %>
-		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:12mm">');
+		htmlArr.push('<td style="height:15mm;vertical-align: middle;width:10mm">');
 		htmlArr.push('<div id="canvas_' + <%=j %>
 				+ '" style="margin:auto;width:61px;height:61px"></div>');
+		
+		htmlArr.push('<span class="span_label">' + '<%=list[i].get("workerName") %>'
+				+ '</span>');
 		htmlArr.push('</td>');
-		htmlArr.push('<td class="td_label" style="width:37mm">');
+		htmlArr.push('<td class="td_label" style="width:39mm">');
 		htmlArr.push('<span class="span_label">' + '<%=list[j].get("batchNo") %>'
 				+ '</span><br/>');
-		htmlArr.push('<span class="span_label">' + '<%=list[j].get("prodSpecName") %>'
+		htmlArr.push('<span class="span_label3">' + '<%=list[j].get("prodSpecName") %>'
 				+ '</span><br/>');
-		htmlArr.push('<span class="span_label">' + '<%=list[j].get("produceDay") %>'
-				+ '</span><br/>');
+		<%--htmlArr.push('<span class="span_label">' + '<%=list[j].get("produceDay") %>'
+				+ '</span><br/>');--%>
 		<%--htmlArr.push('<span class="span_label">' + '<%=list[j].get("lineCode") %>'
 				+ '</span><br/>');--%>
 		htmlArr.push('<span class="span_label">' + '<%=list[j].get("orderNo") %>'
 				+ '</span><br/>');
-		htmlArr.push('<span class="span_label">' + '<%=list[j].get("workerName") %>'
-				+ '</span>');
+		<%--htmlArr.push('<span class="span_label">' + '<%=list[j].get("workerName") %>'
+				+ '</span>');--%>
 		htmlArr.push('</td>');
 		
 		<% }else{ %>

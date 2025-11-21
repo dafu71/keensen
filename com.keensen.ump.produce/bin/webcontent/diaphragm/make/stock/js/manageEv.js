@@ -107,3 +107,24 @@ com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.onShow4New = function(
 	window
 			.open('com.keensen.ump.produce.diaphragm.make.queryStock4View.flow?flag=3');
 }
+
+com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.onScrap = function() {
+	var A = this.listPanel;
+	var _this = this;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var dimoBatchNo = records[0].get('dimoBatchNo');
+		var scrapAmount = records[0].get('scrapAmount');
+		this.updateZmxScrapWindow.dimoBatchNo.setValue(dimoBatchNo);
+		this.updateZmxScrapWindow.scrapAmount.setValue(scrapAmount);
+		this.updateZmxScrapWindow.show();
+	}
+}
+
+com.keensen.ump.produce.diaphragm.make.stockMgr.prototype.onStockBoard = function() {
+	window
+			.open('com.keensen.ump.produce.diaphragm.make.queryStockBoard.flow');
+}

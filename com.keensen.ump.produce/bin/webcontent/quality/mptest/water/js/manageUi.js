@@ -85,35 +85,6 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 					}
 				}
 			}, {
-				ref : '../batchNo',
-				name : 'condition/batchNo',
-				anchor : '95%',
-				xtype : 'textfield',
-				fieldLabel : '水相液批号<br>膜片批号',
-				allowBlank : true
-			}, {
-				xtype : 'displayfield',
-				height : '5',
-				colspan : 4
-			}, {
-
-				xtype : 'combobox',
-				fieldLabel : '当前步骤',
-				ref : '../step',
-				hiddenName : 'condition/step',
-				emptyText : '--请选择--',
-				allowBlank : true,
-				editable : false,
-				anchor : '95%',
-				store : [['first', '分析'], ['second', '调整'], ['third', '配料'],
-						['produce', '生产使用'], ['invalid', '报废']],
-				listeners : {
-					scope : this,
-					'expand' : function(A) {
-						this.queryPanel.step.reset();
-					}
-				}
-			}, {
 				xtype : "dateregion",
 				colspan : 1,
 				anchor : '95%',

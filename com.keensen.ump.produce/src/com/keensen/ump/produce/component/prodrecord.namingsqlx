@@ -117,6 +117,7 @@
    
    <select id="queryMarkPrintList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	SELECT nvl(t1.qj_batch_no,nvl(t1.prod_Batch_No,t1.BATCH_NO))           "prodBatchNo",
+   	nvl(t1.qj_batch_no,nvl(t1.prod_Batch_No,t1.BATCH_NO))           "printBatchNo",
        nvl(t1.qj_spec_name,nvl(t1.prod_Spec_Name2,t1.PROD_NAME))          "prodSpecName2",
        t1.DRY_WET            "dryWet", t1.pkid "pkid",
        T1.IF_PRINT_BATCH_NO  AS "ifPrintBatchNo",

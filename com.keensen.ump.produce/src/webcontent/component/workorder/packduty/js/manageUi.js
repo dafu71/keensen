@@ -108,21 +108,25 @@ com.keensen.ump.produce.component.workorder.PackdutyMgr = function() {
 			},
 			tbar : [{
 						text : '新增任务',
+						hidden : modifyLimit != 1,
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onArrange
 					}, '-', {
 						text : '修改',
+						hidden : modifyLimit != 1,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',
+						hidden : modifyLimit != 1,
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDelArrange
 					}, '->', {
 						text : '更新元件清单',
+						hidden : modifyLimit != 1,
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onRefreshList

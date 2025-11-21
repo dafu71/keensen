@@ -189,6 +189,13 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						xtype : 'displayfield',
 						value : '',
 						id : 'zmxtotalloss'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'zmxtotalrelease'
 					}, '->', {
 						text : '录入铸膜不良',
 						scope : this,
@@ -418,6 +425,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'releaseAmount'
 						}, {
 							name : 'psfName'
+						}, {
+							name : 'zmxtotalrelease'
 						}]
 			})
 		})
@@ -530,11 +539,11 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					height : '5',
 					colspan : 2
 				}, {
-					xtype : 'datefield',
+					xtype : 'datetimefield',
 					name : 'entity/productDt',
-					format : "Y-m-d",
+					format : "Y-m-d H:i:00",
 					allowBlank : false,
-					fieldLabel : '生产日期',
+					fieldLabel : '生产时间',
 					value : new Date(),
 					anchor : '95%',
 					colspan : 1,
@@ -770,13 +779,13 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							height : '5',
 							colspan : 2
 						}, {
-							xtype : 'datefield',
+							xtype : 'datetimefield',
 							name : 'entity/productDt',
 							dataIndex : 'productDt',
 							allowBlank : false,
 							readOnly : true,
-							format : "Y-m-d",
-							fieldLabel : '生产日期',
+							format : "Y-m-d H:i:00",
+							fieldLabel : '生产时间',
 							// value : new Date(),
 							anchor : '95%',
 							colspan : 1
