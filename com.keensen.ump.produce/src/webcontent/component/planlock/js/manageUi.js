@@ -42,7 +42,7 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
 								// anchor : '95%',
-								fieldLabel : '卷膜工艺执行型号 '
+								fieldLabel : '卷膜执行型号 '
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
@@ -186,7 +186,7 @@ com.keensen.ump.produce.component.planlockMgr = function() {
 						}
 					}, {
 						dataIndex : 'materSpecName',
-						header : '卷膜工艺执行型号'
+						header : '卷膜执行型号'
 					}, {
 						dataIndex : 'size',
 						header : '尺寸'

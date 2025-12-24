@@ -11,6 +11,8 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    
+    String ip = userObject.getUserRemoteIP();
 %>
 <html>
 <!-- 
@@ -55,6 +57,9 @@ function formatStr(str){
 }
   var mylistid = Ext.id();
   var uid = "<%=uid %>";
+  
+  var ip = '<%=ip %>';
+  
   var dataorgid = "<%=dataorgid%>";
 var operatorid = "<%=operatorid%>";
 var operatorname = "<%=operatorname%>";

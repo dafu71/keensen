@@ -402,9 +402,9 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
 	  
 	  and exists(SELECT 1 from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
    on rs.juanmo_batch_id = qj.juanmo_batch_id   
-  left join V_KS_QJ_BATCH_NO_raosi v
-	  on rs.batch_no = v.batch_no
-    where V.batch_no = T1.BATCH_NO)
+  <!--left join V_KS_QJ_BATCH_NO_raosi v
+	  on rs.batch_no = v.batch_no-->
+    where qj.batch_no = T1.BATCH_NO)
     
     <isEqual compareValue="是" prepend="" property="ifprint">
             <!--元件已打印唛头-->

@@ -29,6 +29,7 @@
   <isNotNull prepend="and" property="brand">t1.brand like '%' || #brand# || '%'</isNotNull>
         <isNotNull prepend="and" property="company">t1.company like '%' || #company# || '%'</isNotNull>
         <isNotNull prepend="and" property="labelSpecName">t1.label_spec_name like '%' || #labelSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="labelSpecName2">t1.label_spec_name = #labelSpecName2#</isNotNull>
         <isNotNull prepend="and" property="prodSpecName">t1.prod_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
 	     order by t1.id desc
 	</select>

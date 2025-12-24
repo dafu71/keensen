@@ -59,18 +59,18 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 				var tagLength = _this.editPanel.tagLength.getValue();
 
 				// c21
-				
+
 				var mpd = _this.editPanel.mpd.getValue();
 				if (!Ext.isEmpty(mpd) && parseFloat(mpd) >= 10)
 					_this.editPanel.mpdIsQualified.setValue('N')
 				else
 					_this.editPanel.mpdIsQualified.setValue('Y')
 				var mpdIsQualified = _this.editPanel.mpdIsQualified.getValue();
-				
+
 				//if (Ext.isEmpty(trendText)) {
-					_this.editPanel.trend.setValue(trend(perfFlagId,
-							isBatchQualified, isKeep, isWx, qualifidLength,
-							produceRemark, tagNum, tagLength, mpdIsQualified));
+					//_this.editPanel.trend.setValue(trend(perfFlagId,
+					//		isBatchQualified, isKeep, isWx, qualifidLength,
+					//		produceRemark, tagNum, tagLength, mpdIsQualified));
 
 				//}
 
@@ -204,6 +204,7 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onJudge = function() {
 			this.editWindow.items.items[0].loadData(r);
 
 			this.editWindow.show();
+
 		} else {
 			Ext.Msg.alert("系统提示", "请选择一条数据!");
 		}
@@ -229,74 +230,48 @@ function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
 	// 走向只有两个仓，发货仓和ab仓
 	// 发货膜片除合格长度200m以下或标签数大于10个或C21大于10入AB仓，其他的全部入膜片发货仓。
 
+
 			
 	var ret = '仓库AB仓';
-	if (isWx == 'N') {//自用		
-		
+	if (isWx == 'N') {// 自用
+
 		return ret;
 	}
 
-	if (tagNum > 10 || mpdIsQualified=='N' || parseFloat(qualifidLength)<=200) {
-		
+	if (tagNum > 10 || mpdIsQualified == 'N'
+			|| parseFloat(qualifidLength) <= 200) {
+
 		ret = '仓库AB仓';
-	}else{
-		
+	} else {
+
 		ret = '仓库发货仓';
 	}
-	
-	/*if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified == 'Y') {
-		ret = '仓库发货仓';
-	}*/
+
+	/*
+	 * if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified == 'Y') { ret =
+	 * '仓库发货仓'; }
+	 */
 
 	return ret;
 
-	/*if (mpdIsQualified == 'N') {
-		perfFlagId = 300032;
-		isBatchQualified = 'N'
-	}
-
-	var ret = '';
-	if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified == 'Y') {
-		ret = '仓库发货仓';
-	}
-
-	// C等品 不合格 走向待二次判定
-	if (isWx == 'Y' && perfFlagId == 300032 && isBatchQualified == 'N') {
-		ret = '待二次判定';
-	}
-	// 保留品 不合格 走向仓库C仓
-	if (isWx == 'Y' && isKeep == 'Y' && isBatchQualified == 'N') {
-		ret = '仓库C仓';
-	}
-	// 自用膜片
-	// A/B等品 合格 走向仓库AB仓
-	if (isWx == 'N' && (perfFlagId == 300029 || perfFlagId == 300030)
-			&& isBatchQualified == 'Y') {
-		ret = '仓库AB仓';
-	}
-	// C等品 不合格 走向仓库AB仓
-	if (isWx == 'N' && perfFlagId == 300032 && isBatchQualified == 'N') {
-		ret = '仓库AB仓';
-	}
-	// 保留品 不合格 走向仓库C仓
-	if (isWx == 'N' && isKeep == 'Y' && isBatchQualified == 'N') {
-		ret = '仓库C仓';
-	}
-
-	// 外销，合格长度小于300m入AB仓
-	if (isWx == 'Y' && qualifidLength < 300) {
-		ret = '仓库AB仓';
-	}
-
-	// 异常备注里面出现整卷，两个字，系统自动外观判定不合格+流向AB仓
-	if (!Ext.isEmpty(produceRemark) && produceRemark.indexOf('整卷') > -1) {
-		ret = '仓库AB仓';
-	}
-	// 发货请检单内瑕疵标签个数＞10个，瑕疵总长度＞30m，自动流向AB仓
-	if (tagNum > 10 && tagLength > 30) {
-		ret = '仓库AB仓';
-	}
-	return ret;*/
+	/*
+	 * if (mpdIsQualified == 'N') { perfFlagId = 300032; isBatchQualified = 'N' }
+	 * 
+	 * var ret = ''; if (isWx == 'Y' && perfFlagId == 300029 && isBatchQualified ==
+	 * 'Y') { ret = '仓库发货仓'; } // C等品 不合格 走向待二次判定 if (isWx == 'Y' && perfFlagId ==
+	 * 300032 && isBatchQualified == 'N') { ret = '待二次判定'; } // 保留品 不合格 走向仓库C仓
+	 * if (isWx == 'Y' && isKeep == 'Y' && isBatchQualified == 'N') { ret =
+	 * '仓库C仓'; } // 自用膜片 // A/B等品 合格 走向仓库AB仓 if (isWx == 'N' && (perfFlagId ==
+	 * 300029 || perfFlagId == 300030) && isBatchQualified == 'Y') { ret =
+	 * '仓库AB仓'; } // C等品 不合格 走向仓库AB仓 if (isWx == 'N' && perfFlagId == 300032 &&
+	 * isBatchQualified == 'N') { ret = '仓库AB仓'; } // 保留品 不合格 走向仓库C仓 if (isWx ==
+	 * 'N' && isKeep == 'Y' && isBatchQualified == 'N') { ret = '仓库C仓'; } //
+	 * 外销，合格长度小于300m入AB仓 if (isWx == 'Y' && qualifidLength < 300) { ret =
+	 * '仓库AB仓'; } // 异常备注里面出现整卷，两个字，系统自动外观判定不合格+流向AB仓 if
+	 * (!Ext.isEmpty(produceRemark) && produceRemark.indexOf('整卷') > -1) { ret =
+	 * '仓库AB仓'; } // 发货请检单内瑕疵标签个数＞10个，瑕疵总长度＞30m，自动流向AB仓 if (tagNum > 10 &&
+	 * tagLength > 30) { ret = '仓库AB仓'; } return ret;
+	 */
 
 }
 
@@ -350,4 +325,47 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onReduce = function() {
 com.keensen.ump.produce.quality.timojudgeMgr.prototype.destroy = function() {
 	this.editWindow.destroy();
 	this.inputWindow.destroy();
+}
+
+com.keensen.ump.produce.quality.timojudgeMgr.prototype.defectView = function() {
+
+	var _this = this;
+	var tumoBatchNo;
+
+	if (this.editWindow.isVisible()) {
+		tumoBatchNo = this.editPanel.batchNo.getValue();
+	} else {
+		var B = this.listPanel.getSelectionModel().getSelections();
+		if (B && B.length != 0) {
+			if (B.length == 1) {
+				var r = B[0];
+				tumoBatchNo = r.get('batchNo');
+
+			} else {
+				Ext.Msg.alert("系统提示", "请选择一条数据!");
+			}
+		} else {
+			Ext.Msg.alert("系统提示", "请选择数据!");
+			return
+
+		}
+	}
+
+	var spacepanel = Ext.getCmp('spacepanel');
+
+	if (tumoBatchNo == '') {
+		return;
+	}
+
+	var itemId = 'menu10002001';
+	var url = '/qinsen/quality/defect/index.jsp?tumoBatchNo=' + tumoBatchNo;
+	var title = '膜片不良记录';
+	spacepanel.remove(spacepanel.getItem(itemId));
+	spacepanel.open({
+				id : '10002001',
+				text : title,
+				attributes : {
+					respath : url
+				}
+			});
 }

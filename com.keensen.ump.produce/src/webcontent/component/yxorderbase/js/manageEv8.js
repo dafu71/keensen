@@ -1471,14 +1471,23 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onFill = function() {
 	var r = C[0];
 	var label = r.data.label;
 	var mark = r.data.mark;
+	var jmSpecName = r.data.jmSpecName;
+	
 
 	var labelDrawingCode = this.addMaterWindow.labelDrawingCode.getValue();
+	
+	if(labelDrawingCode.substr(0,2)=='KS'){
+		labelDrawingCode = jmSpecName + "-" + labelDrawingCode;
+	}else{
+		labelDrawingCode = "-" + labelDrawingCode;
+	}
+	
 	if (Ext.isEmpty(labelDrawingCode)) {
 		Ext.Msg.alert("系统提示", "标签图号为空，无法填充!");
 		return false;
 	}
 
-	var i = this.baseMaterStore.find('drawingCode', labelDrawingCode);
+	var i = this.baseMaterStore.find('drawingCode2', labelDrawingCode);
 	if (i == -1) {
 		Ext.Msg.alert("系统提示", "没有匹配到数据!");
 		return false;
@@ -1831,13 +1840,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.updateParameter = fun
 					var appearancestd = null == data.appearancestd
 							? ''
 							: data.appearancestd;
-					obj.bag.setValue(appearancestd + data.bag == null
+					obj.bag.setValue(appearancestd + (data.bag == null
 							? ''
-							: data.bag);
+							: data.bag));
 					obj.bagDrawingCode.setValue(data.bagDrawingCode);
-					obj.box.setValue(appearancestd + data.box == null
+					obj.box.setValue(appearancestd + (data.box == null
 							? ''
-							: data.box);
+							: data.box));
 					obj.boxDrawingCode.setValue(data.boxDrawingCode);
 					obj.packingNum.setValue(data.packingNum);
 					obj.traySize.setValue(data.traySize);

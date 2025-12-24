@@ -278,8 +278,20 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onSave = functi
 	var _thispanel = this.inputPanel;
 	var _thislist = this.listPanel;
 	var _this = this;
+	
+	
+	
 
 	if (_thispanel.form.isValid()) {
+		
+		var param0 = this.inputPanel.param0.getValue();
+		var specName = this.inputPanel.specName.getValue();
+		if(param0 == 'N' && Ext.isEmpty(specName)){
+			Ext.Msg.alert("系统提示", "非共版唛头，请填写唛头型号");
+			return;
+		}
+		
+		
 		var mk = new Ext.LoadMask(_thispanel.id, {
 					msg : '正在保存，请稍候!',
 					removeMask : true
@@ -323,6 +335,15 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onSave2 = funct
 	var _this = this;
 
 	if (_thispanel.form.isValid()) {
+		
+		
+		var param0 = this.editPanel.param0.getValue();
+		var specName = this.editPanel.specName.getValue();
+		if(param0 == 'N' && Ext.isEmpty(specName)){
+			Ext.Msg.alert("系统提示", "非共版唛头，请填写唛头型号");
+			return;
+		}
+		
 		var mk = new Ext.LoadMask(_thispanel.id, {
 					msg : '正在保存，请稍候!',
 					removeMask : true
@@ -623,13 +644,17 @@ com.keensen.ump.produce.component.markprinttemplateMgr.prototype.onPreView = fun
 		return;
 	}
 
-	var f = document.getElementById('componentmarktemplatepreviewForm');
-	f.drawingCode.value = templateName;
-	var actionUrl = 'com.keensen.ump.produce.component.printMarks4PreView.flow?time='
-			+ Math.random() + '&token=' + Date.now();
+	Ext.Msg.prompt('装箱数量', '请输入装箱数量', function(btn, text) {
+		if (btn == 'ok') {
+			var f = document.getElementById('componentmarktemplatepreviewForm');
+			f.drawingCode.value = templateName;
+			var actionUrl = 'com.keensen.ump.produce.component.printMarks4PreView.flow?qty='
+					+ text + '&time=' + Math.random() + '&token=' + Date.now();
 
-	f.action = actionUrl;
-	f.submit();
+			f.action = actionUrl;
+			f.submit();
+		}
+	}, this, false, 1);
 
 }
 

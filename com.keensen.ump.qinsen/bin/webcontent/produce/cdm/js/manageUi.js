@@ -68,6 +68,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						name : 'planDate'
 					}, {
 						name : 'batchNo'
+					}, {
+						name : 'defectPicture'
 					}]
 		})
 	}
@@ -76,7 +78,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 200,
 					columns : 4,
 					border : true,
 					collapsible : true,
@@ -122,7 +124,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'condition/prodSpecId',
 						anchor : '95%',
-						fieldLabel : '元件型号 ',
+						fieldLabel : '卷膜执行型号 ',
 						typeAhead : true,
 						typeAheadDelay : 100,
 						minChars : 1,
@@ -181,6 +183,11 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								this.queryPanel.isCutOver.reset();
 							}
 						}
+					}, {
+						xtype : 'textfield',
+						name : 'condition/workerName',
+						anchor : '95%',
+						fieldLabel : '%-操作工姓名-%'
 					}]
 				});
 
@@ -206,22 +213,21 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					handler : this.onQueryQuantity
 				});
 
-	
 		this.queryPanel.addButton({
-					text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
-					height : 40,
-					scope : this,
-					iconCls : 'icon-application_add',
-					handler : this.onStart
-				});
+			text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_add',
+			handler : this.onStart
+		});
 
 		this.queryPanel.addButton({
-					text : "<span style='color:red;font-size:14px;'>下&nbsp;&nbsp;机</span>",
-					height : 40,
-					scope : this,
-					iconCls : 'icon-application_edit',
-					handler : this.onEnd
-				});
+			text : "<span style='color:red;font-size:14px;'>下&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_edit',
+			handler : this.onEnd
+		});
 
 	}
 
@@ -379,7 +385,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						width : 120,
 						dataIndex : 'orderNo'
 					}, {
-						header : '元件型号',
+						header : '卷膜执行型号',
 						width : 120,
 						dataIndex : 'cdmSpecName'
 					}, {
@@ -656,8 +662,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 									.setValue(record.data.denseNetType);
 							this.inputWindow.denseNetWidth
 									.setValue(record.data.denseNetWidth);
-							this.inputWindow.lightNetType
-									.setValue(record.data.lightNetType);
+							// this.inputWindow.lightNetType
+							// .setValue(record.data.lightNetType);
 							this.inputWindow.lightNetShortPage
 									.setValue(record.data.lightNetShortPage);
 
@@ -791,7 +797,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						},
 						'select' : function(combo, record, index) {
 							if (index > -1) {
-
+								
+								var btn = _this.inputWindow.buttons[2];
 								/*
 								 * var orderNo = record.data.orderNo; var
 								 * tumoBatchNo = record.data.batchNo; var planId =
@@ -819,6 +826,16 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								 * _this.inputWindow.orderId.setValue(orderId);
 								 */
 								var planId = record.data.planId;
+								var defectPicture = record.data.defectPicture;
+								
+								_this.inputWindow.defectPicture.setValue(defectPicture);
+								
+								if(Ext.isEmpty(defectPicture)){
+									btn.setDisabled(true);
+								}else{
+									btn.setDisabled(false);
+								}
+								
 								_this.inputWindow.planId.setValue(planId);
 								_this.dealTumoBatchNo();
 							}
@@ -1128,10 +1145,19 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					name : 'entity/orderId',
 					xtype : 'hidden',
 					ref : '../../orderId'
+				},{
+					xtype : 'hidden',
+					ref:'../../defectPicture'
 				}]
 			}]
 		});
 
+		this.inputWindow.addButton({
+					text : "查看瑕疵图",
+					disabled : true,
+					scope : this,
+					handler : this.viewDefectPicture
+				});
 		/*
 		 * this.inputWindow.addButton({ text : "领取任务", scope : this, handler :
 		 * this.onPlan });
@@ -1233,7 +1259,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							dataIndex : 'prodSpecId',
 							state : 'Y',
 							anchor : '75%',
-							fieldLabel : '元件型号 ',
+							fieldLabel : '卷膜执行型号 ',
 							readOnly : true,
 							allowBlank : false,
 							typeAhead : true,
@@ -1945,17 +1971,17 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					viewConfig : {
 						forceFit : true
 					},
-					tbar : ['->',{
-						xtype : 'displayfield',
-						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
-					}, {
-						xtype : 'displayfield',
-						value : '',
-						id : quantityTotalId
-					},{
-						xtype : 'displayfield',
-						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
-					}],
+					tbar : ['->', {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '',
+								id : quantityTotalId
+							}, {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}],
 					hsPage : true,
 					selModel : selModel4ProdCdmList,
 					delUrl : '1.biz.ext',
@@ -1971,7 +1997,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								header : '膜批次'
 							}, {
 								dataIndex : 'prodSpecName',
-								header : '元件型号'
+								header : '卷膜执行型号'
 							}, {
 								dataIndex : 'quantity',
 								header : '产量'
@@ -2010,7 +2036,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 										xtype : 'textfield',
 										name : 'condition/prodSpecName',
 										anchor : '85%',
-										fieldLabel : '元件型号'
+										fieldLabel : '卷膜执行型号'
 									}, {
 										xtype : 'textfield',
 										name : 'condition/batchNo',
@@ -2026,7 +2052,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 										anchor : '85%',
 										fieldLabel : '操作工',
 										value : nowStaffName
-										
+
 									}, {
 										xtype : "dateregion",
 										colspan : 1,

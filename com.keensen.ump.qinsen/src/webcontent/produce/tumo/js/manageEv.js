@@ -146,6 +146,28 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				}
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
+
+				if (ip == '172.16.10.10') {
+					this.editWindow.lineId.setValue(10020);
+					this.editWindow.lineId.setReadOnly(true);
+				}
+				if (ip == '172.16.137.108') {
+					this.editWindow.lineId.setValue(30140);
+					this.editWindow.lineId.setReadOnly(true);
+				}
+				if (ip == '172.16.137.192') {
+					this.editWindow.lineId.setValue(30220);
+					this.editWindow.lineId.setReadOnly(true);
+				}
+				if (ip == '172.16.137.193') {
+					this.editWindow.lineId.setValue(30223);
+					this.editWindow.lineId.setReadOnly(true);
+				}
+				if (ip == '172.16.136.182') {
+					this.editWindow.lineId.setValue(30240);
+					this.editWindow.lineId.setReadOnly(true);
+				}
+
 			}, this);
 
 	this.inputWindow.produceDt.mon(this.inputWindow.produceDt, "change",
@@ -219,8 +241,10 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 								+ data.totalLoss);
 						Ext.getCmp('totalTagNumTxt').setValue('合计标签数:'
 								+ data.totalTagNum);
-						Ext.getCmp('c72invalidtotal').setValue('C72报废合计(kg):' + data.c72invalidtotal);
-						Ext.getCmp('totalWasteTxt').setValue('合计废品(m):' + data.wastelosstotal);
+						Ext.getCmp('c72invalidtotal').setValue('C72报废合计(kg):'
+								+ data.c72invalidtotal);
+						Ext.getCmp('totalWasteTxt').setValue('合计废品(m):'
+								+ data.wastelosstotal);
 
 					} else {
 						Ext.getCmp('totalLengthTxt').setValue('合计长度(m):');
@@ -231,9 +255,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 						Ext.getCmp('totalTagNumTxt').setValue('合计标签数:');
 						Ext.getCmp('c72invalidtotal').setValue('C72报废合计(kg):');
 						Ext.getCmp('totalWasteTxt').setValue('合计废品(m):');
-						
+
 					}
-					
+
 				}
 			},
 			callback : function() {
@@ -578,6 +602,27 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAdd = function() {
 	}
 	this.inputWindow.produceDt.setValue(new Date());
 	this.inputWindow.show();
+
+	if (ip == '172.16.10.10') {
+		this.inputWindow.lineId.setValue(10020);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	if (ip == '172.16.137.108') {
+		this.inputWindow.lineId.setValue(30140);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	if (ip == '172.16.137.192') {
+		this.inputWindow.lineId.setValue(30220);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	if (ip == '172.16.137.193') {
+		this.inputWindow.lineId.setValue(30223);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	if (ip == '172.16.136.182') {
+		this.inputWindow.lineId.setValue(30240);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
 
 }
 
@@ -1370,7 +1415,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveWaterLiquid = function() 
 	var entitys = [];
 	Ext.each(records, function(r) {
 				if (!Ext.isEmpty(r.data['weight'])
-						&& !Ext.isEmpty(r.data['waterType']) && !Ext.isEmpty(r.data['reserve5'])
+						&& !Ext.isEmpty(r.data['waterType'])
+						&& !Ext.isEmpty(r.data['reserve5'])
 						&& !Ext.isEmpty(r.data['operatorName'])) {
 					var d = {
 						'item' : r.data['item'],
@@ -1448,7 +1494,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveTroughLiquid = function()
 	var entitys = [];
 	Ext.each(records, function(r) {
 				if (!Ext.isEmpty(r.data['weight'])
-						&& !Ext.isEmpty(r.data['item']) && !Ext.isEmpty(r.data['reserve5'])
+						&& !Ext.isEmpty(r.data['item'])
+						&& !Ext.isEmpty(r.data['reserve5'])
 						&& !Ext.isEmpty(r.data['operatorName'])) {
 					var d = {
 						'item' : r.data['item'],
@@ -1768,7 +1815,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onPrintLiquidAdjust = function(
 			var id = records[i].data.id;
 			arr.push(id)
 		}
-		
+
 		var actionUrl = 'com.keensen.ump.qinsen.printLiquidAdjusts.flow?token='
 				+ Date.now() + '&idStr=' + arr.join(',');
 		window.open(actionUrl);
@@ -1785,9 +1832,46 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onC72Invalid = function() {
 		this.editWindow4C72Invalid.loadData(records[0]);
 		this.editWindow4C72Invalid.show();
 	}
-	
+
 };
 
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.judgeDm = function(v) {
+
+	var _this = this;
+	if (Ext.isEmpty(v))
+		return;
+	var mk = new Ext.LoadMask(document.body, {
+				msg : '正在保存，请稍候!',
+				removeMask : true
+			});
+	mk.show();
+	Ext.Ajax.request({
+		method : "post",
+		scope : this,
+		url : 'com.keensen.ump.produce.diaphragm.make.make.queryStock2.biz.ext',
+		jsonData : {
+			"condition/notPosition" : 'Y',
+			"condition/dimoBatchNo" : v
+		},
+		success : function(response, action) {
+			mk.hide();
+			// 返回值处理
+			var result = Ext.decode(response.responseText);
+			var data = result.data;
+			if (data != null && data.length > 0) {
+				Ext.Msg.alert("系统提示", "底膜尚未出库，不能使用!", function() {
+							_this.inputWindow.dimoBatchNo.setValue('');
+							_this.inputWindow.dimoBatchNo.focus(false, 100);
+						}, _this);
+			}
+
+		},
+		failure : function(resp, opts) {
+			mk.hide();
+		}
+	});
+
+};
 
 function roundToDecimalPlace(number, decimalPlaces) {
 	const factor = Math.pow(10, decimalPlaces);
@@ -1808,4 +1892,30 @@ function viewWaterLiquid(recordId) {
 	}
 	Ext.getCmp(listPanel4WaterLiquidId).store.load();
 	Ext.getCmp(window4WaterLiquidId).show();
+}
+
+// 显示模态窗口函数
+function showImageModal(defectPicture) {
+	// 创建模态窗口
+	var src = markRootUrl + defectPicture + '?ver=' + Math.random();
+	var win = new Ext.Window({
+		title : '瑕疵图',
+		width : 820,
+		height : 650,
+		layout : 'fit',
+		resizable : false,
+		closable : true,
+		modal : true,
+		bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+		html : '<img src="' + src + '" alt="' + defectPicture
+				+ '" style="max-width: 100%; max-height: 100%;"/>',
+		buttons : [{
+					text : '关闭',
+					handler : function() {
+						win.close();
+					}
+				}]
+	});
+	// 显示窗口
+	win.show();
 }

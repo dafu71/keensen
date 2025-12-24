@@ -466,7 +466,16 @@ com.keensen.ump.produce.marketing.LabelMgr = function() {
 									fieldLabel : '标签尺寸',
 									anchor : '95%',
 									colspan : 1
-								}]
+								}/*, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'filefield',
+									fieldLabel: '图片路径',
+									buttonText: '浏览',
+									colspan : 1
+								}*/]
 					}]
 				});
 	}

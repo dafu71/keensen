@@ -1413,11 +1413,15 @@ public class Common implements Serializable {
 
 		String currentUniqueId = Common.getCurrentUserObject().getUniqueId();
 		String currentUserId = Common.getCurrentUserObject().getUserId();
+		//System.out.println("currentUniqueId=" + currentUniqueId);
+		//System.out.println("currentUserId=" + currentUserId);
+		
 		IUserObject[] onlines = OnlineUserManagerUtil
 				.getUserObjectsByUserId(currentUserId);
 		boolean j = false;
 		for (int i = 0; i < onlines.length; i++) {
-			if (onlines[i].getUniqueId() == currentUniqueId) {
+			//System.out.println("onlines[" + i  + "].getUniqueId()=" + onlines[i].getUniqueId());
+			if (onlines[i].getUniqueId().equals(currentUniqueId)) {
 				j = true;
 				break;
 			}

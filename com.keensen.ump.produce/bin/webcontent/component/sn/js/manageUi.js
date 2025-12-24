@@ -55,7 +55,7 @@ com.keensen.ump.produce.component.snMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/prodSpecName',
 								anchor : '95%',
-								fieldLabel : '标签型号%-%'
+								fieldLabel : '卷膜型号%-%'
 							}, {
 
 								xtype : 'combobox',
@@ -107,7 +107,7 @@ com.keensen.ump.produce.component.snMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/prodSpecName2',
 								anchor : '95%',
-								fieldLabel : '标签型号'
+								fieldLabel : '卷膜型号'
 							}]
 				});
 
@@ -198,7 +198,7 @@ com.keensen.ump.produce.component.snMgr = function() {
 						header : '图纸编号'
 					}, {
 						dataIndex : 'prodSpecName',
-						header : '标签型号'
+						header : '卷膜型号'
 					}, {
 						dataIndex : 'reserve1',
 						header : '标签LOGO'
@@ -337,7 +337,7 @@ com.keensen.ump.produce.component.snMgr = function() {
 								name : 'condition/prodSpecName',
 								ref : '../../prodSpecName',
 								allowBlank : false,
-								fieldLabel : '标签型号',
+								fieldLabel : '卷膜型号',
 								anchor : '85%',
 								colspan : 1
 							}, {

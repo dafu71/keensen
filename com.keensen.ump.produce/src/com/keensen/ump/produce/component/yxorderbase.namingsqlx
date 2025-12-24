@@ -66,12 +66,20 @@
 		t1.tape as "tape",
 		t1.aar as "aar",
 		t1.color as "color",
-		t1.color_code as "colorCode",
+		t1.color_code as "colorCode",t1.person_In_Charge "personInCharge",
 		t1.make_label as "makeLabel",t1.make_label2 as "makeLabel2",
 		t1.new_make_label as "newMakeLabel",
 		t1.water_arrow as "waterArrow",
 		t1.sn_regular as "snRegular",
-		t1.label_nsf as "labelNsf",
+		
+		
+		<!--t1.label_nsf as "labelNsf",-->
+		CASE WHEN replace(replace(REPLACE(REPLACE(t1.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
+  			THEN '错'
+    		ELSE 
+    	DECODE(nsf.label_spec_name,NULL,'无', '有') END  as "labelNsf",
+		
+		
 		t1.sn_start as "snStart",
 		t1.sn_end as "snEnd",
 		t1.label_double as "labelDouble",
@@ -79,7 +87,14 @@
 		t1.position_Label as "positionLabel",
 		t1.make_mark as "makeMark",t1.make_mark2 as "makeMark2",
 		t1.new_make_mark as "newMakeMark",
-		t1.mark_nsf as "markNsf",
+		
+		<!--t1.mark_nsf as "markNsf",-->
+		
+		CASE WHEN replace(replace(REPLACE(REPLACE(t1.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
+  			THEN '错'
+    		ELSE 
+    	DECODE(nsf.label_spec_name,NULL,'无', '有') END  as "markNsf",
+		
 		t1.mark_regular as "markRegular",
 		t1.mark_start as "markStart",
 		t1.mark_end as "markEnd",
@@ -122,7 +137,17 @@
                                '关车门前的状态') "photoAllName",
         t1.logo_Label as "logoLabel",
 		t1.logo_Label2 as "logoLabel2",
-		t1.spec_Name_Label as "specNameLabel",
+		<!--t1.spec_Name_Label as "specNameLabel",-->
+		
+		 REPLACE(REPLACE(REPLACE(REPLACE(T1.SPEC_NAME_LABEL, '客户指定：', ''),
+                               '客户指定:',
+                               ''),
+                       '客户指定',
+                       ''),
+               '不需要',
+               '无') "specNameLabel",
+		
+		
 		t1.spec_Name_Label2 as "specNameLabel2",
 		t1.logo_Mark as "logoMark",
 		t1.logo_Mark2 as "logoMark2",
@@ -131,12 +156,61 @@
 		t1.label_Drawing_Code2 as "labelDrawingCode2",
 		t1.mark_Drawing_Code2 as "markDrawingCode2",
 		t1.seal_Require "sealRequire",
-		t1.DENSE_NET_CDM "denseNetCdm"
+		t1.DENSE_NET_CDM "denseNetCdm",
+		nvl(replace(t1.jm_Spec_Name,'单击旁边按钮更新参数',''),t1.mater_spec_name2) "jmSpecName",
+		
+		t1.if_gift as "ifGift",
+		t1.provide_batch_no as "provideBatchNo",
+		t1.certificate_demand as "certificateDemand",
+		t1.delivery_Date_Earliest as "deliveryDateEarliest",
+		t1.delivery_Date_Latest as "deliveryDateLatest",
+		t1.mark_paste as "markPaste",
+		t1.version as "version",
+		t1.dry_wet_demand as "dryWetDemand",
+		t1.bag_label_po as "bagLabelPo",
+		t1.bag_label_date as "bagLabelDate",
+		t1.bag_label_amount as "bagLabelAmount",
+		t1.qc_Txt as "qcTxt",
+		t1.tech_check as "techCheck",
+		t1.label_sn_rule as "labelSnRule",
+		t1.label_Sn_Rule_Apoint as "labelSnRuleApoint",
+		t1.seal_Position2 as "sealPosition2",
+		t1.pipe_link as "pipeLink",
+		t1.bag_seal as "bagSeal",
+		t1.box_seal as "boxSeal",
+		t1.mark_Sn_Rule_Apoint as "markSnRuleApoint",
+		t1.bag_Label as "bagLabel",
+		t1.bag_Label_Control_Code as "bagLabelControlCode",
+		t1.GIFT_NUM "giftNum",
+		t1.lid_Control_Code "lidControlCode",
+		t1.label_Control_Code "labelControlCode",
+		t1.mark_Control_Code "markControlCode",
+		t1.mptype "mptype"
+		
+		
         
   FROM KS_COMPONENT_YXORDER_BASE T1
+  
+  LEFT JOIN (SELECT DISTINCT t.label_spec_name from KS_QUALITY_NSF_LIST t) nsf
+	ON nsf.label_spec_name = replace(replace(REPLACE(REPLACE(t1.spec_name_label,'客户指定：',''),
+'客户指定:',''),'客户指定',''),'不需要','无') 
+  
+  
   LEFT JOIN qinsen.para_mater_spec pms on pms.mater_spec_id=t1.mp_spec_id
   
 	where 1=1
+	
+	<isNotNull prepend="and" property="orderType"> 
+		       T1.ORDER_TYPE = #orderType# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="jmSpecName"> 
+		       upper(t1.jm_Spec_Name) like '%' || upper(#jmSpecName#) || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="dryWet"> 
+		       t1.dry_Wet like '%' || #dryWet# || '%'
+	</isNotNull>
 	
 	<isNotNull prepend = "and"  property = "recordTimeStart"> 
           to_char(t1.record_TIME,'yyyy-MM-dd HH24:MI:SS')  &gt;=  #recordTimeStart#
@@ -460,7 +534,7 @@
 		nvl(t1.sn_end, decode(t1.mater_type,'标签',t2.sn_end,'唛头',t2.mark_end,null)) "snEnd",
 		decode(t1.BASE_ID,null,t1.reserve2,t2.prod_Name) "prodName"
 		
-		,sn.id "snId"
+		,sn.id "snId",t2.label_Control_Code "labelControlCode",t2.jm_spec_name "jmSpecName"
 		
 	  FROM KS_COMPONENT_YXORDER_MCONFIRM T1
 	  
@@ -477,6 +551,12 @@
 		)) sn
 		on sn.drawing_code = t2.LABEL_DRAWING_CODE and t1.mater_type = '标签'
 	    WHERE 1=1
+	    
+	
+	<isNotNull prepend="and" property="jmSpecName"> 
+		       t2.jm_spec_name like '%' || #jmSpecName# || '%'
+	</isNotNull>    
+	    
 	<isNotNull prepend="and" property="baseId"> 
 		       t1.BASE_ID = #baseId# 
 	</isNotNull>
@@ -679,4 +759,86 @@
     	where t.id in ($ids$)
     	
     </update>
+    
+    
+    <update id="updateMconfirmK3" parameterClass="java.util.HashMap" >
+	UPDATE KS_COMPONENT_YXORDER_MCONFIRM T
+	   SET T.K3 =
+	       (SELECT AMOUNT
+	          FROM (SELECT T.MATER_CODE, SUM(T.AMOUNT) AMOUNT
+	                  FROM KS_COMPONENT_YXORDER_STOCK T
+	                 GROUP BY T.MATER_CODE) TB
+	         WHERE TB.MATER_CODE = T.MATER_CODE)
+	 WHERE EXISTS (SELECT 1
+	          FROM (SELECT T.MATER_CODE, SUM(T.AMOUNT) AMOUNT
+	                  FROM KS_COMPONENT_YXORDER_STOCK T
+	                 GROUP BY T.MATER_CODE) TB
+	         WHERE TB.MATER_CODE = T.MATER_CODE)
+         </update>
+         
+     <update id="updateLabelDrawingCode" parameterClass="java.util.HashMap" >    
+         UPDATE ks_component_yxorder_base t SET t.label_drawing_code =
+		(select max(t2.drawing_code) from KS_BASE_LABEL_DRAWING t2
+		WHERE t2.control_code = #controlCode#
+		GROUP BY t2.control_code)
+		WHERE t.id = #baseId#         
+     </update>    
+         
+         
+       <select id="queryNsf" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >    
+         
+         SELECT T.ID,
+       T.ORDER_NO,
+       T.SPEC_NAME_LABEL,
+       REPLACE(REPLACE(REPLACE(REPLACE(T.SPEC_NAME_LABEL, '客户指定：', ''),
+                               '客户指定:',
+                               ''),
+                       '客户指定',
+                       ''),
+               '不需要',
+               '无') "trueSpecNameLabel",
+       CASE
+         WHEN REPLACE(REPLACE(REPLACE(REPLACE(T.SPEC_NAME_LABEL,
+                                              '客户指定：',
+                                              ''),
+                                      '客户指定:',
+                                      ''),
+                              '客户指定',
+                              ''),
+                      '不需要',
+                      '无') IS NULL THEN
+          '错'
+         ELSE
+         
+          DECODE(NSF.LABEL_SPEC_NAME, NULL, '无', '有')
+       END "labelNsf",
+       
+       CASE
+         WHEN REPLACE(REPLACE(REPLACE(REPLACE(T.SPEC_NAME_LABEL,
+                                              '客户指定：',
+                                              ''),
+                                      '客户指定:',
+                                      ''),
+                              '客户指定',
+                              ''),
+                      '不需要',
+                      '无') IS NULL THEN
+          '错'
+         ELSE
+         
+          DECODE(NSF.LABEL_SPEC_NAME, NULL, '无', '有')
+       END "markNsf",
+       NSF.LABEL_SPEC_NAME
+  FROM KS_COMPONENT_YXORDER_BASE T
+  LEFT JOIN (SELECT DISTINCT T.LABEL_SPEC_NAME FROM KS_QUALITY_NSF_LIST T) NSF
+    ON NSF.LABEL_SPEC_NAME =
+       REPLACE(REPLACE(REPLACE(REPLACE(T.SPEC_NAME_LABEL, '客户指定：', ''),
+                               '客户指定:',
+                               ''),
+                       '客户指定',
+                       ''),
+               '不需要',
+               '无')
+               WHERE t.id =#baseId#
+      </select>   
 </sqlMap>

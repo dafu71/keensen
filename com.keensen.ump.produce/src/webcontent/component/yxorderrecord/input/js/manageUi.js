@@ -130,11 +130,23 @@ com.keensen.ump.produce.component.YxorderInputMgr = function() {
 		// 删除其他、公司标准、旋熔。同时要改成必选项，不选不能下单 2025-07-30 罗
 		// 梳齿改梳齿五星蜂窝
 		// 蜂窝需要改为帽檐蜂窝（非五星） 2025-08-04
-		this.lidStore = new Ext.data.SimpleStore({
+		/*this.lidStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'], ['格栅', '格栅'],
 							['梳齿五星蜂窝', '梳齿五星蜂窝'], ['定制', '定制']]
+				});*/
+				
+		this.lidStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['8寸、4寸膜元件 梳齿五星蜂窝端盖(公司标准)', '8寸、4寸膜元件 梳齿五星蜂窝端盖(公司标准)'], 
+					['2.5寸帽檐格栅端盖(公司标准)', '2.5寸帽檐格栅端盖(公司标准)'],
+							['家用膜元件无端盖(公司标准)', '家用膜元件无端盖(公司标准)'],
+							['8寸梳齿蜂窝端盖(非五星)', '8寸梳齿蜂窝端盖(非五星)'],
+							['4寸帽檐蜂窝端盖(非五星)', '4寸帽檐蜂窝端盖(非五星)'],
+							['4寸帽檐格栅端盖', '4寸帽檐格栅端盖'],
+							['定制', '定制']]
 				});
+
 
 		// 卷膜胶带选项：印刷双层、印刷三层、网纹 蓝胶带 绿胶带 白胶带 黄胶带 灰胶带
 		this.tapeStore = new Ext.data.SimpleStore({
@@ -542,13 +554,13 @@ com.keensen.ump.produce.component.YxorderInputMgr = function() {
 			},
 			hsPage : false,
 			tbar : [{
-						text : '<p style="color:red;font-size:14px;">无外观评审-司标</p>',
+						text : '<p style="color:red;font-size:14px;">无外观评审-公司标准</p>',
 						autoHeight : true,
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAddList
 					}, '-', {
-						text : '<p style="color:red;font-size:14px;">无外观评审-非司标</p>',
+						text : '<p style="color:red;font-size:14px;">无外观评审-非公司标准</p>',
 						autoHeight : true,
 						scope : this,
 						iconCls : 'icon-application_add',

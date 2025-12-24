@@ -21,6 +21,12 @@
 <head>
 <title>K3库存</title>
 
+<!-- 导出Excel -->
+<script src="base/exceljs/polyfill.js"></script>
+<script src="base/exceljs/exceljs.min.js"></script>
+<script src="base/exceljs/FileSaver.min.js"></script>
+<script src="base/exceljs/doQueryAndExport.js"></script>
+
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
 

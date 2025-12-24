@@ -40,6 +40,7 @@
   	if(("'dafu','KS00296','KS00322','KS00483','KS00017','KS00273','KS01054','KS01213','KS01372','KS01397','KS01443','KS01442','KS01406'").indexOf(uid) != -1){
   		specialQuery = "1";
   	}
+  	String uname = userObject.getUserName();	
 %>
 <html>
 <!-- 
@@ -85,7 +86,7 @@
   var gymanage = "<%=gymanage %>";
   
   var uid = "<%=uid %>";
-  
+   var uname = '<%=uname %>';
   var opt = '';
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.quality.mptest.waterMgr

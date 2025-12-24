@@ -454,6 +454,22 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 
 	this.inputWindow.orderNo.setReadOnly(true);
 	this.inputWindow.show();
+	
+	if(ip == '172.16.10.44'){
+		this.inputWindow.lineId.setValue(30046);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	if(ip == '172.16.10.42'){
+		this.inputWindow.lineId.setValue(30181);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	
+	if(ip == '172.16.10.45'){
+		this.inputWindow.lineId.setValue(30200);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	var btn = this.inputWindow.buttons[2];
+	btn.setDisabled(true);
 }
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.dealTumoBatchNo = function() {
@@ -741,6 +757,23 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	this.inputWindow.pageType.setDisabled(false);
 
 	this.inputWindow.show();
+	
+	if(ip == '172.16.10.44'){
+		this.inputWindow.lineId.setValue(30046);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	if(ip == '172.16.10.42'){
+		this.inputWindow.lineId.setValue(30181);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	
+	if(ip == '172.16.10.45'){
+		this.inputWindow.lineId.setValue(30200);
+		this.inputWindow.lineId.setReadOnly(true);
+	}
+	
+	var btn = this.inputWindow.buttons[2];
+	btn.setDisabled(true);
 }
 
 function defectView(tumoBatchNo) {
@@ -885,4 +918,38 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportProduceCountExcel = f
 			'com.keensen.ump.produce.component.productioncount.queryProducCdmList',
 			'0,1');
 
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.viewDefectPicture = function() {
+	
+	var defectPicture = this.inputWindow.defectPicture.getValue();
+	if(Ext.isEmpty(defectPicture)) return false;
+	showImageModal(defectPicture);
+	
+}
+
+// 显示模态窗口函数
+function showImageModal(defectPicture) {
+	// 创建模态窗口
+	var src = markRootUrl + defectPicture + '?ver=' + Math.random();
+	var win = new Ext.Window({
+		title : '瑕疵图',
+		width : 820,
+		height : 650,
+		layout : 'fit',
+		resizable : false,
+		closable : true,
+		modal : true,
+		bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+		html : '<img src="' + src + '" alt="' + defectPicture
+				+ '" style="max-width: 100%; max-height: 100%;"/>',
+		buttons : [{
+					text : '关闭',
+					handler : function() {
+						win.close();
+					}
+				}]
+	});
+	// 显示窗口
+	win.show();
 }

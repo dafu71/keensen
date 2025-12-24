@@ -58,12 +58,12 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/orderNo',
 								anchor : '100%',
-								fieldLabel : '订单号'
+								fieldLabel : '销售订单编号'
 							}, {
 								xtype : 'textfield',
 								hiddenName : 'condition/specName',
 								anchor : '100%',
-								fieldLabel : '膜片型号 '
+								fieldLabel : '膜片生产型号 '
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
@@ -200,21 +200,9 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						},
 						sortable : true
 					}, {
-						dataIndex : 'customerCode',
-						width : 120,
-						header : '客户'
-					}, {
-						dataIndex : 'ext1',
-						width : 120,
-						header : '编码'
-					}, {
-						dataIndex : 'ext3',
-						width : 120,
-						header : '订单类型'
-					}, {
 						dataIndex : 'orderNo',
 						width : 200,
-						header : '订单编号'
+						header : '销售订单编号'
 					}, {
 						dataIndex : 'orderDate',
 						width : 120,
@@ -224,61 +212,58 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						width : 120,
 						header : '要求入库日期'
 					}, {
-						dataIndex : 'ext8',
-						width : 120,
-						header : '货品名称'
-					}, {
-						dataIndex : 'unit',
-						width : 120,
-						header : '单位'
-					}, {
-						dataIndex : 'specName',
-						width : 120,
-						header : '规格型号'
-					}, {
-						dataIndex : 'ext10',
-						width : 120,
-						header : '产品规格'
-					}, {
 						dataIndex : 'amount',
 						width : 120,
 						header : '订单数量'
-					}, {
-						dataIndex : 'ext11',
-						width : 120,
-						header : '待发货（发库存）'
 					}, {
 						dataIndex : 'ext12',
 						width : 120,
 						header : '需生产或入库数量'
 					}, {
-						dataIndex : 'ext13',
-						width : 120,
-						header : '标签'
+						dataIndex : 'manager',
+						header : '负责人'
 					}, {
-						dataIndex : 'ext14',
-						width : 120,
-						header : '真空包装袋'
+						dataIndex : 'prodName',
+						header : '产品名称'
 					}, {
-						dataIndex : 'ext15',
-						width : 120,
-						header : '包装箱'
+						dataIndex : 'amountGift',
+						header : '是否有赠送米数'
 					}, {
-						dataIndex : 'ext16',
-						width : 120,
-						header : '唛头'
+						dataIndex : 'checkReportNeeded',
+						header : '是否需要检测报告'
 					}, {
-						dataIndex : 'ext17',
-						width : 120,
-						header : '打包方式'
+						dataIndex : 'mptype',
+						header : '膜片大类'
 					}, {
-						dataIndex : 'ext18',
-						width : 200,
-						header : '产品性能'
+						dataIndex : 'specName',
+						header : '膜片生产型号'
 					}, {
-						dataIndex : 'ext19',
-						width : 200,
-						header : '其它备注'
+						dataIndex : 'markSpecName',
+						header : '膜片唛头型号'
+					}, {
+						dataIndex : 'deliveryDateEarliest',
+						header : '计划最早发货日期'
+					}, {
+						dataIndex : 'deliveryDateLatest',
+						header : '计划最晚发货日期'
+					}, {
+						dataIndex : 'tray',
+						header : '托盘材质要求'
+					}, {
+						dataIndex : 'packingTxt',
+						header : '整托货物警示标识'
+					}, {
+						dataIndex : 'markPaste',
+						header : '要求整托货物张贴信息唛头'
+					}, {
+						dataIndex : 'pallet',
+						header : '膜元件包装箱打托要求'
+					}, {
+						dataIndex : 'flash',
+						header : '是否飞边'
+					}, {
+						dataIndex : 'mark',
+						header : '膜片包装箱唛头'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.ship.orderbase.queryByPage.biz.ext',
@@ -332,6 +317,36 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							name : 'orderStatus'
 						}, {
 							name : 'id'
+						}, {
+							name : 'dept'
+						}, {
+							name : 'manager'
+						}, {
+							name : 'prodName'
+						}, {
+							name : 'amountGift'
+						}, {
+							name : 'checkReportNeeded'
+						}, {
+							name : 'mptype'
+						}, {
+							name : 'markSpecName'
+						}, {
+							name : 'deliveryDateEarliest'
+						}, {
+							name : 'deliveryDateLatest'
+						}, {
+							name : 'tray'
+						}, {
+							name : 'packingTxt'
+						}, {
+							name : 'markPaste'
+						}, {
+							name : 'pallet'
+						}, {
+							name : 'flash'
+						}, {
+							name : 'mark'
 						}]
 			})
 		})
@@ -396,15 +411,14 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							name : 'entity/orderNo',
 							dataIndex : 'orderNo',
 							allowBlank : false,
-							fieldLabel : '订单号',
+							fieldLabel : '销售订单编号',
 							anchor : '95%',
 							colspan : 2
 						}, {
 							xtype : 'textfield',
-							name : 'entity/customerCode',
-							dataIndex : 'customerCode',
-							allowBlank : true,
-							fieldLabel : '客户',
+							name : 'entity/prodName',
+							dataIndex : 'prodName',
+							fieldLabel : '产品名称',
 							anchor : '95%',
 							colspan : 2
 						}, {
@@ -443,11 +457,19 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'textfield',
-							name : 'entity/unit',
-							dataIndex : 'unit',
+							name : 'entity/ext12',
 							allowBlank : false,
-							fieldLabel : '单位',
+							dataIndex : 'ext12',
+							fieldLabel : '需生产或<br>入库数量',
 							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/mptype',
+							dataIndex : 'mptype',
+							anchor : '95%',
+							allowBlank : false,
+							fieldLabel : '膜片大类 ',
 							colspan : 1
 						}, {
 							xtype : 'textfield',
@@ -455,35 +477,24 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							dataIndex : 'specName',
 							anchor : '95%',
 							allowBlank : false,
-							fieldLabel : '膜片型号 ',
-							colspan : 2
+							fieldLabel : '膜片生产型号 ',
+							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 4
 						}, {
 							xtype : 'textfield',
-							name : 'entity/ext1',
-							dataIndex : 'ext1',
-							fieldLabel : '编码',
+							name : 'entity/markSpecName',
+							dataIndex : 'markSpecName',
+							fieldLabel : '膜片唛头型号',
 							anchor : '95%',
 							colspan : 2
 						}, {
 							xtype : 'textfield',
-							name : 'entity/ext3',
-							dataIndex : 'ext3',
-							fieldLabel : '订单类型',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
-							xtype : 'textfield',
-							name : 'entity/ext8',
-							dataIndex : 'ext8',
-							fieldLabel : '货品名称',
+							name : 'entity/manager',
+							dataIndex : 'manager',
+							fieldLabel : '负责人',
 							anchor : '95%',
 							colspan : 2
 						}, {
@@ -492,34 +503,18 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							colspan : 4
 						}, {
 							xtype : 'textfield',
-							name : 'entity/ext10',
-							dataIndex : 'ext10',
-							fieldLabel : '产品规格',
+							name : 'entity/amountGift',
+							dataIndex : 'amountGift',
+							// allowBlank : false,
+							fieldLabel : '是否有<br>赠送米数',
 							anchor : '95%',
 							colspan : 2
 						}, {
 							xtype : 'textfield',
-							name : 'entity/ext11',
-							dataIndex : 'ext11',
-							fieldLabel : '待发货（发库存）',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
-							xtype : 'textfield',
-							name : 'entity/ext12',
-							dataIndex : 'ext12',
-							fieldLabel : '需生产或入库数量',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'textfield',
-							name : 'entity/ext13',
-							dataIndex : 'ext13',
-							fieldLabel : '标签',
+							name : 'entity/checkReportNeeded',
+							dataIndex : 'checkReportNeeded',
+							// allowBlank : false,
+							fieldLabel : '是否需要<br>检测报告',
 							anchor : '95%',
 							colspan : 2
 						}, {
@@ -527,73 +522,107 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'textfield',
-							name : 'entity/ext14',
-							dataIndex : 'ext14',
-							fieldLabel : '真空包装袋',
+							xtype : 'datefield',
+							format : "Y-m-d",
+							name : 'entity/deliveryDateEarliest',
+							dataIndex : 'deliveryDateEarliest',
+							ref : '../../deliveryDateEarliest',
+							allowBlank : false,
+							disabled : false,
+							hidden : false,
+							// minValue : new Date(),
+							// readOnly : true,
+							fieldLabel : '计划最早<br>发货日期',
+							// readOnly : true,
 							anchor : '95%',
-							colspan : 2
+							colspan : 2,
+							listeners : {
+								scope : this,
+								"change" : function(o, newvalue, oldvalue) {
+
+								}
+							}
 						}, {
-							xtype : 'textfield',
-							name : 'entity/ext15',
-							dataIndex : 'ext15',
-							fieldLabel : '包装箱',
+							xtype : 'datefield',
+							format : "Y-m-d",
+							name : 'entity/deliveryDateLatest',
+							dataIndex : 'deliveryDateLatest',
+							ref : '../../deliveryDateLatest',
+							allowBlank : false,
+							disabled : false,
+							hidden : false,
+							// minValue : new Date(),
+							// readOnly : true,
+							fieldLabel : '计划最晚<br>发货日期',
+							// readOnly : true,
 							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
-							xtype : 'textfield',
-							name : 'entity/ext16',
-							dataIndex : 'ext16',
-							fieldLabel : '唛头',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'textfield',
-							name : 'entity/ext17',
-							dataIndex : 'ext17',
-							fieldLabel : '打包方式',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
-							xtype : 'textfield',
-							name : 'entity/ext18',
-							dataIndex : 'ext18',
-							fieldLabel : '产品性能',
-							anchor : '95%',
-							colspan : 4
+							colspan : 2,
+							listeners : {
+								scope : this,
+								"change" : function(o, newvalue, oldvalue) {
+
+								}
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 4
 						}, {
 							xtype : 'textarea',
-							name : 'entity/ext19',
-							height : '50',
-							dataIndex : 'ext19',
-							fieldLabel : '其它备注',
+							name : 'entity/tray',
+							dataIndex : 'tray',
+							// allowBlank : false,
+							fieldLabel : '托盘材质要求',
 							anchor : '95%',
-							colspan : 4
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							name : 'entity/packingTxt',
+							dataIndex : 'packingTxt',
+							// allowBlank : false,
+							fieldLabel : '整托货物<br>警示标识',
+							anchor : '95%',
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 4
 						}, {
 							xtype : 'textarea',
-							dataIndex : 'remark',
-							height : '50',
-							name : 'entity/remark',
-							allowBlank : true,
-							fieldLabel : '备注',
+							name : 'entity/markPaste',
+							dataIndex : 'markPaste',
+							// allowBlank : false,
+							fieldLabel : '要求整托货物<br>张贴信息唛头',
 							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							name : 'entity/pallet',
+							dataIndex : 'pallet',
+							// allowBlank : false,
+							fieldLabel : '膜元件包装箱<br>打托要求',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
 							colspan : 4
+						}, {
+							xtype : 'textarea',
+							name : 'entity/mark',
+							dataIndex : 'mark',
+							// allowBlank : false,
+							fieldLabel : '膜片包装箱唛头',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/flash',
+							dataIndex : 'flash',
+							// allowBlank : false,
+							fieldLabel : '是否飞边',
+							anchor : '95%',
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -646,7 +675,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 	this.initViewWindow = function() {
 		this.viewWindow = this.viewWindow || new Ext.fn.FormWindow({
 			title : '查看',
-			height : 600,
+			height : 630,
 			width : 800,
 			resizable : false,
 			minimizable : false,
@@ -659,15 +688,17 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 				columns : 4,
 				loadUrl : 'com.keensen.ump.produce.diaphragm.ship.orderbase.expandOrderBase.biz.ext',
 				fields : [{
-							xtype : 'displayfield',
+							xtype : 'textfield',
+							readOnly : true,
 							dataIndex : 'orderNo',
-							fieldLabel : '订单号',
+							fieldLabel : '销售订单编号',
 							anchor : '95%',
 							colspan : 2
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'customerCode',
-							fieldLabel : '客户',
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'prodName',
+							fieldLabel : '产品名称',
 							anchor : '95%',
 							colspan : 2
 						}, {
@@ -675,14 +706,16 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'displayfield',
+							xtype : 'datefield',
+							readOnly : true,
 							dataIndex : 'orderDate',
 							fieldLabel : '下单日期',
 							anchor : '95%',
 							format : "Y-m-d",
 							colspan : 2
 						}, {
-							xtype : 'displayfield',
+							xtype : 'datefield',
+							readOnly : true,
 							dataIndex : 'demandDate',
 							fieldLabel : '要求入库日期',
 							anchor : '95%',
@@ -693,47 +726,49 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'displayfield',
+							xtype : 'numberfield',
+							readOnly : true,
 							dataIndex : 'amount',
 							fieldLabel : '数量',
 							anchor : '95%',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'unit',
-							fieldLabel : '单位',
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'ext12',
+							fieldLabel : '需生产或<br>入库数量',
 							anchor : '95%',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'mptype',
+							anchor : '95%',
+							fieldLabel : '膜片大类 ',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
 							dataIndex : 'specName',
 							anchor : '95%',
-							fieldLabel : '膜片型号 ',
-							colspan : 2
+							fieldLabel : '膜片生产型号 ',
+							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext1',
-							fieldLabel : '编码',
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'markSpecName',
+							fieldLabel : '膜片唛头型号',
 							anchor : '95%',
 							colspan : 2
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext3',
-							fieldLabel : '订单类型',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext8',
-							fieldLabel : '货品名称',
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'manager',
+							fieldLabel : '负责人',
 							anchor : '95%',
 							colspan : 2
 						}, {
@@ -741,31 +776,19 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext10',
-							fieldLabel : '产品规格',
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'amountGift',
+							// allowBlank : false,
+							fieldLabel : '是否有<br>赠送米数',
 							anchor : '95%',
 							colspan : 2
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext11',
-							fieldLabel : '待发货（发库存）',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext12',
-							fieldLabel : '需生产或入库数量',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext13',
-							fieldLabel : '标签',
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'checkReportNeeded',
+							// allowBlank : false,
+							fieldLabel : '是否需要<br>检测报告',
 							anchor : '95%',
 							colspan : 2
 						}, {
@@ -773,31 +796,21 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext14',
-							fieldLabel : '真空包装袋',
+							xtype : 'datefield',
+							format : "Y-m-d",
+							readOnly : true,
+							dataIndex : 'deliveryDateEarliest',
+							ref : '../../deliveryDateEarliest',
+							fieldLabel : '计划最早<br>发货日期',
 							anchor : '95%',
 							colspan : 2
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext15',
-							fieldLabel : '包装箱',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext16',
-							fieldLabel : '唛头',
-							anchor : '95%',
-							colspan : 2
-						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext17',
-							fieldLabel : '打包方式',
+							xtype : 'datefield',
+							format : "Y-m-d",
+							readOnly : true,
+							dataIndex : 'deliveryDateLatest',
+							ref : '../../deliveryDateLatest',
+							fieldLabel : '计划最晚<br>发货日期',
 							anchor : '95%',
 							colspan : 2
 						}, {
@@ -805,33 +818,55 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'ext18',
-							fieldLabel : '产品性能',
+							xtype : 'textarea',
+							readOnly : true,
+							dataIndex : 'tray',
+							fieldLabel : '托盘材质要求',
 							anchor : '95%',
-							colspan : 4
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							readOnly : true,
+							dataIndex : 'packingTxt',
+							fieldLabel : '整托货物<br>警示标识',
+							anchor : '95%',
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'displayfield',
-							height : '50',
-							dataIndex : 'ext19',
-							fieldLabel : '其它备注',
+							xtype : 'textarea',
+							readOnly : true,
+							dataIndex : 'markPaste',
+							fieldLabel : '要求整托货物<br>张贴信息唛头',
 							anchor : '95%',
-							colspan : 4
+							colspan : 2
+						}, {
+							xtype : 'textarea',
+							readOnly : true,
+							dataIndex : 'pallet',
+							fieldLabel : '膜元件包装箱<br>打托要求',
+							anchor : '95%',
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
 							colspan : 4
 						}, {
-							xtype : 'displayfield',
-							dataIndex : 'remark',
-							height : '30',
-							fieldLabel : '备注',
+							xtype : 'textarea',
+							readOnly : true,
+							dataIndex : 'mark',
+							fieldLabel : '膜片包装箱唛头',
 							anchor : '95%',
-							colspan : 4
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'flash',
+							fieldLabel : '是否飞边',
+							anchor : '95%',
+							colspan : 2
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -855,10 +890,6 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							anchor : '95%',
 							colspan : 4
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
 							xtype : 'hidden',
 							dataIndex : 'id'
 						}]
@@ -872,7 +903,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 		this.planConfirmWindow = this.planConfirmWindow
 				|| new Ext.fn.FormWindow({
 					title : '计划员确认',
-					height : 600,
+					height : 630,
 					width : 800,
 					resizable : false,
 					minimizable : false,
@@ -888,15 +919,17 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						saveUrl : 'com.keensen.ump.produce.diaphragm.ship.orderbase.planConfirm.biz.ext',
 						loadUrl : 'com.keensen.ump.produce.diaphragm.ship.orderbase.expandOrderBase.biz.ext',
 						fields : [{
-									xtype : 'displayfield',
+									xtype : 'textfield',
+									readOnly : true,
 									dataIndex : 'orderNo',
-									fieldLabel : '订单号',
+									fieldLabel : '销售订单编号',
 									anchor : '95%',
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'customerCode',
-									fieldLabel : '客户',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'prodName',
+									fieldLabel : '产品名称',
 									anchor : '95%',
 									colspan : 2
 								}, {
@@ -904,14 +937,16 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
+									xtype : 'datefield',
+									readOnly : true,
 									dataIndex : 'orderDate',
 									fieldLabel : '下单日期',
 									anchor : '95%',
 									format : "Y-m-d",
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
+									xtype : 'datefield',
+									readOnly : true,
 									dataIndex : 'demandDate',
 									fieldLabel : '要求入库日期',
 									anchor : '95%',
@@ -922,47 +957,49 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
+									xtype : 'numberfield',
+									readOnly : true,
 									dataIndex : 'amount',
 									fieldLabel : '数量',
 									anchor : '95%',
 									colspan : 1
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'unit',
-									fieldLabel : '单位',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'ext12',
+									fieldLabel : '需生产或<br>入库数量',
 									anchor : '95%',
 									colspan : 1
 								}, {
-									xtype : 'displayfield',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'mptype',
+									anchor : '95%',
+									fieldLabel : '膜片大类 ',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									readOnly : true,
 									dataIndex : 'specName',
 									anchor : '95%',
 									fieldLabel : '膜片型号 ',
-									colspan : 2
+									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext1',
-									fieldLabel : '编码',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'markSpecName',
+									fieldLabel : '膜片唛头型号',
 									anchor : '95%',
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext3',
-									fieldLabel : '订单类型',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 4
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext8',
-									fieldLabel : '货品名称',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'manager',
+									fieldLabel : '负责人',
 									anchor : '95%',
 									colspan : 2
 								}, {
@@ -970,31 +1007,19 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext10',
-									fieldLabel : '产品规格',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'amountGift',
+									// allowBlank : false,
+									fieldLabel : '是否有<br>赠送米数',
 									anchor : '95%',
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext11',
-									fieldLabel : '待发货（发库存）',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 4
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext12',
-									fieldLabel : '需生产或入库数量',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext13',
-									fieldLabel : '标签',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'checkReportNeeded',
+									// allowBlank : false,
+									fieldLabel : '是否需要<br>检测报告',
 									anchor : '95%',
 									colspan : 2
 								}, {
@@ -1002,31 +1027,21 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext14',
-									fieldLabel : '真空包装袋',
+									xtype : 'datefield',
+									format : "Y-m-d",
+									readOnly : true,
+									dataIndex : 'deliveryDateEarliest',
+									ref : '../../deliveryDateEarliest',
+									fieldLabel : '计划最早<br>发货日期',
 									anchor : '95%',
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext15',
-									fieldLabel : '包装箱',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 4
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext16',
-									fieldLabel : '唛头',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext17',
-									fieldLabel : '打包方式',
+									xtype : 'datefield',
+									format : "Y-m-d",
+									readOnly : true,
+									dataIndex : 'deliveryDateLatest',
+									ref : '../../deliveryDateLatest',
+									fieldLabel : '计划最晚<br>发货日期',
 									anchor : '95%',
 									colspan : 2
 								}, {
@@ -1034,33 +1049,55 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext18',
-									fieldLabel : '产品性能',
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'tray',
+									fieldLabel : '托盘材质要求',
 									anchor : '95%',
-									colspan : 4
+									colspan : 2
+								}, {
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'packingTxt',
+									fieldLabel : '整托货物<br>警示标识',
+									anchor : '95%',
+									colspan : 2
 								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									height : '30',
-									dataIndex : 'ext19',
-									fieldLabel : '其它备注',
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'markPaste',
+									fieldLabel : '要求整托货物<br>张贴信息唛头',
 									anchor : '95%',
-									colspan : 4
+									colspan : 2
+								}, {
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'pallet',
+									fieldLabel : '膜元件包装箱<br>打托要求',
+									anchor : '95%',
+									colspan : 2
 								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'remark',
-									height : '30',
-									fieldLabel : '备注',
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'mark',
+									fieldLabel : '膜片包装箱唛头',
 									anchor : '95%',
-									colspan : 4
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'flash',
+									fieldLabel : '是否飞边',
+									anchor : '95%',
+									colspan : 2
 								}, {
 									xtype : 'displayfield',
 									height : '5',
@@ -1073,20 +1110,9 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									anchor : '95%',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 4
-								}, {
 									xtype : 'hidden',
 									name : 'entity/id',
 									dataIndex : 'id'
-								}, {
-									xtype : 'mpspeccombobox',
-									ref : '../../specId',
-									hiddenName : 'entity/specId',
-									fieldLabel : '膜片生产型号 ',
-									anchor : '95%',
-									colspan : 2
 								}, {
 									xtype : 'combobox',
 									forceSelection : true,
@@ -1134,7 +1160,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 		this.storageConfirmWindow = this.storageConfirmWindow
 				|| new Ext.fn.FormWindow({
 					title : '库存确认',
-					height : 600,
+					height : 630,
 					width : 800,
 					resizable : false,
 					minimizable : false,
@@ -1150,15 +1176,17 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						saveUrl : 'com.keensen.ump.produce.diaphragm.ship.orderbase.storageConfirm.biz.ext',
 						loadUrl : 'com.keensen.ump.produce.diaphragm.ship.orderbase.expandOrderBase.biz.ext',
 						fields : [{
-									xtype : 'displayfield',
+									xtype : 'textfield',
+									readOnly : true,
 									dataIndex : 'orderNo',
-									fieldLabel : '订单号',
+									fieldLabel : '销售订单编号',
 									anchor : '95%',
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'customerCode',
-									fieldLabel : '客户',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'prodName',
+									fieldLabel : '产品名称',
 									anchor : '95%',
 									colspan : 2
 								}, {
@@ -1166,14 +1194,16 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
+									xtype : 'datefield',
+									readOnly : true,
 									dataIndex : 'orderDate',
 									fieldLabel : '下单日期',
 									anchor : '95%',
 									format : "Y-m-d",
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
+									xtype : 'datefield',
+									readOnly : true,
 									dataIndex : 'demandDate',
 									fieldLabel : '要求入库日期',
 									anchor : '95%',
@@ -1184,47 +1214,49 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
+									xtype : 'numberfield',
+									readOnly : true,
 									dataIndex : 'amount',
 									fieldLabel : '数量',
 									anchor : '95%',
 									colspan : 1
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'unit',
-									fieldLabel : '单位',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'ext12',
+									fieldLabel : '需生产或<br>入库数量',
 									anchor : '95%',
 									colspan : 1
 								}, {
-									xtype : 'displayfield',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'mptype',
+									anchor : '95%',
+									fieldLabel : '膜片大类 ',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									readOnly : true,
 									dataIndex : 'specName',
 									anchor : '95%',
-									fieldLabel : '膜片型号 ',
-									colspan : 2
+									fieldLabel : '膜片生产型号 ',
+									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext1',
-									fieldLabel : '编码',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'markSpecName',
+									fieldLabel : '膜片唛头型号',
 									anchor : '95%',
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext3',
-									fieldLabel : '订单类型',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 4
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext8',
-									fieldLabel : '货品名称',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'manager',
+									fieldLabel : '负责人',
 									anchor : '95%',
 									colspan : 2
 								}, {
@@ -1232,31 +1264,19 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext10',
-									fieldLabel : '产品规格',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'amountGift',
+									// allowBlank : false,
+									fieldLabel : '是否有<br>赠送米数',
 									anchor : '95%',
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext11',
-									fieldLabel : '待发货（发库存）',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 4
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext12',
-									fieldLabel : '需生产或入库数量',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext13',
-									fieldLabel : '标签',
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'checkReportNeeded',
+									// allowBlank : false,
+									fieldLabel : '是否需要<br>检测报告',
 									anchor : '95%',
 									colspan : 2
 								}, {
@@ -1264,31 +1284,21 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext14',
-									fieldLabel : '真空包装袋',
+									xtype : 'datefield',
+									format : "Y-m-d",
+									readOnly : true,
+									dataIndex : 'deliveryDateEarliest',
+									ref : '../../deliveryDateEarliest',
+									fieldLabel : '计划最早<br>发货日期',
 									anchor : '95%',
 									colspan : 2
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext15',
-									fieldLabel : '包装箱',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 4
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext16',
-									fieldLabel : '唛头',
-									anchor : '95%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext17',
-									fieldLabel : '打包方式',
+									xtype : 'datefield',
+									format : "Y-m-d",
+									readOnly : true,
+									dataIndex : 'deliveryDateLatest',
+									ref : '../../deliveryDateLatest',
+									fieldLabel : '计划最晚<br>发货日期',
 									anchor : '95%',
 									colspan : 2
 								}, {
@@ -1296,33 +1306,55 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'ext18',
-									fieldLabel : '产品性能',
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'tray',
+									fieldLabel : '托盘材质要求',
 									anchor : '95%',
-									colspan : 4
+									colspan : 2
+								}, {
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'packingTxt',
+									fieldLabel : '整托货物<br>警示标识',
+									anchor : '95%',
+									colspan : 2
 								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									height : '30',
-									dataIndex : 'ext19',
-									fieldLabel : '其它备注',
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'markPaste',
+									fieldLabel : '要求整托货物<br>张贴信息唛头',
 									anchor : '95%',
-									colspan : 4
+									colspan : 2
+								}, {
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'pallet',
+									fieldLabel : '膜元件包装箱<br>打托要求',
+									anchor : '95%',
+									colspan : 2
 								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 4
 								}, {
-									xtype : 'displayfield',
-									dataIndex : 'remark',
-									height : '30',
-									fieldLabel : '备注',
+									xtype : 'textarea',
+									readOnly : true,
+									dataIndex : 'mark',
+									fieldLabel : '膜片包装箱唛头',
 									anchor : '95%',
-									colspan : 4
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'flash',
+									fieldLabel : '是否飞边',
+									anchor : '95%',
+									colspan : 2
 								}, {
 									xtype : 'displayfield',
 									height : '5',

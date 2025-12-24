@@ -134,6 +134,7 @@
            AND A.PROD_SPEC_ID = MSC.MATER_SPEC_ID
            AND TM.SPEC_ID = MST.MATER_SPEC_ID
         	<isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
+        <isNotNull prepend="" property="workerName">AND QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(A.WORKER_ID) like '%' || #workerName# || '%'</isNotNull>
         <isNotNull prepend="" property="batchIdStr">AND A.RECORD_ID IN ($batchIdStr$)</isNotNull>
         <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>
         <isNotNull prepend="" property="orderNo">AND A.ORDER_NO = #orderNo#</isNotNull>

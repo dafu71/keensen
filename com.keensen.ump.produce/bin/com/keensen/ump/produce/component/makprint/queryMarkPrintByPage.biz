@@ -25,6 +25,10 @@
       <process:from type="literal" pattern="reference">true</process:from>
       <process:to type="query">pageCond/isCount</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="literal" pattern="reference">1</process:from>
+      <process:to type="query">condition/flag</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <figSize height="20" width="31"/>

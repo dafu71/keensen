@@ -30,7 +30,7 @@
     <figSize height="20" width="31"/>
     <node>end0</node>
   </nodes>
-  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="queryStockDetailBoard" displayName="queryStockDetailBoard" type="subprocess">
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="queryStockDetailBoard2" displayName="queryStockDetailBoard2" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess0</sourceNode>
       <targetNode>subprocess1</targetNode>
@@ -40,7 +40,7 @@
     <size height="27" width="27"/>
     <nodeLabel>subprocess0label</nodeLabel>
     <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
-      <process:partner type="literal">this.queryStockDetailBoard</process:partner>
+      <process:partner type="literal">this.queryStockDetailBoard2</process:partner>
       <process:inputVariables>
         <process:inputVariable id="0" name="condition" type="query" value="java.util.Map" valueType="Java" pattern="reference">condition</process:inputVariable>
       </process:inputVariables>
@@ -54,7 +54,7 @@
     <figSize height="20" width="169"/>
     <node>subprocess0</node>
   </nodes>
-  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="queryStockCountBoard" displayName="queryStockCountBoard" type="subprocess">
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess1" name="queryStockCountBoard2" displayName="queryStockDetailBoard2" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess1</sourceNode>
       <targetNode>assign0</targetNode>
@@ -64,7 +64,7 @@
     <size height="27" width="27"/>
     <nodeLabel>subprocess1label</nodeLabel>
     <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
-      <process:partner type="literal">this.queryStockCountBoard</process:partner>
+      <process:partner type="literal">this.queryStockCountBoard2</process:partner>
       <process:inputVariables>
         <process:inputVariable id="0" name="condition" type="query" value="java.util.Map" valueType="Java" pattern="reference">condition</process:inputVariable>
       </process:inputVariables>
@@ -97,7 +97,7 @@
     <figSize height="20" width="31"/>
     <node>assign0</node>
   </nodes>
-  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="queryStockCountBoard1" displayName="queryStockCountBoard" type="subprocess">
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess2" name="queryStockCountBoard1" displayName="queryStockDetailBoard2" type="subprocess">
     <sourceConnections xsi:type="process:tLink" id="link4" name="link4" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>subprocess2</sourceNode>
       <targetNode>end0</targetNode>
@@ -107,7 +107,7 @@
     <size height="27" width="27"/>
     <nodeLabel>subprocess2label</nodeLabel>
     <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
-      <process:partner type="literal">this.queryStockCountBoard</process:partner>
+      <process:partner type="literal">this.queryStockCountBoard2</process:partner>
       <process:inputVariables>
         <process:inputVariable id="0" name="condition" type="query" value="java.util.Map" valueType="Java" pattern="reference">condition</process:inputVariable>
       </process:inputVariables>

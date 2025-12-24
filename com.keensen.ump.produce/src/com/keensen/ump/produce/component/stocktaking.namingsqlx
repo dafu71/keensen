@@ -2,27 +2,12 @@
 <!-- author:dafu -->
 <sqlMap>
     <select id="queryStocktakingResult" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-   	<!--
-   	SELECT T.BATCH_NO "batchNo", T.JUANMO_BATCH_NO "juanmoBatchNo"
-  	FROM V_KS_BATCHCOMP T
- 	WHERE 1 = 1
-   	AND NOT EXISTS (SELECT 1
-          FROM KS_PROD_COMPONENT_STOCKTAKING TT
-         WHERE TT.BATCH_NO = T.BATCH_NO
-            OR TT.BATCH_NO = T.JUANMO_BATCH_NO)
-            
-     <isNotNull prepend="and" property="batchNo"> 
-		       upper(T.BATCH_NO) like '%' || upper(#batchNo#) || '%'
-		       or
-		       upper(T.JUANMO_BATCH_NO ) like '%' || upper(#batchNo#) || '%'
-	</isNotNull>
-	-->
-	
+   
 	SELECT t.batch_no2 "batchNo2",t.id "id", t.juanmo_batch_no "juanmoBatchNo",t.batch_no "batchNo" ,
 	nvl(t.reserve2,decode(t.reserve1,0,'裁叠膜岗位',1,'卷膜岗位',2,'气检岗位',3,'新基地水测岗位',4,'老基地水测岗位',5,'绕丝岗位',
 	6,'包装岗位',7,'保留区',8,'走廊存放区',9,'历史呆滞品区',10,'白膜仓库',11,'水测岗位',12,'返修仓库')) "step",t.create_time "createTime", t.create_name "createName"
 	, t.mater_spec_name "materSpecName",t.mater_spec_name2 "orderMaterSpecName",t.produce_dt "produceDt"
-	<!--,t2.mark_spec_code "markSpecCode"-->
+	
 	from 
 	(
 	select t.batch_no batch_no2,t.id,jm.batch_no juanmo_batch_no ,qj.batch_no,t.reserve1,t.reserve2,to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss') create_time,t.create_name
@@ -40,17 +25,11 @@
 	  LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id = jm.prod_spec_id
 	  LEFT JOIN (SELECT DISTINCT order_no,mater_spec_id,mater_spec_name2 FROM ks_prod_component_yxorder) od ON od.order_no = qj.order_no AND od.mater_spec_id = qj.prod_spec_id
 		WHERE upper(SUBSTR(t.batch_no,1,1))&lt;>'J') t
-		<!--left join (SELECT t1.batch_no,t1.relation_id,t2.mark_spec_code from 
-		(select t.batch_no,max(t.relation_id) relation_id  
-		 from KS_COMPONENT_CHECK_LIST t
-		 GROUP BY t.batch_no) t1
-		 LEFT JOIN KS_COMPONENT_CHECK_HEAD t2
-		 ON t1.relation_id = t2.id) t2
-		 on t2.batch_no = t.batch_no-->
+		
 		
 		
 	where 1=1 
-	<!--and (T.BATCH_NO is not null or T.JUANMO_BATCH_NO is not null) -->
+	
 	 <isNotNull prepend="and" property="batchNo"> 
 		       upper(T.BATCH_NO) like '%' || upper(#batchNo#) || '%'
 		       or
@@ -168,4 +147,289 @@
   FROM DUAL
 	</select>
     
+    
+     <select id="queryInventoryLocal" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ID                AS "id", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       T1.JUANMO_BATCH_NO            AS "juanmoBatchNo",
+       T1.BATCH_NO            AS "batchNo",       
+       decode(T1.position,0,'裁叠膜岗位',1,'卷膜岗位',2,'气检岗位',3,'新基地水测岗位',4,'老基地水测岗位',5,'绕丝岗位',
+		6,'包装岗位',7,'保留区',8,'走廊存放区',9,'历史呆滞品区',10,'白膜仓库',11,'水测岗位',12,'返修仓库','') "position",
+       to_char(t1.produce_dt,'YYYY-MM-DD HH24:MI') "produceDt",t1.mater_spec_name "prodSpecName"
+       from 
+       (select t1.ID,
+		t1.CREATE_TIME,
+		t1.CREATE_USER_ID,
+		t1.CREATE_NAME,
+		t1.UPDATE_TIME,
+		t1.UPDATE_USER_ID,
+		t1.UPDATE_NAME,
+		t1.RESERVE1,
+		t1.RESERVE2,
+		t1.RESERVE3,
+		t1.RESERVE4,
+		t1.RESERVE5,
+		t1.ORG_ID,
+		t1.STATUS,
+		qj.BATCH_NO,
+		t1.JUANMO_BATCH_NO,
+		t1.POSITION,
+		jm.produce_dt,
+		pms.mater_spec_name 
+       from
+       KS_COMPONENT_INVENTORY_LOCAL t1
+       left join qinsen.inst_juanmo_main jm
+       on T1.JUANMO_BATCH_NO = jm.batch_no
+       left join qinsen.inst_qijian qj
+       on qj.juanmo_batch_id = jm.record_id
+       left join qinsen.para_mater_spec pms
+       on pms.mater_spec_id = jm.prod_spec_id
+       where 1=1
+       and T1.JUANMO_BATCH_NO is not null
+       union
+       select t1.ID,
+		t1.CREATE_TIME,
+		t1.CREATE_USER_ID,
+		t1.CREATE_NAME,
+		t1.UPDATE_TIME,
+		t1.UPDATE_USER_ID,
+		t1.UPDATE_NAME,
+		t1.RESERVE1,
+		t1.RESERVE2,
+		t1.RESERVE3,
+		t1.RESERVE4,
+		t1.RESERVE5,
+		t1.ORG_ID,
+		t1.STATUS,
+		t1.BATCH_NO,
+		t1.JUANMO_BATCH_NO,
+		t1.POSITION,
+		jm.produce_dt,
+		pms.mater_spec_name 
+       from
+       KS_COMPONENT_INVENTORY_LOCAL t1
+       left join qinsen.inst_qijian qj
+       on t1.batch_no = qj.batch_no
+        left join qinsen.para_mater_spec pms
+       on pms.mater_spec_id = qj.prod_spec_id
+       left join qinsen.inst_juanmo_main jm
+       on qj.juanmo_batch_id = jm.record_id
+      
+       where 1=1
+       and T1.JUANMO_BATCH_NO is null
+       ) t1
+       where 1=1
+       
+        <isNotNull prepend="and" property="juanmoBatchNo"> 
+		       T1.JUANMO_BATCH_NO  = #juanmoBatchNo#
+		</isNotNull>
+		<isNotNull prepend="and" property="batchNo"> 
+		       T1.BATCH_NO  = #batchNo#
+		</isNotNull>
+		<isNotNull prepend="and" property="position"> 
+		       T1.position  = #position#
+		</isNotNull>
+  </select>
+  
+  <select id="queryIfCheck" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  	select 1 from KS_COMPONENT_CHECK_LIST t 
+	WHERE 1=1
+	<isNotNull prepend="and" property="juanmoBatchNo"> 
+	t.batch_no =  
+	(SELECT qj.batch_no from qinsen.inst_juanmo_main jm
+	left join qinsen.inst_qijian qj
+	on qj.juanmo_batch_id = jm.record_id
+	WHERE jm.batch_no = #juanmoBatchNo#)
+	</isNotNull>
+	<isNotNull prepend="and" property="batchNo"> 
+	t.batch_no = #batchNo#	
+	</isNotNull>
+  	
+  </select>
+  
+  <select id="queryIfRaosi" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  	SELECT * from qinsen.inst_raosi rs 
+	WHERE 1=1
+	<isNotNull prepend="and" property="batchNo"> 
+	rs.juanmo_batch_id = (
+	SELECT juanmo_batch_id from qinsen.inst_qijian qj 
+	WHERE qj.batch_no=#batchNo#)
+    </isNotNull>
+    <isNotNull prepend="and" property="juanmoBatchNo"> 
+    rs.juanmo_batch_id = (
+    	SELECT jm.record_id from qinsen.inst_juanmo_main jm
+		WHERE jm.batch_no = #juanmoBatchNo#
+    )
+    </isNotNull>
+   </select>
+   
+   <select id="queryIfQijian" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  	SELECT 1 from qinsen.inst_qijian qj
+	WHERE 1=1
+	and qj.batch_no is null
+	<isNotNull prepend="and" property="juanmoBatchNo"> 
+	qj.juanmo_batch_id = 
+	(SELECT jm.record_id from qinsen.inst_juanmo_main jm
+	WHERE jm.batch_no = #juanmoBatchNo#)
+	</isNotNull>
+	<isNotNull prepend="and" property="batchNo"> 
+	qj.batch_no = #batchNo#	
+	</isNotNull>
+	
+  	
+  </select>
+  
+  <select id="queryIfLabel" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  	SELECT 1 from qinsen.inst_qijian qj
+	WHERE 1=1
+	and qj.batch_no is not null
+	<isNotNull prepend="and" property="juanmoBatchNo"> 
+	qj.juanmo_batch_id = 
+	(SELECT jm.record_id from qinsen.inst_juanmo_main jm
+	WHERE jm.batch_no = #juanmoBatchNo#)
+	</isNotNull>
+	<isNotNull prepend="and" property="batchNo"> 
+	qj.batch_no = #batchNo#	
+	</isNotNull>
+	
+  	
+  </select>
+  
+  <select id="queryIfTrim" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  	SELECT * from KS_COMPONENT_TRIM tr 
+	WHERE 1=1
+	<isNotNull prepend="and" property="batchNo"> 
+	tr.juanmo_batch_id = (
+	SELECT juanmo_batch_id from qinsen.inst_qijian qj 
+	WHERE qj.batch_no=#batchNo#)
+    </isNotNull>
+    <isNotNull prepend="and" property="juanmoBatchNo"> 
+    tr.juanmo_batch_id = (
+    	SELECT jm.record_id from qinsen.inst_juanmo_main jm
+		WHERE jm.batch_no = #juanmoBatchNo#
+    )
+    </isNotNull>
+   </select>
+   
+   <select id="queryJuanmo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  	select ROUND(sysdate-jm.produce_dt) "diff" 
+	from qinsen.inst_juanmo_main jm 
+	where 1=1
+	and jm.record_id not in(
+		SELECT juanmo_batch_id
+          FROM QINSEN.INST_QIJIAN QJ
+         WHERE QJ.NG_REASON_ID = 300061
+	)
+	<isNotNull prepend="and" property="juanmoBatchNo">
+	jm.batch_no = #juanmoBatchNo#	
+    </isNotNull>
+    <isNotNull prepend="and" property="batchNo">
+    jm.record_id = (SELECT juanmo_batch_id from qinsen.inst_qijian qj 
+	WHERE qj.batch_no=#batchNo#)
+    </isNotNull>
+  </select>
+  
+  <select id="queryIfSemiStock" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  	select t.qj_batch_id,qj.batch_no,jm.batch_no jm_batch_no from KS_COMPONENT_SEMI_STOCK t
+	LEFT JOIN qinsen.inst_qijian qj
+	ON qj.record_id= t.qj_batch_id
+	LEFT JOIN 	
+	(select * from qinsen.inst_juanmo_main 
+	where  PRODUCE_DT > SYSDATE - 60)
+	jm
+	ON jm.record_id=qj.juanmo_batch_id
+	WHERE 1=1
+	<isNotNull prepend="and" property="juanmoBatchNo"> 
+	jm.batch_no = #juanmoBatchNo#
+	</isNotNull>
+	<isNotNull prepend="and" property="batchNo"> 
+	qj.batch_no = #batchNo#	
+	</isNotNull>
+	
+  	
+  </select>
+  
+   <select id="queryIfWater" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  	SELECT * from  QINSEN.INST_WATER_TEST WT
+	WHERE 1=1
+	and WT.juanmo_batch_id in(
+	select record_id from qinsen.inst_juanmo_main 
+	where  PRODUCE_DT > SYSDATE - 45
+	)
+	
+	<isNotNull prepend="and" property="batchNo"> 
+	WT.juanmo_batch_id = (
+	SELECT juanmo_batch_id from qinsen.inst_qijian qj 
+	WHERE qj.batch_no=#batchNo#)
+    </isNotNull>
+    <isNotNull prepend="and" property="juanmoBatchNo"> 
+    WT.juanmo_batch_id = (
+    	SELECT jm.record_id from qinsen.inst_juanmo_main jm
+		WHERE jm.batch_no = #juanmoBatchNo#
+    )
+    </isNotNull>
+   </select>
+   
+   <select id="queryJuanmoByBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  		SELECT *
+  		FROM QINSEN.INST_JUANMO_MAIN JM
+  		where jm.batch_no = #juanmoBatchNo#
+   </select>
+   
+   <select id="queryQijianByBatchNo" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  		SELECT *
+  		FROM QINSEN.INST_QIJIAN QJ
+  		where QJ.batch_no = #batchNo#
+   </select>
+   
+   <select id="queryJuanmo4Stocktaking" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    
+   SELECT jm.record_id "juanmoBatchId",
+   jm.prod_spec_id "prodSpecId",
+   jm.batch_no "juanmoBatchNo",
+   pms.mater_spec_name "prodSpecName",
+   jm.produce_dt "produceDt"
+	 from QINSEN.INST_JUANMO_MAIN jm
+	 left join qinsen.para_mater_spec pms
+	 on pms.mater_spec_id = jm.prod_spec_id
+	WHERE 1=1
+	<isNotNull prepend = ""  property = "isNotStockConfirm">
+	AND not exists(select 1 FROM V_KS_CHECK_LIST
+						where juanmo_batch_id = jm.record_id
+						
+			<isNotNull prepend = ""  property = "stockConfirmTimeStart">
+			   AND to_char(stock_confirm_time, 'YYYY-MM-DD HH24:MI') &gt;= #stockConfirmTimeStart#
+			</isNotNull>
+			<isNotNull prepend = ""  property = "stockConfirmTimeEnd">
+			   AND to_char(stock_confirm_time, 'YYYY-MM-DD HH24:MI') &lt; #stockConfirmTimeEnd#
+			</isNotNull>							
+						) 
+	</isNotNull>
+	<isNotNull prepend = ""  property = "produceDtStart">
+	   AND jm.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')
+	</isNotNull>
+	<isNotNull prepend = ""  property = "produceDtEnd">
+	   AND jm.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')
+	</isNotNull>
+    </select>
+   
     </sqlMap>

@@ -1212,6 +1212,9 @@
                             <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
 						</isNotNull>
+						<isNotNull prepend="and" property="specId"> 
+		       				TM.spec_ID = #specId#
+						</isNotNull>
                             
                             
                             ) TM
@@ -1348,6 +1351,9 @@
 												   <isNotNull prepend="and" property="lineId"> 
 		       										TM.LINE_ID = #lineId#
 													</isNotNull>
+													<isNotNull prepend="and" property="specId"> 
+								       				TM.spec_ID = #specId#
+													</isNotNull>
 												 GROUP BY TM.WATER_BATCH_NO
 												 UNION ALL
 												 SELECT MAX(TM.record_id) BATCH_id, TM.WATER_BATCH_NO2
@@ -1357,6 +1363,9 @@
 												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
 												   <isNotNull prepend="and" property="lineId"> 
 		       										TM.LINE_ID = #lineId#
+													</isNotNull>
+													<isNotNull prepend="and" property="specId"> 
+								       				TM.spec_ID = #specId#
 													</isNotNull>
 												 GROUP BY TM.WATER_BATCH_NO2) tt
 												 LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD h
@@ -1398,7 +1407,9 @@
 			                            <isNotNull prepend="and" property="lineId"> 
 					       				TM.LINE_ID = #lineId#
 									    </isNotNull>
-                                     
+                                     	<isNotNull prepend="and" property="specId"> 
+								       				TM.spec_ID = #specId#
+										</isNotNull>
                                       UNION ALL 
                                      SELECT TO_NUMBER(T.WEIGHT) WEIGHT,
                                            trim(T.ITEM) item,
@@ -1412,7 +1423,9 @@
 			                            <isNotNull prepend="and" property="lineId"> 
 					       				TM.LINE_ID = #lineId#
 									    </isNotNull>
-                                     
+                                     	<isNotNull prepend="and" property="specId"> 
+								       				TM.spec_ID = #specId#
+										</isNotNull>
                                     UNION ALL
                                     SELECT TO_NUMBER(NVL(T.C21_REALITY, 0))/1000,
                                            'C21',
@@ -1428,6 +1441,9 @@
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
 						</isNotNull>
+						<isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>
                                       GROUP BY tm.water_batch_no
                                       UNION ALL
                                       SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
@@ -1437,6 +1453,9 @@
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
 						</isNotNull> 
+						<isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>
                                       GROUP BY tm.water_batch_no2) tumo
                                       ON tumo.water_batch_no = H.BATCH_NO
                                     UNION ALL
@@ -1454,6 +1473,9 @@
 				                             <isNotNull prepend="and" property="lineId"> 
 						       				TM.LINE_ID = #lineId#
 										</isNotNull>
+										<isNotNull prepend="and" property="specId"> 
+										TM.spec_ID = #specId#
+										</isNotNull>
                                       GROUP BY tm.water_batch_no
                                       UNION ALL
                                       SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
@@ -1462,6 +1484,9 @@
 			                            
 			                             <isNotNull prepend="and" property="lineId"> 
 					       				TM.LINE_ID = #lineId#
+									</isNotNull>
+									<isNotNull prepend="and" property="specId"> 
+									TM.spec_ID = #specId#
 									</isNotNull>
                                       GROUP BY tm.water_batch_no2) tumo
                                       ON tumo.water_batch_no = H.BATCH_NO)
@@ -1487,6 +1512,9 @@
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
 						</isNotNull>
+						<isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>
                                       UNION ALL
                                       SELECT tm.water_batch_no2,tm.batch_no FROM qinsen.inst_tumo tm
                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
@@ -1494,7 +1522,13 @@
                             
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
-						</isNotNull>) 
+						</isNotNull>
+						<isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>
+						
+						
+						) 
                                       GROUP BY water_batch_no) tumo
                                       ON tumo.water_batch_no = h.batch_no
                              ) c29
@@ -1641,6 +1675,9 @@
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
 						</isNotNull>
+						<isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>
                             ) TM
                   LEFT JOIN V_KS_BASE_MP_BOM BOM
                     ON BOM.LINE_ID = TM.LINE_ID
@@ -1774,6 +1811,9 @@
 												   <isNotNull prepend="and" property="lineId"> 
 		       										TM.LINE_ID = #lineId#
 													</isNotNull>
+													<isNotNull prepend="and" property="specId"> 
+													TM.spec_ID = #specId#
+													</isNotNull>
 												 GROUP BY TM.WATER_BATCH_NO
 												 UNION ALL
 												 SELECT MAX(TM.record_id) BATCH_id, TM.WATER_BATCH_NO2
@@ -1783,6 +1823,9 @@
 												   AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
 												   <isNotNull prepend="and" property="lineId"> 
 		       										TM.LINE_ID = #lineId#
+													</isNotNull>
+													<isNotNull prepend="and" property="specId"> 
+													TM.spec_ID = #specId#
 													</isNotNull>
 												 GROUP BY TM.WATER_BATCH_NO2) tt
 												 LEFT JOIN KS_QUALITY_MP_TEST_WATER_HEAD h
@@ -1823,6 +1866,9 @@
 			                            <isNotNull prepend="and" property="lineId"> 
 					       				TM.LINE_ID = #lineId#
 									    </isNotNull>
+									    <isNotNull prepend="and" property="specId"> 
+										TM.spec_ID = #specId#
+										</isNotNull>
                                       UNION ALL 
                                      SELECT TO_NUMBER(T.WEIGHT) WEIGHT,
                                            trim(T.ITEM) item,
@@ -1836,6 +1882,9 @@
 			                            <isNotNull prepend="and" property="lineId"> 
 					       				TM.LINE_ID = #lineId#
 									    </isNotNull>
+									    <isNotNull prepend="and" property="specId"> 
+										TM.spec_ID = #specId#
+										</isNotNull>
                                     UNION ALL
                                    SELECT TO_NUMBER(NVL(T.C21_REALITY, 0))/1000,
                                            'C21',
@@ -1851,6 +1900,9 @@
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
 						</isNotNull>
+						<isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>
                                       GROUP BY tm.water_batch_no
                                       UNION ALL
                                       SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
@@ -1859,6 +1911,9 @@
                             
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
+						</isNotNull>
+						<isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
 						</isNotNull>
                                       GROUP BY tm.water_batch_no2) tumo
                                       ON tumo.water_batch_no = H.BATCH_NO
@@ -1878,7 +1933,9 @@
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
 						</isNotNull> 
-                                      
+                              <isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>        
                                       GROUP BY tm.water_batch_no
                                       UNION ALL
                                       SELECT max(tm.batch_no) batch_no,tm.water_batch_no2 from qinsen.inst_tumo tm
@@ -1889,7 +1946,9 @@
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
 						</isNotNull> 
-                                      
+                              <isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>        
                                       
                                       GROUP BY tm.water_batch_no2) tumo
                                       ON tumo.water_batch_no = H.BATCH_NO)
@@ -1915,6 +1974,9 @@
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
 						</isNotNull>
+						<isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>
                                       UNION ALL
                                       SELECT tm.water_batch_no2,tm.batch_no FROM qinsen.inst_tumo tm
                                       WHERE 1=1 AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
@@ -1922,7 +1984,12 @@
                             
                              <isNotNull prepend="and" property="lineId"> 
 		       				TM.LINE_ID = #lineId#
-						</isNotNull>) 
+						</isNotNull>
+						<isNotNull prepend="and" property="specId"> 
+						TM.spec_ID = #specId#
+						</isNotNull>
+						
+						) 
                                       GROUP BY water_batch_no) tumo
                                       ON tumo.water_batch_no = h.batch_no
                              ) c29
@@ -1983,8 +2050,8 @@
                C13_PERCENT * NVL(RELEASE_AMOUNT, 0) C13_DIFF,
                C14_PERCENT * NVL(RELEASE_AMOUNT, 0) C14_DIFF
           FROM V_KS_DIAPHRAGM_ZM_DM T
-         WHERE TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD') >= #productDtStart#
-           AND TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+         WHERE TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+           AND TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
            
            <isNotNull prepend="and" property="line"> 
 		       				T.LINE  = #line#
@@ -2036,8 +2103,8 @@ SELECT 2 MYORDER,
                C13_PERCENT * NVL(RELEASE_AMOUNT, 0) C13_DIFF,
                C14_PERCENT * NVL(RELEASE_AMOUNT, 0) C14_DIFF
           FROM V_KS_DIAPHRAGM_ZM_DM T
-         WHERE TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD') >= #productDtStart#
-           AND TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD') &lt;= #productDtEnd#
+         WHERE TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD HH24:MI') >= #productDtStart#
+           AND TO_CHAR(T.DM_PRODUCT_DT, 'YYYY-MM-DD HH24:MI') &lt;= #productDtEnd#
            <isNotNull prepend="and" property="line"> 
 		       				T.LINE  = #line#
 			</isNotNull>)

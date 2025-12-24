@@ -12,6 +12,8 @@
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
     String uname = userObject.getUserName();
+    
+    String ip = userObject.getUserRemoteIP();
 %>
 <html>
 <!-- 
@@ -77,6 +79,8 @@ var opt = '';
   var quantityTotalId = Ext.id();
   var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;
+  
+  var ip = '<%=ip %>';
   
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.produce.HouseholdJmMgr

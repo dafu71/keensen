@@ -36,10 +36,11 @@
 <!--
 .style0 {font-family: "仿宋";font-size:9pt;}
 .style1 {font-family: "仿宋";font-size:11pt;}
-.style2 {font-family: "仿宋";font-size:16pt;font-weight: bold }
+.style2 {font-family: "仿宋";font-size:26pt;font-weight: bold }
 .style3 {font-family: "仿宋";font-size:20pt;}
-.style4 {font-family: "仿宋";font-size:18pt;}
-.style5 {color:red;font-family: "仿宋";font-size:18pt;}
+.style4 {font-family: "仿宋";font-size:26pt;}
+.style5 {color:red;font-family: "仿宋";font-size:26pt;}
+.style42 {color:red;font-family: "仿宋";font-size:26pt;}
  
 -->
     </style>
@@ -48,7 +49,7 @@
 
 <script type="text/javascript">
 	(function(){
-		//setInterval(function(){ location.reload(true); }, 60000);
+		setInterval(function(){ location.reload(true); }, 30000);
 	})();
 </script>
 
@@ -60,7 +61,7 @@
 <td width='64%' valign="top">
 <table border="0" width="100%" class="EOS_table">
 	<tr>
-		<th width="100%" align="center" colspan=6><span style="font-size: 18pt;font-weight: bold">冷库底膜明细</span></th>
+		<th width="100%" align="center" colspan=6><span style="font-size: 26pt;font-weight: bold">冷库底膜明细</span></th>
 	</tr>
 
 	<tr>
@@ -84,9 +85,9 @@
 		%>
 		<tr>
 		<% } %>	
-		<td align='center' class="style4"><%=details[i].getString("position")%></td>
+		<td align='center' class="style4"><%=null == details[i].get("position")?"":details[i].getString("position")%></td>
 				
-		<td align='center' class="<%=style %>"><%=details[i].getString("dimoBatchNo")%></td>
+		<td align='center' class="<%=style %>"><%=null == details[i].get("dimoBatchNo")?"":details[i].getString("dimoBatchNo")%></td>
 		
 		<% if(k == 2 || i==details.length-1) { %>
 		</tr>
@@ -105,7 +106,7 @@
 <tr><td>
 	<table border="0" width="100%" class="EOS_table">
 		<tr>
-			<th width="100%" align="center" colspan=3><span style="font-size: 18pt;font-weight: bold">底膜生产管理看板</span></th>
+			<th width="100%" align="center" colspan=3><span style="font-size: 26pt;font-weight: bold">底膜生产管理看板</span></th>
 		</tr>
 	
 	<tr>
@@ -139,7 +140,7 @@
 <tr><td>
 	<table border="0" width="100%" class="EOS_table">
 		<tr>
-			<th width="100%" align="center" colspan=3><span style="font-size: 18pt;font-weight: bold">底膜超期预警</span></th>
+			<th width="100%" align="center" colspan=3><span style="font-size: 26pt;font-weight: bold">底膜超期预警</span></th>
 		</tr>
 	
 	<tr>
@@ -153,9 +154,9 @@
 	for (int i = 0; i < counts2.length; i++) {
 	%>
 	<tr>
-		<td align='center' class="style4"><%=counts2[i].getString("dimoType")%></td>
-		<td align='center' class="style4"><%=counts2[i].getString("cnt")%></td>
-		<td align='center' class="style4"><%=counts2[i].getString("residue")%></td>
+		<td align='center' class="style42"><%=counts2[i].getString("dimoType")%></td>
+		<td align='center' class="style42"><%=counts2[i].getString("cnt")%></td>
+		<td align='center' class="style42"><%=counts2[i].getString("residue")%></td>
 	
 	</tr>	
 	<% } %>

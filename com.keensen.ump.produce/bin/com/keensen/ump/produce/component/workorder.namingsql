@@ -143,7 +143,10 @@
     <delete id="deleteCdmDuty" parameterClass="java.util.HashMap">DELETE FROM KS_COMPONENT_DUTY_CDM T
    	where T.PLAN_DATE = to_date(#planDate#,'yyyy-MM-dd') and t.order_id = #orderId#</delete>
     <select id="queryBatchNo4CdmDuty" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-   	select t.order_id "orderId",t.plan_date "planDate",t.batch_no "batchNo",t.id "planId" from KS_COMPONENT_PLAN_DAY t
+   	select t.order_id "orderId",t.plan_date "planDate",t.batch_no "batchNo",t.id "planId"
+   	,ddp.picture_name "defectPicture"
+   	 from KS_COMPONENT_PLAN_DAY t
+   	left join KS_DIAPHGRAM_DEFECT_PICTURE ddp on t.batch_no = ddp.batch_no
 	WHERE nvl(t.cdm_state,0) =0
 	<isNotNull prepend="and" property="orderId">t.order_id = #orderId#</isNotNull>
         <isNotNull prepend="and" property="planDate">to_char(t.plan_date,'yyyy-MM-dd') = #planDate#</isNotNull>
@@ -809,7 +812,29 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
     </select>
     <select id="queryViewOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	
-	SELECT DECODE(SUBSTR(T2.ORDER_NO, 1, 2), 'SG', '1', '0') "testOrder",
+	SELECT 
+	
+	CASE WHEN replace(replace(REPLACE(REPLACE(YB.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
+  			THEN '错'
+    		ELSE 
+    	DECODE(nsf.label_spec_name,NULL,'无', '有') END  as "markNsf",
+	
+	CASE WHEN replace(replace(REPLACE(REPLACE(YB.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
+  			THEN '错'
+    		ELSE 
+    	DECODE(nsf.label_spec_name,NULL,'无', '有') END  as "labelNsf",
+	
+	 REPLACE(REPLACE(REPLACE(REPLACE(YB.SPEC_NAME_LABEL, '客户指定：', ''),
+                               '客户指定:',
+                               ''),
+                       '客户指定',
+                       ''),
+               '不需要',
+               '无') "specNameLabel",
+               
+     YB.spec_Name_Mark as "specNameMark",
+	
+	DECODE(SUBSTR(T2.ORDER_NO, 1, 2), 'SG', '1', '0') "testOrder",
        T2.ORDER_NO "orderNo",
        T2.MATER_SPEC_ID "materSpecId",
        T2.MATER_SPEC_NAME "materSpecName",
@@ -953,6 +978,10 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
 
   LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
     ON YB.ID = T2.BASE_ID
+    
+  LEFT JOIN (SELECT DISTINCT t.label_spec_name from KS_QUALITY_NSF_LIST t) nsf
+	ON nsf.label_spec_name = replace(replace(REPLACE(REPLACE(YB.spec_name_label,'客户指定：',''),
+'客户指定:',''),'客户指定',''),'不需要','无') 
 
   LEFT JOIN (SELECT DISTINCT T.TEMPLATE_NAME, T.URL, T.URL2
                FROM KS_COMPONENT_MARK_TEMPLATE T) MK

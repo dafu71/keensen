@@ -690,8 +690,8 @@ function display() {
 		result = Ext.ex.XMLHttpRequestEx.synchRequest("POST", url);
 		ret = Ext.decode(result);
 		if (ret.ret == false) {
-			//Ext.Msg.alert("系统提示", "已有其他用户使用现有账号登录,请确认", function() {
-			Ext.Msg.alert("系统提示", "请重新登录", function() {
+			Ext.Msg.alert("系统提示", "已有其他用户使用现有账号登录,请确认", function() {
+			//Ext.Msg.alert("系统提示", "请重新登录", function() {
 						location.href = "/default/frame/ui/page/kick.jsp";
 					})
 

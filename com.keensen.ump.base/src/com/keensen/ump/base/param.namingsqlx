@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <select id="queryParamJm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       t1.prod_spec_name as "prodSpecName",
+		t1.page as "page",
+		t1.long_length as "longLength",
+		t1.long_width as "longWidth",
+		t1.densnet_length as "densnetLength",
+		t1.r_radius as "rRadius"
+
+  FROM KS_BASE_PARAM_JM T1
+  
+ WHERE 1 = 1
+  
+   <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+     
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	
+	
+	<isNotNull prepend="and" property="prodSpecName"> 
+		       t1.prod_Spec_Name like '%' || #prodSpecName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="prodSpecName2"> 
+		       t1.prod_spec_name = #prodSpecName2# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="cmBatchNo">
+	t1.prod_spec_name in(
+	SELECT pms.mater_spec_name from qinsen.inst_caidiemo cm
+	LEFT JOIN qinsen.para_mater_spec pms
+	ON pms.mater_spec_id = cm.prod_spec_id
+	WHERE cm.batch_no =#cmBatchNo#)
+	</isNotNull>
+	
+	  order by id 
+
+	
+    </select>
+    
+    <select id="queryProdSpecName" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+       SELECT pms.mater_spec_name "prodSpecName" from qinsen.inst_caidiemo cm
+		LEFT JOIN qinsen.para_mater_spec pms
+		ON pms.mater_spec_id = cm.prod_spec_id
+		WHERE cm.batch_no =#cmBatchNo#
+  
+    </select>
+  
+    </sqlMap>

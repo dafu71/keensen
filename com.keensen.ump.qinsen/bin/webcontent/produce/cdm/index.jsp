@@ -14,6 +14,10 @@
     String uid = userObject.getUserId();
     String userOrgId = userObject.getUserOrgId();
     String uname = userObject.getUserName();
+    
+    String ip = userObject.getUserRemoteIP();
+    String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("/qinsen/produce/cdm/index.jsp","");
 %>
 <html>
 <!-- 
@@ -68,7 +72,7 @@
 </style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
-  
+  var markRootUrl = "<%=rootUrl %>/myupload/diaphgram/";
   var addBtn = Ext.id();
   var add2Btn = Ext.id();
   
@@ -84,6 +88,8 @@
   
   var quantityTotalId = Ext.id();
   
+  var ip = '<%=ip %>';
+    
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.CaidiemoMgr
 		});

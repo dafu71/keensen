@@ -124,6 +124,7 @@
         ,t1.USED_AMOUNT "usedAmount"
         
         ,t1.waste_loss "wasteLoss" ,nvl(t1.fcc_amount,0) "fccAmount"
+        ,t1.defect_picture "defectPicture"
        
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,  
   replace(A.water_batch_no,'单击旁边选择','') water_batch_no,
@@ -245,7 +246,12 @@
                tld.weight tld_weight,wld.weight wld_weight,pva.c90,pva.used pva_used
                ,USED.AMOUNT USED_AMOUNT,nvl(wst.loss,0) waste_loss,nvl(wst.cm_loss,0) waste_cm_loss,nvl(wst.tm_loss,0) waste_tm_loss,
                nvl(fcc.amount,0) fcc_amount, decode(fcc.batch_no,null,0,1) fcc_exist
+               ,ddp.picture_name defect_picture
           FROM QINSEN.INST_TUMO A
+          
+          left join KS_DIAPHGRAM_DEFECT_PICTURE ddp  
+          on ddp.batch_no = A.batch_no
+          
           
          <!-- left join (select t.batch_no,t.amount
  from KS_PROD_DIAPHRAGM_STOCK t

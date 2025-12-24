@@ -4,6 +4,20 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 
 	this.getRight();
 	
+	if(ip == '172.16.10.86'){
+		this.currentMachineCode = 'J86';
+	}
+	if(ip == '172.16.10.54'){
+		this.currentMachineCode = 'J87';
+	}
+	if(ip == '172.16.10.55'){
+		this.currentMachineCode = 'J88';
+	}
+	if(ip == '172.16.10.56'){
+		this.currentMachineCode = 'J89';
+	}
+	
+	
 	this.listPanel4ProduceCount.store.on('load', function() {
 				var records = _this.listPanel4ProduceCount.store.getRange();
 				if (records.length == 0) {

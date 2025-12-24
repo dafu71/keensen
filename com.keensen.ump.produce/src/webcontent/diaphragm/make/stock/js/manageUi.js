@@ -17,7 +17,7 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -79,6 +79,17 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 								anchor : '90%',
 								name : 'condition/position',
 								fieldLabel : '存放库位'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								boxLabel : '不展示未在库位',
+								xtype : 'checkbox',
+								//checked : true,
+								name : 'condition/notPosition',
+								inputValue : 'Y',
+								anchor : '90%'
 							}]
 				});
 		this.queryPanel.addButton({
@@ -95,11 +106,18 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					handler : this.onShow
 				});
 				
+		/*this.queryPanel.addButton({
+					text : "旧底膜生产看板",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onStockBoard
+				});*/
+				
 		this.queryPanel.addButton({
 					text : "底膜生产看板",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					handler : this.onStockBoard
+					handler : this.onStockBoard2
 				});
 		/*
 		 * this.queryPanel.addButton({ text : "老基地库存显示", scope : this, iconCls :
@@ -146,8 +164,8 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 						dataIndex : 'dimoType',
 						header : '底膜类型'
 					}, {
-						dataIndex : 'pumpSpeed',
-						header : '底膜泵速'
+						dataIndex : 'productType',
+						header : '生产类型'
 					}, {
 						dataIndex : 'supName',
 						header : '无纺布（供应商）'
@@ -169,6 +187,9 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 					}, {
 						dataIndex : 'residue',
 						header : '底膜剩余（=结存）'
+					}, {
+						dataIndex : 'pumpSpeed',
+						header : '底膜泵速'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.make.make.queryStockByPage.biz.ext',
@@ -204,6 +225,8 @@ com.keensen.ump.produce.diaphragm.make.stockMgr = function() {
 							name : 'scrapAmount'
 						}, {
 							name : 'position'
+						}, {
+							name : 'productType'
 						}]
 			})
 		})

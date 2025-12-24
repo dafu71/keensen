@@ -92,7 +92,29 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						'condition/createTimeEnd'],
 				fieldLabel : "记录日期",
 				format : "Y-m-d"
-			}]
+			}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+
+						xtype : 'combobox',
+						fieldLabel : '当前步骤',
+						ref : '../step',
+						hiddenName : 'condition/step',
+						emptyText : '--请选择--',
+						allowBlank : true,
+						editable : false,
+						anchor : '95%',
+						store : [['first', '分析'], /* ['second', '调整'], */
+								['third', '配料'], ['produce', '生产使用']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.step.reset();
+							}
+						}
+					}]
 		});
 
 		this.queryPanel.addButton({
@@ -690,6 +712,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'operatorrolecombobox',
+							defaultValue : uid,
 							currentRolecode : '10001322',
 							allowBlank : false,
 							anchor : '95%',
@@ -832,6 +855,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 						}, {
 							xtype : 'operatorrolecombobox',
 							currentRolecode : '10001323',
+							defaultValue : uid,
 							allowBlank : false,
 							anchor : '95%',
 							colspan : 1,
@@ -1200,6 +1224,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'operatorrolecombobox',
+							defaultValue : uid,
 							currentRolecode : '10001323',
 							allowBlank : false,
 							anchor : '95%',
@@ -1586,6 +1611,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							}
 						}, {
 							xtype : 'operatorrolecombobox',
+							defaultValue : uid,
 							currentRolecode : '10001322',
 							allowBlank : false,
 							anchor : '95%',
@@ -2136,6 +2162,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'operatorrolecombobox',
+							defaultValue : uid,
 							currentRolecode : '10001321',
 							allowBlank : false,
 							anchor : '95%',
@@ -2647,6 +2674,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'operatorrolecombobox',
+							defaultValue : uid,
 							currentRolecode : '10001323',
 							allowBlank : false,
 							anchor : '95%',

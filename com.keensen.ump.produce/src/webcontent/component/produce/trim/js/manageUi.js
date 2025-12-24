@@ -122,7 +122,7 @@ com.keensen.ump.produce.component.produce.TrimMgr = function() {
 					// disabled : allRight != '1',
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					hidden : uid != 'dafu',
 					handler : this.exportExcel
 				});
 				

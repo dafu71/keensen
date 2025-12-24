@@ -143,7 +143,7 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr = function() {
 		this.listPanel = new Ext.fn.ListPanel({
 			tbar : [{
 						text : '机台分配膜片',
-						hidden : modifyLimit != 1,
+						//hidden : modifyLimit != 1,
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onDutyView
@@ -517,12 +517,14 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr = function() {
 					},
 					tbar : [{
 								text : '膜片状态置为处理中',
+								hidden : modifyLimit != 1,
 								scope : this,
 								iconCls : 'icon-application_edit',
 								handler : this.onDutyState2Deal
 
 							},'->',{
 								text : '膜片状态置为完成',
+								hidden : modifyLimit != 1,
 								scope : this,
 								iconCls : 'icon-application_edit',
 								handler : this.onDutyState2Finish
@@ -561,6 +563,7 @@ com.keensen.ump.produce.component.workorder.cdmdutyMgr = function() {
 								header : '膜片完成状态'
 							}, {
 								dataIndex : 'cdmCode',
+								hidden : modifyLimit != 1,
 								width : 150,
 								header : '生产机台',
 								css : 'background:#c7c7c7;',

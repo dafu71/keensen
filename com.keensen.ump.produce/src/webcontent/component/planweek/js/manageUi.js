@@ -121,7 +121,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
 								// anchor : '75%',
-								fieldLabel : '卷膜工艺执行型号 '
+								fieldLabel : '卷膜执行型号 '
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
@@ -240,15 +240,12 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					}, {
 						dataIndex : 'arrangeAmount',
 						header : '已排产数量'
-					}/*, {
-						dataIndex : 'bm',
-						header : '编码'
-					}, {
-						dataIndex : 'performance',
-						header : '产品性能'
-					}*/, {
+					}/*
+						 * , { dataIndex : 'bm', header : '编码' }, { dataIndex :
+						 * 'performance', header : '产品性能' }
+						 */, {
 						dataIndex : 'materSpecName',
-						header : '卷膜工艺执行型号'
+						header : '卷膜执行型号'
 					}, {
 						dataIndex : 'dryWet',
 						header : '干/湿膜'
@@ -688,7 +685,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						colspan : 1
 					}, {
 						xtype : 'displayfield',
-						fieldLabel : '卷膜工艺执行型号',
+						fieldLabel : '卷膜执行型号',
 						ref : '../materSpecName',
 						dataIndex : 'materSpecName',
 						anchor : '85%',
@@ -815,19 +812,33 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 				baseCls : "x-plain",
 				// pgrid : this.listPanel,
 				successFn : function(i, r) {
-					var B = _this.listPanel.getSelectionModel().getSelections();
-					var A = B[0];
-					_this.editPlanDayListPanel.store.load({
-								params : {
-									'condition/relationId' : A.data.id
-								}
-							});
-					_this.planDayWindow.items.items[0].form.reset();
-					_this.planDayWindow.hide();
+
+					if (r.cnt != '0') {
+						Ext.Msg.show({
+									width : 400,
+									title : "操作提示",
+									msg : '同一订单号+卷膜执行型号,一个膜批次只能排一次计划',
+									icon : Ext.Msg.WARNING,
+									buttons : Ext.Msg.OK,
+									fn : function() {
+									}
+								})
+					} else {
+						var B = _this.listPanel.getSelectionModel()
+								.getSelections();
+						var A = B[0];
+						_this.editPlanDayListPanel.store.load({
+									params : {
+										'condition/relationId' : A.data.id
+									}
+								});
+						_this.planDayWindow.items.items[0].form.reset();
+						_this.planDayWindow.hide();
+					}
 
 				},
 				columns : 6,
-				saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanDay.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.neworder.savePlanDayDeduplication.biz.ext',
 				fields : [{
 							xtype : 'textfield',
 							fieldLabel : '订单号',
@@ -837,7 +848,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							colspan : 3
 						}, {
 							xtype : 'textfield',
-							fieldLabel : '卷膜工艺执行型号',
+							fieldLabel : '卷膜执行型号',
 							ref : '../../materSpecName',
 							readOnly : true,
 							anchor : '85%',
@@ -1270,7 +1281,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 							colspan : 3
 						}, {
 							xtype : 'textfield',
-							fieldLabel : '卷膜工艺执行型号',
+							fieldLabel : '卷膜执行型号',
 							ref : '../../materSpecName',
 							readOnly : true,
 							anchor : '85%',
@@ -1887,7 +1898,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 								colspan : 1
 							}, {
 								xtype : 'displayfield',
-								fieldLabel : '卷膜工艺执行型号',
+								fieldLabel : '卷膜执行型号',
 								ref : '../materSpecName',
 								dataIndex : 'materSpecName',
 								anchor : '85%',
@@ -2237,7 +2248,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						header : '订单号'
 					}, {
 						dataIndex : 'materSpecName',
-						header : '卷膜工艺执行型号'
+						header : '卷膜执行型号'
 					}, {
 						dataIndex : 'planDate',
 						header : '计划日期'

@@ -277,6 +277,9 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						dataIndex : 'perfIsQualifiedName',
 						header : '性能'
 					}, {
+						dataIndex : 'remark',
+						header : '生产备注'
+					}, {
 						dataIndex : 'reserve4',
 						header : '工艺员备注'
 					}, {
@@ -474,6 +477,8 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 							name : 'isCutOverName'
 						}, {
 							name : 'lastCaimoDate'
+						}, {
+							name : 'remark'
 						}]
 			})
 		})

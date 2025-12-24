@@ -146,7 +146,7 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 		this.listPanel = new Ext.fn.ListPanel({
 			tbar : [{
 						text : '机台分配膜片',
-						hidden : modifyLimit != 1,
+						
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onDutyView
@@ -350,6 +350,7 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 					}, {
 
 						dataIndex : 'jmCodes',
+						hidden : modifyLimit != 1,
 						width : 350,
 						header : '生产机台',
 						css : 'background:#c7c7c7;',
@@ -420,6 +421,7 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 					items : [this.listPanel3],
 					buttons : [{
 								text : "保存",
+								hidden : modifyLimit != 1,
 								scope : this,
 								handler : this.onSaveArrange
 							}, {
@@ -575,12 +577,14 @@ com.keensen.ump.produce.component.workorder.jmdutyMgr = function() {
 					},
 					tbar : [{
 								text : '膜片卷膜状态置为处理中',
+								hidden : modifyLimit != 1,
 								scope : this,
 								iconCls : 'icon-application_edit',
 								handler : this.onDutyState2Deal
 
 							}, '->', {
 								text : '膜片卷膜状态置为完成',
+								hidden : modifyLimit != 1,
 								scope : this,
 								iconCls : 'icon-application_edit',
 								handler : this.onDutyState2Finish

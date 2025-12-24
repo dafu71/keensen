@@ -53,7 +53,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'condition/materSpecId',
 						anchor : '75%',
-						fieldLabel : '卷膜工艺执行型号 '
+						fieldLabel : '卷膜执行型号 '
 					}, {
 						xtype : "dateregion",
 						colspan : 1,
@@ -261,7 +261,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 				}, {
 					dataIndex : 'materSpecName',
 					locked : true,
-					header : '卷膜工艺执行型号'
+					header : '卷膜执行型号'
 				}, {
 					dataIndex : 'dryWet',
 					width : 60,

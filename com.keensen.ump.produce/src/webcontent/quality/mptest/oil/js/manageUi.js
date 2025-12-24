@@ -162,7 +162,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						fieldLabel : '涂膜批号%-%',
 						allowBlank : true
 					}, {
-						
+
 						xtype : 'checkbox',
 						boxLabel : 'C41报废大于0',
 						// checked : true,
@@ -605,6 +605,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						}, {
 							xtype : 'operatorrolecombobox',
 							currentRolecode : '10001321',
+							defaultValue : uname,
 							valueField : "operatorname",
 							allowBlank : false,
 							anchor : '95%',
@@ -767,6 +768,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						}, {
 							xtype : 'operatorrolecombobox',
 							currentRolecode : '10001321',
+							defaultValue : uname,
 							valueField : "operatorname",
 							allowBlank : false,
 							anchor : '95%',
@@ -920,7 +922,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 							ref : '../../concentration2',
 							name : 'entity/concentration',
 							allowBlank : false,
-							// readOnly : true,
+							readOnly : true,
 							fieldLabel : '标准C42浓度(%)',
 							anchor : '85%',
 							colspan : 2
@@ -1078,6 +1080,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						}, {
 							xtype : 'operatorrolecombobox',
 							currentRolecode : '10001323',
+							defaultValue : uname,
 							valueField : "operatorname",
 							allowBlank : false,
 							anchor : '95%',
@@ -1481,6 +1484,7 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 						}, {
 							xtype : 'operatorrolecombobox',
 							currentRolecode : '10001321',
+							defaultValue : uname,
 							valueField : "operatorname",
 							allowBlank : false,
 							anchor : '85%',
@@ -1753,41 +1757,41 @@ com.keensen.ump.produce.quality.mptest.oilMgr = function() {
 				loadUrl : 'com.keensen.ump.produce.quality.mptest.expandMpTestOilHead.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.quality.mpoiltest.saveOilTestC41Invalid.biz.ext',
 				fields : [{
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'numberfield',
-									decimalPrecision : 4,
-									minValue : 0,
-									ref : '../../c41Invalid',
-									name : 'entity/c41Invalid',
-									dataIndex : 'c41Invalid',
-									allowBlank : false,
-									fieldLabel : 'C41报废(kg)',
-									anchor : '95%',
-									colspan : 1
-								},{
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 1
-								}, {
-									xtype : 'textarea',
-									decimalPrecision : 4,
-									minValue : 0,
-									ref : '../../c41InvalidReason',
-									name : 'entity/c41InvalidReason',
-									dataIndex : 'c41InvalidReason',
-									allowBlank : false,
-									fieldLabel : '报废原因备注',
-									anchor : '95%',
-									colspan : 1
-								}, {
-									xtype : 'hidden',
-									ref : '../../pkid',
-									name : 'entity/id',
-									dataIndex : 'id'
-								}]
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							decimalPrecision : 4,
+							minValue : 0,
+							ref : '../../c41Invalid',
+							name : 'entity/c41Invalid',
+							dataIndex : 'c41Invalid',
+							allowBlank : false,
+							fieldLabel : 'C41报废(kg)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'textarea',
+							decimalPrecision : 4,
+							minValue : 0,
+							ref : '../../c41InvalidReason',
+							name : 'entity/c41InvalidReason',
+							dataIndex : 'c41InvalidReason',
+							allowBlank : false,
+							fieldLabel : '报废原因备注',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'hidden',
+							ref : '../../pkid',
+							name : 'entity/id',
+							dataIndex : 'id'
+						}]
 			}]
 		});
 	}

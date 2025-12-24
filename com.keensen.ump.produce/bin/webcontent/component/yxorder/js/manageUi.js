@@ -280,7 +280,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
 								// anchor : '75%',
-								fieldLabel : '规格型号 '
+								fieldLabel : '卷膜执行型号 '
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
@@ -352,6 +352,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						handler : this.onUpdateMaterial2
 					}, '-', {
 						text : '修改唛头型号',
+						hidden:uid != 'dafu' && uid != 'KS01147' && uid != 'KS01479' && uid != 'LHY' && uid != 'KS00307',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onUpdateSpecNameMark
@@ -360,7 +361,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						 * 'icon-application_form_magnify', handler :
 						 * this.onViewPlanWeek }
 						 */, '-', {
-						text : '修改卷膜工艺执行型号',
+						text : '修改卷膜执行型号',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onUpdateMaterial
@@ -415,7 +416,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onOrderView
 					}, '-', {
-						text : '卷膜工艺执行型号',
+						text : '卷膜执行型号',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onOrderMaterSpec
@@ -442,7 +443,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'materSpecName2',
-						header : '订单下达型号',
+						header : '卷膜型号',
 						sortable : true
 					}, {
 						dataIndex : 'specNameMark',
@@ -450,7 +451,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'materSpecName',
-						header : '卷膜工艺执行型号',
+						header : '卷膜执行型号',
 						sortable : true
 					}, {
 						dataIndex : 'orderAmount',
@@ -797,7 +798,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 								copyToClipboard(_this.rec.data['materSpecName']);
 							}
 						},
-						text : '复制卷膜工艺执行型号'
+						text : '复制卷膜执行型号'
 					}]
 		});
 		// 右键菜单代码关键部分
@@ -1569,7 +1570,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		var _this = this;
 		this.updatematerialWindow = this.updatematerialWindow
 				|| new Ext.fn.FormWindow({
-					title : '修改卷膜工艺执行型号',
+					title : '修改卷膜执行型号',
 					height : 240,
 					width : 300,
 					resizable : false,
@@ -1609,7 +1610,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 								, {
 									xtype : 'combo',
-									fieldLabel : '卷膜工艺执行型号',
+									fieldLabel : '卷膜执行型号',
 									dataIndex : 'materSpecId',
 									forceSelection : true,
 									mode : 'local',
@@ -1884,7 +1885,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						header : '订单元件型号'
 					}, {
 						dataIndex : 'materSpecName',
-						header : '卷膜工艺执行型号'
+						header : '卷膜执行型号'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.order.queryOrderMaterSpecByPage.biz.ext',
@@ -1918,7 +1919,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
 								anchor : '85%',
-								fieldLabel : '卷膜工艺执行型号'
+								fieldLabel : '卷膜执行型号'
 							}]
 				});
 
@@ -1940,7 +1941,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 
 		this.orderMaterSpecWindow = this.orderMaterSpecWindow
 				|| new Ext.Window({
-							title : '订单卷膜工艺执行型号查询',
+							title : '订单卷膜执行型号查询',
 							resizable : true,
 							minimizable : false,
 							maximizable : true,
@@ -1960,7 +1961,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		var _this = this;
 		this.addOrderMaterSpecWindow = this.addOrderMaterSpecWindow
 				|| new Ext.fn.FormWindow({
-					title : '新增订单卷膜工艺执行型号',
+					title : '新增订单卷膜执行型号',
 					height : 240,
 					width : 300,
 					resizable : false,
@@ -2004,7 +2005,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									allowBlank : false,
 									anchor : '100%',
 									colspan : 2,
-									fieldLabel : '卷膜工艺执行型号 ',
+									fieldLabel : '卷膜执行型号 ',
 									typeAhead : true,
 									typeAheadDelay : 100,
 									minChars : 1,
@@ -2250,7 +2251,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							allowBlank : false,
 							anchor : '80%',
 							colspan : 2,
-							fieldLabel : '卷膜工艺执行型号',
+							fieldLabel : '卷膜执行型号',
 							typeAhead : true,
 							typeAheadDelay : 100,
 							minChars : 1,
@@ -4145,7 +4146,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									allowBlank : false,
 									anchor : '80%',
 									colspan : 2,
-									fieldLabel : '卷膜工艺执行型号',
+									fieldLabel : '卷膜执行型号',
 									typeAhead : true,
 									typeAheadDelay : 100,
 									minChars : 1,

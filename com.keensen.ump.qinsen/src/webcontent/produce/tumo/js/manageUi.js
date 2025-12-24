@@ -40,7 +40,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.initWindow4WaterLiquid();
 
 		this.initAddWaterLiquidWindow();
-		
+
 		this.initEditWindow4C72Invalid();
 
 		this.defectTmWin = new com.keensen.ump.defectWindow({
@@ -321,7 +321,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							}
 						}
 					}, {
-						
+
 						xtype : 'numberfield',
 						fieldLabel : '废品数大于',
 						// checked : true,
@@ -338,7 +338,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						colspan : 4,
 						anchor : '100%'
 					}, {
-						
+
 						xtype : 'checkbox',
 						boxLabel : 'C72报废>0',
 						// checked : true,
@@ -468,7 +468,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								handler : this.onTestC92
 							}, '->', '-', {
 								xtype : 'splitbutton',
-								text : '录入调整',
+								text : '录入物料调整',
 
 								iconCls : 'icon-application_edit',
 								arrowAlign : 'bottom',
@@ -988,6 +988,25 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : 'C72报废备注',
 						width : 120,
 						dataIndex : 'c72InvalidReason'
+					}, {
+						dataIndex : 'url',
+						header : '瑕疵图',
+						renderer : function(value, metaData, rec, rowIndex,
+								colIndex, store, view) {
+							
+							var defectPicture = rec.data.defectPicture;
+							if(!Ext.isEmpty(defectPicture))
+								return '<img class="cursor-example" title="单击显示大图" onclick="showImageModal(\''+ defectPicture + '\')" src="'
+									+ markRootUrl
+									+ defectPicture
+									+ '?ver='
+									+ rec.data.recordId
+									+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />'
+							else
+							    return '';
+
+							
+						}
 					}],
 			store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.qinsen.tumo.queryRecordsByPage.biz.ext',
@@ -997,7 +1016,9 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						baseParams : {},
 						fields : [{
 									name : 'wasteLoss'
-								},{
+								}, {
+									name : 'defectPicture'
+								}, {
 									name : 'recordId'
 								}, {
 									name : 'specNameOriginal'
@@ -1239,15 +1260,15 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 	this.initInputWindow = function() {
 		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
-			title : '新增涂膜记录',
-			height : 620,
-			width : 800,
-			// itemCls:'required',
-			// style:'margin-top:10px',
-			resizable : true,
-			minimizable : false,
-			maximizable : true,
-			items : [{
+					title : '新增涂膜记录',
+					height : 620,
+					width : 800,
+					// itemCls:'required',
+					// style:'margin-top:10px',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
 						xtype : 'inputpanel',
 						pgrid : this.listPanel,
 						autoHide : false,
@@ -1308,7 +1329,15 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									fieldLabel : '底膜批次',
 									allowBlank : false,
 									anchor : '75%',
-									colspan : 1
+									colspan : 1,
+									listeners : {
+										scope : this,
+										'blur' : function() {
+											var dimoBatchNo = this.inputWindow.dimoBatchNo
+													.getValue();
+											_this.judgeDm(dimoBatchNo);
+										}
+									}
 								}, {
 									xtype : 'displayfield',
 									height : '5',
@@ -1449,6 +1478,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									height : '5',
+									hidden : true,
 									colspan : 2
 								}, {
 									name : 'entity/tagNum',
@@ -1457,6 +1487,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									decimalPrecision : 0,
 									minValue : 0,
 									allowBlank : true,
+									hidden : true,
 									anchor : '75%'
 								}, {
 									name : 'entity/tagLength',
@@ -1464,6 +1495,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									xtype : 'numberfield',
 									minValue : 0,
 									allowBlank : true,
+									hidden : true,
 									anchor : '75%'
 								}, {
 									xtype : 'displayfield',
@@ -1499,6 +1531,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									colspan : 2
 								}, {
 									xtype : 'mpworkercombobox',
+									defaultValue : operatorid,
 									hiddenName : 'entity/workerId',
 									name : 'entity/workerId',
 									ref : '../../workerId',
@@ -1665,7 +1698,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									allowBlank : true
 								}]
 					}]
-		});
+				});
 	}
 
 	this.initEditWindow = function() {
@@ -1898,6 +1931,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									height : '5',
+									hidden : true,
 									colspan : 2
 								}, {
 									name : 'entity/tagNum',
@@ -1907,6 +1941,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									decimalPrecision : 0,
 									minValue : 0,
 									allowBlank : true,
+									hidden : true,
 									anchor : '75%'
 								}, {
 									name : 'entity/tagLength',
@@ -1915,6 +1950,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									xtype : 'numberfield',
 									minValue : 0,
 									allowBlank : true,
+									hidden : true,
 									anchor : '75%'
 								}, {
 									xtype : 'displayfield',
@@ -4912,7 +4948,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 				});
 
 	}
-	
+
 	this.initEditWindow4C72Invalid = function() {
 
 		this.editWindow4C72Invalid = this.editWindow4C72Invalid
@@ -4945,7 +4981,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									fieldLabel : 'C72报废(kg)',
 									anchor : '95%',
 									colspan : 1
-								},{
+								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 1

@@ -33,7 +33,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 150,
-					columns : 4,
+					columns : 12,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -41,69 +41,70 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					fields : [{
 								xtype : 'dictcombobox',
 								name : 'condition/dimoType',
-								anchor : '90%',
+								colspan:3,
+								anchor : '100%',
 								fieldLabel : '底膜类型',
 								hiddenName : 'condition/dimoType',
 								dictData : KS_DIMO_TYPE
 							}, {
 								xtype : 'dictcombobox',
 								name : 'condition/line',
-								anchor : '90%',
+								anchor : '100%',
+								colspan:3,
 								fieldLabel : '生产线别',
 								hiddenName : 'condition/line',
 								dictData : KS_ZM_LINE
 							}, {
-								xtype : "dateregion",
+								xtype : "datetimeregion",
 								anchor : '100%',
-								colspan : 1,
+								colspan : 6,
 								nameArray : ['condition/productDtStart',
 										'condition/productDtEnd'],
-								fieldLabel : "生产日期",
-								format : "Y-m-d"
-							}, {
-								xtype : 'textfield',
-								anchor : '90%',
-								name : 'condition/dimoBatchNo2',
-								fieldLabel : '底膜批号'
+								fieldLabel : "生产时间",
+								format : "Y-m-d H:i"
 							}, {
 								xtype : 'displayfield',
 								height : '5',
-								colspan : 4
+								colspan : 12
 							}, {
 								xtype : 'textfield',
-								anchor : '90%',
+								anchor : '100%',
+								colspan:3,
 								name : 'condition/wfBatchNo2',
 								fieldLabel : '无纺布批号'
 							}, {
 								xtype : 'textfield',
-								anchor : '90%',
+								anchor : '100%',
+								colspan:3,
 								name : 'condition/zmyBatchNo2',
 								fieldLabel : '铸膜液批号'
 							}, {
 								xtype : 'supcombobox',
 								hiddenName : 'condition/supId',
-								anchor : '90%',
+								anchor : '100%',
+								colspan:3,
 								fieldLabel : '无纺布供应商'
 							}, {
 								xtype : 'textfield',
-								anchor : '90%',
+								anchor : '100%',
+								colspan:3,
 								name : 'condition/createName',
 								fieldLabel : '填报人'
 							}, {
 								xtype : 'displayfield',
 								height : '5',
-								colspan : 4
+								colspan : 12
 							}, {
 								xtype : 'teamcombobox',
 								name : 'condition/teamId',
 								fieldLabel : '生产班组',
 								hiddenName : 'condition/teamId',
-								anchor : '90%',
-								colspan : 1
+								anchor : '100%',
+								colspan : 3
 							}, {
 								xtype : 'combobox',
-								anchor : '90%',
-								colspan : 1,
+								anchor : '100%',
+								colspan : 3,
 								name : 'condition/productType',
 								hiddenName : 'condition/productType',
 								ref : '../productType',
@@ -126,6 +127,12 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 										this.queryPanel.productType.reset();
 									}
 								}
+							}, {
+								xtype : 'textfield',
+								anchor : '100%',
+								colspan:3,
+								name : 'condition/dimoBatchNo2',
+								fieldLabel : '底膜批号'
 							}]
 				});
 		this.queryPanel.addButton({
@@ -517,6 +524,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 				}, {
 					xtype : 'dictcombobox',
 					name : 'entity/line',
+					ref:'../../line',
 					allowBlank : false,
 					fieldLabel : '生产线别',
 					hiddenName : 'entity/line',
@@ -702,6 +710,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 				}, {
 					xtype : 'textfield',
 					name : 'entity/reserve5',
+					value:uname,
+					readOnly:true,
 					allowBlank : false,
 					fieldLabel : '记录人',
 					anchor : '95%',
@@ -741,6 +751,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						}, {
 							xtype : 'dictcombobox',
 							name : 'entity/line',
+							ref:'../../line',
 							dataIndex : 'line',
 							allowBlank : false,
 							readOnly : true,

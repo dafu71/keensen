@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+
+	<!-- 新增膜片瑕疵图 -->
+    <insert id="insertDefectPicture" parameterClass="java.util.HashMap">
+    INSERT INTO KS_DIAPHGRAM_DEFECT_PICTURE
+	(id,create_time,batch_no,picture_name)
+	SELECT SEQU_DIAPHGRAM_DEFECT_PICTURE.Nextval,sysdate,REGEXP_SUBSTR(#defectPicture#, '[^_]+', 1, 1) ,
+	#defectPicture# FROM dual
+	WHERE NOT EXISTS(SELECT 1 FROM KS_DIAPHGRAM_DEFECT_PICTURE t2
+	WHERE t2.batch_no = REGEXP_SUBSTR(#defectPicture#, '[^_]+', 1, 1))
+    </insert>
+</sqlMap>

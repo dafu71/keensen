@@ -57,6 +57,11 @@ com.keensen.ump.base.CraftNotStdMgr.prototype.modifyMater = function(
 		return false;
 	}
 
+	if(field == 'pressureArange' && !isValidRealNumberPattern(newValue)){
+		Ext.Msg.alert("系统提示", "泄压值范围格式错误！");
+		return false;
+	}
+	
 	// 此处加权限判定
 	if (modifyLimit != 1)
 		return false;
@@ -125,22 +130,25 @@ com.keensen.ump.base.CraftNotStdMgr.prototype.onSelect4ChoosePackage = function(
 		var drawNetShortWidth = records[0].data.drawNetShortWidth;
 		var pipe = records[0].data.pipe;
 
-		this.inputWindow.craftNo.setValue(craftNo);
-		this.inputWindow.numPerWad.setValue(numPerWad);
-		this.inputWindow.blankingSize.setValue(blankingSize);
-		this.inputWindow.mpWidth.setValue(mpWidth);
-		this.inputWindow.denseNet.setValue(denseNet);
-		this.inputWindow.denseNetWidth.setValue(denseNetWidth);
-		this.inputWindow.denseNetSpan.setValue(denseNetSpan);
-		this.inputWindow.lightNetLongType.setValue(lightNetLongType);
-		this.inputWindow.lightNetLongPage.setValue(lightNetLongPage);
-		this.inputWindow.lightNetLongSpan.setValue(lightNetLongSpan);
-		this.inputWindow.lightNetShortType.setValue(lightNetShortType);
-		this.inputWindow.lightNetShortPage.setValue(lightNetShortPage);
-		this.inputWindow.drawNetShortWidth.setValue(drawNetShortWidth);
-		this.inputWindow.pipe.setValue(pipe);
+		var obj = this.inputWindow.isVisible()? this.inputWindow:this.editWindow;
+		
+		obj.craftNo.setValue(craftNo);
+		obj.numPerWad.setValue(numPerWad);
+		obj.blankingSize.setValue(blankingSize);
+		obj.mpWidth.setValue(mpWidth);
+		obj.denseNet.setValue(denseNet);
+		obj.denseNetWidth.setValue(denseNetWidth);
+		obj.denseNetSpan.setValue(denseNetSpan);
+		obj.lightNetLongType.setValue(lightNetLongType);
+		obj.lightNetLongPage.setValue(lightNetLongPage);
+		obj.lightNetLongSpan.setValue(lightNetLongSpan);
+		obj.lightNetShortType.setValue(lightNetShortType);
+		obj.lightNetShortPage.setValue(lightNetShortPage);
+		obj.drawNetShortWidth.setValue(drawNetShortWidth);
+		obj.pipe.setValue(pipe);
 
-		this.setReadOnly(true);
+		if(this.inputWindow.isVisible())
+			this.setReadOnly(true);
 
 		this.choosePackageWindow.hide();
 	}
@@ -223,9 +231,69 @@ com.keensen.ump.base.CraftNotStdMgr.prototype.onAdd2 = function() {
 
 }
 
+com.keensen.ump.base.CraftNotStdMgr.prototype.onModify= function() {
+
+	var r = this.rec;
+	if (Ext.isEmpty(r.data)) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	}
+	this.editWindow.show();
+
+	this.editWindow.materSpecId.setValue(r.data.materSpecId);
+	this.editWindow.craftNo.setValue(r.data.craftNo);
+	this.editWindow.numPerWad.setValue(r.data.numPerWad);
+	this.editWindow.blankingSize.setValue(r.data.blankingSize);
+	this.editWindow.mpWidth.setValue(r.data.mpWidth);
+	this.editWindow.denseNet.setValue(r.data.denseNet);
+	this.editWindow.denseNetWidth.setValue(r.data.denseNetWidth);
+	this.editWindow.denseNetSpan.setValue(r.data.denseNetSpan);
+	this.editWindow.lightNetLongType.setValue(r.data.lightNetLongType);
+	this.editWindow.lightNetLongPage.setValue(r.data.lightNetLongPage);
+	this.editWindow.lightNetLongSpan.setValue(r.data.lightNetLongSpan);
+	this.editWindow.lightNetShortType.setValue(r.data.lightNetShortType);
+	this.editWindow.lightNetShortPage.setValue(r.data.lightNetShortPage);
+	this.editWindow.drawNetShortWidth.setValue(r.data.drawNetShortWidth);
+	this.editWindow.pipe.setValue(r.data.pipe);
+
+	this.editWindow.state.setValue('W');
+	this.editWindow.prodType.setValue(r.data.prodType);
+	this.editWindow.fileNo.setValue(r.data.fileNo);
+	this.editWindow.bookVersion.setValue(r.data.bookVersion);
+	this.editWindow.preparationTime.setValue(formatDate(new Date()));
+	this.editWindow.area.setValue(r.data.area);
+	this.editWindow.denseNetCdm.setValue(r.data.denseNetCdm);
+	this.editWindow.juanmo.setValue(r.data.juanmo);
+
+	this.editWindow.materSpecName.setValue(r.data.materSpecName);
+	this.editWindow.jmSpecName.setValue(r.data.jmSpecName);
+	this.editWindow.testPressure.setValue(r.data.testPressure);
+	this.editWindow.keepPressureTime.setValue(r.data.keepPressureTime);
+	this.editWindow.pressureArange.setValue(r.data.pressureArange);
+	this.editWindow.testLiquid.setValue(r.data.testLiquid);
+	this.editWindow.testLiquidDensity.setValue(r.data.testLiquidDensity);
+	this.editWindow.testLiquidPressure.setValue(r.data.testLiquidPressure);
+	this.editWindow.testLiquidTemp.setValue(r.data.testLiquidTemp);
+	this.editWindow.testLiquidPh.setValue(r.data.testLiquidPh);
+	this.editWindow.testLiquidRecovery.setValue(r.data.testLiquidRecovery);
+	this.editWindow.testLiquidGpd.setValue(r.data.testLiquidGpd);
+	this.editWindow.testLiquidSalt.setValue(r.data.testLiquidSalt);
+
+	this.editWindow.intakePipeLength.setValue(r.data.intakePipeLength);
+	this.editWindow.effluentPipeLength.setValue(r.data.effluentPipeLength);
+	this.editWindow.diameter.setValue(r.data.diameter);
+	this.editWindow.juanmoTape.setValue(r.data.juanmoTape);
+
+}
+
 function formatDate(date) {
 	const year = date.getFullYear()
 	const month = (date.getMonth() + 1 + '').padStart(2, '0')
 	const day = (date.getDate() + '').padStart(2, '0')
 	return year + '-' + month + '-' + day;
+}
+
+function isValidRealNumberPattern(str) {
+  const regex = /^(\d+(\.\d+)?)-(\d+(\.\d+)?)$/;
+  return regex.test(str);
 }

@@ -1,6 +1,6 @@
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 	var _this = this;
-	
+
 	this.exportFields = '';
 	this.getRight();
 
@@ -17,6 +17,17 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 					}
 				});
 	}, this);
+
+	// 查询事件
+	this.queryDisinfectPanel.mon(this.queryDisinfectPanel, 'query', function(
+					form, vals) {
+
+				var store = this.disinfectListPanel.store;
+
+				store.baseParams = this.queryDisinfectPanel.getForm()
+						.getValues();
+				store.load();
+			}, this);
 
 	this.queryPanel.testSpecId.store.on('load', function(o) {
 
@@ -138,197 +149,100 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.initEvent = function() {
 					Ext.Msg.alert("判定说明", remark);
 
 				}
+
+				if (this.opt == 'viewdisinfect') {
+
+					var juanmoBatchId = cell.get('juanmoBatchId');
+					var juanmoBatchNo = cell.get('juanmoBatchNo');
+
+					this.queryDisinfectPanel.jmBatchNo.setValue(juanmoBatchNo);
+					this.queryDisinfectPanel.juanmoBatchId
+							.setValue(juanmoBatchId);
+					this.disinfectWindow.show();
+					this.queryDisinfectPanel.fireEvent('query');
+					
+				}
+
 			}, this);
 
 }
 
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.exportExcel = function() {
 	var _this = this;
-	
+
 	if (Ext.isEmpty(this.exportFields)) {
 		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '水测记录',
 				'com.keensen.ump.qinsen.watertest.queryRecords', '0,1');
 	} else {
 		var arr = this.exportFields.split(',');
-		
-		doQuerySqlAndExportExt(
-				this,
-				this.queryPanel,
-				this.listPanel,
-				'水测记录',
-				'com.keensen.ump.qinsen.watertest.queryRecords',
-				arr);
+
+		doQuerySqlAndExportExt(this, this.queryPanel, this.listPanel, '水测记录',
+				'com.keensen.ump.qinsen.watertest.queryRecords', arr);
 	}
-	/*var vals = this.queryPanel.form.getValues();
-	// var start = vals['condition/orderDateStart'];
-	// var end = vals['condition/orderDateEnd'];
-	
+	/*
+	 * var vals = this.queryPanel.form.getValues(); // var start =
+	 * vals['condition/orderDateStart']; // var end =
+	 * vals['condition/orderDateEnd'];
+	 * 
 	 * if (Ext.isEmpty(start) || Ext.isEmpty(end)) { Ext.Msg.alert("系统提示",
 	 * "请选择订单日期时间段！"); return false; } if (dayDiff(start, end) > 31) {
 	 * Ext.Msg.alert("系统提示", "查询间隔日期不能大于1个月！"); return false; }
-	 
-
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.keensen.ump.qinsen.watertest.queryRecords.biz.ext",
-		method : "post",
-		responseType : 'blob',
-		jsonData : vals,
-		// jsonData : {
-		// 'condition/orderDateStart' : start,
-		// 'condition/orderDateEnd' : end
-		// },
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-				if (!Ext.isEmpty(ret.data)) {
-					var str = '<style>td{border:1px black solid;}</style>'
-							+ '<table class="table-data table-bordered table"><tr>';
-
-					str += '<td align="center">量产判定</td>'
-							+ '<td align="center">单品判定</td>'
-							+ '<td align="center">卷膜序号</td>'
-							+ '<td align="center">卷膜型号</td>'
-							+ '<td align="center">元件序号</td>'
-							+ '<td align="center">工艺员备注</td>'
-							+ '<td align="center">测试型号</td>'
-							+ '<td align="center">拟入库型号</td>'
-							+ '<td align="center">拟贴标型号</td>'
-
-							+ '<td align="center">膜片批次</td>'
-							+ '<td align="center">底膜批次</td>'
-							+ '<td align="center">检测类型</td>'
-							+ '<td align="center">气检值</td>'
-							+ '<td align="center">气检时间</td>'
-							+ '<td align="center">检测温度</td>'
-
-							+ '<td align="center">初检产水量</td>'
-							+ '<td align="center">初检脱盐率%</td>'
-							+ '<td align="center">初检系数B</td>'
-							+ '<td align="center">初检检测时间</td>'
-							+ '<td align="center">初检质检员</td>'
-							+ '<td align="center">初检测试膜壳</td>'
-
-							+ '<td align="center">复检产水量</td>'
-							+ '<td align="center">复检脱盐率%</td>'
-							+ '<td align="center">复检系数B</td>'
-							+ '<td align="center">复检检测时间</td>'
-							+ '<td align="center">复检质检员</td>'
-							+ '<td align="center">复检测试膜壳</td>'
-
-							+ '<td align="center">量产标准GPD</td>'
-							+ '<td align="center">量产标准脱盐率%</td>'
-							+ '<td align="center">量产标准系数B%</td>'
-
-							+ '<td align="center">单品标准GPD</td>'
-							+ '<td align="center">单品标准脱盐率%</td>'
-							+ '<td align="center">单品标准系数B%</td>'
-
-							+ '<td align="center">判定说明</td>'
-
-							+ '</tr>';
-					Ext.each(ret.data, function(r) {
-								str += '<tr><td align="center">'
-										+ formatStr(r.isBatchQualifiedName)
-										+ '</td><td align="center">'
-										+ formatStr(r.isProdQualifiedName)
-										+ '</td><td align="center">'
-										+ formatStr(r.juanmoBatchNo)
-										+ '</td><td align="center">'
-										+ formatStr(r.juanmoSpecName)
-										+ '</td>'
-										+'<td align="center">'
-										+ formatStr(r.prodBatchNo)
-										+ '</td>' 
-										+'<td align="center">'
-										+ formatStr(r.gyyRemark)
-										+ '</td>' 
-										+ '<td align="center">'
-										+ formatStr(r.testSpecName) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.ifProdPpecName) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.markSpecName) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.tumoBatchStr) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.dimoBatchStr) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.testTypeName) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.airResult) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.airDate) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.temp) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.fGpd) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.fSalt) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.fFactorB) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.fCheckTime) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.fCheckerName) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.fMacName) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.rGpd) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.rSalt) + '</td>'
-
-										+ '<td align="center">'
-										+ formatStr(r.rFactorB) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.rCheckTime) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.rCheckerName) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.rMacName) + '</td>'
-
-										+ '<td align="center">'
-										+ formatStr(r.batchGpdStdStr) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.batchSaltStd) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.batchFactorBStd)
-										+ '</td>' + '<td align="center">'
-										+ formatStr(r.prodGpdStdStr) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.prodSaltStd) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.prodFactorBStd) + '</td>'
-										+ '<td align="center">'
-										+ formatStr(r.remark) + '</td>'
-
-										+ '</tr>';
-							})
-					str += '</table>';
-					// application/vnd.ms-excel;charset=utf-8
-					var blob = new Blob(["\ufeff", str], {
-								type : 'application/vnd.ms-excel;charset=utf-8'
-							});
-					var link = document.createElement('a');
-					var url = URL.createObjectURL(blob);
-					link.href = url;
-					link.download = 'exported-data.xls'; // 指定导出文件的名称
-					document.body.appendChild(link);
-					link.click();
-					document.body.removeChild(link);
-				} else {
-					Ext.Msg.alert("系统提示", "没有查询到数据!");
-				}
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})*/
+	 * 
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.keensen.ump.qinsen.watertest.queryRecords.biz.ext", method : "post",
+	 * responseType : 'blob', jsonData : vals, // jsonData : { //
+	 * 'condition/orderDateStart' : start, // 'condition/orderDateEnd' : end // },
+	 * success : function(resp) { var ret = Ext.decode(resp.responseText); if
+	 * (ret.success) { if (!Ext.isEmpty(ret.data)) { var str = '<style>td{border:1px
+	 * black solid;}</style>' + '<table class="table-data table-bordered
+	 * table"><tr>';
+	 * 
+	 * str += '<td align="center">量产判定</td>' + '<td align="center">单品判定</td>' + '<td align="center">卷膜序号</td>' + '<td align="center">卷膜型号</td>' + '<td align="center">元件序号</td>' + '<td align="center">工艺员备注</td>' + '<td align="center">测试型号</td>' + '<td align="center">拟入库型号</td>' + '<td align="center">拟贴标型号</td>' + '<td align="center">膜片批次</td>' + '<td align="center">底膜批次</td>' + '<td align="center">检测类型</td>' + '<td align="center">气检值</td>' + '<td align="center">气检时间</td>' + '<td align="center">检测温度</td>' + '<td align="center">初检产水量</td>' + '<td align="center">初检脱盐率%</td>' + '<td align="center">初检系数B</td>' + '<td align="center">初检检测时间</td>' + '<td align="center">初检质检员</td>' + '<td align="center">初检测试膜壳</td>' + '<td align="center">复检产水量</td>' + '<td align="center">复检脱盐率%</td>' + '<td align="center">复检系数B</td>' + '<td align="center">复检检测时间</td>' + '<td align="center">复检质检员</td>' + '<td align="center">复检测试膜壳</td>' + '<td align="center">量产标准GPD</td>' + '<td align="center">量产标准脱盐率%</td>' + '<td align="center">量产标准系数B%</td>' + '<td align="center">单品标准GPD</td>' + '<td align="center">单品标准脱盐率%</td>' + '<td align="center">单品标准系数B%</td>' + '<td align="center">判定说明</td>' + '</tr>';
+	 * Ext.each(ret.data, function(r) { str += '<tr><td align="center">' +
+	 * formatStr(r.isBatchQualifiedName) + '</td><td align="center">' +
+	 * formatStr(r.isProdQualifiedName) + '</td><td align="center">' +
+	 * formatStr(r.juanmoBatchNo) + '</td><td align="center">' +
+	 * formatStr(r.juanmoSpecName) + '</td>' +'<td align="center">' +
+	 * formatStr(r.prodBatchNo) + '</td>' +'<td align="center">' +
+	 * formatStr(r.gyyRemark) + '</td>' + '<td align="center">' +
+	 * formatStr(r.testSpecName) + '</td>' + '<td align="center">' +
+	 * formatStr(r.ifProdPpecName) + '</td>' + '<td align="center">' +
+	 * formatStr(r.markSpecName) + '</td>' + '<td align="center">' +
+	 * formatStr(r.tumoBatchStr) + '</td>' + '<td align="center">' +
+	 * formatStr(r.dimoBatchStr) + '</td>' + '<td align="center">' +
+	 * formatStr(r.testTypeName) + '</td>' + '<td align="center">' +
+	 * formatStr(r.airResult) + '</td>' + '<td align="center">' +
+	 * formatStr(r.airDate) + '</td>' + '<td align="center">' +
+	 * formatStr(r.temp) + '</td>' + '<td align="center">' +
+	 * formatStr(r.fGpd) + '</td>' + '<td align="center">' +
+	 * formatStr(r.fSalt) + '</td>' + '<td align="center">' +
+	 * formatStr(r.fFactorB) + '</td>' + '<td align="center">' +
+	 * formatStr(r.fCheckTime) + '</td>' + '<td align="center">' +
+	 * formatStr(r.fCheckerName) + '</td>' + '<td align="center">' +
+	 * formatStr(r.fMacName) + '</td>' + '<td align="center">' +
+	 * formatStr(r.rGpd) + '</td>' + '<td align="center">' +
+	 * formatStr(r.rSalt) + '</td>' + '<td align="center">' +
+	 * formatStr(r.rFactorB) + '</td>' + '<td align="center">' +
+	 * formatStr(r.rCheckTime) + '</td>' + '<td align="center">' +
+	 * formatStr(r.rCheckerName) + '</td>' + '<td align="center">' +
+	 * formatStr(r.rMacName) + '</td>' + '<td align="center">' +
+	 * formatStr(r.batchGpdStdStr) + '</td>' + '<td align="center">' +
+	 * formatStr(r.batchSaltStd) + '</td>' + '<td align="center">' +
+	 * formatStr(r.batchFactorBStd) + '</td>' + '<td align="center">' +
+	 * formatStr(r.prodGpdStdStr) + '</td>' + '<td align="center">' +
+	 * formatStr(r.prodSaltStd) + '</td>' + '<td align="center">' +
+	 * formatStr(r.prodFactorBStd) + '</td>' + '<td align="center">' +
+	 * formatStr(r.remark) + '</td>' + '</tr>'; }) str += '</table>'; //
+	 * application/vnd.ms-excel;charset=utf-8 var blob = new Blob(["\ufeff",
+	 * str], { type : 'application/vnd.ms-excel;charset=utf-8' }); var link =
+	 * document.createElement('a'); var url = URL.createObjectURL(blob);
+	 * link.href = url; link.download = 'exported-data.xls'; // 指定导出文件的名称
+	 * document.body.appendChild(link); link.click();
+	 * document.body.removeChild(link); } else { Ext.Msg.alert("系统提示",
+	 * "没有查询到数据!"); } } }, callback : function() { _this.requestMask.hide() } })
+	 */
 }
 
 com.keensen.ump.qinsen.quality.watertestMgr.prototype.firstTest = function() {
@@ -917,29 +831,29 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.onRemark = function() {
 								});
 				_this.requestMask.show();
 				Ext.Ajax.request({
-							url : "com.keensen.ump.qinsen.watertest.saveGyyRemark.biz.ext",
-							method : "post",
-							jsonData : {
-								'gyyRemark' : text,
-								'recordIds' : recordIds.join(",")
-							},
-							success : function(resp) {
-								var ret = Ext.decode(resp.responseText);
-								if (ret.success) {
-									Ext.Msg.alert("系统提示", "操作成功！", function() {
-												_this.listPanel.store.load();
+					url : "com.keensen.ump.qinsen.watertest.saveGyyRemark.biz.ext",
+					method : "post",
+					jsonData : {
+						'gyyRemark' : text,
+						'recordIds' : recordIds.join(",")
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.load();
 
-											})
-								} else {
-									Ext.Msg.alert("系统提示", "备注失败！")
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "备注失败！")
 
-								}
+						}
 
-							},
-							callback : function() {
-								_this.requestMask.hide()
-							}
-						})
+					},
+					callback : function() {
+						_this.requestMask.hide()
+					}
+				})
 			}
 		}, this, true, gyyRemark);
 	}
@@ -957,18 +871,71 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.getRight = function() {
 					var watertest = data[0].watertest;
 					var exportLimitUsers = watertest.exportLimitUsers;
 					var exportUsers = watertest.exportUsers;
-					Ext.getCmp(watertestExportButton).setVisible(exportLimitUsers
-							.indexOf(uid) != -1
-							|| exportUsers.indexOf(uid) != -1);
-					
+					Ext.getCmp(watertestExportButton)
+							.setVisible(exportLimitUsers.indexOf(uid) != -1
+									|| exportUsers.indexOf(uid) != -1);
+
 					if (exportLimitUsers.indexOf(uid) != -1) {
 						_this.exportFields = watertest.exportLimitFields;
 					}
-					
+
 				},
 				callback : function() {
 				}
 			})
+}
+
+com.keensen.ump.qinsen.quality.watertestMgr.prototype.onDisinfect = function() {
+
+	var _this = this;
+	var B = this.listPanel.getSelectionModel().getSelections();
+	if (B && B.length != 0) {
+		if (B.length > 1) {
+			Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+			return
+		} else {
+			var juanmoBatchId = B[0].data.juanmoBatchId;
+			Ext.Msg.confirm("系统提示", "您确定该元件已消毒吗？", function(D) {
+				if (D == "yes") {
+					_this.requestMask = this.requestMask
+							|| new Ext.LoadMask(Ext.getBody(), {
+										msg : "后台正在操作,请稍候!"
+									});
+					_this.requestMask.show();
+					Ext.Ajax.request({
+						url : "com.keensen.ump.qinsen.watertest.saveDisinfect.biz.ext",
+						method : "post",
+						jsonData : {
+							'entity/juanmoBatchId' : juanmoBatchId
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								Ext.Msg.alert("系统提示", "操作成功！", function() {
+											_this.listPanel.store.reload();
+
+										})
+							} else {
+								Ext.Msg.alert("系统提示", "备注失败！")
+
+							}
+
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
+				}
+			}, this)
+		}
+	} else {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
+	}
+}
+
+com.keensen.ump.qinsen.quality.watertestMgr.prototype.onViewDisinfect = function() {
+	this.opt = 'viewdisinfect';
+	this.listPanel.onEdit();
 }
 
 function formatDate(date) {

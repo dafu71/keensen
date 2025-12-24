@@ -154,6 +154,7 @@ com.keensen.ump.produce.component.markprintMgr.prototype.onScan = function() {
 					}
 				}
 				if (!isRecord) {
+					var qty = _this.inputPanel.qty.getValue();
 					
 					var f = document.getElementById('componentmarkprintForm');
 					//f.prodBatchNo.value = data.prodBatchNo;
@@ -166,7 +167,7 @@ com.keensen.ump.produce.component.markprintMgr.prototype.onScan = function() {
 					f.isStar.value = isStar == true?"Y":"N"; 
 					f.templateName.value = data.templateName;
 					
-					var actionUrl = 'com.keensen.ump.produce.component.printMark.flow?time='
+					var actionUrl = 'com.keensen.ump.produce.component.printMark.flow?qty=' + qty +'&time='
 							+ Math.random() + '&token=' + Date.now();
 
 					f.action = actionUrl;

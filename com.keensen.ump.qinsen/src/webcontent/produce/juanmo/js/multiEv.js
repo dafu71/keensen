@@ -273,7 +273,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.clearInfo = function() 
 
 	// 不清空混卷记录
 	// _this.detailGrid.getStore().loadData('');
-	_this.cdmPanel.cdmBatchNo.focus();
+
 	_this.mainPanel.teamId.setValue(teamId);// 班组维持不变
 	_this.mainPanel.produceDt.setValue(new Date());
 	_this.mainPanel.trailer.setValue(trailer);
@@ -286,6 +286,8 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.clearInfo = function() 
 	_this.mainPanel.blankingSize.setValue(blankingSize);
 	_this.mainPanel.denseNet.setValue(denseNet);
 	_this.mainPanel.pageWidth.setValue(pageWidth);
+
+	_this.cdmPanel.cdmBatchNo.focus();
 	// 重置自由卷
 	// var vals = {};
 	// vals['nameSqlId'] =
@@ -418,28 +420,40 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 			},
 			success : function(resp) {
 				var ret = Ext.decode(resp.responseText);
+
+				//console.log('ret.success=' + ret.success);
+				//console.log('ret.err=' + ret.err);
+
 				if (ret.success) {
 					if (ret.err == '0') {
 						var recordIdStr = ret.recordIdStr;
+
+						//console.log('recordIdStr=' + recordIdStr);
+
 						_this.mainPanel.produceDt.setValue(new Date());
 						_this.mainPanel.pipeCode.setValue('');
+						_this.clearInfo();
+						_this.genBatchNo();
+						//console.log('ok');
 
-						Ext.Msg.alert("系统提示", '操作成功！', function() {
-							_this.clearInfo();
-							Ext.Msg.confirm('提示', '是否立即打印产品标签？', function(btn) {
-								_this.genBatchNo();
-								if (btn === 'yes') {
-									var f = document
-											.getElementById('juanmoprintForm');
-									f.batchIdStr.value = recordIdStr;
-									var actionUrl = 'com.keensen.ump.qinsen.printJuanmoTags.flow?token='
-											+ Date.now();
-									f.action = actionUrl;
-									f.submit();
-								}
-							});
+						//alert('操作成功！');
+						// Ext.Msg.alert("系统提示", '操作成功！', function() {
 
+						//console.log('操作成功！');
+						Ext.Msg.confirm('提示', '是否立即打印产品标签？', function(btn) {
+
+							if (btn === 'yes') {
+								var f = document
+										.getElementById('juanmoprintForm');
+								f.batchIdStr.value = recordIdStr;
+								var actionUrl = 'com.keensen.ump.qinsen.printJuanmoTags.flow?token='
+										+ Date.now();
+								f.action = actionUrl;
+								f.submit();
+							}
 						});
+
+						// });
 
 					} else {
 						Ext.Msg.show({

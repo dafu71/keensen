@@ -166,6 +166,20 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						height : '10',
 						colspan : 2
 					}, {
+						xtype : 'numberfield',
+						// name : 'warehousing/position',
+						allowBlank : false,
+						value:1,
+						fieldLabel : '装箱数量',
+						style : '{font-weight:bold;}',
+						ref : '../qty',
+						anchor : '80%',
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						height : '10',
+						colspan : 2
+					}, {
 						xtype : 'textfield',
 						// name : 'condition/juanmoBatchNo',
 						style : '{font-weight:bold;}',

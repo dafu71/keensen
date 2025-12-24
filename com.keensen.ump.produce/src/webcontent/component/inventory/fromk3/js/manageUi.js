@@ -96,7 +96,7 @@ com.keensen.ump.produce.component.inventory.K3StockMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					hidden : uid != 'dafu',
 					handler : this.exportExcel
 				});
 				
@@ -140,6 +140,10 @@ com.keensen.ump.produce.component.inventory.K3StockMgr = function() {
 						width : 100,
 						header : '元件序列号'
 					}, {
+						dataIndex : 'orderNo',
+						width : 100,
+						header : '订单号'
+					}, {
 						dataIndex : 'className',
 						width : 100,
 						header : '大类'
@@ -178,7 +182,7 @@ com.keensen.ump.produce.component.inventory.K3StockMgr = function() {
 					}, {
 						dataIndex : 'storeTime',
 						width : 100,
-						header : '卷制/入库时间'
+						header : '卷制时间'
 					}, {
 						dataIndex : 'apperance',
 						width : 100,
@@ -268,6 +272,8 @@ com.keensen.ump.produce.component.inventory.K3StockMgr = function() {
 							name : 'rCheckTm'
 						}, {
 							name : 'id'
+						}, {
+							name : 'orderNo'
 						}]
 			})
 		})

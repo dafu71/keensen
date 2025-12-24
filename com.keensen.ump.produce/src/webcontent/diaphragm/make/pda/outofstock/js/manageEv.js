@@ -17,7 +17,7 @@ com.keensen.ump.produce.diaphragm.zmx.pda.OutofstockMgr.prototype.onScan = funct
 	Ext.Ajax.request({
 				method : "post",
 				scope : this,
-				url : 'com.keensen.ump.produce.diaphragm.make.make.queryStock.biz.ext',
+				url : 'com.keensen.ump.produce.diaphragm.make.make.queryStock2.biz.ext',
 				jsonData : {
 					"condition/dimoBatchNo" : dimoBatchNo
 				},

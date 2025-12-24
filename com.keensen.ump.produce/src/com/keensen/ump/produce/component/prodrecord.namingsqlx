@@ -2,7 +2,7 @@
 <!-- author:dafu -->
 <sqlMap>
   <select id="queryProdRecord" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
-   SELECT T1.ID                AS "id", 
+   SELECT T1.ID                AS "id", t1.source "source",
       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -143,7 +143,8 @@
        T1.PRINT_DELAY_TIME   AS "printDelayTime",
        T1.RESERVE1           AS "reserve1",
        T1.TEMPLATE_NAME AS "templateName",
-       T1.URL AS "url"
+       T1.URL AS "url",
+        DECODE(nsf.prod_spec_name,null,0,1) "isnsf"
   FROM (select t.*,v.prod_spec_name qj_spec_name,v.qj_batch_no,t1.reserve1 prod_Batch_No ,t1.reserve2 prod_Spec_Name2
   ,t1.DRY_WET,t1.BATCH_NO,t1.PROD_NAME,t1.ID pkid
   from KS_COMPONENT_PROD_RECORD t1
@@ -153,6 +154,13 @@
   on od.id = t1.order_id
   left join KS_COMPONENT_MARK_TEMPLATE T
   on od.template_name = t.template_name) T1
+  
+  left join (select DISTINCT t.prod_spec_name from KS_QUALITY_NSF_LIST t
+	WHERE t.prod_spec_name IS NOT NULL) nsf    
+  on nvl(t1.qj_batch_no,nvl(t1.prod_Batch_No,t1.BATCH_NO)) = nsf.prod_spec_name
+  
+  
+  
          where 1=1 
          and T1.URL is not null
          <isNotNull prepend="and" property="ids"> 

@@ -11,6 +11,10 @@
 	String flag = (String) XpathUtil.getObjectByXpath(rootObj, "flag");
 	DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(
 			rootObj, "list");
+			
+			String batchNo = list[0].getString("batchNo");
+			
+			 
 	int cnt = list.length;
 
 	//System.out.println(list2);
@@ -54,6 +58,11 @@
 <body>
 <div align="center">
 
+
+<% if("1234567".equals(batchNo)){
+
+
+}else{ %>
 <table border="1" width="100%" class="EOS_table">
 	<tr>
 		<td align="center">
@@ -132,6 +141,8 @@
 	%>
 
 </table>
+
+<% } %>
 </div>
 
 <script type="text/javascript">

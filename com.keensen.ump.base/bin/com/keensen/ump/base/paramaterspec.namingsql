@@ -24,11 +24,22 @@
        T1.SPEC_NAME    AS "specName",
        T1.LABEL_SIZE   AS "labelSize",
        T1.BUSINESSMAN  AS "businessman",
-       T1.REMARK       AS "remark",T1.url "url",t1.status "status"
+       T1.REMARK       AS "remark",T1.url "url",t1.status "status",
+       t1.control_code "controlCode",
+       t1.goods_name "goodsName",
+       t1.mptype "mptype"
   FROM KS_BASE_LABEL_DRAWING T1 
     where 1=1
     
-    <isNotNull prepend="and" property="status">nvl(t1.status,1) = #status#</isNotNull>
+    <isNotNull prepend="and" property="goodsName">T1.LABEL_SIZE =  (case when #goodsName# = '8寸' then '270mm*90mm'
+		       when #goodsName# = '4寸' then '270mm*90mm'
+		       when #goodsName# = '2.5寸' then '180mm*60mm'
+		       else '75mm*50mm' end)</isNotNull>
+        <isNotNull prepend="and" property="mptype">T1.mptype = #mptype#</isNotNull>
+        <isNotNull prepend="and" property="goodsName2">T1.goods_name like '%' || #goodsName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="mptype2">T1.mptype like '%' || #mptype2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="controlCode">T1.control_Code like '%' || #controlCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="status">nvl(t1.status,1) = #status#</isNotNull>
         <isNotNull prepend="and" property="logo">T1.LOGO = #logo#</isNotNull>
         <isNotNull prepend="and" property="specName">T1.SPEC_NAME = #specName#</isNotNull>
         <isNotNull prepend="and" property="logo2">T1.LOGO like '%' || #logo2# || '%'</isNotNull>
@@ -51,7 +62,7 @@
        T1.REMARK       AS "remark",
        tmp.url "url",tmp.stamp_url "stampUrl",
        tmp.url2 "url2",tmp.code "code",
-       
+       tmp.reserve3 "ifPrintNsf",
 tmp.IF_PRINT_BATCH_NO as "ifPrintBatchNo",
 tmp.Y_BATCH_NO as "yBatchNo",
 tmp.X_BATCH_NO as "xBatchNo",
@@ -73,8 +84,8 @@ tmp.IF_PRINT_DAY_CODE as "ifPrintDayCode",
 tmp.Y_DAY_CODE_SPAN as "yDayCodeSpan",
 tmp.X_DAY_CODE_SPAN as "xDayCodeSpan",
 tmp.PRINT_DELAY_TIME as "printDelayTime"
-       ,tmp.reserve1 "reserve1",
-       tmp.reserve3 "reserve3",tmp.reserve4 "reserve4",tmp.reserve5 "reserve5"
+       ,tmp.reserve1 "reserve1",tmp.param0 "param0",
+       tmp.reserve3 "reserve3",tmp.reserve4 "reserve4",tmp.reserve5 "reserve5",tmp.control_code "controlCode" 
   FROM KS_BASE_MARK_DRAWING T1 
   LEFT JOIN (select t.template_name,max(t.url) URL,max(t.url2) url2,
   max(t.stamp_url) stamp_url,max(t.code) code,
@@ -104,13 +115,14 @@ max(PRINT_DELAY_TIME) as PRINT_DELAY_TIME
 ,max(t.reserve3) reserve3
 ,max(t.reserve4) reserve4
 ,max(t.reserve5) reserve5
-  
+,max(t.control_code)  control_code ,max(t.param0) param0
    from KS_COMPONENT_MARK_TEMPLATE t
        
 GROUP BY t.template_name) tmp ON tmp.template_name = t1.DRAWING_CODE
     where 1=1
     
-   <isNotNull prepend="and" property="status">trim(T1.DRAWING_CODE) IN(SELECT template_name FROM KS_COMPONENT_MARK_TEMPLATE  WHERE nvl(status,'1') = #status#)</isNotNull>
+    <isNotNull prepend="and" property="controlCode">tmp.control_code like '%' || #controlCode# || '%'</isNotNull>
+        <isNotNull prepend="and" property="status">trim(T1.DRAWING_CODE) IN(SELECT template_name FROM KS_COMPONENT_MARK_TEMPLATE  WHERE nvl(status,'1') = #status#)</isNotNull>
         <isNotNull prepend="and" property="logo">T1.LOGO = #logo#</isNotNull>
         <isNotNull prepend="and" property="specName">T1.SPEC_NAME = #specName#</isNotNull>
         <isNotNull prepend="and" property="logo2">T1.LOGO like '%' || #logo2# || '%'</isNotNull>

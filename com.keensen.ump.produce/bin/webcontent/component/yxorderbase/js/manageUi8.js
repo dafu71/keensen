@@ -131,10 +131,21 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		// 删除其他、公司标准、旋熔。同时要改成必选项，不选不能下单 2025-07-30 罗
 		// 梳齿改梳齿五星蜂窝
 		// 蜂窝需要改为帽檐蜂窝（非五星） 2025-08-04
-		this.lidStore = new Ext.data.SimpleStore({
+		/*this.lidStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['帽檐蜂窝(非五星)', '帽檐蜂窝(非五星)'], ['格栅', '格栅'],
 							['梳齿五星蜂窝', '梳齿五星蜂窝'], ['定制', '定制']]
+				});*/
+				
+		this.lidStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['8寸、4寸膜元件 梳齿五星蜂窝端盖(公司标准)', '8寸、4寸膜元件 梳齿五星蜂窝端盖(公司标准)'], 
+					['2.5寸帽檐格栅端盖(公司标准)', '2.5寸帽檐格栅端盖(公司标准)'],
+							['家用膜元件无端盖(公司标准)', '家用膜元件无端盖(公司标准)'],
+							['8寸梳齿蜂窝端盖(非五星)', '8寸梳齿蜂窝端盖(非五星)'],
+							['4寸帽檐蜂窝端盖(非五星)', '4寸帽檐蜂窝端盖(非五星)'],
+							['4寸帽檐格栅端盖', '4寸帽檐格栅端盖'],
+							['定制', '定制']]
 				});
 
 		// 卷膜胶带选项：印刷双层、印刷三层、网纹 蓝胶带 绿胶带 白胶带 黄胶带 灰胶带
@@ -332,6 +343,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								name : 'specName'
 							}, {
 								name : 'unit'
+							}, {
+								name : 'jmSpecName'
+							}, {
+								name : 'controlCode'
+							}, {
+								name : 'drawingCode2'
 							}]
 				})
 
@@ -723,6 +740,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						 */, {
 						dataIndex : 'materSpecName2',
 						header : '订单下达型号',
+						sortable : true
+					}, {
+						dataIndex : 'jmSpecName',
+						header : '卷膜型号',
 						sortable : true
 					}, {
 						dataIndex : 'hpmc',
@@ -1332,6 +1353,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							name : 'recordTime'
 						}, {
 							name : 'packingLid'
+						}, {
+							name : 'jmSpecName'
 						}]
 			})
 		})
@@ -1410,7 +1433,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}
 				},
 				columns : 24,
-				loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandYxOrderBase4Add.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandYxOrderBase4Add2.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveEntity.biz.ext',
 				fields : [{
 					xtype : 'displayfield',
@@ -6307,7 +6330,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								header : '标签尺寸'
 							}, {
 								dataIndex : 'url',
-								header : '标签背景图',
+								header : '唛头背景图',
 								renderer : function(value, metaData, rec,
 										rowIndex, colIndex, store, view) {
 									if (!Ext.isEmpty(value)) {

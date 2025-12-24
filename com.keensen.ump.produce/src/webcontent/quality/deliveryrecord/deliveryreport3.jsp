@@ -87,7 +87,7 @@
 <table width="780" border="0">
 	<tr>
 		<td width="100%" height="47">
-		<div align="center" class="style3"><strong>产品检测报告</strong></div>
+		<div align="center" class="style3"><strong>产品检测报告及合格证</strong></div>
 		</td>
 	</tr>
 </table>

@@ -124,7 +124,15 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						name : 'condition/batchNo',
 						anchor : '100%',
 						fieldLabel : '卷膜序号'
-					}]
+					}/*, {
+								// fieldLabel : '不显示需生产<br>或入库为零',
+								xtype : 'checkbox',
+								boxLabel : '不显示已请检入库',
+								// checked : true,
+								name : 'condition/isNotStockConfirm',
+								inputValue : 'Y',
+								anchor : '100%'
+							}*/]
 				});
 
 		this.queryPanel.addButton({

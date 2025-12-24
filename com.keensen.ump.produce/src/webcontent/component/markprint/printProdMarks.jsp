@@ -16,6 +16,8 @@
 	
 	
 	int tableHeight = 265;
+	
+	String qty = null == request.getAttribute("qty")?"1":request.getAttribute("qty").toString();
 
 	rootUrl = rootUrl.replace(
 			"/produce/component/markprint/printProdMarks.jsp", "");
@@ -337,6 +339,9 @@ function initPage() {
 			<%-- 循环开始--%>			
 			<% 	for (int i = 0; i < list.length; i++) { 
 			
+						String templateName = list[i].get("templateName").toString();
+						String nsfnum = templateName.indexOf("M0224")>-1?"58":"61";
+						
 						String ifPrintNsf = null == list[i].get("reserve3")?"N" : list[i].get("reserve3").toString();
 						int xNsf = null == list[i].get("reserve5")? 100000: Integer.parseInt(list[i].get("reserve5").toString());
 						int yNsf = null == list[i].get("reserve4")? 100000: Integer.parseInt(list[i].get("reserve4").toString());
@@ -355,7 +360,7 @@ function initPage() {
 						String fontSize = prodSpecName.length() >= 15 ? "22px" : prodSpecName.length() > 9 ? "26px" : "30px";
 						
 						if("Y".equals(ifPrintNsf)){	
-							fontSize = prodSpecName.length() >= 15 ? "21px" : prodSpecName.length() > 9 ? "21px" : "21px";
+							fontSize = prodSpecName.length() >= 15 ? "20pt" : prodSpecName.length() > 9 ? "20pt" : "20pt";
 						}
 						
 						int yDryImg = Integer.parseInt(list[i].get("yDryImg").toString());
@@ -375,6 +380,8 @@ function initPage() {
 						String dryWet = list[i].get("dryWet").toString();
 						int batchNoFontSize = null == list[i].get("reserve1")?15:Integer.parseInt(list[i].get("reserve1").toString());
 						
+						int isnsf = null == list[i].get("isnsf")?0:Integer.parseInt(list[i].getString("isnsf"));
+						
 			%>			
 				var batchNo = '<%=prodBatchNo %>';
 				var container = document.getElementById('image-container<%=i %>');
@@ -387,7 +394,7 @@ function initPage() {
 		    brand.className = 'text-overlay';
 		    brand.textContent = 'Brand:';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
@@ -396,7 +403,7 @@ function initPage() {
 		    brand.style.fontSize = fontSize;
 		    brand.style.fontWeight = 'bold';
 		    brand.style.color = color;
-		    brand.style.fontName = 'Arial';   
+		    brand.style.fontFamily = 'Arial';   
 		           
 		    container.appendChild(brand);
 		    
@@ -405,7 +412,7 @@ function initPage() {
 		    brandvalue.className = 'text-overlay';
 		    brandvalue.textContent = 'KeenSen';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
@@ -414,7 +421,7 @@ function initPage() {
 		    brandvalue.style.fontSize = fontSize;
 		    //brand.style.fontWeight = 'bold';
 		    brandvalue.style.color = color;
-		    brandvalue.style.fontName = 'Arial';         
+		    brandvalue.style.fontFamily = 'Arial';         
 		    container.appendChild(brandvalue);
 		            
 			//model
@@ -422,16 +429,16 @@ function initPage() {
 		    model.className = 'text-overlay';
 		    model.textContent = 'Model:';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
-		    model.style.left = '40px';
+		    model.style.left = '38px';
 		    model.style.top = '<%=60  %>px';
 		    model.style.fontSize = fontSize;
 		    model.style.fontWeight = 'bold';
 		    model.style.color = color;
-		    model.style.fontName = 'Arial';         
+		    model.style.fontFamily = 'Arial';         
 		    container.appendChild(model);
 		    
 		    //sn
@@ -439,16 +446,16 @@ function initPage() {
 		    sn.className = 'text-overlay';
 		    sn.textContent = 'S/N:';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
-		    sn.style.left = '65px';
+		    sn.style.left = '70px';
 		    sn.style.top = '<%=110  %>px';
 		    sn.style.fontSize = fontSize;
 		    sn.style.fontWeight = 'bold';
 		    sn.style.color = color;
-		    sn.style.fontName = 'Arial';         
+		    sn.style.fontFamily = 'Arial';         
 		    container.appendChild(sn);
 		    
 		    //qty
@@ -456,7 +463,7 @@ function initPage() {
 		    qty.className = 'text-overlay';
 		    qty.textContent = 'QTY:';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
@@ -465,15 +472,15 @@ function initPage() {
 		    qty.style.fontSize = fontSize;
 		    qty.style.fontWeight = 'bold';
 		    qty.style.color = color;
-		    qty.style.fontName = 'Arial';         
+		    qty.style.fontFamily = 'Arial';         
 		    container.appendChild(qty);
 		    
 		    //qty
 			var qtyvalue = document.createElement('div');
 		    qtyvalue.className = 'text-overlay';
-		    qtyvalue.textContent = '1 pc';
+		    qtyvalue.textContent = '<%=qty %> pc<% if(Integer.valueOf(qty)>1){ %>s<% } %>';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
@@ -482,7 +489,7 @@ function initPage() {
 		    qtyvalue.style.fontSize = fontSize;
 		    //qty.style.fontWeight = 'bold';
 		    qtyvalue.style.color = color;
-		    qtyvalue.style.fontName = 'Arial';         
+		    qtyvalue.style.fontFamily = 'Arial';         
 		    container.appendChild(qtyvalue);
 		    
 		    <% } %>
@@ -509,8 +516,10 @@ function initPage() {
 							format : "CODE128",
 							displayValue : true,
 							fontSize : <%=batchNoFontSize %>,
-							font : 'msyhbd',
+							font : 'Arial',
+							<%if(!"Y".equals(ifPrintNsf)){ %>
 							fontOptions : 'bold',
+							<% } %>
 							textMargin : 0,
 							
 							
@@ -552,9 +561,15 @@ function initPage() {
 					
 					 %>
 					// 创建Nsf元素
+					
+					<% if(isnsf == 1){%>
 		            var nsfElement = document.createElement('div');
 		            nsfElement.className = 'text-overlay';
-		            nsfElement.textContent = 'Certified to NSF/ANSI/CAN 61';
+		             <% if(nsfnum.equals("58")){ %>
+		            nsfElement.textContent = 'Certified to NSF/ANSI <%=nsfnum %>';
+		            <% }else{ %>
+		            nsfElement.textContent = 'Certified to NSF/ANSI/CAN <%=nsfnum %>';
+		            <% } %>
 		            
 		            		            
 		            var fontSize = '12px';
@@ -568,7 +583,7 @@ function initPage() {
 		            nsfElement.style.color = color;
 		            
 		            container.appendChild(nsfElement);
-		    
+		    		<% } %>
 			    
 			    <% } %>
 			    	
@@ -632,10 +647,15 @@ function initPage() {
 				container.appendChild(wetimg);
 				<% } %>
 				
-				<% if(yWetSpan<2000){ %>
+				<% if(yWetSpan<2000 && !"Y".equals(ifPrintNsf)){ %>
 				var wetspan = document.createElement('span');
 				wetspan.className = 'span_a';
 				wetspan.style.position = 'absolute';
+				
+				<%if("Y".equals(ifPrintNsf)){ %>
+				wetspan.className = 'span_aa';
+				
+				<% } %>
 				wetspan.style.left = '<%=xWetSpan %>px';
 				wetspan.style.top = '<%=yWetSpan  %>px';
 				wetspan.textContent = 'WET';
@@ -677,6 +697,11 @@ function initPage() {
 				<% if(yWetSpan<2000){ %>
 				var wetspan = document.createElement('span');
 				wetspan.className = 'span_a';
+				
+				<%if("Y".equals(ifPrintNsf)){ %>
+				wetspan.className = 'span_aa';
+				
+				<% } %>
 				wetspan.style.position = 'absolute';
 				wetspan.style.left = '<%=xWetSpan %>px';
 				wetspan.style.top = '<%=yWetSpan  %>px';

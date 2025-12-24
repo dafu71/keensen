@@ -587,7 +587,7 @@
        decode(t3.thick_is_qualified,'Y','合格','不合格') "thickIsQualifiedName",
        decode(t3.perf_is_qualified,'Y','合格','N','不合格','') "perfIsQualifiedName",
        t3.reserve4 "reserve4",t3.judge_remark "judgeRemark",
-       nvl(T4.title,' ') "title",s.amount "stockAmount"
+       nvl(T4.title,' ') "title",s.amount "stockAmount",t1.remark "remark"
   FROM V_KS_TUMO_ORIGIN2 T1
   left join KS_PROD_DIAPHRAGM_TUMO t3
   on t1.record_id = t3.record_id

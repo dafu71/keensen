@@ -280,7 +280,6 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.onModifySN = function() {
 				return false;
 			}
 
-			
 			if (!Ext.isEmpty(amount) && !Ext.isEmpty(snId)) {// 有图号的
 
 				Ext.Msg.confirm("操作确认", "您确实要更新序列号吗?", function(A) {
@@ -299,22 +298,17 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.onModifySN = function() {
 								if (ret.success) {
 									_this.listPanel.store.reload();
 
-									/*var fname = ret.fname;
-									if (Ext.isEmpty(fname)) {
-										Ext.Msg.alert("系统提示", ret.msg);
-										return
-									} else {
-										if (amount > 0) {
-											if (Ext.isIE) {
-												window
-														.open('/default/deliverynote/seek/down4IE.jsp?fname='
-																+ fname);
-											} else {
-												window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-														+ fname;
-											}
-										}
-									}*/
+									/*
+									 * var fname = ret.fname; if
+									 * (Ext.isEmpty(fname)) {
+									 * Ext.Msg.alert("系统提示", ret.msg); return }
+									 * else { if (amount > 0) { if (Ext.isIE) {
+									 * window
+									 * .open('/default/deliverynote/seek/down4IE.jsp?fname=' +
+									 * fname); } else { window.location.href =
+									 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" +
+									 * fname; } } }
+									 */
 								}
 
 							},
@@ -360,10 +354,14 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.onChooseSingleSn = functi
 			var amount = r.data.amount;
 			var materType = r.data.materType;
 
-			
 			this.choosesingleSnWindow.hide();
 			Ext.Msg.confirm("操作确认", "您确实要更新序列号吗?", function(A) {
 				if (A == "yes") {
+
+					_this.requestMask = _this.requestMask
+							|| new Ext.LoadMask(Ext.getBody(), {
+										msg : "后台正在操作,请稍候!"
+									});
 					Ext.Ajax.request({
 						url : "com.keensen.ump.produce.component.yxorderbase.modifySN.biz.ext",
 						method : "post",
@@ -378,22 +376,16 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.onChooseSingleSn = functi
 							if (ret.success) {
 								_this.listPanel.store.reload();
 
-								/*var fname = ret.fname;
-								if (Ext.isEmpty(fname)) {
-									Ext.Msg.alert("系统提示", ret.msg);
-									return
-								} else {
-									if (amount > 0) {
-										if (Ext.isIE) {
-											window
-													.open('/default/deliverynote/seek/down4IE.jsp?fname='
-															+ fname);
-										} else {
-											window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-													+ fname;
-										}
-									}
-								}*/
+								/*
+								 * var fname = ret.fname; if
+								 * (Ext.isEmpty(fname)) { Ext.Msg.alert("系统提示",
+								 * ret.msg); return } else { if (amount > 0) {
+								 * if (Ext.isIE) { window
+								 * .open('/default/deliverynote/seek/down4IE.jsp?fname=' +
+								 * fname); } else { window.location.href =
+								 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" +
+								 * fname; } } }
+								 */
 							}
 
 						},
@@ -411,4 +403,37 @@ com.keensen.ump.produce.component.YxmaterMgr.prototype.onChooseSingleSn = functi
 		}
 
 	}
+}
+
+com.keensen.ump.produce.component.YxmaterMgr.prototype.onModifyK3 = function() {
+
+	var _this = this;
+	
+	Ext.Msg.confirm("操作确认", "您确实要更新K3库存吗?", function(A) {
+		if (A == "yes") {
+			_this.requestMask = _this.requestMask
+							|| new Ext.LoadMask(Ext.getBody(), {
+										msg : "后台正在操作,请稍候!"
+									});
+			Ext.Ajax.request({
+				url : "com.keensen.ump.produce.component.yxorderbase.updateMconfirmK3.biz.ext",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						_this.listPanel.store.reload();
+
+					}
+
+				},
+				failure : function(resp, options) {
+					// var ret = Ext.decode(resp.responseText);
+					Ext.MessageBox.alert('失败', '请求超时或网络故障');
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+		}
+	})
 }

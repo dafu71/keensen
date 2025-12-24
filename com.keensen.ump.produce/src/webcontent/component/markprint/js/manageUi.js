@@ -40,6 +40,17 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					fields : ['code', 'name'],
 					data : [['Y', '是'], ['N', '否']]
 				});
+
+		this.mptypeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['NF', 'NF'], ['RO', 'RO']]
+				});
+
+		this.goodsNameStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['8寸', '8寸'], ['4寸', '4寸'], ['2.5寸', '2.5寸'],
+							['1.8-3.2寸', '1.8-3.2寸']]
+				});
 	}
 
 	this.initQueryPanel = function() {
@@ -85,7 +96,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/specName',
 								anchor : '100%',
-								fieldLabel : '贴牌型号'
+								fieldLabel : '唛头型号'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/remark',
@@ -119,7 +130,32 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 										this.reset()
 									}
 								}
-							}]
+							}, {
+								xtype : 'textfield',
+								name : 'condition/controlCode',
+								anchor : '100%',
+								fieldLabel : '唛头受控编号'
+							}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否共版',
+						dataIndex : 'param0',
+						ref : '../param0',
+						hiddenName : 'condition/param0',
+						anchor : '100%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.queryPanel.param0.reset()
+							}
+						}
+					}]
 				});
 		/*
 		 * this.queryPanel.addButton({ text : "导出", scope : this, iconCls :
@@ -202,6 +238,16 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						dataIndex : 'templateName',
 						header : '唛头图纸编号'
 					}, {
+						dataIndex : 'param0',
+						header : '是否共版',
+						renderer : function(value, metaData, rec, rowIndex,
+								colIndex, store, view) {
+							return value == 'Y'?'是':'否';
+						}
+					}, {
+						dataIndex : 'controlCode',
+						header : '唛头受控编号'
+					}, {
 						dataIndex : 'url',
 						header : '唛头背景图',
 						renderer : function(value, metaData, rec, rowIndex,
@@ -240,25 +286,22 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 								colIndex, store, view) {
 							if (!Ext.isEmpty(value)) {
 
-							return '<img src="'
-									+ markRootUrl
-									+ value
-									+ '?ver='
-									+ rec.data.id
-									+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
+								return '<img src="'
+										+ markRootUrl
+										+ value
+										+ '?ver='
+										+ rec.data.id
+										+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />';
 
-							 }
+							}
 						}
-					}, {
-						dataIndex : 'code',
-						header : '模板编号',
-						renderer : function(v, m, r, i) {
-							var codeRemark = r.data.codeRemark
-							return '模板' + v + '-' + codeRemark;
-						}
-					}, {
+					}/*
+						 * , { dataIndex : 'code', header : '模板编号', renderer :
+						 * function(v, m, r, i) { var codeRemark =
+						 * r.data.codeRemark return '模板' + v + '-' + codeRemark; } }
+						 */, {
 						dataIndex : 'specName',
-						header : '贴牌型号'
+						header : '唛头型号'
 					}, {
 						dataIndex : 'reserve2',
 						header : '测试照片',
@@ -316,6 +359,10 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 							name : 'status'
 						}, {
 							name : 'stampUrl'
+						}, {
+							name : 'controlCode'
+						}, {
+							name : 'param0'
 						}]
 			})
 		})
@@ -404,6 +451,17 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						height : '5',
 						colspan : 2
 					}, {
+						xtype : 'textfield',
+						name : 'entity/controlCode',
+						allowBlank : false,
+						fieldLabel : '唛头受控编号',
+						anchor : '95%',
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 2
+					}, {
 						xtype : 'trigger',
 						name : 'url',
 						fieldLabel : '唛头背景图',
@@ -482,7 +540,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						allowBlank : true,
 						fieldLabel : '备注说明',
 						anchor : '95%',
-						colspan :1
+						colspan : 1
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">台账</p>',
@@ -512,8 +570,11 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'entity/specName',
-						allowBlank : false,
-						fieldLabel : '贴牌型号',
+						ref : '../specName',
+						// allowBlank : false,
+						regex : /^[^\u4e00-\u9fa5]+$/,
+						regexText : "不合法的格式",
+						fieldLabel : '唛头型号',
 						anchor : '95%',
 						colspan : 1
 					}, {
@@ -522,6 +583,30 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						fieldLabel : '图纸尺寸',
 						anchor : '95%',
 						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否共版',
+						allowBlank : false,
+						dataIndex : 'param0',
+						ref : '../param0',
+						hiddenName : 'entity/param0',
+						anchor : '95%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.inputPanel.param0.reset()
+							}
+						}
 					}, {
 						xtype : 'hidden',
 						dataIndex : 'url',
@@ -572,7 +657,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 		var _this = this;
 
 		this.editPanel = this.editPanel || new Ext.fn.EditPanel({
-			height : 660,
+			height : 690,
 			region : 'center',
 			// baseCls : "x-panel",
 			pgrid : this.listPanel,
@@ -594,6 +679,19 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						height : '5',
+						colspan : 2
+					}, {
+						xtype : 'textfield',
+						name : 'entity/controlCode',
+						dataIndex : 'controlCode',
+						allowBlank : false,
+						// readOnly : true,
+						fieldLabel : '唛头受控编号',
+						anchor : '95%',
+						colspan : 4
+					}, {
+						xtype : 'displayfield',
+						height : '5',
 						colspan : 4
 					}, {
 						xtype : 'trigger',
@@ -606,7 +704,10 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hideTrigger : false,
 						scope : this,
 						onTriggerClick : function() {
-							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu' || uid == 'KS01020' || uid == 'KS01490' || uid == 'KS01473'||'KS00296' )
+							if (uid == 'LHY' || uid == 'KS00307'
+									|| uid == 'dafu' || uid == 'KS01020'
+									|| uid == 'KS01490' || uid == 'KS01473'
+									|| 'KS00296')
 								_this.onUploadWindowShow(3);
 						}
 					}, {
@@ -624,7 +725,10 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hideTrigger : false,
 						scope : this,
 						onTriggerClick : function() {
-							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu' || uid == 'KS01020' || uid == 'KS01490' || uid == 'KS01473' || 'KS00296')
+							if (uid == 'LHY' || uid == 'KS00307'
+									|| uid == 'dafu' || uid == 'KS01020'
+									|| uid == 'KS01490' || uid == 'KS01473'
+									|| 'KS00296')
 								_this.onUploadWindowShow(4);
 						}
 					}, {
@@ -642,7 +746,10 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						hideTrigger : false,
 						scope : this,
 						onTriggerClick : function() {
-							if(uid == 'LHY' || uid == 'KS00307' || uid == 'dafu' || uid == 'KS01020' || uid == 'KS01490' || uid == 'KS01473' || 'KS00296' )
+							if (uid == 'LHY' || uid == 'KS00307'
+									|| uid == 'dafu' || uid == 'KS01020'
+									|| uid == 'KS01490' || uid == 'KS01473'
+									|| 'KS00296')
 								_this.onUploadWindowShow(8);
 						}
 					}, {
@@ -711,8 +818,11 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						xtype : 'textfield',
 						name : 'entity/specName',
 						dataIndex : 'specName',
-						allowBlank : false,
-						fieldLabel : '贴牌型号',
+						ref : '../specName',
+						// allowBlank : false,
+						regex : /^[^\u4e00-\u9fa5]+$/,
+						regexText : "不合法的格式",
+						fieldLabel : '唛头型号',
 						anchor : '95%',
 						colspan : 2
 					}, {
@@ -722,6 +832,30 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						fieldLabel : '标签尺寸',
 						anchor : '95%',
 						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否共版',
+						dataIndex : 'param0',
+						ref : '../param0',
+						hiddenName : 'entity/param0',
+						anchor : '95%',
+						colspan : 2,
+						emptyText : '--请选择--',
+						editable : false,
+						allowBlank : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.param0.reset()
+							}
+						}
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">模板参数</p>',
@@ -950,7 +1084,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					}, {
 						xtype : 'combobox',
 						mode : 'local',
-						fieldLabel : '是否打印<br>NSF',
+						fieldLabel : '是否新版<br>唛头打印',
 						dataIndex : 'reserve3',
 						ref : '../reserve3',
 						hiddenName : 'entity/reserve3',
@@ -1026,7 +1160,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 					autoScroll : false,
 					modal : true,
 					width : 800,
-					height : 650,
+					height : 700,
 					layout : 'border',
 					items : [this.editPanel]
 
@@ -1123,6 +1257,29 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 											}
 										}))
 							}, {
+								dataIndex : 'controlCode',
+								header : '标签受控编号',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec4ChooseLabel.data['id'];
+													_this.saveLabel(id,
+															'controlCode',
+															newValue, oldValue);
+												}
+											}
+										}))
+							}, {
 								dataIndex : 'materCode',
 								header : '物料号',
 								css : 'background:#c7c7c7;',
@@ -1169,8 +1326,34 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 											}
 										}))
 							}, {
+								dataIndex : 'mptype',
+								header : '膜片种类',
+								// hidden : true,
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											allowBlank : false,
+											regex : /^NF$|^RO$/,
+											regexText : "请输入NF或者RO",
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec4ChooseLabel.data['id'];
+													_this.saveLabel(id,
+															'mptype', newValue,
+															oldValue);
+												}
+											}
+										}))
+							}, {
 								dataIndex : 'specName',
-								header : '贴牌型号',
+								header : '标签型号',
 								css : 'background:#c7c7c7;',
 								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 										{
@@ -1267,6 +1450,12 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 									name : 'url'
 								}, {
 									name : 'status'
+								}, {
+									name : 'controlCode'
+								}, {
+									name : 'goodsName'
+								}, {
+									name : 'mptype'
 								}]
 					})
 				})
@@ -1298,7 +1487,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 
 		this.queryPanel4ChooseLable = this.queryPanel4ChooseLable
 				|| new Ext.fn.QueryPanel({
-							height : 80,
+							height : 110,
 							columns : 4,
 							border : true,
 							region : 'north',
@@ -1318,7 +1507,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 										xtype : 'combobox',
 										forceSelection : true,
 										mode : 'local',
-										fieldLabel : '贴牌型号',
+										fieldLabel : '标签型号',
 										// ref : '../../specNameLabel',
 										hiddenName : 'condition/specName',
 										anchor : '100%',
@@ -1339,7 +1528,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 										 */, {
 										xtype : 'textfield',
 										mode : 'local',
-										fieldLabel : '%-贴牌型号-%',
+										fieldLabel : '%-标签型号-%',
 										ref : '../specNameLabel',
 										name : 'condition/specName2',
 										anchor : '100%',
@@ -1379,6 +1568,37 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 												this.reset()
 											}
 										}
+									}, {
+										xtype : 'displayfield',
+										height : 5,
+										colspan : 4
+									}, {
+										xtype : 'textfield',
+										name : 'condition/controlCode',
+										anchor : '100%',
+										fieldLabel : '标签受控编号'
+									}, {
+										xtype : 'textfield',
+										mode : 'local',
+										fieldLabel : '%-标签LOGO-%',
+										ref : '../logo2',
+										name : 'condition/logo2',
+										anchor : '100%',
+										colspan : 1
+									}, {
+										xtype : 'combobox',
+										forceSelection : true,
+										mode : 'local',
+										fieldLabel : '膜片种类',
+										// ref : '../../specNameLabel',
+										hiddenName : 'condition/mptype',
+										anchor : '100%',
+										colspan : 1,
+										emptyText : '',
+										editable : false,
+										store : this.mptypeStore,
+										displayField : "name",
+										valueField : "code"
 									}]
 						})
 
@@ -1443,7 +1663,19 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 									ref : '../../drawingCode',
 									name : 'entity/drawingCode',
 									allowBlank : false,
-									fieldLabel : '图纸编号',
+									fieldLabel : '标签图纸编号',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									ref : '../../controlCode',
+									name : 'entity/controlCode',
+									allowBlank : false,
+									fieldLabel : '标签受控编号',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -1474,7 +1706,7 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 									ref : '../../specName',
 									name : 'entity/specName',
 									allowBlank : false,
-									fieldLabel : '贴牌型号',
+									fieldLabel : '标签型号',
 									anchor : '95%',
 									colspan : 1
 								}, {
@@ -1507,6 +1739,27 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 									name : 'entity/logo',
 									allowBlank : false,
 									fieldLabel : '标签LOGO',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'combobox',
+									forceSelection : true,
+									allowBlank : false,
+									mode : 'local',
+									fieldLabel : '膜片种类',
+									// ref : '../../specNameLabel',
+									hiddenName : 'entity/mptype',
+									anchor : '100%',
+									colspan : 1,
+									emptyText : '',
+									editable : false,
+									store : this.mptypeStore,
+									displayField : "name",
+									valueField : "code",
 									anchor : '95%',
 									colspan : 1
 								}, {

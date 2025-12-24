@@ -19,26 +19,76 @@
        t1.mater_code as "materCode",
 		t1.batch_no as "batchNo",
 		t1.class_name as "className",
-		t1.prod_spec_name as "prodSpecName",
+		t1.prod_spec_name 
+		<!--pms.mater_spec_name-->
+		as "prodSpecName",
 		t1.orig_spec_name as "origSpecName",
 		t1.amount as "amount",
-		t1.prod_type as "prodType",
+		<!--t1.prod_type -->
+		DECODE(wt.JUANMO_BATCH_ID,NULL,'干','湿') 
+		as "prodType",
 		t1.storage as "storage",
 		t1.position as "position",
 		t1.prod_state as "prodState",
 		t1.remark as "remark",
-		substr(trim(t1.Store_Time),1,10) as "storeTime",
+		<!--substr(trim(t1.Store_Time),1,10)--><!--to_char(chk.store_Time,'YYYY-MM-DD HH24:MI:SS') "storeTime",--> 
+		to_char(jm.create_dt,'YYYY-MM-DD') "storeTime",
 		t1.apperance as "apperance",
-		t1.lid as "lid",
-		t1.tape as "tape",
-		t1.f_gpd as "fGpd",
-		t1.f_salt as "fSalt",
-		t1.F_CHECK_TM as "fCheckTm",
-		t1.r_gpd as "rGpd",
-		t1.r_SALT as "rSalt",
-		t1.r_CHECK_TM as "rCheckTm"
+		chk.lid as "lid",
+		chk.label as "tape",
+		wt.f_gpd as "fGpd",
+		wt.f_salt as "fSalt",
+		wt.F_CHECK_TM as "fCheckTm",
+		wt.r_gpd as "rGpd",
+		wt.r_SALT as "rSalt",
+		wt.r_CHECK_TM as "rCheckTm"，
+		qj.order_no "orderNo"
 
   FROM KS_COMPONENT_K3_STOCK t1
+  LEFT JOIN qinsen.inst_qijian qj
+ON qj.batch_no=t1.batch_no
+  LEFT JOIN qinsen.inst_juanmo_main jm
+ON qj.juanmo_batch_id = jm.record_id
+
+  LEFT JOIN qinsen.para_mater_spec pms
+ON pms.mater_spec_id = qj.prod_spec_id
+
+  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+               FROM (select JUANMO_BATCH_ID from QINSEN.INST_WATER_TEST
+               union all
+               select JUANMO_BATCH_ID from KS_INST_WATER_TEST
+               
+               ))  wt
+          on wt.JUANMO_BATCH_ID = qj.JUANMO_BATCH_ID
+
+  left join (SELECT t1.batch_no,nvl(dct.dictname,t2.lid) lid,
+	nvl(dct2.dictname,t2.label) label,
+	t2.stock_confirm_time store_Time
+	FROM
+	(select t.batch_no,MAX(t.relation_id) head_id
+	 from KS_COMPONENT_CHECK_LIST t
+	 GROUP BY t.batch_no) t1
+	 LEFT JOIN KS_COMPONENT_CHECK_head t2
+	 ON t2.id = t1.head_id
+	 LEFT JOIN (select * from EOS_DICT_ENTRY t
+	WHERE t.dicttypeid = 'KS_PROD_LID') dct
+	ON dct.dictid = t2.lid
+	 LEFT JOIN (select * from EOS_DICT_ENTRY t
+	WHERE t.dicttypeid = 'KS_COMPONENT_INDUSTRY_LABEL') dct2
+	ON dct2.dictid = t2.label) chk
+	on chk.batch_no = t1.batch_no 	
+	
+	left join (SELECT t2.batch_no,t1.f_gpd,
+    t1.f_salt,
+    t1.F_CHECK_TM,
+    t1.r_gpd,
+    t1.r_SALT,
+		t1.r_CHECK_TM 
+ from qinsen.inst_water_test t1
+ LEFT JOIN qinsen.inst_qijian t2
+ ON t1.juanmo_batch_id=t2.juanmo_batch_id) wt
+ on wt.batch_no = t1.batch_no
+	
   where 1=1
  and nvl(t1.status,1) != 0
  

@@ -25,6 +25,10 @@ com.keensen.ump.produce.component.produce.CutMgr.prototype.initEvent = function(
 
 com.keensen.ump.produce.component.produce.CutMgr.prototype.onAdd = function() {
 	this.inputWindow.show();
+	if(ip == '172.16.10.65'){
+		this.inputWindow.machineCode.setValue('X1');
+	}
+	
 
 }
 

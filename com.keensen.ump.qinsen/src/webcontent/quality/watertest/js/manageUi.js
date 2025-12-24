@@ -8,6 +8,8 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 
 		this.initTrialPanel();
 		this.initProdPanel();
+		
+		this.initDisinfectListWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -293,12 +295,22 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						iconCls : 'icon-application_edit',
 						hidden : gyyFlag != 1,
 						handler : this.onRemark
+					}, '->', {
+						text : '消毒',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onDisinfect
+					}, '-', {
+						text : '消毒记录',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onViewDisinfect
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.watertest.deleteWatertest.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 				header : '量产判定',
-				hidden:true,
+				hidden : true,
 				width : 70,
 				dataIndex : 'isBatchQualifiedName',
 				renderer : function(value, metaData, rec, rowIndex, colIndex,
@@ -337,6 +349,10 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				header : '元件类型',
 				width : 120,
 				dataIndex : 'hpmc'
+			}, {
+				header : '最新消毒时间',
+				width : 120,
+				dataIndex : 'disinfectTime'
 			}, {
 				header : '工艺员备注 ',
 				width : 120,
@@ -460,6 +476,8 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				baseParams : {},
 				fields : [{
 							name : 'recordId'
+						}, {
+							name : 'disinfectTime'
 						}, {
 							name : 'juanmoBatchId'
 						}, {
@@ -1350,5 +1368,87 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						}]
 					}]
 				});
+	}
+
+	this.initDisinfectListWindow = function() {
+
+		var disinfectSelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.queryDisinfectPanel = this.queryDisinfectPanel
+				|| new Ext.fn.QueryPanel({
+							height : 80,
+							columns : 3,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										ref:'../jmBatchNo',
+										name : 'condition/jmBatchNo',
+										anchor : '100%',
+										fieldLabel : '卷膜序号'
+									},{
+										xtype : 'hidden',
+										ref:'../juanmoBatchId',
+										name : 'condition/juanmoBatchId'
+									}]
+						});
+
+		this.disinfectListPanel = this.disinfectListPanel
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					selModel : disinfectSelModel,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(), disinfectSelModel, {
+								dataIndex : 'jmBatchNo',
+								header : '卷膜序号'
+							}, {
+								dataIndex : 'createTime',
+								header : '消毒时间'
+							}, {
+								dataIndex : 'createName',
+								header : '消毒记录人'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.watertest.queryDisinfect.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {},
+						fields : [{
+									name : 'jmBatchNo'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'createName'
+								}]
+					})
+				})
+
+		this.disinfectWindow = this.disinfectWindow
+				|| new Ext.Window({
+							title : '消毒',
+							resizable : true,
+							minimizable : false,
+							maximizable : true,
+							closeAction : "hide",
+							buttonAlign : "center",
+							autoScroll : false,
+							modal : true,
+							width : 800,
+							height : 600,
+							layout : 'border',
+							items : [this.queryDisinfectPanel,
+									this.disinfectListPanel]
+
+						});
 	}
 }

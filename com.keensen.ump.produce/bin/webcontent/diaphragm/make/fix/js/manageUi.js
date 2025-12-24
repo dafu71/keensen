@@ -727,6 +727,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						}, {
 							xtype : 'textfield',
 							allowBlank : false,
+							value : uname,
+							readOnly:true,
 							name : 'entity/recorder',
 							fieldLabel : '录入人',
 							anchor : '95%',
@@ -993,6 +995,8 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						}, {
 							xtype : 'textfield',
 							allowBlank : false,
+							value : uname,
+							readOnly:true,
 							name : 'entity/recorder2',
 							fieldLabel : '录入人',
 							anchor : '95%',

@@ -26,7 +26,8 @@
   	}
   	if(roleId.toString().indexOf("10001461")!=-1 || uid.equals("sysadmin")){
 		invalid="1";
-  	}	
+  	}
+  	String uname = userObject.getUserName();	
 %>
 <html>
 <!-- 
@@ -63,6 +64,7 @@
   var ply = "<%=ply %>";
   var invalid = "<%=invalid %>";
   var uid = "<%=uid %>";
+   var uname = '<%=uname %>';
   
   var c41invalidtotal = Ext.id();
   var opt = '';

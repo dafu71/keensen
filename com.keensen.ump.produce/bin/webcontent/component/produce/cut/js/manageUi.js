@@ -459,6 +459,9 @@ com.keensen.ump.produce.component.produce.CutMgr = function() {
 				}, {
 					xtype : 'combobox',
 					allowBlank : false,
+					
+					readOnly:true,
+					
 					mode : 'local',
 					fieldLabel : '生产机台号',
 					ref : '../../machineCode',

@@ -9,7 +9,9 @@
 	       T1.CODE          AS "code",
 	       T2.remark        as "codeRemark",
 	       t3.spec_name "specName",t1.reserve5 "reserve5",t1.reserve2 "reserve2",
-	       nvl(t1.status,1) "status"
+	       nvl(t1.status,1) "status",
+	       t1.control_code "controlCode",
+	       t1.param0 "param0"
 	  FROM KS_COMPONENT_MARK_TEMPLATE T1
 	  left join KS_COMPONENT_MARK_CODE t2
 	  on t1.code = t2.code
@@ -17,6 +19,21 @@
 	  on t3.drawing_code = T1.TEMPLATE_NAME
 	
 	 WHERE 1 = 1  
+	 
+	 <isNotNull prepend="and" property="param0"> 
+		       t1.param0 = #param0#
+	</isNotNull>
+	 
+	 <isNotNull prepend="and" property="controlCode"> 
+		       T1.control_Code like '%' || #controlCode# || '%'
+	</isNotNull>
+	 
+	 <isNotNull prepend="" property="flag"> 
+	<!-- 
+	and (T1.TEMPLATE_NAME in ('KS-17-M0223-B','KS-17-M0224-B')
+	 OR( T1.TEMPLATE_NAME not like '%M0223%'
+	 and T1.TEMPLATE_NAME not like '%M0224%'))-->
+	 </isNotNull>
 	 
 	  <isNotNull prepend="and" property="batchNo"> 
 		       t1.TEMPLATE_NAME in(
@@ -141,6 +158,11 @@
             ON T5.TEMPLATE_NAME = T4.TEMPLATE_NAME
           left join KS_COMPONENT_YXORDER_BASE yb
           on yb.id = t4.base_id
+          
+          
+          
+          
+          
          where 1=1
          
          
@@ -201,8 +223,8 @@
 		t1.X_DAY_CODE_SPAN as "xDayCodeSpan",
 		t1.PRINT_DELAY_TIME as "printDelayTime",
        t1.reserve1 as "reserve1",
-       t1.reserve3 as "reserve3",t1.reserve4 as "reserve4",t1.reserve5 as "reserve5"
-       
+       t1.reserve3 as "reserve3",t1.reserve4 as "reserve4",t1.reserve5 as "reserve5",
+       t1.isnsf "isnsf"
        
        
   FROM (
@@ -239,7 +261,10 @@
                 t7.max_print_date,
                 nvl(t4.spec_name_mark,nvl(yb.spec_name_mark,t4.MATER_SPEC_NAME2)) spec_name_mark,
                 
-                rec.dry_wet rec_dry_wet
+                rec.dry_wet rec_dry_wet,
+                
+                decode(nsf.label_spec_name,null,0,1) isnsf
+                
           FROM QINSEN.INST_QIJIAN T1
           
           left join 
@@ -266,6 +291,13 @@
             ON T1.JUANMO_BATCH_ID = T2.RECORD_ID
           LEFT JOIN QINSEN.PARA_MATER_SPEC T3
             ON T3.MATER_SPEC_ID = T1.PROD_SPEC_ID
+          
+          <!--left join (select DISTINCT t.prod_spec_name from KS_QUALITY_NSF_LIST t
+			WHERE t.prod_spec_name IS NOT NULL)  nsf
+			on t3.mater_spec_name = nsf.prod_spec_name-->
+			
+			
+          
           LEFT JOIN (SELECT MATER_SPEC_ID,
                             ORDER_NO,
                             MAX(TEMPLATE_NAME) TEMPLATE_NAME,
@@ -276,6 +308,7 @@
                       GROUP BY ORDER_NO, MATER_SPEC_ID) T4
             ON T4.ORDER_NO = T1.ORDER_NO
            AND T4.MATER_SPEC_ID = T1.PROD_SPEC_ID
+           
           LEFT JOIN KS_COMPONENT_MARK_TEMPLATE T5
             ON T5.TEMPLATE_NAME = T4.TEMPLATE_NAME
           LEFT JOIN (SELECT T.PROD_BATCH_NO, COUNT(*) CNT,MAX(t.create_time) max_print_date
@@ -285,6 +318,10 @@
             
             left join KS_COMPONENT_YXORDER_BASE yb
           on yb.id = t4.base_id
+          
+          left join (select DISTINCT t.label_spec_name from KS_QUALITY_NSF_LIST t
+			WHERE t.prod_spec_name IS NOT NULL)  nsf
+			on nvl(t4.spec_name_mark,nvl(yb.spec_Name_Mark,t4.mater_spec_name2)) = nsf.label_spec_name
           
             where 1=1
             and T1.BATCH_NO is not null
@@ -316,12 +353,12 @@
 		      AND t1.template_name=#templateName#
 		</isNotNull>
 		<isNotNull prepend="" property="testView"> 
-		       AND case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
+		       AND case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(t1.JUANMO_BATCH_ID2, NULL, '干', '湿'))
        			then '是' else '否' end  =  '是'
 		</isNotNull>
 		
 		<isNotNull prepend="" property="ifPrint"> 
-		       AND case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(T1.WATER_BATCH_ID, NULL, '干', '湿'))
+		       AND case when (T1.TEMPLATE_NAME IS NOT NULL) and (T1.DRY_WET = '干/湿' or T1.DRY_WET = DECODE(t1.JUANMO_BATCH_ID2, NULL, '干', '湿'))
        			then 'Y' else 'N' end  =  #ifPrint#
 		</isNotNull>
 		

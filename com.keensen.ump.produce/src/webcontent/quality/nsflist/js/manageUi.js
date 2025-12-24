@@ -36,12 +36,12 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/labelSpecName',
 								anchor : '95%',
-								fieldLabel : '标签元件型号 '
+								fieldLabel : '标签型号 '
 							}, {
 								xtype : 'textfield',
 								name : 'condition/prodSpecName',
 								anchor : '95%',
-								fieldLabel : '我司元件型号 '
+								fieldLabel : '卷膜型号 '
 							}]
 				});
 
@@ -103,10 +103,10 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 						header : '品牌'
 					}, {
 						dataIndex : 'labelSpecName',
-						header : '标签元件型号'
+						header : '标签型号'
 					}, {
 						dataIndex : 'prodSpecName',
-						header : '对应我司元件型号'
+						header : '卷膜型号'
 					}, {
 						dataIndex : 'reserve1',
 						header : '认证标准'
@@ -195,7 +195,7 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 							name : 'entity/labelSpecName',
 							allowBlank : false,
 							ref : '../../labelSpecName',
-							fieldLabel : '标签元件型号',
+							fieldLabel : '标签型号',
 							anchor : '75%',
 							colspan : 2
 						}, {
@@ -207,7 +207,7 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 							name : 'entity/prodSpecName',
 							allowBlank : true,
 							ref : '../../prodSpecName',
-							fieldLabel : '我司元件型号',
+							fieldLabel : '卷膜型号',
 							anchor : '75%',
 							colspan : 2
 						}, {
@@ -290,7 +290,7 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 							dataIndex : 'labelSpecName',
 							allowBlank : false,
 							ref : '../../labelSpecName',
-							fieldLabel : '标签元件型号',
+							fieldLabel : '标签型号',
 							anchor : '75%',
 							colspan : 2
 						}, {
@@ -303,7 +303,7 @@ com.keensen.ump.produce.quality.NsfListMgr = function() {
 							dataIndex : 'prodSpecName',
 							allowBlank : true,
 							ref : '../../prodSpecName',
-							fieldLabel : '我司元件型号',
+							fieldLabel : '卷膜型号',
 							anchor : '75%',
 							colspan : 2
 						}, {

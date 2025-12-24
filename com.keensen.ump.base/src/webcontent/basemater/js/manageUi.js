@@ -17,7 +17,7 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 90,
+					height : 110,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -39,6 +39,14 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/specName',
 								fieldLabel : '规格型号'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'textfield',
+								name : 'condition/controlCode',
+								fieldLabel : '%-受控编号-%'
 							}]
 				});
 
@@ -47,7 +55,7 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 					// disabled : allRight != '1',
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,
+					hidden:uid != 'dafu',
 					handler : this.exportExcel
 				});
 
@@ -68,15 +76,18 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 			tbar : [{
 						text : '新增',
 						scope : this,
+						hidden:uid != 'dafu' && uid !='KS01147',
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
 					}, '-', {
 						text : '修改',
+						hidden:uid != 'dafu' && uid !='KS01147',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',
+						hidden:uid != 'dafu' && uid !='KS01147',
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
@@ -97,6 +108,14 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 						header : '物料号',
 						sortable : true
 					}, {
+						dataIndex : 'controlCode',
+						header : '受控号',
+						sortable : true
+					}, {
+						dataIndex : 'jmSpecName',
+						header : '标签型号',
+						sortable : true
+					}, {
 						dataIndex : 'materName',
 						header : '名称',
 						sortable : true
@@ -107,6 +126,14 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 					}, {
 						dataIndex : 'unit',
 						header : '单位',
+						sortable : true
+					}, {
+						dataIndex : 'updateName',
+						header : '维护人',
+						sortable : true
+					}, {
+						dataIndex : 'updateTime',
+						header : '维护时间',
 						sortable : true
 					}],
 			store : new Ext.data.JsonStore({
@@ -129,6 +156,14 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 							name : 'unit'
 						}, {
 							name : 'id'
+						}, {
+							name : 'controlCode'
+						}, {
+							name : 'jmSpecName'
+						}, {
+							name : 'updateTime'
+						}, {
+							name : 'updateName'
 						}]
 			})
 		})
@@ -196,6 +231,26 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 									xtype : 'textfield',
 									name : 'entity/unit',
 									fieldLabel : '单位',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									name : 'entity/controlCode',
+									fieldLabel : '受控号',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									name : 'entity/jmSpecName',
+									fieldLabel : '标签型号',
 									anchor : '95%',
 									colspan : 1
 								}]
@@ -273,6 +328,28 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 									colspan : 1,
 									dataIndex : 'unit'
 								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									name : 'entity/controlCode',
+									fieldLabel : '受控号',
+									anchor : '95%',
+									colspan : 1,
+									dataIndex : 'controlCode'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									name : 'entity/jmSpecName',
+									fieldLabel : '标签型号',
+									anchor : '95%',
+									colspan : 1,
+									dataIndex : 'jmSpecName'
+								}, {
 									xtype : 'hidden',
 									name : 'entity/id',
 									dataIndex : 'id'
@@ -344,6 +421,22 @@ com.keensen.ump.base.BaseMaterMgr = function() {
 									fieldLabel : '单位',
 									anchor : '95%',
 									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									fieldLabel : '受控号',
+									anchor : '95%',
+									colspan : 1,
+									dataIndex : 'controlCode'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									fieldLabel : '标签型号',
+									anchor : '95%',
+									colspan : 1,
+									dataIndex : 'jmSpecName'
 								}, {
 									xtype : 'hidden',
 									dataIndex : 'id'

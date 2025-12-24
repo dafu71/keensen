@@ -1,7 +1,7 @@
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = function() {
 
 	var _this = this;
-	
+
 	this.getRight();
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -53,7 +53,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 					}
 
 				}
-				
+
 				if (this.opt == 'storageconfirm') {
 
 					if (orderStatus == '库存确认') {
@@ -65,7 +65,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 					}
 
 				}
-				
+
 				if (this.opt == 'updateamount') {
 					this.updateAmountWindow.show();
 					this.updateAmountWindow.loadData(cell);
@@ -77,31 +77,34 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 			'beforeSave', function() {
 				var orderStatus = this.planConfirmWindow.orderStatus.getValue();
 				if (!Ext.isEmpty(orderStatus) && orderStatus == '正式发布') {
-					var specId = this.planConfirmWindow.specId.getValue();
+					/*var specId = this.planConfirmWindow.specId.getValue();
 					if (Ext.isEmpty(specId)) {
 						Ext.Msg.alert('系统提示', '请选择膜片生产型号');
 						return false;
-					}
+					}*/
 				}
 
 			}, this);
-			
-	this.updateAmountWindow.activeItem.mon(this.updateAmountWindow.activeItem, 'afterload',
-			function(win, data) {
+
+	this.updateAmountWindow.activeItem.mon(this.updateAmountWindow.activeItem,
+			'afterload', function(win, data) {
 
 				var amount = data.amount;
 				this.updateAmountWindow.ext12.setMaxValue(amount);
 
 			}, this);
 
-}
+	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterload',
+			function(win, data) {
 
+			}, this);
+
+}
 
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
 }
 
-	
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onSingleSelect = function() {
 	var C = this.listPanel.getSelectionModel().getSelections();
 	if (C.length > 1) {
@@ -113,7 +116,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onSingleSelect =
 // 模板文件下载
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onDown = function() {
 
-	var fname = "ks_yxorder_import.xls";
+	var fname = "ks_dIaphragm_yxorderbase_import.xls";
 	window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
 			+ fname;
 }
@@ -199,7 +202,6 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onUpdateAmount =
 	}
 }
 
-
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onView = function() {
 	var B = this.listPanel.getSelectionModel().getSelections();
 	if (B && B.length != 0) {
@@ -238,24 +240,31 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onStorageConfirm
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.getRight = function() {
 	var _this = this;
 	Ext.Ajax.request({
-		url : "produce/diaphragm/ship/yxorderbase/js/right.json",
-		method : "post",
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			var data = ret.data;
-			var yx = data[0].yx;			
-			var jhy = data[0].jhy;
-			var kc = data[0].kc;
-			
-			_this.listPanel.addOrderBtn.setVisible(yx.indexOf(uid) != -1);
-			_this.listPanel.updateAmountBtn.setVisible(yx.indexOf(uid) != -1);
-			_this.listPanel.confirmBtn.setVisible(jhy.indexOf(uid) != -1);
-			_this.listPanel.storageConfirmBtn.setVisible(jhy.indexOf(uid) != -1 || kc.indexOf(uid) != -1);
-			_this.listPanel.delBtn.setVisible(jhy.indexOf(uid) != -1);
-			
-			Ext.getCmp(importExcelBtnId).setVisible(jhy.indexOf(uid) != -1 || yx.indexOf(uid) != -1);
-		},
-		callback : function() {
-		}
-	})
+				url : "produce/diaphragm/ship/yxorderbase/js/right.json",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					var data = ret.data;
+					var yx = data[0].yx;
+					var jhy = data[0].jhy;
+					var kc = data[0].kc;
+
+					_this.listPanel.addOrderBtn
+							.setVisible(yx.indexOf(uid) != -1);
+					_this.listPanel.updateAmountBtn
+							.setVisible(yx.indexOf(uid) != -1);
+					_this.listPanel.confirmBtn
+							.setVisible(jhy.indexOf(uid) != -1);
+					_this.listPanel.storageConfirmBtn.setVisible(jhy
+							.indexOf(uid) != -1
+							|| kc.indexOf(uid) != -1);
+					_this.listPanel.delBtn.setVisible(jhy.indexOf(uid) != -1);
+
+					Ext.getCmp(importExcelBtnId)
+							.setVisible(jhy.indexOf(uid) != -1
+									|| yx.indexOf(uid) != -1);
+				},
+				callback : function() {
+				}
+			})
 }

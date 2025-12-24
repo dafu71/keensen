@@ -12,73 +12,73 @@ com.keensen.ump.produce.component.markprintlistMgr.prototype.initEvent = functio
 					}
 				});
 	}, this);
-	
-	this.viewOrderPanel.mon(this.viewOrderPanel, 'afterload',
-			function(win, data) {
 
-				if (Ext.isEmpty(data)) {
-					
-				} else {
+	this.viewOrderPanel.mon(this.viewOrderPanel, 'afterload', function(win,
+			data) {
 
-					this.viewOrderPanel.picturePanel.update('');
-					if (!Ext.isEmpty(data.labelUrl)) {
-						var labelUrl = labelRootUrl;
-						labelUrl += data.labelUrl;
+		if (Ext.isEmpty(data)) {
 
-						labelUrl = '<img title="单击查看完整图片" src="'
-								+ labelUrl
-								+ '?ver='
-								+ data.orderNo
-								+ '" onclick= "javascript:window.open('
-								+ "'"
-								+ labelUrl
-								+ "'"
-								+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
+		} else {
 
-						this.viewOrderPanel.picturePanel.update(labelUrl);
-					}
-					
-					this.viewOrderPanel.picturePanel4firsrMarkUrl.update('');
-					if (!Ext.isEmpty(data.firsrMarkUrl)) {
-						var firsrMarkUrl = labelRootUrl;
-						firsrMarkUrl += data.firsrMarkUrl;
+			this.viewOrderPanel.picturePanel.update('');
+			if (!Ext.isEmpty(data.labelUrl)) {
+				var labelUrl = labelRootUrl;
+				labelUrl += data.labelUrl;
 
-						firsrMarkUrl = '<img title="单击查看完整图片" src="'
-								+ firsrMarkUrl
-								+ '?ver='
-								+ data.orderNo
-								+ '" onclick= "javascript:window.open('
-								+ "'"
-								+ firsrMarkUrl
-								+ "'"
-								+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
+				labelUrl = '<img title="单击查看完整图片" src="'
+						+ labelUrl
+						+ '?ver='
+						+ data.orderNo
+						+ '" onclick= "javascript:window.open('
+						+ "'"
+						+ labelUrl
+						+ "'"
+						+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
 
-						this.viewOrderPanel.picturePanel4firsrMarkUrl.update(firsrMarkUrl);
-					}
-					
-					this.viewOrderPanel.picturePanel4secondMarkUrl.update('');
-					if (!Ext.isEmpty(data.secondMarkUrl)) {
-						var secondMarkUrl = labelRootUrl;
-						secondMarkUrl += data.secondMarkUrl;
+				this.viewOrderPanel.picturePanel.update(labelUrl);
+			}
 
-						secondMarkUrl = '<img title="单击查看完整图片" src="'
-								+ secondMarkUrl
-								+ '?ver='
-								+ data.orderNo
-								+ '" onclick= "javascript:window.open('
-								+ "'"
-								+ secondMarkUrl
-								+ "'"
-								+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
+			this.viewOrderPanel.picturePanel4firsrMarkUrl.update('');
+			if (!Ext.isEmpty(data.firsrMarkUrl)) {
+				var firsrMarkUrl = labelRootUrl;
+				firsrMarkUrl += data.firsrMarkUrl;
 
-						this.viewOrderPanel.picturePanel4secondMarkUrl.update(secondMarkUrl);
-					}
+				firsrMarkUrl = '<img title="单击查看完整图片" src="'
+						+ firsrMarkUrl
+						+ '?ver='
+						+ data.orderNo
+						+ '" onclick= "javascript:window.open('
+						+ "'"
+						+ firsrMarkUrl
+						+ "'"
+						+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
 
-					
-				}
-			}, this);
-	
-	
+				this.viewOrderPanel.picturePanel4firsrMarkUrl
+						.update(firsrMarkUrl);
+			}
+
+			this.viewOrderPanel.picturePanel4secondMarkUrl.update('');
+			if (!Ext.isEmpty(data.secondMarkUrl)) {
+				var secondMarkUrl = labelRootUrl;
+				secondMarkUrl += data.secondMarkUrl;
+
+				secondMarkUrl = '<img title="单击查看完整图片" src="'
+						+ secondMarkUrl
+						+ '?ver='
+						+ data.orderNo
+						+ '" onclick= "javascript:window.open('
+						+ "'"
+						+ secondMarkUrl
+						+ "'"
+						+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:50px;" />';
+
+				this.viewOrderPanel.picturePanel4secondMarkUrl
+						.update(secondMarkUrl);
+			}
+
+		}
+	}, this);
+
 }
 
 com.keensen.ump.produce.component.markprintlistMgr.prototype.onPrint = function() {
@@ -106,19 +106,24 @@ com.keensen.ump.produce.component.markprintlistMgr.prototype.onPrint = function(
 	}
 	var list = [];
 	Ext.each(records, function(r) {
-				var prodBatchNo = r.data['prodBatchNo'];				
+				var prodBatchNo = r.data['prodBatchNo'];
 				list.push("'" + prodBatchNo + "'");
 			});
 	var prodBatchNos = list.join(',');
-	var f = document.getElementById('componentmarkprintlistForm');
-	f.prodBatchNos.value = prodBatchNos;
-	f.code.value = records[0].data.code;
-	var actionUrl = 'com.keensen.ump.produce.component.printMarks.flow?time='
-			+ Math.random() + '&token=' + Date.now();
 
-	f.action = actionUrl;
-	f.submit();
+	Ext.Msg.prompt('装箱数量', '请输入装箱数量', function(btn, text) {
+		if (btn == 'ok') {
 
+			var f = document.getElementById('componentmarkprintlistForm');
+			f.prodBatchNos.value = prodBatchNos;
+			f.code.value = records[0].data.code;
+			var actionUrl = 'com.keensen.ump.produce.component.printMarks.flow?qty='
+					+ text + '&time=' + Math.random() + '&token=' + Date.now();
+
+			f.action = actionUrl;
+			f.submit();
+		}
+	}, this, false, 1);
 }
 
 com.keensen.ump.produce.component.markprintlistMgr.prototype.onPreView = function() {
@@ -129,7 +134,6 @@ com.keensen.ump.produce.component.markprintlistMgr.prototype.onPreView = functio
 	}
 	var records = A.getSelectionModel().getSelections();
 	var templateName = records[0].data.templateName;
-	
 
 	var f = document.getElementById('componentmarktemplatepreviewForm2');
 	f.drawingCode.value = templateName;
@@ -159,11 +163,11 @@ com.keensen.ump.produce.component.markprintlistMgr.prototype.onQueryByBatchNos =
 			arr = batchNoStr.split(',');
 			var arr2 = [];
 			for (var i = 0; i < arr.length; i++) {
-				if(arr2.indexOf("'" + arr[i] + "'") != -1) continue;
+				if (arr2.indexOf("'" + arr[i] + "'") != -1)
+					continue;
 				arr2.push("'" + arr[i] + "'");
 			}
 
-			
 			store.baseParams = {
 				'condition/batchNoStr2' : arr2.join(",") == "''" ? null : arr2
 						.join(",")
@@ -196,7 +200,8 @@ com.keensen.ump.produce.component.markprintlistMgr.prototype.onQueryByJmBatchNos
 			arr = batchNoStr.split(',');
 			var arr2 = [];
 			for (var i = 0; i < arr.length; i++) {
-				if(arr2.indexOf("'" + arr[i] + "'") != -1) continue;
+				if (arr2.indexOf("'" + arr[i] + "'") != -1)
+					continue;
 				arr2.push("'" + arr[i] + "'");
 			}
 
@@ -212,8 +217,7 @@ com.keensen.ump.produce.component.markprintlistMgr.prototype.onQueryByJmBatchNos
 					});
 		}
 	}, this, true);
-	
-	
+
 }
 
 com.keensen.ump.produce.component.markprintlistMgr.prototype.onPrint2 = function() {
@@ -241,30 +245,34 @@ com.keensen.ump.produce.component.markprintlistMgr.prototype.onPrint2 = function
 	}
 	var list = [];
 	Ext.each(records, function(r) {
-				var prodBatchNo = r.data['prodBatchNo'];				
+				var prodBatchNo = r.data['prodBatchNo'];
 				list.push("'" + prodBatchNo + "'");
 			});
 	var prodBatchNos = list.join(',');
-	var f = document.getElementById('componentmarkprintlistForm');
-	f.prodBatchNos.value = prodBatchNos;
-	f.code.value = records[0].data.code;
-	var actionUrl = 'com.keensen.ump.produce.component.printMarks.flow?time='
-			+ Math.random() + '&token=' + Date.now() + '&isStar=Y';
 
-	f.action = actionUrl;
-	f.submit();
+	Ext.Msg.prompt('装箱数量', '请输入装箱数量', function(btn, text) {
+		if (btn == 'ok') {
+			var f = document.getElementById('componentmarkprintlistForm');
+			f.prodBatchNos.value = prodBatchNos;
+			f.code.value = records[0].data.code;
+			var actionUrl = 'com.keensen.ump.produce.component.printMarks.flow?qty=' + text + '&time='
+					+ Math.random() + '&token=' + Date.now() + '&isStar=Y';
 
+			f.action = actionUrl;
+			f.submit();
+		}
+	}, this, false, 1);
 }
 
 com.keensen.ump.produce.component.markprintlistMgr.prototype.onViewOrder = function() {
-	
+
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
 		return;
 	}
 	var records = A.getSelectionModel().getSelections();
-	if(records.length>1){
+	if (records.length > 1) {
 		Ext.Msg.alert("系统提示", "请选择一行数据！");
 		return;
 	}

@@ -19,8 +19,8 @@
 		T1.SCFS              AS "scfs",T1.reserve1 "reserve1",T1.reserve2 "reserve2",
        T1.BM                AS "bm",
        
-       decode(T1.template_Name,null, 
-       (decode(substr(t1.order_no,1,2),'SG',SGSTD.MARK_DRAWING_CODE,T1.template_Name )),T1.template_Name) AS "templateName",
+       replace(decode(T1.template_Name,null, 
+       (decode(substr(t1.order_no,1,2),'SG',SGSTD.MARK_DRAWING_CODE,T1.template_Name )),T1.template_Name),'单击旁边按钮选择图纸编号','') AS "templateName",
        
        T1.SFFH              AS "sffh",
        T1.ORDER_TYPE        AS "orderType",

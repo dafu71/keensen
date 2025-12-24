@@ -19,6 +19,9 @@ com.keensen.ump.produce.component.inventory.K3StockMgr.prototype.onDelete = func
 }
 
 com.keensen.ump.produce.component.inventory.K3StockMgr.prototype.exportExcel = function() {
+	
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, 'K3库存',
+			'com.keensen.ump.produce.component.inventory.queryK3Stock');
 
 }
 

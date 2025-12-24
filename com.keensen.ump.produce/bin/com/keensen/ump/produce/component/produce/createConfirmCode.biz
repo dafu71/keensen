@@ -13,8 +13,8 @@
     <node>start0</node>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" type="end">
-    <targetConnections>link14</targetConnections>
     <targetConnections>link16</targetConnections>
+    <targetConnections>link14</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="Int" name="err" type="query" valueType="Primitive">err</process:return>
@@ -67,7 +67,7 @@
       <targetNode>invokePojo1</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -105,8 +105,8 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>invokePojo4</targetNode>
     </sourceConnections>
-    <targetConnections>link8</targetConnections>
     <targetConnections>link15</targetConnections>
+    <targetConnections>link8</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>
     <process:pojo methodType="instance" synchronization="true" transactionType="join">
       <process:partner type="literal">com.eos.foundation.common.utils.CryptoUtil.encryptByDES</process:partner>

@@ -26,6 +26,11 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 	}
 
 	this.initStore = function() {
+		
+		this.sourceStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['返厂元件', '返厂元件'], ['库存元件', '库存元件']]
+				});
 
 		this.whiteStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -73,7 +78,7 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 180,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -158,6 +163,28 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 								fieldLabel : "登记日期",
 								format : "Y-m-d"
 							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '元件来源',
+								ref : '../source',
+								hiddenName : 'condition/source',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.sourceStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.source.reset()
+									}
+								}
+							}, {
 
 								xtype : 'hidden',
 								name : 'condition/batchNos',
@@ -240,6 +267,10 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 						dataIndex : 'createTime',
 						width : 150,
 						header : '登记日期'
+					}, {
+						dataIndex : 'source',
+						width : 150,
+						header : '元件来源'
 					}, {
 						dataIndex : 'orderNo2',
 						width : 100,
@@ -402,6 +433,8 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 							name : 'orderNo2'
 						}, {
 							name : 'orderId'
+						}, {
+							name : 'source'
 						}]
 			})
 		})
@@ -646,6 +679,25 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 							fieldLabel : '元件存放位置',
 							anchor : '95%',
 							colspan : 1
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '元件来源',
+							ref : '../../source',
+							allowBlank : false,
+							hiddenName : 'entity/source',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : _this.sourceStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.source.reset()
+								}
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -990,6 +1042,30 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 							fieldLabel : '返工处理订单号',
 							anchor : '95%',
 							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '元件来源',
+							ref : '../../source',
+							dataIndex : 'source',
+							allowBlank : false,
+							hiddenName : 'entity/source',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : _this.sourceStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.source.reset()
+								}
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',

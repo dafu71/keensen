@@ -140,6 +140,12 @@
 	   AND A.RECORD_ID = #recordId#
 	</isNotNull>
 	
+	
+	<isNotNull prepend = ""  property = "workerName">
+	   AND QINSEN.PG_GET_INFO.GET_STAFF_NAME_BY_ID(A.WORKER_ID) like '%' || #workerName# || '%'
+	</isNotNull>
+	
+	
 	<isNotNull prepend = ""  property = "batchIdStr">
 	   AND A.RECORD_ID IN ($batchIdStr$)
 	</isNotNull>

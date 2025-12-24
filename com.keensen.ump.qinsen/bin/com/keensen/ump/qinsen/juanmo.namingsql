@@ -159,8 +159,19 @@
                         MS.MATER_SPEC_CODE PROD_SPEC_CODE,
                         MS.MATER_SPEC_NAME PROD_SPEC_NAME,
                         ms.cut,ms.raosi
-                  FROM QINSEN.INST_JUANMO_MAIN A, QINSEN.PARA_MATER_SPEC MS
+                  FROM 
+                  
+                  (select jm.* from 
+                  QINSEN.INST_JUANMO_MAIN jm
+                  where 1=1 
+                   <isNotNull prepend="and" property="isNotStockConfirm">not exists(select 1 FROM V_KS_CHECK_LIST
+						where juanmo_batch_id = jm.record_id)</isNotNull>)                  
+                  A          
+                  , QINSEN.PARA_MATER_SPEC MS
                  WHERE A.PROD_SPEC_ID = MS.MATER_SPEC_ID
+                 
+                
+                 
                  
                 <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
         <isNotNull prepend="" property="batchId">AND A.RECORD_ID = #batchId#</isNotNull>

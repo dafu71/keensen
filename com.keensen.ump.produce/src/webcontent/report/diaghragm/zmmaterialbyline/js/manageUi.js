@@ -18,7 +18,7 @@ com.keensen.ump.produce.report.diaghragm.ZmMaterialByLineMgr = function() {
 	}
 
 	this.initQueryPanel = function() {
-		var _this = this;
+		var _this = this; alert();
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
 					columns : 4,
@@ -27,7 +27,7 @@ com.keensen.ump.produce.report.diaghragm.ZmMaterialByLineMgr = function() {
 					titleCollapse : false,
 					// title : '【物料规格查询】',
 					fields : [{
-								xtype : 'datefield',
+								xtype : 'datetimefield',
 								name : 'condition/productDtStart',
 								ref : '../productDtStart',
 								fieldLabel : '生产时间',
@@ -36,11 +36,11 @@ com.keensen.ump.produce.report.diaghragm.ZmMaterialByLineMgr = function() {
 								allowBlank : false,
 								ref : '../productDtStart',
 								editable : true,
-								format : 'Y-m-d',
+								format : 'Y-m-d H:i',
 								value : new Date(getFirstDate())
-										.format('Y-m-d')
+										.format('Y-m-d H:i')
 							}, {
-								xtype : 'datefield',
+								xtype : 'datetimefield',
 								name : 'condition/productDtEnd',
 								ref : '../productDtEnd',
 								fieldLabel : '至',
@@ -48,10 +48,10 @@ com.keensen.ump.produce.report.diaghragm.ZmMaterialByLineMgr = function() {
 								anchor : '100%',
 								editable : true,
 								allowBlank : false,
-								format : 'Y-m-d',
+								format : 'Y-m-d H:i',
 								ref : '../productDtEnd',
 								value : new Date().add(Date.DAY, 0)
-										.format('Y-m-d')
+										.format('Y-m-d H:i')
 							}, {
 								xtype : 'dictcombobox',
 								name : 'condition/line',

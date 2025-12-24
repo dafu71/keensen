@@ -201,6 +201,16 @@
       <sourceNode>assign4</sourceNode>
       <targetNode>subprocess0</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link17" name="标签编号为空" displayName="连接线" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>assign6</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">entity/labelDrawingCode</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link3</targetConnections>
     <targetConnections>link7</targetConnections>
     <location x="540" y="253"/>
@@ -208,7 +218,7 @@
     <nodeLabel>assign4label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">entity/labelDrawingCode</process:from>
-      <process:to type="query">map/drawingCode</process:to>
+      <process:to type="query">map/drawingCode2</process:to>
     </process:copy>
     <process:copy>
       <process:from type="query" pattern="reference">entity/materSpecName2</process:from>
@@ -252,9 +262,20 @@
       <sourceNode>assign6</sourceNode>
       <targetNode>subprocess1</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link22" name="唛头编号为空" displayName="连接线" type="transition">
+      <sourceNode>assign6</sourceNode>
+      <targetNode>switch0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">entity/markDrawingCode</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link11</targetConnections>
     <targetConnections>link9</targetConnections>
-    <location x="661" y="170"/>
+    <targetConnections>link17</targetConnections>
+    <location x="667" y="75"/>
     <size height="28" width="28"/>
     <nodeLabel>assign6label</nodeLabel>
     <process:copy>
@@ -263,7 +284,7 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign6label" name="label" nodeType="label">
-    <location x="655" y="206"/>
+    <location x="661" y="111"/>
     <figSize height="20" width="40"/>
     <node>assign6</node>
   </nodes>
@@ -365,6 +386,7 @@
     </sourceConnections>
     <targetConnections>link15</targetConnections>
     <targetConnections>link13</targetConnections>
+    <targetConnections>link22</targetConnections>
     <location x="915" y="165"/>
     <size height="28" width="28"/>
     <nodeLabel>switch0label</nodeLabel>

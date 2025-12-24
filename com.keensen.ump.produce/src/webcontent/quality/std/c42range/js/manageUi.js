@@ -1,8 +1,14 @@
 com.keensen.ump.produce.quality.C42RangeMgr = function() {
 	this.initPanel = function() {
+		
+		this.opt = '';
+		
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initEditWindow();
+		
+		this.initInputWindow();
+		this.initCopyWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -51,13 +57,28 @@ com.keensen.ump.produce.quality.C42RangeMgr = function() {
 			},
 			hsPage : true,
 			tbar : [{
+						text : '新增',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onAdd
+					}, '-',{
+						text : '复制新增',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onCopy
+					}, '-',{
 						text : '修改',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
+					}, '-', {
+						text : '删除',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDel
 					}],
 			selModel : selModel,
-			delUrl : '123.biz.ext',
+			delUrl : 'com.keensen.ump.produce.quality.quality2.deleteC42Range.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel,  {
 						header : '线别',
 						width : 120,
@@ -190,5 +211,137 @@ com.keensen.ump.produce.quality.C42RangeMgr = function() {
 			}]
 		});
 	}
+	
+	this.initInputWindow = function() {
 
+		var _this = this;
+		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
+			title : '更新C42范围标准',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'inputpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 12,
+				saveUrl : 'com.keensen.ump.produce.quality.quality2.saveC42Range.biz.ext',
+				fields : [{
+							xtype : 'mpspeccombobox',
+							//dataIndex : 'mptype',
+							hiddenName : 'entity/mptype',
+							ref : '../../mptype',
+							valueField:'name',
+							//readOnly : true,
+							anchor : '95%',
+							fieldLabel : '膜种',
+							colspan : 6
+						}, {
+							xtype : 'linecombobox',
+							valueField:'code',
+							ref : '../../line',
+							//dataIndex : 'line',
+							prodTacheId : '100',
+							hiddenName : 'entity/line',
+							//readOnly : true,
+							anchor : '95%',
+							colspan : 6,
+							fieldLabel : '生产线 '
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'numberfield',
+							decimalPrecision:3,
+							//dataIndex : 'c42',
+							ref : '../../c42',
+							name : 'entity/c42',
+							fieldLabel : 'C42浓度%',
+							allowBlank:false,
+							anchor : '95%',
+							colspan : 6
+						}, {
+							xtype : 'numberfield',
+							decimalPrecision:3,
+							//dataIndex : 'diff42',
+							ref : '../../diff42',
+							name : 'entity/diff42',
+							fieldLabel : '偏差范围%',
+							allowBlank:false,
+							anchor : '95%',
+							colspan : 6
+						}]
+			}]
+		});
+	}
+
+	this.initCopyWindow = function() {
+
+		var _this = this;
+		this.copyWindow = this.copyWindow || new Ext.fn.FormWindow({
+			title : '更新C42范围标准',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 12,
+				loadUrl : 'com.keensen.ump.produce.quality.quality2.expandC42Range.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.quality2.saveC42Range.biz.ext',
+				fields : [{
+							xtype : 'mpspeccombobox',
+							dataIndex : 'mptype',
+							ref : '../../mptype',
+							name : 'entity/mptype',
+							valueField:'name',
+							//readOnly : true,
+							anchor : '95%',
+							fieldLabel : '膜种',
+							colspan : 6
+						}, {
+							xtype : 'linecombobox',
+							valueField:'code',
+							ref : '../../line',
+							dataIndex : 'line',
+							prodTacheId : '100',
+							hiddenName : 'entity/line',
+							//readOnly : true,
+							anchor : '95%',
+							colspan : 6,
+							fieldLabel : '生产线 '
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'numberfield',
+							decimalPrecision:3,
+							dataIndex : 'c42',
+							ref : '../../c42',
+							name : 'entity/c42',
+							fieldLabel : 'C42浓度%',
+							allowBlank:false,
+							anchor : '95%',
+							colspan : 6
+						}, {
+							xtype : 'numberfield',
+							decimalPrecision:3,
+							dataIndex : 'diff42',
+							ref : '../../diff42',
+							name : 'entity/diff42',
+							fieldLabel : '偏差范围%',
+							allowBlank:false,
+							anchor : '95%',
+							colspan : 6
+						}]
+			}]
+		});
+	}
 }

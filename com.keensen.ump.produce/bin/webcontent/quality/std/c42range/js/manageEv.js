@@ -13,13 +13,38 @@ com.keensen.ump.produce.quality.C42RangeMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
-				this.editWindow.show();
-				this.editWindow.loadData(cell);
+				if (this.opt == 'edit') {
+					this.editWindow.show();
+					this.editWindow.loadData(cell);
+				}
+				if (this.opt == 'copy') {
+					this.copyWindow.show();
+					this.copyWindow.loadData(cell);
+				}
+
 			}, this);
 }
 
 com.keensen.ump.produce.quality.C42RangeMgr.prototype.onEdit = function() {
+
+	this.opt = 'edit';
 	this.listPanel.onEdit();
+
+}
+
+com.keensen.ump.produce.quality.C42RangeMgr.prototype.onCopy = function() {
+
+	this.opt = 'copy';
+	this.listPanel.onEdit();
+
+}
+
+com.keensen.ump.produce.quality.C42RangeMgr.prototype.onDel = function() {
+	this.listPanel.onDel();
+};
+
+com.keensen.ump.produce.quality.C42RangeMgr.prototype.onAdd = function() {
+	this.inputWindow.show();
 
 }
 

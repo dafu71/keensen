@@ -1010,7 +1010,7 @@ var spacepanel = Ext.getCmp('spacepanel');
 	}
 	
 	if(itemCode == 'orderconfirm'){
-		url = '/produce/component/yxorderbase/index.jsp';
+		url = '/produce/component/yxorderbase/index9.jsp';
 		title = '产品销售统计表';
 		myid = '10003221';
 	}

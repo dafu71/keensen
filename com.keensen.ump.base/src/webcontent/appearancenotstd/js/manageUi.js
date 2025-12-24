@@ -37,7 +37,7 @@ com.keensen.ump.base.AppearancenotstdMgr = function() {
 							}, {
 								xtype : 'textfield',
 								name : 'condition/specName',
-								fieldLabel : '卷膜工艺执行型号%-%'
+								fieldLabel : '卷膜执行型号%-%'
 							}, {
 								xtype : 'hidden',
 								name : 'condition/notreserve1',
@@ -93,7 +93,7 @@ com.keensen.ump.base.AppearancenotstdMgr = function() {
 					}, {
 						dataIndex : 'specName',
 						sortable : true,
-						header : '卷膜工艺执行型号'
+						header : '卷膜执行型号'
 					}, {
 						dataIndex : 'diameter',
 						header : '白膜直径(mm)'

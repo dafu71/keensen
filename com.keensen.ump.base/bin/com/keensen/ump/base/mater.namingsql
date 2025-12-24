@@ -3,7 +3,7 @@
 <sqlMap namespace="com.keensen.ump.base.mater">
     <!-- 查询物料分类树 -->
     <select id="queryMaterClassTree" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">WITH TB AS
-	 (SELECT * FROM QINSEN.PARA_MATER_CLASS)
+	 (SELECT * FROM QINSEN.PARA_MATER_CLASS where MATER_CLASS_ID != '100030027')
 	SELECT LEVEL AS "level",
 			LEVEL AS "orglevel",
 	       C.MATER_CLASS_ID AS "materClassId",C.MATER_CLASS_ID AS "orgid",
@@ -48,9 +48,9 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
        T1.DISP_ORDER            AS "dispOrder",
        T1.DISP_ORDER2           AS "dispOrder2",
        T1.CREATE_DT             AS "createDt",
-       T1.CHANGE_DT             AS "changeDt",
+       NVL(t1.change_dt,t1.create_dt)             AS "changeDt",
        T1.CREATOR_ID            AS "creatorId",
-       T1.CHANGER_ID            AS "changerId",
+       NVL(t1.changer_id,t1.creator_id)            AS "changerId",
        T1.REMARK                AS "remark",
        T1.MP_BATCH_CODE         AS "mpBatchCode",
        T1.QT_JUDGE_FLAG         AS "qtJudgeFlag",
@@ -66,9 +66,9 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
        T1.MEASUREMENT_UNIT_CODE AS "measurementUnitCode",
        T1.MEASUREMENT_UNIT_NAME AS "measurementUnitName",
        T1.CREATE_DATE           AS "createDate",
-       T1.CHANGE_DATE           AS "changeDate",
+       nvl(T1.CHANGE_DATE ,T1.CREATE_DATE)          AS "changeDate",
        T1.CREATOR               AS "creator",
-       T1.CHANGER               AS "changer",
+       nvl(T1.CHANGER,T1.CREATOR)               AS "changer",
        t1.mp_Size as "mpSize",
 		t1.mp_Width as "mpWidth",
 		t1.dense_Net_Type as "denseNetType",
@@ -119,7 +119,26 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 		t1.effluent_pipe_length as "effluentPipeLength",
 		t1.juanmo_tape as "juanmoTape",
 		t1.mater_type "materType",
-		t1.diameter "diameter"
+		t1.diameter "diameter",
+		t1.RS_DIAMETER_LOW as "rsDiameterLow",
+		t1.RS_DIAMETER_UP as "rsDiameterUp",
+		t1.TEST_PRESSURE_LOW as "testPressureLow",
+		t1.TEST_PRESSURE_UP as "testPressureUp",
+		t1.QJ_TYPE as "qjType",
+		t1.PRESSURE_ARANGE_LOW as "pressureArangeLow",
+		t1.PRESSURE_ARANGE_UP as "pressureArangeUp",
+		t1.INTAKE_PIPE_LENGTH_LOW as "intakePipeLengthLow",
+		t1.INTAKE_PIPE_LENGTH_UP as "intakePipeLengthUp",
+		t1.EFFLUENT_PIPE_LENGTH_LOW as "effluentPipeLengthLow",
+		t1.EFFLUENT_PIPE_LENGTH_UP as "effluentPipeLengthUp",
+		t1.CRAFT_NO_WATER as "craftNoWater",
+		t1.CRAFT_NO_RS as "craftNoRs",
+		t1.CRAFT_NO_QJ as "craftNoQj",
+		t1.CRAFT_NO_TRIM as "craftNoTrim",
+		t1.CRAFT_NO_COILING as "craftNoCoiling",
+		t1.DIAMETER_LOW as "diameterLow",
+		t1.DIAMETER_UP as "diameterUp"
+		
 		
        
   FROM (SELECT S.MATER_SPEC_ID,
@@ -186,6 +205,25 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 				s.test_liquid_gpd,
 				s.test_liquid_salt,
 				
+				s.RS_DIAMETER_LOW ,
+				s.RS_DIAMETER_UP ,
+				s.TEST_PRESSURE_LOW ,
+				s.TEST_PRESSURE_UP ,
+				s.QJ_TYPE ,
+				s.PRESSURE_ARANGE_LOW ,
+				s.PRESSURE_ARANGE_UP ,
+				s.INTAKE_PIPE_LENGTH_LOW ,
+				s.INTAKE_PIPE_LENGTH_UP ,
+				s.EFFLUENT_PIPE_LENGTH_LOW ,
+				s.EFFLUENT_PIPE_LENGTH_UP ,
+				s.CRAFT_NO_WATER ,
+				s.CRAFT_NO_RS ,
+				s.CRAFT_NO_QJ ,
+				s.CRAFT_NO_TRIM ,
+				s.CRAFT_NO_COILING ,
+				s.DIAMETER_LOW ,
+				s.DIAMETER_UP ,
+				
 								
 				s.jm_spec_name ,
 		s.craft_no ,
@@ -238,12 +276,18 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
         <isNotNull prepend="" property="prodType">AND S.prod_Type = #prodType#</isNotNull>
         <isNotNull prepend="" property="notProdType">AND S.prod_Type != #notProdType#</isNotNull>
         <isNotNull prepend="" property="craftNo">AND S.craft_No LIKE '%'||#craftNo#||'%'</isNotNull>
+        <isNotNull prepend="" property="craftNoCoiling">AND S.craft_No_coiling LIKE '%'||#craftNoCoiling#||'%'</isNotNull>
+        <isNotNull prepend="" property="craftNoTrim">AND S.craft_No_trim LIKE '%'||#craftNoTrim#||'%'</isNotNull>
+        <isNotNull prepend="" property="craftNoQj">AND S.craft_No_qj LIKE '%'||#craftNoQj#||'%'</isNotNull>
+        <isNotNull prepend="" property="craftNoRs">AND S.craft_No_rs LIKE '%'||#craftNoRs#||'%'</isNotNull>
+        <isNotNull prepend="" property="craftNoWater">AND S.craft_No_water LIKE '%'||#craftNoWater#||'%'</isNotNull>
          
          ) T1
- ORDER BY T1.MATER_SPEC_NAME
-
-
-</select>
+         
+         
+         <isEqual compareValue="1" prepend="" property="selectFlag">ORDER BY length(T1.MATER_SPEC_NAME)</isEqual>
+        <isNotEqual compareValue="1" prepend="" property="selectFlag">ORDER BY T1.MATER_SPEC_NAME</isNotEqual>
+    </select>
     <!-- 获取默认的新物料规格编号 -->
     <select id="getNewMaterSpecCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 
     (SELECT B.mater_Class_Code FROM qinsen.para_mater_class B WHERE B.MATER_CLASS_ID = #materClassId#) 
@@ -346,10 +390,17 @@ SELECT T1.DRAWING_CODE AS "drawingCode",
        T1.MATER_NAME   AS "materName",
        T1.SPEC_NAME    AS "specName",
        T1.UNIT         AS "unit",
-       T1.ID           "id"
+       T1.ID           "id"，
+       t1.control_Code "controlCode",
+       t1.jm_Spec_Name "jmSpecName",
+       t1.jm_Spec_Name || '-' || t1.control_Code "drawingCode2"，
+       to_char(NVL(t1.update_time,t1.create_time),'YYYY-MM-DD') "updateTime",
+	   NVL(t1.update_name,t1.create_name) "updateName"
   FROM KS_BASE_MATER T1
 	where 1=1
 	<isNotNull prepend="" property="id">AND T1.ID = #id#</isNotNull>
+        <isNotNull prepend="" property="controlCode">AND t1.control_Code = #controlCode#</isNotNull>
+        <isNotNull prepend="" property="jmSpecName">AND t1.jm_Spec_Name = #jmSpecName#</isNotNull>
         <isNotNull prepend="and" property="drawingCode">T1.DRAWING_CODE = #drawingCode#</isNotNull>
         <isNotNull prepend="and" property="drawingCode2">T1.DRAWING_CODE like '%'||#drawingCode2#||'%'</isNotNull>
         <isNotNull prepend="and" property="materCode">t1.MATER_CODE = #materCode#</isNotNull>
@@ -453,7 +504,8 @@ SELECT T1.DRAWING_CODE AS "drawingCode",
 		t1.light_Net_Short_Type as "lightNetShortType",
 		t1.light_Net_Short_Page as "lightNetShortPage",
 		t1.draw_Net_Short_Width as "drawNetShortWidth",
-		t1.pipe as "pipe",t1.state as "state"
+		t1.pipe as "pipe",t1.state as "state",
+		t1.area as "area"
 
 
   FROM KS_BASE_CRAFTS_PACKAGE t1

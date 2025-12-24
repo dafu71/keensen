@@ -40,6 +40,8 @@
 <ext:dict property="KS_ZM_LINE"   dictTypeId="KS_ZM_LINE" />
 <ext:dict property="KS_PSF"   dictTypeId="KS_PSF" />
 
+
+
 <js:load scriptPath="pub/common/teamCombo.js" />
 <js:load scriptPath="pub/common/supCombo.js" />
 <js:load scriptPath="produce/diaphragm/make/stock/js/manageUi.js"/>

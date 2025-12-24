@@ -64,7 +64,10 @@
        T1.TUMO_BATCH_STR          AS "tumoBatchStr",
        T1.DIMO_BATCH_STR          AS "dimoBatchStr",
        T1.JM_BATCH_NO             AS "jmBatchNo",
-       T1.hpmc "hpmc"
+       T1.hpmc "hpmc",
+       
+       to_char(disinfect.create_time ,'YYYY-MM-DD HH24:MI:SS') "disinfectTime"
+       
   FROM (SELECT A.RECORD_ID,A.gyy_remark,
                A.JUANMO_BATCH_ID,
                A.TEST_TYPE_ID,
@@ -231,6 +234,11 @@
            
            
            ) T1
+           
+           left join (select max(create_time) create_time, juanmo_batch_id
+           from KS_COMPONENT_DISINFECT group by juanmo_batch_id) disinfect
+           on disinfect.juanmo_batch_id = T1.JUANMO_BATCH_ID
+           
            where 1=1
            <isNotNull prepend="" property="testSpecName">AND t1.TEST_SPEC_NAME like '%' || #testSpecName# || '%'</isNotNull>
 
@@ -265,4 +273,28 @@
 	   A.GYY_REMARK = #gyyRemark#,
 	   A.CHANGER_ID = #operatorId#
 	 WHERE A.RECORD_ID in ($recordIds$)</update>
+    <select id="queryDisinfect" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       t1.juanmo_batch_id "juanmoBatchId",
+       jm.batch_no "jmBatchNo"
+       from KS_COMPONENT_DISINFECT t1
+       left join qinsen.inst_juanmo_main jm
+		ON t1.juanmo_batch_id = jm.record_id
+		where 1=1
+		<isNotNull prepend="" property="juanmoBatchId">AND t1.juanmo_batch_id = #juanmoBatchId#</isNotNull>
+       order by t1.juanmo_batch_id,t1.id
+    </select>
 </sqlMap>

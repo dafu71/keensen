@@ -3,7 +3,7 @@ com.keensen.ump.produce.component.markprintlistMgr = function() {
 		this.initQueryPanel();
 		this.initListPanel();
 		
-		this.initviewOrderWindow();
+		this.initViewOrderWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -214,7 +214,7 @@ com.keensen.ump.produce.component.markprintlistMgr = function() {
 		})
 	}
 
-	this.initviewOrderWindow = function() {
+	this.initViewOrderWindow = function() {
 
 		var _this = this;		
 
@@ -363,6 +363,27 @@ com.keensen.ump.produce.component.markprintlistMgr = function() {
 						colspan : 3
 					}, {
 						xtype : 'displayfield',
+						fieldLabel : '标签型号',
+						ref : '../specNameLabel',
+						readOnly : true,
+						dataIndex : 'specNameLabel',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : 'NSF标识',
+						ref : '../labelNsf',
+						readOnly : true,
+						dataIndex : 'labelNsf',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
 						fieldLabel : '唛头编号',
 						ref : '../markDrawingCode',
 						readOnly : true,
@@ -376,6 +397,35 @@ com.keensen.ump.produce.component.markprintlistMgr = function() {
 						readOnly : true,
 						dataIndex : 'markDrawingCode2',
 						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '第二唛头编号',
+						ref : '../markDrawingCode2',
+						readOnly : true,
+						dataIndex : 'markDrawingCode2',
+						anchor : '85%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						labelSeparator : '',// 去掉冒号
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '唛头型号',
+						dataIndex : 'specNameMark',
+						readOnly : true,
+						ref : '../specNameMark',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						readOnly : true,
+						fieldLabel : 'NSF标识',
+						dataIndex : 'markNsf',
+						ref : '../markNsf',
+						anchor : '100%',
 						colspan : 1
 					}, {
 						xtype : 'displayfield',

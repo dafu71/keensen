@@ -443,6 +443,7 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr = function() {
 							xtype : 'combo',
 							fieldLabel : '操作机台',
 							allowBlank : false,
+							readOnly:true,
 							mode : 'local',
 							anchor : '95%',
 							colspan : 2,

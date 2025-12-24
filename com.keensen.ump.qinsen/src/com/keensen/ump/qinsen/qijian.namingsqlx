@@ -255,8 +255,23 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 		Z.LINE_ID as "lineId",
 		Z.PROD_SPEC_ID as "prodSpecId",
 		Z.ORDER_NO as "orderNo",
+		
+		<!--针对SW、ZM、MS系列元件，包含所有司标和非司标卷制工艺的产品已改为负压检测，生产品质系统内的检测气压值需要改为负值 -->
+		<!-- 判断其卷膜执行型号中包含SW、ZM、MS（在第1~2位，或第5~7位），则在对“检测气压”取值时加负号-->
+		<!--从2025年11月11日后的数据进行修改，之前的数据保持不变-->
+		
+		case when (to_char(Z.PRODUCE_DT,'YYYY-MM-DD')> '2025-11-11') 
+			and (substr(Z.PROD_SPEC_NAME,1,2)='SW' or substr(Z.PROD_SPEC_NAME,1,2)='ZM' 
+			 or substr(Z.PROD_SPEC_NAME,1,2)='MS'
+			 or substr(Z.PROD_SPEC_NAME,5,2)='MS')
+			then -1 * Z.PRESURE
+			else
+			 Z.PRESURE 
+			end as "presure",
+		
+		
 		Z.PRODUCE_DT as "produceDt",
-		Z.PRESURE as "presure",
+		<!--Z.PRESURE as "presure",-->
 		Z.CHECK_RESULT as "checkResult",
 		Z.IS_QUALIFIED as "isQualified",
 		Z.IS_FIRST as "isFirst",

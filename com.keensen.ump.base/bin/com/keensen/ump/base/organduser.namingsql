@@ -36,5 +36,7 @@
         <isNotNull prepend="and" property="userId">t.userid like '%'||#userId#||'%'</isNotNull>
         <!--研发项目调用-->
         <isNotNull prepend="and" property="projectId">t.userid not in (select user_id from KS_RESEARCH_PROJECT_USER where project_id=#projectId#)</isNotNull>
+        <isNotNull prepend="and" property="userId2">t.userid = #userId2#</isNotNull>
+        <isNotNull prepend="and" property="password">t.password = #password#</isNotNull>
     </select>
 </sqlMap>

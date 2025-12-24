@@ -38,6 +38,10 @@
 		       t1.label_spec_name like '%' || #labelSpecName# || '%'
 	    </isNotNull>
 	    
+	    <isNotNull prepend="and" property="labelSpecName2"> 
+		       t1.label_spec_name = #labelSpecName2#
+	    </isNotNull>
+	    
 	    <isNotNull prepend="and" property="prodSpecName">
 	    	t1.prod_spec_name like '%' || #prodSpecName# || '%'
 	    </isNotNull>

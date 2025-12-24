@@ -60,6 +60,12 @@ com.keensen.ump.produce.report.diaghragm.MaterialByLineMgr = function() {
 						anchor : '100%',
 						fieldLabel : '生产线 ',
 						colspan : 1
+					}, {
+						xtype : 'mpspeccombobox',
+						hiddenName : 'condition/specId',
+						colspan : 1,
+						anchor : '100%',
+						fieldLabel : '膜片型号 '
 					}]
 				});
 		this.queryPanel.addButton({

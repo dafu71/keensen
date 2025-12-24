@@ -1076,235 +1076,6 @@
             <column length="50" name="RECORDER"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.ParaMaterSpec" table="PARA_MATER_SPEC">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="materSpecId" type="int">
-            <column length="9" name="MATER_SPEC_ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="materSpecCode" type="string">
-            <column length="50" name="MATER_SPEC_CODE" not-null="true"/>
-        </property>
-        <property name="materSpecName" type="string">
-            <column length="100" name="MATER_SPEC_NAME" not-null="true"/>
-        </property>
-        <property name="materClassId" type="int">
-            <column length="9" name="MATER_CLASS_ID" not-null="true"/>
-        </property>
-        <property name="state" type="string">
-            <column length="1" name="STATE"/>
-        </property>
-        <property name="safetyStock" type="int">
-            <column length="9" name="SAFETY_STOCK"/>
-        </property>
-        <property name="supplierId" type="int">
-            <column length="9" name="SUPPLIER_ID"/>
-        </property>
-        <property name="measurementUnit" type="int">
-            <column length="9" name="MEASUREMENT_UNIT"/>
-        </property>
-        <property name="plannedUnitPrice" type="big_decimal">
-            <column length="9" name="PLANNED_UNIT_PRICE" precision="9" scale="2"/>
-        </property>
-        <property name="thickness" type="string">
-            <column length="24" name="THICKNESS"/>
-        </property>
-        <property name="width" type="string">
-            <column length="24" name="WIDTH"/>
-        </property>
-        <property name="length" type="string">
-            <column length="24" name="LENGTH"/>
-        </property>
-        <property name="propString" type="string">
-            <column length="2000" name="PROP_STRING"/>
-        </property>
-        <property name="dispOrder" type="int">
-            <column length="4" name="DISP_ORDER"/>
-        </property>
-        <property name="createDt" type="date">
-            <column name="CREATE_DT"/>
-        </property>
-        <property name="changeDt" type="date">
-            <column name="CHANGE_DT"/>
-        </property>
-        <property name="creatorId" type="int">
-            <column length="9" name="CREATOR_ID"/>
-        </property>
-        <property name="changerId" type="int">
-            <column length="9" name="CHANGER_ID"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="mpBatchCode" type="string">
-            <column length="20" name="MP_BATCH_CODE"/>
-        </property>
-        <property name="qtJudgeFlag" type="string">
-            <column length="1" name="QT_JUDGE_FLAG"/>
-        </property>
-        <property name="numPerWad" type="big_decimal">
-            <column length="5" name="NUM_PER_WAD" precision="5" scale="1"/>
-        </property>
-        <property name="blankingSize" type="big_decimal">
-            <column length="7" name="BLANKING_SIZE" precision="7" scale="3"/>
-        </property>
-        <property name="denseNet" type="int">
-            <column length="8" name="DENSE_NET"/>
-        </property>
-        <property name="area" type="big_decimal">
-            <column length="8" name="AREA" precision="8" scale="3"/>
-        </property>
-        <property name="pageWidth" type="big_decimal">
-            <column length="8" name="PAGE_WIDTH" precision="8" scale="3"/>
-        </property>
-        <property name="mpSize" type="string">
-            <column length="50" name="MP_SIZE"/>
-        </property>
-        <property name="mpWidth" type="string">
-            <column length="50" name="MP_WIDTH"/>
-        </property>
-        <property name="denseNetType" type="string">
-            <column length="200" name="DENSE_NET_TYPE"/>
-        </property>
-        <property name="denseNetWidth" type="string">
-            <column length="50" name="DENSE_NET_WIDTH"/>
-        </property>
-        <property name="denseNetCdm" type="string">
-            <column length="200" name="DENSE_NET_CDM"/>
-        </property>
-        <property name="lightNetType" type="string">
-            <column length="200" name="LIGHT_NET_TYPE"/>
-        </property>
-        <property name="lightNetLongPage" type="string">
-            <column length="50" name="LIGHT_NET_LONG_PAGE"/>
-        </property>
-        <property name="lightNetShortPage" type="string">
-            <column length="50" name="LIGHT_NET_SHORT_PAGE"/>
-        </property>
-        <property name="juanmo" type="string">
-            <column length="500" name="JUANMO"/>
-        </property>
-        <property name="cut" type="string">
-            <column length="500" name="CUT"/>
-        </property>
-        <property name="raosi" type="string">
-            <column length="500" name="RAOSI"/>
-        </property>
-        <property name="package" type="string">
-            <column length="500" name="PACKAGE"/>
-        </property>
-        <property name="pipe" type="string">
-            <column length="500" name="PIPE"/>
-        </property>
-        <property name="newBatchCode" type="string">
-            <column length="20" name="NEW_BATCH_CODE"/>
-        </property>
-        <property name="bookCode" type="string">
-            <column length="20" name="BOOK_CODE"/>
-        </property>
-        <property name="bookVersion" type="string">
-            <column length="20" name="BOOK_VERSION"/>
-        </property>
-        <property name="preparationTime" type="string">
-            <column length="20" name="PREPARATION_TIME"/>
-        </property>
-        <property name="prodType" type="string">
-            <column length="20" name="PROD_TYPE"/>
-        </property>
-        <property name="lid" type="string">
-            <column length="20" name="LID"/>
-        </property>
-        <property name="denseNetAmount" type="string">
-            <column length="20" name="DENSE_NET_AMOUNT"/>
-        </property>
-        <property name="drawNetLongWidth" type="string">
-            <column length="20" name="DRAW_NET_LONG_WIDTH"/>
-        </property>
-        <property name="drawNetLongAmount" type="string">
-            <column length="20" name="DRAW_NET_LONG_AMOUNT"/>
-        </property>
-        <property name="drawNetShortWidth" type="string">
-            <column length="20" name="DRAW_NET_SHORT_WIDTH"/>
-        </property>
-        <property name="drawNetShortAmount" type="string">
-            <column length="20" name="DRAW_NET_SHORT_AMOUNT"/>
-        </property>
-        <property name="testPressure" type="string">
-            <column length="20" name="TEST_PRESSURE"/>
-        </property>
-        <property name="keepPressureTime" type="string">
-            <column length="20" name="KEEP_PRESSURE_TIME"/>
-        </property>
-        <property name="pressureArange" type="string">
-            <column length="20" name="PRESSURE_ARANGE"/>
-        </property>
-        <property name="testLiquid" type="string">
-            <column length="20" name="TEST_LIQUID"/>
-        </property>
-        <property name="testLiquidDensity" type="string">
-            <column length="20" name="TEST_LIQUID_DENSITY"/>
-        </property>
-        <property name="testLiquidPressure" type="string">
-            <column length="20" name="TEST_LIQUID_PRESSURE"/>
-        </property>
-        <property name="testLiquidTemp" type="string">
-            <column length="20" name="TEST_LIQUID_TEMP"/>
-        </property>
-        <property name="testLiquidPh" type="string">
-            <column length="20" name="TEST_LIQUID_PH"/>
-        </property>
-        <property name="testLiquidRecovery" type="string">
-            <column length="20" name="TEST_LIQUID_RECOVERY"/>
-        </property>
-        <property name="testLiquidGpd" type="string">
-            <column length="20" name="TEST_LIQUID_GPD"/>
-        </property>
-        <property name="testLiquidSalt" type="string">
-            <column length="20" name="TEST_LIQUID_SALT"/>
-        </property>
-        <property name="orderSpecName" type="string">
-            <column length="20" name="ORDER_SPEC_NAME"/>
-        </property>
-        <property name="jmSpecName" type="string">
-            <column length="50" name="JM_SPEC_NAME"/>
-        </property>
-        <property name="craftNo" type="string">
-            <column length="50" name="CRAFT_NO"/>
-        </property>
-        <property name="denseNetSpan" type="string">
-            <column length="50" name="DENSE_NET_SPAN"/>
-        </property>
-        <property name="lightNetLongType" type="string">
-            <column length="50" name="LIGHT_NET_LONG_TYPE"/>
-        </property>
-        <property name="lightNetLongSpan" type="string">
-            <column length="50" name="LIGHT_NET_LONG_SPAN"/>
-        </property>
-        <property name="lightNetShortType" type="string">
-            <column length="50" name="LIGHT_NET_SHORT_TYPE"/>
-        </property>
-        <property name="intakePipeLength" type="string">
-            <column length="50" name="INTAKE_PIPE_LENGTH"/>
-        </property>
-        <property name="effluentPipeLength" type="string">
-            <column length="50" name="EFFLUENT_PIPE_LENGTH"/>
-        </property>
-        <property name="juanmoTape" type="string">
-            <column length="50" name="JUANMO_TAPE"/>
-        </property>
-        <property name="materType" type="string">
-            <column length="20" name="MATER_TYPE"/>
-        </property>
-        <property name="diameter" type="string">
-            <column length="20" name="DIAMETER"/>
-        </property>
-        <property name="fileNo" type="string">
-            <column length="50" name="FILE_NO"/>
-        </property>
-        <property name="modifyRecord" type="string">
-            <column length="500" name="MODIFY_RECORD"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.InstTumo" table="INST_TUMO">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="recordId" type="int">
@@ -1502,6 +1273,283 @@
         </property>
         <property name="c72InvalidName" type="string">
             <column length="50" name="C72_INVALID_NAME"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.qinsen.inst.ParaMaterSpec" table="PARA_MATER_SPEC">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="materSpecId" type="int">
+            <column length="9" name="MATER_SPEC_ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="materSpecCode" type="string">
+            <column length="50" name="MATER_SPEC_CODE" not-null="true"/>
+        </property>
+        <property name="materSpecName" type="string">
+            <column length="100" name="MATER_SPEC_NAME" not-null="true"/>
+        </property>
+        <property name="materClassId" type="int">
+            <column length="9" name="MATER_CLASS_ID" not-null="true"/>
+        </property>
+        <property name="state" type="string">
+            <column length="1" name="STATE"/>
+        </property>
+        <property name="safetyStock" type="int">
+            <column length="9" name="SAFETY_STOCK"/>
+        </property>
+        <property name="supplierId" type="int">
+            <column length="9" name="SUPPLIER_ID"/>
+        </property>
+        <property name="measurementUnit" type="int">
+            <column length="9" name="MEASUREMENT_UNIT"/>
+        </property>
+        <property name="plannedUnitPrice" type="big_decimal">
+            <column length="9" name="PLANNED_UNIT_PRICE" precision="9" scale="2"/>
+        </property>
+        <property name="thickness" type="string">
+            <column length="24" name="THICKNESS"/>
+        </property>
+        <property name="width" type="string">
+            <column length="24" name="WIDTH"/>
+        </property>
+        <property name="length" type="string">
+            <column length="24" name="LENGTH"/>
+        </property>
+        <property name="propString" type="string">
+            <column length="2000" name="PROP_STRING"/>
+        </property>
+        <property name="dispOrder" type="int">
+            <column length="4" name="DISP_ORDER"/>
+        </property>
+        <property name="createDt" type="date">
+            <column name="CREATE_DT"/>
+        </property>
+        <property name="changeDt" type="date">
+            <column name="CHANGE_DT"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column length="9" name="CREATOR_ID"/>
+        </property>
+        <property name="changerId" type="int">
+            <column length="9" name="CHANGER_ID"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="mpBatchCode" type="string">
+            <column length="20" name="MP_BATCH_CODE"/>
+        </property>
+        <property name="qtJudgeFlag" type="string">
+            <column length="1" name="QT_JUDGE_FLAG"/>
+        </property>
+        <property name="numPerWad" type="big_decimal">
+            <column length="5" name="NUM_PER_WAD" precision="5" scale="1"/>
+        </property>
+        <property name="blankingSize" type="big_decimal">
+            <column length="7" name="BLANKING_SIZE" precision="7" scale="3"/>
+        </property>
+        <property name="denseNet" type="int">
+            <column length="8" name="DENSE_NET"/>
+        </property>
+        <property name="area" type="big_decimal">
+            <column length="8" name="AREA" precision="8" scale="3"/>
+        </property>
+        <property name="pageWidth" type="big_decimal">
+            <column length="8" name="PAGE_WIDTH" precision="8" scale="3"/>
+        </property>
+        <property name="mpSize" type="string">
+            <column length="50" name="MP_SIZE"/>
+        </property>
+        <property name="mpWidth" type="string">
+            <column length="50" name="MP_WIDTH"/>
+        </property>
+        <property name="denseNetType" type="string">
+            <column length="200" name="DENSE_NET_TYPE"/>
+        </property>
+        <property name="denseNetWidth" type="string">
+            <column length="50" name="DENSE_NET_WIDTH"/>
+        </property>
+        <property name="denseNetCdm" type="string">
+            <column length="200" name="DENSE_NET_CDM"/>
+        </property>
+        <property name="lightNetType" type="string">
+            <column length="200" name="LIGHT_NET_TYPE"/>
+        </property>
+        <property name="lightNetLongPage" type="string">
+            <column length="50" name="LIGHT_NET_LONG_PAGE"/>
+        </property>
+        <property name="lightNetShortPage" type="string">
+            <column length="50" name="LIGHT_NET_SHORT_PAGE"/>
+        </property>
+        <property name="juanmo" type="string">
+            <column length="500" name="JUANMO"/>
+        </property>
+        <property name="cut" type="string">
+            <column length="500" name="CUT"/>
+        </property>
+        <property name="raosi" type="string">
+            <column length="500" name="RAOSI"/>
+        </property>
+        <property name="package" type="string">
+            <column length="500" name="PACKAGE"/>
+        </property>
+        <property name="pipe" type="string">
+            <column length="500" name="PIPE"/>
+        </property>
+        <property name="newBatchCode" type="string">
+            <column length="20" name="NEW_BATCH_CODE"/>
+        </property>
+        <property name="bookCode" type="string">
+            <column length="20" name="BOOK_CODE"/>
+        </property>
+        <property name="bookVersion" type="string">
+            <column length="20" name="BOOK_VERSION"/>
+        </property>
+        <property name="preparationTime" type="string">
+            <column length="20" name="PREPARATION_TIME"/>
+        </property>
+        <property name="prodType" type="string">
+            <column length="20" name="PROD_TYPE"/>
+        </property>
+        <property name="lid" type="string">
+            <column length="20" name="LID"/>
+        </property>
+        <property name="denseNetAmount" type="string">
+            <column length="20" name="DENSE_NET_AMOUNT"/>
+        </property>
+        <property name="drawNetLongWidth" type="string">
+            <column length="20" name="DRAW_NET_LONG_WIDTH"/>
+        </property>
+        <property name="drawNetLongAmount" type="string">
+            <column length="20" name="DRAW_NET_LONG_AMOUNT"/>
+        </property>
+        <property name="drawNetShortWidth" type="string">
+            <column length="20" name="DRAW_NET_SHORT_WIDTH"/>
+        </property>
+        <property name="drawNetShortAmount" type="string">
+            <column length="20" name="DRAW_NET_SHORT_AMOUNT"/>
+        </property>
+        <property name="testPressure" type="string">
+            <column length="20" name="TEST_PRESSURE"/>
+        </property>
+        <property name="keepPressureTime" type="string">
+            <column length="20" name="KEEP_PRESSURE_TIME"/>
+        </property>
+        <property name="pressureArange" type="string">
+            <column length="50" name="PRESSURE_ARANGE"/>
+        </property>
+        <property name="testLiquid" type="string">
+            <column length="20" name="TEST_LIQUID"/>
+        </property>
+        <property name="testLiquidDensity" type="string">
+            <column length="100" name="TEST_LIQUID_DENSITY"/>
+        </property>
+        <property name="testLiquidPressure" type="string">
+            <column length="20" name="TEST_LIQUID_PRESSURE"/>
+        </property>
+        <property name="testLiquidTemp" type="string">
+            <column length="20" name="TEST_LIQUID_TEMP"/>
+        </property>
+        <property name="testLiquidPh" type="string">
+            <column length="20" name="TEST_LIQUID_PH"/>
+        </property>
+        <property name="testLiquidRecovery" type="string">
+            <column length="20" name="TEST_LIQUID_RECOVERY"/>
+        </property>
+        <property name="testLiquidGpd" type="string">
+            <column length="20" name="TEST_LIQUID_GPD"/>
+        </property>
+        <property name="testLiquidSalt" type="string">
+            <column length="20" name="TEST_LIQUID_SALT"/>
+        </property>
+        <property name="orderSpecName" type="string">
+            <column length="20" name="ORDER_SPEC_NAME"/>
+        </property>
+        <property name="jmSpecName" type="string">
+            <column length="50" name="JM_SPEC_NAME"/>
+        </property>
+        <property name="craftNo" type="string">
+            <column length="50" name="CRAFT_NO"/>
+        </property>
+        <property name="denseNetSpan" type="string">
+            <column length="50" name="DENSE_NET_SPAN"/>
+        </property>
+        <property name="lightNetLongType" type="string">
+            <column length="50" name="LIGHT_NET_LONG_TYPE"/>
+        </property>
+        <property name="lightNetLongSpan" type="string">
+            <column length="50" name="LIGHT_NET_LONG_SPAN"/>
+        </property>
+        <property name="lightNetShortType" type="string">
+            <column length="50" name="LIGHT_NET_SHORT_TYPE"/>
+        </property>
+        <property name="intakePipeLength" type="string">
+            <column length="50" name="INTAKE_PIPE_LENGTH"/>
+        </property>
+        <property name="effluentPipeLength" type="string">
+            <column length="50" name="EFFLUENT_PIPE_LENGTH"/>
+        </property>
+        <property name="juanmoTape" type="string">
+            <column length="50" name="JUANMO_TAPE"/>
+        </property>
+        <property name="materType" type="string">
+            <column length="20" name="MATER_TYPE"/>
+        </property>
+        <property name="diameter" type="string">
+            <column length="20" name="DIAMETER"/>
+        </property>
+        <property name="fileNo" type="string">
+            <column length="50" name="FILE_NO"/>
+        </property>
+        <property name="modifyRecord" type="string">
+            <column length="500" name="MODIFY_RECORD"/>
+        </property>
+        <property name="rsDiameterLow" type="string">
+            <column length="20" name="RS_DIAMETER_LOW"/>
+        </property>
+        <property name="rsDiameterUp" type="string">
+            <column length="20" name="RS_DIAMETER_UP"/>
+        </property>
+        <property name="testPressureLow" type="string">
+            <column length="20" name="TEST_PRESSURE_LOW"/>
+        </property>
+        <property name="testPressureUp" type="string">
+            <column length="20" name="TEST_PRESSURE_UP"/>
+        </property>
+        <property name="qjType" type="string">
+            <column length="20" name="QJ_TYPE"/>
+        </property>
+        <property name="pressureArangeLow" type="string">
+            <column length="20" name="PRESSURE_ARANGE_LOW"/>
+        </property>
+        <property name="pressureArangeUp" type="string">
+            <column length="20" name="PRESSURE_ARANGE_UP"/>
+        </property>
+        <property name="intakePipeLengthLow" type="string">
+            <column length="20" name="INTAKE_PIPE_LENGTH_LOW"/>
+        </property>
+        <property name="intakePipeLengthUp" type="string">
+            <column length="20" name="INTAKE_PIPE_LENGTH_UP"/>
+        </property>
+        <property name="effluentPipeLengthLow" type="string">
+            <column length="20" name="EFFLUENT_PIPE_LENGTH_LOW"/>
+        </property>
+        <property name="effluentPipeLengthUp" type="string">
+            <column length="20" name="EFFLUENT_PIPE_LENGTH_UP"/>
+        </property>
+        <property name="craftNoWater" type="string">
+            <column length="50" name="CRAFT_NO_WATER"/>
+        </property>
+        <property name="craftNoRs" type="string">
+            <column length="50" name="CRAFT_NO_RS"/>
+        </property>
+        <property name="craftNoQj" type="string">
+            <column length="50" name="CRAFT_NO_QJ"/>
+        </property>
+        <property name="craftNoTrim" type="string">
+            <column length="50" name="CRAFT_NO_TRIM"/>
+        </property>
+        <property name="craftNoCoiling" type="string">
+            <column length="50" name="CRAFT_NO_COILING"/>
         </property>
     </class>
 </hibernate-mapping>

@@ -127,7 +127,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 				});
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-			height : 240,
+			height : 270,
 			columns : 16,
 			border : true,
 			collapsible : true,
@@ -138,7 +138,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						name : 'condition/produceDtStart',
 						fieldLabel : '生产时间',
 						colspan : 4,
-						anchor : '75%',
+						anchor : '100%',
 						// allowBlank : false,
 						editable : true,
 						format : 'Y-m-d H:i',
@@ -149,7 +149,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						name : 'condition/produceDtEnd',
 						fieldLabel : '至',
 						colspan : 4,
-						anchor : '75%',
+						anchor : '100%',
 						editable : true,
 						format : 'Y-m-d H:i',
 						// allowBlank : false,
@@ -160,14 +160,14 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						prodTacheId : '103',
 						colspan : 4,
 						hiddenName : 'condition/lineId',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '生产线 '
 					}, {
 						xtype : 'prodspeccombobox',
 						hiddenName : 'condition/prodSpecId',
 						colspan : 4,
-						anchor : '75%',
-						fieldLabel : '元件型号 '
+						anchor : '100%',
+						fieldLabel : '卷膜执行型号 '
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -179,7 +179,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						ref : '../isQualified',
 						hiddenName : 'condition/isQualified',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						store : [[null, '全部'], ['Y', '合格'], ['N', '不合格']],
 						listeners : {
@@ -195,7 +195,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						ref : '../judgeFlag',
 						hiddenName : 'condition/judgeFlag',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						store : [[null, '全部'], ['Y', '合格'], ['N', '不合格']],
 						listeners : {
@@ -206,7 +206,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						}
 					}, {
 						ref : '../ngReasonId',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						xtype : 'combobox',
 						hiddenName : 'condition/ngReasonId',
@@ -228,7 +228,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					}, {
 						xtype : 'componentworkercombobox',
 						hiddenName : 'condition/workerId',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						fieldLabel : '操作工'
 					}, {
@@ -238,27 +238,27 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/orderNo',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						fieldLabel : '订单号'
 					}, {
 						xtype : 'textfield',
 						name : 'condition/dimoBatchNo',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						fieldLabel : '底膜批次'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/tumoBatchNoStr',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						fieldLabel : '膜片批次%-%'
 					}, {
 
 						xtype : 'textfield',
 						name : 'condition/cdmBatchNo',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						fieldLabel : '叠膜栈板号'
 					}, {
@@ -335,7 +335,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						ref : '../dryWet',
 						hiddenName : 'condition/dryWet',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						store : [[null, '全部'], ['干', '干'], ['湿', '湿']],
 						listeners : {
@@ -356,7 +356,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						fieldLabel : '元件类型',
 						ref : '../prodType',
 						hiddenName : 'condition/prodType',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						emptyText : '--请选择--',
 						editable : false,
@@ -375,7 +375,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						ref : '../isLabel',
 						hiddenName : 'condition/isLabel',
 						emptyText : '--请选择--',
-						anchor : '75%',
+						anchor : '100%',
 						colspan : 4,
 						store : [[null, '全部'], ['Y', '有'], ['N', '无']],
 						listeners : {
@@ -388,11 +388,11 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						 * , {
 						 * 
 						 * xtype : 'textfield', name :
-						 * 'condition/juanMoBatchNo', anchor : '75%', fieldLabel :
+						 * 'condition/juanMoBatchNo', anchor : '100%', fieldLabel :
 						 * '卷膜序号' }, {
 						 * 
 						 * xtype : 'textfield', name : 'condition/batchNo',
-						 * anchor : '75%', fieldLabel : '元件序号' }
+						 * anchor : '100%', fieldLabel : '元件序号' }
 						 */]
 		});
 
@@ -648,7 +648,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							return str;
 						}
 					}, {
-						header : '元件型号',
+						header : '卷膜执行型号',
 						width : 120,
 						dataIndex : 'prodSpecName',
 						sortable : true
@@ -1334,7 +1334,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							dataIndex : 'prodSpecId',
 							ref : '../../prodSpecId',
 							anchor : '90%',
-							fieldLabel : '元件型号 ',
+							fieldLabel : '卷膜执行型号 ',
 							typeAhead : true,
 							typeAheadDelay : 100,
 							minChars : 1,
@@ -1566,7 +1566,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									ref : '../../prodSpecId',
 									dataIndex : 'prodSpecId',
 									anchor : '90%',
-									fieldLabel : '元件型号 ',
+									fieldLabel : '卷膜执行型号 ',
 									typeAhead : true,
 									typeAheadDelay : 100,
 									minChars : 1,
@@ -1760,7 +1760,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									hiddenName : 'entity/newSpecId',
 									ref : '../../newSpecId',
 									anchor : '90%',
-									fieldLabel : '新元件型号 ',
+									fieldLabel : '新卷膜执行型号 ',
 									typeAhead : true,
 									typeAheadDelay : 100,
 									minChars : 1,
@@ -1868,7 +1868,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									hiddenName : 'entity/newSpecId',
 									ref : '../../newSpecId',
 									anchor : '90%',
-									fieldLabel : '新元件型号 ',
+									fieldLabel : '新卷膜执行型号 ',
 									typeAhead : true,
 									typeAheadDelay : 100,
 									minChars : 1,
@@ -1976,7 +1976,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									ref : '../../oldSpecName',
 									dataIndex : 'oldSpecName',
 									xtype : 'displayfield',
-									fieldLabel : '旧元件型号',
+									fieldLabel : '旧卷膜执行型号',
 									anchor : '90%'
 								}, {
 									xtype : 'displayfield',
@@ -1997,7 +1997,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									ref : '../../newSpecId',
 									dataIndex : 'newSpecId',
 									anchor : '90%',
-									fieldLabel : '新元件型号 ',
+									fieldLabel : '新卷膜执行型号 ',
 									typeAhead : true,
 									typeAheadDelay : 100,
 									minChars : 1,
@@ -3216,7 +3216,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 								header : '操作工'
 							}, {
 								dataIndex : 'prodSpecName',
-								header : '元件型号'
+								header : '卷膜执行型号'
 							}, {
 								dataIndex : 'quantity',
 								header : '生产数量'
@@ -3269,7 +3269,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/prodSpecName',
 								anchor : '95%',
-								fieldLabel : '元件型号'
+								fieldLabel : '卷膜执行型号'
 							}]
 						});
 
@@ -3331,7 +3331,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 										width : 20
 									}), selModel4Abilition, {
 								dataIndex : 'prodSpecName',
-								header : '元件型号'
+								header : '卷膜执行型号'
 							}, {
 								dataIndex : 'jmBatchNo',
 								header : '卷膜序号'
@@ -3542,7 +3542,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 										width : 20
 									}), selModel4Abilition, {
 								dataIndex : 'prodSpecId',
-								header : '元件型号',
+								header : '卷膜执行型号',
 								css : 'background:#c7c7a7;',
 
 								renderer : function(value) {
@@ -3875,7 +3875,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 								header : '卷膜序号'
 							}, {
 								dataIndex : 'prodSpecName',
-								header : '元件型号'
+								header : '卷膜执行型号'
 							}, {
 								dataIndex : 'tmBatchNo',
 								header : '膜片批次'

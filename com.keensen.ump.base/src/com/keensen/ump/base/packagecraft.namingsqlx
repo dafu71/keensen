@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+ <select id="queryCraftspackageCoiling" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT 
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status", T1.STATE         AS "state",
+       t1.craft_no as "craftNo",
+		t1.dense_Net_Cdm as "denseNetCdm",
+		t1.juanmo as "juanmo",
+		t1.pipe as "pipe",
+		t1.juanmo_Tape as "juanmoTape",
+		t1.diameter_low as "diameterLow",
+		t1.diameter_up as "diameterUp"
+
+  FROM KS_BASE_CRAFTS_PACKAGE_COILING t1  
+
+  where 1=1    
+   
+	
+	<isNotNull prepend="and" property="craftNoStr"> 
+		       t1.craft_no like '%' || #craftNoStr# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="craftNo"> 
+		       t1.craft_no = #craftNo# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="state"> 
+		       t1.state = #state# 
+	</isNotNull>
+	
+	
+	order by t1.craft_no
+    </select>
+    
+    
+    <select id="queryCraftspackageTrim" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT 
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status", T1.STATE         AS "state",
+       t1.craft_no as "craftNo",
+		t1.intake_Pipe_Length_low as "intakePipeLengthLow",
+		t1.intake_Pipe_Length_up as "intakePipeLengthUp",
+		t1.effluent_Pipe_Length_low as "effluentPipeLengthLow",
+		t1.effluent_Pipe_Length_up  as "effluentPipeLengthUp"
+
+  FROM KS_BASE_CRAFTS_PACKAGE_TRIM t1  
+
+  where 1=1    
+   
+	
+	<isNotNull prepend="and" property="craftNoStr"> 
+		       t1.craft_no like '%' || #craftNoStr# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="craftNo"> 
+		       t1.craft_no = #craftNo# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="state"> 
+		       t1.state = #state# 
+	</isNotNull>
+	
+	
+	order by t1.craft_no
+    </select>
+    
+     <select id="queryCraftspackageQj" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT 
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status", T1.STATE         AS "state",
+       t1.craft_no as "craftNo",
+       t1.QJ_TYPE as "qjType",
+		t1.TEST_PRESSURE_LOW as "testPressureLow",
+		t1.TEST_PRESSURE_UP as "testPressureUp",
+		t1.KEEP_PRESSURE_TIME as "keepPressureTime",
+		t1.PRESSURE_ARANGE_LOW as "pressureArangeLow",
+		t1.PRESSURE_ARANGE_UP as "pressureArangeUp"
+
+
+  FROM KS_BASE_CRAFTS_PACKAGE_QJ t1  
+
+  where 1=1    
+   
+	
+	<isNotNull prepend="and" property="craftNoStr"> 
+		       t1.craft_no like '%' || #craftNoStr# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="craftNo"> 
+		       t1.craft_no = #craftNo# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="state"> 
+		       t1.state = #state# 
+	</isNotNull>
+	
+	
+	order by t1.craft_no
+    </select>
+    
+     <select id="queryCraftspackageRs" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT 
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status", T1.STATE         AS "state",
+       t1.craft_no as "craftNo",
+       t1.RAOSI as "raosi",
+		t1.RS_DIAMETER_LOW as "rsDiameterLow",
+		t1.RS_DIAMETER_UP as "rsDiameterUp"
+
+
+
+  FROM KS_BASE_CRAFTS_PACKAGE_RS t1  
+
+  where 1=1    
+   
+	
+	<isNotNull prepend="and" property="craftNoStr"> 
+		       t1.craft_no like '%' || #craftNoStr# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="craftNo"> 
+		       t1.craft_no = #craftNo# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="state"> 
+		       t1.state = #state# 
+	</isNotNull>
+	
+	
+	order by t1.craft_no
+    </select>
+    
+    <select id="queryCraftspackageWater" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT 
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status", T1.STATE         AS "state",
+       t1.craft_no as "craftNo",
+       t1.test_Liquid_Density as "testLiquidDensity",
+		t1.test_Liquid_Pressure as "testLiquidPressure",
+		t1.test_Liquid_Temp as "testLiquidTemp",
+		t1.test_Liquid_Ph as "testLiquidPh",
+		t1.test_Liquid_Recovery as "testLiquidRecovery"，
+		t1.test_Liquid as "testLiquid"
+
+
+
+  FROM KS_BASE_CRAFTS_PACKAGE_WATER t1  
+
+  where 1=1    
+   
+	
+	<isNotNull prepend="and" property="craftNoStr"> 
+		       t1.craft_no like '%' || #craftNoStr# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="craftNo"> 
+		       t1.craft_no = #craftNo# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="state"> 
+		       t1.state = #state# 
+	</isNotNull>
+	
+	
+	order by t1.craft_no
+    </select>
+    
+    <update id="updateMaterByCraftNo" parameterClass="java.util.HashMap">
+    UPDATE qinsen.para_mater_spec pms
+	SET pms.NUM_PER_WAD=( select t.NUM_PER_WAD from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.BLANKING_SIZE=( select t.BLANKING_SIZE from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.MP_WIDTH=( select t.MP_WIDTH from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.DENSE_NET=( select t.DENSE_NET from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.DENSE_NET_WIDTH=( select t.DENSE_NET_WIDTH from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.DENSE_NET_SPAN=( select t.DENSE_NET_SPAN from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.LIGHT_NET_LONG_TYPE=( select t.LIGHT_NET_LONG_TYPE from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.LIGHT_NET_LONG_PAGE=( select t.LIGHT_NET_LONG_PAGE from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.LIGHT_NET_LONG_SPAN=( select t.LIGHT_NET_LONG_SPAN from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.LIGHT_NET_SHORT_TYPE=( select t.LIGHT_NET_SHORT_TYPE from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.LIGHT_NET_SHORT_PAGE=( select t.LIGHT_NET_SHORT_PAGE from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.DRAW_NET_SHORT_WIDTH=( select t.DRAW_NET_SHORT_WIDTH from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.AREA=( select t.AREA from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no )
+	WHERE 1=1
+	<isNotNull prepend="and" property="materSpecId"> 
+		       pms.mater_spec_id = #materSpecId# 
+	</isNotNull>
+	<isNotNull prepend="and" property="craftNo"> 
+		       pms.mater_spec_id in (
+		       	select mater_spec_id from qinsen.para_mater_spec 
+		       	where craft_no = #craftNo#
+		       ) 
+	</isNotNull>
+	
+    
+    </update>
+    
+    <update id="updateMaterByCoilingCraftNo" parameterClass="java.util.HashMap">
+    UPDATE qinsen.para_mater_spec pms
+	SET pms.DENSE_NET_CDM=( select t.DENSE_NET_CDM from KS_BASE_CRAFTS_PACKAGE_coiling t where t.craft_no= pms.craft_no_coiling ),
+	pms.PIPE=( select t.PIPE from KS_BASE_CRAFTS_PACKAGE_coiling t where t.craft_no= pms.craft_no_coiling ),
+	pms.JUANMO=( select t.JUANMO from KS_BASE_CRAFTS_PACKAGE_coiling t where t.craft_no= pms.craft_no_coiling ),
+	pms.JUANMO_TAPE=( select t.JUANMO_TAPE from KS_BASE_CRAFTS_PACKAGE_coiling t where t.craft_no= pms.craft_no_coiling ),
+	pms.DIAMETER_LOW=( select t.DIAMETER_LOW from KS_BASE_CRAFTS_PACKAGE_coiling t where t.craft_no= pms.craft_no_coiling ),
+	pms.DIAMETER_UP=( select t.DIAMETER_UP from KS_BASE_CRAFTS_PACKAGE_coiling t where t.craft_no= pms.craft_no_coiling ),
+	pms.DIAMETER=( select (to_number(T.diameter_low)+ to_number(T.diameter_up))/2
+	|| '±' ||
+	(to_number(T.diameter_up) - to_number(T.diameter_low)) /2 from KS_BASE_CRAFTS_PACKAGE_coiling t 
+	where t.craft_no= pms.craft_no_coiling )
+	WHERE 1=1
+	<isNotNull prepend="and" property="materSpecId"> 
+		       pms.mater_spec_id = #materSpecId# 
+	</isNotNull>
+	<isNotNull prepend="and" property="craftNo"> 
+		       pms.mater_spec_id in (
+		       	select mater_spec_id from qinsen.para_mater_spec 
+		       	where craft_no_coiling = #craftNo#
+		       ) 
+	</isNotNull>
+    
+    </update>
+    
+    <update id="updateMaterByTrimCraftNo" parameterClass="java.util.HashMap">
+    UPDATE qinsen.para_mater_spec pms
+	SET 
+	pms.INTAKE_PIPE_LENGTH_LOW=( select t.INTAKE_PIPE_LENGTH_LOW from KS_BASE_CRAFTS_PACKAGE_trim t where t.craft_no= pms.craft_no_trim ),
+	pms.INTAKE_PIPE_LENGTH_UP=( select t.INTAKE_PIPE_LENGTH_UP from KS_BASE_CRAFTS_PACKAGE_trim t where t.craft_no= pms.craft_no_trim ),
+	pms.INTAKE_PIPE_LENGTH=( select (to_number(t.intake_pipe_length_low)+ to_number(t.intake_pipe_length_up))/2
+	|| '±' ||
+	(to_number(t.intake_pipe_length_up) - to_number(t.intake_pipe_length_low)) /2 intake_pipe_length from KS_BASE_CRAFTS_PACKAGE_trim t where t.craft_no= pms.craft_no_trim ),
+	pms.EFFLUENT_PIPE_LENGTH_LOW=( select t.EFFLUENT_PIPE_LENGTH_LOW from KS_BASE_CRAFTS_PACKAGE_trim t where t.craft_no= pms.craft_no_trim ),
+	pms.EFFLUENT_PIPE_LENGTH_UP=( select t.EFFLUENT_PIPE_LENGTH_UP from KS_BASE_CRAFTS_PACKAGE_trim t where t.craft_no= pms.craft_no_trim ),
+	pms.effluent_PIPE_LENGTH=( select (to_number(t.effluent_pipe_length_low)+ to_number(t.effluent_pipe_length_up))/2
+	|| '±' ||
+	(to_number(t.effluent_pipe_length_up) - to_number(t.effluent_pipe_length_low)) /2 
+	from KS_BASE_CRAFTS_PACKAGE_trim t where t.craft_no= pms.craft_no_trim )
+	WHERE 1=1
+	<isNotNull prepend="and" property="materSpecId"> 
+		       pms.mater_spec_id = #materSpecId# 
+	</isNotNull>
+	<isNotNull prepend="and" property="craftNo"> 
+		       pms.mater_spec_id in (
+		       	select mater_spec_id from qinsen.para_mater_spec 
+		       	where craft_no_trim = #craftNo#
+		       ) 
+	</isNotNull>
+    
+    </update>
+    
+     <update id="updateMaterByQjCraftNo" parameterClass="java.util.HashMap">
+    UPDATE qinsen.para_mater_spec pms
+	SET pms.QJ_TYPE=( select t.QJ_TYPE from KS_BASE_CRAFTS_PACKAGE_qj t where t.craft_no= pms.craft_no_qj ),
+	pms.TEST_PRESSURE_LOW=( select t.TEST_PRESSURE_LOW from KS_BASE_CRAFTS_PACKAGE_qj t where t.craft_no= pms.craft_no_qj ),
+	pms.TEST_PRESSURE_UP=( select t.TEST_PRESSURE_UP from KS_BASE_CRAFTS_PACKAGE_qj t where t.craft_no= pms.craft_no_qj ),
+	pms.TEST_PRESSURE=( select t.TEST_PRESSURE_LOW || '-' || t.Test_Pressure_Up from KS_BASE_CRAFTS_PACKAGE_qj t where t.craft_no= pms.craft_no_qj ),
+	pms.KEEP_PRESSURE_TIME=( select t.KEEP_PRESSURE_TIME from KS_BASE_CRAFTS_PACKAGE_qj t where t.craft_no= pms.craft_no_qj ),
+	pms.PRESSURE_ARANGE_LOW=( select t.PRESSURE_ARANGE_LOW from KS_BASE_CRAFTS_PACKAGE_qj t where t.craft_no= pms.craft_no_qj ),
+	pms.PRESSURE_ARANGE_UP=( select t.PRESSURE_ARANGE_UP from KS_BASE_CRAFTS_PACKAGE_qj t where t.craft_no= pms.craft_no_qj ),
+	pms.PRESSURE_ARANGE=( select t.PRESSURE_ARANGE_LOW || '-' || t.Pressure_Arange_Up from KS_BASE_CRAFTS_PACKAGE_qj t
+	 where t.craft_no= pms.craft_no_qj )
+	WHERE 1=1
+	<isNotNull prepend="and" property="materSpecId"> 
+		       pms.mater_spec_id = #materSpecId# 
+	</isNotNull>
+	<isNotNull prepend="and" property="craftNo"> 
+		       pms.mater_spec_id in (
+		       	select mater_spec_id from qinsen.para_mater_spec 
+		       	where craft_no_qj = #craftNo#
+		       ) 
+	</isNotNull>
+    
+    </update>
+    
+    <update id="updateMaterByRsCraftNo" parameterClass="java.util.HashMap">
+    UPDATE qinsen.para_mater_spec pms
+	SET 
+	pms.RAOSI=( select t.RAOSI from KS_BASE_CRAFTS_PACKAGE_rs t where t.craft_no= pms.craft_no_rs ),
+	pms.RS_DIAMETER_LOW=( select t.RS_DIAMETER_LOW from KS_BASE_CRAFTS_PACKAGE_rs t where t.craft_no= pms.craft_no_rs ),
+	pms.RS_DIAMETER_UP=( select t.RS_DIAMETER_UP from KS_BASE_CRAFTS_PACKAGE_rs t 
+	where t.craft_no= pms.craft_no_rs )
+	WHERE 1=1
+	<isNotNull prepend="and" property="materSpecId"> 
+		       pms.mater_spec_id = #materSpecId# 
+	</isNotNull>
+	<isNotNull prepend="and" property="craftNo"> 
+		       pms.mater_spec_id in (
+		       	select mater_spec_id from qinsen.para_mater_spec 
+		       	where craft_no_rs = #craftNo#
+		       ) 
+	</isNotNull>
+    
+    </update>
+    
+    <update id="updateMaterByWaterCraftNo" parameterClass="java.util.HashMap">
+    UPDATE qinsen.para_mater_spec pms
+	SET pms.TEST_LIQUID_DENSITY=( select t.TEST_LIQUID_DENSITY from KS_BASE_CRAFTS_PACKAGE_WATER t where t.craft_no= pms.craft_no_water ),
+	pms.TEST_LIQUID_PRESSURE=( select t.TEST_LIQUID_PRESSURE from KS_BASE_CRAFTS_PACKAGE_WATER t where t.craft_no= pms.craft_no_water ),
+	pms.TEST_LIQUID_TEMP=( select t.TEST_LIQUID_TEMP from KS_BASE_CRAFTS_PACKAGE_WATER t where t.craft_no= pms.craft_no_water ),
+	pms.TEST_LIQUID=( select t.TEST_LIQUID from KS_BASE_CRAFTS_PACKAGE_WATER t where t.craft_no= pms.craft_no_water ),
+	pms.TEST_LIQUID_RECOVERY=( select t.TEST_LIQUID_RECOVERY from KS_BASE_CRAFTS_PACKAGE_WATER t 
+	where t.craft_no= pms.craft_no_water ),
+	pms.TEST_LIQUID_ph=( select t.TEST_LIQUID_ph from KS_BASE_CRAFTS_PACKAGE_WATER t 
+	where t.craft_no= pms.craft_no_water )
+	WHERE 1=1
+	<isNotNull prepend="and" property="materSpecId"> 
+		       pms.mater_spec_id = #materSpecId# 
+	</isNotNull>
+	<isNotNull prepend="and" property="craftNo"> 
+		       pms.mater_spec_id in (
+		       	select mater_spec_id from qinsen.para_mater_spec 
+		       	where craft_no_water = #craftNo#
+		       ) 
+	</isNotNull>
+    
+    </update>
+    
+    
+</sqlMap>

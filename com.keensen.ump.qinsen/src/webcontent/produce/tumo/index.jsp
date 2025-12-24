@@ -22,6 +22,10 @@
     int replaceTroughFlag = roleId.indexOf("10001441")>-1?1:0;
     //10001701 膜片不良记录修改
     int modifyFlag = roleId.indexOf("10001701")>-1?1:0;
+    String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("/qinsen/produce/tumo/index.jsp","");
+  	String ip = userObject.getUserRemoteIP();
+    
 %>
 <html>
 <!-- 
@@ -40,6 +44,10 @@
 
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
+
+.cursor-example {
+        cursor: pointer;
+    }
 
 </style>
 
@@ -80,6 +88,11 @@
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
 <script type="text/javascript">
+
+  var operatorid = '<%=operatorid %>';
+  var ip = '<%=ip %>';
+  var markRootUrl = "<%=rootUrl %>/myupload/diaphgram/";
+
   var uid = "<%=uid %>";
   var uname = "<%=operatorname %>";
   var modifyFlag = <%=modifyFlag %>;

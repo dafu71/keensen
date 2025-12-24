@@ -55,5 +55,13 @@ INSERT INTO qinsen.base_staff
 		       t.userid not in (select user_id from KS_RESEARCH_PROJECT_USER where project_id=#projectId#)
 	</isNotNull>
 	
+	<isNotNull prepend="and" property="userId2"> 
+		       t.userid = #userId2#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="password"> 
+		       t.password = #password# 
+	</isNotNull>
+	
   </select>
 </sqlMap>

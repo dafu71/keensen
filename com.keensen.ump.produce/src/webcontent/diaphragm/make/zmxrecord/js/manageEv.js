@@ -60,6 +60,14 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 				} else {
 					this.editWindow.show();
 					this.editWindow.loadData(cell);
+					if (ip == '172.16.137.202') {
+						this.editWindow.line.setValue('铸膜B线');
+						this.editWindow.line.setReadOnly(true);
+					}
+					if (ip == '172.16.136.236') {
+						this.editWindow.line.setValue('铸膜C线');
+						this.editWindow.line.setReadOnly(true);
+					}
 				}
 			}, this)
 
@@ -77,7 +85,6 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 							.findField('entity/productDt')
 							.setValue(new Date(date1));
 				}
-				
 
 			}, this);
 
@@ -140,6 +147,14 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onAdd = function() {
 				.setValue(teamId);
 	}
 	this.inputWindow.show();
+	if (ip == '172.16.137.202') {
+		this.inputWindow.line.setValue('铸膜B线');
+		this.inputWindow.line.setReadOnly(true);
+	}
+	if (ip == '172.16.136.236') {
+		this.inputWindow.line.setValue('铸膜C线');
+		this.inputWindow.line.setReadOnly(true);
+	}
 
 }
 

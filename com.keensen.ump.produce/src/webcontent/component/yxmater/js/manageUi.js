@@ -106,8 +106,8 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 								fieldLabel : '订单号'
 							}, {
 								xtype : 'textfield',
-								name : 'condition/prodName',
-								fieldLabel : '下单型号'
+								name : 'condition/jmSpecName',
+								fieldLabel : '卷膜型号'
 							}, {
 								xtype : 'textfield',
 								name : 'condition/specName',
@@ -165,7 +165,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 					text : "即时库存模板",
 					// disabled : allRight != '1',
 					scope : this,
-					hidden : uid != 'KS01147',
+					hidden : uid != 'KS01147'  && uid != 'dafu',
 					iconCls : 'icon-application_excel',
 					handler : this.onDown
 				});
@@ -174,9 +174,18 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 					text : "导入即时库存",
 					// disabled : allRight != '1',
 					scope : this,
-					hidden : uid != 'KS01147',
+					hidden : uid != 'KS01147' && uid != 'dafu',
 					iconCls : 'icon-application_excel',
 					handler : this.importExcel
+				});
+				
+		this.queryPanel.addButton({
+					text : "更新K3库存",
+					// disabled : allRight != '1',
+					scope : this,
+					hidden : uid != 'KS01147' && uid != 'dafu',
+					iconCls : 'icon-application_edit',
+					handler : this.onModifyK3
 				});
 
 		this.queryPanel.addButton({
@@ -229,6 +238,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						text : '更新序列号',
 						scope : this,
 						iconCls : 'icon-application_edit',
+						hidden : uid != 'KS01147' && uid != 'dafu',
 						handler : this.onModifySN
 					}],
 			selModel : selModel,
@@ -253,9 +263,9 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						header : '订单号',
 						sortable : true
 					}, {
-						dataIndex : 'prodName',
+						dataIndex : 'jmSpecName',
 						width : 120,
-						header : '下单型号',
+						header : '卷膜型号',
 						sortable : true
 					}, {
 						dataIndex : 'materCode',
@@ -300,6 +310,10 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 						dataIndex : 'remark',
 						width : 200,
 						header : '备注'
+					}, {
+						dataIndex : 'labelControlCode',
+						header : '标签受控编号',
+						sortable : true
 					}, {
 						dataIndex : 'drawingCode',
 						width : 120,
@@ -358,6 +372,10 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 			}	,
 				fields : [{
 							name : 'id'
+						}, {
+							name : 'jmSpecName'
+						}, {
+							name : 'labelControlCode'
 						}, {
 							name : 'createTime'
 						}, {
@@ -1469,7 +1487,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 								header : '图纸编号'
 							}, {
 								dataIndex : 'prodSpecName',
-								header : '标签型号'
+								header : '卷膜型号'
 							}, {
 								dataIndex : 'reserve1',
 								header : '标签LOGO'
@@ -1553,7 +1571,7 @@ com.keensen.ump.produce.component.YxmaterMgr = function() {
 										name : 'condition/prodSpecName2',
 										ref : '../prodSpecName',
 										anchor : '95%',
-										fieldLabel : '标签型号'
+										fieldLabel : '卷膜型号'
 									}, {
 
 										xtype : 'combobox',

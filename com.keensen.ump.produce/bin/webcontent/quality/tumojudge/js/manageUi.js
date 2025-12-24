@@ -44,7 +44,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					fields : [{
 						xtype : "dateregion",
 						colspan : 1,
-						anchor : '95%',
+						anchor : '100%',
 						nameArray : ['condition/produceDtStart',
 								'condition/produceDtEnd'],
 						fieldLabel : "生产日期",
@@ -52,17 +52,17 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'mplinecombobox',
 						hiddenName : 'condition/lineId',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '生产线 '
 					}, {
 						xtype : 'mpspeccombobox',
 						hiddenName : 'condition/specId',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '膜片型号 '
 					}, {
 						xtype : 'textfield',
 						name : 'condition/batchNoStr',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '膜片批次'
 					}, {
 						xtype : 'displayfield',
@@ -71,16 +71,16 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'prodflagselcombobox',
 						hiddenName : 'condition/prodFlagId',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '生产类型'
 					}, {
 						xtype : 'mpperfcombobox',
 						hiddenName : 'condition/batchPerfFlagId',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '批次性能'
 					}, {
 						xtype : 'combobox',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '批次判定',
 						triggerAction : "all",
 						store : this.validStore,
@@ -119,7 +119,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						name : 'condition/isWx',
 						hiddenName : 'condition/isWx',
 						fieldLabel : '是否外销',
-						anchor : '75%',
+						anchor : '100%',
 						dictData : ABF_YESORNO
 					}, {
 						xtype : 'displayfield',
@@ -130,11 +130,11 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						name : 'condition/ifPerFlag',
 						hiddenName : 'condition/ifPerFlag',
 						fieldLabel : '是否已批次<br>性能判定',
-						anchor : '75%',
+						anchor : '100%',
 						dictData : ABF_YESORNO
 					}, {
 						xtype : 'combobox',
-						anchor : '95%',
+						anchor : '100%',
 						fieldLabel : '选择请检单',
 						triggerAction : "all",
 						store : this.applyStore,
@@ -155,7 +155,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						name : 'condition/title',
-						anchor : '75%',
+						anchor : '100%',
 						fieldLabel : '请检单'
 					}]
 				});
@@ -196,6 +196,11 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						iconCls : 'icon-application_edit',
 						handler : this.onJudge
 					}, '->', {
+						text : '查看不良记录',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.defectView
+					},'-', {
 						text : '膜片降级',
 						scope : this,
 						hidden : true,
@@ -789,6 +794,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'batchNo',
+						ref:'../batchNo',
 						name : 'entity/batchNo',
 						fieldLabel : '膜片批号',
 						readOnly : true,
@@ -947,6 +953,10 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							this.editPanel.form.reset();
 							this.editWindow.hide();
 						}
+					},{
+						text : "查看不良记录",
+						scope : this,
+						handler : this.defectView
 					}]
 
 		})

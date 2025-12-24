@@ -164,9 +164,12 @@ com.keensen.ump.base.CraftspackageMgr = function() {
 						dataIndex : 'drawNetShortWidth',
 						header : '短页淡网宽度(mm)'
 					}, {
+						dataIndex : 'area',
+						header : '有效膜面积'
+					}/*, {
 						dataIndex : 'pipe',
 						header : '中心管型号'
-					}],
+					}*/],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.base.mater.queryCraftspackageByPage.biz.ext',
 				root : 'data',
@@ -205,6 +208,8 @@ com.keensen.ump.base.CraftspackageMgr = function() {
 							name : 'pipe'
 						}, {
 							name : 'state'
+						}, {
+							name : 'area'
 						}]
 			})
 		})
@@ -274,9 +279,9 @@ com.keensen.ump.base.CraftspackageMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'textfield',
-							fieldLabel : '中心管型号',
+							fieldLabel : '有效膜面积',
 							allowBlank : false,
-							name : 'entity/pipe',
+							name : 'entity/area',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -440,10 +445,10 @@ com.keensen.ump.base.CraftspackageMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'textfield',
-							fieldLabel : '中心管型号',
-							dataIndex : 'pipe',
+							fieldLabel : '有效膜面积',
+							dataIndex : 'area',
 							allowBlank : false,
-							name : 'entity/pipe',
+							name : 'entity/area',
 							anchor : '95%',
 							colspan : 1
 						}, {

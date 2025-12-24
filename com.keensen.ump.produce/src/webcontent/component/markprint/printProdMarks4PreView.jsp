@@ -5,19 +5,26 @@
 <%@page import="commonj.sdo.DataObject"%>
 
 <%
-	
-	Object rootObj = XpathUtil.getDataContextRoot("request",
+			Object rootObj = XpathUtil.getDataContextRoot("request",
 			pageContext);
 	DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(
 			rootObj, "list");
-	String rootUrl = request.getRequestURL().toString();	
-			
+	String rootUrl = request.getRequestURL().toString();
+
 	int tableHeight = 265;
 
 	String isStar = "Y";
 
+	String qty = null == request.getAttribute("qty") ? "1" : request
+			.getAttribute("qty").toString();
+
+	String drawingCode = request.getAttribute("drawingCode").toString();
+
+	String nsfnum = drawingCode.indexOf("M0224") > -1 ? "58" : "61";
+
 	rootUrl = rootUrl.replace(
-			"/produce/component/markprint/printProdMarks4PreView.jsp", "");
+			"/produce/component/markprint/printProdMarks4PreView.jsp",
+			"");
 %>
 
 <html>
@@ -100,7 +107,7 @@
 .span_aa {
 	vertical-align: middle;
 	margin-left: 1mm;
-	font-size: 16px;
+	font-size: 16pt;
 	font-family:Arial;
 	font-color: #000000;
 	
@@ -292,10 +299,12 @@ function getDayCode() {
 
 <div id="printContent" align="left">
 
-<% 	for (int i = 0; i < list.length; i++) { %>
+<%
+for (int i = 0; i < list.length; i++) {
+%>
 
 <table style="background-size: cover;page-break-after:always;"
-	class="main_table" border=1>
+	class="main_table" border=0>
 	<tr hight="260px">
 		<td align="left">
 		<div class="image-container" id="image-container">
@@ -305,7 +314,9 @@ function getDayCode() {
 	</tr>
 
 </table>
-<% } %>
+<%
+}
+%>
 
 </div>
 
@@ -353,7 +364,7 @@ function getDayCode() {
 						
 						String fontSize = prodSpecName.length() >= 15 ? "22px" : prodSpecName.length() > 9 ? "26px" : "30px";
 						if("Y".equals(ifPrintNsf)){							
-							fontSize = prodSpecName.length() >= 15 ? "21px" : prodSpecName.length() > 9 ? "21px" : "21px";
+							fontSize = prodSpecName.length() >= 15 ? "20pt" : prodSpecName.length() > 9 ? "20pt" : "20pt";
 						}
 						
 						int yDryImg = Integer.parseInt(list[i].get("yDryImg").toString());
@@ -384,14 +395,14 @@ function getDayCode() {
 		    brand.className = 'text-overlay';
 		    brand.textContent = 'Brand:';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
 		    brand.style.left = '40px';
 		    brand.style.top = '<%=10 + tableHeight*i %>px';
 		    brand.style.fontSize = fontSize;
-		    brand.style.fontName = 'Arial';
+		    brand.style.fontFamily = 'Arial';
 		    brand.style.fontWeight = 'bold';
 		    brand.style.color = color;
 		           
@@ -401,16 +412,16 @@ function getDayCode() {
 			var brandvalue = document.createElement('div');
 		    brandvalue.className = 'text-overlay';
 		    brandvalue.textContent = 'KeenSen';
-		    brand.style.fontName = 'Arial';
+		    brand.style.fontFamily = 'Arial';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
 		    brandvalue.style.left = '140px';
 		    brandvalue.style.top = '<%=10 + tableHeight*i %>px';
 		    brandvalue.style.fontSize = fontSize;
-		    brandvalue.style.fontName = 'Arial';
+		    brandvalue.style.fontFamily = 'Arial';
 		    //brand.style.fontWeight = 'bold';
 		    brandvalue.style.color = color;
 		           
@@ -421,16 +432,16 @@ function getDayCode() {
 		    model.className = 'text-overlay';
 		    model.textContent = 'Model:';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
-		    model.style.left = '40px';
+		    model.style.left = '38px';
 		    model.style.top = '<%=60 + tableHeight*i %>px';
 		    model.style.fontSize = fontSize;
 		    model.style.fontWeight = 'bold';
 		    model.style.color = color;
-		    model.style.fontName = 'Arial';
+		    model.style.fontFamily = 'Arial';
 		           
 		    container.appendChild(model);
 		    
@@ -439,16 +450,16 @@ function getDayCode() {
 		    sn.className = 'text-overlay';
 		    sn.textContent = 'S/N:';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
-		    sn.style.left = '65px';
+		    sn.style.left = '70px';
 		    sn.style.top = '<%=110 + tableHeight*i %>px';
 		    sn.style.fontSize = fontSize;
 		    sn.style.fontWeight = 'bold';
 		    sn.style.color = color;
-		    sn.style.fontName = 'Arial';       
+		    sn.style.fontFamily = 'Arial';       
 		    container.appendChild(sn);
 		    
 		    //qty
@@ -456,7 +467,7 @@ function getDayCode() {
 		    qty.className = 'text-overlay';
 		    qty.textContent = 'QTY:';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
@@ -465,15 +476,15 @@ function getDayCode() {
 		    qty.style.fontSize = fontSize;
 		    qty.style.fontWeight = 'bold';
 		    qty.style.color = color;
-		    qty.style.fontName = 'Arial';       
+		    qty.style.fontFamily = 'Arial';       
 		    container.appendChild(qty);
 		    
 		    //qty
 			var qtyvalue = document.createElement('div');
 		    qtyvalue.className = 'text-overlay';
-		    qtyvalue.textContent = '1 pc';
+		    qtyvalue.textContent = '<%=qty %> pc<% if(Integer.valueOf(qty)>1){ %>s<% } %>';
 		        		            
-		    var fontSize = '21px';
+		    var fontSize = '20pt';
 		    var color = 'black';
 		            
 		    // 设置样式
@@ -482,7 +493,7 @@ function getDayCode() {
 		    qtyvalue.style.fontSize = fontSize;
 		    //qty.style.fontWeight = 'bold';
 		    qtyvalue.style.color = color;
-		    qtyvalue.style.fontName = 'Arial';        
+		    qtyvalue.style.fontFamily = 'Arial';        
 		    container.appendChild(qtyvalue);
 		    
 		    <% } %>
@@ -506,8 +517,10 @@ function getDayCode() {
 							format : "CODE128",
 							displayValue : true,
 							fontSize : <%=batchNoFontSize %>,
-							font : 'msyhbd',
+							font : 'Arial',
+							<%if(!"Y".equals(ifPrintNsf)){ %>
 							fontOptions : 'bold',
+							<% } %>
 							textMargin : 0,
 							
 							<%if("Y".equals(ifPrintNsf)){ %>
@@ -548,8 +561,11 @@ function getDayCode() {
 					// 创建Nsf元素
 		            var nsfElement = document.createElement('div');
 		            nsfElement.className = 'text-overlay';
-		            nsfElement.textContent = 'Certified to NSF/ANSI/CAN 61';
-		            
+		            <% if(nsfnum.equals("58")){ %>
+		            nsfElement.textContent = 'Certified to NSF/ANSI <%=nsfnum %>';
+		            <% }else{ %>
+		            nsfElement.textContent = 'Certified to NSF/ANSI/CAN <%=nsfnum %>';
+		            <% } %>
 		            		            
 		            var fontSize = '12px';
 		            var color = 'black';
@@ -672,6 +688,12 @@ function getDayCode() {
 				<% if(yWetSpan<2000){ %>
 				const wetspan = document.createElement('span');
 				wetspan.className = 'span_a';
+				
+				<%if("Y".equals(ifPrintNsf)){ %>
+				wetspan.className = 'span_aa';
+				
+				<% } %>
+				
 				wetspan.style.position = 'absolute';
 				wetspan.style.left = '<%=xWetSpan %>px';
 				wetspan.style.top = '<%=yWetSpan + tableHeight*i %>px';

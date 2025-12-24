@@ -110,6 +110,10 @@
       <process:from type="query" pattern="reference">m:userObject/userName</process:from>
       <process:to type="query">entity/userName</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userRemoteIP</process:from>
+      <process:to type="query">entity/reserve5</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <figSize height="20" width="40"/>

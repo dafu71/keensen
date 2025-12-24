@@ -9,6 +9,8 @@ com.keensen.ump.base.CraftStdMgr = function() {
 		this.initListPanel();
 
 		this.initInputWindow();
+		
+		this.initEditWindow();
 
 		this.initChoosePackageWindow();
 
@@ -110,7 +112,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 							}, {
 								xtype : 'textfield',
 								name : 'condition/materSpecName',
-								fieldLabel : '卷膜工艺执行型号%-%'
+								fieldLabel : '卷膜执行型号%-%'
 							}, {
 								xtype : 'combo',
 								fieldLabel : '状态',
@@ -172,6 +174,12 @@ com.keensen.ump.base.CraftStdMgr = function() {
 						hidden : modifyLimit != 1 && addLimit != 1,
 						iconCls : 'icon-application_add',
 						handler : this.onAdd2
+					}, '-', {
+						text : '修改',
+						scope : this,
+						hidden : modifyLimit != 1 && addLimit != 1,
+						iconCls : 'icon-application_edit',
+						handler : this.onModify
 					}, '->', {
 						xtype : 'displayfield',
 						value : '当前物料编号:'
@@ -183,7 +191,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 
 					}, {
 						xtype : 'displayfield',
-						value : '卷膜工艺执行型号:'
+						value : '卷膜执行型号:'
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
@@ -200,10 +208,10 @@ com.keensen.ump.base.CraftStdMgr = function() {
 						header : '物料编号'
 					}, {
 						dataIndex : 'materSpecName',
-						header : '卷膜工艺执行型号'
+						header : '卷膜执行型号'
 					}/*
 						 * , { dataIndex : 'materType', header : '产品类别', css :
-						 * modifyLimit != 1 ? '' : 'background:#c7c7c7;', editor :
+						 * modifyLimit != 1 ? '' : '', editor :
 						 * new Ext.grid.GridEditor(new Ext.form.ComboBox( { //
 						 * allowBlank : false, disabled : modifyLimit != 1, mode :
 						 * 'local', emptyText : '--请选择--', editable : false,
@@ -255,7 +263,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 						header : '产品类型'
 					}/*
 						 * , { dataIndex : 'prodType', header : '产品类型', css :
-						 * modifyLimit != 1 ? '' : 'background:#c7c7b7;', editor :
+						 * modifyLimit != 1 ? '' : '', editor :
 						 * new Ext.grid.GridEditor(new Ext.form.ComboBox( { //
 						 * allowBlank : false, disabled : modifyLimit != 1, mode :
 						 * 'local', emptyText : '--请选择--', editable : false,
@@ -268,88 +276,10 @@ com.keensen.ump.base.CraftStdMgr = function() {
 						 * _this.modifyMater(materSpecId, 'prodType', '产品类型',
 						 * newValue, oldValue); } } })) }
 						 */, {
-						dataIndex : 'fileNo',
-						sortable : true,
-						header : '文件编号',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
-								{
-									// allowBlank : false,
-									disabled : modifyLimit != 1,
-									scope : this,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										},
-										'change' : function(o, newValue,
-												oldValue) {
-
-											if (Ext.isEmpty(newValue))
-												return false;
-											if (newValue == oldValue)
-												return false;
-											var materSpecId = _this.rec.data['materSpecId'];
-											_this.modifyMater(materSpecId,
-													'fileNo', '文件编号', newValue,
-													oldValue);
-										}
-									}
-								}))
-					}, {
-						dataIndex : 'bookVersion',
-						sortable : true,
-						header : '版本号',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
-								{
-									// allowBlank : false,
-									disabled : modifyLimit != 1,
-									scope : this,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										},
-										'change' : function(o, newValue,
-												oldValue) {
-											if (newValue == oldValue)
-												return false;
-											var materSpecId = _this.rec.data['materSpecId'];
-											_this.modifyMater(materSpecId,
-													'bookVersion', '版本号',
-													newValue, oldValue);
-										}
-									}
-								}))
-					}, {
-						dataIndex : 'preparationTime',
-						sortable : true,
-						header : '编制时间',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7d7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
-								{
-									// allowBlank : false,
-									disabled : modifyLimit != 1,
-									scope : this,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										},
-										'change' : function(o, newValue,
-												oldValue) {
-											if (newValue == oldValue)
-												return false;
-											var materSpecId = _this.rec.data['materSpecId'];
-											_this.modifyMater(materSpecId,
-													'preparationTime', '编制时间',
-													newValue, oldValue);
-										}
-									}
-								}))
-					}, {
 						dataIndex : 'jmSpecName',
 						sortable : true,
 						header : '卷膜型号',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -369,11 +299,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'craftNo',
 						header : '工艺包编号',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -393,11 +323,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'numPerWad',
 						header : '膜页数',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -433,11 +363,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'blankingSize',
 						header : '膜片长度(m)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -476,11 +406,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'mpWidth',
 						header : '膜片宽度（m）',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -520,11 +450,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'denseNet',
 						header : '浓网型号(mil)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -564,11 +494,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'denseNetWidth',
 						header : '浓网长度(mm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -609,11 +539,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'denseNetSpan',
 						header : '浓网宽度(mm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -653,11 +583,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'lightNetLongType',
 						header : '长页淡网型号',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -697,11 +627,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'lightNetLongPage',
 						header : '长页淡网长度(mm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -742,11 +672,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'lightNetLongSpan',
 						header : '长页淡网宽度(mm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -787,11 +717,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'lightNetShortType',
 						header : '短页淡网型号',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -831,11 +761,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'lightNetShortPage',
 						header : '短页淡网长度(mm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -876,11 +806,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'drawNetShortWidth',
 						header : '短页淡网宽度(mm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -921,11 +851,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'area',
 						header : '膜面积（ft²）',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -962,11 +892,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'pipe',
 						header : '中心管型号',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -1005,11 +935,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'intakePipeLength',
 						header : '白膜进水端中心管长(mm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -1049,11 +979,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'effluentPipeLength',
 						header : '白膜出水端中心管长(mm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -1093,11 +1023,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'denseNetCdm',
 						header : '叠膜工艺',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -1136,11 +1066,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'juanmo',
 						header : '卷膜工艺',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -1179,11 +1109,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'juanmoTape',
 						header : '卷膜胶带材质',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									allowBlank : false,
@@ -1222,16 +1152,16 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'diameter',
 						header : '白膜直径(mm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+						css : modifyLimit != 1 ? '' : ''/*,
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
 									disabled : modifyLimit != 1,
-									decimalPrecision : 3,
+									//decimalPrecision : 3,
 									scope : this,
 									listeners : {
 										'specialkey' : function() {
@@ -1264,16 +1194,16 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'testPressure',
 						header : '气检压力(kPa)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+						css : modifyLimit != 1 ? '' : ''/*,
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
 									disabled : modifyLimit != 1,
-									decimalPrecision : 3,
+									//decimalPrecision : 3,
 									scope : this,
 									listeners : {
 										'specialkey' : function() {
@@ -1309,11 +1239,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'keepPressureTime',
 						header : '保压时间(s)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									// allowBlank : false,
@@ -1354,16 +1284,18 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'pressureArange',
 						header : '泄压值范围(kPa)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
 									disabled : modifyLimit != 1,
 									decimalPrecision : 3,
+									regex : /^(\d+(.\d+)?)-(\d+(.\d+)?)$/,
+									regexText : "不合法的格式",									
 									scope : this,
 									listeners : {
 										'specialkey' : function() {
@@ -1399,11 +1331,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'testLiquid',
 						header : '测试液种类',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
@@ -1442,11 +1374,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'testLiquidDensity',
 						header : '测试液浓度(ppm)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7d7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									// allowBlank : false,
@@ -1487,11 +1419,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'testLiquidPressure',
 						header : '测试液压力(psi)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									// allowBlank : false,
@@ -1532,11 +1464,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'testLiquidTemp',
 						header : '测试液温度(℃)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
@@ -1576,11 +1508,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'testLiquidPh',
 						header : '测试液pH',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
@@ -1619,11 +1551,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'testLiquidRecovery',
 						header : '回收率(%)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7d7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
@@ -1660,11 +1592,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'testLiquidGpd',
 						header : '产水量(GPD)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7a7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
@@ -1701,11 +1633,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													oldValue);
 										}
 									}
-								}))
+								}))*/
 					}, {
 						dataIndex : 'testLiquidSalt',
 						header : '脱盐率(%)',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7b7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
@@ -1741,11 +1673,89 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
+					}, {
+						dataIndex : 'fileNo',
+						sortable : true,
+						header : '文件编号',
+						css : modifyLimit != 1 ? '' : ''/*,
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									// allowBlank : false,
+									disabled : modifyLimit != 1,
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+
+											if (Ext.isEmpty(newValue))
+												return false;
+											if (newValue == oldValue)
+												return false;
+											var materSpecId = _this.rec.data['materSpecId'];
+											_this.modifyMater(materSpecId,
+													'fileNo', '文件编号', newValue,
+													oldValue);
+										}
+									}
+								}))*/
+					}, {
+						dataIndex : 'bookVersion',
+						sortable : true,
+						header : '版本号',
+						css : modifyLimit != 1 ? '' : ''/*,
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									// allowBlank : false,
+									disabled : modifyLimit != 1,
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var materSpecId = _this.rec.data['materSpecId'];
+											_this.modifyMater(materSpecId,
+													'bookVersion', '版本号',
+													newValue, oldValue);
+										}
+									}
+								}))*/
+					}, {
+						dataIndex : 'preparationTime',
+						sortable : true,
+						header : '编制时间',
+						css : modifyLimit != 1 ? '' : ''/*,
+						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+								{
+									// allowBlank : false,
+									disabled : modifyLimit != 1,
+									scope : this,
+									listeners : {
+										'specialkey' : function() {
+											return false;
+										},
+										'change' : function(o, newValue,
+												oldValue) {
+											if (newValue == oldValue)
+												return false;
+											var materSpecId = _this.rec.data['materSpecId'];
+											_this.modifyMater(materSpecId,
+													'preparationTime', '编制时间',
+													newValue, oldValue);
+										}
+									}
+								}))*/
 					}, {
 						dataIndex : 'modifyRecord',
 						header : '修订记录',
-						css : modifyLimit != 1 ? '' : 'background:#c7c7c7;',
+						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
 									// allowBlank : false,
@@ -1765,7 +1775,13 @@ com.keensen.ump.base.CraftStdMgr = function() {
 													newValue, oldValue);
 										}
 									}
-								}))
+								}))*/
+					}, {
+						dataIndex : 'prodType',
+						header : '产品类型'
+					}, {
+						dataIndex : 'prodType',
+						header : '产品类型'
 					}],
 			store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.base.mater.queryMaterSpecList.biz.ext',
@@ -2105,7 +2121,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 									colspan : 1
 								}, {
 									xtype : 'textfield',
-									fieldLabel : '卷膜工艺执行型号',
+									fieldLabel : '卷膜执行型号',
 									allowBlank : false,
 									name : 'entity/materSpecName',
 									ref : '../../materSpecName',
@@ -2303,7 +2319,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 									anchor : '95%',
 									colspan : 1
 								}, {
-									xtype : 'numberfield',
+									xtype : 'textfield',
 									fieldLabel : '白膜直径(mm)',
 									decimalPrecision : 3, //
 									// allowBlank : false,
@@ -2455,5 +2471,455 @@ com.keensen.ump.base.CraftStdMgr = function() {
 							this.listPanel4ChoosePackage]
 
 				})
+	}
+	
+	this.initEditWindow = function() {
+		
+		var _this = this;
+		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
+			title : '修改',
+			height : 600,
+			width : 1024,
+			// itemCls:'required',
+			// style:'margin-top:10px',
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+						xtype : 'inputpanel',
+
+						successFn : function(i, r) {
+							if (r.ret != '1') {
+								Ext.Msg.show({
+											width : 400,
+											title : "操作提示",
+											msg : r.ret,
+											icon : Ext.Msg.WARNING,
+											buttons : Ext.Msg.OK,
+											fn : function() {
+											}
+										})
+							} else {
+								var store = _this.listPanel.store;
+								store.baseParams = _this.queryPanel.form
+										.getValues();
+								store.reload();
+								_this.editWindow.hide();
+							}
+						},
+						// pgrid : _this.listPanel,
+						columns : 4,
+						saveUrl : 'com.keensen.ump.qinsen.std.modifyMater3.biz.ext',
+						fields : [{
+									xtype : 'combo',
+									fieldLabel : '状态',
+									anchor : '95%',
+									colspan : 1,
+									mode : 'local',
+									emptyText : '--请选择--',
+									allowBlank : false,
+									editable : false,
+									store : _this.stateStore4Add,
+									displayField : "name",
+									valueField : "code",
+									ref : '../../state',
+									hiddenName : 'entity/state',
+									value : 'W',
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+								}, {
+									xtype : 'combo',
+									fieldLabel : '产品类型',
+									anchor : '95%',
+									colspan : 1,
+									mode : 'local',
+									emptyText : '--请选择--',
+									allowBlank : false,
+									editable : false,
+									store : _this.prodTypeStore,
+									displayField : "name",
+									valueField : "code",
+									hiddenName : 'entity/prodType',
+									ref : '../../prodType',
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+								}
+								/*
+								 * , { xtype : 'combo', fieldLabel : '产品类别',
+								 * anchor : '95%', colspan : 1, mode : 'local',
+								 * emptyText : '--请选择--', allowBlank : false,
+								 * editable : false, store :
+								 * _this.materTypeStore, displayField : "name",
+								 * valueField : "code", hiddenName :
+								 * 'entity/materType', listeners : { "expand" :
+								 * function(A) { this.reset() } } }
+								 */, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '文件编号',
+									// allowBlank : false,
+									name : 'entity/fileNo',
+									ref : '../../fileNo',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '版本号',
+									// allowBlank : false,
+									name : 'entity/bookVersion',
+									ref : '../../bookVersion',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '编制时间',
+									// allowBlank : false,
+									name : 'entity/preparationTime',
+									ref : '../../preparationTime',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '卷膜执行型号',
+									allowBlank : false,
+									name : 'entity/materSpecName',
+									ref : '../../materSpecName',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '卷膜型号',
+									allowBlank : false,
+									name : 'entity/jmSpecName',
+									ref : '../../jmSpecName',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									name : 'entity/craftNo',
+									ref : '../../craftNo',
+									dataIndex : 'craftNo',
+									allowBlank : false,
+									editable : false,
+									anchor : '95%',
+									colspan : 1,
+									fieldLabel : '工艺包编号',
+									xtype : 'trigger',
+									emptyText : '单击旁边按钮选择',
+									hideTrigger : false,
+									scope : this,
+									onTriggerClick : function() {
+										_this.onChoosePackage();
+									}
+
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '膜页数',
+									allowBlank : false,
+									name : 'entity/numPerWad',
+									decimalPrecision : 3,
+									ref : '../../numPerWad',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '膜片长度(m)',
+									decimalPrecision : 3,
+									allowBlank : false,
+									name : 'entity/blankingSize',
+									ref : '../../blankingSize',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '膜片宽度(m)',
+									decimalPrecision : 3,
+									allowBlank : false,
+									name : 'entity/mpWidth',
+									ref : '../../mpWidth',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '膜面积(ft²)',
+									decimalPrecision : 3,
+									allowBlank : false,
+									name : 'entity/area',
+									ref : '../../area',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '浓网型号(mil)',
+									allowBlank : false,
+									name : 'entity/denseNet',
+									ref : '../../denseNet',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '浓网长度(mm)',
+									decimalPrecision : 3,
+									allowBlank : false,
+									name : 'entity/denseNetWidth',
+									ref : '../../denseNetWidth',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '浓网宽度(mm)',
+									decimalPrecision : 3,
+									allowBlank : false,
+									name : 'entity/denseNetSpan',
+									ref : '../../denseNetSpan',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '长页淡网型号',
+									// allowBlank : false,
+									name : 'entity/lightNetLongType',
+									ref : '../../lightNetLongType',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '长页淡网长度(mm)',
+									decimalPrecision : 3,
+									// allowBlank : false,
+									name : 'entity/lightNetLongPage',
+									ref : '../../lightNetLongPage',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '长页淡网宽度(mm)',
+									decimalPrecision : 3,
+									// allowBlank : false,
+									name : 'entity/lightNetLongSpan',
+									ref : '../../lightNetLongSpan',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '短页淡网型号',
+									// allowBlank : false,
+									name : 'entity/lightNetShortType',
+									ref : '../../lightNetShortType',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '短页淡网长度(mm)',
+									decimalPrecision : 3,
+									// allowBlank : false,
+									name : 'entity/lightNetShortPage',
+									ref : '../../lightNetShortPage',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '短页淡网宽度(mm)',
+									decimalPrecision : 3,
+									// allowBlank : false,
+									name : 'entity/drawNetShortWidth',
+									ref : '../../drawNetShortWidth',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '卷膜胶带材质',
+									// allowBlank : false,
+									name : 'entity/juanmoTape',
+									ref : '../../juanmoTape',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '中心管型号',
+									// allowBlank : false,
+									name : 'entity/pipe',
+									ref : '../../pipe',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '白膜进水端<br>中心管长(mm)',
+									// allowBlank : false,
+									name : 'entity/intakePipeLength',
+									ref : '../../intakePipeLength',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '白膜出水端<br>中心管长(mm)',
+									// allowBlank : false,
+									name : 'entity/effluentPipeLength',
+									ref : '../../effluentPipeLength',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '白膜直径(mm)',
+									decimalPrecision : 3, //
+									// allowBlank : false,
+									name : 'entity/diameter',
+									ref : '../../diameter',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textarea',
+									fieldLabel : '叠膜工艺',
+									// allowBlank : false,
+									name : 'entity/denseNetCdm',
+									ref : '../../denseNetCdm',
+									anchor : '95%',
+									colspan : 2
+								}, {
+									xtype : 'textarea',
+									fieldLabel : '卷膜工艺',
+									// allowBlank : false,
+									name : 'entity/juanmo',
+									ref : '../../juanmo',
+									anchor : '95%',
+									colspan : 2
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '气检压力(kPa)',
+									// allowBlank : false,
+									name : 'entity/testPressure',
+									ref : '../../testPressure',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '保压时间(s)',
+									decimalPrecision : 3,
+									name : 'entity/keepPressureTime',
+									ref : '../../keepPressureTime',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '泄压值范围(kPa)',
+									name : 'entity/pressureArange',
+									regex : /^(\d+(.\d+)?)-(\d+(.\d+)?)$/,
+									regexText : "不合法的格式",
+									ref : '../../pressureArange',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '测试液种类',
+									name : 'entity/testLiquid',
+									ref : '../../testLiquid',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '测试液浓度(ppm)',
+									decimalPrecision : 3,
+									name : 'entity/testLiquidDensity',
+									ref : '../../testLiquidDensity',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									fieldLabel : '测试液压力(psi)',
+									decimalPrecision : 3,
+									name : 'entity/testLiquidPressure',
+									ref : '../../testLiquidPressure',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '测试液温度(℃)',
+									name : 'entity/testLiquidTemp',
+									ref : '../../testLiquidTemp',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '测试液pH',
+									name : 'entity/testLiquidPh',
+									ref : '../../testLiquidPh',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '回收率(%)',
+									name : 'entity/testLiquidRecovery',
+									ref : '../../testLiquidRecovery',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									regex : /^(\d+(.\d+)?)-(\d+(.\d+)?)$/,
+									regexText : "不合法的格式",
+									fieldLabel : '产水量(GPD)',
+									name : 'entity/testLiquidGpd',
+									ref : '../../testLiquidGpd',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									fieldLabel : '脱盐率(%)',
+									regex : /^(\d+(.\d+)?)-(\d+(.\d+)?)$/,
+									regexText : "不合法的格式",
+									name : 'entity/testLiquidSalt',
+									ref : '../../testLiquidSalt',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									name : 'entity/materSpecId',
+									ref : '../../materSpecId'
+								}]
+					}]
+		});
 	}
 }

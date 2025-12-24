@@ -44,9 +44,9 @@
     <node>invokePojo0</node>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" collapsed="false" nodeType="common" type="end">
-    <targetConnections>link24</targetConnections>
-    <targetConnections>link20</targetConnections>
     <targetConnections>link21</targetConnections>
+    <targetConnections>link20</targetConnections>
+    <targetConnections>link24</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="com.keensen.ump.produce.component.KsComponentYxorderBase" name="data" type="query" valueType="DataObject">data</process:return>
@@ -175,12 +175,22 @@
       <sourceNode>assign4</sourceNode>
       <targetNode>subprocess0</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link17" name="标签编号为空" type="transition">
+      <sourceNode>assign4</sourceNode>
+      <targetNode>assign6</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">entity/labelDrawingCode</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link3</targetConnections>
     <targetConnections>link7</targetConnections>
     <nodeLabel>assign4label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">entity/labelDrawingCode</process:from>
-      <process:to type="query">map/drawingCode</process:to>
+      <process:to type="query">map/drawingCode2</process:to>
     </process:copy>
     <process:copy>
       <process:from type="query" pattern="reference">entity/materSpecName2</process:from>
@@ -220,8 +230,19 @@
       <sourceNode>assign6</sourceNode>
       <targetNode>subprocess1</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link22" name="唛头编号为空" type="transition">
+      <sourceNode>assign6</sourceNode>
+      <targetNode>switch0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NULLOREMPTY">
+          <process:leftOperand type="query">entity/markDrawingCode</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link11</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link17</targetConnections>
     <nodeLabel>assign6label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">entity/markDrawingCode</process:from>
@@ -321,6 +342,7 @@
     </sourceConnections>
     <targetConnections>link15</targetConnections>
     <targetConnections>link13</targetConnections>
+    <targetConnections>link22</targetConnections>
     <nodeLabel>switch0label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="switch0label" name="label" nodeType="label">

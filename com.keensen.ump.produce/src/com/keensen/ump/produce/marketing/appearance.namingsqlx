@@ -456,7 +456,7 @@ GROUP BY t.template_name) tmp ON tmp.template_name = t1.DRAWING_CODE
 		t1.PRINT_DELAY_TIME as "printDelayTime",
        t1.reserve1 as "reserve1",
        t1.reserve3 as "reserve3",t1.reserve4 as "reserve4",t1.reserve5 as "reserve5"
-       
+       ,t1.isnsf "isnsf"
        
        
   FROM (
@@ -493,7 +493,8 @@ GROUP BY t.template_name) tmp ON tmp.template_name = t1.DRAWING_CODE
                 t7.max_print_date,
                 nvl(t4.spec_name_mark,nvl(yb.spec_name_mark,t4.MATER_SPEC_NAME2)) spec_name_mark,
                 
-                rec.dry_wet rec_dry_wet
+                rec.dry_wet rec_dry_wet,
+                decode(nsf.prod_spec_name,null,0,1) isnsf
           FROM QINSEN.INST_QIJIAN T1
           
           left join 
@@ -515,6 +516,12 @@ GROUP BY t.template_name) tmp ON tmp.template_name = t1.DRAWING_CODE
             ON T1.JUANMO_BATCH_ID = T2.RECORD_ID
           LEFT JOIN QINSEN.PARA_MATER_SPEC T3
             ON T3.MATER_SPEC_ID = T1.PROD_SPEC_ID
+            
+          left join (select DISTINCT t.prod_spec_name from KS_QUALITY_NSF_LIST t
+			WHERE t.prod_spec_name IS NOT NULL)  nsf
+			on t3.mater_spec_name = nsf.prod_spec_name  
+            
+            
           LEFT JOIN (SELECT MATER_SPEC_ID,
                             ORDER_NO,
                             MAX(TEMPLATE_NAME) TEMPLATE_NAME,

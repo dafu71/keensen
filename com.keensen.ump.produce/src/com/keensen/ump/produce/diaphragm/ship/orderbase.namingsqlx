@@ -43,7 +43,23 @@
 		t1.plan_user_id "planUserID",
 		t1.storage_user_id "storageUserID",
 		t1.plan_user_name "planUserName",
-		t1.storage_user_name "storageUserName"
+		t1.storage_user_name "storageUserName",
+		t1.dept as "dept",
+		t1.manager as "manager",
+		t1.prod_name as "prodName",
+		t1.amount_gift as "amountGift",
+		t1.check_report_needed as "checkReportNeeded",
+		t1.mptype as "mptype",
+		t1.mark_spec_name as "markSpecName",
+		t1.delivery_Date_Earliest as "deliveryDateEarliest",
+		t1.delivery_Date_Latest as "deliveryDateLatest",
+		t1.tray as "tray",
+		t1.packing_txt as "packingTxt",
+		t1.mark_paste as "markPaste",
+		t1.pallet as "pallet",
+		t1.flash as "flash",
+		t1.mark as "mark"		
+		
 		from KS_DIAPHRAGM_ORDER_BASE t1
 		where 1=1
 		<isNotNull prepend = "and"  property = "orderDateStart"> 

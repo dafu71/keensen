@@ -41,6 +41,15 @@ com.keensen.ump.produce.component.produce.WeldedMgr.prototype.initEvent = functi
 
 com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onAdd = function() {
 	this.inputWindow.show();
+	if(ip == '172.16.10.94'){
+		this.inputWindow.machineCode.setValue('H1');
+	}
+	if(ip == '172.16.10.63'){
+		this.inputWindow.machineCode.setValue('H2');
+	}
+	if(ip == '172.16.10.64'){
+		this.inputWindow.machineCode.setValue('H3');
+	}
 
 }
 
