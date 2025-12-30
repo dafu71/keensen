@@ -98,6 +98,9 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 						dataIndex : 'jmSpecName',
 						header : '卷膜型号'
 					}, {
+						dataIndex : 'dryWet',
+						header : '干湿'
+					}, {
 						dataIndex : 'specType',
 						header : '元件类型'
 					}, {
@@ -174,6 +177,8 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 							name : 'jmSpecName'
 						}, {
 							name : 'storageCode'
+						}, {
+							name : 'dryWet'
 						}]
 			})
 		})
@@ -215,14 +220,6 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 				saveUrl : 'com.keensen.ump.produce.component.storage.saveWarehousingByBatchNos.biz.ext',
 				fields : [{
 							xtype : 'textfield',
-							fieldLabel : '元件型号',
-							ref : '../../jmSpecName',
-							allowBlank : false,
-							name : 'entity/jmSpecName',
-							anchor : '95%',
-							colspan : 3
-						}, {
-							xtype : 'textfield',
 							fieldLabel : '元件类型',
 							readOnly : true,
 							value : '工业',
@@ -231,6 +228,36 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 							name : 'entity/specType',
 							anchor : '95%',
 							colspan : 3
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '卷膜型号',
+							ref : '../../jmSpecName',
+							allowBlank : false,
+							name : 'entity/jmSpecName',
+							anchor : '95%',
+							colspan : 3
+						}, {
+
+							anchor : '95%',
+							colspan : 3,
+							xtype : 'combo',
+							mode : 'local',
+							allowBlank : false,
+							hiddenName : 'entity/type',
+							ref : '../../type',
+							fieldLabel : '入库类型',
+							value : '生产入库',
+							store : [['生产入库', '生产入库'], ['其他入库', '其他入库']],
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+
 						}, {
 							xtype : 'displayfield',
 							height : '5',

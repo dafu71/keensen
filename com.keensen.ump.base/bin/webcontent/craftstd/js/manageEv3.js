@@ -363,8 +363,8 @@ com.keensen.ump.base.CraftStdMgr.prototype.initList = function() {
 			'卷膜胶带材质', '白膜直径下限(mm)', '白膜直径上限(mm)', '白膜进水端中心管长下限(mm)',
 			'白膜进水端中心管长上限(mm)', '白膜出水端中心管长下限(mm)', '白膜出水端中心管长上限(mm)', '气检形式',
 			'气检压力下限(kPa)', '气检压力上限(kPa)', '保压时间(s)', '泄压值范围下限(kPa)',
-			'泄压值范围上限(kPa)', '直径下限(mm)', '直径上限(mm)', '绕丝工艺', '测试液种类', '测试液溶液',
-			'压力', '温度', 'pH', '回收率'];
+			'泄压值范围上限(kPa)', '直径下限(mm)', '直径上限(mm)', '绕丝工艺', '测试液种类',
+			'测试液溶液(mg/L)', '压力psi(MPa)', '温度(℃)', 'pH', '回收率(%)'];
 	var cm = this.listPanel.getColumnModel(); // 获取列模型
 	var length = cm.getColumnCount();
 	for (var i = 0; i < length; i++) {

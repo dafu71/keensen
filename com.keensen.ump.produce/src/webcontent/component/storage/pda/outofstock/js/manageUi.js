@@ -23,7 +23,7 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
-					columns : 2,
+					columns : 4,
 					border : true,
 					region : "north",
 					// collapsible : true,
@@ -32,12 +32,18 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 								xtype : 'textfield',
 								colspan : 1,
 								name : 'condition/checkCode',
-								anchor : '85%',
+								anchor : '100%',
 								fieldLabel : '请检单号'
 							}, {
-								xtype : "dateregion",
+								xtype : 'textfield',
 								colspan : 1,
-								anchor : '85%',
+								name : 'condition/batchNo',
+								anchor : '100%',
+								fieldLabel : '元件序号'
+							}, {
+								xtype : "dateregion",
+								colspan : 2,
+								anchor : '100%',
 								nameArray : ['condition/createTimeStart',
 										'condition/createTimeEnd'],
 								fieldLabel : "出库时间",
@@ -68,13 +74,19 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						header : '请检单号'
 					}, {
 						dataIndex : 'orderNo',
-						header : '订单号'
+						header : '出库订单号'
+					}, {
+						dataIndex : 'type',
+						header : '出库类型'
 					}, {
 						dataIndex : 'amount',
 						header : '数量'
 					}, {
 						dataIndex : 'jmSpecName',
 						header : '卷膜型号'
+					}, {
+						dataIndex : 'dryWet',
+						header : '干湿'
 					}, {
 						dataIndex : 'specType',
 						header : '元件类型'
@@ -86,18 +98,17 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						header : '仓库名称'
 					}, {
 						dataIndex : 'type',
-						header : '入库类型'
+						header : '出库类型'
 					}, {
 						dataIndex : 'createTime',
 						sortable : true,
-						header : '入库时间'
+						header : '出库时间'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.component.storage.queryWarehousingByPage.biz.ext.biz.ext',
+				url : 'com.keensen.ump.produce.component.storage.queryOutOfStockByPage.biz.ext.biz.ext',
 				root : 'data',
 				autoLoad : true,
-				baseParams : {
-				},
+				baseParams : {},
 				totalProperty : 'totalCount',
 				fields : [{
 							name : 'id'
@@ -151,6 +162,8 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 							name : 'jmSpecName'
 						}, {
 							name : 'storageCode'
+						}, {
+							name : 'dryWet'
 						}]
 			})
 		})
@@ -163,10 +176,11 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 					height : '500',
 					baseCls : "x-plain"
 				});
+				
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
 			// baseCls : "x-plain",
 			width : '480',
-			height : '350',
+			height : '420',
 			pgrid : '',
 			columns : 1,
 			autoHide : false,
@@ -177,16 +191,11 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						height : '50',
 						colspan : 1
 					}, {
-
-						anchor : "80%",
-						colspan : 1,
-						xtype : 'combo',
-						allowBlank : false,
-						ref : '../type',
-						fieldLabel : '入库类型',
-						value : '生产入库',
-						store : [['生产入库', '生产入库'], ['其他入库', '其他入库']]
-
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						value : '<p style="color:red;font-size:16px;">出库顺序为请检单号>库位码>元件序号</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 1
 					}, {
 						xtype : 'displayfield',
 						height : '10',
@@ -197,10 +206,15 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						colspan : 1,
 						xtype : 'combo',
 						allowBlank : false,
-						ref : '../storage',
-						fieldLabel : '仓库',
-						store : [['高架成品仓', '高架成品仓'], ['高架订单仓', '高架订单仓'],
-								['高架C等品仓', '高架C等品仓']]
+						ref : '../type',
+						fieldLabel : '出库类型',
+						value : '销售出库',
+						store : [['销售出库', '销售出库'], ['其它出库', '其它出库']],
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
 
 					}, {
 						xtype : 'displayfield',
@@ -210,7 +224,30 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						xtype : 'textfield',
 						height : 30,
 						style : '{font-weight:bold;font-size:18px;}',
-						allowBlank : false,
+						//allowBlank : false,
+						fieldLabel : '出库订单号',
+						ref : '../orderNo',
+						anchor : '80%',
+						colspan : 1,
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+									
+
+								}
+
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						height : '10',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						height : 30,
+						style : '{font-weight:bold;font-size:18px;}',
+						//allowBlank : false,
 						fieldLabel : '请检单号',
 						ref : '../checkCode',
 						anchor : '80%',
@@ -219,7 +256,7 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 							scope : this,
 							specialkey : function(C, D) {
 								if (D.getKey() == Ext.EventObject.ENTER) {
-									_this.queryCheck();
+									
 
 								}
 
@@ -228,16 +265,40 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : ' ',
-						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入后按回车键</p>',
+						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 1
 					}, {
 						xtype : 'textfield',
 						height : 30,
 						style : '{font-weight:bold;font-size:18px;}',
-						allowBlank : false,
+						//allowBlank : false,
 						fieldLabel : '库位码',
 						ref : '../storageCode',
+						anchor : '80%',
+						colspan : 1,
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+
+								}
+
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						height : 30,
+						style : '{font-weight:bold;font-size:18px;}',
+						//allowBlank : false,
+						fieldLabel : '元件序号',
+						ref : '../batchNo',
 						anchor : '80%',
 						colspan : 1,
 						listeners : {
@@ -265,9 +326,6 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						ref : '../msg',
 						labelSeparator : '',// 去掉冒号
 						colspan : 1
-					}, {
-						xtype : 'hidden',
-						ref : '../checkId'
 					}],
 			buttons : [{
 						text : "确定",

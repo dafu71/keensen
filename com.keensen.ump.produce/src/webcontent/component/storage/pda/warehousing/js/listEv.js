@@ -44,6 +44,18 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr.prototype.onAdd = f
 	this.inputWindow.show();
 }
 
+com.keensen.ump.produce.component.storage.WareHousingListMgr.prototype.exportExcel = function() {
+
+	doQuerySqlAndExport(
+			this,
+			this.queryPanel,
+			this.listPanel,
+			'入库查询',
+			'com.keensen.ump.produce.component.storage.queryWarehousing',
+			'0,1');
+
+}
+
 function unique(arr) {
 	
 	if (!Array.isArray(arr)) {

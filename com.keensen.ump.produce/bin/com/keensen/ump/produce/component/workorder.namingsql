@@ -813,13 +813,13 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
     <select id="queryViewOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	
 	SELECT 
-	
-	CASE WHEN replace(replace(REPLACE(REPLACE(YB.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
+	case when yb.nsf_confirm_user_id is not null then yb.mark_nsf
+	 WHEN replace(replace(REPLACE(REPLACE(YB.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
   			THEN '错'
     		ELSE 
     	DECODE(nsf.label_spec_name,NULL,'无', '有') END  as "markNsf",
-	
-	CASE WHEN replace(replace(REPLACE(REPLACE(YB.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
+	case when yb.nsf_confirm_user_id is not null then yb.label_nsf
+	WHEN replace(replace(REPLACE(REPLACE(YB.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
   			THEN '错'
     		ELSE 
     	DECODE(nsf.label_spec_name,NULL,'无', '有') END  as "labelNsf",

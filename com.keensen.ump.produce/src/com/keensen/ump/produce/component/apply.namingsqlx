@@ -216,6 +216,7 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
   left join KS_PROD_COMPONENT_YXORDER od
   on od.mater_spec_id = T1.PROD_SPEC_ID and od.order_no = t1.order_no
   
+  <!--
   left join 
   (select v.qj_batch_no,t1.dry_wet,t1.batch_no FROM 
 	(
@@ -228,6 +229,15 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
 	   LEFT JOIN V_KS_QJ_BATCH_NO v
 	  on v.batch_no = t1.batch_no) rec
   on rec.qj_batch_no =t1.batch_no
+  
+  -->
+   left join (SELECT batch_no,dry_wet FROM KS_COMPONENT_PROD_RECORD
+	WHERE ID IN(
+	SELECT MAX(ID)
+	FROM KS_COMPONENT_PROD_RECORD
+	WHERE 1=1 and nvl(status,1) != 0
+	GROUP BY batch_no)) rec
+  on rec.batch_no =t1.batch_no
   
   LEFT JOIN (select wm_concat(distinct m.batch_no) tumo_batch_str,dd.main_batch_id record_id
           from qinsen.inst_juanmo_detail dd,
@@ -255,8 +265,12 @@ LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
     or exists(select 1 from KS_COMPONENT_REWORK_LIST tt where tt.BATCH_NO = T1.BATCH_NO))
     
     <!--元件已完成绕丝-->
-    and exists(SELECT 1 from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
-	  on rs.juanmo_batch_id = qj.juanmo_batch_id where qj.batch_no = T1.BATCH_NO)
+    and exists(SELECT qj.batch_no from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
+	  on rs.juanmo_batch_id = qj.juanmo_batch_id where qj.batch_no = T1.BATCH_NO
+	  UNION
+	  SELECT RS.batch_no from qinsen.inst_raosi rs 
+	  WHERE rs.juanmo_batch_id is null and rs.batch_no = T1.BATCH_NO
+	  ) 
     
     <isEqual prepend="" property="ifprint" compareValue="是">
     <!--元件已打印唛头-->
@@ -501,6 +515,7 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
        T1.diameter "diameter",T1.diameter2 "diameter2"
   FROM QINSEN.INST_QIJIAN T1
   
+  <!--
   left join 
   (select v.qj_batch_no,t1.dry_wet,t1.batch_no FROM 
 	(
@@ -513,6 +528,14 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
 	   LEFT JOIN V_KS_QJ_BATCH_NO v
 	  on v.batch_no = t1.batch_no) rec
   on rec.qj_batch_no =t1.batch_no
+  -->
+  left join (SELECT batch_no,dry_wet FROM KS_COMPONENT_PROD_RECORD
+	WHERE ID IN(
+	SELECT MAX(ID)
+	FROM KS_COMPONENT_PROD_RECORD
+	WHERE 1=1 and nvl(status,1) != 0
+	GROUP BY batch_no)) rec
+  on rec.batch_no =t1.batch_no
   
   LEFT JOIN (select wm_concat(distinct m.batch_no) tumo_batch_str,dd.main_batch_id record_id
           from qinsen.inst_juanmo_detail dd,
@@ -544,12 +567,24 @@ LISTAGG(t.BLANKING_SIZE*t.PAGE_CNT, ', ') WITHIN GROUP (ORDER BY t.tumo_batch_no
 	  on rs.juanmo_batch_id = qj.juanmo_batch_id where qj.batch_no = T1.BATCH_NO)-->
 	  
 	  
-	  
+	<!--  
 	  and exists(SELECT 1 from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
    on rs.juanmo_batch_id = qj.juanmo_batch_id   
-  <!--left join V_KS_QJ_BATCH_NO_raosi v
-	  on rs.batch_no = v.batch_no-->
+  left join V_KS_QJ_BATCH_NO_raosi v
+	  on rs.batch_no = v.batch_no
     where qj.batch_no = T1.BATCH_NO)
+    -->
+    
+     and exists(SELECT qj.batch_no from qinsen.inst_raosi rs left join qinsen.INST_qijian qj
+	  on rs.juanmo_batch_id = qj.juanmo_batch_id where qj.batch_no = T1.BATCH_NO
+	  UNION
+	  SELECT RS.batch_no from qinsen.inst_raosi rs 
+	  WHERE rs.juanmo_batch_id is null and rs.batch_no = T1.BATCH_NO
+	  ) 
+    
+    
+    
+    
     
     <isEqual prepend="" property="ifprint" compareValue="是">
     <!--元件已打印唛头-->

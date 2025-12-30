@@ -207,7 +207,7 @@
 		t1.IF_PRINT_SPEC_NAME as "ifPrintSpecName",
 		t1.Y_BATCH_SPEC_NAME as "yBatchSpecName",
 		t1.X_BATCH_SPEC_NAME as "xBatchSpecName",
-		t1.IF_PRINT_DRY_WET as "ifPrintDryWet",
+		t1.IF_PRINT_DRY_WET as "ifPrintDryWet",t1.if_print_brand as "ifPrintBrand",
 		t1.Y_DRY_IMG as "yDryImg",
 		t1.X_DRY_IMG as "xDryImg",
 		t1.Y_DRY_SPAN as "yDrySpan",
@@ -241,7 +241,7 @@
                 t5.IF_PRINT_BATCH_NO,
                 t5.Y_BATCH_NO,t5.X_BATCH_NO,
                 t5.IF_PRINT_SPEC_NAME,t5.Y_BATCH_SPEC_NAME,
-                t5.X_BATCH_SPEC_NAME,t5.IF_PRINT_DRY_WET,
+                t5.X_BATCH_SPEC_NAME,t5.IF_PRINT_DRY_WET,T5.if_print_brand,
                 t5.Y_DRY_IMG,t5.X_DRY_IMG,t5.Y_DRY_SPAN,
                 t5.X_DRY_SPAN,t5.Y_WET_IMG,t5.X_WET_IMG,
                 t5.Y_WET_SPAN,t5.X_WET_SPAN,t5.Y_STAR_IMG,
@@ -263,7 +263,8 @@
                 
                 rec.dry_wet rec_dry_wet,
                 
-                decode(nsf.label_spec_name,null,0,1) isnsf
+                case when yb.nsf_confirm_user_id is not null then decode(yb.mark_nsf,'有',1,0) 
+                else decode(nsf.label_spec_name,null,0,1) end isnsf
                 
           FROM QINSEN.INST_QIJIAN T1
           
@@ -320,7 +321,11 @@
           on yb.id = t4.base_id
           
           left join (select DISTINCT t.label_spec_name from KS_QUALITY_NSF_LIST t
-			WHERE t.prod_spec_name IS NOT NULL)  nsf
+			WHERE t.prod_spec_name IS NOT NULL
+			
+			
+			
+			)  nsf
 			on nvl(t4.spec_name_mark,nvl(yb.spec_Name_Mark,t4.mater_spec_name2)) = nsf.label_spec_name
           
             where 1=1

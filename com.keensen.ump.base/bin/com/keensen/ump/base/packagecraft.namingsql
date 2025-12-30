@@ -181,6 +181,7 @@
 	SET pms.NUM_PER_WAD=( select t.NUM_PER_WAD from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
 	pms.BLANKING_SIZE=( select t.BLANKING_SIZE from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
 	pms.MP_WIDTH=( select t.MP_WIDTH from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
+	pms.page_WIDTH=( select t.MP_WIDTH from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
 	pms.DENSE_NET=( select t.DENSE_NET from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
 	pms.DENSE_NET_WIDTH=( select t.DENSE_NET_WIDTH from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
 	pms.DENSE_NET_SPAN=( select t.DENSE_NET_SPAN from KS_BASE_CRAFTS_PACKAGE t where t.craft_no= pms.craft_no ),
@@ -287,4 +288,33 @@
 		       	where craft_no_water = #craftNo#
 		       )</isNotNull>
     </update>
+    <update id="updateWaterStd" parameterClass="java.util.HashMap">
+    UPDATE QINSEN.INST_PROD_WATER_STD ws
+	 SET ws.test_liquid = (SELECT test_liquid FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id ),
+	 ws.density = (SELECT density FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id),
+	 ws.pressure = (SELECT pressure FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id),
+	 ws.tempreture = (SELECT tempreture FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id),
+	  ws.ph = (SELECT ph FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id),
+	   ws.recovery = (SELECT recovery FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id),
+	 ws.a_gpd_low_limit = (SELECT a_gpd_low_limit FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id),
+	ws.a_gpd_up_limit = (SELECT a_gpd_up_limit FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id),
+	ws.a_salt_low_limit = (SELECT a_salt_low_limit FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id),
+	ws.a_salt_up_limit = (SELECT a_salt_up_limit FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id),
+	ws.a_gpd_center = (SELECT a_gpd_center FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id)
+	WHERE EXISTS(SELECT 1 FROM V_KS_PROD_WATER_STD v WHERE v.prod_spec_id = ws.prod_spec_id)
+	<isNotNull prepend="and" property="materSpecId">ws.prod_spec_id = #materSpecId#</isNotNull>
+    </update>
+    <insert id="insertWaterStd" parameterClass="java.util.HashMap">insert into QINSEN.INST_PROD_WATER_STD
+	(record_id,prod_spec_id,create_dt,creator_id)
+	select qinsen.SEQ_INST_PROD_WATER_STD.nextval, #materSpecId#,sysdate,#operatorId# from dual</insert>
+    <update id="updateQjStd" parameterClass="java.util.HashMap">
+    UPDATE qinsen.inst_qj_std qs
+	SET qs.low_limit =(SELECT low_limit FROM v_ks_inst_qj_std v WHERE v.prod_spec_id=qs.prod_spec_id),
+	qs.up_limit = (SELECT up_limit FROM v_ks_inst_qj_std v WHERE v.prod_spec_id=qs.prod_spec_id)
+	WHERE EXISTS( SELECT 1 FROM v_ks_inst_qj_std v WHERE v.prod_spec_id=qs.prod_spec_id)
+	<isNotNull prepend="and" property="materSpecId">qs.prod_spec_id = #materSpecId#</isNotNull>
+    </update>
+    <insert id="insertQjStd" parameterClass="java.util.HashMap">insert into qinsen.inst_qj_std
+	(record_id,prod_spec_id,create_dt,creator_id,STATE)
+	select qinsen.SEQ_INST_QJ_STD.nextval, #materSpecId#,sysdate,#operatorId#,'Y' from dual</insert>
 </sqlMap>

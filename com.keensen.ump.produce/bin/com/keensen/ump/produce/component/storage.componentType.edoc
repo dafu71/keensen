@@ -1,11 +1,23 @@
 <map>
   <entry>
-    <string>storage</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;storage.componentType&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;storage&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage&lt;/html&gt;</string>
+    <string>com.keensen.ump.produce.component.storage.saveOutOfStockByCode(commonj.sdo.DataObject)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveOutOfStockByCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveOutOfStockByCode&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.saveOutOfStockByCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(commonj.sdo.DataObject):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.storage.saveAllocate(com.keensen.ump.produce.component2.KsComponentAllocate)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveAllocate&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.saveAllocate&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component2.KsComponentAllocate):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.storage.saveBatchAllocate(String, String, String)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveBatchAllocate&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveBatchAllocate&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.saveBatchAllocate&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;ids(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;toStorage(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;toStorageCode(String):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;msg(String):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;err(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.component.storage.saveWarehousingByBatchNos(com.keensen.ump.produce.component2.KsComponentWarehousing)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveWarehousingByBatchNos&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveWarehousingSingle&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.saveWarehousingByBatchNos&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component2.KsComponentWarehousing):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;ret(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>storage</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;storage.componentType&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;storage&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.component.storage.saveWarehousingByCheckCode(commonj.sdo.DataObject)</string>
@@ -40,19 +52,31 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryBatchNoByCheckCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryStock&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.queryBatchNoByCheckCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.produce.component.storage.queryStorageCode(java.util.Map)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryStorageCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;库位查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.queryStorageCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+    <string>com.keensen.ump.produce.component.storage.queryOutOfStockByPage(java.util.Map, com.eos.foundation.PageCond)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryOutOfStockByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.queryOutOfStockByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.produce.component.storage.saveStorageCode(com.keensen.ump.produce.component2.KsComponentStorageCode)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveStorageCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.saveStorageCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component2.KsComponentStorageCode):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+    <string>com.keensen.ump.produce.component.storage.saveOutOfStock(com.keensen.ump.produce.component2.KsComponentOutofstock)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveOutOfStock&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.saveOutOfStock&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component2.KsComponentOutofstock):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.storage.queryStorageCode(java.util.Map)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryStorageCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;库位查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.queryStorageCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.component.storage.saveWarehousing(com.keensen.ump.produce.component2.KsComponentWarehousing)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveWarehousing&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.saveWarehousing&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component2.KsComponentWarehousing):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
+    <string>com.keensen.ump.produce.component.storage.saveStorageCode(com.keensen.ump.produce.component2.KsComponentStorageCode)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveStorageCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.saveStorageCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component2.KsComponentStorageCode):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>com.keensen.ump.produce.component.storage.queryStorageByPage(java.util.Map, com.eos.foundation.PageCond)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryStorageByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.queryStorageByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.storage.queryAllocateByPage(java.util.Map, com.eos.foundation.PageCond)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryAllocateByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.storage.queryAllocateByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
 </map>

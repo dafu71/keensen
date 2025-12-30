@@ -106,8 +106,11 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 		t1.test_liquid_temp as "testLiquidTemp",
 		t1.test_liquid_ph as "testLiquidPh",
 		t1.test_liquid_recovery as "testLiquidRecovery",
-		t1.test_liquid_gpd as "testLiquidGpd",
-		t1.test_liquid_salt as "testLiquidSalt",
+		<!--t1.test_liquid_gpd as "testLiquidGpd",
+		t1.test_liquid_salt as "testLiquidSalt",-->
+		
+		t1.gpd_low_limit || '-' || t1.gpd_up_limit as "testLiquidGpd",
+		t1.salt_low_limit || '-' || t1.salt_up_limit as "testLiquidSalt",
 		
 		t1.file_no "fileNo",
 		t1.modify_record "modifyRecord",
@@ -140,7 +143,13 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 		t1.CRAFT_NO_TRIM as "craftNoTrim",
 		t1.CRAFT_NO_COILING as "craftNoCoiling",
 		t1.DIAMETER_LOW as "diameterLow",
-		t1.DIAMETER_UP as "diameterUp"
+		t1.DIAMETER_UP as "diameterUp",
+		t1.mp as "mp",
+		t1.gpd_Low_Limit as "gpdLowLimit",
+		t1.gpd_Up_Limit as "gpdUpLimit",
+		t1.salt_Low_Limit as "saltLowLimit",
+		t1.Salt_up_Limit as "saltUpLimit"
+		
 		
 		
        
@@ -240,7 +249,15 @@ SELECT T1.MATER_SPEC_ID         AS "materSpecId",
 		s.mater_type,s.diameter,
 		
 		s.file_no ,
-		s.modify_record,		
+		s.modify_record,	
+		
+		s.mp ,
+		s.gpd_Low_Limit ,
+		s.gpd_Up_Limit ,
+		s.salt_Low_Limit ,
+		s.Salt_up_Limit ,
+		
+			
 
                C.MATER_CLASS_CODE,
                C.MATER_CLASS_NAME,

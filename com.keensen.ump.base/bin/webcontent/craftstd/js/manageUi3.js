@@ -388,7 +388,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 					}
 
 					if (title == '水测条件标准包编号') {
-						var arr = ['测试液种类', '测试液溶液', '压力', '温度', 'pH', '回收率'];
+						var arr = ['测试液种类',  '测试液溶液(mg/L)', '压力psi(MPa)', '温度(℃)','pH','回收率(%)'];
 						var isHidden = cm.isHidden(columnIndex + 1);
 						for (var i = columnIndex; i < length; i++) {
 							var title2 = cm.getColumnHeader(i);
@@ -495,6 +495,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 								}))
 					}, {
 						dataIndex : 'prodType',
+						hidden : true,
 						header : '产品类型'
 					}, {
 						dataIndex : 'jmSpecName',
@@ -636,24 +637,38 @@ com.keensen.ump.base.CraftStdMgr = function() {
 						dataIndex : 'craftNoWater',
 						width : 200,
 						header : '水测条件标准包编号'
-					}, {
-						dataIndex : 'testLiquid',
-						header : '测试液种类'
-					}, {
+					}/*
+						 * , { dataIndex : 'testLiquid', header : '测试液种类' }
+						 */, {
 						dataIndex : 'testLiquidDensity',
-						header : '测试液溶液'
+						header : '测试液溶液(mg/L)'
 					}, {
 						dataIndex : 'testLiquidPressure',
-						header : '压力'
+						header : '压力psi(MPa)'
 					}, {
 						dataIndex : 'testLiquidTemp',
-						header : '温度'
+						header : '温度(℃)'
 					}, {
 						dataIndex : 'testLiquidPh',
 						header : 'pH'
 					}, {
 						dataIndex : 'testLiquidRecovery',
-						header : '回收率'
+						header : '回收率(%)'
+					}, {
+						dataIndex : 'mp',
+						header : '指定膜片'
+					}, {
+						dataIndex : 'gpdLowLimit',
+						header : '产水量下限（GPD）'
+					}, {
+						dataIndex : 'gpdUpLimit',
+						header : '产水量上限(GPD)'
+					}, {
+						dataIndex : 'saltLowLimit',
+						header : '脱盐率下限(%)'
+					}, {
+						dataIndex : 'saltUpLimit',
+						header : '脱盐率上限(%)'
 					}, {
 						dataIndex : 'fileNo',
 						sortable : true,
@@ -684,6 +699,16 @@ com.keensen.ump.base.CraftStdMgr = function() {
 						},
 						fields : [{
 									name : 'materSpecId'
+								}, {
+									name : 'mp'
+								}, {
+									name : 'gpdLowLimit'
+								}, {
+									name : 'gpdUpLimit'
+								}, {
+									name : 'saltLowLimit'
+								}, {
+									name : 'saltUpLimit'
 								}, {
 									name : 'materSpecCode'
 								}, {
@@ -928,6 +953,16 @@ com.keensen.ump.base.CraftStdMgr = function() {
 									name : 'diameterLow'
 								}, {
 									name : 'diameterUp'
+								}, {
+									name : 'mp'
+								}, {
+									name : 'gpdLowLimit'
+								}, {
+									name : 'gpdUpLimit'
+								}, {
+									name : 'saltLowLimit'
+								}, {
+									name : 'saltUpLimit'
 								}]
 					})
 		})
@@ -967,7 +1002,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 							}
 						},
 						// pgrid : _this.listPanel,
-						columns : 4,
+						columns : 3,
 						saveUrl : 'com.keensen.ump.qinsen.std.addMaterByCraft.biz.ext',
 						fields : [{
 									xtype : 'combo',
@@ -990,25 +1025,21 @@ com.keensen.ump.base.CraftStdMgr = function() {
 										}
 									}
 								}, {
-									xtype : 'combo',
-									fieldLabel : '产品类型',
-									anchor : '95%',
-									colspan : 1,
-									mode : 'local',
-									emptyText : '--请选择--',
-									allowBlank : false,
-									editable : false,
-									store : _this.prodTypeStore,
-									displayField : "name",
-									valueField : "code",
-									hiddenName : 'entity/prodType',
+									xtype : 'hidden',
+									name : 'entity/prodType',
 									ref : '../../prodType',
-									listeners : {
-										"expand" : function(A) {
-											this.reset()
-										}
-									}
-								}, {
+									value : '公司标准'
+								}/*
+									 * , { xtype : 'combo', fieldLabel : '产品类型',
+									 * anchor : '95%', colspan : 1, mode :
+									 * 'local', emptyText : '--请选择--',
+									 * allowBlank : false, editable : false,
+									 * store : _this.prodTypeStore, displayField :
+									 * "name", valueField : "code", hiddenName :
+									 * 'entity/prodType', ref :
+									 * '../../prodType', listeners : { "expand" :
+									 * function(A) { this.reset() } } }
+									 */, {
 									xtype : 'textfield',
 									fieldLabel : '卷膜型号',
 									allowBlank : false,
@@ -1162,6 +1193,54 @@ com.keensen.ump.base.CraftStdMgr = function() {
 										_this.onChoosePackageWater();
 									}
 
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../mp',
+									name : 'entity/mp',
+									allowBlank : false,
+									fieldLabel : '指定膜片'
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../gpdLowLimit',
+									name : 'entity/gpdLowLimit',
+									allowBlank : false,
+									fieldLabel : '产水量下限（GPD）'
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../gpdUpLimit',
+									name : 'entity/gpdUpLimit',
+									allowBlank : false,
+									fieldLabel : '产水量上限（GPD）'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../saltLowLimit',
+									name : 'entity/saltLowLimit',
+									allowBlank : false,
+									fieldLabel : '脱盐率下限(%)'
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../saltUpLimit',
+									name : 'entity/saltUpLimit',
+									allowBlank : false,
+									fieldLabel : '脱盐率上限(%)'
 								}]
 					}]
 		});
@@ -1810,7 +1889,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 					}
 				},
 				// pgrid : _this.listPanel,
-				columns : 4,
+				columns : 3,
 				loadUrl : 'com.keensen.ump.base.mater.expandMaterSpec.biz.ext',
 				saveUrl : 'com.keensen.ump.qinsen.std.modifyMaterByCraft.biz.ext',
 				fields : [{
@@ -1834,6 +1913,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 								}
 							}
 						}, {
+									xtype : 'hidden',
+									name : 'entity/prodType',
+									ref : '../../prodType',
+									value : '公司标准'
+								}/*, {
 							xtype : 'combo',
 							fieldLabel : '产品类型',
 							anchor : '95%',
@@ -1853,7 +1937,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 									this.reset()
 								}
 							}
-						}, {
+						}*/, {
 							xtype : 'textfield',
 							fieldLabel : '卷膜型号',
 							allowBlank : false,
@@ -2013,6 +2097,59 @@ com.keensen.ump.base.CraftStdMgr = function() {
 							}
 
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 4
+						}, {
+							xtype : 'textfield',
+							anchor : '95%',
+							colspan : 1,
+							ref : '../../mp',
+							name : 'entity/mp',
+							dataIndex : 'mp',
+							allowBlank : false,
+							fieldLabel : '指定膜片'
+						}, {
+							xtype : 'textfield',
+							anchor : '95%',
+							colspan : 1,
+							ref : '../../gpdLowLimit',
+							name : 'entity/gpdLowLimit',
+							dataIndex : 'gpdLowLimit',
+							allowBlank : false,
+							fieldLabel : '产水量下限（GPD）'
+						}, {
+							xtype : 'textfield',
+							anchor : '95%',
+							colspan : 1,
+							ref : '../../gpdUpLimit',
+							name : 'entity/gpdUpLimit',
+							dataIndex : 'gpdUpLimit',
+							allowBlank : false,
+							fieldLabel : '产水量上限（GPD）'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 4
+						}, {
+							xtype : 'textfield',
+							anchor : '95%',
+							colspan : 1,
+							ref : '../../saltLowLimit',
+							name : 'entity/saltLowLimit',
+							dataIndex : 'saltLowLimit',
+							allowBlank : false,
+							fieldLabel : '脱盐率下限(%)'
+						}, {
+							xtype : 'textfield',
+							anchor : '95%',
+							colspan : 1,
+							ref : '../../saltUpLimit',
+							name : 'entity/saltUpLimit',
+							dataIndex : 'saltUpLimit',
+							allowBlank : false,
+							fieldLabel : '脱盐率上限(%)'
+						}, {
 							xtype : 'hidden',
 							dataIndex : 'materSpecId',
 							name : 'entity/materSpecId'
@@ -2055,7 +2192,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 							}
 						},
 						// pgrid : _this.listPanel,
-						columns : 4,
+						columns : 3,
 						loadUrl : 'com.keensen.ump.base.mater.expandMaterSpec.biz.ext',
 						saveUrl : 'com.keensen.ump.qinsen.std.addMaterByCraft.biz.ext',
 						fields : [{
@@ -2079,6 +2216,11 @@ com.keensen.ump.base.CraftStdMgr = function() {
 										}
 									}
 								}, {
+									xtype : 'hidden',
+									name : 'entity/prodType',
+									ref : '../../prodType',
+									value : '公司标准'
+								}/*, {
 									xtype : 'combo',
 									fieldLabel : '产品类型',
 									anchor : '95%',
@@ -2098,7 +2240,7 @@ com.keensen.ump.base.CraftStdMgr = function() {
 											this.reset()
 										}
 									}
-								}, {
+								}*/, {
 									xtype : 'textfield',
 									fieldLabel : '卷膜型号',
 									allowBlank : false,
@@ -2257,6 +2399,59 @@ com.keensen.ump.base.CraftStdMgr = function() {
 										_this.onChoosePackageWater();
 									}
 
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../mp',
+									name : 'entity/mp',
+									dataIndex : 'mp',
+									allowBlank : false,
+									fieldLabel : '指定膜片'
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../gpdLowLimit',
+									name : 'entity/gpdLowLimit',
+									dataIndex : 'gpdLowLimit',
+									allowBlank : false,
+									fieldLabel : '产水量下限（GPD）'
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../gpdUpLimit',
+									name : 'entity/gpdUpLimit',
+									dataIndex : 'gpdUpLimit',
+									allowBlank : false,
+									fieldLabel : '产水量上限（GPD）'
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../saltLowLimit',
+									name : 'entity/saltLowLimit',
+									dataIndex : 'saltLowLimit',
+									allowBlank : false,
+									fieldLabel : '脱盐率下限(%)'
+								}, {
+									xtype : 'textfield',
+									anchor : '95%',
+									colspan : 1,
+									ref : '../../saltUpLimit',
+									name : 'entity/saltUpLimit',
+									dataIndex : 'saltUpLimit',
+									allowBlank : false,
+									fieldLabel : '脱盐率上限(%)'
 								}]
 					}]
 		});

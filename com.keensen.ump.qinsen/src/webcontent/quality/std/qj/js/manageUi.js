@@ -78,6 +78,11 @@ com.keensen.ump.produce.quality.qjstdMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '->', {
+						text : '批量更新参数',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onModifyBatch
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.qijian.deleteQjStdById.biz.ext',

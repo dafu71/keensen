@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="expandYxOrderBase" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="dafu&#x9;25-12-26 下午6:01">
+    <targetConnections>link24</targetConnections>
+  </nodes>
   <nodes xsi:type="process:tAssign" id="assign0" name="赋值" collapsed="false" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
@@ -172,6 +175,7 @@
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link20</targetConnections>
+    <targetConnections>link25</targetConnections>
     <nodeLabel>assign4label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">entity/labelDrawingCode</process:from>
@@ -334,6 +338,16 @@
       <sourceNode>assign3</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link25" name="nsf已确认的" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">data/nsfConfirmUserId</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link22</targetConnections>
     <targetConnections>link23</targetConnections>
     <nodeLabel>assign3label</nodeLabel>
@@ -350,6 +364,10 @@
     <sourceConnections xsi:type="process:tLink" id="link19" name="link19" isDefault="true" type="transition">
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>assign8</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link24" name="link24" type="note">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>node0</targetNode>
     </sourceConnections>
     <targetConnections>link18</targetConnections>
     <nodeLabel>invokePojo1label</nodeLabel>

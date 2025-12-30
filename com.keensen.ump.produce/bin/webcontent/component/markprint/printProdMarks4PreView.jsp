@@ -385,11 +385,17 @@ for (int i = 0; i < list.length; i++) {
 						String dryWet = list[i].get("dryWet").toString();
 						dryWet = "湿";
 						
+						String ifPrintBrand = list[i].get("ifPrintBrand").toString();
+						
+						int topDiff = 0;//纵坐标补差
+						
 			%>	
 			
 			<%if("Y".equals(ifPrintNsf)){ %>
 			
 			//固定字段
+			
+			<%if("Y".equals(ifPrintBrand)){ %>
 			//brand
 			var brand = document.createElement('div');
 		    brand.className = 'text-overlay';
@@ -407,6 +413,8 @@ for (int i = 0; i < list.length; i++) {
 		    brand.style.color = color;
 		           
 		    container.appendChild(brand);
+		    
+		    
 		    
 		    //brandvalue
 			var brandvalue = document.createElement('div');
@@ -426,6 +434,13 @@ for (int i = 0; i < list.length; i++) {
 		    brandvalue.style.color = color;
 		           
 		    container.appendChild(brandvalue);
+		    
+		    <% } %>
+		    
+		    //不打印brand
+		    <%if("N".equals(ifPrintBrand)){ %>
+		    	
+		    <% topDiff = 20; } %>
 		            
 			//model
 			var model = document.createElement('div');
@@ -437,7 +452,7 @@ for (int i = 0; i < list.length; i++) {
 		            
 		    // 设置样式
 		    model.style.left = '38px';
-		    model.style.top = '<%=60 + tableHeight*i %>px';
+		    model.style.top = '<%=60 -topDiff-15 + tableHeight*i %>px';
 		    model.style.fontSize = fontSize;
 		    model.style.fontWeight = 'bold';
 		    model.style.color = color;
@@ -455,7 +470,7 @@ for (int i = 0; i < list.length; i++) {
 		            
 		    // 设置样式
 		    sn.style.left = '70px';
-		    sn.style.top = '<%=110 + tableHeight*i %>px';
+		    sn.style.top = '<%=110 -topDiff + tableHeight*i %>px';
 		    sn.style.fontSize = fontSize;
 		    sn.style.fontWeight = 'bold';
 		    sn.style.color = color;
@@ -553,7 +568,7 @@ for (int i = 0; i < list.length; i++) {
 					
 					
 					
-					<%if("Y".equals(ifPrintNsf) && xNsf<2000){
+					<%if("Y".equals(ifPrintNsf) && xNsf<2000 && "Y".equals(ifPrintBrand)){ %>){
 					
 						
 					

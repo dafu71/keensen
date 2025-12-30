@@ -127,24 +127,24 @@ com.keensen.ump.base.WaterCraftspackageMgr = function() {
 					}, {
 						dataIndex : 'craftNo',
 						header : '工艺包编号'
-					}, {
+					}/*, {
 						dataIndex : 'testLiquid',
 						header : '测试液种类'
-					}, {
+					}*/, {
 						dataIndex : 'testLiquidDensity',
-						header : '测试液溶液'
+						header : '测试液溶液(mg/L)'
 					}, {
 						dataIndex : 'testLiquidPressure',
-						header : '压力'
+						header : '压力psi(MPa)'
 					}, {
 						dataIndex : 'testLiquidTemp',
-						header : '温度'
+						header : '温度(℃)'
 					}, {
 						dataIndex : 'testLiquidPh',
 						header : 'pH'
 					}, {
 						dataIndex : 'testLiquidRecovery',
-						header : '回收率'
+						header : '回收率(%)'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.base.packagecraft.queryCraftspackageWaterByPage.biz.ext',
@@ -242,17 +242,17 @@ com.keensen.ump.base.WaterCraftspackageMgr = function() {
 							height : '5',
 							colspan : 6
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : '测试液溶液(mg/L)',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidDensity',
 							anchor : '95%',
 							colspan : 3
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : '压力psi(MPa)',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidPressure',
 							anchor : '95%',
@@ -262,17 +262,17 @@ com.keensen.ump.base.WaterCraftspackageMgr = function() {
 							height : '5',
 							colspan : 6
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : '温度(℃)',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidTemp',
 							anchor : '95%',
 							colspan : 3
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : 'pH',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidPh',
 							anchor : '95%',
@@ -282,21 +282,21 @@ com.keensen.ump.base.WaterCraftspackageMgr = function() {
 							height : '5',
 							colspan : 6
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : '回收率(%)',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidRecovery',
 							anchor : '95%',
 							colspan : 3
-						}, {
+						}/*, {
 							xtype : 'textfield',
 							fieldLabel : '测试液',
 							allowBlank : false,
 							name : 'entity/testLiquid',
 							anchor : '95%',
 							colspan : 3
-						}]
+						}*/]
 			}]
 		});
 	}
@@ -352,18 +352,18 @@ com.keensen.ump.base.WaterCraftspackageMgr = function() {
 							height : '5',
 							colspan : 6
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : '测试液溶液(mg/L)',
 							dataIndex : 'testLiquidDensity',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidDensity',
 							anchor : '95%',
 							colspan : 3
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : '压力psi(MPa)',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidPressure',
 							dataIndex : 'testLiquidPressure',
@@ -374,18 +374,18 @@ com.keensen.ump.base.WaterCraftspackageMgr = function() {
 							height : '5',
 							colspan : 6
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : '温度(℃)',
 							dataIndex : 'testLiquidTemp',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidTemp',
 							anchor : '95%',
 							colspan : 3
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : 'pH',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidPh',
 							dataIndex : 'testLiquidPh',
@@ -396,15 +396,15 @@ com.keensen.ump.base.WaterCraftspackageMgr = function() {
 							height : '5',
 							colspan : 6
 						}, {
-							xtype : 'numberfield',
+							xtype : 'textfield',
 							fieldLabel : '回收率(%)',
 							dataIndex : 'testLiquidRecovery',
-							decimalPrecision : 3,
+							//decimalPrecision : 3,
 							allowBlank : false,
 							name : 'entity/testLiquidRecovery',
 							anchor : '95%',
 							colspan : 3
-						}, {
+						}/*, {
 							xtype : 'textfield',
 							fieldLabel : '测试液',
 							allowBlank : false,
@@ -412,7 +412,7 @@ com.keensen.ump.base.WaterCraftspackageMgr = function() {
 							name : 'entity/testLiquid',
 							anchor : '95%',
 							colspan : 3
-						}]
+						}*/]
 			}]
 		});
 	}

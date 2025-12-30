@@ -20,27 +20,72 @@
     <insert id="insertWarehousingByCheckCode" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_WAREHOUSING
 	(id,spec_type,storage_code,storage,position,TYPE,amount,
 	create_time,create_name,create_user_id,
-	batch_no,check_code,order_id,order_no,jm_spec_name)
+	batch_no,check_code,order_id,order_no,jm_spec_name,DRY_WET)
 	select SEQU_COMPONENT_WAREHOUSING.Nextval,'工业',#storageCode#,#storage#,#position#,#type#,1,
 	SYSDATE,#userName#,#userId#,
-	t.batch_no,h.code,h.order_id,od.order_no,od.mater_spec_name2 jm_spec_name 
+	t.batch_no,h.code,h.order_id,od.order_no,od.mater_spec_name2 jm_spec_name,od.dry_wet 
 	from KS_COMPONENT_CHECK_LIST t
 	LEFT JOIN KS_COMPONENT_CHECK_HEAD h
 	ON t.relation_id = h.id
 	LEFT JOIN KS_PROD_COMPONENT_YXORDER od ON od.id=h.order_id
 	WHERE h.code =#checkCode#</insert>
+    <!--插入库存记录-->
     <insert id="insertComponentK3Stock" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_K3_STOCK
 	(id,spec_type,storage_code,storage,position,amount,
 	create_time,create_name,create_user_id,
-	batch_no,check_code,order_id,order_no,jm_spec_name)
+	batch_no,check_code,order_id,order_no,jm_spec_name,dry_wet)
 	select SEQU_COMPONENT_WAREHOUSING.Nextval,'工业',#storageCode#,#storage#,#position#,1,
 	SYSDATE,#userName#,#userId#,
-	t.batch_no,h.code,h.order_id,od.order_no,od.mater_spec_name2 jm_spec_name 
+	t.batch_no,h.code,h.order_id,od.order_no,od.mater_spec_name2 jm_spec_name,od.dry_wet 
 	from KS_COMPONENT_CHECK_LIST t
 	LEFT JOIN KS_COMPONENT_CHECK_HEAD h
 	ON t.relation_id = h.id
 	LEFT JOIN KS_PROD_COMPONENT_YXORDER od ON od.id=h.order_id
 	WHERE h.code =#checkCode#</insert>
+    <!--插入出库记录-->
+    <insert id="insertOutOfStockByCode" parameterClass="java.util.HashMap">
+    INSERT INTO KS_COMPONENT_OUTOFSTOCK
+	(id,spec_type,storage_code,storage,position,TYPE,amount,
+	create_time,create_name,create_user_id,
+	batch_no,check_code,order_id,order_no,jm_spec_name,DRY_WET)
+	
+	SELECT SEQU_COMPONENT_OUTOFSTOCK.Nextval, T1.SPEC_TYPE, T1.STORAGE_CODE,T1.STORAGE,T1.POSITION,#type#,T1.AMOUNT,
+	SYSDATE,#userName#,#userId#,
+	 T1.BATCH_NO,T1.CHECK_CODE,T1.ORDER_ID,#orderNo#,T1.JM_SPEC_NAME,T1.DRY_WET
+     FROM KS_COMPONENT_K3_STOCK T1
+     where 1=1 and t1.amount&gt;0
+	<isNotNull prepend="" property="checkCode">and t1.check_code = #checkCode#</isNotNull>
+        <isNull prepend="" property="checkCode">
+            <isNotNull prepend="" property="storageCode">and T1.STORAGE_CODE = #storageCode#</isNotNull>
+            <isNull prepend="" property="storageCode">
+                <isNotNull prepend="" property="batchNo">and t1.batch_no = #batchNo#</isNotNull>
+            </isNull>
+        </isNull>
+    </insert>
+    <!--出库修改库存记录-->
+    <update id="updateComponentK3Stock" parameterClass="java.util.HashMap">
+    update KS_COMPONENT_K3_STOCK t1
+    set t1.amount = 0, t1.order_no2 = #orderNo#,
+    t1.update_time = sysdate,
+    t1.update_name = #userName#,
+    t1.update_user_id = #userId#
+	 where 1=1 and t1.amount&gt;0
+	<isNotNull prepend="" property="checkCode">and t1.check_code = #checkCode#</isNotNull>
+        <isNull prepend="" property="checkCode">
+            <isNotNull prepend="" property="storageCode">and T1.STORAGE_CODE = #storageCode#</isNotNull>
+            <isNull prepend="" property="storageCode">
+                <isNotNull prepend="" property="batchNo">and t1.batch_no = #batchNo#</isNotNull>
+            </isNull>
+        </isNull>
+    </update>
+    <!--删除库存记录-->
+    <delete id="deleteComponentK3Stock" parameterClass="java.util.HashMap">
+    delete from KS_COMPONENT_K3_STOCK t
+	WHERE 1=1
+	<isNotNull prepend="and" property="batchNo">t.batch_no = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNos">t.batch_no in ($batchNos$)</isNotNull>
+        <isNotNull prepend="and" property="checkCode">t.check_code = #checkCode#</isNotNull>
+    </delete>
     <!--库位码查询-->
     <select id="queryStorageCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
     SELECT t.storage_Code "storageCode",
@@ -80,7 +125,7 @@
        T1.ORDER_NO       AS "orderNo",
        T1.SPEC_TYPE      AS "specType",
        T1.JM_SPEC_NAME   AS "jmSpecName",
-       T1.STORAGE_CODE   AS "storageCode"
+       T1.STORAGE_CODE   AS "storageCode",t1.dry_wet "dryWet"
   FROM KS_COMPONENT_WAREHOUSING T1 
     
   WHERE 1=1
@@ -96,6 +141,7 @@
         <isNotNull prepend="and" property="batchNo2">T1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+     order by t1.id desc
     </select>
     <select id="queryStorage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
      SELECT T1.ID             AS "id",
@@ -118,13 +164,57 @@
        T1.POSITION       AS "position",
        T1.ORDER_ID       AS "orderId",
        T1.CHECK_CODE     AS "checkCode",
-       T1.ORDER_NO       AS "orderNo",
+       T1.ORDER_NO       AS "orderNo",T1.ORDER_NO2       AS "orderNo2",
        T1.SPEC_TYPE      AS "specType",
        T1.JM_SPEC_NAME   AS "jmSpecName",
-       T1.STORAGE_CODE   AS "storageCode"
+       T1.STORAGE_CODE   AS "storageCode",t1.dry_wet "dryWet"
   FROM KS_COMPONENT_K3_STOCK T1 
     
   WHERE 1=1 AND to_char(t1.create_time,'YYYY-MM-DD')&gt;='2025-12-16'
+  	
+  	<isNotNull prepend="and" property="notZero">T1.amount &gt; 0</isNotNull>
+        <isNotNull prepend="and" property="checkCode2">T1.CHECK_CODE like '%' || #checkCode2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="storageCode">t1.storage_Code = #storageCode#</isNotNull>
+        <isNotNull prepend="and" property="storage">t1.storage = #storage#</isNotNull>
+        <isNotNull prepend="and" property="position">t1.position = #position#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="checkCode">T1.CHECK_CODE = #checkCode#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">T1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+      order by t1.id desc
+    </select>
+    <select id="queryOutOfStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.ID             AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       T1.UPDATE_TIME    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.BATCH_NO       AS "batchNo",
+       T1.AMOUNT         AS "amount",
+       T1.STORAGE        AS "storage",
+       T1.POSITION       AS "position",
+       T1.TYPE           AS "type",
+       T1.ORDER_ID       AS "orderId",
+       T1.CHECK_CODE     AS "checkCode",
+       T1.ORDER_NO       AS "orderNo",
+       T1.SPEC_TYPE      AS "specType",
+       T1.JM_SPEC_NAME   AS "jmSpecName",
+       T1.STORAGE_CODE   AS "storageCode",t1.dry_wet "dryWet"
+  FROM KS_COMPONENT_OUTOFSTOCK T1 
+    
+  WHERE 1=1
   	
   	<isNotNull prepend="and" property="checkCode2">T1.CHECK_CODE like '%' || #checkCode2# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
@@ -137,5 +227,58 @@
         <isNotNull prepend="and" property="batchNo2">T1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+      order by t1.id desc
+    </select>
+    <!--批量插入调拨记录-->
+    <insert id="insertAllocateBatch" parameterClass="java.util.HashMap">insert into KS_COMPONENT_ALLOCATE
+    (id,batch_no,from_storage,from_storage_code,to_storage,to_storage_code,amount,
+    create_time,create_name,create_user_id)
+    select SEQU_COMPONENT_ALLOCATE.Nextval,batch_no,storage,storage_code,#toStorage#,#toStorageCode#,amount,
+    SYSDATE,#userName#,#userId#
+    from KS_COMPONENT_K3_STOCK
+    where id in ($ids$)</insert>
+    <!--调拨修改库存记录-->
+    <update id="updateComponentK3StockByAllocate" parameterClass="java.util.HashMap">update KS_COMPONENT_K3_STOCK t1
+    set t1.storage = #toStorage#,t1.storage_code = #toStorageCode#,
+    t1.update_time = sysdate,
+    t1.update_name = #userName#,
+    t1.update_user_id = #userId#
+	 where id in ($ids$)</update>
+    <select id="queryAllocate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    
+    SELECT T1.ID             AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       T1.UPDATE_TIME    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       T1.BATCH_NO       AS "batchNo",
+       T1.AMOUNT         AS "amount",
+       T1.TO_STORAGE        AS "toStorage",
+       T1.TO_STORAGE_CODE   AS "toStorageCode",
+       T1.FROM_STORAGE        AS "fromStorage",
+       T1.FROM_STORAGE_CODE   AS "fromStorageCode"
+  FROM KS_COMPONENT_ALLOCATE T1 
+    
+  WHERE 1=1
+  	
+  	<isNotNull prepend="and" property="fromStorageCode">t1.from_storage_Code = #fromStorageCode#</isNotNull>
+        <isNotNull prepend="and" property="toStorageCode">t1.to_storage_Code = #toStorageCode#</isNotNull>
+        <isNotNull prepend="and" property="toStorage">t1.to_storage = #toStorage#</isNotNull>
+        <isNotNull prepend="and" property="fromStorage">t1.from_Storage = #fromStorage#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">T1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+     order by t1.id desc
     </select>
 </sqlMap>

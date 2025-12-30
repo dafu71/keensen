@@ -38,7 +38,7 @@ com.keensen.ump.produce.quality.waterstdMgr.prototype.initEvent = function() {
 					Ext.Msg.alert("系统提示", '标准1产水量上限不能低于中心线！');
 					return false;
 				}
-				
+
 			}, this);
 
 	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
@@ -59,12 +59,9 @@ com.keensen.ump.produce.quality.waterstdMgr.prototype.initEvent = function() {
 					Ext.Msg.alert("系统提示", '标准1产水量上限不能低于中心线！');
 					return false;
 				}
-				
 
 			}, this);
 }
-
-
 
 com.keensen.ump.produce.quality.waterstdMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
@@ -85,48 +82,58 @@ com.keensen.ump.produce.quality.waterstdMgr.prototype.onEdit = function() {
 }
 
 com.keensen.ump.produce.quality.waterstdMgr.prototype.exportExcel = function() {
-	
-	doQuerySqlAndExport(
-				this,
-				this.queryPanel,
-				this.listPanel,
-				'元件水测标准',
-				'com.keensen.ump.produce.quality.quality2.queryWaterStd',
-				'0,1');
-				
-	/*var _this = this;
-	var daochu = _this.queryPanel.getForm().getValues();
 
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			namingsql : 'com.keensen.ump.produce.quality.quality2.queryWaterStd',
-			templateFilename : 'ks_quality_water_std'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '元件水测标准',
+			'com.keensen.ump.produce.quality.quality2.queryWaterStd', '0,1');
 
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
+	/*
+	 * var _this = this; var daochu = _this.queryPanel.getForm().getValues();
+	 * 
+	 * this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+	 * msg : "后台正在操作,请稍候!" }); this.requestMask.show(); Ext.Ajax.request({ url :
+	 * "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
+	 * method : "post", jsonData : { 'map' : daochu, namingsql :
+	 * 'com.keensen.ump.produce.quality.quality2.queryWaterStd',
+	 * templateFilename : 'ks_quality_water_std' }, success : function(resp) {
+	 * var ret = Ext.decode(resp.responseText); if (ret.success) {
+	 * 
+	 * var fname = ret.fname; if (Ext.isIE) {
+	 * window.open('/default/deliverynote/seek/down4IE.jsp?fname=' + fname); }
+	 * else { window.location.href =
+	 * "com.zoomlion.hjsrm.kcgl.download.flow?fileName=" + fname; } } },
+	 * callback : function() { _this.requestMask.hide() } })
+	 */
+}
+
+com.keensen.ump.produce.quality.waterstdMgr.prototype.onModifyBatch = function() {
+
+	var _this = this;
+
+	Ext.Msg.confirm("操作确认", "您确实要更新参数吗?", function(A) {
+		if (A == "yes") {
+			Ext.Ajax.request({
+				url : "com.keensen.ump.base.packagecraft.updateWaterStd.biz.ext",
+				method : "post",
+				jsonData : {
+					'param/opt' : 1
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						_this.listPanel.store.reload();
+
+					}
+
+				},
+				failure : function(resp, options) {
+					// var ret = Ext.decode(resp.responseText);
+					Ext.MessageBox.alert('失败', '请求超时或网络故障');
+				},
+				callback : function() {
+					_this.requestMask.hide()
 				}
-
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
+			})
 		}
-	})*/
+	})
+
 }

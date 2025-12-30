@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="updateYxOrder.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="修改生产订单" title="dafu&#x9;25-12-30 下午2:36">
+    <targetConnections>link20</targetConnections>
+    <location x="690" y="412"/>
+    <size height="100" width="191"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="修改营销统计表" title="dafu&#x9;25-12-30 下午2:36">
+    <targetConnections>link19</targetConnections>
+    <location x="113" y="505"/>
+    <size height="100" width="191"/>
+  </nodes>
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
@@ -10,10 +20,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link17</targetConnections>
-    <targetConnections>link12</targetConnections>
-    <targetConnections>link9</targetConnections>
     <targetConnections>link8</targetConnections>
+    <targetConnections>link9</targetConnections>
+    <targetConnections>link12</targetConnections>
+    <targetConnections>link17</targetConnections>
     <location x="750" y="163"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -34,12 +44,21 @@
       <sourceNode>assign1</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link0" name="link0" displayName="连接线" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link0" name="入库日期" displayName="连接线" type="transition">
       <sourceNode>assign1</sourceNode>
       <targetNode>assign4</targetNode>
       <process:transitionCondition>
         <process:complexCondition>
           <process:code>fieldDescribe.equals(&quot;demandStockDate&quot;)</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link13" name="nsf判定" displayName="连接线" type="transition">
+      <sourceNode>assign1</sourceNode>
+      <targetNode>assign5</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>fieldDescribe.equals(&quot;nsf&quot;)</process:code>
         </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
@@ -112,8 +131,13 @@
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>switch0</targetNode>
     </sourceConnections>
-    <targetConnections>link3</targetConnections>
+    <sourceConnections xsi:type="process:tLink" id="link19" name="link19" displayName="连接线" type="note">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>node0</targetNode>
+    </sourceConnections>
     <targetConnections>link1</targetConnections>
+    <targetConnections>link3</targetConnections>
+    <targetConnections>link21</targetConnections>
     <location x="214" y="257"/>
     <size height="28" width="22"/>
     <nodeLabel>invokePojo1label</nodeLabel>
@@ -232,6 +256,10 @@
       <sourceNode>invokePojo2</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link20" name="link20" displayName="连接线" type="note">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>node1</targetNode>
+    </sourceConnections>
     <targetConnections>link16</targetConnections>
     <targetConnections>link11</targetConnections>
     <location x="608" y="163"/>
@@ -328,7 +356,7 @@
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
     <targetConnections>link0</targetConnections>
-    <location x="112" y="257"/>
+    <location x="79" y="255"/>
     <size height="28" width="28"/>
     <nodeLabel>assign4label</nodeLabel>
     <process:copy>
@@ -345,9 +373,59 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign4label" name="label" nodeType="label">
-    <location x="106" y="293"/>
+    <location x="73" y="291"/>
     <figSize height="20" width="40"/>
     <node>assign4</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign5" name="赋值5" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign5</sourceNode>
+      <targetNode>assign6</targetNode>
+    </sourceConnections>
+    <targetConnections>link13</targetConnections>
+    <location x="79" y="345"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign5label</nodeLabel>
+    <process:copy>
+      <process:from type="query" pattern="reference">entity/nsf</process:from>
+      <process:to type="query">nsf</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">nsf.split(&quot;,&quot;)</process:from>
+      <process:to type="query">nsfArr</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign5label" name="label" nodeType="label">
+    <location x="73" y="381"/>
+    <figSize height="20" width="40"/>
+    <node>assign5</node>
+  </nodes>
+  <nodes xsi:type="process:tAssign" description="" id="assign6" name="赋值6" displayName="赋值" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link21" name="link21" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>assign6</sourceNode>
+      <targetNode>invokePojo1</targetNode>
+    </sourceConnections>
+    <targetConnections>link18</targetConnections>
+    <location x="159" y="345"/>
+    <size height="28" width="28"/>
+    <nodeLabel>assign6label</nodeLabel>
+    <process:copy>
+      <process:from type="expression" pattern="reference">nsfArr[0]</process:from>
+      <process:to type="query">entity/labelNsf</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">nsfArr[1]</process:from>
+      <process:to type="query">entity/markNsf</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">m:userObject/userId</process:from>
+      <process:to type="query">entity/nsfConfirmUserId</process:to>
+    </process:copy>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="assign6label" name="label" nodeType="label">
+    <location x="153" y="381"/>
+    <figSize height="20" width="40"/>
+    <node>assign6</node>
   </nodes>
   <topRuler/>
   <leftRuler/>
@@ -360,6 +438,8 @@
     <process:variable description="" historyStateLocation="client" isArray="false" name="cnt" primitiveType="Int"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="fieldDescribe" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="demandStockDate" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="true" name="nsfArr" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="nsf" primitiveType="String"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input description="" isArray="false" modelType="com.keensen.ump.produce.component.KsComponentYxorderBase" name="entity"/>

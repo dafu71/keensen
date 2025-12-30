@@ -80,6 +80,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					fields : ['code', 'name'],
 					data : [['是', '是'], ['否', '否']]
 				});
+				
+		this.haveOrNotStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['有', '有'], ['无', '无']]
+				});
 
 		this.dryWetStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -980,7 +985,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'labelNsf',
 						// hidden : true,
-						header : '要NSF标识',
+						header : '标签要NSF标识',
 						sortable : true
 					}, {
 						dataIndex : 'snStart',
@@ -1041,7 +1046,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'markNsf',
 						// hidden : true,
-						header : '要NSF标识',
+						header : '唛头要NSF标识',
 						sortable : true
 					}, {
 						dataIndex : 'markRegular',
@@ -1248,6 +1253,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'testStand',
+						hidden : true,
 						header : '测试液种类',
 						sortable : true
 					}, {
@@ -2313,18 +2319,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					// minValue : 0,
 					// decimalPrecision : 0,
 					allowBlank : false
-				}, {
-					name : 'entity/testStand',
-					ref : '../../testStand',
-					dataIndex : 'testStand',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '测试液种类',
-					// minValue : 0,
-					// decimalPrecision : 0,
-					allowBlank : false
-				}, {
+				}/*
+					 * , { name : 'entity/testStand', ref : '../../testStand',
+					 * dataIndex : 'testStand', anchor : '100%', colspan : 6,
+					 * xtype : 'textfield', fieldLabel : '测试液种类' // minValue :
+					 * 0, // decimalPrecision : 0, //allowBlank : false }
+					 */, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -4351,22 +4351,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					xtype : 'textfield',
 					fieldLabel : '产水量(GPD)',
 					readOnly : true
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '测试液种类',
-					ref : '../../testStand',
-					dataIndex : 'testStand',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.testStandStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
+				}/*
+					 * , { xtype : 'combobox', forceSelection : true, readOnly :
+					 * true, mode : 'local', fieldLabel : '测试液种类', ref :
+					 * '../../testStand', dataIndex : 'testStand', anchor :
+					 * '100%', colspan : 6, emptyText : '', editable : false,
+					 * store : this.testStandStore, displayField : "name",
+					 * valueField : "code" }
+					 */, {
 					xtype : 'displayfield',
 					height : 5,
 					colspan : 24
@@ -9004,6 +8996,77 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										var dryWet = _this.updateOrderWindow.dryWet
 												.getValue();
 										_this.updateOrder('dryWet', dryWet)
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'combobox',
+									mode : 'local',
+									fieldLabel : '标签是否有NSF',
+									dataIndex : 'labelNsf',
+									ref : '../../labelNsf',
+									hiddenName : 'entity/labelNsf',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									store : this.haveOrNotStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											_this.updateOrderWindow.labelNsf
+													.reset()
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'combobox',
+									mode : 'local',
+									fieldLabel : '唛头是否有NSF',
+									dataIndex : 'markNsf',
+									ref : '../../markNsf',
+									hiddenName : 'entity/markNsf',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									store : this.haveOrNotStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											_this.updateOrderWindow.markNsf
+													.reset()
+										}
+									}
+								}, {
+									xtype : 'button',
+									text : '修改',
+									anchor : '30%',
+									colspan : 1,
+									handler : function() {
+										var labelNsf = _this.updateOrderWindow.labelNsf
+												.getValue();
+										var markNsf = _this.updateOrderWindow.markNsf
+												.getValue();
+										if (Ext.isEmpty(labelNsf)) {
+											Ext.Msg.alert("系统提示",
+													"请选择标签是否有NSF！");
+											return;
+										}
+										if (Ext.isEmpty(markNsf)) {
+											Ext.Msg.alert("系统提示",
+													"请选择唛头是否有NSF！");
+											return;
+										}
+										var nsf = labelNsf + ',' + markNsf;
+										_this.updateOrder('nsf', nsf)
 									}
 								}, {
 									name : 'entity/id',

@@ -76,6 +76,9 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 						dataIndex : 'jmSpecName',
 						header : '卷膜型号'
 					}, {
+						dataIndex : 'dryWet',
+						header : '干湿'
+					}, {
 						dataIndex : 'specType',
 						header : '元件类型'
 					}, {
@@ -96,8 +99,7 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 				url : 'com.keensen.ump.produce.component.storage.queryWarehousingByPage.biz.ext.biz.ext',
 				root : 'data',
 				autoLoad : true,
-				baseParams : {
-				},
+				baseParams : {},
 				totalProperty : 'totalCount',
 				fields : [{
 							name : 'id'
@@ -151,6 +153,8 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 							name : 'jmSpecName'
 						}, {
 							name : 'storageCode'
+						}, {
+							name : 'dryWet'
 						}]
 			})
 		})
@@ -181,11 +185,17 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 						anchor : "80%",
 						colspan : 1,
 						xtype : 'combo',
+						mode : 'local',
 						allowBlank : false,
 						ref : '../type',
 						fieldLabel : '入库类型',
 						value : '生产入库',
-						store : [['生产入库', '生产入库'], ['其他入库', '其他入库']]
+						store : [['生产入库', '生产入库'], ['其他入库', '其他入库']],
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
 
 					}, {
 						xtype : 'displayfield',
@@ -196,11 +206,17 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 						anchor : "80%",
 						colspan : 1,
 						xtype : 'combo',
+						mode : 'local',
 						allowBlank : false,
 						ref : '../storage',
 						fieldLabel : '仓库',
 						store : [['高架成品仓', '高架成品仓'], ['高架订单仓', '高架订单仓'],
-								['高架C等品仓', '高架C等品仓']]
+								['高架C等品仓', '高架C等品仓']],
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
 
 					}, {
 						xtype : 'displayfield',

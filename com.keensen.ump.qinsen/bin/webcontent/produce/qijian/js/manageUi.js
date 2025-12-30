@@ -604,6 +604,13 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									iconCls : 'icon-application_edit',
 									handler : this.modifyDryWet
 
+								}, {
+									text : '修改打印序号为元件序号',
+									scope : this,
+									hidden : modifyPrintBatchNo == 0,
+									iconCls : 'icon-application_edit',
+									handler : this.modifyPrintBatchNoBatch
+
 								}]
 					}],
 			selModel : selModel,

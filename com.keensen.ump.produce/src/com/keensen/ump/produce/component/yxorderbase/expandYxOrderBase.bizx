@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="expandYxOrderBase" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="com.keensen.ump.produce.component.yxorderbase.queryNsf" title="dafu&#x9;25-12-26 下午6:01">
+    <targetConnections>link24</targetConnections>
+    <location x="543" y="474"/>
+    <size height="100" width="433"/>
+  </nodes>
   <nodes xsi:type="process:tAssign" description="" id="assign0" name="赋值" displayName="赋值" collapsed="false" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link2" name="link2" displayName="link2" isDefault="true" type="transition">
       <sourceNode>assign0</sourceNode>
@@ -193,6 +198,7 @@
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link20</targetConnections>
+    <targetConnections>link25</targetConnections>
     <location x="540" y="253"/>
     <size height="28" width="28"/>
     <nodeLabel>assign4label</nodeLabel>
@@ -373,6 +379,16 @@
       <sourceNode>assign3</sourceNode>
       <targetNode>invokePojo1</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link25" name="nsf已确认的" displayName="连接线" type="transition">
+      <sourceNode>assign3</sourceNode>
+      <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULLANDEMPTY">
+          <process:leftOperand type="query">data/nsfConfirmUserId</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link22</targetConnections>
     <targetConnections>link23</targetConnections>
     <location x="305" y="470"/>
@@ -392,6 +408,10 @@
     <sourceConnections xsi:type="process:tLink" id="link19" name="link19" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>assign8</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link24" name="link24" displayName="连接线" type="note">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>node0</targetNode>
     </sourceConnections>
     <targetConnections>link18</targetConnections>
     <location x="420" y="470"/>
@@ -421,7 +441,7 @@
       <targetNode>assign4</targetNode>
     </sourceConnections>
     <targetConnections>link19</targetConnections>
-    <location x="416" y="357"/>
+    <location x="482" y="405"/>
     <size height="28" width="28"/>
     <nodeLabel>assign8label</nodeLabel>
     <process:copy>
@@ -438,7 +458,7 @@
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign8label" name="label" nodeType="label">
-    <location x="410" y="393"/>
+    <location x="476" y="441"/>
     <figSize height="20" width="40"/>
     <node>assign8</node>
   </nodes>

@@ -66,6 +66,10 @@
 
 	int isnsf = null == request.getAttribute("isnsf")?0:Integer.parseInt(request.getAttribute("isnsf").toString());
 
+	String ifPrintBrand = template.get("ifPrintBrand").toString();
+	
+	int topDiff = 0;//纵坐标补差
+						
 	//System.out.println("ifPrintNsf=" + ifPrintNsf);
 	
 	rootUrl = rootUrl.replace(
@@ -381,6 +385,8 @@ function getDayCode() {
 						
 			
 			//固定字段
+			
+			<%if("Y".equals(ifPrintBrand)){ %>
 			//brand
 			var brand = document.createElement('div');
 		    brand.className = 'text-overlay';
@@ -414,6 +420,13 @@ function getDayCode() {
 		    brandvalue.style.color = color;
 		    brandvalue.style.fontFamily = 'Arial';       
 		    container.appendChild(brandvalue);
+		    
+		    <% } %>
+		    
+		     //不打印brand
+		    <%if("N".equals(ifPrintBrand)){ %>
+		    	
+		    <% topDiff = 20; } %>  
 		            
 			//model
 			var model = document.createElement('div');
@@ -425,7 +438,7 @@ function getDayCode() {
 		            
 		    // 设置样式
 		    model.style.left = '38px';
-		    model.style.top = '<%=60  %>px';
+		    model.style.top = '<%=60-topDiff-15  %>px';
 		    model.style.fontSize = fontSize;
 		    model.style.fontWeight = 'bold';
 		    model.style.color = color;
@@ -442,7 +455,7 @@ function getDayCode() {
 		            
 		    // 设置样式
 		    sn.style.left = '70px';
-		    sn.style.top = '<%=110  %>px';
+		    sn.style.top = '<%=110-topDiff  %>px';
 		    sn.style.fontSize = fontSize;
 		    sn.style.fontWeight = 'bold';
 		    sn.style.color = color;
@@ -535,7 +548,7 @@ function getDayCode() {
 						<% } %>
 						<% } %>
 						
-						<%if("Y".equals(ifPrintNsf)){
+						<%if("Y".equals(ifPrintNsf) && "Y".equals(ifPrintBrand)){
 					
 						
 					

@@ -667,6 +667,11 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							this.inputWindow.lightNetShortPage
 									.setValue(record.data.lightNetShortPage);
 
+							this.inputWindow.lightNetShortType
+									.setValue(record.data.lightNetShortType);
+							this.inputWindow.lightNetLongType
+									.setValue(record.data.lightNetLongType);
+
 							this.inputWindow.numPerWad
 									.setValue(record.data.numPerWad);
 						},
@@ -797,7 +802,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						},
 						'select' : function(combo, record, index) {
 							if (index > -1) {
-								
+
 								var btn = _this.inputWindow.buttons[2];
 								/*
 								 * var orderNo = record.data.orderNo; var
@@ -827,15 +832,16 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								 */
 								var planId = record.data.planId;
 								var defectPicture = record.data.defectPicture;
-								
-								_this.inputWindow.defectPicture.setValue(defectPicture);
-								
-								if(Ext.isEmpty(defectPicture)){
+
+								_this.inputWindow.defectPicture
+										.setValue(defectPicture);
+
+								if (Ext.isEmpty(defectPicture)) {
 									btn.setDisabled(true);
-								}else{
+								} else {
 									btn.setDisabled(false);
 								}
-								
+
 								_this.inputWindow.planId.setValue(planId);
 								_this.dealTumoBatchNo();
 							}
@@ -1145,9 +1151,9 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					name : 'entity/orderId',
 					xtype : 'hidden',
 					ref : '../../orderId'
-				},{
+				}, {
 					xtype : 'hidden',
-					ref:'../../defectPicture'
+					ref : '../../defectPicture'
 				}]
 			}]
 		});

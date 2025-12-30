@@ -1078,6 +1078,25 @@ com.keensen.ump.produce.component.markprinttemplateMgr = function() {
 						anchor : '100%',
 						colspan : 1
 					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否打印brand',
+						dataIndex : 'ifPrintBrand',
+						ref : '../ifPrintBrand',
+						hiddenName : 'entity/ifPrintBrand',
+						anchor : '100%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.ifPrintBrand.reset()
+							}
+						}
+					}, {
 						xtype : 'displayfield',
 						height : 5,
 						colspan : 4

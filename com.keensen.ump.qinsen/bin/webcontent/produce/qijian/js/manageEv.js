@@ -1421,3 +1421,52 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.modifyDryWet = function() {
 		}, this, true);
 	}
 }
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.modifyPrintBatchNoBatch = function() {
+	var _this = this;
+	var A = this.listPanel;
+	var store = this.listPanel4Abilition.store;
+
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+	} else {
+
+		
+		var C = A.getSelectionModel().getSelections();
+
+		var records = A.getSelectionModel().getSelections();
+
+		var ids = []
+		Ext.each(records, function(r) {
+					var juanmoBatchId = r.data.juanmoBatchId;
+					ids.push(juanmoBatchId);
+				})
+		this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		this.requestMask.show();
+		Ext.Ajax.request({
+			url : "com.keensen.ump.qinsen.qijian.modifyPrintBatchNoBatch.biz.ext",
+			method : "post",
+			jsonData : {
+				ids : ids.join(',')
+
+			},
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					if (ret.success) {
+						_this.listPanel.store.reload();
+					}
+				}
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+	}
+
+}
+

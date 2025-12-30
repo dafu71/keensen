@@ -3972,6 +3972,148 @@
             <column length="50" name="SOURCE"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentMarkTemplate" table="KS_COMPONENT_MARK_TEMPLATE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="int">
+            <column length="9" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="templateName" type="string">
+            <column length="200" name="TEMPLATE_NAME"/>
+        </property>
+        <property name="url" type="string">
+            <column length="200" name="URL"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="500" name="REMARK"/>
+        </property>
+        <property name="code" type="string">
+            <column length="2000" name="CODE"/>
+        </property>
+        <property name="url2" type="string">
+            <column length="200" name="URL2"/>
+        </property>
+        <property name="ifPrintBatchNo" type="string">
+            <column default="'Y'" length="1" name="IF_PRINT_BATCH_NO"/>
+        </property>
+        <property name="yBatchNo" type="string">
+            <column length="20" name="Y_BATCH_NO"/>
+        </property>
+        <property name="xBatchNo" type="string">
+            <column length="20" name="X_BATCH_NO"/>
+        </property>
+        <property name="ifPrintSpecName" type="string">
+            <column default="'Y'" length="1" name="IF_PRINT_SPEC_NAME"/>
+        </property>
+        <property name="yBatchSpecName" type="string">
+            <column length="20" name="Y_BATCH_SPEC_NAME"/>
+        </property>
+        <property name="xBatchSpecName" type="string">
+            <column length="20" name="X_BATCH_SPEC_NAME"/>
+        </property>
+        <property name="ifPrintDryWet" type="string">
+            <column default="'Y'" length="1" name="IF_PRINT_DRY_WET"/>
+        </property>
+        <property name="yDryImg" type="string">
+            <column length="20" name="Y_DRY_IMG"/>
+        </property>
+        <property name="xDryImg" type="string">
+            <column length="20" name="X_DRY_IMG"/>
+        </property>
+        <property name="yDrySpan" type="string">
+            <column length="20" name="Y_DRY_SPAN"/>
+        </property>
+        <property name="xDrySpan" type="string">
+            <column length="20" name="X_DRY_SPAN"/>
+        </property>
+        <property name="yWetImg" type="string">
+            <column length="20" name="Y_WET_IMG"/>
+        </property>
+        <property name="xWetImg" type="string">
+            <column length="20" name="X_WET_IMG"/>
+        </property>
+        <property name="yWetSpan" type="string">
+            <column length="20" name="Y_WET_SPAN"/>
+        </property>
+        <property name="xWetSpan" type="string">
+            <column length="20" name="X_WET_SPAN"/>
+        </property>
+        <property name="yStarImg" type="string">
+            <column length="20" name="Y_STAR_IMG"/>
+        </property>
+        <property name="xStarImg" type="string">
+            <column length="20" name="X_STAR_IMG"/>
+        </property>
+        <property name="ifPrintDayCode" type="string">
+            <column default="'Y'" length="1" name="IF_PRINT_DAY_CODE"/>
+        </property>
+        <property name="yDayCodeSpan" type="string">
+            <column length="20" name="Y_DAY_CODE_SPAN"/>
+        </property>
+        <property name="xDayCodeSpan" type="string">
+            <column length="20" name="X_DAY_CODE_SPAN"/>
+        </property>
+        <property name="printDelayTime" type="string">
+            <column length="20" name="PRINT_DELAY_TIME"/>
+        </property>
+        <property name="stampUrl" type="string">
+            <column length="200" name="STAMP_URL"/>
+        </property>
+        <property name="controlCode" type="string">
+            <column length="50" name="CONTROL_CODE"/>
+        </property>
+        <property name="param0" type="string">
+            <column length="200" name="PARAM0"/>
+        </property>
+        <property name="param1" type="string">
+            <column length="200" name="PARAM1"/>
+        </property>
+        <property name="param2" type="string">
+            <column length="200" name="PARAM2"/>
+        </property>
+        <property name="ifPrintBrand" type="string">
+            <column default="'Y'" length="1" name="IF_PRINT_BRAND"/>
+        </property>
+    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentYxorderBase" table="KS_COMPONENT_YXORDER_BASE">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="long">
@@ -4069,13 +4211,13 @@
             <column length="50" name="LABEL_DRAWING_CODE"/>
         </property>
         <property name="bag" type="string">
-            <column length="50" name="BAG"/>
+            <column length="200" name="BAG"/>
         </property>
         <property name="bagDrawingCode" type="string">
             <column length="50" name="BAG_DRAWING_CODE"/>
         </property>
         <property name="box" type="string">
-            <column length="100" name="BOX"/>
+            <column length="200" name="BOX"/>
         </property>
         <property name="boxDrawingCode" type="string">
             <column length="50" name="BOX_DRAWING_CODE"/>
@@ -4303,10 +4445,10 @@
             <column length="50" name="SPEC_NAME_LABEL2"/>
         </property>
         <property name="logoMark" type="string">
-            <column length="50" name="LOGO_MARK"/>
+            <column length="500" name="LOGO_MARK"/>
         </property>
         <property name="logoMark2" type="string">
-            <column length="50" name="LOGO_MARK2"/>
+            <column length="500" name="LOGO_MARK2"/>
         </property>
         <property name="specNameMark" type="string">
             <column length="50" name="SPEC_NAME_MARK"/>
@@ -4348,7 +4490,7 @@
             <column name="RECORD_TIME"/>
         </property>
         <property name="packingLid" type="string">
-            <column length="50" name="PACKING_LID"/>
+            <column length="200" name="PACKING_LID"/>
         </property>
         <property name="materSpecName" type="string">
             <column length="50" name="MATER_SPEC_NAME"/>
@@ -4446,144 +4588,8 @@
         <property name="mptype" type="string">
             <column length="50" name="MPTYPE"/>
         </property>
-    </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentMarkTemplate" table="KS_COMPONENT_MARK_TEMPLATE">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="id" type="int">
-            <column length="9" name="ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="createTime" type="timestamp">
-            <column name="CREATE_TIME"/>
-        </property>
-        <property name="createUserId" type="string">
-            <column length="24" name="CREATE_USER_ID"/>
-        </property>
-        <property name="createName" type="string">
-            <column length="24" name="CREATE_NAME"/>
-        </property>
-        <property name="updateTime" type="timestamp">
-            <column name="UPDATE_TIME"/>
-        </property>
-        <property name="updateUserId" type="string">
-            <column length="24" name="UPDATE_USER_ID"/>
-        </property>
-        <property name="updateName" type="string">
-            <column length="24" name="UPDATE_NAME"/>
-        </property>
-        <property name="reserve1" type="string">
-            <column length="1500" name="RESERVE1"/>
-        </property>
-        <property name="reserve2" type="string">
-            <column length="1500" name="RESERVE2"/>
-        </property>
-        <property name="reserve3" type="string">
-            <column length="1500" name="RESERVE3"/>
-        </property>
-        <property name="reserve4" type="string">
-            <column length="1500" name="RESERVE4"/>
-        </property>
-        <property name="reserve5" type="string">
-            <column length="1500" name="RESERVE5"/>
-        </property>
-        <property name="orgId" type="string">
-            <column length="90" name="ORG_ID"/>
-        </property>
-        <property name="status" type="string">
-            <column length="24" name="STATUS"/>
-        </property>
-        <property name="templateName" type="string">
-            <column length="200" name="TEMPLATE_NAME"/>
-        </property>
-        <property name="url" type="string">
-            <column length="200" name="URL"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="500" name="REMARK"/>
-        </property>
-        <property name="code" type="string">
-            <column length="2000" name="CODE"/>
-        </property>
-        <property name="url2" type="string">
-            <column length="200" name="URL2"/>
-        </property>
-        <property name="ifPrintBatchNo" type="string">
-            <column default="'Y'" length="1" name="IF_PRINT_BATCH_NO"/>
-        </property>
-        <property name="yBatchNo" type="string">
-            <column length="20" name="Y_BATCH_NO"/>
-        </property>
-        <property name="xBatchNo" type="string">
-            <column length="20" name="X_BATCH_NO"/>
-        </property>
-        <property name="ifPrintSpecName" type="string">
-            <column default="'Y'" length="1" name="IF_PRINT_SPEC_NAME"/>
-        </property>
-        <property name="yBatchSpecName" type="string">
-            <column length="20" name="Y_BATCH_SPEC_NAME"/>
-        </property>
-        <property name="xBatchSpecName" type="string">
-            <column length="20" name="X_BATCH_SPEC_NAME"/>
-        </property>
-        <property name="ifPrintDryWet" type="string">
-            <column default="'Y'" length="1" name="IF_PRINT_DRY_WET"/>
-        </property>
-        <property name="yDryImg" type="string">
-            <column length="20" name="Y_DRY_IMG"/>
-        </property>
-        <property name="xDryImg" type="string">
-            <column length="20" name="X_DRY_IMG"/>
-        </property>
-        <property name="yDrySpan" type="string">
-            <column length="20" name="Y_DRY_SPAN"/>
-        </property>
-        <property name="xDrySpan" type="string">
-            <column length="20" name="X_DRY_SPAN"/>
-        </property>
-        <property name="yWetImg" type="string">
-            <column length="20" name="Y_WET_IMG"/>
-        </property>
-        <property name="xWetImg" type="string">
-            <column length="20" name="X_WET_IMG"/>
-        </property>
-        <property name="yWetSpan" type="string">
-            <column length="20" name="Y_WET_SPAN"/>
-        </property>
-        <property name="xWetSpan" type="string">
-            <column length="20" name="X_WET_SPAN"/>
-        </property>
-        <property name="yStarImg" type="string">
-            <column length="20" name="Y_STAR_IMG"/>
-        </property>
-        <property name="xStarImg" type="string">
-            <column length="20" name="X_STAR_IMG"/>
-        </property>
-        <property name="ifPrintDayCode" type="string">
-            <column default="'Y'" length="1" name="IF_PRINT_DAY_CODE"/>
-        </property>
-        <property name="yDayCodeSpan" type="string">
-            <column length="20" name="Y_DAY_CODE_SPAN"/>
-        </property>
-        <property name="xDayCodeSpan" type="string">
-            <column length="20" name="X_DAY_CODE_SPAN"/>
-        </property>
-        <property name="printDelayTime" type="string">
-            <column length="20" name="PRINT_DELAY_TIME"/>
-        </property>
-        <property name="stampUrl" type="string">
-            <column length="200" name="STAMP_URL"/>
-        </property>
-        <property name="controlCode" type="string">
-            <column length="50" name="CONTROL_CODE"/>
-        </property>
-        <property name="param0" type="string">
-            <column length="200" name="PARAM0"/>
-        </property>
-        <property name="param1" type="string">
-            <column length="200" name="PARAM1"/>
-        </property>
-        <property name="param2" type="string">
-            <column length="200" name="PARAM2"/>
+        <property name="nsfConfirmUserId" type="string">
+            <column length="50" name="NSF_CONFIRM_USER_ID"/>
         </property>
     </class>
 </hibernate-mapping>

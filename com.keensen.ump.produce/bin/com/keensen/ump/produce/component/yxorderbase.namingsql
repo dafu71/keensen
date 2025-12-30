@@ -74,7 +74,10 @@
 		
 		
 		<!--t1.label_nsf as "labelNsf",-->
-		CASE WHEN replace(replace(REPLACE(REPLACE(t1.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
+		
+		case when t1.nsf_confirm_user_id is not null then t1.label_nsf
+		
+		WHEN trim(replace(replace(REPLACE(REPLACE(t1.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无')) IS null
   			THEN '错'
     		ELSE 
     	DECODE(nsf.label_spec_name,NULL,'无', '有') END  as "labelNsf",
@@ -89,8 +92,8 @@
 		t1.new_make_mark as "newMakeMark",
 		
 		<!--t1.mark_nsf as "markNsf",-->
-		
-		CASE WHEN replace(replace(REPLACE(REPLACE(t1.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无') IS null
+		case when t1.nsf_confirm_user_id is not null then t1.mark_nsf
+		 WHEN trim(replace(replace(REPLACE(REPLACE(t1.spec_name_label,'客户指定：',''),'客户指定:',''),'客户指定',''),'不需要','无')) IS null
   			THEN '错'
     		ELSE 
     	DECODE(nsf.label_spec_name,NULL,'无', '有') END  as "markNsf",
@@ -139,13 +142,13 @@
 		t1.logo_Label2 as "logoLabel2",
 		<!--t1.spec_Name_Label as "specNameLabel",-->
 		
-		 REPLACE(REPLACE(REPLACE(REPLACE(T1.SPEC_NAME_LABEL, '客户指定：', ''),
+		 trim(REPLACE(REPLACE(REPLACE(REPLACE(T1.SPEC_NAME_LABEL, '客户指定：', ''),
                                '客户指定:',
                                ''),
                        '客户指定',
                        ''),
                '不需要',
-               '无') "specNameLabel",
+               '无')) "specNameLabel",
 		
 		
 		t1.spec_Name_Label2 as "specNameLabel2",
@@ -191,9 +194,15 @@
         
   FROM KS_COMPONENT_YXORDER_BASE T1
   
-  LEFT JOIN (SELECT DISTINCT t.label_spec_name from KS_QUALITY_NSF_LIST t) nsf
-	ON nsf.label_spec_name = replace(replace(REPLACE(REPLACE(t1.spec_name_label,'客户指定：',''),
-'客户指定:',''),'客户指定',''),'不需要','无') 
+  left join  KS_BASE_LABEL_DRAWING ld
+  on ld.control_code = t1.label_control_code
+  
+  LEFT JOIN (SELECT DISTINCT t.label_spec_name,brand from KS_QUALITY_NSF_LIST t) nsf
+	ON 
+	 upper(nsf.brand) = upper(decode(ld.logo,'公司标准','Keensen',ld.logo))
+	and
+	nsf.label_spec_name = trim(replace(replace(REPLACE(REPLACE(t1.spec_name_label,'客户指定：',''),
+'客户指定:',''),'客户指定',''),'不需要','无')) 
   
   
   LEFT JOIN qinsen.para_mater_spec pms on pms.mater_spec_id=t1.mp_spec_id
@@ -625,8 +634,14 @@
        END "markNsf",
        NSF.LABEL_SPEC_NAME
   FROM KS_COMPONENT_YXORDER_BASE T
-  LEFT JOIN (SELECT DISTINCT T.LABEL_SPEC_NAME FROM KS_QUALITY_NSF_LIST T) NSF
-    ON NSF.LABEL_SPEC_NAME =
+  left join  KS_BASE_LABEL_DRAWING ld
+  on ld.control_code = t.label_control_code
+  
+  
+  LEFT JOIN (SELECT DISTINCT T.LABEL_SPEC_NAME,brand FROM KS_QUALITY_NSF_LIST T) NSF
+    ON upper(nsf.brand) = upper(decode(ld.logo,'公司标准','Keensen',ld.logo))
+    and 
+    NSF.LABEL_SPEC_NAME =
        REPLACE(REPLACE(REPLACE(REPLACE(T.SPEC_NAME_LABEL, '客户指定：', ''),
                                '客户指定:',
                                ''),

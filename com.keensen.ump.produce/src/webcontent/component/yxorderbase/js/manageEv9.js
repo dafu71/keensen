@@ -1,5 +1,14 @@
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function() {
 	var me = this;
+	
+	me.addMaterWindow.labelDrawingCode.setDisabled(true);
+	me.addMaterWindow.markDrawingCode.setDisabled(true);
+	
+	this.baseMaterStore.on('load', function() {
+				me.addMaterWindow.labelDrawingCode.setDisabled(false);
+				me.addMaterWindow.markDrawingCode.setDisabled(false);
+			})
+	
 
 	this.exportFields = '';
 	this.getRight();

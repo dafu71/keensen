@@ -80,7 +80,7 @@ tmp.Y_WET_SPAN as "yWetSpan",
 tmp.X_WET_SPAN as "xWetSpan",
 tmp.Y_STAR_IMG as "yStarImg",
 tmp.X_STAR_IMG as "xStarImg",
-tmp.IF_PRINT_DAY_CODE as "ifPrintDayCode",
+tmp.IF_PRINT_DAY_CODE as "ifPrintDayCode", nvl(tmp.IF_PRINT_brand,'Y') as "ifPrintBrand",
 tmp.Y_DAY_CODE_SPAN as "yDayCodeSpan",
 tmp.X_DAY_CODE_SPAN as "xDayCodeSpan",
 tmp.PRINT_DELAY_TIME as "printDelayTime"
@@ -115,7 +115,7 @@ max(PRINT_DELAY_TIME) as PRINT_DELAY_TIME
 ,max(t.reserve3) reserve3
 ,max(t.reserve4) reserve4
 ,max(t.reserve5) reserve5
-,max(t.control_code)  control_code ,max(t.param0) param0
+,max(t.control_code)  control_code ,max(t.param0) param0,max(t.if_print_brand) if_print_brand
    from KS_COMPONENT_MARK_TEMPLATE t
        
 GROUP BY t.template_name) tmp ON tmp.template_name = t1.DRAWING_CODE

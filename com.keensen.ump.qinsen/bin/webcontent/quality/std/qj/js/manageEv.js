@@ -67,6 +67,7 @@ com.keensen.ump.produce.quality.qjstdMgr.prototype.onEdit = function() {
 }
 
 com.keensen.ump.produce.quality.qjstdMgr.prototype.exportExcel = function() {
+	
 	var _this = this;
 	var daochu = _this.queryPanel.getForm().getValues();
 
@@ -102,4 +103,37 @@ com.keensen.ump.produce.quality.qjstdMgr.prototype.exportExcel = function() {
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.produce.quality.qjstdMgr.prototype.onModifyBatch = function() {
+
+	var _this = this;
+
+	Ext.Msg.confirm("操作确认", "您确实要更新参数吗?", function(A) {
+		if (A == "yes") {
+			Ext.Ajax.request({
+				url : "com.keensen.ump.base.packagecraft.updateQjStd.biz.ext",
+				method : "post",
+				jsonData : {
+					'param/opt' : 1
+				},
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						_this.listPanel.store.reload();
+
+					}
+
+				},
+				failure : function(resp, options) {
+					// var ret = Ext.decode(resp.responseText);
+					Ext.MessageBox.alert('失败', '请求超时或网络故障');
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+		}
+	})
+
 }

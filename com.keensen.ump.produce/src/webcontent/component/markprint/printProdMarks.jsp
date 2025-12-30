@@ -381,7 +381,9 @@ function initPage() {
 						int batchNoFontSize = null == list[i].get("reserve1")?15:Integer.parseInt(list[i].get("reserve1").toString());
 						
 						int isnsf = null == list[i].get("isnsf")?0:Integer.parseInt(list[i].getString("isnsf"));
+						String ifPrintBrand = list[i].get("ifPrintBrand").toString();
 						
+						int topDiff = 0;//纵坐标补差
 			%>			
 				var batchNo = '<%=prodBatchNo %>';
 				var container = document.getElementById('image-container<%=i %>');
@@ -389,6 +391,8 @@ function initPage() {
 				<%if("Y".equals(ifPrintNsf)){ %>
 			
 			//固定字段
+			
+			<%if("Y".equals(ifPrintBrand)){ %>
 			//brand
 			var brand = document.createElement('div');
 		    brand.className = 'text-overlay';
@@ -423,7 +427,12 @@ function initPage() {
 		    brandvalue.style.color = color;
 		    brandvalue.style.fontFamily = 'Arial';         
 		    container.appendChild(brandvalue);
-		            
+		    <% } %>
+		    
+		    //不打印brand
+		    <%if("N".equals(ifPrintBrand)){ %>
+		    	
+		    <% topDiff = 20; } %>        
 			//model
 			var model = document.createElement('div');
 		    model.className = 'text-overlay';
@@ -434,7 +443,7 @@ function initPage() {
 		            
 		    // 设置样式
 		    model.style.left = '38px';
-		    model.style.top = '<%=60  %>px';
+		    model.style.top = '<%=60-topDiff-15  %>px';
 		    model.style.fontSize = fontSize;
 		    model.style.fontWeight = 'bold';
 		    model.style.color = color;
@@ -451,7 +460,7 @@ function initPage() {
 		            
 		    // 设置样式
 		    sn.style.left = '70px';
-		    sn.style.top = '<%=110  %>px';
+		    sn.style.top = '<%=110 -topDiff %>px';
 		    sn.style.fontSize = fontSize;
 		    sn.style.fontWeight = 'bold';
 		    sn.style.color = color;
@@ -555,7 +564,7 @@ function initPage() {
 						<% } %>
             		
             		
-            		<%if("Y".equals(ifPrintNsf) && xNsf<2000){
+            		<%if("Y".equals(ifPrintNsf) && xNsf<2000 && "Y".equals(ifPrintBrand)){
 					
 						
 					

@@ -103,7 +103,12 @@
        T1.RESERVE1           AS "reserve1",
        T1.TEMPLATE_NAME AS "templateName",
        T1.URL AS "url",
-        DECODE(nsf.prod_spec_name,null,0,1) "isnsf"
+       
+       case when yb.nsf_confirm_user_id is not null then decode(yb.mark_nsf,'有',1,0) 
+                else decode(nsf.prod_spec_name,null,0,1) end
+        <!--DECODE(nsf.prod_spec_name,null,0,1)--> "isnsf"
+        
+        
   FROM (select t.*,v.prod_spec_name qj_spec_name,v.qj_batch_no,t1.reserve1 prod_Batch_No ,t1.reserve2 prod_Spec_Name2
   ,t1.DRY_WET,t1.BATCH_NO,t1.PROD_NAME,t1.ID pkid
   from KS_COMPONENT_PROD_RECORD t1
@@ -111,6 +116,10 @@
   on v.batch_no = t1.batch_no
   left join KS_PROD_COMPONENT_YXORDER od
   on od.id = t1.order_id
+  
+  left join KS_COMPONENT_YXORDER_BASE yb
+          on yb.id = od.base_id
+  
   left join KS_COMPONENT_MARK_TEMPLATE T
   on od.template_name = t.template_name) T1
   

@@ -352,7 +352,11 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
   
   <!--返工登记-->
   left join 
-  (select v.qj_batch_no,t1.dry_wet,t1.batch_no FROM 
+  (select 
+  
+  <!--v.qj_batch_no,-->
+  t1.batch_no qj_batch_no,  
+  t1.dry_wet,t1.batch_no FROM 
 	(
 	SELECT batch_no,dry_wet FROM KS_COMPONENT_PROD_RECORD
 	WHERE ID IN(
@@ -360,8 +364,11 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	FROM KS_COMPONENT_PROD_RECORD
 	WHERE 1=1 and nvl(status,1) != 0
 	GROUP BY batch_no)) t1  
-	   LEFT JOIN V_KS_QJ_BATCH_NO v
-	  on v.batch_no = t1.batch_no) rec
+	   
+	 <!--  LEFT JOIN V_KS_QJ_BATCH_NO v
+	  on v.batch_no = t1.batch_no -->
+	  
+	  ) rec
   on rec.qj_batch_no = qj.batch_no
   
    <!--是否返工-->
@@ -770,6 +777,11 @@ on ab.jm_batch_no = J.batch_no
 </update>
     <!-- 批量改干湿膜 -->
     <update id="modiDryWet" parameterClass="java.util.HashMap">UPDATE qinsen.INST_QIJIAN t  SET t.modify_dry_wet_advise = #modifyDryWetAdvise#,
+	
+	t.change_dt = SYSDATE,t.changer_id = #changerId#
+	WHERE t.juanmo_batch_id IN($juanmoBatchId$)</update>
+    <!-- 批量修改打印序号为元件序号 -->
+    <update id="modiPrintBatchNoBatch" parameterClass="java.util.HashMap">UPDATE qinsen.INST_QIJIAN t  SET t.print_batch_no = t.batch_no,
 	
 	t.change_dt = SYSDATE,t.changer_id = #changerId#
 	WHERE t.juanmo_batch_id IN($juanmoBatchId$)</update>
