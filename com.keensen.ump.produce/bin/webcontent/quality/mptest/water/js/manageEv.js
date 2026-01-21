@@ -259,6 +259,11 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.initEvent = function()
 					this.editWindow4.loadData(cell);
 				}
 			}, this);
+			
+	this.addBaseFormulaWindow.activeItem.mon(this.addBaseFormulaWindow.activeItem, 'afterSave',
+			function(gird, cell) {
+				this.listPanel4BaseFormula.store.reload();
+			}, this);
 
 }
 
@@ -700,6 +705,10 @@ com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onJudge = function(c,
 	} else {
 		infoObj.setValue("<span style='color:red'>不合格</span>")
 	}
+}
+
+com.keensen.ump.produce.quality.mptest.waterMgr.prototype.onAddBaseFormula = function() {
+	this.addBaseFormulaWindow.show();
 }
 
 function returnFloat(v,n) {

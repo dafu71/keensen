@@ -14,8 +14,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link5</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link5</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -52,6 +52,10 @@
     <process:copy>
       <process:from type="literal" pattern="reference">0</process:from>
       <process:to type="query">err</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">toTrayCode</process:from>
+      <process:to type="query">param/toTrayCode</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
@@ -181,6 +185,7 @@
     <process:input isArray="false" name="ids" primitiveType="String"/>
     <process:input isArray="false" name="toStorage" primitiveType="String"/>
     <process:input isArray="false" name="toStorageCode" primitiveType="String"/>
+    <process:input isArray="false" name="toTrayCode" primitiveType="String"/>
   </process:inputs>
   <process:outputs>
     <process:output description="" isArray="false" name="msg" primitiveType="String"/>

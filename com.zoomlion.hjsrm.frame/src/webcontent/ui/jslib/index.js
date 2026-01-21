@@ -638,7 +638,8 @@ Frame.ui.Footer = Ext.extend(Ext.Panel, {
 		hotline : hotline,
 		username : username,
 		orgnames : orgnames,
-		remoteIP : remoteIP
+		remoteIP : remoteIP,
+		userid : userid
 	},
 	initComponent : function() {
 		this.buildTpl();
@@ -648,7 +649,7 @@ Frame.ui.Footer = Ext.extend(Ext.Panel, {
 		this.tpl = new Ext.XTemplate('<table width="100%" class="menufsl" cellpadding="0" cellspacing="0" >'
 				+ '<tr valign="middle">'
 				+ '<td valign="middle" width="50%" align="left"> '
-				+ '{sysname}  {version} | 本机IP:  {remoteIP} <span>当前用户：{username}</span><span>业务机构：{orgnames}</span>'
+				+ '{sysname}  {version} | 本机IP:  {remoteIP} <span>当前用户：{username}</span><span>登录名：</span><span id="loginUid">{userid}</span><span>业务机构：{orgnames}</span>'
 				+ '<span><div id="readmail" class="icon_read_mail">  </div></span>'
 				+ '</td>'
 				+ '<td valign="middle" width="20%" align="center"> '
@@ -686,11 +687,13 @@ function display() {
 	if (kicktime > 30) {
 		kicktime = 0;
 
-		url = 'com.zoomlion.hjsrm.frame.auth.login.LoginManager.isLogin.biz.ext';
+		
+		var loginUid = document.getElementById('loginUid').innerText; 
+		url = 'com.zoomlion.hjsrm.frame.auth.login.LoginManager.IsLogin2.biz.ext?uid=' + loginUid;
 		result = Ext.ex.XMLHttpRequestEx.synchRequest("POST", url);
 		ret = Ext.decode(result);
 		if (ret.ret == false) {
-			Ext.Msg.alert("系统提示", "已有其他用户使用现有账号登录,请确认", function() {
+			Ext.Msg.alert("系统提示", "已有其他用户使用现有账号登录或已限制同一ip不能重复登录,请确认", function() {
 			//Ext.Msg.alert("系统提示", "请重新登录", function() {
 						location.href = "/default/frame/ui/page/kick.jsp";
 					})

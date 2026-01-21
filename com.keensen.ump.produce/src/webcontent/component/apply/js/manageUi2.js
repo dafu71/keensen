@@ -126,7 +126,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								xtype : 'textfield',
 								name : 'condition/code',
 								anchor : '100%',
-								fieldLabel : '栈板号 '
+								fieldLabel : '请检单号 '
 							}, {
 								xtype : 'textfield',
 								name : 'condition/markSpecCode',
@@ -216,6 +216,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 										_this.queryPanel.dryWet.reset()
 									}
 								}
+							}, {
+								xtype : 'textfield',
+								name : 'condition/trayCode',
+								anchor : '100%',
+								fieldLabel : '托盘号 '
 							}]
 				});
 
@@ -234,6 +239,14 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					iconCls : 'icon-application_excel',
 					hidden : uid != 'dafu' && uid != 'KS01479',
 					handler : this.exportExcel2
+				});
+				
+		this.queryPanel.addButton({
+					text : "生成托盘栈板号",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					//hidden : uid != 'dafu' && uid != 'KS01479',
+					handler : this.createTrayCode
 				});
 
 	}
@@ -340,9 +353,13 @@ com.keensen.ump.produce.component.applyMgr = function() {
 			columns : [new Ext.grid.RowNumberer({
 								width : 30
 							}), selModel, {
+						dataIndex : 'trayCode',
+						sortable : true,
+						header : '托盘号'
+					}, {
 						dataIndex : 'code',
 						sortable : true,
-						header : '栈板号',
+						header : '请检单号',
 						renderer : function(v, m, r, i) {
 							var orderId = r.get('orderId');
 							if (!Ext.isEmpty(orderId)) {
@@ -557,6 +574,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'baseId'
 						}, {
 							name : 'dryWet'
+						}, {
+							name : 'trayCode'
 						}]
 			})
 		})
@@ -779,7 +798,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								readOnly : true,
 								fieldLabel : '需生产数量',
 								anchor : '95%',
-								colspan : 6
+								colspan : 4
 							}, {
 								xtype : 'numberfield',
 								ref : '../checkCount',
@@ -788,7 +807,15 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								readOnly : true,
 								fieldLabel : '已请检数量',
 								anchor : '95%',
-								colspan : 6
+								colspan : 4
+							}, {
+								xtype : 'numberfield',
+								ref : '../trayCode',
+								name : 'trayCode',
+								allowBlank : false,
+								fieldLabel : '托盘号',
+								anchor : '95%',
+								colspan : 4
 							}, {
 								xtype : 'displayfield',
 								fieldLabel : '<p style="color:red;">订单要求  </p>',
@@ -1045,7 +1072,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				})
 
 		this.inputWindow = this.inputWindow || new Ext.Window({
-					title : '新增',
+					title : '新增<span style="color:red;font-size:16px;">（请扫码输入托盘号）</span>',
 					resizable : true,
 					minimizable : false,
 					maximizable : true,

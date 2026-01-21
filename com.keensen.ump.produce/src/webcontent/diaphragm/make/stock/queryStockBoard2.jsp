@@ -254,14 +254,14 @@
 	<tr>
 		<td align='center' class="style4"><%=counts[i].getString("dimoType")%></td>
 		<td align='center' class="style4"><%=counts[i].getString("cnt")%></td>
-		<td align='center' class="style4"><%=counts[i].getString("residue")%></td>
+		<td align='right' class="style4"><%=counts[i].getString("residue")%></td>
 	
 	</tr>	
 	<% } %>
 	<tr>
 		<td align='center' class="style5" class="style2">合计</td>
 		<td align='center' class="style5" class="style2"><%=cnt%></td>
-		<td align='center' class="style5" class="style2"><%=residue%></td>
+		<td align='right' class="style5" class="style2"><%=(int) Math.round(residue)%></td>
 	</tr>
 	</table>
 	<br>

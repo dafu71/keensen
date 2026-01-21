@@ -161,6 +161,6 @@
        T1.DIFF30         AS "diff30",
        T1.WATERTYPE      AS "watertype",t1.speed "speed"
   FROM KS_BASE_FORMULA T1
-  ORDER BY t1.mptype,t1.watertype DESC
+  ORDER BY t1.mptype,t1.line,t1.watertype DESC
    </select>
  </sqlMap>

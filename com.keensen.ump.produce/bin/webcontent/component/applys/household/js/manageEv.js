@@ -1,6 +1,129 @@
 com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	this.colorTapeNames = [];
+	this.colorTapeValues = [];
+	this.typeProdNames = [];
+	this.typeProdValues = [];
+	this.sizeProdNames = [];
+	this.sizeProdValues = [];
+	this.codeProdNames = [];
+	this.codeProdValues = [];
+
+	this.markPrintPanel.mon(this.markPrintPanel, 'afterload', function(win,
+			data) {
+				
+		var _this = this;
+		var colorTapeNames = this.colorTapeNames;
+		var colorTapeValues = this.colorTapeValues;
+		var typeProdNames = this.typeProdNames;
+		var typeProdValues = this.typeProdValues;
+		var sizeProdNames = this.sizeProdNames;
+		var sizeProdValues = this.sizeProdValues;
+		var codeProdNames = this.codeProdNames;
+		var codeProdValues = this.codeProdValues;
+
+		var colorTape = '';
+		var typeProd = '';
+		var sizeProd = '';
+		var codeProd = '';
+
+		// 🔢数组查找
+		var findElement = function(arr, target) {
+			for (var i = 0; i < arr.length; i++) {
+				if (arr[i] === target) {
+					return i; // 返回索引
+				}
+			}
+			return -1; // 未找到返回-1
+		}
+
+		var tapColor = this.markPrintPanel.tapColor.getValue();
+		var idx = findElement(colorTapeNames, tapColor);
+		if (idx == -1) {
+			Ext.Msg.alert("系统提示", "没有对应胶带颜色代码!");
+			return false;
+		} else {
+			colorTape = colorTapeValues[idx];
+		}
+
+		var prodSpecName = this.markPrintPanel.prodSpecName.getValue();
+		var specArr = prodSpecName.split('-');
+		var idx = findElement(typeProdNames, specArr[0]);
+		if (idx == -1) {
+			Ext.Msg.alert("系统提示", "没有对应产品种类代码!");
+			return false;
+		} else {
+			typeProd = typeProdValues[idx];
+		}
+
+		var idx = findElement(sizeProdNames, specArr[1]);
+		if (idx == -1) {
+			Ext.Msg.alert("系统提示", "没有对应元件尺寸代码!");
+			return false;
+		} else {
+			sizeProd = sizeProdValues[idx];
+		}
+
+		if (specArr.length == 2) {
+			codeProd = '000'
+		} else {
+			var idx = findElement(codeProdNames, specArr[2]);
+			if (idx == -1) {
+				Ext.Msg.alert("系统提示", "没有对应元件型号代码!");
+				return false;
+			} else {
+				codeProd = codeProdValues[idx];
+			}
+		}
+		var prefix = colorTape + typeProd + sizeProd + codeProd;
+
+		Ext.Ajax.request({
+			url : "com.keensen.ump.produce.component.sn.queryYmd.biz.ext",
+			method : "post",
+			success : function(resp) {
+				// 返回值处理
+				var ret = Ext.decode(resp.responseText);
+				var ymd = ret.ymd;
+				_this.markPrintPanel.markBatchNo.setValue(prefix+ymd+'xxx');
+
+			},
+			callback : function() {
+				
+			}
+		})
+
+		
+	}, this);
+
+	this.baseDictStore.on('load', function() {
+				var records = _this.baseDictStore.getRange();
+				if (records.length > 0) {
+					for (var i = 0; i < records.length; i++) {
+						if (records[i].data.business == 'color_tape') {
+							_this.colorTapeNames.push(records[i].data.dictName);
+							_this.colorTapeValues
+									.push(records[i].data.dictValue);
+						}
+						if (records[i].data.business == 'type_prod') {
+							_this.typeProdNames.push(records[i].data.dictName);
+							_this.typeProdValues
+									.push(records[i].data.dictValue);
+						}
+						if (records[i].data.business == 'size_prod') {
+							_this.sizeProdNames.push(records[i].data.dictName);
+							_this.sizeProdValues
+									.push(records[i].data.dictValue);
+						}
+						if (records[i].data.business == 'code_prod') {
+							_this.codeProdNames.push(records[i].data.dictName);
+							_this.codeProdValues
+									.push(records[i].data.dictValue);
+						}
+
+					}
+				}
+			})
 
 	// 查询事件
 	this.queryChooseOrderPanel.mon(this.queryChooseOrderPanel, 'query',
@@ -89,6 +212,12 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 									'condition/relationId' : relationId
 								}
 							});
+				}
+
+				if (this.opt == 'markprint') {
+
+					this.markPrintWindow.show();
+					this.markPrintPanel.loadData(cell);
 				}
 			}, this);
 
@@ -662,8 +791,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onCStock = function(
 			var record = B[0];
 			var pkid = record.data.id;
 			var ifcstock = record.data.ifcstock;
-			
-			
+
 			if (ifcstock == '是') {
 				Ext.Msg.alert("系统提示", "请选择未确认入C仓的数据!");
 				return
@@ -702,4 +830,14 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onCStock = function(
 	} else {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
 	}
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onMarkPrint = function() {
+
+	this.opt = 'markprint';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveMarkPrint = function() {
+
 }

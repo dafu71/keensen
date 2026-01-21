@@ -18,7 +18,7 @@ com.keensen.ump.produce.component.inventory.LocalMgr = function() {
 		var _this = this;
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 110,
 					columns : 3,
 					border : true,
 					region : "north",
@@ -56,6 +56,23 @@ com.keensen.ump.produce.component.inventory.LocalMgr = function() {
 						name : 'condition/juanmoBatchNo',
 						anchor : '95%',
 						fieldLabel : '卷膜序号'
+					}, {
+						xtype : 'displayfield',
+						height : 5,
+						colspan : 3
+					}, {
+						xtype : 'textfield',
+						name : 'condition/createName',
+						anchor : '95%',
+						fieldLabel : '盘库人'
+					}, {
+						xtype : "dateregion",
+						colspan : 2,
+						anchor : '95%',
+						nameArray : ['condition/createTimeStart',
+								'condition/createTimeEnd'],
+						fieldLabel : "盘库时间",
+						format : "Y-m-d"
 					}]
 				});
 
@@ -109,7 +126,9 @@ com.keensen.ump.produce.component.inventory.LocalMgr = function() {
 			clicksToEdit : 1,
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.stocktaking.deleteInventoryLocal.biz.ext',
-			columns : [new Ext.grid.RowNumberer(), selModel, {
+			columns : [new Ext.grid.RowNumberer({
+								width : 50
+							}), selModel, {
 						dataIndex : 'batchNo',
 						header : '元件序号',
 						width : 100
@@ -401,7 +420,7 @@ com.keensen.ump.produce.component.inventory.LocalMgr = function() {
 								xtype : 'displayfield',
 								height : '5',
 								colspan : 3
-							},{
+							}, {
 								xtype : 'datetimefield',
 								name : 'condition/stockConfirmTimeStart',
 								fieldLabel : '请检入库确认时间',

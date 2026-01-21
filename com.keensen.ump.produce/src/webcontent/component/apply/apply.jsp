@@ -52,9 +52,19 @@
 
 <table width="780" border="0">
 	<tr>
-		<td width="100%" height="47">
+	
+		<td width="50%" height="47">		
+		<div align="left" class="style3">		
+		<svg id="trayCode_<b:write property="data/trayCode" />" style="width:80mm"></svg>
+		<br>
+		<span>托盘号<b:write property="data/trayCode" /></span>
+		</div>
+		</td>
+		<td width="50%" height="47">		
 		<div align="right" class="style3">		
 		<svg id="barcode_<b:write property="data/code" />" style="width:80mm"></svg>
+		<br>
+		<span>请检单号<b:write property="data/code" /></span>
 		</div>
 		</td>
 	</tr>
@@ -350,7 +360,7 @@
 						var barcode = document.getElementById('barcode_' + batchNo), 
 						options = {
 						format : "CODE128",
-						displayValue : true,
+						displayValue : false,
 						fontSize : 16,
 						font : 'msyhbd',
 						fontOptions : 'bold',
@@ -361,6 +371,22 @@
 						};
 						
 					JsBarcode(barcode, batchNo, options);
+					
+					var trayCode = '<b:write property="data/trayCode" />';
+					var traycode = document.getElementById('trayCode_' + trayCode), 
+						options = {
+						format : "CODE128",
+						displayValue : false,
+						fontSize : 16,
+						font : 'msyhbd',
+						fontOptions : 'bold',
+						textMargin : 0,
+						height : 50,
+						margin : 0,
+						width : 3
+						};
+						
+					JsBarcode(traycode, trayCode, options);
 					window.print();
 					
 	};

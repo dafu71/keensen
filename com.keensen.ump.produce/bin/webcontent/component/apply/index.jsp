@@ -85,5 +85,13 @@
 </head>
 <body>
 <div id="componentapplymgr"></div>
+
+<div style="display: none">
+		
+		
+		<form name="printtraycodeForm" id="printtraycodeForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+			<input type="hidden" name="num"/>
+		</form>
+	</div>
 </body>
 </html>

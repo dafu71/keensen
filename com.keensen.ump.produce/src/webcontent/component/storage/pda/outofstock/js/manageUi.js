@@ -73,6 +73,9 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						dataIndex : 'checkCode',
 						header : '请检单号'
 					}, {
+						dataIndex : 'trayCode',
+						header : '托盘号'
+					}, {
 						dataIndex : 'orderNo',
 						header : '出库订单号'
 					}, {
@@ -164,6 +167,8 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 							name : 'storageCode'
 						}, {
 							name : 'dryWet'
+						}, {
+							name : 'trayCode'
 						}]
 			})
 		})
@@ -193,7 +198,7 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 					}, {
 						xtype : 'displayfield',
 						fieldLabel : ' ',
-						value : '<p style="color:red;font-size:16px;">出库顺序为请检单号>库位码>元件序号</p>',
+						value : '<p style="color:red;font-size:16px;">出库顺序为托盘号>元件序号</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 1
 					}, {
@@ -224,7 +229,7 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						xtype : 'textfield',
 						height : 30,
 						style : '{font-weight:bold;font-size:18px;}',
-						//allowBlank : false,
+						allowBlank : false,
 						fieldLabel : '出库订单号',
 						ref : '../orderNo',
 						anchor : '80%',
@@ -244,6 +249,31 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						height : '10',
 						colspan : 1
 					}, {
+						xtype : 'textfield',
+						height : 30,
+						style : '{font-weight:bold;font-size:18px;}',
+						//allowBlank : false,
+						fieldLabel : '托盘号',
+						ref : '../trayCode',
+						anchor : '80%',
+						colspan : 1,
+						listeners : {
+							scope : this,
+							specialkey : function(C, D) {
+								if (D.getKey() == Ext.EventObject.ENTER) {
+									
+
+								}
+
+							}
+						}
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : ' ',
+						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入</p>',
+						labelSeparator : '',// 去掉冒号
+						colspan : 1
+					}/*, {
 						xtype : 'textfield',
 						height : 30,
 						style : '{font-weight:bold;font-size:18px;}',
@@ -292,7 +322,7 @@ com.keensen.ump.produce.component.storage.OutofStockMgr = function() {
 						value : '<p style="color:red;">光标置于此框内后扫码，或手工录入</p>',
 						labelSeparator : '',// 去掉冒号
 						colspan : 1
-					}, {
+					}*/, {
 						xtype : 'textfield',
 						height : 30,
 						style : '{font-weight:bold;font-size:18px;}',

@@ -860,6 +860,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'taskState',
 						header : '是否已<br>下达任务单',
+						hidden:uid != 'dafu' && uid !='KS01147',
 						renderer : function(v, m, r, i) {
 							if (v == '是') {
 								return "<span style='color:red'>" + v
@@ -1359,6 +1360,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						dataIndex : 'createTime',
 						header : '导入时间',
 						sortable : true
+					}, {
+						dataIndex : 'ifGift',
+						header : '是否有赠品',
+						hidden : true
 					}, {
 						dataIndex : 'id',
 						header : '订单id',
@@ -1983,7 +1988,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					name : 'entity/giftNum',
 					dataIndex : 'giftNum',
 					ref : '../../giftNum',
-					// allowBlank : false,
+					allowBlank : false,
 					fieldLabel : '赠送数量',
 					// readOnly : true,
 					anchor : '100%',
@@ -3916,7 +3921,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						header : '工艺员'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.component.yxorderbase.queryYxOrderConfirm.biz.ext',
+				url : 'com.keensen.ump.produce.component.yxorderbase.queryYxOrderConfirm2.biz.ext',
 				root : 'data',
 				autoLoad : false,
 				totalProperty : '',

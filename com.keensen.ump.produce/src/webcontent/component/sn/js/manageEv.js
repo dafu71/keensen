@@ -369,7 +369,7 @@ function getSn(useType, prefix, digit) {
 		default :
 			mcode = m;
 	}
-	if (useType == '家用') {
+	if (useType == '家用' || useType == '公司标签-家用') {
 		ret = prefix + ycode + mcode + padNumber(1, digit);
 	} else {
 		ret = prefix + padNumber(1, digit);

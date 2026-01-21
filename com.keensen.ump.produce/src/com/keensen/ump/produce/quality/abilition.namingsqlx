@@ -201,6 +201,10 @@ where 1=1
 		       T1.CREATE_NAME like '%' || #createName# || '%'
 	</isNotNull>
 	
+	<isNotNull prepend="and" property="code2"> 
+		       T1.CODE = #code2# 
+	</isNotNull>
+	
 	  order by t1.id desc,t2.id
 	 
 	

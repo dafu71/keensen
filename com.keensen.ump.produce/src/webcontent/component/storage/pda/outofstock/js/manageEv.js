@@ -34,18 +34,18 @@ com.keensen.ump.produce.component.storage.OutofStockMgr.prototype.onDel = functi
 com.keensen.ump.produce.component.storage.OutofStockMgr.prototype.onSave = function() {
 
 	var _this = this;
-	var checkCode = this.inputPanel.checkCode.getValue();
-	var storageCode = this.inputPanel.storageCode.getValue();
+	// var checkCode = this.inputPanel.checkCode.getValue();
+	// var storageCode = this.inputPanel.storageCode.getValue();
 	var batchNo = this.inputPanel.batchNo.getValue();
 	var type = this.inputPanel.type.getValue();
 	var orderNo = this.inputPanel.orderNo.getValue();
+	var trayCode = this.inputPanel.trayCode.getValue();
 
 	if (!this.inputPanel.form.isValid()) {
 		return;
 	}
 
-	if (Ext.isEmpty(checkCode) && Ext.isEmpty(storageCode)
-			&& Ext.isEmpty(batchNo)) {
+	if (Ext.isEmpty(batchNo) && Ext.isEmpty(trayCode)) {
 		return;
 	}
 
@@ -54,8 +54,9 @@ com.keensen.ump.produce.component.storage.OutofStockMgr.prototype.onSave = funct
 		scope : this,
 		url : 'com.keensen.ump.produce.component.storage.saveOutOfStockByCode.biz.ext',
 		jsonData : {
-			"entity/checkCode" : checkCode,
-			"entity/storageCode" : storageCode,
+			"entity/checkCode" : '',
+			"entity/storageCode" : '',
+			"entity/trayCode" : trayCode,
 			"entity/batchNo" : batchNo,
 			"entity/orderNo" : orderNo,
 			"entity/type" : type
@@ -69,15 +70,19 @@ com.keensen.ump.produce.component.storage.OutofStockMgr.prototype.onSave = funct
 				_this.inputPanel.msg
 						.setValue('<p style="color:red;font-size:16px;">' + msg
 								+ '</p>');
-				_this.inputPanel.checkCode.setValue('');
-				_this.inputPanel.storageCode.setValue('');
+				// _this.inputPanel.checkCode.setValue('');
+				// _this.inputPanel.storageCode.setValue('');
+				// _this.inputPanel.batchNo.setValue('');
 				_this.inputPanel.batchNo.setValue('');
+				_this.inputPanel.trayCode.setValue('');
 
 			} else {
 				_this.inputPanel.msg.setValue('');
-				_this.inputPanel.checkCode.setValue('');
-				_this.inputPanel.storageCode.setValue('');
+				// _this.inputPanel.checkCode.setValue('');
+				// _this.inputPanel.storageCode.setValue('');
+				// _this.inputPanel.batchNo.setValue('');
 				_this.inputPanel.batchNo.setValue('');
+				_this.inputPanel.trayCode.setValue('');
 				_this.listPanel.store.reload();
 			}
 		}

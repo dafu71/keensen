@@ -106,4 +106,123 @@
 
 	
     </select>
+    
+    <select id="queryAppearanceStand" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    	SELECT 
+    	t1.id "id",
+		t1.SPEC_ID as "specId",
+		t1.SPEC_NAME as "specName",
+		t1.SPEC_TYPE as "specType",
+		t1.bag_Drawing_Code as "bagDrawingCode",
+		t1.BOX_Drawing_Code as "boxDrawingCode",
+		t1.PACKING_NUM as "packingNum",
+		t1.LID as "lid",
+		t1.PALLET as "pallet",
+		t1.SEAL_AMOUNT as "sealAmount",
+		t1.PACKING_LID as "packingLid",
+		t1.BAG_SEAL as "bagSeal",
+		t1.BOX_SEAL as "boxSeal",
+		t1.QC_TXT "qcTxt",
+		t1.PACKING_TXT "packingTxt",		
+		t1.TAPE as "tape",
+		t1.PIPE_LINK as "pipeLink",
+		t1.package_a "packageA",
+		t1.package_b "packageB",
+		t1.package_c "packageC",
+		t1.state "state",
+		decode(t1.state,'Y','在用','停用') "stateName"
+		FROM
+		(
+		SELECT t.id,t.spec_id ,t.spec_name,t.spec_type,nvl(t.state,'Y') state,
+    a.bag_drawing_code,a.box_drawing_code,a.packing_num,a.lid,a.pallet,
+    b.seal_amount,b.packing_lid,b.bag_seal,b.box_seal,b.QC_TXT,b.PACKING_TXT,
+    c.tape,c.pipe_link ,t.package_a,t.package_b,t.package_c
+    
+    from ks_BASE_APPEARANCE_STAND t
+    LEFT JOIN KS_BASE_APPEARANCE_STD_A a
+    ON a.code = t.package_a
+    LEFT JOIN KS_BASE_APPEARANCE_STD_b b
+    ON b.code = t.package_b
+    LEFT JOIN KS_BASE_APPEARANCE_STD_c c
+    ON c.code = t.package_c) t1
+        
+        where 1=1
+        
+         <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+		</isNotNull>
+		
+        <isNotNull prepend="and" property="jmSpecName"> 
+		       t1.jm_spec_name like '%' || #jmSpecName# || '%'
+		</isNotNull>
+        <isNotNull prepend="and" property="state"> 
+		       t1.state = #state#
+		</isNotNull>
+		
+		<isNotNull prepend="and" property="packageA"> 
+		       t1.package_a = #packageA#
+		</isNotNull>
+		<isNotNull prepend="and" property="packageB"> 
+		       t1.package_b = #packageB#
+		</isNotNull>
+		<isNotNull prepend="and" property="packageC"> 
+		       t1.package_c = #packageC#
+		</isNotNull>
+		
+		order by t1.spec_name,t1.package_a,t1.package_b,t1.package_c
+    </select>
+    
+     <select id="queryPackageA" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    	SELECT T1.ID               "id",
+       T1.CODE             "code",
+       T1.BOX_DRAWING_CODE "boxDrawingCode",
+       T1.BAG_DRAWING_CODE "bagDrawingCode",t1.PACKING_NUM as "packingNum",
+       T1.LID              "lid",
+       T1.PALLET           "pallet"
+  FROM KS_BASE_APPEARANCE_STD_A T1
+    where 1=1
+        
+         <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+		</isNotNull>
+          <isNotNull prepend="and" property="code"> 
+		       t1.code = #code#
+		</isNotNull>
+    </select>
+    
+     <select id="queryPackageB" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    	SELECT T1.ID               "id",
+       T1.CODE             "code",
+       T1.SEAL_AMOUNT "sealAmount",
+       T1.PACKING_LID "packingLid",
+       T1.BAG_SEAL "bagSeal",
+       T1.BOX_SEAL "boxSeal",
+       t1.qc_txt "qcTxt",
+       t1.packing_txt "packingTxt"
+  	FROM KS_BASE_APPEARANCE_STD_B T1
+    where 1=1
+        
+         <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+		</isNotNull>
+          <isNotNull prepend="and" property="code"> 
+		       t1.code = #code#
+		</isNotNull>
+    </select>
+    
+    <select id="queryPackageC" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    	SELECT T1.ID               "id",
+       T1.CODE             "code",
+       T1.TAPE "tape",
+       t1.pipe_link "pipeLink"
+	  FROM KS_BASE_APPEARANCE_STD_C T1
+	    where 1=1
+        
+         <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+		</isNotNull>
+          <isNotNull prepend="and" property="code"> 
+		       t1.code = #code#
+		</isNotNull>
+    </select>
   </sqlMap>

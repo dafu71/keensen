@@ -86,6 +86,15 @@ com.keensen.ump.produce.component.ProdRecordMgr.prototype.initEvent = function()
 
 	this.inputWindow.activeItem.mon(this.inputWindow.activeItem, 'beforeSave',
 			function() {
+
+				var source = this.inputWindow.source.getValue();
+				var code = this.inputWindow.code.getValue();
+
+				if (source == '库存元件' && Ext.isEmpty(code)) {
+					Ext.Msg.alert("系统提示", "库存返工，指令单编号需必填!");
+					return false;
+				}
+
 				var batchNoStr = this.inputWindow.batchNo.getValue();
 				if (!Ext.isEmpty(batchNoStr)) {
 					var regEx = new RegExp("\\n", "gi");
@@ -409,6 +418,59 @@ com.keensen.ump.produce.component.ProdRecordMgr.prototype.onPrintTag = function(
 				+ Date.now();
 		f.action = actionUrl;
 		f.submit();
+
+	}
+
+}
+
+com.keensen.ump.produce.component.ProdRecordMgr.prototype.onModifyCode = function() {
+
+	var _this = this;
+	var A = this.listPanel;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var arr = [];
+		for (var i = 0; i < C.length; i++) {
+			arr.push(C[i].data.id);
+		}
+
+		Ext.Msg.prompt("修改指令单编号", "请输入指令单编号", function(btn, text) {
+			if (btn == 'ok' && !Ext.isEmpty(text)) {
+				_this.requestMask = this.requestMask
+						|| new Ext.LoadMask(Ext.getBody(), {
+									msg : "后台正在操作,请稍候!"
+								});
+				_this.requestMask.show();
+				Ext.Ajax.request({
+					url : "com.keensen.ump.produce.component.prodrecord.modifyCode.biz.ext",
+					method : "post",
+					jsonData : {
+						'param/code' : text.trim(),
+						'param/ids' : arr.join(',')
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							Ext.Msg.alert("系统提示", "操作成功！", function() {
+										_this.listPanel.store.load();
+
+									})
+						} else {
+							Ext.Msg.alert("系统提示", "修改订单号失败！")
+
+						}
+
+					},
+					callback : function() {
+						_this.requestMask.hide();
+
+					}
+				})
+			} else {
+			}
+		}, this, false, "");
 
 	}
 

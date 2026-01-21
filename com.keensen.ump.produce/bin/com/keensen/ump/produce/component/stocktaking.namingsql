@@ -215,7 +215,11 @@
         <isNotNull prepend="and" property="juanmoBatchNo">T1.JUANMO_BATCH_NO  = #juanmoBatchNo#</isNotNull>
         <isNotNull prepend="and" property="batchNo">T1.BATCH_NO  = #batchNo#</isNotNull>
         <isNotNull prepend="and" property="position">T1.position  = #position#</isNotNull>
-    </select>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="createName">T1.create_name like '%' || #createName# || '%'</isNotNull>
+	order by t1.id desc
+  </select>
     <select id="queryIfCheck" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
   
   	select 1 from KS_COMPONENT_CHECK_LIST t 

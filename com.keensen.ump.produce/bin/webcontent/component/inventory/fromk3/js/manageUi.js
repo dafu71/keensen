@@ -80,7 +80,7 @@ com.keensen.ump.produce.component.inventory.K3StockMgr = function() {
 								// anchor : '75%',
 								nameArray : ['condition/storeTimeStart',
 										'condition/storeTimeEnd'],
-								fieldLabel : "卷制/入库时间",
+								fieldLabel : "入库时间",
 								format : "Y-m-d"
 							}, {
 								xtype : 'textfield',
@@ -126,6 +126,7 @@ com.keensen.ump.produce.component.inventory.K3StockMgr = function() {
 			tbar : [{
 						text : '删除',
 						scope : this,
+						hidden:true,
 						iconCls : 'icon-application_delete',
 						handler : this.onDelete
 					}],
@@ -182,7 +183,7 @@ com.keensen.ump.produce.component.inventory.K3StockMgr = function() {
 					}, {
 						dataIndex : 'storeTime',
 						width : 100,
-						header : '卷制时间'
+						header : '入库时间'
 					}, {
 						dataIndex : 'apperance',
 						width : 100,

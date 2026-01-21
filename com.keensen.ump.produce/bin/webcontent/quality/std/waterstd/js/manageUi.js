@@ -153,7 +153,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 						header : '量产<br>系数B',
 						width : 80,
 						dataIndex : 'aFactorBUpLimit'
-					}, {
+					}/*, {
 						header : '单品<br>产水量-下限',
 						width : 100,
 						dataIndex : 'bGpdLowLimit'
@@ -161,7 +161,7 @@ com.keensen.ump.produce.quality.waterstdMgr = function() {
 						header : '单品<br>脱盐率',
 						width : 80,
 						dataIndex : 'bSaltLowLimit'
-					}, {
+					}*/, {
 						header : '单品<br>贴标元件型号',
 						width : 120,
 						dataIndex : 'bSpecName'

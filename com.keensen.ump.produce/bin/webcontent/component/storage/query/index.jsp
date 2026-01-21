@@ -57,6 +57,6 @@
  </script>
 </head>
 <body>
-<div id="storagequerymgr"></div>
+<div id="componentstoragequerymgr"></div>
 </body>
 </html>

@@ -488,3 +488,16 @@ com.keensen.ump.produce.quality.poorMgr.prototype.exportAbilitionQuery = functio
 			this.listPanel4AbilitionQueryList, '报废单明细',
 			'com.keensen.ump.produce.quality.abilition.queryAbilitionList','0,1,2,3,4,5');
 }
+
+com.keensen.ump.produce.quality.poorMgr.prototype.onPrint = function() {
+	var A = this.listPanel4AbilitionQueryList;
+	var store = A.store;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var code = C[0].data.code;
+		window.open('com.keensen.ump.produce.quality.abilitionReport.flow?code='
+						+ code, "top");
+	}
+}

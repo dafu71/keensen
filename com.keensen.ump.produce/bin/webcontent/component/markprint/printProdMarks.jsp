@@ -384,6 +384,7 @@ function initPage() {
 						String ifPrintBrand = list[i].get("ifPrintBrand").toString();
 						
 						int topDiff = 0;//纵坐标补差
+						int topDiff2 = 0;//纵坐标补差
 			%>			
 				var batchNo = '<%=prodBatchNo %>';
 				var container = document.getElementById('image-container<%=i %>');
@@ -432,7 +433,8 @@ function initPage() {
 		    //不打印brand
 		    <%if("N".equals(ifPrintBrand)){ %>
 		    	
-		    <% topDiff = 20; } %>        
+		    <%  topDiff = 20; 
+		    	 }else{ topDiff2=-12;} %>        
 			//model
 			var model = document.createElement('div');
 		    model.className = 'text-overlay';
@@ -443,7 +445,7 @@ function initPage() {
 		            
 		    // 设置样式
 		    model.style.left = '38px';
-		    model.style.top = '<%=60-topDiff-15  %>px';
+		    model.style.top = '<%=60-topDiff2-15  %>px';
 		    model.style.fontSize = fontSize;
 		    model.style.fontWeight = 'bold';
 		    model.style.color = color;

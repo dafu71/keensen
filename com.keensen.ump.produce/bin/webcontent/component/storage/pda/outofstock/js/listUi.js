@@ -15,7 +15,7 @@ com.keensen.ump.produce.component.storage.OutOfStockListMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -26,13 +26,13 @@ com.keensen.ump.produce.component.storage.OutOfStockListMgr = function() {
 								colspan : 1,
 								name : 'condition/checkCode2',
 								anchor : '100%',
-								fieldLabel : '%-请检单号-%'
+								fieldLabel : '请检单号%-%'
 							}, {
 								xtype : 'textfield',
 								colspan : 1,
 								name : 'condition/orderNo2',
 								anchor : '100%',
-								fieldLabel : '%-订单号-%'
+								fieldLabel : '订单号%-%'
 							}, {
 								xtype : 'textfield',
 								colspan : 1,
@@ -45,15 +45,77 @@ com.keensen.ump.produce.component.storage.OutOfStockListMgr = function() {
 								anchor : '100%',
 								nameArray : ['condition/createTimeStart',
 										'condition/createTimeEnd'],
-								fieldLabel : "入库时间",
+								fieldLabel : "出库时间",
 								format : "Y-m-d"
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 4
+							}, {
+								xtype : 'textfield',
+								name : 'condition/jmSpecName',
+								fieldLabel : '卷膜型号'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/dryWet2',
+								fieldLabel : '干湿%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/storageCode',
+								fieldLabel : '库位码'
+							}, {
+								xtype : 'combo',
+								hiddenName : 'condition/storage',
+								mode : 'local',
+								ref : '../storage',
+								fieldLabel : '仓库',
+								store : [['高架成品仓', '高架成品仓'],
+										['高架订单仓', '高架订单仓'],
+										['高架C等品仓', '高架C等品仓']],
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
+
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 4
+							}, {
+								xtype : 'combo',
+								mode : 'local',
+								editable : false,
+								hiddenName : 'condition/type',
+								ref : '../type',
+								fieldLabel : '出库类型',
+								store : [['销售出库', '销售出库'], ['其它出库', '其它出库']],
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
+
+							}, {
+								xtype : 'textfield',
+								name : 'condition/trayCode',
+								anchor : '100%',
+								fieldLabel : '托盘号 '
 							}]
 				});
+				
+		this.queryPanel.addButton({
+					text : "多元件序号查询",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQueryByBatchNos
+				});
+				
 		this.queryPanel.addButton({
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					//hidden : true,
 					handler : this.exportExcel
 				});
 	}
@@ -80,6 +142,9 @@ com.keensen.ump.produce.component.storage.OutOfStockListMgr = function() {
 					}, {
 						dataIndex : 'checkCode',
 						header : '请检单号'
+					}, {
+						dataIndex : 'trayCode',
+						header : '托盘号'
 					}, {
 						dataIndex : 'orderNo',
 						header : '出库订单号'
@@ -174,6 +239,8 @@ com.keensen.ump.produce.component.storage.OutOfStockListMgr = function() {
 							name : 'storageCode'
 						}, {
 							name : 'dryWet'
+						}, {
+							name : 'trayCode'
 						}]
 			})
 		})

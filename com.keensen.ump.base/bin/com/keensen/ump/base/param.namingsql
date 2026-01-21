@@ -46,4 +46,13 @@
 		LEFT JOIN qinsen.para_mater_spec pms
 		ON pms.mater_spec_id = cm.prod_spec_id
 		WHERE cm.batch_no =#cmBatchNo#</select>
+    <select id="queryBaseDict" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+     
+  			select t.business "business",t.dict_value "dictValue",
+			t.dict_name "dictName",t.remark "remark" from KS_BASE_DICT t
+			where 1=1 
+			<isNotNull prepend="and" property="business">t.business in ($business$)</isNotNull>
+			order by t.business
+			
+	</select>
 </sqlMap>

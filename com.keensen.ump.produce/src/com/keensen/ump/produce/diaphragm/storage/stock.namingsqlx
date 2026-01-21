@@ -23,7 +23,7 @@
 		另外膜片自用的超标标准也修改为：ULP系列与BW(含HW)系列、SW系列片为90个自然日，NF系列膜片标准为180个自然日。
 		-->
 		<!--2025-07-14
-		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为170个自然日
+		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为160个自然日
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		-->
 		
@@ -36,14 +36,39 @@
 		mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1'
 		-->
 		
+		<!--2026-01-0
+		超期与预警规则说明:
+		  
+		3、发货膜片超期（给予膜片事业部业务员考核后调至AB仓自用）标准:ULP与BW(含HW)系列为30个自然日,NF、SW系列膜片为90个自然日;
+		4、发货膜片预警（提醒计划员与膜片事业部业务员、内勤人员）标准:ULP与BW(含HW)系列为20个自然日,NF、SW系列膜片为60个自然日;
+		2025年1月1日之前的不进行报警。
+		-->
+		
 		<!--发货-->
-		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' THEN 'red'
-         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>30) 
-         AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
-         and vkt.mater_spec_name != 'SW2-1' and vkt.mater_spec_name != 'SW3-1'
+		<!--超期标准-->
+		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>30) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+		 and (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR
+                vkt.MATER_CLASS_CODE = 'HW')		 
+		 THEN 'red'
+		 
+		  WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>90) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+		 and (vkt.MATER_CLASS_CODE = 'NF' OR vkt.MATER_CLASS_CODE = 'SW' )		 
+		 THEN 'red'
+		 
+		 <!--预期标准--> 
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>20) 
+         AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=30) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+         and (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR
+                vkt.MATER_CLASS_CODE = 'HW')	
          THEN 'yellow'
+         
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>60) 
+         AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=90) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+         and (vkt.MATER_CLASS_CODE = 'NF' OR vkt.MATER_CLASS_CODE = 'SW')	
+         THEN 'yellow'
+         
         <!--自用膜片--> 
-        <!--超期标准-->
+        
         <!--2025-07-14
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		-->
@@ -56,13 +81,13 @@
         <!--预期标准--> 
         
         <!--2025-07-14
-		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为170个自然日		
+		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为160个自然日		
 		-->
            WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>70) 
           AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=84)
          AND (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'yellow'
-         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>170) 
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>160) 
           AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=174)
          AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'yellow'
@@ -131,6 +156,11 @@
                      GROUP BY C.BATCH_ID) T8
             ON T8.BATCH_ID = vkt.RECORD_ID
   where 1=1
+  
+   <isEqual prepend="and" property="notLock" compareValue="Y">
+ 			   not exists(select 1 from KS_DIAPHRAGM_ORDER_MP tt where tt.batch_no = t1.batch_no)
+    </isEqual>
+  
    <isEqual prepend="and" property="notZero" compareValue="Y">
  			   t1.AMOUNT > 0
     </isEqual>
@@ -204,7 +234,7 @@
 		另外膜片自用的超标标准也修改为：ULP系列与BW(含HW)系列、SW系列片为90个自然日，NF系列膜片标准为180个自然日。
 		-->
 		<!--2025-07-14
-		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为170个自然日
+		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为160个自然日
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		-->
 		
@@ -216,13 +246,34 @@
 		发货预期标准申请把SW2-1和SW3-1改为60个自然日，避免海水膜频繁调仓
 		mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1'
 		-->
+		<!--2026-01-0
+		超期与预警规则说明:
+		  
+		3、发货膜片超期（给予膜片事业部业务员考核后调至AB仓自用）标准:ULP与BW(含HW)系列为30个自然日,NF、SW系列膜片为90个自然日;
+		4、发货膜片预警（提醒计划员与膜片事业部业务员、内勤人员）标准:ULP与BW(含HW)系列为20个自然日,NF、SW系列膜片为60个自然日;
+		2025年1月1日之前的不进行报警。
+		-->
 		
 		<!--发货-->
-		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' THEN 'red'
-         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>30) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) 
+		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>30) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+		 and (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR
+                vkt.MATER_CLASS_CODE = 'HW')		 
+		 THEN 'red'
+		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>90) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+		 and (vkt.MATER_CLASS_CODE = 'NF' OR vkt.MATER_CLASS_CODE = 'SW' )		 
+		 THEN 'red'
+		 
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>20) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=30) 
          AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
-         and vkt.mater_spec_name != 'SW2-1' and vkt.mater_spec_name != 'SW3-1'
+          and (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR
+                vkt.MATER_CLASS_CODE = 'HW')	
          THEN 'yellow'
+         
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>60) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=90) 
+         AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+          and (vkt.MATER_CLASS_CODE = 'NF' OR vkt.MATER_CLASS_CODE = 'SW')	
+         THEN 'yellow'
+         
         <!--自用膜片--> 
         <!--超期标准-->
         <!--2025-07-14
@@ -236,13 +287,13 @@
          THEN 'red'
         <!--预期标准--> 
         <!--2025-07-14
-		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为170个自然日		
+		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为160个自然日		
 		-->
           WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>70) 
           AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=84)
          AND (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'yellow'
-         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>170) 
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>160) 
           AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=174)
          AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'yellow'
@@ -746,7 +797,7 @@
 		-->
 		
 		<!--2025-07-14
-		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为170个自然日
+		自用膜片预期标准改回：ULP与BW（含HW）、SW系列为70个自然日,NF系列标准为160个自然日
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		-->
 		
@@ -778,7 +829,7 @@
           AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=84)
          AND (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'yellow'
-         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>170) 
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>160) 
           AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=174)
          AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'yellow'

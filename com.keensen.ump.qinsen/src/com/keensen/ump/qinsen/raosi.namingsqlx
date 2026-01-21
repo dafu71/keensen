@@ -54,11 +54,11 @@
 	            AND C.TUMO_BATCH_ID = M.RECORD_ID
 	            AND D.MAIN_BATCH_ID = J.RECORD_ID) TUMO_BATCH_STR
 	  FROM 
-	  (select rs.*,v.qj_batch_no qj_batch_no,v.record_id qj_record_id from  qinsen.INST_RAOSI rs
-	  left join V_KS_QJ_BATCH_NO_raosi v
-	  on rs.batch_no = v.batch_no
-	  <!--left join qinsen.INST_qijian qj
-	  on v.juanmo_batch_id = qj.juanmo_batch_id-->
+	  (select rs.*,qj.batch_no qj_batch_no,qj.record_id qj_record_id from  qinsen.INST_RAOSI rs
+	  <!--left join V_KS_QJ_BATCH_NO_raosi v
+	  on rs.batch_no = v.batch_no-->
+	  left join qinsen.INST_qijian qj
+	  on rs.batch_no = qj.batch_no
 	  
 	  ) A, qinsen.INST_QIJIAN Q, qinsen.INST_JUANMO_MAIN J, qinsen.PARA_MATER_SPEC MS
 	 WHERE

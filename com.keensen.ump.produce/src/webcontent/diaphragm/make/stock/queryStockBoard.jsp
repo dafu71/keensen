@@ -156,7 +156,7 @@
 	<tr>
 		<td align='center' class="style42"><%=counts2[i].getString("dimoType")%></td>
 		<td align='center' class="style42"><%=counts2[i].getString("cnt")%></td>
-		<td align='center' class="style42"><%=counts2[i].getString("residue")%></td>
+		<td align='right' class="style42"><%=counts2[i].getString("residue")%></td>
 	
 	</tr>	
 	<% } %>

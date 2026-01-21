@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.produce.component.apply">
     <select id="queryApply" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-   SELECT T1.ID                AS "id", T1.is_c "isC",
+   SELECT T1.ID                AS "id", T1.is_c "isC",t1.tray_code "trayCode",
    		t1.order_id "orderId",t1.base_id "baseId",
       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
@@ -65,7 +65,9 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
 WHERE t.type='工业膜') t5 on t5.code=t1.code
   where 1=1
   
-  <isNotNull prepend="and" property="dryWet">replace(replace(replace(replace(replace(t1.prod_class_flag,'D','干'),'W','湿'),'O','干/湿'),'膜',''),'干湿','干/湿') = #dryWet#</isNotNull>
+   
+     <isNotNull prepend="and" property="trayCode">t1.tray_code  = #trayCode#</isNotNull>
+        <isNotNull prepend="and" property="dryWet">replace(replace(replace(replace(replace(t1.prod_class_flag,'D','干'),'W','湿'),'O','干/湿'),'膜',''),'干湿','干/湿') = #dryWet#</isNotNull>
         <isNotNull prepend="and" property="ifstockconfirm">T1.STOCK_CONFIRM_TIME IS NOT NULL</isNotNull>
         <isNotNull prepend="and" property="stockConfirmTimeStart">to_char(T1.STOCK_CONFIRM_TIME,'yyyy-MM-dd')  &gt;=  #stockConfirmTimeStart#</isNotNull>
         <isNotNull prepend="and" property="stockConfirmTimeEnd">to_char(T1.STOCK_CONFIRM_TIME,'yyyy-MM-dd')  &lt;=  #stockConfirmTimeEnd#</isNotNull>
@@ -108,7 +110,8 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
        h.order_no "orderNo",t2.prod_spec_id "prodSpecId",t1.tumo_batch_str "tumoBatchStr",
        replace(t1.tumo_batch_str,',','&lt;br&gt;') "tumoBatchStr2",
        h.code "code",T2.CHECK_RESULT "checkResult",
-       T2.diameter "diameter",T2.diameter2 "diameter2"
+       T2.diameter "diameter",T2.diameter2 "diameter2",
+       wt.gpd_avg "gpdAvg",wt.salt_avg "saltAvg"
   FROM KS_COMPONENT_CHECK_LIST T1
   LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
   LEFT JOIN QINSEN.INST_QIJIAN T2
@@ -120,6 +123,12 @@ WHERE t.type='工业膜') t5 on t5.code=t1.code
                
                )) T3
     ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
+    
+   left join (SELECT T.JUANMO_BATCH_ID,
+       NVL(T.R_GPD, T.F_GPD) GPD_AVG,
+       NVL(T.R_SALT, T.F_SALT) SALT_AVG
+  FROM QINSEN.INST_WATER_TEST T) wt
+  on T3.JUANMO_BATCH_ID = wt.JUANMO_BATCH_ID
   left join (select t.batch_no,max(h.code) fcode from KS_COMPONENT_REWORK_LIST t
 LEFT JOIN ks_COMPONENT_REWORK_head h ON t.relation_id=h.id
   GROUP BY t.batch_no) t5

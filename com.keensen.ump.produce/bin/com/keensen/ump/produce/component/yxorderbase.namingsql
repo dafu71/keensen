@@ -271,8 +271,12 @@
     ON T1.RELATION_ID = T2.ID
     WHERE 1=1
 	<isNotNull prepend="and" property="relationId">T1.RELATION_ID = #relationId#</isNotNull>
-        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
- ORDER BY T1.ID DESC
+        <isNotNull prepend="and" property="id">T1.id = #id#</isNotNull>
+	
+	
+		
+	
+ ORDER BY t1.id desc
 
 	 </select>
     <insert id="insertYxOrder" parameterClass="java.util.HashMap">
@@ -433,14 +437,19 @@
 		t2.MARK_DRAWING_CODE as "markDrawingCode",
 		decode(t1.mater_type,'标签',decode(t1.base_id,null,t1.LABEL_DRAWING_CODE,t2.LABEL_DRAWING_CODE),'唛头',nvl(t1.MARK_DRAWING_CODE,t2.MARK_DRAWING_CODE)
 		,'真空袋',decode(t1.BASE_ID,null,t1.BAG_DRAWING_CODE,t2.BAG_DRAWING_CODE) 
-		,'纸箱',decode(t1.BASE_ID,null,t1.BOX_DRAWING_CODE,t2.BOX_DRAWING_CODE),'') "drawingCode",
+		,'纸箱',	
+		decode(t1.BASE_ID,null,t1.BOX_DRAWING_CODE,t2.BOX_DRAWING_CODE),'') "drawingCode",
+		
+		
 		decode(t1.mater_type,'标签',t2.sn_start,'唛头',t2.mark_start,'') as "snStart2",
 		decode(t1.mater_type,'标签',t2.sn_end,'唛头',t2.mark_end,'') as "snEnd2",
 		nvl(t1.sn_start, decode(t1.mater_type,'标签',t2.sn_start,'唛头',t2.mark_start,null)) "snStart", 
 		nvl(t1.sn_end, decode(t1.mater_type,'标签',t2.sn_end,'唛头',t2.mark_end,null)) "snEnd",
 		decode(t1.BASE_ID,null,t1.reserve2,t2.prod_Name) "prodName"
 		
-		,sn.id "snId",t2.label_Control_Code "labelControlCode",t2.jm_spec_name "jmSpecName"
+		,sn.id "snId",
+		nvl(t1.label_Control_Code,t2.label_Control_Code) "labelControlCode",
+		NVL(T1.JM_SPEC_NAME,t2.jm_spec_name) "jmSpecName"
 		
 	  FROM KS_COMPONENT_YXORDER_MCONFIRM T1
 	  
@@ -650,4 +659,79 @@
                '不需要',
                '无')
                WHERE t.id =#baseId#</select>
+    <select id="queryYxOrderConfirm2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	SELECT 
+   		 T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:MI:SS') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       T1.ORDER_BRAND    AS "orderBrand",
+       T1.IFBOOK         AS "ifbook",
+       T1.IFALL          AS "ifall",
+       T1.IFDELIVERY     AS "ifdelivery",
+       T1.IFSATISFY      AS "ifsatisfy",
+       T1.IFCONSIDER     AS "ifconsider",
+       T1.IFCONSIDER2    AS "ifconsider2",
+       T1.IFWAREHOUSING  AS "ifwarehousing",
+       T1.IFGET          AS "ifget",
+       T1.REASON         AS "reason",
+       T1.ADVISE_DATE    AS "adviseDate",
+       T1.RELATION_ID    AS "relationId",T1.if_sale_label "ifSaleLabel",
+       T1.m_Reason "mReason",
+       T2.ORDER_NO       "orderNo",t2.order_type "orderType",
+       T2.ORDER_AMOUNT   "orderAmount",t2.demand_Stock_Date "demandStockDate",
+       T2.NEW_MAKE_LABEL "newMakeLabel",
+       T2.NEW_MAKE_MARK  "newMakeMark",
+       T2.PERIOD         "period"，
+       t1.t_advise "tAdvise",	
+		t1.t_route	"tRoute",
+		t1.t_user_id "tUserId",
+		t1.t_name	"tName",
+		TO_CHAR(t1.t_time, 'yyyy-MM-dd')	"tTime"
+  FROM KS_COMPONENT_YXORDER_BASE T2
+  LEFT JOIN KS_COMPONENT_YXORDER_CONFIRM T1
+    ON T1.RELATION_ID = T2.ID
+    WHERE 1=1
+	<isNotNull prepend="and" property="relationId">T1.RELATION_ID = #relationId#</isNotNull>
+	
+	
+	UNION ALL
+    SELECT 
+       T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:MI:SS') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       ''    AS "orderBrand",
+       ''         AS "ifbook",
+       ''          AS "ifall",
+       ''     AS "ifdelivery",
+       ''      AS "ifsatisfy",
+       ''     AS "ifconsider",
+       ''    AS "ifconsider2",
+       ''  AS "ifwarehousing",
+       '营销下单'          AS "ifget",
+       ''         AS "reason",
+       ''    AS "adviseDate",
+       T1.base_ID    AS "relationId",'' "ifSaleLabel",
+       '' "mReason",
+       T2.ORDER_NO       "orderNo",t2.order_type "orderType",
+       T2.ORDER_AMOUNT   "orderAmount",t2.demand_Stock_Date "demandStockDate",
+       T2.NEW_MAKE_LABEL "newMakeLabel",
+       T2.NEW_MAKE_MARK  "newMakeMark",
+       T2.PERIOD         "period"，
+       '' "tAdvise", 
+    ''  "tRoute",
+    '' "tUserId",
+    '' "tName",
+    ''  "tTime"
+    FROM KS_COMPONENT_YXORDER_BASE T2
+  LEFT JOIN KS_COMPONENT_YXORDER_HISTORY t1
+    ON T1.base_ID = T2.ID
+    where 1=1
+    and t1.step = '营销下达'
+	<isNotNull prepend="and" property="relationId">T1.base_ID = #relationId#</isNotNull>	
+	
+ ORDER BY 2
+
+	 </select>
 </sqlMap>

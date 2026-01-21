@@ -53,6 +53,9 @@
 	           FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
 	          WHERE D.CDM_BATCH_ID = C.RECORD_ID
 	            AND C.TUMO_BATCH_ID = M.RECORD_ID
+	            <isNotNull prepend = ""  property = "cmBatchNo">
+	            AND c.batch_no = #cmBatchNo#
+	            </isNotNull>
 	            GROUP BY D.MAIN_BATCH_ID) t4
  WHERE T1.PROD_SPEC_ID = T2.MATER_SPEC_ID
  AND t1.worker_id = t3.staff_id

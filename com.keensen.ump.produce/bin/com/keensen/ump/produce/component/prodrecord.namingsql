@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="com.keensen.ump.produce.component.prodrecord">
     <select id="queryProdRecord" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-   SELECT T1.ID                AS "id", t1.source "source",
+   SELECT T1.ID                AS "id", t1.source "source",T1.code "code",
       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -141,4 +141,215 @@
 	t.update_time = sysdate,t.update_user_id = #userId#,
 	t.update_name = #userName#,t.order_id = #orderId#
 	where id in($ids$)</update>
+    <update id="modifyCode" parameterClass="java.util.HashMap">UPDATE KS_COMPONENT_PROD_RECORD t
+	SET t.code = #code#,
+	t.update_time = sysdate,t.update_user_id = #userId#,
+	t.update_name = #userName#
+	where id in($ids$)</update>
+    <select id="queryRework" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  	SELECT T1.ID                     AS "id",
+       T1.PROD_SPEC_NAME         AS "prodSpecName",
+       TO_CHAR(T1.CREATE_TIME,'YYYY-MM-DD')            AS "createTime",
+       T1.CODE                   AS "code",
+       T1.PROD_TYPE              AS "prodType",
+       T1.PROD_NAME              AS "prodName",
+       T1.WHITE                  AS "white",
+       T1.DRY_WET                AS "dryWet",
+       T1.BATCH_NO               AS "batchNo",
+       T1.QJ_BATCH_NO            AS "qjBatchNo",
+       T1.CHECK_RESULT           AS "checkResult",
+       T1.STOCK_TIME             AS "stockTime",
+       T1.F_CHECK_TM             AS "fCheckTm",
+       T1.F_GPD                  AS "fGpd",
+       T1.F_SALT                 AS "fSalt",
+       T1.WATER_THEORY           AS "waterTheory",
+       T1.SALT_THEORY            AS "saltTheory",
+       T1.IS_PROD_QUALIFIED_NAME AS "isProdQualifiedName",
+       T1.REMARK_PLANNER         AS "remarkPlanner",
+       T1.SAMPLING               AS "sampling",
+       T1.R_CHECK_TM             AS "rCheckTm",
+       T1.R_GPD                  AS "rGpd",
+       T1.R_SALT                 AS "rSalt",
+       T1.ADVISE_LABEL           AS "adviseLabel",
+       T1.EXPLAIN_QUALITY        AS "explainQuality",
+       T1.PLAN_EXCUTE            AS "planExcute",
+       T1.EXPLAIN_PLANNER        AS "explainPlanner",
+       T1.SITUATION_REWORK       AS "situationRework",
+       T1.EXPLAIN_MAKE           AS "explainMake",
+       T1.RESULT_REWORK          AS "resultRework",
+       TO_CHAR(T1.TIME_FINISHED_DEMAND,'YYYY-MM-DD')    AS "timeFinishedDemand",
+       t1.step "step"
+  FROM (
+        
+        SELECT T1.ID,t1.status,nvl(t1.step,'待返工确认') step,t1.time_sampling "timeSampling",
+                NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME) PROD_SPEC_NAME,
+                T1.CREATE_TIME,
+                T1.CODE,
+                T1.PROD_TYPE,
+                T1.PROD_NAME,
+                T1.WHITE,
+                T1.DRY_WET,
+                T1.BATCH_NO,
+                NVL(V.QJ_BATCH_NO, NVL(T1.RESERVE1, T1.BATCH_NO)) QJ_BATCH_NO,
+                QJ.CHECK_RESULT,
+                CASE
+                  WHEN TRUNC(TO_DATE(TO_CHAR(T1.CREATE_TIME,
+                                             'YYYY-MM-DD HH24:MI:SS'),
+                                     'YYYY-MM-DD HH24:MI:SS') - WT.F_CHECK_TM) &lt; 0 THEN
+                   0
+                  ELSE
+                   TRUNC(TO_DATE(TO_CHAR(T1.CREATE_TIME,
+                                         'YYYY-MM-DD HH24:MI:SS'),
+                                 'YYYY-MM-DD HH24:MI:SS') - WT.F_CHECK_TM)
+                END STOCK_TIME,
+                WT.F_CHECK_TM,
+                WT.F_GPD,
+                WT.F_SALT,
+                CASE
+                  WHEN SUBSTR(NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME), 1, 2) LIKE
+                       '%SW%' THEN
+                   NVL(WT.F_GPD, 0) * 1
+                  WHEN (SUBSTR(NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME), 1, 2) = 'BW' OR
+                       SUBSTR(NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME), 1, 2) = 'HW' OR
+                       SUBSTR(NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME), 1, 2) LIKE
+                       '%BW%') AND
+                       TRUNC(TO_DATE(TO_CHAR(T1.CREATE_TIME,
+                                             'YYYY-MM-DD HH24:MI:SS'),
+                                     'YYYY-MM-DD HH24:MI:SS') - WT.F_CHECK_TM) &lt;= 60 THEN
+                   NVL(WT.F_GPD, 0) * 1
+                  WHEN (SUBSTR(NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME), 1, 2) = 'BW' OR
+                       SUBSTR(NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME), 1, 2) = 'HW' OR
+                       SUBSTR(NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME), 1, 2) LIKE
+                       '%BW%') AND
+                       TRUNC(TO_DATE(TO_CHAR(T1.CREATE_TIME,
+                                             'YYYY-MM-DD HH24:MI:SS'),
+                                     'YYYY-MM-DD HH24:MI:SS') - WT.F_CHECK_TM) &gt; 60 THEN
+                   NVL(WT.F_GPD, 0) * 0.8
+                  WHEN SUBSTR(NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME), 1, 3) LIKE
+                       '%ULP%' AND
+                       TRUNC(TO_DATE(TO_CHAR(T1.CREATE_TIME,
+                                             'YYYY-MM-DD HH24:MI:SS'),
+                                     'YYYY-MM-DD HH24:MI:SS') - WT.F_CHECK_TM) &lt;= 365 THEN
+                   NVL(WT.F_GPD, 0) * 0.82
+                  WHEN SUBSTR(NVL(PMS.MATER_SPEC_NAME, T1.PROD_NAME), 1, 3) LIKE
+                       '%ULP%' AND
+                       TRUNC(TO_DATE(TO_CHAR(T1.CREATE_TIME,
+                                             'YYYY-MM-DD HH24:MI:SS'),
+                                     'YYYY-MM-DD HH24:MI:SS') - WT.F_CHECK_TM) &gt; 365 THEN
+                   NVL(WT.F_GPD, 0) * 0.7
+                  ELSE
+                   0
+                END WATER_THEORY,
+                WT.F_SALT SALT_THEORY,
+                DECODE(WT.IS_PROD_QUALIFIED, 'Y', '合格', 'N', '不合格', '') IS_PROD_QUALIFIED_NAME,
+                T1.REMARK_PLANNER,
+                T1.SAMPLING,
+                WT.R_CHECK_TM,
+                WT.R_GPD,
+                WT.R_SALT,
+                T1.ADVISE_LABEL,
+                T1.EXPLAIN_QUALITY,
+                T1.PLAN_EXCUTE,
+                T1.EXPLAIN_PLANNER,
+                T1.SITUATION_REWORK,
+                T1.EXPLAIN_MAKE,
+                CASE
+                  WHEN CHK.ORDER_NO IS NOT NULL THEN
+                   CHK.ORDER_NO
+                  WHEN POOR.JUANMO_BATCH_NO IS NOT NULL THEN
+                   '报废'
+                  WHEN T1.SITUATION_REWORK = '仅消毒后退回仓库' THEN
+                   '消毒退仓'
+                  WHEN T1.SITUATION_REWORK = '未返工直接退回仓库' THEN
+                   '直接退仓'
+                  ELSE
+                   ''
+                END RESULT_REWORK,
+                T1.TIME_FINISHED_DEMAND
+        
+          FROM KS_COMPONENT_PROD_RECORD T1
+          LEFT JOIN V_KS_QJ_BATCH_NO V
+            ON V.BATCH_NO = T1.BATCH_NO
+          LEFT JOIN QINSEN.INST_QIJIAN QJ
+            ON V.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+            ON PMS.MATER_SPEC_ID = QJ.PROD_SPEC_ID
+          LEFT JOIN QINSEN.PARA_MATER_CLASS PMC
+            ON PMS.MATER_CLASS_ID = PMC.MATER_CLASS_ID
+          LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+            ON JM.RECORD_ID = QJ.JUANMO_BATCH_ID
+          LEFT JOIN (SELECT DISTINCT T.JUANMO_BATCH_NO
+                       FROM KS_PROD_QUALITY_POORRECORD T
+                      WHERE T.JUANMO_BATCH_NO IS NOT NULL) POOR
+            ON JM.BATCH_NO = POOR.JUANMO_BATCH_NO
+          LEFT JOIN QINSEN.INST_WATER_TEST WT
+            ON WT.JUANMO_BATCH_ID = V.JUANMO_BATCH_ID
+          LEFT JOIN V_KS_CHECK_LIST_CURRENT CHK
+            ON CHK.BATCH_NO =
+               NVL(V.QJ_BATCH_NO, NVL(T1.RESERVE1, T1.BATCH_NO))) T1
+  where 1=1		
+  and nvl(t1.status,1) != 0
+  
+  <isEqual compareValue="有" prepend="and" property="adviseLabelIf">t1.advise_Label is not null</isEqual>
+        <isEqual compareValue="无" prepend="and" property="adviseLabelIf">t1.advise_Label is  null</isEqual>
+        <isEqual compareValue="有" prepend="and" property="planExcuteIf">t1.plan_Excute is not null</isEqual>
+        <isEqual compareValue="无" prepend="and" property="planExcuteIf">t1.plan_Excute is  null</isEqual>
+        <isEqual compareValue="有" prepend="and" property="situationReworkIf">t1.situation_Rework is not null</isEqual>
+        <isEqual compareValue="无" prepend="and" property="situationReworkIf">t1.situation_Rework is  null</isEqual>
+        <isEqual compareValue="有" prepend="and" property="resultReworkIf">t1.result_Rework is not null</isEqual>
+        <isEqual compareValue="无" prepend="and" property="resultReworkIf">t1.result_Rework is  null</isEqual>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="timeFinishedDemandStart">to_char(T1.TIME_FINISHED_DEMAND,'yyyy-MM-dd')  &gt;=  #timeFinishedDemandStart#</isNotNull>
+        <isNotNull prepend="and" property="timeFinishedDemandEnd">to_char(T1.TIME_FINISHED_DEMAND,'yyyy-MM-dd')  &lt;=  #timeFinishedDemandEnd#</isNotNull>
+        <isNotNull prepend="and" property="prodName">t1.prod_name like '%' || #prodName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodType">t1.prod_Type like '%' || #prodType# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo">t1.batch_No like '%' || #batchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="qjBatchNo">t1.QJ_BATCH_NO like '%' || #qjBatchNo# || '%'</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id  = #id#</isNotNull>
+        <isNotNull prepend="and" property="ids">t1.id  in ($ids$)</isNotNull>
+        <isNotNull prepend="and" property="step">t1.step  = #step#</isNotNull>
+  
+  
+	  order by t1.id desc
+  
+  
+  </select>
+    <update id="updateRework" parameterClass="java.util.HashMap">
+    
+     UPDATE KS_COMPONENT_PROD_RECORD t
+	SET
+	<isNotNull prepend="" property="step">t.step = #step#,</isNotNull>
+        <isNotNull prepend="" property="remarkPlanner">t.REMARK_PLANNER = #remarkPlanner#,</isNotNull>
+        <isNotNull prepend="" property="sampling">t.SAMPLING = #sampling#,</isNotNull>
+        <isNotNull prepend="" property="ifSampling">t.time_sampling = sysdate,</isNotNull>
+        <isNotNull prepend="" property="adviseLabel">t.ADVISE_LABEL = #adviseLabel#,</isNotNull>
+        <isNotNull prepend="" property="explainQuality">t.EXPLAIN_QUALITY = #explainQuality#,</isNotNull>
+        <isNotNull prepend="" property="planExcute">t.PLAN_EXCUTE = #planExcute#,</isNotNull>
+        <isNotNull prepend="" property="explainPlanner">t.EXPLAIN_PLANNER = #explainPlanner#,</isNotNull>
+        <isNotNull prepend="" property="situationRework">t.SITUATION_REWORK = #situationRework#,</isNotNull>
+        <isNotNull prepend="" property="explainMake">t.EXPLAIN_MAKE = #explainMake#,</isNotNull>
+        <isNotNull prepend="" property="timeFinishedDemand">t.TIME_FINISHED_DEMAND = to_date(#timeFinishedDemand#,'YYYY-MM-DD'),</isNotNull>
+	t.update_time = sysdate,t.update_user_id = #userId#,
+	t.update_name = #userName#
+	where id in($ids$)
+    </update>
+    <update id="updateReworkByWaterTest" parameterClass="java.util.HashMap">UPDATE KS_COMPONENT_PROD_RECORD t
+	SET t.step = '品管意见',
+	t.update_time = sysdate,t.update_user_id = #userId#,
+	t.update_name = #userName#
+	WHERE t.id IN(
+	select t1.id
+	FROM KS_COMPONENT_PROD_RECORD T1
+	          LEFT JOIN V_KS_QJ_BATCH_NO V
+	            ON V.BATCH_NO = T1.BATCH_NO
+	          LEFT JOIN QINSEN.INST_QIJIAN QJ
+	            ON V.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID
+	    LEFT JOIN QINSEN.INST_WATER_TEST WT
+	            ON WT.JUANMO_BATCH_ID = V.JUANMO_BATCH_ID
+	    WHERE t1.time_sampling &lt; WT.r_Check_Tm
+	    AND t1.step = '待测试')</update>
+    <select id="countRework" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.step "step",COUNT(1) "cnt" from KS_COMPONENT_PROD_RECORD t
+		WHERE t.step IS NOT NULL AND t.step &lt;&gt; '待返工确认' AND t.step &lt;&gt; '结果确认'
+		GROUP BY t.step</select>
 </sqlMap>

@@ -67,6 +67,9 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 						dataIndex : 'checkCode',
 						header : '请检单号'
 					}, {
+						dataIndex : 'trayCode',
+						header : '托盘号'
+					}, {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
@@ -91,7 +94,7 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 						dataIndex : 'type',
 						header : '入库类型'
 					}, {
-						dataIndex : 'createTime',
+						dataIndex : 'stockTime',
 						sortable : true,
 						header : '入库时间'
 					}],
@@ -155,6 +158,10 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 							name : 'storageCode'
 						}, {
 							name : 'dryWet'
+						}, {
+							name : 'trayCode'
+						}, {
+							name : 'stockTime'
 						}]
 			})
 		})
@@ -187,6 +194,7 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 						xtype : 'combo',
 						mode : 'local',
 						allowBlank : false,
+						editable:false,
 						ref : '../type',
 						fieldLabel : '入库类型',
 						value : '生产入库',
@@ -207,6 +215,7 @@ com.keensen.ump.produce.component.storage.WareHousingMgr = function() {
 						colspan : 1,
 						xtype : 'combo',
 						mode : 'local',
+						editable:false,
 						allowBlank : false,
 						ref : '../storage',
 						fieldLabel : '仓库',

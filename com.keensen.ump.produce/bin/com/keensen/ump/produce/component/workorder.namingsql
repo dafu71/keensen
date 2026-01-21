@@ -386,8 +386,9 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
        NVL(t6.label_amount,0) "labelAmount",
        <!--decode(t4.wait_amount,0,'完成','处理中') "qjStateName"-->
        case when t3.jm_amount = nvl(t5.qj_amount,0) then '完成' else '处理中' end "qjStateName"
-        ,yb.tape "tape",yb.lid "lid",yb.sn_Regular "snRegular",yb.make_Label "makeLabel",
-       yb.label_Double "labelDouble",yb.label_Drawing_Code "labelDrawingCode",
+        ,nvl(yb.tape,t2.tape) "tape",nvl(yb.lid,t2.lid) "lid",yb.sn_Regular "snRegular",
+        nvl(yb.make_Label,t2.label) "makeLabel",
+       yb.label_Double "labelDouble",nvl(yb.label_Drawing_Code,t2.label_Drawing_Code) "labelDrawingCode",
        sn.prefix "prefix", sn.sn_start "snStart",sn.sn_end "snEnd",
        lb.url "labelUrl",
        pms.juanmo "juanmo",pms.cut "cut",pms.raosi "raosi"
@@ -402,7 +403,7 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
   LEFT JOIN ks_component_yxorder_base yb
     ON yb.id = t2.base_id
   left join KS_BASE_LABEL_DRAWING lb
-    on lb.drawing_code = yb.label_drawing_code
+    on lb.drawing_code = nvl(yb.label_drawing_code,t2.label_drawing_code)
   left join (select COUNT(DISTINCT t.jm_batch_id) jm_amount,t.order_id from V_KS_TM_CDM_JM_QJ t
     where exists(select 1 from KS_COMPONENT_DUTY_QJ_list WHERE batch_no = t.jm_batch_no)
   GROUP BY t.order_id) t3 ON T3.ORDER_ID = T2.ID

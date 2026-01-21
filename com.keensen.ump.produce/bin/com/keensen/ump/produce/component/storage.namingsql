@@ -19,22 +19,30 @@
     <!--插入入库记录-->
     <insert id="insertWarehousingByCheckCode" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_WAREHOUSING
 	(id,spec_type,storage_code,storage,position,TYPE,amount,
-	create_time,create_name,create_user_id,
+	create_time,create_name,create_user_id,tray_code,
 	batch_no,check_code,order_id,order_no,jm_spec_name,DRY_WET)
 	select SEQU_COMPONENT_WAREHOUSING.Nextval,'工业',#storageCode#,#storage#,#position#,#type#,1,
-	SYSDATE,#userName#,#userId#,
+	SYSDATE,#userName#,#userId#,h.tray_code,
 	t.batch_no,h.code,h.order_id,od.order_no,od.mater_spec_name2 jm_spec_name,od.dry_wet 
 	from KS_COMPONENT_CHECK_LIST t
 	LEFT JOIN KS_COMPONENT_CHECK_HEAD h
 	ON t.relation_id = h.id
 	LEFT JOIN KS_PROD_COMPONENT_YXORDER od ON od.id=h.order_id
 	WHERE h.code =#checkCode#</insert>
+    <insert id="insertWarehousingByBatchNo" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_WAREHOUSING
+	(id,spec_type,storage_code,storage,position,TYPE,amount,
+	create_time,create_name,create_user_id,
+	batch_no,order_no,jm_spec_name,DRY_WET,reserve5)
+	select SEQU_COMPONENT_WAREHOUSING.Nextval,#specType#,#storageCode#,#storage#,#position#,#type#,1,
+	SYSDATE,#userName#,#userId#,
+	#batchNo#,#orderNo#,#jmSpecName#,#dryWet#,#reserve5# 
+	from dual</insert>
     <!--插入库存记录-->
     <insert id="insertComponentK3Stock" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_K3_STOCK
-	(id,spec_type,storage_code,storage,position,amount,
+	(id,spec_type,storage_code,storage,position,amount,tray_code,
 	create_time,create_name,create_user_id,
 	batch_no,check_code,order_id,order_no,jm_spec_name,dry_wet)
-	select SEQU_COMPONENT_WAREHOUSING.Nextval,'工业',#storageCode#,#storage#,#position#,1,
+	select SEQU_COMPONENT_K3_STOCK.Nextval,'工业',#storageCode#,#storage#,#position#,1,h.tray_code,
 	SYSDATE,#userName#,#userId#,
 	t.batch_no,h.code,h.order_id,od.order_no,od.mater_spec_name2 jm_spec_name,od.dry_wet 
 	from KS_COMPONENT_CHECK_LIST t
@@ -42,26 +50,51 @@
 	ON t.relation_id = h.id
 	LEFT JOIN KS_PROD_COMPONENT_YXORDER od ON od.id=h.order_id
 	WHERE h.code =#checkCode#</insert>
+    <insert id="insertComponentK3StockByachNo" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_K3_STOCK
+	(id,spec_type,storage_code,storage,position,amount,
+	create_time,create_name,create_user_id,
+	batch_no,order_no,jm_spec_name,dry_wet,label,lid)
+	select SEQU_COMPONENT_K3_STOCK.Nextval,#specType#,#storageCode#,#storage#,#position#,1,
+	SYSDATE,#userName#,#userId#,
+	#batchNo#,#orderNo#,#jmSpecName#,#dryWet#,#label#,#lid# 
+	from dual</insert>
     <!--插入出库记录-->
     <insert id="insertOutOfStockByCode" parameterClass="java.util.HashMap">
     INSERT INTO KS_COMPONENT_OUTOFSTOCK
-	(id,spec_type,storage_code,storage,position,TYPE,amount,
+	(id,spec_type,storage_code,storage,position,TYPE,amount,tray_code,
 	create_time,create_name,create_user_id,
 	batch_no,check_code,order_id,order_no,jm_spec_name,DRY_WET)
 	
-	SELECT SEQU_COMPONENT_OUTOFSTOCK.Nextval, T1.SPEC_TYPE, T1.STORAGE_CODE,T1.STORAGE,T1.POSITION,#type#,T1.AMOUNT,
+	SELECT SEQU_COMPONENT_OUTOFSTOCK.Nextval, T1.SPEC_TYPE, T1.STORAGE_CODE,T1.STORAGE,T1.POSITION,#type#,T1.AMOUNT,t1.tray_code,
 	SYSDATE,#userName#,#userId#,
 	 T1.BATCH_NO,T1.CHECK_CODE,T1.ORDER_ID,#orderNo#,T1.JM_SPEC_NAME,T1.DRY_WET
      FROM KS_COMPONENT_K3_STOCK T1
      where 1=1 and t1.amount&gt;0
-	<isNotNull prepend="" property="checkCode">and t1.check_code = #checkCode#</isNotNull>
-        <isNull prepend="" property="checkCode">
-            <isNotNull prepend="" property="storageCode">and T1.STORAGE_CODE = #storageCode#</isNotNull>
-            <isNull prepend="" property="storageCode">
-                <isNotNull prepend="" property="batchNo">and t1.batch_no = #batchNo#</isNotNull>
+     
+     <isNotNull prepend="" property="trayCode">and t1.tray_code = #trayCode#</isNotNull>
+        <isNull prepend="" property="trayCode">
+            <isNotNull prepend="" property="checkCode">and t1.check_code = #checkCode#</isNotNull>
+            <isNull prepend="" property="checkCode">
+                <isNotNull prepend="" property="storageCode">and T1.STORAGE_CODE = #storageCode#</isNotNull>
+                <isNull prepend="" property="storageCode">
+                    <isNotNull prepend="" property="batchNo">and t1.batch_no = #batchNo#</isNotNull>
+                </isNull>
             </isNull>
         </isNull>
     </insert>
+    <!--插入出库记录-->
+    <insert id="insertOutOfStockByIds" parameterClass="java.util.HashMap">INSERT INTO KS_COMPONENT_OUTOFSTOCK
+	(id,spec_type,storage_code,storage,position,TYPE,amount,tray_code,
+	create_time,create_name,create_user_id,
+	batch_no,check_code,order_id,order_no,jm_spec_name,DRY_WET)
+	
+	SELECT SEQU_COMPONENT_OUTOFSTOCK.Nextval, T1.SPEC_TYPE, T1.STORAGE_CODE,T1.STORAGE,
+	T1.POSITION,#type#,T1.AMOUNT,t1.tray_code,
+	SYSDATE,#userName#,#userId#,
+	 T1.BATCH_NO,T1.CHECK_CODE,T1.ORDER_ID,#orderNo#,T1.JM_SPEC_NAME,T1.DRY_WET
+     FROM KS_COMPONENT_K3_STOCK T1
+     where 1=1 and t1.amount&gt;0
+	and t1.id in ($ids$)</insert>
     <!--出库修改库存记录-->
     <update id="updateComponentK3Stock" parameterClass="java.util.HashMap">
     update KS_COMPONENT_K3_STOCK t1
@@ -70,18 +103,28 @@
     t1.update_name = #userName#,
     t1.update_user_id = #userId#
 	 where 1=1 and t1.amount&gt;0
-	<isNotNull prepend="" property="checkCode">and t1.check_code = #checkCode#</isNotNull>
-        <isNull prepend="" property="checkCode">
-            <isNotNull prepend="" property="storageCode">and T1.STORAGE_CODE = #storageCode#</isNotNull>
-            <isNull prepend="" property="storageCode">
-                <isNotNull prepend="" property="batchNo">and t1.batch_no = #batchNo#</isNotNull>
+	 <isNotNull prepend="" property="trayCode">and t1.tray_code = #trayCode#</isNotNull>
+        <isNull prepend="" property="trayCode">
+            <isNotNull prepend="" property="checkCode">and t1.check_code = #checkCode#</isNotNull>
+            <isNull prepend="" property="checkCode">
+                <isNotNull prepend="" property="storageCode">and T1.STORAGE_CODE = #storageCode#</isNotNull>
+                <isNull prepend="" property="storageCode">
+                    <isNotNull prepend="" property="batchNo">and t1.batch_no = #batchNo#</isNotNull>
+                </isNull>
             </isNull>
         </isNull>
     </update>
+    <update id="updateComponentK3StockByIds" parameterClass="java.util.HashMap">update KS_COMPONENT_K3_STOCK t1
+    set t1.amount = 0, t1.order_no2 = #orderNo#,
+    t1.update_time = sysdate,
+    t1.update_name = #userName#,
+    t1.update_user_id = #userId#
+	 where 1=1 and t1.amount&gt;0
+	and t1.id in ($ids$)</update>
     <!--删除库存记录-->
     <delete id="deleteComponentK3Stock" parameterClass="java.util.HashMap">
     delete from KS_COMPONENT_K3_STOCK t
-	WHERE 1=1
+	WHERE 1=1 and t.amount=0
 	<isNotNull prepend="and" property="batchNo">t.batch_no = #batchNo#</isNotNull>
         <isNotNull prepend="and" property="batchNos">t.batch_no in ($batchNos$)</isNotNull>
         <isNotNull prepend="and" property="checkCode">t.check_code = #checkCode#</isNotNull>
@@ -102,7 +145,7 @@
 	WHERE t.code = #checkCode#</select>
     <select id="queryWarehousing" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
     SELECT T1.ID             AS "id",
-       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "stockTime",t1.tray_code "trayCode",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME    AS "createName",
        T1.UPDATE_TIME    AS "updateTime",
@@ -129,8 +172,12 @@
   FROM KS_COMPONENT_WAREHOUSING T1 
     
   WHERE 1=1
-  	
-  	<isNotNull prepend="and" property="checkCode2">T1.CHECK_CODE like '%' || #checkCode2# || '%'</isNotNull>
+    <isNotNull prepend="and" property="trayCode">T1.tray_CODE = #trayCode#</isNotNull>
+        <isNotNull prepend="and" property="type">T1.TYPE = #type#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName">T1.JM_SPEC_NAME = #jmSpecName#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dryWet2">T1.dry_wet like '%' || #dryWet2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="checkCode2">T1.CHECK_CODE like '%' || #checkCode2# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="storageCode">t1.storage_Code = #storageCode#</isNotNull>
         <isNotNull prepend="and" property="storage">t1.storage = #storage#</isNotNull>
@@ -145,7 +192,7 @@
     </select>
     <select id="queryStorage" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
      SELECT T1.ID             AS "id",
-       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",t1.tray_code "trayCode",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME    AS "createName",
        T1.UPDATE_TIME    AS "updateTime",
@@ -170,9 +217,15 @@
        T1.STORAGE_CODE   AS "storageCode",t1.dry_wet "dryWet"
   FROM KS_COMPONENT_K3_STOCK T1 
     
-  WHERE 1=1 AND to_char(t1.create_time,'YYYY-MM-DD')&gt;='2025-12-16'
+  WHERE 1=1 AND to_char(t1.create_time,'YYYY-MM-DD')&gt;='2001-12-16'
   	
-  	<isNotNull prepend="and" property="notZero">T1.amount &gt; 0</isNotNull>
+  	<isNotNull prepend="and" property="trayCode">T1.tray_CODE = #trayCode#</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">T1.BATCH_NO in ($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="storageCode">T1.STORAGE_CODE = #storageCode#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName">T1.JM_SPEC_NAME = #jmSpecName#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dryWet2">T1.dry_wet like '%' || #dryWet2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="notZero">T1.amount &gt; 0</isNotNull>
         <isNotNull prepend="and" property="checkCode2">T1.CHECK_CODE like '%' || #checkCode2# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="storageCode">t1.storage_Code = #storageCode#</isNotNull>
@@ -184,11 +237,11 @@
         <isNotNull prepend="and" property="batchNo2">T1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
-      order by t1.id desc
+      order by T1.CREATE_TIME
     </select>
     <select id="queryOutOfStock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
     SELECT T1.ID             AS "id",
-       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",t1.tray_code "trayCode",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME    AS "createName",
        T1.UPDATE_TIME    AS "updateTime",
@@ -215,8 +268,14 @@
   FROM KS_COMPONENT_OUTOFSTOCK T1 
     
   WHERE 1=1
-  	
-  	<isNotNull prepend="and" property="checkCode2">T1.CHECK_CODE like '%' || #checkCode2# || '%'</isNotNull>
+  
+    <isNotNull prepend="and" property="trayCode">T1.tray_CODE = #trayCode#</isNotNull>
+        <isNotNull prepend="and" property="type">T1.TYPE = #type#</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">T1.BATCH_NO in ($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName">T1.JM_SPEC_NAME = #jmSpecName#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dryWet2">T1.dry_wet like '%' || #dryWet2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="checkCode2">T1.CHECK_CODE like '%' || #checkCode2# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="storageCode">t1.storage_Code = #storageCode#</isNotNull>
         <isNotNull prepend="and" property="storage">t1.storage = #storage#</isNotNull>
@@ -230,20 +289,34 @@
       order by t1.id desc
     </select>
     <!--批量插入调拨记录-->
-    <insert id="insertAllocateBatch" parameterClass="java.util.HashMap">insert into KS_COMPONENT_ALLOCATE
-    (id,batch_no,from_storage,from_storage_code,to_storage,to_storage_code,amount,
+    <insert id="insertAllocateBatch" parameterClass="java.util.HashMap">
+    insert into KS_COMPONENT_ALLOCATE
+    (id,batch_no,from_storage,from_storage_code,to_storage,to_storage_code,amount,from_Tray_Code,to_Tray_Code,
     create_time,create_name,create_user_id)
-    select SEQU_COMPONENT_ALLOCATE.Nextval,batch_no,storage,storage_code,#toStorage#,#toStorageCode#,amount,
+    select SEQU_COMPONENT_ALLOCATE.Nextval,batch_no,storage,storage_code,#toStorage#,#toStorageCode#,amount,tray_Code,
+    <isNotNull prepend="" property="toTrayCode">#toTrayCode#,</isNotNull>
+        <isNull prepend="" property="toTrayCode">tray_Code,</isNull>
+    
     SYSDATE,#userName#,#userId#
     from KS_COMPONENT_K3_STOCK
-    where id in ($ids$)</insert>
+    where 1=1 and amount&gt;0
+    <isNotNull prepend="and" property="ids">id in ($ids$)</isNotNull>
+        <isNotNull prepend="and" property="fromTrayCode">tray_code = #fromTrayCode#</isNotNull>
+        <isNotNull prepend="and" property="batchNos">batch_no in($batchNos$)</isNotNull>
+    </insert>
     <!--调拨修改库存记录-->
-    <update id="updateComponentK3StockByAllocate" parameterClass="java.util.HashMap">update KS_COMPONENT_K3_STOCK t1
+    <update id="updateComponentK3StockByAllocate" parameterClass="java.util.HashMap">
+    update KS_COMPONENT_K3_STOCK t1
     set t1.storage = #toStorage#,t1.storage_code = #toStorageCode#,
+    <isNotNull prepend="" property="toTrayCode">t1.tray_code =  #toTrayCode#,</isNotNull>
     t1.update_time = sysdate,
     t1.update_name = #userName#,
     t1.update_user_id = #userId#
-	 where id in ($ids$)</update>
+	where 1=1 and amount&gt;0
+    <isNotNull prepend="and" property="ids">id in ($ids$)</isNotNull>
+        <isNotNull prepend="and" property="fromTrayCode">tray_code = #fromTrayCode#</isNotNull>
+        <isNotNull prepend="and" property="batchNos">batch_no in($batchNos$)</isNotNull>
+    </update>
     <select id="queryAllocate" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
     
     SELECT T1.ID             AS "id",
@@ -265,11 +338,14 @@
        T1.TO_STORAGE        AS "toStorage",
        T1.TO_STORAGE_CODE   AS "toStorageCode",
        T1.FROM_STORAGE        AS "fromStorage",
-       T1.FROM_STORAGE_CODE   AS "fromStorageCode"
+       T1.FROM_STORAGE_CODE   AS "fromStorageCode",
+       t1.from_Tray_Code "fromTrayCode",
+       t1.to_Tray_Code "toTrayCode"
   FROM KS_COMPONENT_ALLOCATE T1 
     
   WHERE 1=1
-  	
+  
+     	
   	<isNotNull prepend="and" property="fromStorageCode">t1.from_storage_Code = #fromStorageCode#</isNotNull>
         <isNotNull prepend="and" property="toStorageCode">t1.to_storage_Code = #toStorageCode#</isNotNull>
         <isNotNull prepend="and" property="toStorage">t1.to_storage = #toStorage#</isNotNull>
@@ -281,4 +357,382 @@
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
      order by t1.id desc
     </select>
+    <!--查询不符合成品仓元件批量销售出库约定“先进先出”原则的元件-->
+    <select id="queryInvalidBatchNos" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t1.jm_spec_name,t1.batch_no "batchNo",t1.create_time from KS_COMPONENT_K3_STOCK t1
+		WHERE 1=1 AND to_char(t1.create_time,'YYYY-MM-DD')&gt;='2001-12-16'
+		and t1.amount &gt; 0
+		AND t1.id IN ($ids$)
+		AND t1.create_time &gt; (SELECT MIN(t2.create_time) FROM KS_COMPONENT_K3_STOCK t2
+		WHERE 1=1 AND to_char(t2.create_time,'YYYY-MM-DD')&gt;='2001-12-16' 
+		and t2.amount &gt; 0
+		AND t2.id NOT IN ($ids$)
+		AND t2.jm_spec_name = #jmSpecName#)</select>
+    <!--生成托盘号开始-->
+    <update id="updateTrayCode" parameterClass="java.util.HashMap">UPDATE KS_BASE_CREATE_CODE t
+		SET t.code_current = 0,
+		t.date_current = SYSDATE
+		WHERE t.business = 'tray_code'
+		AND NOT EXISTS(SELECT 1 FROM KS_BASE_CREATE_CODE tt
+		WHERE tt.business = 'tray_code' AND to_char(tt.date_current,'YYYYMMDD') = to_char(SYSDATE,'YYYYMMDD'))</update>
+    <select id="queryTrayCode" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select 'G' || (select ymd from V_KS_YMD)|| trim(to_char(t.code_current + LEVEL,'000')) "trayCode" from 
+		(SELECT * FROM KS_BASE_CREATE_CODE t
+    WHERE t.business = 'tray_code' AND to_char(t.date_current,'YYYYMMDD') = to_char(SYSDATE,'YYYYMMDD')) t
+		CONNECT BY LEVEL &lt;= #num#</select>
+    <update id="updateCurrentTrayCode" parameterClass="java.util.HashMap">UPDATE KS_BASE_CREATE_CODE t
+		SET t.code_current = t.code_current + #num#
+		WHERE t.business = 'tray_code' AND to_char(t.date_current,'YYYYMMDD') = to_char(SYSDATE,'YYYYMMDD')</update>
+    <!--生成托盘号结束-->
+    <!--非订单仓库元件库存报表-->
+    <select id="queryReport4NotOrder" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    
+	    SELECT T1.BATCH_NO       AS "batchNo",
+	       T1.CHECK_CODE     AS "checkCode",
+	       T1.JM_SPEC_NAME   AS "jmSpecName",
+	       T1.DRY_WET        AS "dryWet",
+	       T1.LID            AS "lid",
+	       T1.TAPE           AS "tape",
+	       T1.STORAGE        AS "storage",
+	       T1.POSITION       AS "position",
+	       T1.F_CHECK_TM     AS "fCheckTm",
+	       T1.F_SALT         AS "fSalt",
+	       T1.F_GPD          AS "fGpd",
+	       T1.R_CHECK_TM     AS "rCheckTm",
+	       T1.R_SALT         AS "rSalt",
+	       T1.R_GPD          AS "rGpd",
+	       T1.DISINFECT_TIME AS "disinfectTime"
+	  FROM (
+	        
+	        SELECT T.BATCH_NO,
+	                T.CHECK_CODE,
+	                T.JM_SPEC_NAME,
+	                case when T.DRY_WET is not null then T.DRY_WET
+	                else decode(WT.F_CHECK_TM,null,'干','湿') end dry_wet,
+	                CASE
+	                  WHEN T.METHOD = 'check' THEN
+	                   CH.LID
+	                  ELSE
+	                   T.LID
+	                END LID,
+	                CASE
+	                  WHEN T.METHOD = 'check' THEN
+	                   CH.TAPE
+	                  ELSE
+	                   T.TAPE
+	                END TAPE,
+	                T.STORAGE,
+	                CASE
+	                  WHEN T.METHOD = 'import' THEN
+	                   T.POSITION
+	                  ELSE
+	                   T.STORAGE_CODE
+	                END POSITION,
+	                WT.F_CHECK_TM,
+	                WT.F_SALT,
+	                WT.F_GPD,
+	                WT.R_CHECK_TM,
+	                WT.R_SALT,
+	                WT.R_GPD,
+	                CD.DISINFECT_TIME
+	          FROM V_KS_COMPONENT_K3_STOCK T
+	          LEFT JOIN KS_COMPONENT_CHECK_HEAD CH
+	            ON CH.CODE = T.CHECK_CODE
+	          LEFT JOIN QINSEN.INST_QIJIAN QJ
+	            ON T.BATCH_NO = QJ.BATCH_NO
+	          LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+	            ON JM.RECORD_ID = QJ.JUANMO_BATCH_ID
+	          LEFT JOIN QINSEN.INST_WATER_TEST WT
+	            ON WT.JUANMO_BATCH_ID = JM.RECORD_ID
+	          LEFT JOIN (SELECT TT.JUANMO_BATCH_ID,
+	                            MAX(TT.CREATE_TIME) DISINFECT_TIME
+	                       FROM KS_COMPONENT_DISINFECT TT
+	                      GROUP BY TT.JUANMO_BATCH_ID) CD
+	            ON CD.JUANMO_BATCH_ID = JM.RECORD_ID
+	         WHERE T.AMOUNT &gt; 0
+	           AND T.STORAGE IN ('高架C等品仓', '高架成品仓')) T1
+	           where 1=1
+	           	<isNotNull prepend="and" property="checkCode2">T1.CHECK_CODE like '%' || #checkCode2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="storageCode">t1.storage_Code = #storageCode#</isNotNull>
+        <isNotNull prepend="and" property="storage">t1.storage = #storage#</isNotNull>
+        <isNotNull prepend="and" property="position">t1.position = #position#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="checkCode">T1.CHECK_CODE = #checkCode#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">T1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName">T1.JM_SPEC_NAME = #jmSpecName#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'</isNotNull>
+	 ORDER BY T1.STORAGE, T1.POSITION
+    </select>
+    <!--订单仓元件库存报表-->
+    <select id="queryReport4Order" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	    SELECT T1.ORDER_NO             AS "orderNo",
+	       T1.PROD_NAME            AS "prodName",
+	       T1.JM_SPEC_NAME         AS "jmSpecName",
+	       T1.ORDER_AMOUNT         AS "orderAmount",
+	       T1.STOCK_AMOUNT         AS "stockAmount",
+	       T1.DIRECTOR             AS "director",
+	       T1.STOCK_TIME           AS "stockTime",
+	       T1.DELIVERY_DATE_LATEST AS "deliveryDateLatest",
+	       T1.OVER_DATE            AS "overDate"
+	  FROM (        
+	        SELECT STCK.ORDER_NO,
+	                YB.PROD_NAME,
+	                STCK.JM_SPEC_NAME,
+	                OD.ORDER_AMOUNT,
+	                STCK.STOCK_AMOUNT,
+	                nvl(yb.director,yb.person_in_charge) director,
+	                to_char(STCK.STOCK_TIME, 'YYYY-MM-DD') STOCK_TIME,
+	                TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD') DELIVERY_DATE_LATEST,
+	                CASE
+	                  WHEN TRUNC(SYSDATE -
+	                             TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')) &lt;= 0 THEN
+	                   ''
+	                  ELSE
+	                   TO_CHAR(TRUNC(SYSDATE -
+	                                 TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')))
+	                END OVER_DATE
+	          FROM (SELECT STOCK.ORDER_NO,
+	                        STOCK.JM_SPEC_NAME,
+	                        MAX(STOCK_TIME) STOCK_TIME,
+	                        COUNT(1) STOCK_AMOUNT
+	                   FROM (SELECT T.BATCH_NO,
+	                                T.ORDER_NO,
+	                                T.JM_SPEC_NAME,
+	                                T.CREATE_TIME STOCK_TIME
+	                           FROM V_KS_COMPONENT_K3_STOCK T
+	                          WHERE T.METHOD = 'check'
+	                            AND T.STORAGE = '高架订单仓'
+	                            AND T.AMOUNT &gt; 0
+	                         UNION ALL
+	                         SELECT TT.BATCH_NO,
+	                                QJ.ORDER_NO,
+	                                PMS.MATER_SPEC_NAME,
+	                                CASE
+	                                  WHEN TT.METHOD = 'input' THEN
+	                                   TT.CREATE_TIME
+	                                  WHEN TT.METHOD = 'import' THEN
+	                                   JM.CREATE_DT
+	                                END STOCK_TIME
+	                           FROM (SELECT T.METHOD,
+	                                        T.BATCH_NO,
+	                                        T.ORDER_NO,
+	                                        T.JM_SPEC_NAME,
+	                                        T.CREATE_TIME,
+	                                        T.STORE_TIME
+	                                   FROM V_KS_COMPONENT_K3_STOCK T
+	                                  WHERE T.METHOD &lt;&gt; 'check'
+	                                    AND T.STORAGE = '高架订单仓'
+	                                    AND T.AMOUNT &gt; 0) TT
+	                           LEFT JOIN QINSEN.INST_QIJIAN QJ
+	                             ON QJ.BATCH_NO = TT.BATCH_NO
+	                           LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+	                             ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID
+	                           LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+	                             ON PMS.MATER_SPEC_ID = QJ.PROD_SPEC_ID) STOCK
+	                  WHERE STOCK.ORDER_NO IS NOT NULL
+	                    AND STOCK.JM_SPEC_NAME IS NOT NULL
+	                  GROUP BY STOCK.ORDER_NO, STOCK.JM_SPEC_NAME) STCK
+	          LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
+	            ON OD.ORDER_NO = STCK.ORDER_NO
+	           AND OD.MATER_SPEC_NAME = STCK.JM_SPEC_NAME
+	          LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+	            ON YB.ID = OD.BASE_ID) T1
+	 where 1=1
+	 			<isNotNull prepend="and" property="jmSpecName">T1.JM_SPEC_NAME = #jmSpecName#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
+	 ORDER BY T1.ORDER_NO, T1.JM_SPEC_NAME
+    
+    
+    </select>
+    <!--元件库存报表-->
+    <select id="queryReport4Stock" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	 SELECT T1.MATER_CODE           AS "materCode",
+       T1.BATCH_NO             AS "batchNo",
+       T1.CHECK_CODE           AS "checkCode",
+       T1.TRAY_CODE            "trayCode",
+       T1.TYPE                 AS "type",
+       T1.ORDER_NO             AS "orderNo",
+       T1.DIRECTOR             AS "director",
+       nvl(T1.PROD_NAME,T1.JM_SPEC_NAME)            AS "prodName",
+       T1.JM_SPEC_NAME         AS "jmSpecName",
+       T1.TAPE                 AS "tape",
+       T1.SPEC_NAME_LABEL      AS "specNameLabel",
+       T1.BAG                  AS "bag",
+       T1.BOX                  AS "box",
+       T1.LID                  AS "lid",
+       T1.AMOUNT               AS "amount",
+       T1.DRY_WET              AS "dryWet",
+       T1.STORAGE              AS "storage",
+       T1.POSITION             AS "position",
+       to_char(T1.STOCK_TIME,'YYYY-MM-DD')           AS "stockTime",
+       T1.JM_CREATE_DT         AS "jmCreateDt",
+       T1.F_GPD                AS "fGpd",
+       T1.F_SALT               AS "fSalt",
+       T1.F_CHECK_TM           AS "fCheckTm",
+       T1.R_GPD                AS "rGpd",
+       T1.R_SALT               AS "rSalt",
+       T1.R_CHECK_TM           AS "rCheckTm",
+       T1.DISINFECT_TIME       AS "disinfectTime",
+       T1.DELIVERY_DATE_LATEST AS "deliveryDateLatest",
+       T1.OVER_DATE            AS "overDate",
+       T1.ABNORMAL             AS "abnormal",
+       T1.ABNORMAL_EXPLAIN     AS "abnormalExplain",
+       T1.ABNORMAL_OTHER       AS "abnormalOther"
+  FROM (
+        
+        SELECT STOCK.MATER_CODE,
+                STOCK.TRAY_CODE,
+                STOCK.BATCH_NO,
+                STOCK.CHECK_CODE,
+                OD.TYPE,
+                OD.ORDER_NO,
+                NVL(YB.DIRECTOR, YB.PERSON_IN_CHARGE) DIRECTOR,
+                YB.PROD_NAME,
+                STOCK.JM_SPEC_NAME,
+                CHK.TAPE,
+                NVL(YB.SPEC_NAME_LABEL, STOCK.JM_SPEC_NAME) SPEC_NAME_LABEL,
+                YB.BAG,
+                CHK.BOX,
+                CHK.LID,
+                STOCK.AMOUNT,
+                CL.DRY_WET,
+                STOCK.STORAGE,
+                STOCK.POSITION,
+                STOCK.STOCK_TIME,
+                JM.CREATE_DT JM_CREATE_DT,
+                WT.F_GPD,
+                WT.F_SALT,
+                WT.F_CHECK_TM,
+                WT.R_GPD,
+                WT.R_SALT,
+                WT.R_CHECK_TM,
+                CD.DISINFECT_TIME,
+                YB.DELIVERY_DATE_LATEST,
+                CASE
+                  WHEN TRUNC(SYSDATE -
+                             TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')) &lt;= 0 THEN
+                   ''
+                  ELSE
+                   TO_CHAR(TRUNC(SYSDATE -
+                                 TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')))
+                END OVER_DATE,
+                
+                (SELECT WM_CONCAT(DICT.DICTNAME)
+                   FROM EOS_DICT_ENTRY DICT
+                  WHERE DICT.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_ABNORMAL'
+                    AND DICT.DICTID IN
+                        (SELECT COLUMN_VALUE DICTID
+                           FROM TABLE(SPLIT(CHK.ABNORMAL, ',')))) ABNORMAL,
+                CHK.ABNORMAL_EXPLAIN,
+                CHK.ABNORMAL_OTHER
+        
+          FROM (SELECT T.MATER_CODE,
+                        T.TRAY_CODE,
+                        T.JM_SPEC_NAME,
+                        T.AMOUNT,
+                        T.STORAGE,
+                        NVL(T.POSITION, T.STORAGE_CODE) POSITION,
+                        T.BATCH_NO,
+                        T.CREATE_TIME STOCK_TIME,
+                        T.CHECK_CODE
+                   FROM V_KS_COMPONENT_K3_STOCK T
+                  WHERE T.METHOD = 'check'
+                    AND T.AMOUNT &gt; 0
+                 UNION ALL
+                 SELECT TT.MATER_CODE,
+                        TT.TRAY_CODE,
+                        
+                         CASE
+                          WHEN TT.METHOD = 'input' THEN
+                           TT.JM_SPEC_NAME
+                          WHEN TT.METHOD = 'import' THEN
+                           TT.prod_SPEC_NAME
+                        END 
+                        JM_SPEC_NAME,
+                        TT.AMOUNT,
+                        TT.STORAGE,
+                        TT.POSITION,
+                        TT.BATCH_NO,
+                        CASE
+                          WHEN TT.METHOD = 'input' THEN
+                           TT.CREATE_TIME
+                          WHEN TT.METHOD = 'import' THEN
+                           JM.CREATE_DT
+                        END STOCK_TIME,
+                        CHCK.CHECK_CODE
+                   FROM (SELECT T.METHOD,
+                                T.TRAY_CODE,
+                                T.STORAGE,
+                                T.MATER_CODE,
+                                T.BATCH_NO,
+                                T.CREATE_TIME,
+                                T.STORE_TIME,
+                                T.JM_SPEC_NAME,t.prod_spec_name,
+                                T.AMOUNT,
+                                NVL(T.POSITION, T.STORAGE_CODE) POSITION
+                           FROM V_KS_COMPONENT_K3_STOCK T
+                          WHERE T.METHOD &lt;&gt; 'check'
+                               
+                            AND T.AMOUNT &gt; 0) TT
+                   LEFT JOIN V_KS_CHECK_LIST_CURRENT CHCK
+                     ON CHCK.BATCH_NO = TT.BATCH_NO
+                   LEFT JOIN QINSEN.INST_QIJIAN QJ
+                     ON QJ.BATCH_NO = TT.BATCH_NO
+                   LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+                     ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID) STOCK
+          LEFT JOIN V_KS_CHECK_LIST_CURRENT CL
+            ON CL.BATCH_NO = STOCK.BATCH_NO
+          LEFT JOIN QINSEN.INST_QIJIAN QJ
+            ON QJ.BATCH_NO = STOCK.BATCH_NO
+          LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+            ON JM.RECORD_ID = QJ.JUANMO_BATCH_ID
+          LEFT JOIN (SELECT TT.JUANMO_BATCH_ID,
+                            MAX(TT.CREATE_TIME) DISINFECT_TIME
+                       FROM KS_COMPONENT_DISINFECT TT
+                      GROUP BY TT.JUANMO_BATCH_ID) CD
+            ON CD.JUANMO_BATCH_ID = JM.RECORD_ID
+          LEFT JOIN QINSEN.INST_WATER_TEST WT
+            ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID
+        
+          LEFT JOIN V_KS_CHECK_ORDER_RELATION COR
+            ON COR.CHECK_CODE = STOCK.CHECK_CODE
+          LEFT JOIN KS_COMPONENT_CHECK_HEAD CHK
+            ON CHK.CODE = STOCK.CHECK_CODE
+          LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
+            ON OD.ID = COR.ORDER_ID
+          LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+            ON YB.ID = COR.BASE_ID) T1
+
+          
+   where 1=1
+   
+   <isNotNull prepend="and" property="fSaltDown">to_number(nvl(T1.F_SALT,0)) &gt;= #fSaltDown#</isNotNull>
+        <isNotNull prepend="and" property="fSaltUp">to_number(nvl(T1.F_SALT,0)) &lt;= #fSaltUp#</isNotNull>
+        <isNotNull prepend="and" property="fGpdDown">to_number(nvl(T1.F_GPD,0)) &gt;= #fGpdDown#</isNotNull>
+        <isNotNull prepend="and" property="fGpdUp">to_number(nvl(T1.F_GPD,0)) &lt;= #fGpdUp#</isNotNull>
+        <isNotNull prepend="and" property="prodType">T1.type = #prodType#</isNotNull>
+        <isNotNull prepend="and" property="dryWet2">T1.DRY_WET like '%' || #dryWet2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="prodName2">T1.PROD_NAME like '%' || #prodName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNoStr">T1.BATCH_NO in ($batchNoStr$)</isNotNull>
+        <isNotNull prepend="and" property="storageCode">T1.STORAGE_CODE = #storageCode#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName">T1.JM_SPEC_NAME = #jmSpecName#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="dryWet2">T1.dry_wet like '%' || #dryWet2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="checkCode2">T1.CHECK_CODE like '%' || #checkCode2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">T1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="storageCode">t1.storage_Code = #storageCode#</isNotNull>
+        <isNotNull prepend="and" property="storage">t1.storage = #storage#</isNotNull>
+        <isNotNull prepend="and" property="position">t1.position = #position#</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="checkCode">T1.CHECK_CODE = #checkCode#</isNotNull>
+        <isNotNull prepend="and" property="batchNo">T1.BATCH_NO = #batchNo#</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">T1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="stockTimeStart">to_char(T1.STOCK_TIME,'yyyy-MM-dd')  &gt;=  #stockTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="stockTimeEnd">to_char(T1.STOCK_TIME,'yyyy-MM-dd')  &lt;=  #stockTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="trayCode">T1.tray_CODE = #trayCode#</isNotNull>
+
+ ORDER BY T1.STOCK_TIME DESC NULLS LAST
+	 
+	 
+	</select>
 </sqlMap>

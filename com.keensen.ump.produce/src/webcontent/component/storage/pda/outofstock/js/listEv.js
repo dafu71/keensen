@@ -25,6 +25,43 @@ com.keensen.ump.produce.component.storage.OutOfStockListMgr.prototype.exportExce
 
 }
 
+com.keensen.ump.produce.component.storage.OutOfStockListMgr.prototype.onQueryByBatchNos = function() {
+
+	Ext.Msg.prompt('多元件序号查询', '多个序号请用逗号分隔，或一行一个批次', function(btn, text) {
+		if (btn == 'ok') {
+			if (Ext.isEmpty(text)) {
+				Ext.Msg.alert("系统提示", "请输入批次号！");
+				return;
+			}
+
+			var store = this.listPanel.store;
+			var batchNoStr = text;
+			var regEx = new RegExp("\\n", "gi");
+			batchNoStr = batchNoStr.replace(regEx, ",");
+			batchNoStr = batchNoStr.replaceAll('，', ',');
+			batchNoStr = batchNoStr.replaceAll(' ', '');
+			var arr = [];
+			arr = batchNoStr.split(',');
+			var arr2 = [];
+			for (var i = 0; i < arr.length; i++) {
+				arr2.push("'" + arr[i] + "'");
+			}
+
+			store.baseParams = {
+				'condition/batchNoStr' : arr2.join(",") == "''"
+						? null
+						: arr2.join(",")
+			};
+			store.load({
+						params : {
+							"pageCond/begin" : 0,
+							"pageCond/length" : this.listPanel.pagingToolbar.pageSize
+						}
+					});
+		}
+	}, this, true);
+}
+
 function unique(arr) {
 	
 	if (!Array.isArray(arr)) {

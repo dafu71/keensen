@@ -1352,7 +1352,12 @@ com.keensen.ump.produce.quality.poorMgr = function() {
 					viewConfig : {
 						forceFit : false
 					},
-					tbar : [{}],
+					tbar : [{
+								text : '打印',
+								scope : this,
+								iconCls : 'icon-printer',
+								handler : this.onPrint
+							}],
 					hsPage : true,
 					selModel : selModel4AbilitionQuery,
 					delUrl : '1.biz.ext',

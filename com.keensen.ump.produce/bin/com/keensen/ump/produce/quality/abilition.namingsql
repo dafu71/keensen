@@ -155,6 +155,7 @@ where 1=1
         <isNotNull prepend="and" property="code">T1.CODE like '%' || #code# || '%'</isNotNull>
         <isNotNull prepend="and" property="jmBatchNo">t2.jm_batch_no like '%' || #jmBatchNo# || '%'</isNotNull>
         <isNotNull prepend="and" property="createName">T1.CREATE_NAME like '%' || #createName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="code2">T1.CODE = #code2#</isNotNull>
 	
 	  order by t1.id desc,t2.id
 	 

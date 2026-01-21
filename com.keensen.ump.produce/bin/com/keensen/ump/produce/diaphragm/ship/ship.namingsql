@@ -432,13 +432,33 @@
        t2.amount "sendAmount",
        t2.id "sendId",-->
        t1.QUALIFID_LENGTH - nvl(t3.amount,0) "delivery",
-       nvl(t7.SALT_REJECTION,0) "fSaltRejection",
+       nvl(t7.SALT_REJECTION,0) "fSaltRejection",T7.GFD_AVG "fGfdAvg",
        case when t7.SALT_REJECTION-0.05 &gt; 99.79 or t7.SALT_REJECTION-0.05 &lt; 99.65 
        then round(DBMS_RANDOM.VALUE(99.65, 99.79),2) else t7.SALT_REJECTION-0.05 end "fSaltRejection2",
        m.mater_code "materCode",
        nvl(T22.CAIMO_LENGTH,0) "caimoLength",
        prnt.print_name "printName"
+       
+       <!--转换后通量=27+4*（实际通量-标准通量下限）/（标准通量上限-标准通量下限）-->
+       ,case when std.gfd_low_limit is not null and std.gfd_up_limit is not null
+       then round(27 + 4 * (T7.GFD_AVG - std.gfd_low_limit)/(std.gfd_up_limit - std.gfd_low_limit),1)
+       else round(T7.GFD_AVG,1) 
+       end || 'GFD' "fGfdAvg2"
   from v_ks_tumo4 t1
+  
+  <!--质检标准-膜片质检标准：按生产线和膜片型号 引出A等品的通量上下限-->
+  left join (SELECT t.line_id,t.spec_id,max(t.gfd_low_limit) gfd_low_limit, MAX(t.gfd_up_limit) gfd_up_limit
+	FROM
+	(SELECT t.line_id,t.spec_id,t.gfd_low_limit,t.gfd_up_limit from KS_PROD_DIAPHRAGM_STAND t
+	WHERE t.line_id IS NOT NULL AND t.spec_id IS NOT NULL 
+	AND t.gfd_low_limit IS NOT NULL AND t.gfd_up_limit IS NOT NULL
+	AND t.level_id = 300029 AND t.state='Y') t 
+	GROUP BY t.line_id,t.spec_id) std
+	on t1.line_id = std.line_id and t1.spec_id = std.spec_id
+  
+  
+  
+  
   left join KS_DIAPHRAGM_SPEC_PRINT prnt
   on  t1.mater_spec_code = prnt.spec_name
    LEFT JOIN (SELECT SUM(C.QUANTITY * C.BLANKING_SIZE * C.PAGE_WIDTH) CAIMO_LENGTH,

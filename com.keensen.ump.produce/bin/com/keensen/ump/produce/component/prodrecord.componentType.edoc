@@ -4,8 +4,8 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;updateBatchStatus&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;updateBatchStatus&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.updateBatchStatus&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.produce.component.KsComponentProdRecord[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.produce.component.prodrecord.queryProdRecord(java.util.HashMap)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryProdRecord&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryStock&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.queryProdRecord&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+    <string>com.keensen.ump.produce.component.prodrecord.countRework(java.util.HashMap)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;countRework&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryStock&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.countRework&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.component.prodrecord.modifyOrderNo(String, String, String, String, String, String, String)</string>
@@ -16,20 +16,48 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMarkPrintList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryStock&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.queryMarkPrintList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>prodrecord</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;prodrecord.componentType&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;prodrecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord&lt;/html&gt;</string>
-  </entry>
-  <entry>
     <string>com.keensen.ump.produce.component.prodrecord.queryProdRecordByPage(java.util.Map, com.eos.foundation.PageCond)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryProdRecordByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.queryProdRecordByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.prodrecord.updateRework(java.util.HashMap)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;updateRework&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;modifyCode&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.updateRework&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;param(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.prodrecord.updateRework3(java.util.HashMap)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;updateRework3&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;modifyCode&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.updateRework3&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;param(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.prodrecord.saveBatchProdRecord(com.keensen.ump.produce.component.KsComponentProdRecord)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveBatchProdRecord&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.saveBatchProdRecord&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentProdRecord):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.prodrecord.queryProdRecord(java.util.HashMap)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryProdRecord&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;queryStock&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.queryProdRecord&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.prodrecord.queryReworkByPage(java.util.Map, com.eos.foundation.PageCond)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryReworkByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.queryReworkByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>prodrecord</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;prodrecord.componentType&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;prodrecord&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.component.prodrecord.saveProdRecord(com.keensen.ump.produce.component.KsComponentProdRecord)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveProdRecord&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.saveProdRecord&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentProdRecord):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.produce.component.prodrecord.saveBatchProdRecord(com.keensen.ump.produce.component.KsComponentProdRecord)</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveBatchProdRecord&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.saveBatchProdRecord&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component.KsComponentProdRecord):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+    <string>com.keensen.ump.produce.component.prodrecord.updateRework2(java.util.HashMap)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;updateRework2&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;modifyCode&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.updateRework2&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;param(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.prodrecord.updateReworkByWaterTest()</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;updateReworkByWaterTest&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;modifyCode&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.updateReworkByWaterTest&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.component.prodrecord.modifyCode(java.util.HashMap)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;modifyCode&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;modifyCode&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.component.prodrecord.modifyCode&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;param(java.util.HashMap):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.component.prodrecord.expandProdRecord(com.keensen.ump.produce.component.KsComponentProdRecord)</string>

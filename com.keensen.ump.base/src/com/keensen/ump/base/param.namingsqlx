@@ -67,5 +67,16 @@
 		WHERE cm.batch_no =#cmBatchNo#
   
     </select>
-  
+    
+    <select id="queryBaseDict" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     
+  			select t.business "business",t.dict_value "dictValue",
+			t.dict_name "dictName",t.remark "remark" from KS_BASE_DICT t
+			where 1=1 
+			<isNotNull prepend="and" property="business"> 
+		       t.business in ($business$)
+			</isNotNull>
+			order by t.business
+			
+	</select>
     </sqlMap>

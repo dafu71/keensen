@@ -47,6 +47,18 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 						});
 			}, this);
 
+	this.queryFeedingPanel.mon(this.queryFeedingPanel, 'query', function(form,
+			vals) {
+		var store = this.feedingPanel.store;
+		store.baseParams = vals;
+		store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.feedingPanel.pagingToolbar.pageSize
+					}
+				});
+	}, this);
+
 	this.queryPanelChooseWaterBatchNo.mon(this.queryPanelChooseWaterBatchNo,
 			'query', function(form, vals) {
 				var store = this.listPanelChooseWaterBatchNo.store;
@@ -90,6 +102,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var start = vals['condition/produceDtStart'];
 		var end = vals['condition/produceDtEnd'];
+
+		this.queryPanel.batchNoStr2.setValue('');
 
 		var start2 = vals['condition/lastCaimoDateStart'];
 		var end2 = vals['condition/lastCaimoDateEnd'];
@@ -213,7 +227,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 	this.listPanel.store.on('load', function() {
 		var _me = _this;
 		var vals = _this.queryPanel.getForm().getValues();
-
+		var vals2 = {
+			'condition/batchNoStr2' : _this.queryPanel.batchNoStr2.getValue()
+		}
 		_this.requestMask = _this.requestMask
 				|| new Ext.LoadMask(Ext.getBody(), {
 							msg : "后台正在操作,请稍候!"
@@ -223,7 +239,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 			url : "com.keensen.ump.qinsen.tumo.countRecords.biz.ext",
 			method : "post",
 			jsonData : {
-				'map' : vals
+				'map' : Ext.isEmpty(_this.queryPanel.batchNoStr2.getValue())
+						? vals
+						: vals2
 			},
 			success : function(resp) {
 				var ret = Ext.decode(resp.responseText);
@@ -235,6 +253,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 						Ext
 								.getCmp('totalUsefulLengthTxt')
 								.setValue('合计可用长度(m):' + data.totalUsefulLength);
+						Ext.getCmp('totalQualifidLengthTxt')
+								.setValue('合计合格长度(m):'
+										+ data.totalQualifidLength);
 						Ext.getCmp('totalCdmLengthTxt').setValue('合计裁膜产出(m):'
 								+ data.totalCdmLength);
 						Ext.getCmp('totalLossTxt').setValue('合计不良(m):'
@@ -250,6 +271,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 						Ext.getCmp('totalLengthTxt').setValue('合计长度(m):');
 						Ext.getCmp('totalUsefulLengthTxt')
 								.setValue('合计可用长度(m):');
+						Ext.getCmp('totalQualifidLengthTxt')
+								.setValue('合计合格长度(m):');
 						Ext.getCmp('totalCdmLengthTxt').setValue('合计裁膜产出(m):');
 						Ext.getCmp('totalLossTxt').setValue('合计不良(m):');
 						Ext.getCmp('totalTagNumTxt').setValue('合计标签数:');
@@ -1114,6 +1137,9 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onQueryByBatchNos = function() 
 							"pageCond/length" : this.listPanel.pagingToolbar.pageSize
 						}
 					});
+			this.queryPanel.batchNoStr2.setValue(arr2.join(",") == "''"
+					? null
+					: arr2.join(","));
 		}
 	}, this, true);
 }
@@ -1417,6 +1443,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveWaterLiquid = function() 
 				if (!Ext.isEmpty(r.data['weight'])
 						&& !Ext.isEmpty(r.data['waterType'])
 						&& !Ext.isEmpty(r.data['reserve5'])
+						&& !Ext.isEmpty(r.data['reason'])
 						&& !Ext.isEmpty(r.data['operatorName'])) {
 					var d = {
 						'item' : r.data['item'],
@@ -1424,7 +1451,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveWaterLiquid = function() 
 						'weight' : r.data['weight'],
 						'operatorName' : r.data['operatorName'],
 						'batchId' : r.data['batchId'],
-						'reserve5' : r.data['reserve5']
+						'reserve5' : r.data['reserve5'],
+						'reason' : r.data['reason']
 					}
 					entitys.push(d);
 				}
@@ -1496,6 +1524,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveTroughLiquid = function()
 				if (!Ext.isEmpty(r.data['weight'])
 						&& !Ext.isEmpty(r.data['item'])
 						&& !Ext.isEmpty(r.data['reserve5'])
+						&& !Ext.isEmpty(r.data['reason'])
 						&& !Ext.isEmpty(r.data['operatorName'])) {
 					var d = {
 						'item' : r.data['item'],
@@ -1503,7 +1532,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onSaveTroughLiquid = function()
 						'weight' : r.data['weight'],
 						'operatorName' : r.data['operatorName'],
 						'batchId' : r.data['batchId'],
-						'reserve5' : r.data['reserve5']
+						'reserve5' : r.data['reserve5'],
+						'reason' : r.data['reason']
 					}
 					entitys.push(d);
 				}
@@ -1872,6 +1902,10 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.judgeDm = function(v) {
 	});
 
 };
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.onQueryFeeding = function() {
+	this.feedingWindow.show();
+}
 
 function roundToDecimalPlace(number, decimalPlaces) {
 	const factor = Math.pow(10, decimalPlaces);

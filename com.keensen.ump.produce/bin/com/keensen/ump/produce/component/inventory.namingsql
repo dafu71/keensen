@@ -31,8 +31,8 @@
 		t1.position as "position",
 		t1.prod_state as "prodState",
 		t1.remark as "remark",
-		<!--substr(trim(t1.Store_Time),1,10)--><!--to_char(chk.store_Time,'YYYY-MM-DD HH24:MI:SS') "storeTime",--> 
-		to_char(jm.create_dt,'YYYY-MM-DD') "storeTime",
+		<!--substr(trim(t1.Store_Time),1,10)--><!--to_char(chk.store_Time,'YYYY-MM-DD HH24:MI:SS') "storeTime",--><!-- to_char(jm.create_dt,'YYYY-MM-DD') "storeTime",-->
+		decode(t1.store_time,null,to_char(t1.create_time,'YYYY-MM-DD'),substr(trim(t1.Store_Time),1,10)) "storeTime",
 		t1.apperance as "apperance",
 		chk.lid as "lid",
 		chk.label as "tape",
@@ -94,8 +94,8 @@ ON pms.mater_spec_id = qj.prod_spec_id
  
  <isNotNull prepend="and" property="prodSpecName">t1.prod_spec_name like '%' || #prodSpecName# || '%'</isNotNull>
         <isNotNull prepend="and" property="id">t1.id  = #id#</isNotNull>
-        <isNotNull prepend="and" property="storeTimeStart">substr(trim(t1.Store_Time),1,10)  &gt;=  #storeTimeStart#</isNotNull>
-        <isNotNull prepend="and" property="storeTimeEnd">substr(trim(t1.Store_Time),1,10) &lt;=  #storeTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="storeTimeStart">decode(t1.store_time,null,to_char(t1.create_time,'YYYY-MM-DD'),substr(trim(t1.Store_Time),1,10))   &gt;=  #storeTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="storeTimeEnd">decode(t1.store_time,null,to_char(t1.create_time,'YYYY-MM-DD'),substr(trim(t1.Store_Time),1,10))  &lt;=  #storeTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>

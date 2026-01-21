@@ -3,7 +3,7 @@
 <sqlMap namespace="com.keensen.ump.produce.diaphragm.ship.orderbase">
     <select id="queryOrderBase" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    SELECT T1.ID                AS "id",
-   
+      t1.delivery_State "deliveryState",
       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
        T1.CREATE_NAME AS "createName",
@@ -58,9 +58,18 @@
 		t1.mark_paste as "markPaste",
 		t1.pallet as "pallet",
 		t1.flash as "flash",
-		t1.mark as "mark"		
+		t1.mark as "mark"	,	
+		t1.order_no_mark as "orderNoMark",
+		t1.mater_code_mark  as "materCodeMark",
+		mp.cnt "cnt",
+		mp.amount "mpAmount"
 		
 		from KS_DIAPHRAGM_ORDER_BASE t1
+		
+		left join (SELECT t.base_id,COUNT(1) cnt,SUM(t.amount) amount
+		  from KS_DIAPHRAGM_ORDER_mp t
+		  GROUP BY t.base_id) mp
+		  on mp.base_id = t1.id
 		where 1=1
 		<isNotNull prepend="and" property="orderDateStart">to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &gt;=  #orderDateStart#</isNotNull>
         <isNotNull prepend="and" property="orderDateEnd">to_char(t1.ORDER_DATE,'yyyy-MM-dd')  &lt;=  #orderDateEnd#</isNotNull>
@@ -85,4 +94,27 @@ WHERE t.id=#id#</insert>
     set need_amount = #needAmount# ,
     update_time = sysdate,update_user_id = #userId#,update_name = #userName#
     where reserve5 = #baseId#</update>
+    <update id="saveDeliveryStateBatch" parameterClass="java.util.HashMap">update KS_DIAPHRAGM_ORDER_BASE t
+    	set t.delivery_state = decode(nvl(t.delivery_state,'否'),'是','否','是'),
+    	t.change_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
+    	where t.id in ($ids$)</update>
+    <delete id="deleteOrderMp" parameterClass="java.util.HashMap">
+    delete from KS_DIAPHRAGM_ORDER_MP t
+    where t.base_id = #baseId#
+     <isNotNull prepend="and" property="batchNo">t1.batch_no = #batchNo#</isNotNull>
+    </delete>
+    <select id="queryOrderMp" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  
+    SELECT T.BASE_ID   "baseId", t.id "id",
+       T.BATCH_NO  "batchNo",
+       T.AMOUNT    "amount",
+       OB.ORDER_NO "orderNo"
+  FROM KS_DIAPHRAGM_ORDER_MP T
+  LEFT JOIN KS_DIAPHRAGM_ORDER_BASE OB
+    ON OB.ID = T.BASE_ID
+    where 1=1
+    <isNotNull prepend="and" property="baseId">t.BASE_ID = #baseId#</isNotNull>
+        <isNotNull prepend="and" property="baseIds">t.BASE_ID in ($baseIds$)</isNotNull>
+	order by t.base_id
+    </select>
 </sqlMap>

@@ -432,7 +432,7 @@ where nvl(if_tear,'是') = '是'
     <select id="queryStockDetailBoard" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select decode(v.position,'6-3','','7-3','','8-3','',v.position) "position",
     nvl(t.dimo_batch_no,'') "dimoBatchNo",
     nvl(round(SYSDATE - to_date(to_char(t.PRODUCT_DT,'yyyy-mm-dd'),'yyyy-mm-dd')),0) "diff",
-    T.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) - nvl(t.scrap_amount,0) "residue"
+    round(T.THEORY_AMOUNT - nvl(T5.LOSE,0) - nvl(T2.PROD_LENGTH,0) - nvl(t.scrap_amount,0),0) "residue"
     from 
     V_KS_DIAPHRAGM_DM_POSITION V 
     LEFT JOIN
@@ -458,7 +458,7 @@ where nvl(if_tear,'是') = '是'
     ORDER BY v.myorder</select>
     <select id="queryStockCountBoard" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
 	  
-	  SELECT DIMO_TYPE "dimoType", COUNT(1) "cnt", SUM(RESIDUE) "residue"
+	  SELECT DIMO_TYPE "dimoType", COUNT(1) "cnt", round(SUM(RESIDUE),0) "residue"
 		  FROM (SELECT T1.DIMO_BATCH_NO,
 		               T1.DIMO_TYPE,
 		               T1.POSITION,

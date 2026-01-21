@@ -5,6 +5,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		var defectZmWinId = Ext.id();
 		var defectFhWinId = Ext.id();
 
+		this.initStore();
+
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
@@ -42,6 +44,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.initAddWaterLiquidWindow();
 
 		this.initEditWindow4C72Invalid();
+
+		this.initFeedingWindow();
 
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
@@ -111,10 +115,30 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 				});
 	}
 
+	this.initStore = function() {
+
+		this.feedingItemStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['C21', 'C21'], ['C22', 'C22'], ['C23', 'C23'],
+							['C24', 'C24'], ['C27', 'C27'], ['C28', 'C28'],
+							['C29', 'C29'], ['C30', 'C30'], ['RO水', 'RO水'],
+							['水相液排料', '水相液排料'], ['C22-A', 'C22-A'],
+							['C24', 'C24'], ['C51', 'C51'], ['C71', 'C71'],
+							['C72', 'C72']]
+				});
+		// 正常生产加料、工艺调整加料、异常报废加料
+		this.reasonStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['正常生产加料', '正常生产加料'], ['工艺调整加料', '工艺调整加料'],
+							['操作异常报废', '操作异常报废'], ['工艺异常报废', '工艺异常报废'],
+							['设备异常报废', '设备异常报废']]
+				});
+	}
+
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 200,
+					height : 230,
 					columns : 24,
 					border : true,
 					// collapsible : true,
@@ -164,7 +188,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						colspan : 24
 					}, {
 						xtype : 'supcombobox',
-						hiddenName : 'condition/supId',
+						hiddenName : 'condition/wfSupId',
 						colspan : 6,
 						anchor : '90%',
 						fieldLabel : '无纺布供应商'
@@ -346,6 +370,42 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						inputValue : 'Y',
 						colspan : 4,
 						anchor : '100%'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 24
+					}, {
+						xtype : 'combobox',
+						anchor : '90%',
+						colspan : 6,
+						name : 'condition/trend',
+						hiddenName : 'condition/trend',
+						fieldLabel : '走向',
+						triggerAction : "all",
+						store : new Ext.data.ArrayStore({
+									fields : ['mykey', 'myvalue'],
+									data : [['仓库发货仓', '仓库发货仓'],
+											['仓库AB仓', '仓库AB仓'],
+											['仓库C仓', '仓库C仓'],
+											['待二次判定', '待二次判定'],
+											['二次判定-发货', '二次判定-发货'],
+											['二次判定-自用', '二次判定-自用']]
+								}),
+						mode : "local",
+						editable : false,
+						displayField : "myvalue",
+						valueField : "mykey",
+						forceSelection : true,
+						emptyText : "--请选择--",
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							}
+						}
+					}, {
+						xtype : 'hidden',
+						name : 'condition/batchNoStr2',
+						ref : '../batchNoStr2'
 					}]
 				});
 
@@ -377,6 +437,13 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					scope : this,
 					iconCls : 'icon-application_edit',
 					handler : this.onQueryLiquidAdjust
+				});
+
+		this.queryPanel.addButton({
+					text : "生产加料记录",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQueryFeeding
 				});
 
 	}
@@ -547,6 +614,13 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
 						xtype : 'displayfield',
+						value : '合计合格长度(m)',
+						id : 'totalQualifidLengthTxt'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
 						value : '合计裁膜产出(m)',
 						id : 'totalCdmLengthTxt'
 					}, {
@@ -592,6 +666,9 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : '膜片批次',
 						width : 120,
 						dataIndex : 'batchNo'
+					}, {
+						dataIndex : 'trend',
+						header : '走向'
 					}, {
 						header : '返厂数量(m)',
 						width : 60,
@@ -993,19 +1070,20 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : '瑕疵图',
 						renderer : function(value, metaData, rec, rowIndex,
 								colIndex, store, view) {
-							
-							var defectPicture = rec.data.defectPicture;
-							if(!Ext.isEmpty(defectPicture))
-								return '<img class="cursor-example" title="单击显示大图" onclick="showImageModal(\''+ defectPicture + '\')" src="'
-									+ markRootUrl
-									+ defectPicture
-									+ '?ver='
-									+ rec.data.recordId
-									+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />'
-							else
-							    return '';
 
-							
+							var defectPicture = rec.data.defectPicture;
+							if (!Ext.isEmpty(defectPicture))
+								return '<img class="cursor-example" title="单击显示大图" onclick="showImageModal(\''
+										+ defectPicture
+										+ '\')" src="'
+										+ markRootUrl
+										+ defectPicture
+										+ '?ver='
+										+ rec.data.recordId
+										+ '" style="width:auto; height:auto; max-width:98%; max-height:140px;" />'
+							else
+								return '';
+
 						}
 					}],
 			store : new Ext.data.JsonStore({
@@ -1260,445 +1338,439 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 	this.initInputWindow = function() {
 		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
-					title : '新增涂膜记录',
-					height : 620,
-					width : 800,
-					// itemCls:'required',
-					// style:'margin-top:10px',
-					resizable : true,
-					minimizable : false,
-					maximizable : true,
-					items : [{
-						xtype : 'inputpanel',
-						pgrid : this.listPanel,
-						autoHide : false,
-						successFn : function(i, r) {
-							if (r.err != '0') {
-								Ext.Msg.show({
-											width : 400,
-											title : "操作提示",
-											msg : r.msg,
-											icon : Ext.Msg.WARNING,
-											buttons : Ext.Msg.OK,
-											fn : function() {
-												// _this.inputWindow.hide();
-											}
-										})
-							} else {
-								Ext.getCmp('produce-tumo-list').store.reload();
-								_this.inputWindow.hide();
+			title : '新增涂膜记录',
+			height : 620,
+			width : 800,
+			// itemCls:'required',
+			// style:'margin-top:10px',
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			items : [{
+				xtype : 'inputpanel',
+				pgrid : this.listPanel,
+				autoHide : false,
+				successFn : function(i, r) {
+					if (r.err != '0') {
+						Ext.Msg.show({
+									width : 400,
+									title : "操作提示",
+									msg : r.msg,
+									icon : Ext.Msg.WARNING,
+									buttons : Ext.Msg.OK,
+									fn : function() {
+										// _this.inputWindow.hide();
+									}
+								})
+					} else {
+						Ext.getCmp('produce-tumo-list').store.reload();
+						_this.inputWindow.hide();
+					}
+				},
+				columns : 2,
+				saveUrl : 'com.keensen.ump.qinsen.tumo.saveTumo.biz.ext',
+				fields : [{
+							xtype : 'datetimefield',
+							format : "Y-m-d H:i:00",
+							name : 'entity/produceDt',
+							ref : '../../produceDt',
+							fieldLabel : '生产时间',
+							allowBlank : false,
+							value : new Date(),
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'prodflagselcombobox',
+							hiddenName : 'entity/prodFlagId',
+							ref : '../../prodFlagId',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 1,
+							fieldLabel : '生产类型'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'linecombobox',
+							ref : '../../lineId',
+							prodTacheId : '100',
+							hiddenName : 'entity/lineId',
+							name : 'entity/lineId',
+							allowBlank : false,
+							anchor : '75%',
+							fieldLabel : '生产线 '
+						}, {
+							xtype : 'textfield',
+							name : 'entity/dimoBatchNo',
+							ref : '../../dimoBatchNo',
+							fieldLabel : '底膜批次',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 1,
+							listeners : {
+								scope : this,
+								'blur' : function() {
+									var dimoBatchNo = this.inputWindow.dimoBatchNo
+											.getValue();
+									_this.judgeDm(dimoBatchNo);
+								}
 							}
-						},
-						columns : 2,
-						saveUrl : 'com.keensen.ump.qinsen.tumo.saveTumo.biz.ext',
-						fields : [{
-									xtype : 'datetimefield',
-									format : "Y-m-d H:i:00",
-									name : 'entity/produceDt',
-									ref : '../../produceDt',
-									fieldLabel : '生产时间',
-									allowBlank : false,
-									value : new Date(),
-									anchor : '75%',
-									colspan : 1
-								}, {
-									xtype : 'prodflagselcombobox',
-									hiddenName : 'entity/prodFlagId',
-									ref : '../../prodFlagId',
-									allowBlank : false,
-									anchor : '75%',
-									colspan : 1,
-									fieldLabel : '生产类型'
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'linecombobox',
-									ref : '../../lineId',
-									prodTacheId : '100',
-									hiddenName : 'entity/lineId',
-									name : 'entity/lineId',
-									allowBlank : false,
-									anchor : '75%',
-									fieldLabel : '生产线 '
-								}, {
-									xtype : 'textfield',
-									name : 'entity/dimoBatchNo',
-									ref : '../../dimoBatchNo',
-									fieldLabel : '底膜批次',
-									allowBlank : false,
-									anchor : '75%',
-									colspan : 1,
-									listeners : {
-										scope : this,
-										'blur' : function() {
-											var dimoBatchNo = this.inputWindow.dimoBatchNo
-													.getValue();
-											_this.judgeDm(dimoBatchNo);
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'supcombobox',
-									hiddenName : 'entity/wfSupId',
-									name : 'entity/wfSupId',
-									ref : '../../wfSupId',
-									allowBlank : false,
-									anchor : '75%',
-									fieldLabel : '无纺布供应商'
-								}, {
-									xtype : 'textfield',
-									name : 'entity/wfBatchNo',
-									ref : '../../wfBatchNo',
-									fieldLabel : '无纺布批号',
-									allowBlank : false,
-									anchor : '75%',
-									colspan : 1
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'mpspeccombobox',
-									hiddenName : 'entity/specId',
-									ref : '../../specId',
-									allowBlank : false,
-									anchor : '75%',
-									fieldLabel : '膜片型号 '
-								}, {
-									xtype : 'textfield',
-									name : 'entity/batchNo',
-									ref : '../../batchNo',
-									fieldLabel : '膜片批次',
-									allowBlank : false,
-									regex : /^[A-Za-z0-9]{13}$/,
-									anchor : '75%',
-									colspan : 1
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'textfield',
-									name : 'entity/planNo',
-									fieldLabel : '计划单号',
-									allowBlank : false,
-									anchor : '75%',
-									colspan : 1
-								}, {
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'supcombobox',
+							hiddenName : 'entity/wfSupId',
+							name : 'entity/wfSupId',
+							ref : '../../wfSupId',
+							allowBlank : false,
+							anchor : '75%',
+							fieldLabel : '无纺布供应商'
+						}, {
+							xtype : 'textfield',
+							name : 'entity/wfBatchNo',
+							ref : '../../wfBatchNo',
+							fieldLabel : '无纺布批号',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'mpspeccombobox',
+							hiddenName : 'entity/specId',
+							ref : '../../specId',
+							allowBlank : false,
+							anchor : '75%',
+							fieldLabel : '膜片型号 '
+						}, {
+							xtype : 'textfield',
+							name : 'entity/batchNo',
+							ref : '../../batchNo',
+							fieldLabel : '膜片批次',
+							allowBlank : false,
+							regex : /^[A-Za-z0-9]{13}$/,
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/planNo',
+							fieldLabel : '计划单号',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 1
+						}, {
 
-									xtype : 'combo',
-									fieldLabel : '是否外销',
-									ref : '../../isWx',
-									hiddenName : 'entity/isWx',
-									emptyText : '--请选择--',
-									allowBlank : false,
-									anchor : '75%',
-									store : [[null, '全部'], ['Y', '是'],
-											['N', '否']],
-									listeners : {
-										scope : this,
-										'expand' : function(A) {
-											this.inputWindow.isWx.reset();
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'textfield',
-									name : 'entity/orderNo',
-									fieldLabel : '订单号',
-									allowBlank : false,
-									anchor : '75%',
-									colspan : 1
-								}, {
-									xtype : 'numberfield',
-									name : 'entity/outLength',
-									fieldLabel : '产出长度',
-									allowBlank : true,
-									anchor : '75%',
-									colspan : 1
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
+							xtype : 'combo',
+							fieldLabel : '是否外销',
+							ref : '../../isWx',
+							hiddenName : 'entity/isWx',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							anchor : '75%',
+							store : [[null, '全部'], ['Y', '是'], ['N', '否']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.isWx.reset();
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/orderNo',
+							fieldLabel : '订单号',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/outLength',
+							fieldLabel : '产出长度',
+							allowBlank : true,
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 
-									xtype : 'combo',
-									editable : false,
-									fieldLabel : '保留品',
-									ref : '../../isKeep',
-									hiddenName : 'entity/isKeep',
-									value : 'N',
-									emptyText : '--请选择--',
-									allowBlank : true,
-									anchor : '75%',
-									store : [[null, '全部'], ['Y', '是'],
-											['N', '否']],
-									listeners : {
-										scope : this,
-										'expand' : function(A) {
-											this.inputWindow.isKeep.reset();
-										}
-									}
-								}, {
-									name : 'entity/thickAvg',
-									fieldLabel : '厚度(平均)',
-									xtype : 'numberfield',
-									decimalPrecision : 1,
-									minValue : 0,
-									allowBlank : true,
-									anchor : '75%'
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									name : 'entity/thickMin',
-									fieldLabel : '厚度(最小)',
-									xtype : 'numberfield',
-									decimalPrecision : 1,
-									minValue : 0,
-									allowBlank : true,
-									anchor : '75%'
-								}, {
-									name : 'entity/thickMax',
-									fieldLabel : '厚度(最大)',
-									xtype : 'numberfield',
-									decimalPrecision : 1,
-									minValue : 0,
-									allowBlank : true,
-									anchor : '75%'
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									hidden : true,
-									colspan : 2
-								}, {
-									name : 'entity/tagNum',
-									fieldLabel : '标签数',
-									xtype : 'numberfield',
-									decimalPrecision : 0,
-									minValue : 0,
-									allowBlank : true,
-									hidden : true,
-									anchor : '75%'
-								}, {
-									name : 'entity/tagLength',
-									fieldLabel : '标签长度m',
-									xtype : 'numberfield',
-									minValue : 0,
-									allowBlank : true,
-									hidden : true,
-									anchor : '75%'
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'teamcombobox',
-									name : 'entity/teamId',
-									fieldLabel : '生产班组',
-									hiddenName : 'entity/teamId',
-									allowBlank : false,
-									anchor : '75%',
-									colspan : 1
-								}, {
-									xtype : 'combo',
-									name : 'entity/teamSeg',
-									ref : '../../teamSeg',
-									hiddenName : 'entity/teamSeg',
-									fieldLabel : '班次',
-									emptyText : '--请选择--',
-									allowBlank : false,
-									anchor : '75%',
-									store : [['早', '早'], ['中', '中'], ['晚', '晚']],
-									listeners : {
-										scope : this,
-										'expand' : function(A) {
-											this.inputWindow.teamSeg.reset();
-										}
-									}
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'mpworkercombobox',
-									defaultValue : operatorid,
-									hiddenName : 'entity/workerId',
-									name : 'entity/workerId',
-									ref : '../../workerId',
-									allowBlank : false,
-									anchor : '75%',
-									fieldLabel : '操作工'
-								}, {
-									xtype : 'textfield',
-									name : 'entity/outBatchNo',
-									fieldLabel : '膜片卷号',
-									// allowBlank : false,
-									readOnly : true,
-									emptyText : '系统自动生成',
-									anchor : '75%',
-									colspan : 1
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
+							xtype : 'combo',
+							editable : false,
+							fieldLabel : '保留品',
+							ref : '../../isKeep',
+							hiddenName : 'entity/isKeep',
+							value : 'N',
+							emptyText : '--请选择--',
+							allowBlank : true,
+							anchor : '75%',
+							store : [[null, '全部'], ['Y', '是'], ['N', '否']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.isKeep.reset();
+								}
+							}
+						}, {
+							name : 'entity/thickAvg',
+							fieldLabel : '厚度(平均)',
+							xtype : 'numberfield',
+							decimalPrecision : 1,
+							minValue : 0,
+							allowBlank : true,
+							anchor : '75%'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							name : 'entity/thickMin',
+							fieldLabel : '厚度(最小)',
+							xtype : 'numberfield',
+							decimalPrecision : 1,
+							minValue : 0,
+							allowBlank : true,
+							anchor : '75%'
+						}, {
+							name : 'entity/thickMax',
+							fieldLabel : '厚度(最大)',
+							xtype : 'numberfield',
+							decimalPrecision : 1,
+							minValue : 0,
+							allowBlank : true,
+							anchor : '75%'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							hidden : true,
+							colspan : 2
+						}, {
+							name : 'entity/tagNum',
+							fieldLabel : '标签数',
+							xtype : 'numberfield',
+							decimalPrecision : 0,
+							minValue : 0,
+							allowBlank : true,
+							hidden : true,
+							anchor : '75%'
+						}, {
+							name : 'entity/tagLength',
+							fieldLabel : '标签长度m',
+							xtype : 'numberfield',
+							minValue : 0,
+							allowBlank : true,
+							hidden : true,
+							anchor : '75%'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'teamcombobox',
+							name : 'entity/teamId',
+							fieldLabel : '生产班组',
+							hiddenName : 'entity/teamId',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'combo',
+							name : 'entity/teamSeg',
+							ref : '../../teamSeg',
+							hiddenName : 'entity/teamSeg',
+							fieldLabel : '班次',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							anchor : '75%',
+							store : [['早', '早'], ['中', '中'], ['晚', '晚']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.teamSeg.reset();
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'mpworkercombobox',
+							defaultValue : operatorid,
+							hiddenName : 'entity/workerId',
+							name : 'entity/workerId',
+							ref : '../../workerId',
+							allowBlank : false,
+							anchor : '75%',
+							fieldLabel : '操作工'
+						}, {
+							xtype : 'textfield',
+							name : 'entity/outBatchNo',
+							fieldLabel : '膜片卷号',
+							// allowBlank : false,
+							readOnly : true,
+							emptyText : '系统自动生成',
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 
-									xtype : 'combo',
-									fieldLabel : '已裁完',
-									ref : '../../isCutOver',
-									name : 'entity/isCutOver',
-									hiddenName : 'entity/isCutOver',
-									value : 'N',
-									emptyText : '--请选择--',
-									readOnly : true,
-									allowBlank : true,
-									value : 'N',
-									anchor : '37.5%',
-									colspan : 1,
-									store : [[null, '全部'], ['Y', '是'],
-											['N', '否']],
-									listeners : {
-										scope : this,
-										'expand' : function(A) {
-											this.inputWindow.isCutOver.reset();
-										}
+							xtype : 'combo',
+							fieldLabel : '已裁完',
+							ref : '../../isCutOver',
+							name : 'entity/isCutOver',
+							hiddenName : 'entity/isCutOver',
+							value : 'N',
+							emptyText : '--请选择--',
+							readOnly : true,
+							allowBlank : true,
+							value : 'N',
+							anchor : '37.5%',
+							colspan : 1,
+							store : [[null, '全部'], ['Y', '是'], ['N', '否']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.isCutOver.reset();
+								}
+							}
+						}, {
+							name : 'entity/dmUseLength',
+							fieldLabel : '底膜放卷长度',
+							xtype : 'numberfield',
+							decimalPrecision : 0,
+							minValue : 0,
+							allowBlank : true,
+							anchor : '75%'
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+
+							xtype : 'combo',
+							fieldLabel : '是否更换漂洗槽',
+							ref : '../../isReplaceTrough',
+							hiddenName : 'entity/isReplaceTrough',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							anchor : '75%',
+							store : [['Y', '是'], ['N', '否']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.isReplaceTrough.reset();
+								},
+								'select' : function(combo, record, index) {
+									if (index == 0) {
+										Ext.Msg.alert("系统提示", "您已选择更换漂洗槽！");
 									}
-								}, {
-									name : 'entity/dmUseLength',
-									fieldLabel : '底膜放卷长度',
-									xtype : 'numberfield',
-									decimalPrecision : 0,
-									minValue : 0,
-									allowBlank : true,
-									anchor : '75%'
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
+								}
 
-									xtype : 'combo',
-									fieldLabel : '是否更换漂洗槽',
-									ref : '../../isReplaceTrough',
-									hiddenName : 'entity/isReplaceTrough',
-									emptyText : '--请选择--',
-									allowBlank : false,
-									anchor : '75%',
-									store : [['Y', '是'], ['N', '否']],
-									listeners : {
-										scope : this,
-										'expand' : function(A) {
-											this.inputWindow.isReplaceTrough
-													.reset();
-										},
-										'select' : function(combo, record,
-												index) {
-											if (index == 0) {
-												Ext.Msg.alert("系统提示",
-														"您已选择更换漂洗槽！");
-											}
-										}
+							}
+						}, {
+							xtype : 'trigger',
+							emptyText : '单击旁边选择',
+							editable : true,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onWaterBatchNo();
+							},
+							ref : '../../waterBatchNo',
+							name : 'entity/waterBatchNo',
+							fieldLabel : '水相液批次号',
+							// allowBlank : false,
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
 
-									}
-								}, {
-									xtype : 'trigger',
-									emptyText : '单击旁边选择',
-									editable : true,
-									hideTrigger : false,
-									scope : this,
-									onTriggerClick : function() {
-										_this.onWaterBatchNo();
-									},
-									ref : '../../waterBatchNo',
-									name : 'entity/waterBatchNo',
-									fieldLabel : '水相液批次号',
-									// allowBlank : false,
-									anchor : '75%',
-									colspan : 1
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
+							xtype : 'combo',
+							fieldLabel : '是否有针孔',
+							ref : '../../ifPinhole',
+							hiddenName : 'entity/ifPinhole',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							anchor : '75%',
+							store : [['Y', '是'], ['N', '否']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.ifPinhole.reset();
+								}
 
-									xtype : 'combo',
-									fieldLabel : '是否有针孔',
-									ref : '../../ifPinhole',
-									hiddenName : 'entity/ifPinhole',
-									emptyText : '--请选择--',
-									allowBlank : false,
-									anchor : '75%',
-									store : [['Y', '是'], ['N', '否']],
-									listeners : {
-										scope : this,
-										'expand' : function(A) {
-											this.inputWindow.ifPinhole.reset();
-										}
-
-									}
-								}, {
-									xtype : 'trigger',
-									emptyText : '单击旁边选择',
-									editable : true,
-									hideTrigger : false,
-									scope : this,
-									onTriggerClick : function() {
-										_this.onWaterBatchNo2();
-									},
-									ref : '../../waterBatchNo2',
-									name : 'entity/waterBatchNo2',
-									fieldLabel : '水相补充液批次',
-									// allowBlank : false,
-									anchor : '75%',
-									colspan : 1
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									xtype : 'textfield',
-									name : 'entity/remarkPinhole',
-									fieldLabel : '针孔说明',
-									anchor : '85%',
-									colspan : 2
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									colspan : 2
-								}, {
-									name : 'entity/remark',
-									xtype : 'textarea',
-									fieldLabel : '备注',
-									height : 30,
-									colspan : 2,
-									anchor : '85%',
-									allowBlank : true
-								}, {
-									xtype : 'displayfield',
-									height : '5',
-									anchor : '85%',
-									colspan : 2
-								}, {
-									name : 'entity/inboundRemark',
-									xtype : 'textarea',
-									fieldLabel : '入库意见',
-									anchor : '85%',
-									colspan : 2,
-									height : 30,
-									allowBlank : true
-								}]
-					}]
-				});
+							}
+						}, {
+							xtype : 'trigger',
+							emptyText : '单击旁边选择',
+							editable : true,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onWaterBatchNo2();
+							},
+							ref : '../../waterBatchNo2',
+							name : 'entity/waterBatchNo2',
+							fieldLabel : '水相补充液批次',
+							// allowBlank : false,
+							anchor : '75%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/remarkPinhole',
+							fieldLabel : '针孔说明',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							name : 'entity/remark',
+							xtype : 'textarea',
+							fieldLabel : '备注',
+							height : 30,
+							colspan : 2,
+							anchor : '85%',
+							allowBlank : true
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							anchor : '85%',
+							colspan : 2
+						}, {
+							name : 'entity/inboundRemark',
+							xtype : 'textarea',
+							fieldLabel : '入库意见',
+							anchor : '85%',
+							colspan : 2,
+							height : 30,
+							allowBlank : true
+						}]
+			}]
+		});
 	}
 
 	this.initEditWindow = function() {
@@ -3677,6 +3749,9 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								dataIndex : 'reserve5',
 								header : '收卷米数(m)'
 							}, {
+								dataIndex : 'reason',
+								header : '加料原因'
+							}, {
 								dataIndex : 'operatorName',
 								header : '记录人'
 							}, {
@@ -3711,6 +3786,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'operatorName'
 								}, {
 									name : 'reserve5'
+								}, {
+									name : 'reason'
 								}]
 					})
 				})
@@ -3846,6 +3923,36 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 										}))
 
 							}, {
+								dataIndex : 'reason',
+								// sortable : true,
+								width : 150,
+								header : '加料原因',
+								css : 'background:#c7c7a7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+										{
+											typeAhead : true,
+											typeAheadDelay : 100,
+											triggerAction : "all",
+											lazyRender : true,
+											minChars : 1,
+											mode : 'local',
+											lastQuery : '',
+											// allowBlank : false,
+											// mode : 'local',
+											emptyText : '--请选择--',
+											// lastQuery : '',
+											store : this.reasonStore,
+											hiddenName : 'code',
+											valueField : 'name',
+											displayField : 'name',
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
 
 								dataIndex : 'operatorName',
 								// sortable : true,
@@ -3880,6 +3987,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'batchNo'
 								}, {
 									name : 'reserve5'
+								}, {
+									name : 'reason'
 								}]
 					})
 				})
@@ -4708,6 +4817,9 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								dataIndex : 'reserve5',
 								header : '收卷米数(m)'
 							}, {
+								dataIndex : 'reason',
+								header : '加料原因'
+							}, {
 								dataIndex : 'operatorName',
 								header : '记录人'
 							}, {
@@ -4742,6 +4854,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'operatorName'
 								}, {
 									name : 'reserve5'
+								}, {
+									name : 'reason'
 								}]
 					})
 				})
@@ -4881,6 +4995,36 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 										}))
 
 							}, {
+								dataIndex : 'reason',
+								// sortable : true,
+								width : 150,
+								header : '加料原因',
+								css : 'background:#c7c7a7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+										{
+											typeAhead : true,
+											typeAheadDelay : 100,
+											triggerAction : "all",
+											lazyRender : true,
+											minChars : 1,
+											mode : 'local',
+											lastQuery : '',
+											// allowBlank : false,
+											// mode : 'local',
+											emptyText : '--请选择--',
+											// lastQuery : '',
+											store : this.reasonStore,
+											hiddenName : 'code',
+											valueField : 'name',
+											displayField : 'name',
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												}
+											}
+										}))
+
+							}, {
 
 								dataIndex : 'operatorName',
 								// sortable : true,
@@ -4915,6 +5059,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'batchNo'
 								}, {
 									name : 'reserve5'
+								}, {
+									name : 'reason'
 								}]
 					})
 				})
@@ -5004,5 +5150,198 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}]
 					}]
 				});
+	}
+
+	this.initFeedingWindow = function() {
+		var _this = this;
+
+		this.queryFeedingPanel = this.queryFeedingPanel
+				|| new Ext.fn.QueryPanel({
+							height : 110,
+							columns : 4,
+							border : true,
+							region : 'north',
+							titleCollapse : false,
+							fields : [{
+										xtype : 'textfield',
+										name : 'condition/batchNo2',
+										fieldLabel : '膜片批次%-%'
+									}, {
+										xtype : 'linecombobox',
+										prodTacheId : '100',
+										hiddenName : 'condition/lineId',
+										fieldLabel : '生产线 '
+									}, {
+										xtype : 'mpspeccombobox',
+										hiddenName : 'condition/specId',
+										fieldLabel : '膜片型号 '
+									}, {
+										xtype : 'combo',
+										fieldLabel : '加料项目',
+										hiddenName : 'condition/item',
+										ref : '../item',
+										mode : 'local',
+										editable : false,
+										displayField : "name",
+										valueField : "code",
+										emptyText : '--请选择--',
+										store : _this.feedingItemStore,
+										listeners : {
+											'expand' : function(A) {
+												_this.queryFeedingPanel.item
+														.reset();
+											}
+										}
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 24
+									}, {
+										xtype : 'combo',
+										fieldLabel : '加料原因',
+										hiddenName : 'condition/reason',
+										ref : '../reason',
+										mode : 'local',
+										editable : false,
+										displayField : "name",
+										valueField : "code",
+										emptyText : '--请选择--',
+										store : _this.reasonStore,
+										listeners : {
+											'expand' : function(A) {
+												_this.queryFeedingPanel.reason
+														.reset();
+											}
+										}
+									}, {
+										xtype : 'datefield',
+										name : 'condition/createTimeStart',
+										fieldLabel : '操作时间',
+										// allowBlank : false,
+										editable : true,
+										format : 'Y-m-d'
+									}, {
+										xtype : 'datefield',
+										name : 'condition/lcreateTimeEnd',
+										fieldLabel : '至',
+										editable : true,
+										format : 'Y-m-d'
+									}]
+						});
+
+		var selModel2 = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.feedingPanel = this.feedingPanel || new Ext.fn.ListPanel({
+			region : 'center',
+			cls : 'custom-row-height', // 应用自定义的CSS类
+			viewConfig : {
+				forceFit : true
+			},
+			delUrl : '1.biz.ext',
+			hsPage : true,
+			autoScroll : true,
+			selModel : selModel2,
+			columns : [new Ext.grid.RowNumberer(), selModel2, {
+						dataIndex : 'method',
+						header : '调整类型'
+					}, {
+						dataIndex : 'batchNo',
+						header : '膜片批次'
+					}, {
+						dataIndex : 'lineName',
+						header : '生产线'
+					},
+
+					{
+						dataIndex : 'specName',
+						header : '膜片型号'
+					}, {
+						dataIndex : 'area',
+						header : '加料区域'
+					}, {
+						dataIndex : 'item',
+						header : '加料项目'
+					}, {
+						dataIndex : 'weight',
+						header : '加料重量'
+					}, {
+						dataIndex : 'reason',
+						header : '加料原因'
+					}, {
+						dataIndex : 'createName',
+						header : '记录人'
+					}, {
+						dataIndex : 'createTime',
+						header : '操作时间'
+					}],
+			store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.qinsen.tumo.queryFeedingByPage.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : '',
+						baseParams : {
+
+			}			,
+						fields : [{
+									name : 'method'
+								}, {
+									name : 'batchId'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'lineId'
+								}, {
+									name : 'lineName'
+								}, {
+									name : 'specId'
+								}, {
+									name : 'specName'
+								}, {
+									name : 'area'
+								}, {
+									name : 'item'
+								}, {
+									name : 'weight'
+								}, {
+									name : 'reason'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'createTime'
+								}]
+					})
+		})
+
+		this.feedingWindow = this.feedingWindow || new Ext.Window({
+					title : '涂膜生产加料记录',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.queryFeedingPanel, this.feedingPanel],
+					buttons : [{
+								text : "导出",
+								scope : this,
+								hidden : true,
+								handler : this.exportFeeding
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.feedingWindow.hide();
+								}
+							}]
+
+				});
+
 	}
 }

@@ -753,4 +753,15 @@ SELECT T1.DRAWING_CODE AS "drawingCode",
 	</isNotNull>
 	
     </update>
+    
+    <update id="updateGpdAndSalt4NoStd" parameterClass="java.util.HashMap" >
+    UPDATE qinsen.para_mater_spec pms 
+	SET gpd_low_limit = REGEXP_SUBSTR(pms.test_liquid_gpd, '[^-]+', 1, 1),
+	gpd_up_limit = REGEXP_SUBSTR(pms.test_liquid_gpd, '[^-]+', 1, 2),
+	salt_low_limit = REGEXP_SUBSTR(pms.test_liquid_salt, '[^-]+', 1, 1),
+	salt_up_limit = REGEXP_SUBSTR(pms.test_liquid_salt, '[^-]+', 1, 2)
+	WHERE pms.prod_type &lt;> '公司标准'
+	and pms.mater_spec_id = #materSpecId#
+    
+    </update>
 </sqlMap>

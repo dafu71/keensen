@@ -14,6 +14,7 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 		this.initEditWindow4();
 
 		this.initBaseFormulaWindow();
+		this.initAddBaseFormulaWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -93,28 +94,28 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 				fieldLabel : "记录日期",
 				format : "Y-m-d"
 			}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, {
+				xtype : 'displayfield',
+				height : '5',
+				colspan : 4
+			}, {
 
-						xtype : 'combobox',
-						fieldLabel : '当前步骤',
-						ref : '../step',
-						hiddenName : 'condition/step',
-						emptyText : '--请选择--',
-						allowBlank : true,
-						editable : false,
-						anchor : '95%',
-						store : [['first', '分析'], /* ['second', '调整'], */
-								['third', '配料'], ['produce', '生产使用']],
-						listeners : {
-							scope : this,
-							'expand' : function(A) {
-								this.queryPanel.step.reset();
-							}
-						}
-					}]
+				xtype : 'combobox',
+				fieldLabel : '当前步骤',
+				ref : '../step',
+				hiddenName : 'condition/step',
+				emptyText : '--请选择--',
+				allowBlank : true,
+				editable : false,
+				anchor : '95%',
+				store : [['first', '分析'],  ['second', '调整'], 
+						['third', '配料'], ['produce', '生产使用']],
+				listeners : {
+					scope : this,
+					'expand' : function(A) {
+						this.queryPanel.step.reset();
+					}
+				}
+			}]
 		});
 
 		this.queryPanel.addButton({
@@ -2734,6 +2735,11 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 								xtype : 'displayfield',
 								ref : '../info',
 								value : '&nbsp;'
+							}, '->', {
+								text : '新增水相液配方类型',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onAddBaseFormula
 							}],
 
 					columns : [new Ext.grid.RowNumberer(),
@@ -3373,5 +3379,80 @@ com.keensen.ump.produce.quality.mptest.waterMgr = function() {
 
 				});
 
+	}
+
+	this.initAddBaseFormulaWindow = function() {
+		var _this = this;
+		this.addBaseFormulaWindow = this.addBaseFormulaWindow
+				|| new Ext.fn.FormWindow({
+					title : '新增水相液配方类型',
+					height : 480,
+					width : 600,
+					// itemCls:'required',
+					// style:'margin-top:10px',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					items : [{
+						xtype : 'inputpanel',
+						pgrid : this.listPanel4BaseFormula,
+						columns : 2,
+						saveUrl : 'com.keensen.ump.produce.quality.mptest5.addBaseFormula.biz.ext',
+						fields : [{
+
+							xtype : 'combobox',
+							fieldLabel : '线别',
+							ref : '../../line',
+							hiddenName : 'param/line',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							anchor : '95%',
+							colspan : 2,
+							store : [['A', 'A'], ['B', 'B'], ['C', 'C'],
+									['D', 'D'], ['E', 'E'], ['F', 'F']],
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.addBaseFormulaWindow.line.reset();
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'mpspeccombobox',
+							valueField : "name",
+							displayField : "name",
+							fieldLabel : '膜片类型',
+							ref : '../../mptype',
+							hiddenName : 'param/mptype',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							editable : false,
+							anchor : '95%',
+							colspan : 2,
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.addBaseFormulaWindow.mptype.reset();
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							ref : '../../code',
+							fieldLabel : '产品种类代码',
+							name : 'param/code',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 2
+						}]
+					}]
+				});
 	}
 }

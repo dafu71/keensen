@@ -2,7 +2,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 
 	this.initPanel = function() {
 
-		this.initHWaterTestStore();
+		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
 
@@ -11,6 +11,8 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 		this.initViewOrderWindow();
 
 		this.initChooseOrderWindow();
+
+		this.initMarkPrintWindow();
 
 		this.lay = new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -22,7 +24,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 		return this.lay;
 	}
 
-	this.initHWaterTestStore = function() {
+	this.initStore = function() {
 
 		this.ynStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
@@ -52,6 +54,24 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						name : 'sameSalt'
 					}, {
 						name : 'sameGpd'
+					}]
+		})
+
+		this.baseDictStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.base.param.queryBaseDict.biz.ext',
+			root : 'data',
+			autoLoad : true,
+			baseParams : {
+				'condition/business' : "'color_tape','type_prod','size_prod','code_prod'"
+			},
+			fields : [{
+						name : 'business'
+					}, {
+						name : 'dictValue'
+					}, {
+						name : 'dictName'
+					}, {
+						name : 'remark'
 					}]
 		})
 	}
@@ -165,6 +185,11 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						scope : this,
 						iconCls : 'icon-printer',
 						handler : this.onPrint
+					}, '-', {
+						text : '唛头打印',
+						scope : this,
+						iconCls : 'icon-printer',
+						handler : this.onMarkPrint
 					}, '->', {
 						text : '确认入C仓',
 						scope : this,
@@ -1963,6 +1988,151 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 					height : 600,
 					layout : 'border',
 					items : [this.editPanel4ViewOrder, this.listPanel4ViewOrder]
+
+				});
+
+	}
+
+	this.initMarkPrintWindow = function() {
+
+		var _this = this;
+
+		this.markPrintPanel = this.markPrintPanel || new Ext.fn.EditPanel({
+			// height : 440,
+			region : 'center',
+			// baseCls : "x-panel",
+			autoHide : false,
+			autoScroll : false,
+			border : true,
+			columns : 12,
+			loadUrl : 'com.keensen.ump.produce.component.applys.expandHHHead.biz.ext',
+			saveUrl : '1.biz.ext',
+			fields : [{
+						xtype : 'textfield',
+						readOnly : true,
+						dataIndex : 'reserve1',
+						ref : '../orderNo',
+						fieldLabel : '订单号',
+						anchor : '100%',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						readOnly : true,
+						dataIndex : 'prodSpecName',
+						ref : '../prodSpecName',
+						fieldLabel : '卷制型号',
+						anchor : '100%',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						readOnly : true,
+						dataIndex : 'tapColor',
+						anchor : '100%',
+						colspan : 4,
+						ref : '../tapColor',
+						fieldLabel : '胶带颜色'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'numberfield',
+						readOnly : true,
+						dataIndex : 'orderAmount',
+						ref : '../orderAmount',
+						fieldLabel : '订单数量',
+						anchor : '100%',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						readOnly : true,
+						ref : '../applyAmount',
+						dataIndex : 'applyAmount',
+						fieldLabel : '请检数量',
+						anchor : '100%',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						readOnly : true,
+						dataIndex : 'quantityPerBox',
+						ref : '../quantityPerBox',
+						fieldLabel : '单箱数量(支)',
+						anchor : '100%',
+						colspan : 4
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textfield',
+						readOnly : true,
+						dataIndex : 'quantityBox',
+						ref : '../quantityBox',
+						fieldLabel : '预计包装箱数',
+						anchor : '100%',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						readOnly : true,
+						dataIndex : 'quantityLastBox',
+						ref : '../quantityLastBox',
+						fieldLabel : '尾箱元件数(支)',
+						anchor : '100%',
+						colspan : 4
+					}, {
+
+						xtype : 'checkbox',
+						readOnly : true,
+						dataIndex : 'reserve2',
+						boxLabel : '带NSF',
+						colspan : 4,
+						inputValue : 'Y',
+						anchor : '100%'
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 12
+					}, {
+						xtype : 'textfield',
+						readOnly : true,
+						ref : '../markBatchNo',
+						fieldLabel : '箱唛批号示例',
+						anchor : '100%',
+						colspan : 4
+					}, {
+						xtype : 'hidden',
+						ref : '../pkid',
+						name : 'id',
+						dataIndex : 'id'
+					}],
+			buttons : [{
+						text : "确认",
+						scope : this,
+						handler : this.onSaveMarkPrint
+					}, {
+						text : "关闭",
+						scope : this,
+						handler : function() {
+							this.markPrintPanel.form.reset();
+							this.markPrintWindow.hide();
+						}
+					}]
+
+		})
+
+		this.markPrintWindow = this.markPrintWindow || new Ext.Window({
+					title : '唛头打印信息确认',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.markPrintPanel]
 
 				});
 

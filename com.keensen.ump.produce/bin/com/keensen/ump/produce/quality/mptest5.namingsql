@@ -305,4 +305,14 @@ from KS_DIAPHRAGM_MAKE_PVA_LIST t
  ORDER BY iorder,create_time
     
     </select>
+    <insert id="addBaseFormula" parameterClass="java.util.HashMap">INSERT INTO ks_base_formula
+	(ID,create_time,create_user_id,create_name,mptype,CODE,line,watertype,status)
+	SELECT SEQU_BASE_FORMULA.Nextval,SYSDATE,#userId#,#userName#,#mptype#,#code#,#line#,'水相液','Y' FROM dual
+	WHERE NOT EXISTS(SELECT 1 FROM ks_base_formula WHERE mptype = #mptype#
+	AND CODE=#code# AND line = #line# AND watertype='水相液')</insert>
+    <insert id="addBaseFormula2" parameterClass="java.util.HashMap">INSERT INTO ks_base_formula
+	(ID,create_time,create_user_id,create_name,mptype,CODE,line,watertype,status)
+	SELECT SEQU_BASE_FORMULA.Nextval,SYSDATE,#userId#,#userName#,#mptype#,#code#,#line#,'水相补充液','Y' FROM dual
+	WHERE NOT EXISTS(SELECT 1 FROM ks_base_formula WHERE mptype = #mptype#
+	AND CODE=#code# AND line = #line# AND watertype='水相补充液')</insert>
 </sqlMap>

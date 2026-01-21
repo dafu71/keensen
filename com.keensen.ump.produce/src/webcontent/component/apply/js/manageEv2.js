@@ -3,8 +3,8 @@ com.keensen.ump.produce.component.applyMgr.prototype.initEvent = function() {
 	var _this = this;
 
 	this.chooseWindow.mon(this.chooseWindow, 'hide', function() {
-		
-		this.listPanel3.store.removeAll();
+
+				this.listPanel3.store.removeAll();
 			}, this);
 
 	// 查询事件
@@ -1314,4 +1314,19 @@ com.keensen.ump.produce.component.applyMgr.prototype.onJudge = function() {
 	} else {
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行!")
 	}
+}
+
+// 生成托盘号
+com.keensen.ump.produce.component.applyMgr.prototype.createTrayCode = function() {
+	Ext.Msg.prompt('生成托盘', '请输入生成托盘数量', function(btn, text) {
+		if (btn == 'ok') {
+
+			var f = document.getElementById('printtraycodeForm');
+			var actionUrl = 'com.keensen.ump.produce.component.printTrayCode.flow?num='
+					+ text + '&time=' + Math.random() + '&token=' + Date.now();
+
+			f.action = actionUrl;
+			f.submit();
+		}
+	}, this, false, 1);
 }

@@ -12,6 +12,13 @@
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
     String uname = userObject.getUserName();
+    
+    //10001481
+    int modifyLimit = 0;
+    
+    if(roleId.indexOf("10001481")>-1){
+    	modifyLimit = 1;
+    }
 %>
 <html>
 <!-- 
@@ -41,6 +48,8 @@
 <js:load scriptPath="produce/component/prodrecord/js/manageEv.js"/>
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  
+   var modifyLimit = "<%=modifyLimit %>";
   
    var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;

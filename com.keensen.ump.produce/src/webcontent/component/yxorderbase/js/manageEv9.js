@@ -44,9 +44,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 
 						});
 				Ext.each(records, function(r) {
-							var field = r.data['field'];
+							var field = r.data['field'];							
 							var idx = columnModel.findColumnIndex(field);
-							if (idx != -1) {
+							if (idx != -1 && field != 'taskState') {
 								if (!showColumns.includes(field)) {
 									columnModel.setHidden(idx, true);
 								} else {
@@ -720,10 +720,21 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var version = data.version;
 
 				var giftNum = data.giftNum;
-				if (Ext.isEmpty(giftNum)) {
-					this.addOrderWindow.giftNum.setValue(0);
-					giftNum = 0;
-				}
+				
+				var ifGift = data.ifGift;
+				ifGift = ifGift.replace('是，只准填写数量，禁止书写文字，否则驳回：','');
+				ifGift = ifGift.trim();
+
+				
+				//if (Ext.isEmpty(giftNum)) {
+					if(ifGift == '否'){
+						this.addOrderWindow.giftNum.setValue(0);
+						giftNum = 0;
+					}else{
+						this.addOrderWindow.giftNum.setValue(ifGift);
+						giftNum = ifGift;
+					}
+				//}
 				var wetAmount = data.wetAmount;
 				if (Ext.isEmpty(wetAmount)) {
 					this.addOrderWindow.wetAmount.setValue(0);
@@ -736,10 +747,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				}
 				var prodAmount = data.prodAmount;
 				var orderAmount = data.orderAmount;
-				if (Ext.isEmpty(prodAmount)) {
+				//if (Ext.isEmpty(prodAmount)) {
 					prodAmount = parseInt(orderAmount) + parseInt(giftNum);
 					this.addOrderWindow.prodAmount.setValue(prodAmount);
-				}
+				//}
 				if (version == '2.0') {
 					var deliveryDateLatest = data.deliveryDateLatest;
 					this.addOrderWindow.demandStockDate
@@ -995,7 +1006,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 
 	var deliveryDateEarliest = this.addOrderWindow.deliveryDateEarliest
 			.getValue();
-	var demandStockDate = getDiffDay(deliveryDateEarliest, -2);
+	//var demandStockDate = getDiffDay(deliveryDateEarliest, -2);
+	//按与何总达成的共识，我们报的是最晚发货日期，故入库日期要改为：最晚发货日期-2天 @付力(生产管理部) 
+	
+	var deliveryDateLatest = this.addOrderWindow.deliveryDateLatest
+			.getValue();
+	var demandStockDate = getDiffDay(deliveryDateLatest, -2);
+	
 	this.addOrderWindow.demandStockDate.setValue(demandStockDate);
 
 	var checkOrderNo = this.checkOrderNo();
@@ -1303,7 +1320,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onMCConfirm = functio
 }
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = function() {
 	// KS00307 KS01147
-	if (uid == 'KS00307' || uid == 'KS01147') {
+	if (uid == 'KS00307' || uid == 'KS01147' || uid == 'LHY' || uid == 'dafu') {
 		doQuerySqlAndExport(
 				this,
 				this.queryPanel,

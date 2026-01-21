@@ -241,6 +241,18 @@
 		<isNotNull prepend="and" property="position"> 
 		       T1.position  = #position#
 		</isNotNull>
+		
+		 <isNotNull prepend = "and"  property = "createTimeStart"> 
+          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#
+	     </isNotNull>
+	     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+	          to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+	     </isNotNull>
+	     
+	     <isNotNull prepend="and" property="createName"> 
+		       T1.create_name like '%' || #createName# || '%'
+	</isNotNull>
+	order by t1.id desc
   </select>
   
   <select id="queryIfCheck" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >

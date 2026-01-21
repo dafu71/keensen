@@ -20,12 +20,28 @@
 -->
 <head>
 <title>膜片销售统计表</title>
+
+
+<!-- 导出Excel -->
+<script src="base/exceljs/polyfill.js"></script>
+<script src="base/exceljs/exceljs.min.js"></script>
+<script src="base/exceljs/FileSaver.min.js"></script>
+<script src="base/exceljs/doQueryAndExport.js"></script>
+
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.diaphragm.ship');
 </script>
 
-<js:load scriptPath="pub/common/mpspecCombo.js" />
+<ext:dict property="STORAGE_TYPE"   dictTypeId="STORAGE_TYPE" />
+<ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
+<js:load scriptPath="pub/common/storageCombo.js" />
 <js:load scriptPath="pub/common/supCombo.js" />
+<js:load scriptPath="pub/common/mpworkerCombo.js" />
+<js:load scriptPath="pub/common/mpspecCombo.js" />
+<js:load scriptPath="pub/common/mplineCombo.js" />
+<js:load scriptPath="pub/common/mpperfCombo.js" />
+<js:load scriptPath="pub/common/storagePosCombo.js" />
+
 <js:load scriptPath="produce/diaphragm/ship/yxorderbase/js/manageUi.js"/>
 <js:load scriptPath="produce/diaphragm/ship/yxorderbase/js/manageEv.js"/>
 <style type="text/css">
@@ -38,6 +54,7 @@
   importExcelBtnId = 'YxOrderBaseMgr-' + importExcelBtnId;
   
   var listid = Ext.id();
+  var deleteMpBtnId = Ext.id();
 
   var opt = '';
   

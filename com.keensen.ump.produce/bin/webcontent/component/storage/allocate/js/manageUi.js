@@ -75,18 +75,24 @@ com.keensen.ump.produce.component.storage.AllocateListMgr = function() {
 						dataIndex : 'fromStorage',
 						header : '原仓库名称'
 					}, {
+						dataIndex : 'fromTrayCode',
+						header : '原托盘号'
+					}, {
 						dataIndex : 'toStorageCode',
 						header : '目标库位码'
 					}, {
 						dataIndex : 'toStorage',
 						header : '目标仓库名称'
 					}, {
+						dataIndex : 'toTrayCode',
+						header : '目标托盘号'
+					}, {
 						dataIndex : 'createTime',
 						sortable : true,
 						header : '调拨时间'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.component.storage.queryAllocateByPage.biz.ext.biz.ext',
+				url : 'com.keensen.ump.produce.component.storage.queryAllocateByPage.biz.ext',
 				root : 'data',
 				autoLoad : true,
 				totalProperty : 'totalCount',
@@ -133,6 +139,10 @@ com.keensen.ump.produce.component.storage.AllocateListMgr = function() {
 							name : 'fromStorage'
 						}, {
 							name : 'fromStorageCode'
+						}, {
+							name : 'fromTrayCode'
+						}, {
+							name : 'toTrayCode'
 						}]
 			})
 		})

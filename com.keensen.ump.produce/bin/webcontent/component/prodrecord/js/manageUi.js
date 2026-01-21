@@ -169,7 +169,7 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 							}, {
 								xtype : 'combobox',
 								mode : 'local',
-								fieldLabel : '元件来源',
+								fieldLabel : '返工类别',
 								ref : '../source',
 								hiddenName : 'condition/source',
 								anchor : '100%',
@@ -250,6 +250,12 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 						scope : this,
 						iconCls : 'icon-printer',
 						handler : this.onPrintTag
+					}, '-', {
+						text : '修改指令单编号',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						hidden : modifyLimit != 1,
+						handler : this.onModifyCode
 					}, '->', {
 						text : '打印唛头',
 						scope : this,
@@ -270,7 +276,11 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 					}, {
 						dataIndex : 'source',
 						width : 150,
-						header : '元件来源'
+						header : '返工类别'
+					}, {
+						dataIndex : 'code',
+						width : 150,
+						header : '指令单编号'
 					}, {
 						dataIndex : 'orderNo2',
 						width : 100,
@@ -379,6 +389,8 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 				},
 				fields : [{
 							name : 'client'
+						},{
+							name : 'code'
 						}, {
 							name : 'prodType'
 						}, {
@@ -682,7 +694,7 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 						}, {
 							xtype : 'combobox',
 							mode : 'local',
-							fieldLabel : '元件来源',
+							fieldLabel : '返工类别',
 							ref : '../../source',
 							allowBlank : false,
 							hiddenName : 'entity/source',
@@ -737,6 +749,18 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 							ref : '../../orderNo',
 							// allowBlank : false,
 							fieldLabel : '返工处理订单号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/code',
+							ref : '../../code',
+							// allowBlank : false,
+							fieldLabel : '指令单编号',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -1049,7 +1073,7 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 						}, {
 							xtype : 'combobox',
 							mode : 'local',
-							fieldLabel : '元件来源',
+							fieldLabel : '返工类别',
 							ref : '../../source',
 							dataIndex : 'source',
 							allowBlank : false,
@@ -1066,6 +1090,15 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 									_this.inputWindow.source.reset()
 								}
 							}
+						}, {
+							xtype : 'textfield',
+							name : 'entity/code',
+							ref : '../../code',
+							// allowBlank : false,
+							fieldLabel : '指令单编号',
+							dataIndex : 'code',
+							anchor : '95%',
+							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',

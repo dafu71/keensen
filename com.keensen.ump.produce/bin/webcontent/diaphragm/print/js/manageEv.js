@@ -18,7 +18,8 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.initEvent = funct
 		}
 
 		store.baseParams = {
-			"condition/batchNoStr2" : batchNoStr == null ? '' : "'" + batchNoStr + "'",
+			"condition/batchNoStr2" : batchNoStr == null ? '' : "'"
+					+ batchNoStr + "'",
 			"condition/batchNoStr" : arr2.join(",") == "''" ? null : arr2
 					.join(",")
 		};
@@ -41,7 +42,7 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.initEvent = funct
 					}
 				});
 	}, this);
-	
+
 	// 查询列表选择
 	this.listPanel.selModel.on('rowselect', function(o, i, r) {
 
@@ -115,10 +116,11 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 
 	}
 
-	if (templateName == '新MH发货模板') {
+	if (templateName == '新MH发货模板' || templateName == '新MH发货模板带膜通量') {
 		var param7 = this.bar.getComponent('param7').getValue();
 		var param8 = this.bar.getComponent('param8').getValue();
 		var param0 = this.bar.getComponent('param0').getValue();
+
 	}
 	var A = this.listPanel;
 	if (!A.getSelectionModel().getSelected()) {
@@ -132,11 +134,15 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 		var C = A.getSelectionModel().getSelections();
 		var LODOP = getLodop();// 创建打印控件对象
 		LODOP.PRINT_INIT("膜片唛头打印模板");
-		LODOP.SET_PRINT_STYLEA(0, "HtmWaitMilSecs", 1000);		
-		
+		LODOP.SET_PRINT_STYLEA(0, "HtmWaitMilSecs", 1000);
+
 		LODOP.ADD_PRINT_SETUP_BKIMG(rootUrl + templateValue);
 
 		Ext.each(C, function(r) {
+
+			// 打印膜通量
+			var fGfdAvg = r.data.fGfdAvg2;
+
 			var caimoLength = r.data.caimoLength;
 			var materSpecCode = Ext.isEmpty(materSpecCode2)
 					? r.data.materSpecCode
@@ -144,85 +150,84 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 			var outBatchNo = r.data.outBatchNo;
 			var usefulLength = Ext.isEmpty(r.data.usefulLength2)
 					? ''
-					: 'null' == r.data.usefulLength2 ? '' : roundToDecimalPlace(r.data.usefulLength2,2)
-							+ 'm';
+					: 'null' == r.data.usefulLength2
+							? ''
+							: roundToDecimalPlace(r.data.usefulLength2, 2)
+									+ 'm';
 			var qualifidLength = Ext.isEmpty(r.data.qualifidLength2)
 					? ''
 					: 'null' == r.data.qualifidLength2
 							? ''
-							: roundToDecimalPlace(r.data.qualifidLength2,2) + 'm';
+							: roundToDecimalPlace(r.data.qualifidLength2, 2)
+									+ 'm';
 			var outLength = r.data.outLength + 'm';
 
 			LODOP.SET_PRINT_PAGESIZE(1, paperwidth, paperheight, "");
 			LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", true);
 			LODOP.SET_SHOW_MODE("BKIMG_PRINT", true);
-			LODOP.SET_PRINT_STYLEA(0,"Stretch",1);
+			LODOP.SET_PRINT_STYLEA(0, "Stretch", 1);
 
 			if (templateName == '常用模板') {
-			
-				LODOP.ADD_PRINT_IMAGE(0, 0, "100%","100%", rootUrl
+
+				LODOP.ADD_PRINT_IMAGE(0, 0, "100%", "100%", rootUrl
 								+ "produce/diaphragm/print/img/mpmark88.png");
 				LODOP.SET_PRINT_STYLEA(0, "Stretch", 1);
-				//LODOP.ADD_PRINT_TEXT(17, 20, 96, 36, "膜片型号：");
-				
-				//LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
-				//LODOP.SET_PRINT_STYLEA(0, "FontSize", 12);
-				//LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				
+				// LODOP.ADD_PRINT_TEXT(17, 20, 96, 36, "膜片型号：");
+
+				// LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial Black");
+				// LODOP.SET_PRINT_STYLEA(0, "FontSize", 12);
+				// LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+
 				LODOP.ADD_PRINT_TEXT(25, 68, 96, 36, "膜片型号");
-				//LODOP.SET_PRINT_STYLEA(0,"FontSize", 16);
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				// LODOP.SET_PRINT_STYLEA(0,"FontSize", 16);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(37, 83, 96, 36, "Model");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(32, 115, 96, 36, ":");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");
-				
-				
-				
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+
 				LODOP.ADD_PRINT_TEXT(29, 130, 115, 35, materSpecCode);
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "Arial");				
-				LODOP.SET_PRINT_STYLEA(0,"FontSize", 12);
-				LODOP.SET_PRINT_STYLEA(0,"Bold", 1);
-				
-				
-				
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 12);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+
 				LODOP.ADD_PRINT_TEXT(74, 90, 100, 35, "批号");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(86, 75, 100, 35, "Lot No");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(81, 115, 100, 35, ":");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
-				
-				
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+
 				LODOP.ADD_PRINT_TEXT(80, 130, 129, 35, outBatchNo);
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "Arial");
-				LODOP.SET_PRINT_STYLEA(0,"FontSize", 12);
-				LODOP.SET_PRINT_STYLEA(0,"Bold", 1);				
-				
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 12);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+
 				LODOP.ADD_PRINT_TEXT(125, 48, 155, 35, "本卷长度(m)");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(135, 77, 155, 35, "Length");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
-				LODOP.ADD_PRINT_TEXT(130, 115, 155, 35, ":");				
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
-				
-				
-				LODOP.ADD_PRINT_TEXT(131, 130, 120, 35, usefulLength.replace('m',''));
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "Arial");
-				LODOP.SET_PRINT_STYLEA(0,"FontSize", 12);
-				LODOP.SET_PRINT_STYLEA(0,"Bold", 1);
-				
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+				LODOP.ADD_PRINT_TEXT(130, 115, 155, 35, ":");
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+
+				LODOP.ADD_PRINT_TEXT(131, 130, 120, 35, usefulLength.replace(
+								'm', ''));
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 12);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+
 				LODOP.ADD_PRINT_TEXT(178, 48, 156, 35, "可用长度(m)");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(190, 18, 156, 35, "Available Length");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");	
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
 				LODOP.ADD_PRINT_TEXT(185, 115, 156, 35, ":");
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "黑体");					
-				
-				LODOP.ADD_PRINT_TEXT(182, 130, 120, 35, qualifidLength.replace('m',''));
-				LODOP.SET_PRINT_STYLEA(0,"FontName", "Arial");
-				LODOP.SET_PRINT_STYLEA(0,"FontSize", 12);
-				LODOP.SET_PRINT_STYLEA(0,"Bold", 1);
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+
+				LODOP.ADD_PRINT_TEXT(182, 130, 120, 35, qualifidLength.replace(
+								'm', ''));
+				LODOP.SET_PRINT_STYLEA(0, "FontName", "Arial");
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 12);
+				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
 
 			} else if (templateName == 'SW模板') {
 				LODOP.ADD_PRINT_TEXT(19, 167, 250, 45, materSpecCode);
@@ -416,7 +421,8 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.ADD_PRINT_BARCODE(46, 229, 141, 97, "QRCode", outBatchNo);
 
 				// LODOP.SET_PRINT_STYLEA(0, "GroundColor", "#0080FF");
-			} else if (templateName == '新MH发货模板') {
+			} else if (templateName == '新MH发货模板'
+					|| templateName == '新MH发货模板带膜通量') {
 				var orderNo = Ext.isEmpty(param7) ? r.data.orderNo : param7;
 				var materCode = Ext.isEmpty(param8) ? r.data.materCode : param8;
 				var materSpecCode = Ext.isEmpty(param0)
@@ -449,31 +455,75 @@ com.keensen.ump.produce.diaphragm.print.PrintMarkMgr.prototype.onPrint = functio
 				LODOP.ADD_PRINT_TEXT(28, 12, 100, 30, "HUMMEL");
 				LODOP.SET_PRINT_STYLEA(0, "FontSize", 14);
 				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(68, 12, 200, 30, "订单号:" + orderNo);
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(68, 165, 200, 30, "物料号:" + materCode);
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(110, 12, 200, 30, "型号:" + materSpecCode);
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(110, 165, 200, 25, "卷号:" + outBatchNo);
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(152, 12, 200, 25, "截留率:" + fSaltRejection2 + '%');
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(152, 165, 200, 25, "实发数量:" + usefulLength);
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(190, 12, 200, 25, "生产日期:" + produceDt);
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
-				LODOP.ADD_PRINT_TEXT(190, 165, 200, 26, "可用数量:"
-								+ qualifidLength);
-				LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
-				LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+
+				if (templateName == '新MH发货模板') {
+					LODOP.ADD_PRINT_TEXT(68, 12, 200, 30, "订单号:" + orderNo);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(68, 165, 200, 30, "物料号:" + materCode);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(110, 12, 200, 30, "型号:"
+									+ materSpecCode);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(110, 165, 200, 25, "卷号:" + outBatchNo);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(152, 12, 200, 25, "截留率:"
+									+ fSaltRejection2 + '%');
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(152, 165, 200, 25, "实发数量:"
+									+ usefulLength);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(190, 12, 200, 25, "生产日期:" + produceDt);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(190, 165, 200, 26, "可用数量:"
+									+ qualifidLength);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				} else {
+					LODOP.ADD_PRINT_TEXT(68, 12, 200, 30, "订单号:" + orderNo);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(68, 165, 200, 30, "物料号:" + materCode);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					
+					materSpecCode += '  membrane';
+					
+					LODOP.ADD_PRINT_TEXT(100, 12, 200, 30, "型号:"
+									+ materSpecCode);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(100, 165, 200, 25, "卷号:" + outBatchNo);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					
+					LODOP.ADD_PRINT_TEXT(132, 12, 200, 25, "截留率:"
+									+ fSaltRejection2 + '%');
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(132, 165, 200, 25, "实发数量:"
+									+ usefulLength);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					
+					LODOP.ADD_PRINT_TEXT(164, 12, 200, 25, "膜通量:" + fGfdAvg);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					LODOP.ADD_PRINT_TEXT(164, 165, 200, 26, "可用数量:"
+									+ qualifidLength);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+					
+					LODOP.ADD_PRINT_TEXT(196, 12, 200, 25, "生产日期:" + produceDt);
+					LODOP.SET_PRINT_STYLEA(0, "FontSize", 9);
+					LODOP.SET_PRINT_STYLEA(0, "Bold", 1);
+				}
 			}
 			LODOP.NewPage();
 		});

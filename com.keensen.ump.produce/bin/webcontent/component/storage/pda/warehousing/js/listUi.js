@@ -17,7 +17,7 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -28,13 +28,13 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 								colspan : 1,
 								name : 'condition/checkCode2',
 								anchor : '100%',
-								fieldLabel : '%-请检单号-%'
+								fieldLabel : '请检单号%-%'
 							}, {
 								xtype : 'textfield',
 								colspan : 1,
 								name : 'condition/orderNo2',
 								anchor : '100%',
-								fieldLabel : '%-订单号-%'
+								fieldLabel : '订单号%-%'
 							}, {
 								xtype : 'textfield',
 								colspan : 1,
@@ -49,6 +49,62 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 										'condition/createTimeEnd'],
 								fieldLabel : "入库时间",
 								format : "Y-m-d"
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 4
+							}, {
+								xtype : 'textfield',
+								name : 'condition/jmSpecName',
+								fieldLabel : '卷膜型号'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/dryWet2',
+								fieldLabel : '干湿%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/storageCode',
+								fieldLabel : '库位码'
+							}, {
+								xtype : 'combo',
+								hiddenName : 'condition/storage',
+								mode : 'local',
+								ref : '../storage',
+								fieldLabel : '仓库',
+								editable : false,
+								store : [['高架成品仓', '高架成品仓'],
+										['高架订单仓', '高架订单仓'],
+										['高架C等品仓', '高架C等品仓']],
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
+
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 4
+							}, {
+								xtype : 'combo',
+								mode : 'local',
+								editable : false,
+								hiddenName : 'condition/type',
+								ref : '../type',
+								fieldLabel : '入库类型',
+								//value : '生产入库',
+								store : [['生产入库', '生产入库'], ['其他入库', '其他入库']],
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
+
+							}, {
+								xtype : 'textfield',
+								name : 'condition/trayCode',
+								anchor : '100%',
+								fieldLabel : '托盘号 '
 							}]
 				});
 		this.queryPanel.addButton({
@@ -89,6 +145,9 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 						dataIndex : 'checkCode',
 						header : '请检单号'
 					}, {
+						dataIndex : 'trayCode',
+						header : '托盘号'
+					}, {
 						dataIndex : 'orderNo',
 						header : '订单号'
 					}, {
@@ -113,7 +172,7 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 						dataIndex : 'type',
 						header : '入库类型'
 					}, {
-						dataIndex : 'createTime',
+						dataIndex : 'stockTime',
 						sortable : true,
 						header : '入库时间'
 					}],
@@ -179,6 +238,10 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 							name : 'storageCode'
 						}, {
 							name : 'dryWet'
+						}, {
+							name : 'trayCode'
+						}, {
+							name : 'stockTime'
 						}]
 			})
 		})
@@ -198,11 +261,11 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 			items : [{
 				xtype : 'inputpanel',
 				successFn : function(i, r) {
-					if (r.ret != '1') {
+					if (r.err != '0') {
 						Ext.Msg.show({
 									width : 400,
 									title : "操作提示",
-									msg : r.ret,
+									msg : r.msg,
 									icon : Ext.Msg.WARNING,
 									buttons : Ext.Msg.OK,
 									fn : function() {
@@ -211,8 +274,8 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 					} else {
 						_this.inputWindow.hide();
 						var store = _this.listPanel.store;
-						store.baseParams = _this.queryPanel.form.getValues();
-						store.load();
+						//store.baseParams = _this.queryPanel.form.getValues();
+						store.reload();
 					}
 				},
 				pgrid : _this.listPanel,
@@ -247,6 +310,7 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 							xtype : 'combo',
 							mode : 'local',
 							allowBlank : false,
+							editable : false,
 							hiddenName : 'entity/type',
 							ref : '../../type',
 							fieldLabel : '入库类型',
@@ -305,6 +369,7 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 							xtype : 'combo',
 							hiddenName : 'entity/storage',
 							allowBlank : false,
+							editable : false,
 							ref : '../storage',
 							fieldLabel : '仓库',
 							store : [['高架成品仓', '高架成品仓'], ['高架订单仓', '高架订单仓'],

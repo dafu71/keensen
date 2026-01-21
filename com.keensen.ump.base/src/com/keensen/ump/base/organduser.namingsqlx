@@ -64,4 +64,36 @@ INSERT INTO qinsen.base_staff
 	</isNotNull>
 	
   </select>
+  
+   <!-- 限制单ip登录开始 -->
+    <select id="queryUserByIp" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT t.ip "ip",t.user_id "userId",t.time_login "timeLogin"
+	 from KS_BASE_LOGIN t
+	 WHERE 1=1
+	 <isNotNull prepend="" property="ip">
+	 AND t.ip = #ip#
+	 </isNotNull>
+	  
+	 
+    </select>
+    
+    <insert id="insertLogin" parameterClass="java.util.HashMap">
+    insert into KS_BASE_LOGIN
+    (ip,user_id)
+    select #ip#,#userId# from dual    
+    </insert>
+    
+    <update id="updateLogin" parameterClass="java.util.HashMap">
+    update KS_BASE_LOGIN
+    set user_id = #userId#,time_login = sysdate
+    where ip = #ip#    
+    </update>
+    
+     <delete id="deleteLogin" parameterClass="java.util.HashMap">
+    delete from KS_BASE_LOGIN
+    where ip = #ip# and user_id = #userId#   
+    </delete>
+    
+    
+    <!-- 限制单ip登录结束 -->
 </sqlMap>

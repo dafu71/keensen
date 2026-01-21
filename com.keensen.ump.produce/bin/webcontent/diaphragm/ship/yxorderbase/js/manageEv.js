@@ -15,6 +15,44 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 				});
 	}, this);
 
+	this.storagecombo.mon(this.storagecombo, 'select', function(record, index) {
+				this.queryChooseMpPanel.form.findField('condition/storageIds')
+						.setValue(this.storagecombo.myvalue);
+			}, this);
+
+	// 增加删除后事件
+	this.mpListPanel.mon(this.mpListPanel, 'afterdel', function(gird, cell) {
+				this.listPanel.store.reload();
+				
+			}, this);		
+			
+	this.queryChooseMpPanel.mon(this.queryChooseMpPanel, 'query', function(
+			form, vals) {
+		var batchNoStr = this.queryChooseMpPanel.form
+				.findField("condition/batchNoStr2").getValue();
+		var regEx = new RegExp("\\n", "gi");
+		batchNoStr = batchNoStr.replace(regEx, ",");
+		batchNoStr = batchNoStr.replaceAll('，', ',');
+		batchNoStr = batchNoStr.replaceAll(' ', '');
+		var arr = [];
+		arr = batchNoStr.split(',');
+		var arr2 = [];
+		for (var i = 0; i < arr.length; i++) {
+			arr2.push("'" + arr[i] + "'");
+		}
+
+		this.queryChooseMpPanel.getForm().findField('condition/batchNoStr')
+				.setValue(arr2.join(",") == "''" ? null : arr2.join(","));
+		var store = this.chooseMpListPanel.store;
+		store.baseParams = this.queryChooseMpPanel.getForm().getValues();
+		store.load({
+			params : {
+				"pageCond/begin" : 0,
+				"pageCond/length" : this.chooseMpListPanel.pagingToolbar.pageSize
+			}
+		});
+	}, this);
+
 	this.listPanel.mon(this.listPanel, 'beforedel', function(gird, cell) {
 				var C = gird.getSelectionModel().getSelections();
 				var r = C[0];
@@ -25,10 +63,22 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 					return false;
 				}
 			})
+	
+	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'beforeSave',
+			function() {
+		var deliveryDateLatest = this.editWindow.deliveryDateLatest
+			.getValue();
+		var demandDate = getDiffDay(deliveryDateLatest, -2);	
+		this.editWindow.demandDate.setValue(demandDate);		
+				
+			}, this);
+			
+	
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 				var orderStatus = cell.data.orderStatus;
+				var baseId = cell.data.id;
 				var _this = this;
 				if (this.opt == 'addorder') {
 
@@ -60,7 +110,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 						this.storageConfirmWindow.show();
 						this.storageConfirmWindow.loadData(cell);
 					} else {
-						Ext.Msg.alert('系统提示', '请选择计划员确认记录');
+						Ext.Msg.alert('系统提示', '请选择库存确认记录');
 						return false;
 					}
 
@@ -77,11 +127,11 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 			'beforeSave', function() {
 				var orderStatus = this.planConfirmWindow.orderStatus.getValue();
 				if (!Ext.isEmpty(orderStatus) && orderStatus == '正式发布') {
-					/*var specId = this.planConfirmWindow.specId.getValue();
-					if (Ext.isEmpty(specId)) {
-						Ext.Msg.alert('系统提示', '请选择膜片生产型号');
-						return false;
-					}*/
+					/*
+					 * var specId = this.planConfirmWindow.specId.getValue(); if
+					 * (Ext.isEmpty(specId)) { Ext.Msg.alert('系统提示',
+					 * '请选择膜片生产型号'); return false; }
+					 */
 				}
 
 			}, this);
@@ -145,7 +195,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.doUpload = funct
 		Ext.MessageBox.show({
 					title : '操作提示',
 					buttons : Ext.MessageBox.OK,
-					msg : '文件必须为Excel xls文件',
+					msg : '文件必须为Excel xls文件,请去掉文件名中的句点',
 					icon : Ext.MessageBox.ERROR
 				});
 		return false;
@@ -267,4 +317,210 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.getRight = funct
 				callback : function() {
 				}
 			})
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onChange = function() {
+	var A = this.listPanel;
+	var _this = this;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	} else {
+		var records = A.getSelectionModel().getSelections();
+
+		var ids = []
+		Ext.each(records, function(r) {
+					var id = r.data.id;
+					ids.push(id);
+				})
+		this.requestMask = this.requestMask
+				|| new Ext.LoadMask(Ext.getBody(), {
+							msg : "后台正在操作,请稍候!"
+						});
+		this.requestMask.show();
+		Ext.Ajax.request({
+			// url :
+			// "com.keensen.ump.produce.component.yxorderbase.saveDeliveryState.biz.ext",
+			url : "com.keensen.ump.produce.diaphragm.ship.orderbase.saveDeliveryStateBatch.biz.ext",
+			method : "post",
+			jsonData : {
+				ids : ids.join(',')
+				// 'entity/id' : id,
+				// 'entity/deliveryState' : deliveryState
+			},
+			success : function(resp) {
+				var ret = Ext.decode(resp.responseText);
+				if (ret.success) {
+					if (ret.success) {
+						_this.listPanel.store.reload();
+					}
+				}
+
+			},
+			callback : function() {
+				_this.requestMask.hide()
+			}
+		})
+	}
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.chooseMp = function() {
+	this.chooseMpWindow.show();
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onChooseMp = function() {
+
+	var _this = this;
+	var baseId = this.storageConfirmWindow.baseId.getValue();
+	var A = this.chooseMpListPanel;
+
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	}
+	var records = A.getSelectionModel().getSelections();
+
+	var entitys = [];
+	Ext.each(records, function(r) {
+				var batchNo = r.data.batchNo;
+				var amount = r.data.amount;
+				var entity = {
+					batchNo : batchNo,
+					amount : amount
+				};
+				entitys.push(entity);
+			})
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	this.requestMask.show();
+	Ext.Ajax.request({
+		// url :
+		// "com.keensen.ump.produce.component.yxorderbase.saveDeliveryState.biz.ext",
+		url : "com.keensen.ump.produce.diaphragm.ship.orderbase.saveBatchOrderMp.biz.ext",
+		method : "post",
+		jsonData : {
+			entitys : entitys,
+			baseId : baseId
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				if (ret.success) {
+					A.store.reload();
+					_this.listPanel.store.reload();
+				}
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onMpView = function() {
+	var A = this.listPanel;
+	
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
+		return;
+	}
+
+	var records = A.getSelectionModel().getSelections();
+
+	var baseIds = [];
+	Ext.each(records, function(r) {
+				var baseId = r.data.id;
+				baseIds.push(baseId);
+			})
+	var store = this.mpListPanel.store;
+	
+	store.load({
+				params : {
+					'condition/baseIds' : baseIds.join(',')
+				}
+			});
+	Ext.getCmp(deleteMpBtnId).setVisible(false);
+	Ext.getCmp(deleteMpBtnId).setDisabled(true);
+	this.mpListWindow.show();
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onMpView2 = function() {
+	var baseId = this.storageConfirmWindow.baseId.getValue(); 
+	var store = this.mpListPanel.store;
+	
+	store.load({
+				params : {
+					'condition/baseId' : baseId
+				}
+			});
+	Ext.getCmp(deleteMpBtnId).setVisible(true);
+	Ext.getCmp(deleteMpBtnId).setDisabled(false);
+	this.mpListWindow.show();
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.deleteMp = function() {
+	this.mpListPanel.onDel();
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.exportMp = function() {
+	
+	var mytitle = '锁定膜片';
+		var columnArr = ['订单号','膜片批次','数量'];
+		var columns = [];
+		// 创建一个workbook
+		var workbook = new ExcelJS.Workbook();
+		// workbook 添加一个标签的sheet
+		var worksheet = workbook.addWorksheet(mytitle);
+		// 设置sheet数据中的列名
+		for(var i=0;i<columnArr.length;i++){
+			var column = {};
+			column.header = columnArr[i];
+			column.key = i;							
+			columns.push(column);
+		}
+		
+				
+		worksheet.columns = columns;
+		// 设置数据（可以通过后台获取、获取已经存在的数据）
+
+		// 开始添加数据
+		var data = [];
+		
+		var records = this.mpListPanel.store.getRange();
+	
+		for (var i = 0; i < records.length; i++) {
+			var r = records[i];
+			var orderNo = r.get('orderNo');
+			var batchNo = r.get('batchNo');
+			var amount = r.get('amount');
+			var d = [orderNo,batchNo,amount];
+			data.push(d)
+		}	
+		
+		
+		worksheet.addRows(data);
+		const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+		// 下载excel
+		workbook.xlsx.writeBuffer().then((data) => {
+			const blob = new Blob([data], {
+					type: EXCEL_TYPE
+				});
+			saveAs(blob, 'download.xlsx');
+		});
+	
+}
+
+function getDiffDay(date, num) {
+	var date2 = new Date(date);
+	var date1 = new Date(date2.setDate(date2.getDate() + num));
+	return formatDate(new Date(date1));
+}
+
+function formatDate(date) {
+	var year = date.getFullYear()
+	var month = (date.getMonth() + 1 + '').padStart(2, '0')
+	var day = (date.getDate() + '').padStart(2, '0')
+	return year + '-' + month + '-' + day;
 }

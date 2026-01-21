@@ -21,7 +21,8 @@ com.keensen.ump.produce.component.snMgr = function() {
 		this.useTypeStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['家用', '贴牌规则（家用）'], ['工业', '贴牌规则（工业）'],
-							['非常规', '贴牌非规则'], ['公司标签', '公司标签']]
+							['非常规', '贴牌非规则'], ['公司标签-家用', '公司标签-家用'], 
+							['公司标签-工业', '公司标签-工业']]
 				});
 
 		this.statusStore = new Ext.data.SimpleStore({
@@ -180,10 +181,10 @@ com.keensen.ump.produce.component.snMgr = function() {
 						dataIndex : 'useType',
 						header : '标签类型',
 						renderer : function(v, m, r, i) {
-							var prefix = r.get("prefix");
+							//var prefix = r.get("prefix");
 
-							if (prefix.substr(0, 1) == 'K')
-								return '公司标签';
+							//if (prefix.substr(0, 1) == 'K')
+							//	return '公司标签';
 
 							if (v == '家用')
 								return '贴牌规则（家用）';

@@ -53,7 +53,7 @@
     <targetConnections>link1</targetConnections>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
-      <process:from type="literal" pattern="reference">dept,orderNo,manager,orderDate,prodName,amount,amountGift,checkReportNeeded,mptype,specName,markSpecName,deliveryDateEarliest,deliveryDateLatest,tray,packingTxt,markPaste,pallet,flash,mark</process:from>
+      <process:from type="literal" pattern="reference">dept,manager,orderNo,orderDate,prodName,amount,amountGift,checkReportNeeded,mptype,specName,markSpecName,flash,mark,deliveryDateEarliest,deliveryDateLatest,tray,packingTxt,markPaste,pallet,orderNoMark,materCodeMark</process:from>
       <process:to type="query">propertyList</process:to>
     </process:copy>
     <process:copy>
@@ -232,7 +232,7 @@
       <targetNode>assign12</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
