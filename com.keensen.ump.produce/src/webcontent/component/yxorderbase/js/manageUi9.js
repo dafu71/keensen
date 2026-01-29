@@ -47,6 +47,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 		this.initUpdateOrderWindow();
 
+		this.buildPhotoUploadWin();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -80,7 +82,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					fields : ['code', 'name'],
 					data : [['是', '是'], ['否', '否']]
 				});
-				
+
 		this.haveOrNotStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['有', '有'], ['无', '无']]
@@ -653,6 +655,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					text : "公司标准产品模板下载",
 					disabled : allRight != '1',
 					height : 40,
+					hidden:true,
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.onDownStd
@@ -670,6 +673,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.queryPanel.addButton({
 					text : "非公司标准产品模板下载",
 					disabled : allRight != '1',
+					hidden:true,
 					height : 40,
 					scope : this,
 					iconCls : 'icon-application_excel',
@@ -860,7 +864,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}, {
 						dataIndex : 'taskState',
 						header : '是否已<br>下达任务单',
-						hidden:uid != 'dafu' && uid !='KS01147',
+						hidden : uid != 'dafu' && uid != 'KS01147',
 						renderer : function(v, m, r, i) {
 							if (v == '是') {
 								return "<span style='color:red'>" + v
@@ -1657,6 +1661,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							name : 'bagLabel'
 						}, {
 							name : 'bagLabelControlCode'
+						}, {
+							name : 'boxSealControlCode'
+						}, {
+							name : 'dateDelivery'
+						}, {
+							name : 'urlDateDelivery'
 						}]
 			})
 		})
@@ -1702,6 +1712,40 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 	this.initAddOrderWindow = function() {
 		var _this = this;
+
+		this.urlDateDeliveryChoose = this.urlDateDeliveryChoose
+				|| new Ext.Container({
+							autoEl : 'div',
+							layout : 'column',
+							anchor : "100%",
+							colspan : 6,
+							fieldLabel : '<span style="color:red;">询期回复截图</span>',
+							defaults : {
+								xtype : "container",
+								autoEl : "div",
+								anchor : "100%"
+							},
+							items : [{
+										columnWidth : 0.7,
+										anchor : "100%",
+										layout : "anchor",
+										xtype : 'displayfield',
+										// value : '询期回复截图',
+										id : urlDateDeliveryId,
+										name : 'entity/urlDateDelivery'
+									}, {
+										columnWidth : 0.3,
+										anchor : "100%",
+										layout : "anchor",
+										text : '上传图片',
+										xtype : 'button',
+										handler : function() {
+											_this.uploadPhoto();
+										}
+
+									}]
+						});
+
 		this.addOrderWindow = this.addOrderWindow || new Ext.fn.FormWindow({
 			title : '生产计划录入',
 			height : 600,
@@ -2286,6 +2330,27 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					xtype : 'textarea',
 					fieldLabel : '产品备注'
 				}, {
+					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
+					xtype : 'datefield',
+					name : 'entity/dateDelivery',
+					dataIndex : 'dateDelivery',
+					ref : '../../dateDelivery',
+					format : "Y-m-d",
+					allowBlank : false,
+					fieldLabel : '交货日期',
+					// readOnly : true,
+					anchor : '100%',
+					colspan : 6,
+					listeners : {
+						scope : this,
+						"change" : function(o, newvalue, oldvalue) {
+
+						}
+					}
+				}, this.urlDateDeliveryChoose, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">性能要求<br>测试条件</p>',
 					labelSeparator : '',// 去掉冒号
@@ -2989,7 +3054,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							 */, {
 							xtype : 'textfield',// 系统"唛头型呈" 将强置必填字段
 							fieldLabel : '唛头型号',
-							// allowBlank : false,
+							allowBlank : false,
 							ref : '../../specNameMark',
 							dataIndex : 'specNameMark',
 							name : 'entity/specNameMark',
@@ -3061,9 +3126,18 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							height : 5,
 							colspan : 24
 						}, {
+							xtype : 'textfield',
+							fieldLabel : '包装箱第二唛头<br>受控编号',
+							ref : '../../mark2ControlCode',
+							dataIndex : 'mark2ControlCode',
+							name : 'entity/mark2ControlCode',
+							anchor : '100%',
+							colspan : 6
+						}, {
 							name : 'entity/markDrawingCode2',
 							ref : '../../markDrawingCode2',
 							dataIndex : 'markDrawingCode2',
+							hidden : true,
 							// allowBlank : false,
 							anchor : '100%',
 							colspan : 6,
@@ -3313,6 +3387,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							colspan : 6,
 							xtype : 'textfield',
 							fieldLabel : '包装袋粘贴标签<br>受控编号'
+						}, {
+							name : 'entity/boxSealControlCode',
+							dataIndex : 'boxSealControlCode',
+							ref : '../../boxSealControlCode',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '封口胶带<br>受控编号'
 						}
 
 						, {
@@ -3497,6 +3578,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						}, {
 							name : 'entity/id',
 							xtype : 'hidden',
+							ref : '../../baseId',
 							dataIndex : 'id'
 						}]
 			}]
@@ -3570,6 +3652,17 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							fieldLabel : '需生产或入库(支)',
 							ref : '../../prodAmount',
 							dataIndex : 'prodAmount',
+							anchor : '85%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '发货日期',
+							ref : '../../dateDelivery',
+							dataIndex : 'dateDelivery',
 							anchor : '85%',
 							colspan : 1
 						}, {
@@ -4313,6 +4406,32 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					colspan : 6,
 					hideTrigger : false,
 					scope : this
+				}, {
+					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
+				}, {
+					xtype : 'datefield',
+					format : "Y-m-d",
+					dataIndex : 'dateDelivery',
+					ref : '../../dateDelivery',
+					readOnly : true,
+					fieldLabel : '发货日期',
+					// readOnly : true,
+					anchor : '100%',
+					colspan : 6
+				}, {
+					dataIndex : 'urlDateDelivery',
+					anchor : '100%',
+					colspan : 6,
+					// rowspan : 3,
+					ref : '../../urlDateDelivery',
+					xtype : 'displayfield',
+					fieldLabel : '询期回复截图'
+				}, {
+					xtype : 'displayfield',
+					height : 5,
+					colspan : 24
 				}
 
 				, {
@@ -4841,7 +4960,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					anchor : '100%',
 					colspan : 6,
 					xtype : 'textfield',
-					fieldLabel : '唛头编号'
+					fieldLabel : '唛头图纸编号'
 				}, {
 					readOnly : true,
 					ref : '../../markControlCode',
@@ -4985,9 +5104,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					height : 5,
 					colspan : 24
 				}, {
-					name : 'entity/markDrawingCode2',
-					ref : '../../markDrawingCode2',
-					dataIndex : 'markDrawingCode2',
+					name : 'entity/mark2ControlCode',
+					ref : '../../mark2ControlCode',
+					dataIndex : 'mark2ControlCode',
 					readOnly : true,
 					anchor : '100%',
 					colspan : 6,
@@ -5203,9 +5322,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					colspan : 6,
 					xtype : 'textfield',
 					fieldLabel : '包装袋粘贴标签<br>受控编号'
-				}
+				}, {
+					readOnly : true,
+					dataIndex : 'boxSealControlCode',
+					ref : '../../boxSealControlCode',
+					colspan : 6,
+					xtype : 'textfield',
+					fieldLabel : '封口胶带<br>受控编号'
 
-				, {
+				}, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">打包</p>',
 					labelSeparator : '',// 去掉冒号
@@ -7278,7 +7403,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					autoHide : false,
 					autoScroll : false,
 					border : true,
-					columns : 6,
+					columns : 12,
 					loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandConfirm.biz.ext',
 					saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveMCConfirm5.biz.ext',
 					fields : [{
@@ -7286,26 +7411,33 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								fieldLabel : '订单号',
 								ref : '../orderNo',
 								dataIndex : 'orderNo',
-								anchor : '85%',
-								colspan : 2
+								anchor : '100%',
+								colspan : 3
 							}, {
 								xtype : 'displayfield',
 								fieldLabel : '需生产或入库(支)',
 								ref : '../prodAmount',
 								dataIndex : 'prodAmount',
-								anchor : '85%',
-								colspan : 2
+								anchor : '100%',
+								colspan : 3
+							}, {
+								xtype : 'displayfield',
+								fieldLabel : '发货日期',
+								ref : '../dateDelivery',
+								dataIndex : 'dateDelivery',
+								anchor : '100%',
+								colspan : 3
 							}, {
 								xtype : 'displayfield',
 								fieldLabel : '入库日期',
 								ref : '../demandStockDate',
 								dataIndex : 'demandStockDate',
-								anchor : '85%',
-								colspan : 2
+								anchor : '100%',
+								colspan : 3
 							}, {
 								xtype : 'displayfield',
 								height : '5',
-								colspan : 6
+								colspan : 12
 							}, {
 								xtype : 'combobox',
 								forceSelection : true,
@@ -7316,7 +7448,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								ref : '../ifall',
 								hiddenName : 'ifall',
 								anchor : '85%',
-								colspan : 3,
+								colspan : 6,
 								emptyText : '--请选择--',
 								editable : false,
 								store : this.ynStore,
@@ -7337,7 +7469,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								ref : '../ifdelivery',
 								hiddenName : 'ifdelivery',
 								anchor : '85%',
-								colspan : 3,
+								colspan : 6,
 								emptyText : '--请选择--',
 								editable : false,
 								store : this.ynStore,
@@ -7351,7 +7483,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								xtype : 'displayfield',
 								height : '5',
-								colspan : 6
+								colspan : 12
 							}, {
 								xtype : 'combobox',
 								forceSelection : true,
@@ -7362,7 +7494,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								hiddenName : 'ifSaleLabel',
 								dataIndex : 'ifSaleLabel',
 								anchor : '85%',
-								colspan : 3,
+								colspan : 6,
 								emptyText : '--请选择--',
 								editable : false,
 								store : this.ynStore,
@@ -7376,25 +7508,25 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								xtype : 'displayfield',
 								height : '5',
-								colspan : 6
+								colspan : 12
 							}, {
 								xtype : 'displayfield',
 								fieldLabel : '是否首次下单',
 								ref : '../newMakeLabel',
 								dataIndex : 'newMakeLabel',
 								anchor : '85%',
-								colspan : 3
+								colspan : 6
 							}, {
 								xtype : 'displayfield',
 								fieldLabel : '唛头新制版',
 								ref : '../newMakeMark',
 								dataIndex : 'newMakeMark',
 								anchor : '85%',
-								colspan : 3
+								colspan : 6
 							}, {
 								xtype : 'displayfield',
 								height : '5',
-								colspan : 6
+								colspan : 12
 							}, {
 								xtype : 'textarea',
 								fieldLabel : '反馈内容',
@@ -7402,11 +7534,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								ref : '../mReason',
 								name : 'mReason',
 								anchor : '90%',
-								colspan : 6
+								colspan : 12
 							}, {
 								xtype : 'displayfield',
 								height : '5',
-								colspan : 6
+								colspan : 12
 							}, {
 								xtype : 'datefield',
 								fieldLabel : '建议调整<br>入库日期',
@@ -7415,7 +7547,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								dataIndex : 'adviseDate',
 								format : "Y-m-d",
 								anchor : '85%',
-								colspan : 3
+								colspan : 6
 							}, {
 								xtype : 'combobox',
 								forceSelection : true,
@@ -7426,7 +7558,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								ref : '../ifget',
 								hiddenName : 'ifget',
 								anchor : '85%',
-								colspan : 3,
+								colspan : 6,
 								emptyText : '--请选择--',
 								editable : false,
 								store : this.ynStore,
@@ -7466,7 +7598,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					buttonAlign : "center",
 					autoScroll : false,
 					modal : true,
-					width : 800,
+					width : 1024,
 					height : 600,
 					layout : 'border',
 					items : [this.mcconfirmInputPanel, this.mcconfirmListPanel]
@@ -9082,5 +9214,47 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 				});
 
 		this.updateOrderWindow.buttons[0].hide();
+	}
+
+	// 上传图片面板
+	this.buildPhotoUploadWin = function() {
+		this.photoUploadWin = new Ext.Window({
+					title : '上传图片',
+					collapsible : false,
+					modal : true,
+					closeAction : 'hide',
+					buttonAlign : 'center',
+					layout : 'fit',
+					width : 480,
+					height : 120,
+					items : [{
+								xtype : 'columnform',
+								itemId : 'uploadForm',
+								saveUrl : '111.flow',
+								columns : 1,
+								fileUpload : true,
+								fields : [{
+											name : 'uploadFile',
+											fieldLabel : '图片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'hidden',
+											name : 'baseId',
+											ref : '../../baseId'
+										}]
+							}],
+					buttons : [{
+								text : '上传',
+								handler : this.doUploadPhoto,
+								scope : this
+							}, {
+								text : '关闭',
+								scope : this,
+								handler : function() {
+									this.photoUploadWin.hide();
+								}
+							}]
+				});
 	}
 }

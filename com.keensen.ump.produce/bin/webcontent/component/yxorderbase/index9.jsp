@@ -90,6 +90,7 @@ var markRootUrl = "<%=rootUrl %>";
   var allRight = "<%=allRight %>";
   
   var exportButton = Ext.id();
+  var urlDateDeliveryId = Ext.id();
  
   var opt = '';
   FunctionMgr.load({ 

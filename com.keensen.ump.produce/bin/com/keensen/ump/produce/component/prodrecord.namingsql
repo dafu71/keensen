@@ -50,7 +50,8 @@
   where 1=1
  and nvl(t1.status,1) != 0
  
-  <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+ <isNotNull prepend="and" property="code">t1.code like '%' || #code# || '%'</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="client">t1.client like '%' || #client# || '%'</isNotNull>
         <isNotNull prepend="and" property="prodType">t1.prod_Type like '%' || #prodType# || '%'</isNotNull>

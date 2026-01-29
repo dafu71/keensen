@@ -10,13 +10,13 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.initEvent = function() {
 					}
 				});
 	}, this);
-	
+
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
 			}, this);
-			
+
 	// 修改加载数据后事件
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterload',
 			function(win, data) {
@@ -28,7 +28,6 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.initEvent = function() {
 							.findField('entity/testTime')
 							.setValue(new Date(date1));
 				}
-				
 
 			}, this);
 }
@@ -46,9 +45,9 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.onDel = function() {
 }
 
 com.keensen.ump.produce.quality.WaterTestMgr.prototype.getGpd = function() {
-	
-	var obj = this.addWindow.isVisible()?this.addWindow:this.editWindow;
-	
+
+	var obj = this.addWindow.isVisible() ? this.addWindow : this.editWindow;
+
 	var tempreture = obj.tempreture.getValue();
 	var flow = obj.flow.getValue();
 	if (Ext.isEmpty(tempreture) || Ext.isEmpty(flow))
@@ -70,8 +69,9 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.getGpd = function() {
 
 com.keensen.ump.produce.quality.WaterTestMgr.prototype.getSalt = function() {
 
-	var obj = this.addWindow.isVisible()?this.addWindow:this.editWindow;
-	
+	var obj = this.addWindow.isVisible() ? this.addWindow : this.editWindow
+			.isVisible() ? this.editWindow : this.copyWindow;
+
 	var conductivity = obj.conductivity.getValue();
 	var conductivity2 = obj.conductivity2.getValue();
 	if (Ext.isEmpty(conductivity) || Ext.isEmpty(conductivity2))
@@ -89,7 +89,7 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.getSalt = function() {
 
 com.keensen.ump.produce.quality.WaterTestMgr.prototype.onCalc = function() {
 	var _this = this;
-	var obj = this.addWindow.isVisible()?this.addWindow:this.editWindow;
+	var obj = this.addWindow.isVisible() ? this.addWindow : this.editWindow;
 	var prodGpdStd = obj.prodGpdStd.getValue();
 	var prodSaltStd = obj.prodSaltStd.getValue();
 	var gpd = obj.gpd.getValue();
@@ -105,16 +105,16 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.onCalc = function() {
 	salt = parseFloat(salt);
 	if (gpd >= prodGpdStd && salt >= prodSaltStd) {
 		obj.isProdQualified.setValue('合格');
-	}else{
+	} else {
 		obj.isProdQualified.setValue('NG');
 	}
 }
 
 // 校验叠膜栈板号，加载相关信息
 com.keensen.ump.produce.quality.WaterTestMgr.prototype.dealCdmBatchNo = function() {
-	
+
 	var _this = this;
-	var obj = this.addWindow.isVisible()?this.addWindow:this.editWindow;
+	var obj = this.addWindow.isVisible() ? this.addWindow : this.editWindow;
 	var cmBatchNo = obj.cmBatchNo.getValue();
 	if (cmBatchNo) {
 		_this.requestMask = this.requestMask
@@ -123,81 +123,62 @@ com.keensen.ump.produce.quality.WaterTestMgr.prototype.dealCdmBatchNo = function
 						});
 		_this.requestMask.show();
 		Ext.Ajax.request({
-			url : "com.keensen.ump.produce.quality.hwatertest.queryJm.biz.ext",
-			method : "post",
-			jsonData : {
-				'condition/cmBatchNo' : cmBatchNo
-			},
-			success : function(resp) {
-				var ret = Ext.decode(resp.responseText);
-				if (ret.success) {
-					if (!Ext.isEmpty(ret.data)) {
-						var dd = ret.data;
-						
-						obj.batchNo.setValue(dd.batchNo);
-						obj.jName.setValue(dd.jName);
-						
-						
-						
-						
-					} else {
-						Ext.Msg.alert("系统提示", "该栈板号不存在，请检查！", function() {
-									obj.cmBatchNo.setValue('');
-									return false;
-								})
+					url : "com.keensen.ump.produce.quality.hwatertest.queryJm.biz.ext",
+					method : "post",
+					jsonData : {
+						'condition/cmBatchNo' : cmBatchNo
+					},
+					success : function(resp) {
+						var ret = Ext.decode(resp.responseText);
+						if (ret.success) {
+							if (!Ext.isEmpty(ret.data)) {
+								var dd = ret.data;
 
+								obj.batchNo.setValue(dd.batchNo);
+								obj.jName.setValue(dd.jName);
+
+							} else {
+								Ext.Msg.alert("系统提示", "该栈板号不存在，请检查！",
+										function() {
+											obj.cmBatchNo.setValue('');
+											return false;
+										})
+
+							}
+						}
+					},
+					callback : function() {
+						_this.requestMask.hide()
 					}
-				}
-			},
-			callback : function() {
-				_this.requestMask.hide()
-			}
-		})
+				})
 	}
 
 }
 
+com.keensen.ump.produce.quality.WaterTestMgr.prototype.onAddBySn = function() {
+	
+	Ext.Msg.prompt("新增复测", "请输入序号", function(btn, text) {
+				if (btn == 'ok' && !Ext.isEmpty(text)) {
+					var sn = text.trim();
+					var B = {};
+					B.data = {
+						sn : sn
+					};
+					this.copyWindow.show();
+					this.copyWindow.loadData(B);
+				} else {
+				}
+			}, this, false, "");
+}
+
 function roundToDecimalPlace(number, decimalPlaces) {
+	
 	const factor = Math.pow(10, decimalPlaces);
 	return Math.round(number * factor) / factor;
 }
 com.keensen.ump.produce.quality.WaterTestMgr.prototype.exportExcel = function() {
-	
+
 	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '记录',
-				'com.keensen.ump.produce.quality.hwatertest.queryWaterTest', '0,1');
-	/*var _this = this;
-	var daochu = _this.queryPanel.getForm().getValues();
-
-	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
-				msg : "后台正在操作,请稍候!"
-			});
-	this.requestMask.show();
-	Ext.Ajax.request({
-		url : "com.zoomlion.hjsrm.pub.file.excelutil.exportExcelMgr.exportExcelByNamingSql.biz.ext",
-		method : "post",
-		jsonData : {
-			'map' : daochu,
-			namingsql : 'com.keensen.ump.produce.diaphragm.make.make.queryZmx',
-			templateFilename : 'ks_zm_zmx'
-		},
-		success : function(resp) {
-			var ret = Ext.decode(resp.responseText);
-			if (ret.success) {
-
-				var fname = ret.fname;
-				if (Ext.isIE) {
-					window.open('/default/deliverynote/seek/down4IE.jsp?fname='
-							+ fname);
-				} else {
-					window.location.href = "com.zoomlion.hjsrm.kcgl.download.flow?fileName="
-							+ fname;
-				}
-
-			}
-
-		},
-		callback : function() {
-			_this.requestMask.hide()
-		}
-	})*/
+			'com.keensen.ump.produce.quality.hwatertest.queryWaterTest', '0,1');
+	
 }

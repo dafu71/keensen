@@ -18,7 +18,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		this.initCStockWindow();
 
 		this.buildExcelUploadWin();
-
+		
 		this.lay = new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -30,7 +30,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 	}
 
 	this.initStore = function() {
-		
+
 		this.drywetStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['干', '干'], ['湿', '湿'], ['干/湿', '干/湿']]
@@ -112,7 +112,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 140,
+					height : 170,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -221,6 +221,28 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								name : 'condition/trayCode',
 								anchor : '100%',
 								fieldLabel : '托盘号 '
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '直径是否超标',
+								ref : '../diameterNotStd',
+								hiddenName : 'condition/diameterNotStd',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.diameterNotStd.reset()
+									}
+								}
 							}]
 				});
 
@@ -240,12 +262,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					hidden : uid != 'dafu' && uid != 'KS01479',
 					handler : this.exportExcel2
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "生成托盘栈板号",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					//hidden : uid != 'dafu' && uid != 'KS01479',
+					// hidden : uid != 'dafu' && uid != 'KS01479',
 					handler : this.createTrayCode
 				});
 
@@ -700,7 +722,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		})
 
 		this.inputPanel = this.inputPanel || new Ext.fn.InputPanel({
-					height : 450,
+					height : 480,
 					region : 'north',
 					// baseCls : "x-panel",
 					autoHide : false,
@@ -809,7 +831,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								anchor : '95%',
 								colspan : 4
 							}, {
-								xtype : 'numberfield',
+								xtype : 'textfield',
 								ref : '../trayCode',
 								name : 'trayCode',
 								allowBlank : false,
@@ -1004,7 +1026,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								name : 'abnormalExplain',
 								fieldLabel : '外观异常说明',
 								// allowBlank : false,
-								height : 50,
+								height : 35,
 								anchor : '95%',
 								colspan : 6
 							}, {
@@ -1012,7 +1034,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								name : 'abnormalOther',
 								fieldLabel : '其他异常备注',
 								// allowBlank : false,
-								height : 50,
+								height : 35,
 								anchor : '95%',
 								colspan : 6
 							}, {
@@ -1072,20 +1094,20 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				})
 
 		this.inputWindow = this.inputWindow || new Ext.Window({
-					title : '新增<span style="color:red;font-size:16px;">（请扫码输入托盘号）</span>',
-					resizable : true,
-					minimizable : false,
-					maximizable : true,
-					closeAction : "hide",
-					buttonAlign : "center",
-					autoScroll : false,
-					modal : true,
-					width : 800,
-					height : 640,
-					layout : 'border',
-					items : [this.inputPanel, this.listPanel2]
+			title : '新增<span style="color:red;font-size:16px;">（请扫码输入托盘号）</span>',
+			resizable : true,
+			minimizable : false,
+			maximizable : true,
+			closeAction : "hide",
+			buttonAlign : "center",
+			autoScroll : false,
+			modal : true,
+			width : 800,
+			height : 640,
+			layout : 'border',
+			items : [this.inputPanel, this.listPanel2]
 
-				});
+		});
 
 	}
 
@@ -4095,4 +4117,6 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							}]
 				});
 	}
+
+	
 }

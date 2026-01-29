@@ -76,7 +76,7 @@ com.keensen.ump.base.AppearancestandMgr = function() {
 					// title : '【物料规格查询】',
 					fields : [{
 								xtype : 'textfield',
-								name : 'condition/jmSpecName',
+								name : 'condition/jmSpecName2',
 								fieldLabel : '卷膜型号%-%'
 							}, {
 								xtype : 'combobox',

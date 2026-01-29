@@ -207,7 +207,7 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					//hidden : true,
 					handler : this.exportExcel
 				});
 	}
@@ -232,96 +232,127 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 								width : 30
 							}), selModel, {
 						dataIndex : 'materCode',
+						sortable : true,
 						header : '物料代码'
 					}, {
 						dataIndex : 'batchNo',
+						sortable : true,
 						header : '序列号'
 					}, {
 						dataIndex : 'checkCode',
+						sortable : true,
 						header : '请检单号'
 					}, {
 						dataIndex : 'type',
+						sortable : true,
 						header : '产品类型'
 					}, {
 						dataIndex : 'orderNo',
+						sortable : true,
 						header : '订单号'
 					}, {
 						dataIndex : 'director',
+						sortable : true,
 						header : '负责人'
 					}, {
 						dataIndex : 'prodName',
+						sortable : true,
 						header : '产品名称'
 					}, {
 						dataIndex : 'jmSpecName',
+						sortable : true,
 						header : '卷膜型号'
 					}, {
 						dataIndex : 'tape',
+						sortable : true,
 						header : '卷膜胶带'
 					}, {
 						dataIndex : 'specNameLabel',
+						sortable : true,
 						header : '标签型号'
 					}, {
 						dataIndex : 'bag',
+						sortable : true,
 						header : '包装袋'
 					}, {
 						dataIndex : 'box',
+						sortable : true,
 						header : '包装箱'
 					}, {
 						dataIndex : 'lid',
+						sortable : true,
 						header : '端盖类型'
 					}, {
 						dataIndex : 'amount',
+						sortable : true,
 						header : '数量'
 					}, {
 						dataIndex : 'dryWet',
+						sortable : true,
 						header : '干/湿'
 					}, {
 						dataIndex : 'storage',
+						sortable : true,
 						header : '仓库名称'
 					}, {
 						dataIndex : 'position',
+						sortable : true,
 						header : '仓位名称'
 					}, {
 						dataIndex : 'stockTime',
+						sortable : true,
 						header : '入库时间'
 					}, {
 						dataIndex : 'jmCreateDt',
+						sortable : true,
 						header : '卷膜时间'
 					}, {
 						dataIndex : 'fGpd',
+						sortable : true,
 						header : '初检产水量'
 					}, {
 						dataIndex : 'fSalt',
+						sortable : true,
 						header : '初检脱盐率%'
 					}, {
 						dataIndex : 'fCheckTm',
+						sortable : true,
 						header : '初检检测时间'
 					}, {
 						dataIndex : 'rGpd',
+						sortable : true,
 						header : '复检产水量'
 					}, {
 						dataIndex : 'rSalt',
+						sortable : true,
 						header : '复检脱盐率%'
 					}, {
 						dataIndex : 'rCheckTm',
+						sortable : true,
 						header : '复检检测时间'
 					}, {
 						dataIndex : 'disinfectTime',
+						sortable : true,
 						header : '最后1次消毒时间'
 					}, {
 						dataIndex : 'deliveryDateLatest',
+						sortable : true,
 						header : '计划最晚发货日期'
 					}, {
 						dataIndex : 'overDate',
+						sortable : true,
 						header : '超期天数'
 					}, {
 						dataIndex : 'abnormal',
+						sortable : true,
 						header : '外观异常类型'
 					}, {
 						dataIndex : 'abnormalExplain',
+						sortable : true,
 						header : '外观异常说明'
 					}, {
 						dataIndex : 'abnormalOther',
+						sortable : true,
 						header : '其他异常备注'
 					}],
 			store : new Ext.data.JsonStore({

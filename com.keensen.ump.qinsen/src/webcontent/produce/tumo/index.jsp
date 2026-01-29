@@ -115,6 +115,7 @@
   var listPanel4WaterLiquidId = Ext.id();
   var window4WaterLiquidId = Ext.id();
   var window4LiquidAdjustId = Ext.id();
+  var weightTotalId = Ext.id();
   
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.tumoMgr

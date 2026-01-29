@@ -65,7 +65,27 @@ GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mar
 WHERE t.type='工业膜') t5 on t5.code=t1.code
   where 1=1
   
-   
+    <isEqual prepend="" property="diameterNotStd" compareValue="是">
+	   AND exists(select 1 from (SELECT DISTINCT h.id 
+		FROM
+		KS_COMPONENT_CHECK_LIST T1
+		  LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
+		  LEFT JOIN QINSEN.INST_QIJIAN T2
+		    ON T1.BATCH_NO = T2.BATCH_NO
+		    WHERE t2.diameter>201 OR t2.diameter2>201) dsn where dsn.id = t1.id)
+	</isEqual>
+	
+	<isEqual prepend="" property="diameterNotStd" compareValue="否">
+	   AND not exists(select 1 from (SELECT DISTINCT h.id 
+		FROM
+		KS_COMPONENT_CHECK_LIST T1
+		  LEFT JOIN KS_COMPONENT_CHECK_HEAD h on t1.relation_id = h.id
+		  LEFT JOIN QINSEN.INST_QIJIAN T2
+		    ON T1.BATCH_NO = T2.BATCH_NO
+		    WHERE t2.diameter>201 OR t2.diameter2>201) dsn where dsn.id = t1.id)
+	</isEqual>
+	
+	
      <isNotNull prepend="and" property="trayCode"> 
 		       t1.tray_code  = #trayCode#
 	</isNotNull>

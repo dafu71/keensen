@@ -186,6 +186,13 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 								}
 							}, {
 
+								xtype : 'textfield',
+								ref : '../code',
+								name : 'condition/code',
+								anchor : '100%',
+								fieldLabel : '指令单编号%-%'
+							}, {
+
 								xtype : 'hidden',
 								name : 'condition/batchNos',
 								ref : '../batchNos'

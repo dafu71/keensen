@@ -123,8 +123,10 @@
         
         where 1=1
         
-         <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
-        <isNotNull prepend="and" property="jmSpecName">t1.jm_spec_name like '%' || #jmSpecName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="specType">t1.SPEC_TYPE = #specType#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName">t1.spec_name = #jmSpecName#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">t1.spec_name like '%' || #jmSpecName2# || '%'</isNotNull>
         <isNotNull prepend="and" property="state">t1.state = #state#</isNotNull>
         <isNotNull prepend="and" property="packageA">t1.package_a = #packageA#</isNotNull>
         <isNotNull prepend="and" property="packageB">t1.package_b = #packageB#</isNotNull>

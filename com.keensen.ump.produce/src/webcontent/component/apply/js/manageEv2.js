@@ -372,6 +372,21 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 						var baseId = data.baseId;
 						obj.baseId.setValue(baseId);
 
+						var urlPhotoApply = data.urlPhotoApply;
+						var urlPhotoApply2 = data.urlPhotoApply2;
+						var urlPhotoApply3 = data.urlPhotoApply3;
+						var urlPhotoApply4 = data.urlPhotoApply4;
+						var urlPhotoApply5 = data.urlPhotoApply5;
+						var urlPhotoApply6 = data.urlPhotoApply6;
+						
+						var ifphoto = data.ifphoto;
+
+						
+
+						// alert('orderId='+orderId + '-----baseId=' + baseId);
+						// alert('urlPhotoApply='+urlPhotoApply +
+						// '-----ifphoto=' + ifphoto);
+
 						var markDrawingCode2 = data.markDrawingCode2;
 						if (!Ext.isEmpty(markDrawingCode2))
 							obj.markSpecialFlag.setValue(markDrawingCode2);
@@ -414,6 +429,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSave = function() {
 		return false;
 	}
 
+	
 	var orderNo = this.inputPanel.orderNo.getValue();
 	var orderNo2 = records[0].data.orderNo;
 	if (orderNo != orderNo2) {
@@ -1330,3 +1346,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.createTrayCode = function()
 		}
 	}, this, false, 1);
 }
+
+
+
+

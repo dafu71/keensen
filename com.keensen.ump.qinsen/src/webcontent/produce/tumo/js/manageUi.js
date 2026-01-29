@@ -439,12 +439,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					handler : this.onQueryLiquidAdjust
 				});
 
-		this.queryPanel.addButton({
+		/*this.queryPanel.addButton({
 					text : "生产加料记录",
 					scope : this,
 					iconCls : 'icon-application_form_magnify',
 					handler : this.onQueryFeeding
-				});
+				});*/
 
 	}
 
@@ -5214,20 +5214,32 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 											}
 										}
 									}, {
-										xtype : 'datefield',
+										xtype : 'datetimefield',
 										name : 'condition/createTimeStart',
 										fieldLabel : '操作时间',
 										// allowBlank : false,
 										editable : true,
-										format : 'Y-m-d'
+										format : 'Y-m-d H:i',
+										value : new Date().add(Date.DAY, -1)
+												.format('Y-m-d 00:00')
 									}, {
-										xtype : 'datefield',
-										name : 'condition/lcreateTimeEnd',
+										xtype : 'datetimefield',
+										name : 'condition/createTimeEnd',
 										fieldLabel : '至',
 										editable : true,
-										format : 'Y-m-d'
+										format : 'Y-m-d H:i',
+										// allowBlank : false,
+										value : new Date().add(Date.DAY, 1)
+												.format('Y-m-d 00:00')
 									}]
 						});
+
+		this.queryFeedingPanel.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.exportFeeding
+				});
 
 		var selModel2 = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : true,
@@ -5240,6 +5252,13 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 			viewConfig : {
 				forceFit : true
 			},
+			tbar : [{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;加料重量合计(KG):&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						id : weightTotalId
+					}],
 			delUrl : '1.biz.ext',
 			hsPage : true,
 			autoScroll : true,
@@ -5266,7 +5285,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : '加料项目'
 					}, {
 						dataIndex : 'weight',
-						header : '加料重量'
+						header : '加料重量（KG）'
 					}, {
 						dataIndex : 'reason',
 						header : '加料原因'
@@ -5280,8 +5299,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 			store : new Ext.data.JsonStore({
 						url : 'com.keensen.ump.qinsen.tumo.queryFeedingByPage.biz.ext',
 						root : 'data',
-						autoLoad : true,
-						totalProperty : '',
+						autoLoad : false,
+						totalProperty : 'totalCount',
 						baseParams : {
 
 			}			,
@@ -5311,6 +5330,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'createName'
 								}, {
 									name : 'createTime'
+								}, {
+									name : 'weightTotal'
 								}]
 					})
 		})
@@ -5329,11 +5350,6 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					layout : 'border',
 					items : [this.queryFeedingPanel, this.feedingPanel],
 					buttons : [{
-								text : "导出",
-								scope : this,
-								hidden : true,
-								handler : this.exportFeeding
-							}, {
 								text : "关闭",
 								scope : this,
 								handler : function() {

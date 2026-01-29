@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- author:dafu -->
+<sqlMap>
+    <select id="queryMpDeliveryReport" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.CODE AS "code",
+       T1.PRODUCT_NAME AS "productName",
+       decode(T1.product_name,'纳滤膜片','NF Membrane Flat Sheet ','RO Membrane Flat Sheet') "eProductName",
+       T1.LABEL_SPEC_NAME AS "labelSpecName",
+       T1.MATER_SPEC_ID AS "materSpecId",
+       T1.ORDER_NO AS "orderNo",
+       T1.ORDER_AMOUNT AS "orderAmount",
+       TO_CHAR(T1.CHECK_DT, 'yyyy-MM-dd') AS "checkDt",
+       T1.RESULT AS "result",
+       decode(T1.RESULT,'合格','Qualified','Not Qualified') "eResult",
+       T1.INSPECTOR AS "inspector",
+       T1.REVIEWER AS "reviewer",
+       T1.REPORT_DT AS "reportDt",
+       T1.REVIEW_DT AS "reviewDt",
+       T1.INSPECTOR_ID AS "inspectorId",
+       T1.REVIEWER_ID AS "reviewerId",t1.client "client",
+       PMS.MATER_SPEC_NAME AS "materSpecName",
+       dd.cnt "cnt",dd.amount_indeed "amountIndeed",dd.amount_use "amountUse",
+       std.thick_avg || 'μm' "thickAvg",std.width_mp || 'mm' "widthMp",std.width_valid || 'mm' "widthValid",
+       std.gfd_limit "gfdLimit",std.salt_limit "saltLimit"
+  FROM KS_QUALITY_MP_DELIVERY_REPORT T1
+  
+  left join (select t.client,t.spec_name,MAX(t.thick_avg) thick_avg,
+	MAX(t.width_mp) width_mp, MAX(t.width_valid) width_valid,
+	MAX(t.gfd_low_limit) gfd_low_limit, 
+	MAX(t.gfd_up_limit) gfd_up_limit,(MAX(t.gfd_up_limit)+MAX(t.gfd_low_limit))/2 gfd_avg,
+	MAX(t.gfd_up_limit)-MAX(t.gfd_low_limit) gfd_diff,
+	(MAX(t.gfd_up_limit)+MAX(t.gfd_low_limit))/2 || '±' || 
+	to_char((MAX(t.gfd_up_limit)-MAX(t.gfd_low_limit))/2,'FM990.0') || 'GFD' gfd_limit,
+	MAX(t.salt_low_limit) salt_low_limit, 
+	'≥' || MAX(t.salt_low_limit) || '%' salt_limit 
+	  from KS_QUALITY_MP_DELIVERY_STD t
+	GROUP BY t.client,t.spec_name) std
+	on std.client = t1.client and std.spec_name = T1.LABEL_SPEC_NAME 
+  
+  left join (select count(1) cnt, relation_id,round(SUM(to_number(amount_indeed)),0) amount_indeed,
+	round(SUM(to_number(amount_use)),0) amount_use
+ 	from 
+  	KS_QUALITY_MP_DELIVERY_DETAIL
+  	group by relation_id) dd
+  on dd.relation_id = t1.id
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = T1.MATER_SPEC_ID
+   where 1=1
+   <isNotNull prepend = "and"  property = "reportDtStart"> 
+          TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd')  &gt;=  #reportDtStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "reportDtEnd"> 
+          TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd')  &lt;=  #reportDtEnd#
+     </isNotNull>
+     
+     <isNotNull prepend = "and"  property = "checkDtStart"> 
+          TO_CHAR(t1.CHECK_DT, 'yyyy-MM-dd')  &gt;=  #checkDtStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "checkDtEnd"> 
+          TO_CHAR(t1.CHECK_DT, 'yyyy-MM-dd')  &lt;=  #checkDtEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="materSpecId"> 
+		       T1.MATER_SPEC_ID = #materSpecId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="code"> 
+		       t1.code like '%' || #code# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="client2"> 
+		       t1.client like '%' || #client2# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="client"> 
+		       t1.client = #client#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="orderNo"> 
+		       t1.ORDER_NO like '%' || #orderNo# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="labelSpecName"> 
+		       T1.LABEL_SPEC_NAME like '%' || #labelSpecName# || '%'
+	</isNotNull>
+     order by t1.id desc
+   
+   </select>
+   
+    <!--生成报告编号开始-->
+    <update id="updateMpDeliveryReportCode" parameterClass="java.util.HashMap" >
+    	UPDATE KS_BASE_CREATE_CODE t
+		SET t.code_current = 0,
+		t.date_current = SYSDATE
+		WHERE t.business = 'mp_delivery_report'
+		AND NOT EXISTS(SELECT 1 FROM KS_BASE_CREATE_CODE tt
+		WHERE tt.business = 'mp_delivery_report' AND to_char(tt.date_current,'YYYYMMDD') = to_char(SYSDATE,'YYYYMMDD'))    
+    </update>
+    
+    <select id="queryMpDeliveryReportCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    
+	   select 'QC' || to_char(sysdate,'YYYY-MM-DD') || trim(to_char(t.code_current + 1,'000')) "code" from 
+		(SELECT * FROM KS_BASE_CREATE_CODE t
+    WHERE t.business = 'mp_delivery_report' AND to_char(t.date_current,'YYYYMMDD') = to_char(SYSDATE,'YYYYMMDD')) t
+		
+	</select>
+	
+	<update id="updateCurrentMpDeliveryReportCode" parameterClass="java.util.HashMap" >
+    	UPDATE KS_BASE_CREATE_CODE t
+		SET t.code_current = t.code_current + 1
+		WHERE t.business = 'mp_delivery_report' AND to_char(t.date_current,'YYYYMMDD') = to_char(SYSDATE,'YYYYMMDD')
+    </update>
+    <!--生成报告编号结束-->
+    
+     <delete id="deleteMpDeliveryDetail" parameterClass="java.util.HashMap" >
+    delete from KS_QUALITY_MP_DELIVERY_DETAIL t
+    where relation_id = #relationId#
+    </delete>
+    
+    <select id="queryMpDeliveryDetail" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  		SELECT T1.BATCH_NO      AS "batchNo",
+       T1.DM            AS "dm",
+       T1.AMOUNT_INDEED AS "amountIndeed",
+       T1.AMOUNT_USE    AS "amountUse",
+       T1.THICK_AVG     AS "thickAvg",
+       T1.WIDTH_MP      AS "widthMp",
+       T1.WIDTH_VALID   AS "widthValid",
+       to_char(T1.GFD ,'FM99990.0')          AS "gfd",
+       T1.SALT          AS "salt",
+       nvl(T1.DEFECT1,' ')       AS "defect1",
+       nvl(T1.DEFECT2,' ')       AS "defect2",
+       nvl(T1.PACKAGE,' ')       AS "package",
+       nvl(T1.RESULT,' ')        AS "result",
+       T1.RELATION_ID   AS "relationId"
+    FROM KS_QUALITY_MP_DELIVERY_DETAIL T1
+  where T1.relation_id = #relationId#
+  </select>
+  
+  
+</sqlMap>

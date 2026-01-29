@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="importOrderBase" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
   <nodes xsi:type="model:Note" id="node2" name="注释2" displayName="注释" nodeType="note" type="note" content="日期格式判断" title="dafu&#x9;25-12-10 上午10:57">
-    <targetConnections>link59</targetConnections>
-    <targetConnections>link60</targetConnections>
     <targetConnections>link61</targetConnections>
+    <targetConnections>link60</targetConnections>
+    <targetConnections>link59</targetConnections>
     <location x="1142" y="427"/>
     <size height="100" width="200"/>
   </nodes>
@@ -33,13 +33,13 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link27</targetConnections>
-    <targetConnections>link46</targetConnections>
-    <targetConnections>link48</targetConnections>
-    <targetConnections>link41</targetConnections>
-    <targetConnections>link56</targetConnections>
     <targetConnections>link58</targetConnections>
+    <targetConnections>link56</targetConnections>
+    <targetConnections>link41</targetConnections>
+    <targetConnections>link48</targetConnections>
+    <targetConnections>link46</targetConnections>
+    <targetConnections>link27</targetConnections>
+    <targetConnections>link15</targetConnections>
     <location x="1335" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -67,7 +67,7 @@
     <size height="28" width="28"/>
     <nodeLabel>assign0label</nodeLabel>
     <process:copy>
-      <process:from type="literal" pattern="reference">dept,manager,orderNo,orderDate,prodName,amount,amountGift,checkReportNeeded,mptype,specName,markSpecName,flash,mark,deliveryDateEarliest,deliveryDateLatest,tray,packingTxt,markPaste,pallet,orderNoMark,materCodeMark</process:from>
+      <process:from type="literal" pattern="reference">dept,manager,orderNo,orderDate,prodName,amount,amountGift,settlement,checkReportNeeded,mptype,specName,markSpecName,deliveryDateEarliest,deliveryDateLatest,tray,packingTxt,markPaste,pallet,flash,mark,orderNoMark,materCodeMark</process:from>
       <process:to type="query">propertyList</process:to>
     </process:copy>
     <process:copy>
@@ -158,8 +158,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link2</targetConnections>
     <targetConnections>link4</targetConnections>
+    <targetConnections>link2</targetConnections>
     <location x="565" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend0label</nodeLabel>
@@ -275,8 +275,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link9</targetConnections>
     <targetConnections>link10</targetConnections>
+    <targetConnections>link9</targetConnections>
     <location x="1016" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend1label</nodeLabel>
@@ -352,19 +352,19 @@
     <node>assign4</node>
   </nodes>
   <nodes xsi:type="process:tLoopStart" description="" id="loopstart5" name="循环5" displayName="循环" grouped="true" type="loopstart" matchedName="loopend5" loopType="iterate">
-    <sourceConnections xsi:type="process:tLink" id="link50" name="link50" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>loopstart5</sourceNode>
-      <targetNode>assign10</targetNode>
+      <targetNode>subprocess0</targetNode>
     </sourceConnections>
     <targetConnections>link39</targetConnections>
-    <location x="555" y="92"/>
+    <location x="555" y="147"/>
     <size height="24" width="24"/>
     <nodeLabel>loopstart5label</nodeLabel>
     <process:condition/>
     <process:iterate iterable="orderArr" iterableElement="order"/>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopstart5label" name="label" nodeType="label">
-    <location x="547" y="124"/>
+    <location x="547" y="179"/>
     <figSize height="20" width="40"/>
     <node>loopstart5</node>
   </nodes>
@@ -374,22 +374,23 @@
       <targetNode>transactioncommit0</targetNode>
     </sourceConnections>
     <targetConnections>link42</targetConnections>
-    <location x="882" y="92"/>
+    <location x="882" y="147"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend5label</nodeLabel>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="loopend5label" name="label" nodeType="label">
-    <location x="859" y="124"/>
+    <location x="859" y="179"/>
     <figSize height="20" width="70"/>
     <node>loopend5</node>
   </nodes>
   <nodes xsi:type="model:GroupNode" id="group5" name="group5" grouped="true" gstart="loopstart5" gend="loopend5">
     <location x="555" y="79"/>
-    <size height="67" width="352"/>
+    <size height="177" width="352"/>
     <chidren>loopend5</chidren>
     <chidren>loopstart5</chidren>
     <chidren>subprocess2</chidren>
     <chidren>assign10</chidren>
+    <chidren>subprocess0</chidren>
   </nodes>
   <nodes xsi:type="process:tTransactionBegin" id="transactionbegin0" name="事务开始" displayName="事务开始" type="transactionbegin">
     <sourceConnections xsi:type="process:tLink" id="link39" name="link39" displayName="连接线" isDefault="true" type="transition">
@@ -540,12 +541,24 @@
       <sourceNode>assign10</sourceNode>
       <targetNode>subprocess2</targetNode>
     </sourceConnections>
-    <targetConnections>link50</targetConnections>
+    <targetConnections>link17</targetConnections>
     <location x="645" y="95"/>
     <size height="28" width="28"/>
     <nodeLabel>assign10label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">order/amount</process:from>
+      <process:to type="query">amount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">Float.parseFloat(amount)</process:from>
+      <process:to type="query">orderAmount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="expression" pattern="reference">orderAmount + giftAmount</process:from>
+      <process:to type="query">orderAmount</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orderAmount</process:from>
       <process:to type="query">order/needAmount</process:to>
     </process:copy>
     <process:copy>
@@ -553,7 +566,7 @@
       <process:to type="query">order/orderStatus</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">order/amount</process:from>
+      <process:from type="query" pattern="reference">orderAmount</process:from>
       <process:to type="query">order/ext12</process:to>
     </process:copy>
   </nodes>
@@ -631,9 +644,9 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link23</targetConnections>
-    <targetConnections>link24</targetConnections>
     <targetConnections>link30</targetConnections>
+    <targetConnections>link24</targetConnections>
+    <targetConnections>link23</targetConnections>
     <location x="1205" y="699"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend3label</nodeLabel>
@@ -776,9 +789,9 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link32</targetConnections>
-    <targetConnections>link36</targetConnections>
     <targetConnections>link37</targetConnections>
+    <targetConnections>link36</targetConnections>
+    <targetConnections>link32</targetConnections>
     <location x="1638" y="699"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend8label</nodeLabel>
@@ -920,8 +933,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link51</targetConnections>
     <targetConnections>link52</targetConnections>
+    <targetConnections>link51</targetConnections>
     <location x="1694" y="404"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend6label</nodeLabel>
@@ -989,6 +1002,30 @@
     <figSize height="20" width="49"/>
     <node>assign15</node>
   </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess0" name="getNumFromStr" displayName="getNumFromStr" grouped="true" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess0</sourceNode>
+      <targetNode>assign10</targetNode>
+    </sourceConnections>
+    <targetConnections>link16</targetConnections>
+    <location x="621" y="193"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess0label</nodeLabel>
+    <process:flow index="1" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.base.common.getNumFromStr</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="fromStr" type="query" value="String" valueType="Primitive" pattern="reference">order/amountGift</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="num" type="query" value="Float" valueType="Primitive">giftAmount</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess0label" name="label" nodeType="label">
+    <location x="574" y="228"/>
+    <figSize height="20" width="120"/>
+    <node>subprocess0</node>
+  </nodes>
   <topRuler/>
   <leftRuler/>
   <process:info author="dafu" createTime="2023-10-25 13:04:44" date="2023-10-25Z" description="" name="importOrder" version="6.3"/>
@@ -1013,6 +1050,8 @@
     <process:variable description="" historyStateLocation="client" isArray="false" name="deliveryDateEarliest" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="deliveryDateLatest" primitiveType="String"/>
     <process:variable description="" historyStateLocation="client" isArray="false" name="orderDate" primitiveType="String"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="orderAmount" primitiveType="Float"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" name="giftAmount" primitiveType="Float"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input anyType="com.primeton.ext.access.http.IUploadFile" description="" isArray="false" name="uploadFile"/>

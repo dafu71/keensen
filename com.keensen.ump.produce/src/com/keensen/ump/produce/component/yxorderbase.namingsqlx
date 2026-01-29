@@ -71,8 +71,9 @@
 		t1.new_make_label as "newMakeLabel",
 		t1.water_arrow as "waterArrow",
 		t1.sn_regular as "snRegular",
-		
-		
+		t1.box_control_code as "boxControlCode",
+		t1.bag_control_code as "bagControlCode",
+		t1.mark2_control_code as "mark2ControlCode",
 		<!--t1.label_nsf as "labelNsf",-->
 		
 		case when t1.nsf_confirm_user_id is not null then t1.label_nsf
@@ -187,10 +188,16 @@
 		t1.GIFT_NUM "giftNum",
 		t1.lid_Control_Code "lidControlCode",
 		t1.label_Control_Code "labelControlCode",
-		t1.mark_Control_Code "markControlCode",
+		t1.mark_Control_Code "markControlCode",t1.box_seal_control_code "boxSealControlCode",
 		t1.mptype "mptype"
-		
-		
+		,t1.url_photo_apply "urlPhotoApply"
+       ,t1.url_photo_apply2 "urlPhotoApply2"
+       ,t1.url_photo_apply3 "urlPhotoApply3"
+       ,t1.url_photo_apply4 "urlPhotoApply4"
+       ,t1.url_photo_apply5 "urlPhotoApply5"
+       ,t1.url_photo_apply6 "urlPhotoApply6"
+	   ,t1.date_delivery "dateDelivery"
+	   ,t1.url_date_delivery "urlDateDelivery"
         
   FROM KS_COMPONENT_YXORDER_BASE T1
   
@@ -337,6 +344,7 @@
 		t1.t_user_id "tUserId",
 		t1.t_name	"tName",
 		TO_CHAR(t1.t_time, 'yyyy-MM-dd')	"tTime"
+		,TO_CHAR(t2.date_Delivery, 'yyyy-MM-dd')	"dateDelivery"
   FROM KS_COMPONENT_YXORDER_BASE T2
   LEFT JOIN KS_COMPONENT_YXORDER_CONFIRM T1
     ON T1.RELATION_ID = T2.ID
@@ -946,4 +954,79 @@
  ORDER BY 2
 
 	 </select>
+	 
+	 
+	<select id="queryControlCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" > 
+		SELECT T.BOX_SEAL,
+		       T.BOX,
+		       T.BAG,
+		       CASE
+		         WHEN T.BOX_SEAL LIKE '%受控编号%' THEN
+		         TRIM(REGEXP_SUBSTR(replace(REPLACE(SUBSTR(T.BOX_SEAL, -30), ': ', ':'),'：',':'),
+		                             '[^:]+',
+		                             1,
+		                             2))
+		         ELSE
+		          ''
+		       END "boxSealControlCode",
+		       CASE
+		         WHEN T.BOX LIKE '%受控编号%' THEN
+		          TRIM(REGEXP_SUBSTR(REPLACE(REPLACE(SUBSTR(T.BOX, -20), ': ', ':'),
+		                                     '：',
+		                                     ':'),
+		                             '[^:]+',
+		                             1,
+		                             2))
+		         ELSE
+		          ''
+		       END "boxControlCode",
+		       CASE
+		         WHEN T.BAG LIKE '%受控编号%' THEN
+		          TRIM(REGEXP_SUBSTR(REPLACE(REPLACE(SUBSTR(T.BAG, -20), ': ', ':'),
+		                                     '：',
+		                                     ':'),
+		                             '[^:]+',
+		                             1,
+		                             2))
+		         ELSE
+		          ''
+		       END "bagControlCode",
+		       CASE
+		         WHEN T.MARK LIKE '%受控编号%' THEN
+		          TRIM(REGEXP_SUBSTR(REPLACE(REPLACE(SUBSTR(T.MARK, -20), ': ', ':'),
+		                                     '：',
+		                                     ':'),
+		                             '[^:]+',
+		                             1,
+		                             2))
+		         ELSE
+		          ''
+		       END "markControlCode",
+		       CASE
+		         WHEN T.LABEL LIKE '%受控编号%' THEN
+		          TRIM(REGEXP_SUBSTR(REPLACE(REPLACE(SUBSTR(T.LABEL, -20), ': ', ':'),
+		                                     '：',
+		                                     ':'),
+		                             '[^:]+',
+		                             1,
+		                             2))
+		         ELSE
+		          ''
+		       END "labelControlCode",
+		        CASE
+         WHEN T.lid LIKE '%受控编号%' THEN
+          TRIM(REGEXP_SUBSTR(REPLACE(REPLACE(SUBSTR(T.lid, -20), ': ', ':'),
+                                     '：',
+                                     ':'),
+                             '[^:]+',
+                             1,
+                             2))
+         ELSE
+          ''
+       END "lidControlCode"
+		
+		  FROM KS_COMPONENT_YXORDER_BASE T
+		  where 1=1
+		  and t.id = #baseId#
+  </select>
 </sqlMap>

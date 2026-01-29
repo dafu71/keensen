@@ -69,7 +69,7 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 						header : '卷膜型号'
 					}, {
 						dataIndex : 'orderAmount',
-						header : '数量（支）'
+						header : '订单数量（支）'
 					}, {
 						dataIndex : 'stockAmount',
 						header : '在库数量（支）'

@@ -756,4 +756,35 @@ SET
 	WHERE t.batch_no=#batchNo# 
 	AND t.update_time IS NOT NULL 
 	AND t.perf_flag_id IS NOT NULL</select>
+    <!-- 膜片出货质检标准 -->
+    <select id="queryMpDeliveryStd" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    	SELECT T1.ID AS "id",
+       TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME AS "updateName",
+       T1.RESERVE1 AS "reserve1",
+       T1.RESERVE2 AS "reserve2",
+       T1.RESERVE3 AS "reserve3",
+       T1.RESERVE4 AS "reserve4",
+       T1.RESERVE5 AS "reserve5",
+       T1.ORG_ID AS "orgId",
+       T1.STATUS AS "status",
+       T1.CLIENT AS "client",
+       T1.SPEC_NAME AS "specName",
+       T1.THICK_AVG AS "thickAvg",
+       T1.WIDTH_MP AS "widthMp",
+       T1.WIDTH_VALID AS "widthValid",
+       T1.GFD_LOW_LIMIT AS "gfdLowLimit",
+       T1.GFD_UP_LIMIT AS "gfdUpLimit",
+       T1.SALT_LOW_LIMIT AS "saltLowLimit",
+       T1.CONDITION_TEST AS "conditionTest"
+  FROM KS_QUALITY_MP_DELIVERY_STD T1
+  
+    where 1=1
+    <isNotNull prepend="and" property="specId">T1.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="and" property="client">T1.client LIKE '%' || #client# || '%'</isNotNull>
+    </select>
 </sqlMap>

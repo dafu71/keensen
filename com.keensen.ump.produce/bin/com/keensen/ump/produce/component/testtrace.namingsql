@@ -352,9 +352,9 @@
   AND bss.mater_spec_id = t1.mater_spec_id
   -->
   
-    SELECT bss.MATER_SPEC_NAME AS "materSpecName",
+    SELECT nvl(bss.MATER_SPEC_NAME,pms.MATER_SPEC_NAME) AS "materSpecName",
        bss.MATER_SPEC_ID AS "materSpecId",
-       pms.mp_batch_code AS "materCode",pms.new_batch_code "newBatchCode",
+       pms.mp_batch_code AS "materCode",nvl(pms.new_batch_code,pms.mp_batch_code) "newBatchCode",
        pms2.mater_SPEC_NAME AS "prodSpecName", bss.PROD_SPEC_ID AS "prodSpecId",
        CASE
          WHEN INSTR(bss.PROD_SPEC_NAME, '-4') &gt; 0 THEN

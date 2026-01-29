@@ -18,6 +18,18 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				}
 			}, 60000);
 
+	this.feedingPanel.store.on('load', function() {
+				
+				if (_this.feedingPanel.store.getCount() > 0) {
+					var record = _this.feedingPanel.store.getAt(0);
+					var weightTotal = record.get('weightTotal');
+					Ext.getCmp(weightTotalId).setValue(weightTotal);
+				}else{
+					Ext.getCmp(weightTotalId).setValue('');
+				}
+
+			})
+
 	this.defectZmWin.listPanel.store.on('load', function() {
 				var defectZmArr = ['A1-底膜折痕', 'A9-铸膜设备不良', 'A10-铸膜液断流',
 						'A11-铸膜深刮痕', 'A12-无纺布来料不良', 'A13-铸膜浅刮痕', 'A14-工艺异常报废'];
@@ -853,8 +865,8 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.exportExcel = function() {
 
 		}
 
-		if (dayDiff(start, end) > 93) {
-			Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+		if (dayDiff(start, end) > 361) {
+			Ext.Msg.alert("系统提示", "查询间隔日期不能大于12个月！");
 			return false;
 
 		}
@@ -1905,6 +1917,11 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.judgeDm = function(v) {
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onQueryFeeding = function() {
 	this.feedingWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.tumoMgr.prototype.exportFeeding = function() {
+	doQuerySqlAndExport(this, this.queryFeedingPanel, this.feedingPanel,
+			'涂膜生产加料记录', 'com.keensen.ump.qinsen.tumo.queryFeeding');
 }
 
 function roundToDecimalPlace(number, decimalPlaces) {

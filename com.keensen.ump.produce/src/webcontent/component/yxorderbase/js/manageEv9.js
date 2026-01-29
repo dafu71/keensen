@@ -1,14 +1,13 @@
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function() {
 	var me = this;
-	
+
 	me.addMaterWindow.labelDrawingCode.setDisabled(true);
 	me.addMaterWindow.markDrawingCode.setDisabled(true);
-	
+
 	this.baseMaterStore.on('load', function() {
 				me.addMaterWindow.labelDrawingCode.setDisabled(false);
 				me.addMaterWindow.markDrawingCode.setDisabled(false);
 			})
-	
 
 	this.exportFields = '';
 	this.getRight();
@@ -44,7 +43,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 
 						});
 				Ext.each(records, function(r) {
-							var field = r.data['field'];							
+							var field = r.data['field'];
 							var idx = columnModel.findColumnIndex(field);
 							if (idx != -1 && field != 'taskState') {
 								if (!showColumns.includes(field)) {
@@ -198,6 +197,26 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 
 						// this.addOrderWindow.labelDrawingCode.setReadOnly(true);
 
+						// 导入是啥就是啥
+						this.addOrderWindow.orderNo.setReadOnly(true);
+						// this.addOrderWindow.personInCharge.setReadOnly(true);
+						this.addOrderWindow.orderDate.setReadOnly(true);
+						this.addOrderWindow.prodName.setReadOnly(true);
+						this.addOrderWindow.orderAmount.setReadOnly(true);
+						this.addOrderWindow.ifGift.setReadOnly(true);
+						this.addOrderWindow.dryWetDemand.setReadOnly(true);
+						this.addOrderWindow.goodsWithReport.setReadOnly(true);
+						this.addOrderWindow.provideBatchNo.setReadOnly(true);
+						this.addOrderWindow.certificateDemand.setReadOnly(true);
+						this.addOrderWindow.deliveryDateEarliest
+								.setReadOnly(true);
+						this.addOrderWindow.deliveryDateLatest
+								.setReadOnly(true);
+						this.addOrderWindow.tray.setReadOnly(true);
+						this.addOrderWindow.packingTxt.setReadOnly(true);
+						this.addOrderWindow.markPaste.setReadOnly(true);
+						// this.addOrderWindow.pallet.setReadOnly(true);
+
 					}
 
 					if (version == '2.0' && orderType == '非公司标准') {
@@ -255,6 +274,64 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 						this.addOrderWindow.bagLabelControlCode
 								.setVisible(true);
 
+						// 导入是啥就是啥
+						this.addOrderWindow.orderNo.setReadOnly(true);
+						// this.addOrderWindow.personInCharge.setReadOnly(true);
+						this.addOrderWindow.orderDate.setReadOnly(true);
+						this.addOrderWindow.prodName.setReadOnly(true);
+						this.addOrderWindow.orderAmount.setReadOnly(true);
+						this.addOrderWindow.newMakeLabel.setReadOnly(true);
+						this.addOrderWindow.ifGift.setReadOnly(true);
+						this.addOrderWindow.dryWetDemand.setReadOnly(true);
+						this.addOrderWindow.snStart.setReadOnly(true);
+						this.addOrderWindow.snEnd.setReadOnly(true);
+						this.addOrderWindow.bagLabelPo.setReadOnly(true);
+						this.addOrderWindow.bagLabelDate.setReadOnly(true);
+						this.addOrderWindow.bagLabelAmount.setReadOnly(true);
+						this.addOrderWindow.ifphoto.setReadOnly(true);
+						this.addOrderWindow.packingNum.setReadOnly(true);
+						this.addOrderWindow.qcTxt.setReadOnly(true);
+						this.addOrderWindow.goodsWithReport.setReadOnly(true);
+						this.addOrderWindow.provideBatchNo.setReadOnly(true);
+						this.addOrderWindow.certificateDemand.setReadOnly(true);
+						this.addOrderWindow.techCheck.setReadOnly(true);
+						this.addOrderWindow.jmSpecName.setReadOnly(true);
+						this.addOrderWindow.specNameLabel.setReadOnly(true);
+						this.addOrderWindow.label.setReadOnly(true);
+						this.addOrderWindow.labelSnRule.setReadOnly(true);
+						this.addOrderWindow.labelSnRuleApoint.setReadOnly(true);
+						this.addOrderWindow.makeLabel.setReadOnly(true);
+						this.addOrderWindow.tape.setReadOnly(true);
+						this.addOrderWindow.color.setReadOnly(true);
+						this.addOrderWindow.lid.setReadOnly(true);
+						// this.addOrderWindow.sealAmount.setReadOnly(true);
+						this.addOrderWindow.sealPosition.setReadOnly(true);
+						this.addOrderWindow.sealPosition2.setReadOnly(true);
+						this.addOrderWindow.pipeLink.setReadOnly(true);
+						this.addOrderWindow.packingLid.setReadOnly(true);
+						this.addOrderWindow.bag.setReadOnly(true);
+						this.addOrderWindow.bagSeal.setReadOnly(true);
+						this.addOrderWindow.box.setReadOnly(true);
+						this.addOrderWindow.boxSeal.setReadOnly(true);
+						this.addOrderWindow.mark.setReadOnly(true);
+						// this.addOrderWindow.markRuleDouble.setReadOnly(true);
+						this.addOrderWindow.markSnRuleApoint.setReadOnly(true);
+						this.addOrderWindow.logoLabel2.setReadOnly(true);
+						this.addOrderWindow.labelDrawingCode2.setReadOnly(true);
+						this.addOrderWindow.logoMark2.setReadOnly(true);
+						this.addOrderWindow.markDrawingCode2.setReadOnly(true);
+						this.addOrderWindow.bagLabel.setReadOnly(true);
+						this.addOrderWindow.bagLabelControlCode
+								.setReadOnly(true);
+						this.addOrderWindow.deliveryDateEarliest
+								.setReadOnly(true);
+						this.addOrderWindow.deliveryDateLatest
+								.setReadOnly(true);
+						this.addOrderWindow.tray.setReadOnly(true);
+						// this.addOrderWindow.packingTxt.setReadOnly(true);
+						this.addOrderWindow.markPaste.setReadOnly(true);
+						// this.addOrderWindow.pallet.setReadOnly(true);
+
 					}
 				} else {
 					Ext.Msg.alert('系统提示', '请选择状态为制定中或待制造确认或不能接单的记录');
@@ -305,6 +382,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				this.mcconfirmInputPanel.demandStockDate.setValue(cell
 						.get('demandStockDate'));
 				this.mcconfirmInputPanel.relationId.setValue(cell.get('id'));
+
+				this.mcconfirmInputPanel.dateDelivery.setValue(cell
+						.get('dateDelivery'));
 
 				// this.mcconfirmInputPanel.mReason.setValue(cell.get('mReason'));
 
@@ -642,6 +722,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var labelUrl = data.labelDrawingUrl;
 				var markUrl = data.markDrawingUrl;
 				var stampUrl = data.stampUrl;
+				var urlDateDelivery = data.urlDateDelivery;
 
 				// if(Ext.isEmpty(labelUrl) || Ext.isEmpty(markUrl)) return
 				// false;
@@ -658,7 +739,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ labelUrl
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
-					this.orderViewWindow.labelDrawingUrl.update(labelUrl);
+					this.orderViewWindow.labelDrawingUrl.update(labelUrl)
+							.defer(100);
 				}
 
 				this.orderViewWindow.markDrawingUrl.update('');
@@ -674,7 +756,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ markUrl
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
-					this.orderViewWindow.markDrawingUrl.update(markUrl);
+					this.orderViewWindow.markDrawingUrl.update(markUrl)
+							.defer(100);
 
 				}
 
@@ -691,8 +774,24 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ stampUrl
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
-					this.orderViewWindow.stampUrl.update(stampUrl);
+					this.orderViewWindow.stampUrl.update(stampUrl).defer(100);
 
+				}
+
+				if (!Ext.isEmpty(urlDateDelivery)) {
+					urlDateDelivery = markRootUrl + '/myupload/order/'
+							+ urlDateDelivery;
+					dateUrl = '<img title="单击查看完整图片" src="'
+							+ urlDateDelivery
+							+ '?ver='
+							+ data.orderNo
+							+ '" onclick= "javascript:window.open('
+							+ "'"
+							+ urlDateDelivery
+							+ "'"
+							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
+					this.orderViewWindow.urlDateDelivery.update(dateUrl)
+							.defer(100);
 				}
 
 			}, this);
@@ -720,21 +819,20 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var version = data.version;
 
 				var giftNum = data.giftNum;
-				
+
 				var ifGift = data.ifGift;
-				ifGift = ifGift.replace('是，只准填写数量，禁止书写文字，否则驳回：','');
+				ifGift = ifGift.replace('是，只准填写数量，禁止书写文字，否则驳回：', '');
 				ifGift = ifGift.trim();
 
-				
-				//if (Ext.isEmpty(giftNum)) {
-					if(ifGift == '否'){
-						this.addOrderWindow.giftNum.setValue(0);
-						giftNum = 0;
-					}else{
-						this.addOrderWindow.giftNum.setValue(ifGift);
-						giftNum = ifGift;
-					}
-				//}
+				// if (Ext.isEmpty(giftNum)) {
+				if (ifGift == '否') {
+					this.addOrderWindow.giftNum.setValue(0);
+					giftNum = 0;
+				} else {
+					this.addOrderWindow.giftNum.setValue(ifGift);
+					giftNum = ifGift;
+				}
+				// }
 				var wetAmount = data.wetAmount;
 				if (Ext.isEmpty(wetAmount)) {
 					this.addOrderWindow.wetAmount.setValue(0);
@@ -747,14 +845,25 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				}
 				var prodAmount = data.prodAmount;
 				var orderAmount = data.orderAmount;
-				//if (Ext.isEmpty(prodAmount)) {
-					prodAmount = parseInt(orderAmount) + parseInt(giftNum);
-					this.addOrderWindow.prodAmount.setValue(prodAmount);
-				//}
+				// if (Ext.isEmpty(prodAmount)) {
+				prodAmount = parseInt(orderAmount) + parseInt(giftNum);
+				this.addOrderWindow.prodAmount.setValue(prodAmount);
+				// }
 				if (version == '2.0') {
 					var deliveryDateLatest = data.deliveryDateLatest;
 					this.addOrderWindow.demandStockDate
 							.setValue(deliveryDateLatest);
+
+					var urlDateDelivery = data.urlDateDelivery;
+					if (Ext.isEmpty(urlDateDelivery)) {
+						Ext.getCmp(urlDateDeliveryId).setValue('请上传图片');
+					} else {
+						var url = '';
+						url += '<a href="/default/myupload/order/'
+								+ urlDateDelivery + '" target=_blank>查看图片</a>';
+						url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+						Ext.getCmp(urlDateDeliveryId).update(url);
+					}
 				}
 
 				if (version != '2.0') {
@@ -1004,15 +1113,22 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = functi
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function() {
 	var _this = this;
 
+	var urlDateDelivery = Ext.getCmp(urlDateDeliveryId).getValue();
+	if (urlDateDelivery == '请上传图片') {
+		Ext.Msg.alert('系统提示', '请上传询期回复截图');
+		return false;
+	}
+
+	alert('ok');
+	return ;
 	var deliveryDateEarliest = this.addOrderWindow.deliveryDateEarliest
 			.getValue();
-	//var demandStockDate = getDiffDay(deliveryDateEarliest, -2);
-	//按与何总达成的共识，我们报的是最晚发货日期，故入库日期要改为：最晚发货日期-2天 @付力(生产管理部) 
-	
-	var deliveryDateLatest = this.addOrderWindow.deliveryDateLatest
-			.getValue();
+	// var demandStockDate = getDiffDay(deliveryDateEarliest, -2);
+	// 按与何总达成的共识，我们报的是最晚发货日期，故入库日期要改为：最晚发货日期-2天 @付力(生产管理部)
+
+	var deliveryDateLatest = this.addOrderWindow.deliveryDateLatest.getValue();
 	var demandStockDate = getDiffDay(deliveryDateLatest, -2);
-	
+
 	this.addOrderWindow.demandStockDate.setValue(demandStockDate);
 
 	var checkOrderNo = this.checkOrderNo();
@@ -2518,6 +2634,74 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.updateOrder = functio
 
 }
 
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.uploadPhoto = function() {
+
+	this.photoUploadWin.getComponent('uploadForm').form.reset();
+	this.photoUploadWin.baseId.setValue(this.addOrderWindow.baseId.getValue());
+	this.photoUploadWin.show();
+}
+
+// 上传照片
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPhoto = function() {
+
+	var _this = this;
+	var uploadInputPanel = this.photoUploadWin.getComponent('uploadForm');
+	// 校验
+	var fileUploadObj = uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	var filePath = fileUploadObj.getValue();
+	// 文件后缀
+	var sfileName = filePath.split(".");
+
+	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
+			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
+			'raw', 'wmf', 'webp', 'avif', 'apng'];
+	var extname = sfileName[1].toLowerCase();
+	if (extname == null || array.indexOf(extname) == -1) {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为图片文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+	if (uploadInputPanel.form.isValid()) {
+
+		var url = 'com.keensen.ump.produce.component.uploadUrlDateDelivery.flow';
+		uploadInputPanel.form.submit({
+					method : "POST",
+					timeout : 1200,
+					url : url,
+					waitTitle : "操作提示",
+					waitMsg : "上传数据中...",
+					success : function(form, action) {
+						var result = action.result;
+						var fname = result.msg;
+						fname = '/myupload/order/' + fname;
+						if (result.success) {
+							_this.photoUploadWin.hide();
+
+							var url = '';
+							url += '<a href="/default' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							Ext.getCmp(urlDateDeliveryId).update(url);
+
+						}
+					},
+					failure : function(form, action) {
+						Ext.MessageBox.show({
+									title : '操作提示',
+									buttons : Ext.MessageBox.OK,
+									msg : "导入失败，请检查文件格式或网络是否正常",
+									icon : Ext.MessageBox.ERROR
+								});
+					}
+				});
+	}
+
+}
 function getDiffDay(date, num) {
 	var date2 = new Date(date);
 	var date1 = new Date(date2.setDate(date2.getDate() + num));

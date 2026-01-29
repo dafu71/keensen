@@ -67,8 +67,8 @@
 <%--<js:load scriptPath="produce/component/apply/js/manageUi.js" />
 <js:load scriptPath="produce/component/apply/js/manageEv.js" />--%>
 
-<js:load scriptPath="produce/component/apply/js/manageUi2.js" />
-<js:load scriptPath="produce/component/apply/js/manageEv2.js" />
+<js:load scriptPath="produce/component/apply/js/manageUi3.js" />
+<js:load scriptPath="produce/component/apply/js/manageEv3.js" />
 
 <script type="text/javascript">
   var uid = "<%=uid %>";

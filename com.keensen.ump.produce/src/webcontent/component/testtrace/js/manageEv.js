@@ -157,18 +157,18 @@ com.keensen.ump.produce.component.testtraceMgr.prototype.onSubmit = function() {
 		return;
 	}
 
-	if (materSpec == 'NF' && prodSpec != 'NF') {
+	if (materSpec == 'NF' && prodSpec != 'NF' && prodSpec != 'MS') {
 		Ext.Msg.alert("系统提示", "元件试卷类型不匹配");
 		return;
 	}
 
-	if (materSpec == 'BW' && prodSpec != 'BW') {
+	if (materSpec == 'BW' && prodSpec != 'BW' && prodSpec != 'ZM') {
 		Ext.Msg.alert("系统提示", "元件试卷类型不匹配");
 		return;
 	}
 
 	//规则要新增到HW 2025-10-27
-	if (materSpec == 'HW' && prodSpec != 'BW' && prodSpec != 'RO' && prodSpec != 'HW') {
+	if (materSpec == 'HW' && prodSpec != 'BW' && prodSpec != 'RO' && prodSpec != 'HW' && prodSpec != 'ZM') {
 		Ext.Msg.alert("系统提示", "元件试卷类型不匹配");
 		return;
 	}

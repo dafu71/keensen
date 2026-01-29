@@ -342,7 +342,9 @@
        T1.STORAGE_CODE   AS "storageCode",t1.dry_wet "dryWet"
   FROM KS_COMPONENT_K3_STOCK T1 
     
-  WHERE 1=1 AND to_char(t1.create_time,'YYYY-MM-DD')>='2001-12-16'
+  WHERE 1=1 
+  
+  AND to_char(t1.create_time,'YYYY-MM-DD')>='2001-12-16'
   	
   	<isNotNull prepend="and" property="trayCode"> 
 		       T1.tray_CODE = #trayCode# 
@@ -760,78 +762,80 @@
     <!--订单仓元件库存报表-->
     <select id="queryReport4Order" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
 	    SELECT T1.ORDER_NO             AS "orderNo",
-	       T1.PROD_NAME            AS "prodName",
-	       T1.JM_SPEC_NAME         AS "jmSpecName",
-	       T1.ORDER_AMOUNT         AS "orderAmount",
-	       T1.STOCK_AMOUNT         AS "stockAmount",
-	       T1.DIRECTOR             AS "director",
-	       T1.STOCK_TIME           AS "stockTime",
-	       T1.DELIVERY_DATE_LATEST AS "deliveryDateLatest",
-	       T1.OVER_DATE            AS "overDate"
-	  FROM (        
-	        SELECT STCK.ORDER_NO,
-	                YB.PROD_NAME,
-	                STCK.JM_SPEC_NAME,
-	                OD.ORDER_AMOUNT,
-	                STCK.STOCK_AMOUNT,
-	                nvl(yb.director,yb.person_in_charge) director,
-	                to_char(STCK.STOCK_TIME, 'YYYY-MM-DD') STOCK_TIME,
-	                TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD') DELIVERY_DATE_LATEST,
-	                CASE
-	                  WHEN TRUNC(SYSDATE -
-	                             TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')) &lt;= 0 THEN
-	                   ''
-	                  ELSE
-	                   TO_CHAR(TRUNC(SYSDATE -
-	                                 TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')))
-	                END OVER_DATE
-	          FROM (SELECT STOCK.ORDER_NO,
-	                        STOCK.JM_SPEC_NAME,
-	                        MAX(STOCK_TIME) STOCK_TIME,
-	                        COUNT(1) STOCK_AMOUNT
-	                   FROM (SELECT T.BATCH_NO,
-	                                T.ORDER_NO,
-	                                T.JM_SPEC_NAME,
-	                                T.CREATE_TIME STOCK_TIME
-	                           FROM V_KS_COMPONENT_K3_STOCK T
-	                          WHERE T.METHOD = 'check'
-	                            AND T.STORAGE = '高架订单仓'
-	                            AND T.AMOUNT > 0
-	                         UNION ALL
-	                         SELECT TT.BATCH_NO,
-	                                QJ.ORDER_NO,
-	                                PMS.MATER_SPEC_NAME,
-	                                CASE
-	                                  WHEN TT.METHOD = 'input' THEN
-	                                   TT.CREATE_TIME
-	                                  WHEN TT.METHOD = 'import' THEN
-	                                   JM.CREATE_DT
-	                                END STOCK_TIME
-	                           FROM (SELECT T.METHOD,
-	                                        T.BATCH_NO,
-	                                        T.ORDER_NO,
-	                                        T.JM_SPEC_NAME,
-	                                        T.CREATE_TIME,
-	                                        T.STORE_TIME
-	                                   FROM V_KS_COMPONENT_K3_STOCK T
-	                                  WHERE T.METHOD &lt;> 'check'
-	                                    AND T.STORAGE = '高架订单仓'
-	                                    AND T.AMOUNT > 0) TT
-	                           LEFT JOIN QINSEN.INST_QIJIAN QJ
-	                             ON QJ.BATCH_NO = TT.BATCH_NO
-	                           LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
-	                             ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID
-	                           LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
-	                             ON PMS.MATER_SPEC_ID = QJ.PROD_SPEC_ID) STOCK
-	                  WHERE STOCK.ORDER_NO IS NOT NULL
-	                    AND STOCK.JM_SPEC_NAME IS NOT NULL
-	                  GROUP BY STOCK.ORDER_NO, STOCK.JM_SPEC_NAME) STCK
-	          LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
-	            ON OD.ORDER_NO = STCK.ORDER_NO
-	           AND OD.MATER_SPEC_NAME = STCK.JM_SPEC_NAME
-	          LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
-	            ON YB.ID = OD.BASE_ID) T1
-	 where 1=1
+         T1.PROD_NAME            AS "prodName",
+         T1.JM_SPEC_NAME         AS "jmSpecName",
+         T1.ORDER_AMOUNT         AS "orderAmount",
+         T1.STOCK_AMOUNT         AS "stockAmount",
+         T1.DIRECTOR             AS "director",
+         T1.STOCK_TIME           AS "stockTime",
+         T1.DELIVERY_DATE_LATEST AS "deliveryDateLatest",
+         T1.OVER_DATE            AS "overDate"
+    FROM (        
+          SELECT STCK.ORDER_NO,
+                  YB.PROD_NAME,
+                  STCK.JM_SPEC_NAME,
+                  OD.ORDER_AMOUNT,
+                  STCK.STOCK_AMOUNT,
+                  nvl(yb.director,yb.person_in_charge) director,
+                  to_char(STCK.STOCK_TIME, 'YYYY-MM-DD') STOCK_TIME,
+                  TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD') DELIVERY_DATE_LATEST,
+                  CASE
+                    WHEN TRUNC(SYSDATE -
+                               TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')) &lt;= 0 THEN
+                     ''
+                    ELSE
+                     TO_CHAR(TRUNC(SYSDATE -
+                                   TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')))
+                  END OVER_DATE
+            FROM (SELECT STOCK.ORDER_NO,
+                          STOCK.JM_SPEC_NAME,
+                          MAX(STOCK_TIME) STOCK_TIME,
+                          COUNT(1) STOCK_AMOUNT
+                     FROM (SELECT T.BATCH_NO,
+                                  T.ORDER_NO,
+                                  T.JM_SPEC_NAME,
+                                  T.CREATE_TIME STOCK_TIME
+                             FROM KS_COMPONENT_K3_STOCK T
+                            WHERE t.prod_state IS NULL AND t.check_code IS NOT NULL
+                              AND T.STORAGE = '高架订单仓'
+                              AND T.AMOUNT > 0
+                           UNION ALL
+                           SELECT TT.BATCH_NO,
+                                  QJ.ORDER_NO,
+                                  PMS.MATER_SPEC_NAME,
+                                  CASE
+                                    WHEN TT.METHOD = 'input' THEN
+                                     TT.CREATE_TIME
+                                    WHEN TT.METHOD = 'import' THEN
+                                     JM.CREATE_DT
+                                  END STOCK_TIME
+                             FROM (SELECT  case when t.prod_state IS NULL AND t.check_code IS NULL then 'input'
+	                                else 'import' end METHOD,
+                                          T.BATCH_NO,
+                                          T.ORDER_NO,
+                                          T.JM_SPEC_NAME,
+                                          T.CREATE_TIME,
+                                          T.STORE_TIME
+                                     FROM KS_COMPONENT_K3_STOCK T
+                                    WHERE ( ( t.prod_state IS NULL AND t.check_code IS NULL) or (t.prod_state IS NOT NULL))
+                                      AND T.STORAGE = '高架订单仓'
+                                      AND T.AMOUNT > 0) TT
+                             LEFT JOIN QINSEN.INST_QIJIAN QJ
+                               ON QJ.BATCH_NO = TT.BATCH_NO
+                             LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+                               ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID
+                             LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                               ON PMS.MATER_SPEC_ID = QJ.PROD_SPEC_ID) STOCK
+                    WHERE STOCK.ORDER_NO IS NOT NULL
+                      AND STOCK.JM_SPEC_NAME IS NOT NULL
+                    GROUP BY STOCK.ORDER_NO, STOCK.JM_SPEC_NAME) STCK
+            LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
+              ON OD.ORDER_NO = STCK.ORDER_NO
+             AND replace(replace(OD.MATER_SPEC_NAME,'（','('),'）',')') = 
+              replace(replace(STCK.JM_SPEC_NAME,'（','('),'）',')')
+            LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+              ON YB.ID = OD.BASE_ID) T1
+   where 1=1
 	 			<isNotNull prepend="and" property="jmSpecName"> 
 		       		T1.JM_SPEC_NAME = #jmSpecName# 
 				</isNotNull>
@@ -937,8 +941,8 @@
                         T.BATCH_NO,
                         T.CREATE_TIME STOCK_TIME,
                         T.CHECK_CODE
-                   FROM V_KS_COMPONENT_K3_STOCK T
-                  WHERE T.METHOD = 'check'
+                   FROM KS_COMPONENT_K3_STOCK T
+                  WHERE t.prod_state IS NULL AND t.check_code IS NOT NULL
                     AND T.AMOUNT > 0
                  UNION ALL
                  SELECT TT.MATER_CODE,
@@ -962,7 +966,8 @@
                            JM.CREATE_DT
                         END STOCK_TIME,
                         CHCK.CHECK_CODE
-                   FROM (SELECT T.METHOD,
+                   FROM (SELECT case when t.prod_state IS NULL AND t.check_code IS NULL then 'input'
+   							 else 'import' end METHOD,
                                 T.TRAY_CODE,
                                 T.STORAGE,
                                 T.MATER_CODE,
@@ -972,8 +977,9 @@
                                 T.JM_SPEC_NAME,t.prod_spec_name,
                                 T.AMOUNT,
                                 NVL(T.POSITION, T.STORAGE_CODE) POSITION
-                           FROM V_KS_COMPONENT_K3_STOCK T
-                          WHERE T.METHOD &lt;> 'check'
+                           FROM KS_COMPONENT_K3_STOCK T
+                          WHERE  
+                          ( ( t.prod_state IS NULL AND t.check_code IS NULL) or (t.prod_state IS NOT NULL))
                                
                             AND T.AMOUNT > 0) TT
                    LEFT JOIN V_KS_CHECK_LIST_CURRENT CHCK
@@ -1096,7 +1102,7 @@
 		       T1.tray_CODE = #trayCode# 
 	</isNotNull>
 
- ORDER BY T1.STOCK_TIME DESC NULLS LAST
+ ORDER BY T1.JM_CREATE_DT NULLS LAST
 	 
 	 
 	</select> 

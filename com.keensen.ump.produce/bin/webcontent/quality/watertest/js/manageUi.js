@@ -8,6 +8,7 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 
 		this.initAddWindow();
 		this.initEditWindow();
+		this.initCopyWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -238,6 +239,11 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 						xtype : 'textfield',
 						fieldLabel : '膜片批次%-%',
 						anchor : '85%'
+					}, {
+						name : 'condition/sn',
+						xtype : 'textfield',
+						fieldLabel : '序号',
+						anchor : '85%'
 					}]
 		});
 
@@ -269,6 +275,11 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
+					}, '-', {
+						text : '新增复测',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onAddBySn
 					}, '-', {
 						text : '修改',
 						scope : this,
@@ -1215,6 +1226,397 @@ com.keensen.ump.produce.quality.WaterTestMgr = function() {
 							xtype : 'hidden',
 							name : 'entity/id',
 							dataIndex : 'id'
+						}]
+			}]
+
+		});
+	}
+	
+	this.initCopyWindow = function() {
+		var _this = this;
+		this.copyWindow = this.copyWindow || new Ext.fn.FormWindow({
+			title : '新增复测',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				// autoHide : false,
+				columns : 24,
+				loadUrl : 'com.keensen.ump.produce.quality.hwatertest.expandWaterTestBySn.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.hwatertest.saveWaterTest.biz.ext',
+				fields : [{
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>检测信息</span>",
+							colspan : 24
+						}, {
+							xtype : 'textfield',
+							name : 'entity/cdmBatchNo',
+							style : '{font-weight:bold;}',
+							emptyText : '光标置于此框内后扫栈板号',
+							allowBlank : false,
+							fieldLabel : '叠膜栈板号',
+							ref : '../../cmBatchNo',
+							name : 'entity/cmBatchNo',
+							dataIndex : 'cmBatchNo',
+							anchor : '95%',
+							colspan : 24,
+							listeners : {
+								scope : this,
+								specialkey : function(C, D) {
+									if (D.getKey() == Ext.EventObject.ENTER) {
+										_this.dealCdmBatchNo();
+									}
+
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'datetimefield',
+							format : "Y-m-d H:i:00",
+							value : new Date(),
+							name : 'entity/testTime',
+							//dataIndex : 'testTime',
+							ref : '../../testTime',
+							fieldLabel : '检测时间',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 12
+						}, {
+							xtype : 'prodspeccombobox',
+							emptyText : '',
+							hiddenName : 'entity/testSpecId',
+							dataIndex : 'testSpecId',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../testSpecId',
+							allowBlank : false,
+							fieldLabel : '元件型号',
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								},
+								'select' : function(combo, record, index) {
+									if (index > -1) {
+										
+										_this.editWindow.prodGpdStd
+												.setValue('');
+										_this.editWindow.prodSaltStd
+												.setValue('');
+												
+										var testSpecId = combo.getValue();
+										var i = _this.waterStdStore.find(
+												'prodSpecId', testSpecId, 0,
+												false);
+										var rec = _this.waterStdStore.getAt(i);
+										var bGpdLowLimit = '';
+										var bSaltLowLimit = '';
+										if(null != rec.get('aGpdLowLimit')){
+											bGpdLowLimit = rec
+												.get('aGpdLowLimit');
+										}
+										if(null != rec.get('aSaltLowLimit')){
+											bSaltLowLimit = rec
+												.get('aSaltLowLimit');
+										}
+
+										_this.editWindow.prodGpdStd
+												.setValue(bGpdLowLimit);
+										_this.editWindow.prodSaltStd
+												.setValue(bSaltLowLimit);
+										_this.getGpd();
+										_this.getSalt();
+										_this.onCalc();
+									}
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'testtypecombo',
+							hiddenName : 'entity/testTypeId',
+							dataIndex : 'testTypeId',
+							ref : '../../testTypeId',
+							propCode : 'H_WATER_TEST_TYPE',
+							anchor : '95%',
+							colspan : 12,
+							allowBlank : false,
+							fieldLabel : '检测类型',
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../jName',
+							name : 'entity/jName',
+							dataIndex : 'jName',
+							allowBlank : false,
+							fieldLabel : '卷制员'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../vacuumValue',
+							dataIndex : 'vacuumValue',
+							name : 'entity/vacuumValue',
+							allowBlank : false,
+							fieldLabel : '真空下降值'
+						}, {
+							xtype : 'textfield',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../batchNo',
+							name : 'entity/batchNo',
+							dataIndex : 'batchNo',
+							allowBlank : false,
+							fieldLabel : '膜批号'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 8,
+							ref : '../../sn',
+							name : 'entity/sn',
+							dataIndex : 'sn',
+							// allowBlank : false,
+							fieldLabel : '序号'
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 8,
+							ref : '../../testPos',
+							name : 'entity/testPos',
+							dataIndex : 'testPos',
+							// allowBlank : false,
+							fieldLabel : '测试位置'
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 8,
+							ref : '../../pressure',
+							name : 'entity/pressure',
+							dataIndex : 'pressure',
+							allowBlank : false,
+							fieldLabel : '压力psi'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>国标液</span>",
+							colspan : 24
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 8,
+							ref : '../../conductivity',
+							name : 'entity/conductivity',
+							dataIndex : 'conductivity',
+							allowBlank : false,
+							fieldLabel : '进水电导率us/cm',
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									_this.getSalt();
+								}
+							}
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 8,
+							ref : '../../tempreture',
+							name : 'entity/tempreture',
+							dataIndex : 'tempreture',
+							allowBlank : false,
+							fieldLabel : '温度',
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									_this.getGpd();
+								}
+							}
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 8,
+							ref : '../../conductivity2',
+							name : 'entity/conductivity2',
+							dataIndex : 'conductivity2',
+							allowBlank : false,
+							fieldLabel : '产水电导率us/cm',
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									_this.getSalt();
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 8,
+							ref : '../../flow',
+							name : 'entity/flow',
+							dataIndex : 'flow',
+							allowBlank : false,
+							fieldLabel : '产水流量ml/min',
+							listeners : {
+								'specialkey' : function() {
+									return false;
+								},
+								'change' : function(o, newValue, oldValue) {
+									if (newValue == oldValue)
+										return false;
+									_this.getGpd();
+								}
+							}
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 8,
+							ref : '../../flow2',
+							name : 'entity/flow2',
+							dataIndex : 'flow2',
+							allowBlank : false,
+							fieldLabel : '浓水流量ml/min'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../gpd',
+							name : 'entity/gpd',
+							dataIndex : 'gpd',
+							readOnly : true,
+							allowBlank : false,
+							fieldLabel : '产水量'
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../salt',
+							name : 'entity/salt',
+							dataIndex : 'salt',
+							readOnly : true,
+							allowBlank : false,
+							fieldLabel : '脱盐率%'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>标准</span>",
+							colspan : 24
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../prodGpdStd',
+							name : 'entity/prodGpdStd',
+							dataIndex : 'prodGpdStd',
+							readOnly : true,
+							allowBlank : false,
+							fieldLabel : '产水量'
+						}, {
+							xtype : 'numberfield',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../prodSaltStd',
+							name : 'entity/prodSaltStd',
+							dataIndex : 'prodSaltStd',
+							readOnly : true,
+							allowBlank : false,
+							fieldLabel : '脱盐率%'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : "<span style='color:red;'>判定</span>",
+							colspan : 24
+						}, {
+							xtype : 'trigger',
+							emptyText : '单击旁边按钮计算',
+							name : 'entity/isProdQualified',
+							dataIndex : 'isProdQualified',
+							ref : '../../isProdQualified',
+							// readOnly : true,
+							allowBlank : false,
+							editable : false,
+							fieldLabel : '判定',
+							// readOnly : true,
+							anchor : '95%',
+							colspan : 12,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onCalc();
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'textarea',
+							anchor : '95%',
+							colspan : 24,
+							ref : '../../remark',
+							dataIndex : 'remark',
+							name : 'entity/remark',
+							fieldLabel : '备注'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'textfield',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../wetSpecName',
+							dataIndex : 'wetSpecName',
+							name : 'entity/wetSpecName',
+							fieldLabel : '湿膜元件型号'
+						}, {
+							xtype : 'textfield',
+							anchor : '95%',
+							colspan : 12,
+							ref : '../../wetBatchNo',
+							name : 'entity/wetBatchNo',
+							dataIndex : 'wetBatchNo',
+							fieldLabel : '湿膜序列号'
 						}]
 			}]
 

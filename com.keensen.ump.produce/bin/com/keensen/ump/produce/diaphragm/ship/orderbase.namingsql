@@ -62,8 +62,8 @@
 		t1.order_no_mark as "orderNoMark",
 		t1.mater_code_mark  as "materCodeMark",
 		mp.cnt "cnt",
-		mp.amount "mpAmount"
-		
+		mp.amount "mpAmount",
+		t1.settlement "settlement"
 		from KS_DIAPHRAGM_ORDER_BASE t1
 		
 		left join (SELECT t.base_id,COUNT(1) cnt,SUM(t.amount) amount

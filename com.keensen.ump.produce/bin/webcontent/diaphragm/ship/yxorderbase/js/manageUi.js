@@ -262,6 +262,9 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						dataIndex : 'amountGift',
 						header : '是否有赠送米数'
 					}, {
+						dataIndex : 'settlement',
+						header : '单款膜种发货米数据实结算'
+					}, {
 						dataIndex : 'checkReportNeeded',
 						header : '是否需要检测报告'
 					}, {
@@ -396,6 +399,8 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							name : 'cnt'
 						}, {
 							name : 'mpAmount'
+						}, {
+							name : 'settlement'
 						}]
 			})
 		})
@@ -487,9 +492,9 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							xtype : 'datefield',
 							name : 'entity/demandDate',
 							dataIndex : 'demandDate',
-							ref:'../../demandDate',
+							ref : '../../demandDate',
 							allowBlank : true,
-							hidden: true,
+							hidden : true,
 							fieldLabel : '入库日期',
 							anchor : '95%',
 							format : "Y-m-d",
@@ -677,7 +682,15 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 4
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/settlement',
+							dataIndex : 'settlement',
+							// allowBlank : false,
+							fieldLabel : '单款膜种发货<br>米数据实结算',
+							anchor : '95%',
+							colspan : 2
 						}, {
 							xtype : 'textfield',
 							name : 'entity/orderNoMark',
@@ -890,6 +903,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							colspan : 4
 						}, {
 							xtype : 'textarea',
+							height : 30,
 							readOnly : true,
 							dataIndex : 'tray',
 							fieldLabel : '托盘材质要求',
@@ -897,6 +911,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'textarea',
+							height : 30,
 							readOnly : true,
 							dataIndex : 'packingTxt',
 							fieldLabel : '整托货物<br>警示标识',
@@ -908,6 +923,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							colspan : 4
 						}, {
 							xtype : 'textarea',
+							height : 30,
 							readOnly : true,
 							dataIndex : 'markPaste',
 							fieldLabel : '要求整托货物<br>张贴信息唛头',
@@ -915,6 +931,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'textarea',
+							height : 30,
 							readOnly : true,
 							dataIndex : 'pallet',
 							fieldLabel : '膜元件包装箱<br>打托要求',
@@ -941,7 +958,15 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 4
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'settlement',
+							// allowBlank : false,
+							fieldLabel : '单款膜种发货<br>米数据实结算',
+							anchor : '95%',
+							colspan : 2
 						}, {
 							xtype : 'textfield',
 							// name : 'entity/orderNoMark',
@@ -1142,6 +1167,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 4
 								}, {
 									xtype : 'textarea',
+									height : 30,
 									readOnly : true,
 									dataIndex : 'tray',
 									fieldLabel : '托盘材质要求',
@@ -1149,6 +1175,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 2
 								}, {
 									xtype : 'textarea',
+									height : 30,
 									readOnly : true,
 									dataIndex : 'packingTxt',
 									fieldLabel : '整托货物<br>警示标识',
@@ -1160,6 +1187,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 4
 								}, {
 									xtype : 'textarea',
+									height : 30,
 									readOnly : true,
 									dataIndex : 'markPaste',
 									fieldLabel : '要求整托货物<br>张贴信息唛头',
@@ -1167,6 +1195,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 2
 								}, {
 									xtype : 'textarea',
+									height : 30,
 									readOnly : true,
 									dataIndex : 'pallet',
 									fieldLabel : '膜元件包装箱<br>打托要求',
@@ -1178,7 +1207,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 4
 								}, {
 									xtype : 'textarea',
-									height : 30,
+									// height : 30,
 									readOnly : true,
 									dataIndex : 'mark',
 									fieldLabel : '膜片包装箱唛头',
@@ -1194,7 +1223,15 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 4
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'settlement',
+									// allowBlank : false,
+									fieldLabel : '单款膜种发货<br>米数据实结算',
+									anchor : '95%',
+									colspan : 2
 								}, {
 									xtype : 'textfield',
 									// name : 'entity/orderNoMark',
@@ -1420,6 +1457,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 4
 								}, {
 									xtype : 'textarea',
+									height : 30,
 									readOnly : true,
 									dataIndex : 'tray',
 									fieldLabel : '托盘材质要求',
@@ -1427,6 +1465,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 2
 								}, {
 									xtype : 'textarea',
+									height : 30,
 									readOnly : true,
 									dataIndex : 'packingTxt',
 									fieldLabel : '整托货物<br>警示标识',
@@ -1438,6 +1477,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 4
 								}, {
 									xtype : 'textarea',
+									height : 30,
 									readOnly : true,
 									dataIndex : 'markPaste',
 									fieldLabel : '要求整托货物<br>张贴信息唛头',
@@ -1445,6 +1485,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 2
 								}, {
 									xtype : 'textarea',
+									height : 30,
 									readOnly : true,
 									dataIndex : 'pallet',
 									fieldLabel : '膜元件包装箱<br>打托要求',
@@ -1456,7 +1497,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									colspan : 4
 								}, {
 									xtype : 'textarea',
-									height : 30,
+									// height : 30,
 									readOnly : true,
 									dataIndex : 'mark',
 									fieldLabel : '膜片包装箱唛头',
@@ -1472,7 +1513,15 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 								}, {
 									xtype : 'displayfield',
 									height : '5',
-									colspan : 4
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									name : 'entity/settlement',
+									dataIndex : 'settlement',
+									// allowBlank : false,
+									fieldLabel : '单款膜种发货<br>米数据实结算',
+									anchor : '95%',
+									colspan : 2
 								}, {
 									xtype : 'textfield',
 									// name : 'entity/orderNoMark',

@@ -937,20 +937,20 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 		       T1.BATCH_ID    AS "batchId",
 		       T1.BATCH_NO    AS "batchNo",
 		       T1.LINE_ID     AS "lineId",
-		       T1.LINE_NAME   AS "lineName",
+		       T1.LINE_NAME || '(' || T1.LINE_CODE || ')'  AS "lineName",
 		       T1.SPEC_ID     AS "specId",
 		       T1.SPEC_NAME   AS "specName",
 		       T1.AREA        AS "area",
 		       T1.ITEM        AS "item",
-		       T1.WEIGHT      AS "weight",
+		       TO_CHAR(T1.WEIGHT, 'FM999999990.00')       AS "weight",
 		       T1.REASON      AS "reason",
 		       T1.CREATE_NAME AS "createName",
-		       to_char(T1.CREATE_TIME,'YYYY-MM-DD') AS "createTime"
-		  FROM (SELECT TT.METHOD,
+		       to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI') AS "createTime"
+		  FROM (SELECT TT.METHOD,TM.CREATE_DT TM_CREATE_DT,
 		               TT.BATCH_ID,
 		               TM.BATCH_NO,
 		               TM.LINE_ID,
-		               L.LINE_NAME,
+		               L.LINE_NAME,L.LINE_CODE,
 		               TM.SPEC_ID,
 		               PMS.MATER_SPEC_NAME SPEC_NAME,
 		               TT.AREA,
@@ -961,7 +961,7 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 		               TT.CREATE_TIME
 		          FROM (SELECT '漂洗液调整' METHOD,
 		                       T.BATCH_ID,
-		                       T.TROUGH || '槽' AREA,
+		                       '漂洗' || T.TROUGH || '槽' AREA,
 		                       T.ITEM,
 		                       T.WEIGHT,
 		                       T.REASON,
@@ -990,15 +990,71 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 		          LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
 		            ON PMS.MATER_SPEC_ID = TM.SPEC_ID) T1
 		 where 1=1
-		  <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
-        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+		  <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="batchNo2">t1.batch_no like '%' || #batchNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="lineId">T1.LINE_ID = #lineId#</isNotNull>
         <isNotNull prepend="and" property="specId">T1.SPEC_ID = #specId#</isNotNull>
         <isNotNull prepend="and" property="item">T1.item = #item#</isNotNull>
         <isNotNull prepend="and" property="reason">T1.reason = #reason#</isNotNull>
-		 ORDER BY T1.BATCH_NO, T1.CREATE_TIME
+		 ORDER BY T1.TM_CREATE_DT DESC
      
      
      </select>
+    <select id="countFeeding" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+		     SELECT 
+		       TO_CHAR(sum(T1.WEIGHT), 'FM999999990.00')       AS "weightTotal"
+		       
+		  FROM (SELECT TT.METHOD,
+		               TT.BATCH_ID,
+		               TM.BATCH_NO,
+		               TM.LINE_ID,
+		               L.LINE_NAME,
+		               TM.SPEC_ID,
+		               PMS.MATER_SPEC_NAME SPEC_NAME,
+		               TT.AREA,
+		               TT.ITEM,
+		               nvl(TT.WEIGHT,0) WEIGHT,
+		               TT.REASON,
+		               TT.CREATE_NAME,
+		               TT.CREATE_TIME
+		          FROM (SELECT '漂洗液调整' METHOD,
+		                       T.BATCH_ID,
+		                       '漂洗' || T.TROUGH || '槽' AREA,
+		                       T.ITEM,
+		                       T.WEIGHT,
+		                       T.REASON,
+		                       T.CREATE_NAME,
+		                       T.CREATE_TIME
+		                  FROM KS_DIAPHRAGM_TROUGH_LIQUID T
+		                UNION ALL
+		                SELECT '水相液调整',
+		                       T.BATCH_ID,
+		                       T.WATER_TYPE,
+		                       T.ITEM,
+		                       DECODE(T.ITEM,
+		                              'RO水',
+		                              T.WEIGHT,
+		                              '水相液排料',
+		                              T.WEIGHT,
+		                              T.WEIGHT / 1000) WEIGHT,
+		                       T.REASON,
+		                       T.CREATE_NAME,
+		                       T.CREATE_TIME
+		                  FROM KS_DIAPHRAGM_WATER_LIQUID T) TT
+		          LEFT JOIN QINSEN.INST_TUMO TM
+		            ON TM.RECORD_ID = TT.BATCH_ID
+		          LEFT JOIN QINSEN.BASE_PROD_LINE L
+		            ON TM.LINE_ID = L.LINE_ID
+		          LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+		            ON PMS.MATER_SPEC_ID = TM.SPEC_ID) T1
+		 where 1=1
+		  <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">t1.batch_no like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="lineId">T1.LINE_ID = #lineId#</isNotNull>
+        <isNotNull prepend="and" property="specId">T1.SPEC_ID = #specId#</isNotNull>
+        <isNotNull prepend="and" property="item">T1.item = #item#</isNotNull>
+        <isNotNull prepend="and" property="reason">T1.reason = #reason#</isNotNull>
+    </select>
 </sqlMap>

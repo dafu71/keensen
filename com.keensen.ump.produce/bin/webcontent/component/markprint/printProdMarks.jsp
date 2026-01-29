@@ -435,7 +435,7 @@ function initPage() {
 		    	
 		    <%  topDiff = 20; 
 		    	 }else{ topDiff2=-12;} %>        
-			//model
+			//model<%=topDiff %>
 			var model = document.createElement('div');
 		    model.className = 'text-overlay';
 		    model.textContent = 'Model:';
@@ -445,7 +445,7 @@ function initPage() {
 		            
 		    // 设置样式
 		    model.style.left = '38px';
-		    model.style.top = '<%=60-topDiff2-15  %>px';
+		    model.style.top = '<%=60-topDiff-topDiff2-15  %>px';
 		    model.style.fontSize = fontSize;
 		    model.style.fontWeight = 'bold';
 		    model.style.color = color;

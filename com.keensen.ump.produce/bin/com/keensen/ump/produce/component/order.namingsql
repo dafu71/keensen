@@ -105,6 +105,14 @@
        
        ,yb.packing_Num "packingNum"
        
+       ,yb.ifphoto "ifphoto"
+       ,yb.url_photo_apply "urlPhotoApply"
+       ,yb.url_photo_apply2 "urlPhotoApply2"
+       ,yb.url_photo_apply3 "urlPhotoApply3"
+       ,yb.url_photo_apply4 "urlPhotoApply4"
+       ,yb.url_photo_apply5 "urlPhotoApply5"
+       ,yb.url_photo_apply6 "urlPhotoApply6"
+       
        ,decode(t1.type,'家用膜',nvl(hchk.apply_amount,0),nvl(gchk.apply_amount,0)) "applyAmount",
        
        wstd.a_gpd_center "gpdAvg",wstd.a_salt_low_limit "saltAvg",

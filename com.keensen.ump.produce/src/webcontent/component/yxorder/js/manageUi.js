@@ -423,7 +423,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, '-', {
 						text : '删除',
 						scope : this,
-						hidden : uid != 'dafu' && uid != 'KS00307',
+						hidden : uid != 'dafu' && uid != 'KS00307' && uid != 'KS01479',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],
@@ -1792,7 +1792,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							dataIndex : 'materSpecName2',
 							fieldLabel : '订单下达型号 ',
 							ref : '../../orderNo',
-							readOnly : true,
+							//readOnly : true,
 							anchor : '100%',
 							colspan : 2
 
