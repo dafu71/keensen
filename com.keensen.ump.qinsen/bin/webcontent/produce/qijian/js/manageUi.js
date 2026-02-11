@@ -2401,7 +2401,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 				})
 
 		this.viewDutyPanel = this.viewDutyPanel || new Ext.fn.EditPanel({
-			height : 460,
+			height : 490,
 			region : 'north',
 			baseCls : "x-panel",
 			autoHide : false,
@@ -2477,7 +2477,6 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						xtype : 'displayfield',
 						fieldLabel : '待气检数量',
 						ref : '../waitAmount',
-						readOnly : true,
 						dataIndex : 'waitAmount',
 						anchor : '85%',
 						colspan : 2
@@ -2485,8 +2484,14 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						xtype : 'displayfield',
 						fieldLabel : '已气检数量',
 						ref : '../qjAmount',
-						readOnly : true,
 						dataIndex : 'qjAmount',
+						anchor : '85%',
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						fieldLabel : '要求膜元件<br>干湿状态',
+						ref : '../dryWet',
+						dataIndex : 'dryWet',
 						anchor : '85%',
 						colspan : 2
 					}, {

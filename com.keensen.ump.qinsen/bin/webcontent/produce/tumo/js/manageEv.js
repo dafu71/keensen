@@ -42,7 +42,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 
 	// 导出白名单
 
-	var white = ['KS00420']
+	var white = ['KS00880']
 	if (white.indexOf(uid) > -1) {
 		this.queryPanel.buttons[2].setDisabled(false);
 	}

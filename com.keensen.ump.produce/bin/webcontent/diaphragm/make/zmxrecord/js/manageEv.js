@@ -3,6 +3,18 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 	var _this = this;
 
 	// 查询事件
+	this.queryPanel4ChooseDefect.mon(this.queryPanel4ChooseDefect, 'query',
+			function(form, vals) {
+				var store = this.listPanel4ChooseDefect.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4ChooseDefect.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
 		store.baseParams = vals;
@@ -54,6 +66,28 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+
+				if (this.opt == 'adddefect') {
+					this.addDefectWindow.show();
+					this.addDefectWindow.relationId.setValue(cell.get('id'));
+					this.addDefectWindow.tacheCause.setValue('铸膜');
+					this.addDefectWindow.recorder.setValue(uname);
+					if (ip == '172.16.137.202') {
+						this.addDefectWindow.team.setValue('铸膜B线');
+						// this.addDefectWindow.team.setReadOnly(true);
+					}
+					if (ip == '172.16.136.236') {
+						this.addDefectWindow.team.setValue('铸膜C线');
+						// this.addDefectWindow.team.setReadOnly(true);
+					}
+					if (ip == '127.0.0.1') {
+						this.addDefectWindow.team.setValue('铸膜测试线');
+						// this.addDefectWindow.team.setReadOnly(true);
+					}
+
+					return;
+				}
+
 				if (this.opt == 'updatereleaseamount') {
 					this.updateReleaseAmountWindow.show();
 					this.updateReleaseAmountWindow.loadData(cell);
@@ -107,6 +141,29 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 				Ext.getCmp('zmxtotalrelease').setValue('铸膜液排料重量合计:'
 						+ zmxtotalrelease);
 			})
+
+	this.addDefectWindow.activeItem.mon(this.addDefectWindow.activeItem,
+			'afterSave', function() {
+				var relationId = this.addDefectWindow.relationId.getValue();
+				this.addDefectWindow.items.items[0].form.reset();
+
+				this.addDefectWindow.relationId.setValue(relationId);
+				this.addDefectWindow.tacheCause.setValue('铸膜');
+				this.addDefectWindow.recorder.setValue(uname);
+				if (ip == '172.16.137.202') {
+					this.addDefectWindow.team.setValue('铸膜B线');
+					// this.addDefectWindow.team.setReadOnly(true);
+				}
+				if (ip == '172.16.136.236') {
+					this.addDefectWindow.team.setValue('铸膜C线');
+					// this.addDefectWindow.team.setReadOnly(true);
+				}
+				if (ip == '127.0.0.1') {
+					this.addDefectWindow.team.setValue('铸膜测试线');
+					// this.addDefectWindow.team.setReadOnly(true);
+				}
+				this.listPanel.store.reload();
+			}, this);
 }
 
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onUpdateReleaseAmount = function() {
@@ -311,6 +368,33 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onViewDefect = function(
 
 }
 
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onAddDefect = function() {
+	this.opt = 'adddefect';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onChooseDefect = function() {
+	this.chooseDefectWindow.show();
+}
+
+com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onChooseDefectOk = function() {
+
+	var obj = this.addDefectWindow;
+	var A = this.listPanel4ChooseDefect;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var defectId = r.data.id;
+		var defectName = r.data.defectName;
+		obj.defectId.setValue(defectId);
+		obj.defectName.setValue(defectName);
+		this.chooseDefectWindow.hide();
+	}
+
+}
+
 function defectZmView(dimoBatchNo) {
 	Ext.getCmp('zm-defectzmviewwindow').dmBatchNo = dimoBatchNo;
 	var store = Ext.getCmp('zm-defectzmviewwindow').listPanel.store;
@@ -319,5 +403,27 @@ function defectZmView(dimoBatchNo) {
 	};
 	store.load();
 	Ext.getCmp('zm-defectzmviewwindow').show();
+
+}
+
+function defectView(relationId,dimoBatchNo) {
+	
+	var spacepanel = Ext.getCmp('spacepanel');
+
+	if (relationId == '') {
+		return;
+	}
+
+	var itemId = 'menu10004881';
+	var url = '/produce/quality/mpdefect/zmdefectlist.jsp?dimoBatchNo=' + dimoBatchNo + '&relationId=' + relationId;
+	var title = '铸膜工序不良记录';
+	spacepanel.remove(spacepanel.getItem(itemId));
+	spacepanel.open({
+				id : '10004881',
+				text : title,
+				attributes : {
+					respath : url
+				}
+			});
 
 }

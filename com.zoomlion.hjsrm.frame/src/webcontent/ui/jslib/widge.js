@@ -427,8 +427,7 @@ Ext.EventManager.onWindowResize(function(B, A) {
 
 // spacepanel
 Ext.ns("Ext.fn");
-Ext.fn.SpacePanel = Ext.extend(Ext.TabPanel, {
-			isLoading : false,
+Ext.fn.SpacePanel = Ext.extend(Ext.TabPanel, { 
 			constructor : function(A) {
 				A = A == undefined ? {} : A;
 				Ext.fn.SpacePanel.superclass.constructor.call(this, A);

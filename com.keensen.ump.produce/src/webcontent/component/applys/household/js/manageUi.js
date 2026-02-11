@@ -871,7 +871,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								listeners : {
 									scope : this,
 									'expand' : function(A) {
-										this.inputPanel4AddOrder.tapColor
+										this.inputPanel4AddOrder.dryWet
 												.reset();
 									}
 								}

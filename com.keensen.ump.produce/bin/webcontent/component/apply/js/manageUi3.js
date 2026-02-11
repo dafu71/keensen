@@ -1067,9 +1067,13 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								colspan : 4
 							}, {
 								xtype : 'displayfield',
-								ref : '../picturePane3',
+								ref : '../picturePanel3',
 								height : '15',
 								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
 							}, {
 								xtype : 'displayfield',
 								ref : '../picturePanel4',

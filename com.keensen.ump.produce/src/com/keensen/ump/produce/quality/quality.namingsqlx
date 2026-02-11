@@ -240,7 +240,7 @@
 	
 	select t.MATER_SPEC_ID,t.MATER_SPEC_CODE,t.MATER_SPEC_CODE,
 	t.NUM_PER_WAD,t.BLANKING_SIZE,t.PAGE_WIDTH,
-	nvl(t.NUM_PER_WAD * t.BLANKING_SIZE * t.PAGE_WIDTH,0) * #amount# as "length"
+	nvl(t.NUM_PER_WAD * t.BLANKING_SIZE * nvl(t.PAGE_WIDTH,t.mp_width),0) * #amount# as "length"
 	 from V_KS_MATERSPECLIST t
 	WHERE t.MATER_SPEC_id=#materSpecId#
    </select>

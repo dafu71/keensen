@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.quality.file">
+    <select id="queryFileMaterial" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID              AS "id",
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       t1.CONTROL_CODE as "controlCode",
+		t1.STATE as "state",
+		t1.FILE_NAME as "fileName",
+		t1.URL as "url",t1.URL2 as "url2",
+		t1.FILE_TYPE as "fileType",
+		decode(t1.FILE_TYPE,'BQ', '标签', 'MT', '唛头', 'BZD', '包装袋',
+							'BZX', '包装箱', 'ZXG', '中心管', 'MYJDG', '膜元件端盖',
+							'MYJBZDG', '膜元件包装端盖', 'MFQ', '密封圈',
+							'JD', '胶带','') "fileTypeName"
+
+  FROM KS_QUALITY_FILE_MATERIAL T1
+	where 1=1
+	<isNotNull prepend="and" property="createTimeStart">TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="fileType">t1.FILE_TYPE = #fileType#</isNotNull>
+        <isNotNull prepend="and" property="state">t1.STATE = state#</isNotNull>
+        <isNotNull prepend="and" property="fileName">t1.FILE_NAME like '%' || #fileName# || '%'</isNotNull>
+	order by t1.FILE_TYPE,t1.id desc
+	 </select>
+</sqlMap>

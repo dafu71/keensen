@@ -89,6 +89,8 @@
   var quantityTotalId = Ext.id();
   
   var ip = '<%=ip %>';
+  
+  var opt = '';
     
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.CaidiemoMgr

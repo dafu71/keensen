@@ -137,6 +137,8 @@
               0,
               '',
               '合格入库') "applyJudgeResult"
+              
+              ,z.defect_length "defectLength"
   FROM (SELECT T.*
           FROM (
                 
@@ -160,10 +162,15 @@
                         MS.MATER_SPEC_CODE PROD_SPEC_CODE,
                         MS.MATER_SPEC_NAME PROD_SPEC_NAME,
                         ms.cut,ms.raosi
+                        ,A.defect_length 
                   FROM 
                   
-                  (select jm.* from 
+                  (select tmdefect.defect_length,jm.* from 
                   QINSEN.INST_JUANMO_MAIN jm
+                  
+                  left join (select sum(length) defect_length,relation_id from KS_COMPONENT_JM_DEFECT_LIST group by relation_id) tmdefect
+  					on tmdefect.relation_id = jm.record_id
+  			
                   where 1=1 
                    <isNotNull prepend="and" property="isNotStockConfirm">not exists(select 1 FROM V_KS_CHECK_LIST
 						where juanmo_batch_id = jm.record_id)</isNotNull>)                  

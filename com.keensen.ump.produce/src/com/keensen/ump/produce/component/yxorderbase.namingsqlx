@@ -198,8 +198,20 @@
        ,t1.url_photo_apply6 "urlPhotoApply6"
 	   ,t1.date_delivery "dateDelivery"
 	   ,t1.url_date_delivery "urlDateDelivery"
+	   ,t1.url_date_delivery2 "urlDateDelivery2"
+	   ,to_char(yh.order_time, 'YYYY-MM-DD HH24:mi:ss') "orderTime"
+	   
+	   ,t1.url_Label "urlLabel"
+	   ,t1.url_mark "urlMark"
         
   FROM KS_COMPONENT_YXORDER_BASE T1
+  
+  
+  left join
+  (SELECT yh.base_id,MAX(yh.create_time) order_time from KS_COMPONENT_YXORDER_HISTORY yh
+	WHERE yh.step = '营销下达'
+	GROUP BY yh.base_id) yh
+	on yh.base_id = t1.id
   
   left join  KS_BASE_LABEL_DRAWING ld
   on ld.control_code = t1.label_control_code
@@ -215,6 +227,13 @@
   LEFT JOIN qinsen.para_mater_spec pms on pms.mater_spec_id=t1.mp_spec_id
   
 	where 1=1
+	
+	 <isNotNull prepend = "and"  property = "orderTimeStart"> 
+          to_char(yh.order_time, 'YYYY-MM-DD')  &gt;=  #orderTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "orderTimeEnd"> 
+          to_char(yh.order_time, 'YYYY-MM-DD')  &lt;=  #orderTimeEnd#
+     </isNotNull>
 	
 	<isNotNull prepend="and" property="orderType"> 
 		       T1.ORDER_TYPE = #orderType# 

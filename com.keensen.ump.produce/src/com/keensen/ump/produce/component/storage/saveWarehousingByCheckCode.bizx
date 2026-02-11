@@ -34,9 +34,9 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link17</targetConnections>
-    <targetConnections>link13</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link13</targetConnections>
+    <targetConnections>link17</targetConnections>
     <location x="855" y="135"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -319,7 +319,7 @@
       <sourceNode>invokePojo3</sourceNode>
       <targetNode>transactionrollback0</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link22" name="暂不用更新请检单确认" displayName="连接线" isDefault="false" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link22" name="" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo3</sourceNode>
       <targetNode>assign4</targetNode>
       <process:transitionCondition>
@@ -332,14 +332,13 @@
       <sourceNode>invokePojo3</sourceNode>
       <targetNode>node2</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link12" name="link12" displayName="连接线" isDefault="false" type="transition">
       <sourceNode>invokePojo3</sourceNode>
       <targetNode>transactioncommit0</targetNode>
       <process:transitionCondition>
-        <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"/>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
+        <process:complexCondition>
+          <process:code>1==2</process:code>
+        </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link18</targetConnections>
@@ -406,8 +405,8 @@
       <sourceNode>transactionrollback0</sourceNode>
       <targetNode>assign3</targetNode>
     </sourceConnections>
-    <targetConnections>link20</targetConnections>
     <targetConnections>link24</targetConnections>
+    <targetConnections>link20</targetConnections>
     <targetConnections>link15</targetConnections>
     <targetConnections>link14</targetConnections>
     <location x="518" y="250"/>

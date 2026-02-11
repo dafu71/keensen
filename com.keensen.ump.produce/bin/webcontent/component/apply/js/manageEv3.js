@@ -380,7 +380,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 						var urlPhotoApply6 = data.urlPhotoApply6;
 						
 						var ifphoto = data.ifphoto;
-
+					
 						if (!Ext.isEmpty(urlPhotoApply)) {
 							var myurl = '';
 							myurl += '<a href="/default/myupload/apply/'
@@ -1455,32 +1455,32 @@ com.keensen.ump.produce.component.applyMgr.prototype.doUploadPhoto = function() 
 							_this.photoUploadWin.hide();
 							var fname = arr[0]
 							var url = '';
-							url += '<a href="/default/myupload/apply' + fname
+							url += '<a href="/default/myupload/apply/' + fname
 									+ '" target=_blank>查看图片</a>';
 							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
 							_this.inputPanel.picturePanel.update(url);
 							var fname = arr[1]
 							var url = '';
-							url += '<a href="/default/myupload/apply' + fname
+							url += '<a href="/default/myupload/apply/' + fname
 									+ '" target=_blank>查看图片</a>';
 							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
 							_this.inputPanel.picturePanel2.update(url);
 							var fname = arr[2]
 							var url = '';
-							url += '<a href="/default/myupload/apply' + fname
+							url += '<a href="/default/myupload/apply/' + fname
 									+ '" target=_blank>查看图片</a>';
 							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
 							_this.inputPanel.picturePanel3.update(url);
 							var fname = arr[3]
 							var url = '';
-							url += '<a href="/default/myupload/apply' + fname
+							url += '<a href="/default/myupload/apply/' + fname
 									+ '" target=_blank>查看图片</a>';
 							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
 							_this.inputPanel.picturePanel4.update(url);
 							if (arr.length > 4) {
 								var fname = arr[4]
 								var url = '';
-								url += '<a href="/default/myupload/apply' + fname
+								url += '<a href="/default/myupload/apply/' + fname
 										+ '" target=_blank>查看图片</a>';
 								url += '&nbsp;&nbsp;&nbsp;&nbsp;'
 								_this.inputPanel.picturePanel5.update(url);
@@ -1488,7 +1488,7 @@ com.keensen.ump.produce.component.applyMgr.prototype.doUploadPhoto = function() 
 							if (arr.length > 5) {
 								var fname = arr[5]
 								var url = '';
-								url += '<a href="/default/myupload/apply' + fname
+								url += '<a href="/default/myupload/apply/' + fname
 										+ '" target=_blank>查看图片</a>';
 								url += '&nbsp;&nbsp;&nbsp;&nbsp;'
 								_this.inputPanel.picturePanel6.update(url);

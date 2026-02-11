@@ -4,6 +4,16 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 
 	Ext.getCmp(addBtn).setDisabled(true);
 	Ext.getCmp(add2Btn).setDisabled(true);
+	
+	this.listPanel4EditDefect.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					_this.rec = r;
+					
+				}).defer(100);
+			}, this);
+
+	
 
 	this.listPanel4ProdCdmList.store.on('load', function() {
 
@@ -28,6 +38,13 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 						"pageCond/length" : this.listPanel4ProdCdmList.pagingToolbar.pageSize
 					}
 				});
+			}, this);
+			
+	this.queryPanel4EditDefect.mon(this.queryPanel4EditDefect, 'query',
+			function(form, vals) {
+				var store = this.listPanel4EditDefect.store;
+				store.baseParams = vals;
+				store.load();
 			}, this);
 
 	this.listPanel.selModel.on('rowselect', function(o, i, r) {
@@ -120,8 +137,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 			var start = vals['condition/produceBeginDate'];
 			var end = vals['condition/produceEndDate'];
 			if (dayDiff(start, end) > 93) {
-				Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
-				return false;
+				// Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+				// return false;
 
 			}
 
@@ -149,6 +166,35 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.initEvent = function() {
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
 				var recordId = cell.data.recordId;
 				recordId = recordId + '';
+
+				if (this.opt == 'adddefect') {
+
+					this.listPanel4EditDefect.store.reload();
+					this.editDefectWindow.relationId = recordId;
+					this.editDefectWindow.show();
+					return;
+				}
+				/*
+				 * this.addDefectWindow.show();
+				 * this.addDefectWindow.relationId.setValue(cell
+				 * .get('recordId'));
+				 * this.addDefectWindow.tacheCause.setValue('裁叠膜');
+				 * this.addDefectWindow.recorder.setValue(uname);
+				 * 
+				 * if (ip == '172.16.10.44') {
+				 * this.addDefectWindow.team.setValue(30046);
+				 * this.addDefectWindow.team.setReadOnly(true); } if (ip ==
+				 * '172.16.10.42') { this.addDefectWindow.team.setValue(30181);
+				 * this.addDefectWindow.team.setReadOnly(true); }
+				 * 
+				 * if (ip == '172.16.10.45') {
+				 * this.addDefectWindow.team.setValue(30200);
+				 * this.addDefectWindow.team.setReadOnly(true); }
+				 * 
+				 * if (ip == '127.0.0.1') {
+				 * this.addDefectWindow.team.setValue(30200); } return; }
+				 */
+
 				if (recordId.substr(0, 1) != '2') {
 					// Ext.Msg.alert('系统提示', '一期数据不能修改');
 					// return false;
@@ -454,17 +500,17 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd = function() {
 
 	this.inputWindow.orderNo.setReadOnly(true);
 	this.inputWindow.show();
-	
-	if(ip == '172.16.10.44'){
+
+	if (ip == '172.16.10.44') {
 		this.inputWindow.lineId.setValue(30046);
 		this.inputWindow.lineId.setReadOnly(true);
 	}
-	if(ip == '172.16.10.42'){
+	if (ip == '172.16.10.42') {
 		this.inputWindow.lineId.setValue(30181);
 		this.inputWindow.lineId.setReadOnly(true);
 	}
-	
-	if(ip == '172.16.10.45'){
+
+	if (ip == '172.16.10.45') {
 		this.inputWindow.lineId.setValue(30200);
 		this.inputWindow.lineId.setReadOnly(true);
 	}
@@ -757,21 +803,21 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAdd2 = function() {
 	this.inputWindow.pageType.setDisabled(false);
 
 	this.inputWindow.show();
-	
-	if(ip == '172.16.10.44'){
+
+	if (ip == '172.16.10.44') {
 		this.inputWindow.lineId.setValue(30046);
 		this.inputWindow.lineId.setReadOnly(true);
 	}
-	if(ip == '172.16.10.42'){
+	if (ip == '172.16.10.42') {
 		this.inputWindow.lineId.setValue(30181);
 		this.inputWindow.lineId.setReadOnly(true);
 	}
-	
-	if(ip == '172.16.10.45'){
+
+	if (ip == '172.16.10.45') {
 		this.inputWindow.lineId.setValue(30200);
 		this.inputWindow.lineId.setReadOnly(true);
 	}
-	
+
 	var btn = this.inputWindow.buttons[2];
 	btn.setDisabled(true);
 }
@@ -921,11 +967,119 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.exportProduceCountExcel = f
 }
 
 com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.viewDefectPicture = function() {
-	
+
 	var defectPicture = this.inputWindow.defectPicture.getValue();
-	if(Ext.isEmpty(defectPicture)) return false;
+	if (Ext.isEmpty(defectPicture))
+		return false;
 	showImageModal(defectPicture);
-	
+
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.viewDefect = function() {
+
+	var tumoBatchId = this.inputWindow.tumoBatchId.getValue();
+	var tumoBatchNo = this.inputWindow.tumoBatchNo.getValue();
+	if (Ext.isEmpty(tumoBatchId))
+		// return false;
+
+		var spacepanel = Ext.getCmp('spacepanel');
+
+	// tumoBatchId = 200084281;
+	// tumoBatchNo = 'TC341F5C04A20';
+
+	var itemId = 'menu10004882';
+	var url = '/produce/quality/mpdefect/tmdefectlist.jsp?iftear=否&tmBatchNo='
+			+ tumoBatchNo + '&relationId=' + tumoBatchId;
+	var title = '涂膜工序不良记录';
+	spacepanel.remove(spacepanel.getItem(itemId));
+	spacepanel.open({
+				id : '10004882',
+				text : title,
+				attributes : {
+					respath : url
+				}
+			});
+
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onAddDefect = function() {
+
+	this.opt = 'adddefect';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onChooseDefect = function() {
+	this.chooseDefectWindow.show();
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onChooseDefectOk = function() {
+
+	var obj = this.addDefectWindow;
+	var A = this.listPanel4ChooseDefect;
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var C = A.getSelectionModel().getSelections();
+		var r = C[0];
+		var defectId = r.data.id;
+		var defectName = r.data.defectName;
+		obj.defectId.setValue(defectId);
+		obj.defectName.setValue(defectName);
+		this.chooseDefectWindow.hide();
+	}
+
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.saveCdmDefect = function(
+		defectId, field, newValue, oldValue) {
+
+	var _this = this;
+	if (Ext.isEmpty(newValue))
+		return;
+
+	var obj = {};
+	var relationId = this.editDefectWindow.relationId;
+	obj['entity/defectId'] = defectId;
+	obj['entity/' + field] = newValue;
+	obj['entity/relationId'] = relationId;
+	obj['entity/tacheCause'] = '';
+	obj['entity/recorder'] = nowStaffName;
+
+	if (ip == '172.16.10.44') {
+		obj['entity/team'] = '30046';
+	}
+	if (ip == '172.16.10.42') {
+		obj['entity/team'] = '30181';
+	}
+
+	if (ip == '172.16.10.45') {
+		obj['entity/team'] = '30200';
+	}
+
+	if (ip == '127.0.0.1') {
+		obj['entity/team'] = '30200';
+	}
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "正在保存,请稍候!"
+			});
+	this.requestMask.show();
+
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.quality.defect.saveCdmDefectList.biz.ext",
+		method : "post",
+		jsonData : obj,
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				_this.listPanel.store.reload();
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
 }
 
 // 显示模态窗口函数
@@ -952,4 +1106,27 @@ function showImageModal(defectPicture) {
 	});
 	// 显示窗口
 	win.show();
+}
+
+function defectView2(relationId, batchNo) {
+
+	var spacepanel = Ext.getCmp('spacepanel');
+
+	if (relationId == '') {
+		return;
+	}
+
+	var itemId = 'menu10004922';
+	var url = '/produce/quality/mpdefect/cdmdefectlist.jsp?cdmBatchNo='
+			+ batchNo + '&relationId=' + relationId;
+	var title = '裁叠膜工序不良记录';
+	spacepanel.remove(spacepanel.getItem(itemId));
+	spacepanel.open({
+				id : '10004922',
+				text : title,
+				attributes : {
+					respath : url
+				}
+			});
+
 }

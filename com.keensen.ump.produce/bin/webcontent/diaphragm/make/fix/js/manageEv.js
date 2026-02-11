@@ -22,7 +22,6 @@ com.keensen.ump.produce.diaphragm.make.FixMgr.prototype.initEvent = function() {
 				var diff = r.data.diff;
 				if (diff > 48) {
 					Ext.Msg.alert('系统提示', '不能删除两天前的记录');
-					0910
 					return false;
 				}
 				if (uid != createUserId) {

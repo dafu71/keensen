@@ -37,7 +37,7 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					//hidden : true,
 					handler : this.exportExcel
 				});
 	}
@@ -56,34 +56,63 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 			hsPage : true,
 			selModel : selModel,
 			delUrl : '1.biz.ext',
+			tbar : [{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : orderAmountTotalId
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : stockAmountTotalId
+					}],
 			columns : [new Ext.grid.RowNumberer({
 								width : 30
 							}), selModel, {
 						dataIndex : 'orderNo',
+						sortable : true,
 						header : '销售订单编号'
 					}, {
 						dataIndex : 'prodName',
+						sortable : true,
 						header : '产品名称'
 					}, {
 						dataIndex : 'jmSpecName',
+						sortable : true,
 						header : '卷膜型号'
 					}, {
 						dataIndex : 'orderAmount',
+						sortable : true,
 						header : '订单数量（支）'
 					}, {
 						dataIndex : 'stockAmount',
+						sortable : true,
 						header : '在库数量（支）'
 					}, {
 						dataIndex : 'director',
-						header : '负责人'
+						sortable : true,
+						header : '业务员'
 					}, {
 						dataIndex : 'stockTime',
+						sortable : true,
 						header : '入库时间'
 					}, {
+						dataIndex : 'dateDelivery',
+						sortable : true,
+						header : '发货日期'
+					}, {
 						dataIndex : 'deliveryDateLatest',
+						hidden:true,
+						sortable : true,
 						header : '计划最晚发货日期'
 					}, {
 						dataIndex : 'overDate',
+						sortable : true,
 						header : '超期天数'
 					}],
 			store : new Ext.data.JsonStore({
@@ -112,6 +141,12 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 							name : 'deliveryDateLatest'
 						}, {
 							name : 'overDate'
+						}, {
+							name : 'orderAmountTotal'
+						}, {
+							name : 'stockAmountTotal'
+						}, {
+							name : 'dateDelivery'
 						}]
 			})
 		})

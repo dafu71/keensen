@@ -2,6 +2,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 	this.initPanel = function() {
 
 		this.opt = '';
+		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initInputWindow();
@@ -9,6 +10,9 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 		this.initChooseWindow();
 
 		this.initUpdateReleaseAmount();
+
+		this.initChooseDefectWindow();
+		this.initAddDefectWindow();
 
 		this.defectZmWin = new com.keensen.ump.defectWindow({
 					dutyTacheCode : 'ZM',
@@ -29,6 +33,14 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 				});
 	}
 
+	this.initStore = function() {
+
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
+	}
+
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
@@ -41,7 +53,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					fields : [{
 								xtype : 'dictcombobox',
 								name : 'condition/dimoType',
-								colspan:3,
+								colspan : 3,
 								anchor : '100%',
 								fieldLabel : '底膜类型',
 								hiddenName : 'condition/dimoType',
@@ -50,7 +62,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 								xtype : 'dictcombobox',
 								name : 'condition/line',
 								anchor : '100%',
-								colspan:3,
+								colspan : 3,
 								fieldLabel : '生产线别',
 								hiddenName : 'condition/line',
 								dictData : KS_ZM_LINE
@@ -69,25 +81,25 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							}, {
 								xtype : 'textfield',
 								anchor : '100%',
-								colspan:3,
+								colspan : 3,
 								name : 'condition/wfBatchNo2',
 								fieldLabel : '无纺布批号'
 							}, {
 								xtype : 'textfield',
 								anchor : '100%',
-								colspan:3,
+								colspan : 3,
 								name : 'condition/zmyBatchNo2',
 								fieldLabel : '铸膜液批号'
 							}, {
 								xtype : 'supcombobox',
 								hiddenName : 'condition/supId',
 								anchor : '100%',
-								colspan:3,
+								colspan : 3,
 								fieldLabel : '无纺布供应商'
 							}, {
 								xtype : 'textfield',
 								anchor : '100%',
-								colspan:3,
+								colspan : 3,
 								name : 'condition/createName',
 								fieldLabel : '填报人'
 							}, {
@@ -130,9 +142,27 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							}, {
 								xtype : 'textfield',
 								anchor : '100%',
-								colspan:3,
+								colspan : 3,
 								name : 'condition/dimoBatchNo2',
 								fieldLabel : '底膜批号'
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '是否有刮痕',
+								ref : '../ifscratch',
+								hiddenName : 'condition/ifscratch',
+								anchor : '100%',
+								colspan : 3,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.ifscratch.reset()
+									}
+								}
 							}]
 				});
 		this.queryPanel.addButton({
@@ -204,8 +234,14 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						value : '',
 						id : 'zmxtotalrelease'
 					}, '->', {
+						text : '铸膜工序不良录入',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onAddDefect
+					}, '-', {
 						text : '录入铸膜不良',
 						scope : this,
+						hidden : true,
 						iconCls : 'icon-application_add',
 						handler : this.onAddZmDefect
 					}, '-', {
@@ -274,6 +310,24 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 					}, {
 						dataIndex : 'dimoAmountQualified',
 						header : '底膜合格长度'
+					}, {
+						header : '不良米数(新)',
+						width : 80,
+						dataIndex : 'defectLength',
+						renderer : function(v, m, r, i) {
+							if (!Ext.isEmpty(v) && v > 0) {
+								var relationId = r.get('id');
+								var dimoBatchNo = r.get('dimoBatchNo');
+								var style = "<a style='text-decoration:none'";
+								var str = style
+										+ " href='javascript:defectView("
+										+ Ext.encode(relationId) + ","
+										+ Ext.encode(dimoBatchNo) + ");'>" + v
+										+ "</a>";
+
+								return str;
+							}
+						}
 					}, {
 						header : '不良米数',
 						width : 80,
@@ -434,6 +488,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'psfName'
 						}, {
 							name : 'zmxtotalrelease'
+						}, {
+							name : 'defectLength'
 						}]
 			})
 		})
@@ -524,7 +580,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 				}, {
 					xtype : 'dictcombobox',
 					name : 'entity/line',
-					ref:'../../line',
+					ref : '../../line',
 					allowBlank : false,
 					fieldLabel : '生产线别',
 					hiddenName : 'entity/line',
@@ -710,8 +766,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 				}, {
 					xtype : 'textfield',
 					name : 'entity/reserve5',
-					value:uname,
-					readOnly:true,
+					value : uname,
+					readOnly : true,
 					allowBlank : false,
 					fieldLabel : '记录人',
 					anchor : '95%',
@@ -751,7 +807,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						}, {
 							xtype : 'dictcombobox',
 							name : 'entity/line',
-							ref:'../../line',
+							ref : '../../line',
 							dataIndex : 'line',
 							allowBlank : false,
 							readOnly : true,
@@ -911,6 +967,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							colspan : 2
 						}, {
 							xtype : 'textarea',
+							hidden : true,
 							name : 'entity/abnormal',
 							dataIndex : 'abnormal',
 							fieldLabel : '铸膜异常记录',
@@ -1239,6 +1296,517 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 									dataIndex : 'id'
 								}]
 					}]
+				});
+	}
+
+	this.initAddDefectWindow = function() {
+
+		var _this = this;
+
+		this.tacheCauseStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['铸膜', '铸膜'], ['涂膜', '涂膜'], ['裁叠膜', '裁叠膜']]
+				});
+
+		this.iftearStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
+
+		this.dyeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['无异常', '无异常'], ['条状纹', '条状纹'], ['点状', '点状'],
+							['片状细麻点', '片状细麻点'], ['细条划伤', '细条划伤']]
+				});
+
+		this.horizontalStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['距左边边缘', '距左边边缘'], ['距右边边缘', '距右边边缘']]
+				});
+
+		this.reasonStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['设备故障', '设备故障'], ['工艺参数标准异常', '工艺参数标准异常'],
+							['工艺参数与标准不符', '工艺参数与标准不符'], ['人员操作失误', '人员操作失误'],
+							['配件清洁不到位', '配件清洁不到位'], ['配件硌伤/碰伤', '配件硌伤/碰伤'],
+							['料液不合格', '料液不合格']]
+				});
+
+		this.deptStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['膜片制造部', '膜片制造部'], ['工艺部', '工艺部'], ['研发部', '研发部'],
+							['设备能源部', '设备能源部'], ['质量管理部', '质量管理部']]
+				});
+
+		// ①不可用，②可用，且不影响元件端面颜色 ③可用，但影响元件端面颜色 ④待入库前工艺判断
+		//①不可用，②可用，且不影响元件端面颜色，③可用，但影响元件端面颜色，④待入库前工艺判断
+		this.adviseStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['不可用', '不可用'], ['可用，且不影响元件端面颜色', '可用，且不影响元件端面颜色'],
+							['可用，但影响元件端面颜色', '可用，但影响元件端面颜色'],
+							['待入库前工艺判断', '待入库前工艺判断']]
+				});
+
+		this.addDefectWindow = this.addDefectWindow || new Ext.fn.FormWindow({
+			title : '不良录入',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'inputpanel',
+				autoHide : false,
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 12,
+				saveUrl : 'com.keensen.ump.produce.quality.defect.saveZmDefectList.biz.ext',
+				fields : [{
+							xtype : 'trigger',
+							dataIndex : 'defectName',
+							ref : '../../defectName',
+							allowBlank : false,
+							editable : false,
+							fieldLabel : '不良项目',
+							anchor : '95%',
+							colspan : 6,
+							hideTrigger : false,
+							scope : this,
+							onTriggerClick : function() {
+								_this.onChooseDefect();
+							}
+						}, {
+							xtype : 'combobox',
+							anchor : '95%',
+							colspan : 6,
+							allowBlank : false,
+							name : 'entity/tacheCause',
+							dataIndex : 'tacheCause',
+							ref : '../../tacheCause',
+							hiddenName : 'entity/tacheCause',
+							fieldLabel : '产生工序',
+							triggerAction : "all",
+							store : _this.tacheCauseStore,
+							mode : "local",
+							editable : false,
+							displayField : "name",
+							valueField : "code",
+							forceSelection : true,
+							emptyText : "--请选择--"
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'textfield',
+							name : 'entity/position',
+							dataIndex : 'position',
+							fieldLabel : '收卷位置(m)',
+							ref : '../../position',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 6
+
+						}, {
+							xtype : 'numberfield',
+							name : 'entity/length',
+							dataIndex : 'length',
+							fieldLabel : '不良长度(m)',
+							ref : '../../length',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 6
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'textfield',
+							name : 'entity/numLabel',
+							dataIndex : 'numLabel',
+							fieldLabel : '标签数',
+							ref : '../../numLabel',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 6
+
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '是否已扯',
+							ref : '../../iftear',
+							hiddenName : 'entity/iftear',
+							anchor : '95%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : _this.iftearStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.addDefectWindow.iftear.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '染色情况',
+							ref : '../../dye',
+							hiddenName : 'entity/dye',
+							anchor : '95%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							// allowBlank : false,
+							store : _this.dyeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.addDefectWindow.dye.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '未扯底膜/膜片<br>使用意见',
+							ref : '../../advise',
+							hiddenName : 'entity/advise',
+							anchor : '95%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							// allowBlank : false,
+							store : _this.adviseStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.addDefectWindow.advise.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">异常规律描述</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 12
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '横向边距',
+							ref : '../../horizontal',
+							hiddenName : 'entity/horizontal',
+							anchor : '95%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							// allowBlank : false,
+							store : _this.horizontalStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.addDefectWindow.horizontal.reset()
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							name : 'entity/horizontal2',
+							dataIndex : 'horizontal2',
+							fieldLabel : '横向边距距离(cm)',
+							ref : '../../horizontal2',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 6
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'textfield',
+							name : 'entity/vertical',
+							dataIndex : 'vertical',
+							fieldLabel : '纵向间隔<br>(走布方向,cm)',
+							ref : '../../vertical',
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 6
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '产生原因',
+							ref : '../../reason',
+							hiddenName : 'entity/reason',
+							anchor : '95%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							// allowBlank : false,
+							store : _this.reasonStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.addDefectWindow.reason.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '责任部门',
+							ref : '../../dept',
+							hiddenName : 'entity/dept',
+							anchor : '95%',
+							colspan : 6,
+							emptyText : '--请选择--',
+							editable : false,
+							// allowBlank : false,
+							store : _this.deptStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.addDefectWindow.dept.reset()
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							name : 'entity/team',
+							dataIndex : 'team',
+							fieldLabel : '机台',
+							ref : '../../team',
+							// readOnly : true,
+							// allowBlank : false,
+							anchor : '95%',
+							colspan : 6
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'textfield',
+							name : 'entity/recorder',
+							dataIndex : 'recorder',
+							fieldLabel : '记录人',
+							ref : '../../recorder',
+							allowBlank : false,
+							anchor : '95%',
+							colspan : 6
+
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 12
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'relationId',
+							ref : '../../relationId',
+							name : 'entity/relationId'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'defectId',
+							ref : '../../defectId',
+							name : 'entity/defectId'
+						}
+
+				]
+			}]
+		});
+	}
+
+	this.initChooseDefectWindow = function() {
+
+		var _this = this;
+
+		this.firstStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['固损', '固损'], ['不良', '不良']]
+				});
+
+		var selModel4ChooseDefect = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4ChooseDefect = this.listPanel4ChooseDefect
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					hsPage : true,
+					viewConfig : {
+						forceFit : true
+					},
+					pageSize : 100,
+					pageSizeComboStore : [10, 15, 20, 30, 40, 50, 100, 200,
+							500, 1000],
+					selModel : selModel4ChooseDefect,
+					tbar : [{
+						text : '<span style="color:red;font-size:16px;">确认选择</span>',
+						height : 40,
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onChooseDefectOk
+					}],
+					delUrl : '111.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4ChooseDefect, {
+								dataIndex : 'first',
+								header : '一级目录'
+							}, {
+								dataIndex : 'second',
+								header : '二级目录'
+							}, {
+								dataIndex : 'third',
+								header : '三级目录'
+							}, {
+								dataIndex : 'fourth',
+								header : '四级目录'
+							}, {
+								dataIndex : 'advise',
+								hidden : true,
+								header : '使用意见'
+							}, {
+								dataIndex : 'length',
+								hidden : true,
+								header : '长度(米)'
+							}, {
+								dataIndex : 'tache',
+								header : '录入工序'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.defect.queryMpDefectByPage.biz.ext',
+						root : 'data',
+						autoLoad : true,
+						totalProperty : 'totalCount',
+						baseParams : {
+							'condition/tache' : '铸膜'
+						},
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'first'
+								}, {
+									name : 'second'
+								}, {
+									name : 'third'
+								}, {
+									name : 'fourth'
+								}, {
+									name : 'advise'
+								}, {
+									name : 'length'
+								}, {
+									name : 'tache'
+								}, {
+									name : 'defectName'
+								}]
+					})
+				})
+
+		this.queryPanel4ChooseDefect = this.queryPanel4ChooseDefect
+				|| new Ext.fn.QueryPanel({
+							height : 70,
+							columns : 4,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+										xtype : 'combobox',
+										mode : 'local',
+										fieldLabel : '一级目录',
+										ref : '../first',
+										hiddenName : 'condition/first',
+										anchor : '100%',
+										colspan : 1,
+										emptyText : '--请选择--',
+										editable : false,
+										store : _this.firstStore,
+										displayField : "name",
+										valueField : "code",
+										listeners : {
+											"expand" : function(A) {
+												_this.queryPanel.first.reset()
+											}
+										}
+									}, {
+										xtype : 'textfield',
+										name : 'condition/second',
+										anchor : '100%',
+										colspan : 1,
+										fieldLabel : '二级目录%-%'
+									}, {
+										xtype : 'textfield',
+										name : 'condition/third',
+										anchor : '100%',
+										colspan : 1,
+										fieldLabel : '三级目录%-%'
+									}, {
+										xtype : 'textfield',
+										name : 'condition/fourth',
+										anchor : '100%',
+										colspan : 1,
+										fieldLabel : '四级目录%-%'
+									}, {
+										xtype : 'displayfield',
+										height : '5',
+										colspan : 4
+									}, {
+										xtype : 'textfield',
+										name : 'condition/advise',
+										hidden : true,
+										anchor : '100%',
+										colspan : 2,
+										fieldLabel : '使用意见%-%'
+									}, {
+										xtype : 'hidden',
+										value : '铸膜',
+										ref : '../tache',
+										name : 'condition/tache'
+									}]
+						});
+
+		this.queryPanel4ChooseDefect.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.chooseDefectWindow.hide();
+					}
+
+				});
+
+		this.chooseDefectWindow = this.chooseDefectWindow || new Ext.Window({
+					title : '膜片不良项目选择',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 820,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4ChooseDefect,
+							this.listPanel4ChooseDefect]
+
 				});
 	}
 }

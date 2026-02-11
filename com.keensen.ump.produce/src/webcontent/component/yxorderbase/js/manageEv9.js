@@ -45,7 +45,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				Ext.each(records, function(r) {
 							var field = r.data['field'];
 							var idx = columnModel.findColumnIndex(field);
-							if (idx != -1 && field != 'taskState') {
+							if (idx != -1 && field != 'taskState'
+									&& field != 'orderDate') {
 								if (!showColumns.includes(field)) {
 									columnModel.setHidden(idx, true);
 								} else {
@@ -723,7 +724,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				var markUrl = data.markDrawingUrl;
 				var stampUrl = data.stampUrl;
 				var urlDateDelivery = data.urlDateDelivery;
+				var urlDateDelivery2 = data.urlDateDelivery2;
+				var dateUrl = '';
 
+				if (mConfirm == '1') {
+					this.orderViewWindow.orderDate.setVisible(false);
+					this.orderViewWindow.deliveryDateEarliest.setVisible(false);
+					this.orderViewWindow.deliveryDateLatest.setVisible(false);
+					// this.orderViewWindow.demandStockDate.setVisible(false);
+				}
 				// if(Ext.isEmpty(labelUrl) || Ext.isEmpty(markUrl)) return
 				// false;
 
@@ -740,7 +749,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
 					this.orderViewWindow.labelDrawingUrl.update(labelUrl)
-							.defer(100);
+					// .defer(100);
 				}
 
 				this.orderViewWindow.markDrawingUrl.update('');
@@ -757,7 +766,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
 					this.orderViewWindow.markDrawingUrl.update(markUrl)
-							.defer(100);
+					// .defer(100);
 
 				}
 
@@ -774,7 +783,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ stampUrl
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
-					this.orderViewWindow.stampUrl.update(stampUrl).defer(100);
+					this.orderViewWindow.stampUrl.update(stampUrl)// .defer(100);
 
 				}
 
@@ -791,7 +800,23 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
 					this.orderViewWindow.urlDateDelivery.update(dateUrl)
-							.defer(100);
+					// .defer(100);
+				}
+
+				if (!Ext.isEmpty(urlDateDelivery2)) {
+					urlDateDelivery2 = markRootUrl + '/myupload/order/'
+							+ urlDateDelivery2;
+					dateUrl = '<img title="单击查看完整图片" src="'
+							+ urlDateDelivery2
+							+ '?ver='
+							+ data.orderNo
+							+ '" onclick= "javascript:window.open('
+							+ "'"
+							+ urlDateDelivery2
+							+ "'"
+							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
+					this.orderViewWindow.urlDateDelivery2.update(dateUrl)
+					// .defer(100);
 				}
 
 			}, this);
@@ -855,14 +880,28 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							.setValue(deliveryDateLatest);
 
 					var urlDateDelivery = data.urlDateDelivery;
+					var urlDateDelivery2 = data.urlDateDelivery2;
+
 					if (Ext.isEmpty(urlDateDelivery)) {
 						Ext.getCmp(urlDateDeliveryId).setValue('请上传图片');
 					} else {
+
 						var url = '';
 						url += '<a href="/default/myupload/order/'
 								+ urlDateDelivery + '" target=_blank>查看图片</a>';
-						url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+						url += '&nbsp;&nbsp;&nbsp;&nbsp;';
 						Ext.getCmp(urlDateDeliveryId).update(url);
+					}
+
+					if (Ext.isEmpty(urlDateDelivery2)) {
+						Ext.getCmp(urlDateDeliveryId2).setValue('请上传图片');
+					} else {
+
+						var url = '';
+						url += '<a href="/default/myupload/order/'
+								+ urlDateDelivery2 + '" target=_blank>查看图片</a>';
+						url += '&nbsp;&nbsp;&nbsp;&nbsp;';
+						Ext.getCmp(urlDateDeliveryId2).update(url);
 					}
 				}
 
@@ -1111,23 +1150,41 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onCalcPeriod = functi
 }
 
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function() {
+	
 	var _this = this;
+	
+	var prodAmount = this.addOrderWindow.prodAmount
+			.getValue();
+	
+	//需生产数为0时，可以不需要上传“询期回复截图” 2026-2-11
 
 	var urlDateDelivery = Ext.getCmp(urlDateDeliveryId).getValue();
 	if (urlDateDelivery == '请上传图片') {
 		Ext.Msg.alert('系统提示', '请上传询期回复截图');
 		return false;
 	}
+	var urlDateDelivery2 = Ext.getCmp(urlDateDeliveryId2).getValue();
+	if (urlDateDelivery2 == '请上传图片') {
+		Ext.Msg.alert('系统提示', '请上传CRM营销副总或总经理审批截图');
+		return false;
+	}
 
-	alert('ok');
-	return ;
 	var deliveryDateEarliest = this.addOrderWindow.deliveryDateEarliest
 			.getValue();
 	// var demandStockDate = getDiffDay(deliveryDateEarliest, -2);
 	// 按与何总达成的共识，我们报的是最晚发货日期，故入库日期要改为：最晚发货日期-2天 @付力(生产管理部)
 
-	var deliveryDateLatest = this.addOrderWindow.deliveryDateLatest.getValue();
-	var demandStockDate = getDiffDay(deliveryDateLatest, -2);
+	// var deliveryDateLatest =
+	// this.addOrderWindow.deliveryDateLatest.getValue();
+	// var demandStockDate = getDiffDay(deliveryDateLatest, -2);
+
+	// 入库日期要改为：发货日期-1天,2026-02-03
+	var dateDelivery = this.addOrderWindow.dateDelivery.getValue();
+	if (Ext.isEmpty(dateDelivery)) {
+		Ext.Msg.alert('系统提示', '发货日期不能为空');
+		return false;
+	}
+	var demandStockDate = getDiffDay(dateDelivery, -1);
 
 	this.addOrderWindow.demandStockDate.setValue(demandStockDate);
 
@@ -2639,9 +2696,17 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.uploadPhoto = functio
 	this.photoUploadWin.getComponent('uploadForm').form.reset();
 	this.photoUploadWin.baseId.setValue(this.addOrderWindow.baseId.getValue());
 	this.photoUploadWin.show();
+	this.photoUploadWin.tag = 1;
 }
 
-// 上传照片
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.uploadPhoto2 = function() {
+
+	this.photoUploadWin.getComponent('uploadForm').form.reset();
+	this.photoUploadWin.baseId.setValue(this.addOrderWindow.baseId.getValue());
+	this.photoUploadWin.show();
+	this.photoUploadWin.tag = 2;
+}
+
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPhoto = function() {
 
 	var _this = this;
@@ -2667,8 +2732,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPhoto = funct
 		return false;
 	}
 	if (uploadInputPanel.form.isValid()) {
-
+		// 上传询期回复截图
 		var url = 'com.keensen.ump.produce.component.uploadUrlDateDelivery.flow';
+		var obj = Ext.getCmp(urlDateDeliveryId);
+		// 上传CRM总经理审批截图
+		if (this.photoUploadWin.tag == 2) {
+			url = 'com.keensen.ump.produce.component.uploadUrlDateDelivery2.flow';
+			obj = Ext.getCmp(urlDateDeliveryId2);
+		}
+
 		uploadInputPanel.form.submit({
 					method : "POST",
 					timeout : 1200,
@@ -2686,7 +2758,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPhoto = funct
 							url += '<a href="/default' + fname
 									+ '" target=_blank>查看图片</a>';
 							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-							Ext.getCmp(urlDateDeliveryId).update(url);
+							obj.update(url);
 
 						}
 					},
@@ -2702,6 +2774,77 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPhoto = funct
 	}
 
 }
+
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onModifyUrlPicture = function(
+		field) {
+
+	this.pictureUploadWin.getComponent('uploadForm').form.reset();
+	this.pictureUploadWin.baseId
+			.setValue(this.orderViewWindow.baseId.getValue());
+	this.pictureUploadWin.field.setValue(field);
+	this.pictureUploadWin.show();
+}
+
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPicture = function() {
+
+	var _this = this;
+	var uploadInputPanel = this.pictureUploadWin.getComponent('uploadForm');
+	// 校验
+	var fileUploadObj = uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	var filePath = fileUploadObj.getValue();
+	// 文件后缀
+	var sfileName = filePath.split(".");
+
+	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
+			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
+			'raw', 'wmf', 'webp', 'avif', 'apng'];
+	var extname = sfileName[1].toLowerCase();
+	if (extname == null || array.indexOf(extname) == -1) {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为图片文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+	if (uploadInputPanel.form.isValid()) {
+		// 上传截图
+		var url = 'com.keensen.ump.produce.component.uploadUrlPicture.flow';
+
+		uploadInputPanel.form.submit({
+					method : "POST",
+					timeout : 1200,
+					url : url,
+					waitTitle : "操作提示",
+					waitMsg : "上传数据中...",
+					success : function(form, action) {
+						var result = action.result;
+						var fname = result.msg;
+						fname = '/myupload/order/' + fname;
+						if (result.success) {
+							_this.pictureUploadWin.hide();
+							var cell = new Ext.data.Record({
+										id : _this.pictureUploadWin.baseId.getValue()
+									})
+							_this.orderViewWindow.loadData(cell);
+
+						}
+					},
+					failure : function(form, action) {
+						Ext.MessageBox.show({
+									title : '操作提示',
+									buttons : Ext.MessageBox.OK,
+									msg : "导入失败，请检查文件格式或网络是否正常",
+									icon : Ext.MessageBox.ERROR
+								});
+					}
+				});
+	}
+
+}
+
 function getDiffDay(date, num) {
 	var date2 = new Date(date);
 	var date1 = new Date(date2.setDate(date2.getDate() + num));

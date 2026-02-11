@@ -56,6 +56,8 @@
   var listid = Ext.id();
   var listid3 = Ext.id();
   
+  var stockAmountTotalId = Ext.id();
+  
   var exportflag = "<%=exportflag %>";
   
   var opt = '';

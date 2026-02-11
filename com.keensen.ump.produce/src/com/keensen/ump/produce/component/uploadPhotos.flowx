@@ -297,9 +297,9 @@
       <sourceNode>invokePojo3</sourceNode>
       <targetNode>invokePojo5</targetNode>
       <process:transitionCondition>
-        <process:simpleCondition operator="NULLOREMPTY">
-          <process:leftOperand type="query">uploadFile6</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">uploadFile6/size</process:leftOperand>
+          <process:rightOperand type="literal">0</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>

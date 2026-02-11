@@ -108,8 +108,8 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 								fieldLabel : '产品名称%-%'
 							}, {
 								xtype : 'textfield',
-								name : 'condition/jmSpecName',
-								fieldLabel : '卷膜型号'
+								name : 'condition/jmSpecName2',
+								fieldLabel : '卷膜型号%-%'
 							}, {
 								xtype : 'combo',
 								hiddenName : 'condition/storage',
@@ -253,7 +253,7 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 					}, {
 						dataIndex : 'director',
 						sortable : true,
-						header : '负责人'
+						header : '业务员'
 					}, {
 						dataIndex : 'prodName',
 						sortable : true,
@@ -303,9 +303,9 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 						sortable : true,
 						header : '入库时间'
 					}, {
-						dataIndex : 'jmCreateDt',
+						dataIndex : 'dateDelivery',
 						sortable : true,
-						header : '卷膜时间'
+						header : '发货日期'
 					}, {
 						dataIndex : 'fGpd',
 						sortable : true,
@@ -337,6 +337,7 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 					}, {
 						dataIndex : 'deliveryDateLatest',
 						sortable : true,
+						hidden:true,
 						header : '计划最晚发货日期'
 					}, {
 						dataIndex : 'overDate',
@@ -425,6 +426,8 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 							name : 'abnormalExplain'
 						}, {
 							name : 'abnormalOther'
+						}, {
+							name : 'dateDelivery'
 						}]
 			})
 		})

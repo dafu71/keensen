@@ -298,8 +298,15 @@ com.keensen.ump.produce.component.markprintlistMgr = function() {
 							readOnly : true,
 							anchor : '95%',
 							fieldLabel : '订单生产备注',
-							colspan : 3
+							colspan : 2
 						}, {
+						xtype : 'displayfield',
+						fieldLabel : '要求膜元件<br>干湿状态',
+						ref : '../dryWet',
+						dataIndex : 'dryWet',
+						anchor : '95%',
+						colspan : 1
+					}, {
 						xtype : 'displayfield',
 						fieldLabel : '<p style="color:red;font-size:16px;">贴标信息</p>',
 						labelSeparator : '',// 去掉冒号

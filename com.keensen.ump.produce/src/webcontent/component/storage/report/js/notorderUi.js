@@ -23,18 +23,6 @@ com.keensen.ump.produce.component.storage.Report4NotOrderMgr = function() {
 					// title : '【仓库配置查询】',
 					fields : [{
 								xtype : 'textfield',
-								colspan : 1,
-								name : 'condition/checkCode2',
-								anchor : '100%',
-								fieldLabel : '请检单号%-%'
-							}, {
-								xtype : 'textfield',
-								colspan : 1,
-								name : 'condition/batchNo',
-								anchor : '100%',
-								fieldLabel : '元件序号'
-							}, {
-								xtype : 'textfield',
 								name : 'condition/jmSpecName',
 								fieldLabel : '卷膜型号'
 							}, {
@@ -52,13 +40,27 @@ com.keensen.ump.produce.component.storage.Report4NotOrderMgr = function() {
 									}
 								}
 
+							}, {								
+								xtype : 'combo',
+								mode : 'local',
+								editable : false,
+								hiddenName : 'condition/dryWet',
+								ref : '../type',
+								fieldLabel : '干/湿膜',
+								store : [['干', '干'], ['湿', '湿']],
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
+
 							}]
 				});
 		this.queryPanel.addButton({
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					// hidden : true,
 					handler : this.exportExcel
 				});
 	}
@@ -74,56 +76,36 @@ com.keensen.ump.produce.component.storage.Report4NotOrderMgr = function() {
 			viewConfig : {
 				forceFit : true
 			},
+			
+			tbar : [{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : stockAmountTotalId
+					}],
 			hsPage : true,
 			selModel : selModel,
 			delUrl : '1.biz.ext',
 			columns : [new Ext.grid.RowNumberer({
 								width : 30
 							}), selModel, {
-						dataIndex : 'batchNo',
-						header : '元件序列号'
-					}, {
-						dataIndex : 'checkCode',
-						header : '请检单'
-					}, {
 						dataIndex : 'jmSpecName',
+						sortable : true,
 						header : '卷膜型号'
 					}, {
 						dataIndex : 'dryWet',
+						sortable : true,
 						header : '干/湿'
 					}, {
-						dataIndex : 'lid',
-						header : '端盖类型'
-					}, {
-						dataIndex : 'tape',
-						header : '卷膜胶带颜色'
-					}, {
 						dataIndex : 'storage',
+						sortable : true,
 						header : '仓库名称'
 					}, {
-						dataIndex : 'position',
-						header : '仓位名称'
-					}, {
-						dataIndex : 'fCheckTm',
-						header : '初测时间'
-					}, {
-						dataIndex : 'fSalt',
-						header : '初测脱盐率%'
-					}, {
-						dataIndex : 'fGpd',
-						header : '初测产水量gpd'
-					}, {
-						dataIndex : 'rCheckTm',
-						header : '复测时间'
-					}, {
-						dataIndex : 'rSalt',
-						header : '复测脱盐率%'
-					}, {
-						dataIndex : 'rGpd',
-						header : '复测产水量gpd'
-					}, {
-						dataIndex : 'disinfectTime',
-						header : '最后1次消毒时间'
+						dataIndex : 'amount',
+						sortable : true,
+						header : '数量'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.storage.queryReport4NotOrder.biz.ext',
@@ -133,36 +115,16 @@ com.keensen.ump.produce.component.storage.Report4NotOrderMgr = function() {
 				baseParams : {
 
 			}	,
-				fields : [{
-							name : 'batchNo'
-						}, {
-							name : 'checkCode'
-						}, {
+				fields : [ {
 							name : 'jmSpecName'
 						}, {
 							name : 'dryWet'
 						}, {
-							name : 'lid'
-						}, {
-							name : 'tape'
-						}, {
 							name : 'storage'
 						}, {
-							name : 'position'
+							name : 'amount'
 						}, {
-							name : 'fCheckTm'
-						}, {
-							name : 'fSalt'
-						}, {
-							name : 'fGpd'
-						}, {
-							name : 'rCheckTm'
-						}, {
-							name : 'rSalt'
-						}, {
-							name : 'rGpd'
-						}, {
-							name : 'disinfectTime'
+							name : 'stockAmountTotal'
 						}]
 			})
 		})

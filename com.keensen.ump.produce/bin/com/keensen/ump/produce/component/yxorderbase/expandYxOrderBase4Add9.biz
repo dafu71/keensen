@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="expandYxOrderBase4Add9.bizx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+<process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="expandYxOrderBase4Add9" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
   <nodes xsi:type="model:Note" id="node1" name="注释1" nodeType="note" type="note" title="dafu&#x9;25-12-11 上午11:41">
     <sourceConnections xsi:type="process:tLink" id="link39" name="link39" type="note">
       <sourceNode>node1</sourceNode>
@@ -72,6 +72,16 @@
     <node>subprocess3</node>
   </nodes>
   <nodes xsi:type="process:tAssign" id="assign10" name="赋值1" collapsed="false" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link30" name="更新操作" isDefault="false" type="transition">
+      <sourceNode>assign10</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="NOTNULL">
+          <process:leftOperand type="query">data/updateTime</process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link15" name="link15" isDefault="true" type="transition">
       <sourceNode>assign10</sourceNode>
       <targetNode>switch2</targetNode>
@@ -82,46 +92,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link30" name="更新操作" type="transition">
-      <sourceNode>assign10</sourceNode>
-      <targetNode>end0</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="NOTNULL">
-          <process:leftOperand type="query">data/updateTime</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
-    </sourceConnections>
-    <targetConnections>link5</targetConnections>
+    <targetConnections>link45</targetConnections>
     <nodeLabel>assign10label</nodeLabel>
-    <process:copy>
-      <process:from type="query" pattern="reference">data/orderDate</process:from>
-      <process:to type="query">orderDate</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">data/deliveryDate</process:from>
-      <process:to type="query">deliveryDate</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="expression" pattern="reference">orderDate.substring(0,10)</process:from>
-      <process:to type="query">data/orderDate</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">data/deliveryDateLatest</process:from>
-      <process:to type="query">deliveryDateLatest</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">data/deliveryDateEarliest</process:from>
-      <process:to type="query">deliveryDateEarliest</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="expression" pattern="reference">deliveryDateLatest.substring(0,10)</process:from>
-      <process:to type="query">data/deliveryDateLatest</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="expression" pattern="reference">deliveryDateEarliest.substring(0,10)</process:from>
-      <process:to type="query">data/deliveryDateEarliest</process:to>
-    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign10label" name="label" nodeType="label">
     <figSize height="20" width="40"/>
@@ -132,7 +104,8 @@
       <sourceNode>assign21</sourceNode>
       <targetNode>subprocess5</targetNode>
     </sourceConnections>
-    <targetConnections>link45</targetConnections>
+    <targetConnections>link23</targetConnections>
+    <targetConnections>link1</targetConnections>
     <nodeLabel>assign21label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">data2/tape</process:from>
@@ -248,7 +221,7 @@
   <nodes xsi:type="process:tSwitch" id="switch1" name="空操作1" collapsed="false" type="switch">
     <sourceConnections xsi:type="process:tLink" id="link23" name="link23" isDefault="true" type="transition">
       <sourceNode>switch1</sourceNode>
-      <targetNode>switch3</targetNode>
+      <targetNode>assign21</targetNode>
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link24" name="外观标准为空" type="transition">
       <sourceNode>switch1</sourceNode>
@@ -394,7 +367,7 @@
   <nodes xsi:type="process:tAssign" id="assign20" name="赋值21" collapsed="false" type="assign">
     <sourceConnections xsi:type="process:tLink" id="link1" name="link1" isDefault="true" type="transition">
       <sourceNode>assign20</sourceNode>
-      <targetNode>switch3</targetNode>
+      <targetNode>assign21</targetNode>
     </sourceConnections>
     <targetConnections>link11</targetConnections>
     <nodeLabel>assign20label</nodeLabel>
@@ -574,7 +547,7 @@
     </sourceConnections>
     <sourceConnections xsi:type="process:tLink" id="link5" name="2.0版本" type="transition">
       <sourceNode>invokePojo0</sourceNode>
-      <targetNode>assign10</targetNode>
+      <targetNode>assign12</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
           <process:leftOperand type="query">data/version</process:leftOperand>
@@ -760,7 +733,6 @@
     </sourceConnections>
     <targetConnections>link10</targetConnections>
     <targetConnections>link24</targetConnections>
-    <targetConnections>link47</targetConnections>
     <nodeLabel>subprocess5label</nodeLabel>
     <process:flow index="0" synchronization="true" transactionType="join" varArgs="false">
       <process:partner type="literal">this.querylabelDrawingBySpecName10</process:partner>
@@ -916,92 +888,48 @@
     <figSize height="20" width="49"/>
     <node>assign11</node>
   </nodes>
-  <nodes xsi:type="process:tSwitch" id="switch3" name="空操作3" type="switch">
-    <sourceConnections xsi:type="process:tLink" id="link45" name="作废" isDefault="false" type="transition">
-      <sourceNode>switch3</sourceNode>
-      <targetNode>assign21</targetNode>
-      <process:transitionCondition>
-        <process:complexCondition>
-          <process:code>1==2</process:code>
-        </process:complexCondition>
-      </process:transitionCondition>
-    </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" id="link46" name="link46" isDefault="true" type="transition">
-      <sourceNode>switch3</sourceNode>
-      <targetNode>assign12</targetNode>
-      <process:transitionCondition>
-        <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
-      </process:transitionCondition>
-    </sourceConnections>
-    <targetConnections>link1</targetConnections>
-    <targetConnections>link23</targetConnections>
-    <nodeLabel>switch3label</nodeLabel>
-  </nodes>
-  <nodes xsi:type="model:NodeElementLabel" id="switch3label" name="label" nodeType="label">
-    <figSize height="20" width="55"/>
-    <node>switch3</node>
-  </nodes>
-  <nodes xsi:type="process:tAssign" id="assign12" name="赋值12" collapsed="false" type="assign">
-    <sourceConnections xsi:type="process:tLink" id="link47" name="link47" isDefault="true" type="transition">
+  <nodes xsi:type="process:tAssign" id="assign12" name="赋值12" type="assign">
+    <sourceConnections xsi:type="process:tLink" id="link45" name="link45" isDefault="true" type="transition">
       <sourceNode>assign12</sourceNode>
-      <targetNode>subprocess5</targetNode>
+      <targetNode>assign10</targetNode>
     </sourceConnections>
-    <targetConnections>link46</targetConnections>
+    <targetConnections>link5</targetConnections>
     <nodeLabel>assign12label</nodeLabel>
     <process:copy>
-      <process:from type="query" pattern="reference">data2/bagDrawingCode</process:from>
-      <process:to type="query">data/bagDrawingCode</process:to>
+      <process:from type="query" pattern="reference">data/orderDate</process:from>
+      <process:to type="query">orderDate</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">data2/boxDrawingCode</process:from>
-      <process:to type="query">data/boxDrawingCode</process:to>
+      <process:from type="query" pattern="reference">data/deliveryDate</process:from>
+      <process:to type="query">deliveryDate</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">data2/packingNum</process:from>
-      <process:to type="query">data/packingNum</process:to>
+      <process:from type="expression" pattern="reference">orderDate.substring(0,10)</process:from>
+      <process:to type="query">data/orderDate</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">data2/lid</process:from>
-      <process:to type="query">data/lid</process:to>
+      <process:from type="query" pattern="reference">data/deliveryDateLatest</process:from>
+      <process:to type="query">deliveryDateLatest</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">data2/pallet</process:from>
-      <process:to type="query">data/pallet</process:to>
+      <process:from type="query" pattern="reference">data/deliveryDateEarliest</process:from>
+      <process:to type="query">deliveryDateEarliest</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">data2/sealAmount</process:from>
-      <process:to type="query">data/sealAmount</process:to>
+      <process:from type="expression" pattern="reference">deliveryDateLatest.length()</process:from>
+      <process:to type="query">len</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">data2/packingLid</process:from>
-      <process:to type="query">data/packingLid</process:to>
+      <process:from type="expression" pattern="reference">deliveryDateEarliest.length()</process:from>
+      <process:to type="query">len2</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">data2/bagSeal</process:from>
-      <process:to type="query">data/bagSeal</process:to>
+      <process:from type="expression" pattern="reference">deliveryDateLatest.substring(0,len)</process:from>
+      <process:to type="query">deliveryDateLatest</process:to>
     </process:copy>
     <process:copy>
-      <process:from type="query" pattern="reference">data2/boxSeal</process:from>
-      <process:to type="query">data/boxSeal</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">data2/qcTxt</process:from>
-      <process:to type="query">data/qcTxt</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">data2/packingTxt</process:from>
-      <process:to type="query">data/packingTxt</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">data2/tape</process:from>
-      <process:to type="query">data/tape</process:to>
-    </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">data2/pipeLink</process:from>
-      <process:to type="query">data/pipeLink</process:to>
+      <process:from type="expression" pattern="reference">deliveryDateEarliest.substring(0,len2)</process:from>
+      <process:to type="query">deliveryDateEarliest</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign12label" name="label" nodeType="label">
@@ -1030,6 +958,8 @@
     <process:variable historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.component.KsComponentYxorderBase" name="data2"/>
     <process:variable anyType="java.util.HashMap" historyStateLocation="client" isArray="false" name="controlCodeParam"/>
     <process:variable anyType="commonj.sdo.DataObject" historyStateLocation="client" isArray="true" name="controlCodeData"/>
+    <process:variable historyStateLocation="client" isArray="false" name="len" primitiveType="Int"/>
+    <process:variable historyStateLocation="client" isArray="false" name="len2" primitiveType="Int"/>
   </process:variables>
   <process:inputs varArgs="false">
     <process:input isArray="false" modelType="com.keensen.ump.produce.component.KsComponentYxorderBase" name="entity"/>

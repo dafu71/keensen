@@ -497,6 +497,13 @@ com.keensen.ump.produce.component.markprintMgr = function() {
 						anchor : '85%',
 						colspan : 1
 					}, {
+						xtype : 'displayfield',
+						fieldLabel : '要求膜元件<br>干湿状态',
+						ref : '../dryWet',
+						dataIndex : 'dryWet',
+						anchor : '85%',
+						colspan : 1
+					}, {
 							xtype : 'displayfield',
 							ref : '../displayfield1',
 							height : 5,

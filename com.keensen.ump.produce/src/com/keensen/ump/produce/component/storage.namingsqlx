@@ -660,6 +660,7 @@
     <!--非订单仓库元件库存报表-->
     <select id="queryReport4NotOrder" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
     
+	    <!--
 	    SELECT T1.BATCH_NO       AS "batchNo",
 	       T1.CHECK_CODE     AS "checkCode",
 	       T1.JM_SPEC_NAME   AS "jmSpecName",
@@ -757,11 +758,113 @@
 					       T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'
 				</isNotNull>
 	 ORDER BY T1.STORAGE, T1.POSITION
+	 -->
+	 
+	<!-- 
+	SELECT sum(amount) "amount",
+	jm_spec_name "jmSpecName",
+	storage "storage",
+	dry_wet "dryWet"
+	FROM
+	(select t.batch_no,t.storage,replace(t.dry_wet,'膜','') dry_wet,t.jm_spec_name,t.amount from KS_COMPONENT_K3_STOCK t
+	WHERE t.id &lt; 0
+	UNION ALL
+	select t.batch_no,t.storage,replace(od.dry_wet,'膜',''),od.mater_spec_name,t.amount from KS_COMPONENT_K3_STOCK t
+	LEFT JOIN  ks_component_check_head ch
+	ON ch.code = t.check_code
+	LEFT JOIN ks_prod_component_yxorder od
+	ON ch.order_id = od.id
+	WHERE t.id>0 AND t.check_code IS NOT NULL
+	UNION ALL
+	select t.batch_no,t.storage,replace(t.dry_wet,'膜','') ,t.jm_spec_name,t.amount from KS_COMPONENT_K3_STOCK t
+	WHERE t.id>0 AND t.check_code IS NULL) stck
+	WHERE stck.storage != '高架订单仓'
+	<isNotNull prepend="and" property="jmSpecName"> 
+		       stck.JM_SPEC_NAME = #jmSpecName# 
+	</isNotNull>
+	<isNotNull prepend="and" property="dryWet"> 
+		       stck.dry_wet = #dryWet# 
+	</isNotNull>
+	<isNotNull prepend="and" property="storage"> 
+		       stck.storage = #storage# 
+	</isNotNull>
+	GROUP BY jm_spec_name,storage,dry_wet
+	
+	-->
+	
+	SELECT COUNT(1) "amount",
+       JM_SPEC_NAME "jmSpecName",
+       STORAGE "storage",
+       DRY_WET "dryWet"
+  FROM (SELECT T.JM_SPEC_NAME, nvl(T.DRY_WET,T.DRY_WET2) dry_wet, T.STORAGE
+          FROM V_KS_COMPONENT_REPORT_STOCK T
+         WHERE T.STORAGE != '高架订单仓'
+         <isNotNull prepend="and" property="jmSpecName"> 
+		       t.JM_SPEC_NAME = #jmSpecName# 
+	</isNotNull>
+	<isNotNull prepend="and" property="dryWet"> 
+		       nvl(T.DRY_WET,T.DRY_WET2) = #dryWet# 
+	</isNotNull>
+	<isNotNull prepend="and" property="storage"> 
+		       t.storage = #storage# 
+	</isNotNull>)
+ GROUP BY JM_SPEC_NAME, STORAGE, DRY_WET
+ 
+	 
     </select>
+    
+    <select id="countReport4NotOrder" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+    
+    SELECT COUNT(1) "stockAmount"
+  FROM (SELECT T.JM_SPEC_NAME, nvl(T.DRY_WET,T.DRY_WET2) dry_wet, T.STORAGE
+          FROM V_KS_COMPONENT_REPORT_STOCK T
+         WHERE T.STORAGE != '高架订单仓'
+         <isNotNull prepend="and" property="jmSpecName"> 
+		       t.JM_SPEC_NAME = #jmSpecName# 
+	</isNotNull>
+	<isNotNull prepend="and" property="dryWet"> 
+		       nvl(T.DRY_WET,T.DRY_WET2) = #dryWet# 
+	</isNotNull>
+	<isNotNull prepend="and" property="storage"> 
+		       t.storage = #storage# 
+	</isNotNull>
+	)
+	
+	<!--    
+	SELECT sum(amount) "stockAmount"
+	FROM
+	(select t.batch_no,t.storage,replace(t.dry_wet,'膜','') dry_wet,t.jm_spec_name,t.amount from KS_COMPONENT_K3_STOCK t
+	WHERE t.id &lt; 0
+	UNION ALL
+	select t.batch_no,t.storage,replace(od.dry_wet,'膜',''),od.mater_spec_name,t.amount from KS_COMPONENT_K3_STOCK t
+	LEFT JOIN  ks_component_check_head ch
+	ON ch.code = t.check_code
+	LEFT JOIN ks_prod_component_yxorder od
+	ON ch.order_id = od.id
+	WHERE t.id>0 AND t.check_code IS NOT NULL
+	UNION ALL
+	select t.batch_no,t.storage,replace(t.dry_wet,'膜','') ,t.jm_spec_name,t.amount from KS_COMPONENT_K3_STOCK t
+	WHERE t.id>0 AND t.check_code IS NULL) stck
+	WHERE stck.storage != '高架订单仓'
+	<isNotNull prepend="and" property="jmSpecName"> 
+		       stck.JM_SPEC_NAME = #jmSpecName# 
+	</isNotNull>
+	<isNotNull prepend="and" property="dryWet"> 
+		       stck.dry_wet = #dryWet# 
+	</isNotNull>
+	<isNotNull prepend="and" property="storage"> 
+		       stck.storage = #storage# 
+	</isNotNull>
+	-->
+	 
+    </select>
+    
+    
+    
     
     <!--订单仓元件库存报表-->
     <select id="queryReport4Order" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
-	    SELECT T1.ORDER_NO             AS "orderNo",
+	   <!-- SELECT T1.ORDER_NO             AS "orderNo",
          T1.PROD_NAME            AS "prodName",
          T1.JM_SPEC_NAME         AS "jmSpecName",
          T1.ORDER_AMOUNT         AS "orderAmount",
@@ -846,10 +949,177 @@
 		       		T1.ORDER_NO like '%' || #orderNo2# || '%'
 				</isNotNull>
 	 ORDER BY T1.ORDER_NO, T1.JM_SPEC_NAME
+    -->
+    
+    SELECT ORDER_NO "orderNo",
+       MAX(PROD_NAME) "prodName",
+       JM_SPEC_NAME "jmSpecName",
+       MAX(ORDER_AMOUNT) "orderAmount",
+       COUNT(1) "stockAmount",
+       MAX(DIRECTOR) "director",
+       MAX(STOCK_TIME) "stockTime",
+       MAX(DELIVERY_DATE_LATEST) "deliveryDateLatest",
+       MAX(OVER_DATE) "overDate",
+       max(date_delivery) "dateDelivery"
+  FROM (SELECT T.BATCH_NO,
+               to_char(T.STOCK_TIME,'YYYY-MM-DD HH24:MI:SS') STOCK_TIME,
+               NVL(T.ORDER_NO, '空') ORDER_NO,
+               T.JM_SPEC_NAME,
+               T.PROD_NAME,
+               T.ORDER_AMOUNT,
+               T.DIRECTOR,
+               T.DELIVERY_DATE_LATEST,t.date_delivery,
+               CASE
+                 WHEN (T.date_delivery is null) or (TRUNC(SYSDATE -
+                            TO_DATE(to_char(T.date_delivery, 'YYYY-MM-DD'), 'YYYY-MM-DD')) &lt;= 0) THEN
+                  ''
+                 ELSE
+                  TO_CHAR(TRUNC(SYSDATE -
+                                TO_DATE(to_char(T.date_delivery, 'YYYY-MM-DD'), 'YYYY-MM-DD')))
+               END OVER_DATE
+          FROM V_KS_COMPONENT_REPORT_STOCK T
+         WHERE T.STORAGE = '高架订单仓'
+         
+         <isNotNull prepend="and" property="jmSpecName"> 
+		       		T.JM_SPEC_NAME = #jmSpecName# 
+				</isNotNull>
+			  	<isNotNull prepend="and" property="jmSpecName2"> 
+					T.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'
+				</isNotNull>
+				<isNotNull prepend="and" property="orderNo2"> 
+		       		T.ORDER_NO like '%' || #orderNo2# || '%'
+				</isNotNull>
+         
+         
+         )
+ GROUP BY ORDER_NO, JM_SPEC_NAME
     
     
     </select>
     
+    <select id="countReport4Order" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
+	 
+	<!-- SELECT sum(T1.ORDER_AMOUNT)         AS "orderAmount",
+         sum(T1.STOCK_AMOUNT)         AS "stockAmount"
+    FROM (        
+          SELECT STCK.ORDER_NO,
+                  YB.PROD_NAME,
+                  STCK.JM_SPEC_NAME,
+                  OD.ORDER_AMOUNT,
+                  STCK.STOCK_AMOUNT,
+                  nvl(yb.director,yb.person_in_charge) director,
+                  to_char(STCK.STOCK_TIME, 'YYYY-MM-DD') STOCK_TIME,
+                  TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD') DELIVERY_DATE_LATEST,
+                  CASE
+                    WHEN TRUNC(SYSDATE -
+                               TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')) &lt;= 0 THEN
+                     ''
+                    ELSE
+                     TO_CHAR(TRUNC(SYSDATE -
+                                   TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')))
+                  END OVER_DATE
+            FROM (SELECT STOCK.ORDER_NO,
+                          STOCK.JM_SPEC_NAME,
+                          MAX(STOCK_TIME) STOCK_TIME,
+                          COUNT(1) STOCK_AMOUNT
+                     FROM (SELECT T.BATCH_NO,
+                                  T.ORDER_NO,
+                                  T.JM_SPEC_NAME,
+                                  T.CREATE_TIME STOCK_TIME
+                             FROM KS_COMPONENT_K3_STOCK T
+                            WHERE t.prod_state IS NULL AND t.check_code IS NOT NULL
+                              AND T.STORAGE = '高架订单仓'
+                              AND T.AMOUNT > 0
+                           UNION ALL
+                           SELECT TT.BATCH_NO,
+                                  QJ.ORDER_NO,
+                                  PMS.MATER_SPEC_NAME,
+                                  CASE
+                                    WHEN TT.METHOD = 'input' THEN
+                                     TT.CREATE_TIME
+                                    WHEN TT.METHOD = 'import' THEN
+                                     JM.CREATE_DT
+                                  END STOCK_TIME
+                             FROM (SELECT  case when t.prod_state IS NULL AND t.check_code IS NULL then 'input'
+	                                else 'import' end METHOD,
+                                          T.BATCH_NO,
+                                          T.ORDER_NO,
+                                          T.JM_SPEC_NAME,
+                                          T.CREATE_TIME,
+                                          T.STORE_TIME
+                                     FROM KS_COMPONENT_K3_STOCK T
+                                    WHERE ( ( t.prod_state IS NULL AND t.check_code IS NULL) or (t.prod_state IS NOT NULL))
+                                      AND T.STORAGE = '高架订单仓'
+                                      AND T.AMOUNT > 0) TT
+                             LEFT JOIN QINSEN.INST_QIJIAN QJ
+                               ON QJ.BATCH_NO = TT.BATCH_NO
+                             LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+                               ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID
+                             LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                               ON PMS.MATER_SPEC_ID = QJ.PROD_SPEC_ID) STOCK
+                    WHERE STOCK.ORDER_NO IS NOT NULL
+                      AND STOCK.JM_SPEC_NAME IS NOT NULL
+                    GROUP BY STOCK.ORDER_NO, STOCK.JM_SPEC_NAME) STCK
+            LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
+              ON OD.ORDER_NO = STCK.ORDER_NO
+             AND replace(replace(OD.MATER_SPEC_NAME,'（','('),'）',')') = 
+              replace(replace(STCK.JM_SPEC_NAME,'（','('),'）',')')
+            LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+              ON YB.ID = OD.BASE_ID) T1
+   where 1=1
+	 			<isNotNull prepend="and" property="jmSpecName"> 
+		       		T1.JM_SPEC_NAME = #jmSpecName# 
+				</isNotNull>
+			  	<isNotNull prepend="and" property="jmSpecName2"> 
+					T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'
+				</isNotNull>
+				<isNotNull prepend="and" property="orderNo2"> 
+		       		T1.ORDER_NO like '%' || #orderNo2# || '%'
+				</isNotNull>
+				
+				-->
+				
+				SELECT sum(T1.ORDER_AMOUNT)         AS "orderAmount",
+         		sum(T1.STOCK_AMOUNT)          AS "stockAmount"
+				FROM (SELECT ORDER_NO "orderNo",
+       MAX(ORDER_AMOUNT) ORDER_AMOUNT,
+       COUNT(1) stock_Amount
+  FROM (SELECT T.BATCH_NO,
+               to_char(T.STOCK_TIME,'YYYY-MM-DD HH24:MI:SS') STOCK_TIME,
+               NVL(T.ORDER_NO, '空') ORDER_NO,
+               T.JM_SPEC_NAME,
+               T.PROD_NAME,
+               T.ORDER_AMOUNT,
+               T.DIRECTOR,
+               T.DELIVERY_DATE_LATEST,
+               CASE
+                 WHEN (T.date_delivery is null) or (TRUNC(SYSDATE -
+                            TO_DATE(to_char(T.date_delivery, 'YYYY-MM-DD'), 'YYYY-MM-DD')) &lt;= 0) THEN
+                  ''
+                 ELSE
+                  TO_CHAR(TRUNC(SYSDATE -
+                                TO_DATE(to_char(T.date_delivery, 'YYYY-MM-DD'), 'YYYY-MM-DD')))
+               END OVER_DATE
+          FROM V_KS_COMPONENT_REPORT_STOCK T
+         WHERE T.STORAGE = '高架订单仓'
+         
+         <isNotNull prepend="and" property="jmSpecName"> 
+		       		T.JM_SPEC_NAME = #jmSpecName# 
+				</isNotNull>
+			  	<isNotNull prepend="and" property="jmSpecName2"> 
+					T.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'
+				</isNotNull>
+				<isNotNull prepend="and" property="orderNo2"> 
+		       		T.ORDER_NO like '%' || #orderNo2# || '%'
+				</isNotNull>
+         
+         
+         )
+ GROUP BY ORDER_NO, JM_SPEC_NAME ) T1
+				
+				
+	 
+    </select>
     <!--元件库存报表-->
     <select id="queryReport4Stock" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
 	 SELECT T1.MATER_CODE           AS "materCode",
@@ -861,13 +1131,17 @@
        T1.DIRECTOR             AS "director",
        nvl(T1.PROD_NAME,T1.JM_SPEC_NAME)            AS "prodName",
        T1.JM_SPEC_NAME         AS "jmSpecName",
-       T1.TAPE                 AS "tape",
+       
+      t1.tape "tape",
+       t1.box "box",
+	  t1.lid "lid",
+       
+       
        T1.SPEC_NAME_LABEL      AS "specNameLabel",
        T1.BAG                  AS "bag",
-       T1.BOX                  AS "box",
-       T1.LID                  AS "lid",
+      
        T1.AMOUNT               AS "amount",
-       T1.DRY_WET              AS "dryWet",
+       nvl(T1.DRY_WET,T1.DRY_WET2)    AS "dryWet",
        T1.STORAGE              AS "storage",
        T1.POSITION             AS "position",
        to_char(T1.STOCK_TIME,'YYYY-MM-DD')           AS "stockTime",
@@ -884,134 +1158,9 @@
        T1.ABNORMAL             AS "abnormal",
        T1.ABNORMAL_EXPLAIN     AS "abnormalExplain",
        T1.ABNORMAL_OTHER       AS "abnormalOther"
-  FROM (
-        
-        SELECT STOCK.MATER_CODE,
-                STOCK.TRAY_CODE,
-                STOCK.BATCH_NO,
-                STOCK.CHECK_CODE,
-                OD.TYPE,
-                OD.ORDER_NO,
-                NVL(YB.DIRECTOR, YB.PERSON_IN_CHARGE) DIRECTOR,
-                YB.PROD_NAME,
-                STOCK.JM_SPEC_NAME,
-                CHK.TAPE,
-                NVL(YB.SPEC_NAME_LABEL, STOCK.JM_SPEC_NAME) SPEC_NAME_LABEL,
-                YB.BAG,
-                CHK.BOX,
-                CHK.LID,
-                STOCK.AMOUNT,
-                CL.DRY_WET,
-                STOCK.STORAGE,
-                STOCK.POSITION,
-                STOCK.STOCK_TIME,
-                JM.CREATE_DT JM_CREATE_DT,
-                WT.F_GPD,
-                WT.F_SALT,
-                WT.F_CHECK_TM,
-                WT.R_GPD,
-                WT.R_SALT,
-                WT.R_CHECK_TM,
-                CD.DISINFECT_TIME,
-                YB.DELIVERY_DATE_LATEST,
-                CASE
-                  WHEN TRUNC(SYSDATE -
-                             TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')) &lt;= 0 THEN
-                   ''
-                  ELSE
-                   TO_CHAR(TRUNC(SYSDATE -
-                                 TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')))
-                END OVER_DATE,
-                
-                (SELECT WM_CONCAT(DICT.DICTNAME)
-                   FROM EOS_DICT_ENTRY DICT
-                  WHERE DICT.DICTTYPEID = 'KS_COMPONENT_INDUSTRY_ABNORMAL'
-                    AND DICT.DICTID IN
-                        (SELECT COLUMN_VALUE DICTID
-                           FROM TABLE(SPLIT(CHK.ABNORMAL, ',')))) ABNORMAL,
-                CHK.ABNORMAL_EXPLAIN,
-                CHK.ABNORMAL_OTHER
-        
-          FROM (SELECT T.MATER_CODE,
-                        T.TRAY_CODE,
-                        T.JM_SPEC_NAME,
-                        T.AMOUNT,
-                        T.STORAGE,
-                        NVL(T.POSITION, T.STORAGE_CODE) POSITION,
-                        T.BATCH_NO,
-                        T.CREATE_TIME STOCK_TIME,
-                        T.CHECK_CODE
-                   FROM KS_COMPONENT_K3_STOCK T
-                  WHERE t.prod_state IS NULL AND t.check_code IS NOT NULL
-                    AND T.AMOUNT > 0
-                 UNION ALL
-                 SELECT TT.MATER_CODE,
-                        TT.TRAY_CODE,
-                        
-                         CASE
-                          WHEN TT.METHOD = 'input' THEN
-                           TT.JM_SPEC_NAME
-                          WHEN TT.METHOD = 'import' THEN
-                           TT.prod_SPEC_NAME
-                        END 
-                        JM_SPEC_NAME,
-                        TT.AMOUNT,
-                        TT.STORAGE,
-                        TT.POSITION,
-                        TT.BATCH_NO,
-                        CASE
-                          WHEN TT.METHOD = 'input' THEN
-                           TT.CREATE_TIME
-                          WHEN TT.METHOD = 'import' THEN
-                           JM.CREATE_DT
-                        END STOCK_TIME,
-                        CHCK.CHECK_CODE
-                   FROM (SELECT case when t.prod_state IS NULL AND t.check_code IS NULL then 'input'
-   							 else 'import' end METHOD,
-                                T.TRAY_CODE,
-                                T.STORAGE,
-                                T.MATER_CODE,
-                                T.BATCH_NO,
-                                T.CREATE_TIME,
-                                T.STORE_TIME,
-                                T.JM_SPEC_NAME,t.prod_spec_name,
-                                T.AMOUNT,
-                                NVL(T.POSITION, T.STORAGE_CODE) POSITION
-                           FROM KS_COMPONENT_K3_STOCK T
-                          WHERE  
-                          ( ( t.prod_state IS NULL AND t.check_code IS NULL) or (t.prod_state IS NOT NULL))
-                               
-                            AND T.AMOUNT > 0) TT
-                   LEFT JOIN V_KS_CHECK_LIST_CURRENT CHCK
-                     ON CHCK.BATCH_NO = TT.BATCH_NO
-                   LEFT JOIN QINSEN.INST_QIJIAN QJ
-                     ON QJ.BATCH_NO = TT.BATCH_NO
-                   LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
-                     ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID) STOCK
-          LEFT JOIN V_KS_CHECK_LIST_CURRENT CL
-            ON CL.BATCH_NO = STOCK.BATCH_NO
-          LEFT JOIN QINSEN.INST_QIJIAN QJ
-            ON QJ.BATCH_NO = STOCK.BATCH_NO
-          LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
-            ON JM.RECORD_ID = QJ.JUANMO_BATCH_ID
-          LEFT JOIN (SELECT TT.JUANMO_BATCH_ID,
-                            MAX(TT.CREATE_TIME) DISINFECT_TIME
-                       FROM KS_COMPONENT_DISINFECT TT
-                      GROUP BY TT.JUANMO_BATCH_ID) CD
-            ON CD.JUANMO_BATCH_ID = JM.RECORD_ID
-          LEFT JOIN QINSEN.INST_WATER_TEST WT
-            ON WT.JUANMO_BATCH_ID = QJ.JUANMO_BATCH_ID
-        
-          LEFT JOIN V_KS_CHECK_ORDER_RELATION COR
-            ON COR.CHECK_CODE = STOCK.CHECK_CODE
-          LEFT JOIN KS_COMPONENT_CHECK_HEAD CHK
-            ON CHK.CODE = STOCK.CHECK_CODE
-          LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
-            ON OD.ID = COR.ORDER_ID
-          LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
-            ON YB.ID = COR.BASE_ID) T1
-
-          
+       , t1.Date_Delivery "dateDelivery"
+  FROM V_KS_COMPONENT_Report_Stock T1
+		 
    where 1=1
    
    <isNotNull prepend="and" property="fSaltDown"> 
@@ -1102,7 +1251,7 @@
 		       T1.tray_CODE = #trayCode# 
 	</isNotNull>
 
- ORDER BY T1.JM_CREATE_DT NULLS LAST
+ ORDER BY T1.JM_CREATE_DT NULLS LAST,T1.STOCK_TIME NULLS LAST
 	 
 	 
 	</select> 

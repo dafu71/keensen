@@ -125,6 +125,14 @@
         
         ,t1.waste_loss "wasteLoss" ,nvl(t1.fcc_amount,0) "fccAmount"
         ,t1.defect_picture "defectPicture"
+        
+        ,t1.defect_length "defectLength"
+        
+        ,t1.colorb_Avg "colorbAvg"
+        
+        ,case when t1.colorb_Avg&gt;= t1.b_down and t1.colorb_Avg &lt;= t1.b_up 
+        then '合格'
+        else '不合格' end "colorbOk"
        
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,  
   replace(A.water_batch_no,'单击旁边选择','') water_batch_no,
@@ -247,7 +255,23 @@
                ,USED.AMOUNT USED_AMOUNT,nvl(wst.loss,0) waste_loss,nvl(wst.cm_loss,0) waste_cm_loss,nvl(wst.tm_loss,0) waste_tm_loss,
                nvl(fcc.amount,0) fcc_amount, decode(fcc.batch_no,null,0,1) fcc_exist
                ,ddp.picture_name defect_picture
+               
+               ,tmdefect.defect_length 
+               
+               ,nvl(A.colorb,0) colorb
+               ,nvl(A.colorb2,0) colorb2
+               ,nvl(A.colorb3,0) colorb3
+               ,round((nvl(A.colorb,0)+ nvl(A.colorb2,0) + nvl(A.colorb3,0))/3,2) colorb_Avg
+               ,mc.b_up,mc.b_down
+               
           FROM QINSEN.INST_TUMO A
+          
+          LEFT JOIN ks_quality_mp_colorb mc
+          ON a.spec_id = mc.mater_spec_id
+          
+          left join (select sum(length) defect_length,relation_id from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = A.record_id
+          
           
           left join KS_DIAPHGRAM_DEFECT_PICTURE ddp  
           on ddp.batch_no = A.batch_no

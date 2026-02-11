@@ -66,11 +66,55 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 	
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'beforeSave',
 			function() {
+				
+		var urlDateDelivery = Ext.getCmp(urlDateDeliveryId).getValue();
+		if (urlDateDelivery == '请上传图片') {
+			Ext.Msg.alert('系统提示', '请上传询期回复截图');
+			return false;
+		}
+		var urlDateDelivery2 = Ext.getCmp(urlDateDeliveryId2).getValue();
+		if (urlDateDelivery2 == '请上传图片') {
+			Ext.Msg.alert('系统提示', '请上传CRM营销副总或总经理审批截图');
+			return false;
+		} 	
+				
 		var deliveryDateLatest = this.editWindow.deliveryDateLatest
 			.getValue();
 		var demandDate = getDiffDay(deliveryDateLatest, -2);	
 		this.editWindow.demandDate.setValue(demandDate);		
 				
+			}, this);
+			
+			
+	this.editWindow.activeItem.mon(this.editWindow.activeItem,
+			'afterload', function(win, data) {				
+
+					var urlDateDelivery = data.urlDateDelivery;
+					var urlDateDelivery2 = data.urlDateDelivery2;
+
+					if (Ext.isEmpty(urlDateDelivery)) {
+						Ext.getCmp(urlDateDeliveryId).setValue('请上传图片');
+					} else {
+
+						var url = '';
+						url += '<a href="/default/myupload/mporder/'
+								+ urlDateDelivery + '" target=_blank>查看图片</a>';
+						url += '&nbsp;&nbsp;&nbsp;&nbsp;';
+						Ext.getCmp(urlDateDeliveryId).update(url);
+					}
+
+					if (Ext.isEmpty(urlDateDelivery2)) {
+						Ext.getCmp(urlDateDeliveryId2).setValue('请上传图片');
+					} else {
+
+						var url = '';
+						url += '<a href="/default/myupload/mporder/'
+								+ urlDateDelivery2 + '" target=_blank>查看图片</a>';
+						url += '&nbsp;&nbsp;&nbsp;&nbsp;';
+						Ext.getCmp(urlDateDeliveryId2).update(url);
+					}
+				
+
 			}, this);
 			
 	
@@ -510,6 +554,162 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.exportMp = funct
 			saveAs(blob, 'download.xlsx');
 		});
 	
+}
+
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.uploadPhoto = function() {
+
+	this.photoUploadWin.getComponent('uploadForm').form.reset();
+	this.photoUploadWin.baseId.setValue(this.editWindow.baseId.getValue());
+	this.photoUploadWin.show();
+	this.photoUploadWin.tag = 1;
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.uploadPhoto2 = function() {
+
+	this.photoUploadWin.getComponent('uploadForm').form.reset();
+	this.photoUploadWin.baseId.setValue(this.editWindow.baseId.getValue());
+	this.photoUploadWin.show();
+	this.photoUploadWin.tag = 2;
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.doUploadPhoto = function() {
+
+	var _this = this;
+	var uploadInputPanel = this.photoUploadWin.getComponent('uploadForm');
+	// 校验
+	var fileUploadObj = uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	var filePath = fileUploadObj.getValue();
+	// 文件后缀
+	var sfileName = filePath.split(".");
+
+	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
+			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
+			'raw', 'wmf', 'webp', 'avif', 'apng'];
+	var extname = sfileName[1].toLowerCase();
+	if (extname == null || array.indexOf(extname) == -1) {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为图片文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+	if (uploadInputPanel.form.isValid()) {
+		// 上传询期回复截图
+		var url = 'com.keensen.ump.produce.diaphragm.ship.uploadUrlDateDelivery.flow';
+		var obj = Ext.getCmp(urlDateDeliveryId);
+		// 上传CRM总经理审批截图
+		if (this.photoUploadWin.tag == 2) {
+			url = 'com.keensen.ump.produce.diaphragm.ship.uploadUrlDateDelivery2.flow';
+			obj = Ext.getCmp(urlDateDeliveryId2);
+		}
+
+		uploadInputPanel.form.submit({
+					method : "POST",
+					timeout : 1200,
+					url : url,
+					waitTitle : "操作提示",
+					waitMsg : "上传数据中...",
+					success : function(form, action) {
+						var result = action.result;
+						var fname = result.msg;
+						fname = '/myupload/mporder/' + fname;
+						if (result.success) {
+							_this.photoUploadWin.hide();
+
+							var url = '';
+							url += '<a href="/default' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							obj.update(url);
+
+						}
+					},
+					failure : function(form, action) {
+						Ext.MessageBox.show({
+									title : '操作提示',
+									buttons : Ext.MessageBox.OK,
+									msg : "导入失败，请检查文件格式或网络是否正常",
+									icon : Ext.MessageBox.ERROR
+								});
+					}
+				});
+	}
+
+}
+
+// 拍照查看
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.viewPhotos = function() {
+
+	var obj = this.planConfirmWindow.isVisible()?this.planConfirmWindow : this.viewWindow;
+	var urlDateDelivery = obj.urlDateDelivery.getValue();
+	var urlDateDelivery2 = obj.urlDateDelivery2.getValue();
+	
+
+	var url = '&nbsp;';
+	var html = '<table border=1 align=center style="width :100%;height : 100%; border-collapse: collapse;">'
+	html += '<tr>'
+	html += '<td width="50%" style="border: 1px solid #ccc; text-align: center;vertical-align: middle;">'
+	if (!Ext.isEmpty(urlDateDelivery)) {
+		url = markRootUrl + 'myupload/mporder/' + urlDateDelivery;
+		html += '<img title="单击查看完整图片" src="'
+							+ url
+							+ '?ver='
+							+ Math.random()
+							+ '" onclick= "javascript:window.open('
+							+ "'"
+							+ url
+							+ "'"
+							+ ');" style="cursor: pointer;max-width: 100%; max-height: 100%;" />'
+	} else {
+		html += url;
+	}
+	html += '</td>';
+	var url = '&nbsp;';
+	html += '<td width="50%" style="border: 1px solid #ccc; text-align: center;vertical-align: middle;">'
+	if (!Ext.isEmpty(urlDateDelivery2)) {
+		url = markRootUrl + 'myupload/mporder/' + urlDateDelivery2;
+		html += '<img title="单击查看完整图片" src="'
+							+ url
+							+ '?ver='
+							+ Math.random()
+							+ '" onclick= "javascript:window.open('
+							+ "'"
+							+ url
+							+ "'"
+							+ ');" style="cursor: pointer;max-width: 100%; max-height: 100%;" />'
+	} else {
+		html += url;
+	}
+	html += '</td>';
+	
+	html += '</tr>';
+	
+	html += '</table>';
+	
+	var win = new Ext.Window({
+		title : '询期截图',
+		width : 1024,
+		height : 600,
+		layout : 'fit',
+		resizable : false,
+		closable : true,
+		modal : true,
+		bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+		html : html,
+		buttons : [{
+					text : '关闭',
+					handler : function() {
+						win.close();
+					}
+				}]
+	});
+	// 显示窗口
+	win.show();
+
 }
 
 function getDiffDay(date, num) {

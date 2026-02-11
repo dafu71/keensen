@@ -38206,8 +38206,8 @@
     </columnProperty>
   </nodes>
   <nodes xsi:type="model:PEntityNode" id="node28" name="KsComponentYxorderBase" nodeType="table" displayName="KsComponentYxorderBase" author="dafu" allUseViewModel="true" table="KS_COMPONENT_YXORDER_BASE" genStrategy="assigned">
-    <location x="599" y="645"/>
-    <size height="3811" width="150"/>
+    <location x="631" y="375"/>
+    <size height="3931" width="150"/>
     <figSize height="20" width="150"/>
     <comment>产品销售统计表</comment>
     <columnProperty id="property801" name="id" displayName="主键" columnName="ID" nullAble="false" PK="true" columnType="NUMBER" eosDataType="Long" length="22" dasType="long" overWriteDefaultColumnType="false" showType="Long" update="true" insert="true">
@@ -38980,7 +38980,7 @@
         </fieldEdit>
       </viewField>
     </columnProperty>
-    <columnProperty id="property828" name="dryWet" displayName="干/湿" columnName="DRY_WET" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="50" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+    <columnProperty id="property828" name="dryWet" displayName="干/湿" columnName="DRY_WET" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="200" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
       <comment>干/湿</comment>
       <viewField dict="false" dictTypeId="" displayName="干/湿" entityField="dryWet" id="dryWet" label="干/湿" name="dryWet" userDefined="true">
         <fieldView showAllAttr="false">
@@ -42980,6 +42980,90 @@
     <columnProperty id="property1484" name="urlDateDelivery" displayName="询期回复截图" columnName="URL_DATE_DELIVERY" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="200" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
       <comment>询期回复截图</comment>
       <viewField dict="false" displayName="询期回复截图" id="urlDateDelivery" label="询期回复截图" name="urlDateDelivery" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property1485" name="urlDateDelivery2" displayName="CRM总经理审批截图" columnName="URL_DATE_DELIVERY2" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="200" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>CRM总经理审批截图</comment>
+      <viewField dict="false" displayName="CRM总经理审批截图" id="urlDateDelivery2" label="CRM总经理审批截图" name="urlDateDelivery2" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property1486" name="urlLabel" displayName="标签图片" columnName="URL_LABEL" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="200" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>标签图片</comment>
+      <viewField dict="false" displayName="标签图片" id="urlLabel" label="标签图片" name="urlLabel" userDefined="true">
+        <fieldView>
+          <type name="write"/>
+          <attr name="formatPattern"/>
+          <attr name="srcFormatPattern"/>
+          <attr name="maxLength"/>
+          <attr attrValue="" defaultValue="" name="filter"/>
+          <attr attrValue="" defaultValue="" name="maxLengthString"/>
+          <attr name="value"/>
+        </fieldView>
+        <fieldEdit>
+          <type name="text"/>
+          <attr attrValue="" defaultValue="" name="value"/>
+          <attr attrValue="" defaultValue="" name="extAttr"/>
+          <attr attrValue="" defaultValue="" name="tabindex"/>
+          <attr attrValue="" defaultValue="" name="readonly"/>
+          <attr attrValue="" defaultValue="" name="disabled"/>
+          <attr attrValue="" defaultValue="" name="size"/>
+          <attr attrValue="" defaultValue="" name="maxlength"/>
+          <attr attrValue="" defaultValue="" name="title"/>
+          <attr attrValue="" defaultValue="" name="style"/>
+          <attr attrValue="" defaultValue="" name="styleClass"/>
+          <attr attrValue="" defaultValue="" name="validateAttr"/>
+        </fieldEdit>
+      </viewField>
+    </columnProperty>
+    <columnProperty id="property1487" name="urlMark" displayName="唛头图片" columnName="URL_MARK" nullAble="true" columnType="VARCHAR2" eosDataType="String" length="200" dasType="string" overWriteDefaultColumnType="false" showType="String" update="true" insert="true">
+      <comment>唛头图片</comment>
+      <viewField dict="false" displayName="唛头图片" id="urlMark" label="唛头图片" name="urlMark" userDefined="true">
         <fieldView>
           <type name="write"/>
           <attr name="formatPattern"/>

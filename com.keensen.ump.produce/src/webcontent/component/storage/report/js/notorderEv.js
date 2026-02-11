@@ -1,4 +1,6 @@
 com.keensen.ump.produce.component.storage.Report4NotOrderMgr.prototype.initEvent = function() {
+	
+	var _this = this;
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -10,6 +12,19 @@ com.keensen.ump.produce.component.storage.Report4NotOrderMgr.prototype.initEvent
 					}
 				});
 	}, this);
+	
+	this.listPanel.store.on('load', function() {
+
+				var records = _this.listPanel.store.getRange();
+				if (records.length == 0) {
+					Ext.getCmp(stockAmountTotalId).setValue('');
+					return
+				}
+
+				var stockAmountTotal = records[0].data.stockAmountTotal;
+				
+				Ext.getCmp(stockAmountTotalId).setValue('在库数量合计:' + stockAmountTotal);
+			})
 
 }
 

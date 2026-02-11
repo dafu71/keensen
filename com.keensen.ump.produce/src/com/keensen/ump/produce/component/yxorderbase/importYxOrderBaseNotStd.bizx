@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="importYxOrderBaseNotStd" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node2" name="注释2" displayName="注释" collapsed="false" nodeType="note" type="note" content="干湿字段=要求干湿" title="dafu&#x9;26-2-5 下午3:59">
+    <targetConnections>link1</targetConnections>
+    <location x="1286" y="12"/>
+    <size height="100" width="173"/>
+  </nodes>
   <nodes xsi:type="model:Note" id="node7" name="注释7" displayName="注释" nodeType="note" type="note" content="订单类型:非公司标准&#xD;&#xA;版本: 2.0" title="dafu&#x9;25-12-2 下午2:37">
     <sourceConnections xsi:type="process:tLink" id="link30" name="link30" displayName="连接线" type="note">
       <sourceNode>node7</sourceNode>
@@ -18,9 +23,9 @@
     <size height="100" width="541"/>
   </nodes>
   <nodes xsi:type="model:Note" id="node4" name="注释4" displayName="注释" nodeType="note" type="note" content="日期判断" title="dafu&#x9;23-11-2 下午2:27">
-    <targetConnections>link57</targetConnections>
-    <targetConnections>link73</targetConnections>
     <targetConnections>link74</targetConnections>
+    <targetConnections>link73</targetConnections>
+    <targetConnections>link57</targetConnections>
     <location x="1569" y="437"/>
     <size height="100" width="182"/>
   </nodes>
@@ -64,15 +69,15 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link56</targetConnections>
-    <targetConnections>link48</targetConnections>
-    <targetConnections>link46</targetConnections>
-    <targetConnections>link37</targetConnections>
-    <targetConnections>link27</targetConnections>
-    <targetConnections>link15</targetConnections>
-    <targetConnections>link70</targetConnections>
-    <targetConnections>link71</targetConnections>
     <targetConnections>link23</targetConnections>
+    <targetConnections>link71</targetConnections>
+    <targetConnections>link70</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link27</targetConnections>
+    <targetConnections>link37</targetConnections>
+    <targetConnections>link46</targetConnections>
+    <targetConnections>link48</targetConnections>
+    <targetConnections>link56</targetConnections>
     <location x="1500" y="159"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -164,8 +169,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link4</targetConnections>
     <targetConnections>link2</targetConnections>
+    <targetConnections>link4</targetConnections>
     <location x="498" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend0label</nodeLabel>
@@ -274,8 +279,8 @@
       <sourceNode>loopend1</sourceNode>
       <targetNode>loopstart7</targetNode>
     </sourceConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link9</targetConnections>
+    <targetConnections>link10</targetConnections>
     <location x="945" y="436"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend1label</nodeLabel>
@@ -382,8 +387,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link35</targetConnections>
     <targetConnections>link34</targetConnections>
+    <targetConnections>link35</targetConnections>
     <location x="906" y="233"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend4label</nodeLabel>
@@ -726,9 +731,9 @@
       <sourceNode>loopend3</sourceNode>
       <targetNode>node4</targetNode>
     </sourceConnections>
-    <targetConnections>link58</targetConnections>
-    <targetConnections>link60</targetConnections>
     <targetConnections>link61</targetConnections>
+    <targetConnections>link60</targetConnections>
+    <targetConnections>link58</targetConnections>
     <location x="1107" y="625"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend3label</nodeLabel>
@@ -876,8 +881,8 @@
       <sourceNode>loopend6</sourceNode>
       <targetNode>node4</targetNode>
     </sourceConnections>
-    <targetConnections>link65</targetConnections>
     <targetConnections>link66</targetConnections>
+    <targetConnections>link65</targetConnections>
     <location x="1533" y="605"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend6label</nodeLabel>
@@ -1016,8 +1021,8 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
-    <targetConnections>link17</targetConnections>
     <targetConnections>link18</targetConnections>
+    <targetConnections>link17</targetConnections>
     <location x="495" y="685"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend7label</nodeLabel>
@@ -1161,6 +1166,10 @@
       <sourceNode>assign0</sourceNode>
       <targetNode>subprocess2</targetNode>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link1" name="link1" displayName="连接线" type="note">
+      <sourceNode>assign0</sourceNode>
+      <targetNode>node2</targetNode>
+    </sourceConnections>
     <targetConnections>link50</targetConnections>
     <targetConnections>link30</targetConnections>
     <location x="650" y="95"/>
@@ -1181,6 +1190,10 @@
     <process:copy>
       <process:from type="expression" pattern="reference">null</process:from>
       <process:to type="query">data</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">order/dryWetDemand</process:from>
+      <process:to type="query">order/dryWet</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
@@ -1257,9 +1270,9 @@
       <sourceNode>loopend8</sourceNode>
       <targetNode>node4</targetNode>
     </sourceConnections>
-    <targetConnections>link54</targetConnections>
-    <targetConnections>link52</targetConnections>
     <targetConnections>link51</targetConnections>
+    <targetConnections>link52</targetConnections>
+    <targetConnections>link54</targetConnections>
     <location x="1487" y="812"/>
     <size height="24" width="24"/>
     <nodeLabel>loopend8label</nodeLabel>

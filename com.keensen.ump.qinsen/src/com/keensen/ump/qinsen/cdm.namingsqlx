@@ -50,6 +50,8 @@
        ,t1.dm_batch_id "dmBatchId"
        ,t1.dimo_batch_no "dimoBatchNo",t1.dense_net_code "denseNetCode"
        
+       ,t1.defect_length "defectLength"
+       
   FROM (SELECT A.RECORD_ID,A.LOCATION,A.dense_net_code,
                A.BATCH_NO,
                A.LINE_ID,
@@ -103,11 +105,17 @@
                  ,A.jm_cm_batch_no 
                  ,tm.dimo_batch_no 
                  ,dm.id dm_batch_id
+                 ,A.defect_length 
           FROM 
          <!--家用膜--> 
           
-         (SELECT cm.*,nvl(cm.quantity - (jm.amount * pms.Num_Per_Wad),0) UNUSED_QUANTITY2,pms.mp_width 
+         (SELECT tmdefect.defect_length,cm.*,nvl(cm.quantity - (jm.amount * pms.Num_Per_Wad),0) UNUSED_QUANTITY2,pms.mp_width 
          ,jm.cm_batch_no jm_cm_batch_no FROM QINSEN.INST_CAIDIEMO cm
+         
+          left join (select sum(length) defect_length,relation_id from KS_DIAPHRAGM_CDM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = cm.record_id
+         
+         
 			LEFT JOIN KS_COMPONENT_HOUSEHOLD_JM jm
 			ON cm.batch_no=jm.cm_batch_no
 			LEFT JOIN QINSEN.PARA_MATER_SPEC PMS

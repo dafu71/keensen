@@ -81,8 +81,8 @@
 <js:load scriptPath="pub/common/defectWin.js" />
 <js:load scriptPath="pub/common/defectViewWin.js" />
 
-<js:load scriptPath="qinsen/produce/tumo/js/manageUi.js"/>
-<js:load scriptPath="qinsen/produce/tumo/js/manageEv.js"/>
+<js:load scriptPath="qinsen/produce/tumo/js/manageUi2.js"/>
+<js:load scriptPath="qinsen/produce/tumo/js/manageEv2.js"/>
 
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
@@ -92,6 +92,8 @@
   var operatorid = '<%=operatorid %>';
   var ip = '<%=ip %>';
   var markRootUrl = "<%=rootUrl %>/myupload/diaphgram/";
+  
+  var opt = '';
 
   var uid = "<%=uid %>";
   var uname = "<%=operatorname %>";

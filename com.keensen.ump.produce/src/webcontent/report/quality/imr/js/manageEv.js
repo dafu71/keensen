@@ -13,7 +13,7 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 
-				if (Ext.isEmpty(vals['condition/orderNo'])) {
+				if (Ext.isEmpty(vals['condition/orderNo']) && Ext.isEmpty(vals['condition/tmBatchNo'])) {
 
 					if (Ext.isEmpty(vals['condition/produceDtStart'])
 							|| Ext.isEmpty(vals['condition/produceDtEnd'])) {
@@ -31,6 +31,10 @@ com.keensen.ump.produce.report.quality.imr.imrMgr.prototype.initEvent = function
 
 				}
 
+				if (Ext.isEmpty(vals['condition/tmBatchNo']) && Ext.isEmpty(vals['condition/prodSpecId'])) {
+						Ext.Msg.alert("系统提示", "请选择元件型号！");
+						return false;
+				}	
 				var store = this.listPanel.store;
 				store.baseParams = vals;
 				store.load({});

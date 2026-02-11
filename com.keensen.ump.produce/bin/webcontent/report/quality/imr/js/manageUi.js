@@ -19,7 +19,7 @@ com.keensen.ump.produce.report.quality.imr.imrMgr = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
-					columns : 3,
+					columns : 4,
 					border : true,
 					// collapsible : true,
 					titleCollapse : false,
@@ -30,13 +30,19 @@ com.keensen.ump.produce.report.quality.imr.imrMgr = function() {
 								anchor : '90%',
 								//allowBlank : false,
 								fieldLabel : '订单号'
+							},{
+								xtype : 'textfield',
+								name : 'condition/tmBatchNo',
+								anchor : '90%',
+								//allowBlank : false,
+								fieldLabel : '涂膜批号'
 							}, {
 								xtype : 'prodspeccombobox',
 								hiddenName : 'condition/prodSpecId',
 								anchor : '95%',
 								fieldLabel : '元件型号 ',
 								typeAhead : true,
-								allowBlank : false,
+								//allowBlank : false,
 								typeAheadDelay : 100,
 								minChars : 1,
 								queryMode : 'local',

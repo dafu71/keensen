@@ -346,9 +346,16 @@ SELECT 2 MYORDER,
 	WHERE 
 	1=1
 	<isNotNull prepend="and" property="orderNo">t.order_no=#orderNo#</isNotNull>
-	AND t.prod_spec_id=#prodSpecId#
-	<isNotNull prepend="" property="produceDtStart">AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#</isNotNull>
+        <isNotNull prepend="and" property="prodSpecId">t.prod_spec_id=#prodSpecId#</isNotNull>
+        <isNotNull prepend="" property="produceDtStart">AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">AND to_char(T.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#</isNotNull>
+        <isNotNull prepend="" property="tmBatchNo">AND EXISTS
+		 (SELECT 1
+	          FROM qinsen.INST_JUANMO_DETAIL D, qinsen.INST_CAIDIEMO C, qinsen.INST_TUMO M
+	         WHERE t.juanmo_batch_ID = D.MAIN_BATCH_ID
+	           AND D.CDM_BATCH_ID = C.RECORD_ID
+	           AND C.TUMO_BATCH_ID = M.RECORD_ID
+	           AND M.BATCH_NO LIKE '%' || UPPER(#tmBatchNo#) || '%')</isNotNull>
 	ORDER BY t.record_id	
 	</select>
     <!--平均值查询-->

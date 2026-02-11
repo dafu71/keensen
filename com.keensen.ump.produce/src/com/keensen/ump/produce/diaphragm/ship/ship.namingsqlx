@@ -678,8 +678,12 @@
        t2.id "sendId",-->
        t1.QUALIFID_LENGTH - nvl(t3.amount,0) "delivery",
        nvl(t7.SALT_REJECTION,0) "fSaltRejection",T7.GFD_AVG "fGfdAvg",
+       <!--
        case when t7.SALT_REJECTION-0.05 &gt; 99.79 or t7.SALT_REJECTION-0.05 &lt; 99.65 
        then round(DBMS_RANDOM.VALUE(99.65, 99.79),2) else t7.SALT_REJECTION-0.05 end "fSaltRejection2",
+       -->
+       <!--公式修改为:=99.66+0.1(初检脱盐率-99.7)/(99.9-99.7) 数据取两位小数-->
+       round(99.66+0.1*(nvl(t7.SALT_REJECTION,0)-99.7)/(99.9-99.7),2) "fSaltRejection2",
        m.mater_code "materCode",
        nvl(T22.CAIMO_LENGTH,0) "caimoLength",
        prnt.print_name "printName"

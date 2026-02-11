@@ -111,7 +111,7 @@ com.keensen.ump.produce.component.storage.QueryMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : true,
+					//hidden : true,
 					handler : this.exportExcel
 				});
 	}
@@ -157,33 +157,43 @@ com.keensen.ump.produce.component.storage.QueryMgr = function() {
 								width : 30
 							}), selModel, {
 						dataIndex : 'batchNo',
+						sortable : true,
 						header : '元件序号'
 					}, {
 						dataIndex : 'checkCode',
+						sortable : true,
 						header : '请检单号'
 					}, {
 						dataIndex : 'trayCode',
+						sortable : true,
 						header : '托盘号'
 					}, {
 						dataIndex : 'orderNo',
+						sortable : true,
 						header : '订单号'
 					}, {
 						dataIndex : 'amount',
+						sortable : true,
 						header : '数量'
 					}, {
 						dataIndex : 'jmSpecName',
+						sortable : true,
 						header : '卷膜型号'
 					}, {
 						dataIndex : 'dryWet',
+						sortable : true,
 						header : '干湿'
 					}, {
 						dataIndex : 'specType',
+						sortable : true,
 						header : '元件类型'
 					}, {
 						dataIndex : 'storageCode',
+						sortable : true,
 						header : '库位码'
 					}, {
 						dataIndex : 'storage',
+						sortable : true,
 						header : '仓库名称'
 					}, {
 						dataIndex : 'createTime',

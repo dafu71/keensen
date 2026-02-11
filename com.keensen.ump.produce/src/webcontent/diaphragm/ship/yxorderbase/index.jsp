@@ -11,6 +11,8 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("produce/diaphragm/ship/yxorderbase/index.jsp","");
 %>
 <html>
 <!-- 
@@ -49,12 +51,16 @@
 </style>
 <script type="text/javascript">
   var uid = "<%=uid %>";
+  var markRootUrl = "<%=rootUrl %>";
   
   var importExcelBtnId = Ext.id();
   importExcelBtnId = 'YxOrderBaseMgr-' + importExcelBtnId;
   
   var listid = Ext.id();
   var deleteMpBtnId = Ext.id();
+  
+  var urlDateDeliveryId = Ext.id();
+  var urlDateDeliveryId2 = Ext.id();
 
   var opt = '';
   

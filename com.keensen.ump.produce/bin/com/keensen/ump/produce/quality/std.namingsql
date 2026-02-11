@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.quality.std">
+    <select id="queryMpColorb" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   	
+	SELECT T1.ID              AS "id",
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       t1.mater_spec_id as "materSpecId",
+		t1.b_up as "bUp",
+		t1.b_down as "bDown",
+      pms.mater_spec_name "materSpecName"
+
+  FROM KS_QUALITY_MP_COLORB T1
+  left join qinsen.para_mater_spec pms
+  on t1.mater_spec_id = pms.mater_spec_id
+	where 1=1
+	<isNotNull prepend="and" property="createTimeStart">TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+        <isNotNull prepend="and" property="id">T1.ID = #id#</isNotNull>
+        <isNotNull prepend="and" property="materSpecId">t1.mater_spec_id = #materSpecId#</isNotNull>
+	
+	order by t1.id desc
+	 </select>
+</sqlMap>

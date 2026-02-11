@@ -1,5 +1,8 @@
 com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 	this.initPanel = function() {
+		
+		this.rec = {};
+		
 		this.initQueryPanel();
 		this.initListPanel();
 		this.initDetailPanel();
@@ -9,6 +12,8 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 		this.initDetailEditWindow();
 
 		this.initProduceCountWindow();
+		
+		this.initEditDefectWindow();
 
 		this.gridPanel = this.gridPanel || new Ext.Panel({
 					layout : 'border',
@@ -193,7 +198,12 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						scope : this,
 						iconCls : 'icon-printer',
 						handler : this.onPrintTag
-					}],
+					}, '->', {
+								text : '元件不良录入',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onAddDefect
+							}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.qinsen.juanmo.deleteJuanmoMain.biz.ext',
 			columns : [new Ext.grid.RowNumberer({
@@ -240,6 +250,24 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 						header : '生产时间',
 						width : 110,
 						dataIndex : 'produceDate'
+					}, {
+						header : '不良米数',
+						width : 80,
+						dataIndex : 'defectLength',
+						renderer : function(v, m, r, i) {
+							if (!Ext.isEmpty(v) && v > 0) {
+								var relationId = r.get('recordId');
+								var batchNo = r.get('batchNo');
+								var style = "<a style='text-decoration:none'";
+								var str = style
+										+ " href='javascript:defectView2("
+										+ Ext.encode(relationId) + ","
+										+ Ext.encode(batchNo) + ");'>" + v
+										+ "</a>";
+
+								return str;
+							}
+						}
 					}, {
 						header : '叠膜栈板号',
 						width : 210,
@@ -391,6 +419,8 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 							name : 'trailer'
 						}, {
 							name : 'pipeCode'
+						}, {
+							name : 'defectLength'
 						}]
 			})
 		})
@@ -1190,4 +1220,180 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 
 				});
 	}
+	
+	this.initEditDefectWindow = function() {
+
+		var _this = this;
+
+		this.firstStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['固损', '固损'], ['不良', '不良']]
+				});
+
+		var selModel4EditDefect = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4EditDefect = this.listPanel4EditDefect
+				|| new Ext.fn.EditListPanel({
+					region : 'center',
+					hsPage : false,
+					viewConfig : {
+						forceFit : true
+					},
+					clicksToEdit : 1,
+					selModel : selModel4EditDefect,
+					delUrl : '111.biz.ext',
+					columns : [new Ext.grid.RowNumberer(), selModel4EditDefect,
+							{
+								dataIndex : 'first',
+								header : '一级目录'
+							}, {
+								dataIndex : 'second',
+								header : '二级目录'
+							}, {
+								dataIndex : 'third',
+								header : '三级目录'
+							}, {
+								dataIndex : 'fourth',
+								header : '四级目录'
+							}, {
+								dataIndex : 'length',
+								header : '不良长度(米)',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var defectId = _this.rec.data['defectId'];
+													_this.saveJmDefect(
+															defectId, 'length',
+															newValue, oldValue);
+												}
+											}
+										}))
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.defect.queryProdDefect4Jm.biz.ext',
+						root : 'data',
+						hsPage : false,
+						autoLoad : true,
+						autoScroll : true,
+						clicksToEdit : 1,
+						baseParams : {
+							'condition/tache' : '卷膜'
+						},
+						fields : [{
+									name : 'defectId'
+								}, {
+									name : 'first'
+								}, {
+									name : 'second'
+								}, {
+									name : 'third'
+								}, {
+									name : 'fourth'
+								}, {
+									name : 'length'
+								}, {
+									name : 'tacheCause'
+								}]
+					})
+				})
+
+		this.queryPanel4EditDefect = this.queryPanel4EditDefect
+				|| new Ext.fn.QueryPanel({
+							height : 70,
+							columns : 4,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '一级目录',
+								ref : '../first',
+								hiddenName : 'condition/first',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : _this.firstStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel4EditDefect.first
+												.reset()
+									}
+								}
+							}, {
+								xtype : 'textfield',
+								name : 'condition/second',
+								anchor : '100%',
+								colspan : 1,
+								fieldLabel : '二级目录%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/third',
+								anchor : '100%',
+								colspan : 1,
+								fieldLabel : '三级目录%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/fourth',
+								anchor : '100%',
+								colspan : 1,
+								fieldLabel : '四级目录%-%'
+							}, {
+								xtype : 'hidden',
+								value : '卷膜',
+								ref : '../tache',
+								name : 'condition/tache'
+							}]
+						});
+
+		this.queryPanel4EditDefect.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.editDefectWindow.hide();
+					}
+
+				});
+
+		this.editDefectWindow = this.editDefectWindow || new Ext.Window({
+					title : '元件不良录入',
+					relationId : '',// 关联的卷膜记录ID
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 820,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4EditDefect,
+							this.listPanel4EditDefect]
+
+				});
+	}
+	
+	
+	
 }

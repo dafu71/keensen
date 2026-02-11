@@ -525,8 +525,15 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
         ,nvl(yb.tape,t2.tape) "tape",nvl(yb.lid,t2.lid) "lid",yb.sn_Regular "snRegular",
         nvl(yb.make_Label,t2.label) "makeLabel",
        yb.label_Double "labelDouble",nvl(yb.label_Drawing_Code,t2.label_Drawing_Code) "labelDrawingCode",
+       
+       nvl(t2.dry_wet,nvl(yb.dry_wet_demand,yb.dry_wet)) "dryWet",
+       
        sn.prefix "prefix", sn.sn_start "snStart",sn.sn_end "snEnd",
-       lb.url "labelUrl",
+       
+       <!--lb.url "labelUrl",-->
+       
+       CASE WHEN yb.url_label IS NOT NULL THEN '/myupload/order/' || yb.url_label ELSE lb.url END "labelUrl",
+       
        pms.juanmo "juanmo",pms.cut "cut",pms.raosi "raosi"
   FROM KS_COMPONENT_DUTY_QJ T1
   LEFT JOIN KS_PROD_COMPONENT_YXORDER T2
@@ -839,12 +846,25 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
      
        case when t3.jm_amount &lt;= nvl(chk.chk_num,0) then '完成' else '处理中' end "packStateName"
         ,yb.tape "tape",yb.lid "lid",yb.sn_Regular "snRegular",yb.make_Label "makeLabel",
-       yb.label_Double "labelDouble",yb.label_Drawing_Code "labelDrawingCode",lb.url "labelUrl"
+       yb.label_Double "labelDouble",yb.label_Drawing_Code "labelDrawingCode",
+       
+       <!-- lb.url "labelUrl" -->
+       
+       CASE WHEN yb.url_label IS NOT NULL THEN '/myupload/order/' || yb.url_label 
+       ELSE lb.url END "labelUrl"
+       
+       ,nvl(t2.dry_wet,nvl(yb.dry_wet_demand,yb.dry_wet)) "dryWet"
        
        ,chk.chk_num "checkNum"
        ,yb.mark_drawing_code "markDrawingCode"
        , replace(yb.mark_drawing_code2,'单击旁边按钮选择图纸编号','') "markDrawingCode2"
-       ,mk.url2 "firsrMarkUrl"
+       
+       <!--,mk.url2 "firsrMarkUrl"-->
+       
+       ,CASE WHEN yb.url_mark IS NOT NULL THEN '/myupload/order/' || yb.url_mark 
+       ELSE mk.url2 END "firsrMarkUrl"
+       
+       
        ,mk2.url2 "secondMarkUrl"
        
         
@@ -1182,6 +1202,7 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
        
        yb.ifpolish "ifpolish",
        yb.tray "tray",
+       nvl(t2.dry_wet,nvl(yb.dry_wet_demand,yb.dry_wet)) "dryWet",
        
        decode(substr(t2.order_no,1,2),'SG',sgstd.TRAY_SIZE,yb.tray_Size) "traySize",
        
@@ -1199,13 +1220,21 @@ ON od.order_no=t.order_no AND t.prod_spec_id=od.mater_spec_id) v2
        decode(substr(t2.order_no,1,2),'SG',sgstd.LABEL_DRAWING_CODE,YB.LABEL_DRAWING_CODE),
        t2.LABEL_DRAWING_CODE) "labelDrawingCode",
        
-       decode(substr(t2.order_no,1,2),'SG',sgstd.LABEL_url,LB.URL) "labelUrl",
+       <!--decode(substr(t2.order_no,1,2),'SG',sgstd.LABEL_url,LB.URL) "labelUrl",-->
+       
+       CASE WHEN yb.url_label IS NOT NULL THEN '/myupload/order/' || yb.url_label 
+       ELSE decode(substr(t2.order_no,1,2),'SG',sgstd.LABEL_url,LB.URL) end "labelUrl",
+       
        CHK.CHK_NUM "checkNum",
        decode(T2.template_Name,null,
        decode(substr(t2.order_no,1,2),'SG',sgstd.MARK_DRAWING_CODE,YB.MARK_DRAWING_CODE),T2.template_Name） "markDrawingCode",
        REPLACE(YB.MARK_DRAWING_CODE2, '单击旁边按钮选择图纸编号', '') "markDrawingCode2",
        
-       decode(substr(t2.order_no,1,2),'SG',sgstd.mark_url,MK.URL2) "firsrMarkUrl",
+       <!--decode(substr(t2.order_no,1,2),'SG',sgstd.mark_url,MK.URL2) "firsrMarkUrl",-->
+       
+       CASE WHEN yb.url_mark IS NOT NULL THEN '/myupload/order/' || yb.url_mark
+       else decode(substr(t2.order_no,1,2),'SG',sgstd.mark_url,MK.URL2) end "firsrMarkUrl",
+       
        MK2.URL2 "secondMarkUrl"
   FROM KS_PROD_COMPONENT_YXORDER T2
   <!--生管订单-->

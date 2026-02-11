@@ -334,12 +334,23 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 							anchor : '95%',
 							colspan : 3
 						}, {
-							xtype : 'textfield',
-							fieldLabel : '干/湿膜',
-							allowBlank : false,
-							name : 'entity/dryWet',
+
 							anchor : '95%',
-							colspan : 3
+							colspan : 3,
+							xtype : 'combo',
+							mode : 'local',
+							allowBlank : false,
+							editable : false,
+							hiddenName : 'entity/dryWet',
+							ref : '../../type',
+							fieldLabel : '干/湿膜',
+							store : [['干', '干'], ['湿', '湿']],
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+
 						}, {
 							xtype : 'displayfield',
 							height : '5',

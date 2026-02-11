@@ -48,6 +48,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.initUpdateOrderWindow();
 
 		this.buildPhotoUploadWin();
+		
+		this.buildPictureUploadWin();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -438,9 +440,9 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								xtype : "dateregion",
 								colspan : 1,
 								// anchor : '75%',
-								nameArray : ['condition/orderDateStart',
-										'condition/orderDateEnd'],
-								fieldLabel : "下单日期",
+								nameArray : ['condition/orderTimeStart',
+										'condition/orderTimeEnd'],
+								fieldLabel : "订单下单到<br>生产系统时间",
 								format : "Y-m-d"
 							}, {
 								xtype : 'combobox',
@@ -655,7 +657,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					text : "公司标准产品模板下载",
 					disabled : allRight != '1',
 					height : 40,
-					hidden:true,
+					hidden : true,
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.onDownStd
@@ -673,7 +675,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.queryPanel.addButton({
 					text : "非公司标准产品模板下载",
 					disabled : allRight != '1',
-					hidden:true,
+					hidden : true,
 					height : 40,
 					scope : this,
 					iconCls : 'icon-application_excel',
@@ -892,12 +894,22 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						header : '订单状态变更时间',
 						sortable : true
 					}, {
+						dataIndex : 'orderTime',
+						header : '营销下单到<br>生产系统时间',
+						width : 120,
+						sortable : true
+					}, {
 						dataIndex : 'orderDate',
+						hidden : true,
 						header : '下单日期',
 						sortable : true
 					}, {
 						dataIndex : 'demandStockDate',
 						header : '入库日期',
+						sortable : true
+					}, {
+						dataIndex : 'dateDelivery',
+						header : '发货日期',
 						sortable : true
 					}/*
 						 * , { dataIndex : 'prodName', header : '产品名称', sortable :
@@ -1156,7 +1168,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'deliveryDate',
-						header : '交货日期',
+						header : '发货日期',
 						sortable : true
 					}, {
 						dataIndex : 'orderType',
@@ -1295,7 +1307,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'ifGift',
-						header : '是否有相同型号赠送'
+						header : '同型号赠送数量'
 					}, {
 						dataIndex : 'provideBatchNo',
 						header : '是否在检测报告里面提供全部膜元件序列号'
@@ -1366,7 +1378,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'ifGift',
-						header : '是否有赠品',
+						header : '同型号赠送数量',
 						hidden : true
 					}, {
 						dataIndex : 'id',
@@ -1667,6 +1679,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							name : 'dateDelivery'
 						}, {
 							name : 'urlDateDelivery'
+						}, {
+							name : 'urlDateDelivery2'
+						}, {
+							name : 'orderTime'
+						}, {
+							name : 'dateDelivery'
 						}]
 			})
 		})
@@ -1731,6 +1749,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										layout : "anchor",
 										xtype : 'displayfield',
 										// value : '询期回复截图',
+
 										id : urlDateDeliveryId,
 										name : 'entity/urlDateDelivery'
 									}, {
@@ -1745,6 +1764,40 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 									}]
 						});
+
+		this.urlDateDeliveryChoose2 = this.urlDateDeliveryChoose2
+				|| new Ext.Container({
+					autoEl : 'div',
+					layout : 'column',
+					anchor : "100%",
+					colspan : 6,
+					fieldLabel : '<span style="color:red;">CRM营销副总或<br>总经理审批截图</span>',
+					defaults : {
+						xtype : "container",
+						autoEl : "div",
+						anchor : "100%"
+					},
+					items : [{
+								columnWidth : 0.7,
+								anchor : "100%",
+								layout : "anchor",
+								xtype : 'displayfield',
+								// value : '询期回复截图',
+
+								id : urlDateDeliveryId2,
+								name : 'entity/urlDateDelivery2'
+							}, {
+								columnWidth : 0.3,
+								anchor : "100%",
+								layout : "anchor",
+								text : '上传图片',
+								xtype : 'button',
+								handler : function() {
+									_this.uploadPhoto2();
+								}
+
+							}]
+				});
 
 		this.addOrderWindow = this.addOrderWindow || new Ext.fn.FormWindow({
 			title : '生产计划录入',
@@ -1779,7 +1832,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					}
 				},
 				columns : 24,
-				loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandYxOrderBase4Add9.biz.ext',
+				loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandYxOrderBase4Add10.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.component.yxorderbase.saveEntity.biz.ext',
 				fields : [{
 					xtype : 'displayfield',
@@ -1975,7 +2028,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					allowBlank : true,
 					disabled : false,
 					hidden : false,
-					fieldLabel : '是否有相同<br>型号赠送',
+					fieldLabel : '同型号赠送数量',
 					// readOnly : true,
 					anchor : '100%',
 					colspan : 6,
@@ -2268,7 +2321,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					ref : '../../deliveryDate',
 					// allowBlank : true,
 					hidden : true,
-					fieldLabel : '交货日期',
+					fieldLabel : '发货日期',
 					// readOnly : true,
 					anchor : '100%',
 					colspan : 6,
@@ -2340,7 +2393,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					ref : '../../dateDelivery',
 					format : "Y-m-d",
 					allowBlank : false,
-					fieldLabel : '交货日期',
+					fieldLabel : '发货日期',
 					// readOnly : true,
 					anchor : '100%',
 					colspan : 6,
@@ -2350,7 +2403,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 						}
 					}
-				}, this.urlDateDeliveryChoose, {
+				}, this.urlDateDeliveryChoose, this.urlDateDeliveryChoose2, {
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">性能要求<br>测试条件</p>',
 					labelSeparator : '',// 去掉冒号
@@ -4109,7 +4162,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 				columns : 24,
 				loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandYxOrderBase.biz.ext',
 				saveUrl : '1.biz.ext',
-				fields : [{
+				fields : [ {
+					xtype : 'hidden',
+					ref : '../../baseId',
+					dataIndex : 'id'
+				},{
 					xtype : 'displayfield',
 					fieldLabel : '<p style="color:red;font-size:16px;">基本信息</p>',
 					labelSeparator : '',// 去掉冒号
@@ -4209,7 +4266,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					allowBlank : true,
 					disabled : false,
 					hidden : false,
-					fieldLabel : '是否有相同<br>型号赠送',
+					fieldLabel : '同型号赠送数量',
 					// readOnly : true,
 					anchor : '100%',
 					colspan : 6,
@@ -4378,7 +4435,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					ref : '../../deliveryDate',
 					readOnly : true,
 					hidden : true,
-					fieldLabel : '交货日期',
+					fieldLabel : '发货日期',
 					// readOnly : true,
 					anchor : '100%',
 					colspan : 6
@@ -4428,6 +4485,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					ref : '../../urlDateDelivery',
 					xtype : 'displayfield',
 					fieldLabel : '询期回复截图'
+				}, {
+					dataIndex : 'urlDateDelivery2',
+					anchor : '100%',
+					colspan : 6,
+					// rowspan : 3,
+					ref : '../../urlDateDelivery2',
+					xtype : 'displayfield',
+					fieldLabel : 'CRM营销副总或<br>总经理审批截图'
 				}, {
 					xtype : 'displayfield',
 					height : 5,
@@ -5486,6 +5551,26 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		});
 
 		this.orderViewWindow.buttons[0].hide();
+
+		this.orderViewWindow.addButton({
+					text : "修改标签图纸",
+					scope : this,
+					hidden:uid != 'dafu' && uid != 'KS01147' && uid != 'KS00307' && uid != 'KS01479' ,
+					iconCls : 'icon-application_edit',
+					handler : function() {
+						return _this.onModifyUrlPicture('urlLabel')
+					}
+				});
+
+		this.orderViewWindow.addButton({
+					text : "修改唛头图纸",
+					scope : this,
+					hidden:uid != 'dafu' && uid != 'KS01147' && uid != 'KS00307' && uid != 'KS01479',
+					iconCls : 'icon-application_edit',
+					handler : function() {
+						return _this.onModifyUrlPicture('urlMark')
+					}
+				});
 	}
 
 	this.initAdjustWindow = function() {
@@ -9220,6 +9305,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 	this.buildPhotoUploadWin = function() {
 		this.photoUploadWin = new Ext.Window({
 					title : '上传图片',
+					tag : '',
 					collapsible : false,
 					modal : true,
 					closeAction : 'hide',
@@ -9253,6 +9339,53 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								scope : this,
 								handler : function() {
 									this.photoUploadWin.hide();
+								}
+							}]
+				});
+	}
+
+	// 上传图片面板
+	this.buildPictureUploadWin = function() {
+		
+		this.pictureUploadWin = new Ext.Window({
+					title : '上传图片',
+					collapsible : false,
+					modal : true,
+					closeAction : 'hide',
+					buttonAlign : 'center',
+					layout : 'fit',
+					width : 480,
+					height : 120,
+					items : [{
+								xtype : 'columnform',
+								itemId : 'uploadForm',
+								saveUrl : '111.flow',
+								columns : 1,
+								fileUpload : true,
+								fields : [{
+											name : 'uploadFile',
+											fieldLabel : '图片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'hidden',
+											name : 'baseId',
+											ref : '../../baseId'
+										}, {
+											xtype : 'hidden',
+											name : 'field',
+											ref : '../../field'
+										}]
+							}],
+					buttons : [{
+								text : '上传',
+								handler : this.doUploadPicture,
+								scope : this
+							}, {
+								text : '关闭',
+								scope : this,
+								handler : function() {
+									this.pictureUploadWin.hide();
 								}
 							}]
 				});

@@ -128,9 +128,14 @@
        defect.loss "loss",
        fx.mptype "zmcode",fx.psf_Name "psfName",
        t1.RELEASE_AMOUNT "releaseAmount",
-       round((nvl(bm.MATER2,0)+nvl(bm.MATER3,0)+ nvl(bm.MATER4,0)+nvl(bm.MATER5,0))/1000 * (NVL(T1.THEORY_AMOUNT, 0)),2) "usedWeight"
+       round((nvl(bm.MATER2,0)+nvl(bm.MATER3,0)+ nvl(bm.MATER4,0)+nvl(bm.MATER5,0))/1000 * (NVL(T1.THEORY_AMOUNT, 0)),2) "usedWeight",
+       
+       zmdefect.defect_length "defectLength"
+       
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
  
+ left join (select sum(length) defect_length,relation_id from KS_DIAPHRAGM_ZM_DEFECT_LIST group by relation_id) zmdefect
+  on zmdefect.relation_id = t1.id
   
   left join (select t.batch_no,t.mptype,dictname psf_Name from KS_PROD_DIAPHRAGM_MAKE_FIX t
   left join EOS_DICT_ENTRY t2 on t2.dictid=t.psf and t2.dicttypeid='KS_PSF') fx
@@ -162,7 +167,26 @@ where nvl(if_tear,'是') = '是'
   left join (select count(1) cnt ,DIMO_BATCH_NO from KS_PROD_DIAPHRAGM_ZMX_RECORD
       group by DIMO_BATCH_NO) t4 on t4.DIMO_BATCH_NO=t1.DIMO_BATCH_NO
      where 1=1
-     <isNotNull prepend="" property="id">AND t1.id = #id#</isNotNull>
+     
+      <isEqual compareValue="是" prepend="" property="ifscratch">AND exists ( select 1 from (SELECT A.DM_BATCH_ID ,P.DEFECT_NAME from 
+					QINSEN.INST_CDM_DEFECT2 A
+					          LEFT JOIN QINSEN.PARA_CDM_DEFECT P
+					            ON A.DEFECT_ITEM_ID = P.RECORD_ID
+					            WHERE p.defect_name LIKE '%刮%'
+					UNION ALL
+					SELECT t.id,t.abnormal 
+					from KS_PROD_DIAPHRAGM_ZMX_RECORD t
+					WHERE t.abnormal LIKE '%刮%'  ) tt where tt.DM_BATCH_ID = t1.id)</isEqual>
+        <isEqual compareValue="否" prepend="" property="ifscratch">AND not exists ( select 1 from (SELECT A.DM_BATCH_ID ,P.DEFECT_NAME from 
+					QINSEN.INST_CDM_DEFECT2 A
+					          LEFT JOIN QINSEN.PARA_CDM_DEFECT P
+					            ON A.DEFECT_ITEM_ID = P.RECORD_ID
+					            WHERE p.defect_name LIKE '%刮%'
+					UNION ALL
+					SELECT t.id,t.abnormal 
+					from KS_PROD_DIAPHRAGM_ZMX_RECORD t
+					WHERE t.abnormal LIKE '%刮%') tt where tt.DM_BATCH_ID = t1.id)</isEqual>
+        <isNotNull prepend="" property="id">AND t1.id = #id#</isNotNull>
         <isNotNull prepend="" property="dimoType">AND t1.dimo_Type = #dimoType#</isNotNull>
         <isNotNull prepend="" property="teamId">AND T1.TEAM_ID = #teamId#</isNotNull>
         <isNotNull prepend="" property="line">AND T1.LINE = #line#</isNotNull>
@@ -376,8 +400,14 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
      SELECT 
        nvl(sum(T1.THEORY_AMOUNT),0) AS "theoryAmount",
        sum(nvl(t1.release_amount,0)) "releaseAmount",
-       nvl(sum(defect.loss),0) "loss"
+       nvl(sum(defect.loss),0) + nvl(sum(zd.defect_length),0) "loss"
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+  
+  left join (select t.relation_id,SUM(t.length) defect_length from KS_DIAPHRAGM_ZM_DEFECT_LIST t
+  GROUP BY t.relation_id) zd
+  on zd.relation_id = t1.id
+  
+  
   left join (select sum(t.loss) loss ,t.dm_batch_id from QINSEN.Inst_Cdm_Defect2 t
 	GROUP BY t.dm_batch_id) defect on defect.dm_batch_id = t1.id
 	

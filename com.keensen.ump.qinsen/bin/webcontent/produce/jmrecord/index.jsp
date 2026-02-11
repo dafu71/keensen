@@ -68,6 +68,8 @@
   
   var quantityTotalId = Ext.id();
   
+  var machineCode = '';
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.qinsen.produce.jmrecordMgr
 		});

@@ -91,6 +91,7 @@ var markRootUrl = "<%=rootUrl %>";
   
   var exportButton = Ext.id();
   var urlDateDeliveryId = Ext.id();
+  var urlDateDeliveryId2 = Ext.id();
  
   var opt = '';
   FunctionMgr.load({ 

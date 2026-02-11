@@ -25,6 +25,14 @@
 -->
 <head>
 <title>库存查询</title>
+
+
+<!-- 导出Excel -->
+<script src="base/babel-polyfill/6.26.0/polyfill.js"></script>
+<script src="base/exceljs/4.2.1/exceljs.min.js"></script>
+<script src="base/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="base/exceljs/doQueryAndExport.js"></script>
+
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component.storage');
 </script>

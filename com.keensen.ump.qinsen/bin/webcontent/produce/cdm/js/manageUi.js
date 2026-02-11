@@ -4,7 +4,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 		// var defectTmWinId = Ext.id();
 		// var defectZmWinId = Ext.id();
-
+        this.rec = {};
+        
 		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
@@ -20,6 +21,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 		this.initChooseOrderWindow();
 
 		this.initProdCdmListWindow();
+	
+		this.initEditDefectWindow();
 
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					// id : defectTmWinId,
@@ -274,14 +277,18 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 								iconCls : 'icon-application_delete',
 								handler : this.onDel
 							}, '->', {
-								text : '录入铸膜不良',
+								text : '膜片不良录入',
 								scope : this,
 								iconCls : 'icon-application_add',
-								hidden : true,
-								handler : this.onaddZmDefect
-							}, '->', {
+								handler : this.onAddDefect
+							}/*
+								 * { text : '录入铸膜不良', scope : this, iconCls :
+								 * 'icon-application_add', hidden : true,
+								 * handler : this.onaddZmDefect }
+								 */, '->', {
 								text : '录入涂膜不良',
 								scope : this,
+								hidden : true,
 								iconCls : 'icon-application_add',
 								handler : this.onaddTmDefect
 							}]
@@ -389,6 +396,24 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						width : 120,
 						dataIndex : 'cdmSpecName'
 					}, {
+						header : '不良米数(新)',
+						width : 80,
+						dataIndex : 'defectLength',
+						renderer : function(v, m, r, i) {
+							if (!Ext.isEmpty(v) && v > 0) {
+								var relationId = r.get('recordId');
+								var batchNo = r.get('batchNo');
+								var style = "<a style='text-decoration:none'";
+								var str = style
+										+ " href='javascript:defectView2("
+										+ Ext.encode(relationId) + ","
+										+ Ext.encode(batchNo) + ");'>" + v
+										+ "</a>";
+
+								return str;
+							}
+						}
+					}, {
 						header : '不良米数',
 						width : 80,
 						dataIndex : 'totalLoss',
@@ -465,6 +490,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						baseParams : {},
 						fields : [{
 									name : 'recordId'
+								}, {
+									name : 'defectLength'
 								}, {
 									name : 'batchNo'
 								}, {
@@ -1163,6 +1190,13 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 					disabled : true,
 					scope : this,
 					handler : this.viewDefectPicture
+				});
+
+		this.inputWindow.addButton({
+					text : "查看膜片不良",
+					// disabled : true,
+					scope : this,
+					handler : this.viewDefect
 				});
 		/*
 		 * this.inputWindow.addButton({ text : "领取任务", scope : this, handler :
@@ -2105,4 +2139,178 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 				});
 	}
+
+	this.initEditDefectWindow = function() {
+
+		var _this = this;
+
+		this.firstStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['固损', '固损'], ['不良', '不良']]
+				});
+
+		var selModel4EditDefect = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.listPanel4EditDefect = this.listPanel4EditDefect
+				|| new Ext.fn.EditListPanel({
+					region : 'center',
+					hsPage : false,
+					viewConfig : {
+						forceFit : true
+					},
+					clicksToEdit : 1,
+					selModel : selModel4EditDefect,
+					delUrl : '111.biz.ext',
+					columns : [new Ext.grid.RowNumberer(), selModel4EditDefect,
+							{
+								dataIndex : 'first',
+								header : '一级目录'
+							}, {
+								dataIndex : 'second',
+								header : '二级目录'
+							}, {
+								dataIndex : 'third',
+								header : '三级目录'
+							}, {
+								dataIndex : 'fourth',
+								header : '四级目录'
+							}, {
+								dataIndex : 'length',
+								header : '不良长度(米)',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : false,
+											scope : this,
+											allowNegative : false,
+											decimalPrecision : 3,
+											minValue : 0,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var defectId = _this.rec.data['defectId'];
+													_this.saveCdmDefect(
+															defectId, 'length',
+															newValue, oldValue);
+												}
+											}
+										}))
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.quality.defect.queryMpDefect4Cdm.biz.ext',
+						root : 'data',
+						hsPage : false,
+						autoLoad : true,
+						autoScroll : true,
+						clicksToEdit : 1,
+						baseParams : {
+							'condition/tache' : '裁叠膜'
+						},
+						fields : [{
+									name : 'defectId'
+								}, {
+									name : 'first'
+								}, {
+									name : 'second'
+								}, {
+									name : 'third'
+								}, {
+									name : 'fourth'
+								}, {
+									name : 'length'
+								}, {
+									name : 'tacheCause'
+								}]
+					})
+				})
+
+		this.queryPanel4EditDefect = this.queryPanel4EditDefect
+				|| new Ext.fn.QueryPanel({
+							height : 70,
+							columns : 4,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '一级目录',
+								ref : '../first',
+								hiddenName : 'condition/first',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : _this.firstStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel4EditDefect.first
+												.reset()
+									}
+								}
+							}, {
+								xtype : 'textfield',
+								name : 'condition/second',
+								anchor : '100%',
+								colspan : 1,
+								fieldLabel : '二级目录%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/third',
+								anchor : '100%',
+								colspan : 1,
+								fieldLabel : '三级目录%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/fourth',
+								anchor : '100%',
+								colspan : 1,
+								fieldLabel : '四级目录%-%'
+							}, {
+								xtype : 'hidden',
+								value : '裁叠膜',
+								ref : '../tache',
+								name : 'condition/tache'
+							}]
+						});
+
+		this.queryPanel4EditDefect.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.editDefectWindow.hide();
+					}
+
+				});
+
+		this.editDefectWindow = this.editDefectWindow || new Ext.Window({
+					title : '膜片不良录入',
+					relationId : '',// 关联的裁叠膜记录ID
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 820,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4EditDefect,
+							this.listPanel4EditDefect]
+
+				});
+	}
+
 }
