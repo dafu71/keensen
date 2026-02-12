@@ -80,6 +80,8 @@ var opt = '';
   var nowStaffName = "<%=uname %>";
   var nowStaffId = <%=operatorid %>;
   
+  var machineCode = '';
+  
   var ip = '<%=ip %>';
   
   FunctionMgr.load({ 

@@ -48,7 +48,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.initUpdateOrderWindow();
 
 		this.buildPhotoUploadWin();
-		
+
 		this.buildPictureUploadWin();
 
 		return new Ext.fn.fnLayOut({
@@ -916,6 +916,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						 * true }
 						 */, {
 						dataIndex : 'materSpecName2',
+						hidden : true,
 						header : '订单下达型号',
 						sortable : true
 					}, {
@@ -4162,646 +4163,650 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 				columns : 24,
 				loadUrl : 'com.keensen.ump.produce.component.yxorderbase.expandYxOrderBase.biz.ext',
 				saveUrl : '1.biz.ext',
-				fields : [ {
-					xtype : 'hidden',
-					ref : '../../baseId',
-					dataIndex : 'id'
-				},{
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">基本信息</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					dataIndex : 'orderNo',
-					ref : '../../orderNo',
-					anchor : '100%',
-					colspan : 6,
-					fieldLabel : '销售订单编号 '
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					fieldLabel : '产品名称',
-					ref : '../../prodName',
-					dataIndex : 'prodName',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					dataIndex : 'jmSpecName',
-					ref : '../../jmSpecName',
-					anchor : '100%',
-					colspan : 6,
-					fieldLabel : '卷膜型号'
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					fieldLabel : '销售订单类型',
-					ref : '../../orderType',
-					dataIndex : 'orderType',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					fieldLabel : '产品类型',
-					ref : '../../type',
-					dataIndex : 'type',
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					fieldLabel : '货品名称',
-					ref : '../../hpmc',
-					dataIndex : 'hpmc',
-					anchor : '100%',
-					colspan : 6
+				fields : [{
+							xtype : 'hidden',
+							ref : '../../baseId',
+							dataIndex : 'id'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">基本信息</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'orderNo',
+							ref : '../../orderNo',
+							anchor : '100%',
+							colspan : 6,
+							fieldLabel : '销售订单编号 '
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							fieldLabel : '产品名称',
+							ref : '../../prodName',
+							dataIndex : 'prodName',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'jmSpecName',
+							ref : '../../jmSpecName',
+							anchor : '100%',
+							colspan : 6,
+							fieldLabel : '卷膜型号'
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							fieldLabel : '销售订单类型',
+							ref : '../../orderType',
+							dataIndex : 'orderType',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							fieldLabel : '产品类型',
+							ref : '../../type',
+							dataIndex : 'type',
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							fieldLabel : '货品名称',
+							ref : '../../hpmc',
+							dataIndex : 'hpmc',
+							anchor : '100%',
+							colspan : 6
 
-				}/*
-					 * , { xtype : 'textfield', readOnly : true, dataIndex :
-					 * 'ddxj', fieldLabel : '销售订单星级', // readOnly : true, anchor :
-					 * '100%', colspan : 6 }
-					 */, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '款式',
-					ref : '../../style',
-					dataIndex : 'style',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.styleStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
-					xtype : 'textfield',
-					dataIndex : 'mptype',
-					ref : '../../mptype',
-					// allowBlank : true,
-					disabled : false,
-					hidden : false,
-					fieldLabel : '膜片种类',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					dataIndex : 'ifGift',
-					ref : '../../ifGift',
-					allowBlank : true,
-					disabled : false,
-					hidden : false,
-					fieldLabel : '同型号赠送数量',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					listeners : {
-						scope : this,
-						"change" : function(o, newvalue, oldvalue) {
+						}/*
+							 * , { xtype : 'textfield', readOnly : true,
+							 * dataIndex : 'ddxj', fieldLabel : '销售订单星级', //
+							 * readOnly : true, anchor : '100%', colspan : 6 }
+							 */, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '款式',
+							ref : '../../style',
+							dataIndex : 'style',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.styleStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							xtype : 'textfield',
+							dataIndex : 'mptype',
+							ref : '../../mptype',
+							// allowBlank : true,
+							disabled : false,
+							hidden : false,
+							fieldLabel : '膜片种类',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'ifGift',
+							ref : '../../ifGift',
+							allowBlank : true,
+							disabled : false,
+							hidden : false,
+							fieldLabel : '同型号赠送数量',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							listeners : {
+								scope : this,
+								"change" : function(o, newvalue, oldvalue) {
 
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'dryWetDemand',
+							ref : '../../dryWetDemand',
+							allowBlank : true,
+							disabled : false,
+							hidden : false,
+							fieldLabel : '要求膜元件<br>干湿状态',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							listeners : {
+								scope : this,
+								"change" : function(o, newvalue, oldvalue) {
+
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'techCheck',
+							ref : '../../techCheck',
+
+							hidden : false,
+							fieldLabel : '是否通过膜元件<br>技术评审',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							listeners : {
+								scope : this,
+								"change" : function(o, newvalue, oldvalue) {
+
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							ref : '../../dryWet',
+							dataIndex : 'dryWet',
+							fieldLabel : '干/湿',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							ref : '../../wetPercent',
+							dataIndex : 'wetPercent',
+							fieldLabel : '接受湿膜支数',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'numberfield',
+							readOnly : true,
+							dataIndex : 'orderAmount',
+							ref : '../../orderAmount',
+							fieldLabel : '数量',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'numberfield',
+							readOnly : true,
+							dataIndex : 'dryAmount',
+							ref : '../../dryAmount',
+							fieldLabel : '发库存干膜(支)',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'numberfield',
+							dataIndex : 'wetAmount',
+							ref : '../../wetAmount',
+							readOnly : true,
+							fieldLabel : '发库存湿膜(支)',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'trigger',
+							// emptyText : '单击旁边按钮计算',
+							dataIndex : 'stockAmount',
+							ref : '../../stockAmount',
+							// readOnly : true,
+							readOnly : true,
+							editable : false,
+							fieldLabel : '发库存&nbsp;&nbsp;&nbsp;&nbsp;<br>膜元件(支)',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							hideTrigger : false,
+							scope : this
+						}, {
+							xtype : 'trigger',
+							// emptyText : '单击旁边按钮计算',
+							dataIndex : 'prodAmount',
+							ref : '../../prodAmount',
+							// readOnly : true,
+							readOnly : true,
+							editable : false,
+							fieldLabel : '需生产或入库(支)',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							hideTrigger : false,
+							scope : this,
+							regex : /^\d+(\.\d+)?$/,
+							regexText : "不合法的数据格式"
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'textfield',
+							dataIndex : 'orderDate',
+							ref : '../../orderDate',
+							readOnly : true,
+							fieldLabel : '下单日期',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'datefield',
+							format : "Y-m-d",
+							readOnly : true,
+							dataIndex : 'deliveryDateEarliest',
+							ref : '../../deliveryDateEarliest',
+
+							fieldLabel : '计划最早<br>发货日期',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'datefield',
+							format : "Y-m-d",
+							readOnly : true,
+							dataIndex : 'deliveryDateLatest',
+							ref : '../../deliveryDateLatest',
+
+							fieldLabel : '计划最晚<br>发货日期',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'textfield',
+							dataIndex : 'deliveryDate',
+							ref : '../../deliveryDate',
+							readOnly : true,
+							hidden : true,
+							fieldLabel : '发货日期',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'datefield',
+							format : "Y-m-d",
+							dataIndex : 'demandStockDate',
+							ref : '../../demandStockDate',
+							readOnly : true,
+							fieldLabel : '入库日期',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							xtype : 'trigger',
+							// emptyText : '单击旁边按钮计算',
+							dataIndex : 'period',
+							ref : '../../period',
+							readOnly : true,
+							hidden : true,
+							editable : true,
+							fieldLabel : '可用生产天数(天)',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							hideTrigger : false,
+							scope : this
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'datefield',
+							format : "Y-m-d",
+							dataIndex : 'dateDelivery',
+							ref : '../../dateDelivery',
+							readOnly : true,
+							fieldLabel : '发货日期',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6
+						}, {
+							dataIndex : 'urlDateDelivery',
+							anchor : '100%',
+							colspan : 6,
+							// rowspan : 3,
+							ref : '../../urlDateDelivery',
+							xtype : 'displayfield',
+							fieldLabel : '询期回复截图'
+						}, {
+							dataIndex : 'urlDateDelivery2',
+							anchor : '100%',
+							colspan : 6,
+							// rowspan : 3,
+							ref : '../../urlDateDelivery2',
+							xtype : 'displayfield',
+							fieldLabel : 'CRM营销副总或<br>总经理审批截图'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
 						}
-					}
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					dataIndex : 'dryWetDemand',
-					ref : '../../dryWetDemand',
-					allowBlank : true,
-					disabled : false,
-					hidden : false,
-					fieldLabel : '要求膜元件<br>干湿状态',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					listeners : {
-						scope : this,
-						"change" : function(o, newvalue, oldvalue) {
 
+						, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							// name : 'entity/productRemark',
+							dataIndex : 'productRemark',
+							readOnly : true,
+							hidden : true,
+							anchor : '100%',
+							colspan : 24,
+							height : 100,
+							xtype : 'textarea',
+							fieldLabel : '产品备注'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">性能要求<br>测试条件</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							dataIndex : 'saltLow',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '脱盐率(%)',
+							readOnly : true
+						}, {
+							dataIndex : 'gpdLow',
+							anchor : '100',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '产水量范围(GPD)',
+							readOnly : true
+						}, {
+							dataIndex : 'gpdUp',
+							hidden : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '产水量(GPD)',
+							readOnly : true
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * readOnly : true, mode : 'local', fieldLabel :
+							 * '测试液种类', ref : '../../testStand', dataIndex :
+							 * 'testStand', anchor : '100%', colspan : 6,
+							 * emptyText : '', editable : false, store :
+							 * this.testStandStore, displayField : "name",
+							 * valueField : "code" }
+							 */, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							readOnly : true,
+							dataIndex : 'pressure',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '测试液压力(psi)'// ,
+							// minValue : 0,
+						// decimalPrecision : 0
+					}	, {
+							readOnly : true,
+							dataIndex : 'temperature',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '测试液温度(℃)'// ,
+							// decimalPrecision : 0
+					}	, {
+							readOnly : true,
+							dataIndex : 'concentration',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '测试液浓度（ppm）'// ,
+							// decimalPrecision : 2
+					}	, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							readOnly : true,
+							dataIndex : 'recyclePercent',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '单支回收率（%）'// ,
+							// minValue : 2,
+						// decimalPrecision : 0
+					}	, {
+							readOnly : true,
+							dataIndex : 'ph',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '测试液PH值'// ,
+							// decimalPrecision : 0
+					}	, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">卷膜主材</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							readOnly : true,
+							dataIndex : 'denseNet',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '浓网厚度（Mil）'// ,
+							// decimalPrecision : 0
+					}	, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '膜元件端盖类型',
+							ref : '../../lid',
+							hiddenName : 'entity/lid',
+							dataIndex : 'lid',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.lidStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							readOnly : true,
+							dataIndex : 'reserve5',
+							ref : '../../reserve5',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '端盖图纸编号'
+						}, {
+							xtype : 'textfield',
+							emptyText : '',
+							readOnly : true,
+							dataIndex : 'denseNetCdm',
+							anchor : '100%',
+							colspan : 6,
+							fieldLabel : '叠膜工艺'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '膜体胶带颜色',
+							readOnly : true,
+							ref : '../../tape',
+							hiddenName : 'entity/tape',
+							dataIndex : 'tape',
+							anchor : '100%',
+							colspan : 12,
+							emptyText : '',
+							editable : false,
+							store : this.tapeStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							hidden : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '耐酸碱要求',
+							ref : '../../aar',
+							dataIndex : 'aar',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							readOnly : true,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '膜体胶带上<br>缠绕一圈彩带',
+							ref : '../../color',
+							readOnly : true,
+							dataIndex : 'color',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.colorStore,
+							displayField : "name",
+							valueField : "code"
+						}/*
+							 * , { readOnly : true, dataIndex : 'colorCode',
+							 * anchor : '100%', colspan : 6, xtype :
+							 * 'textfield', fieldLabel : '彩带色卡编号',
+							 * decimalPrecision : 0 }
+							 */, {
+							readOnly : true,
+							dataIndex : 'lidControlCode',
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '端盖受控编号'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">标签</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							dataIndex : 'label',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textarea',
+							fieldLabel : '标签使用<br>公司模板',
+							decimalPrecision : 0
+						}, {
+							dataIndex : 'labelDrawingCode',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '图纸编号',
+							decimalPrecision : 0
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '标签型号',
+							ref : '../../specNameLabel',
+							dataIndex : 'specNameLabel',
+							hiddenName : 'entity/specNameLabel',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.labelDrawingSpecNameStore,
+							displayField : "specName",
+							valueField : "specName"
+						}, {
+							dataIndex : 'labelDrawingUrl',
+							anchor : '100%',
+							colspan : 6,
+							// rowspan : 3,
+							ref : '../../labelDrawingUrl',
+							xtype : 'displayfield',
+							fieldLabel : '图纸'
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '制作方式',
+							ref : '../../makeLabel',
+							dataIndex : 'makeLabel',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.makeLabelStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							dataIndex : 'labelControlCode',
+							anchor : '100%',
+							colspan : 6,
+							// rowspan : 3,
+							ref : '../../labelControlCode',
+							xtype : 'textfield',
+							readOnly : true,
+							fieldLabel : '标签受控编号'
+						}, {
+							dataIndex : 'labelNsf',
+							anchor : '100%',
+							colspan : 6,
+							// rowspan : 3,
+							ref : '../../labelNsf',
+							xtype : 'textfield',
+							readOnly : true,
+							fieldLabel : '标签NSF标识'
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * readOnly : true, mode : 'local', fieldLabel :
+							 * '材质', ref : '../../material', dataIndex :
+							 * 'material', anchor : '100%', colspan : 6,
+							 * emptyText : '', editable : false, store :
+							 * this.materialStore, displayField : "name",
+							 * valueField : "code" }, { xtype : 'combobox',
+							 * forceSelection : true, readOnly : true, mode :
+							 * 'local', fieldLabel : '底色', ref : '../../back',
+							 * dataIndex : 'back', anchor : '100%', colspan : 6,
+							 * emptyText : '', editable : false, store :
+							 * this.backStore, displayField : "name", valueField :
+							 * "code" }
+							 */, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
 						}
-					}
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					dataIndex : 'techCheck',
-					ref : '../../techCheck',
-
-					hidden : false,
-					fieldLabel : '是否通过膜元件<br>技术评审',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					listeners : {
-						scope : this,
-						"change" : function(o, newvalue, oldvalue) {
-
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					ref : '../../dryWet',
-					dataIndex : 'dryWet',
-					fieldLabel : '干/湿',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					ref : '../../wetPercent',
-					dataIndex : 'wetPercent',
-					fieldLabel : '接受湿膜支数',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'numberfield',
-					readOnly : true,
-					dataIndex : 'orderAmount',
-					ref : '../../orderAmount',
-					fieldLabel : '数量',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'numberfield',
-					readOnly : true,
-					dataIndex : 'dryAmount',
-					ref : '../../dryAmount',
-					fieldLabel : '发库存干膜(支)',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'numberfield',
-					dataIndex : 'wetAmount',
-					ref : '../../wetAmount',
-					readOnly : true,
-					fieldLabel : '发库存湿膜(支)',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'trigger',
-					// emptyText : '单击旁边按钮计算',
-					dataIndex : 'stockAmount',
-					ref : '../../stockAmount',
-					// readOnly : true,
-					readOnly : true,
-					editable : false,
-					fieldLabel : '发库存&nbsp;&nbsp;&nbsp;&nbsp;<br>膜元件(支)',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					hideTrigger : false,
-					scope : this
-				}, {
-					xtype : 'trigger',
-					// emptyText : '单击旁边按钮计算',
-					dataIndex : 'prodAmount',
-					ref : '../../prodAmount',
-					// readOnly : true,
-					readOnly : true,
-					editable : false,
-					fieldLabel : '需生产或入库(支)',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					hideTrigger : false,
-					scope : this,
-					regex : /^\d+(\.\d+)?$/,
-					regexText : "不合法的数据格式"
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'textfield',
-					dataIndex : 'orderDate',
-					ref : '../../orderDate',
-					readOnly : true,
-					fieldLabel : '下单日期',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'datefield',
-					format : "Y-m-d",
-					readOnly : true,
-					dataIndex : 'deliveryDateEarliest',
-					ref : '../../deliveryDateEarliest',
-
-					fieldLabel : '计划最早<br>发货日期',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'datefield',
-					format : "Y-m-d",
-					readOnly : true,
-					dataIndex : 'deliveryDateLatest',
-					ref : '../../deliveryDateLatest',
-
-					fieldLabel : '计划最晚<br>发货日期',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'textfield',
-					dataIndex : 'deliveryDate',
-					ref : '../../deliveryDate',
-					readOnly : true,
-					hidden : true,
-					fieldLabel : '发货日期',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'datefield',
-					format : "Y-m-d",
-					dataIndex : 'demandStockDate',
-					ref : '../../demandStockDate',
-					readOnly : true,
-					fieldLabel : '入库日期',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					xtype : 'trigger',
-					// emptyText : '单击旁边按钮计算',
-					dataIndex : 'period',
-					ref : '../../period',
-					readOnly : true,
-					hidden : true,
-					editable : true,
-					fieldLabel : '可用生产天数(天)',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					hideTrigger : false,
-					scope : this
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'datefield',
-					format : "Y-m-d",
-					dataIndex : 'dateDelivery',
-					ref : '../../dateDelivery',
-					readOnly : true,
-					fieldLabel : '发货日期',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6
-				}, {
-					dataIndex : 'urlDateDelivery',
-					anchor : '100%',
-					colspan : 6,
-					// rowspan : 3,
-					ref : '../../urlDateDelivery',
-					xtype : 'displayfield',
-					fieldLabel : '询期回复截图'
-				}, {
-					dataIndex : 'urlDateDelivery2',
-					anchor : '100%',
-					colspan : 6,
-					// rowspan : 3,
-					ref : '../../urlDateDelivery2',
-					xtype : 'displayfield',
-					fieldLabel : 'CRM营销副总或<br>总经理审批截图'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}
-
-				, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					// name : 'entity/productRemark',
-					dataIndex : 'productRemark',
-					readOnly : true,
-					hidden : true,
-					anchor : '100%',
-					colspan : 24,
-					height : 100,
-					xtype : 'textarea',
-					fieldLabel : '产品备注'
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">性能要求<br>测试条件</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					dataIndex : 'saltLow',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '脱盐率(%)',
-					readOnly : true
-				}, {
-					dataIndex : 'gpdLow',
-					anchor : '100',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '产水量范围(GPD)',
-					readOnly : true
-				}, {
-					dataIndex : 'gpdUp',
-					hidden : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '产水量(GPD)',
-					readOnly : true
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, readOnly :
-					 * true, mode : 'local', fieldLabel : '测试液种类', ref :
-					 * '../../testStand', dataIndex : 'testStand', anchor :
-					 * '100%', colspan : 6, emptyText : '', editable : false,
-					 * store : this.testStandStore, displayField : "name",
-					 * valueField : "code" }
-					 */, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					readOnly : true,
-					dataIndex : 'pressure',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '测试液压力(psi)'// ,
-						// minValue : 0,
-						// decimalPrecision : 0
-					}, {
-					readOnly : true,
-					dataIndex : 'temperature',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '测试液温度(℃)'// ,
-						// decimalPrecision : 0
-					}, {
-					readOnly : true,
-					dataIndex : 'concentration',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '测试液浓度（ppm）'// ,
-						// decimalPrecision : 2
-					}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					readOnly : true,
-					dataIndex : 'recyclePercent',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '单支回收率（%）'// ,
-						// minValue : 2,
-						// decimalPrecision : 0
-					}, {
-					readOnly : true,
-					dataIndex : 'ph',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '测试液PH值'// ,
-						// decimalPrecision : 0
-					}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">卷膜主材</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					readOnly : true,
-					dataIndex : 'denseNet',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '浓网厚度（Mil）'// ,
-						// decimalPrecision : 0
-					}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '膜元件端盖类型',
-					ref : '../../lid',
-					hiddenName : 'entity/lid',
-					dataIndex : 'lid',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.lidStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
-					readOnly : true,
-					dataIndex : 'reserve5',
-					ref : '../../reserve5',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '端盖图纸编号'
-				}, {
-					xtype : 'textfield',
-					emptyText : '',
-					readOnly : true,
-					dataIndex : 'denseNetCdm',
-					anchor : '100%',
-					colspan : 6,
-					fieldLabel : '叠膜工艺'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '膜体胶带颜色',
-					readOnly : true,
-					ref : '../../tape',
-					hiddenName : 'entity/tape',
-					dataIndex : 'tape',
-					anchor : '100%',
-					colspan : 12,
-					emptyText : '',
-					editable : false,
-					store : this.tapeStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					hidden : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '耐酸碱要求',
-					ref : '../../aar',
-					dataIndex : 'aar',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					readOnly : true,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '膜体胶带上<br>缠绕一圈彩带',
-					ref : '../../color',
-					readOnly : true,
-					dataIndex : 'color',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.colorStore,
-					displayField : "name",
-					valueField : "code"
-				}/*
-					 * , { readOnly : true, dataIndex : 'colorCode', anchor :
-					 * '100%', colspan : 6, xtype : 'textfield', fieldLabel :
-					 * '彩带色卡编号', decimalPrecision : 0 }
-					 */, {
-					readOnly : true,
-					dataIndex : 'lidControlCode',
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '端盖受控编号'
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">标签</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					dataIndex : 'label',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textarea',
-					fieldLabel : '标签使用<br>公司模板',
-					decimalPrecision : 0
-				}, {
-					dataIndex : 'labelDrawingCode',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '图纸编号',
-					decimalPrecision : 0
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '标签型号',
-					ref : '../../specNameLabel',
-					dataIndex : 'specNameLabel',
-					hiddenName : 'entity/specNameLabel',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.labelDrawingSpecNameStore,
-					displayField : "specName",
-					valueField : "specName"
-				}, {
-					dataIndex : 'labelDrawingUrl',
-					anchor : '100%',
-					colspan : 6,
-					// rowspan : 3,
-					ref : '../../labelDrawingUrl',
-					xtype : 'displayfield',
-					fieldLabel : '图纸'
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '制作方式',
-					ref : '../../makeLabel',
-					dataIndex : 'makeLabel',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.makeLabelStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
-					dataIndex : 'labelControlCode',
-					anchor : '100%',
-					colspan : 6,
-					// rowspan : 3,
-					ref : '../../labelControlCode',
-					xtype : 'textfield',
-					readOnly : true,
-					fieldLabel : '标签受控编号'
-				}, {
-					dataIndex : 'labelNsf',
-					anchor : '100%',
-					colspan : 6,
-					// rowspan : 3,
-					ref : '../../labelNsf',
-					xtype : 'textfield',
-					readOnly : true,
-					fieldLabel : '标签NSF标识'
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, readOnly :
-					 * true, mode : 'local', fieldLabel : '材质', ref :
-					 * '../../material', dataIndex : 'material', anchor :
-					 * '100%', colspan : 6, emptyText : '', editable : false,
-					 * store : this.materialStore, displayField : "name",
-					 * valueField : "code" }, { xtype : 'combobox',
-					 * forceSelection : true, readOnly : true, mode : 'local',
-					 * fieldLabel : '底色', ref : '../../back', dataIndex :
-					 * 'back', anchor : '100%', colspan : 6, emptyText : '',
-					 * editable : false, store : this.backStore, displayField :
-					 * "name", valueField : "code" }
-					 */, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}
 
 						/*
 						 * , { xtype : 'combobox', forceSelection : true, hidden :
@@ -4812,741 +4817,766 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						 * false, store : this.ynStore, displayField : "name",
 						 * valueField : "code" }
 						 */, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '序列是否固定',
-					ref : '../../snRegular',
-					dataIndex : 'snRegular',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code"
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, hidden :
-					 * true, // allowBlank : false, mode : 'local', fieldLabel :
-					 * '要NSF标识', ref : '../../labelNsf', readOnly : true,
-					 * dataIndex : 'labelNsf', anchor : '100%', colspan : 6,
-					 * emptyText : '', editable : false, store : this.ynStore,
-					 * displayField : "name", valueField : "code" }
-					 *//*
-					 * , { xtype : 'combobox', forceSelection : true, readOnly :
-					 * true, mode : 'local', fieldLabel : '标签LOGO', ref :
-					 * '../../logoLabel', dataIndex : 'logoLabel', hiddenName :
-					 * 'entity/logoLabel', anchor : '100%', colspan : 6,
-					 * emptyText : '', editable : false, store :
-					 * this.labelDrawingLogoStore, displayField : "logo",
-					 * valueField : "logo" }
-					 */, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '是否首次下单',
-					ref : '../../newMakeLabel',
-					dataIndex : 'newMakeLabel',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					readOnly : true,
-					dataIndex : 'snStart',
-					ref : '../../snStart',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '指定膜元件序列号<br>开始号码',
-					decimalPrecision : 0
-				}, {
-					readOnly : true,
-					dataIndex : 'snEnd',
-					ref : '../../snEnd',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '指定膜元件序列号<br>结束号码',
-					decimalPrecision : 0
-				}/*
-					 * , { xtype : 'displayfield', height : 5, colspan : 24 }, {
-					 * xtype : 'combobox', forceSelection : true, // allowBlank :
-					 * false, mode : 'local', fieldLabel : '双标签', ref :
-					 * '../../labelDouble', readOnly : true, dataIndex :
-					 * 'labelDouble', anchor : '100%', colspan : 6, emptyText :
-					 * '', editable : false, store : this.ynStore, displayField :
-					 * "name", valueField : "code" }, { readOnly : true,
-					 * dataIndex : 'labelRuleDouble', // allowBlank : false,
-					 * anchor : '100%', colspan : 12, xtype : 'textarea',
-					 * fieldLabel : '双标签时<br>第二个标签图纸<br>编号规则' }, { xtype :
-					 * 'combobox', forceSelection : true, // allowBlank : false,
-					 * mode : 'local', fieldLabel : '第二标签<br>贴的位置 ', ref :
-					 * '../../positionLabel', readOnly : true, dataIndex :
-					 * 'positionLabel', anchor : '100%', colspan : 6, emptyText :
-					 * '', editable : false, store : this.positionLabelStore,
-					 * displayField : "name", valueField : "code" }
-					 */, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/labelDrawingCode2',
-					ref : '../../labelDrawingCode2',
-					dataIndex : 'labelDrawingCode2',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '膜体第二标签<br>受控编号'
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '膜体第二标签',
-					ref : '../../logoLabel2',
-					dataIndex : 'logoLabel2',
-					hiddenName : 'entity/logoLabel2',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.labelDrawingLogoStore,
-					displayField : "logo",
-					valueField : "logo"
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, readOnly :
-					 * true, mode : 'local', fieldLabel : '第二标签型号', ref :
-					 * '../../specNameLabel2', dataIndex : 'specNameLabel2',
-					 * hiddenName : 'entity/specNameLabel2', anchor : '100%',
-					 * colspan : 6, emptyText : '', editable : false, store :
-					 * this.labelDrawingSpecNameStore, displayField :
-					 * "specName", valueField : "specName" }, { xtype :
-					 * 'textfield', fieldLabel : '第二标签<br>制作方式', readOnly :
-					 * true, ref : '../../makeLabel2', dataIndex : 'makeLabel2',
-					 * anchor : '100%', colspan : 6 }
-					 */, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'textarea',
-					fieldLabel : '标签序列号<br>编码规则',
-					ref : '../../labelSnRule',
-					dataIndex : 'labelSnRule',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 12
-				}, {
-					xtype : 'textarea',
-					fieldLabel : '客户是否指定标签<br>序列号编码规则',
-					ref : '../../labelSnRuleApoint',
-					dataIndex : 'labelSnRuleApoint',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 12
-				}
-
-				, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">密封圈</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					readOnly : true,
-					dataIndex : 'sealAmount',
-					allowBlank : true,
-					anchor : '100%',
-					colspan : 24,
-					xtype : 'textfield',
-					fieldLabel : '膜元件密封圈<br>位置和数量'
-				}, {
-					readOnly : true,
-					dataIndex : 'sealPosition',
-					ref : '../../sealPosition',
-					allowBlank : true,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textfield',
-					fieldLabel : 'Y型圈距进水端面<br>距离为____<br>mm±2mm'
-				}, {
-					readOnly : true,
-					dataIndex : 'sealPosition2',
-					ref : '../../sealPosition2',
-					allowBlank : true,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textfield',
-					fieldLabel : 'Y型圈距进水端面<br>距离为____<br>mm±1mm'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					readOnly : true,
-					dataIndex : 'sealRequire',
-					allowBlank : true,
-					anchor : '100%',
-					colspan : 24,
-					xtype : 'textfield',
-					fieldLabel : '家用密封圈<br>固定胶带要求'
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">唛头</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					dataIndex : 'mark',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '包装箱唛头<br>使用公司模板',
-					decimalPrecision : 0
-				}, {
-					dataIndex : 'markDrawingCode',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '唛头图纸编号'
-				}, {
-					readOnly : true,
-					ref : '../../markControlCode',
-					dataIndex : 'markControlCode',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					fieldLabel : '唛头受控编号',
-					xtype : 'textfield'
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, readOnly :
-					 * true, mode : 'local', fieldLabel : '制作方式', ref :
-					 * '../../makeMark', dataIndex : 'makeMark', anchor :
-					 * '100%', colspan : 6, emptyText : '', editable : false,
-					 * store : this.makeLabelStore, displayField : "name",
-					 * valueField : "code" }, { xtype : 'combobox',
-					 * forceSelection : true, readOnly : true, mode : 'local',
-					 * fieldLabel : '新制版', ref : '../../newMakeMark', dataIndex :
-					 * 'newMakeMark', anchor : '100%', colspan : 6, emptyText :
-					 * '', editable : false, store : this.ynStore, displayField :
-					 * "name", valueField : "code" }, { xtype : 'displayfield',
-					 * height : 5, colspan : 24 }
-					 *//*
-					 * , { xtype : 'combobox', forceSelection : true, hidden :
-					 * true, // allowBlank : false, mode : 'local', fieldLabel :
-					 * '要NSF标识', ref : '../../markNsf', readOnly : true,
-					 * dataIndex : 'markNsf', anchor : '100%', colspan : 6,
-					 * emptyText : '', editable : false, store : this.ynStore,
-					 * displayField : "name", valueField : "code" }
-					 *//*
-					 * , { xtype : 'combobox', forceSelection : true, readOnly :
-					 * true, mode : 'local', fieldLabel : '唛头号是否固定', ref :
-					 * '../../markRegular', dataIndex : 'markRegular', anchor :
-					 * '100%', colspan : 4, emptyText : '', editable : false,
-					 * store : this.ynStore, displayField : "name", valueField :
-					 * "code" }, { xtype : 'combobox', forceSelection : true,
-					 * readOnly : true, mode : 'local', fieldLabel : '唛头LOGO',
-					 * ref : '../../logoMark', dataIndex : 'logoMark',
-					 * hiddenName : 'entity/logoMark', anchor : '100%', colspan :
-					 * 4, emptyText : '', editable : false, store :
-					 * this.labelDrawingLogoStore, displayField : "logo",
-					 * valueField : "logo" }
-					 */, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					dataIndex : 'markNsf',
-					anchor : '100%',
-					colspan : 6,
-					// rowspan : 3,
-					ref : '../../markNsf',
-					xtype : 'textfield',
-					readOnly : true,
-					fieldLabel : '唛头NSF标识'
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '唛头型号',
-					ref : '../../specNameMark',
-					dataIndex : 'specNameMark',
-					hiddenName : 'entity/specNameMark',
-					anchor : '100%',
-					colspan : 4,
-					emptyText : '',
-					editable : false,
-					store : this.markDrawingSpecNameStore,
-					displayField : "specName",
-					valueField : "specName"
-				}, {
-					dataIndex : 'markDrawingUrl',
-					anchor : '100%',
-					colspan : 6,
-					// rowspan : 3,
-					ref : '../../markDrawingUrl',
-					xtype : 'displayfield',
-					fieldLabel : '图纸'
-				}, {
-					dataIndex : 'stampUrl',
-					anchor : '100%',
-					colspan : 6,
-					// rowspan : 3,
-					ref : '../../stampUrl',
-					xtype : 'displayfield',
-					fieldLabel : '受控章'
-				}/*
-					 * , { xtype : 'displayfield', height : 5, colspan : 24 } , {
-					 * xtype : 'displayfield', height : 5, colspan : 24 } , {
-					 * readOnly : true, dataIndex : 'markStart', ref :
-					 * '../../markStart', // allowBlank : false, anchor :
-					 * '100%', colspan : 6, xtype : 'textfield', fieldLabel :
-					 * '唛头开始号', decimalPrecision : 0 }, { readOnly : true,
-					 * dataIndex : 'markEnd', ref : '../../markEnd', //
-					 * allowBlank : false, anchor : '100%', colspan : 6, xtype :
-					 * 'textfield', fieldLabel : '唛头结束号', decimalPrecision : 0 }, {
-					 * xtype : 'combobox', forceSelection : true, readOnly :
-					 * true, mode : 'local', fieldLabel : '箱唛号是否需要<br>与标签保持一致',
-					 * ref : '../../ifkeep', hiddenName : 'entity/ifkeep',
-					 * dataIndex : 'ifkeep', anchor : '100%', colspan : 6,
-					 * emptyText : '', editable : false, store : this.ynStore,
-					 * displayField : "name", valueField : "code" }
-					 */, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, //
-					 * allowBlank : false, mode : 'local', fieldLabel : '双唛头',
-					 * ref : '../../markDouble', readOnly : true, dataIndex :
-					 * 'markDouble', anchor : '100%', colspan : 6, emptyText :
-					 * '', editable : false, store : this.ynStore, displayField :
-					 * "name", valueField : "code" }
-					 */, {
-					readOnly : true,
-					dataIndex : 'markRuleDouble',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textarea',
-					fieldLabel : '包装箱唛头<br>序列号编码规则',
-					decimalPrecision : 0
-				}, {
-					xtype : 'textarea',
-					fieldLabel : '客户指定包装箱<br>唛头序列号<br>编码规则',
-					ref : '../../markSnRuleApoint',
-					dataIndex : 'markSnRuleApoint',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 12
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, //
-					 * allowBlank : false, mode : 'local', fieldLabel : '第二唛头<br>贴的位置 ',
-					 * ref : '../../positionMark', readOnly : true, dataIndex :
-					 * 'positionMark', anchor : '100%', colspan : 6, emptyText :
-					 * '', editable : false, store : this.positionMarkStore,
-					 * displayField : "name", valueField : "code" }
-					 */, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/mark2ControlCode',
-					ref : '../../mark2ControlCode',
-					dataIndex : 'mark2ControlCode',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '包装箱第二唛头<br>受控编号'
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					readOnly : true,
-					mode : 'local',
-					fieldLabel : '包装箱第二唛头',
-					ref : '../../logoMark2',
-					dataIndex : 'logoMark2',
-					hiddenName : 'entity/logoMark2',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.markDrawingLogoStore,
-					displayField : "logo",
-					valueField : "logo"
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, readOnly :
-					 * true, mode : 'local', fieldLabel : '第二唛头型号', ref :
-					 * '../../specNameMark2', dataIndex : 'specNameMark2',
-					 * hiddenName : 'entity/specNameMark2', anchor : '100%',
-					 * colspan : 6, emptyText : '', editable : false, store :
-					 * this.markDrawingSpecNameStore, displayField : "specName",
-					 * valueField : "specName" }, { xtype : 'textfield',
-					 * fieldLabel : '第二唛头<br>制作方式', ref : '../../makeMark2',
-					 * dataIndex : 'makeMark2', readOnly : true, anchor :
-					 * '100%', colspan : 6 }
-					 */, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">拍照</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '货物拍照要求',
-					ref : '../../ifphoto',
-					readOnly : true,
-					dataIndex : 'ifphoto',
-					anchor : '100%',
-					colspan : 6,
-					// emptyText : '--请选择--',
-					editable : false,
-					store : this.ynStore,
-					displayField : "name",
-					valueField : "code"
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, //
-					 * allowBlank : false, mode : 'local', fieldLabel : '每款型号',
-					 * ref : '../../ifanyone', readOnly : true, dataIndex :
-					 * 'ifanyone', anchor : '100%', colspan : 6, emptyText : '',
-					 * editable : false, store : this.ynStore, displayField :
-					 * "name", valueField : "code" }
-					 *//*
-					 * , { xtype : 'displayfield', height : 5, colspan : 24 }, {
-					 * xtype : 'dictcheckboxgroup', columns : 6, ref :
-					 * '../../photoSingle', dataIndex : 'photoSingle', readOnly :
-					 * true, fieldLabel : '单支拍照要求', anchor : '100%', colspan :
-					 * 24, dictData : KS_YXORDER_PHOTO_SINGLE }, { xtype :
-					 * 'displayfield', height : 5, colspan : 24 }, { xtype :
-					 * 'dictcheckboxgroup', columns : 6, ref : '../../photoAll',
-					 * dataIndex : 'photoAll', readOnly : true, fieldLabel :
-					 * '整托拍照要求', anchor : '100%', colspan : 24, dictData :
-					 * KS_YXORDER_PHOTO_ALL }
-					 */, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">包装</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					name : 'entity/bag',
-					dataIndex : 'bag',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '膜元件包装袋'
-				}, {
-					name : 'entity/bagDrawingCode',
-					dataIndex : 'bagDrawingCode',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '真空包装袋<br>图纸编号'
-				}, {
-					name : 'entity/box',
-					dataIndex : 'box',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '膜元件包装箱'
-				}, {
-					name : 'entity/boxDrawingCode',
-					dataIndex : 'boxDrawingCode',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '包装箱图纸编号'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/packingNum',
-					dataIndex : 'packingNum',
-					readOnly : true,
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '装箱标准'
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					dataIndex : 'pipeLink',
-					ref : '../../pipeLink',
-					hidden : false,
-					fieldLabel : '中心管连接适配器配备要求',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 6,
-					listeners : {
-						scope : this,
-						"change" : function(o, newvalue, oldvalue) {
-
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '序列是否固定',
+							ref : '../../snRegular',
+							dataIndex : 'snRegular',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code"
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * hidden : true, // allowBlank : false, mode :
+							 * 'local', fieldLabel : '要NSF标识', ref :
+							 * '../../labelNsf', readOnly : true, dataIndex :
+							 * 'labelNsf', anchor : '100%', colspan : 6,
+							 * emptyText : '', editable : false, store :
+							 * this.ynStore, displayField : "name", valueField :
+							 * "code" }
+							 *//*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * readOnly : true, mode : 'local', fieldLabel :
+							 * '标签LOGO', ref : '../../logoLabel', dataIndex :
+							 * 'logoLabel', hiddenName : 'entity/logoLabel',
+							 * anchor : '100%', colspan : 6, emptyText : '',
+							 * editable : false, store :
+							 * this.labelDrawingLogoStore, displayField :
+							 * "logo", valueField : "logo" }
+							 */, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '是否首次下单',
+							ref : '../../newMakeLabel',
+							dataIndex : 'newMakeLabel',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							readOnly : true,
+							dataIndex : 'snStart',
+							ref : '../../snStart',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '指定膜元件序列号<br>开始号码',
+							decimalPrecision : 0
+						}, {
+							readOnly : true,
+							dataIndex : 'snEnd',
+							ref : '../../snEnd',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '指定膜元件序列号<br>结束号码',
+							decimalPrecision : 0
+						}/*
+							 * , { xtype : 'displayfield', height : 5, colspan :
+							 * 24 }, { xtype : 'combobox', forceSelection :
+							 * true, // allowBlank : false, mode : 'local',
+							 * fieldLabel : '双标签', ref : '../../labelDouble',
+							 * readOnly : true, dataIndex : 'labelDouble',
+							 * anchor : '100%', colspan : 6, emptyText : '',
+							 * editable : false, store : this.ynStore,
+							 * displayField : "name", valueField : "code" }, {
+							 * readOnly : true, dataIndex : 'labelRuleDouble', //
+							 * allowBlank : false, anchor : '100%', colspan :
+							 * 12, xtype : 'textarea', fieldLabel : '双标签时<br>第二个标签图纸<br>编号规则' }, {
+							 * xtype : 'combobox', forceSelection : true, //
+							 * allowBlank : false, mode : 'local', fieldLabel :
+							 * '第二标签<br>贴的位置 ', ref : '../../positionLabel',
+							 * readOnly : true, dataIndex : 'positionLabel',
+							 * anchor : '100%', colspan : 6, emptyText : '',
+							 * editable : false, store :
+							 * this.positionLabelStore, displayField : "name",
+							 * valueField : "code" }
+							 */, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/labelDrawingCode2',
+							ref : '../../labelDrawingCode2',
+							dataIndex : 'labelDrawingCode2',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '膜体第二标签<br>受控编号'
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '膜体第二标签',
+							ref : '../../logoLabel2',
+							dataIndex : 'logoLabel2',
+							hiddenName : 'entity/logoLabel2',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.labelDrawingLogoStore,
+							displayField : "logo",
+							valueField : "logo"
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * readOnly : true, mode : 'local', fieldLabel :
+							 * '第二标签型号', ref : '../../specNameLabel2', dataIndex :
+							 * 'specNameLabel2', hiddenName :
+							 * 'entity/specNameLabel2', anchor : '100%', colspan :
+							 * 6, emptyText : '', editable : false, store :
+							 * this.labelDrawingSpecNameStore, displayField :
+							 * "specName", valueField : "specName" }, { xtype :
+							 * 'textfield', fieldLabel : '第二标签<br>制作方式',
+							 * readOnly : true, ref : '../../makeLabel2',
+							 * dataIndex : 'makeLabel2', anchor : '100%',
+							 * colspan : 6 }
+							 */, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'textarea',
+							fieldLabel : '标签序列号<br>编码规则',
+							ref : '../../labelSnRule',
+							dataIndex : 'labelSnRule',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 12
+						}, {
+							xtype : 'textarea',
+							fieldLabel : '客户是否指定标签<br>序列号编码规则',
+							ref : '../../labelSnRuleApoint',
+							dataIndex : 'labelSnRuleApoint',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 12
 						}
-					}
-				}/*
-					 * , { xtype : 'combobox', forceSelection : true, readOnly :
-					 * true, mode : 'local', fieldLabel : '中芯管打磨', ref :
-					 * '../../ifpolish', dataIndex : 'ifpolish', anchor :
-					 * '100%', colspan : 6, // emptyText : '--请选择--', editable :
-					 * false, store : this.ynStore, displayField : "name",
-					 * valueField : "code" }
-					 */, {
-					name : 'entity/packingLid',
-					dataIndex : 'packingLid',
-					readOnly : true,
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '膜元件包装<br>端盖要求'
-				}
 
-				, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					readOnly : true,
-					dataIndex : 'bagLabelPo',
-					ref : '../../bagLabelPo',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '包装袋粘贴<br>标签的PO号'
-				}, {
-					readOnly : true,
-					dataIndex : 'bagLabelDate',
-					ref : '../../bagLabelDate',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '包装袋粘贴<br>标签的生产日期'
-				}, {
-					readOnly : true,
-					dataIndex : 'bagLabelAmount',
-					ref : '../../bagLabelAmount',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '包装袋粘贴<br>标签的数量'
-				}, {
-					readOnly : true,
-					dataIndex : 'qcTxt',
-					ref : '../../qcTxt',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : 'QC标识'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					readOnly : true,
-					dataIndex : 'bagSeal',
-					ref : '../../bagSeal',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '膜元件<br>包装袋封口'
-				}, {
-					readOnly : true,
-					dataIndex : 'boxSeal',
-					ref : '../../boxSeal',
-					colspan : 6,
-					xtype : 'textarea',
-					fieldLabel : '膜元件<br>包装箱封口'
-				}, {
-					readOnly : true,
-					dataIndex : 'bagLabel',
-					ref : '../../bagLabel',
-					colspan : 6,
-					xtype : 'textarea',
-					fieldLabel : '包装袋粘贴标签'
-				}, {
-					readOnly : true,
-					dataIndex : 'bagLabelControlCode',
-					ref : '../../bagLabelControlCode',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '包装袋粘贴标签<br>受控编号'
-				}, {
-					readOnly : true,
-					dataIndex : 'boxSealControlCode',
-					ref : '../../boxSealControlCode',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '封口胶带<br>受控编号'
+						, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">密封圈</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							readOnly : true,
+							dataIndex : 'sealAmount',
+							allowBlank : true,
+							anchor : '100%',
+							colspan : 24,
+							xtype : 'textfield',
+							fieldLabel : '膜元件密封圈<br>位置和数量'
+						}, {
+							readOnly : true,
+							dataIndex : 'sealPosition',
+							ref : '../../sealPosition',
+							allowBlank : true,
+							anchor : '100%',
+							colspan : 12,
+							xtype : 'textfield',
+							fieldLabel : 'Y型圈距进水端面<br>距离为____<br>mm±2mm'
+						}, {
+							readOnly : true,
+							dataIndex : 'sealPosition2',
+							ref : '../../sealPosition2',
+							allowBlank : true,
+							anchor : '100%',
+							colspan : 12,
+							xtype : 'textfield',
+							fieldLabel : 'Y型圈距进水端面<br>距离为____<br>mm±1mm'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							readOnly : true,
+							dataIndex : 'sealRequire',
+							allowBlank : true,
+							anchor : '100%',
+							colspan : 24,
+							xtype : 'textfield',
+							fieldLabel : '家用密封圈<br>固定胶带要求'
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">唛头</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							dataIndex : 'mark',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装箱唛头<br>使用公司模板',
+							decimalPrecision : 0
+						}, {
+							dataIndex : 'markDrawingCode',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '唛头图纸编号'
+						}, {
+							readOnly : true,
+							ref : '../../markControlCode',
+							dataIndex : 'markControlCode',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							fieldLabel : '唛头受控编号',
+							xtype : 'textfield'
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * readOnly : true, mode : 'local', fieldLabel :
+							 * '制作方式', ref : '../../makeMark', dataIndex :
+							 * 'makeMark', anchor : '100%', colspan : 6,
+							 * emptyText : '', editable : false, store :
+							 * this.makeLabelStore, displayField : "name",
+							 * valueField : "code" }, { xtype : 'combobox',
+							 * forceSelection : true, readOnly : true, mode :
+							 * 'local', fieldLabel : '新制版', ref :
+							 * '../../newMakeMark', dataIndex : 'newMakeMark',
+							 * anchor : '100%', colspan : 6, emptyText : '',
+							 * editable : false, store : this.ynStore,
+							 * displayField : "name", valueField : "code" }, {
+							 * xtype : 'displayfield', height : 5, colspan : 24 }
+							 *//*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * hidden : true, // allowBlank : false, mode :
+							 * 'local', fieldLabel : '要NSF标识', ref :
+							 * '../../markNsf', readOnly : true, dataIndex :
+							 * 'markNsf', anchor : '100%', colspan : 6,
+							 * emptyText : '', editable : false, store :
+							 * this.ynStore, displayField : "name", valueField :
+							 * "code" }
+							 *//*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * readOnly : true, mode : 'local', fieldLabel :
+							 * '唛头号是否固定', ref : '../../markRegular', dataIndex :
+							 * 'markRegular', anchor : '100%', colspan : 4,
+							 * emptyText : '', editable : false, store :
+							 * this.ynStore, displayField : "name", valueField :
+							 * "code" }, { xtype : 'combobox', forceSelection :
+							 * true, readOnly : true, mode : 'local', fieldLabel :
+							 * '唛头LOGO', ref : '../../logoMark', dataIndex :
+							 * 'logoMark', hiddenName : 'entity/logoMark',
+							 * anchor : '100%', colspan : 4, emptyText : '',
+							 * editable : false, store :
+							 * this.labelDrawingLogoStore, displayField :
+							 * "logo", valueField : "logo" }
+							 */, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							dataIndex : 'markNsf',
+							anchor : '100%',
+							colspan : 6,
+							// rowspan : 3,
+							ref : '../../markNsf',
+							xtype : 'textfield',
+							readOnly : true,
+							fieldLabel : '唛头NSF标识'
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '唛头型号',
+							ref : '../../specNameMark',
+							dataIndex : 'specNameMark',
+							hiddenName : 'entity/specNameMark',
+							anchor : '100%',
+							colspan : 4,
+							emptyText : '',
+							editable : false,
+							store : this.markDrawingSpecNameStore,
+							displayField : "specName",
+							valueField : "specName"
+						}, {
+							dataIndex : 'markDrawingUrl',
+							anchor : '100%',
+							colspan : 6,
+							// rowspan : 3,
+							ref : '../../markDrawingUrl',
+							xtype : 'displayfield',
+							fieldLabel : '图纸'
+						}, {
+							dataIndex : 'stampUrl',
+							anchor : '100%',
+							colspan : 6,
+							// rowspan : 3,
+							ref : '../../stampUrl',
+							xtype : 'displayfield',
+							fieldLabel : '受控章'
+						}/*
+							 * , { xtype : 'displayfield', height : 5, colspan :
+							 * 24 } , { xtype : 'displayfield', height : 5,
+							 * colspan : 24 } , { readOnly : true, dataIndex :
+							 * 'markStart', ref : '../../markStart', //
+							 * allowBlank : false, anchor : '100%', colspan : 6,
+							 * xtype : 'textfield', fieldLabel : '唛头开始号',
+							 * decimalPrecision : 0 }, { readOnly : true,
+							 * dataIndex : 'markEnd', ref : '../../markEnd', //
+							 * allowBlank : false, anchor : '100%', colspan : 6,
+							 * xtype : 'textfield', fieldLabel : '唛头结束号',
+							 * decimalPrecision : 0 }, { xtype : 'combobox',
+							 * forceSelection : true, readOnly : true, mode :
+							 * 'local', fieldLabel : '箱唛号是否需要<br>与标签保持一致', ref :
+							 * '../../ifkeep', hiddenName : 'entity/ifkeep',
+							 * dataIndex : 'ifkeep', anchor : '100%', colspan :
+							 * 6, emptyText : '', editable : false, store :
+							 * this.ynStore, displayField : "name", valueField :
+							 * "code" }
+							 */, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true, //
+							 * allowBlank : false, mode : 'local', fieldLabel :
+							 * '双唛头', ref : '../../markDouble', readOnly : true,
+							 * dataIndex : 'markDouble', anchor : '100%',
+							 * colspan : 6, emptyText : '', editable : false,
+							 * store : this.ynStore, displayField : "name",
+							 * valueField : "code" }
+							 */, {
+							readOnly : true,
+							dataIndex : 'markRuleDouble',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 12,
+							xtype : 'textarea',
+							fieldLabel : '包装箱唛头<br>序列号编码规则',
+							decimalPrecision : 0
+						}, {
+							xtype : 'textarea',
+							fieldLabel : '客户指定包装箱<br>唛头序列号<br>编码规则',
+							ref : '../../markSnRuleApoint',
+							dataIndex : 'markSnRuleApoint',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 12
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true, //
+							 * allowBlank : false, mode : 'local', fieldLabel :
+							 * '第二唛头<br>贴的位置 ', ref : '../../positionMark',
+							 * readOnly : true, dataIndex : 'positionMark',
+							 * anchor : '100%', colspan : 6, emptyText : '',
+							 * editable : false, store : this.positionMarkStore,
+							 * displayField : "name", valueField : "code" }
+							 */, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/mark2ControlCode',
+							ref : '../../mark2ControlCode',
+							dataIndex : 'mark2ControlCode',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装箱第二唛头<br>受控编号'
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							readOnly : true,
+							mode : 'local',
+							fieldLabel : '包装箱第二唛头',
+							ref : '../../logoMark2',
+							dataIndex : 'logoMark2',
+							hiddenName : 'entity/logoMark2',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.markDrawingLogoStore,
+							displayField : "logo",
+							valueField : "logo"
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * readOnly : true, mode : 'local', fieldLabel :
+							 * '第二唛头型号', ref : '../../specNameMark2', dataIndex :
+							 * 'specNameMark2', hiddenName :
+							 * 'entity/specNameMark2', anchor : '100%', colspan :
+							 * 6, emptyText : '', editable : false, store :
+							 * this.markDrawingSpecNameStore, displayField :
+							 * "specName", valueField : "specName" }, { xtype :
+							 * 'textfield', fieldLabel : '第二唛头<br>制作方式', ref :
+							 * '../../makeMark2', dataIndex : 'makeMark2',
+							 * readOnly : true, anchor : '100%', colspan : 6 }
+							 */, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">拍照</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '货物拍照要求',
+							ref : '../../ifphoto',
+							readOnly : true,
+							dataIndex : 'ifphoto',
+							anchor : '100%',
+							colspan : 6,
+							// emptyText : '--请选择--',
+							editable : false,
+							store : this.ynStore,
+							displayField : "name",
+							valueField : "code"
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true, //
+							 * allowBlank : false, mode : 'local', fieldLabel :
+							 * '每款型号', ref : '../../ifanyone', readOnly : true,
+							 * dataIndex : 'ifanyone', anchor : '100%', colspan :
+							 * 6, emptyText : '', editable : false, store :
+							 * this.ynStore, displayField : "name", valueField :
+							 * "code" }
+							 *//*
+							 * , { xtype : 'displayfield', height : 5, colspan :
+							 * 24 }, { xtype : 'dictcheckboxgroup', columns : 6,
+							 * ref : '../../photoSingle', dataIndex :
+							 * 'photoSingle', readOnly : true, fieldLabel :
+							 * '单支拍照要求', anchor : '100%', colspan : 24, dictData :
+							 * KS_YXORDER_PHOTO_SINGLE }, { xtype :
+							 * 'displayfield', height : 5, colspan : 24 }, {
+							 * xtype : 'dictcheckboxgroup', columns : 6, ref :
+							 * '../../photoAll', dataIndex : 'photoAll',
+							 * readOnly : true, fieldLabel : '整托拍照要求', anchor :
+							 * '100%', colspan : 24, dictData :
+							 * KS_YXORDER_PHOTO_ALL }
+							 */, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">包装</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							name : 'entity/bag',
+							dataIndex : 'bag',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '膜元件包装袋'
+						}, {
+							name : 'entity/bagDrawingCode',
+							dataIndex : 'bagDrawingCode',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '真空包装袋<br>图纸编号'
+						}, {
+							name : 'entity/box',
+							dataIndex : 'box',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '膜元件包装箱'
+						}, {
+							name : 'entity/boxDrawingCode',
+							dataIndex : 'boxDrawingCode',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装箱图纸编号'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/packingNum',
+							dataIndex : 'packingNum',
+							readOnly : true,
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '装箱标准'
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'pipeLink',
+							ref : '../../pipeLink',
+							hidden : false,
+							fieldLabel : '中心管连接适配器配备要求',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 6,
+							listeners : {
+								scope : this,
+								"change" : function(o, newvalue, oldvalue) {
 
-				}, {
-					xtype : 'displayfield',
-					fieldLabel : '<p style="color:red;font-size:16px;">打包</p>',
-					labelSeparator : '',// 去掉冒号
-					colspan : 24
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '托盘材质要求',
-					ref : '../../tray',
-					readOnly : true,
-					dataIndex : 'tray',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.trayStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '托盘尺寸',
-					ref : '../../traySize',
-					readOnly : true,
-					dataIndex : 'traySize',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.traySizeStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
-					readOnly : true,
-					dataIndex : 'packingLayer',
-					// allowBlank : false,
-					anchor : '100%',
-					colspan : 6,
-					xtype : 'textfield',
-					fieldLabel : '打包层数'
-				}, {
-					xtype : 'combobox',
-					forceSelection : true,
-					// allowBlank : false,
-					mode : 'local',
-					fieldLabel : '检测报告要求',
-					ref : '../../goodsWithReport',
-					readOnly : true,
-					dataIndex : 'goodsWithReport',
-					anchor : '100%',
-					colspan : 6,
-					emptyText : '',
-					editable : false,
-					store : this.goodsWithReportStore,
-					displayField : "name",
-					valueField : "code"
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					name : 'entity/packingTxt',
-					dataIndex : 'packingTxt',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textfield',
-					fieldLabel : '整托货物<br>警示标识'
-				}, {
-					name : 'entity/pallet',
-					dataIndex : 'pallet',
-					readOnly : true,
-					anchor : '100%',
-					colspan : 12,
-					xtype : 'textfield',
-					fieldLabel : '膜元件包装箱<br>打托要求'
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'textarea',
-					readOnly : true,
-					dataIndex : 'provideBatchNo',
-					ref : '../../provideBatchNo',
-					allowBlank : true,
-					disabled : false,
-					hidden : false,
-					fieldLabel : '是否在检测报告<br>里面提供全部<br>膜元件序列号',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 12,
-					listeners : {
-						scope : this,
-						"change" : function(o, newvalue, oldvalue) {
-
+								}
+							}
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * readOnly : true, mode : 'local', fieldLabel :
+							 * '中芯管打磨', ref : '../../ifpolish', dataIndex :
+							 * 'ifpolish', anchor : '100%', colspan : 6, //
+							 * emptyText : '--请选择--', editable : false, store :
+							 * this.ynStore, displayField : "name", valueField :
+							 * "code" }
+							 */, {
+							name : 'entity/packingLid',
+							dataIndex : 'packingLid',
+							readOnly : true,
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '膜元件包装<br>端盖要求'
 						}
-					}
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					dataIndex : 'certificateDemand',
-					ref : '../../certificateDemand',
-					allowBlank : true,
-					disabled : false,
-					hidden : false,
-					fieldLabel : '合格证要求',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 12,
-					listeners : {
-						scope : this,
-						"change" : function(o, newvalue, oldvalue) {
 
-						}
-					}
-				}, {
-					xtype : 'displayfield',
-					height : 5,
-					colspan : 24
-				}, {
-					xtype : 'textfield',
-					readOnly : true,
-					dataIndex : 'markPaste',
-					ref : '../../markPaste',
-					allowBlank : true,
-					disabled : false,
-					hidden : false,
-					fieldLabel : '要求整托货物<br>张贴信息唛头',
-					// readOnly : true,
-					anchor : '100%',
-					colspan : 24,
-					listeners : {
-						scope : this,
-						"change" : function(o, newvalue, oldvalue) {
+						, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							readOnly : true,
+							dataIndex : 'bagLabelPo',
+							ref : '../../bagLabelPo',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装袋粘贴<br>标签的PO号'
+						}, {
+							readOnly : true,
+							dataIndex : 'bagLabelDate',
+							ref : '../../bagLabelDate',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装袋粘贴<br>标签的生产日期'
+						}, {
+							readOnly : true,
+							dataIndex : 'bagLabelAmount',
+							ref : '../../bagLabelAmount',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装袋粘贴<br>标签的数量'
+						}, {
+							readOnly : true,
+							dataIndex : 'qcTxt',
+							ref : '../../qcTxt',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : 'QC标识'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							readOnly : true,
+							dataIndex : 'bagSeal',
+							ref : '../../bagSeal',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '膜元件<br>包装袋封口'
+						}, {
+							readOnly : true,
+							dataIndex : 'boxSeal',
+							ref : '../../boxSeal',
+							colspan : 6,
+							xtype : 'textarea',
+							fieldLabel : '膜元件<br>包装箱封口'
+						}, {
+							readOnly : true,
+							dataIndex : 'bagLabel',
+							ref : '../../bagLabel',
+							colspan : 6,
+							xtype : 'textarea',
+							fieldLabel : '包装袋粘贴标签'
+						}, {
+							readOnly : true,
+							dataIndex : 'bagLabelControlCode',
+							ref : '../../bagLabelControlCode',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '包装袋粘贴标签<br>受控编号'
+						}, {
+							readOnly : true,
+							dataIndex : 'boxSealControlCode',
+							ref : '../../boxSealControlCode',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '封口胶带<br>受控编号'
 
-						}
-					}
-				}/*
-					 * , { xtype : 'displayfield', fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
-					 * labelSeparator : '',// 去掉冒号 colspan : 24 }, { name :
-					 * 'entity/khxj', dataIndex : 'khxj', readOnly : true,
-					 * anchor : '100%', colspan : 6, xtype : 'textfield',
-					 * fieldLabel : '客户星级评定' }, { name : 'entity/cpxj',
-					 * dataIndex : 'cpxj', readOnly : true, anchor : '100%',
-					 * colspan : 6, xtype : 'textfield', fieldLabel : '产品星级评定' }
-					 */]
+						}, {
+							xtype : 'displayfield',
+							fieldLabel : '<p style="color:red;font-size:16px;">打包</p>',
+							labelSeparator : '',// 去掉冒号
+							colspan : 24
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '托盘材质要求',
+							ref : '../../tray',
+							readOnly : true,
+							dataIndex : 'tray',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.trayStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '托盘尺寸',
+							ref : '../../traySize',
+							readOnly : true,
+							dataIndex : 'traySize',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.traySizeStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							readOnly : true,
+							dataIndex : 'packingLayer',
+							// allowBlank : false,
+							anchor : '100%',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '打包层数'
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							// allowBlank : false,
+							mode : 'local',
+							fieldLabel : '检测报告要求',
+							ref : '../../goodsWithReport',
+							readOnly : true,
+							dataIndex : 'goodsWithReport',
+							anchor : '100%',
+							colspan : 6,
+							emptyText : '',
+							editable : false,
+							store : this.goodsWithReportStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/packingTxt',
+							dataIndex : 'packingTxt',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 12,
+							xtype : 'textfield',
+							fieldLabel : '整托货物<br>警示标识'
+						}, {
+							name : 'entity/pallet',
+							dataIndex : 'pallet',
+							readOnly : true,
+							anchor : '100%',
+							colspan : 12,
+							xtype : 'textfield',
+							fieldLabel : '膜元件包装箱<br>打托要求'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'textarea',
+							readOnly : true,
+							dataIndex : 'provideBatchNo',
+							ref : '../../provideBatchNo',
+							allowBlank : true,
+							disabled : false,
+							hidden : false,
+							fieldLabel : '是否在检测报告<br>里面提供全部<br>膜元件序列号',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 12,
+							listeners : {
+								scope : this,
+								"change" : function(o, newvalue, oldvalue) {
+
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'certificateDemand',
+							ref : '../../certificateDemand',
+							allowBlank : true,
+							disabled : false,
+							hidden : false,
+							fieldLabel : '合格证要求',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 12,
+							listeners : {
+								scope : this,
+								"change" : function(o, newvalue, oldvalue) {
+
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'markPaste',
+							ref : '../../markPaste',
+							allowBlank : true,
+							disabled : false,
+							hidden : false,
+							fieldLabel : '要求整托货物<br>张贴信息唛头',
+							// readOnly : true,
+							anchor : '100%',
+							colspan : 24,
+							listeners : {
+								scope : this,
+								"change" : function(o, newvalue, oldvalue) {
+
+								}
+							}
+						}/*
+							 * , { xtype : 'displayfield', fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
+							 * labelSeparator : '',// 去掉冒号 colspan : 24 }, {
+							 * name : 'entity/khxj', dataIndex : 'khxj',
+							 * readOnly : true, anchor : '100%', colspan : 6,
+							 * xtype : 'textfield', fieldLabel : '客户星级评定' }, {
+							 * name : 'entity/cpxj', dataIndex : 'cpxj',
+							 * readOnly : true, anchor : '100%', colspan : 6,
+							 * xtype : 'textfield', fieldLabel : '产品星级评定' }
+							 */]
 			}]
 		});
 
@@ -5555,7 +5585,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.orderViewWindow.addButton({
 					text : "修改标签图纸",
 					scope : this,
-					hidden:uid != 'dafu' && uid != 'KS01147' && uid != 'KS00307' && uid != 'KS01479' ,
+					hidden : uid != 'dafu' && uid != 'KS01147'
+							&& uid != 'KS00307' && uid != 'KS01479',
 					iconCls : 'icon-application_edit',
 					handler : function() {
 						return _this.onModifyUrlPicture('urlLabel')
@@ -5565,7 +5596,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.orderViewWindow.addButton({
 					text : "修改唛头图纸",
 					scope : this,
-					hidden:uid != 'dafu' && uid != 'KS01147' && uid != 'KS00307' && uid != 'KS01479',
+					hidden : uid != 'dafu' && uid != 'KS01147'
+							&& uid != 'KS00307' && uid != 'KS01479',
 					iconCls : 'icon-application_edit',
 					handler : function() {
 						return _this.onModifyUrlPicture('urlMark')
@@ -9346,7 +9378,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 	// 上传图片面板
 	this.buildPictureUploadWin = function() {
-		
+
 		this.pictureUploadWin = new Ext.Window({
 					title : '上传图片',
 					collapsible : false,

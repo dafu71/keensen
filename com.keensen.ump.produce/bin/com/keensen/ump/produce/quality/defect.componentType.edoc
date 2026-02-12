@@ -12,6 +12,14 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandCdmDefectList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.expandCdmDefectList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.diaphragm.KsDiaphragmCdmDefectList):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.produce.diaphragm.KsDiaphragmCdmDefectList):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
+    <string>com.keensen.ump.produce.quality.defect.saveHHJmDefectList(com.keensen.ump.produce.component2.KsComponentHhjmDefectList)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveHHJmDefectList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.saveHHJmDefectList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component2.KsComponentHhjmDefectList):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.quality.defect.deleteHHJmDefectList(com.keensen.ump.produce.component2.KsComponentHhjmDefectList[])</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteHHJmDefectList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.deleteHHJmDefectList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.produce.component2.KsComponentHhjmDefectList[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>com.keensen.ump.produce.quality.defect.deleteCdmDefectList(com.keensen.ump.produce.diaphragm.KsDiaphragmCdmDefectList[])</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteCdmDefectList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.deleteCdmDefectList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.produce.diaphragm.KsDiaphragmCdmDefectList[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
@@ -26,6 +34,10 @@
   <entry>
     <string>com.keensen.ump.produce.quality.defect.queryProdDefectByPage(java.util.Map, com.eos.foundation.PageCond)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryProdDefectByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.queryProdDefectByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.quality.defect.expandHHJmDefectList(com.keensen.ump.produce.component2.KsComponentHhjmDefectList)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandHHJmDefectList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.expandHHJmDefectList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component2.KsComponentHhjmDefectList):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.produce.component2.KsComponentHhjmDefectList):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.quality.defect.queryZmDefectListByPage(java.util.Map, com.eos.foundation.PageCond)</string>
@@ -56,12 +68,16 @@
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryMpDefectByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.queryMpDefectByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
+    <string>com.keensen.ump.produce.quality.defect.deleteTmDefectList(com.keensen.ump.produce.diaphragm.KsDiaphragmTmDefectList[])</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteTmDefectList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.deleteTmDefectList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.produce.diaphragm.KsDiaphragmTmDefectList[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
     <string>com.keensen.ump.produce.quality.defect.expandTmDefectList(com.keensen.ump.produce.diaphragm.KsDiaphragmTmDefectList)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;expandTmDefectList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;expandEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.expandTmDefectList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.diaphragm.KsDiaphragmTmDefectList):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(com.keensen.ump.produce.diaphragm.KsDiaphragmTmDefectList):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
-    <string>com.keensen.ump.produce.quality.defect.deleteTmDefectList(com.keensen.ump.produce.diaphragm.KsDiaphragmTmDefectList[])</string>
-    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;deleteTmDefectList&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;deleteEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.deleteTmDefectList&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entitys(com.keensen.ump.produce.diaphragm.KsDiaphragmTmDefectList[]):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+    <string>com.keensen.ump.produce.quality.defect.queryHHJmDefectListByPage(java.util.Map, com.eos.foundation.PageCond)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;queryHHJmDefectListByPage&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt; 物料规格编码查询&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.queryHHJmDefectListByPage&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;condition(java.util.Map):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;pageCond(com.eos.foundation.PageCond):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;data(commonj.sdo.DataObject[]):&lt;/b&gt;&lt;/dd&gt;&lt;dd&gt;&lt;b&gt;totalCount(Int):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>com.keensen.ump.produce.quality.defect.saveJmDefectList(com.keensen.ump.produce.quality.KsComponentJmDefectList)</string>
@@ -106,6 +122,10 @@
   <entry>
     <string>com.keensen.ump.produce.quality.defect.saveMpDefect(com.keensen.ump.produce.quality.KsQualityMpDefect)</string>
     <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveMpDefect&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.saveMpDefect&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.quality.KsQualityMpDefect):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
+  </entry>
+  <entry>
+    <string>com.keensen.ump.produce.quality.defect.saveHHJmDefectList2(com.keensen.ump.produce.component2.KsComponentHhjmDefectList)</string>
+    <string>&lt;html&gt;&lt;b&gt;Name:&lt;/b&gt;saveHHJmDefectList2&lt;br&gt;&lt;b&gt;Display Name:&lt;/b&gt;saveEntity&lt;br&gt;&lt;b&gt;Namespace:&lt;/b&gt;com.keensen.ump.produce.quality.defect.saveHHJmDefectList2&lt;dl&gt;&lt;dt&gt;Parameters:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;entity(com.keensen.ump.produce.component2.KsComponentHhjmDefectList):&lt;/b&gt;&lt;/dd&gt;&lt;dt&gt;Return:&lt;/dt&gt;&lt;dd&gt;&lt;b&gt;machineCode(String):&lt;/b&gt;&lt;/dd&gt;&lt;/html&gt;</string>
   </entry>
   <entry>
     <string>defect</string>

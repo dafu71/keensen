@@ -177,6 +177,21 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
+	
+	this.addDefectWindow.activeItem.mon(this.addDefectWindow.activeItem,
+			'beforeSave', function() {
+				
+				var iftear = this.addDefectWindow.iftear.getValue();
+				var advise = this.addDefectWindow.advise.getValue();
+				if(iftear == '是' && Ext.isEmpty(advise)){
+					Ext.Msg.alert('系统提示', '请填写使用意见');
+					return false;
+				}
+				
+				
+			}, this);
+	
+	
 	this.addDefectWindow.activeItem.mon(this.addDefectWindow.activeItem,
 			'afterSave', function() {
 				var relationId = this.addDefectWindow.relationId.getValue();

@@ -17,6 +17,20 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 		this.currentMachineCode = 'J89';
 	}
 	
+	this.queryPanel4EditDefect.mon(this.queryPanel4EditDefect, 'query',
+			function(form, vals) {
+				var store = this.listPanel4EditDefect.store;
+				store.baseParams = vals;
+				store.load();
+			}, this);
+			
+	this.listPanel4EditDefect.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+	(function	() {
+					_this.rec = r;
+
+				}).defer(100);
+			}, this);
 	
 	this.listPanel4ProduceCount.store.on('load', function() {
 				var records = _this.listPanel4ProduceCount.store.getRange();
@@ -66,6 +80,15 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 
 	// 修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+		
+				if (this.opt == 'adddefect') {
+					
+					this.listPanel4EditDefect.store.reload();
+					this.editDefectWindow.relationId = cell.get('id');
+					this.editDefectWindow.show();
+					return;
+				}
+				
 				this.editWindow.show();
 				this.editWindow.loadData(cell);
 			}, this);
@@ -289,4 +312,76 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.exportProduce
 			'com.keensen.ump.produce.component.productioncount.queryProductHHJmList', '0,1');
 			
 	
+}
+
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.onAddDefect = function() {
+
+	this.opt = 'adddefect';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.saveJmDefect = function(
+		defectId, field, newValue, oldValue) {
+
+	var _this = this;
+	if (Ext.isEmpty(newValue))
+		return;
+
+	var obj = {};
+	var relationId = this.editDefectWindow.relationId;
+	obj['entity/defectId'] = defectId;
+	obj['entity/' + field] = newValue;
+	obj['entity/relationId'] = relationId;
+	obj['entity/tacheCause'] = '';
+	obj['entity/recorder'] = nowStaffName;
+	obj['entity/team'] = _this.currentMachineCode;
+
+	var postUrl = 'com.keensen.ump.produce.quality.defect.saveHHJmDefectList.biz.ext';
+	
+
+	this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "正在保存,请稍候!"
+			});
+	this.requestMask.show();
+
+	Ext.Ajax.request({
+
+		url : postUrl,
+		method : "post",
+		jsonData : obj,
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				
+				_this.listPanel.store.reload();
+			}
+
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+function defectView2(relationId, batchNo) {
+
+	var spacepanel = Ext.getCmp('spacepanel');
+
+	if (relationId == '') {
+		return;
+	}
+
+	var itemId = 'menu10004961';
+	var url = '/produce/quality/proddefect/hhjmdefectlist.jsp?batchNo='
+			+ batchNo + '&relationId=' + relationId;
+	var title = '家用卷膜不良记录';
+	spacepanel.remove(spacepanel.getItem(itemId));
+	spacepanel.open({
+				id : '10004961',
+				text : title,
+				attributes : {
+					respath : url
+				}
+			});
+
 }

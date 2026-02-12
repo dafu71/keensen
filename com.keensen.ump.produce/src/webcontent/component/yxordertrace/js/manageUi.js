@@ -257,7 +257,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 				}, {
 					dataIndex : 'materSpecName2',
 					locked : true,
-					header : '订单下达型号'
+					header : '卷膜型号'
 				}, {
 					dataIndex : 'materSpecName',
 					locked : true,

@@ -1403,7 +1403,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							dataIndex : 'position',
 							fieldLabel : '收卷位置(m)',
 							ref : '../../position',
-							allowBlank : false,
+							//allowBlank : false,
 							anchor : '95%',
 							colspan : 6
 

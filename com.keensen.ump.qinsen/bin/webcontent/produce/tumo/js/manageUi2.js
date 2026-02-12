@@ -511,11 +511,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							, '-', {
 								text : '录入涂膜不良',
 								scope : this,
+								hidden : true,
 								iconCls : 'icon-application_add',
 								handler : this.onaddTmDefect
 							}, '-', {
 								text : '涂膜工序不良录入',
-								hidden : true,
+								
 								scope : this,
 								iconCls : 'icon-application_add',
 								handler : this.onAddDefect
@@ -5708,7 +5709,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							dataIndex : 'position',
 							fieldLabel : '收卷位置(m)',
 							ref : '../../position',
-							allowBlank : false,
+							//allowBlank : false,
 							anchor : '95%',
 							colspan : 6
 
@@ -5732,7 +5733,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							dataIndex : 'numLabel',
 							fieldLabel : '标签数',
 							ref : '../../numLabel',
-							allowBlank : false,
+							//allowBlank : false,
 							anchor : '95%',
 							colspan : 6
 

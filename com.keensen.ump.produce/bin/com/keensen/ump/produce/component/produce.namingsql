@@ -257,7 +257,11 @@ and nvl(t1.status,1) != 0
        PMS.Num_Per_Wad "numPerWad",pms.dense_net "denseNet",
        m.name "machineName",
        tm.tm_batch_no "tmBatchNo"
+       ,tmdefect.defect_length "defectLength"
   FROM KS_COMPONENT_HOUSEHOLD_JM T1
+  
+  left join (select sum(length) defect_length,relation_id from KS_COMPONENT_HHJM_DEFECT_LIST group by relation_id) tmdefect
+  					on tmdefect.relation_id = t1.id
   left join (SELECT cm.batch_no cm_batch_no,tm.batch_no tm_batch_no from qinsen.inst_caidiemo cm
 	LEFT JOIN qinsen.inst_tumo tm
 	on cm.tumo_batch_id=tm.record_id) tm

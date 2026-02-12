@@ -638,4 +638,103 @@
 	order by t1.first,t1.second,t1.third,t1.fourth
 	 </select>
 	 
+	 <select id="queryHHJmDefectList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+    SELECT T1.ID              AS "id",
+       to_char(t1.create_time,'YYYY-MM-DD HH24:MI:SS') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       t1.defect_id as "defectId",
+		t1.tache_cause as "tacheCause",
+		t1.position as "position",
+		t1.length as "length",
+		t1.num_label as "numLabel",
+		t1.iftear as "iftear",
+		t1.dye as "dye",
+		t1.horizontal as "horizontal",
+		t1.horizontal2 as "horizontal2",
+		t1.vertical as "vertical",
+		t1.reason as "reason",
+		t1.dept as "dept",
+		t1.team as "team",
+		t1.recorder as "recorder",
+		t1.relation_id as "relationId",
+		
+		zr.cm_batch_no "cdmBatchNo",
+		md.TACHE as "tache",
+		md.first as "first",
+		md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH "defectName"
+		
+		,t1.advise "advise"
+
+  FROM KS_COMPONENT_HHJM_DEFECT_LIST T1
+  left join KS_QUALITY_PROD_DEFECT md 
+  on md.id = t1.defect_Id
+  left join KS_COMPONENT_HOUSEHOLD_JM zr
+  on zr.id = t1.relation_id
+	where 1=1
+	
+	<isNotNull prepend="and" property="iftear"> 
+		       t1.iftear = #iftear#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="team"> 
+		       t1.team like '%' || #team# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="relationId"> 
+		       T1.relation_Id = #relationId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="cdmBatchNo"> 
+		       zr.cm_batch_no like '%' || #cdmBatchNo# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tache"> 
+		       md.tache = #tache#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tacheCause"> 
+		       t1.tache_cause = #tacheCause#
+	</isNotNull>
+	
+	<isNotNull prepend = "and"  property = "createTimeStart"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+	<isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="first"> 
+		       md.first = #first#
+	</isNotNull>
+	<isNotNull prepend="and" property="second"> 
+		       md.second like '%' || #second# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="third"> 
+		       md.third like '%' || #third# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="fourth"> 
+		       md.fourth '%' || #fourth# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="defectName"> 
+		       md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH  like '%' || #defectName# || '%'
+	</isNotNull>
+	
+	order by zr.id,t1.create_time
+	 </select>
+	 
+	 	
 	 </sqlMap>

@@ -28,7 +28,8 @@ com.keensen.ump.produce.quality.MpdefectMgr = function() {
 					fields : ['code', 'name'],
 					data : [['外观', '外观'], ['性能', '性能'], ['尺寸', '尺寸'],
 							['取样损耗', '取样损耗'], ['拼接损耗', '拼接损耗'],
-							['试卷损耗', '试卷损耗']]
+							['试卷损耗', '试卷损耗'],
+							['涂膜收卷换卷损耗', '涂膜收卷换卷损耗']]
 				});
 
 		this.tacheStore = new Ext.data.SimpleStore({
