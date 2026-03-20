@@ -397,4 +397,177 @@ SELECT '8寸',
        JM.LINE_ID = 30222)
    AND TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM-DD HH24:mi:ss') &gt;= #productDtStart#
    AND TO_CHAR(QJ.PRODUCE_DT, 'YYYY-MM-DD HH24:mi:ss') &lt;= #productDtEnd#</select>
+    <!--贴标及绕丝工序看板-->
+    <select id="queryRs4Board" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT DECODE(T1.TYPE,
+              '家用膜',
+              NVL(HCHK.APPLY_AMOUNT, 0),
+              NVL(GCHK.APPLY_AMOUNT, 0)) "applyAmount",
+       NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT) AS "prodAmount",
+       T1.ID,
+       T1.ORDER_NO "orderNo",
+       T1.ORDER_TYPE "orderType",
+       SUBSTR(YB.DEMAND_STOCK_DATE, 1, 10) "demandStockDate",
+       T1.MATER_SPEC_NAME "prodSpecName",
+       T1.DRY_WET "dryWet",
+       T1.MATER_SPEC_ID,
+       T1.MATER_SPEC_NAME2 "orderSpecName",
+       NVL(JMCNT.JMCOUNT, 0) "jmCount",
+       NVL(QJCNT.QJCOUNT, 0) "qjCount",
+       NVL(QJCNT.LABELCOUNT, 0) "labelCount",
+       NVL(CNT.RSCOUNT, 0) "rsCount",
+       ROUND(100 * NVL(JMCNT.JMCOUNT, 0) /
+             NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT),
+             2) || '%' "jmRate",
+       ROUND(100 * NVL(QJCNT.QJCOUNT, 0) /
+             NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT),
+             2) || '%' "qjRate",
+       ROUND(100 * NVL(QJCNT.LABELCOUNT, 0) /
+             NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT),
+             2) || '%' "labelRate",
+       ROUND(100 * NVL(CNT.RSCOUNT, 0) /
+             NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT),
+             2) || '%' "rsRate"
+        ,CASE WHEN TO_DATE(SUBSTR(YB.DEMAND_STOCK_DATE, 1, 10), 'YYYY-MM-DD')
+       &lt;= TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')
+       THEN 'FFE384' ELSE 'ffffff' END "mystyle"
+  FROM KS_PROD_COMPONENT_YXORDER T1
+  LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+    ON T1.BASE_ID = YB.ID
+  LEFT JOIN (SELECT COUNT(1) JMCOUNT, ORDER_NO, PROD_SPEC_ID
+               FROM QINSEN.INST_JUANMO_MAIN JM
+              GROUP BY ORDER_NO, PROD_SPEC_ID) JMCNT
+    ON JMCNT.ORDER_NO = T1.ORDER_NO
+   AND JMCNT.PROD_SPEC_ID = T1.MATER_SPEC_ID
+  LEFT JOIN (SELECT COUNT(1) QJCOUNT,
+                    ORDER_NO,
+                    PROD_SPEC_ID,
+                    SUM(CASE
+                          WHEN QJ.BATCH_NO IS NOT NULL THEN
+                           1
+                          ELSE
+                           0
+                        END) LABELCOUNT
+               FROM QINSEN.INST_QIJIAN QJ
+              GROUP BY ORDER_NO, PROD_SPEC_ID) QJCNT
+    ON QJCNT.ORDER_NO = T1.ORDER_NO
+   AND QJCNT.PROD_SPEC_ID = T1.MATER_SPEC_ID
+  LEFT JOIN (SELECT COUNT(1) RSCOUNT, ORDER_NO, PROD_SPEC_ID
+               FROM (SELECT RS.BATCH_NO,
+                            RS.RECORD_ID,
+                            QJ.ORDER_NO,
+                            QJ.PROD_SPEC_ID
+                       FROM QINSEN.INST_RAOSI RS
+                       LEFT JOIN QINSEN.INST_QIJIAN QJ
+                         ON RS.BATCH_NO = QJ.BATCH_NO)
+              GROUP BY ORDER_NO, PROD_SPEC_ID) CNT
+    ON CNT.ORDER_NO = T1.ORDER_NO
+   AND CNT.PROD_SPEC_ID = T1.MATER_SPEC_ID
+  LEFT JOIN (SELECT SUM(AMOUNT) APPLY_AMOUNT, T.ORDER_NO, T.PROD_SPEC_NAME
+               FROM (SELECT T.RESERVE1       ORDER_NO,
+                            T.PROD_SPEC_NAME,
+                            T.APPLY_AMOUNT   AMOUNT
+                       FROM KS_COMPONENT_HH_CHECK_HEAD T) T
+              GROUP BY T.ORDER_NO, T.PROD_SPEC_NAME) HCHK
+    ON HCHK.ORDER_NO = T1.ORDER_NO
+   AND T1.MATER_SPEC_NAME2 = HCHK.PROD_SPEC_NAME
+   AND T1.TYPE = '家用膜'
+  LEFT JOIN (SELECT COUNT(1) APPLY_AMOUNT, ORDER_NO, PROD_SPEC_NAME
+               FROM (SELECT T.BATCH_NO, T2.ORDER_NO, T2.PROD_SPEC_NAME
+                       FROM KS_COMPONENT_CHECK_LIST T
+                       LEFT JOIN KS_COMPONENT_CHECK_HEAD T2
+                         ON T.RELATION_ID = T2.ID)
+              GROUP BY ORDER_NO, PROD_SPEC_NAME) GCHK
+    ON GCHK.ORDER_NO = T1.ORDER_NO
+   AND GCHK.PROD_SPEC_NAME = T1.MATER_SPEC_NAME2
+ WHERE T1.BASE_ID IN
+       (SELECT T.ID BASE_ID
+          FROM KS_COMPONENT_YXORDER_BASE T
+         WHERE (TO_DATE(SUBSTR(T.DEMAND_STOCK_DATE, 1, 10), 'YYYY-MM-DD') BETWEEN
+               TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') - #daysBefore# AND
+               TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') + #daysAfter#)
+           AND T.TYPE IN ('工业膜', '商用膜'))
+   AND DECODE(T1.TYPE,
+              '家用膜',
+              NVL(HCHK.APPLY_AMOUNT, 0),
+              NVL(GCHK.APPLY_AMOUNT, 0)) &lt;
+       NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT)
+   AND NVL(CNT.RSCOUNT, 0) &lt; NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT)
+ 	ORDER BY SUBSTR(YB.DEMAND_STOCK_DATE, 1, 10)</select>
+    <!--包装工序看板-->
+    <select id="queryPackage4Board" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+ 	SELECT DECODE(T1.TYPE,
+              '家用膜',
+              NVL(HCHK.APPLY_AMOUNT, 0),
+              NVL(GCHK.APPLY_AMOUNT, 0)) "applyAmount",
+       NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT) AS "prodAmount",
+       T1.ID ORDER_ID,
+       T1.ORDER_NO "orderNo",
+       T1.ORDER_TYPE "orderType",
+       SUBSTR(YB.DEMAND_STOCK_DATE, 1, 10) "demandStockDate",
+       T1.MATER_SPEC_NAME "prodSpecName",
+       T1.DRY_WET "dryWet",
+       T1.MATER_SPEC_ID,
+       T1.MATER_SPEC_NAME2 "orderSpecName",
+       NVL(CNT.RSCOUNT, 0) "rsCount",
+       ROUND(100 * DECODE(T1.TYPE,
+                          '家用膜',
+                          NVL(HCHK.APPLY_AMOUNT, 0),
+                          NVL(GCHK.APPLY_AMOUNT, 0)) /
+             NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT),
+             2) || '%' "checkRate",
+       ROUND(100 * NVL(CNT.RSCOUNT, 0) /
+             NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT),
+             2) || '%' "rsRate"
+       ,CASE WHEN TO_DATE(SUBSTR(YB.DEMAND_STOCK_DATE, 1, 10), 'YYYY-MM-DD')
+       &lt;= TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')+1
+       THEN 'FFE384' ELSE 'ffffff' END "mystyle"
+  FROM KS_PROD_COMPONENT_YXORDER T1
+  LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+    ON T1.BASE_ID = YB.ID
+
+  LEFT JOIN (SELECT COUNT(1) RSCOUNT, ORDER_NO, PROD_SPEC_ID
+               FROM (SELECT RS.BATCH_NO,
+                            RS.RECORD_ID,
+                            QJ.ORDER_NO,
+                            QJ.PROD_SPEC_ID
+                       FROM QINSEN.INST_RAOSI RS
+                       LEFT JOIN QINSEN.INST_QIJIAN QJ
+                         ON RS.BATCH_NO = QJ.BATCH_NO)
+              GROUP BY ORDER_NO, PROD_SPEC_ID) CNT
+    ON CNT.ORDER_NO = T1.ORDER_NO
+   AND CNT.PROD_SPEC_ID = T1.MATER_SPEC_ID
+  LEFT JOIN (SELECT SUM(AMOUNT) APPLY_AMOUNT, T.ORDER_NO, T.PROD_SPEC_NAME
+               FROM (SELECT T.RESERVE1       ORDER_NO,
+                            T.PROD_SPEC_NAME,
+                            T.APPLY_AMOUNT   AMOUNT
+                       FROM KS_COMPONENT_HH_CHECK_HEAD T) T
+              GROUP BY T.ORDER_NO, T.PROD_SPEC_NAME) HCHK
+    ON HCHK.ORDER_NO = T1.ORDER_NO
+   AND T1.MATER_SPEC_NAME2 = HCHK.PROD_SPEC_NAME
+   AND T1.TYPE = '家用膜'
+  LEFT JOIN (SELECT COUNT(1) APPLY_AMOUNT, ORDER_NO, PROD_SPEC_NAME
+               FROM (SELECT T.BATCH_NO, T2.ORDER_NO, T2.PROD_SPEC_NAME
+                       FROM KS_COMPONENT_CHECK_LIST T
+                       LEFT JOIN KS_COMPONENT_CHECK_HEAD T2
+                         ON T.RELATION_ID = T2.ID)
+              GROUP BY ORDER_NO, PROD_SPEC_NAME) GCHK
+    ON GCHK.ORDER_NO = T1.ORDER_NO
+   AND GCHK.PROD_SPEC_NAME = T1.MATER_SPEC_NAME2
+ WHERE T1.BASE_ID IN
+       (SELECT T.ID BASE_ID
+          FROM KS_COMPONENT_YXORDER_BASE T
+         WHERE (TO_DATE(SUBSTR(T.DEMAND_STOCK_DATE, 1, 10), 'YYYY-MM-DD') BETWEEN
+               TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') - 3 AND
+               TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') + 5)
+          <!-- AND T.TYPE IN ('工业膜', '商用膜')-->
+           )
+   AND DECODE(T1.TYPE,
+              '家用膜',
+              NVL(HCHK.APPLY_AMOUNT, 0),
+              NVL(GCHK.APPLY_AMOUNT, 0)) &lt;
+       NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT)
+   <!--AND NVL(CNT.RSCOUNT, 0) &lt; NVL(T1.PROD_AMOUNT, T1.ORDER_AMOUNT)-->
+  ORDER BY SUBSTR(YB.DEMAND_STOCK_DATE, 1, 10)
+ 
+   </select>
 </sqlMap>

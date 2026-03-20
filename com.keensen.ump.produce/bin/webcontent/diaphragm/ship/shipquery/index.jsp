@@ -49,6 +49,9 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var listid = 'rkdrk-list';
+  
+  var sendAmountTotalId = Ext.id();
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr
 		});

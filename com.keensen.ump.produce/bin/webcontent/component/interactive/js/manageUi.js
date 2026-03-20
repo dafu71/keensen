@@ -176,7 +176,7 @@ com.keensen.ump.produce.component.InteractiveSelectMgr = function() {
 		var storageStore = new Ext.data.SimpleStore({
 					fields : ['id', 'name'],
 					data : [['1', '膜片AB仓'], ['2', '膜片C仓'], ['3', '膜片发货仓'],
-							['4', '半成品仓'], ['5', '试卷合格仓']]
+							['4', '膜片待请检仓'], ['5', '试卷合格仓']]
 				})
 
 		this.storagecombo = new Ext.form.ComboBox({

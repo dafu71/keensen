@@ -13,6 +13,19 @@ com.keensen.ump.produce.component.storage.PdaAllocateMgr.prototype.initEvent = f
 					}
 				});
 	}, this);
+	
+		// 查询事件
+	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleOrderListPanel.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
 
 	this.listPanel.selModel.on('rowselect', function(o, i, r) {
 				var _this = this;
@@ -39,6 +52,8 @@ com.keensen.ump.produce.component.storage.PdaAllocateMgr.prototype.onSave = func
 	var toStorage = this.inputPanel.toStorage.getValue();
 	var toStorageCode = this.inputPanel.toStorageCode.getValue();
 	var toTrayCode = this.inputPanel.toTrayCode.getValue();
+	var orderNoAllocate = this.inputPanel.orderNoAllocate.getValue();
+	var baseId = this.inputPanel.baseId.getValue();
 
 	if (!this.inputPanel.form.isValid()) {
 		return;
@@ -62,7 +77,9 @@ com.keensen.ump.produce.component.storage.PdaAllocateMgr.prototype.onSave = func
 			"batchNos" : Ext.isEmpty(fromTrayCode) ? batchNos : '',
 			"toStorage" : toStorage,
 			"toStorageCode" : toStorageCode,
-			"toTrayCode" : toTrayCode
+			"toTrayCode" : toTrayCode,
+			"baseId" : baseId,
+			"orderNoAllocate" : orderNoAllocate
 		},
 		success : function(response, action) {
 			var result = Ext.decode(response.responseText);
@@ -75,12 +92,39 @@ com.keensen.ump.produce.component.storage.PdaAllocateMgr.prototype.onSave = func
 								+ '</p>');
 				_this.inputPanel.fromTrayCode.setValue('');
 				_this.inputPanel.batchNos.setValue('');
+				_this.inputPanel.baseId.setValue('');
+				_this.inputPanel.orderNoAllocate.setValue('');
 
 			} else {
 				_this.inputPanel.fromTrayCode.setValue('');
 				_this.inputPanel.batchNos.setValue('');
+				_this.inputPanel.baseId.setValue('');
+				_this.inputPanel.orderNoAllocate.setValue('');
 				_this.listPanel.store.reload();
 			}
 		}
 	});
+}
+
+com.keensen.ump.produce.component.storage.PdaAllocateMgr.prototype.onChooseOrder = function() {
+	
+	this.chooseSingleOrderWindow.show();
+}
+
+com.keensen.ump.produce.component.storage.PdaAllocateMgr.prototype.onChooseSingleOrder = function() {
+	
+	var B = this.chooseSingleOrderListPanel.getSelectionModel().getSelections();
+	
+	if (B && B.length == 1) {
+		
+		var orderNo = B[0].get('orderNo');
+		var baseId = B[0].get('id');
+
+		this.inputPanel.orderNoAllocate.setValue(orderNo);
+		this.inputPanel.baseId.setValue(baseId);
+
+		
+		this.chooseSingleOrderWindow.hide();
+
+	}
 }

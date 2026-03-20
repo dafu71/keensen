@@ -443,4 +443,13 @@
             <xs:element minOccurs="0" name="testLiquid" nillable="true" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="KsBaseDict">
+        <xs:sequence>
+            <xs:any minOccurs="0"/>
+            <xs:element minOccurs="0" name="business" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dictValue" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="dictName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

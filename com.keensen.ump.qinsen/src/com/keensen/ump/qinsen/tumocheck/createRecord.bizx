@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="createRecord.bizx" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node1" name="注释1" displayName="注释" nodeType="note" type="note" content="取消自动判定" title="dafu&#x9;26-3-11 上午8:59">
+    <targetConnections>link18</targetConnections>
+    <location x="812" y="411"/>
+    <size height="100" width="182"/>
+  </nodes>
+  <nodes xsi:type="model:Note" id="node0" name="注释" displayName="注释" nodeType="note" type="note" content="cnt2 > 0" title="dafu&#x9;26-3-11 上午8:58">
+    <targetConnections>link16</targetConnections>
+    <location x="983" y="255"/>
+    <size height="100" width="182"/>
+  </nodes>
   <nodes xsi:type="process:tStart" id="start0" name="开始" displayName="开始" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tLink" id="link0" name="link0" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>
@@ -10,9 +20,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link5</targetConnections>
-    <targetConnections>link15</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link15</targetConnections>
+    <targetConnections>link5</targetConnections>
+    <targetConnections>link17</targetConnections>
     <location x="540" y="150"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -263,9 +274,28 @@
     <node>subprocess2</node>
   </nodes>
   <nodes xsi:type="process:tSwitch" id="switch0" name="空操作" displayName="空操作" type="switch">
-    <sourceConnections xsi:type="process:tLink" id="link12" name="link12" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link12" name="link12" displayName="连接线" isDefault="false" type="transition">
       <sourceNode>switch0</sourceNode>
       <targetNode>assign4</targetNode>
+      <process:transitionCondition>
+        <process:complexCondition>
+          <process:code>1==2</process:code>
+        </process:complexCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link17" name="link17" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link18" name="link18" displayName="连接线" type="note">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>node1</targetNode>
     </sourceConnections>
     <targetConnections>link9</targetConnections>
     <targetConnections>link10</targetConnections>
@@ -311,6 +341,10 @@
           <process:rightOperand type="literal">0</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" id="link16" name="link16" displayName="连接线" type="note">
+      <sourceNode>invokePojo2</sourceNode>
+      <targetNode>node0</targetNode>
     </sourceConnections>
     <targetConnections>link13</targetConnections>
     <location x="814" y="105"/>

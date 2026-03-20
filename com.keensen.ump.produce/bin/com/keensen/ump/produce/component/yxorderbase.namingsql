@@ -203,8 +203,16 @@
 	   
 	   ,t1.url_Label "urlLabel"
 	   ,t1.url_mark "urlMark"
+	   ,t1.o_ring "oRing"
+	   
+	   ,to_char(ctb.delivery_confirm_time, 'YYYY-MM-DD HH24:mi:ss') "deliveryConfirmTime"
+	   ,ctb.delivery_confirm_amount "deliveryConfirmAmount"
         
   FROM KS_COMPONENT_YXORDER_BASE T1
+  
+  left join V_KS_CHECK_TO_BASE ctb
+  on ctb.base_id = t1.id
+  
   
   
   left join
@@ -228,7 +236,10 @@
   
 	where 1=1
 	
-	 <isNotNull prepend="and" property="orderTimeStart">to_char(yh.order_time, 'YYYY-MM-DD')  &gt;=  #orderTimeStart#</isNotNull>
+	<isNotNull prepend="and" property="demandStockDateStart">SUBSTR(t1.DEMAND_STOCK_DATE, 1, 10)  &gt;=  #demandStockDateStart#</isNotNull>
+        <isNotNull prepend="and" property="demandStockDateEnd">SUBSTR(t1.DEMAND_STOCK_DATE, 1, 10)  &lt;=  #demandStockDateEnd#</isNotNull>
+        <isNotNull prepend="and" property="jmSpecName2">t1.jm_Spec_Name = #jmSpecName2#</isNotNull>
+        <isNotNull prepend="and" property="orderTimeStart">to_char(yh.order_time, 'YYYY-MM-DD')  &gt;=  #orderTimeStart#</isNotNull>
         <isNotNull prepend="and" property="orderTimeEnd">to_char(yh.order_time, 'YYYY-MM-DD')  &lt;=  #orderTimeEnd#</isNotNull>
         <isNotNull prepend="and" property="orderType">T1.ORDER_TYPE = #orderType#</isNotNull>
         <isNotNull prepend="and" property="jmSpecName">upper(t1.jm_Spec_Name) like '%' || upper(#jmSpecName#) || '%'</isNotNull>
@@ -555,7 +566,7 @@
 	GROUP BY t.relation_id) 
 	AND t.relation_id=#baseId#</select>
     <update id="saveCancelStateBatch" parameterClass="java.util.HashMap">update KS_COMPONENT_YXORDER_BASE t
-    	set t.state = '取消订单',
+    	set t.state = '取消订单',t.order_no = t.order_no || '(已取消)' 
     	t.update_time = sysdate,t.update_name = #changeName#,t.update_user_id=#changeUserId#
     	where t.id in ($ids$)</update>
     <select id="querySpec" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">    

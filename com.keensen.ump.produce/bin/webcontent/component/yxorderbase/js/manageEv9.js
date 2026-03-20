@@ -736,7 +736,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				// if(Ext.isEmpty(labelUrl) || Ext.isEmpty(markUrl)) return
 				// false;
 
-				this.orderViewWindow.labelDrawingUrl.update('');
+				this.orderViewWindow.labelDrawingUrl.setValue('');
 				if (!Ext.isEmpty(labelUrl)) {
 					labelUrl = markRootUrl + labelUrl;
 					labelUrl = '<img title="单击查看完整图片" src="'
@@ -748,11 +748,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ labelUrl
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
-					this.orderViewWindow.labelDrawingUrl.update(labelUrl)
+					this.orderViewWindow.labelDrawingUrl.setValue(labelUrl)
 					// .defer(100);
 				}
 
-				this.orderViewWindow.markDrawingUrl.update('');
+				this.orderViewWindow.markDrawingUrl.setValue('');
 				if (!Ext.isEmpty(markUrl)) {
 
 					markUrl = markRootUrl + markUrl;
@@ -765,12 +765,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ markUrl
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
-					this.orderViewWindow.markDrawingUrl.update(markUrl)
+					this.orderViewWindow.markDrawingUrl.setValue(markUrl)
 					// .defer(100);
 
 				}
 
-				this.orderViewWindow.stampUrl.update('');
+				this.orderViewWindow.stampUrl.setValue('');
 				if (!Ext.isEmpty(stampUrl)) {
 
 					stampUrl = markRootUrl + stampUrl;
@@ -783,7 +783,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ stampUrl
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
-					this.orderViewWindow.stampUrl.update(stampUrl)// .defer(100);
+					this.orderViewWindow.stampUrl.setValue(stampUrl)// .defer(100);
 
 				}
 
@@ -799,7 +799,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ urlDateDelivery
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
-					this.orderViewWindow.urlDateDelivery.update(dateUrl)
+					this.orderViewWindow.urlDateDelivery.setValue(dateUrl)
 					// .defer(100);
 				}
 
@@ -815,7 +815,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 							+ urlDateDelivery2
 							+ "'"
 							+ ');" style="cursor: pointer;width:auto; height:auto; max-width:98%; max-height:100px;" />';
-					this.orderViewWindow.urlDateDelivery2.update(dateUrl)
+					this.orderViewWindow.urlDateDelivery2.setValue(dateUrl)
 					// .defer(100);
 				}
 
@@ -890,7 +890,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 						url += '<a href="/default/myupload/order/'
 								+ urlDateDelivery + '" target=_blank>查看图片</a>';
 						url += '&nbsp;&nbsp;&nbsp;&nbsp;';
-						Ext.getCmp(urlDateDeliveryId).update(url);
+						Ext.getCmp(urlDateDeliveryId).setValue(url);
 					}
 
 					if (Ext.isEmpty(urlDateDelivery2)) {
@@ -901,7 +901,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 						url += '<a href="/default/myupload/order/'
 								+ urlDateDelivery2 + '" target=_blank>查看图片</a>';
 						url += '&nbsp;&nbsp;&nbsp;&nbsp;';
-						Ext.getCmp(urlDateDeliveryId2).update(url);
+						Ext.getCmp(urlDateDeliveryId2).setValue(url);
 					}
 				}
 
@@ -1159,7 +1159,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onAddSave = function(
 	//需生产数为0时，可以不需要上传“询期回复截图” 2026-2-11
 
 	var urlDateDelivery = Ext.getCmp(urlDateDeliveryId).getValue();
-	if (urlDateDelivery == '请上传图片') {
+	if (urlDateDelivery == '请上传图片' && prodAmount>0) {
 		Ext.Msg.alert('系统提示', '请上传询期回复截图');
 		return false;
 	}
@@ -1493,7 +1493,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onMCConfirm = functio
 }
 com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = function() {
 	// KS00307 KS01147
-	if (uid == 'KS00307' || uid == 'KS01147' || uid == 'LHY' || uid == 'dafu') {
+	if (uid == 'KS00307' || uid == 'KS01147' || uid == 'dafu' || uid == 'KS01479') {
 		doQuerySqlAndExport(
 				this,
 				this.queryPanel,
@@ -1502,7 +1502,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = functio
 				'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
 				'0,1');
 	} else {
-		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '入库日期', '订单下达型号',
+		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '计划入库时间', '发货日期', '订单下达型号',
 				'货品名称', '干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存膜元件（支）',
 				'产品备注', '标签', '标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱',
 				'包装箱内部图纸编号', '是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注',
@@ -2758,7 +2758,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPhoto = funct
 							url += '<a href="/default' + fname
 									+ '" target=_blank>查看图片</a>';
 							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-							obj.update(url);
+							obj.setValue(url);
 
 						}
 					},

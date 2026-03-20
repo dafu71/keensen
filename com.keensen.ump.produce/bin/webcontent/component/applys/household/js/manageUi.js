@@ -138,11 +138,19 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 		 * 'icon-application_excel', handler : this.exportExcelBatch });
 		 */
 		this.queryPanel.addButton({
+					text : "包装生产看板",
+					scope : this,
+					//hidden:true,
+					iconCls : 'icon-application_excel',
+					handler : this.onPackage4Board
+				});
+				
+		this.queryPanel.addButton({
 					text : "导出",
 					// disabled : allRight != '1',
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : uid != 'dafu',
+					hidden : uid != 'dafu' && uid != 'KS00524' ,
 					handler : this.exportExcel
 				});
 	}
@@ -265,6 +273,14 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						dictData : KS_YESORNO,
 						dataIndex : 'ifConfirmed',
 						header : '是否已确认'
+					}, {
+						dataIndex : 'deliveryConfirmTime',
+						sortable : true,
+						header : '元件制造部入库时间'
+					}, {
+						dataIndex : 'deliveryConfirmUserName',
+						sortable : true,
+						header : '转仓库人'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.applys.queryHHApplyByPage.biz.ext',
@@ -376,6 +392,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 							name : 'ifConfirmed'
 						}, {
 							name : 'checkedAmount'
+						}, {
+							name : 'deliveryConfirmTime'
+						}, {
+							name : 'deliveryConfirmUserName'
 						}]
 			})
 		})

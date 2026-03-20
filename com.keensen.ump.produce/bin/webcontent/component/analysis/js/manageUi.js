@@ -5,7 +5,7 @@ com.keensen.ump.produce.component.analysisMgr = function() {
 		var store = new Ext.data.SimpleStore({
 					fields : ['id', 'name'],
 					data : [['膜片AB仓', '膜片AB仓'], ['膜片C仓', '膜片C仓'], ['膜片发货仓', '膜片发货仓'],
-							['研发1号仓', '研发1号仓'], ['半成品仓', '半成品仓']]
+							['研发1号仓', '研发1号仓'], ['膜片待请检仓', '膜片待请检仓']]
 				});
 		this.storagecombo = new Ext.form.ComboBox({
 			store : store,

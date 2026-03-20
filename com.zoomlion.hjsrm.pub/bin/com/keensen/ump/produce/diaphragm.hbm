@@ -1834,241 +1834,6 @@
             <column length="18" name="AMOUNT" precision="18" scale="2"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.diaphragm.KsDiaphragmOrderBase" table="KS_DIAPHRAGM_ORDER_BASE">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="id" type="long">
-            <column length="22" name="ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="createTime" type="timestamp">
-            <column name="CREATE_TIME"/>
-        </property>
-        <property name="createUserId" type="string">
-            <column length="24" name="CREATE_USER_ID"/>
-        </property>
-        <property name="createName" type="string">
-            <column length="24" name="CREATE_NAME"/>
-        </property>
-        <property name="updateTime" type="timestamp">
-            <column name="UPDATE_TIME"/>
-        </property>
-        <property name="updateUserId" type="string">
-            <column length="24" name="UPDATE_USER_ID"/>
-        </property>
-        <property name="updateName" type="string">
-            <column length="24" name="UPDATE_NAME"/>
-        </property>
-        <property name="reserve1" type="string">
-            <column length="1500" name="RESERVE1"/>
-        </property>
-        <property name="reserve2" type="string">
-            <column length="1500" name="RESERVE2"/>
-        </property>
-        <property name="reserve3" type="string">
-            <column length="1500" name="RESERVE3"/>
-        </property>
-        <property name="reserve4" type="string">
-            <column length="1500" name="RESERVE4"/>
-        </property>
-        <property name="reserve5" type="string">
-            <column length="1500" name="RESERVE5"/>
-        </property>
-        <property name="orgId" type="string">
-            <column length="90" name="ORG_ID"/>
-        </property>
-        <property name="status" type="string">
-            <column length="24" name="STATUS"/>
-        </property>
-        <property name="orderNo" type="string">
-            <column length="50" name="ORDER_NO"/>
-        </property>
-        <property name="amount" type="big_decimal">
-            <column length="14" name="AMOUNT" precision="14" scale="2"/>
-        </property>
-        <property name="specName" type="string">
-            <column length="50" name="SPEC_NAME"/>
-        </property>
-        <property name="remark" type="string">
-            <column length="1500" name="REMARK"/>
-        </property>
-        <property name="orderDate" type="date">
-            <column name="ORDER_DATE"/>
-        </property>
-        <property name="customerCode" type="string">
-            <column length="50" name="CUSTOMER_CODE"/>
-        </property>
-        <property name="demandDate" type="date">
-            <column name="DEMAND_DATE"/>
-        </property>
-        <property name="unit" type="string">
-            <column length="50" name="UNIT"/>
-        </property>
-        <property name="ext0" type="string">
-            <column length="500" name="EXT0"/>
-        </property>
-        <property name="ext1" type="string">
-            <column length="500" name="EXT1"/>
-        </property>
-        <property name="ext2" type="string">
-            <column length="500" name="EXT2"/>
-        </property>
-        <property name="ext3" type="string">
-            <column length="500" name="EXT3"/>
-        </property>
-        <property name="ext4" type="string">
-            <column length="500" name="EXT4"/>
-        </property>
-        <property name="ext5" type="string">
-            <column length="500" name="EXT5"/>
-        </property>
-        <property name="ext6" type="string">
-            <column length="500" name="EXT6"/>
-        </property>
-        <property name="ext7" type="string">
-            <column length="500" name="EXT7"/>
-        </property>
-        <property name="ext8" type="string">
-            <column length="500" name="EXT8"/>
-        </property>
-        <property name="ext9" type="string">
-            <column length="500" name="EXT9"/>
-        </property>
-        <property name="ext10" type="string">
-            <column length="500" name="EXT10"/>
-        </property>
-        <property name="ext11" type="string">
-            <column length="500" name="EXT11"/>
-        </property>
-        <property name="ext12" type="string">
-            <column length="500" name="EXT12"/>
-        </property>
-        <property name="ext13" type="string">
-            <column length="500" name="EXT13"/>
-        </property>
-        <property name="ext14" type="string">
-            <column length="500" name="EXT14"/>
-        </property>
-        <property name="ext15" type="string">
-            <column length="500" name="EXT15"/>
-        </property>
-        <property name="ext16" type="string">
-            <column length="500" name="EXT16"/>
-        </property>
-        <property name="ext17" type="string">
-            <column length="500" name="EXT17"/>
-        </property>
-        <property name="ext18" type="string">
-            <column length="1000" name="EXT18"/>
-        </property>
-        <property name="ext19" type="string">
-            <column length="500" name="EXT19"/>
-        </property>
-        <property name="needAmount" type="big_decimal">
-            <column length="14" name="NEED_AMOUNT" precision="14" scale="2"/>
-        </property>
-        <property name="orderStatus" type="string">
-            <column length="20" name="ORDER_STATUS"/>
-        </property>
-        <property name="arrangePercent" type="big_decimal">
-            <column length="14" name="ARRANGE_PERCENT" precision="14" scale="2"/>
-        </property>
-        <property name="planAdvise" type="string">
-            <column length="500" name="PLAN_ADVISE"/>
-        </property>
-        <property name="storageAdvise" type="string">
-            <column length="500" name="STORAGE_ADVISE"/>
-        </property>
-        <property name="planUserId" type="string">
-            <column length="20" name="PLAN_USER_ID"/>
-        </property>
-        <property name="planUserName" type="string">
-            <column length="50" name="PLAN_USER_NAME"/>
-        </property>
-        <property name="storageUserId" type="string">
-            <column length="20" name="STORAGE_USER_ID"/>
-        </property>
-        <property name="storageUserName" type="string">
-            <column length="50" name="STORAGE_USER_NAME"/>
-        </property>
-        <property name="dept" type="string">
-            <column length="50" name="DEPT"/>
-        </property>
-        <property name="manager" type="string">
-            <column length="50" name="MANAGER"/>
-        </property>
-        <property name="prodName" type="string">
-            <column length="50" name="PROD_NAME"/>
-        </property>
-        <property name="amountGift" type="string">
-            <column length="50" name="AMOUNT_GIFT"/>
-        </property>
-        <property name="checkReportNeeded" type="string">
-            <column length="50" name="CHECK_REPORT_NEEDED"/>
-        </property>
-        <property name="mptype" type="string">
-            <column length="50" name="MPTYPE"/>
-        </property>
-        <property name="markSpecName" type="string">
-            <column length="50" name="MARK_SPEC_NAME"/>
-        </property>
-        <property name="deliveryDateEarliest" type="string">
-            <column length="50" name="DELIVERY_DATE_EARLIEST"/>
-        </property>
-        <property name="deliveryDateLatest" type="string">
-            <column length="50" name="DELIVERY_DATE_LATEST"/>
-        </property>
-        <property name="tray" type="string">
-            <column length="500" name="TRAY"/>
-        </property>
-        <property name="packingTxt" type="string">
-            <column length="500" name="PACKING_TXT"/>
-        </property>
-        <property name="markPaste" type="string">
-            <column length="500" name="MARK_PASTE"/>
-        </property>
-        <property name="pallet" type="string">
-            <column length="500" name="PALLET"/>
-        </property>
-        <property name="flash" type="string">
-            <column length="500" name="FLASH"/>
-        </property>
-        <property name="mark" type="string">
-            <column length="200" name="MARK"/>
-        </property>
-        <property name="orderNoMark" type="string">
-            <column length="50" name="ORDER_NO_MARK"/>
-        </property>
-        <property name="materCodeMark" type="string">
-            <column length="50" name="MATER_CODE_MARK"/>
-        </property>
-        <property name="deliveryState" type="string">
-            <column default="'否'" length="20" name="DELIVERY_STATE"/>
-        </property>
-        <property name="changeTime" type="timestamp">
-            <column name="CHANGE_TIME"/>
-        </property>
-        <property name="changeUserId" type="string">
-            <column length="20" name="CHANGE_USER_ID"/>
-        </property>
-        <property name="changeName" type="string">
-            <column length="50" name="CHANGE_NAME"/>
-        </property>
-        <property name="settlement" type="string">
-            <column length="200" name="SETTLEMENT"/>
-        </property>
-        <property name="urlDateDelivery" type="string">
-            <column length="200" name="URL_DATE_DELIVERY"/>
-        </property>
-        <property name="urlDateDelivery2" type="string">
-            <column length="200" name="URL_DATE_DELIVERY2"/>
-        </property>
-        <property name="dateDelivery" type="date">
-            <column name="DATE_DELIVERY"/>
-        </property>
-        <property name="orderTime" type="timestamp">
-            <column name="ORDER_TIME"/>
-        </property>
-    </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.diaphragm.KsDiaphragmZmDefectList" table="KS_DIAPHRAGM_ZM_DEFECT_LIST">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="long">
@@ -2349,6 +2114,247 @@
         </property>
         <property name="advise" type="string">
             <column length="50" name="ADVISE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.diaphragm.KsDiaphragmOrderBase" table="KS_DIAPHRAGM_ORDER_BASE">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="long">
+            <column length="22" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="50" name="ORDER_NO"/>
+        </property>
+        <property name="amount" type="big_decimal">
+            <column length="14" name="AMOUNT" precision="14" scale="2"/>
+        </property>
+        <property name="specName" type="string">
+            <column length="50" name="SPEC_NAME"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="1500" name="REMARK"/>
+        </property>
+        <property name="orderDate" type="date">
+            <column name="ORDER_DATE"/>
+        </property>
+        <property name="customerCode" type="string">
+            <column length="50" name="CUSTOMER_CODE"/>
+        </property>
+        <property name="demandDate" type="date">
+            <column name="DEMAND_DATE"/>
+        </property>
+        <property name="unit" type="string">
+            <column length="50" name="UNIT"/>
+        </property>
+        <property name="ext0" type="string">
+            <column length="500" name="EXT0"/>
+        </property>
+        <property name="ext1" type="string">
+            <column length="500" name="EXT1"/>
+        </property>
+        <property name="ext2" type="string">
+            <column length="500" name="EXT2"/>
+        </property>
+        <property name="ext3" type="string">
+            <column length="500" name="EXT3"/>
+        </property>
+        <property name="ext4" type="string">
+            <column length="500" name="EXT4"/>
+        </property>
+        <property name="ext5" type="string">
+            <column length="500" name="EXT5"/>
+        </property>
+        <property name="ext6" type="string">
+            <column length="500" name="EXT6"/>
+        </property>
+        <property name="ext7" type="string">
+            <column length="500" name="EXT7"/>
+        </property>
+        <property name="ext8" type="string">
+            <column length="500" name="EXT8"/>
+        </property>
+        <property name="ext9" type="string">
+            <column length="500" name="EXT9"/>
+        </property>
+        <property name="ext10" type="string">
+            <column length="500" name="EXT10"/>
+        </property>
+        <property name="ext11" type="string">
+            <column length="500" name="EXT11"/>
+        </property>
+        <property name="ext12" type="string">
+            <column length="500" name="EXT12"/>
+        </property>
+        <property name="ext13" type="string">
+            <column length="500" name="EXT13"/>
+        </property>
+        <property name="ext14" type="string">
+            <column length="500" name="EXT14"/>
+        </property>
+        <property name="ext15" type="string">
+            <column length="500" name="EXT15"/>
+        </property>
+        <property name="ext16" type="string">
+            <column length="500" name="EXT16"/>
+        </property>
+        <property name="ext17" type="string">
+            <column length="500" name="EXT17"/>
+        </property>
+        <property name="ext18" type="string">
+            <column length="1000" name="EXT18"/>
+        </property>
+        <property name="ext19" type="string">
+            <column length="500" name="EXT19"/>
+        </property>
+        <property name="needAmount" type="big_decimal">
+            <column length="14" name="NEED_AMOUNT" precision="14" scale="2"/>
+        </property>
+        <property name="orderStatus" type="string">
+            <column length="20" name="ORDER_STATUS"/>
+        </property>
+        <property name="arrangePercent" type="big_decimal">
+            <column length="14" name="ARRANGE_PERCENT" precision="14" scale="2"/>
+        </property>
+        <property name="planAdvise" type="string">
+            <column length="500" name="PLAN_ADVISE"/>
+        </property>
+        <property name="storageAdvise" type="string">
+            <column length="500" name="STORAGE_ADVISE"/>
+        </property>
+        <property name="planUserId" type="string">
+            <column length="20" name="PLAN_USER_ID"/>
+        </property>
+        <property name="planUserName" type="string">
+            <column length="50" name="PLAN_USER_NAME"/>
+        </property>
+        <property name="storageUserId" type="string">
+            <column length="20" name="STORAGE_USER_ID"/>
+        </property>
+        <property name="storageUserName" type="string">
+            <column length="50" name="STORAGE_USER_NAME"/>
+        </property>
+        <property name="dept" type="string">
+            <column length="50" name="DEPT"/>
+        </property>
+        <property name="manager" type="string">
+            <column length="50" name="MANAGER"/>
+        </property>
+        <property name="prodName" type="string">
+            <column length="50" name="PROD_NAME"/>
+        </property>
+        <property name="amountGift" type="string">
+            <column length="50" name="AMOUNT_GIFT"/>
+        </property>
+        <property name="checkReportNeeded" type="string">
+            <column length="50" name="CHECK_REPORT_NEEDED"/>
+        </property>
+        <property name="mptype" type="string">
+            <column length="50" name="MPTYPE"/>
+        </property>
+        <property name="markSpecName" type="string">
+            <column length="50" name="MARK_SPEC_NAME"/>
+        </property>
+        <property name="deliveryDateEarliest" type="string">
+            <column length="50" name="DELIVERY_DATE_EARLIEST"/>
+        </property>
+        <property name="deliveryDateLatest" type="string">
+            <column length="50" name="DELIVERY_DATE_LATEST"/>
+        </property>
+        <property name="tray" type="string">
+            <column length="500" name="TRAY"/>
+        </property>
+        <property name="packingTxt" type="string">
+            <column length="500" name="PACKING_TXT"/>
+        </property>
+        <property name="markPaste" type="string">
+            <column length="500" name="MARK_PASTE"/>
+        </property>
+        <property name="pallet" type="string">
+            <column length="500" name="PALLET"/>
+        </property>
+        <property name="flash" type="string">
+            <column length="500" name="FLASH"/>
+        </property>
+        <property name="mark" type="string">
+            <column length="200" name="MARK"/>
+        </property>
+        <property name="orderNoMark" type="string">
+            <column length="50" name="ORDER_NO_MARK"/>
+        </property>
+        <property name="materCodeMark" type="string">
+            <column length="50" name="MATER_CODE_MARK"/>
+        </property>
+        <property name="deliveryState" type="string">
+            <column default="'否'" length="20" name="DELIVERY_STATE"/>
+        </property>
+        <property name="changeTime" type="timestamp">
+            <column name="CHANGE_TIME"/>
+        </property>
+        <property name="changeUserId" type="string">
+            <column length="20" name="CHANGE_USER_ID"/>
+        </property>
+        <property name="changeName" type="string">
+            <column length="50" name="CHANGE_NAME"/>
+        </property>
+        <property name="settlement" type="string">
+            <column length="200" name="SETTLEMENT"/>
+        </property>
+        <property name="urlDateDelivery" type="string">
+            <column length="200" name="URL_DATE_DELIVERY"/>
+        </property>
+        <property name="urlDateDelivery2" type="string">
+            <column length="200" name="URL_DATE_DELIVERY2"/>
+        </property>
+        <property name="dateDelivery" type="date">
+            <column name="DATE_DELIVERY"/>
+        </property>
+        <property name="orderTime" type="timestamp">
+            <column name="ORDER_TIME"/>
+        </property>
+        <property name="stockAmount" type="big_decimal">
+            <column length="14" name="STOCK_AMOUNT" precision="14" scale="2"/>
+        </property>
+        <property name="remainingAmount" type="big_decimal">
+            <column length="14" name="REMAINING_AMOUNT" precision="14" scale="2"/>
         </property>
     </class>
 </hibernate-mapping>

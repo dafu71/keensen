@@ -138,7 +138,7 @@
 		t1.relation_id as "relationId",
 
 		l.line_name || '(' || l.line_code || ')' "lineName",
-		zr.batch_no "tmBatchNo",
+		zr.batch_no "tmBatchNo",decode(zr.is_wx,'Y','是','否') "isWxName",
 		md.TACHE as "tache",
 		md.first as "first",
 		md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH "defectName"

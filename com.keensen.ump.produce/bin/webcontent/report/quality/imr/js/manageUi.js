@@ -93,6 +93,9 @@ com.keensen.ump.produce.report.quality.imr.imrMgr = function() {
 						dataIndex : 'batchNo',
 						header : '元件序号'
 					}, {
+						dataIndex : 'jmBatchNo',
+						header : '卷膜序号'
+					}, {
 						dataIndex : 'orderNo',
 						header : '订单编号'
 					}, {
@@ -114,6 +117,8 @@ com.keensen.ump.produce.report.quality.imr.imrMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'jmBatchNo'
+						},{
 							name : 'batchNo'
 						}, {
 							name : 'recordId'

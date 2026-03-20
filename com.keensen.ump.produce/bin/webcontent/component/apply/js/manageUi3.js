@@ -471,13 +471,25 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'isExamine',
 						header : '是否已审核'
 					}, {
+						dataIndex : 'deliveryConfirmTime',
+						sortable : true,
+						header : '元件制造部入库时间'
+					}, {
+						dataIndex : 'deliveryConfirmUserName',
+						sortable : true,
+						header : '转仓库人'
+					}, {
+						dataIndex : 'deliveryConfirmAmount',
+						sortable : true,
+						header : '元件转仓库总数量'
+					}, {
 						dataIndex : 'stockConfirmUserName',
 						sortable : true,
 						header : '仓库确认人'
 					}, {
 						dataIndex : 'stockConfirmTime',
 						sortable : true,
-						header : '交付仓库时间'
+						header : '仓库接收元件确认时间'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryByPage.biz.ext',
@@ -599,6 +611,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'dryWet'
 						}, {
 							name : 'trayCode'
+						}, {
+							name : 'deliveryConfirmTime'
+						}, {
+							name : 'deliveryConfirmUserName'
+						}, {
+							name : 'deliveryConfirmAmount'
 						}]
 			})
 		})

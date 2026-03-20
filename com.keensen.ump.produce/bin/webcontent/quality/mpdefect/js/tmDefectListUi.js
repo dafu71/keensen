@@ -219,6 +219,10 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 						width:200,
 						header : '不良项目'
 					}, {
+						header : '外销',
+						width : 50,
+						dataIndex : 'isWxName'
+					}, {
 						dataIndex : 'first',
 						header : '不良类型'
 					}, {
@@ -280,6 +284,8 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'isWxName'
+						},{
 							name : 'id'
 						}, {
 							name : 'createTime'

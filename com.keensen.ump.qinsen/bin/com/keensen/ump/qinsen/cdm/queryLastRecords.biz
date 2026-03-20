@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tBusinessLogic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="queryLastRecords.bizx" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3">
+  <nodes xsi:type="model:Note" id="node3" name="注释3" nodeType="note" type="note" title="dafu&#x9;26-3-13 上午8:19">
+    <targetConnections>link10</targetConnections>
+  </nodes>
   <nodes xsi:type="model:Note" id="node2" name="注释2" nodeType="note" type="note" title="dafu&#x9;24-2-19 上午9:49"/>
   <nodes xsi:type="model:Note" id="node1" name="注释1" nodeType="note" type="note" title="dafu&#x9;24-2-2 上午11:00"/>
-  <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="dafu&#x9;24-2-2 上午10:59"/>
+  <nodes xsi:type="model:Note" id="node0" name="注释" nodeType="note" type="note" title="dafu&#x9;24-2-2 上午10:59">
+    <sourceConnections xsi:type="process:tLink" id="link10" name="link10" type="note">
+      <sourceNode>node0</sourceNode>
+      <targetNode>node3</targetNode>
+    </sourceConnections>
+  </nodes>
   <nodes xsi:type="process:tStart" id="start0" name="开始" nodeType="common" type="start">
     <sourceConnections xsi:type="process:tLink" id="link0" name="link0" isDefault="true" type="transition">
       <sourceNode>start0</sourceNode>

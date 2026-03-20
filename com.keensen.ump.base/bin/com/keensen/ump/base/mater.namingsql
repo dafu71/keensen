@@ -578,4 +578,7 @@ SELECT T1.DRAWING_CODE AS "drawingCode",
 	salt_up_limit = REGEXP_SUBSTR(pms.test_liquid_salt, '[^-]+', 1, 2)
 	WHERE pms.prod_type &lt;&gt; '公司标准'
 	and pms.mater_spec_id = #materSpecId#</update>
+    <select id="queryMaterClass4Tm" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select t.mater_class_id "materClassId" ,t.mater_class_name "materClassName"
+ 	from QINSEN.PARA_MATER_CLASS t
+ 	WHERE t.up_id = 25519</select>
 </sqlMap>

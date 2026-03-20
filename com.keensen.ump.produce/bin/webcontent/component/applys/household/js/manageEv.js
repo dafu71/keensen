@@ -841,3 +841,8 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onMarkPrint = functi
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveMarkPrint = function() {
 
 }
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onPackage4Board = function() {
+	window
+			.open('com.keensen.ump.produce.report.queryPackage4Board.flow');
+}

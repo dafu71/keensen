@@ -93,7 +93,7 @@
 		<td width="10%" height="38">
 		<div align="center" class="style1"><strong>Purchase NO.</strong></div>
 		</td>
-		<td width="15%">
+		<td width="17%">
 		<div align="center" class="style1"><b:write
 			property="data/orderNo" /></div>
 		</td>
@@ -107,7 +107,7 @@
 		<td width="10%">
 		<div align="center" class="style1"><strong>Model</strong></div>
 		</td>
-		<td width="15%">
+		<td width="13%">
 		<div align="center" class="style1"><b:write
 			property="data/labelSpecName" /></div>
 		</td>

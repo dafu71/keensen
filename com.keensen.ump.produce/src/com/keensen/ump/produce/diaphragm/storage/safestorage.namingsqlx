@@ -70,7 +70,7 @@
 		mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1'
 		-->
 		
-		<!--2026-01-0
+		<!--2026-01-01
 		超期与预警规则说明:
 		  
 		3、发货膜片超期（给予膜片事业部业务员考核后调至AB仓自用）标准:ULP与BW(含HW)系列为30个自然日,NF、SW系列膜片为90个自然日;
@@ -78,10 +78,15 @@
 		2025年1月1日之前的不进行报警。
 		-->
 
+       <!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
 
 		
   SELECT
-<!--发货膜片预警（提醒计划员与膜片事业部业务员、内勤人员）标准:ULP与BW(含HW)系列为20个自然日,NF、SW系列膜片为60个自然日;-->
+<!--发货膜片预警（提醒计划员与膜片事业部业务员、内勤人员）标准:ULP与BW(含HW)系列为20个自然日,SW系列膜片为60个自然日,NF发货膜片预警改为260个自然日;-->
  NVL(SUM(CASE
            WHEN T.STORAGE_ID = 3 AND T.DIFF > 20 AND T.DIFF &lt;= 30 
            and (T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
@@ -89,7 +94,11 @@
            THEN
             1
            WHEN T.STORAGE_ID = 3 AND T.DIFF > 60 AND T.DIFF &lt;= 90 
-           and (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF')
+           and (T.MATER_CLASS_CODE = 'SW')
+           THEN
+            1
+           WHEN T.STORAGE_ID = 3 AND T.DIFF > 260 AND T.DIFF &lt;= 270 
+           and (T.MATER_CLASS_CODE = 'NF')
            THEN
             1
          END),
@@ -102,7 +111,11 @@
            THEN
             1
            WHEN T.STORAGE_ID = 3 AND T.DIFF > 90  
-           and (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF')
+           and (T.MATER_CLASS_CODE = 'SW')
+           THEN
+            1
+            WHEN T.STORAGE_ID = 3 AND T.DIFF > 270  
+           and (T.MATER_CLASS_CODE = 'NF')
            THEN
             1
          END),
@@ -123,6 +136,12 @@
 		
 		-->
 		
+		<!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
+		
  NVL(SUM(CASE
            WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 70 AND
                 T.DIFF &lt;= 84 AND
@@ -131,7 +150,12 @@
             1
            WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 160 AND
                 T.DIFF &lt;= 174 AND
-                (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
+                (T.MATER_CLASS_CODE = 'SW') THEN
+            1
+            
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 330 AND
+                T.DIFF &lt;= 354 AND
+                (T.MATER_CLASS_CODE = 'NF') THEN
             1
          END),
      0) "selfYellowCount",
@@ -144,13 +168,22 @@
 		<!--2025-07-14
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		-->
+		
+		<!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
  NVL(SUM(CASE
            WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 84 AND
                 ( T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
                 T.MATER_CLASS_CODE = 'HW') THEN
             1
            WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 174 AND
-                (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
+                (T.MATER_CLASS_CODE = 'SW') THEN
+            1
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 354 AND
+                (T.MATER_CLASS_CODE = 'NF') THEN
             1
          END),
      0) "selfRedCount",
@@ -164,13 +197,23 @@
 		2025年1月1日之前的不进行报警。
 		-->
 		
+		<!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
+		
  NVL(SUM(CASE
            WHEN T.STORAGE_ID = 3 AND T.DIFF > 20 AND T.DIFF &lt;= 30
            and ( T.MATER_CLASS_CODE = 'ULP' OR T.MATER_CLASS_CODE = 'BW' OR
                 T.MATER_CLASS_CODE = 'HW') THEN
             T.AMOUNT
            WHEN T.STORAGE_ID = 3 AND T.DIFF  >= 60  AND T.DIFF  &lt; 90 
-           and (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF')
+           and (T.MATER_CLASS_CODE = 'SW')
+           THEN
+            T.AMOUNT
+           WHEN T.STORAGE_ID = 3 AND T.DIFF  >= 260  AND T.DIFF  &lt; 270 
+           and (T.MATER_CLASS_CODE = 'NF')
            THEN
             T.AMOUNT
          END),
@@ -183,7 +226,11 @@
            THEN
             T.AMOUNT
           WHEN T.STORAGE_ID = 3 AND T.DIFF > 90 
-            and ( T.MATER_CLASS_CODE = 'NF' OR T.MATER_CLASS_CODE = 'SW' )
+            and (T.MATER_CLASS_CODE = 'SW' )
+           THEN
+            T.AMOUNT
+           WHEN T.STORAGE_ID = 3 AND T.DIFF > 270 
+            and ( T.MATER_CLASS_CODE = 'NF')
            THEN
             T.AMOUNT
          END),
@@ -203,6 +250,12 @@
 		2、自用膜片预警（提醒计划员强制使用或启动报废）标准:ULP与BW(含HW)为70个自然日,NF、SW系列标准为160个自然日;  
 		
 		-->
+		
+		<!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
  NVL(SUM(CASE
            WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 70 AND
                 T.DIFF &lt;= 84 AND
@@ -211,7 +264,11 @@
             T.AMOUNT
            WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 160 AND
                 T.DIFF &lt;= 174 AND
-                (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
+                (T.MATER_CLASS_CODE = 'SW' ) THEN
+            T.AMOUNT
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 330 AND
+                T.DIFF &lt;= 354 AND
+                (T.MATER_CLASS_CODE = 'NF') THEN
             T.AMOUNT
          END),
      0) "selfYellowAmount",
@@ -228,7 +285,10 @@
                 T.MATER_CLASS_CODE = 'HW') THEN
             T.AMOUNT
            WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 174 AND
-                (T.MATER_CLASS_CODE = 'SW' OR T.MATER_CLASS_CODE = 'NF') THEN
+                (T.MATER_CLASS_CODE = 'SW') THEN
+            T.AMOUNT
+           WHEN (T.STORAGE_ID = 1 OR T.STORAGE_ID = 2) AND T.DIFF > 354 AND
+                 (T.MATER_CLASS_CODE = 'NF') THEN
             T.AMOUNT
          END),
      0) "selfRedAmount"
@@ -326,11 +386,11 @@
 	ORDER BY t.mater_spec_name
  </select>
  
- <!--罗海鹰、吴敏、任栋-->
+ <!--吴敏、任栋-->
  <select id="queryUsers4Mail" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap">
 	SELECT V.USERID "userId", V.OPERATORNAME "userName"
 	  FROM (SELECT DISTINCT COLUMN_VALUE USER_ID
-	          FROM TABLE(SPLIT('KS00307,LHY,KS01147,dafu',
+	          FROM TABLE(SPLIT('KS00307,KS01147,dafu',
 	                           ','))) T
 	  LEFT JOIN V_AC_OPERATOR_TRS V
 	    ON T.USER_ID = V.USERID

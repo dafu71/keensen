@@ -129,8 +129,14 @@ where 1=1
        ,'/' "returnFactory"
        ,'/' "materCode"
        ,'支' "unit"
+       ,qj.check_result "checkResult"
        
   FROM KS_COMPONENT_ABILITION_LIST t2
+  
+  LEFT JOIN qinsen.inst_juanmo_main jm
+ON jm.batch_no = t2.jm_batch_no
+LEFT JOIN qinsen.inst_qijian qj
+ON qj.juanmo_batch_id = jm.record_id
   left join
   KS_COMPONENT_ABILITION T1
   on t2.relation_id = t1.id

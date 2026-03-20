@@ -148,7 +148,7 @@ com.keensen.ump.produce.quality.ProddefectMgr = function() {
 					}, '-', {
 						text : '删除',
 						scope : this,
-						//hidden : true,
+						hidden : true,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],

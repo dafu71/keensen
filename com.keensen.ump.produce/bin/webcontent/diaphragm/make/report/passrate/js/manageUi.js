@@ -135,6 +135,9 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateMgr = function() {
 						dataIndex : 'c21OutLength',
 						header : 'C21不合格数'
 					}, {
+						dataIndex : 'colorbQualifiedNotLength',
+						header : 'b*值不合格长度'
+					}, {
 						dataIndex : 'caimoLoss',
 						header : '涂膜外观不良数'
 					}, {
@@ -179,6 +182,8 @@ com.keensen.ump.produce.diaphragm.make.report.PassrateMgr = function() {
 							name : 'aUsefulLength'
 						}, {
 							name : 'passful'
+						}, {
+							name : 'colorbQualifiedNotLength'
 						}
 
 				]

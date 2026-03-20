@@ -38,7 +38,7 @@ com.keensen.ump.produce.quality.file.MaterialMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 80,
+					height : 110,
 					columns : 4,
 					border : true,
 					titleCollapse : false,
@@ -90,6 +90,22 @@ com.keensen.ump.produce.quality.file.MaterialMgr = function() {
 										'condition/createTimeEnd'],
 								fieldLabel : "上传日期",
 								format : "Y-m-d"
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : 'textfield',
+								name : 'condition/controlCode2',
+								fieldLabel : '受控编号%-%'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/controlCodeMin',
+								fieldLabel : '受控编号从'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/controlCodeMax',
+								fieldLabel : '至'
 							}]
 				});
 

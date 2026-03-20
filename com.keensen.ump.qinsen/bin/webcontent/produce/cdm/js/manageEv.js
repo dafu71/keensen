@@ -321,7 +321,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onEdit = function() {
 		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
 		return
 	}
-
+	this.opt = '';
 	this.listPanel.onEdit();
 };
 
@@ -1080,6 +1080,12 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.saveCdmDefect = function(
 			_this.requestMask.hide()
 		}
 	})
+}
+
+com.keensen.ump.qinsen.produce.CaidiemoMgr.prototype.onGetPrintTag = function(v) {
+	var actionUrl = 'com.keensen.ump.produce.component.getCdm4PrintTag.flow?token='
+				+ Date.now() + '&workstation=工位' + v;
+	window.open(actionUrl);
 }
 
 // 显示模态窗口函数

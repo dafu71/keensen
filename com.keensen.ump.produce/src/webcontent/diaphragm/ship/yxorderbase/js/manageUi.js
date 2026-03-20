@@ -19,6 +19,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 		this.initMpListWindow();
 
 		this.buildPhotoUploadWin();
+		this.initUpdateRemainingAmountWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -54,7 +55,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 120,
+					height : 150,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -130,7 +131,44 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 								name : 'condition/isNotZero',
 								inputValue : 'Y',
 								anchor : '100%'
+							}, {
+								xtype : 'displayfield',
+								height : 5,
+								colspan : 4
+							}, {
+								fieldLabel : '不展示已发货',
+								xtype : 'checkbox',
+								checked : true,
+								name : 'condition/deliveryState',
+								inputValue : '否',
+								anchor : '100%'
+							}, {
+								xtype : 'combobox',
+								mode : 'local',
+								fieldLabel : '是否已发货',
+								ref : '../deliveryState2',
+								hiddenName : 'condition/deliveryState2',
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.ynStore,
+								displayField : "name",
+								valueField : "code",
+								listeners : {
+									"expand" : function(A) {
+										_this.queryPanel.deliveryState2.reset()
+									}
+								}
 							}]
+				});
+
+		this.queryPanel.addButton({
+					text : "导出",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					// hidden : uid != 'dafu',
+					handler : this.exportExcel
 				});
 
 		this.queryPanel.addButton({
@@ -193,6 +231,13 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						ref : '../updateAmountBtn',
 						handler : this.onUpdateAmount
 					}, '-', {
+						text : '修改订单剩余发货数量',
+						scope : this,
+						//hidden : true,
+						iconCls : 'icon-application_edit',
+						ref : '../updateRemainingAmountBtn',
+						handler : this.onUpdateRemainingAmount
+					}, '-', {
 						text : '变更发货状态',
 						scope : this,
 						iconCls : 'icon-application_edit',
@@ -247,6 +292,9 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						width : 200,
 						header : '销售订单编号'
 					}, {
+						dataIndex : 'specName',
+						header : '膜片生产型号'
+					}, {
 						dataIndex : 'orderTime',
 						width : 120,
 						header : '下单到生管时间'
@@ -267,9 +315,17 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						width : 120,
 						header : '订单数量'
 					}, {
+						dataIndex : 'remainingAmount',
+						width : 120,
+						header : '订单剩余发货数量'
+					}, {
 						dataIndex : 'ext12',
 						width : 120,
 						header : '需生产或入库数量'
+					}, {
+						dataIndex : 'stockAmount',
+						width : 120,
+						header : '发库存膜片(米)'
 					}, {
 						dataIndex : 'cnt',
 						width : 120,
@@ -296,9 +352,6 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 					}, {
 						dataIndex : 'mptype',
 						header : '膜片大类'
-					}, {
-						dataIndex : 'specName',
-						header : '膜片生产型号'
 					}, {
 						dataIndex : 'markSpecName',
 						header : '膜片唛头型号'
@@ -339,9 +392,14 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 				autoLoad : true,
 				totalProperty : 'totalCount',
 				baseParams : {
-
-			}	,
+					'condition/deliveryState' : '否',
+					'condition/isNotZero' : 'Y'
+				},
 				fields : [{
+							name : 'remainingAmount'
+						}, {
+							name : 'stockAmount'
+						}, {
 							name : 'customerCode'
 						}, {
 							name : 'ext1'
@@ -637,6 +695,18 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							anchor : '95%',
 							colspan : 1
 						}, {
+							xtype : 'numberfield',
+							name : 'entity/remainingAmount',
+							dataIndex : 'remainingAmount',
+							// allowBlank : false,
+							fieldLabel : '订单剩余发货数量',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 4
+						}, {
 							xtype : 'textfield',
 							name : 'entity/mptype',
 							dataIndex : 'mptype',
@@ -653,23 +723,19 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							fieldLabel : '膜片生产型号 ',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 4
-						}, {
 							xtype : 'textfield',
 							name : 'entity/markSpecName',
 							dataIndex : 'markSpecName',
 							fieldLabel : '膜片唛头型号',
 							anchor : '95%',
-							colspan : 2
+							colspan : 1
 						}, {
 							xtype : 'textfield',
 							name : 'entity/manager',
 							dataIndex : 'manager',
 							fieldLabel : '负责人',
 							anchor : '95%',
-							colspan : 2
+							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -882,7 +948,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 	this.initViewWindow = function() {
 		this.viewWindow = this.viewWindow || new Ext.fn.FormWindow({
 			title : '查看',
-			height : 630,
+			height : 650,
 			width : 800,
 			resizable : false,
 			minimizable : false,
@@ -946,6 +1012,25 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 							fieldLabel : '需生产或<br>入库数量',
 							anchor : '95%',
 							colspan : 1
+						}, {
+							xtype : 'numberfield',
+							// name : 'entity/remainingAmount',
+							dataIndex : 'remainingAmount',
+							readOnly : true,
+							fieldLabel : '订单剩余<br>发货数量',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							readOnly : true,
+							dataIndex : 'stockAmount',
+							fieldLabel : '发库存膜片(米)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 4
 						}, {
 							xtype : 'textfield',
 							readOnly : true,
@@ -1158,7 +1243,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 		this.planConfirmWindow = this.planConfirmWindow
 				|| new Ext.fn.FormWindow({
 					title : '计划员确认',
-					height : 630,
+					height : 650,
 					width : 800,
 					resizable : false,
 					minimizable : false,
@@ -1219,12 +1304,33 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									anchor : '95%',
 									colspan : 1
 								}, {
-									xtype : 'textfield',
-									readOnly : true,
+									xtype : 'numberfield',
+									name : 'entity/ext12',
+									// readOnly : true,
 									dataIndex : 'ext12',
 									fieldLabel : '需生产或<br>入库数量',
 									anchor : '95%',
 									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									// name : 'entity/remainingAmount',
+									dataIndex : 'remainingAmount',
+									readOnly : true,
+									fieldLabel : '订单剩余<br>发货数量',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/stockAmount',
+									// readOnly : true,
+									dataIndex : 'stockAmount',
+									fieldLabel : '发库存膜片(米)',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
 								}, {
 									xtype : 'textfield',
 									readOnly : true,
@@ -1473,7 +1579,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 		this.storageConfirmWindow = this.storageConfirmWindow
 				|| new Ext.fn.FormWindow({
 					title : '库存确认',
-					height : 630,
+					height : 650,
 					width : 800,
 					resizable : false,
 					minimizable : false,
@@ -1540,6 +1646,25 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									fieldLabel : '需生产或<br>入库数量',
 									anchor : '95%',
 									colspan : 1
+								}, {
+									xtype : 'numberfield',
+									// name : 'entity/remainingAmount',
+									dataIndex : 'remainingAmount',
+									readOnly : true,
+									fieldLabel : '订单剩余<br>发货数量',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									readOnly : true,
+									dataIndex : 'stockAmount',
+									fieldLabel : '发库存膜片(米)',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
 								}, {
 									xtype : 'textfield',
 									readOnly : true,
@@ -1822,7 +1947,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 		var store = new Ext.data.SimpleStore({
 					fields : ['id', 'name'],
 					data : [['1', '膜片AB仓'], ['2', '膜片C仓'], ['3', '膜片发货仓'],
-							['4', '试卷合格仓'], ['5', '半成品仓'], ['81', '返厂仓'],
+							['4', '试卷合格仓'], ['5', '膜片待请检仓'], ['81', '返厂仓'],
 							['82', '膜片报废仓']]
 				});
 
@@ -2335,6 +2460,52 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 									this.photoUploadWin.hide();
 								}
 							}]
+				});
+	}
+
+	this.initUpdateRemainingAmountWindow = function() {
+		var _this = this;
+		this.updateRemainingAmount = this.updateRemainingAmount
+				|| new Ext.fn.FormWindow({
+					title : '修改订单剩余发货数量',
+					height : 240,
+					width : 300,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+							_this.updateRemainingAmount.items.items[0].form
+									.reset();
+							_this.updateRemainingAmount.hide();
+							_this.listPanel.refresh();
+						},
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.diaphragm.ship.orderbase.expandOrderBase.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.diaphragm.ship.orderbase.saveOrderBase.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'numberfield',
+									name : 'entity/remainingAmount',
+									dataIndex : 'remainingAmount',
+									fieldLabel : '订单剩余发货数量',
+									ref : '../../remainingAmount',
+									allowBlank : false,
+									anchor : '100%',
+									colspan : 2
+
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
+								}]
+					}]
 				});
 	}
 }

@@ -531,6 +531,13 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr = function() {
 							this.inputPanel.teamId.setValue(teamId);// 班组维持不变
 						}
 					}, {
+						text : "<span style='color:red;font-size:14px;'>打印标签</span>",
+						height : 40,
+						// hidden:true,
+						scope : this,
+						iconCls : 'icon-printer',
+						handler : this.onGetPrintTag
+					}, {
 						text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
 						height : 40,
 						scope : this,

@@ -555,7 +555,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							}, {
 								// fieldLabel : '不显示需生产<br>或入库为零',
 								xtype : 'checkbox',
-								boxLabel : '不显示需生产或入库为零',
+								boxLabel : '不显示需生产入库为零',
 								// checked : true,
 								name : 'condition/isNotZero',
 								inputValue : 'Y',
@@ -622,6 +622,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 										return false;
 									}
 								}
+							}, {
+								xtype : "dateregion",
+								colspan : 1,
+								// anchor : '75%',
+								nameArray : ['condition/demandStockDateStart',
+										'condition/demandStockDateEnd'],
+								fieldLabel : "计划入库时间",
+								format : "Y-m-d"
 							}]
 				});
 
@@ -905,12 +913,20 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'demandStockDate',
-						header : '入库日期',
+						header : '计划入库时间',
 						sortable : true
 					}, {
 						dataIndex : 'dateDelivery',
 						header : '发货日期',
 						sortable : true
+					}, {
+						dataIndex : 'deliveryConfirmTime',
+						sortable : true,
+						header : '元件制造部入库时间'
+					}, {
+						dataIndex : 'deliveryConfirmAmount',
+						sortable : true,
+						header : '已生产入库总数量'
 					}/*
 						 * , { dataIndex : 'prodName', header : '产品名称', sortable :
 						 * true }
@@ -945,7 +961,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'prodAmount',
-						header : '需生产或入库数量',
+						header : '需生产入库数量',
 						sortable : true
 					}, {
 						dataIndex : 'dryAmount',
@@ -1075,7 +1091,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						header : '唛头开始号',
 						sortable : true
 					}, {
-						dataIndex : 'markDrawingCode2',
+						// dataIndex : 'markDrawingCode2',
+						dataIndex : 'mark2ControlCode',
 						header : '包装箱第二唛头受控编号',
 						sortable : true
 					}, {
@@ -1199,6 +1216,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 						dataIndex : 'sealAmount',
 						header : '膜元件密封圈位置和数量',
+						sortable : true
+					}, {
+
+						dataIndex : 'oRing',
+						header : '膜元件O型圈要求',
 						sortable : true
 					}, {
 
@@ -1395,6 +1417,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'oRing'
+						}, {
+							name : 'deliveryConfirmTime'
+						}, {
+							name : 'deliveryConfirmAmount'
+						}, {
 							name : 'id'
 						}, {
 							name : 'dryWetDemand'
@@ -1686,6 +1714,8 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							name : 'orderTime'
 						}, {
 							name : 'dateDelivery'
+						}, {
+							name : 'mark2ControlCode'
 						}]
 			})
 		})
@@ -2345,9 +2375,10 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						 * 'entity/demandStockDate', dataIndex :
 						 * 'demandStockDate', ref : '../../demandStockDate',
 						 * allowBlank : false, // hidden:true, fieldLabel :
-						 * '入库日期', // readOnly : true, anchor : '100%', colspan :
-						 * 6, listeners : { scope : this, "change" : function(o,
-						 * newvalue, oldvalue) { _this.onCalcPeriod(); } } }
+						 * '计划入库时间', // readOnly : true, anchor : '100%',
+						 * colspan : 6, listeners : { scope : this, "change" :
+						 * function(o, newvalue, oldvalue) {
+						 * _this.onCalcPeriod(); } } }
 						 */, {
 					xtype : 'trigger',
 					name : 'entity/period',
@@ -3448,6 +3479,18 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							colspan : 6,
 							xtype : 'textfield',
 							fieldLabel : '封口胶带<br>受控编号'
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							name : 'entity/oRing',
+							dataIndex : 'oRing',
+							readOnly : true,
+							ref : '../../oRing',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '膜元件<br>O型圈要求'
 						}
 
 						, {
@@ -3703,7 +3746,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : '需生产或入库(支)',
+							fieldLabel : '需生产入库(支)',
 							ref : '../../prodAmount',
 							dataIndex : 'prodAmount',
 							anchor : '85%',
@@ -4387,7 +4430,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							// readOnly : true,
 							readOnly : true,
 							editable : false,
-							fieldLabel : '需生产或入库(支)',
+							fieldLabel : '需生产入库(支)',
 							// readOnly : true,
 							anchor : '100%',
 							colspan : 6,
@@ -4446,7 +4489,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							dataIndex : 'demandStockDate',
 							ref : '../../demandStockDate',
 							readOnly : true,
-							fieldLabel : '入库日期',
+							fieldLabel : '计划入库时间',
 							// readOnly : true,
 							anchor : '100%',
 							colspan : 6
@@ -5100,7 +5143,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							xtype : 'textfield',
 							readOnly : true,
 							fieldLabel : '唛头NSF标识'
-						}, {
+						}/*, {
 							xtype : 'combobox',
 							forceSelection : true,
 							readOnly : true,
@@ -5116,6 +5159,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							store : this.markDrawingSpecNameStore,
 							displayField : "specName",
 							valueField : "specName"
+						}*/, {
+							xtype : 'displayfield',
+							fieldLabel : '唛头型号',
+							ref : '../../specNameMark',
+							dataIndex : 'specNameMark',
+							anchor : '100%',
+							colspan : 4
 						}, {
 							dataIndex : 'markDrawingUrl',
 							anchor : '100%',
@@ -5424,6 +5474,17 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							xtype : 'textfield',
 							fieldLabel : '封口胶带<br>受控编号'
 
+						}, {
+							xtype : 'displayfield',
+							height : 5,
+							colspan : 24
+						}, {
+							dataIndex : 'oRing',
+							readOnly : true,
+							ref : '../../oRing',
+							colspan : 6,
+							xtype : 'textfield',
+							fieldLabel : '膜元件<br>O型圈要求'
 						}, {
 							xtype : 'displayfield',
 							fieldLabel : '<p style="color:red;font-size:16px;">打包</p>',
@@ -6559,7 +6620,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : '需生产或入库数量(只)',
+							fieldLabel : '需生产入库数量(只)',
 							ref : '../../prodAmount',
 							dataIndex : 'prodAmount',
 							anchor : '85%',
@@ -7532,7 +7593,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								colspan : 3
 							}, {
 								xtype : 'displayfield',
-								fieldLabel : '需生产或入库(支)',
+								fieldLabel : '需生产入库(支)',
 								ref : '../prodAmount',
 								dataIndex : 'prodAmount',
 								anchor : '100%',
@@ -7546,7 +7607,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								colspan : 3
 							}, {
 								xtype : 'displayfield',
-								fieldLabel : '入库日期',
+								fieldLabel : '计划入库时间',
 								ref : '../demandStockDate',
 								dataIndex : 'demandStockDate',
 								anchor : '100%',
@@ -8187,7 +8248,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						colspan : 1
 					}, {
 						xtype : 'displayfield',
-						fieldLabel : '需生产或入库(支)',
+						fieldLabel : '需生产入库(支)',
 						ref : '../prodAmount',
 						readOnly : true,
 						dataIndex : 'prodAmount',
@@ -8491,14 +8552,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								colspan : 2
 							}, {
 								xtype : 'displayfield',
-								fieldLabel : '需生产或入库(支)',
+								fieldLabel : '需生产入库(支)',
 								ref : '../prodAmount',
 								dataIndex : 'prodAmount',
 								anchor : '85%',
 								colspan : 2
 							}, {
 								xtype : 'displayfield',
-								fieldLabel : '入库日期',
+								fieldLabel : '计划入库时间',
 								ref : '../demandStockDate',
 								dataIndex : 'demandStockDate',
 								anchor : '85%',
@@ -8723,7 +8784,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
-							fieldLabel : '需生产或入库数量(只)',
+							fieldLabel : '需生产入库数量(只)',
 							ref : '../../prodAmount',
 							dataIndex : 'prodAmount',
 							anchor : '85%',
@@ -9206,7 +9267,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									name : 'entity/demandStockDate',
 									dataIndex : 'demandStockDate',
 									ref : '../../demandStockDate',
-									fieldLabel : '入库日期',
+									fieldLabel : '计划入库时间',
 									anchor : '100%',
 									colspan : 1,
 									listeners : {

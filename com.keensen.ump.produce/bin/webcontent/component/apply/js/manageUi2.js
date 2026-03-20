@@ -259,8 +259,16 @@ com.keensen.ump.produce.component.applyMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : uid != 'dafu' && uid != 'KS01479',
+					hidden : uid != 'dafu' && uid != 'KS01479' && uid != 'KS00524' && uid != 'KS01408',
 					handler : this.exportExcel2
+				});
+				
+		this.queryPanel.addButton({
+					text : "包装生产看板",
+					scope : this,
+					//hidden:true,
+					iconCls : 'icon-application_excel',
+					handler : this.onPackage4Board
 				});
 
 		this.queryPanel.addButton({
@@ -470,13 +478,25 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						dataIndex : 'isExamine',
 						header : '是否已审核'
 					}, {
+						dataIndex : 'deliveryConfirmTime',
+						sortable : true,
+						header : '元件制造部入库时间'
+					}, {
+						dataIndex : 'deliveryConfirmUserName',
+						sortable : true,
+						header : '转仓库人'
+					}/*, {
+						dataIndex : 'deliveryConfirmAmount',
+						sortable : true,
+						header : '元件转仓库总数量'
+					}*/, {
 						dataIndex : 'stockConfirmUserName',
 						sortable : true,
 						header : '仓库确认人'
 					}, {
 						dataIndex : 'stockConfirmTime',
 						sortable : true,
-						header : '交付仓库时间'
+						header : '仓库接收元件确认时间'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.apply.queryByPage.biz.ext',
@@ -598,6 +618,12 @@ com.keensen.ump.produce.component.applyMgr = function() {
 							name : 'dryWet'
 						}, {
 							name : 'trayCode'
+						}, {
+							name : 'deliveryConfirmTime'
+						}, {
+							name : 'deliveryConfirmUserName'
+						}, {
+							name : 'deliveryConfirmAmount'
 						}]
 			})
 		})
@@ -1719,6 +1745,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						xtype : 'dictcombobox',
 						dataIndex : 'final',
 						hiddenName : 'entity/final',
+						ref : '../final',
 						allowBlank : false,
 						fieldLabel : '最终判定',
 						dictData : KS_YESORNO,

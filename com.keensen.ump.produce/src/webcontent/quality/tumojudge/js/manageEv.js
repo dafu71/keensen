@@ -67,12 +67,12 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.initEvent = function() {
 					_this.editPanel.mpdIsQualified.setValue('Y')
 				var mpdIsQualified = _this.editPanel.mpdIsQualified.getValue();
 
-				//if (Ext.isEmpty(trendText)) {
-					//_this.editPanel.trend.setValue(trend(perfFlagId,
-					//		isBatchQualified, isKeep, isWx, qualifidLength,
-					//		produceRemark, tagNum, tagLength, mpdIsQualified));
+				// if (Ext.isEmpty(trendText)) {
+				// _this.editPanel.trend.setValue(trend(perfFlagId,
+				// isBatchQualified, isKeep, isWx, qualifidLength,
+				// produceRemark, tagNum, tagLength, mpdIsQualified));
 
-				//}
+				// }
 
 				_this.listPanel2.store.load({
 							params : {
@@ -230,8 +230,6 @@ function trend(perfFlagId, isBatchQualified, isKeep, isWx, qualifidLength,
 	// 走向只有两个仓，发货仓和ab仓
 	// 发货膜片除合格长度200m以下或标签数大于10个或C21大于10入AB仓，其他的全部入膜片发货仓。
 
-
-			
 	var ret = '仓库AB仓';
 	if (isWx == 'N') {// 自用
 
@@ -331,15 +329,18 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.defectView = function() {
 
 	var _this = this;
 	var tumoBatchNo;
+	var relationId;
 
 	if (this.editWindow.isVisible()) {
 		tumoBatchNo = this.editPanel.batchNo.getValue();
+		relationId = this.editPanel.recordId.getValue();
 	} else {
 		var B = this.listPanel.getSelectionModel().getSelections();
 		if (B && B.length != 0) {
 			if (B.length == 1) {
 				var r = B[0];
 				tumoBatchNo = r.get('batchNo');
+				relationId = r.get('recordId');
 
 			} else {
 				Ext.Msg.alert("系统提示", "请选择一条数据!");
@@ -357,15 +358,96 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.defectView = function() {
 		return;
 	}
 
-	var itemId = 'menu10002001';
-	var url = '/qinsen/quality/defect/index.jsp?tumoBatchNo=' + tumoBatchNo;
+	var itemId = 'menu10004882';
+	var url = '/produce/quality/mpdefect/tmdefectlist.jsp?tmBatchNo='
+			+ tumoBatchNo + '&relationId=' + relationId;
 	var title = '膜片不良记录';
 	spacepanel.remove(spacepanel.getItem(itemId));
 	spacepanel.open({
-				id : '10002001',
+				id : '10004882',
 				text : title,
 				attributes : {
 					respath : url
 				}
 			});
+}
+
+com.keensen.ump.produce.quality.timojudgeMgr.prototype.viewDefectPicture = function() {
+
+	var defectPicture = this.editPanel.defectPicture.getValue();
+	if (Ext.isEmpty(defectPicture)) {
+		Ext.Msg.alert("系统提示", "该膜片没有瑕疵图！")
+		return false;
+	} else {
+
+		showImageModal(defectPicture);
+	}
+}
+
+com.keensen.ump.produce.quality.timojudgeMgr.prototype.onReject = function() {
+
+	var _this = this;
+	var recordId = this.editPanel.recordId.getValue();
+
+	Ext.Msg.prompt('驳回理由', '请输入', function(btn, text) {
+		if (btn == 'ok') {
+			_this.requestMask = this.requestMask
+					|| new Ext.LoadMask(Ext.getBody(), {
+								msg : "后台正在操作,请稍候!"
+							});
+			_this.requestMask.show();
+			Ext.Ajax.request({
+						url : "com.keensen.ump.qinsen.tumo.updateReject.biz.ext",
+						method : "post",
+						jsonData : {
+							'param/reasonReject' : text,
+							'param/ifReject' : '是',
+							'param/recordId' : recordId
+						},
+						success : function(resp) {
+							var ret = Ext.decode(resp.responseText);
+							if (ret.success) {
+								Ext.Msg.alert("系统提示", "操作成功！", function() {
+											_this.editWindow.hide();
+
+										})
+							} else {
+								Ext.Msg.alert("系统提示", "驳回失败！")
+
+							}
+
+						},
+						callback : function() {
+							_this.requestMask.hide()
+						}
+					})
+		}
+	}, this, true);
+
+}
+
+// 显示模态窗口函数
+function showImageModal(defectPicture) {
+	// 创建模态窗口
+	var src = markRootUrl + defectPicture + '?ver=' + Math.random();
+	var win = new Ext.Window({
+		title : '瑕疵图',
+		width : 820,
+		height : 650,
+		layout : 'fit',
+		resizable : false,
+		closable : true,
+		modal : true,
+		bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+		html : '<img src="' + src + '" alt="' + defectPicture
+				+ '" style="max-width: 100%; max-height: 100%;"/>',
+		buttons : [{
+					text : '关闭',
+					handler : function() {
+						win.close();
+					}
+				}]
+	});
+	// 显示窗口
+	win.show();
 }

@@ -261,7 +261,10 @@
 		else
         T1.TEST_YJ_SALT 
         end ) >=T1.TEST_YJ_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) "condition2"
+        
+       
   FROM KS_COMPONENT_MP_SELECT T1
+
   
   left join (SELECT t.batch_id mp_record_ID,round(avg(t.salt_rejection) ,2) mp_salt_avg
 	from qinsen.inst_tumo_check t
@@ -672,4 +675,187 @@
    <select id="queryStockTime" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
       select to_char(MAX(t.update_time),'yyyy-MM-dd HH24:mi:ss') "stockTime" from KS_PROD_COMPONENT_STOCK t
    </select>
+   
+   <!--新膜片挑选-->
+   
+   <!--插入元件即时库存-->
+   	
+	<insert id="insertComponentStock" parameterClass="java.util.HashMap" >
+	INSERT INTO ks_prod_component_stock
+	(batch_no,storage_name,position ,amount,create_time,create_user_id)
+	SELECT t.batch_no,t2.name storage_name,t.position storage_position,t.amount,SYSDATE,#userId# 
+	from KS_PROD_DIAPHRAGM_STOCK t
+	LEFT JOIN KS_BASE_STORAGE t2
+	ON t.storage_id = t2.id
+	LEFT JOIN qinsen.inst_tumo tm
+	ON tm.batch_no = t.batch_no
+	WHERE t.amount>0
+	AND t.storage_id IN($storageIds$)
+	AND tm.spec_id IN($specIds$)
+	AND NOT EXISTS(SELECT 1 FROM ks_component_plan_day pd WHERE pd.batch_no=t.batch_no AND pd.order_id=#orderId#)
+	</insert>
+	
+	<!--查询膜片挑选记录-->
+	<select id="query4Select" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	   SELECT T1.MP_MATER_CODE             AS "mpMaterCode",
+       T1.MP_SPEC_CODE              AS "mpSpecCode",
+       T1.MP_BATCH_NO               AS "mpBatchNo",
+       T1.STORAGE_NAME              AS "storageName",
+       T1.STORAGE_POSITION          AS "storagePosition",
+       T1.AMOUNT                    AS "amount",
+       T1.IS_KEEP                   AS "isKeep",
+       T1.MP_POINT_SALT_REJECTION   AS "mpPointSaltRejection",
+       T1.MP_MIN_SALT_REJECTION     AS "mpMinSaltRejection",
+       T1.MP_SALT_LOW_LIMIT         AS "mpSaltLowLimit",
+       T1.R_MP_POINT_SALT_REJECTION AS "rMpPointSaltRejection",
+       T1.MP_POINT_GFD              AS "mpPointGfd",
+       T1.MP_MIN_GFD                AS "mpMinGfd",
+       T1.MP_MAX_GFD                AS "mpMaxGfd",
+       T1.MP_AVG_GFD                AS "mpAvgGfd",
+       T1.R_MP_POINT_GFD            AS "rMpPointGfd",
+       T1.YJ_GPD_LOW_LIMIT          AS "yjGpdLowLimit",
+       T1.YJ_GPD_UP_LIMIT           AS "yjGpdUpLimit",
+       T1.YJ_GPD_AVG                AS "yjGpdAvg",
+       T1.TEST_MP_BATCH_NO          AS "testMpBatchNo",
+       T1.TEST_YJ_SPEC_NAME         AS "testYjSpecName",
+       T1.TEST_YJ_AREA              AS "testYjArea",
+       T1.TEST_YJ_DENSE_NET         AS "testYjDenseNet",
+       
+             
+       <!--试卷膜批次的第2位是“D”第3-4位是“22和24”第6-9位在“4401-4731区间“
+		试卷元件产水量=实际值x1.15，试卷元件脱盐率=实际值-0.05-->
+		
+		case when SUBSTR(T1.TEST_MP_BATCH_NO,2,3) IN( 'D22','D24')
+		AND (SUBSTR(T1.TEST_MP_BATCH_NO,6,4) BETWEEN '4401' AND '4731')
+		then round(nvl(T1.TEST_YJ_GPD,0) * 1.15,2)
+		else		
+        T1.TEST_YJ_GPD 
+        end              AS "testYjGpd",
+        case when SUBSTR(T1.TEST_MP_BATCH_NO,2,3) IN( 'D22','D24')
+		AND (SUBSTR(T1.TEST_MP_BATCH_NO,6,4) BETWEEN '4401' AND '4731')
+		then round(nvl(T1.TEST_YJ_SALT,0) - 0.05 ,2)
+		else
+        T1.TEST_YJ_SALT 
+        end      AS "testYjSalt",
+       
+       T1.TEST_YJ_GPD_LOW_LIMIT     AS "testYjGpdLowLimit",
+       T1.TEST_YJ_GPD_UP_LIMIT      AS "testYjGpdUpLimit",
+       T1.TEST_YJ_SALT_LOW_LIMIT    AS "testYjSaltLowLimit",
+       to_char(T1.mp_produce_dt,'yyyy-MM-dd HH24:mi:ss')             AS "mpProduceDt",
+       T1.REMARK                    AS "remark",
+       T1.mp_record_ID              AS "mpRecordId",
+       T1.mp_spec_ID               AS "mpSpecId",
+       t2.mp_salt_avg  "mpSaltAvg",
+       decode(upper(substr(T1.MP_SPEC_CODE ,1,3)), 'ULP','1','0') "isUlp",
+       case when upper(substr(T1.MP_SPEC_CODE ,1,3)) = 'ULP' then
+       (CASE WHEN t2.mp_salt_avg >=T1.MP_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END)
+       else
+       (CASE WHEN T1.MP_MIN_SALT_REJECTION >=T1.MP_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) end "condition1",
+       (CASE WHEN 
+       (case when SUBSTR(T1.TEST_MP_BATCH_NO,2,3) IN( 'D22','D24')
+		AND (SUBSTR(T1.TEST_MP_BATCH_NO,6,4) BETWEEN '4401' AND '4731')
+		then round(nvl(T1.TEST_YJ_SALT,0) - 0.05 ,2)
+		else
+        T1.TEST_YJ_SALT 
+        end ) >=T1.TEST_YJ_SALT_LOW_LIMIT THEN 'Y' ELSE 'N' END) "condition2"
+        
+        ,tmc.point_salt_rejection "testMpPointSaltRejection"
+        ,tmc.point_gfd "testMpPointGfd"
+        
+        ,nvl(T1.MP_MIN_GFD,0) * nvl(#area#,0) * nvl(#factor#,0) "yjGpdLowLimit2"
+        ,nvl(T1.MP_MAX_GFD,0) * nvl(#area#,0) * nvl(#factor#,0) "yjGpdUpLimit2"
+        ,nvl(T1.MP_AVG_GFD,0) * nvl(#area#,0) * nvl(#factor#,0) "yjGpdAvg2"
+  FROM KS_COMPONENT_MP_SELECT T1
+  <!--新膜片挑选开始-->
+  left join 
+  (SELECT tm.batch_no,LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
+   round(MIN(itc.salt_rejection),2) min_salt_rejection, 
+   LISTAGG(itc.gfd_avg, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_gfd,
+   round(MIN(itc.gfd_avg),2) min_gfd,round(MAX(itc.gfd_avg),2) max_gfd,round(AVG(itc.gfd_avg),2) avg_gfd,
+   MIN(nvl(itc.mac_name,1)) mac_name
+    from qinsen.inst_tumo_check itc
+    LEFT JOIN qinsen.inst_tumo tm
+    ON tm.record_id = itc.batch_id
+    WHERE itc.recheck_flag ='N' 
+    GROUP BY tm.batch_no) tmc
+    on tmc.batch_no = T1.TEST_MP_BATCH_NO
+  
+  <!--新膜片挑选结束-->
+  
+  left join (SELECT t.batch_id mp_record_ID,round(avg(t.salt_rejection) ,2) mp_salt_avg
+	from qinsen.inst_tumo_check t
+	GROUP BY t.batch_id) t2 on T1.mp_record_ID = t2.mp_record_ID
+  
+  where 1=1
+  
+  <!--膜片筛选开始-->
+  <isNotNull prepend="" property="prodSpecIdFilter">
+           AND T1.MP_SPEC_CODE in (
+           select pms.mater_spec_name from KS_PROD_WATER_STD std
+           left join qinsen.para_mater_spec pms ON pms.mater_spec_id=std.mp_spec_id
+           where std.prod_spec_id = #prodSpecIdFilter#)          
+  </isNotNull>
+  
+  <isNotNull prepend="" property="storageNameFilter">
+           AND T1.STORAGE_NAME = #storageNameFilter#          
+  </isNotNull>
+  
+  <isNotNull prepend="" property="mpSpecIdFilter">
+           AND T1.mp_spec_ID = #mpSpecIdFilter#          
+  </isNotNull>
+  
+  <isNull prepend="" property="mpSaltLowLimitFilter2">
+  <isNotNull prepend="" property="mpSaltLowLimitFilter">
+           AND T1.MP_MIN_SALT_REJECTION >= #mpSaltLowLimitFilter#  
+           and T1.MP_SALT_LOW_LIMIT is not null        
+  </isNotNull>
+  </isNull>
+  <isNotNull prepend="" property="mpSaltLowLimitFilter2">
+           AND T1.MP_MIN_SALT_REJECTION >= #mpSaltLowLimitFilter2#  
+           and T1.MP_SALT_LOW_LIMIT is not null        
+  </isNotNull>
+  
+  <isNotNull prepend="" property="testYjSaltLowLimitDownFilter">
+  <isNotEqual prepend="" property="testYjSaltLowLimitDownFilter" compareValue="0">
+           AND T1.TEST_YJ_SALT + #testYjSaltLowLimitDownFilter# >= T1.TEST_YJ_SALT_LOW_LIMIT  
+           and T1.TEST_YJ_SALT_LOW_LIMIT is not null
+           and T1.TEST_YJ_SALT is not null 
+  </isNotEqual>       
+  </isNotNull>
+  
+  <!--膜片筛选结束-->
+  
+  		<isEqual prepend="and" property="isStorage" compareValue="Y">
+ 			   T1.MP_BATCH_NO in (select batch_no from  KS_PROD_COMPONENT_STOCK) 
+        </isEqual>
+  		<isNotNull prepend="and" property="tumoBatchNo3"> 
+		       upper(t1.MP_BATCH_NO) like '%' || upper(#tumoBatchNo3#) || '%'
+	    </isNotNull>
+	    
+	    <isNotNull prepend="" property="tumoBatchNo">
+           AND T1.MP_BATCH_NO in ($tumoBatchNo$)
+          </isNotNull>
+	    
+	     <isNotNull prepend="" property="produceDtStart">
+          and to_char(T1.mp_produce_dt,'yyyy-MM-dd') >= #produceDtStart#
+           </isNotNull>
+           
+            <isNotNull prepend="" property="produceDtEnd">
+          and to_char(T1.mp_produce_dt,'yyyy-MM-dd') &lt;= #produceDtEnd#
+           </isNotNull>
+           
+            <isNotNull prepend="" property="produceYear"> 
+            <isNotNull prepend="" property="produceMonth">
+          and to_char(T1.mp_produce_dt,'yyyy-MM') = #produceYear# || '-' || #produceMonth#
+           </isNotNull>
+           
+           
+            </isNotNull>   
+    </select>
+    
+    <!--删除在即时库存里面的记录-->
+	<delete id="deleteAllComponentMpSelect" parameterClass="java.util.HashMap" >
+   delete from  KS_COMPONENT_MP_SELECT
+   
+	</delete>
  </sqlMap>

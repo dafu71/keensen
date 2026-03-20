@@ -1,6 +1,11 @@
 com.keensen.ump.produce.quality.timojudgeMgr = function() {
 	this.initPanel = function() {
 
+		this.ynStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
+
 		this.validStore = new Ext.data.ArrayStore({
 					fields : ['mykey', 'myvalue'],
 					data : [['Y', '合格'], ['N', '不合格']]
@@ -164,7 +169,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					text : "导出",
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden:true,
+					hidden : true,
 					handler : this.exportExcel
 				});
 
@@ -200,7 +205,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.defectView
-					},'-', {
+					}, '-', {
 						text : '膜片降级',
 						scope : this,
 						hidden : true,
@@ -245,6 +250,28 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'mpd',
 						header : 'C21浓度'
 					}, {
+						header : 'b*均值',
+						width : 150,
+						width : 70,
+						dataIndex : 'colorbAvg'
+					}, {
+						header : 'b*是否合格',
+						width : 100,
+						renderer : function(v, m, r, i) {
+
+							var colorbOk = r.get('colorbOk');
+							var colorbAvg = r.get('colorbAvg');
+							if (colorbAvg == 0)
+								return '';
+
+							if (colorbOk == '不合格') {
+								return "<span style='color:red'>" + '不合格'
+										+ "</span>";
+							}
+							return colorbOk;
+
+						}
+					}, {
 						dataIndex : 'rGfdAvg',
 						header : '复测膜通量'
 					}, {
@@ -273,8 +300,11 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'reduceDt',
 						header : '降级时间'
 					}, {
+						dataIndex : 'judgeTime',
+						header : '判定时间'
+					}, {
 						dataIndex : 'judgerName',
-						//hidden:true,
+						// hidden:true,
 						header : '判定人'
 					}],
 			store : new Ext.data.JsonStore({
@@ -286,6 +316,24 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'defectAdvise'
+						},{
+							name : 'isAPlus'
+						}, {
+							name : 'aPlusLength'
+						}, {
+							name : 'isReport'
+						},{
+							name : 'gyyRemark'
+						}, {
+							name : 'defectNotearLength'
+						}, {
+							name : 'colorbAvg'
+						}, {
+							name : 'colorbOk'
+						}, {
+							name : 'defectPicture'
+						}, {
 							name : 'recordId'
 						}, {
 							name : 'batchNo'
@@ -349,6 +397,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							name : 'perfIsQualifiedName'
 						}, {
 							name : 'judgerName'
+						},{
+							name : 'judgeTime'
 						}]
 			})
 		})
@@ -357,7 +407,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 	this.initEditWindow = function() {
 		var _this = this;
 		this.listPanel2 = this.listPanel2 || new Ext.fn.ListPanel({
-			//title : '【样块性能列表】',
+			// title : '【样块性能列表】',
 			region : 'center',
 			viewConfig : {
 				forceFit : true
@@ -484,125 +534,19 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'textfield',
-						dataIndex : 'tagNum',
-						ref : '../tagNum',
-						name : 'tagNum',
-						readOnly : true,
-						fieldLabel : '标签数',
-						anchor : '95%',
-						colspan : 2
-					}, {
-						xtype : 'textfield',
-						dataIndex : 'tagLength',
-						ref : '../tagLength',
-						name : 'tagLength',
-						readOnly : true,
-						fieldLabel : '标签长度m',
-						anchor : '95%',
-						colspan : 2
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, {
-						xtype : 'textarea',
-						dataIndex : 'produceRemark',
-						ref : '../produceRemark',
-						readOnly : true,
-						fieldLabel : '异常备注',
-						anchor : '95%',
-						height : 30,
-						colspan : 4
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
-					}, {
-						xtype : 'combobox',
-						allowBlank : false,
-						dataIndex : 'appearanceIsQualified',
-						anchor : '95%',
-						colspan : 2,
-						fieldLabel : '外观是否能发货',
-						triggerAction : "all",
-						store : this.validStore,
-						valueField : 'mykey',
-						displayField : 'myvalue',
-						hiddenName : 'entity/appearanceIsQualified',
-						name : 'entity/appearanceIsQualified',
-						editable : false,
-						forceSelection : true,
-						mode : 'local',
-
-						listeners : {
-							"expand" : function(A) {
-								// this.reset()
-							},
-							"select" : function(combo, record) {
-								
-								return;
-								/*var isBatchQualified = _this.editPanel.form
-										.findField('isBatchQualified2')
-										.getValue();
-								var appearanceIsQualified = combo.getValue();
-								var thickIsQualified = _this.editPanel.form
-										.findField('entity/thickIsQualified')
-										.getValue();
-								var mpdIsQualified = _this.editPanel.mpdIsQualified
-										.getValue();
-								if ("N" == appearanceIsQualified) {
-									_this.editPanel.form
-											.findField('entity/isQualified')
-											.setValue("N");
-									_this.editPanel.form
-											.findField('entity/isQualified')
-											.fireEvent('change');
-									_this.editPanel.form
-											.findField('entity/perfFlagId')
-											.setValue("300032");
-									_this.editPanel.form
-											.findField('entity/perfFlagId')
-											.fireEvent('change');
-								} else {
-									if ("Y" == isBatchQualified
-											&& "Y" == thickIsQualified
-											&& "Y" == mpdIsQualified) {
-										_this.editPanel.form
-												.findField('entity/isQualified')
-												.setValue("Y");
-										_this.editPanel.form
-												.findField('entity/isQualified')
-												.fireEvent('change');
-										_this.editPanel.form
-												.findField('entity/perfFlagId')
-												.setValue("300029");
-										_this.editPanel.form
-												.findField('entity/perfFlagId')
-												.fireEvent('change');
-									}
-								}*/
-							}
-						},
-						emptyText : '--请选择--'
-					}, {
-						xtype : 'displayfield',
-						fieldLabel : "<span style='color:red;'>C21浓度判定</span>",
-						colspan : 4
-					}, {
-						xtype : 'textfield',
 						dataIndex : 'mpd',
 						ref : '../mpd',
 						readOnly : true,
 						fieldLabel : 'C21浓度',
-						anchor : '95%',
-						colspan : 2
+						anchor : '100%',
+						colspan : 1
 					}, {
 						xtype : 'combobox',
 						allowBlank : false,
 						dataIndex : 'mpdIsQualified',
 						ref : '../mpdIsQualified',
-						anchor : '95%',
-						colspan : 2,
+						anchor : '100%',
+						colspan : 1,
 						fieldLabel : 'C21是否合格',
 						triggerAction : "all",
 						store : this.validStore,
@@ -630,7 +574,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 								var appearanceIsQualified = _this.editPanel.form
 										.findField('entity/appearanceIsQualified')
 										.getValue();
-									if ("N" == mpdIsQualified) {
+								if ("N" == mpdIsQualified) {
 									_this.editPanel.form
 											.findField('entity/isQualified')
 											.setValue("N");
@@ -647,7 +591,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 									if ("Y" == isBatchQualified
 											&& "Y" == thickIsQualified
 											&& "Y" == appearanceIsQualified) {
-										
+
 										_this.editPanel.form
 												.findField('entity/isQualified')
 												.setValue("Y");
@@ -665,8 +609,159 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							}
 						},
 						emptyText : '--请选择--'
-					},
+					}, {
 
+						xtype : 'combo',
+						fieldLabel : '保留品',
+						dataIndex : 'isKeep',
+						ref : '../isKeep',
+						hiddenName : 'entity/isKeep',
+						value : 'N',
+						emptyText : '--请选择--',
+						allowBlank : true,
+						readOnly : true,
+						colspan : 1,
+						anchor : '95%',
+						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.editPanel.isKeep.reset();
+							}
+						}
+
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'tagNum',
+						ref : '../tagNum',
+						name : 'tagNum',
+						readOnly : true,
+						fieldLabel : '标签数',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'tagLength',
+						ref : '../tagLength',
+						name : 'tagLength',
+						readOnly : true,
+						fieldLabel : '标签长度m',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'colorbAvg',
+						ref : '../colorbAvg',
+						name : 'colorbAvg',
+						readOnly : true,
+						fieldLabel : '色差b*',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'colorbOk',
+						ref : '../colorbOk',
+						name : 'colorbOk',
+						readOnly : true,
+						fieldLabel : 'b*是否合格',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'defectNotearLength',
+						ref : '../defectNotearLength',
+						name : 'defectNotearLength',
+						readOnly : true,
+						fieldLabel : '未扯且边距<br>大于4cm长度',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'defectAdvise',
+						ref : '../defectAdvise',
+						name : 'defectAdvise',
+						readOnly : true,
+						fieldLabel : '使用意见',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'textarea',
+						dataIndex : 'produceRemark',
+						ref : '../produceRemark',
+						readOnly : true,
+						fieldLabel : '异常备注',
+						anchor : '95%',
+						height : 30,
+						colspan : 2
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						allowBlank : false,
+						dataIndex : 'appearanceIsQualified',
+						anchor : '95%',
+						colspan : 2,
+						fieldLabel : '外观是否能发货',
+						triggerAction : "all",
+						store : this.validStore,
+						valueField : 'mykey',
+						displayField : 'myvalue',
+						hiddenName : 'entity/appearanceIsQualified',
+						name : 'entity/appearanceIsQualified',
+						editable : false,
+						forceSelection : true,
+						mode : 'local',
+
+						listeners : {
+							"expand" : function(A) {
+								// this.reset()
+							},
+							"select" : function(combo, record) {
+
+								return;
+								/*
+								 * var isBatchQualified = _this.editPanel.form
+								 * .findField('isBatchQualified2') .getValue();
+								 * var appearanceIsQualified = combo.getValue();
+								 * var thickIsQualified = _this.editPanel.form
+								 * .findField('entity/thickIsQualified')
+								 * .getValue(); var mpdIsQualified =
+								 * _this.editPanel.mpdIsQualified .getValue();
+								 * if ("N" == appearanceIsQualified) {
+								 * _this.editPanel.form
+								 * .findField('entity/isQualified')
+								 * .setValue("N"); _this.editPanel.form
+								 * .findField('entity/isQualified')
+								 * .fireEvent('change'); _this.editPanel.form
+								 * .findField('entity/perfFlagId')
+								 * .setValue("300032"); _this.editPanel.form
+								 * .findField('entity/perfFlagId')
+								 * .fireEvent('change'); } else { if ("Y" ==
+								 * isBatchQualified && "Y" == thickIsQualified &&
+								 * "Y" == mpdIsQualified) { _this.editPanel.form
+								 * .findField('entity/isQualified')
+								 * .setValue("Y"); _this.editPanel.form
+								 * .findField('entity/isQualified')
+								 * .fireEvent('change'); _this.editPanel.form
+								 * .findField('entity/perfFlagId')
+								 * .setValue("300029"); _this.editPanel.form
+								 * .findField('entity/perfFlagId')
+								 * .fireEvent('change'); } }
+								 */
+							}
+						},
+						emptyText : '--请选择--'
+					},
 					{
 						xtype : 'displayfield',
 						fieldLabel : "<span style='color:red;'>厚度判定</span>",
@@ -676,32 +771,28 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						dataIndex : 'thickMin',
 						readOnly : true,
 						fieldLabel : '厚度(最小)',
-						anchor : '95%',
-						colspan : 2
+						anchor : '100%',
+						colspan : 1
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'thickMax',
 						readOnly : true,
 						fieldLabel : '厚度(最大)',
-						anchor : '95%',
-						colspan : 2
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
+						anchor : '100%',
+						colspan : 1
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'thickAvg',
 						readOnly : true,
 						fieldLabel : '厚度(平均)',
-						anchor : '95%',
-						colspan : 2
+						anchor : '100%',
+						colspan : 1
 					}, {
 						xtype : 'combobox',
 						allowBlank : false,
 						dataIndex : 'thickIsQualified',
-						anchor : '95%',
-						colspan : 2,
+						anchor : '100%',
+						colspan : 1,
 						fieldLabel : '厚度是否合格',
 						triggerAction : "all",
 						store : this.validStore,
@@ -794,23 +885,19 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'batchNo',
-						ref:'../batchNo',
+						ref : '../batchNo',
 						name : 'entity/batchNo',
 						fieldLabel : '膜片批号',
 						readOnly : true,
-						anchor : '95%',
-						colspan : 2
+						anchor : '100%',
+						colspan : 1
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'orderNo',
 						name : 'entity/orderNo',
 						fieldLabel : '订单号',
-						anchor : '95%',
-						colspan : 2
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
+						anchor : '100%',
+						colspan : 1
 					}, {
 						xtype : 'mpperfcombobox',
 						allowBlank : false,
@@ -818,8 +905,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						ref : '../perfFlagId',
 						name : 'entity/perfFlagId',
 						dataIndex : 'batchPerfFlagId',
-						anchor : '95%',
-						colspan : 2,
+						anchor : '100%',
+						colspan : 1,
 						fieldLabel : '批次等级',
 						listeners : {
 							scope : this,
@@ -846,8 +933,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						allowBlank : false,
 						dataIndex : 'isBatchQualified',
 						ref : '../isBatchQualified',
-						anchor : '95%',
-						colspan : 2,
+						anchor : '100%',
+						colspan : 1,
 						fieldLabel : '是否合格',
 						triggerAction : "all",
 						store : this.validStore,
@@ -883,32 +970,6 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						xtype : 'displayfield',
 						height : '5',
 						colspan : 4
-					}
-
-					, {
-
-						xtype : 'combo',
-						fieldLabel : '保留品',
-						dataIndex : 'isKeep',
-						ref : '../isKeep',
-						hiddenName : 'entity/isKeep',
-						value : 'N',
-						emptyText : '--请选择--',
-						allowBlank : true,
-						readOnly : true,
-						colspan : 2,
-						anchor : '95%',
-						store : [[null, '全部'], ['Y', '是'], ['N', '否']],
-						listeners : {
-							scope : this,
-							'expand' : function(A) {
-								this.editPanel.isKeep.reset();
-							}
-						}
-					}, {
-						xtype : 'displayfield',
-						height : '5',
-						colspan : 4
 					}, {
 						xtype : 'textarea',
 						dataIndex : 'judgeRemark',
@@ -926,8 +987,85 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						anchor : '95%',
 						colspan : 2
 					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '是否A+等级',
+						ref : '../isAPlus',
+						dataIndex : 'isAPlus',
+						hiddenName : 'entity/isAPlus',
+						anchor : '100%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.isAPlus.reset()
+							},
+							"change" : function(A) {
+								var isAPlus = _this.editPanel.isAPlus
+										.getValue();
+								var qualifidLength = _this.editPanel.qualifidLength
+										.getValue();
+								if(isAPlus == '是'){
+									_this.editPanel.aPlusLength.setValue(qualifidLength);
+								}else{
+									_this.editPanel.aPlusLength.setValue(0);
+								}
+								
+							}
+						}
+					}, {
+						xtype : 'numberfield',
+						dataIndex : 'aPlusLength',
+						ref : '../aPlusLength',
+						dataIndex : 'aPlusLength',
+						name : 'entity/aPlusLength',
+						fieldLabel : 'A+品长度(m)',
+						anchor : '100%',
+						colspan : 1
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 4
+					}, {
+						xtype : 'combobox',
+						mode : 'local',
+						fieldLabel : '入C仓已提交<br>5why分析报告',
+						ref : '../isReport',
+						dataIndex : 'isReport',
+						hiddenName : 'entity/isReport',
+						anchor : '100%',
+						colspan : 1,
+						emptyText : '--请选择--',
+						editable : false,
+						store : this.ynStore,
+						displayField : "name",
+						valueField : "code",
+						listeners : {
+							"expand" : function(A) {
+								_this.editPanel.isReport.reset()
+							}
+						}
+					}, {
+						xtype : 'textfield',
+						dataIndex : 'gyyRemark',
+						ref : '../gyyRemark',
+						readOnly:true,
+						//name : 'entity/gyyRemark',
+						fieldLabel : '入C仓膜片<br>工艺意见',
+						anchor : '95%',
+						colspan : 3
+					}, {
 						xtype : 'hidden',
 						name : 'entity/recordId',
+						ref : '../recordId',
 						dataIndex : 'recordId'
 					}, {
 						xtype : 'hidden',
@@ -941,11 +1079,19 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						xtype : 'hidden',
 						ref : '../isWx',
 						dataIndex : 'isWx'
+					}, {
+						xtype : 'hidden',
+						ref : '../defectPicture',
+						dataIndex : 'defectPicture'
 					}],
 			buttons : [{
 						text : "确定",
 						scope : this,
 						handler : this.onSave
+					},{
+						text : "驳回",
+						scope : this,
+						handler : this.onReject
 					}, {
 						text : "关闭",
 						scope : this,
@@ -953,10 +1099,14 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							this.editPanel.form.reset();
 							this.editWindow.hide();
 						}
-					},{
+					}, {
 						text : "查看不良记录",
 						scope : this,
 						handler : this.defectView
+					}, {
+						text : "查看瑕疵图",
+						scope : this,
+						handler : this.viewDefectPicture
 					}]
 
 		})
@@ -964,7 +1114,7 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 		this.editWindow = this.editWindow || new Ext.Window({
 					title : '膜片质检判定',
 					height : 650,
-					width : 800,
+					width : 1024,
 					resizable : false,
 					minimizable : false,
 					maximizable : true,

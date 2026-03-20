@@ -167,9 +167,9 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 		Z.PROD_SPEC_ID as "prodSpecId",
 		Z.ORDER_NO as "orderNo",
 		
-		<!--针对SW、ZM、MS系列元件，包含所有司标和非司标卷制工艺的产品已改为负压检测，生产品质系统内的检测气压值需要改为负值 --><!-- 判断其卷膜执行型号中包含SW、ZM、MS（在第1~2位，或第5~7位），则在对“检测气压”取值时加负号--><!--从2025年11月11日后的数据进行修改，之前的数据保持不变-->
+		<!--针对SW、ZM、MS系列元件，包含所有司标和非司标卷制工艺的产品已改为负压检测，生产品质系统内的检测气压值需要改为负值 --><!-- 判断其卷膜执行型号中包含SW、ZM、MS（在第1~2位，或第5~7位），则在对“检测气压”取值时加负号--><!--从2025年11月11日后的数据进行修改，之前的数据保持不变--><!--2026-03-04  GYQJI0000051(GYQJI0000051) 需要将正压气检机（生产线：GYQJI0000051），检测气压值都改为正数-->
 		
-		case when (to_char(Z.PRODUCE_DT,'YYYY-MM-DD')&gt; '2025-11-11') 
+		case when (to_char(Z.PRODUCE_DT,'YYYY-MM-DD')&gt; '2025-11-11') and (z.line_id != 30241)
 			and (substr(Z.PROD_SPEC_NAME,1,2)='SW' or substr(Z.PROD_SPEC_NAME,1,2)='ZM' 
 			 or substr(Z.PROD_SPEC_NAME,1,2)='MS'
 			 or substr(Z.PROD_SPEC_NAME,5,2)='MS')
@@ -295,6 +295,18 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
            FROM qinsen.INST_QIJIAN_CHANGE QC
           WHERE QC.JUANMO_BATCH_ID = Z.JUANMO_BATCH_ID) "lastTagDate",
        qinsen.PG_GET_INFO.GET_STAFF_NAME_BY_ID(qinsen.PG_GET_INFO.GET_LAST_TAG_WORKER(Z.JUANMO_BATCH_ID)) "lastTagWorker"
+	  
+	  ,z.is_c "isC",to_char(z.check_time,'YYYY-MM-DD HH24:MI:SS') "checkTime",
+	  
+	  
+	  z.reason_degrade as "reasonDegrade",
+z.type_degrade as "typeDegrade",
+z.dept_degrade as "deptDegrade",
+z.user_id_degrade as "userIdDegrade",
+z.user_name_degrade as "userNameDegrade",
+z.time_degrade as "timeDegrade"
+	  
+	  
 	  FROM (SELECT  T.* 
 	          FROM (
 
@@ -318,6 +330,7 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 			A.WATER_REMARK_USER_NAME ,A.DRY_WET,J.trailer,
 			
 			A.modify_order_no_advise ,A.modify_dry_wet_advise,
+			
 		       
 	       A.diff, nvl(A.print_batch_no,A.batch_no) print_batch_no,
 	       A.monitor_advise,A.monitor_advise_time,A.monitor_advise_user_id,A.monitor_advise_user_name,
@@ -325,6 +338,7 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	       A.overtime_advise,A.overtime_advise_time,A.overtime_advise_user_id,A.overtime_advise_user_name,
 	       
 	       ab.abilition_code,
+	       
 	        
 	        DECODE(ss.Batch_No,NULL,'否','是') if_semi_stock,
 	        
@@ -335,6 +349,16 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
 	       J.LINE_ID JM_LINE_ID, J.WORKER_ID JM_WORKER_ID, J.BLANKING_SIZE, J.PAGE_WIDTH,
 	       J.BATCH_NO JUANMO_BATCH_NO, MS.AREA PROD_SPEC_AREA,
 	       MS.MATER_SPEC_CODE PROD_SPEC_CODE, MS.MATER_SPEC_NAME PROD_SPEC_NAME
+	       
+	       ,a.is_c, a.check_time,
+	       a.reason_degrade ,
+			a.type_degrade ,
+			a.dept_degrade ,
+			a.user_id_degrade ,
+			a.user_name_degrade,
+			a.time_degrade 
+	       
+	       
 	  FROM (SELECT pms3.page_width page_width3,QJ.*,chk.batch_no check_batch_no, pms.MATER_SPEC_name gyy_SPEC_name,pms2.MATER_SPEC_name prod_SPEC_name_original,
       nvl(rec.dry_wet,CASE WHEN WT.JUANMO_BATCH_ID IS NULL THEN '干' ELSE  '湿' END) DRY_WET, rw.batch_no rw_batch_no,
 
@@ -345,8 +369,22 @@ TO_NUMBER(TO_DATE(TO_CHAR(NVL(QJ.MODIFY_ORDER_NO_TIME,
                  TO_DATE(TO_CHAR(RS.PRODUCE_DT, 'yyyy-mm-dd hh24:mi:ss'),
                          'yyyy-mm-dd hh24:mi:ss')) diff
 
-
+	,chklst.is_c , clc.create_time check_time
   FROM QINSEN.INST_QIJIAN QJ
+  
+  left join V_KS_CHECK_LIST_CURRENT clc
+  on clc.batch_no = qj.batch_no
+  
+  
+  left join (SELECT MAX(is_c) is_c,batch_no
+	FROM(
+	select t.batch_no,h.is_c from KS_COMPONENT_CHECK_LIST t
+	LEFT JOIN KS_COMPONENT_CHECK_HEAD h
+	ON t.relation_id = h.id
+	) GROUP BY batch_no) chklst
+	on chklst.batch_no = qj.batch_no
+  
+  
   LEFT JOIN qinsen.para_mater_spec pms3
   ON pms3.mater_spec_id=qj.prod_spec_id
   
@@ -413,8 +451,11 @@ on ab.jm_batch_no = J.batch_no
 	 WHERE A.JUANMO_BATCH_ID = J.RECORD_ID
 	   AND A.PROD_SPEC_ID = MS.MATER_SPEC_ID
 	   
-	   
-	   <isNotNull prepend="and" property="jmBatchNoStr2">J.batch_No in ($jmBatchNoStr2$)</isNotNull>
+	   <isNotNull prepend="" property="checkTimeStart">AND to_char(A.check_time, 'YYYY-MM-DD') &gt;= #checkTimeStart#</isNotNull>
+        <isNotNull prepend="" property="checkTimeEnd">AND to_char(A.check_time, 'YYYY-MM-DD') &lt;= #checkTimeEnd#</isNotNull>
+        <isEqual compareValue="是" prepend="" property="isC">AND A.is_c = '是'</isEqual>
+        <isEqual compareValue="否" prepend="" property="isC">AND A.is_c = '否'</isEqual>
+        <isNotNull prepend="and" property="jmBatchNoStr2">J.batch_No in ($jmBatchNoStr2$)</isNotNull>
         <isEqual compareValue="Y" prepend="" property="isLabel">AND A.BATCH_NO is not null</isEqual>
         <isEqual compareValue="N" prepend="" property="isLabel">AND A.BATCH_NO is null</isEqual>
         <isEqual compareValue="4寸" prepend="" property="prodType">AND A.team_id in (100516,100070) and (J.LINE_ID = 30061 OR J.LINE_ID = 30221 OR
@@ -597,8 +638,8 @@ on ab.jm_batch_no = J.batch_no
                 A.CREATOR_ID,
                 A.CHANGER_ID,
                 A.REMARK,
-                TO_CHAR(A.LOW_LIMIT, 'fm990.0') || '-' ||
-                TO_CHAR(A.UP_LIMIT, 'fm990.0') STD_STR,
+                TO_CHAR(A.LOW_LIMIT, 'fm990.00') || '-' ||
+                TO_CHAR(A.UP_LIMIT, 'fm990.00') STD_STR,
                 S.MATER_SPEC_CODE PROD_SPEC_CODE,
                 S.MATER_SPEC_NAME PROD_SPEC_NAME,
                 DECODE(A.STATE, 'Y', '在用', 'N', '失效', '') STATE_NAME
@@ -785,4 +826,15 @@ on ab.jm_batch_no = J.batch_no
 	
 	t.change_dt = SYSDATE,t.changer_id = #changerId#
 	WHERE t.juanmo_batch_id IN($juanmoBatchId$)</update>
+    <!-- 批量修改降级原因 -->
+    <update id="updateDegradeBatch" parameterClass="java.util.HashMap">UPDATE qinsen.inst_qijian t
+	SET t.change_dt = SYSDATE,	
+	t.changer_id = #operatorId#,	
+	t.reason_degrade = #reasonDegrade#,
+       t.type_degrade = #typeDegrade#,
+       t.dept_degrade = #deptDegrade#,
+      t.user_id_degrade = #userId#,
+     t.user_name_degrade = #userName#,
+     t.time_degrade = sysdate
+     WHERE t.record_id in ($recordIds$)</update>
 </sqlMap>

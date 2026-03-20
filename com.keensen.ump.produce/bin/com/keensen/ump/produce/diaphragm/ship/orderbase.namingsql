@@ -70,6 +70,8 @@
 		t1.url_Date_Delivery2 "urlDateDelivery2",
 		to_char(t1.order_time,'YYYY-MM-DD HH24:MI:SS') "orderTime"
 		
+		,t1.stock_Amount "stockAmount"
+		,T1.remaining_amount "remainingAmount"
 		
 		from KS_DIAPHRAGM_ORDER_BASE t1
 		
@@ -79,7 +81,9 @@
 		  on mp.base_id = t1.id
 		where 1=1
 		
-		<isNotNull prepend="and" property="dateDeliveryStart">to_char(t1.date_Delivery,'yyyy-MM-dd')  &gt;=  #dateDeliveryStart#</isNotNull>
+		 <isNotNull prepend="and" property="deliveryState">t1.delivery_State = #deliveryState#</isNotNull>
+        <isNotNull prepend="and" property="deliveryState2">t1.delivery_State = #deliveryState2#</isNotNull>
+        <isNotNull prepend="and" property="dateDeliveryStart">to_char(t1.date_Delivery,'yyyy-MM-dd')  &gt;=  #dateDeliveryStart#</isNotNull>
         <isNotNull prepend="and" property="dateDeliveryEnd">to_char(t1.date_Delivery,'yyyy-MM-dd')  &lt;=  #dateDeliveryEnd#</isNotNull>
         <isNotNull prepend="and" property="orderTimeStart">to_char(t1.order_time,'yyyy-MM-dd')  &gt;=  #orderTimeStart#</isNotNull>
         <isNotNull prepend="and" property="orderTimeEnd">to_char(t1.order_time,'yyyy-MM-dd')  &lt;=  #orderTimeEnd#</isNotNull>
@@ -97,11 +101,14 @@
 (id,customer_code,ext1,ext3,order_no,order_date,ext8,unit,spec_id,ext10,
 amount,need_amount,ext11,ext12,ext13,ext14,ext15,ext16,ext17,ext18,ext19,
 demand_date,create_time,create_user_id,create_name,order_status,reserve5)
-SELECT #orderId#,customer_code,ext1,ext3,order_no,order_date,ext8,unit,#specId#,ext10,
+SELECT #orderId#,customer_code,ext1,ext3,order_no,order_date,ext8,unit,t2.mater_spec_id,ext10,
 amount,amount,ext11,ext12,ext13,ext14,ext15,ext16,ext17,ext18,ext19,demand_date,
 SYSDATE, #userId#,#userName#,'进行' ,#id#
 from KS_DIAPHRAGM_ORDER_BASE t
-WHERE t.id=#id#</insert>
+left join (SELECT pms.* from qinsen.para_mater_spec pms
+WHERE pms.state='Y' AND pms.mater_class_id='100030023') t2
+on t2.mater_spec_name = t.spec_name
+WHERE t.id=#id# and to_number(t.ext12)&gt;0</insert>
     <update id="updateOrderNeedAmount" parameterClass="java.util.HashMap">update KS_PROD_DIAPHRAGM_ORDER 
     set need_amount = #needAmount# ,
     update_time = sysdate,update_user_id = #userId#,update_name = #userName#

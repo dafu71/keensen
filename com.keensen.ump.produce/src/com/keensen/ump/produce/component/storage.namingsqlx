@@ -35,11 +35,13 @@
 	batch_no,check_code,order_id,order_no,jm_spec_name,DRY_WET)
 	select SEQU_COMPONENT_WAREHOUSING.Nextval,'工业',#storageCode#,#storage#,#position#,#type#,1,
 	SYSDATE,#userName#,#userId#,h.tray_code,
-	t.batch_no,h.code,h.order_id,od.order_no,od.mater_spec_name2 jm_spec_name,od.dry_wet 
+	t.batch_no,h.code,nvl(h.order_id,od2.id),nvl(od.order_no,od2.order_no),
+	nvl(od.mater_spec_name2,od2.mater_spec_name2) jm_spec_name,nvl(od.dry_wet,od2.dry_wet )
 	from KS_COMPONENT_CHECK_LIST t
 	LEFT JOIN KS_COMPONENT_CHECK_HEAD h
 	ON t.relation_id = h.id
 	LEFT JOIN KS_PROD_COMPONENT_YXORDER od ON od.id=h.order_id
+	LEFT JOIN KS_PROD_COMPONENT_YXORDER od2 ON od2.order_no=h.order_no AND h.prod_spec_name = od2.mater_spec_name
 	WHERE h.code =#checkCode#
     
     </insert>
@@ -339,7 +341,9 @@
        T1.ORDER_NO       AS "orderNo",T1.ORDER_NO2       AS "orderNo2",
        T1.SPEC_TYPE      AS "specType",
        T1.JM_SPEC_NAME   AS "jmSpecName",
-       T1.STORAGE_CODE   AS "storageCode",t1.dry_wet "dryWet"
+       T1.STORAGE_CODE   AS "storageCode",t1.dry_wet "dryWet",
+       t1.order_No_Allocate "orderNoAllocate",
+       t1.base_Id "baseId"
   FROM KS_COMPONENT_K3_STOCK T1 
     
   WHERE 1=1 
@@ -506,14 +510,20 @@
     <insert id="insertAllocateBatch" parameterClass="java.util.HashMap" >
     insert into KS_COMPONENT_ALLOCATE
     (id,batch_no,from_storage,from_storage_code,to_storage,to_storage_code,amount,from_Tray_Code,to_Tray_Code,
+    order_No_Allocate,base_id,
     create_time,create_name,create_user_id)
-    select SEQU_COMPONENT_ALLOCATE.Nextval,batch_no,storage,storage_code,#toStorage#,#toStorageCode#,amount,tray_Code,
+    select SEQU_COMPONENT_ALLOCATE.Nextval,batch_no,storage,storage_code,#toStorage#,#toStorageCode#,amount,tray_Code,    
+    
+    
     <isNotNull prepend = ""  property = "toTrayCode">
     #toTrayCode#,
     </isNotNull>
     <isNull prepend = ""  property = "toTrayCode">
     tray_Code,
     </isNull>
+    
+    #orderNoAllocate#,    
+    #baseId#,
     
     SYSDATE,#userName#,#userId#
     from KS_COMPONENT_K3_STOCK
@@ -539,6 +549,15 @@
     <isNotNull prepend = ""  property = "toTrayCode"> 
           t1.tray_code =  #toTrayCode#,
     </isNotNull>
+    
+    <isNotNull prepend = ""  property = "orderNoAllocate"> 
+          t1.order_No_Allocate =  #orderNoAllocate#,
+    </isNotNull>
+    
+    <isNotNull prepend = ""  property = "baseId"> 
+          t1.base_Id =  #baseId#,
+    </isNotNull>
+    
     t1.update_time = sysdate,
     t1.update_name = #userName#,
     t1.update_user_id = #userId#
@@ -580,11 +599,15 @@
        T1.FROM_STORAGE        AS "fromStorage",
        T1.FROM_STORAGE_CODE   AS "fromStorageCode",
        t1.from_Tray_Code "fromTrayCode",
-       t1.to_Tray_Code "toTrayCode"
+       t1.to_Tray_Code "toTrayCode",
+       t1.order_No_Allocate "orderNoAllocate",
+       t1.base_Id "baseId"
   FROM KS_COMPONENT_ALLOCATE T1 
     
   WHERE 1=1
-  
+   <isNotNull prepend="and" property="orderNoAllocate2"> 
+		       t1.order_No_Allocate like '%' || #orderNoAllocate2# || '%'
+	</isNotNull>
      	
   	<isNotNull prepend="and" property="fromStorageCode"> 
 		       t1.from_storage_Code = #fromStorageCode# 
@@ -803,7 +826,8 @@
 		       t.JM_SPEC_NAME = #jmSpecName# 
 	</isNotNull>
 	<isNotNull prepend="and" property="dryWet"> 
-		       nvl(T.DRY_WET,T.DRY_WET2) = #dryWet# 
+		       <!--nvl(T.DRY_WET,T.DRY_WET2) = #dryWet# -->
+		      nvl(T.DRY_WET,T.DRY_WET2) like '%' || #dryWet# || '%'
 	</isNotNull>
 	<isNotNull prepend="and" property="storage"> 
 		       t.storage = #storage# 
@@ -955,39 +979,67 @@
        MAX(PROD_NAME) "prodName",
        JM_SPEC_NAME "jmSpecName",
        MAX(ORDER_AMOUNT) "orderAmount",
+       MAX(ORDER_AMOUNT9) "orderAmount9",
        COUNT(1) "stockAmount",
        MAX(DIRECTOR) "director",
        MAX(STOCK_TIME) "stockTime",
        MAX(DELIVERY_DATE_LATEST) "deliveryDateLatest",
-       MAX(OVER_DATE) "overDate",
-       max(date_delivery) "dateDelivery"
+       <!--MAX(OVER_DATE) "overDate",-->
+       <!--超期天数应该是“当前日期-发货日期”-->
+        TO_DATE(to_char(sysdate,'YYYY-MM-DD'),'YYYY-MM-DD')
+       -TO_DATE(to_char(MAX(date_delivery),'YYYY-MM-DD'),'YYYY-MM-DD') "overDate",
+       max(date_delivery) "dateDelivery",
+       to_char(max(delivery_confirm_time),'YYYY-MM-DD HH24:mi:ss') "deliveryConfirmTime"
   FROM (SELECT T.BATCH_NO,
                to_char(T.STOCK_TIME,'YYYY-MM-DD HH24:MI:SS') STOCK_TIME,
-               NVL(T.ORDER_NO, '空') ORDER_NO,
-               T.JM_SPEC_NAME,
-               T.PROD_NAME,
-               T.ORDER_AMOUNT,
-               T.DIRECTOR,
-               T.DELIVERY_DATE_LATEST,t.date_delivery,
+               nvl(order_no_allocate,ORDER_NO) ORDER_NO,
+               CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
+                 ELSE T.JM_SPEC_NAME_allocate  END
+               JM_SPEC_NAME,
+                CASE WHEN order_no_allocate IS NULL THEN T.PROD_NAME
+                 ELSE T.PROD_NAME_allocate  END
+               PROD_NAME,
+               CASE WHEN order_no_allocate IS NULL THEN T.ORDER_AMOUNT
+                 ELSE to_number(t.order_amount_allocate) END ORDER_AMOUNT,
+               CASE WHEN order_no_allocate IS NULL THEN T.ORDER_AMOUNT9
+                 ELSE to_number(t.order_amount9_allocate) END ORDER_AMOUNT9,
+               CASE WHEN order_no_allocate IS NULL THEN T.DIRECTOR
+                 ELSE T.DIRECTOR_allocate END
+               DIRECTOR,
+                CASE WHEN order_no_allocate IS NULL THEN T.DELIVERY_DATE_LATEST
+                 ELSE T.DELIVERY_DATE_LATEST_allocate END
+               DELIVERY_DATE_LATEST,
+                CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
+                 ELSE T.date_delivery_allocate  END date_delivery,
                CASE
-                 WHEN (T.date_delivery is null) or (TRUNC(SYSDATE -
-                            TO_DATE(to_char(T.date_delivery, 'YYYY-MM-DD'), 'YYYY-MM-DD')) &lt;= 0) THEN
+                 WHEN (( CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
+                 ELSE T.date_delivery_allocate  END) is null) or (TRUNC(SYSDATE -
+                            TO_DATE(to_char( CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
+                 ELSE T.date_delivery_allocate  END, 'YYYY-MM-DD'), 'YYYY-MM-DD')) &lt;= 0) THEN
                   ''
                  ELSE
                   TO_CHAR(TRUNC(SYSDATE -
-                                TO_DATE(to_char(T.date_delivery, 'YYYY-MM-DD'), 'YYYY-MM-DD')))
-               END OVER_DATE
-          FROM V_KS_COMPONENT_REPORT_STOCK T
+                                TO_DATE(to_char( CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
+                 ELSE T.date_delivery_allocate  END, 'YYYY-MM-DD'), 'YYYY-MM-DD')))
+               END OVER_DATE,
+               t.delivery_confirm_time
+               
+          FROM V_KS_COMPONENT_REPORT_STOCK2 T
+          
+                
+          
          WHERE T.STORAGE = '高架订单仓'
          
          <isNotNull prepend="and" property="jmSpecName"> 
-		       		T.JM_SPEC_NAME = #jmSpecName# 
+		       		(CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
+                 ELSE T.JM_SPEC_NAME_allocate  END) = #jmSpecName# 
 				</isNotNull>
 			  	<isNotNull prepend="and" property="jmSpecName2"> 
-					T.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'
+					(CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
+                 ELSE T.JM_SPEC_NAME_allocate  END) like '%' || #jmSpecName2# || '%'
 				</isNotNull>
 				<isNotNull prepend="and" property="orderNo2"> 
-		       		T.ORDER_NO like '%' || #orderNo2# || '%'
+		       		nvl(order_no_allocate,ORDER_NO) like '%' || #orderNo2# || '%'
 				</isNotNull>
          
          
@@ -1079,38 +1131,56 @@
 				
 				-->
 				
-				SELECT sum(T1.ORDER_AMOUNT)         AS "orderAmount",
+				SELECT sum(T1.ORDER_AMOUNT9)         AS "orderAmount",
          		sum(T1.STOCK_AMOUNT)          AS "stockAmount"
 				FROM (SELECT ORDER_NO "orderNo",
-       MAX(ORDER_AMOUNT) ORDER_AMOUNT,
+       MAX(ORDER_AMOUNT9) ORDER_AMOUNT9,
        COUNT(1) stock_Amount
   FROM (SELECT T.BATCH_NO,
                to_char(T.STOCK_TIME,'YYYY-MM-DD HH24:MI:SS') STOCK_TIME,
-               NVL(T.ORDER_NO, '空') ORDER_NO,
-               T.JM_SPEC_NAME,
-               T.PROD_NAME,
-               T.ORDER_AMOUNT,
-               T.DIRECTOR,
-               T.DELIVERY_DATE_LATEST,
+               nvl(order_no_allocate,ORDER_NO) ORDER_NO,
+               CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
+                 ELSE T.JM_SPEC_NAME_allocate  END
+               JM_SPEC_NAME,
+                CASE WHEN order_no_allocate IS NULL THEN T.PROD_NAME
+                 ELSE T.PROD_NAME_allocate  END
+               PROD_NAME,
+               CASE WHEN order_no_allocate IS NULL THEN T.ORDER_AMOUNT
+                 ELSE to_number(t.order_amount_allocate) END ORDER_AMOUNT,
+               CASE WHEN order_no_allocate IS NULL THEN T.ORDER_AMOUNT9
+                 ELSE to_number(t.order_amount9_allocate) END ORDER_AMOUNT9,
+               CASE WHEN order_no_allocate IS NULL THEN T.DIRECTOR
+                 ELSE T.DIRECTOR_allocate END
+               DIRECTOR,
+                CASE WHEN order_no_allocate IS NULL THEN T.DELIVERY_DATE_LATEST
+                 ELSE T.DELIVERY_DATE_LATEST_allocate END
+               DELIVERY_DATE_LATEST,
+                CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
+                 ELSE T.date_delivery_allocate  END date_delivery,
                CASE
-                 WHEN (T.date_delivery is null) or (TRUNC(SYSDATE -
-                            TO_DATE(to_char(T.date_delivery, 'YYYY-MM-DD'), 'YYYY-MM-DD')) &lt;= 0) THEN
+                 WHEN (( CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
+                 ELSE T.date_delivery_allocate  END) is null) or (TRUNC(SYSDATE -
+                            TO_DATE(to_char( CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
+                 ELSE T.date_delivery_allocate  END, 'YYYY-MM-DD'), 'YYYY-MM-DD')) &lt;= 0) THEN
                   ''
                  ELSE
                   TO_CHAR(TRUNC(SYSDATE -
-                                TO_DATE(to_char(T.date_delivery, 'YYYY-MM-DD'), 'YYYY-MM-DD')))
+                                TO_DATE(to_char( CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
+                 ELSE T.date_delivery_allocate  END, 'YYYY-MM-DD'), 'YYYY-MM-DD')))
                END OVER_DATE
-          FROM V_KS_COMPONENT_REPORT_STOCK T
+          FROM V_KS_COMPONENT_REPORT_STOCK2 T
          WHERE T.STORAGE = '高架订单仓'
          
          <isNotNull prepend="and" property="jmSpecName"> 
-		       		T.JM_SPEC_NAME = #jmSpecName# 
+		       		(CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
+                 ELSE T.JM_SPEC_NAME_allocate  END) = #jmSpecName# 
 				</isNotNull>
 			  	<isNotNull prepend="and" property="jmSpecName2"> 
-					T.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'
+					(CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
+                 ELSE T.JM_SPEC_NAME_allocate  END) like '%' || #jmSpecName2# || '%'
 				</isNotNull>
 				<isNotNull prepend="and" property="orderNo2"> 
-		       		T.ORDER_NO like '%' || #orderNo2# || '%'
+		       		nvl(order_no_allocate,ORDER_NO) like '%' || #orderNo2# || '%'
 				</isNotNull>
          
          
@@ -1159,10 +1229,20 @@
        T1.ABNORMAL_EXPLAIN     AS "abnormalExplain",
        T1.ABNORMAL_OTHER       AS "abnormalOther"
        , t1.Date_Delivery "dateDelivery"
+       ,t1.order_no_allocate "orderNoAllocate"
+       ,t1.base_id_allocate "baseIdAllocate"
   FROM V_KS_COMPONENT_Report_Stock T1
 		 
    where 1=1
    
+    <isNotNull prepend="and" property="prodName"> 
+		       T1.PROD_NAME = #prodName# 
+	</isNotNull> 
+   
+   <isNotNull prepend="and" property="orderNoAllocate2"> 
+		       T1.order_no_allocate like '%' || #orderNoAllocate2# || '%'
+	</isNotNull>
+	
    <isNotNull prepend="and" property="fSaltDown"> 
 		       to_number(nvl(T1.F_SALT,0)) >= #fSaltDown#
 	</isNotNull>
@@ -1184,9 +1264,7 @@
 		       T1.type = #prodType#
 	</isNotNull>
 	
-	 <isNotNull prepend="and" property="dryWet2"> 
-		       T1.DRY_WET like '%' || #dryWet2# || '%'
-	</isNotNull> 
+	
              
      <isNotNull prepend="and" property="prodName2"> 
 		       T1.PROD_NAME like '%' || #prodName2# || '%'
@@ -1207,7 +1285,7 @@
 		       T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'
 	</isNotNull>
     <isNotNull prepend="and" property="dryWet2"> 
-		       T1.dry_wet like '%' || #dryWet2# || '%'
+		       nvl(T1.DRY_WET,T1.DRY_WET2) like '%' || #dryWet2# || '%'
 	</isNotNull>
   	
  

@@ -40,7 +40,7 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 					height : 180,
 					columns : 4,
 					border : true,
-					collapsible : true,
+					//collapsible : true,
 					titleCollapse : false,
 					// title : '',
 					fields : [{
@@ -162,6 +162,8 @@ com.keensen.ump.qinsen.produce.raosiMgr = function() {
 					iconCls : 'icon-application_form_magnify',
 					handler : this.onQueryQuantity
 				});
+				
+		
 
 	
 		this.queryPanel.addButton({

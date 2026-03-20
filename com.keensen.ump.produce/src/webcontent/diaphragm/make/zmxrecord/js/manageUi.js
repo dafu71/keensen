@@ -14,6 +14,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 		this.initChooseDefectWindow();
 		this.initAddDefectWindow();
 
+		this.initTmDefectListWindow();
+
 		this.defectZmWin = new com.keensen.ump.defectWindow({
 					dutyTacheCode : 'ZM',
 					recTacheCode : 'ZM',
@@ -344,6 +346,22 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 								return str;
 							}
 						}
+					}, {
+						header : '涂膜后不良米数',
+						width : 80,
+						dataIndex : 'tmDefectLength',
+						renderer : function(v, m, r, i) {
+							if (!Ext.isEmpty(v) && v > 0) {
+								var dimoBatchNo = r.get('dimoBatchNo');
+								var style = "<a style='text-decoration:none'";
+								var str = style
+										+ " href='javascript:tmDefectView("
+										+ Ext.encode(dimoBatchNo) + ");'>" + v
+										+ "</a>";
+
+								return str;
+							}
+						}
 					}/*
 						 * , { dataIndex : 'lose0', header : '无纺布取样' }, {
 						 * dataIndex : 'lose1', header : '拼接固损' }, { dataIndex :
@@ -490,6 +508,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							name : 'zmxtotalrelease'
 						}, {
 							name : 'defectLength'
+						}, {
+							name : 'tmDefectLength'
 						}]
 			})
 		})
@@ -1090,10 +1110,10 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						header : '打料结束时间'
 					}, {
 						dataIndex : 'loopStarttime',
-						header : '内循环开始时间'
+						header : '搅拌环开始时间'
 					}, {
 						dataIndex : 'loopOvertime',
-						header : '内循环结束时间'
+						header : '搅拌环结束时间'
 					}, {
 						dataIndex : 'jarNo',
 						header : '脱气罐编号'
@@ -1339,7 +1359,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 				});
 
 		// ①不可用，②可用，且不影响元件端面颜色 ③可用，但影响元件端面颜色 ④待入库前工艺判断
-		//①不可用，②可用，且不影响元件端面颜色，③可用，但影响元件端面颜色，④待入库前工艺判断
+		// ①不可用，②可用，且不影响元件端面颜色，③可用，但影响元件端面颜色，④待入库前工艺判断
 		this.adviseStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['不可用', '不可用'], ['可用，且不影响元件端面颜色', '可用，且不影响元件端面颜色'],
@@ -1403,7 +1423,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							dataIndex : 'position',
 							fieldLabel : '收卷位置(m)',
 							ref : '../../position',
-							//allowBlank : false,
+							// allowBlank : false,
 							anchor : '95%',
 							colspan : 6
 
@@ -1808,5 +1828,107 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 							this.listPanel4ChooseDefect]
 
 				});
+	}
+
+	this.initTmDefectListWindow = function() {
+		var _this = this;
+
+		var selModel4TmDefect = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false
+				});
+
+		this.tmDefectListPanel = this.tmDefectListPanel
+				|| new Ext.fn.ListPanel({
+					id : tmDefectListId,
+					region : 'center',
+					cls : 'custom-row-height', // 应用自定义的CSS类
+					viewConfig : {
+						forceFit : true
+					},
+					hsPage : false,
+					autoScroll : true,
+					selModel : selModel4TmDefect,
+					columns : [new Ext.grid.RowNumberer(), selModel4TmDefect, {
+								dataIndex : 'defectLength',
+								header : '不良米数'
+							}, {
+								dataIndex : 'createTime',
+								header : '录入时间'
+							}, {
+								dataIndex : 'createName',
+								header : '录入人'
+							}, {
+								dataIndex : 'dimoBatchNo',
+								header : '底膜批次'
+							}, {
+								dataIndex : 'tmBatchNo',
+								header : '涂膜批次'
+							}, {
+								dataIndex : 'first',
+								header : '不良一级'
+							}, {
+								dataIndex : 'second',
+								header : '不良二级'
+							}, {
+								dataIndex : 'third',
+								header : '不良三级'
+							}, {
+								dataIndex : 'fourth',
+								header : '不良四级'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.diaphragm.make.report.queryTumoDefect.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'defectLength'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'dimoBatchNo'
+								}, {
+									name : 'tmBatchNo'
+								}, {
+									name : 'first'
+								}, {
+									name : 'second'
+								}, {
+									name : 'third'
+								}, {
+									name : 'fourth'
+								}]
+					})
+				})
+
+		this.tmDefectListWindow = this.tmDefectListWindow || new Ext.Window({
+					title : '涂膜后不良记录',
+					id : tmDefectListWindowId,
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.tmDefectListPanel],
+					buttons : [{
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.tmDefectListWindow.hide();
+								}
+							}]
+
+				});
+
 	}
 }

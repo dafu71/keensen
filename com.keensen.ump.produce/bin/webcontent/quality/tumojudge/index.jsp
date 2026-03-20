@@ -12,6 +12,9 @@
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
     String orgid = userObject.getUserOrgId();
+    
+    String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("/produce/quality/tumojudge/index.jsp","");
 %>
 <html>
 <!-- 
@@ -49,6 +52,9 @@
   var operatorid = "<%=operatorid %>";
   var optId = orgid == '100080'?operatorid:'';
   var listid = 'timojudge-list';
+  
+  var markRootUrl = "<%=rootUrl %>/myupload/diaphgram/";
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.quality.timojudgeMgr
 		});

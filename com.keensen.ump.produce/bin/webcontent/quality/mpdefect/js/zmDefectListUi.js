@@ -140,7 +140,7 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 								name : 'condition/team',
 								anchor : '100%',
 								colspan : 1,
-								fieldLabel : '机台%%'
+								fieldLabel : '生产线%%'
 							}, {
 								xtype : "dateregion",
 								anchor : '100%',
@@ -242,7 +242,7 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 						header : '责任部门'
 					}, {
 						dataIndex : 'team',
-						header : '机台'
+						header : '生产线'
 					}, {
 						dataIndex : 'recorder',
 						header : '记录人'

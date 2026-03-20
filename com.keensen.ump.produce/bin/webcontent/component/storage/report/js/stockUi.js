@@ -94,7 +94,7 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 				});
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 210,
+					height : 230,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -185,7 +185,7 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 								anchor : '100%',
 								nameArray : ['condition/stockTimeStart',
 										'condition/stockTimeEnd'],
-								fieldLabel : "入库时间",
+								fieldLabel : "仓库接收元件确认时间",
 								format : "Y-m-d"
 							}, this.gpdChoose, this.saltChoose, {
 								xtype : 'displayfield',
@@ -199,8 +199,18 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 								anchor : '100%',
 								fieldLabel : '元件序列号'
 							}, {
+								xtype : 'textfield',
+								colspan : 1,
+								name : 'condition/orderNoAllocate2',
+								anchor : '100%',
+								fieldLabel : '调拨后订单号%%'
+							}, {
 								xtype : 'hidden',
 								name : 'condition/batchNoStr'
+							}, {
+								xtype : 'textfield',
+								name : 'condition/jmSpecName',
+								fieldLabel : '卷膜型号'
 							}]
 				});
 		this.queryPanel.addButton({
@@ -250,6 +260,9 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 						dataIndex : 'orderNo',
 						sortable : true,
 						header : '订单号'
+					}, {
+						dataIndex : 'orderNoAllocate',
+						header : '调拨后订单号'
 					}, {
 						dataIndex : 'director',
 						sortable : true,
@@ -301,7 +314,7 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 					}, {
 						dataIndex : 'stockTime',
 						sortable : true,
-						header : '入库时间'
+						header : '仓库接收元件确认时间'
 					}, {
 						dataIndex : 'dateDelivery',
 						sortable : true,
@@ -428,6 +441,10 @@ com.keensen.ump.produce.component.storage.Report4StockMgr = function() {
 							name : 'abnormalOther'
 						}, {
 							name : 'dateDelivery'
+						}, {
+							name : 'orderNoAllocate'
+						}, {
+							name : 'baseIdAllocate'
 						}]
 			})
 		})

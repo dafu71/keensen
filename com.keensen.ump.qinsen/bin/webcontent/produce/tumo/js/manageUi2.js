@@ -50,8 +50,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.initChooseDefectWindow();
 		this.initAddDefectWindow();
 
-		this.initColorbWindow();
-
+		this.initColorbWindow();		
+		
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
 					batchNoControl : true,
@@ -408,6 +408,27 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							}
 						}
 					}, {
+
+						xtype : 'combo',
+						fieldLabel : '是否A+等级',
+						ref : '../isAPlus',
+						name : 'condition/isAPlus',
+						hiddenName : 'condition/isAPlus',
+						// value : 'N',
+						emptyText : '--请选择--',
+						// readOnly : true,
+						allowBlank : true,
+						// value : 'N',
+						anchor : '90%',
+						colspan : 6,
+						store : [['是', '是'], ['否', '否']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.isAPlus.reset();
+							}
+						}
+					}, {
 						xtype : 'hidden',
 						name : 'condition/batchNoStr2',
 						ref : '../batchNoStr2'
@@ -443,6 +464,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					iconCls : 'icon-application_edit',
 					handler : this.onQueryLiquidAdjust
 				});
+
+		
 
 		/*
 		 * this.queryPanel.addButton({ text : "生产加料记录", scope : this, iconCls :
@@ -504,10 +527,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									 * iconCls : 'icon-application_add', handler :
 									 * this.onaddFhDefect }
 									 *//*
-								 * , '->', { text : '录入铸膜不良', scope : this,
-								 * iconCls : 'icon-application_add', hidden :
-								 * true, handler : this.onaddZmDefect },
-								 */
+										 * , '->', { text : '录入铸膜不良', scope :
+										 * this, iconCls :
+										 * 'icon-application_add', hidden :
+										 * true, handler : this.onaddZmDefect },
+										 */
 							, '-', {
 								text : '录入涂膜不良',
 								scope : this,
@@ -516,7 +540,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								handler : this.onaddTmDefect
 							}, '-', {
 								text : '涂膜工序不良录入',
-								
+
 								scope : this,
 								iconCls : 'icon-application_add',
 								handler : this.onAddDefect
@@ -689,6 +713,9 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 120,
 						dataIndex : 'batchNo'
 					}, {
+						dataIndex : 'cmLineCode',
+						header : '裁叠膜生产线'
+					}, {
 						dataIndex : 'trend',
 						header : '走向'
 					}, {
@@ -757,6 +784,14 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						header : '剩余可用长度(m)',
 						width : 80,
 						dataIndex : 'remainLength'
+					}, {
+						header : '是否A+等级',
+						width : 80,
+						dataIndex : 'isAPlus'
+					}, {
+						header : 'A+等级长度(m)',
+						width : 80,
+						dataIndex : 'aPlusLength'
 					}, {
 						header : '锟筒尺寸(m)',
 						width : 80,
@@ -909,11 +944,17 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}, {
 						header : '标签数',
 						width : 60,
-						dataIndex : 'tagNum'
+						dataIndex : 'tagNum',
+						renderer : function(v, m, r, i) {
+							return v == 0? '':v;
+						}
 					}, {
 						header : '标签长度',
 						width : 80,
-						dataIndex : 'tagLength'
+						dataIndex : 'tagLength',
+						renderer : function(v, m, r, i) {
+							return v == 0? '':v;
+						}
 					}, {
 						header : '初检测试台',
 						width : 90,
@@ -1137,7 +1178,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							if (!Ext.isEmpty(defectPicture))
 								return '<img class="cursor-example" title="单击显示大图" onclick="showImageModal(\''
 										+ defectPicture
-										+ '\')" src="'
+										+ '\',820 ,650)" src="'
 										+ markRootUrl
 										+ defectPicture
 										+ '?ver='
@@ -1155,6 +1196,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						totalProperty : 'totalCount',
 						baseParams : {},
 						fields : [{
+									name : 'cmLineCode'
+								},{
+									name : 'aPlusLength'
+								}, {
+									name : 'isAPlus'
+								},{
 									name : 'colorbAvg'
 								}, {
 									name : 'colorbOk'
@@ -5709,7 +5756,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							dataIndex : 'position',
 							fieldLabel : '收卷位置(m)',
 							ref : '../../position',
-							//allowBlank : false,
+							// allowBlank : false,
 							anchor : '95%',
 							colspan : 6
 
@@ -5728,12 +5775,12 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							height : '5',
 							colspan : 12
 						}, {
-							xtype : 'textfield',
+							xtype : 'numberfield',
 							name : 'entity/numLabel',
 							dataIndex : 'numLabel',
 							fieldLabel : '标签数',
 							ref : '../../numLabel',
-							//allowBlank : false,
+							// allowBlank : false,
 							anchor : '95%',
 							colspan : 6
 
@@ -5996,7 +6043,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					}]
 		});
 
-		
-
 	}
+
+
 }

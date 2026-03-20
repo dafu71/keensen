@@ -44,6 +44,12 @@
 		2025年1月1日之前的不进行报警。
 		-->
 		
+		<!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
+		
 		<!--发货-->
 		<!--超期标准-->
 		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>30) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
@@ -52,7 +58,11 @@
 		 THEN 'red'
 		 
 		  WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>90) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
-		 and (vkt.MATER_CLASS_CODE = 'NF' OR vkt.MATER_CLASS_CODE = 'SW' )		 
+		 and (vkt.MATER_CLASS_CODE = 'SW' )		 
+		 THEN 'red'
+		 
+		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>270) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+		 and (vkt.MATER_CLASS_CODE = 'NF' )		 
 		 THEN 'red'
 		 
 		 <!--预期标准--> 
@@ -64,7 +74,12 @@
          
          WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>60) 
          AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=90) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
-         and (vkt.MATER_CLASS_CODE = 'NF' OR vkt.MATER_CLASS_CODE = 'SW')	
+         and (vkt.MATER_CLASS_CODE = 'SW')	
+         THEN 'yellow'
+         
+         WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>260) 
+         AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=270) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+         and (vkt.MATER_CLASS_CODE = 'NF')	
          THEN 'yellow'
          
         <!--自用膜片--> 
@@ -72,12 +87,23 @@
         <!--2025-07-14
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		-->
+		
+		<!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>84) 
          AND ( vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'red'
          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>174) 
-         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         AND (vkt.MATER_CLASS_CODE = 'SW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'red'
+         
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>354) 
+         AND (vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         THEN 'red'
+         
         <!--预期标准--> 
         
         <!--2025-07-14
@@ -89,7 +115,11 @@
          THEN 'yellow'
          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>160) 
           AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=174)
-         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         AND (vkt.MATER_CLASS_CODE = 'SW' ) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         THEN 'yellow'
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>330) 
+          AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=354)
+         AND (vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'yellow'
          
          
@@ -105,14 +135,14 @@
        
        vkt.worker_id "workerId"
        ,vkt.spec_id "spectId",vkt.line_id "lineId",
-       vkt.QUALIFID_LENGTH  as "qualifidLength",
+       vkt.QUALIFID_LENGTH - nvl(tmdefect.defect_length,0) as "qualifidLength",
        vkt.LINE_NAME       as "lineName",
        vkt.LINE_CODE       as "lineCode",
        to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')      as "produceDt",
        vkt.IS_QUALIFIED    as "isQualified",
        vkt.OUT_LENGTH      as "outLength",
        vkt.LOSS            as "loss",
-       vkt.USEFUL_LENGTH as "usefulLength",
+       vkt.USEFUL_LENGTH - nvl(tmdefect.defect_length2,0) as "usefulLength",
        vkt.PLAN_NO         as "planNo",
        vkt.ORDER_NO        as "orderNo",
        vkt.SUP_ID          as "supId",
@@ -136,9 +166,23 @@
        T8.MAC_NAME        AS "rMacName",
        T8.GFD_AVG         AS "rGfdAvg",
        T8.SALT_REJECTION  AS "rSaltRejection"
+       
+       ,t33.reserve4 "gyyRemark"
   from KS_PROD_DIAPHRAGM_STOCK t1
+  
+  
+  
   left join ks_base_storage t2 on t1.storage_id=t2.id
   left join V_KS_TUMO vkt on t1.batch_no = vkt.batch_no
+  
+  left join KS_PROD_DIAPHRAGM_TUMO t33
+  				on vkt.record_id = t33.record_id
+  
+  left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = vkt.record_id
+  
    LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
                            MAX(C.GFD_AVG) GFD_AVG,
                            C.BATCH_ID,
@@ -254,13 +298,23 @@
 		2025年1月1日之前的不进行报警。
 		-->
 		
+		<!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
+		
 		<!--发货-->
 		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>30) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
 		 and (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR
                 vkt.MATER_CLASS_CODE = 'HW')		 
 		 THEN 'red'
 		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>90) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
-		 and (vkt.MATER_CLASS_CODE = 'NF' OR vkt.MATER_CLASS_CODE = 'SW' )		 
+		 and (vkt.MATER_CLASS_CODE = 'SW' )		 
+		 THEN 'red'
+		 
+		  WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>270) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+		 and (vkt.MATER_CLASS_CODE = 'NF')		 
 		 THEN 'red'
 		 
          WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>20) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=30) 
@@ -271,7 +325,12 @@
          
          WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>60) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=90) 
          AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
-          and (vkt.MATER_CLASS_CODE = 'NF' OR vkt.MATER_CLASS_CODE = 'SW')	
+          and (vkt.MATER_CLASS_CODE = 'SW')	
+         THEN 'yellow'
+         
+          WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>260) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=270) 
+         AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' 
+          and (vkt.MATER_CLASS_CODE = 'NF')	
          THEN 'yellow'
          
         <!--自用膜片--> 
@@ -279,11 +338,19 @@
         <!--2025-07-14
 		自用膜片超期标准改为：ULP与BW（含HW）系列、SW系列为84个自然日,NF膜片为174个自然日。
 		-->
+		<!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>84) 
          AND ( vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'red'
          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>174) 
-         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         AND (vkt.MATER_CLASS_CODE = 'SW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         THEN 'red'
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>270) 
+         AND (vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'red'
         <!--预期标准--> 
         <!--2025-07-14
@@ -295,7 +362,12 @@
          THEN 'yellow'
          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>160) 
           AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=174)
-         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         AND (vkt.MATER_CLASS_CODE = 'SW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         THEN 'yellow'
+         
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>330) 
+          AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=354)
+         AND (vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'yellow'
          
          
@@ -589,7 +661,9 @@
        t1.IS_QUALIFIED    as "isQualified",
        t1.OUT_LENGTH      as "outLength",
        t1.LOSS            as "loss",
-       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+       t1.USEFUL_LENGTH - nvl(tmdefect.defect_length2,0)
+       as "usefulLength",
+       t1.QUALIFID_LENGTH - nvl(tmdefect.defect_length,0) as "qualifidLength",
        t1.PLAN_NO         as "planNo",
        t1.ORDER_NO        as "orderNo",
        t1.SUP_ID          as "supId",
@@ -614,6 +688,11 @@
   from KS_PROD_DIAPHRAGM_RUKUDAN t2
   left join V_KS_TUMO2 t1 
     on t1.RECORD_ID = t2.RECORD_ID
+  left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = t1.record_id  
+    
   left join KS_PROD_DIAPHRAGM_SHIP t3
     on t1.RECORD_ID = t3.RECORD_ID
  where 1=1
@@ -810,6 +889,12 @@
 		mater_spec_name = 'SW2-1' or mater_spec_name = 'SW3-1'
 		-->
 		
+			<!--2026-02-27
+		超期与预警规则说明:
+		NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；
+		NF系列自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
+		-->
+		
 		<!--发货-->
 		 WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>60) AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01' THEN 'red'
          WHEN (t1.STORAGE_ID = 3) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>30) AND (ROUND(SYSDATE - vkt.PRODUCE_DT) &lt;=60) 
@@ -822,7 +907,10 @@
          AND (vkt.MATER_CLASS_CODE = 'ULP' OR vkt.MATER_CLASS_CODE = 'BW' OR vkt.MATER_CLASS_CODE = 'HW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'red'
          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>174) 
-         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         AND (vkt.MATER_CLASS_CODE = 'SW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         THEN 'red'
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>354) 
+         AND ( vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'red'
         <!--预期标准--> 
           WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>70) 
@@ -831,7 +919,12 @@
          THEN 'yellow'
          WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>160) 
           AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=174)
-         AND (vkt.MATER_CLASS_CODE = 'SW' OR vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         AND (vkt.MATER_CLASS_CODE = 'SW') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
+         THEN 'yellow'
+         
+         WHEN (t1.STORAGE_ID = 1 OR t1.STORAGE_ID = 2) AND (t1.AMOUNT>0) AND (ROUND(SYSDATE - vkt.PRODUCE_DT)>330) 
+          AND (ROUND(SYSDATE - vkt.PRODUCE_DT)&lt;=354)
+         AND (vkt.MATER_CLASS_CODE = 'NF') AND to_char(vkt.PRODUCE_DT,'YYYY-MM-DD')>= '2025-01-01'
          THEN 'yellow'
          
          

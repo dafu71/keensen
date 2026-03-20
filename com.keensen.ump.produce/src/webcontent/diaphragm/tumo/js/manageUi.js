@@ -277,6 +277,12 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 						dataIndex : 'perfIsQualifiedName',
 						header : '性能'
 					}, {
+						dataIndex : 'ifReject',
+						header : '是否驳回'
+					}, {
+						dataIndex : 'reasonReject',
+						header : '驳回理由'
+					}, {
 						dataIndex : 'remark',
 						header : '生产备注'
 					}, {
@@ -382,6 +388,10 @@ com.keensen.ump.produce.diaphragm.tumo.tumoMgr = function() {
 					'condition/isCutOver' : 'N'
 				},
 				fields : [{
+							name : 'ifReject'
+						}, {
+							name : 'reasonReject'
+						},{
 							name : 'batchNo'
 						}, {
 							name : 'usefulLength'

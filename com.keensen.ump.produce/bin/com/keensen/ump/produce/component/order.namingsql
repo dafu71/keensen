@@ -339,7 +339,9 @@ GROUP BY order_no,prod_spec_name) gchk on gchk.order_no = t1.order_no
        t5.num_per_wad "numPerWad",
        t5.blanking_size "blankingSize",
        t5.dense_net "denseNet",
-       t5.area "area",t5.page_width "pageWidth"
+       t5.area "area",t5.page_width "pageWidth",
+       t2.id "orderId",
+       t2.base_Id "baseId"
   FROM KS_COMPONENT_PLAN_WEEK T1
   left join KS_PROD_COMPONENT_YXORDER t2
   ON T1.relation_id = t2.id
@@ -490,7 +492,7 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        case when substr(T3.ORDER_NO,1,2) = 'SG' and length(T3.ORDER_NO)=8 then 
        	case when t8.out_length&gt;=nvl(sl.test_length,0) and t8.out_length &lt;=nvl(sl.test_length2,1000000000) and nvl(t8.residue,0)&gt;0 then '是' else '否' end
        else '' end "sampleLengthValid"
-       
+       ,t1.if_mix "ifMix"
   FROM KS_COMPONENT_PLAN_DAY T1 
   LEFT JOIN (select t.plan_date,t.batch_no,COUNT(1) cnt from KS_COMPONENT_PLAN_DAY t
   GROUP BY t.plan_date,t.batch_no ) cnt ON cnt.batch_no = t1.batch_no AND cnt.plan_date = t1.plan_date
@@ -810,8 +812,13 @@ ON t66.mp_batch_no = t1.batch_No AND T3.MATER_SPEC_ID = t66.MATER_SPEC_ID
 		
 		nvl(inamount.amount,0) "inAmount",
 		nvl(outamount.amount,0) "outAmount"
+		,cto.delivery_confirm_amount "deliveryConfirmAmount"
+		
 		
   FROM KS_PROD_COMPONENT_YXORDER T1
+  
+  left join V_KS_CHECK_TO_ORDER cto
+  on cto.order_id = t1.id
   
   <!--家用-->
    left join
@@ -907,7 +914,8 @@ GROUP BY ttt.order_no,ttt.prod_spec_id ) t6 ON t6.order_no = t1.order_no AND t1.
 
 	where 1=1	
 	
-	<isNotNull prepend="and" property="workDateStart">exists (SELECT pw.relation_id from KS_COMPONENT_PLAN_WEEK pw
+	<isNotNull prepend="and" property="isNotZero">nvl(t1.PROD_AMOUNT,T1.ORDER_AMOUNT) != 0</isNotNull>
+        <isNotNull prepend="and" property="workDateStart">exists (SELECT pw.relation_id from KS_COMPONENT_PLAN_WEEK pw
 	where t1.id = pw.relation_id and to_char(pw.start_date,'yyyy-MM-dd')  &gt;=  #workDateStart#)</isNotNull>
         <isNotNull prepend="and" property="workDateEnd">exists (SELECT pw.relation_id from KS_COMPONENT_PLAN_WEEK pw
 	where t1.id = pw.relation_id and to_char(pw.end_date,'yyyy-MM-dd')  &gt;=  #workDateEnd#)</isNotNull>

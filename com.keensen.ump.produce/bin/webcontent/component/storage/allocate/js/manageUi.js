@@ -2,7 +2,7 @@ com.keensen.ump.produce.component.storage.AllocateListMgr = function() {
 	this.initPanel = function() {
 
 		this.initQueryPanel();
-		this.initListPanel();
+		this.initListPanel();		
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -35,6 +35,12 @@ com.keensen.ump.produce.component.storage.AllocateListMgr = function() {
 										'condition/createTimeEnd'],
 								fieldLabel : "调拨时间",
 								format : "Y-m-d"
+							},{
+								xtype : 'textfield',
+								colspan : 1,
+								name : 'condition/orderNoAllocate2',
+								anchor : '100%',
+								fieldLabel : '调拨后&nbsp;&nbsp;&nbsp;&nbsp;<br>订单号%%'
 							}]
 				});
 		this.queryPanel.addButton({
@@ -86,6 +92,9 @@ com.keensen.ump.produce.component.storage.AllocateListMgr = function() {
 					}, {
 						dataIndex : 'toTrayCode',
 						header : '目标托盘号'
+					}, {
+						dataIndex : 'orderNoAllocate',
+						header : '调拨后订单号'
 					}, {
 						dataIndex : 'createTime',
 						sortable : true,
@@ -143,6 +152,10 @@ com.keensen.ump.produce.component.storage.AllocateListMgr = function() {
 							name : 'fromTrayCode'
 						}, {
 							name : 'toTrayCode'
+						}, {
+							name : 'orderNoAllocate'
+						}, {
+							name : 'baseId'
 						}]
 			})
 		})

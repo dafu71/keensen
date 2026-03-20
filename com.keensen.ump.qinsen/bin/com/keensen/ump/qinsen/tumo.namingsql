@@ -23,7 +23,7 @@
        T1.CHANGE_DT         AS "changeDt",
        T1.CREATOR_ID        AS "creatorId",
        T1.CHANGER_ID        AS "changerId",
-       T1.REMARK || ';' || cd.remark           AS "remark",
+       T1.REMARK || ';' || cd.remark || t1.tmdefect_remark          AS "remark",
        T1.JUDGE_REMARK      AS "judgeRemark",
        T1.IS_VALID          AS "isValid",
        T1.VALID_TM          AS "validTm",
@@ -43,8 +43,14 @@
        T1.modify_user_id "modifyUserId",
        T1.modify_name "modifyName",
        
-       nvl(cd.tag_num,T1.TAG_NUM)           AS "tagNum",
-       nvl(cd.tag_length,T1.TAG_LENGTH)        AS "tagLength",
+       case when t1.num_label is null then
+       nvl(cd.tag_num,T1.TAG_NUM)           
+       else t1.num_label end AS "tagNum",
+       case when t1.num_label is null then
+       nvl(cd.tag_length,T1.TAG_LENGTH)       
+       else t1.num_label*1.5 end
+        AS "tagLength",
+       
        T1.INBOUND_REMARK    AS "inboundRemark",
        T1.ORDER_NO          AS "orderNo",
        T1.IS_WX             AS "isWx",
@@ -133,6 +139,12 @@
         ,case when t1.colorb_Avg&gt;= t1.b_down and t1.colorb_Avg &lt;= t1.b_up 
         then '合格'
         else '不合格' end "colorbOk"
+        
+        ,t1.tmdefect_remark "tmdefectRemark"
+        
+        ,t1.is_a_plus "isAPlus",nvl(t1.a_plus_length,0) "aPlusLength"
+        
+        ,t1.cm_line_name "cmLineName",t1.cm_line_code "cmLineCode"
        
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,  
   replace(A.water_batch_no,'单击旁边选择','') water_batch_no,
@@ -244,6 +256,8 @@
                T8.GFD_AVG R_GFD_AVG,
                T8.SALT_REJECTION R_SALT_REJECTION,
                t33.reserve4,t33.trend,t33.perf_is_qualified,t33.judger_name pg_judger_name ,
+               t33.is_a_plus,t33.a_plus_length,
+               
                vkrc.sumOutLength,
                
                DECODE(A.IS_CUT_OVER, 'Y', to_char(A.OUT_LENGTH - nvl(kt.CAIMO_LOSS,0) - nvl(T2.CAIMO_LENGTH,0),'FM9999999990.99') , '') kt_amount
@@ -251,26 +265,66 @@
                nvl(c92.density7,'') density7 ,c92.result7 ,nvl(c92.density8,'') density8,c92.result8,
                
                to_char(nvl(c92.update_time,c92.create_time),'yyyy-MM-dd HH24:MI:SS') c92time,
-               tld.weight tld_weight,wld.weight wld_weight,pva.c90,pva.used pva_used
-               ,USED.AMOUNT USED_AMOUNT,nvl(wst.loss,0) waste_loss,nvl(wst.cm_loss,0) waste_cm_loss,nvl(wst.tm_loss,0) waste_tm_loss,
+               tld.weight tld_weight,wld.weight wld_weight,pva.c90,pva.used pva_used               
+               ,USED.AMOUNT USED_AMOUNT,
+               nvl(wst.loss,0) + NVL(tmdefect.defect_length2,0) + NVL(cmdefect.defect_length,0)              
+               waste_loss,nvl(wst.cm_loss,0) waste_cm_loss,nvl(wst.tm_loss,0) waste_tm_loss,
                nvl(fcc.amount,0) fcc_amount, decode(fcc.batch_no,null,0,1) fcc_exist
                ,ddp.picture_name defect_picture
                
                ,tmdefect.defect_length 
-               
+               ,tmdefect.num_label 
+               ,tmdefect9.remark tmdefect_remark
                ,nvl(A.colorb,0) colorb
                ,nvl(A.colorb2,0) colorb2
                ,nvl(A.colorb3,0) colorb3
                ,round((nvl(A.colorb,0)+ nvl(A.colorb2,0) + nvl(A.colorb3,0))/3,2) colorb_Avg
                ,mc.b_up,mc.b_down
+               ,cmdefect.defect_length cm_defect_length
+               ,cmline.line_name cm_line_name,cmline.line_code cm_line_code
                
           FROM QINSEN.INST_TUMO A
+          
+          <!--裁膜生产线-->
+          left join (SELECT t.tumo_batch_id,l.line_name,l.line_code from 
+		(SELECT cm.tumo_batch_id,MIN(cm.line_id) line_id
+		 from qinsen.inst_caidiemo cm
+		 GROUP BY cm.tumo_batch_id) t
+		 LEFT JOIN QINSEN.BASE_PROD_LINE L
+		            ON t.LINE_ID = L.LINE_ID) cmline
+		            on cmline.tumo_batch_id = A.record_id
+          
+          
+          left join (SELECT tumo_batch_id, SUM(num_label) tag_Num, SUM(num_label)*1.5 tag_Length,
+       		LISTAGG(remark, ';') WITHIN GROUP (ORDER BY record_id) AS remark 
+		  FROM (SELECT t.id record_id,t.num_label,t.relation_id tumo_batch_id,'位置' || t.position || ',不良长度' || t.length || ',标签数' || t.num_label remark
+		   from KS_DIAPHRAGM_TM_DEFECT_LIST t
+		  WHERE t.iftear&lt;&gt; '是') 
+		  GROUP BY tumo_batch_id) tmdefect9
+		  on tmdefect9.tumo_batch_id = A.record_id
+          
+          
+          
+          <!--裁膜不良-->
+          left join (
+          	SELECT SUM(tt.length) defect_length, tt.record_id tm_batch_id
+			FROM 
+			(
+			select t.length,t.relation_id,tm.record_id
+			 from KS_DIAPHRAGM_CDM_DEFECT_LIST t
+			 LEFT JOIN qinsen.inst_caidiemo cm
+			 ON t.relation_id = cm.record_id
+			 LEFT JOIN qinsen.inst_tumo tm
+			 ON tm.record_id = cm.tumo_batch_id) tt
+			 GROUP BY tt.record_id          
+          ) cmdefect
+          on cmdefect.tm_batch_id = a.record_id
           
           LEFT JOIN ks_quality_mp_colorb mc
           ON a.spec_id = mc.mater_spec_id
           
           left join (select sum(length) defect_length,relation_id,
-          sum(decode(iftear,'是', length,0)) defect_length2
+          sum(decode(iftear,'是', length,0)) defect_length2,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
            from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
   			on tmdefect.relation_id = A.record_id
           
@@ -433,8 +487,8 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
             
             where 1=1
             
-            
-             <isNotNull prepend="and" property="trend">t33.trend = #trend#</isNotNull>
+            <isNotNull prepend="" property="isAPlus">AND T33.is_A_Plus = #isAPlus#</isNotNull>
+        <isNotNull prepend="and" property="trend">t33.trend = #trend#</isNotNull>
         <isNotNull prepend="" property="prodFlagId">AND A.PROD_FLAG_ID = #prodFlagId#</isNotNull>
         <isNotNull prepend="" property="lastCaimoDateStart">AND SUBSTR(T4.LAST_CAIMO_DATE,1,10) &gt;= #lastCaimoDateStart#</isNotNull>
         <isNotNull prepend="" property="lastCaimoDateEnd">AND SUBSTR(T4.LAST_CAIMO_DATE,1,10) &lt;= #lastCaimoDateEnd#</isNotNull>
@@ -484,13 +538,14 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
    	</select>
     <select id="countRecords" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
    	SELECT nvl(COUNT(1),0) "cnt", nvl(SUM(T.OUT_LENGTH),0) "totalLength",
-       nvl(SUM(T.USEFUL_LENGTH),0) "totalUsefulLength",
-       nvl(SUM(T.CAIMO_LENGTH),0) "totalCdmLength", nvl(SUM(T.CAIMO_LOSS),0) "totalLoss",
+       nvl(SUM(T.USEFUL_LENGTH),0) - nvl(sum(t.defect_length2),0) "totalUsefulLength",
+       nvl(SUM(T.CAIMO_LENGTH),0) "totalCdmLength", nvl(SUM(T.CAIMO_LOSS),0) + NVL(sum(t.defect_length),0)  "totalLoss",
        sum(nvl(tag_num,0)) "totalTagNum",
        nvl(sum(C72_invalid),0) as "c72invalidtotal"
-       ,nvl(sum(t.wst_loss),0) as "wastelosstotal"
-       ,nvl(sum(t.QUALIFID_LENGTH),0) as "totalQualifidLength"
-  FROM (SELECT a.loss wst_loss,A.RECORD_ID, A.OUT_LENGTH, nvl(a.tag_num2,a.tag_num) tag_num,A.C72_invalid,a.QUALIFID_LENGTH,a.trend,
+       ,nvl(sum(t.wst_loss),0) + nvl(sum(t.defect_length2),0) + NVL(sum(t.cm_defect_length),0)   as "wastelosstotal"
+       ,nvl(sum(t.QUALIFID_LENGTH),0) - nvl(sum(t.defect_length),0) as "totalQualifidLength"
+  FROM (SELECT A.defect_length,A.defect_length2, A.cm_defect_length,
+  a.loss wst_loss,A.RECORD_ID, A.OUT_LENGTH, nvl(num_label,nvl(a.tag_num2,a.tag_num)) tag_num,A.C72_invalid,a.QUALIFID_LENGTH,a.trend,
                 (SELECT nvl(A.OUT_LENGTH - NVL(SUM(D.LOSS), 0),0)
                     FROM qinsen.INST_CDM_DEFECT D, qinsen.PARA_CDM_DEFECT P
                    WHERE D.TUMO_BATCH_ID = A.RECORD_ID
@@ -503,9 +558,33 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
                 (SELECT nvl(SUM(D.LOSS),0)
                     FROM qinsen.INST_CDM_DEFECT D
                    WHERE D.TUMO_BATCH_ID = A.RECORD_ID) CAIMO_LOSS
-           FROM (SELECT TM.*,WST.loss,CD.*,t33.trend
-           ,tm.OUT_LENGTH - DECODE(tm.IS_WX, 'Y', NVL(tm.TAG_LENGTH, 0), 0) - nvl(T6.LOSS,0) QUALIFID_LENGTH           
+           FROM (SELECT TM.*,WST.loss,CD.*,t33.trend,t33.is_A_Plus ,tmdefect.defect_length,tmdefect.defect_length2,tmdefect.num_label,
+           cmdefect.defect_length cm_defect_length,
+           tm.OUT_LENGTH - DECODE(tm.IS_WX, 'Y', NVL(tm.TAG_LENGTH, 0), 0) - nvl(T6.LOSS,0) QUALIFID_LENGTH           
             FROM qinsen.INST_TUMO tm 
+            
+            left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2
+          ,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = tm.record_id
+            
+           <!--裁膜不良-->
+          left join (
+          	SELECT SUM(tt.length) defect_length, tt.record_id tm_batch_id
+			FROM 
+			(
+			select t.length,t.relation_id,tm.record_id
+			 from KS_DIAPHRAGM_CDM_DEFECT_LIST t
+			 LEFT JOIN qinsen.inst_caidiemo cm
+			 ON t.relation_id = cm.record_id
+			 LEFT JOIN qinsen.inst_tumo tm
+			 ON tm.record_id = cm.tumo_batch_id) tt
+			 GROUP BY tt.record_id          
+          ) cmdefect
+	  on cmdefect.tm_batch_id = tm.record_id 
+            
+            
            left join KS_PROD_DIAPHRAGM_TUMO t33
   				on tm.record_id = t33.record_id
            LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
@@ -517,7 +596,7 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
                      GROUP BY D.TUMO_BATCH_ID) T6
             ON T6.TUMO_BATCH_ID = tm.RECORD_ID
            
-           
+        
            
             LEFT JOIN  V_KS_DIAPHRAGM_TM_WASTE wst
            ON TM.record_id = wst.tumo_batch_id  
@@ -534,8 +613,8 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
      AND A.WF_SUP_ID = O1.PROP_VALUE_ID
      AND A.PROD_FLAG_ID = O2.PROP_VALUE_ID
      
-     
-     <isNotNull prepend="and" property="trend">A.trend = #trend#</isNotNull>
+      <isNotNull prepend="" property="isAPlus">AND A.is_A_Plus = #isAPlus#</isNotNull>
+        <isNotNull prepend="and" property="trend">A.trend = #trend#</isNotNull>
         <isNotNull prepend="" property="prodFlagId">AND A.PROD_FLAG_ID = #prodFlagId#</isNotNull>
         <isNotNull prepend="and" property="batchNoStr2">A.batch_No in ($batchNoStr2$)</isNotNull>
         <isNotNull prepend="" property="recordId">AND A.RECORD_ID = #recordId#</isNotNull>
@@ -971,7 +1050,8 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 		       TO_CHAR(T1.WEIGHT, 'FM999999990.00')       AS "weight",
 		       T1.REASON      AS "reason",
 		       T1.CREATE_NAME AS "createName",
-		       to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI') AS "createTime"
+		       to_char(T1.CREATE_TIME,'YYYY-MM-DD HH24:MI') AS "createTime",
+		       t1.operator_name "operatorName"
 		  FROM (SELECT TT.METHOD,TM.CREATE_DT TM_CREATE_DT,
 		               TT.BATCH_ID,
 		               TM.BATCH_NO,
@@ -984,7 +1064,8 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 		               TT.WEIGHT,
 		               TT.REASON,
 		               TT.CREATE_NAME,
-		               TT.CREATE_TIME
+		               TT.CREATE_TIME,
+		               tt.operator_name
 		          FROM (SELECT '漂洗液调整' METHOD,
 		                       T.BATCH_ID,
 		                       '漂洗' || T.TROUGH || '槽' AREA,
@@ -992,7 +1073,8 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 		                       T.WEIGHT,
 		                       T.REASON,
 		                       T.CREATE_NAME,
-		                       T.CREATE_TIME
+		                       T.CREATE_TIME,
+		                       t.operator_name
 		                  FROM KS_DIAPHRAGM_TROUGH_LIQUID T
 		                UNION ALL
 		                SELECT '水相液调整',
@@ -1007,7 +1089,8 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 		                              T.WEIGHT / 1000) WEIGHT,
 		                       T.REASON,
 		                       T.CREATE_NAME,
-		                       T.CREATE_TIME
+		                       T.CREATE_TIME,
+		                       t.operator_name
 		                  FROM KS_DIAPHRAGM_WATER_LIQUID T) TT
 		          LEFT JOIN QINSEN.INST_TUMO TM
 		            ON TM.RECORD_ID = TT.BATCH_ID
@@ -1083,4 +1166,12 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
         <isNotNull prepend="and" property="item">T1.item = #item#</isNotNull>
         <isNotNull prepend="and" property="reason">T1.reason = #reason#</isNotNull>
     </select>
+    <!-- 更新驳回 -->
+    <update id="updateReject" parameterClass="java.util.HashMap">UPDATE qinsen.inst_tumo t SET 
+	t.IF_REJECT= #ifReject#,
+	t.REASON_REJECT= #reasonReject#,
+	t.TIME_REJECT= sysdate,
+	t.REJECT_USER_ID= #userId#,
+	t.REJECT_USER_NAME= #userName#
+	where t.record_id = #recordId#</update>
 </sqlMap>

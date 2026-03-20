@@ -265,13 +265,24 @@ SELECT P.TEAM_ID         AS "teamId",
 	SUM(decode(t.PERF_FLAG_CODE,'A',t.QUALIFID_LENGTH,0)) "aUsefulLength",
 	round(SUM(decode(t.PERF_FLAG_CODE,'A',t.QUALIFID_LENGTH,0))/SUM(t.out_length) *100,2) || '%' "passful",
 	round(SUM(CASE WHEN t.mpd&gt;10 THEN t.out_length ELSE 0 END),1) "c21OutLength",
-	round(SUM(t.CAIMO_LOSS),1) "caimoLoss",
-	round(SUM(t.Qualified_not_length),1) "qualifiedNotLength",
+	nvl(round(nvl(SUM(t.CAIMO_LOSS),0) + nvl(sum(tmdefect.defect_length),0),1),0) "caimoLoss",
+	round(nvl(SUM(t.Qualified_not_length),0) + nvl(sum(tmdefect.defect_length3),0),1) "qualifiedNotLength",
 	round(SUM(nvl(notear.loss,0)),0) "noTearLength" ,
 	round(SUM(nvl(scratch.loss,0)),0) "scratchLength" ,
-	round(SUM(nvl(t.out_length,0)),0) - round(SUM(nvl(notear.loss,0)),0) + round(SUM(nvl(scratch.loss,0)),0) "actualLength"
+	round(SUM(nvl(t.out_length,0)),0) - round(SUM(nvl(notear.loss,0)),0) + round(SUM(nvl(scratch.loss,0)),0) "actualLength",
+	
+	
+	round(sum(case when (t.colorb_Avg &lt; mc.b_down OR t.colorb_Avg &gt; mc.b_up) and t.colorb_Avg &lt;&gt; 0
+        then t.out_length
+        else 0 end),1) "colorbQualifiedNotLength"
+	
 	 from (select * from V_KS_TUMO_PASSREATE t
 		WHERE SUBSTR(t.batch_no,1,1) !='P') t
+		
+		LEFT JOIN ks_quality_mp_colorb mc
+          ON t.spec_id = mc.mater_spec_id
+		
+		
 	 left join 
 		 (SELECT DDD.LOSS,
 	       T.TM_BATCH_ID,
@@ -297,7 +308,13 @@ SELECT P.TEAM_ID         AS "teamId",
 	              WHERE DD.DEFECT_ITEM_ID = '-102'
 	              GROUP BY DD.DM_BATCH_ID) DDD
 	    ON DDD.DM_BATCH_ID = T.ZM_BATCH_ID) scratch
-	    on scratch.TM_BATCH_ID = t.record_id   
+	    on scratch.TM_BATCH_ID = t.record_id 
+	    
+	   left join (select sum(length) defect_length,relation_id,
+	   sum(CASE WHEN defect_id IN (-1994) THEN LENGTH ELSE 0 END) defect_length3,
+          sum(decode(iftear,'是', length,0)) defect_length2,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = t.record_id  
 	    
 	WHERE 1=1
 	and SUBSTR(t.batch_no,1,1) &lt;&gt; 'E' 
@@ -333,13 +350,20 @@ SELECT P.TEAM_ID         AS "teamId",
                        T1.DIMO_TYPE,
                        T1.PRODUCT_DT,
                        T1.THEORY_AMOUNT,
-                       NVL(T1.THEORY_AMOUNT, 0) - NVL(DEFECT.LOSS, 0) AMOUNT_QUALIFIED,
-                       DEFECT.LOSS LOSS_TOTAL,
-                       DEFECT2.LOSS LOSS_TEAR,
-                       DEFECT.LOSS - DEFECT2.LOSS LOSS_NOT_TEAR,
+                       NVL(T1.THEORY_AMOUNT, 0) - NVL(DEFECT.LOSS, 0) - nvl(newdefect.defect_length,0)  AMOUNT_QUALIFIED,
+                       nvl(DEFECT.LOSS,0) + newdefect.defect_length LOSS_TOTAL,
+                       nvl(DEFECT2.LOSS,0) + newdefect.defect_length2 LOSS_TEAR,
+                       nvl(DEFECT.LOSS,0) - nvl(DEFECT2.LOSS,0) + newdefect.defect_length - newdefect.defect_length2 LOSS_NOT_TEAR,
                        nvl(DEFECT3.loss,0) loss_not_zm 
                   FROM (SELECT t.* from KS_PROD_DIAPHRAGM_ZMX_RECORD t
 					WHERE t.product_type !='实验') T1
+					
+					left join (select t.relation_id,nvl(sum(t.length),0) defect_length,
+					nvl(sum(CASE WHEN t.iftear = '是' THEN t.length ELSE 0 END),0) defect_length2
+					from KS_DIAPHRAGM_ZM_DEFECT_LIST t
+					GROUP BY t.relation_id) newdefect
+					on newdefect.relation_id = t1.id
+					
                   
                   left join (SELECT DIMO_BATCH_NO, SUM(LOSS) LOSS
 					  FROM (SELECT CD.LOSS, TM.DIMO_BATCH_NO
@@ -407,9 +431,9 @@ SELECT P.TEAM_ID         AS "teamId",
                      WHEN SUBSTR(TM.BATCH_NO, 1, 1) = 'T' THEN
                       CASE
                         WHEN TO_CHAR(TM.PRODUCE_DT, 'yyyy-MM-dd') &gt;= '2025-02-10' THEN
-                         NVL(T55.LOSS, 0)
+                         NVL(T55.LOSS, 0) + nvl(tmdefect.defect_length2,0)
                         ELSE
-                         NVL(T5.LOSS, 0)
+                         NVL(T5.LOSS, 0) + nvl(tmdefect.defect_length2,0)
                       END
                      ELSE
                       0
@@ -418,9 +442,9 @@ SELECT P.TEAM_ID         AS "teamId",
                      WHEN SUBSTR(TM.BATCH_NO, 1, 1) = 'T' THEN
                       CASE
                         WHEN TO_CHAR(TM.PRODUCE_DT, 'yyyy-MM-dd') &gt;= '2025-02-10' THEN
-                         TM.OUT_LENGTH - NVL(T55.LOSS, 0)
+                         TM.OUT_LENGTH - NVL(T55.LOSS, 0) - nvl(tmdefect.defect_length2,0)
                         ELSE
-                         TM.OUT_LENGTH - NVL(T5.LOSS, 0)
+                         TM.OUT_LENGTH - NVL(T5.LOSS, 0) - nvl(tmdefect.defect_length2,0)
                       END
                      ELSE
                       0
@@ -464,8 +488,15 @@ SELECT P.TEAM_ID         AS "teamId",
                        AND P.REC_TACHE_ID = 100
                        AND D.IF_TEAR = '是'
                      GROUP BY D.TUMO_BATCH_ID) T55
-            ON T55.TUMO_BATCH_ID = TM.RECORD_ID)
-     
+            ON T55.TUMO_BATCH_ID = TM.RECORD_ID
+           left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = tm.record_id 
+            
+            
+            )
+           
      
      </select>
     <select id="queryZmMaterUsed" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">

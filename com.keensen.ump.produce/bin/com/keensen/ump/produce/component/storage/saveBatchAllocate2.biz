@@ -14,8 +14,8 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" nodeType="common" type="end">
-    <targetConnections>link5</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link5</targetConnections>
     <nodeLabel>end0label</nodeLabel>
     <process:returns>
       <process:return id="0" language="String" name="msg" type="query" valueType="Primitive">msg</process:return>
@@ -60,6 +60,14 @@
     <process:copy>
       <process:from type="query" pattern="reference">fromTrayCode</process:from>
       <process:to type="query">param/fromTrayCode</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">orderNoAllocate</process:from>
+      <process:to type="query">param/orderNoAllocate</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">baseId</process:from>
+      <process:to type="query">param/baseId</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
@@ -193,6 +201,8 @@
     <process:input isArray="false" name="toStorage" primitiveType="String"/>
     <process:input isArray="false" name="toStorageCode" primitiveType="String"/>
     <process:input isArray="false" name="toTrayCode" primitiveType="String"/>
+    <process:input isArray="false" name="orderNoAllocate" primitiveType="String"/>
+    <process:input isArray="false" name="baseId" primitiveType="String"/>
   </process:inputs>
   <process:outputs>
     <process:output description="" isArray="false" name="msg" primitiveType="String"/>

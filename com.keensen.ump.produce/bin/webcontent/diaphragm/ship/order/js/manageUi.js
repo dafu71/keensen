@@ -161,6 +161,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						header : '订单号'
 					}, {
 						dataIndex : 'customerCode',
+						hidden:true,
 						header : '客户',
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{
@@ -219,10 +220,12 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 					}, {
 						dataIndex : 'arrangeAmount',
 						sortable : true,
+						hidden:true,
 						header : '建议排产数量'
 					}, {
 						dataIndex : 'arrangePercent',
 						header : '排产合格率%',
+						hidden:true,
 						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
 								{
 									allowBlank : false,
@@ -283,7 +286,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						header : '单位'
 					}, {
 						dataIndex : 'materSpecCode',
-						header : '型号'
+						header : '膜片生产型号'
 					}, {
 						dataIndex : 'createName',
 						header : '订单录入'
@@ -424,7 +427,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							xtype : 'mpspeccombobox',
 							hiddenName : 'entity/specId',
 							anchor : '95%',
-							allowBlank : false,
+							//allowBlank : false,
 							fieldLabel : '膜片型号 ',
 							colspan : 2
 						}, {
@@ -522,7 +525,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							hiddenName : 'entity/specId',
 							dataIndex : 'specId',
 							anchor : '95%',
-							allowBlank : false,
+							//allowBlank : false,
 							fieldLabel : '膜片型号 ',
 							colspan : 2
 						}, {
@@ -767,7 +770,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 						header : '计划入库数量'
 					}, {
 						dataIndex : 'materSpecCode',
-						header : '型号'
+						header : '膜片生产型号'
 					}, {
 						dataIndex : 'remark',
 						header : '备注'
@@ -1443,7 +1446,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							}, {
 								xtype : 'numberfield',
 								name : 'condition/days',
-								allowBlank : false,
+								//allowBlank : false,
 								ref : '../days',
 								fieldLabel : '排产天数',
 								anchor : '100%',
@@ -1451,7 +1454,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 							}, {
 								xtype : 'supcombobox',
 								hiddenName : 'condition/supId',
-								allowBlank : false,
+								//allowBlank : false,
 								anchor : '100%',
 								fieldLabel : '无纺布供应商',
 								colspan : 2

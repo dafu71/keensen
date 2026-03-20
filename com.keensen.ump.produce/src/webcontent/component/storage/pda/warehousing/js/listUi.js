@@ -47,7 +47,7 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 								anchor : '100%',
 								nameArray : ['condition/createTimeStart',
 										'condition/createTimeEnd'],
-								fieldLabel : "入库时间",
+								fieldLabel : "仓库接收元件确认时间",
 								format : "Y-m-d"
 							}, {
 								xtype : 'displayfield',
@@ -174,7 +174,7 @@ com.keensen.ump.produce.component.storage.WareHousingListMgr = function() {
 					}, {
 						dataIndex : 'stockTime',
 						sortable : true,
-						header : '入库时间'
+						header : '仓库接收元件确认时间'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.storage.queryWarehousingByPage.biz.ext.biz.ext',

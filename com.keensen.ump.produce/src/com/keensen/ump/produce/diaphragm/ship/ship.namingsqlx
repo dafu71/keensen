@@ -308,6 +308,92 @@
 	
  order by t2.delivery_Order_No desc nulls last, t1.produce_dt desc 
      </select>
+     
+     
+     <select id="countFhd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     select sum(nvl(t2.amount,0)) "sendAmountTotal"
+  from V_KS_PROD_DIAPHRAGM_SHIP t2
+  left join V_KS_TUMO3 t1 
+    on t1.RECORD_ID = t2.RECORD_ID
+ where 1=1
+ 
+ <isNotNull prepend="and" property="clientName"> 
+		       t2.client_Name like '%' || #clientName# || '%'
+	</isNotNull>
+	
+    <isNotNull prepend="and" property="ifconfirm"> 
+		       nvl(t2.ifconfirm,'n') = #ifconfirm#
+	</isNotNull>
+   <isNotNull prepend="and" property="perfFlagId"> 
+		       t1.PERF_FLAG_ID = #perfFlagId#
+	</isNotNull>
+ 
+   <isNotNull prepend="and" property="lineId"> 
+		       t1.line_id = #lineId#
+	</isNotNull> 
+	<isNotNull prepend="and" property="specId"> 
+		       t1.spec_id = #specId#
+	</isNotNull>
+	<isNotNull prepend="and" property="workerId"> 
+		       t1.worker_Id = #workerId#
+	</isNotNull>
+	<isNotNull prepend="and" property="supId"> 
+		       t1.SUP_ID = #supId#
+	</isNotNull>
+	<isNotNull prepend="and" property="isWx"> 
+		       t1.is_wx = #isWx#
+	</isNotNull>		
+    <isNotNull prepend="and" property="recordId"> 
+		       t1.RECORD_ID = #recordId#
+	</isNotNull>
+
+	<isNotNull prepend="and" property="batchNo"> 
+		       t1.batch_No = #batchNo#
+	</isNotNull>
+	
+	
+	<isNotNull prepend="and" property="batchNo2"> 
+		       t1.batch_No like '%' || upper(#batchNo2#) || '%'
+	</isNotNull>
+	
+	<isNotNull prepend = "and"  property = "produceDtStart"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &gt;=  #produceDtStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "produceDtEnd"> 
+          to_char(t1.PRODUCE_DT,'yyyy-MM-dd')  &lt;=  #produceDtEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="orderNo"> 
+		       upper(t1.order_No) like '%' || upper(#orderNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="planNo"> 
+		       upper(t1.plan_No)  like '%' || upper(#planNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="dimoBatchNo"> 
+		       t1.DIMO_BATCH_NO  like '%' || #dimoBatchNo# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="orderNo2"> 
+		       upper(t1.order_No) = upper(#orderNo2#) 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="deliveryOrderNo"> 
+		       t2.delivery_Order_No like '%' || #deliveryOrderNo# || '%'
+	</isNotNull>
+	
+	
+	<isNotNull prepend = "and"  property = "deliveryDtStart"> 
+          to_char(t2.delivery_DT,'yyyy-MM-dd')  &gt;=  #deliveryDtStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "deliveryDtEnd"> 
+          to_char(t2.delivery_DT,'yyyy-MM-dd')  &lt;=  #deliveryDtEnd#
+     </isNotNull>
+     
+     <isNotNull prepend="and" property="batchNoStr"> 
+		       t1.batch_No in ($batchNoStr$)
+	</isNotNull>
+	
+
+     </select>
+     
  
  	<select id="queryOrder" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
       
@@ -647,11 +733,11 @@
        t1.BATCH_NO        as "batchNo",
        lower(t1.IS_QUALIFIED)    as "isQualified",
        t1.OUT_LENGTH      as "outLength",
-       t1.LOSS            as "loss",
-       t1.USEFUL_LENGTH as "usefulLength",
-       nvl(t1.USEFUL_LENGTH,0) - nvl(T22.CAIMO_LENGTH,0)  as "usefulLength2",
-       t1.QUALIFID_LENGTH as "qualifidLength",
-       nvl(t1.QUALIFID_LENGTH,0) - nvl(T22.CAIMO_LENGTH,0) as "qualifidLength2",
+       t1.LOSS + nvl(tmdefect.defect_length,0)           as "loss",
+       t1.USEFUL_LENGTH - nvl(tmdefect.defect_length2,0) as "usefulLength",
+       nvl(t1.USEFUL_LENGTH,0) - nvl(T22.CAIMO_LENGTH,0) - nvl(tmdefect.defect_length2,0) as "usefulLength2",
+       t1.QUALIFID_LENGTH - nvl(tmdefect.defect_length,0) as "qualifidLength",
+       nvl(t1.QUALIFID_LENGTH,0) - nvl(T22.CAIMO_LENGTH,0) - nvl(tmdefect.defect_length,0) as "qualifidLength2",
        t1.PLAN_NO         as "planNo",
        t1.ORDER_NO        as "orderNo",
        t1.SUP_ID          as "supId",
@@ -694,6 +780,11 @@
        else round(T7.GFD_AVG,1) 
        end || 'GFD' "fGfdAvg2"
   from v_ks_tumo4 t1
+  
+  left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = t1.record_id
   
   <!--质检标准-膜片质检标准：按生产线和膜片型号 引出A等品的通量上下限-->
   left join (SELECT t.line_id,t.spec_id,max(t.gfd_low_limit) gfd_low_limit, MAX(t.gfd_up_limit) gfd_up_limit
@@ -899,9 +990,9 @@
        T1.CAIMO_LENGTH       AS "caimoLength",
        T1.CAIMO_LOSS         AS "caimoLoss",
        T1.LAST_CAIMO_DATE    AS "lastCaimoDate",
-       T1.USEFUL_LENGTH      AS "usefulLength",
-       T1.QUALIFID_LENGTH    AS "qualifidLength",
-       (T1.QUALIFID_LENGTH-T1.CAIMO_LENGTH) AS "qualifidLength2",
+       T1.USEFUL_LENGTH - nvl(tmdefect.defect_length2,0)     AS "usefulLength",
+       T1.QUALIFID_LENGTH - nvl(tmdefect.defect_length,0)   AS "qualifidLength",
+       (T1.QUALIFID_LENGTH-T1.CAIMO_LENGTH - nvl(tmdefect.defect_length,0)) AS "qualifidLength2",
        T1.F_GFD_AVG          AS "fGfdAvg",
        T1.F_SALT_REJECTION   AS "fSaltRejection",
        T1.R_GFD_AVG          AS "rGfdAvg",
@@ -914,7 +1005,16 @@
        decode(t3.perf_is_qualified,'Y','合格','N','不合格','') "perfIsQualifiedName",
        t3.reserve4 "reserve4",t3.judge_remark "judgeRemark",
        nvl(T4.title,' ') "title",s.amount "stockAmount",t1.remark "remark"
+       ,t1.if_reject "ifReject", t1.reason_Reject "reasonReject"
   FROM V_KS_TUMO_ORIGIN2 T1
+  
+  left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = t1.record_id
+  
+  
+  
   left join KS_PROD_DIAPHRAGM_TUMO t3
   on t1.record_id = t3.record_id
   left join (select t.record_id,t.relation_id,t2.code|| t2.types || '请检单' title from KS_PROD_DIAPHRAGM_APPLY_LIST t

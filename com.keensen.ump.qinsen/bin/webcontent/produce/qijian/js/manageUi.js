@@ -39,6 +39,8 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 
 		this.initModifyPrintBatchNoWindow();
 
+		this.initEditWindow4Degrade();
+
 		this.opt = '';
 
 		this.gridPanel = this.gridPanel || new Ext.Panel({
@@ -384,16 +386,32 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 								this.queryPanel.isLabel.reset();
 							}
 						}
-					}/*
-						 * , {
-						 * 
-						 * xtype : 'textfield', name :
-						 * 'condition/juanMoBatchNo', anchor : '100%', fieldLabel :
-						 * '卷膜序号' }, {
-						 * 
-						 * xtype : 'textfield', name : 'condition/batchNo',
-						 * anchor : '100%', fieldLabel : '元件序号' }
-						 */]
+					}, {
+
+						xtype : 'combo',
+						fieldLabel : '是否C等品',
+						ref : '../isC',
+						hiddenName : 'condition/isC',
+						emptyText : '--请选择--',
+						anchor : '100%',
+						colspan : 4,
+						store : [[null, '全部'], ['是', '是'], ['否', '否']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.isC.reset();
+							}
+						}
+					}, {
+						xtype : "dateregion",
+						colspan : 4,
+						anchor : '100%',
+						nameArray : ['condition/checkTimeStart',
+								'condition/checkTimeEnd'],
+						fieldLabel : "请检日期",
+						format : "Y-m-d"
+
+					}]
 		});
 
 		this.queryPanel.addButton({
@@ -411,6 +429,13 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					hidden : true,
 					id : qijianExportButton,
 					handler : this.exportExcel
+				});
+				
+		this.queryPanel.addButton({
+					text : "绕丝生产看板",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onRs4Board
 				});
 
 		this.queryPanel.addButton({
@@ -555,6 +580,11 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 									handler : this.onAbolitionQuery
 
 								}]
+					}, '-', {
+						text : '元件降级',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onDegrade
 					}
 
 					, '->', {
@@ -562,15 +592,21 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						value : '',
 						id : 'qijianamountinfo'
 					}, {
-						text : '换标',
-						scope : this,
+						xtype : 'splitbutton',
+						text : '补换标',
 						iconCls : 'icon-application_edit',
-						handler : this.changeTag
-					}, '-', {
-						text : '补标',
-						scope : this,
-						iconCls : 'icon-application_edit',
-						handler : this.makeupTag
+						arrowAlign : 'bottom',
+						menu : [{
+									text : '换标',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.changeTag
+								}, '-', {
+									text : '补标',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.makeupTag
+								}]
 					}, '-', {
 						text : '质检',
 						scope : this,
@@ -643,6 +679,26 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 						dataIndex : 'ifCheckStock',
 						sortable : true,
 						header : '是否已<br>请检入库'
+					}, {
+						dataIndex : 'checkTime',
+						sortable : true,
+						header : '请检时间'
+					}, {
+						dataIndex : 'isC',
+						sortable : true,
+						header : '是否C等品'
+					}, {
+						dataIndex : 'reasonDegrade',
+						sortable : true,
+						header : '降级原因'
+					}, {
+						dataIndex : 'typeDegrade',
+						sortable : true,
+						header : '降级类型'
+					}, {
+						dataIndex : 'deptDegrade',
+						sortable : true,
+						header : '责任部门'
 					}, {
 						header : '是否在<br>白膜仓',
 						sortable : true,
@@ -887,7 +943,23 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 				totalProperty : 'totalCount',
 				baseParams : {},
 				fields : [{
+							name : 'checkTime'
+						}, {
+							name : 'reasonDegrade'
+						}, {
+							name : 'typeDegrade'
+						}, {
+							name : 'deptDegrade'
+						}, {
+							name : 'userIdDegrade'
+						}, {
+							name : 'userNameDegrade'
+						}, {
+							name : 'timeDegrade'
+						}, {
 							name : 'recordId'
+						}, {
+							name : 'isC'
 						}, {
 							name : 'batchNo'
 						}, {
@@ -4089,4 +4161,135 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 					}]
 				})
 	}
+
+	this.initEditWindow4Degrade = function() {
+
+		this.reasonDegradeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['生产制程-膜片合格，生管排产', '生产制程-膜片合格，生管排产'],
+							['生产制程-膜片不合格，生管排产', '生产制程-膜片不合格，生管排产'],
+							['生产制程-贴错标签', '生产制程-贴错标签'],
+							['生产制程-性能不合格，1月内入库', '生产制程-性能不合格，1月内入库'],
+							['生产制程-性能不合格，1月外入库', '生产制程-性能不合格，1月外入库'],
+							['生产制程-颜色不合格，1月内入库', '生产制程-颜色不合格，1月内入库'],
+							['生产制程-元件外观不良', '生产制程-元件外观不良'],							
+							['生产制程-试量产膜片', '生产制程-试量产膜片'],
+							['库存元件-保存得当性能衰减', '库存元件-保存得当性能衰减'],
+							['库存元件-保存不当性能衰减', '库存元件-保存不当性能衰减'],
+							['库存元件-保存时间过长（两年以上）', '库存元件-保存时间过长（两年以上）'],
+							['库存元件-湿膜发霉', '库存元件-湿膜发霉'],
+							['库存元件-超期膜片', '库存元件-超期膜片'],
+							['返厂元件-外观/性能不合格，生管排产', '返厂元件-外观/性能不合格，生管排产'],
+							['返厂膜片-颜色/性能合格，生管排产', '返厂膜片-颜色/性能合格，生管排产'],
+							['返厂膜片-颜色/性能不合格，生管排产', '返厂膜片-颜色/性能不合格，生管排产'],							
+							['实验膜片', '实验膜片']]
+				});
+
+		this.typeDegradeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['主动降级', '主动降级'], ['被动降级', '被动降级']]
+				});
+
+		this.deptDegradeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['元件制造部', '元件制造部'], ['膜片制造部', '膜片制造部'],
+							['生产管理部', '生产管理部'], ['财务部-仓库组', '财务部-仓库组'],
+							['设备能源部', '设备能源部'], ['研发中心-工艺部', '研发中心-工艺部'],
+							['研发中心-研发部', '研发中心-研发部']
+
+					]
+				});
+
+		this.editWindow4Degrade = this.editWindow4Degrade
+				|| new Ext.fn.FormWindow({
+					title : '降级意见',
+					height : 600,
+					width : 800,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : '1.biz.ext',
+						saveUrl : 'com.keensen.ump.qinsen.qijian.updateDegradeBatch.biz.ext',
+						fields : [{
+									xtype : 'combobox',
+									forceSelection : true,
+									allowBlank : false,
+									mode : 'local',
+									fieldLabel : '降级原因',
+									ref : '../../reasonDegrade',
+									hiddenName : 'entity/reasonDegrade',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									store : this.reasonDegradeStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'combobox',
+									forceSelection : true,
+									allowBlank : false,
+									mode : 'local',
+									fieldLabel : '降级类型',
+									ref : '../../typeDegrade',
+									hiddenName : 'entity/typeDegrade',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									store : this.typeDegradeStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'combobox',
+									forceSelection : true,
+									allowBlank : false,
+									mode : 'local',
+									fieldLabel : '责任部门',
+									ref : '../../deptDegrade',
+									hiddenName : 'entity/deptDegrade',
+									anchor : '95%',
+									colspan : 1,
+									emptyText : '--请选择--',
+									editable : false,
+									store : this.deptDegradeStore,
+									displayField : "name",
+									valueField : "code",
+									listeners : {
+										"expand" : function(A) {
+											this.reset()
+										}
+									}
+								}, {
+									xtype : 'hidden',
+									ref : '../../recordIds',
+									name : 'entity/recordIds'
+								}]
+					}]
+				});
+	}
+
 }

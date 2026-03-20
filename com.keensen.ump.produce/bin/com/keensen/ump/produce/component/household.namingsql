@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.household">
+    <select id="queryDegrade" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+   SELECT T1.ID                AS "id", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       T1.STATUS            AS "status",
+       t1.PROD_SPEC_ID as "prodSpecId",
+		t1.LABEL_SPEC_NAME as "labelSpecName",
+		t1.BATCH_NO as "batchNo",
+		t1.AMOUNT as "amount",
+		t1.ORDER_NO as "orderNo",
+		t1.COLOR_TAPE as "colorTape",
+		t1.BLANKING_SIZE as "blankingSize",
+		t1.IP as "ip",
+		t1.REASON_DEGRADE as "reasonDegrade",
+		t1.DEPT_DEGRADE as "deptDegrade",
+		t1.TYPE_DEGRADE as "typeDegrade",
+		pms.mater_spec_name "prodSpecName"
+
+       
+  FROM KS_COMPONENT_HH_DEGRADE T1
+  LEFT JOIN qinsen.para_mater_spec pms
+  ON pms.mater_spec_id = t1.prod_spec_id
+  where 1=1
+   <isNotNull prepend="and" property="id">t1.id = #id#</isNotNull>
+        <isNotNull prepend="and" property="labelSpecName2">t1.LABEL_SPEC_NAME like '%' || #labelSpecName2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="batchNo2">t1.BATCH_NO like '%' || #batchNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="orderNo2">t1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
+        <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+    </select>
+</sqlMap>

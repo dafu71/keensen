@@ -335,10 +335,10 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 						header : '打料结束时间'
 					}, {
 						dataIndex : 'loopStarttime',
-						header : '内循环开始时间'
+						header : '搅拌开始时间'
 					}, {
 						dataIndex : 'loopOvertime',
-						header : '内循环结束时间'
+						header : '搅拌结束时间'
 					}, {
 						dataIndex : 'jarNo',
 						header : '脱气罐编号'
@@ -922,7 +922,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							format : 'Y-m-d H:i:00',
 							name : 'entity/loopStarttime',
 							dataIndex : 'loopStarttime',
-							fieldLabel : '内循环开始时间',
+							fieldLabel : '搅拌开始时间',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -930,7 +930,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							format : 'Y-m-d H:i:00',
 							name : 'entity/loopOvertime',
 							dataIndex : 'loopOvertime',
-							fieldLabel : '内循环结束时间',
+							fieldLabel : '搅拌结束时间',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -1325,7 +1325,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							format : 'Y-m-d H:i:00',
 							name : 'entity/loopStarttime',
 							dataIndex : 'loopStarttime',
-							fieldLabel : '内循环开始时间',
+							fieldLabel : '搅拌开始时间',
 							anchor : '95%',
 							colspan : 1
 						}, {
@@ -1333,7 +1333,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							format : 'Y-m-d H:i:00',
 							name : 'entity/loopOvertime',
 							dataIndex : 'loopOvertime',
-							fieldLabel : '内循环结束时间',
+							fieldLabel : '搅拌结束时间',
 							anchor : '95%',
 							colspan : 1
 						}, {

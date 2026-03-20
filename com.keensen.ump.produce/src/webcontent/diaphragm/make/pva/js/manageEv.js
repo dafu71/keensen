@@ -1,11 +1,12 @@
 com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	//2026-03-11 PVA配料界面中，PVA-165的配方把C23-A的含量0.12调成0
 	this.formulas = {
 		'PVA-165' : {
 			pva : 1,
 			c51 : 1,
-			c23 : 0.12,
+			c23 : 0,
 			ro : 97.88
 		},
 		'PVA-205' : {

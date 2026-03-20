@@ -1267,7 +1267,7 @@ com.keensen.ump.produce.component.mpselectMgr = function() {
 		var storageStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['膜片AB仓', '膜片AB仓'], ['膜片C仓', '膜片C仓'],
-							['膜片发货仓', '膜片发货仓'], ['半成品仓', '半成品仓'],
+							['膜片发货仓', '膜片发货仓'], ['膜片待请检仓', '膜片待请检仓'],
 							['试卷合格仓', '试卷合格仓']]
 				});
 

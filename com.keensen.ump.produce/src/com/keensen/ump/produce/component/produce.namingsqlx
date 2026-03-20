@@ -609,4 +609,111 @@ and nvl(t1.status,1) != 0
  	from KS_COMPONENT_WORKER t    
     </select>
     
+    <select id="queryPrint" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT T1.ID             AS "id",
+       to_char(T1.CREATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd HH24:MI:SS')    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.RESERVE1       AS "reserve1",
+       T1.RESERVE2       AS "reserve2",
+       T1.RESERVE3       AS "reserve3",
+       T1.RESERVE4       AS "reserve4",
+       T1.RESERVE5       AS "reserve5",
+       T1.ORG_ID         AS "orgId",
+       T1.STATUS         AS "status",
+       t1.user_id   "userId",
+		t1.record_id as "recordId",
+		t1.business as "business"
+
+  FROM KS_COMPONENT_print T1
+  
+
+  where 1=1 
+  
+  
+     
+    <isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+	</isNotNull>
+	
+	
+	<isNotNull prepend="and" property="recordId"> 
+		       T1.record_id = #recordId# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="business"> 
+		       T1.business = #business# 
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="userId"> 
+		       t1.user_id = #userId#
+	</isNotNull>
+	
+	
+    
+    </select>
+    
+    <select id="queryCdm4PrintTag" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT cm.record_id "batchId",cm.batch_no "batchNo",cm.tumo_batch_id,
+	tm.batch_no "tumoBatchNo",cm.order_no "orderNo",pms.mater_spec_name "prodSpecName",
+	DECODE(cm.IS_TO_MIX, 'Y', '混卷', 'N', '单卷', '') "isToMixStr",
+	cm.quantity "quantity",
+	cm.num_per_wad "numPerWad",
+	cm.BLANKING_SIZE   AS "blankingSize",
+	cm.dense_net "denseNet",
+	to_char(cm.produce_dt,'YYYY-MM-DD') "produceDate"
+	from qinsen.inst_caidiemo cm
+	LEFT JOIN qinsen.para_mater_spec pms
+	ON pms.mater_spec_id = cm.prod_spec_id
+	LEFT JOIN qinsen.inst_tumo tm
+	ON cm.tumo_batch_id = tm.record_id
+	LEFT JOIN v_ac_operator_trs op
+	ON op.empid = cm.worker_id
+	WHERE op.userid = #userId#
+	and cm.workstation = #workstation#	
+	AND (to_date(to_char(sysdate,'yyyy-MM-dd hh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') - cm.create_dt)*24  &lt;=#hours#
+	AND NOT EXISTS(SELECT 1 FROM ks_component_print pr WHERE pr.record_id=cm.record_id 
+	AND pr.user_id = op.userid
+	AND pr.business='cdm')
+	AND EXISTS(SELECT 1 FROM V_KS_CDM_LINE_IP v WHERE v.ip = #ip# AND v.line_id = cm.line_id)
+	ORDER BY cm.record_id 
+    </select>
+    
+    <update id="updateCdmProduceDt" parameterClass="java.util.HashMap" >
+    
+    UPDATE qinsen.inst_caidiemo cm
+	SET cm.produce_dt = SYSDATE ,cm.change_dt = SYSDATE ,cm.changer_id = #changerId#
+	WHERE cm.record_id = #recordId#
+    </update>
+    
+     <select id="queryJm4PrintTag" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT jm.record_id "batchId" from qinsen.inst_juanmo_main jm
+    LEFT JOIN qinsen.inst_juanmo_detail jd
+    ON jd.main_batch_id = jm.record_id
+	LEFT JOIN v_ac_operator_trs op
+		ON op.empid = jm.worker_id
+	LEFT JOIN QINSEN.BASE_PROD_LINE PL
+	ON pl.Line_Id=jm.line_id
+	WHERE op.userid =#userId#
+	AND (to_date(to_char(sysdate,'yyyy-MM-dd hh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') - jm.create_dt)*24  &lt;= #hours#
+	AND NOT EXISTS(SELECT 1 FROM ks_component_print pr WHERE pr.record_id=jm.record_id 
+		AND pr.user_id = op.userid
+		AND pr.business='jm')
+	AND EXISTS( SELECT 1 FROM KS_BASE_MACHINE bm WHERE bm.code = PL.LINE_CODE 
+	AND bm.ip = #ip#) 
+	AND EXISTS(SELECT 1 FROM qinsen.inst_caidiemo cm WHERE cm.record_id = jd.cdm_batch_id)
+	ORDER BY jm.record_id 
+    
+    </select>
+    
+    <update id="updateJmProduceDt" parameterClass="java.util.HashMap" >
+    
+    UPDATE qinsen.inst_juanmo_main jm
+	SET jm.produce_dt = SYSDATE ,jm.change_dt = SYSDATE ,jm.changer_id = #changerId#
+	WHERE jm.record_id = #recordId#
+    </update>
+    
 </sqlMap>

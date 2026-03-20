@@ -41,8 +41,8 @@
 	BIZ.ns('com.keensen.ump.produce.quality');
 </script>
 <js:load scriptPath="pub/common/prodspecCombo.js" />
-<js:load scriptPath="produce/quality/deliveryrecord/js/manageUi.js"/>
-<js:load scriptPath="produce/quality/deliveryrecord/js/manageEv.js"/>
+<js:load scriptPath="produce/quality/deliveryrecord/js/manageUi2.js"/>
+<js:load scriptPath="produce/quality/deliveryrecord/js/manageEv2.js"/>
 
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}

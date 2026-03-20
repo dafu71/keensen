@@ -1146,4 +1146,21 @@
             <column length="20" name="TEST_LIQUID"/>
         </property>
     </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.base.common.KsBaseDict" table="KS_BASE_DICT">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <composite-id>
+            <key-property name="business" type="string">
+                <column length="20" name="BUSINESS"/>
+            </key-property>
+            <key-property name="dictName" type="string">
+                <column length="50" name="DICT_NAME"/>
+            </key-property>
+        </composite-id>
+        <property name="dictValue" type="string">
+            <column length="20" name="DICT_VALUE"/>
+        </property>
+        <property name="remark" type="string">
+            <column length="50" name="REMARK"/>
+        </property>
+    </class>
 </hibernate-mapping>

@@ -125,13 +125,14 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
-		// var start = vals['condition/produceDtStart'];
-		// var end = vals['condition/produceDtEnd'];
-		// if (dayDiff(start, end) > 93) {
-		// Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
-		// return false;
+		
+		var start = vals['condition/produceDtStart'];
+		var end = vals['condition/produceDtEnd'];
+		if (dayDiff(start, end) > 93) {
+			Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+			return false;
 
-		// }
+		}
 		var store = this.listPanel.store;
 		this.queryFlag = true;
 		store.baseParams = this.queryPanel.getForm().getValues();
@@ -1431,7 +1432,6 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.modifyPrintBatchNoBatch = fun
 		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！");
 	} else {
 
-		
 		var C = A.getSelectionModel().getSelections();
 
 		var records = A.getSelectionModel().getSelections();
@@ -1470,3 +1470,26 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.modifyPrintBatchNoBatch = fun
 
 }
 
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onDegrade = function() {
+	var _this = this;
+	var grid = this.listPanel;
+
+	var records = grid.getSelectionModel().getSelections();
+	if (records.length == 0) {
+		Ext.Msg.alert('系统提示', '请先选择数据');
+		return false;
+	}
+	var arr = new Array();
+	for (var i = 0; i < records.length; i++) {
+
+		var recordId = records[i].get('recordId');
+		arr.push(recordId);
+	}
+	this.editWindow4Degrade.recordIds.setValue(arr.join(','));
+	this.editWindow4Degrade.show();
+}
+
+com.keensen.ump.qinsen.produce.qijianMgr.prototype.onRs4Board = function() {
+	window
+			.open('com.keensen.ump.produce.report.queryRs4Board.flow');
+}

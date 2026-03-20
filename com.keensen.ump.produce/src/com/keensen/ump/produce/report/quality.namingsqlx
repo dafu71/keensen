@@ -386,8 +386,10 @@ SELECT 2 MYORDER,
 	SELECT t.record_id "recordId",t.batch_no "batchNo",t.order_no "orderNo",
 	t.prod_spec_id "prodSpecId",
 	t.check_result "checkResult",pms.mater_spec_name "prodSpecName"，
-	to_char(T.PRODUCE_DT,'yyyy-MM-dd') "produceDt"
+	to_char(T.PRODUCE_DT,'yyyy-MM-dd') "produceDt",jm.batch_no "jmBatchNo"
 	 from qinsen.inst_qijian t
+	 left join qinsen.inst_juanmo_main jm
+	ON t.juanmo_batch_id = jm.record_id
 	LEFT JOIN qinsen.para_mater_spec pms ON pms.mater_spec_id =  t.prod_spec_id
 	WHERE 
 	1=1

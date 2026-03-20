@@ -35,6 +35,9 @@
         <isNotNull prepend="and" property="fileType">t1.FILE_TYPE = #fileType#</isNotNull>
         <isNotNull prepend="and" property="state">t1.STATE = state#</isNotNull>
         <isNotNull prepend="and" property="fileName">t1.FILE_NAME like '%' || #fileName# || '%'</isNotNull>
+        <isNotNull prepend="and" property="controlCode2">t1.CONTROL_CODE like '%' || #controlCode2# || '%'</isNotNull>
+        <isNotNull prepend="and" property="controlCodeMin">t1.CONTROL_CODE &gt;= #controlCodeMin#</isNotNull>
+        <isNotNull prepend="and" property="controlCodeMax">t1.CONTROL_CODE &lt;= #controlCodeMax#</isNotNull>
 	order by t1.FILE_TYPE,t1.id desc
 	 </select>
 </sqlMap>

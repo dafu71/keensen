@@ -1,10 +1,12 @@
 com.keensen.ump.produce.quality.JmDefectListMgr = function() {
-	
+
 	this.initPanel = function() {
 
 		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
+
+		this.initEditWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -15,7 +17,7 @@ com.keensen.ump.produce.quality.JmDefectListMgr = function() {
 	}
 
 	this.initStore = function() {
-		
+
 		this.iftearStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['是', '是'], ['否', '否']]
@@ -36,6 +38,22 @@ com.keensen.ump.produce.quality.JmDefectListMgr = function() {
 		this.tacheStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['铸膜', '铸膜'], ['涂膜', '涂膜'], ['裁叠膜', '裁叠膜']]
+				});
+
+		this.deptStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['元件制造部', '元件制造部'], ['膜片制造部', '膜片制造部'],
+							/* ['生产管理部', '生产管理部'], ['财务部-仓库组', '财务部-仓库组'], */
+							['设备能源部', '设备能源部'], ['研发中心-工艺部', '研发中心-工艺部'],
+							['研发中心-研发部', '研发中心-研发部']
+
+					]
+				});
+		this.reasonStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['设备故障', '设备故障'], ['人员操作失误', '人员操作失误']
+
+					]
 				});
 	}
 
@@ -97,7 +115,7 @@ com.keensen.ump.produce.quality.JmDefectListMgr = function() {
 							}, {
 								xtype : 'textfield',
 								name : 'condition/jmBatchNo',
-								ref:'../jmBatchNo',
+								ref : '../jmBatchNo',
 								anchor : '100%',
 								colspan : 1,
 								fieldLabel : '卷膜序号%%'
@@ -145,9 +163,14 @@ com.keensen.ump.produce.quality.JmDefectListMgr = function() {
 			},
 			hsPage : true,
 			tbar : [{
+						text : '修改',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onEdit
+					}, '-', {
 						text : '删除',
 						scope : this,
-						//hidden : true,
+						// hidden : true,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],
@@ -158,28 +181,28 @@ com.keensen.ump.produce.quality.JmDefectListMgr = function() {
 						header : '卷膜序号'
 					}, {
 						dataIndex : 'defectName',
-						width:200,
+						width : 200,
 						header : '不良项目'
 					}, {
 						dataIndex : 'first',
 						header : '不良类型'
 					}, {
 						dataIndex : 'createTime',
-						width:120,
+						width : 120,
 						header : '不良记录时间'
 					}, {
 						dataIndex : 'length',
 						header : '不良长度'
 					}, {
 						dataIndex : 'numLabel',
-						hidden:true,
+						hidden : true,
 						header : '标签数'
 					}, {
 						dataIndex : 'reason',
 						header : '产生原因'
 					}, {
 						dataIndex : 'advise',
-						hidden:true,
+						hidden : true,
 						header : '使用意见'
 					}, {
 						dataIndex : 'dept',
@@ -276,4 +299,110 @@ com.keensen.ump.produce.quality.JmDefectListMgr = function() {
 		})
 	}
 
+	this.initEditWindow = function() {
+
+		var _this = this;
+
+		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
+			title : '修改',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 1,
+				loadUrl : 'com.keensen.ump.produce.quality.defect.expandJmDefectList.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.defect.saveJmDefectList.biz.ext',
+				fields : [{
+							xtype : 'textfield',
+							dataIndex : 'jmBatchNo',
+							readOnly : true,
+							allowBlank : false,
+							fieldLabel : '卷膜序号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						},{
+							xtype : 'textfield',
+							dataIndex : 'defectName',
+							readOnly : true,
+							fieldLabel : '不良项目',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						},{
+							xtype : 'textfield',
+							dataIndex : 'length',
+							readOnly : true,
+							fieldLabel : '不良长度',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '产生原因',
+							ref : '../../reason',
+							hiddenName : 'entity/reason',
+							dataIndex : 'reason',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.reasonStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '责任部门',
+							ref : '../../dept',
+							hiddenName : 'entity/dept',
+							dataIndex : 'dept',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.deptStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'hidden',
+							name : 'entity/id',
+							dataIndex : 'id'
+						}]
+			}]
+		});
+	}
 }

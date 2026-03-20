@@ -34,10 +34,11 @@
 <style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
+<ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
 <ext:dict property="KS_COMPONENT_PLAN_RISK"   dictTypeId="KS_COMPONENT_PLAN_RISK" />
 <js:load scriptPath="pub/common/componentworkerCombo.js" />
-<js:load scriptPath="produce/component/planweek/js/manageUi.js"/>
-<js:load scriptPath="produce/component/planweek/js/manageEv.js"/>
+<js:load scriptPath="produce/component/planweek/js/manageUi2.js"/>
+<js:load scriptPath="produce/component/planweek/js/manageEv2.js"/>
 <script type="text/javascript">
 
 function getCurrentWeekNumber() {

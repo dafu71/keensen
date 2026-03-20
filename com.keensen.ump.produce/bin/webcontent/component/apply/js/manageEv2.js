@@ -1347,6 +1347,9 @@ com.keensen.ump.produce.component.applyMgr.prototype.createTrayCode = function()
 	}, this, false, 1);
 }
 
-
+com.keensen.ump.produce.component.applyMgr.prototype.onPackage4Board = function() {
+	window
+			.open('com.keensen.ump.produce.report.queryPackage4Board.flow');
+}
 
 

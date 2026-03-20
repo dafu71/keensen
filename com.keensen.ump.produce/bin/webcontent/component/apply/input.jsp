@@ -24,7 +24,7 @@
   - Description:
 -->
 <head>
-<title>仓库PDA扫码确认</title>
+<title>工业元件转仓库扫码确认</title>
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
@@ -68,11 +68,11 @@
   
   var opt = '';
   FunctionMgr.load({ 
-			mainfn:com.keensen.ump.produce.component.ApplyStockConfirmMgr
+			mainfn:com.keensen.ump.produce.component.ApplyDeliveryConfirmMgr
 		});
  </script>
 </head>
 <body>
-<div id="applystockconfirmmgr"></div>
+<div id="applydeliveryconfirmmgr"></div>
 </body>
 </html>

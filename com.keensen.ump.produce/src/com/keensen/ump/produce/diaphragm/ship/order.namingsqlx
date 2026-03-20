@@ -205,7 +205,12 @@
         (SELECT T2.MATER_SPEC_CODE FROM KS_PROD_DIAPHRAGM_ORDER T1
           LEFT JOIN QINSEN.PARA_MATER_SPEC T2
             ON T1.SPEC_ID = T2.MATER_SPEC_ID WHERE t1.ID=#relationId#) "specName",
-         (select decode(substr(translate(t.order_no,'1234567890','XXXXXXXXXX'),1,1),'X','FH','ZY') 
+         (select 
+         case when t.order_no like '%SY%' then 'SY'
+              when t.order_no like '%WB%' then 'WB'
+         else 
+         decode(substr(translate(t.order_no,'1234567890','XXXXXXXXXX'),1,1),'X','FH','ZY')
+         end 
          FROM KS_PROD_DIAPHRAGM_order t WHERE t.ID=#relationId#) as "itype"
     FROM DUAL
   CONNECT BY LEVEL &lt;=#days#
@@ -330,7 +335,12 @@ wp.line "line",wp.sup_id "supId",wp.relation_Id "relationId",
         (SELECT T2.MATER_SPEC_CODE FROM KS_PROD_DIAPHRAGM_ORDER T1
           LEFT JOIN QINSEN.PARA_MATER_SPEC T2
             ON T1.SPEC_ID = T2.MATER_SPEC_ID WHERE t1.ID=wp.relation_Id) "specName",
-             (select decode(substr(translate(t.order_no,'1234567890','XXXXXXXXXX'),1,1),'X','FH','ZY') 
+             (select 
+             case when t.order_no like '%SY%' then 'SY'
+              when t.order_no like '%WB%' then 'WB'
+         else 
+         decode(substr(translate(t.order_no,'1234567890','XXXXXXXXXX'),1,1),'X','FH','ZY')
+         end  
          FROM KS_PROD_DIAPHRAGM_order t WHERE t.ID=wp.relation_Id) as "itype"
    FROM DUAL,(SELECT wp.* from Ks_Prod_Diaphragm_Workplan wp
     WHERE ID=#id#) wp
@@ -410,4 +420,118 @@ SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
               AND TT.PLAN_NO=#planNo#
               AND UPPER(SUBSTR(TT.PLAN_NO,4,2)) = 'ZY'  
               </select>
+              
+              
+              
+    <select id="queryWeekName" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  	
+  	SELECT MYORDER "myorder",
+       to_char(TT.DATE_COUNT,'YYYY-MM-DD') "dateCount",
+       '星期' ||
+       TRANSLATE(to_number(TO_CHAR(TT.DATE_COUNT, 'D'))-1, '1234560', '一二三四五六日') "weekCount"
+  	FROM (SELECT LEVEL MYORDER,
+               TRUNC(TO_DATE(TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD'),
+                             'YYYY-MM-DD') + LEVEL - 1) DATE_COUNT
+          FROM DUAL
+        CONNECT BY LEVEL &lt;= TRUNC(TO_DATE(TO_CHAR(SYSDATE + 5, 'YYYY-MM-DD'),
+                                          'YYYY-MM-DD')) -
+                   TRUNC(TO_DATE(TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD'),
+                                          'YYYY-MM-DD')) + 1) TT
+       ORDER BY myorder       
+  	
+  	</select>
+  	
+  	<select id="queryPlan" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  	SELECT MYORDER "myorder",
+       FATHER.DATE_COUNT "dateCount",
+       FATHER.WEEK_COUNT "weekCount",
+       FATHER.LINE "line",
+       NVL(MATER_SPEC_NAME, '-') "specName",
+       NVL(TO_CHAR(PROD_AMOUNT), '-') "prodAmount",
+       NVL(SUP_NAME, '-') "supName",
+       NVL(CODE, '-') "code",
+       NVL(ORDER_NO, '-') "orderNo",
+       NVL(PERFORMANCE, '-') "performance",
+       NVL(REMARK, '-') "remark"
+  FROM (SELECT MYORDER, DATE_COUNT, WEEK_COUNT, LINE
+          FROM (SELECT MYORDER,
+                       TT.DATE_COUNT,
+                       '星期' || TRANSLATE(TO_CHAR(TT.DATE_COUNT, 'D'),
+                                         '1234567',
+                                         '一二三四五六日') WEEK_COUNT
+                  FROM (SELECT LEVEL MYORDER,
+                               TRUNC(TO_DATE(TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD'),
+                                             'YYYY-MM-DD') + LEVEL - 1) DATE_COUNT
+                          FROM DUAL
+                        CONNECT BY LEVEL &lt;=
+                                   TRUNC(TO_DATE(TO_CHAR(SYSDATE + 5,
+                                                         'YYYY-MM-DD'),
+                                                 'YYYY-MM-DD')) -
+                                   TRUNC(TO_DATE(TO_CHAR(SYSDATE - 1,
+                                                         'YYYY-MM-DD'),
+                                                 'YYYY-MM-DD')) + 1) TT) T1,
+               (SELECT 'A' LINE
+                  FROM DUAL
+                UNION
+                SELECT 'C' LINE
+                  FROM DUAL
+                UNION
+                SELECT 'D' LINE
+                  FROM DUAL
+                UNION
+                SELECT 'E' LINE
+                  FROM DUAL
+                UNION
+                SELECT 'F' LINE
+                  FROM DUAL) T2) FATHER
+  LEFT JOIN (SELECT TTT.LINE,
+                    TTT.WORK_DT,
+                    LISTAGG(TTT.MATER_SPEC_NAME, '/ ') WITHIN GROUP(ORDER BY TTT.LINE, TTT.WORK_DT) MATER_SPEC_NAME,
+                    LISTAGG(TTT.PROD_AMOUNT, '/ ') WITHIN GROUP(ORDER BY TTT.LINE, TTT.WORK_DT) PROD_AMOUNT,
+                    LISTAGG(TTT.SUP_NAME, '/ ') WITHIN GROUP(ORDER BY TTT.LINE, TTT.WORK_DT) SUP_NAME,
+                    LISTAGG(TTT.CODE, '/ ') WITHIN GROUP(ORDER BY TTT.LINE, TTT.WORK_DT) CODE,
+                    LISTAGG(TTT.ORDER_NO, '/ ') WITHIN GROUP(ORDER BY TTT.LINE, TTT.WORK_DT) ORDER_NO,
+                    LISTAGG(TTT.PERFORMANCE, '/ ') WITHIN GROUP(ORDER BY TTT.LINE, TTT.WORK_DT) PERFORMANCE,
+                    LISTAGG(TTT.REMARK, '/ ') WITHIN GROUP(ORDER BY TTT.LINE, TTT.WORK_DT) REMARK,
+                    LISTAGG(TTT.SPEC_ID, '/ ') WITHIN GROUP(ORDER BY TTT.LINE, TTT.WORK_DT) SPEC_ID
+               FROM (SELECT T.LINE,
+                            T.WORK_DT,
+                            case when t2.order_no LIKE '%SY%' then '实验' when t2.order_no LIKE '%WB%' then '维保' else PMS.MATER_SPEC_NAME end MATER_SPEC_NAME,
+                            decode(t.arrange_amount,0,'',t.arrange_amount) PROD_AMOUNT,
+                            decode(T3.PROP_VALUE_NAME,null,'',T3.PROP_VALUE_NAME || '(' || T3.PROP_VALUE_CODE || ')') SUP_NAME,
+                            case when T2.ORDER_NO LIKE '%WB%' then '' else T.CODE end code,
+                            case when T2.ORDER_NO LIKE '%WB%' then '' else T2.ORDER_NO end order_no,
+                            T.PERFORMANCE,
+                            T.REMARK,
+                            T2.SPEC_ID
+                       FROM KS_PROD_DIAPHRAGM_WORKPLAN T
+                       LEFT JOIN KS_PROD_DIAPHRAGM_ORDER T2
+                         ON T2.ID = T.RELATION_ID
+                       LEFT JOIN 
+                       
+                       
+                       QINSEN.PARA_MATER_SPEC PMS
+                       
+                       
+                         ON PMS.MATER_SPEC_ID = T2.SPEC_ID
+                       
+                       LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION T3
+                         ON T3.PROP_ID = 30021
+                        AND T3.PROP_VALUE_ID = T.SUP_ID
+                      WHERE 1 = 1
+                        AND (T.WORK_DT BETWEEN
+                            TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'),
+                                     'YYYY-MM-DD') - 1 AND
+                            TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'),
+                                     'YYYY-MM-DD') + 5)) TTT
+              GROUP BY TTT.LINE, TTT.WORK_DT
+              ORDER BY TTT.WORK_DT) CHILDREN
+    ON FATHER.DATE_COUNT = CHILDREN.WORK_DT
+   AND FATHER.LINE = CHILDREN.LINE
+ ORDER BY FATHER.LINE, FATHER.DATE_COUNT
+
+  	
+  	
+  	</select>
+  	
     </sqlMap>

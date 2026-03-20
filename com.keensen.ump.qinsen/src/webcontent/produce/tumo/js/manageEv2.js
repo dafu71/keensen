@@ -17,7 +17,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 	// 定时更新漂洗液添加提醒
 
 	var liquidAdjusr = setInterval(function() {
-				//本机不要提醒
+				// 本机不要提醒
 				if (ip == '127.0.0.1')
 					return;
 				var spacepanel = Ext.getCmp('spacepanel');
@@ -177,21 +177,18 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 				});
 	}, this);
 
-	
 	this.addDefectWindow.activeItem.mon(this.addDefectWindow.activeItem,
 			'beforeSave', function() {
-				
+
 				var iftear = this.addDefectWindow.iftear.getValue();
 				var advise = this.addDefectWindow.advise.getValue();
-				if(iftear == '是' && Ext.isEmpty(advise)){
+				if (iftear == '否' && Ext.isEmpty(advise)) {
 					Ext.Msg.alert('系统提示', '请填写使用意见');
 					return false;
 				}
-				
-				
+
 			}, this);
-	
-	
+
 	this.addDefectWindow.activeItem.mon(this.addDefectWindow.activeItem,
 			'afterSave', function() {
 				var relationId = this.addDefectWindow.relationId.getValue();
@@ -253,38 +250,38 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.initEvent = function() {
 					}
 
 					return;
-				}
+				} else {
 
-				var recordId = cell.data.recordId;
-				recordId = recordId + '';
-				if (recordId.substr(0, 1) != '2') {
-					// Ext.Msg.alert('系统提示', '一期数据不能修改');
-					// return false;
-				}
-				this.editWindow.show();
-				this.editWindow.loadData(cell);
+					var recordId = cell.data.recordId;
+					recordId = recordId + '';
+					if (recordId.substr(0, 1) != '2') {
+						// Ext.Msg.alert('系统提示', '一期数据不能修改');
+						// return false;
+					}
+					this.editWindow.show();
+					this.editWindow.loadData(cell);
 
-				if (ip == '172.16.10.10') {
-					this.editWindow.lineId.setValue(10020);
-					this.editWindow.lineId.setReadOnly(true);
+					if (ip == '172.16.10.10') {
+						this.editWindow.lineId.setValue(10020);
+						this.editWindow.lineId.setReadOnly(true);
+					}
+					if (ip == '172.16.137.108') {
+						this.editWindow.lineId.setValue(30140);
+						this.editWindow.lineId.setReadOnly(true);
+					}
+					if (ip == '172.16.137.192') {
+						this.editWindow.lineId.setValue(30220);
+						this.editWindow.lineId.setReadOnly(true);
+					}
+					if (ip == '172.16.137.193') {
+						this.editWindow.lineId.setValue(30223);
+						this.editWindow.lineId.setReadOnly(true);
+					}
+					if (ip == '172.16.136.182') {
+						this.editWindow.lineId.setValue(30240);
+						this.editWindow.lineId.setReadOnly(true);
+					}
 				}
-				if (ip == '172.16.137.108') {
-					this.editWindow.lineId.setValue(30140);
-					this.editWindow.lineId.setReadOnly(true);
-				}
-				if (ip == '172.16.137.192') {
-					this.editWindow.lineId.setValue(30220);
-					this.editWindow.lineId.setReadOnly(true);
-				}
-				if (ip == '172.16.137.193') {
-					this.editWindow.lineId.setValue(30223);
-					this.editWindow.lineId.setReadOnly(true);
-				}
-				if (ip == '172.16.136.182') {
-					this.editWindow.lineId.setValue(30240);
-					this.editWindow.lineId.setReadOnly(true);
-				}
-
 			}, this);
 
 	this.inputWindow.produceDt.mon(this.inputWindow.produceDt, "change",
@@ -689,6 +686,7 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onaddZmDefect = function() {
 };
 
 com.keensen.ump.qinsen.produce.tumoMgr.prototype.onEdit = function() {
+	this.opt = '';
 	this.listPanel.onEdit();
 };
 
@@ -729,9 +727,12 @@ com.keensen.ump.qinsen.produce.tumoMgr.prototype.onAdd = function() {
 		this.inputWindow.workerId.setValue(staffId);
 	}
 	if (!Ext.isEmpty(teamId)) {
-		this.inputWindow.items.items[0].form.findField('entity/teamId')
-				.setValue(teamId);
+		//this.inputWindow.items.items[0].form.findField('entity/teamId')
+				//.setValue(teamId);
 	}
+	
+	this.inputWindow.items.items[0].form.findField('entity/teamId').setValue('');
+	
 	this.inputWindow.produceDt.setValue(new Date());
 	this.inputWindow.show();
 
@@ -2079,13 +2080,13 @@ function viewWaterLiquid(recordId) {
 }
 
 // 显示模态窗口函数
-function showImageModal(defectPicture) {
+function showImageModal(defectPicture,width,height) {
 	// 创建模态窗口
 	var src = markRootUrl + defectPicture + '?ver=' + Math.random();
 	var win = new Ext.Window({
 		title : '瑕疵图',
-		width : 820,
-		height : 650,
+		width : width,
+		height : height,
 		layout : 'fit',
 		resizable : false,
 		closable : true,

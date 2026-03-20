@@ -440,7 +440,8 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 						// Ext.Msg.alert("系统提示", '操作成功！', function() {
 
 						//console.log('操作成功！');
-						Ext.Msg.confirm('提示', '是否立即打印产品标签？', function(btn) {
+						return;
+						/*Ext.Msg.confirm('提示', '是否立即打印产品标签？', function(btn) {
 
 							if (btn === 'yes') {
 								var f = document
@@ -451,7 +452,7 @@ com.keensen.ump.qinsen.produce.juanmo.multiMgr.prototype.onSave = function() {
 								f.action = actionUrl;
 								f.submit();
 							}
-						});
+						});*/
 
 						// });
 

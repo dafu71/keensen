@@ -15,9 +15,10 @@
     <nodeLabel>start0label</nodeLabel>
   </nodes>
   <nodes xsi:type="process:tEnd" id="end0" name="结束" displayName="结束" nodeType="common" type="end">
-    <targetConnections>link13</targetConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link11</targetConnections>
+    <targetConnections>link10</targetConnections>
+    <targetConnections>link13</targetConnections>
+    <targetConnections>link15</targetConnections>
     <location x="691" y="169"/>
     <size height="28" width="28"/>
     <nodeLabel>end0label</nodeLabel>
@@ -252,7 +253,7 @@
     <node>assign0</node>
   </nodes>
   <nodes xsi:type="process:tInvoke" description="" id="invokePojo1" name="executeNamedSql" displayName="executeNamedSql" nodeType="common" type="invoke" index="3" invokeType="invoke_pojo" varArgs="false">
-    <sourceConnections xsi:type="process:tLink" description="" id="link2" name="link2" displayName="连接线" isDefault="true" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link2" name="作废" displayName="连接线" isDefault="false" type="transition">
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>assign5</targetNode>
       <process:transitionCondition>
@@ -264,6 +265,16 @@
     <sourceConnections xsi:type="process:tLink" id="link3" name="link3" displayName="连接线" isDefault="false" type="note">
       <sourceNode>invokePojo1</sourceNode>
       <targetNode>node0</targetNode>
+    </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link15" name="link15" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>invokePojo1</sourceNode>
+      <targetNode>end0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query"></process:leftOperand>
+          <process:rightOperand type="literal">1</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link1</targetConnections>
     <location x="578" y="343"/>
@@ -308,8 +319,14 @@
     <sourceConnections xsi:type="process:tLink" id="link7" name="link7" displayName="连接线" isDefault="true" type="transition">
       <sourceNode>invokePojo2</sourceNode>
       <targetNode>subprocess0</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand></process:leftOperand>
+          <process:rightOperand></process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link13" name="已做质检人工判定" displayName="连接线" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link13" name="已做质检人工判定" displayName="连接线" isDefault="false" type="transition">
       <sourceNode>invokePojo2</sourceNode>
       <targetNode>end0</targetNode>
       <process:transitionCondition>

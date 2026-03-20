@@ -1,4 +1,4 @@
-com.keensen.ump.produce.component.ApplyStockConfirmMgr.prototype.initEvent = function() {
+com.keensen.ump.produce.component.ApplyDeliveryConfirmMgr.prototype.initEvent = function() {
 
 	var _this = this;
 
@@ -25,15 +25,15 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr.prototype.initEvent = fun
 
 }
 
-com.keensen.ump.produce.component.ApplyStockConfirmMgr.prototype.destroy = function() {
+com.keensen.ump.produce.component.ApplyDeliveryConfirmMgr.prototype.destroy = function() {
 
 }
 
-com.keensen.ump.produce.component.ApplyStockConfirmMgr.prototype.onDel = function() {
+com.keensen.ump.produce.component.ApplyDeliveryConfirmMgr.prototype.onDel = function() {
 	this.listPanel.onDel();
 }
 
-com.keensen.ump.produce.component.ApplyStockConfirmMgr.prototype.onSave = function() {
+com.keensen.ump.produce.component.ApplyDeliveryConfirmMgr.prototype.onSave = function() {
 
 	var _this = this;
 	var code = this.inputPanel.code.getValue();
@@ -45,7 +45,7 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr.prototype.onSave = functi
 	Ext.Ajax.request({
 		method : "post",
 		scope : this,
-		url : 'com.keensen.ump.produce.component.apply.saveStockConfirm.biz.ext',
+		url : 'com.keensen.ump.produce.component.apply.saveDeliveryConfirm.biz.ext',
 		jsonData : {
 			"entity/code" : code
 		},

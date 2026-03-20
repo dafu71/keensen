@@ -226,8 +226,9 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onSave = function() {
 													.setValue('');
 											_this.inputPanel.pipeInfo
 													.setValue('');
-
-											Ext.Msg.confirm('提示',
+											_this.genBatchNo();
+											return;
+											/*Ext.Msg.confirm('提示',
 													'是否立即打印产品标签？',
 													function(btn) {
 														_this.genBatchNo();
@@ -241,7 +242,7 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onSave = function() {
 															f.action = actionUrl;
 															f.submit();
 														}
-													});
+													});*/
 										} else {
 											Ext.Msg.show({
 														width : 400,
@@ -442,4 +443,10 @@ com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onEnd = function() {
 			}, this, false);
 		}
 	})
+}
+
+com.keensen.ump.qinsen.produce.juanmo.quickMgr.prototype.onGetPrintTag = function() {
+	var actionUrl = 'com.keensen.ump.produce.component.getJm4PrintTag.flow?token='
+				+ Date.now();
+	window.open(actionUrl);
 }

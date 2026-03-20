@@ -501,6 +501,12 @@ com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.saveJmDefect = function(
 	})
 }
 
+com.keensen.ump.qinsen.produce.jmrecordMgr.prototype.onGetPrintTag = function() {
+	var actionUrl = 'com.keensen.ump.produce.component.getJm4PrintTag.flow?token='
+				+ Date.now();
+	window.open(actionUrl);
+}
+
 function defectView2(relationId, batchNo) {
 
 	var spacepanel = Ext.getCmp('spacepanel');

@@ -10,6 +10,19 @@ com.keensen.ump.produce.component.storage.QueryMgr.prototype.initEvent = functio
 					}
 				});
 	}, this);
+	
+    	// 查询事件
+	this.queryChooseSingleOrderPanel.mon(this.queryChooseSingleOrderPanel,
+			'query', function(form, vals) {
+				var store = this.chooseSingleOrderListPanel.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.chooseSingleOrderListPanel.pagingToolbar.pageSize
+					}
+				});
+			}, this);
 }
 
 com.keensen.ump.produce.component.storage.QueryMgr.prototype.onAllocate = function() {
@@ -185,4 +198,27 @@ com.keensen.ump.produce.component.storage.QueryMgr.prototype.onQueryByBatchNos =
 					});
 		}
 	}, this, true);
+}
+
+com.keensen.ump.produce.component.storage.QueryMgr.prototype.onChooseOrder = function() {
+	
+	this.chooseSingleOrderWindow.show();
+}
+
+com.keensen.ump.produce.component.storage.QueryMgr.prototype.onChooseSingleOrder = function() {
+	
+	var B = this.chooseSingleOrderListPanel.getSelectionModel().getSelections();
+	
+	if (B && B.length == 1) {
+		
+		var orderNo = B[0].get('orderNo');
+		var baseId = B[0].get('id');
+
+		this.allocateWindow.orderNoAllocate.setValue(orderNo);
+		this.allocateWindow.baseId.setValue(baseId);
+
+		
+		this.chooseSingleOrderWindow.hide();
+
+	}
 }

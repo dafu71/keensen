@@ -28,7 +28,7 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 		var store = new Ext.data.SimpleStore({
 					fields : ['id', 'name'],
 					data : [['1', '膜片AB仓'], ['2', '膜片C仓'], ['3', '膜片发货仓'],
-							['4', '试卷合格仓'], ['5', '半成品仓'], ['81', '返厂仓'], ['82', '膜片报废仓']]
+							['4', '试卷合格仓'], ['5', '膜片待请检仓'], ['81', '返厂仓'], ['82', '膜片报废仓']]
 				});
 
 		this.storagecombo = new Ext.form.ComboBox({
@@ -297,12 +297,14 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 						//4、发货膜片预警（提醒计划员与膜片事业部业务员、内勤人员）标准:ULP与BW(含HW)系列为20个自然日,NF、SW系列膜片为50个自然日;
 						
 						//2025年1月1日之前的不进行报警。
+						
+						//NF系列发货膜片超期改为270个自然日，发货膜片预警改为260个自然日；自用膜片超期改为354个自然日，自用膜片预警改为330个自然日
 						handler : function() {
 							var s = '预警超期说明:<br>'
-							s += '自用膜片超期（超过将接受膜片呆滞考核）标准：ULP与BW（含HW）系列为84个自然日,NF、SW系列膜片为174个自然日;<br>';
-							s += '发货膜片超期（给予膜片事业部业务员考核后调至AB仓自用）标准：ULP与BW(含HW)系列为30个自然日,NF、SW系列膜片为60个自然日<br>';
-							s += '自用膜片预警（提醒计划员强制使用或启动报废）标准：ULP与BW（含HW）为70个自然日,NF、SW系列标准为160个自然日;<br>';
-							s += '发货膜片预警（提醒计划员与膜片事业部业务员、内勤人员）标准：ULP与BW(含HW)系列为20个自然日,NF、SW系列膜片为50个自然日<br>';
+							s += '自用膜片超期（超过将接受膜片呆滞考核）标准：ULP与BW（含HW）系列为84个自然日,SW系列膜片为174个自然日,NF系列膜片为354个自然日;<br>';
+							s += '发货膜片超期（给予膜片事业部业务员考核后调至AB仓自用）标准：ULP与BW(含HW)系列为30个自然日,SW系列膜片为60个自然日,NF系列膜片为270个自然日;<br>';
+							s += '自用膜片预警（提醒计划员强制使用或启动报废）标准：ULP与BW（含HW）为70个自然日,SW系列标准为160个自然日,NF系列标准为330个自然日;<br>';
+							s += '发货膜片预警（提醒计划员与膜片事业部业务员、内勤人员）标准：ULP与BW(含HW)系列为20个自然日,SW系列膜片为50个自然日,NF系列膜片为260个自然日<br>';
 							s += '2025年1月1日之前的不进行报警。<br>';
 							Ext.Msg.alert("预警规则", s);
 						}
@@ -437,6 +439,9 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					}, {
 						dataIndex : 'choiceDt',
 						header : '备货日期'
+					}, {
+						dataIndex : 'gyyRemark',
+						header : '工艺员备注'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.diaphragm.storage.query.queryStockByPage.biz.ext',
@@ -447,6 +452,8 @@ com.keensen.ump.produce.diaphragm.storage.StorageQueryMgr = function() {
 					'condition/notZero' : 'Y'
 				},
 				fields : [{
+							name : 'gyyRemark'
+						}, {
 							name : 'storageName'
 						}, {
 							name : 'batchNo'

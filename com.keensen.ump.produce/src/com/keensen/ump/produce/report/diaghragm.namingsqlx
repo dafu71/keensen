@@ -2112,4 +2112,164 @@ SELECT 2 MYORDER,
   
   
   </select>
+  
+  <select id="queryAPlusReport" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+  
+  SELECT TUMO.TEAM_ID "teamId",
+       NVL(AP.A_PLUS_LENGTH, 0) "aPlusLength",
+       NVL(TUMO.OUT_LENGTH, 0) "outLength",
+       ROUND(NVL(100 * AP.A_PLUS_LENGTH, 0) / NVL(TUMO.OUT_LENGTH, 1), 2) || '%' "rate",
+       BD.DEPT_NAME "teamName"
+  FROM (SELECT SUM(TM.OUT_LENGTH) OUT_LENGTH, TM.TEAM_ID
+          FROM QINSEN.INST_TUMO TM
+          LEFT JOIN qinsen.para_mater_spec pms
+                         ON pms.mater_spec_id = tm.spec_id
+                       LEFT JOIN qinsen.para_mater_class pmc
+                         ON pms.mater_class_id = pmc.mater_class_id
+         WHERE 1 = 1
+         <isNotNull prepend="" property="produceDtStart"> 
+           AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >=
+               #produceDtStart#
+         </isNotNull>
+         <isNotNull prepend="" property="produceDtEnd">
+           AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;=
+               #produceDtEnd#
+          </isNotNull> 
+          <isNotNull prepend="" property="lineId">    
+           AND tm.line_id = #lineId#
+          </isNotNull>
+          <isNotNull prepend="" property="specId">
+           AND tm.spec_id = #specId#
+          </isNotNull>
+          
+           <isNotNull prepend="" property="prodFlagId">
+           AND tm.prod_flag_id = #prodFlagId#
+          </isNotNull> 
+          
+          <isNotNull prepend="" property="materClassId">
+           AND pmc.mater_class_id = #materClassId#
+          </isNotNull>
+         GROUP BY TM.TEAM_ID) TUMO
+  LEFT JOIN (SELECT TEAM_ID, SUM(A_PLUS_LENGTH) A_PLUS_LENGTH
+               FROM (SELECT TM.RECORD_ID,
+                            TM.BATCH_NO,
+                            TM.SPEC_ID,
+                            TM.TEAM_ID,
+                            TM.PRODUCE_DT,
+                            T33.IS_A_PLUS,
+                            T33.A_PLUS_LENGTH,
+                            pms.mater_class_id,
+                            pmc.mater_class_name
+                       FROM KS_PROD_DIAPHRAGM_TUMO T33
+                       LEFT JOIN QINSEN.INST_TUMO TM
+                         ON TM.RECORD_ID = T33.RECORD_ID
+                       LEFT JOIN qinsen.para_mater_spec pms
+                         ON pms.mater_spec_id = tm.spec_id
+                       LEFT JOIN qinsen.para_mater_class pmc
+                         ON pms.mater_class_id = pmc.mater_class_id
+                      WHERE T33.IS_A_PLUS = '是'
+                         <isNotNull prepend="" property="produceDtStart"> 
+           AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >=
+               #produceDtStart#
+         </isNotNull>
+         <isNotNull prepend="" property="produceDtEnd">
+           AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;=
+               #produceDtEnd#
+          </isNotNull> 
+          <isNotNull prepend="" property="lineId">    
+           AND tm.line_id = #lineId#
+          </isNotNull>
+          <isNotNull prepend="" property="specId">
+           AND tm.spec_id = #specId#
+          </isNotNull>
+           <isNotNull prepend="" property="prodFlagId">
+           AND tm.prod_flag_id = #prodFlagId#
+          </isNotNull>
+          <isNotNull prepend="" property="materClassId">
+           AND pmc.mater_class_id = #materClassId#
+          </isNotNull>)
+                        
+              GROUP BY TEAM_ID) AP
+    ON TUMO.TEAM_ID = AP.TEAM_ID
+  LEFT JOIN QINSEN.BASE_DEPARTMENT BD
+    ON BD.DEPT_ID = TUMO.TEAM_ID
+  
+  UNION ALL
+    SELECT TUMO.TEAM_ID "teamId",
+       NVL(AP.A_PLUS_LENGTH, 0) "aPlusLength",
+       NVL(TUMO.OUT_LENGTH, 0) "outLength",
+       ROUND(NVL(100 * AP.A_PLUS_LENGTH, 0) / NVL(TUMO.OUT_LENGTH, 1), 2) || '%' "rate",
+       '膜片整体' "teamName"
+  FROM (SELECT SUM(TM.OUT_LENGTH) OUT_LENGTH,  200000 TEAM_ID
+          FROM QINSEN.INST_TUMO TM
+          LEFT JOIN qinsen.para_mater_spec pms
+                         ON pms.mater_spec_id = tm.spec_id
+                       LEFT JOIN qinsen.para_mater_class pmc
+                         ON pms.mater_class_id = pmc.mater_class_id
+         WHERE 1 = 1
+            <isNotNull prepend="" property="produceDtStart"> 
+           AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >=
+               #produceDtStart#
+         </isNotNull>
+         <isNotNull prepend="" property="produceDtEnd">
+           AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;=
+               #produceDtEnd#
+          </isNotNull> 
+          <isNotNull prepend="" property="lineId">    
+           AND tm.line_id = #lineId#
+          </isNotNull>
+          <isNotNull prepend="" property="specId">
+           AND tm.spec_id = #specId#
+          </isNotNull>
+           <isNotNull prepend="" property="prodFlagId">
+           AND tm.prod_flag_id = #prodFlagId#
+          </isNotNull>
+          <isNotNull prepend="" property="materClassId">
+           AND pmc.mater_class_id = #materClassId#
+          </isNotNull>
+         ) TUMO
+  LEFT JOIN (SELECT 200000 TEAM_ID, SUM(A_PLUS_LENGTH) A_PLUS_LENGTH
+               FROM (SELECT TM.RECORD_ID,
+                            TM.BATCH_NO,
+                            TM.SPEC_ID,
+                            TM.TEAM_ID,
+                            TM.PRODUCE_DT,
+                            T33.IS_A_PLUS,
+                            T33.A_PLUS_LENGTH,
+                            pms.mater_class_id,
+                            pmc.mater_class_name
+                       FROM KS_PROD_DIAPHRAGM_TUMO T33
+                       LEFT JOIN QINSEN.INST_TUMO TM
+                         ON TM.RECORD_ID = T33.RECORD_ID
+                       LEFT JOIN qinsen.para_mater_spec pms
+                         ON pms.mater_spec_id = tm.spec_id
+                       LEFT JOIN qinsen.para_mater_class pmc
+                         ON pms.mater_class_id = pmc.mater_class_id
+                      WHERE T33.IS_A_PLUS = '是'
+                         <isNotNull prepend="" property="produceDtStart"> 
+           AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') >=
+               #produceDtStart#
+         </isNotNull>
+         <isNotNull prepend="" property="produceDtEnd">
+           AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;=
+               #produceDtEnd#
+          </isNotNull> 
+          <isNotNull prepend="" property="lineId">    
+           AND tm.line_id = #lineId#
+          </isNotNull>
+          <isNotNull prepend="" property="specId">
+           AND tm.spec_id = #specId#
+          </isNotNull>
+           <isNotNull prepend="" property="prodFlagId">
+           AND tm.prod_flag_id = #prodFlagId#
+          </isNotNull>
+          <isNotNull prepend="" property="materClassId">
+           AND pmc.mater_class_id = #materClassId#
+          </isNotNull>)
+                        
+              ) AP
+    ON TUMO.TEAM_ID = AP.TEAM_ID
+    
+  ORDER BY 1
+  </select>
  </sqlMap>

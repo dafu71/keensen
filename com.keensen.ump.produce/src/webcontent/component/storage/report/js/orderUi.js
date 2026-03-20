@@ -86,9 +86,9 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 						sortable : true,
 						header : '卷膜型号'
 					}, {
-						dataIndex : 'orderAmount',
+						dataIndex : 'orderAmount9',
 						sortable : true,
-						header : '订单数量（支）'
+						header : '订单数量+赠送数量（支）'
 					}, {
 						dataIndex : 'stockAmount',
 						sortable : true,
@@ -98,22 +98,33 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 						sortable : true,
 						header : '业务员'
 					}, {
+						dataIndex : 'deliveryConfirmTime',
+						sortable : true,
+						header : '元件制造部入库时间'
+					}/*, {
+						dataIndex : 'deliveryConfirmAmount',
+						sortable : true,
+						header : '元件转仓库总数量'
+					}, {
 						dataIndex : 'stockTime',
 						sortable : true,
-						header : '入库时间'
-					}, {
+						header : '仓库接收元件确认时间'
+					}*/, {
 						dataIndex : 'dateDelivery',
 						sortable : true,
 						header : '发货日期'
-					}, {
+					}/*, {
 						dataIndex : 'deliveryDateLatest',
 						hidden:true,
 						sortable : true,
 						header : '计划最晚发货日期'
-					}, {
+					}*/, {
 						dataIndex : 'overDate',
 						sortable : true,
-						header : '超期天数'
+						header : '逾期未发天数',
+						renderer : function(v, m, r, i) {
+							return v <= 0 ? '' : v;
+						}
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.storage.queryReport4Order.biz.ext',
@@ -124,6 +135,10 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'deliveryConfirmTime'
+						}, {
+							name : 'deliveryConfirmAmount'
+						},{
 							name : 'orderNo'
 						}, {
 							name : 'prodName'
@@ -147,6 +162,8 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 							name : 'stockAmountTotal'
 						}, {
 							name : 'dateDelivery'
+						}, {
+							name : 'orderAmount9'
 						}]
 			})
 		})

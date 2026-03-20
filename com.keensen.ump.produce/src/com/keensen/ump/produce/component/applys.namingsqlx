@@ -101,7 +101,7 @@
        T1.RESERVE5          AS "reserve5",
        T1.ORG_ID            AS "orgId",
        T1.STATUS            AS "status",
-       T1.ORDER_NO          AS "orderNo",
+       nvl(od.order_no,T1.ORDER_NO)          AS "orderNo",
        T1.order_type "orderType",
        T1.CODE              AS "code",
        T1.PROD_SPEC_Name      AS "prodSpecName",
@@ -140,7 +140,18 @@
        
        ,checked.apply_amount "checkedAmount"
        
+       ,TO_CHAR(T1.delivery_CONFIRM_TIME, 'YYYY-MM-DD HH24:MI:SS') "deliveryConfirmTime",
+       T1.delivery_CONFIRM_USER_ID "deliveryConfirmUserId",
+       T1.delivery_CONFIRM_USER_NAME "deliveryConfirmUserName",
+       
+       od.base_id "baseId",
+       od.id "orderId"
+       
   FROM KS_COMPONENT_HH_CHECK_HEAD T1
+  LEFT JOIN ks_prod_component_yxorder od
+	ON od.id = t1.order_id
+  
+  
   left join (select t.reserve1 order_no,t.prod_spec_name,sum(t.apply_amount) apply_amount
 	 from KS_COMPONENT_HH_CHECK_HEAD t
 	 WHERE t.reserve1 IS NOT NULL
@@ -154,6 +165,17 @@ WHERE t.type='家用膜') t5 on t5.code=t1.code
 GROUP BY h.order_no,h.mark_spec_code) t2 on t1.order_no = t2.order_no and t1.mark_spec_code = t2.mark_spec_code-->
 	
   where 1=1
+  
+  <isNotNull prepend="and" property="ifdeliveryconfirm">
+  T1.delivery_CONFIRM_TIME IS NOT NULL
+  </isNotNull>
+  
+  <isNotNull prepend = "and"  property = "deliveryConfirmTimeStart"> 
+          to_char(T1.delivery_CONFIRM_TIME,'yyyy-MM-dd')  &gt;=  #deliveryConfirmTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "deliveryConfirmTimeEnd"> 
+          to_char(T1.delivery_CONFIRM_TIME,'yyyy-MM-dd')  &lt;=  #deliveryConfirmTimeEnd#
+     </isNotNull>
   
    <isNotNull prepend="and" property="ifcstock"> 
 		       decode(t5.code,null,'N','Y')  = #ifcstock#
@@ -743,4 +765,13 @@ WHERE SUBSTR(T.CODE, 2, 8) = TO_CHAR(SYSDATE, 'yyyyMMdd'))
      WHERE 1=1 	
      and id in ($ids$)
      </update>
+     
+      <select id="queryCode4DeliveryConfirm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+       select t.code "code",
+		DECODE(t.delivery_confirm_time,NULL,'0','1') "state" ,
+		t.id "id"
+		from KS_COMPONENT_HH_CHECK_HEAD t
+		where
+		t.code = #code#
+   </select>
 </sqlMap>

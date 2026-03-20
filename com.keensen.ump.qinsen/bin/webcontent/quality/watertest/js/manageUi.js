@@ -322,7 +322,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 					}
 				}
 			}, {
-				header : '单品判定',
+				header : '检测判定',
 				width : 70,
 				dataIndex : 'isProdQualifiedName',
 				renderer : function(value, metaData, rec, rowIndex, colIndex,
@@ -450,7 +450,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				header : '量产标准<BR>系数B%',
 				width : 70,
 				dataIndex : 'batchFactorBStd'
-			}, {
+			}/*, {
 
 				header : '单品标准<BR>GPD',
 				width : 90,
@@ -463,7 +463,7 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 				header : '单品标准<BR>系数B%',
 				width : 70,
 				dataIndex : 'prodFactorBStd'
-			}, {
+			}*/, {
 				header : '判定说明',
 				width : 300,
 				dataIndex : 'remark'

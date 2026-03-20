@@ -1,0 +1,381 @@
+<%@page pageEncoding="UTF-8"%>
+<%@include file="/common/common.jsp"%>
+<%--<%@include file="/frame/ui/page/include.jsp"%>--%>
+<%@page import="com.eos.web.taglib.util.XpathUtil"%>
+<%@page import="commonj.sdo.DataObject"%>
+<html>
+<%
+	Object rootObj = XpathUtil.getDataContextRoot("request",
+			pageContext);
+			
+			
+	String title = "膜片排产计划";
+	DataObject[] head = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
+			"head");
+	DataObject[] list = (DataObject[]) XpathUtil.getObjectByXpath(rootObj,
+			"list");
+	
+	 String[] arrLine = {"A","C","D","E","F"};
+	
+	
+	
+	//System.out.println(list);	
+%>
+
+<!-- 
+  - Author(s): dafu
+  - Date: 2023-11-17 16:59:24
+  - Description:
+-->
+<head>
+<title><%=title %></title>
+ <h:css href="/css/style1/style-custom.css"/>  
+ <style type="text/css">
+<!--
+.style0 {font-family: "仿宋";font-size:9pt;}
+.style1 {font-family: "仿宋";font-size:11pt;}
+.style2 {font-family: "仿宋";font-size:12pt;}
+.style3 {font-family: "仿宋";font-size:20pt;}
+.style4 {font-family: "仿宋";font-size:18pt;}
+.style5 {color:red;font-family: "仿宋";font-size:18pt;}
+.style6 {font-family: "仿宋";font-size:18pt;font-weight:bold;}
+ 
+ 
+ thead th {
+    position: sticky; /* 固定表头 */
+    top: 0; /* 固定在顶部 */
+    background-color: white; /* 背景色与页面背景相同，或使用其他颜色以确保清晰可见 */
+    z-index: 1000; /* 确保表头在其他内容之上 */
+  }
+-->
+    </style>
+    
+</head>
+
+
+
+<body>
+<div align="center" style="height:100%;overflow-y: auto;">
+<table border="1" width="100%" class="EOS_table">
+<thead>
+<tr>
+<th align='center' colspan=9 class="style6">
+          	<%=title %>
+        </th>
+</tr>
+ <tr>
+        <th width="4%" align="center" class="style5">
+         线别
+        </th> 
+        <th width="12%" align="center" class="style5">
+                日期<br>星期
+        </th>
+        
+        <%  for(int i=0;i<head.length;i++){ %>        
+        <th  width="12%" align="center" class="style5">
+          <%=head[i].getString("dateCount") %><br>
+          <%=head[i].getString("weekCount") %>
+        </th>
+        <% } %>        
+</tr>
+
+</thead>
+<% //线别 %>
+<% for(int i=0;i<arrLine.length;i++){ %>
+<tr>
+		<td width="4%" align="center" rowspan=7 class="style4">
+         <%=arrLine[i] %>
+        </td> 
+        <td width="12%" align="center" class="style4">
+                膜片型号
+        </td>
+        <% if(arrLine[i].equals("A")){ %>
+	        <%  for(int j=0;j<7;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("specName") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("C")){ %>
+	        <%  for(int j=7;j<14;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("specName") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("D")){ %>
+	        <%  for(int j=14;j<21;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("specName") %>
+	        </td>
+	        <% } %>
+        <% } %> 
+         <% if(arrLine[i].equals("E")){ %>
+	        <%  for(int j=21;j<28;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("specName") %>
+	        </td>
+	        <% } %>
+        <% } %>  
+         <% if(arrLine[i].equals("F")){ %>
+	        <%  for(int j=28;j<35;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("specName") %>
+	        </td>
+	        <% } %>
+        <% } %>      
+</tr>
+<tr>
+		
+        <td width="12%" align="center" class="style4">
+                排产数量
+        </td>
+        <% if(arrLine[i].equals("A")){ %>
+	        <%  for(int j=0;j<7;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("prodAmount") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("C")){ %>
+	        <%  for(int j=7;j<14;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("prodAmount") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("D")){ %>
+	        <%  for(int j=14;j<21;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("prodAmount") %>
+	        </td>
+	        <% } %>
+        <% } %> 
+         <% if(arrLine[i].equals("E")){ %>
+	        <%  for(int j=21;j<28;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("prodAmount") %>
+	        </td>
+	        <% } %>
+        <% } %>  
+         <% if(arrLine[i].equals("F")){ %>
+	        <%  for(int j=28;j<35;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("prodAmount") %>
+	        </td>
+	        <% } %>
+        <% } %>      
+</tr>
+<tr>
+		 
+        <td width="12%" align="center" class="style4">
+                无纺布
+        </td>
+        <% if(arrLine[i].equals("A")){ %>
+	        <%  for(int j=0;j<7;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("supName") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("C")){ %>
+	        <%  for(int j=7;j<14;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("supName") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("D")){ %>
+	        <%  for(int j=14;j<21;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("supName") %>
+	        </td>
+	        <% } %>
+        <% } %> 
+         <% if(arrLine[i].equals("E")){ %>
+	        <%  for(int j=21;j<28;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("supName") %>
+	        </td>
+	        <% } %>
+        <% } %>  
+         <% if(arrLine[i].equals("F")){ %>
+	        <%  for(int j=28;j<35;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("supName") %>
+	        </td>
+	        <% } %>
+        <% } %>      
+</tr>
+<tr>
+		
+        <td width="12%" align="center" class="style4">
+                计划单号
+        </td>
+        <% if(arrLine[i].equals("A")){ %>
+	        <%  for(int j=0;j<7;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("code") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("C")){ %>
+	        <%  for(int j=7;j<14;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("code") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("D")){ %>
+	        <%  for(int j=14;j<21;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("code") %>
+	        </td>
+	        <% } %>
+        <% } %> 
+         <% if(arrLine[i].equals("E")){ %>
+	        <%  for(int j=21;j<28;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("code") %>
+	        </td>
+	        <% } %>
+        <% } %>   
+         <% if(arrLine[i].equals("F")){ %>
+	        <%  for(int j=28;j<35;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("code") %>
+	        </td>
+	        <% } %>
+        <% } %>     
+</tr>
+<tr>
+		
+        <td width="12%" align="center" class="style4">
+                订单号
+        </td>
+        <% if(arrLine[i].equals("A")){ %>
+	        <%  for(int j=0;j<7;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("orderNo") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("C")){ %>
+	        <%  for(int j=7;j<14;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("orderNo") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("D")){ %>
+	        <%  for(int j=14;j<21;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("orderNo") %>
+	        </td>
+	        <% } %>
+        <% } %> 
+         <% if(arrLine[i].equals("E")){ %>
+	        <%  for(int j=21;j<28;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("orderNo") %>
+	        </td>
+	        <% } %>
+        <% } %>  
+         <% if(arrLine[i].equals("F")){ %>
+	        <%  for(int j=28;j<35;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("orderNo") %>
+	        </td>
+	        <% } %>
+        <% } %>      
+</tr>
+<tr>
+		 
+        <td width="12%" align="center" class="style4">
+                性能要求
+        </td>
+        <% if(arrLine[i].equals("A")){ %>
+	        <%  for(int j=0;j<7;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("performance") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("C")){ %>
+	        <%  for(int j=7;j<14;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("performance") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("D")){ %>
+	        <%  for(int j=14;j<21;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("performance") %>
+	        </td>
+	        <% } %>
+        <% } %> 
+         <% if(arrLine[i].equals("E")){ %>
+	        <%  for(int j=21;j<28;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("performance") %>
+	        </td>
+	        <% } %>
+        <% } %>  
+         <% if(arrLine[i].equals("F")){ %>
+	        <%  for(int j=28;j<35;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("performance") %>
+	        </td>
+	        <% } %>
+        <% } %>      
+</tr>
+<tr>
+		
+        <td width="12%" align="center" class="style4">
+                备注
+        </td>
+        <% if(arrLine[i].equals("A")){ %>
+	        <%  for(int j=0;j<7;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("remark") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("C")){ %>
+	        <%  for(int j=7;j<14;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("remark") %>
+	        </td>
+	        <% } %>
+        <% } %>
+         <% if(arrLine[i].equals("D")){ %>
+	        <%  for(int j=14;j<21;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("remark") %>
+	        </td>
+	        <% } %>
+        <% } %> 
+         <% if(arrLine[i].equals("E")){ %>
+	        <%  for(int j=21;j<28;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("remark") %>
+	        </td>
+	        <% } %>
+        <% } %>    
+         <% if(arrLine[i].equals("F")){ %>
+	        <%  for(int j=28;j<35;j++){ %>        
+	        <td  width="12%" align="center" class="style4">
+	          <%=list[j].getString("remark") %>
+	        </td>
+	        <% } %>
+        <% } %>    
+</tr>
+<% } %>
+
+
+</table>
+</div>
+
+</body>
+</html>

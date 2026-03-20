@@ -1,6 +1,7 @@
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
 
 	// 查询事件
 	this.queryPanel4ChooseDefect.mon(this.queryPanel4ChooseDefect, 'query',
@@ -225,6 +226,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.destroy = function() {
 }
 
 com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onEdit = function() {
+	this.opt = '';
 	this.listPanel.onEdit();
 };
 
@@ -393,6 +395,18 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.onChooseDefectOk = funct
 		this.chooseDefectWindow.hide();
 	}
 
+}
+
+
+
+function tmDefectView(dimoBatchNo) {
+	
+	var store = Ext.getCmp(tmDefectListId).store;
+	store.baseParams = {
+		'condition/dimoBatchNo' : dimoBatchNo
+	};
+	store.load();
+	Ext.getCmp(tmDefectListWindowId).show();
 }
 
 function defectZmView(dimoBatchNo) {

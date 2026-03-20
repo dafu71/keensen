@@ -36,8 +36,8 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 					height : 180,
 					columns : 4,
 					border : true,
-					collapsible : true,
-					titleCollapse : false,
+					//collapsible : true,
+					//titleCollapse : false,
 					title : '',
 					fields : [{
 						xtype : 'datetimefield',
@@ -142,7 +142,8 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 
 		this.queryPanel.addButton({
 					text : "导出",
-					rescode : '10002661',
+					//rescode : '10002661',
+					hidden: uid != 'dafu' && uid != 'KS00524' && uid != 'KS00307' && uid != 'KS01408' && uid != 'KS01147',
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.exportExcel
@@ -154,6 +155,15 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 					iconCls : 'icon-application_form_magnify',
 					handler : this.onQueryQuantity
 				});
+				
+		this.queryPanel.addButton({
+			text : "<span style='color:red;font-size:14px;'>打印标签</span>",
+			height : 40,
+			//hidden:true,
+			scope : this,
+			iconCls : 'icon-printer',
+			handler : this.onGetPrintTag
+		});
 
 		this.queryPanel.addButton({
 			text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
@@ -196,6 +206,7 @@ com.keensen.ump.qinsen.produce.jmrecordMgr = function() {
 					}, '-', {
 						text : '打印标签',
 						scope : this,
+						hidden : uid != 'dafu' && uid != 'KS00388' && uid != 'KS00420' && uid != 'KS00141' && uid != 'KS00524',
 						iconCls : 'icon-printer',
 						handler : this.onPrintTag
 					}, '->', {

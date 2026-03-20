@@ -27,6 +27,19 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr.prototype.initEvent = functi
 					}
 				});
 	}, this);
+	
+	this.listPanel.store.on('load', function() {
+
+				var records = _this.listPanel.store.getRange();
+				if (records.length == 0) {
+					Ext.getCmp(sendAmountTotalId).setValue('');
+					return
+				}
+
+				var sendAmountTotal = records[0].data.sendAmountTotal;
+							
+				Ext.getCmp(sendAmountTotalId).setValue('发货合计(m):' + sendAmountTotal);
+			})
 
 }
 

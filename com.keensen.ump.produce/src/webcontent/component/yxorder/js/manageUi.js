@@ -413,6 +413,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, '->', {
 						text : '订单详情',
 						scope : this,
+						hidden:true,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onOrderView
 					}, '-', {
@@ -463,7 +464,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'prodAmount',
-						header : '需生产或入库数量',
+						header : '需生产入库数量',
 						sortable : true
 					}, {
 						dataIndex : 'orderDate',
@@ -549,7 +550,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'xsc',
-						header : '需生产或入库数量',
+						header : '需生产入库数量',
 						sortable : true
 					}, {
 						dataIndex : 'sbkcgm',
@@ -2608,7 +2609,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					// readOnly : true,
 					readOnly : true,
 					editable : false,
-					fieldLabel : '需生产或入库数量(支)',
+					fieldLabel : '需生产入库数量(支)',
 					// readOnly : true,
 					anchor : '100%',
 					colspan : 6,

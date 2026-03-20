@@ -1,4 +1,4 @@
-com.keensen.ump.produce.component.ApplyStockConfirmMgr = function() {
+com.keensen.ump.produce.component.ApplyDeliveryConfirmMgr = function() {
 
 	this.initPanel = function() {
 		this.rec = {};
@@ -10,7 +10,7 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr = function() {
 					layout : 'new',
 					border : false,
 					border : false,
-					renderTo : 'applystockconfirmmgr',
+					renderTo : 'applydeliveryconfirmmgr',
 					panels : [this.inputPanel, this.panel, this.panel2]
 				});
 	}
@@ -33,18 +33,18 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr = function() {
 								colspan : 1,
 								name : 'condition/code',
 								anchor : '85%',
-								fieldLabel : '栈板号'
+								fieldLabel : '请检单号'
 							}, {
 								xtype : "dateregion",
 								colspan : 1,
 								anchor : '85%',
-								nameArray : ['condition/stockConfirmTimeStart',
-										'condition/stockConfirmTimeEnd'],
+								nameArray : ['condition/deliveryConfirmTimeStart',
+										'condition/deliveryConfirmTimeEnd'],
 								fieldLabel : "确认时间",
 								format : "Y-m-d"
 							}, {
 								xtype : 'hidden',
-								name : 'condition/ifstockconfirm',
+								name : 'condition/ifdeliveryconfirm',
 								value : '1'
 							}]
 				});
@@ -59,7 +59,7 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr = function() {
 				forceFit : true
 			},
 			// autoExpandColumn : '4',
-			delUrl : 'com.keensen.ump.produce.component.apply.cancelStockConfirm.biz.ext',
+			delUrl : 'com.keensen.ump.produce.component.apply.cancelDeliveryConfirm.biz.ext',
 			hsPage : true,
 			tbar : [{
 						text : '删除',
@@ -73,7 +73,7 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr = function() {
 							}), selModel, {
 						dataIndex : 'code',
 						sortable : true,
-						header : '栈板号'
+						header : '请检单号'
 					}, {
 						dataIndex : 'orderNo',
 						sortable : true,
@@ -88,11 +88,11 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr = function() {
 						sortable : true,
 						header : '请检数量'
 					}, {
-						dataIndex : 'stockConfirmUserName',
+						dataIndex : 'deliveryConfirmUserName',
 						sortable : true,
 						header : '确认人'
 					}, {
-						dataIndex : 'stockConfirmTime',
+						dataIndex : 'deliveryConfirmTime',
 						sortable : true,
 						header : '确认时间'
 					}],
@@ -101,7 +101,7 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr = function() {
 				root : 'data',
 				autoLoad : true,
 				baseParams : {
-					'condition/ifstockconfirm' : 1
+					'condition/ifdeliveryconfirm' : 1
 				},
 				totalProperty : 'totalCount',
 				fields : [{
@@ -205,9 +205,9 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr = function() {
 						}, {
 							name : 'ifcstock'
 						}, {
-							name : 'stockConfirmTime'
+							name : 'deliveryConfirmTime'
 						}, {
-							name : 'stockConfirmUserName'
+							name : 'deliveryConfirmUserName'
 						}]
 			})
 		})
@@ -238,7 +238,7 @@ com.keensen.ump.produce.component.ApplyStockConfirmMgr = function() {
 						height:30,
 						style : '{font-weight:bold;font-size:18px;}',
 						allowBlank : false,
-						fieldLabel : '栈板号',
+						fieldLabel : '请检单号',
 						ref : '../code',
 						anchor : '80%',
 						colspan : 1,

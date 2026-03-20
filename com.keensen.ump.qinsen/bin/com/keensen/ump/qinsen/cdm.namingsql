@@ -50,8 +50,9 @@
        ,t1.dimo_batch_no "dimoBatchNo",t1.dense_net_code "denseNetCode"
        
        ,t1.defect_length "defectLength"
+       ,t1.workstation "workstation"
        
-  FROM (SELECT A.RECORD_ID,A.LOCATION,A.dense_net_code,
+  FROM (SELECT A.RECORD_ID,A.LOCATION,A.dense_net_code,A.workstation,
                A.BATCH_NO,
                A.LINE_ID,
                A.TUMO_BATCH_ID,
@@ -73,7 +74,7 @@
                A.PAGE_WIDTH,A.PAGE_TYPE,
                TM.BATCH_NO TUMO_BATCH_NO,tm.is_cut_over,
                
-               nvl(TM.OUT_LENGTH,0) - nvl(T2.CAIMO_LENGTH,0) - nvl(T3.CAIMO_LOSS,0) remain_Length,
+               nvl(TM.OUT_LENGTH,0) - nvl(T2.CAIMO_LENGTH,0) - nvl(T3.CAIMO_LOSS,0) - nvl(A.defect_length,0)  remain_Length,
                
                DECODE(tm.IS_CUT_OVER, 'Y', '是', 'N', '否', '') IS_CUT_OVER_NAME,
                MST.MATER_SPEC_CODE MP_SPEC_CODE,
@@ -236,7 +237,7 @@ SELECT COUNT(1) as "cnt", SUM(A.QUANTITY) as "totalQuantity",
 	 WHERE 1=1
 	 <isNotNull prepend="and" property="tumoBatchId">A.TUMO_BATCH_ID = #tumoBatchId#</isNotNull>
 	
-	 ORDER BY A.PRODUCE_DT DESC, A.BATCH_NO DESC
+	 ORDER BY <!--A.PRODUCE_DT DESC,--> A.BATCH_NO DESC
 </select>
     <select id="queryLastRecords2" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT ''     AS "recordId",
        #tumoBatchNo#       AS "batchNo",

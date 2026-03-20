@@ -29,7 +29,18 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr.prototype.initEvent = function
 				});
 
 	}
+	
+	// 增加修改事件
+	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+				this.editWindow.show();
+				this.editWindow.loadData(cell);
+			}, this);
 
+}
+
+com.keensen.ump.produce.quality.HHJmDefectListMgr.prototype.onEdit = function() {
+
+	this.listPanel.onEdit();
 }
 
 com.keensen.ump.produce.quality.HHJmDefectListMgr.prototype.onDel = function() {

@@ -266,10 +266,29 @@
 		t1.WATER2 as "water2",
 		t1.DESALINATION2 as "desalination2",
 		T2.MATER_SPEC_NAME "materSpecName"
+		,TO_CHAR(qs.LOW_LIMIT, 'fm990.00') || '-' ||
+                TO_CHAR(qs.UP_LIMIT, 'fm990.00') "stdStr"
+        ,t1.client as "client",
+		t1.air_Std_Str as "airStdStr",
+		t1.press_work as "pressWork",
+		t1.range_ph as "rangePh",
+		t1.range_run_ph as "rangeRunPh",
+		t1.area as "area",
+		t1.press_work2 as "pressWork2",
+		t1.range_ph2 as "rangePh2",
+		t1.range_run_ph2 as "rangeRunPh2",
+		t1.area2 as "area2"
+        
   FROM KS_PROD_QUALITY_DELIVERYSTAND T1
   LEFT JOIN QINSEN.PARA_MATER_SPEC T2
     ON T1.MATER_SPEC_ID = T2.MATER_SPEC_ID
+  LEFT JOIN QINSEN.INST_QJ_STD qs ON qs.prod_spec_id = t1.mater_spec_id
 	where 1=1
+	<isNotNull prepend="and" property="client"> 
+		       (T1.client = #client# OR t1.client IS NULL) 
+	</isNotNull>
+	
+	
 	
 	<isNotNull prepend="and" property="id"> 
 		       T1.ID = #id#
@@ -283,6 +302,14 @@
 	<isNotNull prepend="and" property="labelingModel"> 
 		       t1.LABELING_MODEL like '%' || #labelingModel# || '%'
 	</isNotNull>
+	<isNotNull property="client"> 
+	ORDER BY CASE WHEN t1.client=#client# THEN 0 
+	when t1.client is null then 1
+	ELSE 2 END
+	</isNotNull>
+	<isNull property="client"> 
+	ORDER BY CASE WHEN t1.client IS NULL THEN 0 ELSE 1 END 
+	</isNull>
 	 </select>
 	 
 	 
@@ -329,8 +356,19 @@
 		TO_CHAR(t1.REPORT_DT, 'yyyy-MM-dd') as "reportDt",
 		TO_CHAR(t1.review_dt, 'yyyy-MM-dd') as "reportDt",
 		t1.mater_spec_id "materSpecId",
-		t2.mater_spec_name "materSpecName"
-
+		t2.mater_spec_name "materSpecName",
+		t1.CLIENT as "client",
+		t1.APPEARANCE_NUM as "appearanceNum",
+		t1.WATER_CHECK_NUM as "waterCheckNum",
+		t1.DESALINATION_CHECK_NUM as "desalinationCheckNum",
+		t1.WATER_CHECK2_NUM as "waterCheck2Num",
+		t1.DESALINATION_CHECK2_NUM as "desalinationCheck2Num",
+		t1.AIR_STD_STR as "airStdStr",
+		t1.AIR_CHECK_NUM as "airCheckNum",
+		t1.AIR_RESULT as "airResult",
+		t1.air_check as "airCheck",
+		t1.mater_code "materCode"
+        
   FROM KS_PROD_QUALITY_DELIVERYRECORD T1
   left join qinsen.para_mater_spec t2 on t2.mater_spec_id = t1.mater_spec_id
   
@@ -657,8 +695,20 @@
        T1.USEFUL_LENGTH AS "usefulLength",
        T1.QUALIFID_LENGTH AS "qualifidLength",
        
+       <!--
        nvl(cd.tag_num,T1.TAG_NUM)           AS "tagNum",
        nvl(cd.tag_length,T1.TAG_LENGTH)        AS "tagLength",
+       -->
+       
+       case when t1.num_label is null then
+       nvl(cd.tag_num,T1.TAG_NUM)           
+       else t1.num_label end AS "tagNum",
+       case when t1.num_label is null then
+       nvl(cd.tag_length,T1.TAG_LENGTH)       
+       else t1.num_label*1.5 end
+        AS "tagLength",
+       
+       
        
        T1.THICK_MAX AS "thickMax",
        T1.THICK_MIN AS "thickMin",
@@ -680,6 +730,20 @@
        DECODE(NVL(t2.appearance_is_qualified, 'Y'), 'Y', '合格', 'N', '不合格', '') "appearanceIsQualifiedName",
        t2.thick_is_qualified "thickIsQualified",
        DECODE(NVL(t2.thick_is_qualified, 'N'), 'Y', '合格', 'N', '不合格', '') "thickIsQualifiedName"
+       ,t1.defect_picture "defectPicture"
+       
+       ,t1.colorb_Avg "colorbAvg"
+        
+        ,case when t1.colorb_Avg >0 and t1.colorb_Avg>= t1.b_down and t1.colorb_Avg &lt;= t1.b_up 
+        then '合格'
+        when t1.colorb_Avg = 0 then ''
+        else '不合格' end "colorbOk"
+        
+        ,t1.defect_notear_length "defectNotearLength",t1.defect_advise "defectAdvise"
+        ,t1.gyy_remark "gyyRemark"
+        ,T2.is_a_plus "isAPlus",T2.a_plus_length "aPlusLength",T2.is_report "isReport"
+        ,t1.judge_time "judgeTime"
+       
   FROM (SELECT T.RECORD_ID,T.PRODUCE_DT,T.PROD_FLAG_ID,T.order_no,T.out_length,
                T.BATCH_NO,T.mpd,
                T.LINE_ID,
@@ -690,11 +754,11 @@
                S.MATER_SPEC_CODE,
                S.MATER_SPEC_NAME,S2.MATER_CLASS_CODE,
                DECODE(NVL(T.IS_WX, 'N'), 'Y', '是', 'N', '否', '') IS_WX_NAME,
-               T.OUT_LENGTH - NVL(T100.LOSS, 0) USEFUL_LENGTH,
+               T.OUT_LENGTH - NVL(T100.LOSS, 0) - nvl(tmdefect.defect_length2,0) USEFUL_LENGTH,
                DECODE(NVL(T.IS_WX, 'N'),
                       'N',
-                      T.OUT_LENGTH - NVL(T22.LOSS, 0),
-                      T.OUT_LENGTH - NVL(T22.LOSS, 0) - NVL(T.TAG_LENGTH, 0)) QUALIFID_LENGTH,
+                      T.OUT_LENGTH - NVL(T22.LOSS, 0) - nvl(tmdefect.defect_length,0),
+                      T.OUT_LENGTH - NVL(T22.LOSS, 0) - nvl(tmdefect.defect_length,0) - NVL(T.TAG_LENGTH, 0)) QUALIFID_LENGTH,
                T.TAG_NUM,
                T.TAG_LENGTH,
                <!--T.THICK_MAX,
@@ -703,19 +767,51 @@
                
                nvl(kdd.diameter_avg,T.THICK_AVG) THICK_AVG,
                nvl(kdd.diameter_min,T.THICK_MIN) THICK_MIN,
-               nvl(kdd.diameter_max,T.THICK_MAX) THICK_MAX,           
+               nvl(kdd.diameter_max,T.THICK_MAX) THICK_MAX,     
               
-               
-               
-               
-               
                T.REMARK PRODUCE_REMARK,T.is_keep
+               
+               ,ddp.picture_name defect_picture
+               
+               ,round((nvl(t.colorb,0)+ nvl(t.colorb2,0) + nvl(t.colorb3,0))/3,2) colorb_Avg
+               ,mc.b_up,mc.b_down
+               ,defect.defect_notear_length
+               ,tmdefect.defect_length
+               ,tmdefect.defect_length2,tmdefect.defect_advise,tmdefect.num_label
+               
+               ,t33.reserve4 gyy_remark,
+               to_char(t33.update_time,'YYYY-MM-DD HH24:MI:SS') judge_time
                
           FROM 
           <!--去掉有无质检性能分析判断
           (select * from QINSEN.INST_TUMO tm where exists(select 1 from QINSEN.INST_TUMO_CHECK tmc where tmc.batch_id=tm.record_id) ) T
           -->
           QINSEN.INST_TUMO T
+          
+          
+          
+          left join KS_PROD_DIAPHRAGM_TUMO t33
+  				on t.record_id = t33.record_id
+          
+          left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2,
+          MAX(CASE WHEN ADVISE = '待入库前工艺判断' THEN ADVISE ELSE '' END) defect_advise,
+          nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = t.record_id
+          
+          left join (select t.relation_id,SUM(t.length) defect_notear_length from KS_DIAPHRAGM_TM_DEFECT_LIST t
+			WHERE t.iftear = '否' AND REGEXP_SUBSTR(t.horizontal2, '[0-9]+')>=4
+			GROUP BY t.relation_id) defect
+		   on defect.relation_id = t.record_id
+          
+          LEFT JOIN ks_quality_mp_colorb mc
+          ON t.spec_id = mc.mater_spec_id
+          
+          left join KS_DIAPHGRAM_DEFECT_PICTURE ddp  
+          on ddp.batch_no = t.batch_no
+          
+          
           left join KS_DIAPHRAGM_DIAMETER kdd on kdd.batch_no = T.batch_no 
           LEFT JOIN (SELECT NVL(SUM(D.LOSS), 0) LOSS, D.TUMO_BATCH_ID
                       FROM QINSEN.INST_CDM_DEFECT D,
@@ -921,6 +1017,18 @@
 	  relation_id = #relationId#
 	</delete>
 	
+	<delete id="deleteDeliveryrecordList2" parameterClass="java.util.HashMap" >
+   delete from  KS_QUALITY_DELIVERY_LIST2
+	WHERE
+	  relation_id = #relationId#
+	</delete>
+	
+	<delete id="deleteDeliveryrecordList3" parameterClass="java.util.HashMap" >
+   delete from  KS_QUALITY_DELIVERY_LIST3
+	WHERE
+	  relation_id = #relationId#
+	</delete>
+	
 	<select id="queryDeliveryrecordList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
 
 	SELECT T1.ID           "id", rownum "rn",
@@ -1057,6 +1165,29 @@ SET
 	<isNotNull prepend="and" property="client">
 	T1.client LIKE '%' || #client# || '%'
 	</isNotNull>
+    </select>
+    
+    <select id="queryDeliveryList4Water" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    
+    SELECT t.batch_no "batchNo", t.water "water",t.desalination "desalination"
+	 from KS_QUALITY_DELIVERYRECORD_LIST t
+	 WHERE t.relation_id = #relationId#
+    
+    </select>
+    
+    <select id="queryDeliveryList4Air" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    
+    select t.batch_no "batchNo",t.dry_wet "dryWet",t.check_result "checkResult" 
+	from KS_QUALITY_DELIVERY_LIST2 t
+	 WHERE t.relation_id = #relationId#
+    
+    </select>
+    
+    <select id="queryDeliveryList4Prod" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    select t.batch_no "batchNo"
+	from KS_QUALITY_DELIVERY_LIST3 t
+	 WHERE t.relation_id = #relationId#
+    
     </select>
     
 </sqlMap>

@@ -113,9 +113,9 @@
        <!--NVL(T1.THEORY_AMOUNT, 0) - nvl(defect.loss,0) - 
        (NVL(T1.LOSE0, 0) + NVL(T1.LOSE1, 0) + NVL(T1.LOSE2, 0) +
         NVL(T1.LOSE3, 0) + NVL(T1.LOSE4, 0) + NVL(T1.LOSE5, 0) +
-        NVL(T1.LOSE6, 0) + NVL(T1.LOSE7, 0)) "dimoAmount",-->
-        NVL(T1.THEORY_AMOUNT, 0) - nvl(defect2.loss,0) "dimoAmount",
-        NVL(T1.THEORY_AMOUNT, 0) - nvl(defect.loss,0) "dimoAmountQualified",
+        NVL(T1.LOSE6, 0) + NVL(T1.LOSE7, 0)) "dimoAmount",--><!--实际长度=放卷长度-已扯不良 。    合格长度=放卷长度-不良米数（包含未扯）-->
+        NVL(T1.THEORY_AMOUNT, 0) - nvl(defect2.loss,0) - nvl(zmdefect2.defect_length2,0) "dimoAmount",
+        NVL(T1.THEORY_AMOUNT, 0) - nvl(defect.loss,0) - nvl(zmdefect.defect_length,0) "dimoAmountQualified",
        T1.FLAW0 AS "flaw0",
        T1.FLAW1 AS "flaw1",
        T1.FLAW2 AS "flaw2",
@@ -130,12 +130,26 @@
        t1.RELEASE_AMOUNT "releaseAmount",
        round((nvl(bm.MATER2,0)+nvl(bm.MATER3,0)+ nvl(bm.MATER4,0)+nvl(bm.MATER5,0))/1000 * (NVL(T1.THEORY_AMOUNT, 0)),2) "usedWeight",
        
-       zmdefect.defect_length "defectLength"
+       zmdefect.defect_length "defectLength",zmdefect2.defect_length2 "defectLength2"
+       ,tmdefect.defect_length "tmDefectLength"
        
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+  
+  left join (select SUM(t.length) defect_length,tm.dimo_batch_no
+	 from KS_DIAPHRAGM_TM_DEFECT_LIST t
+	 LEFT JOIN qinsen.inst_tumo tm
+	 ON tm.record_id = t.relation_id
+	 WHERE EXISTS(SELECT 1 FROM KS_QUALITY_MP_DEFECT md WHERE md.reserve1='ZM' AND md.id=t.defect_id)
+	  GROUP BY tm.dimo_batch_no) tmdefect
+	  on tmdefect.dimo_batch_no = t1.dimo_batch_no
  
  left join (select sum(length) defect_length,relation_id from KS_DIAPHRAGM_ZM_DEFECT_LIST group by relation_id) zmdefect
   on zmdefect.relation_id = t1.id
+  
+ left join (select sum(length) defect_length2,relation_id from KS_DIAPHRAGM_ZM_DEFECT_LIST 
+ where iftear = '是'
+ group by relation_id) zmdefect2
+  on zmdefect2.relation_id = t1.id
   
   left join (select t.batch_no,t.mptype,dictname psf_Name from KS_PROD_DIAPHRAGM_MAKE_FIX t
   left join EOS_DICT_ENTRY t2 on t2.dictid=t.psf and t2.dicttypeid='KS_PSF') fx
@@ -519,4 +533,19 @@ where nvl(if_tear,'是') = '是'
 		 ORDER BY DIMO_TYPE
 	  
 	  </select>
+    <select id="queryTumoDefect" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+	  SELECT t.length "defectLength",to_char(t.create_time,'YYYY-MM-DD HH24:MI:SS') "createTime",
+		 t.create_name "createName",
+		 t.relation_id,tm.dimo_batch_no "dimoBatchNo",tm.batch_no "tmBatchNo",
+		 md.id,md.first "first",md.second "second",md.third "third",md.fourth "fourth"
+		  FROM KS_DIAPHRAGM_TM_DEFECT_LIST  t
+		 LEFT JOIN qinsen.inst_tumo tm
+		 ON t.relation_id = tm.record_id
+		 LEFT JOIN KS_QUALITY_MP_DEFECT md
+		 ON t.defect_id = md.id 
+		 WHERE 1=1
+	 <isNotNull prepend="" property="dimoBatchNo">and tm.dimo_batch_no = #dimoBatchNo#</isNotNull>	 
+	 AND md.reserve1='ZM'
+	 ORDER BY t.id
+	 </select>
 </sqlMap>

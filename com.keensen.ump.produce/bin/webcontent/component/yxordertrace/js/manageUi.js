@@ -38,7 +38,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 				});
 
 		this.queryPanel = new Ext.fn.QueryPanel({
-			height : 180,
+			height : 210,
 			columns : 3,
 			border : true,
 			// collapsible : true,
@@ -151,6 +151,18 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 							}
 						}
 					}, {
+						xtype : 'displayfield',
+						height : '3',
+						colspan : 3
+					}, {
+								// fieldLabel : '不显示需生产<br>或入库为零',
+								xtype : 'checkbox',
+								boxLabel : '不显示需生产或入库为零',
+								// checked : true,
+								name : 'condition/isNotZero',
+								inputValue : 'Y',
+								anchor : '100%'
+							}, {
 						xtype : 'hidden',
 						name : 'condition/orderNos',
 						ref : '../orderNos'
@@ -253,7 +265,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 				}, {
 					dataIndex : 'demandStockDate',
 					locked : true,
-					header : '要求入库日期'
+					header : '计划入库时间'
 				}, {
 					dataIndex : 'materSpecName2',
 					locked : true,
@@ -270,7 +282,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 				}, {
 					dataIndex : 'prodAmount',
 					locked : true,
-					header : '需生产<br>或入库数量'
+					header : '需生产<br>入库数量'
 				}, {
 					dataIndex : 'cdmAmount',
 					header : '裁叠膜<br>生产数量（支）'
@@ -324,7 +336,7 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 					 * 'dw', header : '单位' }
 					 *//*
 					 * , { dataIndex : 'dfh', header : '待发货（发库存）' }, { dataIndex :
-					 * 'xsc', header : '需生产或入库数量' }, { dataIndex :
+					 * 'xsc', header : '需生产入库数量' }, { dataIndex :
 					 * 'performance', header : '产品性能' }, { dataIndex : 'remark',
 					 * header : '其它备注' }
 					 *//*
@@ -333,6 +345,9 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 					 */, {
 					dataIndex : 'applyAmount',
 					header : '请检总数量'
+				}, {
+					dataIndex : 'deliveryConfirmAmount',
+					header : '元件转仓库总数量'
 				}, {
 					dataIndex : 'applyPercent',
 					header : '完成比例',
@@ -417,6 +432,8 @@ com.keensen.ump.produce.component.yxordertraceMgr = function() {
 
 		}	,
 			fields : [{
+						name : 'deliveryConfirmAmount'
+					},{
 						name : 'id'
 					}, {
 						name : 'createTime'

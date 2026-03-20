@@ -175,7 +175,7 @@ com.keensen.ump.qinsen.produce.FeedingMgr = function() {
 						dataIndex : 'reason',
 						header : '加料原因'
 					}, {
-						dataIndex : 'createName',
+						dataIndex : 'operatorName',
 						header : '记录人'
 					}, {
 						dataIndex : 'createTime',
@@ -217,6 +217,8 @@ com.keensen.ump.qinsen.produce.FeedingMgr = function() {
 									name : 'createTime'
 								}, {
 									name : 'weightTotal'
+								}, {
+									name : 'operatorName'
 								}]
 					})
 		})

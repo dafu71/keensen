@@ -147,6 +147,14 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 			viewConfig : {
 				forceFit : false
 			},
+			tbar : [ {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : sendAmountTotalId
+					}],
 			hsPage : true,
 			id : 'ship-shipquery-list',
 			selModel : selModel,
@@ -235,6 +243,8 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'sendAmountTotal'
+						}, {
 							name : 'batchNo'
 						}, {
 							name : 'usefulLength'

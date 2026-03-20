@@ -100,7 +100,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 						url += '<a href="/default/myupload/mporder/'
 								+ urlDateDelivery + '" target=_blank>查看图片</a>';
 						url += '&nbsp;&nbsp;&nbsp;&nbsp;';
-						Ext.getCmp(urlDateDeliveryId).update(url);
+						Ext.getCmp(urlDateDeliveryId).setValue(url);
 					}
 
 					if (Ext.isEmpty(urlDateDelivery2)) {
@@ -111,7 +111,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 						url += '<a href="/default/myupload/mporder/'
 								+ urlDateDelivery2 + '" target=_blank>查看图片</a>';
 						url += '&nbsp;&nbsp;&nbsp;&nbsp;';
-						Ext.getCmp(urlDateDeliveryId2).update(url);
+						Ext.getCmp(urlDateDeliveryId2).setValue(url);
 					}
 				
 
@@ -160,6 +160,11 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 
 				}
 
+				if (this.opt == 'updateremainingamount') {
+					this.updateRemainingAmount.show();
+					this.updateRemainingAmount.loadData(cell);
+				}
+				
 				if (this.opt == 'updateamount') {
 					this.updateAmountWindow.show();
 					this.updateAmountWindow.loadData(cell);
@@ -289,6 +294,16 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onAddOrder = fun
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onUpdateAmount = function() {
 	if (this.onSingleSelect()) {
 		this.opt = 'updateamount';
+		this.listPanel.onEdit();
+	} else {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return false;
+	}
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onUpdateRemainingAmount = function() {
+	if (this.onSingleSelect()) {
+		this.opt = 'updateremainingamount';
 		this.listPanel.onEdit();
 	} else {
 		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
@@ -710,6 +725,13 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.viewPhotos = fun
 	// 显示窗口
 	win.show();
 
+}
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.exportExcel = function() {
+	
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '膜片销售统计表',
+			'com.keensen.ump.produce.diaphragm.ship.orderbase.queryOrderBase', '0,1');
+	
 }
 
 function getDiffDay(date, num) {

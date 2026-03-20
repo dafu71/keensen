@@ -374,6 +374,12 @@ com.keensen.ump.base.CraftStdMgr.prototype.initList = function() {
 	}
 }
 
+com.keensen.ump.base.CraftStdMgr.prototype.exportExcel = function() {
+	doQuerySqlAndExport(this, this.queryPanel, this.listPanel, '卷制工艺参数',
+			'com.keensen.ump.base.mater.queryMaterSpecList');
+
+}
+
 function formatDate(date) {
 	const year = date.getFullYear()
 	const month = (date.getMonth() + 1 + '').padStart(2, '0')

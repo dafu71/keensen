@@ -5,6 +5,8 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
+		
+		this.initEditWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -36,6 +38,22 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 		this.tacheStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['铸膜', '铸膜'], ['涂膜', '涂膜'], ['裁叠膜', '裁叠膜']]
+				});
+				
+		this.deptStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['元件制造部', '元件制造部'], ['膜片制造部', '膜片制造部'],
+							/* ['生产管理部', '生产管理部'], ['财务部-仓库组', '财务部-仓库组'], */
+							['设备能源部', '设备能源部'], ['研发中心-工艺部', '研发中心-工艺部'],
+							['研发中心-研发部', '研发中心-研发部']
+
+					]
+				});
+		this.reasonStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['设备故障', '设备故障'], ['人员操作失误', '人员操作失误']
+
+					]
 				});
 	}
 
@@ -145,6 +163,11 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 			},
 			hsPage : true,
 			tbar : [{
+						text : '修改',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onEdit
+					}, '-',{
 						text : '删除',
 						scope : this,
 						//hidden : true,
@@ -276,4 +299,109 @@ com.keensen.ump.produce.quality.HHJmDefectListMgr = function() {
 		})
 	}
 
+	this.initEditWindow = function() {
+
+		var _this = this;
+
+		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
+			title : '修改',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 1,
+				loadUrl : 'com.keensen.ump.produce.quality.defect.expandHHJmDefectList.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.quality.defect.saveHHJmDefectList.biz.ext',
+				fields : [{
+							xtype : 'textfield',
+							dataIndex : 'cdmBatchNo',
+							readOnly : true,
+							fieldLabel : '裁叠膜栈板号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						},{
+							xtype : 'textfield',
+							dataIndex : 'defectName',
+							readOnly : true,
+							fieldLabel : '不良项目',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						},{
+							xtype : 'textfield',
+							dataIndex : 'length',
+							readOnly : true,
+							fieldLabel : '不良长度',
+							anchor : '95%',
+							colspan : 1
+						},  {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '产生原因',
+							ref : '../../reason',
+							hiddenName : 'entity/reason',
+							dataIndex : 'reason',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.reasonStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 1
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '责任部门',
+							ref : '../../dept',
+							hiddenName : 'entity/dept',
+							dataIndex : 'dept',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.deptStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'hidden',
+							name : 'entity/id',
+							dataIndex : 'id'
+						}]
+			}]
+		});
+	}
 }

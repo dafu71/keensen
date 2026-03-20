@@ -56,7 +56,8 @@
 <script type="text/javascript">
   var uid = "<%=uid %>";
   var ip = '<%=ip %>';
-  var uname = '<%=uname %>';
+  var uname = '<%=uname %>'; 
+
   
   <% if(workerflag){ %>
   var teamId = "<%=userOrgId %>";
@@ -64,6 +65,9 @@
   var teamId = '';
   <% } %>
 
+  var tmDefectListWindowId = Ext.id();
+  var tmDefectListId = Ext.id();
+  
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.diaphragm.make.zmxMgr
 		});
