@@ -37,7 +37,6 @@
 	String pressWidth = "25%";
 	String recoveryWidth = "20%";
 	String pressWorkWidth = "0%";
-	String rangePhWidth = "0%";
 	String rangeRunPhWidth = "0%";
 	String areaWidth = "0%";
 	
@@ -49,12 +48,12 @@
 		 solutionWidth3 = "15%";
 		 temperatureWidth = "10%";
 		 phWidth = "10%";
-		 pressWidth = "10%";
-		 recoveryWidth = "10%";
-		 pressWorkWidth = "10%";
-		 rangePhWidth = "10%";
-		 rangeRunPhWidth = "10%";
-		 areaWidth = "10%";
+		 pressWidth = "12%";
+		 recoveryWidth = "12%";
+		 pressWorkWidth = "12%";
+		 
+		 rangeRunPhWidth = "12%";
+		 areaWidth = "12%";
 	}
 	
 	
@@ -94,7 +93,7 @@
 </div>
 <% } %>
 <div align="center" id="pdfContainer">
-
+<div align="center" style="height: 297mm; width: 210mm;">
 <table width="780" border="0">
 	<tr>
 		<td rowspan="4" width="50%"><img
@@ -220,9 +219,7 @@
 		<td width="<%=pressWorkWidth %>" height="27">
 		<div align="center" class="style1">最高工作压力psi(MPa)</div>
 		</td>
-		<td width="<%=rangePhWidth %>" height="27">
-		<div align="center" class="style1">ph适应范围</div>
-		</td>
+		
 		<td width="<%=rangeRunPhWidth %>" height="27">
 		<div align="center" class="style1">连续运行时进水PH范围</div>
 		</td>
@@ -263,10 +260,7 @@
 			<div align="center" class="style1"><b:write
 				property="data/pressWork" /></div>
 		</td>
-		<td height="33">
-			<div align="center" class="style1"><b:write
-				property="data/rangePh" /></div>
-		</td>
+		
 		<td height="33">
 			<div align="center" class="style1"><b:write
 				property="data/rangeRunPh" /></div>
@@ -311,10 +305,7 @@
 			<div align="center" class="style1"><b:write
 				property="data/pressWork2" /></div>
 		</td>
-		<td height="33">
-			<div align="center" class="style1"><b:write
-				property="data/rangePh2" /></div>
-		</td>
+		
 		<td height="33">
 			<div align="center" class="style1"><b:write
 				property="data/rangeRunPh2" /></div>
@@ -358,10 +349,7 @@
 			<div align="center" class="style1"><b:write
 				property="data/pressWork" /></div>
 		</td>
-		<td height="33">
-			<div align="center" class="style1"><b:write
-				property="data/rangePh" /></div>
-		</td>
+		
 		<td height="33">
 			<div align="center" class="style1"><b:write
 				property="data/rangeRunPh" /></div>
@@ -454,8 +442,10 @@
 			<div align="center" class="style1">标准测试条件</div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/waterCheck" /></div>
+			<div align="center" class="style1">
+			<%--<b:write property="data/waterCheck" />--%>
+			详见检测清单
+			</div>
 			</td>			
 			<td height="38">
 			<div align="center" class="style1"><b:write
@@ -479,8 +469,10 @@
 				property="data/waterCheck2Num" /></div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/waterCheck2" /></div>
+			<div align="center" class="style1">
+			<%--<b:write property="data/waterCheck2" />--%>
+			详见检测清单
+			</div>
 			</td>
 			
 			<td height="38">
@@ -511,8 +503,10 @@
 			<div align="center" class="style1">标准测试条件</div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/desalinationCheck" /></div>
+			<div align="center" class="style1">
+			<%--<b:write property="data/desalinationCheck" />--%>
+			详见检测清单
+			</div>
 			</td>			
 			<td height="38">
 			<div align="center" class="style1"><b:write
@@ -537,8 +531,10 @@
 			</td>
 			
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/desalinationCheck2" /></div>
+			<div align="center" class="style1">
+			<%--<b:write property="data/desalinationCheck2" />--%>
+			详见检测清单
+			</div>
 			</td>
 			<td height="38">
 			<div align="center" class="style1"><b:write
@@ -567,8 +563,10 @@
 		<div align="center" class="style1">标准测试条件</div>
 		</td>
 				<td height="78">
-		<div align="center" class="style1"><b:write
-			property="data/airCheck" /></div>
+		<div align="center" class="style1">
+		<%--<b:write property="data/airCheck" />--%>
+		详见检测清单
+		</div>
 		</td>
 		<td height="78">
 		<div align="center" class="style1"><b:write
@@ -597,8 +595,10 @@
 			<div align="center" class="style1">产品标准测试</div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/waterCheck" /></div>
+			<div align="center" class="style1">
+			<%--<b:write property="data/waterCheck" />--%>
+			详见检测清单
+			</div>
 			</td>
 			
 			<td height="38">
@@ -622,8 +622,10 @@
 			<div align="center" class="style1">产品标准测试</div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/desalinationCheck" /></div>
+			<div align="center" class="style1">
+			<%--<b:write property="data/desalinationCheck" />--%>
+			详见检测清单
+			</div>
 			</td>
 			
 			<td height="38">
@@ -649,8 +651,10 @@
 		<div align="center" class="style1">标准测试条件</div>
 		</td>
 				<td height="78">
-		<div align="center" class="style1"><b:write
-			property="data/airCheck" /></div>
+		<div align="center" class="style1">
+		<%--<b:write property="data/airCheck" />--%>
+		详见检测清单
+		</div>
 		</td>
 		<td height="78">
 		<div align="center" class="style1"><b:write
@@ -727,6 +731,7 @@
 	</table>
 
 </l:notEmpty> 
+</div>
 
 <p>&nbsp;</p>
 

@@ -87,7 +87,7 @@
 		<div align="center" valign="middle" class="style1"><strong>订单号</strong></div>
 		</td>
 		<td>
-		<div align="center" valign="middle" class="style1"><strong>规格型号</strong></div>
+		<div align="center" valign="middle" class="style1"><strong>卷制型号</strong></div>
 		</td>
 		<td>
 		<div align="center" valign="middle" class="style1"><strong>卷膜数量</strong></div>
@@ -117,15 +117,13 @@
 		<div align="center" valign="middle" class="style1"><strong>生产顺序</strong></div>
 		</td>
 		<td>
-		<div align="center" valign="middle" class="style1"><strong>卷制元件</strong></div>
+		<div align="center" valign="middle" class="style1"><strong>卷膜执行型号</strong></div>
 		</td>
 		<td>
-		<div align="center" valign="middle" class="style1"><strong>可卷制元件<br>
-		换算平均产水量</strong></div>
+		<div align="center" valign="middle" class="style1"><strong>理论平均产水量</strong></div>
 		</td>
 		<td>
-		<div align="center" valign="middle" class="style1"><strong>按试卷型号<br>
-		换算脱盐率</strong></div>
+		<div align="center" valign="middle" class="style1"><strong>理论最低脱盐率</strong></div>
 		</td>
 	</tr>
 
@@ -194,12 +192,18 @@
 		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("materSpecName")%></div>
 		</td>
-		<td>
+		<%--<td>
 		<div align="center" valign="middle" class="style1"><%=(null == list[i].get("yjAvgGpd")) ? ""
 							: list[i].getString("yjAvgGpd")%></div>
 		</td>
 		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("saltRejection")%></div>
+		</td>--%>
+		<td>
+		<div align="center" valign="middle" class="style1"><%=list[i].getString("yjGpdLowLimit2")%></div>
+		</td>
+		<td>
+		<div align="center" valign="middle" class="style1"><%=list[i].getString("mpMinSaltRejection")%></div>
 		</td>
 	</tr>
 	<%
@@ -241,12 +245,18 @@
 		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("materSpecName")%></div>
 		</td>
-		<td>
+		<%--<td>
 		<div align="center" valign="middle" class="style1"><%=(null == list[i].get("yjAvgGpd")) ? ""
 							: list[i].getString("yjAvgGpd")%></div>
 		</td>
 		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("saltRejection")%></div>
+		</td>--%>
+		<td>
+		<div align="center" valign="middle" class="style1"><%=list[i].getString("yjGpdLowLimit2")%></div>
+		</td>
+		<td>
+		<div align="center" valign="middle" class="style1"><%=list[i].getString("mpMinSaltRejection")%></div>
 		</td>
 	</tr>
 
@@ -260,7 +270,7 @@
 	
 	
 	<tr>
-		<td colspan=4 height=40>
+		<%--<td colspan=4 height=40>
 		<div align="left" class="style1"><strong>审核：</strong></div>
 		</td>
 		<td colspan=4 height=40>
@@ -268,6 +278,9 @@
 		</td>
 		<td colspan=4 height=40>
 		<div align="left" class="style1"><strong>材料确认：</strong></div>
+		</td>--%>
+		<td colspan=12 height=40>
+		&nbsp;
 		</td>
 		<td colspan=3 height=40>
 		<div align="left" class="style1"><strong>品质审核：</strong></div>

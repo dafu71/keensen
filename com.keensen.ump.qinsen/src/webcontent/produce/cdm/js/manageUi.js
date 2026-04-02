@@ -226,7 +226,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						this.onGetPrintTag(1)
 					}
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "<span style='color:red;font-size:14px;'>工位2打印标签</span>",
 					height : 40,
@@ -237,7 +237,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 						this.onGetPrintTag(2)
 					}
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "<span style='color:red;font-size:14px;'>工位3打印标签</span>",
 					height : 40,
@@ -949,7 +949,8 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							xtype : 'combo',
 							fieldLabel : '工位',
 							allowBlank : false,
-							store : [['工位1', '工位1'], ['工位2', '工位2'], ['工位3', '工位3']],
+							store : [['工位1', '工位1'], ['工位2', '工位2'],
+									['工位3', '工位3']],
 							emptyText : '--请选择--',
 							listeners : {
 								scope : this,
@@ -2210,6 +2211,16 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 
 		var _this = this;
 
+		this.deptStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['元件制造部', '元件制造部'], ['膜片制造部', '膜片制造部'],
+							/* ['生产管理部', '生产管理部'], ['财务部-仓库组', '财务部-仓库组'], */
+							['设备能源部', '设备能源部'], ['研发中心-工艺部', '研发中心-工艺部'],
+							['研发中心-研发部', '研发中心-研发部']
+
+					]
+				});
+
 		this.firstStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['固损', '固损'], ['不良', '不良']]
@@ -2265,6 +2276,35 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 													var defectId = _this.rec.data['defectId'];
 													_this.saveCdmDefect(
 															defectId, 'length',
+															newValue, oldValue);
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'dept',
+								header : '责任部门',
+								css : 'background:#c7c7a7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.ComboBox(
+										{
+											allowBlank : false,
+											mode : 'local',
+											emptyText : '--请选择--',
+											editable : false,
+											store : _this.deptStore,
+											displayField : "name",
+											valueField : "code",
+											scope : this,
+											listeners : {
+												"expand" : function(A) {
+													this.reset()
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var defectId = _this.rec.data['defectId'];
+													_this.saveCdmDefect(
+															defectId, 'dept',
 															newValue, oldValue);
 												}
 											}

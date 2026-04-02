@@ -16,6 +16,9 @@ com.keensen.ump.produce.component.produce.HouseholdJmMgr.prototype.initEvent = f
 	if(ip == '172.16.10.56'){
 		this.currentMachineCode = 'J89';
 	}
+	if(ip == '172.16.137.214'){
+		this.currentMachineCode = 'J90';
+	}
 	
 	this.queryPanel4EditDefect.mon(this.queryPanel4EditDefect, 'query',
 			function(form, vals) {

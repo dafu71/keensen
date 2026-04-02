@@ -145,7 +145,10 @@ com.keensen.ump.produce.quality.tumocheckMgr.prototype.onJudgeBlock = function()
 }
 
 com.keensen.ump.produce.quality.tumocheckMgr.prototype.onDel = function() {
-	var grid = this.listPanel;
+	
+	this.listPanel.onDel();
+	
+	/*var grid = this.listPanel;
 	var _this = this;
 	var C = grid.getSelectionModel().getSelections();
 	if (C.length > 1) {
@@ -177,7 +180,7 @@ com.keensen.ump.produce.quality.tumocheckMgr.prototype.onDel = function() {
 					}
 				})
 	}
-
+*/
 };
 
 // 获取权限

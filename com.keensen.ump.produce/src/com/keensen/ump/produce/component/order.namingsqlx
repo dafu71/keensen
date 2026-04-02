@@ -620,7 +620,7 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        case when substr(T3.ORDER_NO,1,2) = 'SG' and length(T3.ORDER_NO)=8 then 
        	case when t8.out_length>=nvl(sl.test_length,0) and t8.out_length &lt;=nvl(sl.test_length2,1000000000) and nvl(t8.residue,0)>0 then '是' else '否' end
        else '' end "sampleLengthValid"
-       ,t1.if_mix "ifMix"
+       ,t1.if_mix "ifMix",nvl(t1.mp_min_salt_rejection,0) "mpMinSaltRejection",nvl(t1.yj_gpd_low_limit2,0) "yjGpdLowLimit2"
   FROM KS_COMPONENT_PLAN_DAY T1 
   LEFT JOIN (select t.plan_date,t.batch_no,COUNT(1) cnt from KS_COMPONENT_PLAN_DAY t
   GROUP BY t.plan_date,t.batch_no ) cnt ON cnt.batch_no = t1.batch_no AND cnt.plan_date = t1.plan_date

@@ -774,4 +774,10 @@ WHERE SUBSTR(T.CODE, 2, 8) = TO_CHAR(SYSDATE, 'yyyyMMdd'))
 		where
 		t.code = #code#
    </select>
+   
+   <update id="updatePrintCnt" parameterClass="java.util.HashMap" >
+    update KS_COMPONENT_HH_CHECK_HEAD
+    set print_cnt = nvl(print_cnt,0) + 1
+    where id = #id#
+    </update>
 </sqlMap>

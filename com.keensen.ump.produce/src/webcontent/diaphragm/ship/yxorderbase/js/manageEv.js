@@ -124,6 +124,17 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 				var orderStatus = cell.data.orderStatus;
 				var baseId = cell.data.id;
 				var _this = this;
+				
+				if(this.opt == 'updatedatedelivery'){
+					if (orderStatus == '正式发布') {
+						this.updateDateDeliveryWindow.show();
+						this.updateDateDeliveryWindow.loadData(cell);
+					} else {
+						Ext.Msg.alert('系统提示', '请选择正式发布的记录');
+						return false;
+					}
+				}
+				
 				if (this.opt == 'addorder') {
 
 					if (orderStatus == '制定中' || orderStatus == '不能接单') {
@@ -196,6 +207,18 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.initEvent = func
 	this.editWindow.activeItem.mon(this.editWindow.activeItem, 'afterload',
 			function(win, data) {
 
+			}, this);
+			
+	this.updateDateDeliveryWindow.activeItem.mon(this.updateDateDeliveryWindow.activeItem, 'beforeSave',
+			function() {
+
+		var urlDateDelivery = Ext.getCmp(urlDateDeliveryId3).getValue();
+		if (urlDateDelivery == '请上传图片') {
+			Ext.Msg.alert('系统提示', '请上传询期回复截图');
+			return false;
+		}
+				
+				
 			}, this);
 
 }
@@ -588,6 +611,14 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.uploadPhoto2 = f
 	this.photoUploadWin.tag = 2;
 }
 
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.uploadPhoto3 = function() {
+
+	this.photoUploadWin.getComponent('uploadForm').form.reset();
+	this.photoUploadWin.baseId.setValue(this.updateDateDeliveryWindow.baseId.getValue());
+	this.photoUploadWin.show();
+	this.photoUploadWin.tag = 3;
+}
+
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.doUploadPhoto = function() {
 
 	var _this = this;
@@ -622,6 +653,10 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.doUploadPhoto = 
 			obj = Ext.getCmp(urlDateDeliveryId2);
 		}
 
+		if (this.photoUploadWin.tag == 3) {
+			obj = Ext.getCmp(urlDateDeliveryId3);
+		}
+		
 		uploadInputPanel.form.submit({
 					method : "POST",
 					timeout : 1200,
@@ -733,6 +768,18 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.exportExcel = fu
 			'com.keensen.ump.produce.diaphragm.ship.orderbase.queryOrderBase', '0,1');
 	
 }
+
+com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onUpdateDateDelivery = function() {
+	
+	if (this.onSingleSelect()) {
+		this.opt = 'updatedatedelivery';
+		this.listPanel.onEdit();
+	} else {
+		Ext.Msg.alert("系统提示", "仅允许选择一条数据行!");
+		return false;
+	}
+}
+
 
 function getDiffDay(date, num) {
 	var date2 = new Date(date);

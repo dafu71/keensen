@@ -472,6 +472,10 @@ com.keensen.ump.produce.component.applyMgr = function() {
 						sortable : true,
 						header : '请检时间'
 					}, {
+						dataIndex : 'checkDate',
+						sortable : true,
+						header : '检验判定时间'
+					}, {
 						xtype : 'dictcolumn',
 						sortable : true,
 						dictData : KS_YESORNO,
@@ -506,6 +510,8 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				baseParams : {},
 				fields : [{
 							name : 'id'
+						},{
+							name : 'checkDate'
 						}, {
 							name : 'createTime'
 						}, {

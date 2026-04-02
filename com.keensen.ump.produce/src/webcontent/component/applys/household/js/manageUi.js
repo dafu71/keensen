@@ -255,6 +255,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						dataIndex : 'checkedAmount',
 						sortable : true,
 						header : '请检总数量'
+					}, {
+						dataIndex : 'printCnt',
+						sortable : true,
+						header : '打印次数'
 					}/*
 						 * , { dataIndex : 'storage', xtype : 'dictcolumn',
 						 * dictData : KS_PROD_STORAGE, sortable : true, header :

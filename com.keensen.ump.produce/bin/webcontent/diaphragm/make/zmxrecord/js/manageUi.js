@@ -235,6 +235,13 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 						xtype : 'displayfield',
 						value : '',
 						id : 'zmxtotalrelease'
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : 'zmxtotaltmdefect'
 					}, '->', {
 						text : '铸膜工序不良录入',
 						scope : this,
@@ -403,6 +410,8 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'zmxtotaltmdefect'
+						},{
 							name : 'id'
 						}, {
 							name : 'createTime'
@@ -1877,7 +1886,7 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr = function() {
 								header : '不良四级'
 							}],
 					store : new Ext.data.JsonStore({
-						url : 'com.keensen.ump.produce.diaphragm.make.report.queryTumoDefect.biz.ext',
+						url : 'com.keensen.ump.produce.diaphragm.make.report.queryTumoDefect2.biz.ext',
 						root : 'data',
 						autoLoad : false,
 						totalProperty : '',

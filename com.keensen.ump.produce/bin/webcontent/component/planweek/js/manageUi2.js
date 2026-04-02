@@ -1,5 +1,6 @@
 com.keensen.ump.produce.component.planweekMgr = function() {
 	this.initPanel = function() {
+		
 		this.initWeekArr();
 		this.initPlanYear();
 		this.initPlanDateStore();
@@ -24,6 +25,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 		this.initChooseMpSpecWindow();
 		this.initChooseStorageWindow();
 		this.initChooseTumoWindow();
+		
+		this.initInputAddWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -213,7 +216,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					}, '->', {
 						text : '删除',
 						scope : this,
-						hidden : uid != 'KS00307' && uid != 'LHY'
+						hidden : uid != 'KS00307' && uid != 'KS00524'
 								&& uid != 'dafu',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
@@ -999,6 +1002,10 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 											name : 'storageName'
 										}, {
 											name : 'storagePosition'
+										}, {
+											name : 'mpMinSaltRejection'
+										}, {
+											name : 'yjGpdLowLimit2'
 										}
 
 								]
@@ -1006,7 +1013,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 				})
 
 		this.addPlanDayPanel = this.addPlanDayPanel || new Ext.fn.InputPanel({
-			height : 180,
+			height : 200,
 			region : 'north',
 			baseCls : "x-plain",
 			// pgrid : this.listPanel,
@@ -1069,6 +1076,24 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						xtype : 'textfield',
 						fieldLabel : '面积',
 						ref : '../../area',
+						readOnly : true,
+						anchor : '85%',
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 6
+					}, {
+						xtype : 'textfield',
+						fieldLabel : '脱盐率(%)',
+						ref : '../../saltLow',
+						readOnly : true,
+						anchor : '85%',
+						colspan : 3
+					}, {
+						xtype : 'textfield',
+						fieldLabel : '产水量范围(GPD)',
+						ref : '../../gpdLow',
 						readOnly : true,
 						anchor : '85%',
 						colspan : 3
@@ -1180,6 +1205,13 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					layout : 'border',
 					items : [this.addPlanDayPanel, this.addPlanDayListPanel],
 					buttons : [{
+								text : "录入新增",
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : function() {
+									this.onInputAdd();
+								}
+							}, {
 								text : "保存",
 								scope : this,
 								handler : function() {
@@ -2392,7 +2424,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 		var _this = this;
 
 		var selModel2 = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : false
+					singleSelect : false,
+					header : ''
 				});
 
 		this.chooseMpSpecPanel = this.chooseMpSpecPanel
@@ -2451,6 +2484,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					layout : 'border',
 					items : [this.chooseMpSpecPanel],
 					buttons : [{
+								text : '确定选择',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onSelect4ChooseMpSpec
+							}, {
 								text : "关闭",
 								scope : this,
 								handler : function() {
@@ -2519,6 +2557,11 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					layout : 'border',
 					items : [this.chooseStoragePanel],
 					buttons : [{
+								text : '确定选择',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onSelect4ChooseStorage
+							}, {
 								text : "关闭",
 								scope : this,
 								handler : function() {
@@ -2533,9 +2576,226 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 	this.initChooseTumoWindow = function() {
 		var _this = this;
 
-		var selModel4Tumo = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : false
+		var smLock = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					handleMouseDown : function(g, rowIndex, e) {
+						if (e.button !== 0 || this.isLocked()) {
+							return;
+						}
+						var view = this.grid.getView();
+						if (e.shiftKey && !this.singleSelect
+								&& this.last !== false) {
+							var last = this.last;
+							this.selectRange(last, rowIndex, e.ctrlKey);
+							this.last = last;
+							view.focusRow(rowIndex);
+						} else {
+							var isSelected = this.isSelected(rowIndex);
+							if (isSelected) {
+								this.deselectRow(rowIndex);
+							} else if (!isSelected || this.getCount() > 1) {
+								this.selectRow(rowIndex, true);
+								view.focusRow(rowIndex);
+							}
+						}
+					},
+					isLocked : Ext.emptyFn,
+					initEvents : function() {
+						Ext.grid.CheckboxSelectionModel.superclass.initEvents
+								.call(this);
+						this.grid.on('render', function() {
+									var view = this.grid.getView();
+									view.mainBody.on('mousedown',
+											this.onMouseDown, this);
+									Ext.fly(view.lockedInnerHd).on('mousedown',
+											this.onHdMouseDown, this);
+								}, this);
+					}
 				});
+		smLock.sortLock();
+
+		var columns = new Ext.ux.grid.LockingColumnModel([
+				new Ext.grid.RowNumberer({
+							locked : true,
+							width : 30
+						}), smLock, {
+					dataIndex : 'selected',
+					sortable : true,
+					locked : true,
+					header : '挑选状态'
+				}, {
+					dataIndex : 'mpSpecCode',
+					sortable : true,
+					locked : true,
+					header : '膜片类型'
+				}, {
+					dataIndex : 'mpBatchNo',
+					sortable : true,
+					locked : true,
+					header : '膜片批次'
+				}, {
+					dataIndex : 'storageName',
+					sortable : true,
+					locked : true,
+					header : '仓库名称'
+				}, {
+					dataIndex : 'storagePosition',
+					sortable : true,
+					locked : true,
+					header : '仓位名称'
+				}, {
+					dataIndex : 'amount',
+					sortable : true,
+					locked : true,
+					header : '数量'
+				}, {
+					xtype : 'dictcolumn',
+					sortable : true,
+					dictData : KS_YESORNO,
+					dataIndex : 'isKeep',
+					header : '是否保留品'
+				}, {
+					dataIndex : 'mpPointSaltRejection',
+					sortable : true,
+					header : '膜片<br>单点脱盐率'
+				}, {
+					dataIndex : 'mpSaltAvg',
+					sortable : true,
+					header : '膜片<br>平均脱盐率',
+					renderer : function(v, m, r, i) {
+						var isUlp = r.get('isUlp');
+						if (v == null || v == 'null')
+							return '';
+						if (isUlp == '0')
+							return v;
+						var condition1 = r.get('condition1');
+						if (condition1 == 'N') {
+							return "<span style='color:red'>" + v + "</span>";
+
+						} else {
+							return "<span style='color:green'>" + v + "</span>";
+						}
+					}
+				}, {
+					dataIndex : 'mpMinSaltRejection',
+					sortable : true,
+					header : '膜片<br>最低脱盐率',
+					renderer : function(v, m, r, i) {
+						var isUlp = r.get('isUlp');
+						if (v == null || v == 'null')
+							return '';
+						if (isUlp == '1')
+							return v;
+						var condition1 = r.get('condition1');
+						if (condition1 == 'N') {
+							return "<span style='color:red'>" + v + "</span>";
+
+						} else {
+							return "<span style='color:green'>" + v + "</span>";
+						}
+					}
+				}, {
+					dataIndex : 'mpSaltLowLimit',
+					sortable : true,
+					header : '膜片<br>脱盐率下限标准'
+				}, {
+					dataIndex : 'rMpPointSaltRejection',
+					sortable : true,
+					header : '膜片<br>复测脱盐率'
+				}, {
+					dataIndex : 'mpPointGfd',
+					sortable : true,
+					header : '膜片<br>单点通量'
+				}, {
+					dataIndex : 'mpMinGfd',
+					sortable : true,
+					header : '膜片<br>最低通量'
+				}, {
+					dataIndex : 'mpMaxGfd',
+					sortable : true,
+					header : '膜片<br>最高通量'
+				}, {
+					dataIndex : 'mpAvgGfd',
+					sortable : true,
+					header : '膜片<br>平均通量'
+				}, {
+					dataIndex : 'rMpPointGfd',
+					sortable : true,
+					header : '膜片<br>复测通量'
+				}, {
+					dataIndex : 'yjGpdLowLimit2',
+					sortable : true,
+					header : '元件<br>最低产水量(理论换算)'
+				}, {
+					dataIndex : 'yjGpdUpLimit2',
+					sortable : true,
+					header : '元件<br>最高产水量(理论换算)'
+				}, {
+					dataIndex : 'yjGpdAvg2',
+					sortable : true,
+					header : '元件<br>平均产水量(理论换算)'
+				}, {
+					dataIndex : 'testMpBatchNo',
+					sortable : true,
+					header : '试卷<br>膜批次'
+				}, {
+					dataIndex : 'testMpPointGfd',
+					sortable : true,
+					header : '试卷<br>膜批次单点通量'
+				}, {
+					dataIndex : 'testMpPointSaltRejection',
+					sortable : true,
+					header : '试卷<br>膜批次单点脱盐率'
+				}, {
+					dataIndex : 'testYjSpecName',
+					sortable : true,
+					header : '试卷<br>元件型号'
+				}, {
+					dataIndex : 'testYjArea',
+					sortable : true,
+					header : '试卷<br>元件膜面积'
+				}, {
+					dataIndex : 'testYjDenseNet',
+					sortable : true,
+					header : '试卷<br>元件浓网规格'
+				}, {
+					dataIndex : 'testYjGpd',
+					sortable : true,
+					header : '试卷<br>元件产水量'
+				}, {
+					dataIndex : 'testYjSalt',
+					sortable : true,
+					header : '试卷<br>元件脱盐率'/*
+											 * , renderer : function(v, m, r, i) {
+											 * if (v == null || v == 'null')
+											 * return ''; var condition2 =
+											 * r.get('condition2'); if
+											 * (condition2 == 'N') { return "<span
+											 * style='color:red'>" + v + "</span>"; }
+											 * else { return "<span
+											 * style='color:green'>" + v + "</span>"; } }
+											 */
+				}, {
+					dataIndex : 'testYjGpdLowLimit',
+					sortable : true,
+					header : '试卷<br>元件产水量下限'
+				}, {
+					dataIndex : 'testYjGpdUpLimit',
+					sortable : true,
+					header : '试卷<br>元件产水量上限'
+				}, {
+					dataIndex : 'testYjSaltLowLimit',
+					sortable : true,
+					header : '试卷<br>元件脱盐率下限'
+				}, {
+					dataIndex : 'mpProduceDt',
+					sortable : true,
+					header : '生产时间'
+				}, {
+					dataIndex : 'remark',
+					sortable : true,
+					header : '生产备注'
+				}])
 
 		this.chooseTumoPanel = this.chooseTumoPanel || new Ext.fn.ListPanel({
 			region : 'center',
@@ -2543,188 +2803,50 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 			viewConfig : {
 				forceFit : false
 			},
+			view : new Ext.ux.grid.LockingGridView({
+						enableRowBody : true
+					}),
 			tbar : [{
 						text : '确定选择',
 						scope : this,
 						iconCls : 'icon-application_add',
 						handler : this.onSelect4ChooseTumo
+					},{
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '脱盐率(%)::',
+						id : saltLowId
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '产水量范围(GPD):',
+						id : gpdLowId
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '膜片用量(m):',
+						id : useAmountId
+					}, '->', {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '选中膜片合计(m):',
+						id : amountCheckedId
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}],
 			hsPage : false,
 			autoScroll : true,
-			selModel : selModel4Tumo,
-			columns : [new Ext.grid.RowNumberer(), selModel4Tumo, {
-						dataIndex : 'mpSpecCode',
-						sortable : true,
-						header : '物料名称'
-					}, {
-						dataIndex : 'mpBatchNo',
-						sortable : true,
-						header : '膜片批次'
-					}, {
-						dataIndex : 'storageName',
-						sortable : true,
-						header : '仓库名称'
-					}, {
-						dataIndex : 'storagePosition',
-						sortable : true,
-						header : '仓位名称'
-					}, {
-						dataIndex : 'amount',
-						sortable : true,
-						header : '数量'
-					}, {
-						xtype : 'dictcolumn',
-						sortable : true,
-						dictData : KS_YESORNO,
-						dataIndex : 'isKeep',
-						header : '是否保留品'
-					}, {
-						dataIndex : 'mpPointSaltRejection',
-						sortable : true,
-						header : '膜片<br>单点脱盐率'
-					}, {
-						dataIndex : 'mpSaltAvg',
-						sortable : true,
-						header : '膜片<br>平均脱盐率',
-						renderer : function(v, m, r, i) {
-							var isUlp = r.get('isUlp');
-							if (v == null || v == 'null')
-								return '';
-							if (isUlp == '0')
-								return v;
-							var condition1 = r.get('condition1');
-							if (condition1 == 'N') {
-								return "<span style='color:red'>" + v
-										+ "</span>";
-
-							} else {
-								return "<span style='color:green'>" + v
-										+ "</span>";
-							}
-						}
-					}, {
-						dataIndex : 'mpMinSaltRejection',
-						sortable : true,
-						header : '膜片<br>最低脱盐率',
-						renderer : function(v, m, r, i) {
-							var isUlp = r.get('isUlp');
-							if (v == null || v == 'null')
-								return '';
-							if (isUlp == '1')
-								return v;
-							var condition1 = r.get('condition1');
-							if (condition1 == 'N') {
-								return "<span style='color:red'>" + v
-										+ "</span>";
-
-							} else {
-								return "<span style='color:green'>" + v
-										+ "</span>";
-							}
-						}
-					}, {
-						dataIndex : 'mpSaltLowLimit',
-						sortable : true,
-						header : '膜片<br>脱盐率下限标准'
-					}, {
-						dataIndex : 'rMpPointSaltRejection',
-						sortable : true,
-						header : '膜片<br>复测脱盐率'
-					}, {
-						dataIndex : 'mpPointGfd',
-						sortable : true,
-						header : '膜片<br>单点通量'
-					}, {
-						dataIndex : 'mpMinGfd',
-						sortable : true,
-						header : '膜片<br>最低通量'
-					}, {
-						dataIndex : 'mpMaxGfd',
-						sortable : true,
-						header : '膜片<br>最高通量'
-					}, {
-						dataIndex : 'mpAvgGfd',
-						sortable : true,
-						header : '膜片<br>平均通量'
-					}, {
-						dataIndex : 'rMpPointGfd',
-						sortable : true,
-						header : '膜片<br>复测通量'
-					}, {
-						dataIndex : 'yjGpdLowLimit2',
-						sortable : true,
-						header : '元件<br>最低产水量(理论换算)'
-					}, {
-						dataIndex : 'yjGpdUpLimit2',
-						sortable : true,
-						header : '元件<br>最高产水量(理论换算)'
-					}, {
-						dataIndex : 'yjGpdAvg2',
-						sortable : true,
-						header : '元件<br>平均产水量(理论换算)'
-					}, {
-						dataIndex : 'testMpBatchNo',
-						sortable : true,
-						header : '试卷<br>膜批次'
-					}, {
-						dataIndex : 'testMpPointGfd',
-						sortable : true,
-						header : '试卷<br>膜批次单点通量'
-					}, {
-						dataIndex : 'testMpPointSaltRejection',
-						sortable : true,
-						header : '试卷<br>膜批次单点脱盐率'
-					}, {
-						dataIndex : 'testYjSpecName',
-						sortable : true,
-						header : '试卷<br>元件型号'
-					}, {
-						dataIndex : 'testYjArea',
-						sortable : true,
-						header : '试卷<br>元件膜面积'
-					}, {
-						dataIndex : 'testYjDenseNet',
-						sortable : true,
-						header : '试卷<br>元件浓网规格'
-					}, {
-						dataIndex : 'testYjGpd',
-						sortable : true,
-						header : '试卷<br>元件产水量'
-					}, {
-						dataIndex : 'testYjSalt',
-						sortable : true,
-						header : '试卷<br>元件脱盐率'/*
-												 * , renderer : function(v, m,
-												 * r, i) { if (v == null || v ==
-												 * 'null') return ''; var
-												 * condition2 =
-												 * r.get('condition2'); if
-												 * (condition2 == 'N') { return "<span
-												 * style='color:red'>" + v + "</span>"; }
-												 * else { return "<span
-												 * style='color:green'>" + v + "</span>"; } }
-												 */
-					}, {
-						dataIndex : 'testYjGpdLowLimit',
-						sortable : true,
-						header : '试卷<br>元件产水量下限'
-					}, {
-						dataIndex : 'testYjGpdUpLimit',
-						sortable : true,
-						header : '试卷<br>元件产水量上限'
-					}, {
-						dataIndex : 'testYjSaltLowLimit',
-						sortable : true,
-						header : '试卷<br>元件脱盐率下限'
-					}, {
-						dataIndex : 'mpProduceDt',
-						sortable : true,
-						header : '生产时间'
-					}, {
-						dataIndex : 'remark',
-						sortable : true,
-						header : '生产备注'
-					}],
+			selModel : smLock,
+			colModel : columns,
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.mpselect.query4Select.biz.ext',
 				root : 'data',
@@ -2734,6 +2856,8 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'selected'
+						},{
 							name : 'testMpPointSaltRejection'
 						}, {
 							name : 'testMpPointGfd'
@@ -2821,10 +2945,110 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 					layout : 'border',
 					items : [this.chooseTumoPanel],
 					buttons : [{
+								text : '确定选择',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onSelect4ChooseTumo
+							}, {
 								text : "关闭",
 								scope : this,
 								handler : function() {
 									this.chooseTumoWindow.hide();
+								}
+							}]
+
+				});
+
+	}
+
+	this.initInputAddWindow = function() {
+		var _this = this;
+
+		this.inputAddPanel = this.inputAddPanel || new Ext.fn.InputPanel({
+					region : 'center',
+					baseCls : "x-plain",
+					// pgrid : this.listPanel,
+					autoHide : false,
+					autoScroll : false,
+					border : true,
+					columns : 6,
+					saveUrl : '1.biz.ext',
+					fields : [{
+								xtype : 'textfield',
+								fieldLabel : '膜片批次',
+								ref : '../../batchNo',
+								allowBlank : false,
+								anchor : '85%',
+								colspan : 3
+							}, {
+								xtype : 'numberfield',
+								fieldLabel : '米数',
+								ref : '../../meterAmount',
+								allowBlank : false,
+								anchor : '85%',
+								colspan : 3
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 6
+							}, {
+								xtype : 'textfield',
+								fieldLabel : '仓库',
+								ref : '../../storageName',
+								allowBlank : false,
+								anchor : '85%',
+								colspan : 3
+							}, {
+								xtype : 'textfield',
+								fieldLabel : '库位',
+								ref : '../../storagePosition',
+								allowBlank : false,
+								anchor : '85%',
+								colspan : 3
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 6
+							}, {
+								xtype : 'textfield',
+								fieldLabel : '理论平均产水量',
+								ref : '../../yjGpdLowLimit2',
+								allowBlank : false,
+								anchor : '85%',
+								colspan : 3
+							}, {
+								xtype : 'textfield',
+								fieldLabel : '理论最低脱盐率',
+								ref : '../../mpMinSaltRejection',
+								allowBlank : false,
+								anchor : '85%',
+								colspan : 3
+							}]
+
+				})
+
+		this.inputAddWindow = this.inputAddWindow || new Ext.Window({
+					title : '录入新增',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 600,
+					height : 480,
+					layout : 'border',
+					items : [this.inputAddPanel],
+					buttons : [{
+								text : '确定',
+								scope : this,
+								handler : this.onConfirm4InputAdd
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.inputAddWindow.hide();
 								}
 							}]
 

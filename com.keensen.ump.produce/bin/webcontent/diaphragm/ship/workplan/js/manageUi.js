@@ -229,6 +229,7 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 			})
 		})
 	}
+	
 
 	this.initEditWindow = function() {
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
@@ -289,6 +290,18 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 							name : 'entity/remark',
 							allowBlank : true,
 							fieldLabel : '备注',
+							anchor : '95%',
+							colspan : 2
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							dataIndex : 'reserve1',
+							name : 'entity/reserve1',
+							//allowBlank : true,
+							fieldLabel : '无纺布种类',
 							anchor : '95%',
 							colspan : 2
 						}, {

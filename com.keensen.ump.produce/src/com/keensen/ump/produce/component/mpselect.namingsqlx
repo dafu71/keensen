@@ -765,7 +765,11 @@
         ,nvl(T1.MP_MIN_GFD,0) * nvl(#area#,0) * nvl(#factor#,0) "yjGpdLowLimit2"
         ,nvl(T1.MP_MAX_GFD,0) * nvl(#area#,0) * nvl(#factor#,0) "yjGpdUpLimit2"
         ,nvl(T1.MP_AVG_GFD,0) * nvl(#area#,0) * nvl(#factor#,0) "yjGpdAvg2"
+        
+        ,CASE WHEN pd.batch_no IS NOT NULL THEN '已选' ELSE '' END "selected"
   FROM KS_COMPONENT_MP_SELECT T1
+  LEFT JOIN (SELECT DISTINCT tt.batch_no   FROM ks_component_plan_day tt) pd
+ON pd.batch_no=t1.mp_batch_no
   <!--新膜片挑选开始-->
   left join 
   (SELECT tm.batch_no,LISTAGG(itc.salt_rejection, ', ') WITHIN GROUP (ORDER BY itc.record_id) point_salt_rejection,
@@ -850,7 +854,8 @@
            </isNotNull>
            
            
-            </isNotNull>   
+            </isNotNull> 
+            order by T1.mp_produce_dt  
     </select>
     
     <!--删除在即时库存里面的记录-->

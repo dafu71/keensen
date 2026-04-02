@@ -1,5 +1,6 @@
 com.keensen.ump.produce.quality.TmDefectListMgr.prototype.initEvent = function() {
 
+	var _this = this;
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
 		var store = this.listPanel.store;
@@ -32,6 +33,21 @@ com.keensen.ump.produce.quality.TmDefectListMgr.prototype.initEvent = function()
 				});
 
 	}
+	
+	this.listPanel.store.on('load', function() {
+
+				var records = _this.listPanel.store.getRange();
+				if (records.length == 0) {
+					Ext.getCmp(lengthTotalId).setValue('');
+					return
+				}
+
+				var lengthTotal = records[0].data.lengthTotal;
+							
+				
+				Ext.getCmp(lengthTotalId).setValue('不良长度合计(米):' + lengthTotal);
+			})
+			
 
 }
 

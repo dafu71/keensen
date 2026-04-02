@@ -111,18 +111,18 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 			tbar : [{
 						text : '新增',
 						scope : this,
-						hidden : uid != 'dafu' && uid != 'KS01147',
+						//hidden : uid != 'dafu' && uid != 'KS01147',
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
 					}, '-', {
 						text : '修改',
-						hidden : uid != 'dafu' && uid != 'KS01147',
+						//hidden : uid != 'dafu' && uid != 'KS01147',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',
-						hidden : uid != 'dafu' && uid != 'KS01147',
+						//hidden : uid != 'dafu' && uid != 'KS01147',
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel

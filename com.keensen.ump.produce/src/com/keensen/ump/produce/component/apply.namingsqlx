@@ -52,7 +52,7 @@
        T1.is_examine "isExamine",
        decode(t5.code,null,'否','是') "ifcstock",
        
-       
+       TO_CHAR(T1.check_date, 'yyyy-MM-dd HH24:mi:ss') "checkDate",
        
        replace(replace(replace(t1.prod_class_flag,'D','干'),'W','湿'),'O','干/湿') "dryWet",
        

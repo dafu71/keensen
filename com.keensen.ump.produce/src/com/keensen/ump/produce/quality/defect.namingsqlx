@@ -100,14 +100,99 @@
 		md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH "defectName"
 		
 		,t1.advise "advise"
+		,zr.TEAM_ID AS "teamId"
+       ,t3.dept_name AS "teamName"
+         ,zr.product_Type "productType"
+  FROM KS_DIAPHRAGM_ZM_DEFECT_LIST T1
+  left join KS_QUALITY_MP_DEFECT md 
+  on md.id = t1.defect_Id
+  left join KS_PROD_DIAPHRAGM_ZMX_RECORD zr
+  on zr.id = t1.relation_id
+  left join qinsen.BASE_DEPARTMENT t3
+	on t3.dept_type_id='110' and t3.dept_id = zr.TEAM_ID
+	where 1=1
+	
+	<isNotNull prepend="" property="productType"> 
+		       AND zr.product_Type = #productType#
+	</isNotNull>
+	
+	<isNotNull prepend="" property="teamId"> 
+		       AND zr.TEAM_ID = #teamId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="iftear"> 
+		       t1.iftear = #iftear#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="team"> 
+		       t1.team like '%' || #team# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="relationId"> 
+		       T1.relation_Id = #relationId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="dimoBatchNo"> 
+		       zr.dimo_batch_no like '%' || #dimoBatchNo# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tache"> 
+		       md.tache = #tache#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tacheCause"> 
+		       t1.tache_cause = #tacheCause#
+	</isNotNull>
+	
+	<isNotNull prepend = "and"  property = "createTimeStart"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+	<isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="first"> 
+		       md.first = #first#
+	</isNotNull>
+	<isNotNull prepend="and" property="second"> 
+		       md.second like '%' || #second# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="third"> 
+		       md.third like '%' || #third# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="fourth"> 
+		       md.fourth '%' || #fourth# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="defectName"> 
+		       md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH  like '%' || #defectName# || '%'
+	</isNotNull>
+	
+	order by zr.id,t1.create_time
+	 </select>
+	 
+	 <select id="countZmDefectList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+    SELECT 
+		sum(t1.length) as "lengthTotal"
 
   FROM KS_DIAPHRAGM_ZM_DEFECT_LIST T1
   left join KS_QUALITY_MP_DEFECT md 
   on md.id = t1.defect_Id
   left join KS_PROD_DIAPHRAGM_ZMX_RECORD zr
   on zr.id = t1.relation_id
+  left join qinsen.BASE_DEPARTMENT t3
+	on t3.dept_type_id='110' and t3.dept_id = zr.TEAM_ID
 	where 1=1
 	
+	<isNotNull prepend="" property="productType"> 
+		       AND zr.product_Type = #productType#
+	</isNotNull>
+	
+	<isNotNull prepend="" property="teamId"> 
+		       AND zr.TEAM_ID = #teamId#
+	</isNotNull>
 	
 	<isNotNull prepend="and" property="iftear"> 
 		       t1.iftear = #iftear#
@@ -200,6 +285,84 @@
 		md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH "defectName"
 		
 		,t1.advise "advise"
+		,BD.DEPT_NAME "teamName"
+        ,O2.PROP_VALUE_NAME "prodFlagName"
+  FROM KS_DIAPHRAGM_TM_DEFECT_LIST T1
+  left join KS_QUALITY_MP_DEFECT md 
+  on md.id = t1.defect_Id
+  left join qinsen.inst_tumo zr
+  on zr.record_id = t1.relation_id
+  left join QINSEN.BASE_PROD_LINE  L
+  on l.line_id = t1.team
+  LEFT JOIN QINSEN.BASE_DEPARTMENT BD
+  ON BD.DEPT_ID = zr.TEAM_ID
+  LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION O2
+    ON zr.PROD_FLAG_ID = O2.PROP_VALUE_ID
+	where 1=1
+	
+	<isNotNull prepend="and" property="prodFlagId"> 
+		       zr.prod_flag_id = #prodFlagId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="teamId"> 
+		       zr.TEAM_ID = #teamId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="iftear"> 
+		       t1.iftear = #iftear#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="lineName"> 
+		       l.line_name || '(' || l.line_code || ')' like '%' || #lineName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="relationId"> 
+		       T1.relation_Id = #relationId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tmBatchNo"> 
+		       zr.batch_no like '%' || #tmBatchNo# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tache"> 
+		       md.tache = #tache#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tacheCause"> 
+		       t1.tache_cause = #tacheCause#
+	</isNotNull>
+	
+	<isNotNull prepend = "and"  property = "createTimeStart"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+	<isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="first"> 
+		       md.first = #first#
+	</isNotNull>
+	<isNotNull prepend="and" property="second"> 
+		       md.second like '%' || #second# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="third"> 
+		       md.third like '%' || #third# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="fourth"> 
+		       md.fourth '%' || #fourth# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="defectName"> 
+		       md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH  like '%' || #defectName# || '%'
+	</isNotNull>
+	
+	order by zr.record_id,t1.create_time
+	 </select>
+	 
+	 <select id="countTmDefectList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+    SELECT sum(t1.length) as "lengthTotal"
 
   FROM KS_DIAPHRAGM_TM_DEFECT_LIST T1
   left join KS_QUALITY_MP_DEFECT md 
@@ -208,7 +371,19 @@
   on zr.record_id = t1.relation_id
   left join QINSEN.BASE_PROD_LINE  L
   on l.line_id = t1.team
+	  LEFT JOIN QINSEN.BASE_DEPARTMENT BD
+  ON BD.DEPT_ID = zr.TEAM_ID
+  LEFT JOIN QINSEN.CONF_PROP_VALUE_OPTION O2
+    ON zr.PROD_FLAG_ID = O2.PROP_VALUE_ID
 	where 1=1
+	
+	<isNotNull prepend="and" property="prodFlagId"> 
+		       zr.prod_flag_id = #prodFlagId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="teamId"> 
+		       zr.TEAM_ID = #teamId#
+	</isNotNull>
 	
 	<isNotNull prepend="and" property="iftear"> 
 		       t1.iftear = #iftear#
@@ -396,6 +571,71 @@
 	</isNotNull>
 	
 	<isNotNull prepend = "and"  property = "createTimeStart"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:MI:SS')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:MI:SS')  &lt;=  #createTimeEnd#
+     </isNotNull>
+	<isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="first"> 
+		       md.first = #first#
+	</isNotNull>
+	<isNotNull prepend="and" property="second"> 
+		       md.second like '%' || #second# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="third"> 
+		       md.third like '%' || #third# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="fourth"> 
+		       md.fourth '%' || #fourth# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="defectName"> 
+		       md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH  like '%' || #defectName# || '%'
+	</isNotNull>
+	
+	order by zr.record_id,t1.create_time
+	 </select>
+	 
+	 
+	 <select id="countCdmDefectList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+    SELECT sum(t1.length) as "lengthTotal"
+  FROM KS_DIAPHRAGM_CDM_DEFECT_LIST T1
+  left join KS_QUALITY_MP_DEFECT md 
+  on md.id = t1.defect_Id
+  left join QINSEN.INST_CAIDIEMO zr
+  on zr.record_id = t1.relation_id
+  left join QINSEN.BASE_PROD_LINE  L
+  on l.line_id = t1.team
+	where 1=1
+	
+	<isNotNull prepend="and" property="iftear"> 
+		       t1.iftear = #iftear#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="lineName"> 
+		       l.line_name || '(' || l.line_code || ')' like '%' || #lineName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="relationId"> 
+		       T1.relation_Id = #relationId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="cdmBatchNo"> 
+		       zr.batch_no like '%' || #cdmBatchNo# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tache"> 
+		       md.tache = #tache#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tacheCause"> 
+		       t1.tache_cause = #tacheCause#
+	</isNotNull>
+	
+	<isNotNull prepend = "and"  property = "createTimeStart"> 
           TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#
      </isNotNull>
      <isNotNull prepend = "and"  property = "createTimeEnd"> 
@@ -422,7 +662,6 @@
 	
 	order by zr.record_id,t1.create_time
 	 </select>
-	 
 	 
 	  <select id="queryMpDefect4Cdm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
    	
@@ -736,5 +975,14 @@
 	order by zr.id,t1.create_time
 	 </select>
 	 
-	 	
+	 	<update id="updateBatchCdmmDefectDept" parameterClass="java.util.HashMap">
+	
+	UPDATE KS_DIAPHRAGM_CDM_DEFECT_LIST T
+   SET T.dept          = #dept#,
+       T.update_USER_ID   = #userId#,
+       T.update_NAME = #userName#,
+       T.update_TIME      = SYSDATE
+ WHERE T.ID in ($ids$)
+   
+     </update>
 	 </sqlMap>

@@ -1,6 +1,34 @@
 com.keensen.ump.produce.component.planweekMgr.prototype.initEvent = function() {
 	var _this = this;
 
+	this.chooseTumoPanel.selModel.on('rowselect', function(o, i, r) {
+				var _this = this;
+				var A = this.chooseTumoPanel;
+	(function	() {
+					var amountChecked = 0;
+					var records = A.getSelectionModel().getSelections();
+					for (var i = 0; i < records.length; i++) {
+						amountChecked += records[i].data.amount;
+					}
+					Ext.getCmp(amountCheckedId).setValue('选中合计(m):<font color="red">'
+							+ getOneDecimal(amountChecked) + '</font>');
+				}).defer(100);
+			}, this);
+			
+	this.chooseTumoPanel.selModel.on('rowdeselect', function(o, i, r) {
+				var _this = this;
+				var A = this.chooseTumoPanel;
+	(function	() {
+					var amountChecked = 0;
+					var records = A.getSelectionModel().getSelections();
+					for (var i = 0; i < records.length; i++) {
+						amountChecked += records[i].data.amount;
+					}
+					Ext.getCmp(amountCheckedId).setValue('选中合计(m):<font color="red">'
+							+ getOneDecimal(amountChecked) + '</font>');
+				}).defer(100);
+			}, this);
+
 	// this.queryPanel.planWeek.setValue(getCurrentWeekNumber());
 
 	// 查询事件
@@ -179,6 +207,8 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	// var pageWidth = this.editPlanDayPanel.pageWidth.getValue();
 
 	var pageWidth = this.editPlanDayPanel.mpWidth.getValue();
+	var saltLow = this.editPlanDayPanel.saltLow.getValue();
+	var gpdLow = this.editPlanDayPanel.gpdLow.getValue();
 
 	// var records = this.listPanel.getSelectionModel().getSelections();
 	// var r = records[0];
@@ -211,6 +241,9 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	this.planDayWindow.denseNet.setValue(denseNet);
 	this.planDayWindow.area.setValue(area);
 	this.planDayWindow.pageWidth.setValue(pageWidth);
+
+	this.planDayWindow.saltLow.setValue(saltLow);
+	this.planDayWindow.gpdLow.setValue(gpdLow);
 
 	this.planDayWindow.show();
 }
@@ -447,6 +480,14 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onCalc = function() {
 	var area = this.planDayWindow.area.getValue();
 	var orderId = this.planDayWindow.orderId.getValue();
 
+	var planDate = this.planDayWindow.planDate.getValue();
+	var useAmount = this.planDayWindow.useAmount.getValue();
+
+	if (Ext.isEmpty(planDate)) {
+		Ext.Msg.alert("系统提示", "请选择计划日期！");
+		return;
+	}
+
 	if (Ext.isEmpty(specIds) || Ext.isEmpty(storageIds) || Ext.isEmpty(factor)) {
 		Ext.Msg.alert("系统提示", "膜片型号、仓库、换算系数均为必填项！");
 		return;
@@ -476,6 +517,12 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onCalc = function() {
 										'condition/area' : area
 									}
 								});
+						var saltLow = _this.planDayWindow.saltLow.getValue();
+						var gpdLow = _this.planDayWindow.gpdLow.getValue();
+
+						Ext.getCmp(saltLowId).setValue('脱盐率(%):' + saltLow);
+						Ext.getCmp(gpdLowId).setValue('产水量范围(GPD):' + gpdLow);
+						Ext.getCmp(useAmountId).setValue('膜片用量:' + useAmount);
 						_this.chooseTumoWindow.show();
 					}
 				}
@@ -489,46 +536,47 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onSelect4ChooseTumo = fu
 	} else {
 		var records = A.getSelectionModel().getSelections();
 		var store = this.addPlanDayListPanel.store;
-		
+
 		Ext.each(records, function(r) {
 					var rd = new Ext.data.Record({
-						meterAmount : r.data.amount,
-						batchNo : r.data.mpBatchNo,
-						storageName : r.data.storageName,
-						storagePosition : r.data.storagePosition,
-						ifMix : '否',
-						mpRemark : ''
-					})
+								meterAmount : r.data.amount,
+								batchNo : r.data.mpBatchNo,
+								storageName : r.data.storageName,
+								storagePosition : r.data.storagePosition,
+								ifMix : '否',
+								mpRemark : '',
+								mpMinSaltRejection : r.data.mpMinSaltRejection,
+								yjGpdLowLimit2 : r.data.yjGpdLowLimit2
+							})
 					store.add(rd);
 				})
-		
-		
+
 		this.chooseTumoWindow.hide();
 	}
-}	
+}
 
 com.keensen.ump.produce.component.planweekMgr.prototype.onSaveAdd = function() {
-	
+
 	var _this = this;
-	var B = this.listPanel.getSelectionModel()
-								.getSelections();
+	var B = this.listPanel.getSelectionModel().getSelections();
 	var A = this.addPlanDayListPanel;
-	if (!A.getSelectionModel().getSelected()) {
+	var records = A.store.getRange();
+	if (records.length == 0) {
 		Ext.Msg.alert("系统提示", "没有数据可以保存！");
 		return;
 	} else {
-		var records = A.store.getRange();
+
 		var relationId = this.planDayWindow.relationId.getValue();
 		var orderId = this.planDayWindow.orderId.getValue();
 		var planDate = this.planDayWindow.planDate.getValue();
 		var jmAmount = this.planDayWindow.jmAmount.getValue();
-		
-		if(Ext.isEmpty(planDate)){
+
+		if (Ext.isEmpty(planDate)) {
 			Ext.Msg.alert("系统提示", "请选择计划日期！");
 			return;
 		}
-		
-		var entitys = [];		
+
+		var entitys = [];
 		Ext.each(records, function(r) {
 					var rd = {
 						meterAmount : r.data.meterAmount,
@@ -540,50 +588,76 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onSaveAdd = function() {
 						relationId : relationId,
 						orderId : orderId,
 						planDate : planDate,
-						jmAmount : jmAmount
+						jmAmount : jmAmount,
+						mpMinSaltRejection : r.data.mpMinSaltRejection,
+						yjGpdLowLimit2 : r.data.yjGpdLowLimit2
 					}
 					entitys.push(rd);
 				})
 		var mk = new Ext.LoadMask(document.body, {
-				msg : '正在计算中，请稍候！',
-				removeMask : true
-			});
-	mk.show();
-	Ext.Ajax.request({
-				method : "post",
-				scope : this,
-				url : 'com.keensen.ump.produce.component.neworder.saveBatchPlanDay.biz.ext',
-				jsonData : {
-					entitys : entitys
-				},
-				success : function(response, action) {
-					mk.hide();
-					// 返回值处理
-					var result = Ext.decode(response.responseText);
-					if (result.success) {
-						
-						A.store.removeAll();
-						_this.addPlanDayPanel.form.reset();
-						_this.editPlanDayListPanel.store.load({
-									params : {
-										'condition/relationId' : B[0].data.id
-									}
-								});
-						_this.planDayWindow.hide();
-					}
+					msg : '正在计算中，请稍候！',
+					removeMask : true
+				});
+		mk.show();
+		Ext.Ajax.request({
+			method : "post",
+			scope : this,
+			url : 'com.keensen.ump.produce.component.neworder.saveBatchPlanDay.biz.ext',
+			jsonData : {
+				entitys : entitys
+			},
+			success : function(response, action) {
+				mk.hide();
+				// 返回值处理
+				var result = Ext.decode(response.responseText);
+				if (result.success) {
+
+					A.store.removeAll();
+					_this.addPlanDayPanel.form.reset();
+					_this.editPlanDayListPanel.store.load({
+								params : {
+									'condition/relationId' : B[0].data.id
+								}
+							});
+					_this.planDayWindow.hide();
 				}
-			});
-		
-		
+			}
+		});
+
 	}
 }
 
 com.keensen.ump.produce.component.planweekMgr.prototype.onDelChoose = function() {
-	
+
 	var A = this.addPlanDayListPanel;
-	A.store.remove(A.getSelectionModel().getSelected()) ;
+	A.store.remove(A.getSelectionModel().getSelected());
 	A.store.fireEvent('datachanged'); // 通知 Store 数据已更改
-								
+
+}
+
+com.keensen.ump.produce.component.planweekMgr.prototype.onInputAdd = function() {
+	this.inputAddPanel.form.reset();
+	this.inputAddWindow.show();
+}
+
+com.keensen.ump.produce.component.planweekMgr.prototype.onConfirm4InputAdd = function() {
+
+	var store = this.addPlanDayListPanel.store;
+	var rd = new Ext.data.Record({
+				meterAmount : this.inputAddWindow.meterAmount.getValue(),
+				batchNo : this.inputAddWindow.batchNo.getValue(),
+				storageName : this.inputAddWindow.storageName.getValue(),
+				storagePosition : this.inputAddWindow.storagePosition
+						.getValue(),
+				ifMix : '否',
+				mpRemark : '',
+				mpMinSaltRejection : this.inputAddWindow.mpMinSaltRejection
+						.getValue(),
+				yjGpdLowLimit2 : this.inputAddWindow.yjGpdLowLimit2.getValue()
+			})
+	store.add(rd);
+	store.fireEvent('datachanged');
+	this.inputAddWindow.hide();
 }
 
 function getOneDecimal(num) {

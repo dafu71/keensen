@@ -108,8 +108,8 @@
       <sourceNode>assign1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link6</targetConnections>
     <targetConnections>link10</targetConnections>
+    <targetConnections>link6</targetConnections>
     <location x="420" y="255"/>
     <size height="28" width="28"/>
     <nodeLabel>assign1label</nodeLabel>
@@ -161,6 +161,14 @@
       <process:from type="query" pattern="reference">maters[1]/MP_WIDTH</process:from>
       <process:to type="query">data/mpWidth</process:to>
     </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">maters[1]/saltLow</process:from>
+      <process:to type="query">data/saltLow</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">maters[1]/gpdLow</process:from>
+      <process:to type="query">data/gpdLow</process:to>
+    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">
     <location x="414" y="291"/>
@@ -172,14 +180,13 @@
       <sourceNode>subprocess0</sourceNode>
       <targetNode>assign1</targetNode>
     </sourceConnections>
-    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="link7" displayName="连接线" type="transition">
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="废除" displayName="连接线" type="transition">
       <sourceNode>subprocess0</sourceNode>
       <targetNode>assign3</targetNode>
       <process:transitionCondition>
-        <process:simpleCondition operator="NOTNULLANDEMPTY">
-          <process:leftOperand type="query">order/baseId</process:leftOperand>
-          <process:rightOperand type="literal">1</process:rightOperand>
-        </process:simpleCondition>
+        <process:complexCondition>
+          <process:code>1==2</process:code>
+        </process:complexCondition>
       </process:transitionCondition>
     </sourceConnections>
     <targetConnections>link5</targetConnections>

@@ -184,7 +184,12 @@
 	   AND A.TEST_SPEC_ID = #testSpecId#
 	</isNotNull>
 	
-	
+	<isNotNull prepend="" property="rCheckBeginDate">
+	   AND A.r_CHECK_TM &gt;= TO_DATE(#rCheckBeginDate#, 'YYYY-MM-DD HH24:MI')
+	</isNotNull>
+	<isNotNull prepend="" property="frCheckEndDate">
+	   AND A.r_CHECK_TM &lt; TO_DATE(#rCheckEndDate#, 'YYYY-MM-DD HH24:MI')
+	</isNotNull>
 	
 	<isNotNull prepend="" property="isBatchQualified">
 	   AND A.IS_BATCH_QUALIFIED = #isBatchQualified#

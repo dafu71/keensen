@@ -35,7 +35,6 @@
 	String pressWidth = "25%";
 	String recoveryWidth = "20%";
 	String pressWorkWidth = "0%";
-	String rangePhWidth = "0%";
 	String rangeRunPhWidth = "0%";
 	String areaWidth = "0%";
 	
@@ -47,12 +46,11 @@
 		 solutionWidth3 = "15%";
 		 temperatureWidth = "10%";
 		 phWidth = "10%";
-		 pressWidth = "10%";
-		 recoveryWidth = "10%";
-		 pressWorkWidth = "10%";
-		 rangePhWidth = "10%";
-		 rangeRunPhWidth = "10%";
-		 areaWidth = "10%";
+		 pressWidth = "12%";
+		 recoveryWidth = "12%";
+		 pressWorkWidth = "12%";
+		 rangeRunPhWidth = "12%";
+		 areaWidth = "12%";
 	}
 
 	
@@ -91,7 +89,7 @@
 </div>
 <%} %>
 <div align="center" id="pdfContainer">
-
+<div align="center" style="height: 297mm; width: 210mm;">
 <table width="780" border="0">
 	<tr>
 		<td rowspan="4" width="50%"><img
@@ -217,9 +215,7 @@
 		<td width="<%=pressWorkWidth %>" height="27">
 		<div align="center" class="style1">Maximum working pressure psi(MPa)</div>
 		</td>
-		<td width="<%=rangePhWidth %>" height="27">
-		<div align="center" class="style1">PH adaptation range</div>
-		</td>
+		
 		<td width="<%=rangeRunPhWidth %>" height="27">
 		<div align="center" class="style1">PH range of inlet water during continuous operation</div>
 		</td>
@@ -260,10 +256,7 @@
 			<div align="center" class="style1"><b:write
 				property="data/pressWork" /></div>
 		</td>
-		<td height="33">
-			<div align="center" class="style1"><b:write
-				property="data/rangePh" /></div>
-		</td>
+		
 		<td height="33">
 			<div align="center" class="style1"><b:write
 				property="data/rangeRunPh" /></div>
@@ -308,10 +301,7 @@
 			<div align="center" class="style1"><b:write
 				property="data/pressWork2" /></div>
 		</td>
-		<td height="33">
-			<div align="center" class="style1"><b:write
-				property="data/rangePh2" /></div>
-		</td>
+		
 		<td height="33">
 			<div align="center" class="style1"><b:write
 				property="data/rangeRunPh2" /></div>
@@ -355,10 +345,7 @@
 			<div align="center" class="style1"><b:write
 				property="data/pressWork" /></div>
 		</td>
-		<td height="33">
-			<div align="center" class="style1"><b:write
-				property="data/rangePh" /></div>
-		</td>
+		
 		<td height="33">
 			<div align="center" class="style1"><b:write
 				property="data/rangeRunPh" /></div>
@@ -448,8 +435,10 @@
 			<div align="center" class="style1">Standard Test Conditions</div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/waterCheck" /></div>
+			<div align="center" class="style1">
+			<%--<b:write property="data/waterCheck" />--%>
+			See the below Checklist
+			</div>
 			</td>			
 			<td height="38">
 			<div align="center" class="style1">up to standard</div>
@@ -473,8 +462,8 @@
 			</td>
 			
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/waterCheck2" /></div>
+			<div align="center" class="style1"><%--<b:write
+				property="data/waterCheck2" />--%>See the below Checklist</div>
 			</td>
 			<td height="38">
 			<div align="center" class="style1">up to standard</div>
@@ -503,8 +492,8 @@
 			<div align="center" class="style1">Standard Test Conditions</div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/desalinationCheck" /></div>
+			<div align="center" class="style1"><%--<b:write
+				property="data/desalinationCheck" />--%>See the below Checklist</div>
 			</td>			
 			<td height="38">
 			<div align="center" class="style1">up to standard</div>
@@ -528,8 +517,8 @@
 			</td>
 			
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/desalinationCheck2" /></div>
+			<div align="center" class="style1"><%--<b:write
+				property="data/desalinationCheck2" />--%>See the below Checklist</div>
 			</td>	
 			<td height="38">
 			<div align="center" class="style1">up to standard</div>
@@ -557,8 +546,8 @@
 		<div align="center" class="style1">Pressure gage</div>
 		</td>
 				<td height="78">
-		<div align="center" class="style1"><b:write
-				property="data/airCheck" /></div>
+		<div align="center" class="style1"><%--<b:write
+				property="data/airCheck" />--%>See the below Checklist</div>
 		</td>
 		<td height="78">
 		<div align="center" class="style1">up to standard</div>
@@ -586,8 +575,8 @@
 			<div align="center" class="style1">Standard Test Conditions</div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/waterCheck" /></div>
+			<div align="center" class="style1"><%--<b:write
+				property="data/waterCheck" />--%>See the below Checklist</div>
 			</td>
 			
 			<td height="38">
@@ -610,8 +599,8 @@
 			<div align="center" class="style1">Standard Test Conditions</div>
 			</td>
 			<td height="38">
-			<div align="center" class="style1"><b:write
-				property="data/desalinationCheck" /></div>
+			<div align="center" class="style1"><%--<b:write
+				property="data/desalinationCheck" />--%>See the below Checklist</div>
 			</td>
 			
 			<td height="38">
@@ -636,8 +625,8 @@
 		<div align="center" class="style1">Pressure gage</div>
 		</td>
 				<td height="78">
-		<div align="center" class="style1"><b:write
-				property="data/airCheck" /></div>
+		<div align="center" class="style1"><%--<b:write
+				property="data/airCheck" />--%>See the below Checklist</div>
 		</td>
 		<td height="78">
 		<div align="center" class="style1">up to standard</div>
@@ -710,6 +699,7 @@
 	</table>
 
 </l:notEmpty> 
+</div>
 
 <p>&nbsp;</p>
 

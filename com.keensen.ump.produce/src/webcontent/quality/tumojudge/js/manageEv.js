@@ -426,6 +426,52 @@ com.keensen.ump.produce.quality.timojudgeMgr.prototype.onReject = function() {
 
 }
 
+com.keensen.ump.produce.quality.timojudgeMgr.prototype.defectView2 = function() {
+
+	var _this = this;
+	var dimoBatchNo;
+	var relationId;
+
+	if (this.editWindow.isVisible()) {
+		dimoBatchNo = this.editPanel.dimoBatchNo.getValue();
+		relationId = this.editPanel.zmId.getValue();
+	} else {
+		var B = this.listPanel.getSelectionModel().getSelections();
+		if (B && B.length != 0) {
+			if (B.length == 1) {
+				var r = B[0];
+				dimoBatchNo = r.get('dimoBatchNo');
+				relationId = r.get('zmId');
+
+			} else {
+				Ext.Msg.alert("系统提示", "请选择一条数据!");
+			}
+		} else {
+			Ext.Msg.alert("系统提示", "请选择数据!");
+			return
+
+		}
+	}
+
+	var spacepanel = Ext.getCmp('spacepanel');
+
+	if (dimoBatchNo == '') {
+		return;
+	}
+
+	var itemId = 'menu10004881';
+	var url = '/produce/quality/mpdefect/zmdefectlist.jsp?dimoBatchNo=' + dimoBatchNo + '&relationId=' + relationId;
+	var title = '铸膜工序不良记录';
+	spacepanel.remove(spacepanel.getItem(itemId));
+	spacepanel.open({
+				id : '10004881',
+				text : title,
+				attributes : {
+					respath : url
+				}
+			});
+}
+
 // 显示模态窗口函数
 function showImageModal(defectPicture) {
 	// 创建模态窗口
@@ -451,3 +497,4 @@ function showImageModal(defectPicture) {
 	// 显示窗口
 	win.show();
 }
+

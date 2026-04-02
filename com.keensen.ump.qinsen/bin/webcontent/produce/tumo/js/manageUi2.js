@@ -50,8 +50,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		this.initChooseDefectWindow();
 		this.initAddDefectWindow();
 
-		this.initColorbWindow();		
-		
+		this.initColorbWindow();
+
 		this.defectTmWin = new com.keensen.ump.defectWindow({
 					id : defectTmWinId,
 					batchNoControl : true,
@@ -465,8 +465,6 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 					handler : this.onQueryLiquidAdjust
 				});
 
-		
-
 		/*
 		 * this.queryPanel.addButton({ text : "生产加料记录", scope : this, iconCls :
 		 * 'icon-application_form_magnify', handler : this.onQueryFeeding });
@@ -527,11 +525,10 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									 * iconCls : 'icon-application_add', handler :
 									 * this.onaddFhDefect }
 									 *//*
-										 * , '->', { text : '录入铸膜不良', scope :
-										 * this, iconCls :
-										 * 'icon-application_add', hidden :
-										 * true, handler : this.onaddZmDefect },
-										 */
+								 * , '->', { text : '录入铸膜不良', scope : this,
+								 * iconCls : 'icon-application_add', hidden :
+								 * true, handler : this.onaddZmDefect },
+								 */
 							, '-', {
 								text : '录入涂膜不良',
 								scope : this,
@@ -946,14 +943,14 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						width : 60,
 						dataIndex : 'tagNum',
 						renderer : function(v, m, r, i) {
-							return v == 0? '':v;
+							return v == 0 ? '' : v;
 						}
 					}, {
 						header : '标签长度',
 						width : 80,
 						dataIndex : 'tagLength',
 						renderer : function(v, m, r, i) {
-							return v == 0? '':v;
+							return v == 0 ? '' : v;
 						}
 					}, {
 						header : '初检测试台',
@@ -1197,11 +1194,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						baseParams : {},
 						fields : [{
 									name : 'cmLineCode'
-								},{
+								}, {
 									name : 'aPlusLength'
 								}, {
 									name : 'isAPlus'
-								},{
+								}, {
 									name : 'colorbAvg'
 								}, {
 									name : 'colorbOk'
@@ -1606,9 +1603,19 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							xtype : 'textfield',
 							name : 'entity/orderNo',
 							fieldLabel : '订单号',
+							ref : '../../orderNo',
 							allowBlank : false,
 							anchor : '75%',
-							colspan : 1
+							colspan : 1,
+							listeners : {
+								scope : this,
+								'blur' : function() {
+									var orderNo = this.inputWindow.orderNo
+											.getValue();
+									this.inputWindow.orderNo.setValue(orderNo
+											.trim());
+								}
+							}
 						}, {
 							xtype : 'numberfield',
 							name : 'entity/outLength',
@@ -1891,13 +1898,13 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 	this.initEditWindow = function() {
 		var _this = this;
 		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
-			title : '修改涂膜记录',
-			height : 620,
-			width : 800,
-			resizable : false,
-			minimizable : false,
-			maximizable : false,
-			items : [{
+					title : '修改涂膜记录',
+					height : 620,
+					width : 800,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
 						xtype : 'editpanel',
 						baseCls : "x-plain",
 						pgrid : this.listPanel,
@@ -2047,11 +2054,21 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}, {
 									xtype : 'textfield',
 									name : 'entity/orderNo',
+									ref : '../../orderNo',
 									dataIndex : 'orderNo',
 									fieldLabel : '订单号',
 									allowBlank : false,
 									anchor : '75%',
-									colspan : 1
+									colspan : 1,
+									listeners : {
+										scope : this,
+										'blur' : function() {
+											var orderNo = this.editWindow.orderNo
+													.getValue();
+											this.editWindow.orderNo
+													.setValue(orderNo.trim());
+										}
+									}
 								}, {
 									xtype : 'numberfield',
 									name : 'entity/outLength',
@@ -2349,7 +2366,7 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									xtype : 'hidden'
 								}]
 					}]
-		});
+				});
 	}
 
 	this.initEditMpdWindow = function() {
@@ -6044,6 +6061,5 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 		});
 
 	}
-
 
 }

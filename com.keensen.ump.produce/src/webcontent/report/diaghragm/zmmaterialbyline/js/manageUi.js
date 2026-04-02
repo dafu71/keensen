@@ -18,7 +18,7 @@ com.keensen.ump.produce.report.diaghragm.ZmMaterialByLineMgr = function() {
 	}
 
 	this.initQueryPanel = function() {
-		var _this = this; alert();
+		var _this = this; 
 		this.queryPanel = new Ext.fn.QueryPanel({
 					height : 80,
 					columns : 4,

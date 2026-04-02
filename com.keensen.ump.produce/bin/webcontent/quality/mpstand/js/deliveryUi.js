@@ -48,7 +48,7 @@ com.keensen.ump.produce.quality.DeliverStdMgr = function() {
 								}
 							}, {
 								xtype : 'textfield',
-								hiddenName : 'condition/client',
+								name : 'condition/client',
 								anchor : '100%',
 								colspan : 1,
 								fieldLabel : '客户 '

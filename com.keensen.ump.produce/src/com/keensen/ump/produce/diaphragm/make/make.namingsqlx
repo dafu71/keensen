@@ -67,6 +67,11 @@
     
     
      where 1=1
+     
+     <isNotNull prepend="" property="mptype"> 
+		       AND t1.mptype = #mptype#
+	</isNotNull>
+         
      <isNotNull prepend="" property="batchNo"> 
 		       AND t1.BATCH_NO = #batchNo#
 	</isNotNull>
@@ -529,7 +534,18 @@ LEFT JOIN qinsen.CONF_PROP_VALUE_OPTION t2
        nvl(sum(T1.THEORY_AMOUNT),0) AS "theoryAmount",
        sum(nvl(t1.release_amount,0)) "releaseAmount",
        nvl(sum(defect.loss),0) + nvl(sum(zd.defect_length),0) "loss"
+       
+       ,nvl(sum(tmdefect.defect_length),0) AS "zmxtotaltmdefect"
+       
   FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T1
+  
+  left join (select SUM(t.length) defect_length,tm.dimo_batch_no
+	 from KS_DIAPHRAGM_TM_DEFECT_LIST t
+	 LEFT JOIN qinsen.inst_tumo tm
+	 ON tm.record_id = t.relation_id
+	 WHERE EXISTS(SELECT 1 FROM KS_QUALITY_MP_DEFECT md WHERE md.reserve1='ZM' AND md.id=t.defect_id)
+	  GROUP BY tm.dimo_batch_no) tmdefect
+	  on tmdefect.dimo_batch_no = t1.dimo_batch_no
   
   left join (select t.relation_id,SUM(t.length) defect_length from KS_DIAPHRAGM_ZM_DEFECT_LIST t
   GROUP BY t.relation_id) zd

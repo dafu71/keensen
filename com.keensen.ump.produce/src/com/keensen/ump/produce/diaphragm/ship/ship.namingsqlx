@@ -10,8 +10,9 @@
        t1.BATCH_NO        as "batchNo",
        lower(t1.IS_QUALIFIED)    as "isQualified",
        t1.OUT_LENGTH      as "outLength",
-       t1.LOSS            as "loss",
-       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+       nvl(t1.LOSS,0) + nvl(tmdefect.defect_length,0)            as "loss",
+       nvl(t1.USEFUL_LENGTH,0) - nvl(tmdefect.defect_length2,0)  as "usefulLength",
+       nvl(t1.QUALIFID_LENGTH,0) - nvl(tmdefect.defect_length,0)  as "qualifidLength",
        t1.PLAN_NO         as "planNo",
        t1.ORDER_NO        as "orderNo",
        t1.SUP_ID          as "supId",
@@ -36,8 +37,14 @@
        t2.create_name "createName", 
        t2.amount "sendAmount",
        t2.id "sendId",-->
-       t1.QUALIFID_LENGTH - nvl(t3.amount,0) "delivery"
+       t1.QUALIFID_LENGTH - nvl(t3.amount,0) - nvl(tmdefect.defect_length,0) "delivery"
   from v_ks_tumo3 t1
+  
+   left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = t1.record_id
+  
   
   left join (SELECT sum(nvl(t.amount,0)) amount ,record_id 
 			from KS_PROD_DIAPHRAGM_SHIP t
@@ -120,13 +127,19 @@
  
  <select id="queryTumoSum" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
   SELECT SUM(T1.OUT_LENGTH) AS "outLength",
-       SUM(T1.LOSS) AS "loss",
-       SUM(T1.USEFUL_LENGTH) AS "usefulLength",
-       SUM(T1.QUALIFID_LENGTH) AS "qualifidLength",
+       SUM( nvl(t1.LOSS,0) + nvl(tmdefect.defect_length,0)) AS "loss",
+       SUM(nvl(t1.USEFUL_LENGTH,0) - nvl(tmdefect.defect_length2,0)) AS "usefulLength",
+       SUM(nvl(t1.QUALIFID_LENGTH,0) - nvl(tmdefect.defect_length,0)) AS "qualifidLength",
        SUM(DECODE(T1.PERF_FLAG_CODE, 'A', T1.QUALIFID_LENGTH, 0)) AS "aqualifidLength",
        SUM(DECODE(T1.PERF_FLAG_CODE, 'B', T1.QUALIFID_LENGTH, 0)) AS "bqualifidLength",
        SUM(DECODE(T1.PERF_FLAG_CODE, 'C', T1.QUALIFID_LENGTH, 0)) AS "cqualifidLength"
   FROM V_KS_TUMO3 T1
+  
+  left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = t1.record_id
+  			
   LEFT JOIN KS_PROD_DIAPHRAGM_SHIP T2
     ON T1.RECORD_ID = T2.RECORD_ID
  WHERE 1 = 1
@@ -195,7 +208,8 @@
  
  <select id="queryFhd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
      select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",t2.create_name "createName",
-       t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id", t2.amount "sendAmount",
+       t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id", 
+       nvl(t2.amount,0) - nvl(tmdefect.defect_length,0) "sendAmount",
        to_char(t2.create_time,'yyyy-MM-dd') "createTime",
        nvl(t2.ifconfirm,'n')    "ifconfirm",
        t1.LINE_CODE       as "lineCode",
@@ -203,8 +217,9 @@
        t1.BATCH_NO        as "batchNo",
        t1.IS_QUALIFIED    as "isQualified",
        t1.OUT_LENGTH      as "outLength",
-       t1.LOSS            as "loss",
-       t1.USEFUL_LENGTH as "usefulLength",t1.QUALIFID_LENGTH as "qualifidLength",
+        nvl(t1.LOSS,0) + nvl(tmdefect.defect_length,0)            as "loss",
+       nvl(t1.USEFUL_LENGTH,0) - nvl(tmdefect.defect_length2,0) as "usefulLength",
+       nvl(t1.QUALIFID_LENGTH,0) - nvl(tmdefect.defect_length,0) as "qualifidLength",
        t2.PLAN_NO         as "planNo",
        t2.ORDER_NO        as "orderNo",
        t2.delivery_order_no as "deliveryOrderNo",
@@ -230,6 +245,10 @@
   from V_KS_PROD_DIAPHRAGM_SHIP t2
   left join V_KS_TUMO3 t1 
     on t1.RECORD_ID = t2.RECORD_ID
+  left join (select sum(length) defect_length,relation_id,
+          sum(decode(iftear,'是', length,0)) defect_length2,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
+           from KS_DIAPHRAGM_TM_DEFECT_LIST group by relation_id) tmdefect
+  			on tmdefect.relation_id = t1.record_id
  where 1=1
  
  <isNotNull prepend="and" property="clientName"> 

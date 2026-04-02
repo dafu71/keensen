@@ -659,6 +659,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.updateTumoOrderNO = fu
 		recordId, newValue, oldValue) {
 	var _this = this;
 
+	if(Ext.isEmpty(newValue)) return;
 	Ext.Ajax.request({
 		method : "post",
 		scope : this,
@@ -692,7 +693,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr.prototype.onModifyBatch = functi
 					recordIds.push(r.data['recordId']);
 				});
 		Ext.Msg.prompt('修改订单号', '请输入订单号', function(btn, text) {
-			if (btn == 'ok') {
+			if (btn == 'ok' && !Ext.isEmpty(text)) {
 				_this.requestMask = this.requestMask
 						|| new Ext.LoadMask(Ext.getBody(), {
 									msg : "后台正在操作,请稍候!"

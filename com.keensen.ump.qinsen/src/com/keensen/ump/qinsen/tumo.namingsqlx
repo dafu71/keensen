@@ -862,6 +862,7 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 	t.fxy = #fxy#,t.ro = #ro#,t.absorbance =#absorbance#,t.a =#a#,t.b=#b#	
 	WHERE (t.mpd IS NULL) and (t.batch_no &lt;= #batchNo#)
 	AND (t.replace_trough_id = #replaceTroughId#)
+	and (t.line_id , t.prod_flag_id) in (SELECT  t.line_id,t.prod_flag_id FROM qinsen.inst_tumo t where t.batch_no = #batchNo#)
 	</update>
 	
 	<!-- 查询更换漂洗槽提醒 -->

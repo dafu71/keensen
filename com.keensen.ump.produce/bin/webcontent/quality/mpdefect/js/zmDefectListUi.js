@@ -31,12 +31,17 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 					fields : ['code', 'name'],
 					data : [['铸膜', '铸膜'], ['涂膜', '涂膜'], ['裁叠膜', '裁叠膜']]
 				});
+				
+		this.iftearStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['是', '是'], ['否', '否']]
+				});
 	}
 
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 180,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -91,7 +96,7 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 							}, {
 								xtype : 'textfield',
 								name : 'condition/dimoBatchNo',
-								ref:'../dimoBatchNo',
+								ref : '../dimoBatchNo',
 								anchor : '100%',
 								colspan : 1,
 								fieldLabel : '底膜批号%%'
@@ -150,6 +155,61 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 								fieldLabel : "不良记录时间",
 								format : "Y-m-d"
 							}, {
+								xtype : 'teamcombobox',
+								name : 'condition/teamId',
+								fieldLabel : '生产班组',
+								hiddenName : 'condition/teamId',
+								anchor : '100%',
+								colspan : 1
+							}, {
+								xtype : 'combobox',
+								anchor : '100%',
+								colspan : 1,
+								name : 'condition/productType',
+								hiddenName : 'condition/productType',
+								ref : '../productType',
+								fieldLabel : '生产类型',
+								triggerAction : "all",
+								store : new Ext.data.ArrayStore({
+											fields : ['mykey', 'myvalue'],
+											data : [['量产', '量产'], ['实验', '实验'],
+													['试量产', '试量产']]
+										}),
+								mode : "local",
+								editable : false,
+								displayField : "myvalue",
+								valueField : "mykey",
+								forceSelection : true,
+								emptyText : "--请选择--",
+								listeners : {
+									scope : this,
+									'expand' : function(A) {
+										this.queryPanel.productType.reset();
+									}
+								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '是否已扯',
+							ref : '../iftear',
+							hiddenName : 'condition/iftear',
+							anchor : '100%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							store : _this.iftearStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.queryPanel.iftear.reset()
+								}
+							}
+						}, {
 								xtype : 'hidden',
 								ref : '../relationId',
 								hiddenName : 'condition/relationId'
@@ -181,9 +241,16 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 			tbar : [{
 						text : '删除',
 						scope : this,
-						//hidden : true,
+						// hidden : true,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : lengthTotalId
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.defect.deleteZmDefectList.biz.ext',
@@ -192,14 +259,22 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 						header : '底膜批号'
 					}, {
 						dataIndex : 'defectName',
-						width:200,
+						width : 200,
 						header : '不良项目'
+					}, {
+						header : '班组',
+						width : 100,
+						dataIndex : 'teamName'
+					}, {
+						header : '生产类型',
+						width : 70,
+						dataIndex : 'productType'
 					}, {
 						dataIndex : 'first',
 						header : '不良类型'
 					}, {
 						dataIndex : 'createTime',
-						width:120,
+						width : 120,
 						header : '不良记录时间'
 					}, {
 						dataIndex : 'tacheCause',
@@ -256,6 +331,12 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'productType'
+						}, {
+							name : 'teamName'
+						}, {
+							name : 'lengthTotal'
+						}, {
 							name : 'id'
 						}, {
 							name : 'createTime'

@@ -2845,6 +2845,11 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.doUploadPicture = fun
 
 }
 
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onMarketingBoard = function() {
+	window
+			.open('com.keensen.ump.produce.report.queryMarketingBoard.flow');
+}
+
 function getDiffDay(date, num) {
 	var date2 = new Date(date);
 	var date1 = new Date(date2.setDate(date2.getDate() + num));

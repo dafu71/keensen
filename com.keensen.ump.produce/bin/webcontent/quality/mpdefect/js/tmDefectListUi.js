@@ -42,7 +42,7 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 150,
+					height : 180,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -174,6 +174,34 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 									}
 								}
 							}, {
+								xtype : 'teamcombobox',
+								name : 'condition/teamId',
+								fieldLabel : '生产班组',
+								hiddenName : 'condition/teamId',
+								anchor : '100%',
+								colspan : 1
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+
+						xtype : 'combo',
+						fieldLabel : '生产类型',
+						ref : '../prodFlagId',
+						hiddenName : 'condition/prodFlagId',
+						emptyText : '--请选择--',
+						anchor : '100%',
+						colspan : 1,
+						store : [[null, '全部'], ['300027', '量产'],
+								['300028', '实验'], ['300140', '试量产']],
+						listeners : {
+							scope : this,
+							'expand' : function(A) {
+								this.queryPanel.prodFlagId.reset();
+							}
+						}
+					}, {
 								xtype : 'hidden',
 								ref : '../relationId',
 								hiddenName : 'condition/relationId'
@@ -208,6 +236,13 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 						//hidden : true,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, {
+						xtype : 'displayfield',
+						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+					}, {
+						xtype : 'displayfield',
+						value : '',
+						id : lengthTotalId
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.quality.defect.deleteTmDefectList.biz.ext',
@@ -218,6 +253,14 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 						dataIndex : 'defectName',
 						width:200,
 						header : '不良项目'
+					}, {
+						header : '班组',
+						width : 100,
+						dataIndex : 'teamName'
+					}, {
+						header : '生产类型',
+						width : 70,
+						dataIndex : 'prodFlagName'
 					}, {
 						header : '外销',
 						width : 50,
@@ -284,6 +327,12 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'prodFlagName'
+						},{
+							name : 'teamName'
+						},{
+							name : 'lengthTotal'
+						},{
 							name : 'isWxName'
 						},{
 							name : 'id'

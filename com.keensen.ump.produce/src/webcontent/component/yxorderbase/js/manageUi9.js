@@ -698,6 +698,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.importNoStdExcel
 				});
+				
+		this.queryPanel.addButton({
+					text : "销售订单生产进度看板",
+					scope : this,
+					hidden : boardRight != '1',
+					iconCls : 'icon-application_excel',
+					handler : this.onMarketingBoard
+				});
 
 	}
 

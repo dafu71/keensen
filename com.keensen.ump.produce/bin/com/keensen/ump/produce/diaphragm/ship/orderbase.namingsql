@@ -106,7 +106,7 @@ amount,amount,ext11,ext12,ext13,ext14,ext15,ext16,ext17,ext18,ext19,demand_date,
 SYSDATE, #userId#,#userName#,'进行' ,#id#
 from KS_DIAPHRAGM_ORDER_BASE t
 left join (SELECT pms.* from qinsen.para_mater_spec pms
-WHERE pms.state='Y' AND pms.mater_class_id='100030023') t2
+WHERE pms.state='Y' AND pms.mater_class_id IN('100030022','100030023','100030024','100030025')) t2
 on t2.mater_spec_name = t.spec_name
 WHERE t.id=#id# and to_number(t.ext12)&gt;0</insert>
     <update id="updateOrderNeedAmount" parameterClass="java.util.HashMap">update KS_PROD_DIAPHRAGM_ORDER 

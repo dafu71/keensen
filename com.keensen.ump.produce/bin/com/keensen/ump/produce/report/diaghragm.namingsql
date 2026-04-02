@@ -1916,7 +1916,7 @@ SELECT 2 MYORDER,
                          ON pms.mater_spec_id = tm.spec_id
                        LEFT JOIN qinsen.para_mater_class pmc
                          ON pms.mater_class_id = pmc.mater_class_id
-         WHERE 1 = 1
+         WHERE 1 = 1 and tm.prod_flag_id = 300027
          <isNotNull prepend="" property="produceDtStart">AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &gt;=
                #produceDtStart#</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;=
@@ -1943,7 +1943,7 @@ SELECT 2 MYORDER,
                          ON pms.mater_spec_id = tm.spec_id
                        LEFT JOIN qinsen.para_mater_class pmc
                          ON pms.mater_class_id = pmc.mater_class_id
-                      WHERE T33.IS_A_PLUS = '是'
+                      WHERE T33.IS_A_PLUS = '是' and tm.prod_flag_id = 300027
                          <isNotNull prepend="" property="produceDtStart">AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &gt;=
                #produceDtStart#</isNotNull>
         <isNotNull prepend="" property="produceDtEnd">AND TO_CHAR(TM.PRODUCE_DT, 'YYYY-MM-DD HH24:MI') &lt;=

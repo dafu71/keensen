@@ -743,9 +743,12 @@
         ,t1.gyy_remark "gyyRemark"
         ,T2.is_a_plus "isAPlus",T2.a_plus_length "aPlusLength",T2.is_report "isReport"
         ,t1.judge_time "judgeTime"
+        
+        ,t1.dimo_batch_no "dimoBatchNo"
+        ,t1.zm_id "zmId"
        
   FROM (SELECT T.RECORD_ID,T.PRODUCE_DT,T.PROD_FLAG_ID,T.order_no,T.out_length,
-               T.BATCH_NO,T.mpd,
+               T.BATCH_NO,T.mpd,t.dimo_batch_no,zm.id zm_id,
                T.LINE_ID,
                T.SPEC_ID,
                NVL(T.IS_WX, 'N') IS_WX,
@@ -787,7 +790,8 @@
           (select * from QINSEN.INST_TUMO tm where exists(select 1 from QINSEN.INST_TUMO_CHECK tmc where tmc.batch_id=tm.record_id) ) T
           -->
           QINSEN.INST_TUMO T
-          
+          LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD zm
+          ON t.dimo_batch_no = zm.dimo_batch_no
           
           
           left join KS_PROD_DIAPHRAGM_TUMO t33
@@ -1055,8 +1059,8 @@ SET
   WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),
   qinsen.inst_tumo.judge_remark  =  (SELECT  judge_remark  FROM  KS_PROD_DIAPHRAGM_TUMO  
   WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),
-  qinsen.inst_tumo.order_no  =  (SELECT  order_no  FROM  KS_PROD_DIAPHRAGM_TUMO  
-  WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),
+  <!--qinsen.inst_tumo.order_no  =  (SELECT  order_no  FROM  KS_PROD_DIAPHRAGM_TUMO  
+  WHERE   KS_PROD_DIAPHRAGM_TUMO.record_id = qinsen.inst_tumo.record_id AND qinsen.inst_tumo.record_id=#recordId#),-->
   qinsen.inst_tumo.is_valid  =  'Y'
 	WHERE
   EXISTS ( SELECT 1 FROM   KS_PROD_DIAPHRAGM_TUMO  WHERE   

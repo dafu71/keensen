@@ -42,6 +42,7 @@
   <js:load scriptPath="pub/common/lineCombo.js" />
 <js:load scriptPath="pub/common/mpspecCombo.js" />
 <js:load scriptPath="pub/common/mpperfCombo.js" />
+<js:load scriptPath="pub/common/teamCombo.js" />
 <js:load scriptPath="produce/quality/mpdefect/js/tmDefectListUi.js"/>
 <js:load scriptPath="produce/quality/mpdefect/js/tmDefectListEv.js"/>
 
@@ -55,6 +56,8 @@
   var relationId4Search = "<%=relationId  %>";
   var tmBatchNo4Search = "<%=tmBatchNo  %>";
   var iftear4Search = "<%=iftear  %>";
+  
+  var lengthTotalId = Ext.id();
  
   var opt = '';
   FunctionMgr.load({ 

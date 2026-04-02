@@ -201,10 +201,15 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						iconCls : 'icon-application_edit',
 						handler : this.onJudge
 					}, '->', {
-						text : '查看不良记录',
+						text : '查看涂膜不良记录',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.defectView
+					}, '-', {
+						text : '查看底膜不良记录',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.defectView2
 					}, '-', {
 						text : '膜片降级',
 						scope : this,
@@ -316,6 +321,10 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'zmId'
+						},{
+							name : 'dimoBatchNo'
+						},{
 							name : 'defectAdvise'
 						},{
 							name : 'isAPlus'
@@ -894,7 +903,8 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 					}, {
 						xtype : 'textfield',
 						dataIndex : 'orderNo',
-						name : 'entity/orderNo',
+						//name : 'entity/orderNo',
+						readOnly : true,
 						fieldLabel : '订单号',
 						anchor : '100%',
 						colspan : 1
@@ -1083,6 +1093,14 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 						xtype : 'hidden',
 						ref : '../defectPicture',
 						dataIndex : 'defectPicture'
+					}, {
+						xtype : 'hidden',
+						ref : '../dimoBatchNo',
+						dataIndex : 'dimoBatchNo'
+					}, {
+						xtype : 'hidden',
+						ref : '../zmId',
+						dataIndex : 'zmId'
 					}],
 			buttons : [{
 						text : "确定",
@@ -1100,9 +1118,13 @@ com.keensen.ump.produce.quality.timojudgeMgr = function() {
 							this.editWindow.hide();
 						}
 					}, {
-						text : "查看不良记录",
+						text : "查看涂膜不良记录",
 						scope : this,
 						handler : this.defectView
+					}, {
+						text : "查看底膜不良记录",
+						scope : this,
+						handler : this.defectView2
 					}, {
 						text : "查看瑕疵图",
 						scope : this,

@@ -14,7 +14,12 @@
     String userName = userObject.getUserName();
     String mConfirm = "0";//生产管理部管理员
     
+    //营销订单生产看板
+    String boardRight = roleId.toString().indexOf("10002082")!=-1? "1":"0";//
+    
     String allRight = "0";
+    
+    
     
     if(roleId.toString().indexOf("10001521")!=-1 || uid.equals("sysadmin")){
 		allRight="1";
@@ -23,6 +28,9 @@
     if(roleId.toString().indexOf("10001481")!=-1 || uid.equals("sysadmin")){
 		mConfirm="1";
   	}
+  	
+  	//沁森管理员 10001081
+  	
   	String rootUrl = request.getRequestURL().toString();
   	rootUrl = rootUrl.replace("produce/component/yxorderbase/index9.jsp","");
   	
@@ -88,6 +96,7 @@ var markRootUrl = "<%=rootUrl %>";
   var mConfirm = "<%=mConfirm %>";
   var userName = "<%=userName %>";
   var allRight = "<%=allRight %>";
+  var boardRight = "<%=boardRight %>";
   
   var exportButton = Ext.id();
   var urlDateDeliveryId = Ext.id();

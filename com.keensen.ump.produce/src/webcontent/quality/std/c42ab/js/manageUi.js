@@ -115,7 +115,7 @@ com.keensen.ump.produce.quality.c42abMgr = function() {
 	this.initInputWindow = function() {
 		var _this = this;
 		this.inputWindow = this.inputWindow || new Ext.fn.FormWindow({
-			title : '更新C21标准',
+			title : '更新C42标准',
 			height : 480,
 			width : 600,
 			resizable : false,

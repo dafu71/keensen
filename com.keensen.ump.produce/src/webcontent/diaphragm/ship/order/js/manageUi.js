@@ -1730,6 +1730,7 @@ com.keensen.ump.produce.diaphragm.ship.OrderMgr = function() {
 														newValue, oldValue) {
 													if (newValue == oldValue)
 														return false;
+													if(Ext.isEmpty(newValue)) return;
 													var recordId = _this.orderRec.data['recordId'];
 													_this.updateTumoOrderNO(
 															recordId, newValue,

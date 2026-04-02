@@ -67,7 +67,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 90,
+					height : 120,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -131,6 +131,18 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 										_this.queryPanel.produceType.reset()
 									}
 								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 4
+							}, {
+								xtype : "dateregion",
+								colspan : 1,
+								anchor : '100%',
+								nameArray : ['condition/createTimeStart',
+										'condition/createTimeEnd'],
+								fieldLabel : "生产日期",
+								format : "Y-m-d"
 							}]
 				});
 
@@ -186,67 +198,67 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 			delUrl : 'com.keensen.ump.produce.component.produce.deleteWelded.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {
 						dataIndex : 'pipeType',
-						width:150,
+						width : 150,
 						header : '中心管型号'
 					}, {
 						dataIndex : 'batchNo',
-						width:150,
+						width : 150,
 						header : '中心管批号'
 					}, {
 						dataIndex : 'pipeCode',
-						width:120,
+						width : 120,
 						header : '中心管组件编号'
 					}, {
 						dataIndex : 'pipeSize',
-						width:120,
+						width : 120,
 						header : '中心管尺寸'
 					}, {
 						dataIndex : 'lightNetBatchNo',
-						width:150,
+						width : 150,
 						header : '淡网批号'
 					}, {
 						dataIndex : 'lightNetType',
-						width:120,
+						width : 120,
 						header : '淡网型号'
 					}, {
 						dataIndex : 'longPage',
-						width:120,
+						width : 120,
 						header : '长页'
 					}, {
 						dataIndex : 'pageNum',
-						width:120,
+						width : 120,
 						header : '长页页数'
 					}, {
 						dataIndex : 'shortPage',
-						width:120,
+						width : 120,
 						header : '短页'
 					}, {
 						dataIndex : 'pageNum2',
-						width:120,
+						width : 120,
 						header : '短页页数'
 					}, {
 						dataIndex : 'produceType',
-						width:120,
+						width : 120,
 						header : '生产类型'
 					}, {
 						dataIndex : 'perNum',
-						width:120,
+						width : 120,
 						header : '每卷数量'
 					}, {
 						dataIndex : 'produceNum',
-						width:120,
+						width : 120,
 						header : '生产数量'
 					}, {
 						dataIndex : 'machineCode',
-						width:120,
+						width : 120,
 						header : '生产机台号'
 					}, {
 						dataIndex : 'createDate',
-						width:120,
+						width : 120,
 						header : '生产日期'
 					}, {
 						dataIndex : 'operateUserName',
-						width:120,
+						width : 120,
 						header : '操作工'
 					}],
 			store : new Ext.data.JsonStore({
@@ -544,7 +556,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 					anchor : '95%',
 					colspan : 1,
 					emptyText : '',
-					readOnly:true,
+					readOnly : true,
 					editable : false,
 					store : _this.machineCodeStore,
 					displayField : "name",

@@ -28,6 +28,10 @@
 <script src="base/exceljs/doQueryAndExport.js"></script>
 
 <script type="text/javascript">
+    Ext.util.CSS.swapStyleSheet("","base/common/lockingGridView.css");
+</script>
+
+<script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component');
 </script>
 
@@ -36,6 +40,9 @@
 </style>
 <ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
 <ext:dict property="KS_COMPONENT_PLAN_RISK"   dictTypeId="KS_COMPONENT_PLAN_RISK" />
+
+<js:load scriptPath="base/common/lockingGridView.js"/>
+
 <js:load scriptPath="pub/common/componentworkerCombo.js" />
 <js:load scriptPath="produce/component/planweek/js/manageUi2.js"/>
 <js:load scriptPath="produce/component/planweek/js/manageEv2.js"/>
@@ -58,6 +65,12 @@ function getCurrentWeekNumber() {
 var operatorid = "<%=operatorid%>";
 var operatorname = "<%=operatorname%>";
 var opt = '';
+
+  var saltLowId = Ext.id();
+  var gpdLowId = Ext.id();
+  var useAmountId = Ext.id();
+  var amountCheckedId = Ext.id();
+  
   var listid = Ext.id();
   FunctionMgr.load({ 
 			mainfn:com.keensen.ump.produce.component.planweekMgr

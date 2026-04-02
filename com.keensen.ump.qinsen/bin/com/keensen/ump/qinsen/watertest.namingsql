@@ -171,6 +171,8 @@
         <isNotNull prepend="" property="testTypeId">AND A.TEST_TYPE_ID = #testTypeId#</isNotNull>
         <isNotNull prepend="" property="ifProdSpecId">AND A.IF_PROD_SPEC_ID = #ifProdSpecId#</isNotNull>
         <isNotNull prepend="" property="testSpecId">AND A.TEST_SPEC_ID = #testSpecId#</isNotNull>
+        <isNotNull prepend="" property="rCheckBeginDate">AND A.r_CHECK_TM &gt;= TO_DATE(#rCheckBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
+        <isNotNull prepend="" property="frCheckEndDate">AND A.r_CHECK_TM &lt; TO_DATE(#rCheckEndDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>
         <isNotNull prepend="" property="isBatchQualified">AND A.IS_BATCH_QUALIFIED = #isBatchQualified#</isNotNull>
         <isNotNull prepend="" property="isProdQualified">AND A.IS_PROD_QUALIFIED = #isProdQualified#</isNotNull>
         <isNotNull prepend="" property="fCheckBeginDate">AND A.F_CHECK_TM &gt;= TO_DATE(#fCheckBeginDate#, 'YYYY-MM-DD HH24:MI')</isNotNull>

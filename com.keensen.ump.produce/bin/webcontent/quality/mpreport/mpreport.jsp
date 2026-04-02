@@ -10,6 +10,7 @@
 	    DataObject[] list2 = (DataObject[]) XpathUtil.getObjectByXpath(
 			rootObj, "list");
 		String opt = (String) XpathUtil.getObjectByXpath(rootObj, "opt");
+		
 	
 %>
 
@@ -264,11 +265,13 @@
 		</td>
 		<td width="21%" height="78" rowspan=2>
 		<div align="left" class="style1">
-		温度：25℃<br>
+		<b:write
+			property="data/conditionTest" filter="false"/>
+		<%--温度：25℃<br>
 		压力：1.55MPa<br>
 		测试液浓度：2000mg/L NaCl溶液<br>
 		测试液pH值：7.0-8.0<br>
-		浓水流量：4Lpm    
+		浓水流量：4Lpm --%>   
 		</div>
 		</td>
 		<td width="25%" height="78" rowspan=2>

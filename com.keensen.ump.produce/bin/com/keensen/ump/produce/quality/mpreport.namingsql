@@ -41,9 +41,10 @@
        std.gfd_limit end "gfdLimit",
        
        std.salt_limit "saltLimit"
+       ,std.condition_test "conditionTest"
   FROM KS_QUALITY_MP_DELIVERY_REPORT T1
   
-  left join (select t.client,t.spec_name,MAX(t.thick_avg) thick_avg,
+  left join (select t.client,t.spec_name,MAX(t.thick_avg) thick_avg,MAX(t.condition_test) condition_test, 
 	MAX(t.width_mp) width_mp, MAX(t.width_valid) width_valid,
 	MAX(t.gfd_low_limit) gfd_low_limit, 
 	MAX(t.gfd_up_limit) gfd_up_limit,(MAX(t.gfd_up_limit)+MAX(t.gfd_low_limit))/2 gfd_avg,

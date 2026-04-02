@@ -570,4 +570,406 @@ SELECT '8寸',
   ORDER BY SUBSTR(YB.DEMAND_STOCK_DATE, 1, 10)
  
    </select>
+    <select id="queryPercentInvalid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT replace(T1.YEAR_MONTH,'-','年')|| '月'      AS "yearMonth",
+       T1.CDM_VALID       AS "cdmValid",
+       T1.MP_SCRAP        AS "mpScrap",
+       T1.PROD_SCRAP      AS "prodScrap",
+       T1.PROD_DEGRADE    AS "prodDegrade",
+       T1.PERCENT_INVALID AS "percentInvalid",
+       T1.CDM_SCRAP       AS "cdmScrap",
+       T1.JM_SCRAP        AS "jmScrap",
+       T1.PROD_DEGRADE2   AS "prodDegrade2",
+       T1.HHPROD_DEGRADE  AS "hhprodDegrade"
+  FROM (SELECT T1.YEAR_MONTH,
+               NVL(CDMVALID.CDM_VALID, 0) CDM_VALID,
+               NVL(CDMSCRAP.CDM_SCRAP, 0) + NVL(JMSCRAP.JM_SCRAP, 0) MP_SCRAP,
+               NVL(PRODSCRAP.PROD_SCRAP, 0) PROD_SCRAP,
+               NVL(PRODDEGRADE.PROD_DEGRADE, 0) +
+               NVL(HHPRODDEGRADE.HHPROD_DEGRADE, 0) PROD_DEGRADE,
+               TO_CHAR(ROUND(100 * (NVL(CDMSCRAP.CDM_SCRAP, 0) +
+                             NVL(JMSCRAP.JM_SCRAP, 0) +
+                             NVL(PRODSCRAP.PROD_SCRAP, 0) +
+                             NVL(PRODDEGRADE.PROD_DEGRADE, 0) +
+                             NVL(HHPRODDEGRADE.HHPROD_DEGRADE, 0)) /
+                             NVL(CDMVALID.CDM_VALID, 1000000000),
+                             2),
+                       'FM990.00') || '%' PERCENT_INVALID,
+               NVL(CDMSCRAP.CDM_SCRAP, 0) CDM_SCRAP,
+               NVL(JMSCRAP.JM_SCRAP, 0) JM_SCRAP,
+               NVL(PRODDEGRADE.PROD_DEGRADE, 0) PROD_DEGRADE2,
+               NVL(HHPRODDEGRADE.HHPROD_DEGRADE, 0) HHPROD_DEGRADE
+          FROM (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#ymStart#, 'YYYY-MM'),
+                                          ROWNUM - 1),
+                               'YYYY-MM') AS YEAR_MONTH
+                  FROM DUAL
+                CONNECT BY ROWNUM &lt;=
+                           MONTHS_BETWEEN(TO_DATE(#ymEnd#, 'YYYY-MM'),
+                                          TO_DATE(#ymStart#, 'YYYY-MM')) + 1) T1
+          LEFT JOIN (SELECT SUM(T.LENGTH) CDM_SCRAP,
+                           TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                      FROM KS_DIAPHRAGM_CDM_DEFECT_LIST T
+                      LEFT JOIN QINSEN.INST_CAIDIEMO CM
+                        ON CM.RECORD_ID = T.RELATION_ID
+                      LEFT JOIN KS_QUALITY_MP_DEFECT MD
+                        ON MD.ID = T.DEFECT_ID
+                     WHERE MD.FIRST = '固损'
+                       AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                       AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                     GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) CDMSCRAP
+            ON CDMSCRAP.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT SUM(T.LENGTH) JM_SCRAP,
+                           TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                      FROM KS_COMPONENT_JM_DEFECT_LIST T
+                      LEFT JOIN KS_QUALITY_PROD_DEFECT MD
+                        ON MD.ID = T.DEFECT_ID
+                     WHERE T.DEPT = '元件制造部'
+                       AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                       AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                     GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) JMSCRAP
+            ON JMSCRAP.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT TO_CHAR(T.INVALID_DT, 'YYYY-MM') YEAR_MONTH,
+                           SUM(T.LENGTH) PROD_SCRAP
+                      FROM KS_PROD_QUALITY_POORRECORD T
+                     WHERE T.DEPARTMENT = '元件制造'
+                       AND TO_CHAR(T.INVALID_DT, 'YYYY-MM') &gt;= #ymStart#
+                       AND TO_CHAR(T.INVALID_DT, 'YYYY-MM') &lt;= #ymEnd#
+                     GROUP BY TO_CHAR(T.INVALID_DT, 'YYYY-MM')) PRODSCRAP
+            ON PRODSCRAP.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') YEAR_MONTH,
+                           SUM(NVL(JD.OUT_QUANTITY, 0) * JM.BLANKING_SIZE *
+                               NVL(JM.PAGE_WIDTH, PMS.PAGE_WIDTH)) PROD_DEGRADE
+                      FROM QINSEN.INST_QIJIAN T
+                      LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+                        ON JM.RECORD_ID = T.JUANMO_BATCH_ID
+                      LEFT JOIN (SELECT SUM(D.OUT_QUANTITY) OUT_QUANTITY,
+                                       D.MAIN_BATCH_ID JUANMO_BATCH_ID
+                                  FROM QINSEN.INST_JUANMO_DETAIL D
+                                 GROUP BY D.MAIN_BATCH_ID) JD
+                        ON JM.RECORD_ID = JD.JUANMO_BATCH_ID
+                      LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                        ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID
+                     WHERE T.TIME_DEGRADE IS NOT NULL
+                       AND TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') &gt;= #ymStart#
+                       AND TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') &lt;= #ymEnd#
+                     GROUP BY TO_CHAR(T.PRODUCE_DT, 'YYYY-MM')) PRODDEGRADE
+            ON PRODDEGRADE.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH,
+                           SUM(T.AMOUNT) HHPROD_DEGRADE
+                      FROM KS_COMPONENT_HH_DEGRADE T
+                     WHERE T.DEPT_DEGRADE = '元件制造部'
+                       AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                       AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                     GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) HHPRODDEGRADE
+            ON HHPRODDEGRADE.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') YEAR_MONTH,
+                           SUM(T.QUANTITY * T.BLANKING_SIZE * PMS.MP_WIDTH *
+                               DECODE(NVL(T.PAGE_TYPE, '长页'),
+                                      '长页',
+                                      1,
+                                      0.5)) CDM_VALID
+                      FROM QINSEN.INST_CAIDIEMO T
+                      LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                        ON PMS.MATER_SPEC_ID = T.PROD_SPEC_ID
+                     WHERE T.ORDER_NO &lt;&gt; '研发实验'
+                       AND TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') &gt;= #ymStart#
+                       AND TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') &lt;= #ymEnd#
+                     GROUP BY TO_CHAR(T.PRODUCE_DT, 'YYYY-MM')) CDMVALID
+            ON CDMVALID.YEAR_MONTH = T1.YEAR_MONTH
+         ORDER BY T1.YEAR_MONTH) T1</select>
+    <select id="queryYearMonth" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT TO_CHAR(ADD_MONTHS(TO_DATE('2026-01', 'YYYY-MM'), ROWNUM - 1),
+               'YYYY-MM') AS "id",
+       REPLACE(TO_CHAR(ADD_MONTHS(TO_DATE('2026-01', 'YYYY-MM'), ROWNUM - 1),
+                       'YYYY-MM'),
+               '-',
+               '年') || '月' AS "name"
+	  FROM DUAL
+	CONNECT BY ROWNUM &lt;=
+	           MONTHS_BETWEEN(TO_DATE('2030-12', 'YYYY-MM'),
+	                          TO_DATE('2026-01', 'YYYY-MM')) + 1
+	 ORDER BY 1</select>
+    <select id="queryMarketingBoard" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.ORDER_NO                AS "orderNo",
+       T1.TYPE                    AS "type",
+       T1.DEMAND_STOCK_DATE       AS "demandStockDate",
+       T1.JM_SPEC_NAME            AS "jmSpecName",
+       T1.MATER_SPEC_NAME         AS "materSpecName",
+       T1.DRY_WET                 AS "dryWet",
+       T1.PROD_AMOUNT             AS "prodAmount",
+       nvl(T1.DELIVERY_CONFIRM_AMOUNT,0) AS "deliveryConfirmAmount",
+       T1.CDM_AMOUNT              AS "cdmAmount",
+       T1.JM_AMOUNT               AS "jmAmount",
+       T1.QJ_MODIFY_AMOUNT        AS "qjModifyAmount",
+       T1.J_AMOUNT                AS "jAmount",
+       T1.QJ_AMOUNT               AS "qjAmount",
+       T1.QJ_LABEL_AMOUNT         AS "qjLabelAmount",
+       T1.RS_AMOUNT               AS "rsAmount",
+       T1.CHK_AMOUNT              AS "chkAmount",
+       T1.BASE_ID                 AS "baseId",
+       CASE WHEN TO_DATE(SUBSTR(t1.DEMAND_STOCK_DATE, 1, 10), 'YYYY-MM-DD')
+       &lt;= TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')
+       THEN 'FFE384' ELSE 'ffffff' END "mystyle",
+       t1.dry_amount "dryAmount",
+       t1.wet_amount "wetAmount"
+  FROM (SELECT T.ORDER_NO，T.TYPE,
+               T.DEMAND_STOCK_DATE,
+               T.JM_SPEC_NAME,
+               OD.MATER_SPEC_NAME,
+               T.DRY_WET,
+               T.PROD_AMOUNT,
+               CTB.DELIVERY_CONFIRM_AMOUNT,
+               NVL(C.AMOUNT, 0) CDM_AMOUNT,
+               CASE
+                 WHEN T.TYPE = '家用膜' THEN
+                  NVL(J2.AMOUNT, 0)
+                 ELSE
+                  NVL(J.CNT, 0)
+               END JM_AMOUNT,
+               NVL(Q.CNT, 0) QJ_MODIFY_AMOUNT,
+               (CASE
+                 WHEN T.TYPE = '家用膜' THEN
+                  NVL(J2.AMOUNT, 0)
+                 ELSE
+                  NVL(J.CNT, 0)
+               END) + NVL(Q.CNT, 0) J_AMOUNT,
+               NVL(Q2.CNT, 0) QJ_AMOUNT,
+               NVL(Q3.CNT, 0) QJ_LABEL_AMOUNT,
+               NVL(RS.CNT, 0) RS_AMOUNT,
+               CASE
+                 WHEN T.TYPE = '家用膜' THEN
+                  NVL(CK2.AMOUNT, 0)
+                 ELSE
+                  NVL(CK.CNT, 0)
+               END CHK_AMOUNT,
+               T.ID BASE_ID
+                ,CASE
+                 WHEN T.TYPE = '家用膜' THEN
+                  '-'
+                 ELSE
+                  to_char(NVL(dw.dry_amount, 0))
+               END dry_AMOUNT
+               ,CASE
+                 WHEN T.TYPE = '家用膜' THEN
+                  '-'
+                 ELSE
+                  to_char(NVL(dw.wet_amount, 0))
+               END wet_AMOUNT
+          FROM KS_COMPONENT_YXORDER_BASE T
+          
+          left join (SELECT SUM(DECODE(ck.dry_wet,'干',1,0)) dry_amount,
+			SUM(DECODE(ck.dry_wet,'湿',1,0)) wet_amount,
+			base_id
+			FROM(
+			SELECT T.BATCH_NO,
+			       H.BASE_ID,
+			       DECODE(T3.JUANMO_BATCH_ID, NULL, NVL(T.STATE, '干'), '湿') DRY_WET
+			  FROM KS_COMPONENT_CHECK_LIST T
+			  LEFT JOIN KS_COMPONENT_CHECK_HEAD H
+			    ON T.RELATION_ID = H.ID
+			  LEFT JOIN QINSEN.INST_QIJIAN T2
+			    ON T.BATCH_NO = T2.BATCH_NO
+			  LEFT JOIN (SELECT DISTINCT JUANMO_BATCH_ID JUANMO_BATCH_ID
+			               FROM (SELECT JUANMO_BATCH_ID
+			                       FROM QINSEN.INST_WATER_TEST
+			                     UNION ALL
+			                     SELECT JUANMO_BATCH_ID
+			                       FROM KS_INST_WATER_TEST
+			                     
+			                     )) T3
+			    ON T3.JUANMO_BATCH_ID = T2.JUANMO_BATCH_ID
+			 WHERE H.BASE_ID IS NOT NULL) ck
+			 GROUP BY ck.base_id) dw
+			 on dw.base_id = t.id
+          
+          LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
+            ON OD.BASE_ID = T.ID
+          LEFT JOIN (SELECT CM.ORDER_NO,
+                           CM.PROD_SPEC_ID,
+                           SUM(CM.QUANTITY) QUANTITY,
+                           MIN(CM.NUM_PER_WAD) NUM_PER_WAD,
+                           FLOOR(SUM(CM.QUANTITY) / MIN(CM.NUM_PER_WAD)) AMOUNT
+                      FROM (SELECT CM.ORDER_NO,
+                                   CM.PROD_SPEC_ID,
+                                   CM.QUANTITY,
+                                   PMS.NUM_PER_WAD
+                              FROM QINSEN.INST_CAIDIEMO CM
+                              LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+                                ON PMS.MATER_SPEC_ID = CM.PROD_SPEC_ID) CM
+                     GROUP BY CM.ORDER_NO, CM.PROD_SPEC_ID) C
+            ON C.ORDER_NO = OD.ORDER_NO
+           AND OD.MATER_SPEC_ID = C.PROD_SPEC_ID
+          LEFT JOIN (SELECT JM.ORDER_NO, JM.PROD_SPEC_ID, COUNT(1) CNT
+                      FROM QINSEN.INST_JUANMO_MAIN JM
+                     GROUP BY JM.ORDER_NO, JM.PROD_SPEC_ID) J
+            ON J.ORDER_NO = OD.ORDER_NO
+           AND OD.MATER_SPEC_ID = J.PROD_SPEC_ID
+        
+          LEFT JOIN (SELECT T.ORDER_NO, T.PROD_SPEC_ID, SUM(T.AMOUNT) AMOUNT
+                      FROM KS_COMPONENT_HOUSEHOLD_JM T
+                     GROUP BY T.ORDER_NO, T.PROD_SPEC_ID) J2
+            ON J2.ORDER_NO = OD.ORDER_NO
+           AND OD.MATER_SPEC_ID = J2.PROD_SPEC_ID
+        
+          LEFT JOIN (SELECT QJ.ORDER_NO, QJ.PROD_SPEC_ID, COUNT(1) CNT
+                      FROM QINSEN.INST_QIJIAN QJ
+                     WHERE QJ.MODIFY_ORDER_NO_TIME IS NOT NULL
+                     GROUP BY QJ.ORDER_NO, QJ.PROD_SPEC_ID) Q
+            ON Q.ORDER_NO = OD.ORDER_NO
+           AND OD.MATER_SPEC_ID = Q.PROD_SPEC_ID
+          LEFT JOIN (SELECT QJ.ORDER_NO, QJ.PROD_SPEC_ID, COUNT(1) CNT
+                      FROM QINSEN.INST_QIJIAN QJ
+                     GROUP BY QJ.ORDER_NO, QJ.PROD_SPEC_ID) Q2
+            ON Q2.ORDER_NO = OD.ORDER_NO
+           AND OD.MATER_SPEC_ID = Q2.PROD_SPEC_ID
+          LEFT JOIN (SELECT QJ.ORDER_NO, QJ.PROD_SPEC_ID, COUNT(1) CNT
+                      FROM QINSEN.INST_QIJIAN QJ
+                     WHERE QJ.BATCH_NO IS NOT NULL
+                     GROUP BY QJ.ORDER_NO, QJ.PROD_SPEC_ID) Q3
+            ON Q3.ORDER_NO = OD.ORDER_NO
+           AND OD.MATER_SPEC_ID = Q3.PROD_SPEC_ID
+          LEFT JOIN (SELECT QJ.ORDER_NO, QJ.PROD_SPEC_ID, COUNT(1) CNT
+                      FROM QINSEN.INST_RAOSI RS
+                      LEFT JOIN QINSEN.INST_QIJIAN QJ
+                        ON QJ.BATCH_NO = RS.BATCH_NO
+                     GROUP BY QJ.ORDER_NO, QJ.PROD_SPEC_ID) RS
+            ON RS.ORDER_NO = OD.ORDER_NO
+           AND OD.MATER_SPEC_ID = RS.PROD_SPEC_ID
+          LEFT JOIN (SELECT COUNT(1) CNT, ORDER_ID
+                      FROM (SELECT CH.ORDER_ID
+                              FROM KS_COMPONENT_CHECK_LIST CL
+                              LEFT JOIN KS_COMPONENT_CHECK_HEAD CH
+                                ON CL.RELATION_ID = CH.ID) CK
+                     GROUP BY ORDER_ID) CK
+            ON CK.ORDER_ID = OD.ID
+        
+          LEFT JOIN (SELECT T.ORDER_ID, SUM(T.APPLY_AMOUNT) AMOUNT
+                      FROM KS_COMPONENT_HH_CHECK_HEAD T
+                     GROUP BY T.ORDER_ID) CK2
+            ON CK2.ORDER_ID = OD.ID
+        
+          LEFT JOIN V_KS_CHECK_TO_BASE CTB
+            ON CTB.BASE_ID = T.ID
+         WHERE (TO_DATE(SUBSTR(T.DEMAND_STOCK_DATE, 1, 10), 'YYYY-MM-DD') BETWEEN
+               TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') - 3 AND
+               TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') + 5)
+           AND T.PROD_AMOUNT &gt; 0
+           AND NVL(CTB.DELIVERY_CONFIRM_AMOUNT, 0) &lt; T.PROD_AMOUNT) T1
+ 	order by  T1.DEMAND_STOCK_DATE desc</select>
+    <select id="queryMpPercentInvalid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.YEAR_MONTH AS "yearMonth",
+       T1.ZM_SCRAP AS "zmScrap",
+       T1.TM_SCRAP AS "tmScrap",
+       T1.CDM_SCRAP AS "cdmScrap",
+       T1.PROD_SCRAP AS "prodScrap",
+       T1.PROD_DEGRADE AS "prodDegrade",
+       T1.HHPROD_DEGRADE AS "hhprodDegrade",
+       T1.WF_AMOUNT AS "wfAmount",
+       TO_CHAR(ROUND(100 *
+                     (T1.ZM_SCRAP + T1.TM_SCRAP + T1.CDM_SCRAP +
+                     T1.PROD_SCRAP + T1.PROD_DEGRADE + T1.HHPROD_DEGRADE) /
+                     DECODE(T1.WF_AMOUNT,0,100000000,T1.WF_AMOUNT),
+                     2),
+               'FM990.00') || '%' AS "percentInvalid"
+  FROM (
+        
+        SELECT T1.YEAR_MONTH,
+                ROUND(NVL(ZM.AMOUNT, 0), 2) ZM_SCRAP,
+                ROUND(NVL(TM.AMOUNT, 0), 2) TM_SCRAP,
+                ROUND(NVL(CDM.AMOUNT, 0), 2) CDM_SCRAP,
+                ROUND(NVL(PROD.AMOUNT, 0), 2) PROD_SCRAP,
+                ROUND(NVL(PROD2.AMOUNT, 0), 2) PROD_DEGRADE,
+                ROUND(NVL(HHPROD.AMOUNT, 0), 2) HHPROD_DEGRADE,
+                ROUND(NVL(WF.AMOUNT, 0), 2) WF_AMOUNT
+          FROM (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#ymStart#, 'YYYY-MM'),
+                                           ROWNUM - 1),
+                                'YYYY-MM') AS YEAR_MONTH
+                   FROM DUAL
+                 CONNECT BY ROWNUM &lt;=
+                            MONTHS_BETWEEN(TO_DATE(#ymEnd#, 'YYYY-MM'),
+                                           TO_DATE(#ymStart#, 'YYYY-MM')) + 1) T1
+          LEFT JOIN (SELECT SUM(T.LENGTH) AMOUNT,
+                            TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                       FROM KS_DIAPHRAGM_ZM_DEFECT_LIST T
+                       LEFT JOIN KS_PROD_DIAPHRAGM_ZMX_RECORD ZM
+                         ON ZM.ID = T.RELATION_ID
+                      WHERE ZM.PRODUCT_TYPE = '量产'
+                        AND T.IFTEAR = '是'
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                      GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) ZM
+            ON ZM.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT SUM(T.LENGTH) AMOUNT,
+                            TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                       FROM KS_DIAPHRAGM_TM_DEFECT_LIST T
+                       LEFT JOIN QINSEN.INST_TUMO TM
+                         ON TM.RECORD_ID = T.RELATION_ID
+                       LEFT JOIN KS_PROD_DIAPHRAGM_TUMO TM2
+                         ON TM.RECORD_ID = TM2.RECORD_ID
+                      WHERE TM.PROD_FLAG_ID = 300027
+                        AND (TRIM(TM2.TREND) = '仓库发货仓' OR
+                            (TRIM(TM2.TREND) != '仓库发货仓' AND T.IFTEAR = '是'))
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                      GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) TM
+            ON TM.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT SUM(T.LENGTH) AMOUNT,
+                            TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                       FROM KS_DIAPHRAGM_CDM_DEFECT_LIST T
+                       LEFT JOIN QINSEN.INST_CAIDIEMO CDM
+                         ON CDM.RECORD_ID = T.RELATION_ID
+                       LEFT JOIN QINSEN.INST_TUMO TM
+                         ON CDM.TUMO_BATCH_ID = TM.RECORD_ID
+                      WHERE TM.PROD_FLAG_ID = 300027
+                        AND T.DEPT = '膜片制造部'
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                      GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) CDM
+            ON CDM.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT SUM(T.LENGTH) AMOUNT,
+                            TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                       FROM KS_PROD_QUALITY_POORRECORD T
+                      WHERE (TRIM(T.DEPARTMENT) = '膜片制造部' OR
+                            TRIM(T.DEPARTMENT) = '膜片制造')
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                      GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) PROD
+            ON PROD.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT SUM(AMOUNT) AMOUNT,
+                            TO_CHAR(CLC.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                       FROM QINSEN.INST_QIJIAN T
+                       LEFT JOIN V_KS_CHECK_LIST_CURRENT CLC
+                         ON CLC.BATCH_NO = T.BATCH_NO
+                       LEFT JOIN (SELECT SUM(OUT_QUANTITY * BLANKING_SIZE *
+                                            PAGE_WIDTH) AMOUNT,
+                                        RECORD_ID
+                                   FROM (SELECT JD.OUT_QUANTITY,
+                                                Z.BLANKING_SIZE,
+                                                Z.PAGE_WIDTH,
+                                                Z.RECORD_ID
+                                           FROM QINSEN.INST_JUANMO_DETAIL JD
+                                           LEFT JOIN QINSEN.INST_JUANMO_MAIN Z
+                                             ON JD.MAIN_BATCH_ID = Z.RECORD_ID)
+                                  GROUP BY RECORD_ID) JM
+                         ON JM.RECORD_ID = T.JUANMO_BATCH_ID
+                      WHERE 1 = 1
+                        AND T.DEPT_DEGRADE = '膜片制造部'
+                        AND TO_CHAR(CLC.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                        AND TO_CHAR(CLC.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                      GROUP BY TO_CHAR(CLC.CREATE_TIME, 'YYYY-MM')) PROD2
+            ON PROD2.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT SUM(T.BLANKING_SIZE) AMOUNT,
+                            TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                       FROM KS_COMPONENT_HH_DEGRADE T
+                      WHERE 1 = 1
+                        AND T.DEPT_DEGRADE = '膜片制造部'
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                      GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) HHPROD
+            ON HHPROD.YEAR_MONTH = T1.YEAR_MONTH
+          LEFT JOIN (SELECT SUM(T.THEORY_AMOUNT) AMOUNT,
+                            TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH
+                       FROM KS_PROD_DIAPHRAGM_ZMX_RECORD T
+                      WHERE T.PRODUCT_TYPE = '量产'
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
+                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
+                      GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) WF
+            ON WF.YEAR_MONTH = T1.YEAR_MONTH) T1
+ 	ORDER BY T1.YEAR_MONTH</select>
 </sqlMap>

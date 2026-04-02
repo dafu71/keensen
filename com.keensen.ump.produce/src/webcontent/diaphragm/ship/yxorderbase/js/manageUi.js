@@ -20,6 +20,8 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 
 		this.buildPhotoUploadWin();
 		this.initUpdateRemainingAmountWindow();
+		
+		this.initUpdateDateDeliveryWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -67,7 +69,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 								fieldLabel : '销售订单编号'
 							}, {
 								xtype : 'textfield',
-								hiddenName : 'condition/specName',
+								name : 'condition/specName',
 								anchor : '100%',
 								fieldLabel : '膜片生产型号 '
 							}, {
@@ -233,7 +235,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 					}, '-', {
 						text : '修改订单剩余发货数量',
 						scope : this,
-						//hidden : true,
+						// hidden : true,
 						iconCls : 'icon-application_edit',
 						ref : '../updateRemainingAmountBtn',
 						handler : this.onUpdateRemainingAmount
@@ -242,6 +244,13 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onChange
+					}, '-', {
+						text : '修改发货日期',
+						scope : this,
+						hidden : true,
+						iconCls : 'icon-application_edit',
+						ref : '../updateAmountBtn',
+						handler : this.onUpdateDateDelivery
 					}, '->', {
 						text : '查看',
 						scope : this,
@@ -2503,6 +2512,114 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr = function() {
 								}, {
 									name : 'entity/id',
 									xtype : 'hidden',
+									dataIndex : 'id'
+								}]
+					}]
+				});
+	}
+
+	this.initUpdateDateDeliveryWindow = function() {
+
+		var _this = this;
+
+		this.urlDateDeliveryChoose3 = this.urlDateDeliveryChoose3
+				|| new Ext.Container({
+							autoEl : 'div',
+							layout : 'column',
+							anchor : "95%",
+							colspan : 2,
+							fieldLabel : '<span style="color:red;">询期回复截图</span>',
+							defaults : {
+								xtype : "container",
+								autoEl : "div",
+								anchor : "100%"
+							},
+							items : [{
+										columnWidth : 0.6,
+										anchor : "100%",
+										layout : "anchor",
+										xtype : 'displayfield',
+										value : '请上传图片',
+										id : urlDateDeliveryId3,
+										name : 'entity/urlDateDelivery'
+									}, {
+										columnWidth : 0.4,
+										anchor : "100%",
+										layout : "anchor",
+										text : '上传图片',
+										xtype : 'button',
+										handler : function() {
+											_this.uploadPhoto3();
+										}
+
+									}]
+						});
+
+		this.updateDateDeliveryWindow = this.updateDateDeliveryWindow
+				|| new Ext.fn.FormWindow({
+					title : '修改发货日期',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 4,
+						loadUrl : 'com.keensen.ump.produce.diaphragm.ship.orderbase.expandOrderBase.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.diaphragm.ship.orderbase.saveOrderBase4Yx.biz.ext',
+						fields : [{
+									xtype : 'textfield',
+									// name : 'entity/orderNo',
+									dataIndex : 'orderNo',
+									readOnly : true,
+									fieldLabel : '销售订单编号',
+									anchor : '95%',
+									colspan : 2
+								}, {
+									xtype : 'textfield',
+									// name : 'entity/prodName',
+									dataIndex : 'prodName',
+									readOnly : true,
+									fieldLabel : '产品名称',
+									anchor : '95%',
+									colspan : 2
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'datefield',
+									name : 'entity/dateDelivery',
+									dataIndex : 'dateDelivery',
+									ref : '../../dateDelivery',
+									format : "Y-m-d",
+									allowBlank : false,
+									fieldLabel : '发货日期',
+									// readOnly : true,
+									anchor : '95%',
+									colspan : 2,
+									listeners : {
+										scope : this,
+										"change" : function(o, newvalue,
+												oldvalue) {
+
+										}
+									}
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, this.urlDateDeliveryChoose3, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 4
+								}, {
+									xtype : 'hidden',
+									name : 'entity/id',
+									ref : '../../baseId',
 									dataIndex : 'id'
 								}]
 					}]

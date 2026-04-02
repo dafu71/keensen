@@ -154,6 +154,26 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 										this.reset()
 									}
 								}
+							}, {
+								xtype : 'combobox',
+								forceSelection : true,
+								mode : 'local',
+								fieldLabel : '产品类型',
+								ref : '../mptype',
+								hiddenName : 'condition/mptype',
+								// allowBlank : false,
+								anchor : '100%',
+								colspan : 1,
+								emptyText : '--请选择--',
+								editable : false,
+								store : this.mptypeStore,
+								displayField : "mptype",
+								valueField : "mptype",
+								listeners : {
+									"expand" : function(A) {
+										this.reset()
+									}
+								}
 							}]
 				});
 		this.queryPanel.addButton({
@@ -728,7 +748,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							xtype : 'textfield',
 							allowBlank : false,
 							value : uname,
-							readOnly:true,
+							readOnly : true,
 							name : 'entity/recorder',
 							fieldLabel : '录入人',
 							anchor : '95%',
@@ -867,9 +887,9 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 	}
 
 	this.initEditWindow2 = function() {
-		
+
 		var _this = this;
-		
+
 		this.editWindow2 = this.editWindow2 || new Ext.fn.FormWindow({
 			title : '打料记录',
 			height : 600,
@@ -996,21 +1016,18 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 							xtype : 'textfield',
 							allowBlank : false,
 							value : uname,
-							readOnly:true,
+							readOnly : true,
 							name : 'entity/recorder2',
 							fieldLabel : '录入人',
 							anchor : '95%',
 							colspan : 1
-						}/*, {
-							xtype : 'operatorrolecombobox',
-							currentRolecode : '10001501',
-							ref : '../../hitUserid',
-							allowBlank : false,
-							anchor : '95%',
-							ref : '../../hitUserid',
-							hiddenName : 'entity/hitUserid',
-							fieldLabel : '打料人'
-						}*//*
+						}/*
+							 * , { xtype : 'operatorrolecombobox',
+							 * currentRolecode : '10001501', ref :
+							 * '../../hitUserid', allowBlank : false, anchor :
+							 * '95%', ref : '../../hitUserid', hiddenName :
+							 * 'entity/hitUserid', fieldLabel : '打料人' }
+							 *//*
 							 * , { xtype : 'displayfield', height : '5', colspan :
 							 * 2 }, { xtype : 'textarea', name :
 							 * 'entity/remark', dataIndex : 'remark', fieldLabel :
@@ -1438,7 +1455,7 @@ com.keensen.ump.produce.diaphragm.make.FixMgr = function() {
 									fieldLabel : 'C11报废(kg)',
 									anchor : '95%',
 									colspan : 1
-								},{
+								}, {
 									xtype : 'displayfield',
 									height : '5',
 									colspan : 1

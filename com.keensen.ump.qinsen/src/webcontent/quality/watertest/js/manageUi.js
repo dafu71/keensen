@@ -234,6 +234,23 @@ com.keensen.ump.qinsen.quality.watertestMgr = function() {
 						anchor : '85%',
 						xtype : 'textfield',
 						fieldLabel : '至'
+					},{
+						xtype : 'datetimefield',
+						name : 'condition/rCheckBeginDate',
+						fieldLabel : '复检时间',
+						colspan : 1,
+						anchor : '85%',
+						// allowBlank : false,
+						editable : true,
+						format : 'Y-m-d H:i'
+					}, {
+						xtype : 'datetimefield',
+						name : 'condition/rCheckEndDate',
+						fieldLabel : '至',
+						colspan : 1,
+						anchor : '85%',
+						editable : true,
+						format : 'Y-m-d H:i'
 					}]
 		});
 

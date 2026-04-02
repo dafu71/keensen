@@ -130,17 +130,21 @@ com.keensen.ump.produce.diaphragm.make.zmxMgr.prototype.initEvent = function() {
 					Ext.getCmp('zmxtotaltheoryamount').setValue('');
 					Ext.getCmp('zmxtotalloss').setValue('');
 					Ext.getCmp('zmxtotalrelease').setValue('');
+					Ext.getCmp('zmxtotaltmdefect').setValue('');
 					return
 				}
 
 				var totalTheoryAmount = records[0].data.totalTheoryAmount;
 				var totalLoss = records[0].data.totalLoss;
 				var zmxtotalrelease = records[0].data.zmxtotalrelease;
+				var zmxtotaltmdefect = records[0].data.zmxtotaltmdefect;
 				Ext.getCmp('zmxtotaltheoryamount').setValue('理论投入数合计:'
 						+ totalTheoryAmount);
 				Ext.getCmp('zmxtotalloss').setValue('不良米数合计:' + totalLoss);
 				Ext.getCmp('zmxtotalrelease').setValue('铸膜液排料重量合计:'
 						+ zmxtotalrelease);
+				Ext.getCmp('zmxtotaltmdefect').setValue('涂膜后不良合计:'
+						+ zmxtotaltmdefect);
 			})
 
 	this.addDefectWindow.activeItem.mon(this.addDefectWindow.activeItem,

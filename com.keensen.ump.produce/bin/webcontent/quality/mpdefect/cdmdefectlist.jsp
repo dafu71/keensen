@@ -16,6 +16,14 @@
     String cdmBatchNo = request.getParameter("cdmBatchNo");
     String iftear = request.getParameter("iftear");
     
+    //品管30479  30797
+    int pgLimit = 0;
+    
+    //品管
+    if(roleId.indexOf("30479")>-1 || roleId.indexOf("30797")>-1){
+    	pgLimit = 1;
+    }
+    
     
 %>
 <html>
@@ -39,6 +47,7 @@
  <ext:dict property="ABF_YESORNO"   dictTypeId="ABF_YESORNO" />
   <ext:dict property="KS_YESORNO"   dictTypeId="KS_YESORNO" />
   
+  <js:load scriptPath="pub/common/datetimeRegion.js"/>
   <js:load scriptPath="pub/common/lineCombo.js" />
 <js:load scriptPath="pub/common/mpspecCombo.js" />
 <js:load scriptPath="pub/common/mpperfCombo.js" />
@@ -55,6 +64,9 @@
   var relationId4Search = "<%=relationId  %>";
   var cdmBatchNo4Search = "<%=cdmBatchNo  %>";
   var iftear4Search = "<%=iftear  %>";
+  
+  var lengthTotalId = Ext.id();
+ var pgLimit = <%=pgLimit %>;
  
   var opt = '';
   FunctionMgr.load({ 

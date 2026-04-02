@@ -587,156 +587,130 @@
 	--></select>
     <!--订单仓元件库存报表-->
     <select id="queryReport4Order" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
-        <!-- SELECT T1.ORDER_NO             AS "orderNo",
-         T1.PROD_NAME            AS "prodName",
-         T1.JM_SPEC_NAME         AS "jmSpecName",
-         T1.ORDER_AMOUNT         AS "orderAmount",
-         T1.STOCK_AMOUNT         AS "stockAmount",
-         T1.DIRECTOR             AS "director",
-         T1.STOCK_TIME           AS "stockTime",
-         T1.DELIVERY_DATE_LATEST AS "deliveryDateLatest",
-         T1.OVER_DATE            AS "overDate"
-    FROM (        
-          SELECT STCK.ORDER_NO,
-                  YB.PROD_NAME,
-                  STCK.JM_SPEC_NAME,
-                  OD.ORDER_AMOUNT,
-                  STCK.STOCK_AMOUNT,
-                  nvl(yb.director,yb.person_in_charge) director,
-                  to_char(STCK.STOCK_TIME, 'YYYY-MM-DD') STOCK_TIME,
-                  TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD') DELIVERY_DATE_LATEST,
-                  CASE
-                    WHEN TRUNC(SYSDATE -
-                               TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')) &lt;= 0 THEN
-                     ''
-                    ELSE
-                     TO_CHAR(TRUNC(SYSDATE -
-                                   TO_DATE(YB.DELIVERY_DATE_LATEST, 'YYYY-MM-DD')))
-                  END OVER_DATE
-            FROM (SELECT STOCK.ORDER_NO,
-                          STOCK.JM_SPEC_NAME,
-                          MAX(STOCK_TIME) STOCK_TIME,
-                          COUNT(1) STOCK_AMOUNT
-                     FROM (SELECT T.BATCH_NO,
-                                  T.ORDER_NO,
-                                  T.JM_SPEC_NAME,
-                                  T.CREATE_TIME STOCK_TIME
-                             FROM KS_COMPONENT_K3_STOCK T
-                            WHERE t.prod_state IS NULL AND t.check_code IS NOT NULL
-                              AND T.STORAGE = '高架订单仓'
-                              AND T.AMOUNT > 0
-                           UNION ALL
-                           SELECT TT.BATCH_NO,
-                                  QJ.ORDER_NO,
-                                  PMS.MATER_SPEC_NAME,
-                                  CASE
-                                    WHEN TT.METHOD = 'input' THEN
-                                     TT.CREATE_TIME
-                                    WHEN TT.METHOD = 'import' THEN
-                                     JM.CREATE_DT
-                                  END STOCK_TIME
-                             FROM (SELECT  case when t.prod_state IS NULL AND t.check_code IS NULL then 'input'
-	                                else 'import' end METHOD,
-                                          T.BATCH_NO,
-                                          T.ORDER_NO,
-                                          T.JM_SPEC_NAME,
-                                          T.CREATE_TIME,
-                                          T.STORE_TIME
-                                     FROM KS_COMPONENT_K3_STOCK T
-                                    WHERE ( ( t.prod_state IS NULL AND t.check_code IS NULL) or (t.prod_state IS NOT NULL))
-                                      AND T.STORAGE = '高架订单仓'
-                                      AND T.AMOUNT > 0) TT
-                             LEFT JOIN QINSEN.INST_QIJIAN QJ
-                               ON QJ.BATCH_NO = TT.BATCH_NO
-                             LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
-                               ON QJ.JUANMO_BATCH_ID = JM.RECORD_ID
-                             LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
-                               ON PMS.MATER_SPEC_ID = QJ.PROD_SPEC_ID) STOCK
-                    WHERE STOCK.ORDER_NO IS NOT NULL
-                      AND STOCK.JM_SPEC_NAME IS NOT NULL
-                    GROUP BY STOCK.ORDER_NO, STOCK.JM_SPEC_NAME) STCK
-            LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
-              ON OD.ORDER_NO = STCK.ORDER_NO
-             AND replace(replace(OD.MATER_SPEC_NAME,'（','('),'）',')') = 
-              replace(replace(STCK.JM_SPEC_NAME,'（','('),'）',')')
-            LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
-              ON YB.ID = OD.BASE_ID) T1
-   where 1=1
-	 			<isNotNull prepend="and" property="jmSpecName"> 
-		       		T1.JM_SPEC_NAME = #jmSpecName# 
-				</isNotNull>
-			  	<isNotNull prepend="and" property="jmSpecName2"> 
-					T1.JM_SPEC_NAME like '%' || #jmSpecName2# || '%'
-				</isNotNull>
-				<isNotNull prepend="and" property="orderNo2"> 
-		       		T1.ORDER_NO like '%' || #orderNo2# || '%'
-				</isNotNull>
-	 ORDER BY T1.ORDER_NO, T1.JM_SPEC_NAME
-    -->
-    
-    SELECT ORDER_NO "orderNo",
-       MAX(PROD_NAME) "prodName",
-       JM_SPEC_NAME "jmSpecName",
-       MAX(ORDER_AMOUNT) "orderAmount",
-       MAX(ORDER_AMOUNT9) "orderAmount9",
-       COUNT(1) "stockAmount",
-       MAX(DIRECTOR) "director",
-       MAX(STOCK_TIME) "stockTime",
-       MAX(DELIVERY_DATE_LATEST) "deliveryDateLatest",
-       <!--MAX(OVER_DATE) "overDate",--><!--超期天数应该是“当前日期-发货日期”-->
-        TO_DATE(to_char(sysdate,'YYYY-MM-DD'),'YYYY-MM-DD')
-       -TO_DATE(to_char(MAX(date_delivery),'YYYY-MM-DD'),'YYYY-MM-DD') "overDate",
-       max(date_delivery) "dateDelivery",
-       to_char(max(delivery_confirm_time),'YYYY-MM-DD HH24:mi:ss') "deliveryConfirmTime"
-  FROM (SELECT T.BATCH_NO,
-               to_char(T.STOCK_TIME,'YYYY-MM-DD HH24:MI:SS') STOCK_TIME,
-               nvl(order_no_allocate,ORDER_NO) ORDER_NO,
-               CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
-                 ELSE T.JM_SPEC_NAME_allocate  END
-               JM_SPEC_NAME,
-                CASE WHEN order_no_allocate IS NULL THEN T.PROD_NAME
-                 ELSE T.PROD_NAME_allocate  END
-               PROD_NAME,
-               CASE WHEN order_no_allocate IS NULL THEN T.ORDER_AMOUNT
-                 ELSE to_number(t.order_amount_allocate) END ORDER_AMOUNT,
-               CASE WHEN order_no_allocate IS NULL THEN T.ORDER_AMOUNT9
-                 ELSE to_number(t.order_amount9_allocate) END ORDER_AMOUNT9,
-               CASE WHEN order_no_allocate IS NULL THEN T.DIRECTOR
-                 ELSE T.DIRECTOR_allocate END
-               DIRECTOR,
-                CASE WHEN order_no_allocate IS NULL THEN T.DELIVERY_DATE_LATEST
-                 ELSE T.DELIVERY_DATE_LATEST_allocate END
-               DELIVERY_DATE_LATEST,
-                CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
-                 ELSE T.date_delivery_allocate  END date_delivery,
-               CASE
-                 WHEN (( CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
-                 ELSE T.date_delivery_allocate  END) is null) or (TRUNC(SYSDATE -
-                            TO_DATE(to_char( CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
-                 ELSE T.date_delivery_allocate  END, 'YYYY-MM-DD'), 'YYYY-MM-DD')) &lt;= 0) THEN
-                  ''
-                 ELSE
-                  TO_CHAR(TRUNC(SYSDATE -
-                                TO_DATE(to_char( CASE WHEN order_no_allocate IS NULL THEN T.date_delivery
-                 ELSE T.date_delivery_allocate  END, 'YYYY-MM-DD'), 'YYYY-MM-DD')))
-               END OVER_DATE,
-               t.delivery_confirm_time
-               
-          FROM V_KS_COMPONENT_REPORT_STOCK2 T
-          
+	 SELECT TT.ORDER_NO             "orderNo",
+       TT.PROD_NAME            "prodName",
+       TT.JM_SPEC_NAME         "jmSpecName",
+       TT.ORDER_AMOUNT         "orderAmount",
+       TT.ORDER_AMOUNT9        "orderAmount9",
+       TT.STOCK_AMOUNT         "stockAmount",
+       TT.DIRECTOR             "director",
+       TT.STOCK_TIME           "stockTime",
+       TT.DELIVERY_DATE_LATEST "deliveryDateLatest",
+       
+       TT.OVER_DATE                "overDate",
+       TT.DATE_DELIVERY            "dateDelivery",
+       TT.DELIVERY_CONFIRM_TIME    "deliveryConfirmTime",
+       YBB.DELIVERY_CONFIRM_AMOUNT "deliveryConfirmAmount"
+  FROM (
+        
+        SELECT ORDER_NO ORDER_NO,
+                MAX(PROD_NAME) PROD_NAME,
+                JM_SPEC_NAME,
+                MAX(ORDER_AMOUNT) ORDER_AMOUNT,
+                MAX(ORDER_AMOUNT9) ORDER_AMOUNT9,
+                COUNT(1) STOCK_AMOUNT,
+                MAX(DIRECTOR) DIRECTOR,
+                MAX(STOCK_TIME) STOCK_TIME,
+                MAX(DELIVERY_DATE_LATEST) DELIVERY_DATE_LATEST,
                 
-          
-         WHERE T.STORAGE = '高架订单仓'
-         
-         <isNotNull prepend="and" property="jmSpecName">(CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
+                TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') -
+                TO_DATE(TO_CHAR(MAX(DATE_DELIVERY), 'YYYY-MM-DD'),
+                        'YYYY-MM-DD') OVER_DATE,
+                MAX(DATE_DELIVERY) DATE_DELIVERY,
+                TO_CHAR(MAX(DELIVERY_CONFIRM_TIME), 'YYYY-MM-DD HH24:mi:ss') DELIVERY_CONFIRM_TIME
+          FROM (SELECT T.BATCH_NO,
+                        TO_CHAR(T.STOCK_TIME, 'YYYY-MM-DD HH24:MI:SS') STOCK_TIME,
+                        NVL(ORDER_NO_ALLOCATE, ORDER_NO) ORDER_NO,
+                        CASE
+                          WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                           T.JM_SPEC_NAME
+                          ELSE
+                           T.JM_SPEC_NAME_ALLOCATE
+                        END JM_SPEC_NAME,
+                        CASE
+                          WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                           T.PROD_NAME
+                          ELSE
+                           T.PROD_NAME_ALLOCATE
+                        END PROD_NAME,
+                        CASE
+                          WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                           T.ORDER_AMOUNT
+                          ELSE
+                           TO_NUMBER(T.ORDER_AMOUNT_ALLOCATE)
+                        END ORDER_AMOUNT,
+                        CASE
+                          WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                           T.ORDER_AMOUNT9
+                          ELSE
+                           TO_NUMBER(T.ORDER_AMOUNT9_ALLOCATE)
+                        END ORDER_AMOUNT9,
+                        CASE
+                          WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                           T.DIRECTOR
+                          ELSE
+                           T.DIRECTOR_ALLOCATE
+                        END DIRECTOR,
+                        CASE
+                          WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                           T.DELIVERY_DATE_LATEST
+                          ELSE
+                           T.DELIVERY_DATE_LATEST_ALLOCATE
+                        END DELIVERY_DATE_LATEST,
+                        CASE
+                          WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                           T.DATE_DELIVERY
+                          ELSE
+                           T.DATE_DELIVERY_ALLOCATE
+                        END DATE_DELIVERY,
+                        CASE
+                          WHEN ((CASE
+                                 WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                                  T.DATE_DELIVERY
+                                 ELSE
+                                  T.DATE_DELIVERY_ALLOCATE
+                               END) IS NULL) OR
+                               (TRUNC(SYSDATE - TO_DATE(TO_CHAR(CASE
+                                                                  WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                                                                   T.DATE_DELIVERY
+                                                                  ELSE
+                                                                   T.DATE_DELIVERY_ALLOCATE
+                                                                END,
+                                                                'YYYY-MM-DD'),
+                                                        'YYYY-MM-DD')) &lt;= 0) THEN
+                           ''
+                          ELSE
+                           TO_CHAR(TRUNC(SYSDATE -
+                                         TO_DATE(TO_CHAR(CASE
+                                                           WHEN ORDER_NO_ALLOCATE IS NULL THEN
+                                                            T.DATE_DELIVERY
+                                                           ELSE
+                                                            T.DATE_DELIVERY_ALLOCATE
+                                                         END,
+                                                         'YYYY-MM-DD'),
+                                                 'YYYY-MM-DD')))
+                        END OVER_DATE,
+                        T.DELIVERY_CONFIRM_TIME
+                 
+                   FROM V_KS_COMPONENT_REPORT_STOCK2 T
+                 
+                  WHERE T.STORAGE = '高架订单仓'
+		   <isNotNull prepend="and" property="jmSpecName">(CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
                  ELSE T.JM_SPEC_NAME_allocate  END) = #jmSpecName#</isNotNull>
         <isNotNull prepend="and" property="jmSpecName2">(CASE WHEN order_no_allocate IS NULL THEN T.JM_SPEC_NAME
                  ELSE T.JM_SPEC_NAME_allocate  END) like '%' || #jmSpecName2# || '%'</isNotNull>
         <isNotNull prepend="and" property="orderNo2">nvl(order_no_allocate,ORDER_NO) like '%' || #orderNo2# || '%'</isNotNull>
-         
-         
-         )
- GROUP BY ORDER_NO, JM_SPEC_NAME
+                 
+                 )
+         GROUP BY ORDER_NO, JM_SPEC_NAME) TT
+  LEFT JOIN (SELECT V.*, YB.ORDER_NO, YB.JM_SPEC_NAME
+               FROM V_KS_CHECK_TO_BASE V
+               LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+                 ON V.BASE_ID = YB.ID) YBB
+    ON YBB.ORDER_NO = TT.ORDER_NO
+   AND YBB.JM_SPEC_NAME = TT.JM_SPEC_NAME
+
+
     
     
     </select>

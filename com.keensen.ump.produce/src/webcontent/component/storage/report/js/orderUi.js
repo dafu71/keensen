@@ -94,6 +94,10 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 						sortable : true,
 						header : '在库数量（支）'
 					}, {
+						dataIndex : 'deliveryConfirmAmount',
+						sortable : true,
+						header : '已生产入库+已调拨入库总数量（支）'
+					}, {
 						dataIndex : 'director',
 						sortable : true,
 						header : '业务员'
