@@ -362,7 +362,7 @@
 		<div align="center" class="style1"><strong>脱盐率</strong><br>%</div>
 		</td>
 		<td width="16%" height="26" >
-		<div align="center" class="style1"><strong>瑕疵点位置、类型和长度</strong></div>
+		<div align="center" class="style1"><strong>瑕疵点位置，m</strong></div>
 		</td>
 		<td width="8%" height="26" >
 		<div align="center" class="style1"><strong>瑕疵标签个数</strong></div>

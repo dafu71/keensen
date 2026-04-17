@@ -683,7 +683,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.queryPanel.addButton({
 					text : "非公司标准产品模板下载",
 					disabled : allRight != '1',
-					hidden : true,
+					//hidden : true,
 					height : 40,
 					scope : this,
 					iconCls : 'icon-application_excel',
@@ -702,7 +702,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.queryPanel.addButton({
 					text : "销售订单生产进度看板",
 					scope : this,
-					hidden : boardRight != '1',
+					hidden : boardRight != '1' && uid != 'public',
 					iconCls : 'icon-application_excel',
 					handler : this.onMarketingBoard
 				});
@@ -1214,11 +1214,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						sortable : true
 					}, {
 						dataIndex : 'sealPosition',
-						header : 'Y型圈距进水端面的距离为____mm±2mm',
+						header : 'Y型圈距卡口端面的距离为____mm±2mm',
 						sortable : true
 					}, {
 						dataIndex : 'sealPosition2',
-						header : 'Y型圈距进水端面的距离为____mm±1mm',
+						header : 'Y型圈距卡口端面的距离为____mm±1mm',
+						sortable : true
+					}, {
+						dataIndex : 'sealPosition3',
+						header : '圈小端边缘距元件卡口端端面距离为____mm±1mm',
 						sortable : true
 					}, {
 
@@ -1380,7 +1384,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						header : '客户是否指定标签序列号编码规则'
 					}, {
 						dataIndex : 'sealPosition2',
-						header : 'Y型圈距进水端面的距离为____mm±1mm'
+						header : 'Y型圈距卡口端面的距离为____mm±1mm'
 					}, {
 						dataIndex : 'pipeLink',
 						header : '中心管连接适配器配备要求'
@@ -3002,7 +3006,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							forceSelection : false,
 							// allowBlank : false,
 							mode : 'local',
-							fieldLabel : 'Y型圈距进水端面<br>距离为____<br>mm±2mm',
+							fieldLabel : 'Y型圈距卡口端面<br>距离为____<br>mm±2mm',
 							ref : '../../sealPosition',
 							hiddenName : 'entity/sealPosition',
 							dataIndex : 'sealPosition',
@@ -3024,7 +3028,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							forceSelection : false,
 							// allowBlank : false,
 							mode : 'local',
-							fieldLabel : 'Y型圈距进水端面<br>距离为____<br>mm±1mm',
+							fieldLabel : 'Y型圈距卡口端面<br>距离为____<br>mm±1mm',
 							ref : '../../sealPosition2',
 							hiddenName : 'entity/sealPosition2',
 							dataIndex : 'sealPosition2',
@@ -3050,11 +3054,19 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							height : 5,
 							colspan : 24
 						}, {
+							name : 'entity/sealPosition3',
+							dataIndex : 'sealPosition3',
+							allowBlank : true,
+							anchor : '100%',
+							colspan : 12,
+							xtype : 'textfield',
+							fieldLabel : '圈小端边缘距元件<br>卡口端端面距离为____mm±1mm'
+						}, {
 							name : 'entity/sealRequire',
 							dataIndex : 'sealRequire',
 							allowBlank : true,
 							anchor : '100%',
-							colspan : 24,
+							colspan : 12,
 							xtype : 'textfield',
 							fieldLabel : '家用密封圈<br>固定胶带要求'
 						}, {
@@ -5048,7 +5060,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 12,
 							xtype : 'textfield',
-							fieldLabel : 'Y型圈距进水端面<br>距离为____<br>mm±2mm'
+							fieldLabel : 'Y型圈距卡口端面<br>距离为____<br>mm±2mm'
 						}, {
 							readOnly : true,
 							dataIndex : 'sealPosition2',
@@ -5057,17 +5069,25 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							anchor : '100%',
 							colspan : 12,
 							xtype : 'textfield',
-							fieldLabel : 'Y型圈距进水端面<br>距离为____<br>mm±1mm'
+							fieldLabel : 'Y型圈距卡口端面<br>距离为____<br>mm±1mm'
 						}, {
 							xtype : 'displayfield',
 							height : 5,
 							colspan : 24
 						}, {
 							readOnly : true,
+							dataIndex : 'sealPosition3',
+							allowBlank : true,
+							anchor : '100%',
+							colspan : 12,
+							xtype : 'textfield',
+							fieldLabel : '圈小端边缘距元件<br>卡口端端面距离为____mm±1mm'
+						}, {
+							readOnly : true,
 							dataIndex : 'sealRequire',
 							allowBlank : true,
 							anchor : '100%',
-							colspan : 24,
+							colspan : 12,
 							xtype : 'textfield',
 							fieldLabel : '家用密封圈<br>固定胶带要求'
 						}, {
@@ -5636,16 +5656,31 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 
 								}
 							}
-						}/*
-							 * , { xtype : 'displayfield', fieldLabel : '<p style="color:red;font-size:16px;">营销管理</p>',
-							 * labelSeparator : '',// 去掉冒号 colspan : 24 }, {
-							 * name : 'entity/khxj', dataIndex : 'khxj',
-							 * readOnly : true, anchor : '100%', colspan : 6,
-							 * xtype : 'textfield', fieldLabel : '客户星级评定' }, {
-							 * name : 'entity/cpxj', dataIndex : 'cpxj',
-							 * readOnly : true, anchor : '100%', colspan : 6,
-							 * xtype : 'textfield', fieldLabel : '产品星级评定' }
-							 */]
+						}, {
+					xtype : 'hidden',
+					dataIndex : 'urlPhotoApply',
+					ref : '../../urlPhotoApply'
+				}, {
+					xtype : 'hidden',
+					dataIndex : 'urlPhotoApply2',
+					ref : '../../urlPhotoApply2'
+				}, {
+					xtype : 'hidden',
+					dataIndex : 'urlPhotoApply3',
+					ref : '../../urlPhotoApply3'
+				}, {
+					xtype : 'hidden',
+					dataIndex : 'urlPhotoApply4',
+					ref : '../../urlPhotoApply4'
+				}, {
+					xtype : 'hidden',
+					dataIndex : 'urlPhotoApply5',
+					ref : '../../urlPhotoApply5'
+				}, {
+					xtype : 'hidden',
+					dataIndex : 'urlPhotoApply6',
+					ref : '../../urlPhotoApply6'
+				}]
 			}]
 		});
 
@@ -5671,6 +5706,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					handler : function() {
 						return _this.onModifyUrlPicture('urlMark')
 					}
+				});
+				
+		this.orderViewWindow.addButton({
+					text : "拍照查看",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					hidden : uid != 'dafu' ,
+					handler : this.viewPhotos
 				});
 	}
 

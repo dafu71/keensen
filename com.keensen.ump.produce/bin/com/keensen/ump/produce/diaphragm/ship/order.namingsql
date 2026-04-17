@@ -229,7 +229,7 @@
        T1.CODE AS "code",
        T2.ORDER_NO "orderNo",
        T2.SPEC_ID "specId",
-       T22.MATER_SPEC_NAME AS "materSpecName",
+       nvl(t1.reserve2,T22.MATER_SPEC_NAME) AS "materSpecName",
        nvl(t1.reserve1,T3.PROP_VALUE_NAME || '(' || T3.PROP_VALUE_CODE || ')') "supName",
        T4.PROD_AMOUNT "prodAmount",
        decode(SUBSTR(t1.code,4,2),'FH',T5.STORAGE_AMOUNT,T6.STORAGE_AMOUNT) "storageAmount",
@@ -413,7 +413,7 @@ SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
                     LISTAGG(TTT.SPEC_ID, '/ ') WITHIN GROUP(ORDER BY TTT.LINE, TTT.WORK_DT) SPEC_ID
                FROM (SELECT T.LINE,
                             T.WORK_DT,
-                            case when t2.order_no LIKE '%SY%' then '实验' when t2.order_no LIKE '%WB%' then '维保' else PMS.MATER_SPEC_NAME end MATER_SPEC_NAME,
+                            case when t2.order_no LIKE '%WB%' then '维保' else nvl(t.reserve2,PMS.MATER_SPEC_NAME) end MATER_SPEC_NAME,
                             decode(t.arrange_amount,0,'',t.arrange_amount) PROD_AMOUNT,
                             nvl(t.reserve1,decode(T3.PROP_VALUE_NAME,null,'',T3.PROP_VALUE_NAME || '(' || T3.PROP_VALUE_CODE || ')')) SUP_NAME,
                             case when T2.ORDER_NO LIKE '%WB%' then '' else T.CODE end code,

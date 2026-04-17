@@ -25,7 +25,7 @@
     String rootUrl = request.getRequestURL().toString();
   	rootUrl = rootUrl.replace("/qinsen/produce/tumo/index.jsp","");
   	String ip = userObject.getUserRemoteIP();
-    
+    //System.out.println(gyyFlag);
 %>
 <html>
 <!-- 

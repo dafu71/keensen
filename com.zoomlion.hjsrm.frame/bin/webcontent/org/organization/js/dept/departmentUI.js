@@ -157,10 +157,10 @@ com.zoomlion.hjsrm.org.departmentMgr = function() {
 	this.deptGridPanel = new Ext.fn.ListPanel({
 			sm : selModel,
 			delUrl : 'com.zoomlion.hjsrm.frame.org.organization.OrgManager.removeOrganizations.biz.ext',//注销机构
-			tbar : [{text : '新增',scope : this,ref : '../addNewOrgBtn',iconCls : 'icon-application_add',handler : this.onAdd}, '-',
-					{text : '修改',scope : this,iconCls : 'icon-application_edit',handler : this.onEdit}, '-', 
-					{text : '注销',scope : this,iconCls : 'icon-application_delete',handler : this.onCancellation}, '-', 
-					{text : '恢复',scope : this,iconCls : 'icon-application_reset',handler : this.onRecovery}
+			tbar : [{text : '新增',hidden:true,scope : this,ref : '../addNewOrgBtn',iconCls : 'icon-application_add',handler : this.onAdd}, '-',
+					{text : '修改',hidden:true,scope : this,iconCls : 'icon-application_edit',handler : this.onEdit}, '-', 
+					{text : '注销',hidden:true,scope : this,iconCls : 'icon-application_delete',handler : this.onCancellation}, '-', 
+					{text : '恢复',hidden:true,scope : this,iconCls : 'icon-application_reset',handler : this.onRecovery}
 					],
 			store : _store,
 			columns : [new Ext.grid.RowNumberer(), selModel, 

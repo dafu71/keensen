@@ -1771,8 +1771,8 @@ com.keensen.ump.base.CraftNotStdMgr = function() {
 									}
 								}))*/
 					}, {
-						dataIndex : 'modifyRecord',
-						header : '修订记录',
+						dataIndex : 'changeDt',
+						header : '修订时间',
 						css : modifyLimit != 1 ? '' : ''/*,
 						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
 								{

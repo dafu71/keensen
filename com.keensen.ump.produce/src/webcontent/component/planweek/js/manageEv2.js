@@ -209,6 +209,7 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 	var pageWidth = this.editPlanDayPanel.mpWidth.getValue();
 	var saltLow = this.editPlanDayPanel.saltLow.getValue();
 	var gpdLow = this.editPlanDayPanel.gpdLow.getValue();
+	var mp = this.editPlanDayPanel.mp.getValue();
 
 	// var records = this.listPanel.getSelectionModel().getSelections();
 	// var r = records[0];
@@ -244,6 +245,7 @@ com.keensen.ump.produce.component.planweekMgr.prototype.onAddPlan = function() {
 
 	this.planDayWindow.saltLow.setValue(saltLow);
 	this.planDayWindow.gpdLow.setValue(gpdLow);
+	this.planDayWindow.mp.setValue(mp);
 
 	this.planDayWindow.show();
 }

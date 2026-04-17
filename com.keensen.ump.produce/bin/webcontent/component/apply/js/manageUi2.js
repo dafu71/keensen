@@ -18,6 +18,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 		this.initCStockWindow();
 
 		this.buildExcelUploadWin();
+		this.buildPhotoUploadWin();
 		
 		this.lay = new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -361,13 +362,13 @@ com.keensen.ump.produce.component.applyMgr = function() {
 									iconCls : 'icon-application_excel',
 									handler : this.onUploadProd
 								}]
-					}, '-', {
+					}/*, '-', {
 						text : '请检判定',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						hidden : uid != 'dafu',
 						handler : this.onJudge
-					}, '->', {
+					}*/, '->', {
 						text : '确认入C仓',
 						scope : this,
 						iconCls : 'icon-application_edit',
@@ -1083,6 +1084,44 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								colspan : 12,
 								anchor : '95%'
 							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel2',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel3',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel4',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel5',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel6',
+								height : '15',
+								colspan : 4
+							}, {
 								xtype : 'hidden',
 								ref : '../abnormal',
 								name : 'abnormal'
@@ -1102,6 +1141,9 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								xtype : 'hidden',
 								ref : '../baseId',
 								name : 'baseId'
+							}, {
+								xtype : 'hidden',
+								ref : '../ifphoto'
 							}],
 					buttons : [{
 								text : "保存",
@@ -1121,6 +1163,11 @@ com.keensen.ump.produce.component.applyMgr = function() {
 										&& uid != 'KS01147',
 								scope : this,
 								handler : this.onSaveApply
+							}, {
+								text : "上传照片",
+								hidden:uid != 'dafu',
+								scope : this,
+								handler : this.uploadPhoto
 							}]
 
 				})
@@ -4151,5 +4198,85 @@ com.keensen.ump.produce.component.applyMgr = function() {
 				});
 	}
 
-	
+	// 上传照片面板
+	this.buildPhotoUploadWin = function() {
+		this.photoUploadWin = new Ext.Window({
+					title : '上传照片<span style="color:red;font-size:16px;">（至少上传4张照片）</span>',
+					collapsible : false,
+					modal : true,
+					closeAction : 'hide',
+					buttonAlign : 'center',
+					layout : 'fit',
+					width : 600,
+					height : 480,
+					items : [{
+								xtype : 'columnform',
+								itemId : 'uploadForm',
+								saveUrl : '111.flow',
+								columns : 1,
+								fileUpload : true,
+								fields : [{
+											name : 'uploadFile',
+											fieldLabel : '第1张照片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile2',
+											fieldLabel : '第2张照片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile3',
+											fieldLabel : '第3张照片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile4',
+											fieldLabel : '第4张照片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile5',
+											fieldLabel : '第5张照片',
+											// allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile6',
+											fieldLabel : '第6张照片',
+											// allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'hidden',
+											name : 'baseId',
+											ref : '../../baseId'
+										}]
+							}],
+					buttons : [{
+								text : '上传',
+								handler : this.doUploadPhoto,
+								scope : this
+							}, {
+								text : '关闭',
+								scope : this,
+								handler : function() {
+									this.photoUploadWin.hide();
+								}
+							}]
+				});
+	}
 }

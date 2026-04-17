@@ -78,6 +78,13 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 				});
 
 		this.queryPanel.addButton({
+					text : "水检数据模板(纳滤)",
+					scope : this,
+					iconCls : 'icon-application_excel',
+					handler : this.onDown1
+				});
+
+		this.queryPanel.addButton({
 					text : "气检数据模板",
 					scope : this,
 					iconCls : 'icon-application_excel',
@@ -136,6 +143,14 @@ com.keensen.ump.produce.quality.deliveryrecordMgr = function() {
 									iconCls : 'icon-application_excel',
 									handler : function() {
 										this.onImport(1);
+
+									}
+								},{
+									text : '水检数据(纳滤)',
+									scope : this,
+									iconCls : 'icon-application_excel',
+									handler : function() {
+										this.onImport(4);
 
 									}
 								}, {

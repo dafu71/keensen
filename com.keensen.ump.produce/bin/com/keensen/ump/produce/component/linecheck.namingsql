@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.keensen.ump.produce.component.linecheck">
+    <select id="queryCheckJudge" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.CODE AS "code",T1.CHECH_ID "checkId",
+       T1.ORDER_NO AS "orderNo",
+       T1.ORDER_TYPE AS "orderType",
+       T1.ORDER_AMOUNT AS "orderAmount",
+       T1.JM_SPEC_NAME AS "jmSpecName",
+       T1.APPLY_AMOUNT AS "applyAmount",
+       T1.TAPE AS "tape",
+       T1.LID AS "lid",
+       T1.SN_REGULAR AS "snRegular",
+       T1.MAKE_LABEL AS "makeLabel",
+       T1.LABEL_DRAWING_URL AS "labelDrawingUrl",
+       T1.LABEL_DRAWING_CODE2 AS "labelDrawingCode2",
+       T1.MARK_DRAWING_URL AS "markDrawingUrl",
+       T1.LOGO_MARK2 AS "logoMark2",
+       T1.IFPHOTO AS "ifphoto",
+       T1.URL_PHOTO_APPLY AS "urlPhotoApply",
+       T1.URL_PHOTO_APPLY2 AS "urlPhotoApply2",
+       T1.URL_PHOTO_APPLY3 AS "urlPhotoApply3",
+       T1.URL_PHOTO_APPLY4 AS "urlPhotoApply4",
+       T1.URL_PHOTO_APPLY5 AS "urlPhotoApply5",
+       T1.URL_PHOTO_APPLY6 AS "urlPhotoApply6",
+       T1.BAG_DRAWING_CODE AS "bagDrawingCode",
+       T1.BOX AS "box",
+       T1.PACKING_NUM AS "packingNum",
+       T1.TRAY AS "tray",
+       T1.TRAY_SIZE AS "traySize",
+       T1.PACKING_LAYER AS "packingLayer",
+       T1.SALT_LOW AS "saltLow",
+       T1.GPD_LOW AS "gpdLow",
+       T1.JUDGE_USER_ID AS "judgeUserId",
+       T1.JUDGE_USER_NAME AS "judgeUserName",
+       TO_CHAR(T1.JUDGE_TIME, 'YYYY-MM-DD HH24:MI:SS') AS "judgeTime",
+       T1.LABEL_JUDGE AS "labelJudge",
+       T1.APPEARANCE_JUDGE AS "appearanceJudge",
+       T1.PACKAGE_JUDGE AS "packageJudge",
+       T1.DIAMETER_JUDGE AS "diameterJudge",
+       T1.COMPREHENSIVE_JUEGE AS "comprehensiveJuege",
+       T1.IS_C AS "isC",
+       T1.STORAGE AS "storage"
+  FROM (SELECT CH.ID CHECH_ID,
+               CH.CODE,
+               YB.ORDER_NO,
+               YB.ORDER_TYPE,
+               YB.ORDER_AMOUNT,
+               YB.JM_SPEC_NAME,
+               CH.APPLY_AMOUNT,
+               YB.TAPE,
+               YB.LID,
+               YB.SN_REGULAR,
+               YB.MAKE_LABEL,
+               KBLD.URL LABEL_DRAWING_URL,
+               REPLACE(YB.LABEL_DRAWING_CODE2,
+                       '单击旁边按钮选择图纸编号',
+                       '') LABEL_DRAWING_CODE2,
+               KCMT.URL MARK_DRAWING_URL,
+               YB.LOGO_MARK2,
+               YB.IFPHOTO,
+               YB.URL_PHOTO_APPLY,
+               YB.URL_PHOTO_APPLY2,
+               YB.URL_PHOTO_APPLY3,
+               YB.URL_PHOTO_APPLY4,
+               YB.URL_PHOTO_APPLY5,
+               YB.URL_PHOTO_APPLY6,
+               YB.BAG_DRAWING_CODE,
+               YB.BOX,
+               YB.PACKING_NUM,
+               YB.TRAY,
+               YB.TRAY_SIZE,
+               YB.PACKING_LAYER,
+               YB.SALT_LOW,
+               YB.GPD_LOW,
+               CH.JUDGE_USER_ID,
+               CH.JUDGE_USER_NAME,
+               CH.JUDGE_TIME,
+               CH.LABEL_JUDGE,
+               CH.APPEARANCE_JUDGE,
+               CH.PACKAGE_JUDGE,
+               CH.DIAMETER_JUDGE,
+               CH.COMPREHENSIVE_JUEGE,
+               CH.IS_C,
+               CH.STORAGE
+          FROM KS_COMPONENT_CHECK_HEAD CH
+          LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+            ON CH.BASE_ID = YB.ID
+          LEFT JOIN (SELECT MAX(URL) URL, DRAWING_CODE
+                      FROM KS_BASE_LABEL_DRAWING
+                     GROUP BY DRAWING_CODE) KBLD
+            ON KBLD.DRAWING_CODE = YB.LABEL_DRAWING_CODE
+          LEFT JOIN (SELECT MAX(URL) URL, TEMPLATE_NAME
+                      FROM KS_COMPONENT_MARK_TEMPLATE
+                     GROUP BY TEMPLATE_NAME) KCMT
+            ON YB.MARK_DRAWING_CODE = KCMT.TEMPLATE_NAME
+         WHERE CH.BASE_ID IS NOT NULL
+         <isNotNull prepend="and" property="code">ch.code  = #code#</isNotNull>
+         
+         ) T1
+ ORDER BY T1.CHECH_ID DESC
+
+    
+    </select>
+    <select id="queryHHCheckJudge" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+    SELECT T1.CODE AS "code",T1.CHECH_ID "checkId",
+       T1.ORDER_NO AS "orderNo",
+       T1.ORDER_TYPE AS "orderType",
+       T1.ORDER_AMOUNT AS "orderAmount",
+       T1.JM_SPEC_NAME AS "jmSpecName",
+       T1.APPLY_AMOUNT AS "applyAmount",
+       T1.TAPE AS "tape",
+       T1.LID AS "lid",
+       T1.SN_REGULAR AS "snRegular",
+       T1.MAKE_LABEL AS "makeLabel",
+       T1.LABEL_DRAWING_URL AS "labelDrawingUrl",
+       T1.LABEL_DRAWING_CODE2 AS "labelDrawingCode2",
+       T1.MARK_DRAWING_URL AS "markDrawingUrl",
+       T1.LOGO_MARK2 AS "logoMark2",
+       T1.IFPHOTO AS "ifphoto",
+       T1.URL_PHOTO_APPLY AS "urlPhotoApply",
+       T1.URL_PHOTO_APPLY2 AS "urlPhotoApply2",
+       T1.URL_PHOTO_APPLY3 AS "urlPhotoApply3",
+       T1.URL_PHOTO_APPLY4 AS "urlPhotoApply4",
+       T1.URL_PHOTO_APPLY5 AS "urlPhotoApply5",
+       T1.URL_PHOTO_APPLY6 AS "urlPhotoApply6",
+       T1.BAG_DRAWING_CODE AS "bagDrawingCode",
+       T1.BOX AS "box",
+       T1.PACKING_NUM AS "packingNum",
+       T1.TRAY AS "tray",
+       T1.TRAY_SIZE AS "traySize",
+       T1.PACKING_LAYER AS "packingLayer",
+       T1.SALT_LOW AS "saltLow",
+       T1.GPD_LOW AS "gpdLow",
+       T1.JUDGE_USER_ID AS "judgeUserId",
+       T1.JUDGE_USER_NAME AS "judgeUserName",
+       TO_CHAR(T1.JUDGE_TIME, 'YYYY-MM-DD HH24:MI:SS') AS "judgeTime",
+       T1.LABEL_JUDGE AS "labelJudge",
+       T1.APPEARANCE_JUDGE AS "appearanceJudge",
+       T1.PACKAGE_JUDGE AS "packageJudge",
+       T1.DIAMETER_JUDGE AS "diameterJudge",
+       T1.COMPREHENSIVE_JUEGE AS "comprehensiveJuege",
+       T1.IS_C AS "isC",
+       T1.STORAGE AS "storage"
+  FROM (SELECT CH.ID CHECH_ID,
+               CH.CODE,
+               YB.ORDER_NO,
+               YB.ORDER_TYPE,
+               YB.ORDER_AMOUNT,
+               YB.JM_SPEC_NAME,
+               CH.APPLY_AMOUNT,
+               YB.TAPE,
+               YB.LID,
+               YB.SN_REGULAR,
+               YB.MAKE_LABEL,
+               KBLD.URL LABEL_DRAWING_URL,
+               REPLACE(YB.LABEL_DRAWING_CODE2,
+                       '单击旁边按钮选择图纸编号',
+                       '') LABEL_DRAWING_CODE2,
+               KCMT.URL MARK_DRAWING_URL,
+               YB.LOGO_MARK2,
+               YB.IFPHOTO,
+               YB.URL_PHOTO_APPLY,
+               YB.URL_PHOTO_APPLY2,
+               YB.URL_PHOTO_APPLY3,
+               YB.URL_PHOTO_APPLY4,
+               YB.URL_PHOTO_APPLY5,
+               YB.URL_PHOTO_APPLY6,
+               YB.BAG_DRAWING_CODE,
+               YB.BOX,
+               YB.PACKING_NUM,
+               YB.TRAY,
+               YB.TRAY_SIZE,
+               YB.PACKING_LAYER,
+               YB.SALT_LOW,
+               YB.GPD_LOW,
+               CH.JUDGE_USER_ID,
+               CH.JUDGE_USER_NAME,
+               CH.JUDGE_TIME,
+               CH.LABEL_JUDGE,
+               CH.APPEARANCE_JUDGE,
+               CH.PACKAGE_JUDGE,
+               CH.DIAMETER_JUDGE,
+               CH.COMPREHENSIVE_JUEGE,
+               CH.IFCSTOCK IS_C,
+               CH.STORAGE
+          FROM KS_COMPONENT_HH_CHECK_HEAD CH
+          LEFT JOIN KS_PROD_COMPONENT_YXORDER OD
+            ON CH.ORDER_ID = OD.ID
+          LEFT JOIN KS_COMPONENT_YXORDER_BASE YB
+            ON OD.BASE_ID = YB.ID
+          LEFT JOIN (SELECT MAX(URL) URL, DRAWING_CODE
+                      FROM KS_BASE_LABEL_DRAWING
+                     GROUP BY DRAWING_CODE) KBLD
+            ON KBLD.DRAWING_CODE = YB.LABEL_DRAWING_CODE
+          LEFT JOIN (SELECT MAX(URL) URL, TEMPLATE_NAME
+                      FROM KS_COMPONENT_MARK_TEMPLATE
+                     GROUP BY TEMPLATE_NAME) KCMT
+            ON YB.MARK_DRAWING_CODE = KCMT.TEMPLATE_NAME
+         WHERE CH.ORDER_ID IS NOT NULL
+           AND OD.BASE_ID IS NOT NULL
+           <isNotNull prepend="and" property="code">ch.code  = #code#</isNotNull>) T1
+ ORDER BY T1.CHECH_ID DESC
+    
+    
+    </select>
+</sqlMap>

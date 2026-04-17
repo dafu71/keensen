@@ -9,7 +9,7 @@
 		decode(t1.label_drawing_code,null,yb.label_drawing_code,t1.label_drawing_code) "labelDrawingCode",
 	
 	
-	
+	T1.RESERVE5        AS "reserve5",
 	T1.ID AS "id",T1.base_ID AS "baseId",T1.ID AS "orderId",
        TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd') "createTime",
        T1.CREATE_USER_ID AS "createUserId",
@@ -99,6 +99,8 @@
         "labelBase"
        
        , yb.seal_Position "sealPosition"
+       , yb.seal_Position2 "sealPosition2"
+       , yb.seal_Position3 "sealPosition3"
        
        ,yb.order_type "orderTypeBase",yb.prod_amount "prodAmount"
        ,nvl(chk.cnt,0) "checkCount"
@@ -621,6 +623,7 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        	case when t8.out_length>=nvl(sl.test_length,0) and t8.out_length &lt;=nvl(sl.test_length2,1000000000) and nvl(t8.residue,0)>0 then '是' else '否' end
        else '' end "sampleLengthValid"
        ,t1.if_mix "ifMix",nvl(t1.mp_min_salt_rejection,0) "mpMinSaltRejection",nvl(t1.yj_gpd_low_limit2,0) "yjGpdLowLimit2"
+       ,yb.salt_Low "saltLow",yb.gpd_Low "gpdLow"
   FROM KS_COMPONENT_PLAN_DAY T1 
   LEFT JOIN (select t.plan_date,t.batch_no,COUNT(1) cnt from KS_COMPONENT_PLAN_DAY t
   GROUP BY t.plan_date,t.batch_no ) cnt ON cnt.batch_no = t1.batch_no AND cnt.plan_date = t1.plan_date
@@ -637,6 +640,8 @@ CONNECT BY LEVEL &lt; TRUNC(TO_DATE(to_char(#endDate#, 'YYYY-MM-DD'), 'YYYY-MM-D
        
   LEFT JOIN KS_PROD_COMPONENT_YXORDER T3
     ON T3.ID = T2.RELATION_ID
+  LEFT JOIN KS_COMPONENT_YXORDER_BASE yb
+	ON t3.base_id =yb.id  
     
   left join (select t.mp_spec_id,prod_spec_id,t.test_length,t.test_length2 from KS_QUALITY_SAMPLE_LENGTH t
 	WHERE t.id IN

@@ -685,8 +685,8 @@ com.keensen.ump.base.CraftStdMgr = function() {
 						header : '编制时间',
 						css : modifyLimit != 1 ? '' : ''
 					}, {
-						dataIndex : 'modifyRecord',
-						header : '修订记录',
+						dataIndex : 'changeDt',
+						header : '修订时间',
 						css : modifyLimit != 1 ? '' : ''
 					}],
 			store : new Ext.data.JsonStore({

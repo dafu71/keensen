@@ -776,6 +776,16 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							scope : this,
 							onTriggerClick : function() {
 								_this.onTmBatchNo();
+							},
+							enableKeyEvents :true,
+							listeners : {
+								scope : this,
+								'blur' : function(o) {
+									var v = o.getValue();
+									if(v.length==13){
+										_this.onTmBatchNo();
+									}
+								}
 							}
 						}, {
 							xtype : 'displayfield',
@@ -787,8 +797,9 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							fieldLabel : '线别',
 							ref : '../../line',
 							hiddenName : 'entity/line',
-							emptyText : '--请选择--',
+							//emptyText : '--请选择--',
 							allowBlank : false,
+							readOnly:true,
 							editable : false,
 							anchor : '95%',
 							colspan : 1,
@@ -807,9 +818,10 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							fieldLabel : '膜片型号',
 							ref : '../../mptype',
 							hiddenName : 'entity/mptype',
-							emptyText : '--请选择--',
+							emptyText : null,
 							allowBlank : false,
 							editable : false,
+							readOnly:true,
 							anchor : '95%',
 							colspan : 1,
 							listeners : {

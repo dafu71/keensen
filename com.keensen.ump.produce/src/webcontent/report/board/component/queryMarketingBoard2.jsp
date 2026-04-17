@@ -119,6 +119,8 @@
 <div style="position: absolute; white-space: nowrap;">
 <table border="1" width="100%" class="EOS_table">
 
+<% for(int j=0;j<5;j++){ %>
+
 <%  for(int i=0;i<list.length;i++){ %>
 <%
 	String style5="style4";	
@@ -182,7 +184,7 @@
 
          </tr>
 <% } %>
-
+<% } %>
 </table>
 </div>
 </div>

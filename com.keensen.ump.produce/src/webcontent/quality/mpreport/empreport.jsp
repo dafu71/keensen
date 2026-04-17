@@ -359,7 +359,7 @@
 		<div align="center" class="style1"><strong>Rejection rate</strong><br>%</div>
 		</td>
 		<td width="16%" height="26" >
-		<div align="center" class="style1"><strong>Defect point position、type and length</strong></div>
+		<div align="center" class="style1"><strong>Defect point position，m</strong></div>
 		</td>
 		<td width="8%" height="26" >
 		<div align="center" class="style1"><strong>Defect point numbers</strong></div>

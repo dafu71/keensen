@@ -83,5 +83,18 @@
 </head>
 <body>
 <div id="applysapplymgr"></div>
+
+<div style="display: none">
+		<form name="printForm" id="applysapplymgrForm" action="" target="_blank" method="post" accept-charset="UTF-8">
+			<input type="hidden" name="markBatchNo"/>
+			<input type="hidden" name="prodSpecName"/>
+			<input type="hidden" name="quantityBox"/>
+			<input type="hidden" name="quantityLastBox"/>
+			<input type="hidden" name="quantityPerBox"/>
+			<input type="hidden" name="dryWet"/>
+			<input type="hidden" name="nsf"/>
+		</form>
+	</div>
+	
 </body>
 </html>

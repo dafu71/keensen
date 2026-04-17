@@ -807,6 +807,10 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						xtype : 'hidden',
 						ref : '../mpWidth',
 						dataIndex : 'mpWidth'
+					}, {
+						xtype : 'hidden',
+						ref : '../mp',
+						dataIndex : 'mp'
 					}]
 
 		})
@@ -1013,7 +1017,7 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 				})
 
 		this.addPlanDayPanel = this.addPlanDayPanel || new Ext.fn.InputPanel({
-			height : 200,
+			height : 220,
 			region : 'north',
 			baseCls : "x-plain",
 			// pgrid : this.listPanel,
@@ -1178,6 +1182,17 @@ com.keensen.ump.produce.component.planweekMgr = function() {
 						ref : '../../useAmount',
 						anchor : '85%',
 						minValue : 1,
+						colspan : 3
+					}, {
+						xtype : 'displayfield',
+						height : '5',
+						colspan : 6
+					}, {
+						xtype : 'textfield',
+						fieldLabel : '指定膜片',
+						ref : '../../mp',
+						readOnly : true,
+						anchor : '85%',
 						colspan : 3
 					}, {
 						name : 'entity/relationId',

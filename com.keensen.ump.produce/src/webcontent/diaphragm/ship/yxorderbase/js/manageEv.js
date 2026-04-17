@@ -389,7 +389,7 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.getRight = funct
 							.setVisible(jhy.indexOf(uid) != -1);
 					_this.listPanel.storageConfirmBtn.setVisible(jhy
 							.indexOf(uid) != -1
-							|| kc.indexOf(uid) != -1);
+							|| kc.indexOf(uid) != -1 || yx.indexOf(uid) != -1);
 					_this.listPanel.delBtn.setVisible(jhy.indexOf(uid) != -1);
 
 					Ext.getCmp(importExcelBtnId)

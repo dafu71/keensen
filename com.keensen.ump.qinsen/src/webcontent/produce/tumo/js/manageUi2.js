@@ -138,6 +138,11 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 							['操作异常报废', '操作异常报废'], ['工艺异常报废', '工艺异常报废'],
 							['设备异常报废', '设备异常报废']]
 				});
+
+		this.dmUseLengthStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['1080', '1080'], ['1140', '1140']]
+				});
 	}
 
 	this.initQueryPanel = function() {
@@ -713,6 +718,9 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						dataIndex : 'cmLineCode',
 						header : '裁叠膜生产线'
 					}, {
+						dataIndex : 'width',
+						header : '宽幅'
+					}, {
 						dataIndex : 'trend',
 						header : '走向'
 					}, {
@@ -1193,6 +1201,8 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 						totalProperty : 'totalCount',
 						baseParams : {},
 						fields : [{
+									name : 'width'
+								}, {
 									name : 'cmLineCode'
 								}, {
 									name : 'aPlusLength'
@@ -1771,13 +1781,27 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 								}
 							}
 						}, {
-							name : 'entity/dmUseLength',
+
+							xtype : 'combo',
+							mode : 'local',
+							displayField : "name",
+							valueField : "code",
 							fieldLabel : '锟筒尺寸',
-							xtype : 'numberfield',
-							decimalPrecision : 0,
-							minValue : 0,
-							allowBlank : true,
-							anchor : '75%'
+							ref : '../../dmUseLength',
+							name : 'entity/dmUseLength',
+							hiddenName : 'entity/dmUseLength',
+							value : '1080',
+							emptyText : '--请选择--',
+							allowBlank : false,
+							anchor : '75%',
+							colspan : 1,
+							store : _this.dmUseLengthStore,
+							listeners : {
+								scope : this,
+								'expand' : function(A) {
+									this.inputWindow.dmUseLength.reset();
+								}
+							}
 						}, {
 							xtype : 'displayfield',
 							height : '5',
@@ -2237,14 +2261,28 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 										}
 									}
 								}, {
-									name : 'entity/dmUseLength',
-									dataIndex : 'dmUseLength',
+
+									xtype : 'combo',
+									mode : 'local',
+									displayField : "name",
+									valueField : "code",
 									fieldLabel : '锟筒尺寸',
-									xtype : 'numberfield',
-									decimalPrecision : 0,
-									minValue : 0,
-									allowBlank : true,
-									anchor : '75%'
+									ref : '../../dmUseLength',
+									name : 'entity/dmUseLength',
+									hiddenName : 'entity/dmUseLength',
+									dataIndex : 'dmUseLength',
+									emptyText : '--请选择--',
+									allowBlank : false,
+									anchor : '75%',
+									colspan : 1,
+									store : _this.dmUseLengthStore,
+									listeners : {
+										scope : this,
+										'expand' : function(A) {
+											this.inputWindow.dmUseLength
+													.reset();
+										}
+									}
 								}, {
 									xtype : 'displayfield',
 									height : '5',
@@ -2331,8 +2369,15 @@ com.keensen.ump.qinsen.produce.tumoMgr = function() {
 									name : 'entity/remarkPinhole',
 									dataIndex : 'remarkPinhole',
 									fieldLabel : '针孔说明',
-									anchor : '85%',
-									colspan : 2
+									anchor : '75%',
+									colspan : 1
+								}, {
+									xtype : 'textfield',
+									name : 'entity/width',
+									dataIndex : 'width',
+									fieldLabel : '宽幅',
+									anchor : '75%',
+									colspan : 1
 								}, {
 									xtype : 'displayfield',
 									height : '5',

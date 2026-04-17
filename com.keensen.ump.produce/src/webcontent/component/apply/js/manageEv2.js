@@ -378,10 +378,80 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSelect = function() {
 						var urlPhotoApply4 = data.urlPhotoApply4;
 						var urlPhotoApply5 = data.urlPhotoApply5;
 						var urlPhotoApply6 = data.urlPhotoApply6;
-						
-						var ifphoto = data.ifphoto;
 
-						
+						var ifphoto = data.ifphoto;	
+						obj.ifphoto.setValue(ifphoto);
+
+						if (!Ext.isEmpty(urlPhotoApply)) {
+							var myurl = '';
+							myurl += '<a href="/default/myupload/apply/'
+									+ urlPhotoApply
+									+ '" target=_blank>查看图片</a>';
+							myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+							_this.inputPanel.picturePanel.update(myurl);
+						} else {
+							if (ifphoto == '按公司标准提供') {
+								_this.inputPanel.picturePanel.setValue('请上传照片');
+							}
+						}
+						if (!Ext.isEmpty(urlPhotoApply2)) {
+							var myurl = '';
+							myurl += '<a href="/default/myupload/apply/'
+									+ urlPhotoApply2
+									+ '" target=_blank>查看图片</a>';
+							myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+							_this.inputPanel.picturePanel2.update(myurl);
+						} else {
+							if (ifphoto == '按公司标准提供') {
+								_this.inputPanel.picturePanel2.setValue('请上传照片');
+							}
+						}
+						if (!Ext.isEmpty(urlPhotoApply3)) {
+							var myurl = '';
+							myurl += '<a href="/default/myupload/apply/'
+									+ urlPhotoApply3
+									+ '" target=_blank>查看图片</a>';
+							myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+							_this.inputPanel.picturePanel3.update(myurl);
+						} else {
+							if (ifphoto == '按公司标准提供') {
+								_this.inputPanel.picturePanel3.setValue('请上传照片');
+							}
+						}
+						if (!Ext.isEmpty(urlPhotoApply4)) {
+							var myurl = '';
+							myurl += '<a href="/default/myupload/apply/'
+									+ urlPhotoApply4
+									+ '" target=_blank>查看图片</a>';
+							myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+							_this.inputPanel.picturePanel4.update(myurl);
+						} else {
+							if (ifphoto == '按公司标准提供') {
+								_this.inputPanel.picturePanel4.setValue('请上传照片');
+							}
+						}
+						if (!Ext.isEmpty(urlPhotoApply5)) {
+							var myurl = '';
+							myurl += '<a href="/default/myupload/apply/'
+									+ urlPhotoApply5
+									+ '" target=_blank>查看图片</a>';
+							myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+							_this.inputPanel.picturePanel5.update(myurl);
+						}
+						if (!Ext.isEmpty(urlPhotoApply6)) {
+							var myurl = '';
+							myurl += '<a href="/default/myupload/apply/'
+									+ urlPhotoApply6
+									+ '" target=_blank>查看图片</a>';
+							myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+							_this.inputPanel.picturePanel6.update(myurl);
+						}
 
 						// alert('orderId='+orderId + '-----baseId=' + baseId);
 						// alert('urlPhotoApply='+urlPhotoApply +
@@ -429,7 +499,6 @@ com.keensen.ump.produce.component.applyMgr.prototype.onSave = function() {
 		return false;
 	}
 
-	
 	var orderNo = this.inputPanel.orderNo.getValue();
 	var orderNo2 = records[0].data.orderNo;
 	if (orderNo != orderNo2) {
@@ -1348,8 +1417,122 @@ com.keensen.ump.produce.component.applyMgr.prototype.createTrayCode = function()
 }
 
 com.keensen.ump.produce.component.applyMgr.prototype.onPackage4Board = function() {
-	window
-			.open('com.keensen.ump.produce.report.queryPackage4Board.flow');
+	window.open('com.keensen.ump.produce.report.queryPackage4Board.flow');
 }
 
+com.keensen.ump.produce.component.applyMgr.prototype.uploadPhoto = function() {
 
+	var orderId = this.inputPanel.orderId.getValue();
+	if (Ext.isEmpty(orderId)) {
+		Ext.Msg.alert("系统提示", "请选择订单!");
+		return
+	}
+	
+	var baseId = this.inputPanel.baseId.getValue();
+	if (Ext.isEmpty(baseId)) {
+		Ext.Msg.alert("系统提示", "非营销订单无需上传照片!");
+		return
+	}
+	this.photoUploadWin.getComponent('uploadForm').form.reset();
+	this.photoUploadWin.show();
+}
+
+// 上传照片
+com.keensen.ump.produce.component.applyMgr.prototype.doUploadPhoto = function() {
+
+	var _this = this;
+	var uploadInputPanel = this.photoUploadWin.getComponent('uploadForm');
+	// 校验
+	var fileUploadObj = uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	var filePath = fileUploadObj.getValue();
+	// 文件后缀
+	var sfileName = filePath.split(".");
+
+	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
+			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
+			'raw', 'wmf', 'webp', 'avif', 'apng'];
+	var extname = sfileName[1].toLowerCase();
+	if (extname == null || array.indexOf(extname) == -1) {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为图片文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+	if (uploadInputPanel.form.isValid()) {
+
+		var baseId = this.inputPanel.baseId.getValue();
+		this.photoUploadWin.baseId.setValue(baseId);
+
+		var url = 'com.keensen.ump.produce.component.uploadPhotos.flow';
+		uploadInputPanel.form.submit({
+					method : "POST",
+					timeout : 1200,
+					url : url,
+					waitTitle : "操作提示",
+					waitMsg : "上传数据中...",
+					success : function(form, action) {
+						var result = action.result;
+						var fnames = result.msg;
+						var arr = fnames.split('|');
+						// fname = '/myupload/apply/' + fname;
+						if (result.success) {
+							_this.photoUploadWin.hide();
+							var fname = arr[0]
+							var url = '';
+							url += '<a href="/default/myupload/apply/' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							_this.inputPanel.picturePanel.update(url);
+							var fname = arr[1]
+							var url = '';
+							url += '<a href="/default/myupload/apply/' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							_this.inputPanel.picturePanel2.update(url);
+							var fname = arr[2]
+							var url = '';
+							url += '<a href="/default/myupload/apply/' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							_this.inputPanel.picturePanel3.update(url);
+							var fname = arr[3]
+							var url = '';
+							url += '<a href="/default/myupload/apply/' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							_this.inputPanel.picturePanel4.update(url);
+							if (arr.length > 4) {
+								var fname = arr[4]
+								var url = '';
+								url += '<a href="/default/myupload/apply/'
+										+ fname + '" target=_blank>查看图片</a>';
+								url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+								_this.inputPanel.picturePanel5.update(url);
+							}
+							if (arr.length > 5) {
+								var fname = arr[5]
+								var url = '';
+								url += '<a href="/default/myupload/apply/'
+										+ fname + '" target=_blank>查看图片</a>';
+								url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+								_this.inputPanel.picturePanel6.update(url);
+							}
+
+						}
+					},
+					failure : function(form, action) {
+						Ext.MessageBox.show({
+									title : '操作提示',
+									buttons : Ext.MessageBox.OK,
+									msg : "导入失败，请检查文件格式或网络是否正常",
+									icon : Ext.MessageBox.ERROR
+								});
+					}
+				});
+	}
+
+}

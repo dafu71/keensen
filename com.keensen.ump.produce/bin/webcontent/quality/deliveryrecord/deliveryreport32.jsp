@@ -747,8 +747,7 @@
 <% } %>
 
 <l:notEmpty property="waterList">
-
-	<table width="780" border="0">
+<table width="780" border="0">
 		<tr>
 			<td width="50%">
 			<div align="left" class="style2"><strong>水检数据</strong></div>
@@ -756,6 +755,9 @@
 			<td width="50%">&nbsp;</td>
 		</tr>
 	</table>
+<l:notEqual targetValue="纳滤膜元件" property="data/productName"
+		compareType="string">
+	
 	
 	<table width="780" border="1" bordercolor="#000000"
 		style="border-collapse: collapse; ">
@@ -832,6 +834,68 @@
 		%>	
 		
     </table>
+    </l:notEqual>
+    
+    <l:equal targetValue="纳滤膜元件" property="data/productName"
+		compareType="string">
+	
+	
+	<table width="780" border="1" bordercolor="#000000"
+		style="border-collapse: collapse; ">
+	<tr  style="border: 1px solid black;">
+			<td width="8%"  >
+			<div align="center" class="style1"  >序号</div>
+			</td>
+			<td width="20%" style="">
+			<div align="center" class="style1" >元件序列号</div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1" >产水量(NaCl),GPD</div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1" >脱盐率(NaCl),%</div>
+			</td>
+			
+			<td width="18%">
+			<div align="center" class="style1" >产水量(MgSO4),GPD</div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1" >脱盐率(MgSO4),%</div>
+			</td>
+		</tr>
+	<%
+		for (int i = 0; i < waterList.length; i++) {
+		%>
+		
+		<tr style="border: 1px solid black;">
+			
+
+			<td width="8%">
+			<div align="center" class="style1"><%=i + 1%></div>
+			</td>
+			<td width="20%">
+			<div align="center" class="style1"><%=waterList[i].getString("batchNo")%></div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1"><%=waterList[i].getString("water")%></div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1"><%=waterList[i].getString("desalination")%></div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1"><%=waterList[i].getString("reserve1")%></div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1"><%=waterList[i].getString("reserve2")%></div>
+			</td>
+		</tr>
+		
+		<%
+		}
+		%>	
+		
+    </table>
+    </l:equal>
 </l:notEmpty>
 
 <l:notEmpty property="airList">

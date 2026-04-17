@@ -129,6 +129,10 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 						renderer : function(v, m, r, i) {
 							return v <= 0 ? '' : v;
 						}
+					}, {
+						dataIndex : 'otherRemark',
+						sortable : true,
+						header : '备注'
 					}],
 			store : new Ext.data.JsonStore({
 				url : 'com.keensen.ump.produce.component.storage.queryReport4Order.biz.ext',
@@ -168,6 +172,8 @@ com.keensen.ump.produce.component.storage.Report4OrderMgr = function() {
 							name : 'dateDelivery'
 						}, {
 							name : 'orderAmount9'
+						}, {
+							name : 'otherRemark'
 						}]
 			})
 		})

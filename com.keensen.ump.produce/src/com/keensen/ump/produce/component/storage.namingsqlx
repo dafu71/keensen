@@ -901,7 +901,8 @@
        TT.OVER_DATE                "overDate",
        TT.DATE_DELIVERY            "dateDelivery",
        TT.DELIVERY_CONFIRM_TIME    "deliveryConfirmTime",
-       YBB.DELIVERY_CONFIRM_AMOUNT "deliveryConfirmAmount"
+       nvl(YBB.DELIVERY_CONFIRM_AMOUNT,0) + nvl(alct.cnt,0) "deliveryConfirmAmount",
+       alct.other_remark "otherRemark"
   FROM (
         
         SELECT ORDER_NO ORDER_NO,
@@ -1016,6 +1017,17 @@
                  ON V.BASE_ID = YB.ID) YBB
     ON YBB.ORDER_NO = TT.ORDER_NO
    AND YBB.JM_SPEC_NAME = TT.JM_SPEC_NAME
+   
+   left join (SELECT t1.cnt,t2.order_no,t2.jm_spec_name,od.reserve5 other_remark from 
+(select t.base_id,COUNT(1) cnt from KS_COMPONENT_ALLOCATE t
+GROUP BY t.base_id) t1
+LEFT JOIN ks_component_yxorder_base t2
+ON t1.base_id=t2.id
+left join KS_PROD_COMPONENT_YXORDER od
+on od.base_id = t2.id
+) alct
+ON alct.ORDER_NO = TT.ORDER_NO
+   AND alct.JM_SPEC_NAME = TT.JM_SPEC_NAME
 
 
     

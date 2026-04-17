@@ -2850,6 +2850,105 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.onMarketingBoard = fu
 			.open('com.keensen.ump.produce.report.queryMarketingBoard.flow');
 }
 
+// 拍照查看
+com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function() {
+
+	var urlPhotoApply = this.orderViewWindow.urlPhotoApply.getValue();
+	var urlPhotoApply2 = this.orderViewWindow.urlPhotoApply2.getValue();
+	var urlPhotoApply3 = this.orderViewWindow.urlPhotoApply3.getValue();
+	var urlPhotoApply4 = this.orderViewWindow.urlPhotoApply4.getValue();
+	var urlPhotoApply5 = this.orderViewWindow.urlPhotoApply5.getValue();
+	var urlPhotoApply6 = this.orderViewWindow.urlPhotoApply6.getValue();
+
+	var url = '&nbsp;';
+
+	var html = '<table border=1 align=center style="width :100%;height : 100%; border-collapse: collapse;">'
+	html += '<tr>'
+	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle; width:33%; height:300px;">'
+	if (!Ext.isEmpty(urlPhotoApply)) {
+		url = markRootUrl + 'myupload/apply/' + urlPhotoApply;
+		html += '<img src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>';
+	} else {
+		html += url;
+	}
+	html += '</td>';
+	var url = '&nbsp;';
+	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+	if (!Ext.isEmpty(urlPhotoApply2)) {
+		url = markRootUrl + 'myupload/apply/' + urlPhotoApply2;
+		html += '<img src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+	} else {
+		html += url;
+	}
+	html += '</td>';
+	var url = '&nbsp;';
+	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+	if (!Ext.isEmpty(urlPhotoApply3)) {
+		url = markRootUrl + 'myupload/apply/' + urlPhotoApply2;
+		html += '<img src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+	} else {
+		html += url;
+	}
+	html += '</td>';
+	html += '</tr>';
+	html += '<tr>'
+	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+	if (!Ext.isEmpty(urlPhotoApply4)) {
+		url = markRootUrl + 'myupload/apply/' + urlPhotoApply4;
+		html += '<img src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>';
+	} else {
+		html += url;
+	}
+	html += '</td>';
+	var url = '&nbsp;';
+	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+	if (!Ext.isEmpty(urlPhotoApply5)) {
+		url = markRootUrl + 'myupload/apply/' + urlPhotoApply5;
+		html += '<img src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+	} else {
+		html += url;
+	}
+	html += '</td>';
+	var url = '&nbsp;';
+	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+	if (!Ext.isEmpty(urlPhotoApply6)) {
+		url = markRootUrl + 'myupload/apply/' + urlPhotoApply6;
+		html += '<img src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+	} else {
+		html += url;
+	}
+	html += '</td>';
+	html += '</tr>';
+	html += '</table>';
+	
+	var win = new Ext.Window({
+		title : '拍照图',
+		width : 1024,
+		height : 680,
+		layout : 'fit',
+		resizable : false,
+		closable : true,
+		modal : true,
+		bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+		html : html,
+		buttons : [{
+					text : '关闭',
+					handler : function() {
+						win.close();
+					}
+				}]
+	});
+	// 显示窗口
+	win.show();
+
+}
+
 function getDiffDay(date, num) {
 	var date2 = new Date(date);
 	var date1 = new Date(date2.setDate(date2.getDate() + num));

@@ -1173,7 +1173,8 @@ SET
     
     <select id="queryDeliveryList4Water" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
     
-    SELECT t.batch_no "batchNo", t.water "water",t.desalination "desalination"
+    SELECT t.batch_no "batchNo", t.water "water",t.desalination "desalination",
+    nvl(t.reserve1,0) "reserve1",nvl(t.reserve2,0) "reserve2"
 	 from KS_QUALITY_DELIVERYRECORD_LIST t
 	 WHERE t.relation_id = #relationId#
     
@@ -1191,6 +1192,118 @@ SET
     select t.batch_no "batchNo"
 	from KS_QUALITY_DELIVERY_LIST3 t
 	 WHERE t.relation_id = #relationId#
+    
+    </select>
+    
+    <select id="query4CreateDeliveryMpReport" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+
+		WITH TB AS
+		 (SELECT DIMO_BATCH_NO, ROWNUM DM
+		    FROM (SELECT DISTINCT TM.DIMO_BATCH_NO
+		            FROM QINSEN.INST_TUMO TM
+		           WHERE TM.RECORD_ID IN
+		                 ($recordIds$)))
+		SELECT Tm.out_BATCH_NO "batchNo",
+		       TB.DM "dm"， NVL(T1.USEFUL_LENGTH, 0) - NVL(TMDEFECT.DEFECT_LENGTH2, 0) AS "amountIndeed",
+		       NVL(T1.QUALIFID_LENGTH, 0) - NVL(TMDEFECT.DEFECT_LENGTH, 0) AS "amountUse",
+		       nvl(NVL(KDD.DIAMETER_AVG, TM.THICK_AVG),0) "thickAvg",
+		       nvl(TM.WIDTH,0) "widthMp",
+		       '1015' "widthValid",
+		       T1.RECORD_ID,
+		       T1.OUT_BATCH_NO,
+		       T1.DIMO_BATCH_NO,
+		       TM.LINE_ID,
+		       TM.SPEC_ID,
+		       T1.MATER_SPEC_NAME,
+		       T2.CLIENT_NAME,
+		       STD.GFD_LOW_LIMIT,
+		       STD.GFD_UP_LIMIT,
+		       STD.SALT_LOW_LIMIT,
+		       STD2.GFD_LOW_LIMIT GFD_LOW_LIMIT2,
+		       STD2.GFD_UP_LIMIT GFD_UP_LIMIT2,
+		       STD2.SALT_LOW_LIMIT SALT_LOW_LIMIT2,
+		       NVL(T7.GFD_AVG, 0) GFD_AVG,
+		       NVL(T7.SALT_REJECTION, 0) SALT_REJECTION,
+		       ROUND(NVL(STD.GFD_LOW_LIMIT, 0) +
+		             (NVL(STD.GFD_UP_LIMIT, 0) - NVL(STD.GFD_LOW_LIMIT, 0)) *
+		             (NVL(T7.GFD_AVG, 0) - NVL(STD2.GFD_LOW_LIMIT, 0)) /
+		             (NVL(STD2.GFD_UP_LIMIT, 0) - NVL(STD2.GFD_LOW_LIMIT, 0)),
+		             1) "gfd",
+		       ROUND(NVL(STD.SALT_LOW_LIMIT, 0) +
+		             (NVL(T7.SALT_REJECTION, 0) - NVL(STD2.SALT_LOW_LIMIT, 0)) / 2,
+		             2) || '%' "salt",
+		       NVL(CASE
+		             WHEN TMDEFECT.NUM_LABEL IS NULL THEN
+		              NVL(CD.TAG_NUM, TM.TAG_NUM)
+		             ELSE
+		              TMDEFECT.NUM_LABEL
+		           END,
+		           0) AS "defect2",
+		       NVL(NVL(TMDEFECT.POSITION, CD.POSITION), ' ') "defect1",
+		       '合格' "package",
+		       '合格' "result"
+		  FROM V_KS_PROD_DIAPHRAGM_SHIP T2
+		  LEFT JOIN V_KS_TUMO3 T1
+		    ON T1.RECORD_ID = T2.RECORD_ID
+		  LEFT JOIN QINSEN.INST_TUMO TM
+		    ON T1.RECORD_ID = TM.RECORD_ID
+		  LEFT JOIN (SELECT TUMO_BATCH_ID,
+		                    SUM(LABEL_NUM) TAG_NUM,
+		                    SUM(LABEL_NUM) * 1.5 TAG_LENGTH,
+		                    LISTAGG(REMARK, ';') WITHIN GROUP(ORDER BY RECORD_ID) AS REMARK,
+		                    LISTAGG(POSITION, '/') WITHIN GROUP(ORDER BY RECORD_ID) AS POSITION
+		               FROM (SELECT T.RECORD_ID,
+		                            T.LABEL_NUM,
+		                            T.TUMO_BATCH_ID,
+		                            T.POSITION,
+		                            '位置' || T.POSITION || ',不良长度' || T.LOSS || ',标签数' ||
+		                            T.LABEL_NUM REMARK
+		                       FROM QINSEN.INST_CDM_DEFECT T
+		                      WHERE T.IF_TEAR &lt;> '是')
+		              GROUP BY TUMO_BATCH_ID) CD
+		    ON CD.TUMO_BATCH_ID = TM.RECORD_ID
+		  LEFT JOIN (SELECT MAX(C.MAC_NAME) MAC_NAME,
+		                    MAX(C.GFD_AVG) GFD_AVG,
+		                    C.BATCH_ID,
+		                    MAX(C.SALT_REJECTION) SALT_REJECTION
+		               FROM QINSEN.INST_TUMO_CHECK C
+		              WHERE C.RECHECK_FLAG = 'N'
+		              GROUP BY C.BATCH_ID) T7
+		    ON T7.BATCH_ID = TM.RECORD_ID
+		  LEFT JOIN KS_DIAPHRAGM_DIAMETER KDD
+		    ON KDD.BATCH_NO = T1.BATCH_NO
+		  LEFT JOIN (SELECT SUM(LENGTH) DEFECT_LENGTH,
+		                    RELATION_ID,
+		                    SUM(DECODE(IFTEAR, '是', LENGTH, 0)) DEFECT_LENGTH2,
+		                    NVL(SUM(REGEXP_SUBSTR(NUM_LABEL, '[0-9]+')), 0) NUM_LABEL,
+		                    LISTAGG(POSITION, '/') WITHIN GROUP(ORDER BY RELATION_ID) AS POSITION
+		               FROM KS_DIAPHRAGM_TM_DEFECT_LIST
+		              GROUP BY RELATION_ID) TMDEFECT
+		    ON TMDEFECT.RELATION_ID = T1.RECORD_ID
+		  LEFT JOIN KS_QUALITY_MP_DELIVERY_STD STD
+		    ON STD.SPEC_NAME = #specName#
+		   AND STD.CLIENT = T2.CLIENT_NAME
+		  LEFT JOIN (SELECT T.SPEC_ID,
+		                    T.LINE_ID,
+		                    MAX(GFD_LOW_LIMIT) GFD_LOW_LIMIT,
+		                    MAX(GFD_UP_LIMIT) GFD_UP_LIMIT,
+		                    MAX(SALT_LOW_LIMIT) SALT_LOW_LIMIT
+		               FROM (SELECT T.SPEC_ID,
+		                            T.LINE_ID,
+		                            NVL(T.GFD_LOW_LIMIT, 0) GFD_LOW_LIMIT,
+		                            NVL(T.GFD_UP_LIMIT, 10000) GFD_UP_LIMIT,
+		                            NVL(T.SALT_LOW_LIMIT, 0) SALT_LOW_LIMIT
+		                       FROM KS_PROD_DIAPHRAGM_STAND T
+		                      WHERE T.LEVEL_ID = 300029) T
+		              GROUP BY T.SPEC_ID, T.LINE_ID) STD2
+		    ON STD2.SPEC_ID = TM.SPEC_ID
+		   AND STD2.LINE_ID = TM.LINE_ID
+		  LEFT JOIN TB
+		    ON TB.DIMO_BATCH_NO = T1.DIMO_BATCH_NO
+		 WHERE T1.RECORD_ID IN
+		       ($recordIds$)
+		 ORDER BY T1.DIMO_BATCH_NO
+
     
     </select>
     

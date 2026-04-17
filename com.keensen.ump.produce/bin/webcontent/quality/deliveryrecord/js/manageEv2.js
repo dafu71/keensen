@@ -597,6 +597,13 @@ com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onDown = function() 
 			+ fname;
 }
 
+com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onDown1 = function() {
+
+	var fname = "ks_quality_delivery_list_import1.xls";
+	window.location.href = "com.zoomlion.hjsrm.pub.file.excelutil.modelDownload.flow?fileName="
+			+ fname;
+}
+
 com.keensen.ump.produce.quality.deliveryrecordMgr.prototype.onDown2 = function() {
 
 	var fname = "ks_quality_delivery_list_import2.xls";

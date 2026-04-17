@@ -13,6 +13,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 		this.initChooseOrderWindow();
 
 		this.initMarkPrintWindow();
+		this.buildPhotoUploadWin();
 
 		this.lay = new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -74,6 +75,24 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						name : 'remark'
 					}]
 		})
+
+		this.tapColorStore = new Ext.data.JsonStore({
+					url : 'com.keensen.ump.base.param.queryBaseDict.biz.ext',
+					root : 'data',
+					autoLoad : true,
+					baseParams : {
+						'condition/business' : "'color_tape'"
+					},
+					fields : [{
+								name : 'business'
+							}, {
+								name : 'dictValue'
+							}, {
+								name : 'dictName'
+							}, {
+								name : 'remark'
+							}]
+				})
 	}
 
 	this.initQueryPanel = function() {
@@ -140,17 +159,17 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 		this.queryPanel.addButton({
 					text : "包装生产看板",
 					scope : this,
-					//hidden:true,
+					// hidden:true,
 					iconCls : 'icon-application_excel',
 					handler : this.onPackage4Board
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "导出",
 					// disabled : allRight != '1',
 					scope : this,
 					iconCls : 'icon-application_excel',
-					hidden : uid != 'dafu' && uid != 'KS00524' ,
+					hidden : uid != 'dafu' && uid != 'KS00524',
 					handler : this.exportExcel
 				});
 	}
@@ -621,6 +640,20 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									name : 'packingNum'
 								}, {
 									name : 'tumoBatchStr'
+								}, {
+									name : 'urlPhotoApply'
+								}, {
+									name : 'urlPhotoApply2'
+								}, {
+									name : 'urlPhotoApply3'
+								}, {
+									name : 'urlPhotoApply4'
+								}, {
+									name : 'urlPhotoApply5'
+								}, {
+									name : 'urlPhotoApply6'
+								}, {
+									name : 'ifphoto'
 								}]
 					})
 				})
@@ -796,7 +829,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 
 		this.inputPanel4AddOrder = this.inputPanel4AddOrder
 				|| new Ext.fn.InputPanel({
-					height : 440,
+					height : 500,
 					region : 'north',
 					baseCls : "x-panel",
 					autoHide : false,
@@ -895,8 +928,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								listeners : {
 									scope : this,
 									'expand' : function(A) {
-										this.inputPanel4AddOrder.dryWet
-												.reset();
+										this.inputPanel4AddOrder.dryWet.reset();
 									}
 								}
 							}, {
@@ -1121,6 +1153,44 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								anchor : '95%',
 								colspan : 6
 							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel2',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel3',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 12
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel4',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel5',
+								height : '15',
+								colspan : 4
+							}, {
+								xtype : 'displayfield',
+								ref : '../picturePanel6',
+								height : '15',
+								colspan : 4
+							}, {
 								xtype : 'hidden',
 								ref : '../makeLabelBase',
 								name : 'reserve3'
@@ -1132,6 +1202,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								xtype : 'hidden',
 								ref : '../abnormal',
 								name : 'abnormal'
+							}, {
+								xtype : 'hidden',
+								ref : '../baseId',
+								name : 'baseId'
 							}],
 					buttons : [{
 								text : "保存",
@@ -1144,6 +1218,11 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 									this.inputPanel4AddOrder.form.reset();
 									this.inputWindow4AddOrder.hide();
 								}
+							}, {
+								text : "上传照片",
+								hidden:uid != 'dafu',
+								scope : this,
+								handler : this.uploadPhoto
 							}]
 
 				})
@@ -1159,7 +1238,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 							autoScroll : false,
 							modal : true,
 							width : 1024,
-							height : 600,
+							height : 660,
 							layout : 'border',
 							items : [this.inputPanel4AddOrder,
 									this.ListPanel4AddOrder]
@@ -1630,6 +1709,10 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								xtype : 'hidden',
 								ref : '../abnormal',
 								name : 'abnormal'
+							}, {
+								xtype : 'hidden',
+								ref : '../baseId',
+								name : 'baseId'
 							}],
 					buttons : [{
 								text : "保存",
@@ -2034,6 +2117,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 			fields : [{
 						xtype : 'textfield',
 						readOnly : true,
+						allowBlank : false,
 						dataIndex : 'reserve1',
 						ref : '../orderNo',
 						fieldLabel : '订单号',
@@ -2041,20 +2125,36 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						colspan : 4
 					}, {
 						xtype : 'textfield',
-						readOnly : true,
+						// readOnly : true,
+						allowBlank : false,
 						dataIndex : 'prodSpecName',
 						ref : '../prodSpecName',
 						fieldLabel : '卷制型号',
 						anchor : '100%',
 						colspan : 4
 					}, {
-						xtype : 'textfield',
-						readOnly : true,
+						xtype : 'combobox',
+						forceSelection : false,
+						allowBlank : false,
+						mode : 'local',
+						fieldLabel : '胶带颜色',
+						ref : '../tapColor',
 						dataIndex : 'tapColor',
 						anchor : '100%',
 						colspan : 4,
-						ref : '../tapColor',
-						fieldLabel : '胶带颜色'
+						emptyText : '--请选择--',
+						editable : true,
+						store : this.tapColorStore,
+						displayField : "dictName",
+						valueField : "dictName",
+						listeners : {
+							"expand" : function(A) {
+								this.reset()
+							},
+							'specialkey' : function() {
+								return false;
+							}
+						}
 					}, {
 						xtype : 'displayfield',
 						height : '5',
@@ -2062,6 +2162,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 					}, {
 						xtype : 'numberfield',
 						readOnly : true,
+						allowBlank : false,
 						dataIndex : 'orderAmount',
 						ref : '../orderAmount',
 						fieldLabel : '订单数量',
@@ -2070,6 +2171,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
+						allowBlank : false,
 						ref : '../applyAmount',
 						dataIndex : 'applyAmount',
 						fieldLabel : '请检数量',
@@ -2078,6 +2180,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
+						allowBlank : false,
 						dataIndex : 'quantityPerBox',
 						ref : '../quantityPerBox',
 						fieldLabel : '单箱数量(支)',
@@ -2090,6 +2193,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
+						allowBlank : false,
 						dataIndex : 'quantityBox',
 						ref : '../quantityBox',
 						fieldLabel : '预计包装箱数',
@@ -2098,6 +2202,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 					}, {
 						xtype : 'textfield',
 						readOnly : true,
+						allowBlank : false,
 						dataIndex : 'quantityLastBox',
 						ref : '../quantityLastBox',
 						fieldLabel : '尾箱元件数(支)',
@@ -2107,7 +2212,9 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 
 						xtype : 'checkbox',
 						readOnly : true,
+						allowBlank : false,
 						dataIndex : 'reserve2',
+						ref : '../nsf',
 						boxLabel : '带NSF',
 						colspan : 4,
 						inputValue : 'Y',
@@ -2118,6 +2225,16 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						colspan : 12
 					}, {
 						xtype : 'textfield',
+						// readOnly : true,
+						allowBlank : false,
+						dataIndex : 'dryWet',
+						ref : '../dryWet',
+						fieldLabel : '干/湿膜',
+						anchor : '100%',
+						colspan : 4
+					}, {
+						xtype : 'textfield',
+						allowBlank : false,
 						readOnly : true,
 						ref : '../markBatchNo',
 						fieldLabel : '箱唛批号示例',
@@ -2130,7 +2247,11 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						dataIndex : 'id'
 					}],
 			buttons : [{
-						text : "确认",
+						text : "重新生成箱唛批号",
+						scope : this,
+						handler : this.onCreateMarkBatchNo
+					}, {
+						text : "打印",
 						scope : this,
 						handler : this.onSaveMarkPrint
 					}, {
@@ -2160,5 +2281,87 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 
 				});
 
+	}
+	
+	// 上传照片面板
+	this.buildPhotoUploadWin = function() {
+		this.photoUploadWin = new Ext.Window({
+					title : '上传照片<span style="color:red;font-size:16px;">（至少上传4张照片）</span>',
+					collapsible : false,
+					modal : true,
+					closeAction : 'hide',
+					buttonAlign : 'center',
+					layout : 'fit',
+					width : 600,
+					height : 480,
+					items : [{
+								xtype : 'columnform',
+								itemId : 'uploadForm',
+								saveUrl : '111.flow',
+								columns : 1,
+								fileUpload : true,
+								fields : [{
+											name : 'uploadFile',
+											fieldLabel : '第1张照片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile2',
+											fieldLabel : '第2张照片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile3',
+											fieldLabel : '第3张照片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile4',
+											fieldLabel : '第4张照片',
+											allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile5',
+											fieldLabel : '第5张照片',
+											// allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'displayfield',
+											height : '5'
+										}, {
+											name : 'uploadFile6',
+											fieldLabel : '第6张照片',
+											// allowBlank : false,
+											inputType : 'file'
+										}, {
+											xtype : 'hidden',
+											name : 'baseId',
+											ref : '../../baseId'
+										}]
+							}],
+					buttons : [{
+								text : '上传',
+								handler : this.doUploadPhoto,
+								scope : this
+							}, {
+								text : '关闭',
+								scope : this,
+								handler : function() {
+									this.photoUploadWin.hide();
+								}
+							}]
+				});
 	}
 }

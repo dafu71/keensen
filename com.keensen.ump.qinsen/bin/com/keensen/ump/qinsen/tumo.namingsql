@@ -145,6 +145,8 @@
         ,t1.is_a_plus "isAPlus",nvl(t1.a_plus_length,0) "aPlusLength"
         
         ,t1.cm_line_name "cmLineName",t1.cm_line_code "cmLineCode"
+        
+        ,t1.width "width"
        
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,  
   replace(A.water_batch_no,'单击旁边选择','') water_batch_no,
@@ -282,6 +284,8 @@
                ,mc.b_up,mc.b_down
                ,cmdefect.defect_length cm_defect_length
                ,cmline.line_name cm_line_name,cmline.line_code cm_line_code
+               
+               ,A.width
                
           FROM QINSEN.INST_TUMO A
           

@@ -11,90 +11,11 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 	this.codeProdValues = [];
 
 	this.markPrintPanel.mon(this.markPrintPanel, 'afterload', function(win,
-			data) {
-				
-		var _this = this;
-		var colorTapeNames = this.colorTapeNames;
-		var colorTapeValues = this.colorTapeValues;
-		var typeProdNames = this.typeProdNames;
-		var typeProdValues = this.typeProdValues;
-		var sizeProdNames = this.sizeProdNames;
-		var sizeProdValues = this.sizeProdValues;
-		var codeProdNames = this.codeProdNames;
-		var codeProdValues = this.codeProdValues;
+					data) {
 
-		var colorTape = '';
-		var typeProd = '';
-		var sizeProd = '';
-		var codeProd = '';
+				this.onCreateMarkBatchNo();
 
-		// 🔢数组查找
-		var findElement = function(arr, target) {
-			for (var i = 0; i < arr.length; i++) {
-				if (arr[i] === target) {
-					return i; // 返回索引
-				}
-			}
-			return -1; // 未找到返回-1
-		}
-
-		var tapColor = this.markPrintPanel.tapColor.getValue();
-		var idx = findElement(colorTapeNames, tapColor);
-		if (idx == -1) {
-			Ext.Msg.alert("系统提示", "没有对应胶带颜色代码!");
-			return false;
-		} else {
-			colorTape = colorTapeValues[idx];
-		}
-
-		var prodSpecName = this.markPrintPanel.prodSpecName.getValue();
-		var specArr = prodSpecName.split('-');
-		var idx = findElement(typeProdNames, specArr[0]);
-		if (idx == -1) {
-			Ext.Msg.alert("系统提示", "没有对应产品种类代码!");
-			return false;
-		} else {
-			typeProd = typeProdValues[idx];
-		}
-
-		var idx = findElement(sizeProdNames, specArr[1]);
-		if (idx == -1) {
-			Ext.Msg.alert("系统提示", "没有对应元件尺寸代码!");
-			return false;
-		} else {
-			sizeProd = sizeProdValues[idx];
-		}
-
-		if (specArr.length == 2) {
-			codeProd = '000'
-		} else {
-			var idx = findElement(codeProdNames, specArr[2]);
-			if (idx == -1) {
-				Ext.Msg.alert("系统提示", "没有对应元件型号代码!");
-				return false;
-			} else {
-				codeProd = codeProdValues[idx];
-			}
-		}
-		var prefix = colorTape + typeProd + sizeProd + codeProd;
-
-		Ext.Ajax.request({
-			url : "com.keensen.ump.produce.component.sn.queryYmd.biz.ext",
-			method : "post",
-			success : function(resp) {
-				// 返回值处理
-				var ret = Ext.decode(resp.responseText);
-				var ymd = ret.ymd;
-				_this.markPrintPanel.markBatchNo.setValue(prefix+ymd+'xxx');
-
-			},
-			callback : function() {
-				
-			}
-		})
-
-		
-	}, this);
+			}, this);
 
 	this.baseDictStore.on('load', function() {
 				var records = _this.baseDictStore.getRange();
@@ -216,6 +137,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 
 				if (this.opt == 'markprint') {
 
+					this.markPrintPanel.form.reset();
 					this.markPrintWindow.show();
 					this.markPrintPanel.loadData(cell);
 				}
@@ -234,79 +156,50 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onDeleteOrder = func
 	}
 }
 
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onChoose = function() {
+/*
+ * com.keensen.ump.produce.component.applys.applyMgr.prototype.onChoose =
+ * function() {
+ * 
+ * if (!this.inputWindow.hidden) { var orderNo =
+ * this.inputPanel.orderNo.getValue(); } else { var orderNo =
+ * this.modifyPanel.orderNo.getValue(); } // var prodSpecId =
+ * this.inputPanel.prodSpecId.getValue(); if (Ext.isEmpty(orderNo)) {
+ * Ext.Msg.alert("系统提示", "请输入订单号！"); return; } // if (Ext.isEmpty(prodSpecId)) { //
+ * Ext.Msg.alert("系统提示", "请选择订单元件型号！"); // return; // }
+ * 
+ * this.queryPanel3.orderNo.setValue(orderNo); //
+ * this.queryPanel3.prodSpecId.setValue(prodSpecId); this.prodcombo.reset();
+ * this.prodcombo.getStore().baseParams = { 'condition/orderNo' : orderNo // , //
+ * 'condition/prodSpecId' : prodSpecId }; this.prodcombo.getStore().load();
+ * 
+ * this.chooseWindow.show(); }
+ */
 
-	if (!this.inputWindow.hidden) {
-		var orderNo = this.inputPanel.orderNo.getValue();
-	} else {
-		var orderNo = this.modifyPanel.orderNo.getValue();
-	}
-	// var prodSpecId = this.inputPanel.prodSpecId.getValue();
-	if (Ext.isEmpty(orderNo)) {
-		Ext.Msg.alert("系统提示", "请输入订单号！");
-		return;
-	}
-	// if (Ext.isEmpty(prodSpecId)) {
-	// Ext.Msg.alert("系统提示", "请选择订单元件型号！");
-	// return;
-	// }
-
-	this.queryPanel3.orderNo.setValue(orderNo);
-	// this.queryPanel3.prodSpecId.setValue(prodSpecId);
-	this.prodcombo.reset();
-	this.prodcombo.getStore().baseParams = {
-		'condition/orderNo' : orderNo
-		// ,
-		// 'condition/prodSpecId' : prodSpecId
-	};
-	this.prodcombo.getStore().load();
-
-	this.chooseWindow.show();
-}
-
-com.keensen.ump.produce.component.applys.applyMgr.prototype.onSelect = function() {
-	var A = this.listPanel3;
-	if (!A.getSelectionModel().getSelected()) {
-		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
-	} else {
-		var records = A.getSelectionModel().getSelections();
-		// this.listPanel2.store.removeAll();
-		if (!this.inputWindow.hidden) {
-			var records2 = this.listPanel2.store.getRange();
-
-			for (var i = 0; i < records.length; i++) {
-				var batchNo = records[i].data.batchNo;
-				var addFlag = true;
-				Ext.each(records2, function(r) {
-							var batchNo2 = r.data.batchNo;
-							if (batchNo == batchNo2)
-								addFlag = false;
-						})
-				if (addFlag)
-					this.listPanel2.store.add(records[i]);
-			}
-			var records = this.listPanel2.store.getRange();
-			this.inputPanel.applyAmount.setValue(records.length);
-		} else {
-			var records2 = this.listPanel7.store.getRange();
-
-			for (var i = 0; i < records.length; i++) {
-				var batchNo = records[i].data.batchNo;
-				var addFlag = true;
-				Ext.each(records2, function(r) {
-							var batchNo2 = r.data.batchNo;
-							if (batchNo == batchNo2)
-								addFlag = false;
-						})
-				if (addFlag)
-					this.listPanel7.store.add(records[i]);
-			}
-			var records = this.listPanel7.store.getRange();
-			this.modifyPanel.applyAmount.setValue(records.length);
-		}
-		this.chooseWindow.hide();
-	}
-}
+/*
+ * com.keensen.ump.produce.component.applys.applyMgr.prototype.onSelect =
+ * function() { var A = this.listPanel3; if
+ * (!A.getSelectionModel().getSelected()) { Ext.Msg.alert("系统提示",
+ * "没有选定数据，请选择数据行！") } else { var records =
+ * A.getSelectionModel().getSelections(); // this.listPanel2.store.removeAll();
+ * if (!this.inputWindow.hidden) { var records2 =
+ * this.listPanel2.store.getRange();
+ * 
+ * for (var i = 0; i < records.length; i++) { var batchNo =
+ * records[i].data.batchNo; var addFlag = true; Ext.each(records2, function(r) {
+ * var batchNo2 = r.data.batchNo; if (batchNo == batchNo2) addFlag = false; })
+ * if (addFlag) this.listPanel2.store.add(records[i]); } var records =
+ * this.listPanel2.store.getRange();
+ * this.inputPanel.applyAmount.setValue(records.length); } else { var records2 =
+ * this.listPanel7.store.getRange();
+ * 
+ * for (var i = 0; i < records.length; i++) { var batchNo =
+ * records[i].data.batchNo; var addFlag = true; Ext.each(records2, function(r) {
+ * var batchNo2 = r.data.batchNo; if (batchNo == batchNo2) addFlag = false; })
+ * if (addFlag) this.listPanel7.store.add(records[i]); } var records =
+ * this.listPanel7.store.getRange();
+ * this.modifyPanel.applyAmount.setValue(records.length); }
+ * this.chooseWindow.hide(); } }
+ */
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onSave = function() {
 	var _this = this;
@@ -473,6 +366,80 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.chooseOrderOk = func
 	var quantityPerBox = record.data.packingNum;
 	var tumoBatchStr = record.data.tumoBatchStr;
 
+	var baseId = record.data.baseId;
+	var urlPhotoApply = record.data.urlPhotoApply;
+	var urlPhotoApply2 = record.data.urlPhotoApply2;
+	var urlPhotoApply3 = record.data.urlPhotoApply3;
+	var urlPhotoApply4 = record.data.urlPhotoApply4;
+	var urlPhotoApply5 = record.data.urlPhotoApply5;
+	var urlPhotoApply6 = record.data.urlPhotoApply6;
+	var ifphoto = record.data.ifphoto;
+
+	if (!Ext.isEmpty(urlPhotoApply)) {
+		var myurl = '';
+		myurl += '<a href="/default/myupload/apply/' + urlPhotoApply
+				+ '" target=_blank>查看图片</a>';
+		myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+		obj.picturePanel.update(myurl);
+	} else {
+		if (ifphoto == '按公司标准提供') {
+			obj.picturePanel.setValue('请上传照片');
+		}
+	}
+	if (!Ext.isEmpty(urlPhotoApply2)) {
+		var myurl = '';
+		myurl += '<a href="/default/myupload/apply/' + urlPhotoApply2
+				+ '" target=_blank>查看图片</a>';
+		myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+		obj.picturePanel2.update(myurl);
+	} else {
+		if (ifphoto == '按公司标准提供') {
+			obj.picturePanel2.setValue('请上传照片');
+		}
+	}
+	if (!Ext.isEmpty(urlPhotoApply3)) {
+		var myurl = '';
+		myurl += '<a href="/default/myupload/apply/' + urlPhotoApply3
+				+ '" target=_blank>查看图片</a>';
+		myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+		obj.picturePanel3.update(myurl);
+	} else {
+		if (ifphoto == '按公司标准提供') {
+			obj.picturePanel3.setValue('请上传照片');
+		}
+	}
+	if (!Ext.isEmpty(urlPhotoApply4)) {
+		var myurl = '';
+		myurl += '<a href="/default/myupload/apply/' + urlPhotoApply4
+				+ '" target=_blank>查看图片</a>';
+		myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+		obj.picturePanel4.update(myurl);
+	} else {
+		if (ifphoto == '按公司标准提供') {
+			obj.picturePanel4.setValue('请上传照片');
+		}
+	}
+	if (!Ext.isEmpty(urlPhotoApply5)) {
+		var myurl = '';
+		myurl += '<a href="/default/myupload/apply/' + urlPhotoApply5
+				+ '" target=_blank>查看图片</a>';
+		myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+		obj.picturePanel5.update(myurl);
+	}
+	if (!Ext.isEmpty(urlPhotoApply6)) {
+		var myurl = '';
+		myurl += '<a href="/default/myupload/apply/' + urlPhotoApply6
+				+ '" target=_blank>查看图片</a>';
+		myurl += '&nbsp;&nbsp;&nbsp;&nbsp;'
+
+		obj.picturePanel6.update(myurl);
+	}
+
 	obj.prodSpecName.setValue(materSpecName2);
 	obj.orderNo.setValue(orderNo);
 	obj.dryWet.setValue(dryWet);
@@ -492,6 +459,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.chooseOrderOk = func
 	obj.tumoBatchStr.setValue(tumoBatchStr);
 
 	obj.orderId.setValue(orderId);
+	obj.baseId.setValue(baseId);
 
 	this.chooseOrderWindow.hide();
 }
@@ -535,6 +503,8 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onAddOrder = functio
 }
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.calculateBox = function() {
+
+
 	var obj = this.editWindow4ModifyOrder.hidden
 			? this.inputPanel4AddOrder
 			: this.editPanel4ModifyOrder;
@@ -587,8 +557,12 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.calculateBox = funct
 		markSn += 'X'
 	}
 
+	// RO-2012-100-3
+	materSpecName2 = 'RO-2012-100-3';
+
 	var arr = materSpecName2.split('-');
 
+	alert(arr.length);
 	if (arr.length >= 2) {
 		if (arr[1] == '1812') {
 			markSn += 'A2'
@@ -635,6 +609,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.calculateBox = funct
 		if (arr[2] == '100') {
 			markSn += '100'
 		}
+		alert(arr[3])
 		if (arr[2] == '100') {
 			if (arr.length > 3 && arr[3] == '2') {
 				markSn += '102'
@@ -840,9 +815,253 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onMarkPrint = functi
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveMarkPrint = function() {
 
+	if (this.markPrintPanel.form.isValid()) {
+		var f = document.getElementById('applysapplymgrForm');
+		f.markBatchNo.value = this.markPrintPanel.markBatchNo.getValue();
+		f.prodSpecName.value = this.markPrintPanel.prodSpecName.getValue();
+		f.quantityBox.value = this.markPrintPanel.quantityBox.getValue();
+		f.quantityLastBox.value = this.markPrintPanel.quantityLastBox
+				.getValue();
+		f.quantityPerBox.value = this.markPrintPanel.quantityPerBox.getValue();
+		f.dryWet.value = this.markPrintPanel.dryWet.getValue();
+		f.nsf.value = this.markPrintPanel.nsf.getValue() ? 'Y' : 'N';
+
+		var actionUrl = 'com.keensen.ump.produce.component.printHHProdMarks.flow?time='
+				+ Math.random() + '&token=' + Date.now();
+
+		f.action = actionUrl;
+		f.submit();
+	}
+
 }
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.onPackage4Board = function() {
-	window
-			.open('com.keensen.ump.produce.report.queryPackage4Board.flow');
+	window.open('com.keensen.ump.produce.report.queryPackage4Board.flow');
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onCreateMarkBatchNo = function() {
+
+	var _this = this;
+	var colorTapeNames = this.colorTapeNames;
+	var colorTapeValues = this.colorTapeValues;
+	var typeProdNames = this.typeProdNames;
+	var typeProdValues = this.typeProdValues;
+	var sizeProdNames = this.sizeProdNames;
+	var sizeProdValues = this.sizeProdValues;
+	var codeProdNames = this.codeProdNames;
+	var codeProdValues = this.codeProdValues;
+
+	var colorTape = '';
+	var typeProd = '';
+	var sizeProd = '';
+	var codeProd = '';
+	var prefix = '';
+
+	// 🔢数组查找
+	var findElement = function(arr, target) {
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i] === target) {
+				return i; // 返回索引
+			}
+		}
+		return -1; // 未找到返回-1
+	}
+
+	var tapColor = this.markPrintPanel.tapColor.getValue();
+	var idx = findElement(colorTapeNames, tapColor);
+	if (idx == -1) {
+		Ext.Msg.alert("系统提示", "没有对应胶带颜色代码!");
+		return false;
+	} else {
+		colorTape = colorTapeValues[idx];
+	}
+
+	var prodSpecName = this.markPrintPanel.prodSpecName.getValue();
+	var specArr = prodSpecName.split('-');
+	var idx = findElement(typeProdNames, specArr[0]);
+	if (idx == -1) {
+		Ext.Msg.alert("系统提示", "没有对应产品种类代码!");
+		return false;
+	} else {
+		typeProd = typeProdValues[idx];
+	}
+
+	var idx = findElement(sizeProdNames, specArr[1]);
+	if (idx == -1) {
+		Ext.Msg.alert("系统提示", "没有对应元件尺寸代码!");
+		return false;
+	} else {
+		sizeProd = sizeProdValues[idx];
+	}
+
+	// NF特例
+	var nfArr = {
+		'NF-1812' : 'A2150',
+		'NF-1812R' : 'A2120',
+		'NF-60' : 'B2140',
+		'NF-2012' : 'B2225',
+		'NF-2012R' : 'B2175',
+		'NF-2812' : 'C2450',
+		'NF-2812R' : 'C2350',
+		'NF-3012' : 'D2525',
+		'NF-3012R' : 'D252R',
+		'NF-3013' : 'D3575',
+		'NF-3013R' : 'D3525'
+	};
+
+	if (Ext.isEmpty(nfArr[prodSpecName])) {
+
+		if (specArr.length == 2) {
+			codeProd = '000'
+		} else {
+
+			var idx = findElement(codeProdNames, specArr.length == 3
+							? specArr[2]
+							: specArr[2] + '-' + specArr[3]);
+			if (idx == -1) {
+				Ext.Msg.alert("系统提示", "没有对应元件型号代码!");
+				return false;
+			} else {
+				codeProd = codeProdValues[idx];
+			}
+		}
+		prefix = colorTape + typeProd + sizeProd + codeProd;
+	}else{
+		prefix = colorTape + typeProd + nfArr[prodSpecName];
+	}
+	//var prefix = colorTape + typeProd + sizeProd + codeProd;
+
+	Ext.Ajax.request({
+				url : "com.keensen.ump.produce.component.sn.queryYmd.biz.ext",
+				method : "post",
+				success : function(resp) {
+					// 返回值处理
+					var ret = Ext.decode(resp.responseText);
+					var ymd = ret.ymd;
+					_this.markPrintPanel.markBatchNo.setValue(prefix + ymd
+							+ 'xxx');
+
+				},
+				callback : function() {
+
+				}
+			})
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.uploadPhoto = function() {
+
+	var orderId = this.inputPanel4AddOrder.orderId.getValue();
+	if (Ext.isEmpty(orderId)) {
+		Ext.Msg.alert("系统提示", "请选择订单!");
+		return
+	}
+	var baseId = this.inputPanel4AddOrder.baseId.getValue();
+	if (Ext.isEmpty(baseId)) {
+		Ext.Msg.alert("系统提示", "非营销订单无需上传照片!");
+		return
+	}
+	this.photoUploadWin.getComponent('uploadForm').form.reset();
+	this.photoUploadWin.show();
+}
+
+// 上传照片
+com.keensen.ump.produce.component.applys.applyMgr.prototype.doUploadPhoto = function() {
+
+	var _this = this;
+	var uploadInputPanel = this.photoUploadWin.getComponent('uploadForm');
+	// 校验
+	var fileUploadObj = uploadInputPanel.form.findField("uploadFile");
+	// 文件名
+	var filePath = fileUploadObj.getValue();
+	// 文件后缀
+	var sfileName = filePath.split(".");
+
+	var array = ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif',
+			'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai',
+			'raw', 'wmf', 'webp', 'avif', 'apng'];
+	var extname = sfileName[1].toLowerCase();
+	if (extname == null || array.indexOf(extname) == -1) {
+		Ext.MessageBox.show({
+					title : '操作提示',
+					buttons : Ext.MessageBox.OK,
+					msg : '文件必须为图片文件',
+					icon : Ext.MessageBox.ERROR
+				});
+		return false;
+	}
+	if (uploadInputPanel.form.isValid()) {
+
+		var baseId = this.inputPanel4AddOrder.baseId.getValue();
+		this.photoUploadWin.baseId.setValue(baseId);
+
+		var url = 'com.keensen.ump.produce.component.uploadPhotos.flow';
+		uploadInputPanel.form.submit({
+					method : "POST",
+					timeout : 1200,
+					url : url,
+					waitTitle : "操作提示",
+					waitMsg : "上传数据中...",
+					success : function(form, action) {
+						var result = action.result;
+						var fnames = result.msg;
+						var arr = fnames.split('|');
+						// fname = '/myupload/apply/' + fname;
+						if (result.success) {
+							_this.photoUploadWin.hide();
+							var fname = arr[0]
+							var url = '';
+							url += '<a href="/default/myupload/apply/' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							_this.inputPanel4AddOrder.picturePanel.update(url);
+							var fname = arr[1]
+							var url = '';
+							url += '<a href="/default/myupload/apply/' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							_this.inputPanel4AddOrder.picturePanel2.update(url);
+							var fname = arr[2]
+							var url = '';
+							url += '<a href="/default/myupload/apply/' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							_this.inputPanel4AddOrder.picturePanel3.update(url);
+							var fname = arr[3]
+							var url = '';
+							url += '<a href="/default/myupload/apply/' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							_this.inputPanel4AddOrder.picturePanel4.update(url);
+							if (arr.length > 4) {
+								var fname = arr[4]
+								var url = '';
+								url += '<a href="/default/myupload/apply/'
+										+ fname + '" target=_blank>查看图片</a>';
+								url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+								_this.inputPanel4AddOrder.picturePanel5
+										.update(url);
+							}
+							if (arr.length > 5) {
+								var fname = arr[5]
+								var url = '';
+								url += '<a href="/default/myupload/apply/'
+										+ fname + '" target=_blank>查看图片</a>';
+								url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+								_this.inputPanel4AddOrder.picturePanel6
+										.update(url);
+							}
+
+						}
+					},
+					failure : function(form, action) {
+						Ext.MessageBox.show({
+									title : '操作提示',
+									buttons : Ext.MessageBox.OK,
+									msg : "导入失败，请检查文件格式或网络是否正常",
+									icon : Ext.MessageBox.ERROR
+								});
+					}
+				});
+	}
+
 }

@@ -710,17 +710,18 @@ com.keensen.ump.qinsen.quality.watertestMgr.prototype.judge = function() {
 	var bGpdLowLimit = _this.firstTestWindow2.bGpdLowLimit.getValue() * 1;
 	var bSaltLowLimit = _this.firstTestWindow2.bSaltLowLimit.getValue() * 1;
 
+	//适配量产 2026-04-17 取消优先标准2
 	// 优先标准2
-	var prodGpdLowLimit, prodGpdUpLimit, prodSaltLowLimit, prodFactorBUpLimit;
-	if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit != 0) {
-		prodGpdLowLimit = bGpdLowLimit;
-		prodSaltLowLimit = bSaltLowLimit;
-	} else {
+	//var prodGpdLowLimit, prodGpdUpLimit, prodSaltLowLimit, prodFactorBUpLimit;
+	//if (!Ext.isEmpty(bGpdLowLimit) && bGpdLowLimit != 0) {
+	//	prodGpdLowLimit = bGpdLowLimit;
+	//	prodSaltLowLimit = bSaltLowLimit;
+	//} else {
 		prodGpdLowLimit = aGpdLowLimit;
 		prodGpdUpLimit = aGpdUpLimit;
 		prodSaltLowLimit = aSaltLowLimit;
 		prodFactorBUpLimit = aFactorBUpLimit;
-	}
+	//}
 
 	// 标准的产水量下限、脱盐率是必须有的，其它的可能为空
 	if (!Ext.isEmpty(prodGpdLowLimit) && !Ext.isEmpty(prodSaltLowLimit)) {

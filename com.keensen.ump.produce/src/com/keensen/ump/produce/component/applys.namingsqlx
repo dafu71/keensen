@@ -780,4 +780,19 @@ WHERE SUBSTR(T.CODE, 2, 8) = TO_CHAR(SYSDATE, 'yyyyMMdd'))
     set print_cnt = nvl(print_cnt,0) + 1
     where id = #id#
     </update>
+    
+     <select id="query4HHMark" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT REPLACE(#markBatchNo#, 'xxx', TRIM(TO_CHAR(LEVEL, '000'))) "cNo",
+       #prodSpecName# "model",
+       CASE
+         WHEN LEVEL = #quantityBox# THEN
+          case when #quantityLastBox#>0 then #quantityLastBox# else #quantityPerBox# end
+         ELSE
+          #quantityPerBox#
+       END "qty",
+       #dryWet# "dryWet",
+       #nsf# "nsf"
+	  FROM DUAL
+	CONNECT BY LEVEL &lt;= #quantityBox#
+     </select>
 </sqlMap>

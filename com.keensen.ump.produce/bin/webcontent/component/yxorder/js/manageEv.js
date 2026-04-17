@@ -193,6 +193,11 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.initEvent = function() {
 			this.updateSpecNameMarkWindow.loadData(cell);
 		}
 
+		if (this.opt == 'updateotherremark') {
+			this.updateOtherRemarkWindow.show();
+			this.updateOtherRemarkWindow.loadData(cell);
+		}
+		
 	}, this);
 
 	// 增加修改事件
@@ -479,6 +484,11 @@ com.keensen.ump.produce.component.yxorderMgr.prototype.onOrderView = function() 
 
 com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateProdRemark = function() {
 	this.opt = 'updateprodremark';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.yxorderMgr.prototype.onUpdateOtherRemark = function() {
+	this.opt = 'updateotherremark';
 	this.listPanel.onEdit();
 }
 

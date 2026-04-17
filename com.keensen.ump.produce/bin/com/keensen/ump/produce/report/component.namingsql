@@ -612,7 +612,7 @@ SELECT '8寸',
                         ON CM.RECORD_ID = T.RELATION_ID
                       LEFT JOIN KS_QUALITY_MP_DEFECT MD
                         ON MD.ID = T.DEFECT_ID
-                     WHERE MD.FIRST = '固损'
+                     WHERE t.dept = '元件制造部'
                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &lt;= #ymEnd#
                      GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) CDMSCRAP
@@ -635,10 +635,12 @@ SELECT '8寸',
                        AND TO_CHAR(T.INVALID_DT, 'YYYY-MM') &lt;= #ymEnd#
                      GROUP BY TO_CHAR(T.INVALID_DT, 'YYYY-MM')) PRODSCRAP
             ON PRODSCRAP.YEAR_MONTH = T1.YEAR_MONTH
-          LEFT JOIN (SELECT TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') YEAR_MONTH,
+          LEFT JOIN (SELECT TO_CHAR(clc.create_time, 'YYYY-MM') YEAR_MONTH,
                            SUM(NVL(JD.OUT_QUANTITY, 0) * JM.BLANKING_SIZE *
                                NVL(JM.PAGE_WIDTH, PMS.PAGE_WIDTH)) PROD_DEGRADE
                       FROM QINSEN.INST_QIJIAN T
+                      left join V_KS_CHECK_LIST_CURRENT clc
+                           on clc.batch_no = t.batch_no
                       LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
                         ON JM.RECORD_ID = T.JUANMO_BATCH_ID
                       LEFT JOIN (SELECT SUM(D.OUT_QUANTITY) OUT_QUANTITY,
@@ -649,12 +651,13 @@ SELECT '8寸',
                       LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
                         ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID
                      WHERE T.TIME_DEGRADE IS NOT NULL
-                       AND TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') &gt;= #ymStart#
-                       AND TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') &lt;= #ymEnd#
-                     GROUP BY TO_CHAR(T.PRODUCE_DT, 'YYYY-MM')) PRODDEGRADE
+                       AND T.dept_degrade = '元件制造部'
+                       AND TO_CHAR(clc.create_time, 'YYYY-MM') &gt;= #ymStart#
+                       AND TO_CHAR(clc.create_time, 'YYYY-MM') &lt;= #ymEnd#
+                     GROUP BY TO_CHAR(clc.create_time, 'YYYY-MM')) PRODDEGRADE
             ON PRODDEGRADE.YEAR_MONTH = T1.YEAR_MONTH
           LEFT JOIN (SELECT TO_CHAR(T.CREATE_TIME, 'YYYY-MM') YEAR_MONTH,
-                           SUM(T.AMOUNT) HHPROD_DEGRADE
+                           SUM(T.Blanking_Size) HHPROD_DEGRADE
                       FROM KS_COMPONENT_HH_DEGRADE T
                      WHERE T.DEPT_DEGRADE = '元件制造部'
                        AND TO_CHAR(T.CREATE_TIME, 'YYYY-MM') &gt;= #ymStart#
@@ -662,11 +665,11 @@ SELECT '8寸',
                      GROUP BY TO_CHAR(T.CREATE_TIME, 'YYYY-MM')) HHPRODDEGRADE
             ON HHPRODDEGRADE.YEAR_MONTH = T1.YEAR_MONTH
           LEFT JOIN (SELECT TO_CHAR(T.PRODUCE_DT, 'YYYY-MM') YEAR_MONTH,
-                           SUM(T.QUANTITY * T.BLANKING_SIZE * PMS.MP_WIDTH *
+                           round(SUM(T.QUANTITY * T.BLANKING_SIZE * PMS.MP_WIDTH *
                                DECODE(NVL(T.PAGE_TYPE, '长页'),
                                       '长页',
                                       1,
-                                      0.5)) CDM_VALID
+                                      0.5)),2) CDM_VALID
                       FROM QINSEN.INST_CAIDIEMO T
                       LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
                         ON PMS.MATER_SPEC_ID = T.PROD_SPEC_ID
@@ -850,7 +853,7 @@ SELECT '8寸',
          WHERE (TO_DATE(SUBSTR(T.DEMAND_STOCK_DATE, 1, 10), 'YYYY-MM-DD') BETWEEN
                TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') - 3 AND
                TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') + 5)
-           AND T.PROD_AMOUNT &gt; 0
+           AND T.PROD_AMOUNT &gt; 0 and t.state = '正式发布'
            AND NVL(CTB.DELIVERY_CONFIRM_AMOUNT, 0) &lt; T.PROD_AMOUNT) T1
  	order by  T1.DEMAND_STOCK_DATE desc</select>
     <select id="queryMpPercentInvalid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.YEAR_MONTH AS "yearMonth",

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process:tPageFlow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://com.primeton.emf.core" xmlns:process="http://primeton.com/emf/core/process" name="importDeliveryReportDetail" detailDescription="" demonstration="" urls="" gridVisibility="false" rulerVisibility="true" snapToGeometry="true" productVersion="6.3" state="stateless">
   <nodes xsi:type="process:tEnd" description="" id="end1" name="结束1" displayName="结束" collapsed="false" nodeType="common" type="end" contextPath="" method="forward" uri="/pub/common/success.jsp">
-    <targetConnections>link1</targetConnections>
-    <targetConnections>link4</targetConnections>
     <targetConnections>link5</targetConnections>
+    <targetConnections>link4</targetConnections>
+    <targetConnections>link1</targetConnections>
+    <targetConnections>link8</targetConnections>
     <location x="555" y="190"/>
     <size height="28" width="28"/>
     <nodeLabel>end1label</nodeLabel>
@@ -115,7 +116,7 @@
       <targetNode>subprocess0</targetNode>
       <process:transitionCondition>
         <process:simpleCondition operator="EQ">
-          <process:leftOperand type="query"></process:leftOperand>
+          <process:leftOperand type="query"/>
           <process:rightOperand type="literal">1</process:rightOperand>
         </process:simpleCondition>
       </process:transitionCondition>
@@ -140,6 +141,16 @@
         </process:simpleCondition>
       </process:transitionCondition>
     </sourceConnections>
+    <sourceConnections xsi:type="process:tLink" description="" id="link7" name="纳滤水测数据" displayName="连接线" type="transition">
+      <sourceNode>switch0</sourceNode>
+      <targetNode>subprocess3</targetNode>
+      <process:transitionCondition>
+        <process:simpleCondition operator="EQ">
+          <process:leftOperand type="query">tag</process:leftOperand>
+          <process:rightOperand type="literal">4</process:rightOperand>
+        </process:simpleCondition>
+      </process:transitionCondition>
+    </sourceConnections>
     <targetConnections>link0</targetConnections>
     <location x="243" y="190"/>
     <size height="28" width="28"/>
@@ -149,6 +160,31 @@
     <location x="234" y="226"/>
     <figSize height="20" width="46"/>
     <node>switch0</node>
+  </nodes>
+  <nodes xsi:type="process:tSubprocess" description="" id="subprocess3" name="importDeliveryReportList4" displayName="importDeliveryReportList4" type="subprocess">
+    <sourceConnections xsi:type="process:tLink" id="link8" name="link8" displayName="连接线" isDefault="true" type="transition">
+      <sourceNode>subprocess3</sourceNode>
+      <targetNode>end1</targetNode>
+    </sourceConnections>
+    <targetConnections>link7</targetConnections>
+    <location x="375" y="495"/>
+    <size height="27" width="27"/>
+    <nodeLabel>subprocess3label</nodeLabel>
+    <process:flow index="2" synchronization="true" transactionType="join" varArgs="false">
+      <process:partner type="literal">com.keensen.ump.produce.quality.deliveryrecord.importDeliveryReportList4</process:partner>
+      <process:inputVariables>
+        <process:inputVariable id="0" name="uploadFile" type="query" value="com.primeton.ext.access.http.IUploadFile" valueType="Java" pattern="reference">uploadFile</process:inputVariable>
+        <process:inputVariable id="1" name="relationId" type="query" value="String" valueType="Primitive" pattern="reference">relationId</process:inputVariable>
+      </process:inputVariables>
+      <process:outputVariables>
+        <process:outputVariable id="0" name="msg" type="query" value="String" valueType="Primitive">msg</process:outputVariable>
+      </process:outputVariables>
+    </process:flow>
+  </nodes>
+  <nodes xsi:type="model:NodeElementLabel" id="subprocess3label" name="label" nodeType="label">
+    <location x="291" y="530"/>
+    <figSize height="20" width="195"/>
+    <node>subprocess3</node>
   </nodes>
   <topRuler/>
   <leftRuler/>

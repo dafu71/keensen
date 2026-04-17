@@ -305,6 +305,18 @@ com.keensen.ump.produce.diaphragm.ship.WorkPlanMgr = function() {
 							anchor : '95%',
 							colspan : 2
 						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							dataIndex : 'reserve2',
+							name : 'entity/reserve2',
+							//allowBlank : true,
+							fieldLabel : '膜片型号',
+							anchor : '95%',
+							colspan : 2
+						}, {
 							xtype : 'hidden',
 							name : 'entity/id',
 							dataIndex : 'id'

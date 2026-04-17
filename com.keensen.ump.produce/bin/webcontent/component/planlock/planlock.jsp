@@ -73,11 +73,11 @@
 <table border="1" bordercolor="#000000"
 	style="border-collapse: collapse;">
 	<tr>
-		<td colspan=9 height=40>
+		<td colspan=11 height=40>
 		<div align="center" class="style1"><strong>作业锁定计划表(<b:write
 			property="condition/size" />寸)&nbsp;&nbsp;&nbsp;&nbsp;制表人:<%=operatorname%></strong></div>
 		</td>
-		<td colspan=6>
+		<td colspan=8>
 		<div align="center" class="style1"><strong>作业日期：<b:write
 			property="condition/planDate" formatPattern="yyyy-MM-dd" /></strong></div>
 		</td>
@@ -118,6 +118,12 @@
 		</td>
 		<td>
 		<div align="center" valign="middle" class="style1"><strong>卷膜执行型号</strong></div>
+		</td>
+		<td>
+		<div align="center" valign="middle" class="style1"><strong>订单要求产水</strong></div>
+		</td>
+		<td>
+		<div align="center" valign="middle" class="style1"><strong>订单要求脱盐</strong></div>
 		</td>
 		<td>
 		<div align="center" valign="middle" class="style1"><strong>理论平均产水量</strong></div>
@@ -200,6 +206,12 @@
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("saltRejection")%></div>
 		</td>--%>
 		<td>
+		<div align="center" valign="middle" class="style1"><%=list[i].getString("gpdLow")%></div>
+		</td>
+		<td>
+		<div align="center" valign="middle" class="style1"><%=list[i].getString("saltLow")%></div>
+		</td>
+		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("yjGpdLowLimit2")%></div>
 		</td>
 		<td>
@@ -253,6 +265,12 @@
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("saltRejection")%></div>
 		</td>--%>
 		<td>
+		<div align="center" valign="middle" class="style1"><%=list[i].getString("gpdLow")%></div>
+		</td>
+		<td>
+		<div align="center" valign="middle" class="style1"><%=list[i].getString("saltLow")%></div>
+		</td>
+		<td>
 		<div align="center" valign="middle" class="style1"><%=list[i].getString("yjGpdLowLimit2")%></div>
 		</td>
 		<td>
@@ -282,7 +300,7 @@
 		<td colspan=12 height=40>
 		&nbsp;
 		</td>
-		<td colspan=3 height=40>
+		<td colspan=5 height=40>
 		<div align="left" class="style1"><strong>品质审核：</strong></div>
 		</td>
 	</tr>

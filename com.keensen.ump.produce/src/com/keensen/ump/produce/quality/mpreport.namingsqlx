@@ -57,8 +57,8 @@
 	GROUP BY t.client,t.spec_name) std
 	on std.client = t1.client and std.spec_name = T1.LABEL_SPEC_NAME 
   
-  left join (select count(1) cnt, relation_id,round(SUM(to_number(amount_indeed)),0) amount_indeed,
-	round(SUM(to_number(amount_use)),0) amount_use
+  left join (select count(1) cnt, relation_id,floor(SUM(to_number(amount_indeed))) amount_indeed,
+	floor(SUM(to_number(amount_use))) amount_use
  	from 
   	KS_QUALITY_MP_DELIVERY_DETAIL
   	group by relation_id) dd
@@ -147,9 +147,9 @@
        T1.WIDTH_MP      AS "widthMp",
        T1.WIDTH_VALID   AS "widthValid",
        to_char(T1.GFD ,'FM99990.0')          AS "gfd",
-       T1.SALT          AS "salt",
+       to_char(replace(T1.SALT,'%',''),'FM99990.00')          AS "salt",
        nvl(T1.DEFECT1,' ')       AS "defect1",
-       nvl(T1.DEFECT2,' ')       AS "defect2",
+       nvl(decode(T1.DEFECT2,'0',null,t1.defect2),' ')       AS "defect2",
        nvl(T1.PACKAGE,' ')       AS "package",
        nvl(T1.RESULT,' ')        AS "result",
        T1.RELATION_ID   AS "relationId"

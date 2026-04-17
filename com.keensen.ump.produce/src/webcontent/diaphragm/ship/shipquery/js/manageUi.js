@@ -1,7 +1,11 @@
 com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
+
 	this.initPanel = function() {
+		
 		this.initQueryPanel();
 		this.initListPanel();
+		this.initAddReportWindow();
+		
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -139,15 +143,19 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 	this.initListPanel = function() {
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
-					singleSelect : true,
-					header : ''
+					singleSelect : false
 				});
 		this.listPanel = new Ext.fn.EditListPanel({
 
 			viewConfig : {
 				forceFit : false
 			},
-			tbar : [ {
+			tbar : [{
+						text : '生成出货报告',
+						scope : this,
+						iconCls : 'icon-application_add',
+						handler : this.onCreateReport
+					}, '-', {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
 					}, {
@@ -204,6 +212,10 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 				dataIndex : 'loss',
 				header : '不良(米)'
 			}, {
+				header : '膜片卷号',
+				width : 100,
+				dataIndex : 'outBatchNo'
+			}, {
 				dataIndex : 'dimoBatchNo',
 				header : '底膜批次'
 			}, {
@@ -243,6 +255,10 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'specId'
+						},{
+							name : 'outBatchNo'
+						}, {
 							name : 'sendAmountTotal'
 						}, {
 							name : 'batchNo'
@@ -301,4 +317,267 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 		})
 	}
 
+	// 新增出货报告
+	this.initAddReportWindow = function() {
+
+		var _this = this;
+		
+		this.productNameStore = new Ext.data.ArrayStore({
+					fields : ['mykey', 'myvalue'],
+					data : [["反渗透膜片", "反渗透膜片"], ["纳滤膜片", "纳滤膜片"]]
+
+				});
+
+		var addSelModel = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : true,
+					header : ''
+				});
+
+		this.addReportListPanel = this.addReportListPanel
+				|| new Ext.fn.ListPanel({
+							height : 400,
+							sm : addSelModel,
+							region : 'center',
+							viewConfig : {
+								forceFit : false
+							},
+							// autoExpandColumn : '3',
+							hsPage : false,
+							autoScroll : true,
+							delUrl : '1.biz.ext',
+							columns : [addSelModel, {
+										dataIndex : 'batchNo',
+										header : '批号'
+									}, {
+										dataIndex : 'dm',
+										header : '底膜号'
+									}, {
+										dataIndex : 'amountIndeed',
+										header : '长度实发数量m'
+									}, {
+										dataIndex : 'amountUse',
+										header : '长度可用数量m'
+									}, {
+										dataIndex : 'thickAvg',
+										header : '尺寸平均厚度μm '
+									}, {
+										dataIndex : 'widthMp',
+										header : '尺寸宽幅mm'
+									}, {
+										dataIndex : 'widthValid',
+										header : '尺寸有效涂布宽度mm'
+									}, {
+										dataIndex : 'gfd',
+										header : '性能通量GFD '
+									}, {
+										dataIndex : 'salt',
+										header : '性能脱盐率%'
+									}, {
+										dataIndex : 'defect1',
+										header : '外观瑕疵点位置、类型和长度 '
+									}, {
+										dataIndex : 'defect2',
+										header : '外观瑕疵标签个数'
+									}, {
+										dataIndex : 'package',
+										header : '包装'
+									}, {
+										dataIndex : 'result',
+										header : '膜片批次判定'
+									}],
+							store : new Ext.data.JsonStore({
+										url : 'com.keensen.ump.produce.quality.mpreport.query4CreateDeliveryMpReport.biz.ext',
+										root : 'data',
+										autoLoad : false,
+										totalProperty : '',
+										baseParams : {
+
+							}			,
+										fields : [{
+													name : 'batchNo'
+												}, {
+													name : 'dm'
+												}, {
+													name : 'amountIndeed'
+												}, {
+													name : 'amountUse'
+												}, {
+													name : 'thickAvg'
+												}, {
+													name : 'widthMp'
+												}, {
+													name : 'widthValid'
+												}, {
+													name : 'gfd'
+												}, {
+													name : 'salt'
+												}, {
+													name : 'defect1'
+												}, {
+													name : 'defect2'
+												}, {
+													name : 'package'
+												}, {
+													name : 'result'
+												}
+
+										]
+									})
+						})
+
+		this.addReportPanel = this.addReportPanel || new Ext.fn.InputPanel({
+					height : 200,
+					region : 'north',
+					baseCls : "x-plain",
+					// pgrid : this.listPanel,
+					autoHide : false,
+					autoScroll : false,
+					border : true,
+					columns : 6,
+					saveUrl : '1.biz.ext',
+					fields : [{
+								xtype : 'displayfield',
+								fieldLabel : "<span style='color:red;'>产品信息</span>",
+								colspan : 6
+							}, {
+								xtype : 'combobox',
+								anchor : '75%',
+								colspan : 3,
+								name : 'productName',
+								hiddenName : 'productName',
+								dataIndex : 'productName',
+								allowBlank : false,
+								fieldLabel : '货品名称',
+								triggerAction : "all",
+								store : _this.productNameStore,
+								mode : "local",
+								editable : false,
+								displayField : "myvalue",
+								valueField : "mykey",
+								forceSelection : true,
+								emptyText : "--请选择--",
+								listeners : {
+
+								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 6
+							}, {
+								xtype : 'textfield',
+								name : 'labelSpecName',
+								dataIndex : 'labelSpecName',
+								ref:'../../labelSpecName',
+								allowBlank : false,
+								fieldLabel : '规格型号',
+								anchor : '75%',
+								colspan : 3
+							}, {
+								xtype : 'mpspeccombobox',
+								hiddenName : 'materSpecId',
+								dataIndex : 'materSpecId',
+								ref:'../../materSpecId',
+								allowBlank : false,
+								anchor : '75%',
+								colspan : 3,
+								fieldLabel : '膜片型号 ',
+								typeAhead : true,
+								typeAheadDelay : 100,
+								minChars : 1,
+								queryMode : 'local',
+								lastQuery : '',
+								editable : true,
+								listeners : {
+									'specialkey' : function() {
+										return false;
+									}
+								}
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 6
+							}, {
+								xtype : 'textfield',
+								name : 'orderNo',
+								ref:'../../orderNo',
+								allowBlank : false,
+								fieldLabel : '订单号',
+								anchor : '75%',
+								colspan : 3,
+								dataIndex : 'orderNo'
+							}, {
+								xtype : 'textfield',
+								name : 'orderAmount',
+								ref:'../../orderAmount',
+								allowBlank : false,
+								fieldLabel : '订单数量',
+								anchor : '75%',
+								colspan : 3,
+								dataIndex : 'orderAmount'
+							}, {
+								xtype : 'displayfield',
+								height : '5',
+								colspan : 6
+							}, {
+								xtype : 'datefield',
+								allowBlank : false,
+								name : 'checkDt',
+								dataIndex : 'checkDt',
+								ref:'../../checkDt',
+								format : "Y-m-d",
+								fieldLabel : '检验日期',
+								anchor : '75%',
+								colspan : 3
+							}, {
+								xtype : 'textfield',
+								name : 'client',
+								ref:'../../client',
+								allowBlank : false,
+								fieldLabel : '客户名称',
+								anchor : '75%',
+								colspan : 3,
+								dataIndex : 'client'
+							}, {
+								xtype : 'hidden',
+								ref:'../../recordIds'
+							}]
+
+				})
+
+		this.addReportWindow = this.addReportWindow || new Ext.Window({
+					title : '新增出货报告',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 800,
+					height : 600,
+					layout : 'border',
+					items : [this.addReportPanel, this.addReportListPanel],
+					buttons : [{
+								text : "加载膜片明细",
+								scope : this,
+								handler : function() {
+									this.onDetailLoad();
+								}
+							},{
+								text : "保存",
+								scope : this,
+								handler : function() {
+									this.onSaveAdd();
+								}
+							}, {
+								text : "关闭",
+								scope : this,
+								handler : function() {
+									this.addReportPanel.form.reset();
+									this.addReportWindow.hide();
+								}
+							}]
+				});
+
+	}
 }

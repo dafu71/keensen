@@ -3556,7 +3556,7 @@
             <column name="TIME_SAMPLING"/>
         </property>
     </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentHhCheckHead" table="KS_COMPONENT_HH_CHECK_HEAD">
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentPlanDay" table="KS_COMPONENT_PLAN_DAY">
         <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
         <id name="id" type="int">
             <column length="9" name="ID"/>
@@ -3601,200 +3601,140 @@
         <property name="status" type="string">
             <column length="24" name="STATUS"/>
         </property>
-        <property name="orderNo" type="string">
-            <column length="100" name="ORDER_NO"/>
+        <property name="relationId" type="int">
+            <column length="9" name="RELATION_ID"/>
         </property>
-        <property name="code" type="string">
-            <column length="50" name="CODE"/>
+        <property name="orderId" type="int">
+            <column length="9" name="ORDER_ID"/>
         </property>
-        <property name="prodSpecId" type="int">
-            <column length="9" name="PROD_SPEC_ID"/>
+        <property name="planDate" type="date">
+            <column name="PLAN_DATE"/>
         </property>
-        <property name="orderAmount" type="long">
-            <column length="22" name="ORDER_AMOUNT"/>
+        <property name="jmAmount" type="big_decimal">
+            <column length="10" name="JM_AMOUNT" precision="10" scale="2"/>
         </property>
-        <property name="applyAmount" type="long">
-            <column length="22" name="APPLY_AMOUNT"/>
+        <property name="batchNo" type="string">
+            <column length="50" name="BATCH_NO"/>
         </property>
-        <property name="checkUserId" type="string">
-            <column length="50" name="CHECK_USER_ID"/>
+        <property name="meterAmount" type="big_decimal">
+            <column length="10" name="METER_AMOUNT" precision="10" scale="2"/>
         </property>
-        <property name="checkUserName" type="string">
-            <column length="100" name="CHECK_USER_NAME"/>
+        <property name="position" type="string">
+            <column length="50" name="POSITION"/>
         </property>
-        <property name="applyDate" type="date">
-            <column name="APPLY_DATE"/>
+        <property name="mpRemark" type="string">
+            <column length="2000" name="MP_REMARK"/>
         </property>
-        <property name="applyUserId" type="string">
-            <column length="50" name="APPLY_USER_ID"/>
+        <property name="problem" type="string">
+            <column length="2000" name="PROBLEM"/>
         </property>
-        <property name="applyUserName" type="string">
-            <column length="100" name="APPLY_USER_NAME"/>
+        <property name="productOrder" type="int">
+            <column length="3" name="PRODUCT_ORDER"/>
         </property>
-        <property name="lid" type="string">
-            <column length="20" name="LID"/>
+        <property name="cmWorker" type="string">
+            <column length="50" name="CM_WORKER"/>
         </property>
-        <property name="prodClassFlag" type="string">
-            <column length="1" name="PROD_CLASS_FLAG"/>
+        <property name="storageName" type="string">
+            <column length="50" name="STORAGE_NAME"/>
         </property>
-        <property name="tape" type="string">
-            <column length="20" name="TAPE"/>
-        </property>
-        <property name="markSpecialFlag" type="string">
-            <column length="1" name="MARK_SPECIAL_FLAG"/>
-        </property>
-        <property name="markTypeFlag" type="string">
-            <column length="1" name="MARK_TYPE_FLAG"/>
-        </property>
-        <property name="markSpecCode" type="string">
-            <column length="100" name="MARK_SPEC_CODE"/>
-        </property>
-        <property name="markIsok" type="string">
-            <column length="1" name="MARK_ISOK"/>
-        </property>
-        <property name="labelIsok" type="string">
-            <column length="1" name="LABEL_ISOK"/>
-        </property>
-        <property name="apperanceIsok" type="string">
-            <column length="1" name="APPERANCE_ISOK"/>
-        </property>
-        <property name="diameter" type="string">
-            <column length="1" name="DIAMETER"/>
-        </property>
-        <property name="final" type="string">
-            <column length="1" name="FINAL"/>
-        </property>
-        <property name="deal" type="string">
-            <column length="1" name="DEAL"/>
-        </property>
-        <property name="deal1" type="string">
-            <column length="1" name="DEAL1"/>
-        </property>
-        <property name="deal2" type="string">
-            <column length="50" name="DEAL2"/>
-        </property>
-        <property name="deal3" type="string">
-            <column length="50" name="DEAL3"/>
-        </property>
-        <property name="storage" type="string">
-            <column length="1" name="STORAGE"/>
-        </property>
-        <property name="manageUserId" type="string">
-            <column length="50" name="MANAGE_USER_ID"/>
-        </property>
-        <property name="manageUserName" type="string">
-            <column length="100" name="MANAGE_USER_NAME"/>
-        </property>
-        <property name="orderType" type="string">
-            <column length="50" name="ORDER_TYPE"/>
+        <property name="storagePosition" type="string">
+            <column length="50" name="STORAGE_POSITION"/>
         </property>
         <property name="confirmDate" type="date">
             <column name="CONFIRM_DATE"/>
         </property>
-        <property name="prodSpecName" type="string">
-            <column length="50" name="PROD_SPEC_NAME"/>
-        </property>
-        <property name="printCnt" type="long">
-            <column length="22" name="PRINT_CNT"/>
-        </property>
-        <property name="performance" type="string">
-            <column length="500" name="PERFORMANCE"/>
-        </property>
-        <property name="box" type="string">
-            <column length="500" name="BOX"/>
-        </property>
-        <property name="tray" type="string">
-            <column length="50" name="TRAY"/>
-        </property>
-        <property name="isExamine" type="string">
-            <column default="'N'" length="1" name="IS_EXAMINE"/>
-        </property>
-        <property name="examineUserId" type="string">
-            <column length="50" name="EXAMINE_USER_ID"/>
-        </property>
-        <property name="examineUserName" type="string">
-            <column length="100" name="EXAMINE_USER_NAME"/>
-        </property>
-        <property name="examineDate" type="date">
-            <column name="EXAMINE_DATE"/>
-        </property>
-        <property name="label" type="string">
-            <column length="500" name="LABEL"/>
-        </property>
-        <property name="abnormal" type="string">
-            <column length="50" name="ABNORMAL"/>
-        </property>
-        <property name="abnormalExplain" type="string">
-            <column length="1000" name="ABNORMAL_EXPLAIN"/>
-        </property>
-        <property name="abnormalOther" type="string">
-            <column length="1000" name="ABNORMAL_OTHER"/>
-        </property>
-        <property name="dryWet" type="string">
-            <column length="50" name="DRY_WET"/>
-        </property>
-        <property name="jmDate" type="date">
-            <column name="JM_DATE"/>
-        </property>
-        <property name="tumoBatchStr" type="string">
-            <column length="500" name="TUMO_BATCH_STR"/>
-        </property>
-        <property name="tapColor" type="string">
-            <column length="500" name="TAP_COLOR"/>
-        </property>
-        <property name="bag" type="string">
-            <column length="50" name="BAG"/>
-        </property>
-        <property name="gpdAvg" type="string">
-            <column length="20" name="GPD_AVG"/>
-        </property>
-        <property name="saltAvg" type="string">
-            <column length="20" name="SALT_AVG"/>
-        </property>
-        <property name="performanceIsok" type="string">
-            <column length="1" name="PERFORMANCE_ISOK"/>
-        </property>
-        <property name="checkDate" type="date">
-            <column name="CHECK_DATE"/>
-        </property>
-        <property name="quantityPerBox" type="long">
-            <column length="22" name="QUANTITY_PER_BOX"/>
-        </property>
-        <property name="quantityBox" type="long">
-            <column length="22" name="QUANTITY_BOX"/>
-        </property>
-        <property name="quantityLastBox" type="long">
-            <column length="22" name="QUANTITY_LAST_BOX"/>
-        </property>
-        <property name="markSnStart" type="string">
-            <column length="20" name="MARK_SN_START"/>
-        </property>
-        <property name="markSnEnd" type="string">
-            <column length="20" name="MARK_SN_END"/>
-        </property>
         <property name="confirmUserId" type="string">
-            <column length="20" name="CONFIRM_USER_ID"/>
+            <column length="50" name="CONFIRM_USER_ID"/>
         </property>
         <property name="confirmUserName" type="string">
-            <column length="50" name="CONFIRM_USER_NAME"/>
+            <column length="100" name="CONFIRM_USER_NAME"/>
         </property>
-        <property name="orderId" type="string">
-            <column length="20" name="ORDER_ID"/>
+        <property name="confirmStatus" type="string">
+            <column length="50" name="CONFIRM_STATUS"/>
         </property>
-        <property name="ifcstock" type="string">
-            <column default="'否'" length="10" name="IFCSTOCK"/>
+        <property name="cdmCode" type="string">
+            <column length="20" name="CDM_CODE"/>
         </property>
-        <property name="ifwaited" type="string">
-            <column default="'否'" length="10" name="IFWAITED"/>
+        <property name="cdmState" type="int">
+            <column default="0&#10;" length="2" name="CDM_STATE"/>
         </property>
-        <property name="deliveryConfirmTime" type="timestamp">
-            <column name="DELIVERY_CONFIRM_TIME"/>
+        <property name="dutyTime" type="timestamp">
+            <column name="DUTY_TIME"/>
         </property>
-        <property name="deliveryConfirmUserId" type="string">
-            <column length="20" name="DELIVERY_CONFIRM_USER_ID"/>
+        <property name="dutyUserId" type="string">
+            <column length="24" name="DUTY_USER_ID"/>
         </property>
-        <property name="deliveryConfirmUserName" type="string">
-            <column length="50" name="DELIVERY_CONFIRM_USER_NAME"/>
+        <property name="dutyName" type="string">
+            <column length="50" name="DUTY_NAME"/>
+        </property>
+        <property name="cdmReportTime" type="timestamp">
+            <column name="CDM_REPORT_TIME"/>
+        </property>
+        <property name="cdmReportUserId" type="string">
+            <column length="24" name="CDM_REPORT_USER_ID"/>
+        </property>
+        <property name="cdmReportName" type="string">
+            <column length="24" name="CDM_REPORT_NAME"/>
+        </property>
+        <property name="arrangeDate" type="date">
+            <column name="ARRANGE_DATE"/>
+        </property>
+        <property name="jmCode" type="string">
+            <column length="50" name="JM_CODE"/>
+        </property>
+        <property name="jmState" type="int">
+            <column default="0&#10;" length="2" name="JM_STATE"/>
+        </property>
+        <property name="dutyJmTime" type="timestamp">
+            <column name="DUTY_JM_TIME"/>
+        </property>
+        <property name="dutyJmUserId" type="string">
+            <column length="24" name="DUTY_JM_USER_ID"/>
+        </property>
+        <property name="dutyJmName" type="string">
+            <column length="50" name="DUTY_JM_NAME"/>
+        </property>
+        <property name="jmReportTime" type="timestamp">
+            <column name="JM_REPORT_TIME"/>
+        </property>
+        <property name="jmReportUserId" type="string">
+            <column length="24" name="JM_REPORT_USER_ID"/>
+        </property>
+        <property name="jmReportName" type="string">
+            <column length="24" name="JM_REPORT_NAME"/>
+        </property>
+        <property name="arrangeJmDate" type="date">
+            <column name="ARRANGE_JM_DATE"/>
+        </property>
+        <property name="mixBatchNo" type="string">
+            <column length="50" name="MIX_BATCH_NO"/>
+        </property>
+        <property name="mixProportion" type="string">
+            <column length="24" name="MIX_PROPORTION"/>
+        </property>
+        <property name="qjCode" type="string">
+            <column length="50" name="QJ_CODE"/>
+        </property>
+        <property name="qjState" type="int">
+            <column default="0&#10;" length="2" name="QJ_STATE"/>
+        </property>
+        <property name="dutyQjTime" type="timestamp">
+            <column name="DUTY_QJ_TIME"/>
+        </property>
+        <property name="dutyQjUserId" type="string">
+            <column length="24" name="DUTY_QJ_USER_ID"/>
+        </property>
+        <property name="dutyQjName" type="string">
+            <column length="50" name="DUTY_QJ_NAME"/>
+        </property>
+        <property name="ifMix" type="string">
+            <column length="24" name="IF_MIX"/>
+        </property>
+        <property name="mpMinSaltRejection" type="string">
+            <column length="50" name="MP_MIN_SALT_REJECTION"/>
+        </property>
+        <property name="yjGpdLowLimit2" type="string">
+            <column length="50" name="YJ_GPD_LOW_LIMIT2"/>
         </property>
     </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentYxorderBase" table="KS_COMPONENT_YXORDER_BASE">
@@ -4071,7 +4011,7 @@
             <column length="20" name="PHOTO_ALL"/>
         </property>
         <property name="packingNum" type="string">
-            <column default="'公司标准'" length="50" name="PACKING_NUM"/>
+            <column default="'公司标准'" length="200" name="PACKING_NUM"/>
         </property>
         <property name="ifpolish" type="string">
             <column default="'否'" length="20" name="IFPOLISH"/>
@@ -4322,186 +4262,8 @@
         <property name="oRing" type="string">
             <column length="200" name="O_RING"/>
         </property>
-    </class>
-    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentPlanDay" table="KS_COMPONENT_PLAN_DAY">
-        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
-        <id name="id" type="int">
-            <column length="9" name="ID"/>
-            <generator class="assigned"/>
-        </id>
-        <property name="createTime" type="timestamp">
-            <column name="CREATE_TIME"/>
-        </property>
-        <property name="createUserId" type="string">
-            <column length="24" name="CREATE_USER_ID"/>
-        </property>
-        <property name="createName" type="string">
-            <column length="24" name="CREATE_NAME"/>
-        </property>
-        <property name="updateTime" type="timestamp">
-            <column name="UPDATE_TIME"/>
-        </property>
-        <property name="updateUserId" type="string">
-            <column length="24" name="UPDATE_USER_ID"/>
-        </property>
-        <property name="updateName" type="string">
-            <column length="24" name="UPDATE_NAME"/>
-        </property>
-        <property name="reserve1" type="string">
-            <column length="1500" name="RESERVE1"/>
-        </property>
-        <property name="reserve2" type="string">
-            <column length="1500" name="RESERVE2"/>
-        </property>
-        <property name="reserve3" type="string">
-            <column length="1500" name="RESERVE3"/>
-        </property>
-        <property name="reserve4" type="string">
-            <column length="1500" name="RESERVE4"/>
-        </property>
-        <property name="reserve5" type="string">
-            <column length="1500" name="RESERVE5"/>
-        </property>
-        <property name="orgId" type="string">
-            <column length="90" name="ORG_ID"/>
-        </property>
-        <property name="status" type="string">
-            <column length="24" name="STATUS"/>
-        </property>
-        <property name="relationId" type="int">
-            <column length="9" name="RELATION_ID"/>
-        </property>
-        <property name="orderId" type="int">
-            <column length="9" name="ORDER_ID"/>
-        </property>
-        <property name="planDate" type="date">
-            <column name="PLAN_DATE"/>
-        </property>
-        <property name="jmAmount" type="big_decimal">
-            <column length="10" name="JM_AMOUNT" precision="10" scale="2"/>
-        </property>
-        <property name="batchNo" type="string">
-            <column length="50" name="BATCH_NO"/>
-        </property>
-        <property name="meterAmount" type="big_decimal">
-            <column length="10" name="METER_AMOUNT" precision="10" scale="2"/>
-        </property>
-        <property name="position" type="string">
-            <column length="50" name="POSITION"/>
-        </property>
-        <property name="mpRemark" type="string">
-            <column length="2000" name="MP_REMARK"/>
-        </property>
-        <property name="problem" type="string">
-            <column length="2000" name="PROBLEM"/>
-        </property>
-        <property name="productOrder" type="int">
-            <column length="3" name="PRODUCT_ORDER"/>
-        </property>
-        <property name="cmWorker" type="string">
-            <column length="50" name="CM_WORKER"/>
-        </property>
-        <property name="storageName" type="string">
-            <column length="50" name="STORAGE_NAME"/>
-        </property>
-        <property name="storagePosition" type="string">
-            <column length="50" name="STORAGE_POSITION"/>
-        </property>
-        <property name="confirmDate" type="date">
-            <column name="CONFIRM_DATE"/>
-        </property>
-        <property name="confirmUserId" type="string">
-            <column length="50" name="CONFIRM_USER_ID"/>
-        </property>
-        <property name="confirmUserName" type="string">
-            <column length="100" name="CONFIRM_USER_NAME"/>
-        </property>
-        <property name="confirmStatus" type="string">
-            <column length="50" name="CONFIRM_STATUS"/>
-        </property>
-        <property name="cdmCode" type="string">
-            <column length="20" name="CDM_CODE"/>
-        </property>
-        <property name="cdmState" type="int">
-            <column default="0&#10;" length="2" name="CDM_STATE"/>
-        </property>
-        <property name="dutyTime" type="timestamp">
-            <column name="DUTY_TIME"/>
-        </property>
-        <property name="dutyUserId" type="string">
-            <column length="24" name="DUTY_USER_ID"/>
-        </property>
-        <property name="dutyName" type="string">
-            <column length="50" name="DUTY_NAME"/>
-        </property>
-        <property name="cdmReportTime" type="timestamp">
-            <column name="CDM_REPORT_TIME"/>
-        </property>
-        <property name="cdmReportUserId" type="string">
-            <column length="24" name="CDM_REPORT_USER_ID"/>
-        </property>
-        <property name="cdmReportName" type="string">
-            <column length="24" name="CDM_REPORT_NAME"/>
-        </property>
-        <property name="arrangeDate" type="date">
-            <column name="ARRANGE_DATE"/>
-        </property>
-        <property name="jmCode" type="string">
-            <column length="50" name="JM_CODE"/>
-        </property>
-        <property name="jmState" type="int">
-            <column default="0&#10;" length="2" name="JM_STATE"/>
-        </property>
-        <property name="dutyJmTime" type="timestamp">
-            <column name="DUTY_JM_TIME"/>
-        </property>
-        <property name="dutyJmUserId" type="string">
-            <column length="24" name="DUTY_JM_USER_ID"/>
-        </property>
-        <property name="dutyJmName" type="string">
-            <column length="50" name="DUTY_JM_NAME"/>
-        </property>
-        <property name="jmReportTime" type="timestamp">
-            <column name="JM_REPORT_TIME"/>
-        </property>
-        <property name="jmReportUserId" type="string">
-            <column length="24" name="JM_REPORT_USER_ID"/>
-        </property>
-        <property name="jmReportName" type="string">
-            <column length="24" name="JM_REPORT_NAME"/>
-        </property>
-        <property name="arrangeJmDate" type="date">
-            <column name="ARRANGE_JM_DATE"/>
-        </property>
-        <property name="mixBatchNo" type="string">
-            <column length="50" name="MIX_BATCH_NO"/>
-        </property>
-        <property name="mixProportion" type="string">
-            <column length="24" name="MIX_PROPORTION"/>
-        </property>
-        <property name="qjCode" type="string">
-            <column length="50" name="QJ_CODE"/>
-        </property>
-        <property name="qjState" type="int">
-            <column default="0&#10;" length="2" name="QJ_STATE"/>
-        </property>
-        <property name="dutyQjTime" type="timestamp">
-            <column name="DUTY_QJ_TIME"/>
-        </property>
-        <property name="dutyQjUserId" type="string">
-            <column length="24" name="DUTY_QJ_USER_ID"/>
-        </property>
-        <property name="dutyQjName" type="string">
-            <column length="50" name="DUTY_QJ_NAME"/>
-        </property>
-        <property name="ifMix" type="string">
-            <column length="24" name="IF_MIX"/>
-        </property>
-        <property name="mpMinSaltRejection" type="string">
-            <column length="50" name="MP_MIN_SALT_REJECTION"/>
-        </property>
-        <property name="yjGpdLowLimit2" type="string">
-            <column length="50" name="YJ_GPD_LOW_LIMIT2"/>
+        <property name="sealPosition3" type="string">
+            <column default="'公司标准'" length="500" name="SEAL_POSITION3"/>
         </property>
     </class>
     <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentCheckHead" table="KS_COMPONENT_CHECK_HEAD">
@@ -4722,6 +4484,295 @@
         </property>
         <property name="deliveryConfirmUserName" type="string">
             <column length="50" name="DELIVERY_CONFIRM_USER_NAME"/>
+        </property>
+        <property name="judgeUserId" type="string">
+            <column length="20" name="JUDGE_USER_ID"/>
+        </property>
+        <property name="judgeUserName" type="string">
+            <column length="50" name="JUDGE_USER_NAME"/>
+        </property>
+        <property name="judgeTime" type="timestamp">
+            <column name="JUDGE_TIME"/>
+        </property>
+        <property name="labelJudge" type="string">
+            <column length="20" name="LABEL_JUDGE"/>
+        </property>
+        <property name="packageJudge" type="string">
+            <column length="20" name="PACKAGE_JUDGE"/>
+        </property>
+        <property name="appearanceJudge" type="string">
+            <column length="20" name="APPEARANCE_JUDGE"/>
+        </property>
+        <property name="diameterJudge" type="string">
+            <column length="20" name="DIAMETER_JUDGE"/>
+        </property>
+        <property name="comprehensiveJuege" type="string">
+            <column length="20" name="COMPREHENSIVE_JUEGE"/>
+        </property>
+    </class>
+    <class dynamic-insert="true" dynamic-update="true" entity-name="com.keensen.ump.produce.component.KsComponentHhCheckHead" table="KS_COMPONENT_HH_CHECK_HEAD">
+        <tuplizer class="com.primeton.server.das.tuplizer.SDOEntityTuplizer" entity-mode="sdo"/>
+        <id name="id" type="int">
+            <column length="9" name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="createUserId" type="string">
+            <column length="24" name="CREATE_USER_ID"/>
+        </property>
+        <property name="createName" type="string">
+            <column length="24" name="CREATE_NAME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="updateUserId" type="string">
+            <column length="24" name="UPDATE_USER_ID"/>
+        </property>
+        <property name="updateName" type="string">
+            <column length="24" name="UPDATE_NAME"/>
+        </property>
+        <property name="reserve1" type="string">
+            <column length="1500" name="RESERVE1"/>
+        </property>
+        <property name="reserve2" type="string">
+            <column length="1500" name="RESERVE2"/>
+        </property>
+        <property name="reserve3" type="string">
+            <column length="1500" name="RESERVE3"/>
+        </property>
+        <property name="reserve4" type="string">
+            <column length="1500" name="RESERVE4"/>
+        </property>
+        <property name="reserve5" type="string">
+            <column length="1500" name="RESERVE5"/>
+        </property>
+        <property name="orgId" type="string">
+            <column length="90" name="ORG_ID"/>
+        </property>
+        <property name="status" type="string">
+            <column length="24" name="STATUS"/>
+        </property>
+        <property name="orderNo" type="string">
+            <column length="100" name="ORDER_NO"/>
+        </property>
+        <property name="code" type="string">
+            <column length="50" name="CODE"/>
+        </property>
+        <property name="prodSpecId" type="int">
+            <column length="9" name="PROD_SPEC_ID"/>
+        </property>
+        <property name="orderAmount" type="long">
+            <column length="22" name="ORDER_AMOUNT"/>
+        </property>
+        <property name="applyAmount" type="long">
+            <column length="22" name="APPLY_AMOUNT"/>
+        </property>
+        <property name="checkUserId" type="string">
+            <column length="50" name="CHECK_USER_ID"/>
+        </property>
+        <property name="checkUserName" type="string">
+            <column length="100" name="CHECK_USER_NAME"/>
+        </property>
+        <property name="applyDate" type="date">
+            <column name="APPLY_DATE"/>
+        </property>
+        <property name="applyUserId" type="string">
+            <column length="50" name="APPLY_USER_ID"/>
+        </property>
+        <property name="applyUserName" type="string">
+            <column length="100" name="APPLY_USER_NAME"/>
+        </property>
+        <property name="lid" type="string">
+            <column length="20" name="LID"/>
+        </property>
+        <property name="prodClassFlag" type="string">
+            <column length="1" name="PROD_CLASS_FLAG"/>
+        </property>
+        <property name="tape" type="string">
+            <column length="20" name="TAPE"/>
+        </property>
+        <property name="markSpecialFlag" type="string">
+            <column length="1" name="MARK_SPECIAL_FLAG"/>
+        </property>
+        <property name="markTypeFlag" type="string">
+            <column length="1" name="MARK_TYPE_FLAG"/>
+        </property>
+        <property name="markSpecCode" type="string">
+            <column length="100" name="MARK_SPEC_CODE"/>
+        </property>
+        <property name="markIsok" type="string">
+            <column length="1" name="MARK_ISOK"/>
+        </property>
+        <property name="labelIsok" type="string">
+            <column length="1" name="LABEL_ISOK"/>
+        </property>
+        <property name="apperanceIsok" type="string">
+            <column length="1" name="APPERANCE_ISOK"/>
+        </property>
+        <property name="diameter" type="string">
+            <column length="1" name="DIAMETER"/>
+        </property>
+        <property name="final" type="string">
+            <column length="1" name="FINAL"/>
+        </property>
+        <property name="deal" type="string">
+            <column length="1" name="DEAL"/>
+        </property>
+        <property name="deal1" type="string">
+            <column length="1" name="DEAL1"/>
+        </property>
+        <property name="deal2" type="string">
+            <column length="50" name="DEAL2"/>
+        </property>
+        <property name="deal3" type="string">
+            <column length="50" name="DEAL3"/>
+        </property>
+        <property name="storage" type="string">
+            <column length="1" name="STORAGE"/>
+        </property>
+        <property name="manageUserId" type="string">
+            <column length="50" name="MANAGE_USER_ID"/>
+        </property>
+        <property name="manageUserName" type="string">
+            <column length="100" name="MANAGE_USER_NAME"/>
+        </property>
+        <property name="orderType" type="string">
+            <column length="50" name="ORDER_TYPE"/>
+        </property>
+        <property name="confirmDate" type="date">
+            <column name="CONFIRM_DATE"/>
+        </property>
+        <property name="prodSpecName" type="string">
+            <column length="50" name="PROD_SPEC_NAME"/>
+        </property>
+        <property name="printCnt" type="long">
+            <column length="22" name="PRINT_CNT"/>
+        </property>
+        <property name="performance" type="string">
+            <column length="500" name="PERFORMANCE"/>
+        </property>
+        <property name="box" type="string">
+            <column length="500" name="BOX"/>
+        </property>
+        <property name="tray" type="string">
+            <column length="50" name="TRAY"/>
+        </property>
+        <property name="isExamine" type="string">
+            <column default="'N'" length="1" name="IS_EXAMINE"/>
+        </property>
+        <property name="examineUserId" type="string">
+            <column length="50" name="EXAMINE_USER_ID"/>
+        </property>
+        <property name="examineUserName" type="string">
+            <column length="100" name="EXAMINE_USER_NAME"/>
+        </property>
+        <property name="examineDate" type="date">
+            <column name="EXAMINE_DATE"/>
+        </property>
+        <property name="label" type="string">
+            <column length="500" name="LABEL"/>
+        </property>
+        <property name="abnormal" type="string">
+            <column length="50" name="ABNORMAL"/>
+        </property>
+        <property name="abnormalExplain" type="string">
+            <column length="1000" name="ABNORMAL_EXPLAIN"/>
+        </property>
+        <property name="abnormalOther" type="string">
+            <column length="1000" name="ABNORMAL_OTHER"/>
+        </property>
+        <property name="dryWet" type="string">
+            <column length="50" name="DRY_WET"/>
+        </property>
+        <property name="jmDate" type="date">
+            <column name="JM_DATE"/>
+        </property>
+        <property name="tumoBatchStr" type="string">
+            <column length="500" name="TUMO_BATCH_STR"/>
+        </property>
+        <property name="tapColor" type="string">
+            <column length="500" name="TAP_COLOR"/>
+        </property>
+        <property name="bag" type="string">
+            <column length="50" name="BAG"/>
+        </property>
+        <property name="gpdAvg" type="string">
+            <column length="20" name="GPD_AVG"/>
+        </property>
+        <property name="saltAvg" type="string">
+            <column length="20" name="SALT_AVG"/>
+        </property>
+        <property name="performanceIsok" type="string">
+            <column length="1" name="PERFORMANCE_ISOK"/>
+        </property>
+        <property name="checkDate" type="date">
+            <column name="CHECK_DATE"/>
+        </property>
+        <property name="quantityPerBox" type="long">
+            <column length="22" name="QUANTITY_PER_BOX"/>
+        </property>
+        <property name="quantityBox" type="long">
+            <column length="22" name="QUANTITY_BOX"/>
+        </property>
+        <property name="quantityLastBox" type="long">
+            <column length="22" name="QUANTITY_LAST_BOX"/>
+        </property>
+        <property name="markSnStart" type="string">
+            <column length="20" name="MARK_SN_START"/>
+        </property>
+        <property name="markSnEnd" type="string">
+            <column length="20" name="MARK_SN_END"/>
+        </property>
+        <property name="confirmUserId" type="string">
+            <column length="20" name="CONFIRM_USER_ID"/>
+        </property>
+        <property name="confirmUserName" type="string">
+            <column length="50" name="CONFIRM_USER_NAME"/>
+        </property>
+        <property name="orderId" type="string">
+            <column length="20" name="ORDER_ID"/>
+        </property>
+        <property name="ifcstock" type="string">
+            <column default="'否'" length="10" name="IFCSTOCK"/>
+        </property>
+        <property name="ifwaited" type="string">
+            <column default="'否'" length="10" name="IFWAITED"/>
+        </property>
+        <property name="deliveryConfirmTime" type="timestamp">
+            <column name="DELIVERY_CONFIRM_TIME"/>
+        </property>
+        <property name="deliveryConfirmUserId" type="string">
+            <column length="20" name="DELIVERY_CONFIRM_USER_ID"/>
+        </property>
+        <property name="deliveryConfirmUserName" type="string">
+            <column length="50" name="DELIVERY_CONFIRM_USER_NAME"/>
+        </property>
+        <property name="judgeUserId" type="string">
+            <column length="20" name="JUDGE_USER_ID"/>
+        </property>
+        <property name="judgeUserName" type="string">
+            <column length="50" name="JUDGE_USER_NAME"/>
+        </property>
+        <property name="judgeTime" type="timestamp">
+            <column name="JUDGE_TIME"/>
+        </property>
+        <property name="labelJudge" type="string">
+            <column length="20" name="LABEL_JUDGE"/>
+        </property>
+        <property name="packageJudge" type="string">
+            <column length="20" name="PACKAGE_JUDGE"/>
+        </property>
+        <property name="appearanceJudge" type="string">
+            <column length="20" name="APPEARANCE_JUDGE"/>
+        </property>
+        <property name="diameterJudge" type="string">
+            <column length="20" name="DIAMETER_JUDGE"/>
+        </property>
+        <property name="comprehensiveJuege" type="string">
+            <column length="20" name="COMPREHENSIVE_JUEGE"/>
         </property>
     </class>
 </hibernate-mapping>

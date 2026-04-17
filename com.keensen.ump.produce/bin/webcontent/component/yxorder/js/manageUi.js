@@ -41,6 +41,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 		this.initChooseLableWindow();
 
 		this.initModifyOrderWindow();
+		
+		this.initUpdateOtherRemarkWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -352,7 +354,9 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						handler : this.onUpdateMaterial2
 					}, '-', {
 						text : '修改唛头型号',
-						hidden:uid != 'dafu' && uid != 'KS01147' && uid != 'KS01479' && uid != 'LHY' && uid != 'KS00307',
+						hidden : uid != 'dafu' && uid != 'KS01147'
+								&& uid != 'KS01479' && uid != 'LHY'
+								&& uid != 'KS00307',
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onUpdateSpecNameMark
@@ -399,6 +403,11 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									scope : this,
 									iconCls : 'icon-application_edit',
 									handler : this.onModifyOrder
+								}, {
+									text : '订单计划员备注',
+									scope : this,
+									iconCls : 'icon-application_edit',
+									handler : this.onUpdateOtherRemark
 								}]
 					}, '-', {
 						text : '订单生产备注',
@@ -413,7 +422,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, '->', {
 						text : '订单详情',
 						scope : this,
-						hidden:true,
+						hidden : true,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onOrderView
 					}, '-', {
@@ -424,7 +433,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 					}, '-', {
 						text : '删除',
 						scope : this,
-						hidden : uid != 'dafu' && uid != 'KS00307' && uid != 'KS01479',
+						hidden : uid != 'dafu' && uid != 'KS00307'
+								&& uid != 'KS01479',
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
 					}],
@@ -624,6 +634,9 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						header : '生产完成日期',
 						sortable : true
 					}, {
+						dataIndex : 'reserve5',
+						header : '订单计划员备注'
+					}, {
 						dataIndex : 'id',
 						header : '订单ID',
 						sortable : true
@@ -748,6 +761,8 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							name : 'applyAmount'
 						}, {
 							name : 'labelDrawingCode'
+						}, {
+							name : 'reserve5'
 						}]
 			})
 		})
@@ -1793,7 +1808,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 							dataIndex : 'materSpecName2',
 							fieldLabel : '订单下达型号 ',
 							ref : '../../orderNo',
-							//readOnly : true,
+							// readOnly : true,
 							anchor : '100%',
 							colspan : 2
 
@@ -4315,6 +4330,52 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 									dataIndex : 'id',
 									ref : '../../pkid',
 									xtype : 'hidden'
+								}]
+					}]
+				});
+	}
+	
+	this.initUpdateOtherRemarkWindow = function() {
+		var _this = this;
+		this.updateOtherRemarkWindow = this.updateOtherRemarkWindow
+				|| new Ext.fn.FormWindow({
+					title : '订单计划员备注',
+					height : 320,
+					width : 480,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						successFn : function(i, r) {
+							_this.updateOtherRemarkWindow.items.items[0].form
+									.reset();
+							_this.updateOtherRemarkWindow.hide();
+							_this.listPanel.refresh();
+						},
+						columns : 2,
+						loadUrl : 'com.keensen.ump.produce.component.neworder.expandYxOrder.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.component.neworder.saveEntity.biz.ext',
+						fields : [{
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 2
+								}, {
+									xtype : 'textarea',
+									name : 'entity/reserve5',
+									dataIndex : 'reserve5',
+									fieldLabel : '订单计划员备注',
+									ref : '../../reserve5',
+									allowBlank : false,
+									anchor : '100%',
+									colspan : 2
+
+								}, {
+									name : 'entity/id',
+									xtype : 'hidden',
+									dataIndex : 'id'
 								}]
 					}]
 				});

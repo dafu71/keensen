@@ -225,7 +225,7 @@
 		
 	<% } %>
 	</tr>
-	<l:equal targetValue="纳滤膜元件" property="data/productName"
+	<l:equal targetValue="NF Membrane" property="data/productName"
 		compareType="string">
 		<tr style="border: 1px solid black;">
 			<td width="<%=solutionWidth2 %>" height="33">
@@ -318,7 +318,7 @@
 		}
 		%>
 	</l:equal>
-	<l:notEqual targetValue="纳滤膜元件" property="data/productName"
+	<l:notEqual targetValue="NF Membrane" property="data/productName"
 		compareType="string">
 		<tr style="border: 1px solid black;">
 			<td height="33" colspan="2">
@@ -413,7 +413,7 @@
 		<div align="center" class="style1">up to standard</div>
 		</td>
 	</tr>
-	<l:equal targetValue="纳滤膜元件" property="data/productName"
+	<l:equal targetValue="NF Membrane" property="data/productName"
 		compareType="string">
 		<tr style="border: 1px solid black;">
 			
@@ -557,7 +557,7 @@
 		}
 		%>
 	</l:equal>
-	<l:notEqual targetValue="纳滤膜元件" property="data/productName"
+	<l:notEqual targetValue="NF Membrane" property="data/productName"
 		compareType="string">
 		<tr style="border: 1px solid black;">
 			<td height="38">
@@ -724,7 +724,8 @@
 			<td width="50%">&nbsp;</td>
 		</tr>
 	</table>
-	
+<l:notEqual targetValue="NF Membrane" property="data/productName"
+		compareType="string">	
 	<table width="780" border="1" bordercolor="#000000"
 		style="border-collapse: collapse; ">
 	<tr  style="border: 1px solid black;">
@@ -800,6 +801,68 @@
 		%>	
 		
     </table>
+    </l:notEqual>
+    
+    <l:equal targetValue="NF Membrane" property="data/productName"
+		compareType="string">
+	
+	
+	<table width="780" border="1" bordercolor="#000000"
+		style="border-collapse: collapse; ">
+	<tr  style="border: 1px solid black;">
+			<td width="8%"  >
+			<div align="center" class="style1"  >No.</div>
+			</td>
+			<td width="20%" style="">
+			<div align="center" class="style1" >Serial No.</div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1" >Permeate Flow Rate(NaCl),GPD</div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1" >Salt Rejection(NaCl),%</div>
+			</td>
+			
+			<td width="18%">
+			<div align="center" class="style1" >Permeate Flow Rate(MgSO4),GPD</div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1" >Salt Rejection(MgSO4),%</div>
+			</td>
+		</tr>
+	<%
+		for (int i = 0; i < waterList.length; i++) {
+		%>
+		
+		<tr style="border: 1px solid black;">
+			
+
+			<td width="8%">
+			<div align="center" class="style1"><%=i + 1%></div>
+			</td>
+			<td width="20%">
+			<div align="center" class="style1"><%=waterList[i].getString("batchNo")%></div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1"><%=waterList[i].getString("water")%></div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1"><%=waterList[i].getString("desalination")%></div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1"><%=waterList[i].getString("reserve1")%></div>
+			</td>
+			<td width="18%">
+			<div align="center" class="style1"><%=waterList[i].getString("reserve2")%></div>
+			</td>
+		</tr>
+		
+		<%
+		}
+		%>	
+		
+    </table>
+    </l:equal>
 </l:notEmpty>
 
 <l:notEmpty property="airList">

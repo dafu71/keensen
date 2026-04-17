@@ -93,8 +93,8 @@
       <sourceNode>assign1</sourceNode>
       <targetNode>end0</targetNode>
     </sourceConnections>
-    <targetConnections>link10</targetConnections>
     <targetConnections>link6</targetConnections>
+    <targetConnections>link10</targetConnections>
     <nodeLabel>assign1label</nodeLabel>
     <process:copy>
       <process:from type="query" pattern="reference">order/orderNo</process:from>
@@ -151,6 +151,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">maters[1]/gpdLow</process:from>
       <process:to type="query">data/gpdLow</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">maters[1]/mp</process:from>
+      <process:to type="query">data/mp</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign1label" name="label" nodeType="label">

@@ -4182,7 +4182,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 	// 上传照片面板
 	this.buildPhotoUploadWin = function() {
 		this.photoUploadWin = new Ext.Window({
-					title : '上传照片<span style="color:red;font-size:16px;">（至少生成4张照片）</span>',
+					title : '上传照片<span style="color:red;font-size:16px;">（至少上传4张照片）</span>',
 					collapsible : false,
 					modal : true,
 					closeAction : 'hide',

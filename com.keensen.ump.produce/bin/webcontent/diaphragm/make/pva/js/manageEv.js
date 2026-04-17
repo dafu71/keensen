@@ -286,6 +286,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onTmBatchNo = function()
 						var mptype = data.materSpecName;
 						_this.editWindow2.line.setValue(line);
 						_this.editWindow2.mptype.setValue(mptype);
+						return ;
 
 					} else {
 						Ext.Msg.alert('系统提示', '没有找到涂膜数据');
