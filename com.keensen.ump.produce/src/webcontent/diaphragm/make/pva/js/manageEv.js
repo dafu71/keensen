@@ -21,6 +21,12 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 			c51 : 1.5,
 			c23 : 0.5,
 			ro : 96
+		},
+		'PVA-205(2%)' : {
+			pva : 2,
+			c51 : 0.5,
+			c23 : 0,
+			ro : 97.5
 		}
 		/*
 		 * 'PVA540-S' : { pva : 2, c51 : 1.5, c23 : 0.5, ro : 96 }, 'PVA540-U' : {

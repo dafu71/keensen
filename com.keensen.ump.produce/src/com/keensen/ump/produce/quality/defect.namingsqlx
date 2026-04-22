@@ -985,4 +985,245 @@
  WHERE T.ID in ($ids$)
    
      </update>
+     
+     <select id="queryJm" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT JM.RECORD_ID "recordId",
+       JM.BATCH_NO "batchNo",
+       jm.produce_dt "produceDt",
+       JM.ORDER_NO "orderNo",
+       PMS.MATER_SPEC_NAME "prodSpecName",
+       TM.TUMO_BATCH_STR "tumoBatchStr"， JM.BLANKING_SIZE "blankingSize",
+       PG.PAGE_CNT "pageCnt",
+       JM.PAGE_WIDTH "pageWidth",
+       NVL(JM.BLANKING_SIZE, 0) * NVL(PG.PAGE_CNT, 0) *
+       NVL(JM.PAGE_WIDTH, 0) "tmLength"
+  FROM QINSEN.INST_JUANMO_MAIN JM
+  LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+    ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID
+  LEFT JOIN (SELECT WM_CONCAT(DISTINCT M.BATCH_NO) TUMO_BATCH_STR,
+                    JD.MAIN_BATCH_ID
+               FROM QINSEN.INST_JUANMO_DETAIL JD,
+                    QINSEN.INST_CAIDIEMO      C,
+                    QINSEN.INST_TUMO          M
+              WHERE JD.CDM_BATCH_ID = C.RECORD_ID
+                AND C.TUMO_BATCH_ID = M.RECORD_ID
+              GROUP BY JD.MAIN_BATCH_ID) TM
+    ON TM.MAIN_BATCH_ID = JM.RECORD_ID
+  LEFT JOIN (SELECT SUM(JD.OUT_QUANTITY) PAGE_CNT, JD.MAIN_BATCH_ID
+               FROM QINSEN.INST_JUANMO_DETAIL JD
+              GROUP BY JD.MAIN_BATCH_ID) PG
+    ON PG.MAIN_BATCH_ID = JM.RECORD_ID
+    
+    where 1=1
+	<isNotNull prepend = ""  property = "produceDtStart">
+	   AND jm.PRODUCE_DT &gt;= TO_DATE(#produceDtStart#, 'YYYY-MM-DD HH24:MI')
+	</isNotNull>
+	<isNotNull prepend = ""  property = "produceDtEnd">
+	   AND jm.PRODUCE_DT &lt; TO_DATE(#produceDtEnd#, 'YYYY-MM-DD HH24:MI')
+	</isNotNull>
+	<isNotNull prepend = ""  property = "batchNo">
+	   AND jm.BATCH_NO LIKE '%' || UPPER(#batchNo#) || '%'
+	</isNotNull>
+	<isNotNull prepend = ""  property = "prodSpecName">
+	   AND PMS.MATER_SPEC_NAME LIKE '%' || #prodSpecName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend = ""  property = "prodSpecId">
+	   AND PMS.MATER_SPEC_ID = #prodSpecId#
+	</isNotNull>
+	
+    ORDER BY jm.record_id DESC
+   	
+   	
+   	
+   	
+   	</select>
+   	
+   	<select id="queryProdDefectList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	SELECT T1.RECORD_ID      AS "recordId",
+       T1.BATCH_NO       AS "batchNo",
+       T1.PRODUCE_DT     AS "produceDt",
+       T1.ORDER_NO       AS "orderNo",
+       T1.PROD_SPEC_NAME AS "prodSpecName",
+       T1.TUMO_BATCH_STR AS "tumoBatchStr",
+       T1.BLANKING_SIZE  AS "blankingSize",
+       T1.PAGE_CNT       AS "pageCnt",
+       T1.PAGE_WIDTH     AS "pageWidth",
+       T1.TM_LENGTH      AS "tmLength",
+       T1.CREATE_TIME    AS "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME    AS "createName",
+       T1.UPDATE_TIME    AS "updateTime",
+       T1.UPDATE_USER_ID AS "updateUserId",
+       T1.UPDATE_NAME    AS "updateName",
+       T1.ID           AS "id",
+       T1.AMOUNT         AS "amount",
+       T1.BELONG_TYPE    AS "belongType",
+       T1.TACHE          AS "tache",
+       T1.DEAL_TYPE      AS "dealType",
+       T1.REASON         AS "reason",
+       T1.DEPT           AS "dept",
+       T1.PG_USER_ID     AS "pgUserId",
+       T1.PG_USER_NAME   AS "pgUserName",
+       T1.PG_UPDATE_TIME AS "pgUpdateTime",t1.rp "rp",
+       T1.FIRST          AS "first",
+       T1.SECOND         AS "second",
+       T1.THIRD          AS "third",
+       T1.FOURTH         AS "fourth",
+       t1.defect_Name "defectName"
+  FROM (SELECT JM.RECORD_ID,
+               JM.BATCH_NO,
+               JM.PRODUCE_DT,
+               JM.ORDER_NO,
+               PMS.MATER_SPEC_NAME PROD_SPEC_NAME,
+               TM.TUMO_BATCH_STR， JM.BLANKING_SIZE,
+               PG.PAGE_CNT,
+               JM.PAGE_WIDTH,
+               NVL(JM.BLANKING_SIZE, 0) * NVL(PG.PAGE_CNT, 0) *
+               NVL(JM.PAGE_WIDTH, 0) TM_LENGTH,
+               TO_CHAR(CD.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') CREATE_TIME,
+               CD.CREATE_USER_ID AS CREATE_USER_ID,
+               CD.CREATE_NAME AS CREATE_NAME,
+               TO_CHAR(CD.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') UPDATE_TIME,
+               CD.UPDATE_USER_ID AS UPDATE_USER_ID,
+               CD.UPDATE_NAME AS UPDATE_NAME,
+               CD.ID ,
+               pd.FIRST || '-' || pd.SECOND || '-' || pd.THIRD || '-' || pd.FOURTH defect_Name,
+               CD.AMOUNT,
+               CD.BELONG_TYPE,
+               CD.TACHE,
+               CD.DEAL_TYPE,
+               CD.REASON,
+               CD.DEPT,
+               CD.PG_USER_ID,
+               CD.PG_USER_NAME,cd.rp,
+               TO_CHAR(CD.PG_UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') PG_UPDATE_TIME,
+               PD.FIRST,
+               PD.SECOND,
+               PD.THIRD,
+               PD.FOURTH
+          FROM KS_COMPONENT_DEFECT CD
+          LEFT JOIN KS_QUALITY_PROD_DEFECT PD
+            ON CD.DEFECT_ID = PD.ID
+          LEFT JOIN QINSEN.INST_JUANMO_MAIN JM
+            ON CD.JUANMO_BATCH_ID = JM.RECORD_ID
+          LEFT JOIN QINSEN.PARA_MATER_SPEC PMS
+            ON PMS.MATER_SPEC_ID = JM.PROD_SPEC_ID
+          LEFT JOIN (SELECT WM_CONCAT(DISTINCT M.BATCH_NO) TUMO_BATCH_STR,
+                           JD.MAIN_BATCH_ID
+                      FROM QINSEN.INST_JUANMO_DETAIL JD,
+                           QINSEN.INST_CAIDIEMO      C,
+                           QINSEN.INST_TUMO          M
+                     WHERE JD.CDM_BATCH_ID = C.RECORD_ID
+                       AND C.TUMO_BATCH_ID = M.RECORD_ID
+                     GROUP BY JD.MAIN_BATCH_ID) TM
+            ON TM.MAIN_BATCH_ID = JM.RECORD_ID
+          LEFT JOIN (SELECT SUM(JD.OUT_QUANTITY) PAGE_CNT, JD.MAIN_BATCH_ID
+                      FROM QINSEN.INST_JUANMO_DETAIL JD
+                     GROUP BY JD.MAIN_BATCH_ID) PG
+            ON PG.MAIN_BATCH_ID = JM.RECORD_ID
+            
+       where  1=1   
+       
+       <isNotNull prepend="and" property="dept"> 
+		       cd.dept like '%' || #dept# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="rp"> 
+		       cd.rp like '%' || #rp# || '%'
+	</isNotNull>
+	
+        <isNotNull prepend="and" property="id"> 
+		       cd.id = #id#
+	</isNotNull>
+	 
+            <isNotNull prepend="and" property="defectId"> 
+		       cd.defect_ID = #defectId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="dealType"> 
+		       cd.deal_Type = #dealType#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="tache"> 
+		       cd.tache = #tache#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="belongType"> 
+		       cd.belong_Type = #belongType#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="first"> 
+		       pd.first = #first#
+	</isNotNull>
+	<isNotNull prepend="and" property="second"> 
+		       pd.second like '%' || #second# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="third"> 
+		       pd.third like '%' || #third# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="fourth"> 
+		       pd.fourth like '%' || #fourth# || '%'
+	</isNotNull>
+     <isNotNull prepend = ""  property = "batchNo">
+	   AND jm.BATCH_NO LIKE '%' || UPPER(#batchNo#) || '%'
+	</isNotNull>       
+         ORDER BY cd.id DESC) T1
+   	</select>
+   	
+   	<select id="queryComponentDefect4Create" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   	
+    SELECT T1.ID              AS "defectId",
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID  AS "createUserId",
+       T1.CREATE_NAME     AS "createName",
+       to_char(t1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID  AS "updateUserId",
+       T1.UPDATE_NAME     AS "updateName",
+       T1.RESERVE1        AS "reserve1",
+       T1.RESERVE2        AS "reserve2",
+       T1.RESERVE3        AS "reserve3",
+       T1.RESERVE4        AS "reserve4",
+       T1.RESERVE5        AS "reserve5",
+       T1.ORG_ID          AS "orgId",
+       T1.STATUS          AS "status",
+       t1.FIRST as "first",
+		t1.SECOND as "second",
+		t1.THIRD as "third",
+		t1.FOURTH as "fourth",
+		1 as "amount",
+		'' as "belongType",
+		'' as "tache",
+		'' as "dealType"
+
+  FROM KS_QUALITY_PROD_DEFECT T1
+	where 1=1
+	
+	
+	
+	<isNotNull prepend = "and"  property = "createTimeStart"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &gt;=  #createTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "createTimeEnd"> 
+          TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd')  &lt;=  #createTimeEnd#
+     </isNotNull>
+	<isNotNull prepend="and" property="id"> 
+		       T1.ID = #id#
+	</isNotNull>
+	<isNotNull prepend="and" property="first"> 
+		       t1.first = #first#
+	</isNotNull>
+	<isNotNull prepend="and" property="second"> 
+		       t1.second like '%' || #second# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="third"> 
+		       t1.third like '%' || #third# || '%'
+	</isNotNull>
+	<isNotNull prepend="and" property="fourth"> 
+		       t1.fourth '%' || #fourth# || '%'
+	</isNotNull>
+	
+	
+	order by t1.first,t1.second,t1.third,t1.fourth
+	 </select>
+	 
 	 </sqlMap>

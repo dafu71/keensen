@@ -126,6 +126,15 @@ com.keensen.ump.produce.report.diaghragm.MaterialByLineMgr = function() {
 						dataIndex : 'c51Diff',
 						header : 'C51<br>差异'
 					}, {
+						dataIndex : 'c14Bom',
+						header : 'C14<br>BOM用量'
+					}, {
+						dataIndex : 'c14Reality',
+						header : 'C14<br>实际用量'
+					}, {
+						dataIndex : 'c14Diff',
+						header : 'C14<br>差异'
+					}, {
 						dataIndex : 'pva165Bom',
 						header : 'PVA165<br>BOM用量'
 					}, {
@@ -251,6 +260,12 @@ com.keensen.ump.produce.report.diaghragm.MaterialByLineMgr = function() {
 							name : 'c51Reality'
 						}, {
 							name : 'c51Diff'
+						}, {
+							name : 'c14Bom'
+						}, {
+							name : 'c14Reality'
+						}, {
+							name : 'c14Diff'
 						}, {
 							name : 'pva165Bom'
 						}, {

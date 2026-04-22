@@ -128,8 +128,8 @@ com.keensen.ump.qinsen.produce.qijianMgr.prototype.initEvent = function() {
 		
 		var start = vals['condition/produceDtStart'];
 		var end = vals['condition/produceDtEnd'];
-		if (dayDiff(start, end) > 93) {
-			Ext.Msg.alert("系统提示", "查询间隔日期不能大于3个月！");
+		if (dayDiff(start, end) > 61) {
+			Ext.Msg.alert("系统提示", "查询间隔日期不能大于2个月！");
 			return false;
 
 		}

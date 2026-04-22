@@ -266,13 +266,13 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 					}, '->', {
 						text : '打印唛头',
 						scope : this,
-						hidden:true,
+						//hidden:true,
 						iconCls : 'icon-printer',
 						handler : this.onPrintMarks
 					},'-', {
 						text : '打印唛头(带五星)',
 						scope : this,
-						hidden:true,
+						//hidden:true,
 						iconCls : 'icon-printer',
 						handler : this.onPrintMarks2
 					}],

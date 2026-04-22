@@ -1165,7 +1165,7 @@ com.keensen.ump.produce.component.applyMgr = function() {
 								handler : this.onSaveApply
 							}, {
 								text : "上传照片",
-								hidden:uid != 'dafu',
+								//hidden:uid != 'dafu',
 								scope : this,
 								handler : this.uploadPhoto
 							}]

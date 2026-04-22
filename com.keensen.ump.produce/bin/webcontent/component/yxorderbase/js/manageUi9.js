@@ -5712,7 +5712,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					text : "拍照查看",
 					scope : this,
 					iconCls : 'icon-application_form_magnify',
-					hidden : uid != 'dafu' ,
+					hidden : uid != 'dafu' && uid != 'KS00524',
 					handler : this.viewPhotos
 				});
 	}

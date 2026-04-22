@@ -1220,7 +1220,7 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 								}
 							}, {
 								text : "上传照片",
-								hidden:uid != 'dafu',
+								//hidden:uid != 'dafu',
 								scope : this,
 								handler : this.uploadPhoto
 							}]

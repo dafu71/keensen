@@ -41,7 +41,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 		this.pvaStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['PVA-165', 'PVA-165'], ['PVA-205', 'PVA-205'],
-							['PVA540', 'PVA540']]
+							['PVA540', 'PVA540'], ['PVA-205(2%)', 'PVA-205(2%)']]
 				});
 
 		this.stateStore = new Ext.data.SimpleStore({

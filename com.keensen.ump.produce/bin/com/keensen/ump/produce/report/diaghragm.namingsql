@@ -107,6 +107,10 @@
        T1.C22_STD       AS "c22Std",
        T1.C51_STD       AS "c51Std",
        T1.C51_WEIGHT    AS "c51Weight",
+       
+       T1.C14_STD       AS "c14Std",
+       T1.C14_WEIGHT    AS "c14Weight",
+       
        T1.C71_STD       AS "c71Std",
        T1.C71_WEIGHT    AS "c71Weight",
        T1.C72_STD       AS "c72Std",
@@ -133,8 +137,14 @@
                 TRGH.C22a_STD,
                 TRGH.C22_WEIGHT,
                 TRGH.C22_STD,
+                
                 TRGH.C51_STD,
-                NVL(TRGH.C51_WEIGHT, 0) + NVL(PVA.C51_WEIGHT, 0) C51_WEIGHT， TRGH.C71_STD,
+                NVL(TRGH.C51_WEIGHT, 0) + NVL(PVA.C51_WEIGHT, 0) C51_WEIGHT, 
+                
+                TRGH.C14_STD,
+                NVL(TRGH.C14_WEIGHT, 0) + NVL(PVA.C14_WEIGHT, 0) C14_WEIGHT,
+                
+                TRGH.C71_STD,
                 TRGH.C71_WEIGHT,
                 TRGH.C72_STD,
                 TRGH.C72_WEIGHT， PVA.USED_WEIGHT,
@@ -159,7 +169,11 @@
                         BM.C22a * TM.OUT_LENGTH / 1000 C22_STD,
                         TM.OUT_LENGTH * C22_METER C22_WEIGHT,
                         BM.C51 * TM.OUT_LENGTH / 1000 C51_STD,
+                        BM.C14 * TM.OUT_LENGTH / 1000 C14_STD,
+                        
                         TM.OUT_LENGTH * C51_METER C51_WEIGHT,
+                        TM.OUT_LENGTH * C14_METER C14_WEIGHT,
+                        
                         BM.C71 * TM.OUT_LENGTH / 1000 C71_STD,
                         TM.OUT_LENGTH * C71_METER C71_WEIGHT,
                         BM.C72 * TM.OUT_LENGTH / 1000 C72_STD,
@@ -172,11 +186,17 @@
                                     TRGH.C22a_WEIGHT,
                                     TRGH.C22_WEIGHT,
                                     TRGH.C51_WEIGHT,
+                                    
+                                    TRGH.C14_WEIGHT,
+                                    
                                     TRGH.C71_WEIGHT,
                                     TRGH.C72_WEIGHT,
                                     TRGH.C22a_WEIGHT / TM.OUT_LENGTH C22a_METER,
                                     TRGH.C22_WEIGHT / TM.OUT_LENGTH C22_METER,
                                     TRGH.C51_WEIGHT / TM.OUT_LENGTH C51_METER,
+                                    
+                                    TRGH.C14_WEIGHT / TM.OUT_LENGTH C14_METER,
+                                    
                                     TRGH.C71_WEIGHT / TM.OUT_LENGTH C71_METER,
                                     TRGH.C72_WEIGHT / TM.OUT_LENGTH C72_METER
                                FROM (SELECT ORDER_NO,
@@ -185,6 +205,9 @@
                                             SUM(C22a_WEIGHT) C22a_WEIGHT,
                                             SUM(C22_WEIGHT) C22_WEIGHT,
                                             SUM(C51_WEIGHT) C51_WEIGHT,
+                                            
+                                            SUM(C14_WEIGHT) C14_WEIGHT,
+                                            
                                             SUM(C71_WEIGHT) C71_WEIGHT,
                                             SUM(C72_WEIGHT) C72_WEIGHT
                                        FROM (SELECT TM.BATCH_NO,
@@ -194,6 +217,9 @@
                                                     T.C22a_WEIGHT,
                                                     T.C22_WEIGHT,
                                                     T.C51_WEIGHT,
+                                                    
+                                                    T.C14_weight,
+                                                    
                                                     T.C71_WEIGHT,
                                                     T.C72_WEIGHT
                                                FROM (SELECT T.BATCH_ID,
@@ -213,7 +239,10 @@
                                                                            'C51',
                                                                            T.WEIGHT,
                                                                            0)),
-                                                                0) C51_WEIGHT,
+                                                                0) C51_WEIGHT,                                                                
+                                                            
+                                                            0 C14_WEIGHT,
+                                                                
                                                             NVL(SUM(DECODE(T.ITEM,
                                                                            'C71',
                                                                            T.WEIGHT,
@@ -255,7 +284,10 @@
                                     T1.MPTYPE,
                                     MIN(T1.c22a) C22a,
                                     MIN(T1.MATER6) C22,
+                                    
                                     MIN(T1.MATER11) C51,
+                                    MIN(T1.MATER5) C14,
+                                    
                                     MIN(T1.MATER16) C71,
                                     MIN(T1.MATER15) C72
                                FROM KS_BASE_MP_BOM T1
@@ -279,6 +311,9 @@
                             PMS.MATER_SPEC_NAME SPEC_NAME,
                             BM.C51 * TM.OUT_LENGTH / 1000 C51_STD,
                             C51_METER * TM.OUT_LENGTH C51_WEIGHT,
+                            
+                            BM.C14 * TM.OUT_LENGTH / 1000 C14_STD,
+                            C14_METER * TM.OUT_LENGTH C14_WEIGHT,
                             
                             USED_METER * TM.OUT_LENGTH USED_WEIGHT,
                             BM.PVA165 * TM.OUT_LENGTH / 1000 PVA165_STD,
@@ -308,6 +343,9 @@
                        LEFT JOIN (SELECT PVA.*,
                                         TM.OUT_LENGTH,
                                         PVA.C51_WEIGHT / TM.OUT_LENGTH C51_METER,
+                                        
+                                        PVA.C14_WEIGHT / TM.OUT_LENGTH C14_METER,
+                                        
                                         PVA.USED / TM.OUT_LENGTH USED_METER,
                                         PVA.PVA165_WEIGHT / TM.OUT_LENGTH PVA165_METER,
                                         PVA.PVA205_WEIGHT / TM.OUT_LENGTH PVA205_METER,
@@ -316,6 +354,9 @@
                                                 PVA.LINE_ID,
                                                 PVA.SPEC_ID,
                                                 SUM(PVA.C51_WEIGHT) C51_WEIGHT,
+                                                
+                                                SUM(PVA.C14_WEIGHT) C14_WEIGHT,
+                                                
                                                 SUM(PVA.USED) USED,
                                                 SUM(DECODE(PVA.PVA,
                                                            'PVA-165',
@@ -332,6 +373,9 @@
                                            FROM (SELECT H.PVA,
                                                         LST.TM_BATCH_NO,
                                                         LST.C51,
+                                                        
+                                                        LST.C14,
+                                                        
                                                         LST.USED,
                                                         LST.USED *
                                                         DECODE(H.PVA,
@@ -351,6 +395,9 @@
                                                                'PVA540',
                                                                0.015,
                                                                '0.01') + LST.C51/1000 C51_WEIGHT,
+                                                               
+                                                        LST.C14 / 1000  C14_WEIGHT,      
+                                                               
                                                         LST.TM_BATCH_NO,
                                                         TM.ORDER_NO,
                                                         TM.SPEC_ID,
@@ -392,6 +439,9 @@
                        LEFT JOIN (SELECT T1.LINE,
                                         T1.MPTYPE,
                                         MIN(T1.MATER11) C51,
+                                        
+                                        MIN(T1.MATER5) C14,
+                                        
                                         MIN(T1.MATER14) PVA165,
                                         MIN(T1.MATER13) PVA205,
                                         MIN(T1.MATER12) PVA540
@@ -977,6 +1027,11 @@
        T1.C51_BOM        AS "c51Bom",
        T1.C51_REALITY    AS "c51Reality",
        T1.C51_DIFF       AS "c51Diff",
+       
+       T1.C14_BOM        AS "c14Bom",
+       T1.C14_REALITY    AS "c14Reality",
+       T1.C14_DIFF       AS "c14Diff",
+       
        T1.PVA165_BOM     AS "pva165Bom",
        T1.PVA165_REALITY AS "pva165Reality",
        T1.PVA165_DIFF    AS "pva165Diff",
@@ -1021,6 +1076,11 @@
                SUM(C51_BOM) C51_BOM,
                SUM(C51_REALITY) C51_REALITY,
                SUM(C51_REALITY) - SUM(C51_BOM) C51_DIFF,
+               
+               SUM(C14_BOM) C14_BOM,
+               SUM(C14_REALITY) C14_REALITY,
+               SUM(C14_REALITY) - SUM(C14_BOM) C14_DIFF,
+               
                SUM(PVA165_BOM) PVA165_BOM,
                SUM(PVA165_REALITY) PVA165_REALITY,
                SUM(PVA165_REALITY) - SUM(PVA165_BOM) PVA165_DIFF,
@@ -1061,6 +1121,9 @@
                        NVL(TM.OUT_LENGTH, 0) * NVL(C41, 0) / 1000 C41_BOM,
                        NVL(TM.OUT_LENGTH, 0) * NVL(C42, 0) / 1000 C42_BOM,
                        NVL(TM.OUT_LENGTH, 0) * NVL(C51, 0) / 1000 C51_BOM,
+                       
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C14, 0) / 1000 C14_BOM,
+                       
                        NVL(TM.OUT_LENGTH, 0) * NVL(PVA165, 0) / 1000 PVA165_BOM,
                        NVL(TM.OUT_LENGTH, 0) * NVL(PVA205, 0) / 1000 PVA205_BOM,
                        NVL(TM.OUT_LENGTH, 0) * NVL(PVA540, 0) / 1000 PVA540_BOM,
@@ -1076,6 +1139,9 @@
                        OIL.C41_REALITY,
                        OIL.C42_REALITY,
                        NVL(C51.C51_REALITY, 0) C51_REALITY,
+                       
+                       NVL(C51.C14_REALITY, 0) C14_REALITY,
+                       
                        NVL(PVA165.PVA165_REALITY, 0) PVA165_REALITY,
                        NVL(PVA205.PVA205_REALITY, 0) PVA205_REALITY,
                        NVL(PVA540.PVA540_REALITY, 0) PVA540_REALITY,
@@ -1122,7 +1188,7 @@
                                          GROUP BY TM_BATCH_NO) T2
                                 ON T1.TM_BATCH_NO = T2.TM_BATCH_NO) OIL
                     ON OIL.TM_BATCH_NO = TM.BATCH_NO
-                  LEFT JOIN (SELECT SUM(NVL(C51, 0)) C51_REALITY, TM_BATCH_NO
+                  LEFT JOIN (SELECT SUM(NVL(C51, 0)) C51_REALITY, SUM(NVL(C14, 0)) C14_REALITY, TM_BATCH_NO
                               FROM (SELECT DECODE(H.PVA,
                                                                'PVA-165',
                                                                0.01,
@@ -1131,13 +1197,15 @@
                                                                'PVA540',
                                                                0.015,
                                                                '0.01')*t.used + TO_NUMBER(NVL(T.C51, 0)) / 1000 C51,
+                                                               
+                                                               t.C14 / 1000 C14,
                                            T.TM_BATCH_NO
                                       FROM KS_DIAPHRAGM_MAKE_PVA_LIST T
                                       LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
                                                      ON T.RELATION_ID = H.ID
                                      WHERE T.TM_BATCH_NO IS NOT NULL
                                     UNION ALL
-                                    SELECT TO_NUMBER(NVL(T.WEIGHT, 0)),
+                                    SELECT TO_NUMBER(NVL(T.WEIGHT, 0)),0,
                                            TM.BATCH_NO
                                       FROM KS_DIAPHRAGM_TROUGH_LIQUID T
                                       LEFT JOIN QINSEN.INST_TUMO TM
@@ -1395,6 +1463,11 @@
        T1.C51_BOM        AS "c51Bom",
        T1.C51_REALITY    AS "c51Reality",
        T1.C51_DIFF       AS "c51Diff",
+       
+       T1.C14_BOM        AS "c14Bom",
+       T1.C14_REALITY    AS "c14Reality",
+       T1.C14_DIFF       AS "c14Diff",
+       
        T1.PVA165_BOM     AS "pva165Bom",
        T1.PVA165_REALITY AS "pva165Reality",
        T1.PVA165_DIFF    AS "pva165Diff",
@@ -1439,6 +1512,11 @@
                SUM(C51_BOM) C51_BOM,
                SUM(C51_REALITY) C51_REALITY,
                SUM(C51_REALITY) - SUM(C51_BOM) C51_DIFF,
+               
+               SUM(C14_BOM) C14_BOM,
+               SUM(C14_REALITY) C14_REALITY,
+               SUM(C14_REALITY) - SUM(C14_BOM) C14_DIFF,
+               
                SUM(PVA165_BOM) PVA165_BOM,
                SUM(PVA165_REALITY) PVA165_REALITY,
                SUM(PVA165_REALITY) - SUM(PVA165_BOM) PVA165_DIFF,
@@ -1479,6 +1557,9 @@
                        NVL(TM.OUT_LENGTH, 0) * NVL(C41, 0) / 1000 C41_BOM,
                        NVL(TM.OUT_LENGTH, 0) * NVL(C42, 0) / 1000 C42_BOM,
                        NVL(TM.OUT_LENGTH, 0) * NVL(C51, 0) / 1000 C51_BOM,
+                       
+                       NVL(TM.OUT_LENGTH, 0) * NVL(C14, 0) / 1000 C14_BOM,
+                       
                        NVL(TM.OUT_LENGTH, 0) * NVL(PVA165, 0) / 1000 PVA165_BOM,
                        NVL(TM.OUT_LENGTH, 0) * NVL(PVA205, 0) / 1000 PVA205_BOM,
                        NVL(TM.OUT_LENGTH, 0) * NVL(PVA540, 0) / 1000 PVA540_BOM,
@@ -1494,6 +1575,9 @@
                        OIL.C41_REALITY,
                        OIL.C42_REALITY,
                        NVL(C51.C51_REALITY, 0) C51_REALITY,
+                       
+                       NVL(C51.C14_REALITY, 0) C14_REALITY,
+                       
                        NVL(PVA165.PVA165_REALITY, 0) PVA165_REALITY,
                        NVL(PVA205.PVA205_REALITY, 0) PVA205_REALITY,
                        NVL(PVA540.PVA540_REALITY, 0) PVA540_REALITY,
@@ -1539,7 +1623,7 @@
                                          GROUP BY TM_BATCH_NO) T2
                                 ON T1.TM_BATCH_NO = T2.TM_BATCH_NO) OIL
                     ON OIL.TM_BATCH_NO = TM.BATCH_NO
-                  LEFT JOIN (SELECT SUM(NVL(C51, 0)) C51_REALITY, TM_BATCH_NO
+                  LEFT JOIN (SELECT SUM(NVL(C51, 0)) C51_REALITY, SUM(NVL(C14, 0)) C14_REALITY,  TM_BATCH_NO
                               FROM (SELECT DECODE(H.PVA,
                                                                'PVA-165',
                                                                0.01,
@@ -1547,14 +1631,14 @@
                                                                0.02,
                                                                'PVA540',
                                                                0.015,
-                                                               '0.01')*t.used + TO_NUMBER(NVL(T.C51, 0)) / 1000 C51,
+                                                               '0.01')*t.used + TO_NUMBER(NVL(T.C51, 0)) / 1000 C51, nvl(T.C14,0)/1000 C14,
                                            T.TM_BATCH_NO
                                       FROM KS_DIAPHRAGM_MAKE_PVA_LIST T
                                       LEFT JOIN KS_DIAPHRAGM_MAKE_PVA H
                                                      ON T.RELATION_ID = H.ID
                                      WHERE T.TM_BATCH_NO IS NOT NULL
                                     UNION ALL
-                                    SELECT TO_NUMBER(NVL(T.WEIGHT, 0)),
+                                    SELECT TO_NUMBER(NVL(T.WEIGHT, 0)),0,
                                            TM.BATCH_NO
                                       FROM KS_DIAPHRAGM_TROUGH_LIQUID T
                                       LEFT JOIN QINSEN.INST_TUMO TM
