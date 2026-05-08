@@ -28,8 +28,12 @@
        T1.DENSITY        AS "density",T1.DENSITY_real        AS "densityReal",
        T1.OPERATOR_ID    AS "operatorId",
        T1.OPERATOR_NAME  AS "operatorName",
-       t2.cnt as "cnt",nvl(t2.used,0) as "used",T1.WEIGHT-nvl(t2.used,0) "remain",
-       case when T1.WEIGHT-nvl(t2.used,0)&gt;0 then '处理中' else '完结' end "state"
+       t2.cnt as "cnt",nvl(t2.used,0) as "used",T1.WEIGHT-nvl(t2.used,0) - nvl(t1.scrap_Weight,0) "remain",
+       case when T1.WEIGHT-nvl(t2.used,0) - nvl(t1.scrap_Weight,0)&gt;0 then '处理中' else '完结' end "state",
+       
+       t1.scrap_Weight "scrapWeight",
+       t1.scrap_Reason "scrapReason"
+       
   FROM KS_DIAPHRAGM_MAKE_PVA T1
   left join (select t.relation_id,COUNT(1) cnt,SUM(t.used) used from KS_DIAPHRAGM_MAKE_PVA_LIST t
 	GROUP BY t.relation_id) t2 on t2.relation_id = t1.id
@@ -45,7 +49,7 @@
         <isNotNull prepend="and" property="createTimeEnd">to_char(t1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
         <isNotNull prepend="" property="type">AND t1.type = #type#</isNotNull>
         <isNotNull prepend="" property="pva">AND t1.pva = #pva#</isNotNull>
-        <isNotNull prepend="" property="state">AND (case when T1.WEIGHT-nvl(t2.used,0)&gt;0 then '处理中' else '完结' end) = #state#</isNotNull>
+        <isNotNull prepend="" property="state">AND (case when T1.WEIGHT-nvl(t2.used,0) - nvl(t1.scrap_Weight,0) &gt;0 then '处理中' else '完结' end) = #state#</isNotNull>
 	 ORDER BY t1.id desc
      </select>
     <select id="queryPvaBatchNo" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT 'P' || 

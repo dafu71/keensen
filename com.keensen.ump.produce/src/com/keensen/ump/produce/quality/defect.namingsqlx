@@ -98,7 +98,7 @@
 		md.TACHE as "tache",
 		md.first as "first",
 		md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH "defectName"
-		
+		,t2.prop_value_name AS "supName"
 		,t1.advise "advise"
 		,zr.TEAM_ID AS "teamId"
        ,t3.dept_name AS "teamName"
@@ -108,6 +108,8 @@
   on md.id = t1.defect_Id
   left join KS_PROD_DIAPHRAGM_ZMX_RECORD zr
   on zr.id = t1.relation_id
+  left join qinsen.CONF_PROP_VALUE_OPTION t2
+   on t2.prop_id = 30021 and t2.prop_value_id = zr.SUP_ID 
   left join qinsen.BASE_DEPARTMENT t3
 	on t3.dept_type_id='110' and t3.dept_id = zr.TEAM_ID
 	where 1=1
@@ -277,6 +279,8 @@
 		t1.team as "team",
 		t1.recorder as "recorder",
 		t1.relation_id as "relationId",
+		
+		wf.prop_value_name AS "supName",
 
 		l.line_name || '(' || l.line_code || ')' "lineName",
 		zr.batch_no "tmBatchNo",decode(zr.is_wx,'Y','是','否') "isWxName",
@@ -292,6 +296,11 @@
   on md.id = t1.defect_Id
   left join qinsen.inst_tumo zr
   on zr.record_id = t1.relation_id
+  
+  left join qinsen.CONF_PROP_VALUE_OPTION wf
+   on wf.prop_id = 30021 and wf.prop_value_id = zr.WF_SUP_ID 
+  
+  
   left join QINSEN.BASE_PROD_LINE  L
   on l.line_id = t1.team
   LEFT JOIN QINSEN.BASE_DEPARTMENT BD
@@ -536,12 +545,16 @@
 		md.FIRST || '-' || md.SECOND || '-' || md.THIRD || '-' || md.FOURTH "defectName"
 		
 		,t1.advise "advise"
-
+        ,tm.batch_no "tmBatchNo",pms.mater_spec_name "materSpecName"
   FROM KS_DIAPHRAGM_CDM_DEFECT_LIST T1
   left join KS_QUALITY_MP_DEFECT md 
   on md.id = t1.defect_Id
   left join QINSEN.INST_CAIDIEMO zr
   on zr.record_id = t1.relation_id
+  LEFT JOIN qinsen.inst_tumo tm
+  ON zr.tumo_batch_id = tm.record_id
+  LEFT JOIN qinsen.para_mater_spec pms
+  ON pms.mater_spec_id = tm.spec_id
   left join QINSEN.BASE_PROD_LINE  L
   on l.line_id = t1.team
 	where 1=1

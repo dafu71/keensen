@@ -67,10 +67,6 @@
       <process:from type="query" pattern="reference">entitys[1]</process:from>
       <process:to type="query">entity</process:to>
     </process:copy>
-    <process:copy>
-      <process:from type="query" pattern="reference">entity/id</process:from>
-      <process:to type="query">map/relationId</process:to>
-    </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">
     <location x="194" y="186"/>
@@ -81,13 +77,10 @@
   <leftRuler/>
   <process:info author="dafu" createTime="2023-09-19 23:08:25" date="2023-09-19Z" description="" name="deleteEntity" version="6.3"/>
   <process:variables>
-    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.component.KsComponentReworkHead" name="entity"/>
-    <process:variable anyType="java.util.HashMap" description="" historyStateLocation="client" isArray="false" name="map"/>
-    <process:variable anyType="commonj.sdo.DataObject" description="" historyStateLocation="client" isArray="true" name="data"/>
-    <process:variable description="" historyStateLocation="client" isArray="false" name="cnt" primitiveType="Int"/>
+    <process:variable description="" historyStateLocation="client" isArray="false" modelType="com.keensen.ump.produce.diaphragm.KsDiaphragmStockup" name="entity"/>
   </process:variables>
   <process:inputs varArgs="false">
-    <process:input description="" isArray="true" modelType="com.keensen.ump.produce.component.KsComponentReworkHead" name="entitys"/>
+    <process:input description="" isArray="true" modelType="com.keensen.ump.produce.diaphragm.KsDiaphragmStockup" name="entitys"/>
   </process:inputs>
   <process:outputs/>
   <process:extAttribute1>public</process:extAttribute1>

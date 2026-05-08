@@ -16,6 +16,9 @@
   if(roleId.toString().indexOf("10001381")!=-1 || uid.equals("sysadmin")){
 		exportflag="1";
   }	
+  
+  String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("produce/component/apply/index.jsp","");
 %>
 <html>
 <!-- 
@@ -74,6 +77,7 @@
   var uid = "<%=uid %>";
   var listid = Ext.id();
   var listid3 = Ext.id();
+  var markRootUrl = "<%=rootUrl %>";
   
   var exportflag = "<%=exportflag %>";
   

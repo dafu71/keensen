@@ -1,6 +1,33 @@
 com.keensen.ump.produce.component.produce.WeldedMgr.prototype.initEvent = function() {
 
 	var _this = this;
+	
+	Ext.getCmp(addBtn).setDisabled(true);
+	
+	// 查询事件
+	this.queryPanel4ProduceCount.mon(this.queryPanel4ProduceCount, 'query',
+			function(form, vals) {
+				var store = this.listPanel4ProduceCount.store;
+				store.baseParams = vals;
+				store.load({
+					params : {
+						"pageCond/begin" : 0,
+						"pageCond/length" : this.listPanel4ProduceCount.pagingToolbar.pageSize
+					}
+				});
+			}, this);
+			
+	this.listPanel4ProduceCount.store.on('load', function() {
+
+				var records = _this.listPanel4ProduceCount.store.getRange();
+				if (records.length == 0) {
+					Ext.getCmp(quantityTotalId).setValue('');
+				} else {
+					var quantityTotal = records[0].data.quantityTotal;
+					Ext.getCmp(quantityTotalId).setValue('产量合计:'
+							+ quantityTotal);
+				}
+			});
 
 	// 查询事件
 	this.queryPanel.mon(this.queryPanel, 'query', function(form, vals) {
@@ -50,7 +77,10 @@ com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onAdd = function()
 	if(ip == '172.16.10.64'){
 		this.inputWindow.machineCode.setValue('H3');
 	}
-
+	//测试用
+	if(ip == '127.0.0.1'){
+		this.inputWindow.machineCode.setValue('H1');
+	}
 }
 
 com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onEdit = function() {
@@ -138,6 +168,110 @@ com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onScan = function(
 		this.editWindow.lightNetType.setValue(lightNetType);
 		return;
 	}
+
+}
+
+com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onStart = function() {
+	var _this = this;
+	_this.requestMask = this.requestMask || new Ext.LoadMask(Ext.getBody(), {
+				msg : "后台正在操作,请稍候!"
+			});
+	_this.requestMask.show();
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.productioncount.saveWeldedStart.biz.ext",
+		method : "post",
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				var msg = ret.msg;
+				_this.queryPanel.setTitle("<span style='color:red'>" + msg
+						+ "</span>");
+				Ext.getCmp(addBtn).setDisabled(false);
+			}
+		},
+		callback : function() {
+			_this.requestMask.hide()
+		}
+	})
+}
+
+com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onEnd = function() {
+	
+	var _this = this;
+	Ext.Msg.confirm("操作确认", "您确实要下机结算工作量吗?", function(A) {
+		if (A == "yes") {
+			Ext.Msg.prompt('您的确认码', '请输入', function(btn, text) {
+				if (btn == 'ok') {
+					var confirmCode = text.trim();
+					if (Ext.isEmpty(confirmCode)) {
+						Ext.Msg.alert('系统提示', '确认码不能为空');
+						return false;
+					} else {
+						_this.requestMask = this.requestMask
+								|| new Ext.LoadMask(Ext.getBody(), {
+											msg : "后台正在操作,请稍候!"
+										});
+						_this.requestMask.show();
+						Ext.Ajax.request({
+							url : "com.keensen.ump.produce.component.produce.queryConfirmCode.biz.ext",
+							jsonData : {
+								'confirmCode' : confirmCode
+							},
+							method : "post",
+							success : function(resp) {
+								var ret = Ext.decode(resp.responseText);
+								if (ret.success) {
+									var err = ret.err;
+									var msg = ret.msg;
+									if (err != '0') {
+										Ext.Msg.alert('系统提示', msg);
+										return false;
+									} else {
+										Ext.Ajax.request({
+				url : "com.keensen.ump.produce.component.productioncount.saveWeldedEnd.biz.ext",
+				method : "post",
+				success : function(resp) {
+					var ret = Ext.decode(resp.responseText);
+					if (ret.success) {
+						var msg = ret.msg;
+						_this.queryPanel.setTitle("<span style='color:red'>"
+								+ msg + "</span>");
+						Ext.getCmp(addBtn).setDisabled(true);
+					}
+				},
+				callback : function() {
+					_this.requestMask.hide()
+				}
+			})
+									}
+								}
+							},
+							callback : function() {
+								_this.requestMask.hide()
+							}
+						})
+					}
+				}
+			}, this, false);
+
+		}
+	})
+}
+
+com.keensen.ump.produce.component.produce.WeldedMgr.prototype.onQueryQuantity = function() {
+	
+	this.produceCountWindow.show();
+}
+
+com.keensen.ump.produce.component.produce.WeldedMgr.prototype.exportProduceCountExcel = function() {
+
+	doQuerySqlAndExport(
+			this,
+			this.queryPanel4ProduceCount,
+			this.listPanel4ProduceCount,
+			'产量统计',
+			'com.keensen.ump.produce.component.productioncount.queryProductWeldedList',
+			'0,1');
 
 }
 

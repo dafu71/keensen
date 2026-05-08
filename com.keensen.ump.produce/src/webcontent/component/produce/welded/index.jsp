@@ -65,7 +65,7 @@ var operatorid = "<%=operatorid%>";
 var operatorname = "<%=operatorname%>";
 var opt = '';
 
-
+var addBtn = Ext.id();
 
   var listid = Ext.id();
   FunctionMgr.load({ 

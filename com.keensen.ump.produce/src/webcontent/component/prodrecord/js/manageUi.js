@@ -78,7 +78,7 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 	this.initQueryPanel = function() {
 		var _this = this;
 		this.queryPanel = new Ext.fn.QueryPanel({
-					height : 180,
+					height : 200,
 					columns : 4,
 					border : true,
 					// collapsible : true,
@@ -113,7 +113,7 @@ com.keensen.ump.produce.component.ProdRecordMgr = function() {
 							}, {
 								xtype : 'textfield',
 								name : 'condition/orderNo',
-								fieldLabel : '订单号%-%'
+								fieldLabel : '返工处理的订单号%-%'
 							}, {
 								xtype : 'displayfield',
 								height : '5',

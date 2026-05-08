@@ -83,7 +83,14 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 
 	// 增加修改事件
 	this.listPanel.mon(this.listPanel, 'update', function(gird, cell) {
+
 				var confirmDate = cell.get('confirmDate');
+				var baseId = cell.get('baseId');
+
+				if (this.opt == 'viewphotos') {
+					this.viewPhotos(baseId);
+					return;
+				}
 
 				if (this.opt == 'modify') {
 					if (!Ext.isEmpty(confirmDate)) {
@@ -139,6 +146,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.initEvent = function
 
 					this.markPrintPanel.form.reset();
 					this.markPrintWindow.show();
+					this.markPrintPanel.log.setValue(true);
 					this.markPrintPanel.loadData(cell);
 				}
 			}, this);
@@ -504,7 +512,6 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onAddOrder = functio
 
 com.keensen.ump.produce.component.applys.applyMgr.prototype.calculateBox = function() {
 
-
 	var obj = this.editWindow4ModifyOrder.hidden
 			? this.inputPanel4AddOrder
 			: this.editPanel4ModifyOrder;
@@ -825,7 +832,8 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onSaveMarkPrint = fu
 		f.quantityPerBox.value = this.markPrintPanel.quantityPerBox.getValue();
 		f.dryWet.value = this.markPrintPanel.dryWet.getValue();
 		f.nsf.value = this.markPrintPanel.nsf.getValue() ? 'Y' : 'N';
-
+		f.log.value = this.markPrintPanel.log.getValue() ? 'Y' : 'N';
+		
 		var actionUrl = 'com.keensen.ump.produce.component.printHHProdMarks.flow?time='
 				+ Math.random() + '&token=' + Date.now();
 
@@ -926,10 +934,10 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.onCreateMarkBatchNo 
 			}
 		}
 		prefix = colorTape + typeProd + sizeProd + codeProd;
-	}else{
+	} else {
 		prefix = colorTape + typeProd + nfArr[prodSpecName];
 	}
-	//var prefix = colorTape + typeProd + sizeProd + codeProd;
+	// var prefix = colorTape + typeProd + sizeProd + codeProd;
 
 	Ext.Ajax.request({
 				url : "com.keensen.ump.produce.component.sn.queryYmd.biz.ext",
@@ -961,6 +969,7 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.uploadPhoto = functi
 		return
 	}
 	this.photoUploadWin.getComponent('uploadForm').form.reset();
+	this.photoUploadWin.baseId.setValue(baseId);
 	this.photoUploadWin.show();
 }
 
@@ -991,77 +1000,272 @@ com.keensen.ump.produce.component.applys.applyMgr.prototype.doUploadPhoto = func
 	}
 	if (uploadInputPanel.form.isValid()) {
 
-		var baseId = this.inputPanel4AddOrder.baseId.getValue();
-		this.photoUploadWin.baseId.setValue(baseId);
-
+		var baseId = this.photoUploadWin.baseId.getValue();
 		var url = 'com.keensen.ump.produce.component.uploadPhotos.flow';
 		uploadInputPanel.form.submit({
-					method : "POST",
-					timeout : 1200,
-					url : url,
-					waitTitle : "操作提示",
-					waitMsg : "上传数据中...",
-					success : function(form, action) {
-						var result = action.result;
-						var fnames = result.msg;
-						var arr = fnames.split('|');
-						// fname = '/myupload/apply/' + fname;
-						if (result.success) {
-							_this.photoUploadWin.hide();
-							var fname = arr[0]
+			method : "POST",
+			timeout : 1200,
+			url : url,
+			waitTitle : "操作提示",
+			waitMsg : "上传数据中...",
+			success : function(form, action) {
+				var result = action.result;
+				var fnames = result.msg;
+				var arr = fnames.split('|');
+				// fname = '/myupload/apply/' + fname;
+				if (result.success) {
+					_this.photoUploadWin.hide();
+					if (!_this.inputWindow4AddOrder.hidden) {
+						var fname = arr[0]
+						var url = '';
+						url += '<a href="/default/myupload/apply/' + fname
+								+ '" target=_blank>查看图片</a>';
+						url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+						_this.inputPanel4AddOrder.picturePanel.update(url);
+						var fname = arr[1]
+						var url = '';
+						url += '<a href="/default/myupload/apply/' + fname
+								+ '" target=_blank>查看图片</a>';
+						url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+						_this.inputPanel4AddOrder.picturePanel2.update(url);
+						var fname = arr[2]
+						var url = '';
+						url += '<a href="/default/myupload/apply/' + fname
+								+ '" target=_blank>查看图片</a>';
+						url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+						_this.inputPanel4AddOrder.picturePanel3.update(url);
+						var fname = arr[3]
+						var url = '';
+						url += '<a href="/default/myupload/apply/' + fname
+								+ '" target=_blank>查看图片</a>';
+						url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+						_this.inputPanel4AddOrder.picturePanel4.update(url);
+						if (arr.length > 4) {
+							var fname = arr[4]
 							var url = '';
 							url += '<a href="/default/myupload/apply/' + fname
 									+ '" target=_blank>查看图片</a>';
 							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-							_this.inputPanel4AddOrder.picturePanel.update(url);
-							var fname = arr[1]
-							var url = '';
-							url += '<a href="/default/myupload/apply/' + fname
-									+ '" target=_blank>查看图片</a>';
-							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-							_this.inputPanel4AddOrder.picturePanel2.update(url);
-							var fname = arr[2]
-							var url = '';
-							url += '<a href="/default/myupload/apply/' + fname
-									+ '" target=_blank>查看图片</a>';
-							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-							_this.inputPanel4AddOrder.picturePanel3.update(url);
-							var fname = arr[3]
-							var url = '';
-							url += '<a href="/default/myupload/apply/' + fname
-									+ '" target=_blank>查看图片</a>';
-							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-							_this.inputPanel4AddOrder.picturePanel4.update(url);
-							if (arr.length > 4) {
-								var fname = arr[4]
-								var url = '';
-								url += '<a href="/default/myupload/apply/'
-										+ fname + '" target=_blank>查看图片</a>';
-								url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-								_this.inputPanel4AddOrder.picturePanel5
-										.update(url);
-							}
-							if (arr.length > 5) {
-								var fname = arr[5]
-								var url = '';
-								url += '<a href="/default/myupload/apply/'
-										+ fname + '" target=_blank>查看图片</a>';
-								url += '&nbsp;&nbsp;&nbsp;&nbsp;'
-								_this.inputPanel4AddOrder.picturePanel6
-										.update(url);
-							}
-
+							_this.inputPanel4AddOrder.picturePanel5.update(url);
 						}
-					},
-					failure : function(form, action) {
-						Ext.MessageBox.show({
-									title : '操作提示',
-									buttons : Ext.MessageBox.OK,
-									msg : "导入失败，请检查文件格式或网络是否正常",
-									icon : Ext.MessageBox.ERROR
-								});
+						if (arr.length > 5) {
+							var fname = arr[5]
+							var url = '';
+							url += '<a href="/default/myupload/apply/' + fname
+									+ '" target=_blank>查看图片</a>';
+							url += '&nbsp;&nbsp;&nbsp;&nbsp;'
+							_this.inputPanel4AddOrder.picturePanel6.update(url);
+						}
+
+					} else {
+						_this.viewPhotos(baseId);
 					}
-				});
+				}
+			},
+			failure : function(form, action) {
+				Ext.MessageBox.show({
+							title : '操作提示',
+							buttons : Ext.MessageBox.OK,
+							msg : "导入失败，请检查文件格式或网络是否正常",
+							icon : Ext.MessageBox.ERROR
+						});
+			}
+		});
 	}
 
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.onViewPhotos = function() {
+
+	this.opt = 'viewphotos';
+	this.listPanel.onEdit();
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.uploadPhoto2 = function(
+		baseId) {
+
+	this.photoUploadWin.getComponent('uploadForm').form.reset();
+	this.photoUploadWin.baseId.setValue(baseId);
+	this.photoUploadWin.show();
+
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.viewPhotos = function(
+		baseId) {
+
+	var _this = this;
+
+	if (Ext.isEmpty(baseId)) {
+		Ext.Msg.alert("系统提示", "非营销订单无需上传照片!");
+		return;
+	}
+	Ext.Ajax.request({
+		url : "com.keensen.ump.produce.component.yxorderbase.expandYxOrderBase0.biz.ext",
+		method : "post",
+		jsonData : {
+			'entity/id' : baseId
+		},
+		success : function(resp) {
+			var ret = Ext.decode(resp.responseText);
+			if (ret.success) {
+				var data = ret.data;
+
+				var urlPhotoApply = data.urlPhotoApply;
+				var urlPhotoApply2 = data.urlPhotoApply2;
+				var urlPhotoApply3 = data.urlPhotoApply3;
+				var urlPhotoApply4 = data.urlPhotoApply4;
+				var urlPhotoApply5 = data.urlPhotoApply5;
+				var urlPhotoApply6 = data.urlPhotoApply6;
+
+				var url = '&nbsp;';
+
+				var html = '<table border=1 align=center style="width :100%;height : 100%; border-collapse: collapse;">'
+				html += '<tr>'
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle; width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply)) {
+					url = markRootUrl + 'myupload/apply/' + urlPhotoApply;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>';
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				var url = '&nbsp;';
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply2)) {
+					url = markRootUrl + 'myupload/apply/' + urlPhotoApply2;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				var url = '&nbsp;';
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply3)) {
+					url = markRootUrl + 'myupload/apply/' + urlPhotoApply2;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				html += '</tr>';
+				html += '<tr>'
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply4)) {
+					url = markRootUrl + 'myupload/apply/' + urlPhotoApply4;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>';
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				var url = '&nbsp;';
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply5)) {
+					url = markRootUrl + 'myupload/apply/' + urlPhotoApply5;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				var url = '&nbsp;';
+				html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
+				if (!Ext.isEmpty(urlPhotoApply6)) {
+					url = markRootUrl + 'myupload/apply/' + urlPhotoApply6;
+					html += '<img src="'
+							+ url
+							+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+				} else {
+					html += url;
+				}
+				html += '</td>';
+				html += '</tr>';
+				html += '</table>';
+
+				var win = new Ext.Window({
+					title : '拍照查看',
+					width : 1024,
+					height : 680,
+					layout : 'fit',
+					resizable : false,
+					closable : true,
+					modal : true,
+					bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+					html : html,
+					buttons : [{
+								text : '拍照上传',
+								handler : function() {
+									_this.uploadPhoto2(baseId);
+									win.close();
+
+								}
+							},{
+								text : '多文件上传',
+								//hidden : uid != 'dafu',
+								handler : function() {
+									_this.uploadPhotos(baseId);
+									win.close();
+
+								}
+							}, {
+								text : '关闭',
+								handler : function() {
+									win.close();
+								}
+							}]
+				});
+				// 显示窗口
+				win.show();
+			}
+
+		},
+		callback : function() {
+
+		}
+	})
+}
+
+com.keensen.ump.produce.component.applys.applyMgr.prototype.uploadPhotos = function(
+		baseId) {
+	var _this = this;
+
+	if (Ext.isEmpty(baseId)) {
+		Ext.Msg.alert("系统提示", "非营销订单无需上传照片!");
+		return;
+	}
+
+	var src = markRootUrl + 'produce/component/apply/uploadPhotos.jsp?uploadwin=applysapplymgrphotowin&' + 
+	'baseId='+baseId;
+
+	var win = new Ext.Window({
+		title : '多文件上传',
+		id:'applysapplymgrphotowin',
+		width : 600,
+		height : 480,
+		layout : 'fit',
+		resizable : false,
+		closable : true,
+		modal : true,
+		bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+		html : '<iframe style="border-top-width: 0px; border-left-width: 0px; border-bottom-width: 0px; ' +
+				'width: 578px; height: 475px; border-right-width: 0px" ' +
+				'src=' + src +
+				' frameborder="0" width="100%" scrolling="no" height="100%"></iframe>',
+		buttons : [{
+					text : '关闭',
+					handler : function() {
+						win.close();
+					}
+				}]
+	});
+	// 显示窗口
+	win.show();
 }

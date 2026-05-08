@@ -254,6 +254,9 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 						width:200,
 						header : '不良项目'
 					}, {
+						dataIndex : 'supName',
+						header : '无纺布类型'
+					}, {
 						header : '班组',
 						width : 100,
 						dataIndex : 'teamName'
@@ -327,6 +330,8 @@ com.keensen.ump.produce.quality.TmDefectListMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'supName'
+						},{
 							name : 'prodFlagName'
 						},{
 							name : 'teamName'

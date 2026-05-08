@@ -191,40 +191,44 @@ function initPage() {
 			String qty = list[i].get("qty").toString();
 			String dryWet = list[i].get("dryWet").toString();
 			String nsf = list[i].get("nsf").toString();
+			String log = list[i].get("log").toString();
 			
 	%>		
 			var container = document.getElementById('image-container<%=i %>');
-			var brand = document.createElement('div');
-		    brand.className = 'text-overlay';
-		    brand.textContent = 'Brand:';
-		    var fontSize = '20pt';
-		    var color = 'black';
-		            
-		    // 设置样式
-		    brand.style.left = '10px';
-		    brand.style.top = '25px';
-		    brand.style.fontSize = fontSize;
-		    brand.style.fontWeight = 'bold';
-		    brand.style.color = color;
-		    brand.style.fontFamily = 'Arial';   
-		           
-		    container.appendChild(brand);
-		    //brandvalue
-			var brandvalue = document.createElement('div');
-		    brandvalue.className = 'text-overlay';
-		    brandvalue.textContent = 'KeenSen';
-		        		            
-		    var fontSize = '20pt';
-		    var color = 'black';
-		            
-		    // 设置样式
-		    brandvalue.style.left = '110px';
-		    brandvalue.style.top = '25px';
-		    brandvalue.style.fontSize = fontSize;
-		    //brand.style.fontWeight = 'bold';
-		    brandvalue.style.color = color;
-		    brandvalue.style.fontFamily = 'Arial';         
-		    container.appendChild(brandvalue);
+			
+			<% if(log.indexOf("Y")>-1){ %>
+				var brand = document.createElement('div');
+			    brand.className = 'text-overlay';
+			    brand.textContent = 'Brand:';
+			    var fontSize = '20pt';
+			    var color = 'black';
+			            
+			    // 设置样式
+			    brand.style.left = '10px';
+			    brand.style.top = '25px';
+			    brand.style.fontSize = fontSize;
+			    brand.style.fontWeight = 'bold';
+			    brand.style.color = color;
+			    brand.style.fontFamily = 'Arial';   
+			           
+			    container.appendChild(brand);
+			    //brandvalue
+				var brandvalue = document.createElement('div');
+			    brandvalue.className = 'text-overlay';
+			    brandvalue.textContent = 'KeenSen';
+			        		            
+			    var fontSize = '20pt';
+			    var color = 'black';
+			            
+			    // 设置样式
+			    brandvalue.style.left = '110px';
+			    brandvalue.style.top = '25px';
+			    brandvalue.style.fontSize = fontSize;
+			    //brand.style.fontWeight = 'bold';
+			    brandvalue.style.color = color;
+			    brandvalue.style.fontFamily = 'Arial';         
+			    container.appendChild(brandvalue);
+		   <% } %>
 		    
 		    var model = document.createElement('div');
 		    model.className = 'text-overlay';

@@ -1467,7 +1467,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							hiddenName : 'entity/isFirst',
 							emptyText : '--请选择--',
 							allowBlank : false,
-							readOnly : true,
+							//readOnly : true,
 							anchor : '90%',
 							store : [['', ''], ['Y', '首检'], ['N', '复检']],
 							listeners : {
@@ -1484,7 +1484,7 @@ com.keensen.ump.qinsen.produce.qijianMgr = function() {
 							hiddenName : 'entity/isQualified',
 							emptyText : '--请选择--',
 							allowBlank : false,
-							readOnly : true,
+							//readOnly : true,
 							anchor : '90%',
 							store : [['', '未判'], ['Y', '合格'], ['N', '不合格']],
 							listeners : {

@@ -370,7 +370,8 @@ com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.onStorageConfirm
 
 // 获取权限
 com.keensen.ump.produce.diaphragm.ship.YxOrderBaseMgr.prototype.getRight = function() {
-	var _this = this;
+	
+	var _this = this; 
 	Ext.Ajax.request({
 				url : "produce/diaphragm/ship/yxorderbase/js/right.json",
 				method : "post",

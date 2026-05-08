@@ -593,7 +593,8 @@ WHERE SUBSTR(T.CODE, 2, 8) = TO_CHAR(SYSDATE, 'yyyyMMdd'))
           #quantityPerBox#
        END "qty",
        #dryWet# "dryWet",
-       #nsf# "nsf"
+       #nsf# "nsf",
+       #log# "log"
 	  FROM DUAL
 	CONNECT BY LEVEL &lt;= #quantityBox#</select>
 </sqlMap>

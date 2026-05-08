@@ -1502,7 +1502,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.exportExcel = functio
 				'com.keensen.ump.produce.component.yxorderbase.queryYxOrderBase',
 				'0,1');
 	} else {
-		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '计划入库时间', '发货日期', '订单下达型号',
+		var arr = ['导入时间', '订单状态', '是否已发货', '销售订单编号', '下单日期', '计划入库时间', '发货日期', '订单下达型号','卷膜型号',
 				'货品名称', '干/湿', '订单数量', '发库存干膜数量（支）', '发库存湿膜数量（支）', '发库存膜元件（支）',
 				'产品备注', '标签', '标签制作方式', '标签内部图纸编号', '唛头', '唛头内部图纸编号', '包装箱',
 				'包装箱内部图纸编号', '是否新制版', '序列开始号', '序列结束号', '负责人', '产品型号', '备注',
@@ -2867,8 +2867,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle; width:33%; height:300px;">'
 	if (!Ext.isEmpty(urlPhotoApply)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply;
-		html += '<img src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>';
+		html += '<img class="cursor-example" src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
+				+ ' title="单击显示大图" onclick="showImageModal(\''
+				+ url
+				+ '\',820 ,650)"'
+				'/>';
 	} else {
 		html += url;
 	}
@@ -2877,8 +2881,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
 	if (!Ext.isEmpty(urlPhotoApply2)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply2;
-		html += '<img src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+		html += '<img class="cursor-example" src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
+				+ ' title="单击显示大图" onclick="showImageModal(\''
+				+ url
+				+ '\',820 ,650)"'
+				'/>';
 	} else {
 		html += url;
 	}
@@ -2886,9 +2894,13 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	var url = '&nbsp;';
 	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
 	if (!Ext.isEmpty(urlPhotoApply3)) {
-		url = markRootUrl + 'myupload/apply/' + urlPhotoApply2;
-		html += '<img src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+		url = markRootUrl + 'myupload/apply/' + urlPhotoApply3;
+		html += '<img class="cursor-example" src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
+				+ ' title="单击显示大图" onclick="showImageModal(\''
+				+ url
+				+ '\',820 ,650)"'
+				'/>';
 	} else {
 		html += url;
 	}
@@ -2898,8 +2910,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
 	if (!Ext.isEmpty(urlPhotoApply4)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply4;
-		html += '<img src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>';
+		html += '<img class="cursor-example" src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
+				+ ' title="单击显示大图" onclick="showImageModal(\''
+				+ url
+				+ '\',820 ,650)"'
+				'/>';
 	} else {
 		html += url;
 	}
@@ -2908,8 +2924,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
 	if (!Ext.isEmpty(urlPhotoApply5)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply5;
-		html += '<img src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+		html += '<img class="cursor-example" src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
+				+ ' title="单击显示大图" onclick="showImageModal(\''
+				+ url
+				+ '\',820 ,650)"'
+				'/>';
 	} else {
 		html += url;
 	}
@@ -2918,8 +2938,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.viewPhotos = function
 	html += '<td style="border: 1px solid #ccc; text-align: center;vertical-align: middle;width:33%; height:300px;">'
 	if (!Ext.isEmpty(urlPhotoApply6)) {
 		url = markRootUrl + 'myupload/apply/' + urlPhotoApply6;
-		html += '<img src="' + url
-				+ '" style="width: 100%; height: 100%; object-fit: cover;"/>'
+		html += '<img class="cursor-example" src="' + url
+				+ '" style="width: 100%; height: 100%; object-fit: cover;"' 
+				+ ' title="单击显示大图" onclick="showImageModal(\''
+				+ url
+				+ '\',820 ,650)"'
+				'/>';
 	} else {
 		html += url;
 	}
@@ -2960,4 +2984,30 @@ function formatDate(date) {
 	var month = (date.getMonth() + 1 + '').padStart(2, '0')
 	var day = (date.getDate() + '').padStart(2, '0')
 	return year + '-' + month + '-' + day;
+}
+
+// 显示模态窗口函数
+function showImageModal(defectPicture,width,height) {
+	// 创建模态窗口
+	var src = defectPicture + '?ver=' + Math.random();
+	var win = new Ext.Window({
+		title : '拍照图',
+		width : width,
+		height : height,
+		layout : 'fit',
+		resizable : false,
+		closable : true,
+		modal : true,
+		bodyStyle : 'background-color: #fff; padding: 10px; text-align: center;',
+		html : '<img src="' + src + '" alt="' + defectPicture
+				+ '" style="max-width: 100%; max-height: 100%;"/>',
+		buttons : [{
+					text : '关闭',
+					handler : function() {
+						win.close();
+					}
+				}]
+	});
+	// 显示窗口
+	win.show();
 }

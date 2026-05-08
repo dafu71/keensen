@@ -16,6 +16,9 @@
   if(roleId.toString().indexOf("10001381")!=-1 || uid.equals("sysadmin")){
 		exportflag="1";
   }	
+  
+  String rootUrl = request.getRequestURL().toString();
+  	rootUrl = rootUrl.replace("produce/component/applys/household/index.jsp","");
 %>
 <html>
 <!-- 
@@ -70,7 +73,7 @@
   var uid = "<%=uid %>";
   var listid = Ext.id();
   var listid3 = Ext.id();
-  
+  var markRootUrl = "<%=rootUrl %>";
   
   
   var exportflag = "<%=exportflag %>";
@@ -93,6 +96,7 @@
 			<input type="hidden" name="quantityPerBox"/>
 			<input type="hidden" name="dryWet"/>
 			<input type="hidden" name="nsf"/>
+			<input type="hidden" name="log"/>
 		</form>
 	</div>
 	

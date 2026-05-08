@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+ </head>
+ <body>
+  <input type="file" id="fileInput" multiple>
+<button onclick="uploadFiles()">上传文件</button>
+
+ </body>
+ <script type="text/javascript">
+ function uploadFiles() {
+    const files = document.getElementById('fileInput').files;
+    const formData = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+        formData.append('files[' + i + ']', files[i]);
+    }
+	
+	for (let i = 0; i < files.length; i++) {
+    	console.dir(formData.get('files[' + i + ']'))
+    }
+}
+</script>
+</html>

@@ -395,6 +395,42 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.exportExcel2 = fu
 	})
 }
 
+
+com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr.prototype.onCreateStockup = function() {
+	var A = this.listPanel;
+
+	if (!A.getSelectionModel().getSelected()) {
+		Ext.Msg.alert("系统提示", "没有选定数据，请选择数据行！")
+	} else {
+		var records = A.getSelectionModel().getSelections();
+		var spectId0 = records[0].get('spectId');
+		var arr = [];
+		var amount = 0;
+		for (var i = 0; i < records.length; i++) {
+
+			var spectId = records[i].get('spectId');
+			var qualifidLength = records[i].get('qualifidLength');
+			if (spectId != spectId0) {
+				Ext.Msg.alert("系统提示", "请选择同一膜片型号批次！");
+				return;
+			}
+			arr.push(records[i].get('recordId'));
+			amount += qualifidLength;
+		}
+		
+		this.stockupWindow.amount.setValue(roundToDecimalPlace(amount,2));
+		this.stockupWindow.specId.setValue(records[0].get('spectId'));
+		this.stockupWindow.recordIds.setValue(arr.join(","));
+		this.stockupWindow.show();
+	}
+}
+
+function roundToDecimalPlace(number, decimalPlaces) {
+	const factor = Math.pow(10, decimalPlaces);
+	return Math.round(number * factor) / factor;
+}
+
+
 function formatTime(date) {
 	const year = date.getFullYear();
 	const month = date.getMonth() + 1;

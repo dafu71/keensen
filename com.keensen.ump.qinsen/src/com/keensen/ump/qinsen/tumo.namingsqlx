@@ -157,6 +157,10 @@
         ,t1.cm_line_name "cmLineName",t1.cm_line_code "cmLineCode"
         
         ,t1.width "width"
+        
+        ,t1.f_Salt_Rejection2 "fSaltRejection2"
+        
+        ,t1.f_Gfd_Avg2 "fGfdAvg2"
        
   FROM (SELECT A.RECORD_ID,A.dm_Use_Length,A.is_replace_trough,A.replace_trough_id,  
   replace(A.water_batch_no,'单击旁边选择','') water_batch_no,
@@ -264,6 +268,17 @@
                T7.MAC_NAME F_MAC_NAME,
                T7.GFD_AVG F_GFD_AVG,
                T7.SALT_REJECTION F_SALT_REJECTION,
+               
+               <!--公式修改为:=99.66+0.1(初检脱盐率-99.7)/(99.9-99.7) 数据取两位小数-->
+              round(99.66+0.1*(nvl(t7.SALT_REJECTION,0)-99.7)/(99.9-99.7),2) F_SALT_REJECTION2 ,
+              
+              <!--转换后通量=27+4*（实际通量-标准通量下限）/（标准通量上限-标准通量下限）-->
+       case when std.gfd_low_limit is not null and std.gfd_up_limit is not null
+       then round(27 + 4 * (T7.GFD_AVG - std.gfd_low_limit)/(std.gfd_up_limit - std.gfd_low_limit),1)
+       else round(T7.GFD_AVG,1) 
+       end || 'GFD' f_Gfd_Avg2,
+               
+               
                T8.MAC_NAME R_MAC_NAME,
                T8.GFD_AVG R_GFD_AVG,
                T8.SALT_REJECTION R_SALT_REJECTION,
@@ -298,6 +313,18 @@
                ,A.width
                
           FROM QINSEN.INST_TUMO A
+          
+           <!--质检标准-膜片质检标准：按生产线和膜片型号 引出A等品的通量上下限-->
+  	left join (SELECT t.line_id,t.spec_id,max(t.gfd_low_limit) gfd_low_limit, MAX(t.gfd_up_limit) gfd_up_limit
+	FROM
+	(SELECT t.line_id,t.spec_id,t.gfd_low_limit,t.gfd_up_limit from KS_PROD_DIAPHRAGM_STAND t
+	WHERE t.line_id IS NOT NULL AND t.spec_id IS NOT NULL 
+	AND t.gfd_low_limit IS NOT NULL AND t.gfd_up_limit IS NOT NULL
+	AND t.level_id = 300029 AND t.state='Y') t 
+	GROUP BY t.line_id,t.spec_id) std
+	on A.line_id = std.line_id and A.spec_id = std.spec_id
+          
+          
           
           <!--裁膜生产线-->
           left join (SELECT t.tumo_batch_id,l.line_name,l.line_code from 
@@ -502,6 +529,11 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
             ON T8.BATCH_ID = A.RECORD_ID
             
             where 1=1
+            
+            <isNotNull prepend = ""  property = "stockupId">
+	   	AND A.record_id in (select batch_id from KS_DIAPHRAGM_STOCKUP_LIST where relation_id = #stockupId#)
+		</isNotNull>
+		
             
             <isNotNull prepend = ""  property = "isAPlus"> 
 	   	AND T33.is_A_Plus = #isAPlus#

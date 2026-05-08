@@ -262,6 +262,9 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 						width : 200,
 						header : '不良项目'
 					}, {
+						dataIndex : 'supName',
+						header : '无纺布类型'
+					}, {
 						header : '班组',
 						width : 100,
 						dataIndex : 'teamName'
@@ -331,6 +334,8 @@ com.keensen.ump.produce.quality.ZmDefectListMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'supName'
+						},{
 							name : 'productType'
 						}, {
 							name : 'teamName'

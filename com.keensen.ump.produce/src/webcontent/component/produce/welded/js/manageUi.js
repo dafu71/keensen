@@ -9,6 +9,8 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 		this.initInputWindow();
 		this.initEditWindow();
 		this.initViewWindow();
+		
+		this.initProduceCountWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -70,7 +72,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 					height : 120,
 					columns : 4,
 					border : true,
-					// collapsible : true,
+					collapsible : true,
 					titleCollapse : false,
 					// title : '【BOM查询】',
 					fields : [{
@@ -154,7 +156,29 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 					hidden : true,
 					handler : this.exportExcel
 				});
+				
+		this.queryPanel.addButton({
+					text : "工作量查询",
+					scope : this,
+					iconCls : 'icon-application_form_magnify',
+					handler : this.onQueryQuantity
+				});
+				
+		this.queryPanel.addButton({
+			text : "<span style='color:red;font-size:14px;'>上&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_add',
+			handler : this.onStart
+		});
 
+		this.queryPanel.addButton({
+			text : "<span style='color:red;font-size:14px;'>下&nbsp;&nbsp;机</span>",
+			height : 40,
+			scope : this,
+			iconCls : 'icon-application_edit',
+			handler : this.onEnd
+		});
 	}
 
 	this.initListPanel = function() {
@@ -171,6 +195,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 			tbar : [{
 						text : '新增',
 						scope : this,
+						id : addBtn,
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
 					}, '-', {
@@ -938,5 +963,135 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 						}]
 			}]
 		});
+	}
+	
+	this.initProduceCountWindow = function() {
+
+		var _this = this;
+
+		var selModel4ProduceCount = new Ext.grid.CheckboxSelectionModel({
+					singleSelect : false,
+					header : ''
+				});
+
+		this.listPanel4ProduceCount = this.listPanel4ProduceCount
+				|| new Ext.fn.ListPanel({
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					tbar : ['->', {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}, {
+								xtype : 'displayfield',
+								value : '',
+								id : quantityTotalId
+							}, {
+								xtype : 'displayfield',
+								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
+							}],
+					hsPage : true,
+					selModel : selModel4ProduceCount,
+					delUrl : '1.biz.ext',
+					columns : [new Ext.grid.RowNumberer(),
+							selModel4ProduceCount, {
+								dataIndex : 'dataCount',
+								header : '生产日期'
+							}, {
+								dataIndex : 'userName',
+								header : '操作工'
+							}, {
+								dataIndex : 'pipeSize',
+								header : '中心管尺寸'
+							}, {
+								dataIndex : 'quantity',
+								header : '生产数量'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.component.productioncount.queryProductWeldedListByPage.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : 'totalCount',
+						baseParams : {},
+						fields : [{
+									name : 'userName'
+								}, {
+									name : 'pipeSize'
+								}, {
+									name : 'dataCount'
+								}, {
+									name : 'quantity'
+								}, {
+									name : 'quantityTotal'
+								}]
+					})
+				})
+
+		this.queryPanel4ProduceCount = this.queryPanel4ProduceCount
+				|| new Ext.fn.QueryPanel({
+							height : 80,
+							columns : 4,
+							border : true,
+							region : 'north',
+							// collapsible : true,
+							titleCollapse : false,
+							fields : [{
+								xtype : "dateregion",
+								colspan : 2,
+								anchor : '95%',
+								nameArray : ['condition/dateCountStart',
+										'condition/dateCountEnd'],
+								fieldLabel : "生产日期",
+								format : "Y-m-d",
+								value : new Date()
+							}, {
+								xtype : 'textfield',
+								name : 'condition/userName',
+								anchor : '95%',
+								fieldLabel : '操作工',
+								value : nowStaffName
+
+							}, {
+								xtype : 'textfield',
+								name : 'condition/pipeSize',
+								anchor : '95%',
+								fieldLabel : '中心管尺寸%-%'
+							}]
+						});
+
+		this.queryPanel4ProduceCount.addButton({
+					text : "导出",
+					scope : this,
+					hidden : true,
+					iconCls : 'icon-application_excel',
+					handler : this.exportProduceCountExcel
+				});
+
+		this.queryPanel4ProduceCount.addButton({
+					text : "关闭",
+					scope : this,
+					handler : function() {
+						this.produceCountWindow.hide();
+					}
+
+				});
+
+		this.produceCountWindow = this.produceCountWindow || new Ext.Window({
+					title : '产量统计',
+					resizable : true,
+					minimizable : false,
+					maximizable : true,
+					closeAction : "hide",
+					buttonAlign : "center",
+					autoScroll : false,
+					modal : true,
+					width : 1024,
+					height : 600,
+					layout : 'border',
+					items : [this.queryPanel4ProduceCount,
+							this.listPanel4ProduceCount]
+
+				});
 	}
 }

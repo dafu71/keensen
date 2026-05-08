@@ -19,6 +19,7 @@
         <process:parameter description="" historyStateLocation="client" isArray="false" name="quantityPerBox" primitiveType="String"/>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="dryWet" primitiveType="String"/>
         <process:parameter description="" historyStateLocation="client" isArray="false" name="nsf" primitiveType="String"/>
+        <process:parameter description="" historyStateLocation="client" isArray="false" name="log" primitiveType="String"/>
       </process:inputParameters>
     </sourceConnections>
     <location x="100" y="150"/>
@@ -79,6 +80,10 @@
     <process:copy>
       <process:from type="query" pattern="reference">nsf</process:from>
       <process:to type="query">condition/nsf</process:to>
+    </process:copy>
+    <process:copy>
+      <process:from type="query" pattern="reference">log</process:from>
+      <process:to type="query">condition/log</process:to>
     </process:copy>
   </nodes>
   <nodes xsi:type="model:NodeElementLabel" id="assign0label" name="label" nodeType="label">

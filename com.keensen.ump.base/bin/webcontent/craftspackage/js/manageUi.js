@@ -109,7 +109,7 @@ com.keensen.ump.base.CraftspackageMgr = function() {
 						handler : this.onEdit
 					}, '-', {
 						text : '删除',
-						hidden : modifyLimit != 1,
+						hidden : uid != 'KS00296' && uid != 'dafu',
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel

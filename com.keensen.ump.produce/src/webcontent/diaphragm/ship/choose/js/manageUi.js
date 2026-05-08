@@ -5,6 +5,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 		this.initInputWindow();
 
 		this.initOrderNoWindow();
+		this.initStockupWindow();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -157,6 +158,12 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 								hidden : true,
 								iconCls : 'icon-application_edit',
 								handler : this.onCreate2
+							},'->',{
+								text : '生成备货请检单',
+								//hidden : uid != 'dafu',
+								scope : this,
+								iconCls : 'icon-application_add',
+								handler : this.onCreateStockup
 							}, {
 								xtype : 'displayfield',
 								value : '&nbsp;&nbsp;&nbsp;&nbsp;'
@@ -313,6 +320,19 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 						}
 
 					}, {
+						dataIndex : 'stockupFlag',
+						header : '是否已备货请检',
+						renderer : function(v, m, r, i) {
+							
+							if (v  == '是') {
+								return "<span style='color:red;'>" + v
+										+ "</span>"
+							} else {
+								return v;
+							}
+						}
+
+					},{
 						dataIndex : 'produceDt',
 						header : '生产日期'
 					}, {
@@ -372,6 +392,10 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 					'condition/isCutOver' : 'N'
 				},
 				fields : [{
+							name : 'stockupFlag'
+						}, {
+							name : 'spectId'
+						}, {
 							name : 'batchNo'
 						}, {
 							name : 'usefulLength'
@@ -555,6 +579,80 @@ com.keensen.ump.produce.diaphragm.ship.ShipChooseMgr = function() {
 						this.orderNoWindow.hide();
 					}
 				});
+
+	}
+	
+	this.initStockupWindow = function() {
+		
+		var _this = this;
+		this.stockupWindow = this.stockupWindow || new Ext.fn.FormWindow({
+					title : '备货请检',
+					height : 240,
+					width : 300,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+								xtype : 'inputpanel',
+								baseCls : "x-plain",
+								pgrid : this.listPanel,
+								columns : 2,
+								saveUrl : 'com.keensen.ump.produce.diaphragm.ship.stockup.saveBusiness4Stockup.biz.ext',
+								fields : [{
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'textfield',
+											allowBlank:false,
+											ref : '../../deliveryOrderNo',
+											name : 'entity/deliveryOrderNo',
+											fieldLabel : '发货订单号',
+											anchor : '100%',
+											colspan : 2
+
+										}, {
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'datetimefield',
+											ref : '../../checkTime',
+											name : 'entity/checkTime',
+											allowBlank:false,
+											fieldLabel : '请检时间',
+											format : "Y-m-d H:i:00",
+											value : new Date(),
+											anchor : '100%',
+											colspan : 2
+										}, {
+											xtype : 'displayfield',
+											height : '5',
+											colspan : 2
+										}, {
+											xtype : 'textfield',
+											ref : '../../clientName',
+											name : 'entity/clientName',
+											allowBlank:false,
+											fieldLabel : '发货客户',
+											anchor : '100%',
+											colspan : 2
+										}, {
+											xtype : 'hidden',
+											ref : '../../recordIds',
+											name : 'entity/recordIds'
+										}, {
+											xtype : 'hidden',
+											ref : '../../specId',
+											name : 'entity/specId'
+										}, {
+											xtype : 'hidden',
+											ref : '../../amount',
+											name : 'entity/amount'
+										}]
+							}]
+				});
+		
 
 	}
 }

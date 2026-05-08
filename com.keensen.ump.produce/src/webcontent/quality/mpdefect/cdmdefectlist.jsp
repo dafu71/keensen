@@ -66,6 +66,8 @@
   var iftear4Search = "<%=iftear  %>";
   
   var lengthTotalId = Ext.id();
+  lengthTotalId += 'cdmdefectlistmgr';
+  
  var pgLimit = <%=pgLimit %>;
  
   var opt = '';

@@ -16,7 +16,7 @@
 			"list");
 	
 	String uid = userObject.getUserId();
-	double speed = uid.indexOf("public")>-1?1:0.1;
+	double speed = uid.indexOf("public")>-1?1:0.3;
 	
 	
 
@@ -169,20 +169,15 @@
         <%=list[i].getString("rsAmount") %>
         </td>
          <td width="5%" align='center' class="<%=style5 %>" >
-        <%=list[i].getString("chkAmount") %>
-        </td>
+        <%=list[i].getString("chkAmount") %></td>
         <td width="5%" align='center' class="<%=style5 %>" >
-        <%=list[i].getString("dryAmount") %>
-        </td>
+        <%=list[i].getString("dryAmount") %></td>
         <td width="5%" align='center' class="<%=style5 %>" >
-        <%=list[i].getString("wetAmount") %>
-        </td>
+        <%=list[i].getString("wetAmount") %></td>
         <td width="5%" align='center' class="<%=style5 %>" >
-        <%=list[i].getString("deliveryConfirmAmount") %>
-        </td>
+        <%=list[i].getString("deliveryConfirmAmount") %></td>
          <td width="12%" align='center' class="<%=style5 %>" >
-        <%=list[i].getString("demandStockDate") %>
-        </td>
+        <%=list[i].getString("demandStockDate") %></td>
         
         
 

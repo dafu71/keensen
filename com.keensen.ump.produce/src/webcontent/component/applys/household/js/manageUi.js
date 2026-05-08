@@ -217,6 +217,12 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						scope : this,
 						iconCls : 'icon-printer',
 						handler : this.onMarkPrint
+					}, '-', {
+						text : '拍照查看',
+						hidden : uid != 'dafu',
+						scope : this,
+						iconCls : 'icon-application_form_magnify',
+						handler : this.onViewPhotos
 					}, '->', {
 						text : '确认入C仓',
 						scope : this,
@@ -313,6 +319,8 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 				baseParams : {},
 				fields : [{
 							name : 'id'
+						},{
+							name : 'baseId'
 						}, {
 							name : 'createTime'
 						}, {
@@ -2240,6 +2248,16 @@ com.keensen.ump.produce.component.applys.applyMgr = function() {
 						fieldLabel : '箱唛批号示例',
 						anchor : '100%',
 						colspan : 4
+					}, {
+
+						xtype : 'checkbox',
+						allowBlank : false,
+						checked : true,
+						ref : '../log',
+						boxLabel : '有logo',
+						colspan : 4,
+						inputValue : 'Y',
+						anchor : '100%'
 					}, {
 						xtype : 'hidden',
 						ref : '../pkid',

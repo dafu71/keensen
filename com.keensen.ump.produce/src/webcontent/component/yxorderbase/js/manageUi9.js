@@ -683,7 +683,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 		this.queryPanel.addButton({
 					text : "非公司标准产品模板下载",
 					disabled : allRight != '1',
-					//hidden : true,
+					hidden : true,
 					height : 40,
 					scope : this,
 					iconCls : 'icon-application_excel',

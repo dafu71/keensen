@@ -70,6 +70,16 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.initEvent = function() {
 				var relationId = cell.get('id');
 				var batchNo = cell.get('batchNo');
 				var type = cell.get('type');
+				
+				if (opt == 'scrap') {
+					if (state == '完结') {
+						Ext.Msg.alert('系统提示', '已完结记录不能修改');
+						return false;
+					} else {
+						this.editWindow4Scrap.show();
+						this.editWindow4Scrap.loadData(cell);
+					}
+				}
 
 				if (opt == 'viewlist') {
 					var store = this.listPanel4Dilute.store;
@@ -336,6 +346,11 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.savePva = function(
 					_this.requestMask.hide()
 				}
 			})
+}
+
+com.keensen.ump.produce.diaphragm.make.PvaMgr.prototype.onScrap = function() {
+	opt = 'scrap';
+	this.listPanel.onEdit();
 }
 
 function roundToDecimalPlace(number, decimalPlaces) {

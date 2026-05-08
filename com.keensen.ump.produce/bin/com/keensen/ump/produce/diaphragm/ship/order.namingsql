@@ -346,7 +346,9 @@ SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
               WHERE T.TREND = '仓库AB仓'
               AND TT.PLAN_NO=#planNo#
               AND UPPER(SUBSTR(TT.PLAN_NO,4,2)) = 'ZY'</select>
-    <select id="queryWeekName" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT MYORDER "myorder",
+    <select id="queryWeekName" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  	
+  	SELECT MYORDER "myorder",
        to_char(TT.DATE_COUNT,'YYYY-MM-DD') "dateCount",
        '星期' ||
        TRANSLATE(to_number(TO_CHAR(TT.DATE_COUNT, 'D'))-1, '1234560', '一二三四五六日') "weekCount"
@@ -358,8 +360,12 @@ SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
                                           'YYYY-MM-DD')) -
                    TRUNC(TO_DATE(TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD'),
                                           'YYYY-MM-DD')) + 1) TT
-       ORDER BY myorder</select>
-    <select id="queryPlan" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT MYORDER "myorder",
+        <!-- WHERE to_char(TT.DATE_COUNT,'YYYY-MM-DD') NOT IN ('2026-05-01','2026-05-02','2026-05-03')-->
+       ORDER BY myorder       
+  	
+  	</select>
+    <select id="queryPlan" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  	SELECT MYORDER "myorder",
        FATHER.DATE_COUNT "dateCount",
        FATHER.WEEK_COUNT "weekCount",
        FATHER.LINE "line",
@@ -386,7 +392,12 @@ SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
                                                  'YYYY-MM-DD')) -
                                    TRUNC(TO_DATE(TO_CHAR(SYSDATE - 1,
                                                          'YYYY-MM-DD'),
-                                                 'YYYY-MM-DD')) + 1) TT) T1,
+                                                 'YYYY-MM-DD')) + 1) TT
+                                                 
+                                                 <!--WHERE to_char(TT.DATE_COUNT,'YYYY-MM-DD') NOT IN ('2026-05-01','2026-05-02','2026-05-03')-->
+                                                 
+                                                 
+                                                 ) T1,
                (SELECT 'A' LINE
                   FROM DUAL
                 UNION
@@ -445,5 +456,9 @@ SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
               ORDER BY TTT.WORK_DT) CHILDREN
     ON FATHER.DATE_COUNT = CHILDREN.WORK_DT
    AND FATHER.LINE = CHILDREN.LINE
- ORDER BY FATHER.LINE, FATHER.DATE_COUNT</select>
+ ORDER BY FATHER.LINE, FATHER.DATE_COUNT
+
+  	
+  	
+  	</select>
 </sqlMap>

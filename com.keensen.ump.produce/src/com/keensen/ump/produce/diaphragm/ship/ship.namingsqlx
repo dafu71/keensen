@@ -38,7 +38,13 @@
        t2.amount "sendAmount",
        t2.id "sendId",-->
        t1.QUALIFID_LENGTH - nvl(t3.amount,0) - nvl(tmdefect.defect_length,0) "delivery"
+       
+       ,decode(stc.batch_id,null,'否','是') "stockupFlag"
+       
   from v_ks_tumo3 t1
+  
+  left join (select DISTINCT t.batch_id from KS_DIAPHRAGM_STOCKUP_LIST t) stc
+  on stc.batch_id = t1.record_id
   
    left join (select sum(length) defect_length,relation_id,
           sum(decode(iftear,'是', length,0)) defect_length2,nvl(sum(REGEXP_SUBSTR(num_label, '[0-9]+')) ,0) num_label
@@ -209,7 +215,8 @@
  <select id="queryFhd" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
      select t1.RECORD_ID       as "recordId", t1.is_wx "isWx",t1.worker_id "workerId",t2.create_name "createName",
        t1.LINE_NAME       as "lineName",t1.line_id "lineId",t2.id "id", 
-       nvl(t2.amount,0) - nvl(tmdefect.defect_length,0) "sendAmount",
+       <!--nvl(t2.amount,0) - nvl(tmdefect.defect_length,0)--> 
+       nvl(t1.QUALIFID_LENGTH,0) - nvl(tmdefect.defect_length,0) "sendAmount",
        to_char(t2.create_time,'yyyy-MM-dd') "createTime",
        nvl(t2.ifconfirm,'n')    "ifconfirm",
        t1.LINE_CODE       as "lineCode",
@@ -1168,4 +1175,131 @@
  
  
   </select>
+  
+  <select id="queryStockup" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT T1.ID                AS "id", 
+      TO_CHAR(T1.CREATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "createTime",
+       T1.CREATE_USER_ID AS "createUserId",
+       T1.CREATE_NAME AS "createName",
+       TO_CHAR(T1.UPDATE_TIME, 'yyyy-MM-dd HH24:mi:ss') "updateTime",
+       T1.UPDATE_USER_ID    AS "updateUserId",
+       T1.UPDATE_NAME       AS "updateName",
+       T1.RESERVE1          AS "reserve1",
+       T1.RESERVE2          AS "reserve2",
+       T1.RESERVE3          AS "reserve3",
+       T1.RESERVE4          AS "reserve4",
+       T1.RESERVE5          AS "reserve5",
+       T1.ORG_ID            AS "orgId",
+       t1.CODE || '备货请检单' as "code",
+		t1.delivery_order_no as "deliveryOrderNo",
+		t1.client_name as "clientName",
+		TO_CHAR(t1.check_time, 'yyyy-MM-dd HH24:mi:ss') as "checkTime",
+		t1.amount as "amount",
+		t1.spec_id as "specId",
+    	pms.mater_spec_name "specName",
+    	mark.mark_spec_name "markSpecName"
+    from KS_DIAPHRAGM_STOCKUP t1
+    LEFT JOIN qinsen.para_mater_spec pms
+    ON pms.mater_spec_id = t1.spec_id
+    
+    left join (select t.order_no,t.spec_name,max(t.mark_spec_name) mark_spec_name
+ from KS_DIAPHRAGM_ORDER_BASE t
+ GROUP BY  t.order_no,t.spec_name) mark
+ on mark.order_no = t1.delivery_order_no and pms.mater_spec_name = mark.spec_name
+    
+		where 1=1
+		<isNotNull prepend = "and"  property = "checkTimeStart"> 
+          to_char(t1.check_time,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #checkTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "checkTimeEnd"> 
+          to_char(t1.check_time,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #checkTimeEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="deliveryOrderNo"> 
+		       t1.delivery_order_no like '%' || #deliveryOrderNo# || '%'
+	</isNotNull>
+	 <isNotNull prepend="and" property="code"> 
+		       t1.delivery_order_no || '备货请检单' like '%' || #code# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="clientName"> 
+		       t1.client_Name like '%' || #clientName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="specId"> 
+		       t1.spec_id = #specId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="batchNo"> 
+		       exists( select 1 from KS_DIAPHRAGM_STOCKUP_LIST lst
+		       left join qinsen.inst_tumo tm
+		       on tm.record_id = lst.batch_id
+		       where lst.relation_id = t1.id 
+		       and tm.batch_no = #batchNo#)		       
+	</isNotNull>
+	
+       order by t1.id desc
+   </select>  
+   
+   <select id="countStockup" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+   SELECT 
+		nvl(sum(t1.amount),0) as "amount"
+    from KS_DIAPHRAGM_STOCKUP t1
+    LEFT JOIN qinsen.para_mater_spec pms
+    ON pms.mater_spec_id = t1.spec_id
+    
+    left join (select t.order_no,t.spec_name,max(t.mark_spec_name) mark_spec_name
+ from KS_DIAPHRAGM_ORDER_BASE t
+ GROUP BY  t.order_no,t.spec_name) mark
+ on mark.order_no = t1.delivery_order_no and pms.mater_spec_name = mark.spec_name
+    
+		where 1=1
+		<isNotNull prepend = "and"  property = "checkTimeStart"> 
+          to_char(t1.check_time,'yyyy-MM-dd hh24:mi:ss')  &gt;=  #checkTimeStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "checkTimeEnd"> 
+          to_char(t1.check_time,'yyyy-MM-dd hh24:mi:ss')  &lt;=  #checkTimeEnd#
+     </isNotNull>
+     <isNotNull prepend="and" property="deliveryOrderNo"> 
+		       t1.delivery_order_no like '%' || #deliveryOrderNo# || '%'
+	</isNotNull>
+	 <isNotNull prepend="and" property="code"> 
+		       t1.delivery_order_no || '备货请检单' like '%' || #code# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="clientName"> 
+		       t1.client_Name like '%' || #clientName# || '%'
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="specId"> 
+		       t1.spec_id = #specId#
+	</isNotNull>
+	
+	<isNotNull prepend="and" property="batchNo"> 
+		       exists( select 1 from KS_DIAPHRAGM_STOCKUP_LIST lst
+		       left join qinsen.inst_tumo tm
+		       on tm.record_id = lst.batch_id
+		       where lst.relation_id = t1.id 
+		       and tm.batch_no = #batchNo#)		       
+	</isNotNull>
+	
+       
+   </select>   
+   
+   <select id="queryStockupCode" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+     SELECT code  "code" from 
+  (SELECT to_char(SYSDATE,'yyyyMMdd')|| '01' CODE FROM dual
+  WHERE NOT EXISTS(
+  select t.code from KS_DIAPHRAGM_STOCKUP t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  UNION
+  select to_char(to_number(max(t.code))+1) planNo from KS_DIAPHRAGM_STOCKUP t
+  WHERE SUBSTR(t.code,1,8) = to_char(SYSDATE,'yyyyMMdd'))
+  WHERE CODE IS NOT NULL
+    </select>
+     
+     <delete id="deleteStockupList" parameterClass="java.util.HashMap" >
+   	DELETE  from KS_DIAPHRAGM_STOCKUP_LIST t
+	WHERE t.relation_id=#relationId# 
+	</delete>
+       
  </sqlMap>

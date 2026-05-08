@@ -437,6 +437,7 @@ SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
                                           'YYYY-MM-DD')) -
                    TRUNC(TO_DATE(TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD'),
                                           'YYYY-MM-DD')) + 1) TT
+        <!-- WHERE to_char(TT.DATE_COUNT,'YYYY-MM-DD') NOT IN ('2026-05-01','2026-05-02','2026-05-03')-->
        ORDER BY myorder       
   	
   	</select>
@@ -469,7 +470,12 @@ SELECT TT.BATCH_NO "batchNo", TT.PLAN_NO
                                                  'YYYY-MM-DD')) -
                                    TRUNC(TO_DATE(TO_CHAR(SYSDATE - 1,
                                                          'YYYY-MM-DD'),
-                                                 'YYYY-MM-DD')) + 1) TT) T1,
+                                                 'YYYY-MM-DD')) + 1) TT
+                                                 
+                                                 <!--WHERE to_char(TT.DATE_COUNT,'YYYY-MM-DD') NOT IN ('2026-05-01','2026-05-02','2026-05-03')-->
+                                                 
+                                                 
+                                                 ) T1,
                (SELECT 'A' LINE
                   FROM DUAL
                 UNION

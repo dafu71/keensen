@@ -310,6 +310,7 @@ com.keensen.ump.qinsen.produce.CaidiemoMgr = function() {
 							}, '->', {
 								text : '删除',
 								scope : this,
+								hidden : uid != 'dafu' && uid != 'KS00524',
 								iconCls : 'icon-application_delete',
 								handler : this.onDel
 							}, '->', {

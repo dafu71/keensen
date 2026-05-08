@@ -171,7 +171,7 @@ com.keensen.ump.produce.diaphragm.ship.ShipqueryMgr = function() {
 				scope : this,
 				renderer : function(v, m, r, i) {
 					var id = r.get('id');
-					if (uid == 'KS00420' || uid == 'XXB') {
+					if (uid == 'KS00880' || uid == 'dafu') {
 						var style = "<a style='color:red;text-decoration:none'";
 						var str = style + " href='javascript:dealship(" + id
 								+ ");'>" + "取消发货单</a>";

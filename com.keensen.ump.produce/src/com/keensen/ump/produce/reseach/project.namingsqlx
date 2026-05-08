@@ -41,8 +41,9 @@
 		       T1.PROJECT_CODE like '%' || #projectCode# || '%'
 	</isNotNull> 
 	
-	<isNotNull prepend="and" property="belongUserId"> 
-		       t1.id in (select project_id from KS_RESEARCH_PROJECT_USER where user_id = #belongUserId#)
+	<isNotNull prepend="" property="belongUserId"> 
+		   and  t1.id in (select project_id from KS_RESEARCH_PROJECT_USER where user_id = #belongUserId#)-->
+		       
 	</isNotNull>
 	
 	<isEqual prepend="" property="manageFlag" compareValue="0">

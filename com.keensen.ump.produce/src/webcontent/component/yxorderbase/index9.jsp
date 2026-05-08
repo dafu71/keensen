@@ -88,6 +88,10 @@
     height: 50px; /* 设置行高 */
     line-height: 50px; /* 设置行内文本的垂直居中 */
 }
+
+.cursor-example {
+        cursor: pointer;
+    }
 </style>
 
 <script type="text/javascript">

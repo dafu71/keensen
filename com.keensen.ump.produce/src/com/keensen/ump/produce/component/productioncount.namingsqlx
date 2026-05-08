@@ -1076,4 +1076,165 @@ ORDER BY t.prod_type
  	delete from KS_COMPONENT_PRODUCT_TRIM_LIST where relation_id = #relationId#
  
  </delete>
+ 
+ 
+  <select id="queryProductWelded" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+    SELECT T1.ID                 AS "id",
+
+       to_char(t1.create_time,'yyyy-MM-dd') "createTime",
+       T1.CREATE_USER_ID     AS "createUserId",
+       T1.CREATE_NAME        AS "createName",
+    
+       to_char(T1.UPDATE_TIME,'yyyy-MM-dd') "updateTime",
+       T1.UPDATE_USER_ID     AS "updateUserId",
+       T1.UPDATE_NAME        AS "updateName",
+       T1.RESERVE1           AS "reserve1",
+       T1.RESERVE2           AS "reserve2",
+       T1.RESERVE3           AS "reserve3",
+       T1.RESERVE4           AS "reserve4",
+       T1.RESERVE5           AS "reserve5",
+       T1.ORG_ID             AS "orgId",
+       T1.STATUS             AS "status",
+       t1.user_id as "userId",
+		t1.user_name as "userName",
+		 to_char(t1.date_count,'yyyy-MM-dd') as "dateCount",
+		TO_CHAR(t1.time_start, 'yyyy-MM-dd HH24:mi:ss') as "timeStart",
+		TO_CHAR(t1.time_end, 'yyyy-MM-dd HH24:mi:ss') as "timeEnd",
+		t1.quantity as "quantity",
+		t1.confirm_user_id as "confirmUserId",
+		t1.confirm_user_name as "confirmUserName",
+		t1.confirm_time as "confirmTime",
+		t1.confirm_user_id2 as "confirmUserId2",
+		t1.confirm_user_name2 as "confirmUserName2",
+		t1.confirm_time2 as "confirmTime2",
+		t1.confirm_user_id3 as "confirmUserId3",
+		t1.confirm_user_name3 as "confirmUserName3",
+		t1.confirm_time3 as "confirmTime3",
+		
+		case when to_char(t1.date_count,'yyyy-MM-dd') = to_char(sysdate,'yyyy-MM-dd')
+		then 1
+		else 0 end "ifExistToday"
+		
+		from KS_COMPONENT_PRODUCT_WELDED t1
+		where 1=1
+		<isNotNull prepend="and" property="id"> 
+		       t1.id = #id#
+		</isNotNull> 
+		
+		<!--检查开机信息-->
+       <isEqual prepend="" property="checkstart" compareValue="1"> 
+		       and t1.id = (select max(id) from KS_COMPONENT_PRODUCT_WELDED
+		       where user_id = #userId#)
+		</isEqual>
+       
+       </select>
+       
+        <insert id="insertProductWeldedList" parameterClass="java.util.HashMap">
+	
+	 INSERT INTO KS_COMPONENT_PROD_WELDED_LIST
+  (ID,
+   RELATION_ID,
+   PIPE_SIZE,
+   QUANTITY)
+  SELECT SEQ_COMPONENT_PROD_WELDED_LIST.NEXTVAL,
+         #relationId#,
+         PIPE_SIZE,
+         QUANTITY
+    FROM (SELECT PIPE_SIZE, sum(produce_num) QUANTITY
+            FROM (SELECT T.ID,
+                         TO_CHAR(T.create_time, 'YYYY-MM-DD') create_dt,
+                         t.PIPE_SIZE,t.produce_num
+                    FROM KS_COMPONENT_WELDED T                    
+                   WHERE TO_CHAR(T.create_time, 'YYYY-MM-DD HH24:MI') >=
+                         (SELECT TO_CHAR(TIME_START, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_WELDED
+                           WHERE ID = #relationId#)
+                     AND TO_CHAR(T.create_time, 'YYYY-MM-DD HH24:MI') &lt;=
+                         (SELECT TO_CHAR(TIME_END, 'YYYY-MM-DD HH24:MI')
+                            FROM KS_COMPONENT_PRODUCT_WELDED
+                           WHERE ID = #relationId#)
+                     AND T.operate_user_ID = (SELECT user_id
+                                          FROM KS_COMPONENT_PRODUCT_WELDED tr
+                                          
+                                         WHERE ID = #relationId#))
+           GROUP BY PIPE_SIZE) tr 
+    
+
+</insert>
+
+<select id="queryProductWeldedList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ 
+ SELECT h.user_name "userName",to_char(h.date_count,'YYYY-MM-DD') "dataCount",
+	t.pipe_size "pipeSize",t.quantity "quantity",
+	to_char(h.time_start,'YYYY-MM-DD HH24:MI:SS') "timeStart",
+	to_char(h.time_end,'YYYY-MM-DD HH24:MI:SS') "timeEnd",
+	h.user_id,t.id,t.relation_id "relationId"
+	FROM KS_COMPONENT_PROD_WELDED_LIST t
+	LEFT JOIN KS_COMPONENT_PRODUCT_WELDED h
+	ON t.relation_id = h.id
+ 	where 1=1
+		<isNotNull prepend="and" property="id"> 
+		       h.id = #id#
+		</isNotNull>
+		
+		<isNotNull prepend="and" property="userId"> 
+		       h.user_id = #userId#
+		</isNotNull>
+		
+		
+		
+		<isNotNull prepend="and" property="userName"> 
+		       h.user_name like '%' || #userName# || '%'
+		</isNotNull>
+		
+				
+		<isNotNull prepend = "and"  property = "dateCountStart"> 
+          to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "dateCountEnd"> 
+          to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#
+     </isNotNull>
+     order by h.user_name , to_char(h.date_count,'YYYY-MM-DD')
+ </select>
+       
+     <select id="countProductWeldedList" resultClass="commonj.sdo.DataObject" parameterClass="java.util.HashMap" >
+ 
+ SELECT sum(t.quantity) "quantityTotal"
+  FROM KS_COMPONENT_PROD_WELDED_LIST t
+  LEFT JOIN KS_COMPONENT_PRODUCT_WELDED h
+  ON t.relation_id = h.id
+   where 1=1
+		<isNotNull prepend="and" property="id"> 
+		       h.id = #id#
+		</isNotNull>
+		
+		<isNotNull prepend="and" property="userId"> 
+		       h.user_id = #userId#
+		</isNotNull>
+		
+		
+		
+		<isNotNull prepend="and" property="userName"> 
+		       h.user_name like '%' || #userName# || '%'
+		</isNotNull>
+		
+		
+		
+		<isNotNull prepend = "and"  property = "dateCountStart"> 
+          to_char(h.date_count,'yyyy-MM-dd')  &gt;=  #dateCountStart#
+     </isNotNull>
+     <isNotNull prepend = "and"  property = "dateCountEnd"> 
+          to_char(h.date_count,'yyyy-MM-dd')  &lt;=  #dateCountEnd#
+     </isNotNull>
+     order by to_char(h.date_count,'YYYY-MM-DD'),h.user_id
+ </select>  
+       
+       <delete id="deleteProductWeldedList" parameterClass="java.util.HashMap">
+ 	delete from KS_COMPONENT_PROD_WELDED_LIST where relation_id = #relationId#
+ 
+ </delete>
+       
+       
+       
+       
 </sqlMap>

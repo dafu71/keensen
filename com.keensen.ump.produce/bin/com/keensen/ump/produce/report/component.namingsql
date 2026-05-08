@@ -695,9 +695,9 @@ SELECT '8寸',
        T1.DEMAND_STOCK_DATE       AS "demandStockDate",
        T1.JM_SPEC_NAME            AS "jmSpecName",
        T1.MATER_SPEC_NAME         AS "materSpecName",
-       T1.DRY_WET                 AS "dryWet",
+       T1.DRY_WET || '        '                AS "dryWet",
        T1.PROD_AMOUNT             AS "prodAmount",
-       nvl(T1.DELIVERY_CONFIRM_AMOUNT,0) AS "deliveryConfirmAmount",
+       to_char(nvl(T1.DELIVERY_CONFIRM_AMOUNT,0)) AS "deliveryConfirmAmount",
        T1.CDM_AMOUNT              AS "cdmAmount",
        T1.JM_AMOUNT               AS "jmAmount",
        T1.QJ_MODIFY_AMOUNT        AS "qjModifyAmount",
@@ -854,7 +854,9 @@ SELECT '8寸',
                TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') - 3 AND
                TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') + 5)
            AND T.PROD_AMOUNT &gt; 0 and t.state = '正式发布'
-           AND NVL(CTB.DELIVERY_CONFIRM_AMOUNT, 0) &lt; T.PROD_AMOUNT) T1
+           AND NVL(CTB.DELIVERY_CONFIRM_AMOUNT, 0) &lt; T.PROD_AMOUNT) T1           
+           
+           
  	order by  T1.DEMAND_STOCK_DATE desc</select>
     <select id="queryMpPercentInvalid" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">SELECT T1.YEAR_MONTH AS "yearMonth",
        T1.ZM_SCRAP AS "zmScrap",

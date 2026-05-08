@@ -253,6 +253,12 @@ com.keensen.ump.produce.quality.CdmDefectListMgr = function() {
 						dataIndex : 'cdmBatchNo',
 						header : '裁叠膜栈板号'
 					}, {
+						dataIndex : 'tmBatchNo',
+						header : '膜片批次'
+					}, {
+						dataIndex : 'materSpecName',
+						header : '膜片型号'
+					}, {
 						dataIndex : 'defectName',
 						width : 200,
 						header : '不良项目'
@@ -326,6 +332,10 @@ com.keensen.ump.produce.quality.CdmDefectListMgr = function() {
 
 			}	,
 				fields : [{
+							name : 'tmBatchNo'
+						}, {
+							name : 'materSpecName'
+						},{
 							name : 'lengthTotal'
 						}, {
 							name : 'id'

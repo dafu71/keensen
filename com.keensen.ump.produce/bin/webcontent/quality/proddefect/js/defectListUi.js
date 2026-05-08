@@ -269,7 +269,7 @@ com.keensen.ump.produce.quality.ProddefectListMgr = function() {
 						header : '处理方式'
 					}],
 			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.quality.defect.queryProdDefectListByPage.biz.ext',
+				url : 'com.keensen.ump.produce.quality.defect.queryComponentDefectByPage.biz.ext',
 				root : 'data',
 				autoLoad : true,
 				totalProperty : 'totalCount',

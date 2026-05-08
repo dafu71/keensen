@@ -1,8 +1,8 @@
 com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 	this.initPanel = function() {
-		
+
 		this.rec = {};
-		
+
 		this.initStore();
 		this.initQueryPanel();
 		this.initListPanel();
@@ -14,6 +14,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 		this.initListWindow4Dilute();
 
 		this.initMixWindow();
+		this.initWindow4Scrap();
 
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
@@ -25,7 +26,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 
 	// 初始化store
 	this.initStore = function() {
-		
+
 		this.monitorStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['KS00867', '张博宁'], ['KS00866', '周波'],
@@ -41,7 +42,8 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 		this.pvaStore = new Ext.data.SimpleStore({
 					fields : ['code', 'name'],
 					data : [['PVA-165', 'PVA-165'], ['PVA-205', 'PVA-205'],
-							['PVA540', 'PVA540'], ['PVA-205(2%)', 'PVA-205(2%)']]
+							['PVA540', 'PVA540'],
+							['PVA-205(2%)', 'PVA-205(2%)']]
 				});
 
 		this.stateStore = new Ext.data.SimpleStore({
@@ -137,7 +139,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 										this.reset()
 									}
 								}
-							},{
+							}, {
 								xtype : 'textfield',
 								name : 'condition/tmBatchNo',
 								fieldLabel : '涂膜批号'
@@ -198,6 +200,11 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						scope : this,
 						iconCls : 'icon-application_delete',
 						handler : this.onDel
+					}, '-', {
+						text : '母液报废',
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onScrap
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.diaphragm.make.pva.deletePvaEntity.biz.ext',
@@ -225,6 +232,14 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 						dataIndex : 'remain',
 						width : 100,
 						header : '剩余重量(KG)'
+					}, {
+						dataIndex : 'scrapWeight',
+						width : 100,
+						header : '母液报废重量(KG)'
+					}, {
+						dataIndex : 'scrapReason',
+						width : 100,
+						header : '母液报废原因'
 					}, {
 						dataIndex : 'pva',
 						width : 100,
@@ -299,6 +314,10 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 			// 'condition/werks' : 3000
 				},
 				fields : [{
+							name : 'scrapReason'
+						},{
+							name : 'scrapWeight'
+						},{
 							name : 'id'
 						}, {
 							name : 'createTime'
@@ -777,12 +796,12 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							onTriggerClick : function() {
 								_this.onTmBatchNo();
 							},
-							enableKeyEvents :true,
+							enableKeyEvents : true,
 							listeners : {
 								scope : this,
 								'blur' : function(o) {
 									var v = o.getValue();
-									if(v.length==13){
+									if (v.length == 13) {
 										_this.onTmBatchNo();
 									}
 								}
@@ -797,9 +816,9 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							fieldLabel : '线别',
 							ref : '../../line',
 							hiddenName : 'entity/line',
-							//emptyText : '--请选择--',
+							// emptyText : '--请选择--',
 							allowBlank : false,
-							readOnly:true,
+							readOnly : true,
 							editable : false,
 							anchor : '95%',
 							colspan : 1,
@@ -821,7 +840,7 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 							emptyText : null,
 							allowBlank : false,
 							editable : false,
-							readOnly:true,
+							readOnly : true,
 							anchor : '95%',
 							colspan : 1,
 							listeners : {
@@ -1002,251 +1021,253 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					singleSelect : false
 				});
 
-		this.listPanel4Dilute = this.listPanel4Dilute || new Ext.fn.EditListPanel({
-			
-			clicksToEdit : 1,
-			cls : 'custom-row-height', // 应用自定义的CSS类
-			region : 'center',
-			viewConfig : {
-				forceFit : true
-			},
-			delUrl : 'com.keensen.ump.produce.diaphragm.make.pva.deletePvaLists.biz.ext',
+		this.listPanel4Dilute = this.listPanel4Dilute
+				|| new Ext.fn.EditListPanel({
 
-			tbar : [{
-						text : '删除',
-						scope : this,
-						iconCls : 'icon-application_delete',
-						handler : this.onDelList
-					}],
+					clicksToEdit : 1,
+					cls : 'custom-row-height', // 应用自定义的CSS类
+					region : 'center',
+					viewConfig : {
+						forceFit : true
+					},
+					delUrl : 'com.keensen.ump.produce.diaphragm.make.pva.deletePvaLists.biz.ext',
 
-			hsPage : false,
-			autoScroll : true,
-			selModel : selModel4Dilute,
-			columns : [new Ext.grid.RowNumberer(), selModel4Dilute, {
-						dataIndex : 'batchNo',
-						header : '料液批号'
-					}, {
-						dataIndex : 'tmBatchNo',
-						width:150,
-						header : '膜片批次',
-						css : 'background:#c7c7a7;',
-						renderer : function(v, m, r, i) {
-							var line = r.get('line');
-							var line2 = r.get('line2');
-							var mptype = r.get('mptype');
-							var mptype2 = r.get('mptype2');
-							if (line != line2 || mptype != mptype2) {
-								return "<span style='color:red'>" + v
-										+ "</span>";
-							} else {
-								return v;
-							}
-						},
-						editor : new Ext.grid.GridEditor(new Ext.form.TextField(
-								{
-									allowBlank : false,
-									scope : this,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										},
-										'change' : function(o, newValue,
-												oldValue) {
-											if (newValue == oldValue)
-												return false;
-											var id = _this.rec.data['id'];
-											_this.savePva(id,'tmBatchNo',
-													newValue, oldValue);
-										}
-									}
-								}))
-					}, {
-						dataIndex : 'line',
-						header : '线别'
-					}, {
-						dataIndex : 'mptype',
-						header : '膜片型号'
-					}, {
-						dataIndex : 'weight',
-						header : '稀释配料<br>重量(KG)'
-					}, {
-						dataIndex : 'used',
-						header : '母液重量(KG)'
-					}, {
-						dataIndex : 'c90',
-						header : 'C90重量(g)',
-						css : 'background:#c7c7c7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
-								{
-									allowBlank : true,
-									allowDecimals : true,
-									
-									scope : this,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										},
-										'change' : function(o, newValue,
-												oldValue) {
-											if (newValue == oldValue)
-												return false;
-											var id = _this.rec.data['id'];
-											_this.savePva(id,'c90',
-													newValue, oldValue);
-										}
-									}
-								}))
-					}, {
-						dataIndex : 'c14',
-						header : 'C14重量(g)',
-						css : 'background:#c7c7d7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
-								{
-									allowBlank : true,
-									allowDecimals : true,
-									
-									scope : this,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										},
-										'change' : function(o, newValue,
-												oldValue) {
-											if (newValue == oldValue)
-												return false;
-											var id = _this.rec.data['id'];
-											_this.savePva(id,'c14',
-													newValue, oldValue);
-										}
-									}
-								}))
-					}, {
-						dataIndex : 'c51',
-						header : 'C51重量(g)',
-						css : 'background:#c7c7e7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
-								{
-									allowBlank : true,
-									allowDecimals : true,
-									
-									scope : this,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										},
-										'change' : function(o, newValue,
-												oldValue) {
-											if (newValue == oldValue)
-												return false;
-											var id = _this.rec.data['id'];
-											_this.savePva(id,'c51',
-													newValue, oldValue);
-										}
-									}
-								}))
-					}, {
-						dataIndex : 'ro',
-						header : 'RO水重量(KG)',
-						css : 'background:#c7c7f7;',
-						editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
-								{
-									allowBlank : true,
-									allowDecimals : true,
-									
-									scope : this,
-									listeners : {
-										'specialkey' : function() {
-											return false;
-										},
-										'change' : function(o, newValue,
-												oldValue) {
-											if (newValue == oldValue)
-												return false;
-											var id = _this.rec.data['id'];
-											_this.savePva(id,'ro',
-													newValue, oldValue);
-										}
-									}
-								}))
-					}, {
-						dataIndex : 'operatorName',
-						header : '配料人'
-					}, {
-						dataIndex : 'recorder',
-						header : '记录人'
-					}, {
-						dataIndex : 'createTime',
-						header : '配料时间'
-					}],
-			store : new Ext.data.JsonStore({
-				url : 'com.keensen.ump.produce.diaphragm.make.pva.queryPvaList.biz.ext',
-				root : 'data',
-				autoLoad : false,
-				totalProperty : '',
-				baseParams : {
+					tbar : [{
+								text : '删除',
+								scope : this,
+								iconCls : 'icon-application_delete',
+								handler : this.onDelList
+							}],
 
-			}	,
-				fields : [{
-							name : 'id'
-						}, {
-							name : 'createTime'
-						}, {
-							name : 'createUserId'
-						}, {
-							name : 'createName'
-						}, {
-							name : 'updateTime'
-						}, {
-							name : 'updateUserId'
-						}, {
-							name : 'updateName'
-						}, {
-							name : 'reserve1'
-						}, {
-							name : 'reserve2'
-						}, {
-							name : 'reserve3'
-						}, {
-							name : 'reserve4'
-						}, {
-							name : 'reserve5'
-						}, {
-							name : 'orgId'
-						}, {
-							name : 'status'
-						}, {
-							name : 'batchNo'
-						}, {
-							name : 'line'
-						}, {
-							name : 'weight'
-						}, {
-							name : 'mptype'
-						}, {
-							name : 'used'
-						}, {
-							name : 'c90'
-						}, {
-							name : 'c14'
-						}, {
-							name : 'ro'
-						}, {
-							name : 'operatorId'
-						}, {
-							name : 'operatorName'
-						}, {
-							name : 'c51'
-						}, {
-							name : 'tmBatchNo'
-						}, {
-							name : 'line2'
-						}, {
-							name : 'mptype2'
-						}, {
-							name : 'recorder'
-						}]
-			})
-		})
+					hsPage : false,
+					autoScroll : true,
+					selModel : selModel4Dilute,
+					columns : [new Ext.grid.RowNumberer(), selModel4Dilute, {
+								dataIndex : 'batchNo',
+								header : '料液批号'
+							}, {
+								dataIndex : 'tmBatchNo',
+								width : 150,
+								header : '膜片批次',
+								css : 'background:#c7c7a7;',
+								renderer : function(v, m, r, i) {
+									var line = r.get('line');
+									var line2 = r.get('line2');
+									var mptype = r.get('mptype');
+									var mptype2 = r.get('mptype2');
+									if (line != line2 || mptype != mptype2) {
+										return "<span style='color:red'>" + v
+												+ "</span>";
+									} else {
+										return v;
+									}
+								},
+								editor : new Ext.grid.GridEditor(new Ext.form.TextField(
+										{
+											allowBlank : false,
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.savePva(id,
+															'tmBatchNo',
+															newValue, oldValue);
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'line',
+								header : '线别'
+							}, {
+								dataIndex : 'mptype',
+								header : '膜片型号'
+							}, {
+								dataIndex : 'weight',
+								header : '稀释配料<br>重量(KG)'
+							}, {
+								dataIndex : 'used',
+								header : '母液重量(KG)'
+							}, {
+								dataIndex : 'c90',
+								header : 'C90重量(g)',
+								css : 'background:#c7c7c7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : true,
+											allowDecimals : true,
+
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.savePva(id, 'c90',
+															newValue, oldValue);
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'c14',
+								header : 'C14重量(g)',
+								css : 'background:#c7c7d7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : true,
+											allowDecimals : true,
+
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.savePva(id, 'c14',
+															newValue, oldValue);
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'c51',
+								header : 'C51重量(g)',
+								css : 'background:#c7c7e7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : true,
+											allowDecimals : true,
+
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.savePva(id, 'c51',
+															newValue, oldValue);
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'ro',
+								header : 'RO水重量(KG)',
+								css : 'background:#c7c7f7;',
+								editor : new Ext.grid.GridEditor(new Ext.form.NumberField(
+										{
+											allowBlank : true,
+											allowDecimals : true,
+
+											scope : this,
+											listeners : {
+												'specialkey' : function() {
+													return false;
+												},
+												'change' : function(o,
+														newValue, oldValue) {
+													if (newValue == oldValue)
+														return false;
+													var id = _this.rec.data['id'];
+													_this.savePva(id, 'ro',
+															newValue, oldValue);
+												}
+											}
+										}))
+							}, {
+								dataIndex : 'operatorName',
+								header : '配料人'
+							}, {
+								dataIndex : 'recorder',
+								header : '记录人'
+							}, {
+								dataIndex : 'createTime',
+								header : '配料时间'
+							}],
+					store : new Ext.data.JsonStore({
+						url : 'com.keensen.ump.produce.diaphragm.make.pva.queryPvaList.biz.ext',
+						root : 'data',
+						autoLoad : false,
+						totalProperty : '',
+						baseParams : {
+
+					}	,
+						fields : [{
+									name : 'id'
+								}, {
+									name : 'createTime'
+								}, {
+									name : 'createUserId'
+								}, {
+									name : 'createName'
+								}, {
+									name : 'updateTime'
+								}, {
+									name : 'updateUserId'
+								}, {
+									name : 'updateName'
+								}, {
+									name : 'reserve1'
+								}, {
+									name : 'reserve2'
+								}, {
+									name : 'reserve3'
+								}, {
+									name : 'reserve4'
+								}, {
+									name : 'reserve5'
+								}, {
+									name : 'orgId'
+								}, {
+									name : 'status'
+								}, {
+									name : 'batchNo'
+								}, {
+									name : 'line'
+								}, {
+									name : 'weight'
+								}, {
+									name : 'mptype'
+								}, {
+									name : 'used'
+								}, {
+									name : 'c90'
+								}, {
+									name : 'c14'
+								}, {
+									name : 'ro'
+								}, {
+									name : 'operatorId'
+								}, {
+									name : 'operatorName'
+								}, {
+									name : 'c51'
+								}, {
+									name : 'tmBatchNo'
+								}, {
+									name : 'line2'
+								}, {
+									name : 'mptype2'
+								}, {
+									name : 'recorder'
+								}]
+					})
+				})
 
 		this.listWindow4Dilute = this.listWindow4Dilute || new Ext.Window({
 					title : '稀释配料记录',
@@ -1583,6 +1604,56 @@ com.keensen.ump.produce.diaphragm.make.PvaMgr = function() {
 					scope : this,
 					iconCls : 'icon-application_edit',
 					handler : this.onMixCalc
+				});
+	}
+
+	this.initWindow4Scrap = function() {
+
+		this.editWindow4Scrap = this.editWindow4Scrap
+				|| new Ext.fn.FormWindow({
+					title : '母液报废',
+					height : 480,
+					width : 600,
+					resizable : false,
+					minimizable : false,
+					maximizable : false,
+					items : [{
+						xtype : 'editpanel',
+						baseCls : "x-plain",
+						pgrid : this.listPanel,
+						columns : 1,
+						loadUrl : 'com.keensen.ump.produce.diaphragm.make.pva.expandPva.biz.ext',
+						saveUrl : 'com.keensen.ump.produce.diaphragm.make.pva.savePvaScrap.biz.ext',
+						fields : [{
+									xtype : 'numberfield',
+									ref : '../../scrapWeight',
+									dataIndex : 'scrapWeight',
+									name : 'entity/scrapWeight',
+									decimalPrecision : 2,
+									allowBlank : false,
+									fieldLabel : '母液报废重量(KG)',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'displayfield',
+									height : '5',
+									colspan : 1
+								}, {
+									xtype : 'textarea',
+									dataIndex : 'scrapReason',
+									name : 'entity/scrapReason',
+									allowBlank : false,
+									value : '-',
+									fieldLabel : '母液报废原因',
+									anchor : '95%',
+									colspan : 1
+								}, {
+									xtype : 'hidden',
+									dataIndex : 'id',
+									ref : '../../id',
+									name : 'entity/id'
+								}]
+					}]
 				});
 	}
 }
