@@ -34,6 +34,13 @@
 -->
 <head>
  <title>膜片备货请检单</title>
+ 
+ <!-- 导出Excel -->
+<script src="base/exceljs/polyfill.js"></script>
+<script src="base/exceljs/exceljs.min.js"></script>
+<script src="base/exceljs/FileSaver.min.js"></script>
+<script src="base/exceljs/doExport.js"></script>
+
     <style>
         /* 打印设置 */
         @page {            
@@ -171,6 +178,7 @@
         
         <div align='center' id='noprintdiv' >
             <button onclick="printPage()">打印本页</button>
+            &nbsp;&nbsp;<button onclick="exportExcel()">导出Excel</button>
         </div>
     </div>
 </body>
@@ -182,6 +190,67 @@
 		document.getElementById('noprintdiv').style.display = "none";;
 		window.print();
 					
-	};
+	}
+	
+	function exportExcel(){
+		var mytitle = '膜片备货请检单';
+		var columnArr = ['膜片卷号','膜片批次','可用长度(m)',
+		'合格长度(m)','膜片型号','初检膜通量','初检脱盐率%',
+		'复检膜通量','复检脱盐率%','生产备注','标签数',
+		'厚度(平均)','厚度(最小)','厚度(最大)',
+		'标签长度','发货订单号','膜片唛头型号'];
+		var columns = [];
+		// 创建一个workbook
+		var workbook = new ExcelJS.Workbook();
+		// workbook 添加一个标签的sheet
+		var worksheet = workbook.addWorksheet(mytitle);
+		// 设置sheet数据中的列名
+		for(var i=0;i<columnArr.length;i++){
+			var column = {};
+			column.header = columnArr[i];
+			column.key = i;							
+			columns.push(column);
+		}
+		worksheet.columns = columns;
+		// 设置数据（可以通过后台获取、获取已经存在的数据）
+
+		// 开始添加数据
+		var data = [];
+		 <% 	for (int i = 0; i < list.length; i++) { 
+		  			usefulLength = usefulLength + (null == list[i].get("usefulLength")?0:Double.parseDouble(list[i].get("usefulLength").toString()));
+		  			qualifidLength = qualifidLength + (null == list[i].get("qualifidLength")?0:Double.parseDouble(list[i].get("qualifidLength").toString()));
+		  			tagNum = tagNum + (null == list[i].get("tagNum")?0:Integer.parseInt(list[i].get("tagNum").toString()));
+		  			tagLength = tagLength + (null == list[i].get("tagLength")?0:Double.parseDouble(list[i].get("tagLength").toString()));
+  
+  		 %>
+		 		
+		 		 var d = ['<%=list[i].get("outBatchNo") %>','<%=list[i].get("batchNo") %>',
+		 		 '<%=list[i].get("usefulLength") %>','<%=list[i].get("qualifidLength") %>',
+				'<%=list[i].get("materSpecName") %>','<%=null == list[i].get("fGfdAvg")?"":list[i].get("fGfdAvg").toString() %>',
+				'<%=null == list[i].get("fSaltRejection")?"":list[i].get("fSaltRejection").toString() %>',
+				'<%=null == list[i].get("rGfdAvg")?"":list[i].get("rGfdAvg").toString() %>',
+				'<%=null == list[i].get("rSaltRejection")?"":list[i].get("rSaltRejection").toString() %>',
+				'<%=null == list[i].get("remark")?"":list[i].get("remark").toString() %>',
+				'<%=null == list[i].get("tagNum")?"":list[i].get("tagNum").toString()  %>',
+				'<%=null == list[i].get("thickAvg")?"":list[i].get("thickAvg").toString() %>',
+				'<%=null == list[i].get("thickMin")?"":list[i].get("thickMin").toString() %>',
+				'<%=null == list[i].get("thickMax")?"":list[i].get("thickMax").toString() %>',
+				'<%=null == list[i].get("tagLength")?"":list[i].get("tagLength").toString() %>',
+				'<%=deliveryOrderNo %>','<%=markSpecName %>'];
+				data.push(d);
+				
+		<% } %>
+		
+		worksheet.addRows(data);
+		const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+		// 下载excel
+		workbook.xlsx.writeBuffer().then((data) => {
+			const blob = new Blob([data], {
+					type: EXCEL_TYPE
+				});
+			saveAs(blob, '膜片备货请检单.xlsx');
+		});
+		
+	}
 </script>
 </html>

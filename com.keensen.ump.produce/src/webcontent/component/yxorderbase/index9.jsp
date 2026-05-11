@@ -14,6 +14,15 @@
     String userName = userObject.getUserName();
     String mConfirm = "0";//生产管理部管理员
     
+    int viewPhotosLimit = 0;
+    
+    //营销内勤 10002001 
+    //班长  10001951  10001947 
+    if(roleId.indexOf("10002001")>-1 || uid.equals("dafu") || uid.equals("KS00524")
+    || roleId.indexOf("10001951")>-1 || roleId.indexOf("10001947")>-1){
+    	viewPhotosLimit = 1;
+    }
+    
     //营销订单生产看板
     String boardRight = roleId.toString().indexOf("10002082")!=-1? "1":"0";//
     
@@ -105,6 +114,8 @@ var markRootUrl = "<%=rootUrl %>";
   var exportButton = Ext.id();
   var urlDateDeliveryId = Ext.id();
   var urlDateDeliveryId2 = Ext.id();
+  
+  var viewPhotosLimit = "<%=viewPhotosLimit %>"
  
   var opt = '';
   FunctionMgr.load({ 

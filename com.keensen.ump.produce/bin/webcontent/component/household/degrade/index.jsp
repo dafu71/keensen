@@ -16,6 +16,17 @@
   if(roleId.toString().indexOf("10001381")!=-1 || uid.equals("sysadmin")){
 		exportflag="1";
   }	
+  //品管30479  30797
+  //班长  10001951  10001947 
+    int modifyLimit = 0;
+     //品管
+    if(roleId.indexOf("30479")>-1 || roleId.indexOf("30797")>-1
+    || roleId.indexOf("10001951")>-1 || roleId.indexOf("10001947")>-1){
+    	modifyLimit = 1;
+    }
+    
+    
+    
 %>
 <html>
 <!-- 
@@ -71,7 +82,7 @@
   var listid = Ext.id();
   var listid3 = Ext.id();
   
-  
+  var modifyLimit = "<%=modifyLimit %>";
   
   var exportflag = "<%=exportflag %>";
   

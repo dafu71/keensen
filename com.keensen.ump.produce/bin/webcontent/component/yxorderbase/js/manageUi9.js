@@ -527,9 +527,14 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 									}
 								}
 							}, {
-								xtype : 'textfield',
+								xtype : 'trigger',
+								ref:'../createName',
 								name : 'condition/createName',
-								fieldLabel : '导入操作员'
+								fieldLabel : '导入操作员',
+								scope : this,
+								onTriggerClick : function() {
+									_this.queryPanel.createName.setValue(userName)
+								}
 							}, {
 								xtype : 'displayfield',
 								height : 5,
@@ -665,7 +670,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					text : "公司标准产品模板下载",
 					disabled : allRight != '1',
 					height : 40,
-					hidden : true,
+					// hidden : true,
 					scope : this,
 					iconCls : 'icon-application_excel',
 					handler : this.onDownStd
@@ -698,7 +703,7 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 					iconCls : 'icon-application_excel',
 					handler : this.importNoStdExcel
 				});
-				
+
 		this.queryPanel.addButton({
 					text : "销售订单生产进度看板",
 					scope : this,
@@ -5171,23 +5176,16 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 							xtype : 'textfield',
 							readOnly : true,
 							fieldLabel : '唛头NSF标识'
-						}/*, {
-							xtype : 'combobox',
-							forceSelection : true,
-							readOnly : true,
-							mode : 'local',
-							fieldLabel : '唛头型号',
-							ref : '../../specNameMark',
-							dataIndex : 'specNameMark',
-							hiddenName : 'entity/specNameMark',
-							anchor : '100%',
-							colspan : 4,
-							emptyText : '',
-							editable : false,
-							store : this.markDrawingSpecNameStore,
-							displayField : "specName",
-							valueField : "specName"
-						}*/, {
+						}/*
+							 * , { xtype : 'combobox', forceSelection : true,
+							 * readOnly : true, mode : 'local', fieldLabel :
+							 * '唛头型号', ref : '../../specNameMark', dataIndex :
+							 * 'specNameMark', hiddenName :
+							 * 'entity/specNameMark', anchor : '100%', colspan :
+							 * 4, emptyText : '', editable : false, store :
+							 * this.markDrawingSpecNameStore, displayField :
+							 * "specName", valueField : "specName" }
+							 */, {
 							xtype : 'displayfield',
 							fieldLabel : '唛头型号',
 							ref : '../../specNameMark',
@@ -5657,30 +5655,30 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 								}
 							}
 						}, {
-					xtype : 'hidden',
-					dataIndex : 'urlPhotoApply',
-					ref : '../../urlPhotoApply'
-				}, {
-					xtype : 'hidden',
-					dataIndex : 'urlPhotoApply2',
-					ref : '../../urlPhotoApply2'
-				}, {
-					xtype : 'hidden',
-					dataIndex : 'urlPhotoApply3',
-					ref : '../../urlPhotoApply3'
-				}, {
-					xtype : 'hidden',
-					dataIndex : 'urlPhotoApply4',
-					ref : '../../urlPhotoApply4'
-				}, {
-					xtype : 'hidden',
-					dataIndex : 'urlPhotoApply5',
-					ref : '../../urlPhotoApply5'
-				}, {
-					xtype : 'hidden',
-					dataIndex : 'urlPhotoApply6',
-					ref : '../../urlPhotoApply6'
-				}]
+							xtype : 'hidden',
+							dataIndex : 'urlPhotoApply',
+							ref : '../../urlPhotoApply'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'urlPhotoApply2',
+							ref : '../../urlPhotoApply2'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'urlPhotoApply3',
+							ref : '../../urlPhotoApply3'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'urlPhotoApply4',
+							ref : '../../urlPhotoApply4'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'urlPhotoApply5',
+							ref : '../../urlPhotoApply5'
+						}, {
+							xtype : 'hidden',
+							dataIndex : 'urlPhotoApply6',
+							ref : '../../urlPhotoApply6'
+						}]
 			}]
 		});
 
@@ -5707,12 +5705,12 @@ com.keensen.ump.produce.component.yxorderbaseMgr = function() {
 						return _this.onModifyUrlPicture('urlMark')
 					}
 				});
-				
+
 		this.orderViewWindow.addButton({
 					text : "拍照查看",
 					scope : this,
 					iconCls : 'icon-application_form_magnify',
-					hidden : uid != 'dafu' && uid != 'KS00524',
+					hidden : viewPhotosLimit != "1",
 					handler : this.viewPhotos
 				});
 	}

@@ -695,10 +695,15 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.initEvent = function(
 				// 即整个订单号为F20251212-？？？（共13位，类似于备货订单号规则）
 				var regex = /^F\d{8}-\d{3}$/;
 				var returnFactory = regex.test(orderNo);
+				
+				//生管订单
+				//生管：SGAQ????????-???，共16位
+				var regex = /^\SGAQ\d{8}-\d{3}$/;
+				var returnSG = regex.test(orderNo);
 
 				if (!convention && !convention2 && !sample && !exhibit
 						&& !exhibit2 && !exhibit3 && !exhibit4 && !special
-						&& !special2 && !aftersale && !returnFactory) {
+						&& !special2 && !aftersale && !returnFactory && !returnSG) {
 					Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 					return false;
 				}
@@ -2243,7 +2248,8 @@ function describeOrderNo() {
 	s += '特规2: B202?????-???，共13位<br>'
 	s += '免费样品: MF-年年月月日日-XXXXXX<br>'
 	s += '售后: 售后-CRM??????，共12位<br>';
-	s += '返厂: F202?????-???，共13位'
+	s += '返厂: F202?????-???，共13位<br>'
+	s += '生管: SGAQ????????-???，共16位'
 	Ext.Msg.alert("订单编号规则", s);
 }
 
@@ -2599,10 +2605,16 @@ com.keensen.ump.produce.component.yxorderbaseMgr.prototype.checkOrderNo = functi
 	// 即整个订单号为F20251212-？？？（共13位，类似于备货订单号规则）
 	var regex = /^F\d{8}-\d{3}$/;
 	var returnFactory = regex.test(orderNo);
+	
+	//生管订单
+	//生管：SGAQ????????-???，共16位
+	var regex = /^\SGAQ\d{8}-\d{3}$/;
+	var returnSG = regex.test(orderNo);
+	
 
 	if (!convention && !convention2 && !sample && !exhibit && !exhibit2
 			&& !exhibit3 && !exhibit4 && !special && !special2 && !aftersale
-			&& !returnFactory) {
+			&& !returnFactory && !returnSG) {
 		Ext.Msg.alert('系统提示', '订单编号不符合要求，请重新输入');
 		return false;
 	}

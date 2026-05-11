@@ -152,3 +152,11 @@ com.keensen.ump.produce.component.WarehousingMgr.prototype.onSave = function() {
 		})
 	}
 }
+
+com.keensen.ump.produce.component.WarehousingMgr.prototype.exportExcel = function() {
+
+		doQuerySqlAndExport(this, this.queryPanel, this.listPanel, 'PDA白膜入库',
+				'com.keensen.ump.produce.component.semifinished.queryWarehousing', '0,1');
+	
+
+}

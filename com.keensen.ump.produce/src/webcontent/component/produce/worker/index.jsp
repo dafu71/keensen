@@ -6,13 +6,14 @@
 <%
 	com.eos.data.datacontext.IUserObject userObject = (com.eos.data.datacontext.IUserObject) request.getSession().getAttribute(com.eos.data.datacontext.IUserObject.KEY_IN_CONTEXT);
   
-  	String jmBatchNo = null != request.getParameter("jmBatchNo")?request.getParameter("jmBatchNo"):"";
-  
   	String dataorgid=(String)userObject.getAttributes().get("dataorgid");
   	Long operatorid=(Long)userObject.getAttributes().get("operatorid");
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    String uname = userObject.getUserName();
+    
+    String ip = userObject.getUserRemoteIP();
 %>
 <html>
 <!-- 
@@ -21,7 +22,7 @@
   - Description:
 -->
 <head>
-<title>PDA白膜入库</title>
+<title>班组信息</title>
 
 <!-- 导出Excel -->
 <script src="base/exceljs/polyfill.js"></script>
@@ -30,32 +31,36 @@
 <script src="base/exceljs/doQueryAndExport.js"></script>
 
 <script type="text/javascript">
-	BIZ.ns('com.keensen.ump.produce.component');
-	
-	
+	BIZ.ns('com.keensen.ump.produce.component.produce');
 </script>
 
-<js:load scriptPath="produce/component/semifinished/warehousing/js/manageUi.js"/>
-<js:load scriptPath="produce/component/semifinished/warehousing/js/manageEv.js"/>
+<script type="text/javascript">
+	function dayDiff(start,end){
+		var datediff = (new Date(end)) - (new Date(start));
+		datediff = datediff / 24 / 60 / 60 / 1000;
+		return datediff;
+		
+	}
+</script>
 
- <style type="text/css">
+<style type="text/css">
 .x-grid3-cell-inner {-webkit-user-select:text;}
 </style>
+
+<js:load scriptPath="produce/component/produce/worker/js/manageUi.js"/>
+<js:load scriptPath="produce/component/produce/worker/js/manageEv.js"/>
 <script type="text/javascript">
-  var uid = "<%=uid %>";
-  
-  var exportExcelBtn = Ext.id();
-  
-  var jmBatchNo = "<%=jmBatchNo %>";
-  //var listid = Ext.id();
+
+  var uid = "<%=uid %>";  
+  var ip = '<%=ip %>';
+
   FunctionMgr.load({ 
-			mainfn:com.keensen.ump.produce.component.WarehousingMgr
+			mainfn:com.keensen.ump.produce.component.produce.WorkerMgr
 		});
  </script>
- 
- 
 </head>
 <body>
-<div id="componentwarehousingmgr"></div>
+<div id="componentproduceworkermgr"></div>
+
 </body>
 </html>

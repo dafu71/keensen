@@ -9,6 +9,9 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 		this.initEditWindow();
 		this.initViewWindow();
 
+		this.initModifyWindow();
+		this.initCopyWindow();
+
 		return new Ext.fn.fnLayOut({
 					layout : 'ns',
 					border : false,
@@ -56,6 +59,34 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 
 					]
 				});
+
+		this.describeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [
+							['气检NG水测不合格', '气检NG水测不合格'],
+							['气检NG补胶后端面胶水不良', '气检NG补胶后端面胶水不良'],
+							['端面不良(膜片打折、浓网打折、淡网打折、端面不齐)',
+									'端面不良(膜片打折、浓网打折、淡网打折、端面不齐)'],
+							['中心管不良', '中心管不良'], ['膜体长度短', '膜体长度短'],
+							['湿膜正常入库', '湿膜正常入库']]
+				});
+
+		this.dryWetStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['干膜', '干膜'], ['湿膜', '湿膜']]
+				});
+
+		this.colorTapeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['水光蓝', '水光蓝'], ['蓝', '蓝'], ['绿', '绿'], ['灰', '灰'],
+							['黄', '黄'], ['白', '白'], ['黑', '黑']]
+				});
+
+		this.machineCodeStore = new Ext.data.SimpleStore({
+					fields : ['code', 'name'],
+					data : [['1#', '1#'], ['2#', '2#'], ['4#', '4#'],
+							['5#', '5#']]
+				});
 	}
 
 	this.initQueryPanel = function() {
@@ -99,6 +130,7 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 	}
 
 	this.initListPanel = function() {
+
 		var _this = this;
 		var selModel = new Ext.grid.CheckboxSelectionModel({
 					singleSelect : true,
@@ -107,32 +139,44 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 		this.listPanel = new Ext.fn.ListPanel({
 			// title : '【BOM列表】',
 			viewConfig : {
-				forceFit : true
+				forceFit : false
 			},
 			hsPage : true,
 			tbar : [{
-						text : '新增',
+						text : '生产员工填写',
 						scope : this,
-						//hidden : uid != 'dafu' && uid != 'KS01147',
+						// hidden : uid != 'dafu' && uid != 'KS01147',
 						iconCls : 'icon-application_add',
 						handler : this.onAdd
 					}, '-', {
+						text : '品管填写',
+						hidden : modifyLimit != "1",
+						scope : this,
+						iconCls : 'icon-application_edit',
+						handler : this.onModify
+					}, '-', {
 						text : '修改',
-						//hidden : uid != 'dafu' && uid != 'KS01147',
+						hidden : modifyLimit != "1",
 						scope : this,
 						iconCls : 'icon-application_edit',
 						handler : this.onEdit
 					}, '-', {
-						text : '删除',
-						//hidden : uid != 'dafu' && uid != 'KS01147',
+						text : '复制新增',
+						hidden : modifyLimit != "1",
 						scope : this,
-						iconCls : 'icon-application_delete',
-						handler : this.onDel
+						iconCls : 'icon-page_copy',
+						handler : this.onCopy
 					}, '-', {
 						text : '查看',
 						scope : this,
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onView
+					}, '->', {
+						text : '删除',
+						hidden : modifyLimit != "1",
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDel
 					}],
 			selModel : selModel,
 			delUrl : 'com.keensen.ump.produce.component.household.deleteDegrade.biz.ext',
@@ -157,6 +201,24 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 					}, {
 						dataIndex : 'blankingSize',
 						header : '膜片长度'
+					}, {
+						dataIndex : 'orderDate',
+						header : '工单日期'
+					}, {
+						dataIndex : 'judgeDate',
+						header : '判定日期'
+					}, {
+						dataIndex : 'machineCode',
+						header : '卷膜机台'
+					}, {
+						dataIndex : 'jmName',
+						header : '卷制人员'
+					}, {
+						dataIndex : 'dryWet',
+						header : '规格'
+					}, {
+						dataIndex : 'describe',
+						header : '不良描述'
 					}, {
 						dataIndex : 'ip',
 						header : 'ip'
@@ -216,6 +278,18 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 							name : 'createTime'
 						}, {
 							name : 'createName'
+						}, {
+							name : 'orderDate'
+						}, {
+							name : 'judgeDate'
+						}, {
+							name : 'machineCode'
+						}, {
+							name : 'jmName'
+						}, {
+							name : 'dryWet'
+						}, {
+							name : 'describe'
 						}]
 			})
 		})
@@ -238,7 +312,7 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 						anchor : "100%"
 					},
 					items : [{
-								columnWidth : 0.85,
+								columnWidth : 0.55,
 								anchor : "100%",
 								layout : "anchor",
 								id : amountId,
@@ -247,7 +321,7 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 								dataIndex : 'amount',
 								name : 'entity/amount'
 							}, {
-								columnWidth : 0.15,
+								columnWidth : 0.45,
 								anchor : "100%",
 								layout : "anchor",
 								text : '计算膜片长度',
@@ -275,39 +349,34 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 			items : [{
 				xtype : 'inputpanel',
 				autoHide : false,
-				successFn:function(){
+				successFn : function() {
 					_this.listPanel.store.load();
-					_this.inputWindow.items.items[0].form
-										.reset();
+					_this.inputWindow.items.items[0].form.reset();
 				},
 				pgrid : this.listPanel,
-				columns : 1,
+				columns : 2,
 				saveUrl : 'com.keensen.ump.produce.component.household.saveDegrade.biz.ext',
 				fields : [{
 							xtype : 'prodspeccombobox',
 							allowBlank : false,
 							hiddenName : 'entity/prodSpecId',
 							valueField : "id",
-			                displayField : "name",
+							displayField : "name",
 							ref : '../../prodSpecId',
 							fieldLabel : '卷膜执行型号',
 							anchor : '95%',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
 							xtype : 'textfield',
 							name : 'entity/labelSpecName',
-							allowBlank : false,
+							// allowBlank : false,
 							fieldLabel : '贴标型号',
 							anchor : '95%',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'textfield',
 							name : 'entity/batchNo',
@@ -315,14 +384,10 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 							fieldLabel : '膜片批次',
 							anchor : '95%',
 							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
 						}, this.quantityField, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'textfield',
 							name : 'entity/orderNo',
@@ -330,13 +395,9 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 							anchor : '95%',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
 							xtype : 'textfield',
 							name : 'entity/blankingSize',
-							ref:'../../blankingSize',
+							ref : '../../blankingSize',
 							allowBlank : false,
 							fieldLabel : '膜片长度(m)',
 							anchor : '95%',
@@ -344,83 +405,116 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '胶带颜色',
+							ref : '../../colorTape',
+							hiddenName : 'entity/colorTape',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.colorTapeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.colorTape.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '规格',
+							ref : '../../dryWet',
+							hiddenName : 'entity/dryWet',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.dryWetStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.dryWet.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							name : 'entity/orderDate',
+							allowBlank : false,
+							fieldLabel : '工单日期',
+							anchor : '95%',
+							format : "Y-m-d",
 							colspan : 1
+						}, {
+							xtype : 'datefield',
+							name : 'entity/judgeDate',
+							allowBlank : false,
+							fieldLabel : '判定日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '卷膜机台',
+							ref : '../../machineCode',
+							hiddenName : 'entity/machineCode',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.machineCodeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.inputWindow.machineCode.reset()
+								}
+							}
 						}, {
 							xtype : 'textfield',
-							name : 'entity/colorTape',
-							fieldLabel : '胶带颜色',
+							name : 'entity/jmName',
+							allowBlank : false,
+							fieldLabel : '卷制人员',
 							anchor : '95%',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'combobox',
-							forceSelection : true,
-							allowBlank : false,
 							mode : 'local',
-							fieldLabel : '降级原因',
-							ref : '../../reasonDegrade',
-							hiddenName : 'entity/reasonDegrade',
+							fieldLabel : '不良描述',
+							ref : '../../describe',
+							hiddenName : 'entity/describe',
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
 							emptyText : '--请选择--',
 							editable : false,
-							store : this.reasonDegradeStore,
+							allowBlank : false,
+							store : this.describeStore,
 							displayField : "name",
 							valueField : "code",
 							listeners : {
 								"expand" : function(A) {
-									this.reset()
-								}
-							}
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'combobox',
-							forceSelection : true,
-							allowBlank : false,
-							mode : 'local',
-							fieldLabel : '降级类型',
-							ref : '../../typeDegrade',
-							hiddenName : 'entity/typeDegrade',
-							anchor : '95%',
-							colspan : 1,
-							emptyText : '--请选择--',
-							editable : false,
-							store : this.typeDegradeStore,
-							displayField : "name",
-							valueField : "code",
-							listeners : {
-								"expand" : function(A) {
-									this.reset()
-								}
-							}
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'combobox',
-							forceSelection : true,
-							allowBlank : false,
-							mode : 'local',
-							fieldLabel : '责任部门',
-							ref : '../../deptDegrade',
-							hiddenName : 'entity/deptDegrade',
-							anchor : '95%',
-							colspan : 1,
-							emptyText : '--请选择--',
-							editable : false,
-							store : this.deptDegradeStore,
-							displayField : "name",
-							valueField : "code",
-							listeners : {
-								"expand" : function(A) {
-									this.reset()
+									_this.inputWindow.describe.reset()
 								}
 							}
 						}]
@@ -428,49 +522,12 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 		});
 	}
 
-	this.initEditWindow = function() {
+	this.initModifyWindow = function() {
 
 		var _this = this;
-		var amountId = Ext.id();
 
-		this.quantityField2 = this.quantityField2 || new Ext.Container({
-					autoEl : 'div',
-					layout : 'column',
-					anchor : "95%",
-					colspan : 1,
-					fieldLabel : '数量(支)',
-					defaults : {
-						xtype : "container",
-						autoEl : "div",
-						anchor : "100%"
-					},
-					items : [{
-								columnWidth : 0.85,
-								anchor : "100%",
-								layout : "anchor",
-								id : amountId,
-								xtype : 'numberfield',
-								allowBlank : false,
-								dataIndex : 'amount',
-								name : 'entity/amount'
-							}, {
-								columnWidth : 0.15,
-								anchor : "100%",
-								layout : "anchor",
-								text : '计算膜片长度',
-								xtype : 'button',
-								handler : function() {
-									var obj = Ext.getCmp(amountId);
-									var value = obj.getValue()
-									if (!Ext.isEmpty(value)) {
-										_this.onCalc(value);
-									}
-								}
-
-							}]
-				});
-		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
-			title : '修改',
+		this.modifyWindow = this.modifyWindow || new Ext.fn.FormWindow({
+			title : '品管填写',
 			height : 600,
 			width : 800,
 			resizable : false,
@@ -484,88 +541,6 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 				loadUrl : 'com.keensen.ump.produce.component.household.expandDegrade.biz.ext',
 				saveUrl : 'com.keensen.ump.produce.component.household.saveDegrade.biz.ext',
 				fields : [{
-							xtype : 'prodspeccombobox',
-							allowBlank : false,
-							hiddenName : 'entity/prodSpecId',
-							dataIndex : 'prodSpecId',
-							ref : '../../prodSpecId',
-							fieldLabel : '卷膜执行型号',
-							valueField : "id",
-			                displayField : "name",
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'textfield',
-							name : 'entity/labelSpecName',
-							dataIndex : 'labelSpecName',
-							allowBlank : false,
-							fieldLabel : '贴标型号',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'textfield',
-							name : 'entity/batchNo',
-							dataIndex : 'batchNo',
-							allowBlank : false,
-							fieldLabel : '膜片批次',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, this.quantityField2, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'textfield',
-							name : 'entity/orderNo',
-							dataIndex : 'orderNo',
-							fieldLabel : '订单号',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'textfield',
-							name : 'entity/blankingSize',
-							dataIndex : 'blankingSize',
-							ref:'../../blankingSize',
-							allowBlank : false,
-							fieldLabel : '膜片长度(m)',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'textfield',
-							name : 'entity/colorTape',
-							dataIndex : 'colorTape',
-							fieldLabel : '胶带颜色',
-							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
 							xtype : 'combobox',
 							forceSelection : true,
 							allowBlank : false,
@@ -618,7 +593,7 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 						}, {
 							xtype : 'combobox',
 							forceSelection : true,
-							allowBlank : false,
+							// allowBlank : false,
 							mode : 'local',
 							fieldLabel : '责任部门',
 							ref : '../../deptDegrade',
@@ -645,9 +620,631 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 		});
 	}
 
+	this.initEditWindow = function() {
+
+		var _this = this;
+		var amountId = Ext.id();
+
+		this.quantityField2 = this.quantityField2 || new Ext.Container({
+					autoEl : 'div',
+					layout : 'column',
+					anchor : "95%",
+					colspan : 1,
+					fieldLabel : '数量(支)',
+					defaults : {
+						xtype : "container",
+						autoEl : "div",
+						anchor : "100%"
+					},
+					items : [{
+								columnWidth : 0.55,
+								anchor : "100%",
+								layout : "anchor",
+								id : amountId,
+								xtype : 'numberfield',
+								allowBlank : false,
+								dataIndex : 'amount',
+								name : 'entity/amount'
+							}, {
+								columnWidth : 0.45,
+								anchor : "100%",
+								layout : "anchor",
+								text : '计算膜片长度',
+								xtype : 'button',
+								handler : function() {
+									var obj = Ext.getCmp(amountId);
+									var value = obj.getValue()
+									if (!Ext.isEmpty(value)) {
+										_this.onCalc(value);
+									}
+								}
+
+							}]
+				});
+		this.editWindow = this.editWindow || new Ext.fn.FormWindow({
+			title : '修改',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.component.household.expandDegrade.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.household.saveDegrade.biz.ext',
+				fields : [{
+							xtype : 'prodspeccombobox',
+							allowBlank : false,
+							hiddenName : 'entity/prodSpecId',
+							dataIndex : 'prodSpecId',
+							valueField : "id",
+							displayField : "name",
+							ref : '../../prodSpecId',
+							fieldLabel : '卷膜执行型号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/labelSpecName',
+							dataIndex : 'labelSpecName',
+							// allowBlank : false,
+							fieldLabel : '贴标型号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/batchNo',
+							dataIndex : 'batchNo',
+							allowBlank : false,
+							fieldLabel : '膜片批次',
+							anchor : '95%',
+							colspan : 1
+						}, this.quantityField2, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/orderNo',
+							dataIndex : 'orderNo',
+							fieldLabel : '订单号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/blankingSize',
+							dataIndex : 'blankingSize',
+							ref : '../../blankingSize',
+							allowBlank : false,
+							fieldLabel : '膜片长度(m)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '胶带颜色',
+							ref : '../../colorTape',
+							hiddenName : 'entity/colorTape',
+							dataIndex : 'colorTape',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.colorTapeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.editWindow.colorTape.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '规格',
+							ref : '../../dryWet',
+							hiddenName : 'entity/dryWet',
+							dataIndex : 'dryWet',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.dryWetStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.editWindow.dryWet.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							name : 'entity/orderDate',
+							dataIndex : 'orderDate',
+							allowBlank : false,
+							fieldLabel : '工单日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'datefield',
+							name : 'entity/judgeDate',
+							dataIndex : 'judgeDate',
+							allowBlank : false,
+							fieldLabel : '判定日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '卷膜机台',
+							ref : '../../machineCode',
+							hiddenName : 'entity/machineCode',
+							dataIndex : 'machineCode',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.machineCodeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.editWindow.machineCode.reset()
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							name : 'entity/jmName',
+							dataIndex : 'jmName',
+							allowBlank : false,
+							fieldLabel : '卷制人员',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '不良描述',
+							dataIndex : 'describe',
+							ref : '../../describe',
+							hiddenName : 'entity/describe',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.describeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.editWindow.describe.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '降级原因',
+							ref : '../../reasonDegrade',
+							hiddenName : 'entity/reasonDegrade',
+							dataIndex : 'reasonDegrade',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.reasonDegradeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '降级类型',
+							ref : '../../typeDegrade',
+							hiddenName : 'entity/typeDegrade',
+							dataIndex : 'typeDegrade',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.typeDegradeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '责任部门',
+							ref : '../../deptDegrade',
+							hiddenName : 'entity/deptDegrade',
+							dataIndex : 'deptDegrade',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.deptDegradeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'hidden',
+							name : 'entity/id',
+							dataIndex : 'id'
+						}]
+			}]
+		});
+	}
+
+	this.initCopyWindow = function() {
+
+		var _this = this;
+		var amountId = Ext.id();
+
+		this.quantityField3 = this.quantityField3 || new Ext.Container({
+					autoEl : 'div',
+					layout : 'column',
+					anchor : "95%",
+					colspan : 1,
+					fieldLabel : '数量(支)',
+					defaults : {
+						xtype : "container",
+						autoEl : "div",
+						anchor : "100%"
+					},
+					items : [{
+								columnWidth : 0.55,
+								anchor : "100%",
+								layout : "anchor",
+								id : amountId,
+								xtype : 'numberfield',
+								allowBlank : false,
+								dataIndex : 'amount',
+								name : 'entity/amount'
+							}, {
+								columnWidth : 0.45,
+								anchor : "100%",
+								layout : "anchor",
+								text : '计算膜片长度',
+								xtype : 'button',
+								handler : function() {
+									var obj = Ext.getCmp(amountId);
+									var value = obj.getValue()
+									if (!Ext.isEmpty(value)) {
+										_this.onCalc(value);
+									}
+								}
+
+							}]
+				});
+		this.copyWindow = this.copyWindow || new Ext.fn.FormWindow({
+			title : '复制新增',
+			height : 600,
+			width : 800,
+			resizable : false,
+			minimizable : false,
+			maximizable : false,
+			items : [{
+				xtype : 'editpanel',
+				baseCls : "x-plain",
+				pgrid : this.listPanel,
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.component.household.expandDegrade.biz.ext',
+				saveUrl : 'com.keensen.ump.produce.component.household.saveDegrade.biz.ext',
+				fields : [{
+							xtype : 'prodspeccombobox',
+							allowBlank : false,
+							hiddenName : 'entity/prodSpecId',
+							dataIndex : 'prodSpecId',
+							valueField : "id",
+							displayField : "name",
+							ref : '../../prodSpecId',
+							fieldLabel : '卷膜执行型号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/labelSpecName',
+							dataIndex : 'labelSpecName',
+							// allowBlank : false,
+							fieldLabel : '贴标型号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/batchNo',
+							dataIndex : 'batchNo',
+							allowBlank : false,
+							fieldLabel : '膜片批次',
+							anchor : '95%',
+							colspan : 1
+						}, this.quantityField3, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'textfield',
+							name : 'entity/orderNo',
+							dataIndex : 'orderNo',
+							fieldLabel : '订单号',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'textfield',
+							name : 'entity/blankingSize',
+							dataIndex : 'blankingSize',
+							ref : '../../blankingSize',
+							allowBlank : false,
+							fieldLabel : '膜片长度(m)',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '胶带颜色',
+							ref : '../../colorTape',
+							hiddenName : 'entity/colorTape',
+							dataIndex : 'colorTape',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.colorTapeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.copyWindow.colorTape.reset()
+								}
+							}
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '规格',
+							ref : '../../dryWet',
+							hiddenName : 'entity/dryWet',
+							dataIndex : 'dryWet',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.dryWetStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.copyWindow.dryWet.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							name : 'entity/orderDate',
+							ref : '../../orderDate',
+							dataIndex : 'orderDate',
+							allowBlank : false,
+							fieldLabel : '工单日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'datefield',
+							name : 'entity/judgeDate',
+							ref : '../../judgeDate',
+							dataIndex : 'judgeDate',
+							allowBlank : false,
+							fieldLabel : '判定日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '卷膜机台',
+							ref : '../../machineCode',
+							hiddenName : 'entity/machineCode',
+							dataIndex : 'machineCode',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.machineCodeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.copyWindow.machineCode.reset()
+								}
+							}
+						}, {
+							xtype : 'textfield',
+							name : 'entity/jmName',
+							dataIndex : 'jmName',
+							allowBlank : false,
+							fieldLabel : '卷制人员',
+							anchor : '95%',
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '不良描述',
+							dataIndex : 'describe',
+							ref : '../../describe',
+							hiddenName : 'entity/describe',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							allowBlank : false,
+							store : this.describeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									_this.copyWindow.describe.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '降级原因',
+							ref : '../../reasonDegrade',
+							hiddenName : 'entity/reasonDegrade',
+							dataIndex : 'reasonDegrade',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.reasonDegradeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '降级类型',
+							ref : '../../typeDegrade',
+							hiddenName : 'entity/typeDegrade',
+							dataIndex : 'typeDegrade',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.typeDegradeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
+							mode : 'local',
+							fieldLabel : '责任部门',
+							ref : '../../deptDegrade',
+							hiddenName : 'entity/deptDegrade',
+							dataIndex : 'deptDegrade',
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '--请选择--',
+							editable : false,
+							store : this.deptDegradeStore,
+							displayField : "name",
+							valueField : "code",
+							listeners : {
+								"expand" : function(A) {
+									this.reset()
+								}
+							}
+						}]
+			}]
+		});
+	}
+
 	this.initViewWindow = function() {
 
-		this.viewWindow = this.viewWindow || new Ext.fn.ShowWindow({
+		this.viewWindow = this.viewWindow || new Ext.fn.FormWindow({
 			title : '查看',
 			height : 600,
 			width : 800,
@@ -658,42 +1255,40 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 				autoScroll : true
 			},
 			items : [{
-						xtype : 'viewpanel',
-						baseCls : "x-plain",
-						columns : 1,
-						loadUrl : 'com.keensen.ump.produce.component.household.expandDegrade.biz.ext',
-						fields : [{
+				xtype : 'viewpanel',
+				baseCls : "x-plain",
+				columns : 2,
+				loadUrl : 'com.keensen.ump.produce.component.household.expandDegrade.biz.ext',
+				fields : [{
 							xtype : 'prodspeccombobox',
+							allowBlank : false,
 							readOnly : true,
 							dataIndex : 'prodSpecId',
+							valueField : "id",
+							displayField : "name",
+							ref : '../../prodSpecId',
 							fieldLabel : '卷膜执行型号',
 							anchor : '95%',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
 							xtype : 'textfield',
-							dataIndex : 'labelSpecName',
 							readOnly : true,
+							dataIndex : 'labelSpecName',
+							// allowBlank : false,
 							fieldLabel : '贴标型号',
 							anchor : '95%',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'textfield',
-							dataIndex : 'batchNo',
 							readOnly : true,
+							dataIndex : 'batchNo',
+							allowBlank : false,
 							fieldLabel : '膜片批次',
 							anchor : '95%',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
 							colspan : 1
 						}, {
 							xtype : 'textfield',
@@ -705,11 +1300,7 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 1
-						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'textfield',
 							readOnly : true,
@@ -718,77 +1309,180 @@ com.keensen.ump.produce.component.household.DegradeMgr = function() {
 							anchor : '95%',
 							colspan : 1
 						}, {
-							xtype : 'displayfield',
-							height : '5',
-							colspan : 1
-						}, {
 							xtype : 'textfield',
-							dataIndex : 'blankingSize',
 							readOnly : true,
+							dataIndex : 'blankingSize',
+							ref : '../../blankingSize',
+							allowBlank : false,
 							fieldLabel : '膜片长度(m)',
 							anchor : '95%',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '胶带颜色',
+							ref : '../../colorTape',
+							readOnly : true,
+							dataIndex : 'colorTape',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '',
+							editable : false,
+							allowBlank : false,
+							store : this.colorTapeStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '规格',
+							ref : '../../dryWet',
+							readOnly : true,
+							dataIndex : 'dryWet',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '',
+							editable : false,
+							allowBlank : false,
+							store : this.dryWetStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'datefield',
+							readOnly : true,
+							ref : '../../orderDate',
+							dataIndex : 'orderDate',
+							allowBlank : false,
+							fieldLabel : '工单日期',
+							anchor : '95%',
+							format : "Y-m-d",
 							colspan : 1
+						}, {
+							xtype : 'datefield',
+							name : 'entity/judgeDate',
+							ref : '../../judgeDate',
+							dataIndex : 'judgeDate',
+							allowBlank : false,
+							fieldLabel : '判定日期',
+							anchor : '95%',
+							format : "Y-m-d",
+							colspan : 1
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '卷膜机台',
+							ref : '../../machineCode',
+							readOnly : true,
+							dataIndex : 'machineCode',
+							anchor : '95%',
+							colspan : 1,
+							emptyText : '',
+							editable : false,
+							allowBlank : false,
+							store : this.machineCodeStore,
+							displayField : "name",
+							valueField : "code"
 						}, {
 							xtype : 'textfield',
 							readOnly : true,
-							dataIndex : 'colorTape',
-							fieldLabel : '胶带颜色',
+							dataIndex : 'jmName',
+							allowBlank : false,
+							fieldLabel : '卷制人员',
 							anchor : '95%',
 							colspan : 1
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'combobox',
+							mode : 'local',
+							fieldLabel : '不良描述',
+							dataIndex : 'describe',
+							ref : '../../describe',
 							readOnly : true,
+							anchor : '95%',
+							colspan : 2,
+							emptyText : '',
+							editable : false,
+							allowBlank : false,
+							store : this.describeStore,
+							displayField : "name",
+							valueField : "code"
+						}, {
+							xtype : 'displayfield',
+							height : '5',
+							colspan : 2
+						}, {
+							xtype : 'combobox',
+							forceSelection : true,
+							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '降级原因',
+							ref : '../../reasonDegrade',
+							readOnly : true,
 							dataIndex : 'reasonDegrade',
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
+							emptyText : '',
+							editable : false,
 							store : this.reasonDegradeStore,
 							displayField : "name",
 							valueField : "code"
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'combobox',
-							readOnly : true,
+							forceSelection : true,
+							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '降级类型',
+							ref : '../../typeDegrade',
+							readOnly : true,
 							dataIndex : 'typeDegrade',
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
+							emptyText : '',
+							editable : false,
 							store : this.typeDegradeStore,
 							displayField : "name",
 							valueField : "code"
 						}, {
 							xtype : 'displayfield',
 							height : '5',
-							colspan : 1
+							colspan : 2
 						}, {
 							xtype : 'combobox',
-							readOnly : true,
+							forceSelection : true,
+							allowBlank : false,
 							mode : 'local',
 							fieldLabel : '责任部门',
+							ref : '../../deptDegrade',
 							dataIndex : 'deptDegrade',
 							anchor : '95%',
-							colspan : 1,
+							colspan : 2,
+							emptyText : '',
+							editable : false,
 							store : this.deptDegradeStore,
 							displayField : "name",
-							valueField : "code"
-						}, {
-									xtype : 'hidden',
-									dataIndex : 'id'
-								}]
-					}]
+							valueField : "code",
+							readOnly : true
+						}]
+			}]
 		});
 	}
 }

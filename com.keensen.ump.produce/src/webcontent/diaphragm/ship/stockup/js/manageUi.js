@@ -2,6 +2,8 @@ com.keensen.ump.produce.diaphragm.ship.StockupMgr = function() {
 
 	this.initPanel = function() {
 
+		this.initStore();
+		
 		this.initQueryPanel();
 		this.initListPanel();
 
@@ -11,6 +13,19 @@ com.keensen.ump.produce.diaphragm.ship.StockupMgr = function() {
 					renderTo : 'diaphragmshipstockupmgr',
 					panels : [this.queryPanel, this.listPanel]
 				});
+	}
+
+	this.initStore = function() {
+
+		this.tumoStore = new Ext.data.JsonStore({
+			url : 'com.keensen.ump.produce.diaphragm.ship.stockup.queryTumo.biz.ext',
+			root : 'data',
+			autoLoad : false,
+			baseParams : {},
+			fields : [{
+						name : 'batchNo'
+					}]
+		})
 	}
 
 	this.initQueryPanel = function() {
@@ -89,10 +104,10 @@ com.keensen.ump.produce.diaphragm.ship.StockupMgr = function() {
 						iconCls : 'icon-application_form_magnify',
 						handler : this.onReport
 					}, '-', {
-						text : '删除',
+						text : '复制膜批次到剪贴板',
 						scope : this,
-						iconCls : 'icon-application_delete',
-						handler : this.onDel
+						iconCls : 'icon-page_copy',
+						handler : this.onCopyBatchNo
 					}, {
 						xtype : 'displayfield',
 						value : '&nbsp;&nbsp;&nbsp;&nbsp;'
@@ -100,6 +115,11 @@ com.keensen.ump.produce.diaphragm.ship.StockupMgr = function() {
 						xtype : 'displayfield',
 						value : '',
 						id : checkCountId
+					}, '->', {
+						text : '删除',
+						scope : this,
+						iconCls : 'icon-application_delete',
+						handler : this.onDel
 					}],
 			delUrl : 'com.keensen.ump.produce.diaphragm.ship.stockup.deleteStockup.biz.ext',
 			columns : [new Ext.grid.RowNumberer(), selModel, {

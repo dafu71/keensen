@@ -18,7 +18,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr.prototype.initEvent = functi
 			}, this);
 			
 	this.listPanel4ProduceCount.store.on('load', function() {
-
+			
 				var records = _this.listPanel4ProduceCount.store.getRange();
 				if (records.length == 0) {
 					Ext.getCmp(quantityTotalId).setValue('');

@@ -11,6 +11,7 @@
   	String operatorname=URLEncoder.encode((String)userObject.getAttributes().get("operatorname"),"UTF-8");
   	String roleId=(String)userObject.getAttributes().get("roles_rolecode_str");
     String uid = userObject.getUserId();
+    String uname = userObject.getUserName();
     
     String ip = userObject.getUserRemoteIP();
 %>
@@ -22,6 +23,13 @@
 -->
 <head>
 <title>焊网记录</title>
+
+<!-- 导出Excel -->
+<script src="base/exceljs/polyfill.js"></script>
+<script src="base/exceljs/exceljs.min.js"></script>
+<script src="base/exceljs/FileSaver.min.js"></script>
+<script src="base/exceljs/doQueryAndExport.js"></script>
+
 <script type="text/javascript">
 	BIZ.ns('com.keensen.ump.produce.component.produce');
 </script>
@@ -65,7 +73,12 @@ var operatorid = "<%=operatorid%>";
 var operatorname = "<%=operatorname%>";
 var opt = '';
 
+var nowStaffName = "<%=uname %>";
+  var nowStaffId = <%=operatorid %>;
+  
+
 var addBtn = Ext.id();
+var quantityTotalId = 'componentproduceweldedmgr' + Ext.id();
 
   var listid = Ext.id();
   FunctionMgr.load({ 

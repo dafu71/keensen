@@ -625,7 +625,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						dataIndex : 'rksl',
 						header : '入库数量（支）',
 						sortable : true
-					}, {
+					}/*, {
 						dataIndex : 'jhwcsj',
 						header : '计划完成时间',
 						sortable : true
@@ -633,7 +633,7 @@ com.keensen.ump.produce.component.yxorderMgr = function() {
 						dataIndex : 'scwcrq',
 						header : '生产完成日期',
 						sortable : true
-					}, {
+					}*/, {
 						dataIndex : 'reserve5',
 						header : '订单计划员备注'
 					}, {

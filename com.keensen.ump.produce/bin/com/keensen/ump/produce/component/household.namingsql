@@ -27,6 +27,14 @@
 		t1.REASON_DEGRADE as "reasonDegrade",
 		t1.DEPT_DEGRADE as "deptDegrade",
 		t1.TYPE_DEGRADE as "typeDegrade",
+		
+		TO_CHAR(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		TO_CHAR(t1.judge_date,'yyyy-MM-dd') as "judgeDate",
+		t1.machine_code as "machineCode",
+		t1.jm_name as "jmName",
+		t1.dry_wet as "dryWet",
+		t1.describe as "describe",
+		
 		pms.mater_spec_name "prodSpecName"
 
        
@@ -40,5 +48,6 @@
         <isNotNull prepend="and" property="orderNo2">t1.ORDER_NO like '%' || #orderNo2# || '%'</isNotNull>
         <isNotNull prepend="and" property="createTimeStart">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &gt;=  #createTimeStart#</isNotNull>
         <isNotNull prepend="and" property="createTimeEnd">to_char(T1.CREATE_TIME,'yyyy-MM-dd')  &lt;=  #createTimeEnd#</isNotNull>
+     order by t1.id desc
     </select>
 </sqlMap>

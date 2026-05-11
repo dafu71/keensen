@@ -9,7 +9,7 @@ com.keensen.ump.produce.component.produce.WeldedMgr = function() {
 		this.initInputWindow();
 		this.initEditWindow();
 		this.initViewWindow();
-		
+	
 		this.initProduceCountWindow();
 
 		return new Ext.fn.fnLayOut({

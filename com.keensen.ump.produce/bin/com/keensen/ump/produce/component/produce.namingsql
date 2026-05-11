@@ -500,4 +500,12 @@ and nvl(t1.status,1) != 0
     <update id="updateJmProduceDt" parameterClass="java.util.HashMap">UPDATE qinsen.inst_juanmo_main jm
 	SET jm.produce_dt = SYSDATE ,jm.change_dt = SYSDATE ,jm.changer_id = #changerId#
 	WHERE jm.record_id = #recordId#</update>
+    <select id="queryWorker" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">
+  		select t.user_id "userId",t.user_name "userName",t.crew "crew" 
+  		from KS_COMPONENT_WORKER t
+  		where 1=1
+  			<isNotNull prepend="and" property="userId">T.user_Id = #userId#</isNotNull>
+        <isNotNull prepend="and" property="crew">T.crew = #crew#</isNotNull>
+        <isNotNull prepend="and" property="userName">T.user_name like '%' || #userName# || '%'</isNotNull>
+    </select>
 </sqlMap>

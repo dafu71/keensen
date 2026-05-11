@@ -418,7 +418,7 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 		 <!-- NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
 	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)-->
 	       
-	        ) &gt;= 50
+	        ) &gt;= 10
 	       or 
 	       (
 	       
@@ -434,7 +434,7 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 	       
 	       )
 	       
-	       &lt;= -50
+	       &lt;= -10
 	       )
 	       
 		</isEqual>
@@ -468,7 +468,7 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 	       <!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
 	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)-->
 	       
-	       )&lt;= 50)
+	       )&lt;= 10)
 	       or 
 	       ((
 	       
@@ -483,7 +483,7 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
 	       <!--NVL(T1.OUT_LENGTH, 0) - NVL(T2.CAIMO_LENGTH, 0) -
 	       NVL(T3.CAIMO_LOSS, 0) -nvl(t1.USED_AMOUNT,0)-->
 	       
-	        )&gt;= -50
+	        )&gt;= -10
 	       and 
 	       (
 	       
@@ -511,7 +511,11 @@ WHERE t.storage_id=81 AND TYPE='退货入库'
     <!--一级 -50<x<=-10  or 0<x<50  '王正娥','蒋滔','李长林','李雅琪','周波','何选鹏','张博宁'-->
     <!--二级 x>=50 or x<=-50 '王金铁'，'唐学军','李卓','梁彪','罗啸'-->
     <!--三级 x>=100 or x<=-100 '焦朝凤','罗海鹰'-->
-    <select id="queryRemainLengthLimit" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select #userId# "userId",case when #userId# in('KS00420','KS00141','KS00388','KS00866','KS00867','XXB','KS00500','KS01295')
+    <!--2026-05-09-->
+    <!--一级 x<10  '王正娥','蒋滔','李长林','李雅琪','周波','何选鹏','张博宁'-->
+    <!--二级 x>=10 or x<=-10 '王金铁'，'唐学军','李卓','梁彪','罗啸'-->
+    <!--三级 x>=10 or x<=-10 '焦朝凤','罗海鹰'-->
+    <select id="queryRemainLengthLimit" parameterClass="java.util.HashMap" resultClass="commonj.sdo.DataObject">select #userId# "userId",case when #userId# in('KS00420','KS00141','KS00388','KS00866','KS00867','dafu','KS00500','KS01295')
  		then '1'	 
 	  	when #userId# in('KS00880','KS00017','KS01374','KS00524','KS00517')
  		then '2'
